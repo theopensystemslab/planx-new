@@ -21,6 +21,7 @@ const BG_COLOR_DEFAULT = "#FFFFFF";
 // Type styles
 export const FONT_WEIGHT_STRONG = "600";
 const SPACING_TIGHT = "-0.02em";
+const LINE_HEIGHT_BASE = "1.33";
 
 const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   primary: {
@@ -269,7 +270,7 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
       },
       subtitle1: {
         fontSize: "1.5rem",
-        lineHeight: 1.33,
+        lineHeight: LINE_HEIGHT_BASE,
         color: TEXT_COLOR_SECONDARY,
       },
       body1: {
@@ -291,7 +292,7 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
           body: {
             backgroundColor: BG_COLOR_DEFAULT,
             fontSize: "1rem",
-            lineHeight: 1.33,
+            lineHeight: LINE_HEIGHT_BASE,
           },
         },
       },
