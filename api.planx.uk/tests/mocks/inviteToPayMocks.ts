@@ -3,11 +3,11 @@ import {
   validSession,
   payee,
   applicant,
-  paymentAmount,
   sessionPreviewData,
   flowGraph,
   paymentRequestResponse,
   validPaymentRequest,
+  paymentAmountPence,
 } from "./inviteToPayData";
 
 export const validSessionQueryMock = {
@@ -117,7 +117,7 @@ export const createPaymentRequestQueryMock = {
   variables: {
     sessionId: validSession.id,
     applicantName: applicant.name,
-    paymentAmount,
+    paymentAmount: paymentAmountPence,
     payeeName: payee.name,
     payeeEmail: payee.email,
     sessionPreviewData: sessionPreviewData,
@@ -127,7 +127,7 @@ export const createPaymentRequestQueryMock = {
 export const validatePaymentRequestQueryMock = {
   name: "ValidatePaymentRequest",
   data: {
-    payment_requests_by_pk: {
+    query: {
       ...validPaymentRequest,
     },
   },
@@ -144,4 +144,16 @@ export const validatePaymentRequestNotFoundQueryMock = {
   variables: {
     paymentRequestId: "123-wrong-456",
   },
+};
+
+export const getHumanReadableProjectTypeQueryMock = {
+  name: "GetHumanReadableProjectType",
+  data: {
+    project_types: [
+      { description: "New office premises" }
+    ],
+  },
+  variables: {
+    rawList: ["new.office"],
+  }
 };

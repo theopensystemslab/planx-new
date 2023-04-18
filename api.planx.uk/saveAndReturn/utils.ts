@@ -297,7 +297,7 @@ const markSessionAsSubmitted = async (sessionId: string) => {
  */
 const getHumanReadableProjectType = async (
   sessionData: LowCalSession["data"]["passport"]["data"] | Record<string, any>
-): Promise<string | void> => {
+): Promise<string | undefined> => {
   const rawProjectType =
     sessionData?.["proposal.projectType"];
   if (!rawProjectType) return;

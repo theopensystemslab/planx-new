@@ -47,9 +47,9 @@ export default function MakePayment({
   paymentRequestId,
   paymentAmount,
 }: PaymentRequest) {
-  const [currentState, setState] = useState<typeof States[keyof typeof States]>(
-    States.Init
-  );
+  const [currentState, setState] = useState<
+    (typeof States)[keyof typeof States]
+  >(States.Init);
   const [loading, isLoading] = useState(true);
   const [payment, setPayment] = useState(
     sessionPreviewData.govUkPayment || undefined
@@ -88,7 +88,7 @@ export default function MakePayment({
 
   const handleSuccess = () => {
     // TODO - route to confirmation page
-    alert("payment succeded");
+    alert("payment succeeded");
   };
 
   const resolvePaymentResponse = (responseData: GovUKPayment) => {

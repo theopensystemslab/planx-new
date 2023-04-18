@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
-import { validatePaymentRequestNotFoundQueryMock, validatePaymentRequestQueryMock } from "../tests/mocks/inviteToPayMocks";
+import { validatePaymentRequestNotFoundQueryMock, getHumanReadableProjectTypeQueryMock, validatePaymentRequestQueryMock } from "../tests/mocks/inviteToPayMocks";
 import { mockGetHumanReadableProjectType } from "../tests/mocks/saveAndReturnMocks";
 
 const TEST_PAYMENT_REQUEST_ID = "09655c28-3f34-4619-9385-cd57312acc44";
@@ -12,6 +12,7 @@ describe("Send email endpoint for invite to pay templates", () => {
     queryMock.mockQuery(mockGetHumanReadableProjectType);
     queryMock.mockQuery(validatePaymentRequestQueryMock);
     queryMock.mockQuery(validatePaymentRequestNotFoundQueryMock);
+    queryMock.mockQuery(getHumanReadableProjectTypeQueryMock);
   });
 
   describe("All invite to pay templates require authorisation", () => {
