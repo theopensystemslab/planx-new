@@ -1,6 +1,7 @@
 import { PaymentRequest } from '@opensystemslab/planx-core';
 import { gql } from "graphql-request";
-import { Template, calculateExpiryDate, convertSlugToName, getClientForTemplate, getHumanReadableProjectType, sendEmail } from "../saveAndReturn/utils";
+import { calculateExpiryDate, convertSlugToName, getHumanReadableProjectType } from "../saveAndReturn/utils";
+import { Template, getClientForTemplate, sendEmail } from "../notify/utils";
 import { InviteToPayNotifyConfig } from "../types";
 import { Team } from '../types';
 

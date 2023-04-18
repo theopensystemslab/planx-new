@@ -29,8 +29,8 @@ import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
 import {
   resumeApplication,
   validateSession,
-  routeSendEmailRequest,
 } from "./saveAndReturn";
+import { routeSendEmailRequest } from "./notify";
 import { makePaymentViaProxy, fetchPaymentViaProxy } from "./pay";
 import {
   inviteToPay,

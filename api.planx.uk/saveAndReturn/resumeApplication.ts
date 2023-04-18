@@ -4,12 +4,14 @@ import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import {
-  sendEmail,
   convertSlugToName,
   getResumeLink,
   calculateExpiryDate,
   getHumanReadableProjectType,
 } from "./utils";
+import { 
+  sendEmail
+} from "../notify/utils";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
