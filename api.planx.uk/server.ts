@@ -64,7 +64,7 @@ import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
-import { isLiveEnv, passportPolyfill } from "./helpers";
+import { isLiveEnv } from "./helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
 import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
@@ -336,9 +336,6 @@ app.use(
     secret: process.env.SESSION_SECRET,
   })
 );
-
-// Register regenerate & save after the cookieSession middleware initialization
-app.use(passportPolyfill)
 
 app.use(passport.initialize());
 app.use(passport.session());
