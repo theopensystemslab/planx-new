@@ -26,7 +26,8 @@ export interface Props extends InputBaseProps {
 export const useClasses = makeStyles<Theme, Props>((theme) => ({
   input: {
     backgroundColor: "#fff",
-    fontSize: 15,
+    // Maintain 16px minimum input size to prevent zoom on iOS
+    fontSize: "1rem",
     width: "100%",
     padding: theme.spacing(0, 1.5),
     height: 50,
