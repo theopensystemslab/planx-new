@@ -1,4 +1,3 @@
-import { NextFunction, Response, Request } from 'express';
 import { gql } from "graphql-request";
 import { capitalize } from "lodash";
 import { adminGraphQLClient as adminClient } from "./hasura";
@@ -227,28 +226,6 @@ const getFormattedEnvironment = (): string => {
   return capitalize(environment);
 };
 
-// Add dummy implementation of methods that passport 0.6.0 expects the request to have, if not present
-// See issue https://github.com/jaredhanson/passport/issues/904
-const passportPolyfill = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-  ) => {
-  type CallbackFunction = () => void
-
-  if (req.session && !req.session.regenerate) {
-    req.session.regenerate = (cb: CallbackFunction) => {
-      cb()
-    }
-  }
-  if (req.session && !req.session.save) {
-    req.session.save = (cb: CallbackFunction) => {
-      cb()
-    }
-  }
-  next();
-};
-
 export {
   getFlowData,
   getMostRecentPublishedFlow,
@@ -259,5 +236,4 @@ export {
   insertFlow,
   isLiveEnv,
   getFormattedEnvironment,
-  passportPolyfill,
 };
