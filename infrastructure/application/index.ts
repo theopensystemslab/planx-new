@@ -371,54 +371,6 @@ export = async () => {
             value: config.requireSecret("govuk-notify-api-key"),
           },
           {
-            name: "GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID",
-            value: "428c4dfd-a70b-44d6-9f81-b4f833d80405",
-          },
-          {
-            name: "GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID",
-            value: "c7202e07-08cf-468e-a6a4-ac528d60d2f7",
-          },
-          {
-            name: "GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID",
-            value: "43be4c11-a406-4381-b2be-056a1127455d",
-          },
-          {
-            name: "GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID",
-            value: "9619f89d-5d33-4cb0-a365-42c431ea9db3",
-          },
-          {
-            name: "GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID",
-            value: "7e77bdae-7379-4dd8-a8cc-086a0029163c",
-          },
-          {
-            name: "GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID",
-            value: "8b82b606-defa-4daa-8fdb-e78b852b8ffb",
-          },
-          {
-            name: "GOVUK_NOTIFY_PAYMENT_REQUEST_EMAIL_TEMPLATE_ID",
-            value: "7bdbc880-4f4e-400b-a838-74de401dfa92",
-          },
-          {
-            name: "GOVUK_NOTIFY_PAYMENT_REQUEST_AGENT_EMAIL_TEMPLATE_ID",
-            value: "a964d10a-5442-42fa-b94b-b6623450cd68",
-          },
-          {
-            name: "GOVUK_NOTIFY_PAYMENT_REMINDER_EMAIL_TEMPLATE_ID",
-            value: "3208bf39-152d-4259-9064-ef5e192aeaa6",
-          },
-          {
-            name: "GOVUK_NOTIFY_PAYMENT_REMINDER_AGENT_EMAIL_TEMPLATE_ID",
-            value: "de02ca5c-fc1e-4360-8848-1f413bbd39e9",
-          },
-          {
-            name: "GOVUK_NOTIFY_PAYMENT_EXPIRY_EMAIL_TEMPLATE_ID",
-            value: "825d51cf-f018-46c7-b381-81472c9507f7",
-          },
-          {
-            name: "GOVUK_NOTIFY_PAYMENT_EXPIRY_AGENT_EMAIL_TEMPLATE_ID",
-            value: "92d9756b-d0ca-4d72-82c8-886c7af492fd",
-          },
-          {
             name: "SLACK_WEBHOOK_URL",
             value: config.requireSecret("slack-webhook-url"),
           },
