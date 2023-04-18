@@ -518,7 +518,7 @@ jobs:
 
   failure_notification:
     name: Send failure notification
-    needs: [healthcheck, lighthouse]
+    needs: [api_tests, test_react, end_to_end_tests, healthcheck, lighthouse]
     if: failure()
     uses: ./.github/workflows/action-failure.yml
     secrets: inherit
