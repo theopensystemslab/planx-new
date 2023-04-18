@@ -174,6 +174,18 @@ describe("Confirm component with inviteToPay", () => {
     expect(screen.getByTestId("invite-page-link")).toBeDisabled();
   });
 
+  it("hides fee banner on the 'InviteToPay' page", async () => {
+    const { user } = setup(<Confirm {...inviteProps} />);
+
+    // Land on "Pay" page by default
+    expect(screen.getByText("The fee is")).toBeInTheDocument();
+
+    // Switch to "InviteToPay" page
+    await user.click(screen.getByText(invitePrompt));
+    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
+  });
+
   it("should not have any accessibility violations", async () => {
     const { container } = setup(<Confirm {...inviteProps} />);
     const results = await axe(container);

@@ -226,37 +226,40 @@ export default function Confirm(props: Props) {
             {props.title}
           </Typography>
         </Container>
-        <Banner
-          color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
-          }}
-        >
-          <Container maxWidth="md">
-            <Typography
-              variant="h5"
-              gutterBottom
-              className="marginBottom"
-              component="h2"
-            >
-              {props.bannerTitle || "The planning fee for this application is"}
-            </Typography>
-            <Typography
-              variant="h1"
-              gutterBottom
-              className="marginBottom"
-              component="span"
-            >
-              {formattedPriceWithCurrencySymbol(props.fee)}
-            </Typography>
-            <Typography variant="h4" component="span">
-              <ReactMarkdownOrHtml
-                source={props.description}
-                openLinksOnNewTab
-              />
-            </Typography>
-          </Container>
-        </Banner>
+        {page === "Pay" && (
+          <Banner
+            color={{
+              background: theme.palette.primary.main,
+              text: theme.palette.primary.contrastText,
+            }}
+          >
+            <Container maxWidth="md">
+              <Typography
+                variant="h5"
+                gutterBottom
+                className="marginBottom"
+                component="h2"
+              >
+                {props.bannerTitle ||
+                  "The planning fee for this application is"}
+              </Typography>
+              <Typography
+                variant="h1"
+                gutterBottom
+                className="marginBottom"
+                component="span"
+              >
+                {formattedPriceWithCurrencySymbol(props.fee)}
+              </Typography>
+              <Typography variant="h4" component="span">
+                <ReactMarkdownOrHtml
+                  source={props.description}
+                  openLinksOnNewTab
+                />
+              </Typography>
+            </Container>
+          </Banner>
+        )}
         {page === "Pay" ? (
           <PayBody changePage={changePage} {...props} />
         ) : (
