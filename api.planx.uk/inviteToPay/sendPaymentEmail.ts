@@ -8,8 +8,9 @@ const sendSinglePaymentEmail = async (
 ) => {
   try {
     const payment = await validatePaymentRequest(paymentRequestId, template);
-    if (!payment || Boolean(payment?.paid_at)) throw Error(`Invalid payment request: ${paymentRequestId}`);
-
+    if (!payment) throw Error("Unable to send payment email, cannot find payment request");
+    
+    const humanReadableProjectType = await getHumanReadableProjectType(payment.session_preview_data);
     const config: InviteToPayNotifyConfig = {
       personalisation: {
         id: payment.session_id,
@@ -21,10 +22,10 @@ const sendSinglePaymentEmail = async (
         paymentRequestId: paymentRequestId,
         payeeEmail: payment.payee_email,
         payeeName: payment.payee_name,
-        agentName: `{TODO}`,
+        agentName: payment.applicant_name,
         paymentLink: `https://${payment.session.flow.team.domain}/${payment.session.flow.slug}/pay?paymentRequestId=${paymentRequestId}`,
-        fee: Number(payment.session_preview_data?.fee).toLocaleString("en-GB", { style: "currency", currency: "GBP" }),
-        projectType: payment.session_preview_data?.["proposal.projectType"],
+        fee: Number(payment.payment_amount).toLocaleString("en-GB", { style: "currency", currency: "GBP" }),
+        projectType: humanReadableProjectType || "Project type not submitted",
         address: payment.session_preview_data?._address.title,
         expiryDate: calculateExpiryDate(payment.created_at),
       }
@@ -47,6 +48,8 @@ const validatePaymentRequest = async (
         payment_requests_by_pk(id: $paymentRequestId) {
           payee_email
           payee_name
+          applicant_name
+          payment_amount
           session_id
           session_preview_data
           created_at
@@ -71,6 +74,7 @@ const validatePaymentRequest = async (
     const { payment_requests_by_pk: paymentRequest } = await client.request(query, { paymentRequestId }, headers);
 
     if (!paymentRequest) throw Error(`Unable to find payment request: ${paymentRequestId}`);
+    if (paymentRequest?.paid_at) throw Error(`Invalid payment request, already paid`);
     
     return paymentRequest;
   } catch (error) {

@@ -135,3 +135,13 @@ export const validatePaymentRequestQueryMock = {
     paymentRequestId: validPaymentRequest.id,
   },
 };
+
+export const validatePaymentRequestNotFoundQueryMock = {
+  name: "ValidatePaymentRequest",
+  data: {
+    payment_requests_by_pk: null,
+  },
+  variables: {
+    paymentRequestId: "123-wrong-456",
+  },
+};

@@ -124,7 +124,7 @@ const buildContentFromSessions = async (
     const service = convertSlugToName(session.flow.slug);
     const address: SiteAddress | undefined = session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
-    const projectType = await getHumanReadableProjectType(session);
+    const projectType = await getHumanReadableProjectType(session?.data?.passport?.data);
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 
