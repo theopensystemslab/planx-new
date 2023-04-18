@@ -1,3 +1,4 @@
+import { PaymentRequest } from "@opensystemslab/planx-core";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import {
@@ -12,7 +13,6 @@ import {
 } from "navi";
 import InviteToPay from "pages/Pay/InviteToPay";
 import MakePayment from "pages/Pay/MakePayment";
-import { PaymentRequest } from "pages/Pay/types";
 import React from "react";
 
 import { getTeamFromDomain, makeTitle, validateTeamRoute } from "./utils";
@@ -68,6 +68,7 @@ const getPaymentRequest = async (req: NaviRequest) => {
   return data;
 };
 
+// TODO: type this?
 const fetchPaymentRequest = async (paymentRequestId: string) => {
   try {
     const {
@@ -79,6 +80,7 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
             sessionPreviewData: session_preview_data
             paymentRequestId: id
             createdAt: created_at
+            paymentAmount: payment_amount
           }
         }
       `,

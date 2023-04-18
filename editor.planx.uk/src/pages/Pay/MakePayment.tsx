@@ -1,18 +1,19 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { PaymentRequest } from "@opensystemslab/planx-core";
 import axios from "axios";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import { DescriptionList } from "ui/DescriptionList";
 
 import {
   formattedPriceWithCurrencySymbol,
   toDecimal,
-  toPence,
 } from "../../@planx/components/Pay/model";
 import Confirm from "../../@planx/components/Pay/Public/Confirm";
 import { logger } from "../../airbrake";
 import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator";
 import { GovUKPayment, PaymentStatus } from "../../types";
-import type { PaymentRequest } from "./types";
 
 const States = {
   Init: {
@@ -44,23 +45,26 @@ enum PaymentState {
 export default function MakePayment({
   sessionPreviewData,
   createdAt,
-  paymentRequestId,
+  id: paymentRequestId,
   paymentAmount,
 }: PaymentRequest) {
   const [currentState, setState] = useState<
     (typeof States)[keyof typeof States]
   >(States.Init);
   const [loading, isLoading] = useState(true);
-  const [payment, setPayment] = useState(
-    sessionPreviewData.govUkPayment || undefined
+  const [payment, setPayment] = useState<GovUKPayment | undefined>(
+    (sessionPreviewData.govUkPayment as unknown as GovUKPayment) || undefined
   );
+  const flowName = useStore((state) => state.flowName);
+
+  console.log(sessionPreviewData);
 
   useEffect(() => {
     const updatePaymentState = async () => {
       setState(States.Fetching);
       fetchPayment({
         paymentRequestId,
-        payment: sessionPreviewData.govUkPayment,
+        payment: sessionPreviewData.govUkPayment as unknown as GovUKPayment,
       }).then((responseData: GovUKPayment | null) => {
         if (responseData) resolvePaymentResponse(responseData);
         isLoading(false);
@@ -114,39 +118,43 @@ export default function MakePayment({
   };
 
   return (
-    <Box>
+    <Box pt={5}>
       <Typography variant="h1" gutterBottom>
         Pay for your application
       </Typography>
-      {/* TODO - this is just a placeholder */}
-      <table>
-        <tr>
-          <th>Application type</th>
-          <td>...</td>
-        </tr>
-        <tr>
-          <th>Fee</th>
-          <td>{formattedPriceWithCurrencySymbol(paymentAmount)}</td>
-        </tr>
-        <tr>
-          <th>Address</th>
-          <td>...</td>
-        </tr>
-        <tr>
-          <th>Project type</th>
-          <td>...</td>
-        </tr>
-      </table>
+      <DescriptionList
+        data={[
+          { term: "Application type", details: flowName },
+          {
+            term: "Fee",
+            details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
+          },
+          {
+            term: "Address",
+            details: (sessionPreviewData._address as Record<string, string>)
+              ?.title,
+          },
+          {
+            term: "Project type",
+            details: (
+              sessionPreviewData["proposal.projectType"] as string[]
+            ).join(", "),
+          },
+        ]}
+      />
       <Typography variant="body1">
         {(currentState === States.Ready ||
           currentState === States.ReadyToRetry) &&
         !loading ? (
           <Confirm
-            fee={paymentAmount}
+            fee={toDecimal(paymentAmount)}
             onConfirm={readyAction}
             buttonTitle={currentState.button!}
             showInviteToPay={false}
-            paymentStatus={sessionPreviewData.govUkPayment?.state?.status}
+            paymentStatus={
+              (sessionPreviewData.govUkPayment as unknown as GovUKPayment)
+                ?.state?.status
+            }
             hideFeeBanner={true}
           />
         ) : (

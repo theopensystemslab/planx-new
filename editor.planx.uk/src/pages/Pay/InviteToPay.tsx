@@ -3,11 +3,10 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { PaymentRequest } from "@opensystemslab/planx-core";
 import { addDays, format } from "date-fns";
 import React from "react";
 import Banner from "ui/Banner";
-
-import type { PaymentRequest } from "./types";
 
 const DAYS_UNTIL_EXPIRY = 28;
 
