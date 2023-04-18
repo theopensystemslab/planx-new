@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { sendSingleApplicationEmail, Template } from "./utils";
 import { sendSinglePaymentEmail } from "../inviteToPay";
+import { sendSingleApplicationEmail } from "../saveAndReturn/utils";
+import { Template } from "./utils";
 
 const routeSendEmailRequest = async (
   req: Request,
