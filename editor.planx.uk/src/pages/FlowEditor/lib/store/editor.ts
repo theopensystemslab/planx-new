@@ -17,7 +17,6 @@ import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
-import type { FlowSettings, TextContent } from "types";
 import type { StateCreator } from "zustand";
 
 import { FlowLayout } from "../../components/Flow";
@@ -79,12 +78,6 @@ export interface EditorStore extends Store.Store {
   pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
   publishFlow: (flowId: string, summary?: string) => Promise<any>;
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
-  updateFlowSettings: (
-    teamSlug: string,
-    flowSlug: string,
-    newSettings: FlowSettings
-  ) => Promise<number>;
-  updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
   updateNode: (node: any, relationships?: any) => void;
 }
 
@@ -415,61 +408,6 @@ export const editorStore: StateCreator<
   removeNode: (id, parent) => {
     const [, ops] = remove(id, parent)(get().flow);
     send(ops);
-  },
-
-  updateFlowSettings: async (teamSlug, flowSlug, newSettings) => {
-    let response = await client.mutate({
-      mutation: gql`
-        mutation UpdateFlowSettings(
-          $team_slug: String
-          $flow_slug: String
-          $settings: jsonb
-        ) {
-          update_flows(
-            where: {
-              team: { slug: { _eq: $team_slug } }
-              slug: { _eq: $flow_slug }
-            }
-            _set: { settings: $settings }
-          ) {
-            affected_rows
-            returning {
-              id
-              slug
-              settings
-            }
-          }
-        }
-      `,
-      variables: {
-        team_slug: teamSlug,
-        flow_slug: flowSlug,
-        settings: newSettings,
-      },
-    });
-
-    return response.data.update_flows.affected_rows;
-  },
-
-  updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
-    let response = await client.mutate({
-      mutation: gql`
-        mutation UpdateGlobalSettings($new_settings: jsonb) {
-          insert_global_settings(
-            objects: { id: 1, footer_content: $new_settings }
-            on_conflict: {
-              constraint: global_settings_pkey
-              update_columns: footer_content
-            }
-          ) {
-            affected_rows
-          }
-        }
-      `,
-      variables: {
-        new_settings: newSettings,
-      },
-    });
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

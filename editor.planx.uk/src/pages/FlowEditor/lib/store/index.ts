@@ -8,6 +8,8 @@ import type { NavigationStore } from "./navigation";
 import { navigationStore } from "./navigation";
 import type { PreviewStore } from "./preview";
 import { previewStore } from "./preview";
+import type { SettingsStore } from "./settings";
+import { settingsStore } from "./settings";
 import type { SharedStore } from "./shared";
 import { sharedStore } from "./shared";
 
@@ -41,7 +43,10 @@ export declare namespace Store {
 //      frontend because they do things like connect to sharedb, which is
 //      not something that public users should be concerned with.
 
-export type PublicStore = SharedStore & PreviewStore & NavigationStore;
+export type PublicStore = SharedStore &
+  PreviewStore &
+  NavigationStore &
+  SettingsStore;
 
 export type FullStore = PublicStore & EditorStore & EditorUIStore;
 
@@ -61,6 +66,7 @@ const createPublicStore = (): StoreApi<FullStore> =>
     ...sharedStore(...args),
     ...previewStore(...args),
     ...navigationStore(...args),
+    ...settingsStore(...args),
   })) as StoreApi<FullStore>;
 
 /**
@@ -74,6 +80,7 @@ const createFullStore = (): StoreApi<FullStore> => {
     ...navigationStore(...args),
     ...editorStore(...args),
     ...editorUIStore(...args),
+    ...settingsStore(...args),
   }));
 };
 

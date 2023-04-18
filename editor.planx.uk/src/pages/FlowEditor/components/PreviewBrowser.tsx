@@ -11,7 +11,6 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { ExternalLink, Globe, RefreshCw, Terminal } from "react-feather";
 import { useAsync } from "react-use";
-import { FlowSettings } from "types";
 import Input from "ui/Input";
 
 import { TYPES } from "../../../@planx/components/types";
@@ -97,7 +96,6 @@ function PublishChangeItem(props: any) {
 
 const PreviewBrowser: React.FC<{
   url: string;
-  settings: FlowSettings;
 }> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
@@ -284,11 +282,7 @@ const PreviewBrowser: React.FC<{
         </Box>
       </header>
       <div className={classes.previewContainer}>
-        <Questions
-          previewEnvironment="editor"
-          key={String(key)}
-          settings={props.settings}
-        />
+        <Questions previewEnvironment="editor" key={String(key)} />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>

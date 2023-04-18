@@ -1,4 +1,3 @@
-import camelcaseKeys from "camelcase-keys";
 import gql from "graphql-tag";
 import { dataMerged } from "lib/dataMergedHotfix";
 import { client } from "lib/graphql";
@@ -10,7 +9,7 @@ import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
 import { View } from "react-navi";
 import { getTeamFromDomain, setPath } from "routes/utils";
-import { Flow, GlobalSettings, Maybe } from "types";
+import { Flow, GlobalSettings } from "types";
 
 interface PublishedViewData {
   flows: PreviewFlow[];
@@ -38,21 +37,15 @@ export const publishedView = async (req: NaviRequest) => {
   const flowData = publishedFlow ? publishedFlow : await dataMerged(flow.id);
   setPath(flowData, req);
 
+  const state = useStore.getState();
   // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
   // load pre-flattened published flow if exists, else load & flatten flow
-  useStore.getState().setFlow({ id: flow.id, flow: flowData, flowSlug });
-
-  const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
-    data.globalSettings[0]
-  );
+  state.setFlow({ id: flow.id, flow: flowData, flowSlug });
+  state.setGlobalSettings(data.globalSettings[0]);
+  state.setFlowSettings(flow.settings);
 
   return (
-    <PublicLayout
-      team={flow.team}
-      footerContent={globalSettings?.footerContent}
-      flowSettings={flow.settings}
-      globalSettings={globalSettings}
-    >
+    <PublicLayout team={flow.team}>
       <SaveAndReturnLayout>
         <View />
       </SaveAndReturnLayout>
