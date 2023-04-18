@@ -25,8 +25,8 @@ import {
   useCurrentRoute,
   useNavigation,
 } from "react-navi";
-import { borderedFocusStyle, focusStyle } from "theme";
-import { ApplicationPath } from "types";
+import { borderedFocusStyle, focusStyle, FONT_WEIGHT_STRONG } from "theme";
+import { ApplicationPath, Team } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -130,7 +130,7 @@ const SkipLink = styled("a")(({ theme }) => ({
 
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
   fontSize: "1.25em",
-  fontWeight: 700,
+  fontWeight: FONT_WEIGHT_STRONG,
   paddingLeft: theme.spacing(2),
   paddingBottom: theme.spacing(1),
 }));
@@ -145,7 +145,7 @@ const StyledNavBar = styled("nav")(({ theme }) => ({
 
 const SectionName = styled(Typography)(() => ({
   fontSize: "inherit",
-  fontWeight: 600,
+  fontWeight: FONT_WEIGHT_STRONG,
 }));
 
 const SectionCount = styled(Typography)(() => ({

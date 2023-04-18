@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import React from "react";
+import { FONT_WEIGHT_STRONG } from "theme";
 
 const infoSectionStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +20,7 @@ const infoSectionStyles = makeStyles((theme) => ({
       marginTop: 0,
     },
     "& strong": {
-      fontWeight: 600,
+      fontWeight: FONT_WEIGHT_STRONG,
     },
     "& em": {
       fontStyle: "italic",

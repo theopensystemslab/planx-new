@@ -8,6 +8,7 @@ import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { FONT_WEIGHT_STRONG } from "theme";
 
 export default SummaryListsBySections;
 
@@ -31,7 +32,7 @@ const Grid = styled("dl")(({ theme }) => ({
   },
   "& dt": {
     // left column
-    fontWeight: 600,
+    fontWeight: FONT_WEIGHT_STRONG,
   },
   "& dd:nth-of-type(n)": {
     // middle column

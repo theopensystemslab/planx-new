@@ -1,6 +1,7 @@
 import makeStyles from "@mui/styles/makeStyles";
 import { ERROR_MESSAGE } from "@planx/components/shared/constants";
 import React, { ReactElement } from "react";
+import { FONT_WEIGHT_STRONG } from "theme";
 
 export interface Props {
   error: string | string[] | undefined;
@@ -22,7 +23,7 @@ const useClasses = makeStyles((theme) => ({
   errorText: {
     color: theme.palette.error.main,
     margin: 0,
-    fontWeight: 600,
+    fontWeight: FONT_WEIGHT_STRONG,
   },
 }));
 

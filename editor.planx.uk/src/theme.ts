@@ -19,7 +19,7 @@ const TEXT_COLOR_SECONDARY = "#505A5F";
 const BG_COLOR_DEFAULT = "#FFFFFF";
 
 // Type styles
-const SEMI_BOLD = "600";
+export const FONT_WEIGHT_STRONG = "600";
 const SPACING_TIGHT = "-0.02em";
 
 const DEFAULT_PALETTE: Partial<PaletteOptions> = {
@@ -248,24 +248,24 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
       h1: {
         fontSize: "3rem",
         letterSpacing: SPACING_TIGHT,
-        fontWeight: SEMI_BOLD,
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       h3: {
         fontSize: "2.25rem",
         letterSpacing: SPACING_TIGHT,
-        fontWeight: SEMI_BOLD,
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       h4: {
         fontSize: "1.5rem",
-        fontWeight: SEMI_BOLD,
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       h5: {
         fontSize: "1.188rem",
-        fontWeight: SEMI_BOLD,
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       h6: {
         fontSize: "1rem",
-        fontWeight: SEMI_BOLD,
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       subtitle1: {
         fontSize: "1.5rem",
@@ -283,10 +283,10 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
       MuiCssBaseline: {
         styleOverrides: {
           strong: {
-            fontWeight: SEMI_BOLD,
+            fontWeight: FONT_WEIGHT_STRONG,
           },
           b: {
-            fontWeight: SEMI_BOLD,
+            fontWeight: FONT_WEIGHT_STRONG,
           },
           body: {
             backgroundColor: BG_COLOR_DEFAULT,
@@ -324,7 +324,7 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
           },
           containedSizeLarge: {
             fontSize: "1.188rem",
-            fontWeight: SEMI_BOLD,
+            fontWeight: FONT_WEIGHT_STRONG,
           },
         },
       },
