@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core";
 import axios from "axios";
+import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { DescriptionList } from "ui/DescriptionList";
@@ -48,43 +49,49 @@ export default function MakePayment({
   id: paymentRequestId,
   paymentAmount,
 }: PaymentRequest) {
+  // TODO: Type/parse this?
+  const {
+    _address: { title: addressTitle },
+    "proposal.projectType": rawProjectTypes,
+    govUkPayment,
+  } = sessionPreviewData as any;
+
+  const expiryDate = getExpiryDateForPaymentRequest(createdAt);
   const [currentState, setState] = useState<
     (typeof States)[keyof typeof States]
   >(States.Init);
   const [loading, isLoading] = useState(true);
   const [payment, setPayment] = useState<GovUKPayment | undefined>(
-    (sessionPreviewData.govUkPayment as unknown as GovUKPayment) || undefined
+    govUkPayment || undefined
   );
   const flowName = useStore((state) => state.flowName);
-
-  console.log(sessionPreviewData);
 
   useEffect(() => {
     const updatePaymentState = async () => {
       setState(States.Fetching);
-      fetchPayment({
+      const responseData = await fetchPayment({
         paymentRequestId,
-        payment: sessionPreviewData.govUkPayment as unknown as GovUKPayment,
-      }).then((responseData: GovUKPayment | null) => {
-        if (responseData) resolvePaymentResponse(responseData);
-        isLoading(false);
-        switch (computePaymentState(responseData)) {
-          case PaymentState.NotStarted:
-            setState(States.Ready);
-            break;
-          case PaymentState.Pending:
-            setState(States.ReadyToRetry);
-            break;
-          case PaymentState.Failed:
-            setState(States.ReadyToRetry);
-            setPayment(undefined);
-            break;
-          case PaymentState.Completed:
-            setState(States.Finished);
-            handleSuccess();
-            break;
-        }
+        payment: govUkPayment,
       });
+      if (responseData) resolvePaymentResponse(responseData);
+      isLoading(false);
+      switch (computePaymentState(responseData)) {
+        case PaymentState.NotStarted:
+          setState(States.Ready);
+          break;
+        case PaymentState.Pending:
+          setState(States.ReadyToRetry);
+          break;
+        case PaymentState.Failed:
+          setState(States.ReadyToRetry);
+          setPayment(undefined);
+          break;
+        case PaymentState.Completed:
+          console.log("completed....!!");
+          setState(States.Finished);
+          handleSuccess();
+          break;
+      }
     };
     // synchronize payment state on load
     updatePaymentState();
@@ -95,14 +102,16 @@ export default function MakePayment({
     alert("payment succeeded");
   };
 
-  const resolvePaymentResponse = (responseData: GovUKPayment) => {
+  const resolvePaymentResponse = (responseData: GovUKPayment): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    let payment: GovUKPayment = {
+    const resolvedPayment: GovUKPayment = {
       ...responseData,
       amount: toDecimal(responseData.amount),
     };
-    setPayment(payment);
+    setPayment(resolvedPayment);
+    // useState is async, so we also pass the resolved value to the chained promise
+    return resolvedPayment;
   };
 
   const readyAction = async () => {
@@ -112,7 +121,7 @@ export default function MakePayment({
     } else {
       await startNewPayment(paymentRequestId)
         .then(resolvePaymentResponse)
-        .then(() => redirectToGovPay(payment))
+        .then(redirectToGovPay)
         .catch(logger.notify);
     }
   };
@@ -131,14 +140,15 @@ export default function MakePayment({
           },
           {
             term: "Address",
-            details: (sessionPreviewData._address as Record<string, string>)
-              ?.title,
+            details: addressTitle,
           },
           {
             term: "Project type",
-            details: (
-              sessionPreviewData["proposal.projectType"] as string[]
-            ).join(", "),
+            details: rawProjectTypes.join(", "),
+          },
+          {
+            term: "Valid until",
+            details: expiryDate,
           },
         ]}
       />
@@ -151,11 +161,8 @@ export default function MakePayment({
             onConfirm={readyAction}
             buttonTitle={currentState.button!}
             showInviteToPay={false}
-            paymentStatus={
-              (sessionPreviewData.govUkPayment as unknown as GovUKPayment)
-                ?.state?.status
-            }
             hideFeeBanner={true}
+            paymentStatus={govUkPayment?.state.status}
           />
         ) : (
           <DelayedLoadingIndicator text={currentState.loading} />
@@ -175,7 +182,8 @@ async function fetchPayment({
 }): Promise<GovUKPayment | null> {
   if (!payment) return Promise.resolve(null);
   const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/payment/${payment.payment_id}`;
-  return await axios.get(paymentURL);
+  const response = await axios.get<GovUKPayment>(paymentURL);
+  return response.data;
 }
 
 // initiate a new payment with GovPay (via proxy)
@@ -183,7 +191,8 @@ async function startNewPayment(
   paymentRequestId: string
 ): Promise<GovUKPayment> {
   const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/pay?returnURL=${window.location.href}`;
-  return await axios.post(paymentURL);
+  const response = await axios.post<GovUKPayment>(paymentURL);
+  return response.data;
 }
 
 // return to GovPay with an existing payment

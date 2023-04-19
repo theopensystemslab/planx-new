@@ -4,11 +4,9 @@ import Divider from "@mui/material/Divider";
 import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core";
-import { addDays, format } from "date-fns";
+import { getExpiryDateForPaymentRequest } from "lib/pay";
 import React from "react";
 import Banner from "ui/Banner";
-
-const DAYS_UNTIL_EXPIRY = 28;
 
 const List = styled("ul")(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
@@ -16,8 +14,7 @@ const List = styled("ul")(({ theme }) => ({
 
 const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
   const theme = useTheme();
-  const expiryDate = addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY);
-  const formattedExpiryDate = format(expiryDate, "dd MMMM yyyy");
+  const expiryDate = getExpiryDateForPaymentRequest(createdAt);
 
   return (
     <>
@@ -38,9 +35,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
           You will be contacted
         </Typography>
         <List>
-          <li>
-            if your nominee fails to make payment by {formattedExpiryDate}
-          </li>
+          <li>if your nominee fails to make payment by {expiryDate}</li>
           <li>
             if there is anything missing from the information you have provided
             so far

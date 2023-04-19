@@ -77,8 +77,8 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
       query: gql`
         query GetPaymentRequestById($id: uuid!) {
           paymentRequest: payment_requests_by_pk(id: $id) {
+            id
             sessionPreviewData: session_preview_data
-            paymentRequestId: id
             createdAt: created_at
             paymentAmount: payment_amount
           }
