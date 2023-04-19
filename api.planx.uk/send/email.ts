@@ -12,7 +12,8 @@ import {
   generateHTMLOverviewStream,
 } from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
-import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
+import { markSessionAsSubmitted } from "../saveAndReturn/utils";
+import { sendEmail } from "../notify/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
 import { Passport } from '@opensystemslab/planx-core';

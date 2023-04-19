@@ -9,7 +9,6 @@ on:
 
 jobs:
   notifications:
-    name: Failure notifications
     runs-on: ubuntu-22.04
     steps:
       - name: Slack Notification
@@ -19,4 +18,5 @@ jobs:
           SLACK_USERNAME: GitHub Actions
           SLACK_COLOR: "#FF5733"
           SLACK_TITLE: ${{ inputs.environment }} deploy failure
+          SLACK_MESSAGE: Failed to deploy to ${{ inputs.environment }} environment 
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}

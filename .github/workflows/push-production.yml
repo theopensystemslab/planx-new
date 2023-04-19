@@ -129,3 +129,12 @@ jobs:
           SLACK_COLOR: "#42AC6A"
           SLACK_TITLE: ${{ env.DEPLOYMENT_ENVIRONMENT }} deploy
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
+
+  failure_notification:
+    name: Send failure notification
+    needs: preview
+    if: failure()
+    uses: ./.github/workflows/action-failure.yml
+    secrets: inherit
+    with:
+      environment: Production

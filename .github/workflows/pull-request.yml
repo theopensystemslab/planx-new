@@ -515,12 +515,3 @@ jobs:
           name: playwright-report
           path: e2e/test-results/
           retention-days: 3
-
-  failure_notification:
-    name: Send failure notification
-    needs: [api_tests, test_react, end_to_end_tests, healthcheck, lighthouse]
-    if: failure()
-    uses: ./.github/workflows/action-failure.yml
-    secrets: inherit
-    with:
-      environment: pizza

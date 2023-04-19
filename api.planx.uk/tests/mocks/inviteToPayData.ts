@@ -15,7 +15,8 @@ export const applicant = {
   name: "Applic Ant",
 };
 
-export const paymentAmount = 12000;
+export const paymentAmountPounds = 123.45;
+export const paymentAmountPence = 12345;
 
 export const notFoundSession: Partial<Session> = {
   id: "3da7734f-d5c5-4f69-a261-1b31c2adf6fc",
@@ -25,7 +26,7 @@ export const sessionPreviewData = {
   _address: {
     title: "1 House, Street, Town, City, PO27 0DE",
   },
-  "proposal.projectType": ["new.office"],
+  "proposal.projectType": [ "new.office" ],
 };
 
 export const validSession: Session = {
@@ -35,11 +36,11 @@ export const validSession: Session = {
     id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
     passport: {
       data: {
-        amountToPay: paymentAmount,
+        amountToPay: paymentAmountPounds,
         ...sessionPreviewData,
       },
     },
-    // breadcrumbs is missing the pay component to refect current implementation
+    // breadcrumbs is missing the pay component to reflect current implementation
     breadcrumbs: {
       NATwM9rXTQ: {
         auto: false,
@@ -48,26 +49,26 @@ export const validSession: Session = {
   },
 };
 
-export const paymentRequestResponse: PaymentRequest = {
+export const paymentRequestResponse: Partial<PaymentRequest> = {
   id: "09655c28-3f34-4619-9385-cd57312acc44",
   sessionId: validSession.id,
   applicantName: applicant.name,
   payeeName: payee.name,
   payeeEmail: payee.email,
-  paymentAmount,
+  paymentAmount: paymentAmountPence,
   sessionPreviewData: sessionPreviewData,
 };
 
 export const validPaymentRequest = {
   id: "09655c28-3f34-4619-9385-cd57312acc44",
-  payee_email: payee.email,
-  payee_name: payee.name,
-  applicant_name: applicant.name,
-  session_id: validSession.id,
-  session_preview_data: sessionPreviewData,
-  created_at: new Date("01 Apr 2023 12:00 UTC+1").toISOString(),
-  paid_at: null,
-  payment_amount: paymentAmount,
+  payeeEmail: payee.email,
+  payeeName: payee.name,
+  sessionId: validSession.id,
+  sessionPreviewData: sessionPreviewData,
+  createdAt: new Date("01 Apr 2023 12:00 UTC+1").toISOString(),
+  paidAt: null,
+  applicantName: "agent display name",
+  paymentAmount: paymentAmountPence,
   session: {
     email: "the-agent@opensystemslab.io",
     flow: {
@@ -76,7 +77,7 @@ export const validPaymentRequest = {
         name: "Buckinghamshire",
         slug: "buckinghamshire",
         domain: "planningservices.buckinghamshire.gov.uk",
-        notify_personalisation: {
+        notifyPersonalisation: {
           helpEmail: "help@council.gov.uk",
           helpPhone: "123",
           helpOpeningHours: "9a-5p",
@@ -94,7 +95,7 @@ export const flowGraph: FlowGraph = {
   NATwM9rXTQ: {
     data: {
       fn: "amountToPay",
-      val: paymentAmount,
+      val: paymentAmountPounds,
     },
     type: 380,
   },

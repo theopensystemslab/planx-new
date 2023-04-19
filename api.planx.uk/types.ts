@@ -99,7 +99,7 @@ export interface InviteToPayNotifyConfig {
     paymentLink?: string;
     fee?: string;
     projectType?: string;
-    address?: any;
+    address?: string;
     expiryDate?: string;
     id: string; // sessionId
     serviceName: string;
