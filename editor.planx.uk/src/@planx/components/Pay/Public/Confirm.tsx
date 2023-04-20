@@ -1,18 +1,13 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import FormGroup from "@mui/material/FormGroup";
 import Link from "@mui/material/Link";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
-import { submitFeedback } from "lib/feedback";
 import React, { useState } from "react";
 import { PaymentStatus } from "types";
 import Banner from "ui/Banner";
-import ChecklistItem from "ui/ChecklistItem";
-import Input from "ui/Input";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
@@ -26,6 +21,7 @@ export interface Props {
   instructionsTitle?: string;
   instructionsDescription?: string;
   showInviteToPay?: boolean;
+  secondaryPageTitle?: string;
   nomineeTitle?: string;
   nomineeDescription?: string;
   yourDetailsTitle?: string;
@@ -87,7 +83,7 @@ const PayBody: React.FC<PayBodyProps> = (props) => (
           >
             {props.buttonTitle || "Pay using GOV.UK Pay"}
           </Button>
-          {props.showInviteToPay ? (
+          {props.showInviteToPay && (
             <>
               <Typography variant="body2">or</Typography>
               <Link
@@ -101,8 +97,6 @@ const PayBody: React.FC<PayBodyProps> = (props) => (
                 </Typography>
               </Link>
             </>
-          ) : (
-            <SuggestionDrawer />
           )}
         </PayText>
       </Card>
@@ -121,84 +115,6 @@ const PayBody: React.FC<PayBodyProps> = (props) => (
     )}
   </>
 );
-
-function SuggestionDrawer() {
-  const OTHER_OPTIONS = [
-    { name: "Apple", label: "Apple Pay" },
-    { name: "BACs", label: "Bank transfer by BACs" },
-    { name: "Cheque", label: "Cheque" },
-    { name: "PayPal", label: "PayPal" },
-    { name: "Phone", label: "Phone" },
-    { name: "Other", label: "Other" },
-  ];
-
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [checkboxes, setCheckboxes] = React.useState<{
-    [key: string]: boolean;
-  }>(Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false])));
-  const [text, setText] = React.useState("");
-
-  const sendFeedback = () => {
-    submitFeedback(text, "Alternate payment methods", checkboxes);
-    setIsOpen(false);
-  };
-
-  return (
-    <>
-      <Link component="button" onClick={() => setIsOpen(!isOpen)}>
-        <Typography variant="body2">
-          Tell us other ways you'd like to pay in the future
-        </Typography>
-      </Link>
-      <MoreInfo open={isOpen} handleClose={() => setIsOpen(!isOpen)}>
-        <Box>
-          <p>
-            What other types of payment would you like this service to accept in
-            the future:
-          </p>
-          <FormGroup row>
-            {OTHER_OPTIONS.map((option) => (
-              <ChecklistItem
-                label={option.label}
-                checked={checkboxes[option.name]}
-                id={option.name}
-                key={option.name}
-                onChange={() =>
-                  setCheckboxes({
-                    ...checkboxes,
-                    [option.name]: !checkboxes[option.name],
-                  })
-                }
-              />
-            ))}
-          </FormGroup>
-          <p>Why would you prefer to use this form of payment?</p>
-
-          <Input
-            aria-label="Reason for selected form of payments"
-            bordered
-            multiline={true}
-            rows={3}
-            style={{ width: "100%" }}
-            onChange={(ev) => {
-              setText(ev.target.value);
-            }}
-            value={text}
-          />
-          <Box sx={{ textAlign: "right", mt: 2 }}>
-            <Link
-              component="button"
-              variant="body2"
-              onClick={() => sendFeedback()}
-            >
-              Save
-            </Link>
-          </Box>
-        </Box>
-      </MoreInfo>
-    </>
-  );
-}
 
 export default function Confirm(props: Props) {
   const theme = useTheme();
@@ -227,7 +143,7 @@ export default function Confirm(props: Props) {
       <>
         <Container maxWidth="md">
           <Typography variant="h1" gutterBottom align="left">
-            {props.title}
+            {page === "Pay" ? props.title : props.secondaryPageTitle}
           </Typography>
         </Container>
         {page === "Pay" && !props.hideFeeBanner && (

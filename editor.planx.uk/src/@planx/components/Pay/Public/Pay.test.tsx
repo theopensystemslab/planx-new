@@ -56,21 +56,6 @@ describe("Confirm component without inviteToPay", () => {
     expect(screen.getByText("£103.00")).toBeInTheDocument();
   });
 
-  it("shows the SuggestionDrawer link by default", async () => {
-    const feedbackPrompt = "Tell us other ways you'd like to pay in the future";
-    const { user } = setup(<Confirm {...defaultProps} />);
-
-    expect(screen.getByText(feedbackPrompt)).toBeInTheDocument();
-
-    // open the side panel
-    await user.click(screen.getByText(feedbackPrompt));
-    expect(
-      screen.getByText(
-        "What other types of payment would you like this service to accept in the future:"
-      )
-    ).toBeInTheDocument();
-  });
-
   it("correctly adjusts the heading heirarchy when the fee banner is hidden", async () => {
     setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
 
@@ -131,15 +116,6 @@ describe("Confirm component with inviteToPay", () => {
 
   const invitePrompt = "Invite someone else to pay for this application";
   const payPrompt = "Pay for this application myself instead";
-
-  it("shows the invite link and hides the SuggestionDrawer link", () => {
-    setup(<Confirm {...inviteProps} />);
-
-    expect(screen.getByText(invitePrompt)).toBeInTheDocument();
-    expect(
-      screen.queryByText("Tell us other ways you'd like to pay in the future")
-    ).not.toBeInTheDocument();
-  });
 
   it("switches pages when you click the invite link", async () => {
     const { user } = setup(<Confirm {...inviteProps} />);
