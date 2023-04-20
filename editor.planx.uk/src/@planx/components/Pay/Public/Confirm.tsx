@@ -31,6 +31,7 @@ export interface Props {
   buttonTitle?: string;
   onConfirm: () => void;
   error?: string;
+  hideFeeBanner?: boolean;
 }
 
 interface PayBodyProps extends Props {
@@ -57,7 +58,10 @@ const PayBody: React.FC<PayBodyProps> = (props) => (
     {!props.error ? (
       <Card>
         <PayText>
-          <Typography variant="h3">
+          <Typography
+            variant="h3"
+            component={props.hideFeeBanner ? "h2" : "h3"}
+          >
             {props.instructionsTitle || "How to pay"}
           </Typography>
           <Typography variant="body2">
@@ -142,37 +146,40 @@ export default function Confirm(props: Props) {
             {page === "Pay" ? props.title : props.secondaryPageTitle}
           </Typography>
         </Container>
-        <Banner
-          color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
-          }}
-        >
-          <Container maxWidth="md">
-            <Typography
-              variant="h5"
-              gutterBottom
-              className="marginBottom"
-              component="h2"
-            >
-              {props.bannerTitle || "The planning fee for this application is"}
-            </Typography>
-            <Typography
-              variant="h1"
-              gutterBottom
-              className="marginBottom"
-              component="span"
-            >
-              {formattedPriceWithCurrencySymbol(props.fee)}
-            </Typography>
-            <Typography variant="h4" component="span">
-              <ReactMarkdownOrHtml
-                source={props.description}
-                openLinksOnNewTab
-              />
-            </Typography>
-          </Container>
-        </Banner>
+        {page === "Pay" && !props.hideFeeBanner && (
+          <Banner
+            color={{
+              background: theme.palette.primary.main,
+              text: theme.palette.primary.contrastText,
+            }}
+          >
+            <Container maxWidth="md">
+              <Typography
+                variant="h5"
+                gutterBottom
+                className="marginBottom"
+                component="h2"
+              >
+                {props.bannerTitle ||
+                  "The planning fee for this application is"}
+              </Typography>
+              <Typography
+                variant="h1"
+                gutterBottom
+                className="marginBottom"
+                component="span"
+              >
+                {formattedPriceWithCurrencySymbol(props.fee)}
+              </Typography>
+              <Typography variant="h4" component="span">
+                <ReactMarkdownOrHtml
+                  source={props.description}
+                  openLinksOnNewTab
+                />
+              </Typography>
+            </Container>
+          </Banner>
+        )}
         {page === "Pay" ? (
           <PayBody changePage={changePage} {...props} />
         ) : (

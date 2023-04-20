@@ -56,6 +56,19 @@ describe("Confirm component without inviteToPay", () => {
     expect(screen.getByText("£103.00")).toBeInTheDocument();
   });
 
+  it("correctly adjusts the heading heirarchy when the fee banner is hidden", async () => {
+    setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
+
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Pay for your application"
+    );
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
+      "How to pay"
+    );
+
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
+  });
+
   it("displays an error and continue-with-testing button if Pay is not enabled for this team", async () => {
     const handleSubmit = jest.fn();
     const errorMessage = "No pay token found for this team!";
@@ -148,6 +161,33 @@ describe("Confirm component with inviteToPay", () => {
     expect(screen.getByText("How to pay")).toBeInTheDocument();
     expect(screen.getByText("Retry payment")).toBeInTheDocument();
     expect(screen.getByTestId("invite-page-link")).toBeDisabled();
+  });
+
+  it("always hides fee banner on the 'InviteToPay' page", async () => {
+    const { user } = setup(<Confirm {...inviteProps} />);
+
+    // Land on "Pay" page by default
+    expect(screen.getByText("The fee is")).toBeInTheDocument();
+
+    // Switch to "InviteToPay" page
+    await user.click(screen.getByText(invitePrompt));
+    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
+  });
+
+  it("hides the fee banner on both pages when 'hideFeeBanner' prop is provided", async () => {
+    const { user } = setup(
+      <Confirm {...{ ...inviteProps, hideFeeBanner: true }} />
+    );
+
+    // Land on "Pay" page by default
+    expect(screen.getByText("How to pay")).toBeInTheDocument();
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
+
+    // Switch to "InviteToPay" page
+    await user.click(screen.getByText(invitePrompt));
+    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
