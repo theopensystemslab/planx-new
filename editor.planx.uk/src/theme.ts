@@ -95,37 +95,42 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
   const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
 
   const themeOptions: ThemeOptions = {
+    // Set default spacing unit to match GOV.UK
+    spacing: 10,
     typography: {
-      fontFamily: "'Inter', Arial",
+      fontFamily: "'Inter', Arial, sans-serif",
       h1: {
-        fontSize: 40,
-        letterSpacing: "-0.02em",
-        fontWeight: 700,
+        fontSize: "3rem",
+        letterSpacing: SPACING_TIGHT,
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       h3: {
-        fontSize: 25,
-        letterSpacing: "-0.02em",
-        fontWeight: 700,
+        fontSize: "2.25rem",
+        letterSpacing: SPACING_TIGHT,
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       h4: {
-        fontSize: 20,
+        fontSize: "1.5rem",
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       h5: {
-        fontSize: 20,
-        fontWeight: 700,
+        fontSize: "1.188rem",
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       h6: {
-        fontSize: 15,
-        fontWeight: 600,
+        fontSize: "1rem",
+        fontWeight: FONT_WEIGHT_STRONG,
       },
       subtitle1: {
-        fontSize: 20,
+        fontSize: "1.5rem",
+        lineHeight: LINE_HEIGHT_BASE,
+        color: TEXT_COLOR_SECONDARY,
       },
       body1: {
-        fontSize: 18,
+        fontSize: "1.188rem",
       },
       body2: {
-        fontSize: 15,
+        fontSize: "1rem",
       },
     },
     palette,
@@ -146,11 +151,16 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
     components: {
       MuiCssBaseline: {
         styleOverrides: {
+          strong: {
+            fontWeight: FONT_WEIGHT_STRONG,
+          },
+          b: {
+            fontWeight: FONT_WEIGHT_STRONG,
+          },
           body: {
-            backgroundColor: "#efefef",
-            fontSize: "0.875rem",
-            lineHeight: 1.43,
-            letterSpacing: "0.01071em",
+            backgroundColor: BG_COLOR_DEFAULT,
+            fontSize: "1rem",
+            lineHeight: LINE_HEIGHT_BASE,
           },
         },
       },
@@ -161,7 +171,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             "&:focus-visible": {
               ...focusStyle,
               // !important is required here as setting disableElevation = true removes boxShadow
-              boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px black !important`,
+              boxShadow: `inset 0 -4px 0 black !important`,
               // Hover should not overwrite focus
               "&:hover": focusStyle,
             },
@@ -185,6 +195,8 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           root: {
             borderRadius: 0,
             textTransform: "none",
+            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
+            padding: "0.5em 1.1em",
           },
           text: {
             color: "rgba(0,0,0,0.4)",
@@ -193,7 +205,8 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             },
           },
           containedSizeLarge: {
-            fontWeight: 700,
+            fontSize: "1.188rem",
+            fontWeight: FONT_WEIGHT_STRONG,
           },
         },
       },
@@ -242,60 +255,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
 const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
   const themeOptions = getThemeOptions(primaryColor);
   const altThemeOptions: ThemeOptions = {
-    // Set default spacing unit to match GOV.UK
-    spacing: 10,
-    typography: {
-      fontFamily: "'Inter', Arial, sans-serif",
-      h1: {
-        fontSize: "3rem",
-        letterSpacing: SPACING_TIGHT,
-        fontWeight: FONT_WEIGHT_STRONG,
-      },
-      h3: {
-        fontSize: "2.25rem",
-        letterSpacing: SPACING_TIGHT,
-        fontWeight: FONT_WEIGHT_STRONG,
-      },
-      h4: {
-        fontSize: "1.5rem",
-        fontWeight: FONT_WEIGHT_STRONG,
-      },
-      h5: {
-        fontSize: "1.188rem",
-        fontWeight: FONT_WEIGHT_STRONG,
-      },
-      h6: {
-        fontSize: "1rem",
-        fontWeight: FONT_WEIGHT_STRONG,
-      },
-      subtitle1: {
-        fontSize: "1.5rem",
-        lineHeight: LINE_HEIGHT_BASE,
-        color: TEXT_COLOR_SECONDARY,
-      },
-      body1: {
-        fontSize: "1.188rem",
-      },
-      body2: {
-        fontSize: "1rem",
-      },
-    },
     components: {
-      MuiCssBaseline: {
-        styleOverrides: {
-          strong: {
-            fontWeight: FONT_WEIGHT_STRONG,
-          },
-          b: {
-            fontWeight: FONT_WEIGHT_STRONG,
-          },
-          body: {
-            backgroundColor: BG_COLOR_DEFAULT,
-            fontSize: "1rem",
-            lineHeight: LINE_HEIGHT_BASE,
-          },
-        },
-      },
       MuiRadio: {
         defaultProps: {
           disableFocusRipple: true,
@@ -303,29 +263,6 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
             "& .MuiSvgIcon-root": {
               fontSize: 32,
             },
-          },
-        },
-      },
-      MuiButtonBase: {
-        styleOverrides: {
-          root: {
-            "&:focus-visible": {
-              ...focusStyle,
-              boxShadow: `inset 0 -4px 0 black !important`,
-              "&:hover": focusStyle,
-            },
-          },
-        },
-      },
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
-            padding: "0.5em 1.1em",
-          },
-          containedSizeLarge: {
-            fontSize: "1.188rem",
-            fontWeight: FONT_WEIGHT_STRONG,
           },
         },
       },

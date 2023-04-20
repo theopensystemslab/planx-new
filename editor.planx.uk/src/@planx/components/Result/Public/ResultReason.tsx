@@ -42,6 +42,7 @@ const useClasses = makeStyles((theme: Theme) => ({
   changeLink: {
     marginLeft: theme.spacing(2),
     marginBottom: theme.spacing(0.5),
+    fontSize: "inherit",
   },
   removeTopBorder: {
     "&:before": {
