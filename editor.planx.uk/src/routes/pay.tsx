@@ -63,17 +63,18 @@ const payRoutes = compose(
 const getPaymentRequest = async (req: NaviRequest) => {
   const paymentRequestId = req.params["paymentRequestId"];
   if (!paymentRequestId) throw new NotFoundError(req.originalUrl);
-  const data: PaymentRequest = await fetchPaymentRequest(paymentRequestId);
-  if (!data) throw new NotFoundError(req.originalUrl);
-  return data;
+  const paymentRequest = await fetchPaymentRequest(paymentRequestId);
+  if (!paymentRequest) throw new NotFoundError(req.originalUrl);
+  return paymentRequest;
 };
 
-// TODO: type this?
 const fetchPaymentRequest = async (paymentRequestId: string) => {
   try {
     const {
       data: { paymentRequest },
-    } = await client.query({
+    } = await client.query<{
+      paymentRequest: PaymentRequest;
+    }>({
       query: gql`
         query GetPaymentRequestById($id: uuid!) {
           paymentRequest: payment_requests_by_pk(id: $id) {

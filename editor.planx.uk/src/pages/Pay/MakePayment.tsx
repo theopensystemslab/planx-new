@@ -1,5 +1,5 @@
-import Box from "@mui/material/Box";
-import { lighten, styled, useTheme } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core";
 import axios from "axios";
@@ -8,6 +8,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import Banner from "ui/Banner";
 import { DescriptionList } from "ui/DescriptionList";
+import { z } from "zod";
 
 import {
   formattedPriceWithCurrencySymbol,
@@ -52,21 +53,15 @@ export default function MakePayment({
   govPayPaymentId,
   paymentAmount,
 }: PaymentRequest) {
-  // TODO: Type/parse this?
-  const {
-    _address: { title: addressTitle },
-    "proposal.projectType": rawProjectTypes,
-    govUkPayment,
-  } = sessionPreviewData as any;
+  const { address, rawProjectTypes } =
+    parseSessionPreviewData(sessionPreviewData);
 
   const expiryDate = getExpiryDateForPaymentRequest(createdAt);
   const [currentState, setState] = useState<
     (typeof States)[keyof typeof States]
   >(States.Init);
   const [isLoading, setIsLoading] = useState(true);
-  const [payment, setPayment] = useState<GovUKPayment | undefined>(
-    govUkPayment || undefined
-  );
+  const [payment, setPayment] = useState<GovUKPayment | undefined>(undefined);
   const flowName = useStore((state) => state.flowName);
   const theme = useTheme();
 
@@ -152,7 +147,7 @@ export default function MakePayment({
         },
         {
           term: "Address",
-          details: addressTitle,
+          details: address,
         },
         {
           term: "Project type",
@@ -169,7 +164,7 @@ export default function MakePayment({
   return isLoading ? (
     <DelayedLoadingIndicator text={currentState.loading} />
   ) : (
-    <>
+    <Container maxWidth="md">
       <Header />
       <PaymentDetails />
       {(currentState === States.Ready ||
@@ -181,10 +176,10 @@ export default function MakePayment({
             buttonTitle={currentState.button!}
             showInviteToPay={false}
             hideFeeBanner={true}
-            paymentStatus={govUkPayment?.state.status}
+            paymentStatus={payment?.state.status}
           />
         )}
-    </>
+    </Container>
   );
 }
 
@@ -241,3 +236,24 @@ function computePaymentState(govUkPayment: GovUKPayment | null): PaymentState {
   // PaymentStatus.cancelled, PaymentStatus.error, PaymentStatus.failed,
   return PaymentState.Failed;
 }
+
+const parseSessionPreviewData = (sessionPreviewData: unknown) => {
+  // Represents what we believe the API will return
+  const schema = z.object({
+    _address: z.object({
+      title: z.string(),
+    }),
+    "proposal.projectType": z.string().array().min(1),
+  });
+
+  // Parse and validate this assumption
+  try {
+    const {
+      _address: { title: address },
+      "proposal.projectType": rawProjectTypes,
+    } = schema.parse(sessionPreviewData);
+    return { address, rawProjectTypes };
+  } catch (error) {
+    throw Error("Invalid session preview data");
+  }
+};

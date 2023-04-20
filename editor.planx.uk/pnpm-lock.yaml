@@ -187,6 +187,7 @@ specifiers:
   webpack: ^5.79.0
   wkt: ^0.1.1
   yup: ^0.32.11
+  zod: ^3.21.4
   zustand: ^4.3.7
 
 dependencies:
@@ -274,6 +275,7 @@ dependencies:
   uuid: 8.3.2
   wkt: 0.1.1
   yup: 0.32.11
+  zod: 3.21.4
   zustand: 4.3.7_immer@9.0.21+react@18.2.0
 
 devDependencies:
