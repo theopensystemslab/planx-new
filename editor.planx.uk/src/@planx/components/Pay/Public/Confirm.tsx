@@ -21,6 +21,7 @@ export interface Props {
   instructionsTitle?: string;
   instructionsDescription?: string;
   showInviteToPay?: boolean;
+  secondaryPageTitle?: string;
   nomineeTitle?: string;
   nomineeDescription?: string;
   yourDetailsTitle?: string;
@@ -138,7 +139,7 @@ export default function Confirm(props: Props) {
       <>
         <Container maxWidth="md">
           <Typography variant="h1" gutterBottom align="left">
-            {props.title}
+            {page === "Pay" ? props.title : props.secondaryPageTitle}
           </Typography>
         </Container>
         <Banner
