@@ -56,19 +56,17 @@ describe("Confirm component without inviteToPay", () => {
     expect(screen.getByText("£103.00")).toBeInTheDocument();
   });
 
-  it("shows the SuggestionDrawer link by default", async () => {
-    const feedbackPrompt = "Tell us other ways you'd like to pay in the future";
-    const { user } = setup(<Confirm {...defaultProps} />);
+  it("correctly adjusts the heading heirarchy when the fee banner is hidden", async () => {
+    setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
 
-    expect(screen.getByText(feedbackPrompt)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Pay for your application"
+    );
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
+      "How to pay"
+    );
 
-    // open the side panel
-    await user.click(screen.getByText(feedbackPrompt));
-    expect(
-      screen.getByText(
-        "What other types of payment would you like this service to accept in the future:"
-      )
-    ).toBeInTheDocument();
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
   });
 
   it("displays an error and continue-with-testing button if Pay is not enabled for this team", async () => {
@@ -119,15 +117,6 @@ describe("Confirm component with inviteToPay", () => {
   const invitePrompt = "Invite someone else to pay for this application";
   const payPrompt = "Pay for this application myself instead";
 
-  it("shows the invite link and hides the SuggestionDrawer link", () => {
-    setup(<Confirm {...inviteProps} />);
-
-    expect(screen.getByText(invitePrompt)).toBeInTheDocument();
-    expect(
-      screen.queryByText("Tell us other ways you'd like to pay in the future")
-    ).not.toBeInTheDocument();
-  });
-
   it("switches pages when you click the invite link", async () => {
     const { user } = setup(<Confirm {...inviteProps} />);
 
@@ -172,6 +161,33 @@ describe("Confirm component with inviteToPay", () => {
     expect(screen.getByText("How to pay")).toBeInTheDocument();
     expect(screen.getByText("Retry payment")).toBeInTheDocument();
     expect(screen.getByTestId("invite-page-link")).toBeDisabled();
+  });
+
+  it("always hides fee banner on the 'InviteToPay' page", async () => {
+    const { user } = setup(<Confirm {...inviteProps} />);
+
+    // Land on "Pay" page by default
+    expect(screen.getByText("The fee is")).toBeInTheDocument();
+
+    // Switch to "InviteToPay" page
+    await user.click(screen.getByText(invitePrompt));
+    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
+  });
+
+  it("hides the fee banner on both pages when 'hideFeeBanner' prop is provided", async () => {
+    const { user } = setup(
+      <Confirm {...{ ...inviteProps, hideFeeBanner: true }} />
+    );
+
+    // Land on "Pay" page by default
+    expect(screen.getByText("How to pay")).toBeInTheDocument();
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
+
+    // Switch to "InviteToPay" page
+    await user.click(screen.getByText(invitePrompt));
+    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+    expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {

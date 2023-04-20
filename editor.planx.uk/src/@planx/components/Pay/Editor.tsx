@@ -33,7 +33,11 @@ function Component(props: any) {
          <p>Your application will be sent after you have paid the fee. \
          Wait until you see an application sent message before closing your browser.</p>`,
       allowInviteToPay: props.node?.data?.allowInviteToPay ?? true,
-      nomineeTitle: props.node?.data?.nomineeTitle || "Details of your nominee",
+      secondaryPageTitle:
+        props.node?.data?.secondaryPageTitle ||
+        "Invite someone else to pay for this application",
+      nomineeTitle:
+        props.node?.data?.nomineeTitle || "Details of the person paying",
       nomineeDescription:
         props.node?.data?.nomineeDescription ||
         `<p>You can invite someone else to pay for your application.</p>\
@@ -43,7 +47,7 @@ function Component(props: any) {
       yourDetailsTitle: props.node?.data?.yourDetailsTitle || "Your details",
       yourDetailsDescription:
         props.node?.data?.yourDetailsDescription ||
-        "How should we refer to you in communications with your nominee?",
+        "How should we refer to you in communications with the person paying?",
       yourDetailsLabel:
         props.node?.data?.yourDetailsLabel || "Your name or organisation name",
       ...parseMoreInformation(props.node?.data),
@@ -98,7 +102,7 @@ function Component(props: any) {
             />
           </InputRow>
         </ModalSectionContent>
-        <ModalSectionContent title="Instructions">
+        <ModalSectionContent>
           <InputRow>
             <Input
               format="large"
@@ -135,6 +139,18 @@ function Component(props: any) {
             {formik.values.allowInviteToPay ? (
               <>
                 <Box>
+                  <InputRow>
+                    <Input
+                      required
+                      format="large"
+                      name="secondaryPageTitle"
+                      placeholder="Card title"
+                      value={formik.values.secondaryPageTitle}
+                      onChange={formik.handleChange}
+                    />
+                  </InputRow>
+                </Box>
+                <Box pt={4}>
                   <InputRow>
                     <Input
                       required

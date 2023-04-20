@@ -28,6 +28,7 @@ const db = new aws.rds.Instance("app", {
   publiclyAccessible: true,
   storageEncrypted: true,
   backupRetentionPeriod: env === "production" ? 35 : 0,
+  applyImmediately: true,
 });
 export const dbRootUrl = pulumi.interpolate`postgres://${DB_ROOT_USERNAME}:${config.require(
   "db-password"

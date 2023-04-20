@@ -13,6 +13,7 @@ export interface Pay extends MoreInformation {
   instructionsTitle?: string;
   instructionsDescription?: string;
   allowInviteToPay?: boolean;
+  secondaryPageTitle?: string;
   nomineeTitle?: string;
   nomineeDescription?: string;
   yourDetailsTitle?: string;

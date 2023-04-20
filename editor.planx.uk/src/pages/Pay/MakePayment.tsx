@@ -147,6 +147,7 @@ export default function MakePayment({
             buttonTitle={currentState.button!}
             showInviteToPay={false}
             paymentStatus={sessionPreviewData.govUkPayment?.state?.status}
+            hideFeeBanner={true}
           />
         ) : (
           <DelayedLoadingIndicator text={currentState.loading} />

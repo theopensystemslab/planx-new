@@ -150,7 +150,9 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     <DelayedLoadingIndicator />
   ) : (
     <Card>
-      <Typography variant="h3">{nomineeTitle}</Typography>
+      <Typography variant="h3" component="h2">
+        {nomineeTitle}
+      </Typography>
       <Typography variant="body2">
         <ReactMarkdownOrHtml source={nomineeDescription} openLinksOnNewTab />
       </Typography>
@@ -201,7 +203,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
           />
         </InputLabel>
         <Box>
-          <Typography variant="h3" pt={3} pb={2}>
+          <Typography variant="h3" component="h2" pt={3} pb={2}>
             {yourDetailsTitle}
           </Typography>
           <Typography variant="body2">
