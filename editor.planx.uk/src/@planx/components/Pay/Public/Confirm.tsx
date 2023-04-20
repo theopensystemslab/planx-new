@@ -35,6 +35,7 @@ export interface Props {
   buttonTitle?: string;
   onConfirm: () => void;
   error?: string;
+  hideFeeBanner?: boolean;
 }
 
 interface PayBodyProps extends Props {
@@ -61,7 +62,10 @@ const PayBody: React.FC<PayBodyProps> = (props) => (
     {!props.error ? (
       <Card>
         <PayText>
-          <Typography variant="h3">
+          <Typography
+            variant="h3"
+            component={props.hideFeeBanner ? "h2" : "h3"}
+          >
             {props.instructionsTitle || "How to pay"}
           </Typography>
           <Typography variant="body2">
@@ -226,7 +230,7 @@ export default function Confirm(props: Props) {
             {props.title}
           </Typography>
         </Container>
-        {page === "Pay" && (
+        {page === "Pay" && !props.hideFeeBanner && (
           <Banner
             color={{
               background: theme.palette.primary.main,
