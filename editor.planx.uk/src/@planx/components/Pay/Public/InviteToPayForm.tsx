@@ -1,3 +1,4 @@
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
@@ -54,6 +55,17 @@ const StyledForm = styled("form")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(3),
+}));
+
+const StyledWarningBox = styled(Box)(({ theme }) => ({
+  border: `solid 2px ${theme.palette.grey[400]}`,
+  backgroundColor: theme.palette.background.paper,
+  padding: theme.spacing(2),
+  marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
 }));
 
 const SubmitButton: React.FC = () => (
@@ -220,6 +232,13 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
+        <StyledWarningBox>
+          <ErrorOutline />
+          <Typography variant="body2" ml={2} fontWeight="bold">
+            Selecting "continue" locks your application and you'll no longer be
+            able to make changes.
+          </Typography>
+        </StyledWarningBox>
         {error ? (
           <ErrorWrapper
             error={"Error generating payment request, please try again"}
