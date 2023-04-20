@@ -4,7 +4,6 @@ import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 
@@ -42,7 +41,6 @@ interface BannerProps {
 
 function Banner(props: BannerProps) {
   const classes = useClasses(props);
-  const isUsingAltTheme = hasFeatureFlag("ALT_THEME");
 
   return (
     <Box

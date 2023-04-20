@@ -1,10 +1,12 @@
 import Box from "@mui/material/Box";
+import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core";
 import axios from "axios";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import Banner from "ui/Banner";
 import { DescriptionList } from "ui/DescriptionList";
 
 import {
@@ -58,14 +60,15 @@ export default function MakePayment({
   } = sessionPreviewData as any;
 
   const expiryDate = getExpiryDateForPaymentRequest(createdAt);
-  const [currentState, setState] = useState<typeof States[keyof typeof States]>(
-    States.Init
-  );
-  const [loading, isLoading] = useState(true);
+  const [currentState, setState] = useState<
+    (typeof States)[keyof typeof States]
+  >(States.Init);
+  const [isLoading, setIsLoading] = useState(true);
   const [payment, setPayment] = useState<GovUKPayment | undefined>(
     govUkPayment || undefined
   );
   const flowName = useStore((state) => state.flowName);
+  const theme = useTheme();
 
   useEffect(() => {
     const updatePaymentState = async () => {
@@ -75,7 +78,7 @@ export default function MakePayment({
         govPayPaymentId,
       });
       if (responseData) resolvePaymentResponse(responseData);
-      isLoading(false);
+      setIsLoading(false);
       switch (computePaymentState(responseData)) {
         case PaymentState.NotStarted:
           setState(States.Ready);
@@ -88,20 +91,13 @@ export default function MakePayment({
           setPayment(undefined);
           break;
         case PaymentState.Completed:
-          console.log("completed....!!");
           setState(States.Finished);
-          handleSuccess();
           break;
       }
     };
     // synchronize payment state on load
     updatePaymentState();
   }, []);
-
-  const handleSuccess = () => {
-    // TODO - route to confirmation page
-    alert("payment succeeded");
-  };
 
   const resolvePaymentResponse = (responseData: GovUKPayment): GovUKPayment => {
     if (!responseData?.state?.status)
@@ -116,7 +112,7 @@ export default function MakePayment({
   };
 
   const readyAction = async () => {
-    isLoading(true);
+    setIsLoading(true);
     if (payment && currentState === States.ReadyToRetry) {
       redirectToGovPay(payment);
     } else {
@@ -127,36 +123,58 @@ export default function MakePayment({
     }
   };
 
-  return (
-    <Box pt={5}>
-      <Typography variant="h1" gutterBottom>
+  const Header = () =>
+    currentState === States.Finished ? (
+      <Banner
+        heading="Payment received"
+        color={{
+          background: lighten(theme.palette.success.main, 0.9),
+          text: "black",
+        }}
+      >
+        <Typography pt={2} variant="body2">
+          Thanks for making your payment. We'll send you a confirmation email.
+        </Typography>
+      </Banner>
+    ) : (
+      <Typography variant="h1" pt={5} gutterBottom>
         Pay for your application
       </Typography>
-      <DescriptionList
-        data={[
-          { term: "Application type", details: flowName },
-          {
-            term: "Fee",
-            details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
-          },
-          {
-            term: "Address",
-            details: addressTitle,
-          },
-          {
-            term: "Project type",
-            details: rawProjectTypes.join(", "),
-          },
-          {
-            term: "Valid until",
-            details: expiryDate,
-          },
-        ]}
-      />
-      <Typography variant="body1">
-        {(currentState === States.Ready ||
-          currentState === States.ReadyToRetry) &&
-        !loading ? (
+    );
+
+  const PaymentDetails = () => (
+    <DescriptionList
+      data={[
+        { term: "Application type", details: flowName },
+        {
+          term: "Fee",
+          details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
+        },
+        {
+          term: "Address",
+          details: addressTitle,
+        },
+        {
+          term: "Project type",
+          details: rawProjectTypes.join(", "),
+        },
+        {
+          term: "Valid until",
+          details: expiryDate,
+        },
+      ]}
+    />
+  );
+
+  return isLoading ? (
+    <DelayedLoadingIndicator text={currentState.loading} />
+  ) : (
+    <>
+      <Header />
+      <PaymentDetails />
+      {(currentState === States.Ready ||
+        currentState === States.ReadyToRetry) &&
+        !isLoading && (
           <Confirm
             fee={toDecimal(paymentAmount)}
             onConfirm={readyAction}
@@ -165,11 +183,8 @@ export default function MakePayment({
             hideFeeBanner={true}
             paymentStatus={govUkPayment?.state.status}
           />
-        ) : (
-          <DelayedLoadingIndicator text={currentState.loading} />
         )}
-      </Typography>
-    </Box>
+    </>
   );
 }
 

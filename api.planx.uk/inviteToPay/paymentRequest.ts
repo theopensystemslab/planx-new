@@ -114,10 +114,10 @@ export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
         govUkPayment: { govUkPayment: govUkResponse } ,
       });
       if (!updatePaymentRequestPaidAt?.affectedRows) {
-        throw Error(`payment request ${paymentRequestId} not updated`);
+        console.log(`payment request ${paymentRequestId} not updated`);
       }
       if (!appendGovUKPaymentToSessionData?.affectedRows) {
-        throw Error(`session for payment request ${paymentRequestId} not updated`);
+        console.log(`session for payment request ${paymentRequestId} not updated`);
       }
     }
     await postPaymentNotificationToSlack(req, govUkResponse, "(invite to pay)");
@@ -147,6 +147,6 @@ export const addGovPayPaymentIdToPaymentRequest = async (
     govPayPaymentId: govUKPayment.payment_id,
   });
   if (!update_payment_requests?.affected_rows) {
-    throw Error(`payment request ${paymentRequestId} not updated`);
+    console.log(`payment request ${paymentRequestId} not updated`);
   }
 };
