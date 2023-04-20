@@ -1,3 +1,4 @@
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
@@ -5,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core";
 import Card from "@planx/components/shared/Preview/Card";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -222,6 +224,13 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
+        <WarningContainer>
+          <ErrorOutline />
+          <Typography variant="body2" ml={2} fontWeight="bold">
+            Selecting "continue" locks your application and you'll no longer be
+            able to make changes.
+          </Typography>
+        </WarningContainer>
         {error ? (
           <ErrorWrapper
             error={"Error generating payment request, please try again"}
