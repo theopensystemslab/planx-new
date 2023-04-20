@@ -13,7 +13,7 @@ import type { GovUKPayment } from "../types";
 //  * /payment-request/:paymentRequest/payment/:paymentId
 export async function fetchPaymentRequestDetails(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) {
   const query = gql`
@@ -61,7 +61,7 @@ export async function fetchPaymentRequestDetails(
 // middleware used by /payment-request/:paymentRequest/pay?returnURL=...
 export async function buildPaymentPayload(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) {
   if (!req.query.returnURL) {
@@ -86,8 +86,8 @@ export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
     const paymentRequestId = req.params.paymentRequest;
     if (paymentRequestId && govUkResponse?.state.status === "success") {
       const query = gql`
-        mutation UpdatePaymentRequestPaidAt($paymentRequestId: uuid!) {
-          update_payment_requests(
+        mutation MarkPaymentRequestAsPaid($paymentRequestId: uuid!, $govUkPayment: jsonb) {
+          updatePaymentRequestPaidAt: update_payment_requests(
             where: {
               _and: {
                 id: { _eq: $paymentRequestId }
@@ -96,17 +96,57 @@ export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
             }
             _set: { paid_at: "now()" }
           ) {
-            affected_rows
+            affectedRows: affected_rows
+          }
+
+          # This will also overwrite any abandoned payments attempted on the session
+          appendGovUKPaymentToSessionData: update_lowcal_sessions(
+            _append: { data: $govUkPayment }, 
+            where: {
+              payment_requests: { id: {_eq: $paymentRequestId} }
+            }) {
+            affectedRows: affected_rows
           }
         }
       `;
-      const { update_payment_requests } = await client.request(query, {
+      const { updatePaymentRequestPaidAt, appendGovUKPaymentToSessionData } = await client.request(query, {
         paymentRequestId,
+        govUkPayment: { govUkPayment: govUkResponse } ,
       });
-      if (!update_payment_requests?.affected_rows) {
-        console.log(`payment request ${paymentRequestId} not updated`);
+      if (!updatePaymentRequestPaidAt?.affectedRows) {
+        throw Error(`payment request ${paymentRequestId} not updated`);
+      }
+      if (!appendGovUKPaymentToSessionData?.affectedRows) {
+        throw Error(`session for payment request ${paymentRequestId} not updated`);
       }
     }
     await postPaymentNotificationToSlack(req, govUkResponse, "(invite to pay)");
   }
 );
+
+export const addGovPayPaymentIdToPaymentRequest = async (
+  paymentRequestId: string,
+  govUKPayment: GovUKPayment,
+) => {
+  const query = gql`
+    mutation AddGovPayPaymentIdToPaymentRequest($paymentRequestId: uuid!, $govPayPaymentId: String) {
+      update_payment_requests(
+        where: {
+          _and: {
+            id: { _eq: $paymentRequestId }
+          }
+        }
+        _set: { govpay_payment_id: $govPayPaymentId }
+      ) {
+        affected_rows
+      }
+    }
+  `;
+  const { update_payment_requests } = await client.request(query, {
+    paymentRequestId,
+    govPayPaymentId: govUKPayment.payment_id,
+  });
+  if (!update_payment_requests?.affected_rows) {
+    throw Error(`payment request ${paymentRequestId} not updated`);
+  }
+};

@@ -81,6 +81,7 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
             sessionPreviewData: session_preview_data
             createdAt: created_at
             paymentAmount: payment_amount
+            govPayPaymentId: govpay_payment_id
           }
         }
       `,

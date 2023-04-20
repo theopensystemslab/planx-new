@@ -31,12 +31,12 @@ import {
   validateSession,
 } from "./saveAndReturn";
 import { routeSendEmailRequest } from "./notify";
-import { makePaymentViaProxy, fetchPaymentViaProxy } from "./pay";
+import { makePaymentViaProxy, fetchPaymentViaProxy, makeInviteToPayPaymentViaProxy } from "./pay";
 import {
   inviteToPay,
   fetchPaymentRequestDetails,
   buildPaymentPayload,
-  fetchPaymentRequestViaProxy
+  fetchPaymentRequestViaProxy,
 } from "./inviteToPay";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
@@ -319,7 +319,7 @@ app.post(
   "/payment-request/:paymentRequest/pay",
   fetchPaymentRequestDetails,
   buildPaymentPayload,
-  makePaymentViaProxy,
+  makeInviteToPayPaymentViaProxy,
 );
 
 app.get(

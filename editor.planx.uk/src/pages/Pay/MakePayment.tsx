@@ -47,6 +47,7 @@ export default function MakePayment({
   sessionPreviewData,
   createdAt,
   id: paymentRequestId,
+  govPayPaymentId,
   paymentAmount,
 }: PaymentRequest) {
   // TODO: Type/parse this?
@@ -57,9 +58,9 @@ export default function MakePayment({
   } = sessionPreviewData as any;
 
   const expiryDate = getExpiryDateForPaymentRequest(createdAt);
-  const [currentState, setState] = useState<
-    (typeof States)[keyof typeof States]
-  >(States.Init);
+  const [currentState, setState] = useState<typeof States[keyof typeof States]>(
+    States.Init
+  );
   const [loading, isLoading] = useState(true);
   const [payment, setPayment] = useState<GovUKPayment | undefined>(
     govUkPayment || undefined
@@ -71,7 +72,7 @@ export default function MakePayment({
       setState(States.Fetching);
       const responseData = await fetchPayment({
         paymentRequestId,
-        payment: govUkPayment,
+        govPayPaymentId,
       });
       if (responseData) resolvePaymentResponse(responseData);
       isLoading(false);
@@ -175,13 +176,13 @@ export default function MakePayment({
 // refetch payment from GovPay (via proxy) to confirm it's status
 async function fetchPayment({
   paymentRequestId,
-  payment,
+  govPayPaymentId,
 }: {
   paymentRequestId: string;
-  payment?: GovUKPayment;
+  govPayPaymentId?: string;
 }): Promise<GovUKPayment | null> {
-  if (!payment) return Promise.resolve(null);
-  const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/payment/${payment.payment_id}`;
+  if (!govPayPaymentId) return Promise.resolve(null);
+  const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
   const response = await axios.get<GovUKPayment>(paymentURL);
   return response.data;
 }
