@@ -94,26 +94,23 @@ export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
 export const addGovPayPaymentIdToPaymentRequest = async (
   paymentRequestId: string,
   govUKPayment: GovUKPayment,
-) => {
+): Promise<void> => {
   const query = gql`
     mutation AddGovPayPaymentIdToPaymentRequest($paymentRequestId: uuid!, $govPayPaymentId: String) {
-      update_payment_requests(
-        where: {
-          _and: {
-            id: { _eq: $paymentRequestId }
-          }
-        }
+      update_payment_requests_by_pk(
+        pk_columns: { id: $paymentRequestId }
         _set: { govpay_payment_id: $govPayPaymentId }
-      ) {
-        affected_rows
+       ) {
+        id
       }
     }
   `;
-  const { update_payment_requests } = await client.request(query, {
-    paymentRequestId,
-    govPayPaymentId: govUKPayment.payment_id,
-  });
-  if (!update_payment_requests?.affected_rows) {
+  try {
+    await client.request(query, {
+      paymentRequestId,
+      govPayPaymentId: govUKPayment.payment_id,
+    });
+  } catch (error) {
     throw Error(`payment request ${paymentRequestId} not updated`);
   }
 };

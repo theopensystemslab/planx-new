@@ -165,7 +165,7 @@ export default function MakePayment({
         details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
       },
       {
-        term: "Address",
+        term: "Property address",
         details: address,
       },
       {
