@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.8",
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#e5fda1f",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#1343f51",
     "@opensystemslab/planx-document-templates": "github:theopensystemslab/planx-document-templates#debaeca",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",

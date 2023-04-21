@@ -7,11 +7,11 @@ import {
   convertSlugToName,
   getResumeLink,
   calculateExpiryDate,
-  getHumanReadableProjectType,
 } from "./utils";
 import { 
   sendEmail
 } from "../notify/utils";
+import { _public } from '../client';
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -126,7 +126,7 @@ const buildContentFromSessions = async (
     const service = convertSlugToName(session.flow.slug);
     const address: SiteAddress | undefined = session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
-    const projectType = await getHumanReadableProjectType(session?.data?.passport?.data);
+    const projectType = await _public.getHumanReadableProjectType(session?.data?.passport?.data);
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 
