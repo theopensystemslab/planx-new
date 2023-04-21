@@ -1,5 +1,4 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
@@ -43,13 +42,17 @@ type CreatePaymentRequest = {
 type FormValues = Omit<CreatePaymentRequest, "sessionPreviewKeys">;
 
 const validationSchema = object({
-  payeeName: string().trim().required("Nominee name required"),
+  payeeName: string()
+    .trim()
+    .required("Enter the full name of the person paying"),
   payeeEmail: string()
     .email(
       "Enter an email address in the correct format, like name@example.com"
     )
-    .required("Email address required"),
-  applicantName: string().trim().required("Your details required"),
+    .required("Enter the email address of the person paying"),
+  applicantName: string()
+    .trim()
+    .required("Enter your name or organisation name"),
 });
 
 const StyledForm = styled("form")(({ theme }) => ({
@@ -140,13 +143,18 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     <DelayedLoadingIndicator />
   ) : (
     <Card>
-      <Typography variant="h3" component="h2">
-        {nomineeTitle}
-      </Typography>
-      <Typography variant="body2">
-        <ReactMarkdownOrHtml source={nomineeDescription} openLinksOnNewTab />
-      </Typography>
       <StyledForm onSubmit={formik.handleSubmit}>
+        <Typography variant="h3" component="h2">
+          {nomineeTitle}
+        </Typography>
+        {nomineeDescription && (
+          <Typography variant="body2">
+            <ReactMarkdownOrHtml
+              source={nomineeDescription}
+              openLinksOnNewTab
+            />
+          </Typography>
+        )}
         <InputLabel label="Full name" htmlFor="payeeName">
           <Input
             bordered
@@ -192,17 +200,17 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-        <Box>
-          <Typography variant="h3" component="h2" pt={3} pb={2}>
-            {yourDetailsTitle}
-          </Typography>
+        <Typography variant="h3" component="h2" pt={2}>
+          {yourDetailsTitle}
+        </Typography>
+        {yourDetailsDescription && (
           <Typography variant="body2">
             <ReactMarkdownOrHtml
               source={yourDetailsDescription}
               openLinksOnNewTab
             />
           </Typography>
-        </Box>
+        )}
         <InputLabel label={yourDetailsLabel || ""} htmlFor="applicantName">
           <Input
             bordered

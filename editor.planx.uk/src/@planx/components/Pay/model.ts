@@ -86,7 +86,7 @@ export const validationSchema = object({
   title: string().trim().required(),
   bannerTitle: string().trim().required(),
   description: string().trim().required(),
-  fn: string().trim().required(),
+  fn: string().trim().required("Data field is required"),
   instructionsTitle: string().trim().required(),
   instructionsDescription: string().trim().required(),
   allowInviteToPay: boolean(),
@@ -96,7 +96,7 @@ export const validationSchema = object({
   }),
   nomineeDescription: string().trim().when("allowInviteToPay", {
     is: true,
-    then: string().required(),
+    then: string(),
   }),
   yourDetailsTitle: string().trim().when("allowInviteToPay", {
     is: true,
@@ -104,7 +104,7 @@ export const validationSchema = object({
   }),
   yourDetailsDescription: string().trim().when("allowInviteToPay", {
     is: true,
-    then: string().required(),
+    then: string(),
   }),
   yourDetailsLabel: string().trim().when("allowInviteToPay", {
     is: true,

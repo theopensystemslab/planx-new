@@ -38,16 +38,9 @@ function Component(props: any) {
         "Invite someone else to pay for this application",
       nomineeTitle:
         props.node?.data?.nomineeTitle || "Details of the person paying",
-      nomineeDescription:
-        props.node?.data?.nomineeDescription ||
-        `<p>You can invite someone else to pay for your application.</p>\
-         <p>They will receive an email with a link to pay using GOV.UK Pay that will be \
-         valid for 28 days. Upon successful payment, this application will be \
-         sent and you will both receive a confirmation email.</p>`,
+      nomineeDescription: props.node?.data?.nomineeDescription,
       yourDetailsTitle: props.node?.data?.yourDetailsTitle || "Your details",
-      yourDetailsDescription:
-        props.node?.data?.yourDetailsDescription ||
-        "How should we refer to you in communications with the person paying?",
+      yourDetailsDescription: props.node?.data?.yourDetailsDescription,
       yourDetailsLabel:
         props.node?.data?.yourDetailsLabel || "Your name or organisation name",
       ...parseMoreInformation(props.node?.data),
@@ -163,7 +156,6 @@ function Component(props: any) {
                   </InputRow>
                   <InputRow>
                     <RichTextInput
-                      required
                       name="nomineeDescription"
                       placeholder="Description"
                       value={formik.values.nomineeDescription}
@@ -184,7 +176,6 @@ function Component(props: any) {
                   </InputRow>
                   <InputRow>
                     <RichTextInput
-                      required
                       name="yourDetailsDescription"
                       placeholder="Description"
                       value={formik.values.yourDetailsDescription}
