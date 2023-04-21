@@ -87,7 +87,12 @@ export async function makeInviteToPayPaymentViaProxy(req: Request, res: Response
             teamSlug,
             govUkResponse,
           });
-          await addGovPayPaymentIdToPaymentRequest(paymentRequestId, govUkResponse)
+
+          try {
+            await addGovPayPaymentIdToPaymentRequest(paymentRequestId, govUkResponse);
+          } catch (error) {
+            throw Error(error as string);
+          };
 
           return responseBuffer;
         }),
@@ -129,8 +134,7 @@ export function fetchPaymentViaProxyWithCallback(
           try {
             await callback(req, govUkResponse);
           } catch (e) {
-            next(e);
-            return "";
+            throw Error(e as string)
           }
 
           // only return payment status, filter out PII

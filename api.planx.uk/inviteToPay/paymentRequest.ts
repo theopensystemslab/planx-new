@@ -85,40 +85,7 @@ export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
   async (req: Request, govUkResponse: GovUKPayment) => {
     const paymentRequestId = req.params.paymentRequest;
     if (paymentRequestId && govUkResponse?.state.status === "success") {
-      const query = gql`
-        mutation MarkPaymentRequestAsPaid($paymentRequestId: uuid!, $govUkPayment: jsonb) {
-          updatePaymentRequestPaidAt: update_payment_requests(
-            where: {
-              _and: {
-                id: { _eq: $paymentRequestId }
-                paid_at: { _is_null: true }
-              }
-            }
-            _set: { paid_at: "now()" }
-          ) {
-            affectedRows: affected_rows
-          }
-
-          # This will also overwrite any abandoned payments attempted on the session
-          appendGovUKPaymentToSessionData: update_lowcal_sessions(
-            _append: { data: $govUkPayment }, 
-            where: {
-              payment_requests: { id: {_eq: $paymentRequestId} }
-            }) {
-            affectedRows: affected_rows
-          }
-        }
-      `;
-      const { updatePaymentRequestPaidAt, appendGovUKPaymentToSessionData } = await client.request(query, {
-        paymentRequestId,
-        govUkPayment: { govUkPayment: govUkResponse } ,
-      });
-      if (!updatePaymentRequestPaidAt?.affectedRows) {
-        console.log(`payment request ${paymentRequestId} not updated`);
-      }
-      if (!appendGovUKPaymentToSessionData?.affectedRows) {
-        console.log(`session for payment request ${paymentRequestId} not updated`);
-      }
+      await markPaymentRequestAsPaid(paymentRequestId, govUkResponse);
     }
     await postPaymentNotificationToSlack(req, govUkResponse, "(invite to pay)");
   }
@@ -147,6 +114,47 @@ export const addGovPayPaymentIdToPaymentRequest = async (
     govPayPaymentId: govUKPayment.payment_id,
   });
   if (!update_payment_requests?.affected_rows) {
-    console.log(`payment request ${paymentRequestId} not updated`);
+    throw Error(`payment request ${paymentRequestId} not updated`);
   }
+};
+
+export const markPaymentRequestAsPaid = async (paymentRequestId: string, govUkPayment: GovUKPayment) => {
+  const query = gql`
+    mutation MarkPaymentRequestAsPaid($paymentRequestId: uuid!, $govUkPayment: jsonb) {
+      updatePaymentRequestPaidAt: update_payment_requests(
+        where: {
+          _and: {
+            id: { _eq: $paymentRequestId }
+            paid_at: { _is_null: true }
+          }
+        }
+        _set: { paid_at: "now()" }
+      ) {
+        affectedRows: affected_rows
+      }
+
+      # This will also overwrite any abandoned payments attempted on the session
+      appendGovUKPaymentToSessionData: update_lowcal_sessions(
+        _append: { data: $govUkPayment }, 
+        where: {
+          payment_requests: { id: {_eq: $paymentRequestId} }
+        }) {
+        affectedRows: affected_rows
+      }
+    }
+  `;
+  try {
+    const { updatePaymentRequestPaidAt, appendGovUKPaymentToSessionData } = await client.request(query, {
+      paymentRequestId,
+      govUkPayment: { govUkPayment },
+    });
+    if (!updatePaymentRequestPaidAt?.affectedRows) {
+      throw Error(`payment request ${paymentRequestId} not updated`);
+    }
+    if (!appendGovUKPaymentToSessionData?.affectedRows) {
+      throw Error(`session for payment request ${paymentRequestId} not updated`);
+    }
+  } catch (error) {
+    throw Error("Error marking payment request as paid: " + error)
+  };
 };

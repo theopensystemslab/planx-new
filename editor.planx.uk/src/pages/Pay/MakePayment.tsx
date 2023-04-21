@@ -3,6 +3,7 @@ import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core";
 import axios from "axios";
+import { format } from "date-fns";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -52,11 +53,10 @@ export default function MakePayment({
   id: paymentRequestId,
   govPayPaymentId,
   paymentAmount,
+  paidAt,
 }: PaymentRequest) {
   const { address, rawProjectTypes } =
     parseSessionPreviewData(sessionPreviewData);
-
-  const expiryDate = getExpiryDateForPaymentRequest(createdAt);
   const [currentState, setState] = useState<
     (typeof States)[keyof typeof States]
   >(States.Init);
@@ -65,34 +65,54 @@ export default function MakePayment({
   const flowName = useStore((state) => state.flowName);
   const theme = useTheme();
 
+  // Pass async errors up to ErrorBoundary
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
   useEffect(() => {
-    const updatePaymentState = async () => {
-      setState(States.Fetching);
-      const responseData = await fetchPayment({
-        paymentRequestId,
-        govPayPaymentId,
-      });
-      if (responseData) resolvePaymentResponse(responseData);
+    if (errorMessage) throw Error(errorMessage);
+  }, [errorMessage]);
+
+  useEffect(() => {
+    // If payment is completed, we don't need to fetch data from GovPay
+    if (paidAt) {
+      setState(States.Finished);
       setIsLoading(false);
-      switch (computePaymentState(responseData)) {
-        case PaymentState.NotStarted:
-          setState(States.Ready);
-          break;
-        case PaymentState.Pending:
-          setState(States.ReadyToRetry);
-          break;
-        case PaymentState.Failed:
-          setState(States.ReadyToRetry);
-          setPayment(undefined);
-          break;
-        case PaymentState.Completed:
-          setState(States.Finished);
-          break;
-      }
-    };
+      return;
+    }
     // synchronize payment state on load
     updatePaymentState();
   }, []);
+
+  const updatePaymentState = async () => {
+    setState(States.Fetching);
+    let responseData: GovUKPayment | null = null;
+
+    try {
+      responseData = await fetchPayment({
+        paymentRequestId,
+        govPayPaymentId,
+      });
+    } catch (error) {
+      setErrorMessage("Failed to fetch payment details");
+    }
+
+    if (responseData) resolvePaymentResponse(responseData);
+    setIsLoading(false);
+    switch (computePaymentState(responseData)) {
+      case PaymentState.NotStarted:
+        setState(States.Ready);
+        break;
+      case PaymentState.Pending:
+        setState(States.ReadyToRetry);
+        break;
+      case PaymentState.Failed:
+        setState(States.ReadyToRetry);
+        setPayment(undefined);
+        break;
+      case PaymentState.Completed:
+        setState(States.Finished);
+        break;
+    }
+  };
 
   const resolvePaymentResponse = (responseData: GovUKPayment): GovUKPayment => {
     if (!responseData?.state?.status)
@@ -132,54 +152,64 @@ export default function MakePayment({
         </Typography>
       </Banner>
     ) : (
-      <Typography variant="h1" pt={5} gutterBottom>
+      <Typography maxWidth="md" variant="h1" pt={5} gutterBottom>
         Pay for your application
       </Typography>
     );
 
-  const PaymentDetails = () => (
-    <DescriptionList
-      data={[
-        { term: "Application type", details: flowName },
-        {
-          term: "Fee",
-          details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
-        },
-        {
-          term: "Address",
-          details: address,
-        },
-        {
-          term: "Project type",
-          details: rawProjectTypes.join(", "),
-        },
-        {
-          term: "Valid until",
-          details: expiryDate,
-        },
-      ]}
-    />
-  );
+  const PaymentDetails = () => {
+    const data = [
+      { term: "Application type", details: flowName },
+      {
+        term: "Fee",
+        details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
+      },
+      {
+        term: "Address",
+        details: address,
+      },
+      {
+        term: "Project type",
+        details: rawProjectTypes.join(", "),
+      },
+    ];
+
+    if (paidAt) {
+      data.push({
+        term: "Paid at",
+        details: format(Date.parse(paidAt), "dd MMMM yyyy"),
+      });
+    } else {
+      data.push({
+        term: "Valid until",
+        details: getExpiryDateForPaymentRequest(createdAt),
+      });
+    }
+
+    return <DescriptionList data={data} />;
+  };
 
   return isLoading ? (
     <DelayedLoadingIndicator text={currentState.loading} />
   ) : (
-    <Container maxWidth="md">
+    <>
       <Header />
       <PaymentDetails />
-      {(currentState === States.Ready ||
-        currentState === States.ReadyToRetry) &&
-        !isLoading && (
-          <Confirm
-            fee={toDecimal(paymentAmount)}
-            onConfirm={readyAction}
-            buttonTitle={currentState.button!}
-            showInviteToPay={false}
-            hideFeeBanner={true}
-            paymentStatus={payment?.state.status}
-          />
-        )}
-    </Container>
+      <Container maxWidth="md">
+        {(currentState === States.Ready ||
+          currentState === States.ReadyToRetry) &&
+          !isLoading && (
+            <Confirm
+              fee={toDecimal(paymentAmount)}
+              onConfirm={readyAction}
+              buttonTitle={currentState.button!}
+              showInviteToPay={false}
+              hideFeeBanner={true}
+              paymentStatus={payment?.state.status}
+            />
+          )}
+      </Container>
+    </>
   );
 }
 

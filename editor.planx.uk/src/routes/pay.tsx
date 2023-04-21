@@ -83,6 +83,7 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
             createdAt: created_at
             paymentAmount: payment_amount
             govPayPaymentId: govpay_payment_id
+            paidAt: paid_at
           }
         }
       `,
