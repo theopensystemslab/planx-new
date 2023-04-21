@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 
 interface DescriptionListItem {
   term: string;
-  details: string;
+  details?: string;
 }
 
 interface DescriptionListProps {
