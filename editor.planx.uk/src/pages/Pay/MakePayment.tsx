@@ -174,11 +174,19 @@ export default function MakePayment({
       },
     ];
 
+    // Handle payments completed before page load
     if (paidAt) {
       data.push({
         term: "Paid at",
         details: format(Date.parse(paidAt), "dd MMMM yyyy"),
       });
+      // Handle payments just completed (on immediate return from GovPay)
+    } else if (currentState === States.Finished) {
+      data.push({
+        term: "Paid at",
+        details: format(Date.now(), "dd MMMM yyyy"),
+      });
+      // Handle payments not started
     } else {
       data.push({
         term: "Valid until",
