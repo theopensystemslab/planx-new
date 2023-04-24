@@ -47,6 +47,10 @@ const CUSTOM_DOMAINS =
           domain: "planningservices.medway.gov.uk",
           name: "medway",
         },
+        {
+          domain: "planningservices.newcastle.gov.uk",
+          name: "newcastle",
+        },
       ]
     : [];
 

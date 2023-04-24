@@ -25,7 +25,7 @@ This guide will walk through the process of setting a custom domain for a new te
 
     The `<TEAM_NAME>.csr` file can then passed along to the IT team who should respond with a certificate and intermediary/chain certificate (next step). 
 
-    The `<TEAM_NAME>.key` file should be kept, we require this for step XXX.
+    The `<TEAM_NAME>.key` file should be kept, we require this for step 5 onwards.
 
 
 3. **IT Team** - Provide PlanX with certificates (details in documentation above)
@@ -53,7 +53,7 @@ This guide will walk through the process of setting a custom domain for a new te
         - Subdomain is correct ✅
         - Key algorithm is RSA 2048 ✅
         - Navigate to AWS CloudFront > Create new distribution. The certificate is listed in the dropdown for "Custom SSL certificate" ✅
-      - If the above checks pass, proceed to next step
+      - If the above checks pass, delete the test certificate from the AWS Certificate Manager dashboard, and proceed to the next step
 
 6. **PlanX** - Add certificates to AWS infrastructure
 
