@@ -108,6 +108,7 @@ const ReconciliationPage: React.FC<Props> = ({
             variant="contained"
             color="primary"
             size="large"
+            data-testid="continue-button"
             onClick={onButtonClick}
           >
             {buttonText}
