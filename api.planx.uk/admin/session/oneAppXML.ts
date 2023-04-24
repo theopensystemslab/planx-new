@@ -25,7 +25,7 @@ const fetchSessionXML = async (sessionId: string) => {
           order_by: { created_at: desc },
           limit: 1
         ) {
-          payload(path: "xml")
+          xml
         }
       }
     `;
@@ -36,7 +36,7 @@ const fetchSessionXML = async (sessionId: string) => {
 
     if (!uniform_applications?.length) throw Error("Invalid sessionID");
 
-    return uniform_applications[0].payload;
+    return uniform_applications[0].xml;
 } catch (error) {
     throw Error("Unable to fetch session XML: " + (error as Error).message);
   }
