@@ -5,25 +5,14 @@ import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient } from "graphql-request";
 
 export interface Context {
-  user?: {
-    id: string;
-  };
-  team?: {
-    id: string;
-  };
-  flow?: {
-    id: string;
-    publishedFlowId?: number;
-  };
-}
-
-export async function setUpTestContext(initialContext: {
-  user?: {
+  user: {
+    id?: number;
     firstName: string;
     lastName: string;
     email: string;
   };
-  team?: {
+  team: {
+    id?: number;
     name: string;
     slug?: string;
     logo: string;
@@ -31,27 +20,48 @@ export async function setUpTestContext(initialContext: {
     homepage: string;
   };
   flow?: {
+    id?: string;
+    publishedId?: number;
     slug: string;
     data?: object;
   };
-}): Promise<Context> {
+  sessionIds?: string[];
+}
+
+export async function setUpTestContext(
+  initialContext: Context
+): Promise<Context> {
   const core = getCoreDomainClient();
-  const context: any = initialContext;
+  const context: Context = { ...initialContext };
   if (context.user) {
     context.user.id = await core.createUser(context.user);
   }
   if (context.team) {
-    context.team.id = await core.createTeam(context.team);
+    context.team.id = await core.createTeam({
+      name: context.team.name,
+      slug: context.team.slug,
+      logo: context.team.logo,
+      primaryColor: context.team.primaryColor,
+      homepage: context.team.homepage,
+    });
   }
-  if (context.flow?.slug && context.team?.id) {
+  if (
+    context.flow?.slug &&
+    context.flow?.data &&
+    context.team?.id &&
+    context.user?.id
+  ) {
     context.flow.id = await core.createFlow({
       slug: context.flow.slug,
       teamId: context.team.id,
-      data: context.flow.data,
+      data: context.flow!.data!,
     });
     context.flow.publishedId = await core.publishFlow({
-      flow: context.flow,
-      publisherId: context.user.id,
+      flow: {
+        id: context.flow.id,
+        data: context.flow!.data!,
+      },
+      publisherId: context.user!.id!,
     });
   }
   return context;
@@ -176,15 +186,15 @@ async function deletePublishedFlow(
   adminGQLClient: GraphQLClient,
   context: Context
 ) {
-  if (context.flow?.publishedFlowId) {
-    log(`deleting published flow ${context.flow?.publishedFlowId}`);
+  if (context.flow?.publishedId) {
+    log(`deleting published flow ${context.flow?.publishedId}`);
     await adminGQLClient.request(
       `mutation DeleteTestPublishedFlow( $publishedFlowId: Int!) {
         delete_published_flows_by_pk(id: $publishedFlowId) {
           id
         }
       }`,
-      { publishedFlowId: context.flow?.publishedFlowId }
+      { publishedFlowId: context.flow?.publishedId }
     );
   }
 }

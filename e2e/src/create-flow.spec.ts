@@ -1,9 +1,10 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Browser } from "@playwright/test";
 import { setUpTestContext, tearDownTestContext } from "./context";
 import { getTeamPage, createAuthenticatedSession } from "./helpers";
+import type { Context } from "./context";
 
 test.describe("Navigation", () => {
-  let context: any = {
+  let context: Context = {
     user: {
       firstName: "test",
       lastName: "test",
@@ -39,7 +40,7 @@ test.describe("Navigation", () => {
   test("Create a flow", async ({ browser }) => {
     const page = await getTeamPage({
       browser,
-      userId: context.user.id,
+      userId: context.user!.id!,
       teamName: context.team.name,
     });
 
@@ -92,18 +93,21 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
   });
 
-  test("Preview a created flow", async ({ browser }) => {
+  test("Preview a created flow", async ({ browser }: { browser: Browser }) => {
     const page = await createAuthenticatedSession({
       browser,
-      userId: context.user.id,
+      userId: context.user!.id!,
     });
+
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`
     );
 
     await page.locator("form").getByText("Yes").click();
     await page.locator("button").filter({ hasText: "Continue" }).click();
-    await expect(page.locator("h3", "Yes! this is a test")).toBeVisible();
+    await expect(
+      page.locator("h3", { hasText: "Yes! this is a test" })
+    ).toBeVisible();
 
     await page
       .locator("#main-content")
@@ -112,6 +116,8 @@ test.describe("Navigation", () => {
 
     await page.locator("form").getByText("No").click();
     await page.locator("button").filter({ hasText: "Continue" }).click();
-    await expect(page.locator("h3", "Sorry this is a test")).toBeVisible();
+    await expect(
+      page.locator("h3", { hasText: "Sorry, this is a test" })
+    ).toBeVisible();
   });
 });

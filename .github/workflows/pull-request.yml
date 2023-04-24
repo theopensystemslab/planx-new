@@ -497,6 +497,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Code checks
+        run:  pnpm check
+        working-directory: e2e
       - name: Install Playwright
         run: pnpm install --frozen-lockfile
         working-directory: e2e

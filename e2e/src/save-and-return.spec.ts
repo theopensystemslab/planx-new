@@ -1,15 +1,22 @@
-import { test, expect, Locator } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import simpleSendFlow from "./flows/simple-send-flow.json";
 import {
   getGraphQLClient,
-  findSessionId,
   setUpTestContext,
   tearDownTestContext,
 } from "./context";
+import {
+  fillInEmail,
+  findQuestionGroup,
+  answerQuestion,
+  returnToSession,
+  saveSession,
+} from "./helpers";
+import type { Context } from "./context";
 
 test.describe("Save and return", () => {
   const adminGQLClient = getGraphQLClient();
-  let context: any = {
+  let context: Context = {
     user: {
       firstName: "test",
       lastName: "test",
@@ -27,7 +34,7 @@ test.describe("Save and return", () => {
       data: simpleSendFlow,
     },
   };
-  const previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
+  const previewURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false`;
 
   test.beforeAll(async () => {
     try {
@@ -45,7 +52,7 @@ test.describe("Save and return", () => {
   test.describe("email", () => {
     test("email confirmation is required", async ({ page }) => {
       await page.goto(previewURL);
-      await page.locator("#email").fill(context.user.email);
+      await page.locator("#email").fill(context.user?.email);
       await page.getByTestId("continue-button").click();
       const errorMessage = page.getByTestId("error-message-confirmEmail");
       await expect(errorMessage).toHaveText("Email address required");
@@ -53,7 +60,7 @@ test.describe("Save and return", () => {
 
     test("email confirmation must match", async ({ page }) => {
       await page.goto(previewURL);
-      await page.locator("#email").fill(context.user.email);
+      await page.locator("#email").fill(context.user?.email);
       await page.locator("#confirmEmail").fill("notthesame@email.com");
       await page.getByTestId("continue-button").click();
       const errorMessage = page.getByTestId("error-message-confirmEmail");
@@ -71,7 +78,7 @@ test.describe("Save and return", () => {
 
       const sessionId = await saveSession({ page, adminGQLClient, context });
       if (!sessionId) test.fail();
-      await returnToSession({ page, context, sessionId });
+      await returnToSession({ page, context, sessionId: sessionId! });
 
       const reviewTitle = await page.locator("h1", {
         hasText: "Resume your application",
@@ -94,7 +101,7 @@ test.describe("Save and return", () => {
 
       const sessionId = await saveSession({ page, adminGQLClient, context });
       if (!sessionId) test.fail();
-      await returnToSession({ page, context, sessionId });
+      await returnToSession({ page, context, sessionId: sessionId! });
 
       // skip review page
       await page.getByRole("button", { name: "Continue" }).click();
@@ -103,46 +110,3 @@ test.describe("Save and return", () => {
     });
   });
 });
-
-async function returnToSession({ page, context, sessionId }) {
-  const returnURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false&sessionId=${sessionId}`;
-  await page.goto(returnURL);
-  await page.locator("#email").fill(context.user.email);
-  await page.getByTestId("continue-button").click();
-}
-
-async function saveSession({
-  page,
-  adminGQLClient,
-  context,
-}): Promise<string | undefined> {
-  const text = "Save and return to this application later";
-  await page.locator(`button :has-text("${text}")`).click();
-  await page.waitForResponse((response) => {
-    return response.url().includes("/send-email/save");
-  });
-  const sessionId = await findSessionId(adminGQLClient, context);
-  return sessionId;
-}
-
-async function fillInEmail({ page, context }) {
-  await page.locator("#email").fill(context.user.email);
-  await page.locator("#confirmEmail").fill(context.user.email);
-  await page.getByTestId("continue-button").click();
-}
-
-async function findQuestionGroup({ page, questionGroup }): Promise<Locator> {
-  return await page.getByRole("group", {
-    name: questionGroup,
-  });
-}
-
-async function answerQuestion({ page, questionGroup, answer }) {
-  const group = await findQuestionGroup({ page, questionGroup });
-  await group.getByRole("button", { name: answer }).click();
-  await page.getByTestId("continue-button").click();
-  await page.waitForResponse(
-    (response) =>
-      response.url().includes("graphql") && response.status() === 200
-  );
-}

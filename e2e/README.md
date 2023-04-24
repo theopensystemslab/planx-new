@@ -10,4 +10,4 @@ Running tests requires a clean DB which can be set up with `../scripts/start-con
 
 ## Debugging
 
-run `DEBUG=true pnpm test` to run with debug logging (useful for setup and teardown issues)
+run `DEBUG_LOG=true pnpm test` to run with debug logging (useful for setup and teardown issues)

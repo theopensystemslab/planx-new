@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { createAuthenticatedSession } from "./helpers";
 import { setUpTestContext, tearDownTestContext } from "./context";
+import type { Context } from "./context";
 
 test.describe("Login", () => {
-  let context: any = {
+  let context: Context = {
     user: {
       firstName: "test",
       lastName: "test",
@@ -34,7 +35,7 @@ test.describe("Login", () => {
   test("setting a cookie bypasses login", async ({ browser }) => {
     const page = await createAuthenticatedSession({
       browser,
-      userId: context.user.id,
+      userId: context.user!.id!,
     });
 
     await page.goto("/");
@@ -51,7 +52,7 @@ test.describe("Login", () => {
   }) => {
     const page = await createAuthenticatedSession({
       browser,
-      userId: context.user.id,
+      userId: context.user!.id!,
     });
     await page.goto("/");
 
