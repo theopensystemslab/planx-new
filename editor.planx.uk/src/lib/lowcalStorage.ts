@@ -26,7 +26,8 @@ class LowcalStorage {
     try {
       const session: Session = data.lowcal_sessions_by_pk?.data;
       if (!session) return null;
-      return JSON.stringify(session);
+      current = stringifyWithRootKeysSortedAlphabetically(session) || null;
+      return current;
     } catch (err) {
       return null;
     }
