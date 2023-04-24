@@ -88,6 +88,6 @@ This guide will walk through the process of setting a custom domain for a new te
 10. **PlanX** - Point application to new custom domain
 
   - Add subdomain to `PREVIEW_ONLY_DOMAINS` in the PlanX frontend. This is located in `editor.planx.uk/src/routes/utils.ts`
-  - Add subdomain to `team.domain` column via Hasura
+  - Add subdomain to `team.domain` column via Hasura (production only)
   
 11.  **PlanX** - Add custom domain to UptimeRobot (create monitor & also select SSL reminders)
