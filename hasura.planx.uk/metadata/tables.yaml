@@ -189,6 +189,14 @@
           insertion_order: null
           column_mapping:
             flow_id: id
+  array_relationships:
+    - name: payment_requests
+      using:
+        foreign_key_constraint_on:
+          column: session_id
+          table:
+            schema: public
+            name: payment_requests
   insert_permissions:
     - role: public
       permission:

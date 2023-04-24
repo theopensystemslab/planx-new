@@ -1,18 +1,24 @@
-import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { PaymentRequest } from "@opensystemslab/planx-core";
 import axios from "axios";
+import { format } from "date-fns";
+import { getExpiryDateForPaymentRequest } from "lib/pay";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import Banner from "ui/Banner";
+import { DescriptionList } from "ui/DescriptionList";
+import { z } from "zod";
 
 import {
   formattedPriceWithCurrencySymbol,
   toDecimal,
-  toPence,
 } from "../../@planx/components/Pay/model";
 import Confirm from "../../@planx/components/Pay/Public/Confirm";
 import { logger } from "../../airbrake";
 import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator";
 import { GovUKPayment, PaymentStatus } from "../../types";
-import type { PaymentRequest } from "./types";
 
 const States = {
   Init: {
@@ -44,130 +50,189 @@ enum PaymentState {
 export default function MakePayment({
   sessionPreviewData,
   createdAt,
-  paymentRequestId,
+  id: paymentRequestId,
+  govPayPaymentId,
   paymentAmount,
+  paidAt,
 }: PaymentRequest) {
+  const { address, rawProjectTypes } =
+    parseSessionPreviewData(sessionPreviewData);
   const [currentState, setState] = useState<
     (typeof States)[keyof typeof States]
   >(States.Init);
-  const [loading, isLoading] = useState(true);
-  const [payment, setPayment] = useState(
-    sessionPreviewData.govUkPayment || undefined
-  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [payment, setPayment] = useState<GovUKPayment | undefined>(undefined);
+  const flowName = useStore((state) => state.flowName);
+  const theme = useTheme();
+
+  // Pass async errors up to ErrorBoundary
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  useEffect(() => {
+    if (errorMessage) throw Error(errorMessage);
+  }, [errorMessage]);
 
   useEffect(() => {
-    const updatePaymentState = async () => {
-      setState(States.Fetching);
-      fetchPayment({
-        paymentRequestId,
-        payment: sessionPreviewData.govUkPayment,
-      }).then((responseData: GovUKPayment | null) => {
-        if (responseData) resolvePaymentResponse(responseData);
-        isLoading(false);
-        switch (computePaymentState(responseData)) {
-          case PaymentState.NotStarted:
-            setState(States.Ready);
-            break;
-          case PaymentState.Pending:
-            setState(States.ReadyToRetry);
-            break;
-          case PaymentState.Failed:
-            setState(States.ReadyToRetry);
-            setPayment(undefined);
-            break;
-          case PaymentState.Completed:
-            setState(States.Finished);
-            handleSuccess();
-            break;
-        }
-      });
-    };
+    // If payment is completed, we don't need to fetch data from GovPay
+    if (paidAt) {
+      setState(States.Finished);
+      setIsLoading(false);
+      return;
+    }
     // synchronize payment state on load
     updatePaymentState();
   }, []);
 
-  const handleSuccess = () => {
-    // TODO - route to confirmation page
-    alert("payment succeeded");
+  const updatePaymentState = async () => {
+    setState(States.Fetching);
+    let responseData: GovUKPayment | null = null;
+
+    try {
+      responseData = await fetchPayment({
+        paymentRequestId,
+        govPayPaymentId,
+      });
+    } catch (error) {
+      setErrorMessage("Failed to fetch payment details");
+    }
+
+    if (responseData) resolvePaymentResponse(responseData);
+    setIsLoading(false);
+    switch (computePaymentState(responseData)) {
+      case PaymentState.NotStarted:
+        setState(States.Ready);
+        break;
+      case PaymentState.Pending:
+        setState(States.ReadyToRetry);
+        break;
+      case PaymentState.Failed:
+        setState(States.ReadyToRetry);
+        setPayment(undefined);
+        break;
+      case PaymentState.Completed:
+        setState(States.Finished);
+        break;
+    }
   };
 
-  const resolvePaymentResponse = (responseData: GovUKPayment) => {
+  const resolvePaymentResponse = (responseData: GovUKPayment): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    let payment: GovUKPayment = {
+    const resolvedPayment: GovUKPayment = {
       ...responseData,
       amount: toDecimal(responseData.amount),
     };
-    setPayment(payment);
+    setPayment(resolvedPayment);
+    // useState is async, so we also pass the resolved value to the chained promise
+    return resolvedPayment;
   };
 
   const readyAction = async () => {
-    isLoading(true);
+    setIsLoading(true);
     if (payment && currentState === States.ReadyToRetry) {
       redirectToGovPay(payment);
     } else {
       await startNewPayment(paymentRequestId)
         .then(resolvePaymentResponse)
-        .then(() => redirectToGovPay(payment))
+        .then(redirectToGovPay)
         .catch(logger.notify);
     }
   };
 
-  return (
-    <Box>
-      <Typography variant="h1" gutterBottom>
+  const Header = () =>
+    currentState === States.Finished ? (
+      <Banner
+        heading="Payment received"
+        color={{
+          background: lighten(theme.palette.success.main, 0.9),
+          text: "black",
+        }}
+      >
+        <Typography pt={2} variant="body2">
+          Thanks for making your payment. We'll send you a confirmation email.
+        </Typography>
+      </Banner>
+    ) : (
+      <Typography maxWidth="md" variant="h1" pt={5} gutterBottom>
         Pay for your application
       </Typography>
-      {/* TODO - this is just a placeholder */}
-      <table>
-        <tr>
-          <th>Application type</th>
-          <td>...</td>
-        </tr>
-        <tr>
-          <th>Fee</th>
-          <td>{formattedPriceWithCurrencySymbol(paymentAmount)}</td>
-        </tr>
-        <tr>
-          <th>Address</th>
-          <td>...</td>
-        </tr>
-        <tr>
-          <th>Project type</th>
-          <td>...</td>
-        </tr>
-      </table>
-      <Typography variant="body1">
+    );
+
+  const PaymentDetails = () => {
+    const data = [
+      { term: "Application type", details: flowName },
+      {
+        term: "Fee",
+        details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
+      },
+      {
+        term: "Property address",
+        details: address,
+      },
+      {
+        term: "Project type",
+        details: rawProjectTypes.join(", "),
+      },
+    ];
+
+    // Handle payments completed before page load
+    if (paidAt) {
+      data.push({
+        term: "Paid at",
+        details: format(Date.parse(paidAt), "dd MMMM yyyy"),
+      });
+      // Handle payments just completed (on immediate return from GovPay)
+    } else if (currentState === States.Finished) {
+      data.push({
+        term: "Paid at",
+        details: format(Date.now(), "dd MMMM yyyy"),
+      });
+      // Handle payments not started
+    } else {
+      data.push({
+        term: "Valid until",
+        details: getExpiryDateForPaymentRequest(createdAt),
+      });
+    }
+
+    return <DescriptionList data={data} />;
+  };
+
+  return isLoading ? (
+    <DelayedLoadingIndicator text={currentState.loading} />
+  ) : (
+    <>
+      <Header />
+      <PaymentDetails />
+      <Container maxWidth="md">
         {(currentState === States.Ready ||
           currentState === States.ReadyToRetry) &&
-        !loading ? (
-          <Confirm
-            fee={paymentAmount}
-            onConfirm={readyAction}
-            buttonTitle={currentState.button!}
-            showInviteToPay={false}
-            paymentStatus={sessionPreviewData.govUkPayment?.state?.status}
-            hideFeeBanner={true}
-          />
-        ) : (
-          <DelayedLoadingIndicator text={currentState.loading} />
-        )}
-      </Typography>
-    </Box>
+          !isLoading && (
+            <Confirm
+              fee={toDecimal(paymentAmount)}
+              onConfirm={readyAction}
+              buttonTitle={currentState.button!}
+              showInviteToPay={false}
+              hideFeeBanner={true}
+              paymentStatus={payment?.state.status}
+            />
+          )}
+      </Container>
+    </>
   );
 }
 
 // refetch payment from GovPay (via proxy) to confirm it's status
 async function fetchPayment({
   paymentRequestId,
-  payment,
+  govPayPaymentId,
 }: {
   paymentRequestId: string;
-  payment?: GovUKPayment;
+  govPayPaymentId?: string;
 }): Promise<GovUKPayment | null> {
-  if (!payment) return Promise.resolve(null);
-  const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/payment/${payment.payment_id}`;
-  return await axios.get(paymentURL);
+  if (!govPayPaymentId) return Promise.resolve(null);
+  const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
+  const response = await axios.get<GovUKPayment>(paymentURL);
+  return response.data;
 }
 
 // initiate a new payment with GovPay (via proxy)
@@ -175,7 +240,8 @@ async function startNewPayment(
   paymentRequestId: string
 ): Promise<GovUKPayment> {
   const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/pay?returnURL=${window.location.href}`;
-  return await axios.post(paymentURL);
+  const response = await axios.post<GovUKPayment>(paymentURL);
+  return response.data;
 }
 
 // return to GovPay with an existing payment
@@ -208,3 +274,24 @@ function computePaymentState(govUkPayment: GovUKPayment | null): PaymentState {
   // PaymentStatus.cancelled, PaymentStatus.error, PaymentStatus.failed,
   return PaymentState.Failed;
 }
+
+const parseSessionPreviewData = (sessionPreviewData: unknown) => {
+  // Represents what we believe the API will return
+  const schema = z.object({
+    _address: z.object({
+      title: z.string(),
+    }),
+    "proposal.projectType": z.string().array().min(1),
+  });
+
+  // Parse and validate this assumption
+  try {
+    const {
+      _address: { title: address },
+      "proposal.projectType": rawProjectTypes,
+    } = schema.parse(sessionPreviewData);
+    return { address, rawProjectTypes };
+  } catch (error) {
+    throw Error("Invalid session preview data");
+  }
+};

@@ -15,7 +15,7 @@
     "@mui/styles": "5.11.9",
     "@mui/utils": "5.11.9",
     "@opensystemslab/map": "^0.7.4",
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#3c5394a",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#e5fda1f",
     "@opensystemslab/planx-document-templates": "github:theopensystemslab/planx-document-templates#debaeca",
     "@tiptap/core": "^2.0.3",
     "@tiptap/extension-bold": "^2.0.3",
@@ -87,6 +87,7 @@
     "uuid": "^8.3.2",
     "wkt": "^0.1.1",
     "yup": "^0.32.11",
+    "zod": "^3.21.4",
     "zustand": "^4.3.7"
   },
   "devDependencies": {
