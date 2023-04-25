@@ -1,3 +1,4 @@
+import { expect } from "@playwright/test";
 import type { Page, Browser, Locator } from "@playwright/test";
 import { findSessionId, generateAuthenticationToken } from "./context";
 import type { Context } from "./context";
@@ -72,8 +73,9 @@ export async function saveSession({
   adminGQLClient: GraphQLClient;
   context: Context;
 }): Promise<string | undefined> {
-  const text = "Save and return to this application later";
-  await page.locator(`button :has-text("${text}")`).click();
+  await page
+    .locator("button", { hasText: "Save and return to this application later" })
+    .click();
   await page.waitForResponse((response) => {
     return response.url().includes("/send-email/save");
   });
@@ -93,7 +95,22 @@ export async function returnToSession({
   const returnURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false&sessionId=${sessionId}`;
   await page.goto(returnURL);
   await page.locator("#email").fill(context.user?.email);
+}
+
+export async function clickContinue({
+  page,
+  waitForResponse = false,
+}: {
+  page: Page;
+  waitForResponse?: boolean;
+}) {
   await page.getByTestId("continue-button").click();
+  if (waitForResponse) {
+    await page.waitForResponse(
+      (response) =>
+        response.url().includes("graphql") && response.status() === 200
+    );
+  }
 }
 
 export async function fillInEmail({
@@ -105,35 +122,83 @@ export async function fillInEmail({
 }) {
   await page.locator("#email").fill(context.user.email);
   await page.locator("#confirmEmail").fill(context.user.email);
-  await page.getByTestId("continue-button").click();
 }
 
-export async function findQuestionGroup({
+export async function findQuestion({
   page,
-  questionGroup,
+  title,
 }: {
   page: Page;
-  questionGroup: string;
+  title: string;
 }): Promise<Locator> {
-  return await page.getByRole("group", {
-    name: questionGroup,
-  });
+  return await page.getByRole("group", { name: title });
 }
 
 export async function answerQuestion({
   page,
-  questionGroup,
+  title,
   answer,
 }: {
   page: Page;
-  questionGroup: string;
+  title: string;
   answer: string;
 }) {
-  const group = await findQuestionGroup({ page, questionGroup });
+  const group = await findQuestion({ page, title });
   await group.getByRole("button", { name: answer }).click();
-  await page.getByTestId("continue-button").click();
-  await page.waitForResponse(
-    (response) =>
-      response.url().includes("graphql") && response.status() === 200
-  );
+}
+
+export async function answerChecklist({
+  page,
+  title,
+  answers,
+}: {
+  page: Page;
+  title: string;
+  answers: string[];
+}) {
+  const checklist = await page.getByRole("heading").filter({
+    hasText: title,
+  });
+  await expect(checklist).toBeVisible();
+  for (const answer of answers) {
+    await page.locator("label", { hasText: answer }).click();
+  }
+}
+
+export async function expectNotice({
+  page,
+  text,
+}: {
+  page: Page;
+  text: string;
+}) {
+  const notice = await page.locator("h3", { hasText: text });
+  await expect(notice).toBeVisible();
+}
+
+export async function expectConfirmation({
+  page,
+  text,
+}: {
+  page: Page;
+  text: string;
+}) {
+  const confirmation = await page.locator("h1", { hasText: text });
+  await expect(confirmation).toBeVisible();
+}
+
+export async function expectSections({
+  page,
+  sections,
+}: {
+  page: Page;
+  sections: {
+    title: string;
+    status: string;
+  }[];
+}) {
+  const pageSections = await page.locator("dl > dt");
+  const pageStatuses = await page.locator("dl > dd");
+  await expect(pageSections).toContainText(sections.map((s) => s.title));
+  await expect(pageStatuses).toContainText(sections.map((s) => s.status));
 }

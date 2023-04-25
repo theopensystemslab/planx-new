@@ -58,7 +58,7 @@ export const flow: FlowGraph = {
     edges: ["NUFNkSkxqR"],
   },
   T1X91EICsC: {
-    data: { text: "Mulit-select", allRequired: false },
+    data: { text: "Multi-select", allRequired: false },
     type: ComponentType.Checklist,
     edges: ["oLkOyC2LeL", "SBzvpSq8DD", "1hJpwGw4Je", "WdKErxvyoo"],
   },
