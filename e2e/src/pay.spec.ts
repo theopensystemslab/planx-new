@@ -58,7 +58,7 @@ test.describe("Payment flow", async () => {
     const sessionId = await navigateToPayComponent(page);
     context.sessionIds.push(sessionId);
 
-    await page.getByText("Pay using GOV.UK Pay").click();
+    await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({
       page,
       cardNumber: cards.successful_card_number,
@@ -91,7 +91,7 @@ test.describe("Payment flow", async () => {
     const sessionId = await navigateToPayComponent(page);
     context.sessionIds.push(sessionId);
 
-    await page.getByText("Pay using GOV.UK Pay").click();
+    await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({ page, cardNumber: cards.invalid_card_number });
     await page.locator("#return-url").click();
 
@@ -147,7 +147,7 @@ test.describe("Payment flow", async () => {
     const sessionId = await navigateToPayComponent(page);
     context.sessionIds.push(sessionId);
 
-    await page.getByText("Pay using GOV.UK Pay").click();
+    await page.getByText(payButtonText).click();
     await page.locator("#cancel-payment").click();
     await page.locator("#return-url").click();
     const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page);
@@ -195,7 +195,7 @@ test.describe("Payment flow", async () => {
     const sessionId = await navigateToPayComponent(page);
     context.sessionIds.push(sessionId);
 
-    await page.getByText("Pay using GOV.UK Pay").click();
+    await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({
       page,
       cardNumber: cards.successful_card_number,
@@ -256,7 +256,7 @@ test.describe("Payment flow", async () => {
     context.sessionIds.push(sessionId);
 
     // begin a payment
-    await page.getByText("Pay using GOV.UK Pay").click();
+    await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({
       page,
       cardNumber: cards.successful_card_number,
@@ -295,7 +295,7 @@ test.describe("Payment flow", async () => {
     const sessionId = await navigateToPayComponent(page);
     context.sessionIds.push(sessionId);
 
-    await page.getByText("Pay using GOV.UK Pay").click();
+    await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({
       page,
       cardNumber: cards.successful_card_number,
