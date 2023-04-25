@@ -361,7 +361,9 @@
         columns:
           - applicant_name
           - created_at
+          - govpay_payment_id
           - id
+          - paid_at
           - payment_amount
           - session_preview_data
         filter:
