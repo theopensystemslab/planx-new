@@ -14,7 +14,7 @@ import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import type {
   OrderedBreadcrumbs,
   NormalizedCrumb,
-} from "@opensystemslab/planx-core";
+} from "@opensystemslab/planx-core/types";
 import type { Breadcrumb, LowCalSession, Node } from "../types";
 
 export async function validateSession(

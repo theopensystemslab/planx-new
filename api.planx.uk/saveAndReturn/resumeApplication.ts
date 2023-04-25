@@ -1,4 +1,3 @@
-import { SiteAddress } from '@opensystemslab/planx-core/types/types';
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../hasura";
@@ -9,9 +8,8 @@ import {
   calculateExpiryDate,
   getHumanReadableProjectType,
 } from "./utils";
-import { 
-  sendEmail
-} from "../notify/utils";
+import { sendEmail } from "../notify/utils";
+import type { SiteAddress } from "@opensystemslab/planx-core/types";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -124,9 +122,12 @@ const buildContentFromSessions = async (
 ): Promise<string> => {
   const contentBuilder = async (session: LowCalSession) => {
     const service = convertSlugToName(session.flow.slug);
-    const address: SiteAddress | undefined = session.data?.passport?.data?._address;
+    const address: SiteAddress | undefined =
+      session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
-    const projectType = await getHumanReadableProjectType(session?.data?.passport?.data);
+    const projectType = await getHumanReadableProjectType(
+      session?.data?.passport?.data
+    );
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 

@@ -1,4 +1,4 @@
-import { SiteAddress } from "@opensystemslab/planx-core/types/types";
+import { SiteAddress } from "@opensystemslab/planx-core/types";
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
 import {

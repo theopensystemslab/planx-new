@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import type { PaymentRequest, KeyPath } from "@opensystemslab/planx-core";
+import type { PaymentRequest, KeyPath } from "@opensystemslab/planx-core/types";
 
 import { ServerError } from "../errors";
 import { _admin } from "../client";

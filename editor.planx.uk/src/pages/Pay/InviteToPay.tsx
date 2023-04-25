@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { PaymentRequest } from "@opensystemslab/planx-core";
+import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import React from "react";
 import Banner from "ui/Banner";
