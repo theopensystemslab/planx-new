@@ -35,6 +35,7 @@ const cards = {
   successful_card_number: "4444333322221111",
   invalid_card_number: "4000000000000002",
 };
+const payButtonText = "Pay now using GOV.UK Pay";
 
 test.describe("Payment flow", async () => {
   const adminGQLClient = getGraphQLClient();
