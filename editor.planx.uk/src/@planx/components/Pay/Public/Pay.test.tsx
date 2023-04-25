@@ -115,7 +115,7 @@ describe("Confirm component with inviteToPay", () => {
   };
 
   const invitePrompt = "Invite someone else to pay for this application";
-  const payPrompt = "Pay for this application myself instead";
+  const payPrompt = "I want to pay for this application myself";
 
   it("switches pages when you click the invite link", async () => {
     const { user } = setup(<Confirm {...inviteProps} />);

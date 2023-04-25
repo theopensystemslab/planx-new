@@ -261,7 +261,9 @@ function Component(props: Props) {
             }
           }}
           buttonTitle={
-            state.status === "init" ? "Pay using GOV.UK Pay" : "Retry payment"
+            state.status === "init"
+              ? "Pay now using GOV.UK Pay"
+              : "Retry payment"
           }
           error={
             state.status === "unsupported_team"
