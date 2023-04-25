@@ -25,9 +25,11 @@ const useClasses = makeStyles<Theme, BannerProps>((theme) => ({
     color: "currentColor",
   },
   icon: {
-    marginBottom: theme.spacing(2),
-    height: theme.spacing(6),
-    width: theme.spacing(6),
+    marginBottom: theme.spacing(1),
+    height: theme.spacing(5),
+    width: theme.spacing(5),
+    border: "3px solid",
+    borderRadius: "50%",
   },
 }));
 
@@ -52,7 +54,10 @@ function Banner(props: BannerProps) {
       textAlign="left"
       py={6}
     >
-      <Container maxWidth="md">
+      <Container
+        maxWidth="md"
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
         {props.Icon && (
           <props.Icon className={classes.icon} titleAccess={props.iconTitle} />
         )}
