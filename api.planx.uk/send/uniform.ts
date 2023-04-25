@@ -414,6 +414,8 @@ const createUniformApplicationAuditRecord = async ({
   localAuthority: string,
   submissionDetails: UniformSubmissionResponse,
   }): Promise<UniformApplication> => {
+  const xml = await _admin.generateOneAppXML(payload?.sessionId);
+
   const application: Record<"insert_uniform_applications_one", UniformApplication> = await adminClient.request(gql`
     mutation CreateUniformApplication(
       $idox_submission_id: String = ""
@@ -421,6 +423,7 @@ const createUniformApplicationAuditRecord = async ({
       $destination: String = ""
       $response: jsonb = ""
       $payload: jsonb = ""
+      $xml: xml = ""
     ) {
       insert_uniform_applications_one(
         object: {
@@ -429,6 +432,7 @@ const createUniformApplicationAuditRecord = async ({
           destination: $destination
           response: $response
           payload: $payload
+          xml: $xml
         }
       ) {
         id
@@ -446,6 +450,7 @@ const createUniformApplicationAuditRecord = async ({
       destination: localAuthority,
       response: submissionDetails,
       payload,
+      xml,
     });
 
   return application.insert_uniform_applications_one;

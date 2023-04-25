@@ -14,7 +14,7 @@ describe("OneApp XML endpoint", () => {
       },
       data: {
         uniform_applications: [
-          { payload: "<dummy:xml></dummy:xml>"}
+          { xml: "<dummy:xml></dummy:xml>"}
         ]
       },
     });
