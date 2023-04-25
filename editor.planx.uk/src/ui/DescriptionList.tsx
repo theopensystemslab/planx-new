@@ -13,8 +13,6 @@ interface DescriptionListProps {
 const List = styled("dl")(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "1fr 2fr",
-  marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(4),
   "& > *": {
     borderBottom: "1px solid lightgrey",
     paddingBottom: theme.spacing(2),

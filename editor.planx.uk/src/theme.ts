@@ -38,7 +38,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     main: "#E91B0C",
   },
   success: {
-    main: "#00703C",
+    main: "#4CAF50",
   },
 };
 

@@ -1,3 +1,4 @@
+import Check from "@mui/icons-material/Check";
 import Container from "@mui/material/Container";
 import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -141,6 +142,8 @@ export default function MakePayment({
   const Header = () =>
     currentState === States.Finished ? (
       <Banner
+        Icon={Check}
+        iconTitle={"Success"}
         heading="Payment received"
         color={{
           background: lighten(theme.palette.success.main, 0.9),
@@ -152,9 +155,11 @@ export default function MakePayment({
         </Typography>
       </Banner>
     ) : (
-      <Typography maxWidth="md" variant="h1" pt={5} gutterBottom>
-        Pay for your application
-      </Typography>
+      <Container maxWidth="md">
+        <Typography maxWidth="md" variant="h1" pt={5} gutterBottom>
+          Pay for your application
+        </Typography>
+      </Container>
     );
 
   const PaymentDetails = () => {
@@ -194,7 +199,11 @@ export default function MakePayment({
       });
     }
 
-    return <DescriptionList data={data} />;
+    return (
+      <Container maxWidth="md" sx={{ pb: 0 }}>
+        <DescriptionList data={data} />
+      </Container>
+    );
   };
 
   return isLoading ? (
@@ -203,20 +212,18 @@ export default function MakePayment({
     <>
       <Header />
       <PaymentDetails />
-      <Container maxWidth="md">
-        {(currentState === States.Ready ||
-          currentState === States.ReadyToRetry) &&
-          !isLoading && (
-            <Confirm
-              fee={toDecimal(paymentAmount)}
-              onConfirm={readyAction}
-              buttonTitle={currentState.button!}
-              showInviteToPay={false}
-              hideFeeBanner={true}
-              paymentStatus={payment?.state.status}
-            />
-          )}
-      </Container>
+      {(currentState === States.Ready ||
+        currentState === States.ReadyToRetry) &&
+        !isLoading && (
+          <Confirm
+            fee={toDecimal(paymentAmount)}
+            onConfirm={readyAction}
+            buttonTitle={currentState.button!}
+            showInviteToPay={false}
+            hideFeeBanner={true}
+            paymentStatus={payment?.state.status}
+          />
+        )}
     </>
   );
 }

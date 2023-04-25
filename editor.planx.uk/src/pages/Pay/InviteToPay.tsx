@@ -1,3 +1,4 @@
+import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
@@ -19,6 +20,8 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
   return (
     <>
       <Banner
+        Icon={Check}
+        iconTitle={"Success"}
         heading="Payment invitation sent"
         color={{
           background: lighten(theme.palette.success.main, 0.9),
