@@ -129,7 +129,7 @@ export async function findSessionId(
   context
 ): Promise<string | undefined> {
   // get the flow id which may have a session
-  const { flows: flowResponse } = await adminGQLClient.request(
+  const flowResponse: { flows: { id: string }[] } = await adminGQLClient.request(
     `query GetFlowBySlug( $slug: String!) {
         flows(where: {slug: {_eq: $slug}}) {
           id
@@ -137,21 +137,22 @@ export async function findSessionId(
       }`,
     { slug: context.flow?.slug }
   );
-  if (!flowResponse.length || !flowResponse[0].id) {
+  if (!flowResponse.flows.length || !flowResponse.flows[0].id) {
     return;
   }
-  const flowId = flowResponse[0].id;
+  const flowId = flowResponse.flows[0].id;
   // get the session id
-  const { lowcal_sessions: response } = await adminGQLClient.request(
-    `query GetSession( $flowId: uuid!, $email: String!) {
+  const response: { lowcal_sessions: { id: string }[] } =
+    await adminGQLClient.request(
+      `query GetSession( $flowId: uuid!, $email: String!) {
         lowcal_sessions(where: {flow_id: {_eq: $flowId}, email: {_eq: $email}}) {
           id
         }
       }`,
-    { flowId, email: context.user?.email }
-  );
-  if (response.length && response[0].id) {
-    return response[0].id;
+      { flowId, email: context.user?.email }
+    );
+  if (response.lowcal_sessions.length && response.lowcal_sessions[0].id) {
+    return response.lowcal_sessions[0].id;
   }
 }
 
@@ -212,7 +213,7 @@ async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
     );
   } else if (context.flow?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
-    const { flows: response } = await adminGQLClient.request(
+    const response: { flows: { id: string }[] } = await adminGQLClient.request(
       `query GetFlowBySlug($slug: String!) {
         flows(where: {slug: {_eq: $slug}}) {
             id
@@ -220,15 +221,17 @@ async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
         }`,
       { slug: context.flow?.slug }
     );
-    if (response.length && response[0].id) {
-      log(`deleting flow ${context.flow?.slug} flowId: ${response[0].id}`);
+    if (response.flows.length && response.flows[0].id) {
+      log(
+        `deleting flow ${context.flow?.slug} flowId: ${response.flows[0].id}`
+      );
       await adminGQLClient.request(
         `mutation DeleteTestFlow( $flowId: uuid!) {
           delete_flows_by_pk(id: $flowId) {
             id
           }
         }`,
-        { flowId: response[0].id }
+        { flowId: response.flows[0].id }
       );
     }
   }
@@ -247,7 +250,7 @@ async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
     );
   } else if (context.user?.email) {
     // try deleting via email (when cleaning up from a previously failed test)
-    const { users: response } = await adminGQLClient.request(
+    const response: { users: { id: number }[] } = await adminGQLClient.request(
       `query GetUserByEmail($email: String!) {
         users(where: {email: {_eq: $email}}) {
           id
@@ -255,15 +258,17 @@ async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
       }`,
       { email: context.user?.email }
     );
-    if (response.length && response[0].id) {
-      log(`deleting user ${context.user?.email} userId: ${response[0].id}`);
+    if (response.users.length && response.users[0].id) {
+      log(
+        `deleting user ${context.user?.email} userId: ${response.users[0].id}`
+      );
       await adminGQLClient.request(
         `mutation DeleteTestUser($userId: Int!) {
           delete_users_by_pk(id: $userId) {
             id
           }
         }`,
-        { userId: response[0].id }
+        { userId: response.users[0].id }
       );
     }
   }
@@ -282,7 +287,7 @@ async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
     );
   } else if (context.team?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
-    const { teams: response } = await adminGQLClient.request(
+    const response: { teams: { id: number }[] } = await adminGQLClient.request(
       `query GetTeamBySlug( $slug: String!) {
            teams(where: {slug: {_eq: $slug}}) {
                id
@@ -290,15 +295,17 @@ async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
            }`,
       { slug: context.team?.slug }
     );
-    if (response.length && response[0].id) {
-      log(`deleting team ${context.team?.slug} teamId: ${response[0].id}`);
+    if (response.teams.length && response.teams[0].id) {
+      log(
+        `deleting team ${context.team?.slug} teamId: ${response.teams[0].id}`
+      );
       await adminGQLClient.request(
         `mutation DeleteTestTeam( $teamId: Int!) {
         delete_teams_by_pk(id: $teamId) {
           id
         }
       }`,
-        { teamId: response[0].id }
+        { teamId: response.teams[0].id }
       );
     }
   }

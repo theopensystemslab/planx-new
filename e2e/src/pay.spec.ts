@@ -3,7 +3,7 @@ import { log } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";
-import type { GovUKPayment } from "@opensystemslab/planx-core/types/types";
+import type { SessionData } from "@opensystemslab/planx-core/types/types";
 import type { Context } from "./context";
 import {
   getGraphQLClient,
@@ -219,7 +219,7 @@ test.describe("Payment flow", async () => {
     expect(
       await hasPaymentStatus({
         status: "created",
-        paymentId: initialSession!.data.govUkPayment.payment_id,
+        paymentId: initialSession!.data!.govUkPayment!.payment_id,
         adminGQLClient,
       })
     ).toBe(true);
@@ -378,23 +378,30 @@ async function hasPaymentStatus({
   adminGQLClient: GraphQLClient;
 }): Promise<boolean> {
   try {
-    const { payment_status: response } = await adminGQLClient.request(
-      gql`
-        query GetPaymentStatus(
-          $paymentId: String!
-          $status: payment_status_enum_enum!
-        ) {
-          payment_status(
-            where: { payment_id: { _eq: $paymentId }, status: { _eq: $status } }
+    const response: { payment_status: { status: string }[] } =
+      await adminGQLClient.request(
+        gql`
+          query GetPaymentStatus(
+            $paymentId: String!
+            $status: payment_status_enum_enum!
           ) {
-            status
+            payment_status(
+              where: {
+                payment_id: { _eq: $paymentId }
+                status: { _eq: $status }
+              }
+            ) {
+              status
+            }
           }
-        }
-      `,
-      { paymentId, status }
-    );
-    if (response.length === 1 && response[0].status) {
-      return response[0].status === status;
+        `,
+        { paymentId, status }
+      );
+    if (
+      response.payment_status.length === 1 &&
+      response.payment_status[0].status
+    ) {
+      return response.payment_status[0].status === status;
     } else {
       return false;
     }
@@ -410,16 +417,17 @@ async function findSession({
 }: {
   sessionId: string;
   adminGQLClient: GraphQLClient;
-}): Promise<{ data: { govUkPayment: GovUKPayment } } | undefined> {
-  const { lowcal_sessions: response } = await adminGQLClient.request(
-    gql`
-      query FindLowcalSesion($sessionId: uuid!) {
-        lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
-          data
+}): Promise<{ data: SessionData } | undefined> {
+  const response: { lowcal_sessions: { data: SessionData } } =
+    await adminGQLClient.request(
+      gql`
+        query FindLowcalSesion($sessionId: uuid!) {
+          lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
+            data
+          }
         }
-      }
-    `,
-    { sessionId }
-  );
-  return response[0];
+      `,
+      { sessionId }
+    );
+  return response.lowcal_sessions[0];
 }
