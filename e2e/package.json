@@ -2,10 +2,11 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
+    "test:debug": "DEBUG_LOG=true pnpm test",
+    "test:server": "NODE_ENV=test serve ../editor.planx.uk/build --single --listen 3000",
     "lint": "eslint './src/*.{js,ts}' && prettier -c ./src",
     "lint:fix": "eslint --fix './src/*.{js,ts}' && prettier -w ./src",
     "check": "tsc && pnpm lint",
-    "test:server": "NODE_ENV=test serve ../editor.planx.uk/build --single --listen 3000",
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
