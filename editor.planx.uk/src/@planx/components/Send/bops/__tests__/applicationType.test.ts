@@ -9,6 +9,7 @@ describe("application_type is set correctly based on flowName", () => {
       flow: {},
       passport: {},
       sessionId: "session-123",
+      // @ts-ignore: Type 'undefined' is not assignable to type 'string'
       flowName: undefined,
     });
 

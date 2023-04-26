@@ -48,7 +48,7 @@ export const FOOTER_ITEMS = ["privacy", "help"];
 const FLOW_SETTINGS = [...FOOTER_ITEMS, "legalDisclaimer"] as const;
 export interface FlowSettings {
   elements?: {
-    [key in typeof FLOW_SETTINGS[number]]?: TextContent;
+    [key in (typeof FLOW_SETTINGS)[number]]?: TextContent;
   };
 }
 
@@ -153,9 +153,9 @@ export type Session = {
 
 export interface ReconciliationResponse {
   message: string;
+  changesFound: boolean | null;
+  alteredSectionIds?: string[];
   reconciledSessionData: Session;
-  alteredNodes?: Node[];
-  removedBreadcrumbIds?: string[];
 }
 
 // re-export store types

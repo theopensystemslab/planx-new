@@ -52,7 +52,7 @@ const ReconciliationPage: React.FC<Props> = ({
   // Calculate the section statuses based on the response data from /validate-session, before it's been updated in app state
   const reconciledSectionStatuses = sectionStatuses(
     sortedBreadcrumbs,
-    reconciliationResponse.removedBreadcrumbIds
+    reconciliationResponse.alteredSectionIds
   );
 
   const theme = useTheme();
@@ -71,7 +71,7 @@ const ReconciliationPage: React.FC<Props> = ({
       </Box>
       <Card>
         {/* Only show a warning if the content change has affected the user's path */}
-        {(reconciliationResponse.removedBreadcrumbIds || []).length > 0 && (
+        {reconciliationResponse.changesFound && (
           <Box display="flex" mb={4}>
             <Warning
               titleAccess="Warning"

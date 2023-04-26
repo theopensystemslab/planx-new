@@ -6,7 +6,7 @@ import {
 } from "../hasura";
 import { getSaveAndReturnPublicHeaders } from "./utils";
 import { getMostRecentPublishedFlow } from "../helpers";
-import { sortBreadcrumbs as normalizedBreadcrumbSort } from "@opensystemslab/planx-core";
+import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type {
   NormalizedCrumb,
@@ -17,14 +17,14 @@ import type { LowCalSession, PublishedFlow, Node } from "../types";
 
 export interface ValidationResponse {
   message: string;
-  alteredNodes?: Node[];
+  changesFound: boolean | null;
+  alteredSectionIds?: Array<string>;
   reconciledSessionData: LowCalSession["data"];
-  removedBreadcrumbIds?: Array<string>;
 }
 
-type ReconciledSession = {
+export type ReconciledSession = {
+  alteredSectionIds: Array<string>;
   reconciledSessionData: LowCalSession["data"];
-  removedBreadcrumbIds: Array<string>;
 };
 
 // TODO - Ensure reconciliation handles:
@@ -65,10 +65,10 @@ export async function validateSession(
     if (userHasPaid) {
       const responseData: ValidationResponse = {
         message: "Payment process initiated, skipping reconciliation",
-        alteredNodes: [],
+        changesFound: null,
         reconciledSessionData: sessionData,
       };
-      await createAuditEntry(sessionId, responseData, responseData.message);
+      await createAuditEntry(sessionId, responseData);
       return res.status(200).json(responseData);
     }
 
@@ -81,9 +81,10 @@ export async function validateSession(
     if (!flowDiff) {
       const responseData: ValidationResponse = {
         message: "No content changes since last save point",
+        changesFound: false,
         reconciledSessionData: sessionData,
       };
-      await createAuditEntry(sessionId, responseData, responseData.message);
+      await createAuditEntry(sessionId, responseData);
       return res.status(200).json(responseData);
     }
 
@@ -92,27 +93,28 @@ export async function validateSession(
       id: nodeId,
     }));
 
-    const { reconciledSessionData, removedBreadcrumbIds }: ReconciledSession =
+    const { reconciledSessionData, alteredSectionIds } =
       await reconcileSessionData({ sessionData, alteredNodes });
 
-    // store modified session data
-    await updateLowcalSessionData(sessionId, sessionData, email);
-
-    const message =
-      "This service has been updated since you last saved your application." +
-      " We will ask you to answer any updated questions again when you continue.";
+    // store reconciled session data
+    await updateLowcalSessionData({
+      sessionId,
+      sessionData: reconciledSessionData,
+      email,
+    });
 
     const responseData: ValidationResponse = {
-      message,
-      alteredNodes,
-      removedBreadcrumbIds,
+      message:
+        "This service has been updated since you last saved your application." +
+        " We will ask you to answer any updated questions again when you continue.",
+      changesFound: true,
+      alteredSectionIds,
       reconciledSessionData,
     };
 
-    await createAuditEntry(sessionId, responseData, responseData.message);
+    await createAuditEntry(sessionId, responseData);
     return res.status(200).json(responseData);
   } catch (error) {
-    console.log(error);
     return next({
       error,
       message: "Failed to validate session",
@@ -127,55 +129,44 @@ async function reconcileSessionData({
   sessionData: LowCalSession["data"];
   alteredNodes: Array<Node>;
 }): Promise<ReconciledSession> {
-  const sessionData = { ...originalData }; // copy original data
+  const sessionData = { ...originalData }; // copy original data for modification
+  const alteredSectionIds: string[] = [];
 
-  // fetch the full flow to order breadcrumbs
   const currentFlow = await getMostRecentPublishedFlow(sessionData.id);
 
+  const findParentNode = (nodeId: string): string | undefined => {
+    const [parentId, _] =
+      Object.entries(currentFlow).find(([_, node]) =>
+        node.edges?.includes(nodeId)
+      ) || [];
+    return parentId;
+  };
+
   // create ordered breadcrumbs to be able to look up section IDs later
-  const orderedBreadcrumbs: OrderedBreadcrumbs = normalizedBreadcrumbSort(
+  const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
     currentFlow as FlowGraph,
     sessionData.breadcrumbs
   );
 
-  // update breadcrumbs
-  const removedBreadcrumbIds: string[] = [];
-  alteredNodes.forEach((node) => {
-    // remove existing breadcrumbs to mark updated questions as unanswered
-    if (sessionData.breadcrumbs[node.id!]) {
-      removedBreadcrumbIds.push(node.id!);
-      delete sessionData.breadcrumbs[node.id!];
+  const removeBreadcrumb = (nodeId: string) => {
+    if (sessionData.breadcrumbs[nodeId]) {
+      delete sessionData.breadcrumbs[nodeId];
     }
-
-    // if an answer has changed, find it's question and remove that from breadcrumbs
-    if (node.type === ComponentType.Answer) {
-      const [parentId, _] =
-        Object.entries(currentFlow).find(([_, currentNode]) =>
-          currentNode.edges?.includes(node.id!)
-        ) || [];
-      if (parentId && sessionData.breadcrumbs[parentId!]) {
-        removedBreadcrumbIds.push(parentId!);
-        delete sessionData.breadcrumbs[parentId!];
-      }
-    }
-
-    // also remove the associated section to mark it as incomplete
     const crumb: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
-      (crumb) => crumb.id === node.id!
+      (crumb) => crumb.id === nodeId!
     );
     if (
       crumb &&
       crumb?.sectionId &&
       sessionData.breadcrumbs[crumb.sectionId!]
     ) {
-      removedBreadcrumbIds.push(crumb.sectionId!);
       delete sessionData.breadcrumbs[crumb.sectionId!];
+      alteredSectionIds.push(crumb.sectionId);
     }
-  });
+  };
 
-  // TODO - it would be nicer to recompute the passport from the modified breadcrumbs
-  // update passport data
-  removedBreadcrumbIds.forEach((nodeId) => {
+  // TODO - ensure all passport keys are cleaned up
+  const removePassportValue = (nodeId: string) => {
     // a flow schema can store the planx variable name under any of these keys
     const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
     planx_keys.forEach((key) => {
@@ -185,11 +176,32 @@ async function reconcileSessionData({
         delete sessionData.passport?.data?.[currentFlow[nodeId].data?.[key]];
       }
     });
-  });
+  };
+
+  const removeSessionDataForNodeId = (nodeId: string) => {
+    removeBreadcrumb(nodeId);
+    removePassportValue(nodeId);
+  };
+
+  // update breadcrumbs
+  for (const node of alteredNodes) {
+    if (node.type === ComponentType.Section) {
+      // ignore section content changes and do not included these in alteredSectionIds
+      continue;
+    }
+    removeSessionDataForNodeId(node.id!);
+    // if an answer has changed, find it's parent and remove that from breadcrumbs
+    if (node.type === ComponentType.Answer) {
+      const parentId = findParentNode(node.id!);
+      if (parentId && sessionData.breadcrumbs[parentId!]) {
+        removeSessionDataForNodeId(parentId!);
+      }
+    }
+  }
 
   return {
     reconciledSessionData: sessionData,
-    removedBreadcrumbIds,
+    alteredSectionIds,
   };
 }
 
@@ -245,11 +257,15 @@ async function findSession({
     : undefined;
 }
 
-async function updateLowcalSessionData(
-  sessionId: string,
-  data: LowCalSession["data"],
-  email: string
-): Promise<LowCalSession> {
+async function updateLowcalSessionData({
+  sessionId,
+  sessionData,
+  email,
+}: {
+  sessionId: string;
+  sessionData: LowCalSession["data"];
+  email: string;
+}): Promise<LowCalSession> {
   const query = gql`
     mutation UpdateLowcalSessionData($sessionId: uuid!, $data: jsonb!) {
       update_lowcal_sessions_by_pk(
@@ -263,7 +279,7 @@ async function updateLowcalSessionData(
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await publicClient.request(
     query,
-    { sessionId, data },
+    { sessionId, data: sessionData },
     headers
   );
   return response.update_lowcal_sessions_by_pk?.data;
@@ -271,10 +287,9 @@ async function updateLowcalSessionData(
 
 async function createAuditEntry(
   sessionId: string,
-  data: ValidationResponse,
-  message: string
-): Promise<Record<"insert_reconciliation_requests_one", string>> {
-  return await adminClient.request(
+  data: ValidationResponse
+): Promise<void> {
+  await adminClient.request(
     gql`
       mutation InsertReconciliationRequests(
         $session_id: String = ""
@@ -295,7 +310,7 @@ async function createAuditEntry(
     {
       session_id: sessionId,
       response: data,
-      message: message,
+      message: data.message,
     }
   );
 }

@@ -16,7 +16,7 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "jest/expect-expect": [
       "error",
       {

@@ -64,6 +64,8 @@ describe("Validate Session endpoint", () => {
   });
 
   it("returns a 200 OK for a valid session where there have been no updates", async () => {
+    mockQueryWithFlowDiff({ flow: mockFlow.data, diff: null });
+
     const data = {
       payload: {
         sessionId: mockLowcalSession.id,
@@ -71,28 +73,24 @@ describe("Validate Session endpoint", () => {
       },
     };
 
-    const expectedSessionData = {
-      ...mockLowcalSession.data,
+    const expected = {
+      message: "No content changes since last save point",
+      changesFound: false,
+      reconciledSessionData: {
+        ...mockLowcalSession.data,
+      },
     };
-
-    const expectedMessage = "No content changes since last save point";
-
-    mockQueryWithFlowDiff({ flow: mockFlow.data, diff: null });
 
     await supertest(app)
       .post(validateSessionPath)
       .send(data)
       .expect(200)
       .then((response) => {
-        expect(response.body).toHaveProperty("message", expectedMessage);
-        expect(response.body).toHaveProperty(
-          "reconciledSessionData",
-          expectedSessionData
-        );
+        expect(response.body).toEqual(expected);
       });
   });
 
-  it("returns changed nodes and invalidated breadcrumbs when the flow has been updated", async () => {
+  test("an updated flow without sections", async () => {
     const flow: Flow["data"] = {
       _root: {
         edges: ["question"],
@@ -132,22 +130,13 @@ describe("Validate Session endpoint", () => {
     };
 
     const expected = {
-      alteredNodes: [
-        {
-          id: "question",
-          data: { fn: "question", text: "Is it '1' or '2'" },
-          edges: ["one", "two"],
-          type: 100,
-        },
-        { data: { text: "1", val: "answer" }, id: "one", type: 200 },
-        { data: { text: "2", val: "answer" }, id: "two", type: 200 },
-      ],
       reconciledSessionData: {
         ...mockLowcalSession.data,
       },
       message:
         "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
-      removedBreadcrumbIds: [],
+      alteredSectionIds: [],
+      changesFound: true,
     };
 
     await supertest(app)
@@ -159,7 +148,7 @@ describe("Validate Session endpoint", () => {
       });
   });
 
-  it("returns changed nodes and invalidated breadcrumbs when a flow has updated only nested nodes (answers but not questions)", async () => {
+  test("an updated flow with modified answers but not questions", async () => {
     const flow: Flow["data"] = {
       _root: {
         edges: ["question1", "question2"],
@@ -224,18 +213,6 @@ describe("Validate Session endpoint", () => {
     };
 
     const expected = {
-      alteredNodes: [
-        {
-          id: "one",
-          data: { val: "answer", text: "One (1)" },
-          type: 200,
-        },
-        {
-          id: "two",
-          data: { val: "answer", text: "Two (2)" },
-          type: 200,
-        },
-      ],
       reconciledSessionData: {
         ...mockLowcalSession.data,
         breadcrumbs: {
@@ -247,8 +224,11 @@ describe("Validate Session endpoint", () => {
       },
       message:
         "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
-      removedBreadcrumbIds: ["question1"],
+      alteredSectionIds: [],
+      changesFound: true,
     };
+
+    const removedBreadcrumbIds = ["question1"];
 
     await supertest(app)
       .post(validateSessionPath)
@@ -259,13 +239,13 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            expected.removedBreadcrumbIds
+            removedBreadcrumbIds
           )
         ).toBe(false);
       });
   });
 
-  it("returns changed nodes and invalidated breadcrumbs when a flow with sections has been updated", async () => {
+  test("an updated flow with modified answers but not questions where the flow has sections", async () => {
     const flow: Flow["data"] = {
       _root: {
         edges: ["section1", "question1", "question2", "section2", "question3"],
@@ -367,20 +347,6 @@ describe("Validate Session endpoint", () => {
     };
 
     const expected = {
-      alteredNodes: [
-        {
-          id: "question1",
-          data: { fn: "question", text: 'Is it "One" or "Two"' },
-          type: 100,
-          edges: ["one", "two"],
-        },
-        {
-          id: "question2",
-          data: { fn: "question", text: '"Yes" or "No"' },
-          type: 100,
-          edges: ["yes", "no"],
-        },
-      ],
       reconciledSessionData: {
         ...mockLowcalSession.data,
         breadcrumbs: {
@@ -395,8 +361,11 @@ describe("Validate Session endpoint", () => {
       },
       message:
         "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
-      removedBreadcrumbIds: ["question1", "section1", "question2"],
+      alteredSectionIds: ["section1"],
+      changesFound: true,
     };
+
+    const removedBreadcrumbIds = ["question1", "section1", "question2"];
 
     await supertest(app)
       .post(validateSessionPath)
@@ -407,13 +376,13 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            expected.removedBreadcrumbIds
+            removedBreadcrumbIds
           )
         ).toBe(false);
       });
   });
 
-  it("returns changed nodes and invalidated breadcrumbs when a flow without sections has sections added", async () => {
+  test("an updated flow without sections where sections are added", async () => {
     const flow: Flow["data"] = {
       _root: {
         edges: ["section1", "question1", "section2", "question2"],
@@ -497,33 +466,14 @@ describe("Validate Session endpoint", () => {
     };
 
     const expected = {
-      alteredNodes: [
-        {
-          id: "_root",
-          edges: ["section1", "question1", "section2", "question2"],
-        },
-        {
-          id: "section1",
-          data: {
-            title: "Section One",
-          },
-          type: 360,
-        },
-        {
-          id: "section2",
-          data: {
-            title: "Section Two",
-          },
-          type: 360,
-        },
-      ],
       reconciledSessionData: {
         ...mockLowcalSession.data,
         breadcrumbs,
       },
       message:
         "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
-      removedBreadcrumbIds: [],
+      alteredSectionIds: [],
+      changesFound: true,
     };
 
     await supertest(app)
@@ -535,7 +485,7 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            expected.removedBreadcrumbIds
+            []
           )
         ).toBe(false);
       });

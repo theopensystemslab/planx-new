@@ -355,7 +355,7 @@ export const previewStore: StateCreator<
   },
 
   resumeSession(session: Session) {
-    set(session);
+    set({ ...session });
     get().updateSectionData();
   },
 
