@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core";
+import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";

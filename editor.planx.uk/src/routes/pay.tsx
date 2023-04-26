@@ -1,4 +1,4 @@
-import { PaymentRequest } from "@opensystemslab/planx-core";
+import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import {

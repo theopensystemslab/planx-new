@@ -7,7 +7,7 @@
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
-    "@opensystemslab/planx-core": "git://github.com/theopensystemslab/planx-core.git#5e932c3",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#16ec679",
     "axios": "^1.1.3",
     "dotenv": "^16.0.2",
     "graphql": "^16.6.0",

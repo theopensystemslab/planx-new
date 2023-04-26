@@ -2,7 +2,7 @@ import Check from "@mui/icons-material/Check";
 import Container from "@mui/material/Container";
 import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { PaymentRequest } from "@opensystemslab/planx-core";
+import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { format } from "date-fns";
 import { getExpiryDateForPaymentRequest } from "lib/pay";

@@ -2,7 +2,7 @@ import type {
   Session,
   PaymentRequest,
   FlowGraph,
-} from "@opensystemslab/planx-core/types/types";
+} from "@opensystemslab/planx-core/types";
 
 export const validEmail = "the-payee@opensystemslab.io";
 

@@ -7,13 +7,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
-    "outDir": "./dist",
+    "outDir": "dist",
     "resolveJsonModule": true,
     "rootDir": ".",
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2021",
-    "typeRoots": ["./node_modules/@types", "./@types"]
+    "target": "es2021"
   },
-  "exclude": ["node_modules", "./dist/**/*"]
+  "exclude": ["node_modules", "dist"]
 }
