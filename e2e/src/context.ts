@@ -129,14 +129,15 @@ export async function findSessionId(
   context
 ): Promise<string | undefined> {
   // get the flow id which may have a session
-  const flowResponse: { flows: { id: string }[] } = await adminGQLClient.request(
-    `query GetFlowBySlug( $slug: String!) {
+  const flowResponse: { flows: { id: string }[] } =
+    await adminGQLClient.request(
+      `query GetFlowBySlug( $slug: String!) {
         flows(where: {slug: {_eq: $slug}}) {
           id
         }
       }`,
-    { slug: context.flow?.slug }
-  );
+      { slug: context.flow?.slug }
+    );
   if (!flowResponse.flows.length || !flowResponse.flows[0].id) {
     return;
   }

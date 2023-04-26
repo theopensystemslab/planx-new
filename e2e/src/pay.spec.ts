@@ -3,7 +3,7 @@ import { log } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";
-import type { SessionData } from "@opensystemslab/planx-core/types/types";
+import type { SessionData } from "@opensystemslab/planx-core/types";
 import type { Context } from "./context";
 import {
   getGraphQLClient,
