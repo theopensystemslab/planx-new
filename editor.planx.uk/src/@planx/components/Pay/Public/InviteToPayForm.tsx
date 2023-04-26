@@ -69,7 +69,7 @@ const SubmitButton: React.FC = () => (
     type="submit"
     sx={{ alignSelf: "start" }}
   >
-    {"Email your nominee"}
+    {"Send invitation to pay"}
   </Button>
 );
 
@@ -249,14 +249,20 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
           <SubmitButton />
         )}
       </StyledForm>
-      <Typography variant="body2">or</Typography>
-      <Link
-        component="button"
+      <Button
+        variant="contained"
+        color="secondary"
+        style={{ borderBottom: `solid 2px lightgrey` }}
+        size="large"
         onClick={changePage}
         disabled={Boolean(paymentStatus)}
       >
+        {"I want to pay for this application myself"}
+      </Button>
+      <Typography variant="body2">or</Typography>
+      <Link component="button">
         <Typography variant="body2">
-          Pay for this application myself instead
+          Save and return to this application later
         </Typography>
       </Link>
     </Card>

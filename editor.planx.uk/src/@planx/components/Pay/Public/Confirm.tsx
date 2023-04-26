@@ -81,19 +81,25 @@ const PayBody: React.FC<PayBodyProps> = (props) => (
             size="large"
             onClick={props.onConfirm}
           >
-            {props.buttonTitle || "Pay using GOV.UK Pay"}
+            {props.buttonTitle || "Pay now using GOV.UK Pay"}
           </Button>
           {props.showInviteToPay && (
             <>
-              <Typography variant="body2">or</Typography>
-              <Link
-                component="button"
+              <Button
+                variant="contained"
+                color="secondary"
+                style={{ borderBottom: `solid 2px lightgrey` }}
+                size="large"
                 onClick={props.changePage}
                 disabled={Boolean(props?.paymentStatus)}
                 data-testid="invite-page-link"
               >
+                {"Invite someone else to pay for this application"}
+              </Button>
+              <Typography variant="body2">or</Typography>
+              <Link component="button">
                 <Typography variant="body2">
-                  Invite someone else to pay for this application
+                  Save and return to this application later
                 </Typography>
               </Link>
             </>
