@@ -3,13 +3,15 @@ import { log } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";
+import type { SessionData } from "@opensystemslab/planx-core/types";
+import type { Context } from "./context";
 import {
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
 } from "./context";
 
-let context = {
+let context: Context = {
   user: {
     firstName: "test",
     lastName: "test",
@@ -28,7 +30,8 @@ let context = {
   },
   sessionIds: [], // used to collect and clean up sessions
 };
-const previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
+const previewURL = `/${context.team!.slug!}/${context.flow!
+  .slug!}/preview?analytics=false`;
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
 const cards = {
@@ -56,7 +59,7 @@ test.describe("Payment flow", async () => {
 
   test("a successful payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page);
-    context.sessionIds.push(sessionId);
+    context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({
@@ -89,7 +92,7 @@ test.describe("Payment flow", async () => {
 
   test("a retry attempt for a failed GOV.UK payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page);
-    context.sessionIds.push(sessionId);
+    context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({ page, cardNumber: cards.invalid_card_number });
@@ -145,7 +148,7 @@ test.describe("Payment flow", async () => {
 
   test("a retry attempt for a cancelled GOV.UK payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page);
-    context.sessionIds.push(sessionId);
+    context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
     await page.locator("#cancel-payment").click();
@@ -193,7 +196,7 @@ test.describe("Payment flow", async () => {
 
   test("a retry attempt for an abandoned GOV.UK payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page);
-    context.sessionIds.push(sessionId);
+    context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({
@@ -216,7 +219,7 @@ test.describe("Payment flow", async () => {
     expect(
       await hasPaymentStatus({
         status: "created",
-        paymentId: initialSession?.data?.govUkPayment?.payment_id,
+        paymentId: initialSession!.data!.govUkPayment!.payment_id,
         adminGQLClient,
       })
     ).toBe(true);
@@ -253,7 +256,7 @@ test.describe("Payment flow", async () => {
     page,
   }) => {
     const sessionId = await navigateToPayComponent(page);
-    context.sessionIds.push(sessionId);
+    context.sessionIds!.push(sessionId);
 
     // begin a payment
     await page.getByText(payButtonText).click();
@@ -293,7 +296,7 @@ test.describe("Payment flow", async () => {
     page,
   }) => {
     const sessionId = await navigateToPayComponent(page);
-    context.sessionIds.push(sessionId);
+    context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
     await fillGovUkCardDetails({
@@ -349,7 +352,7 @@ async function waitForPaymentResponse(
 ): Promise<{ paymentId: string; state?: { status: string } }> {
   const { payment_id: paymentId, state } = await page
     .waitForResponse((response) => {
-      return response.url().includes(`pay/${context.team.slug}`);
+      return response.url().includes(`pay/${context.team!.slug!}`);
     })
     .then((req) => req.json());
   if (!paymentId) throw new Error("Bad payment response");
@@ -358,7 +361,7 @@ async function waitForPaymentResponse(
 
 async function getSessionId(page: Page): Promise<string> {
   // the session id is not available in the url so find it in a test utility component
-  const sessionId = await page
+  const sessionId: string | null = await page
     .getByTestId("sessionId")
     .getAttribute("data-sessionid");
   if (!sessionId) throw new Error("Session ID not found on page");
@@ -375,23 +378,30 @@ async function hasPaymentStatus({
   adminGQLClient: GraphQLClient;
 }): Promise<boolean> {
   try {
-    const { payment_status: response } = await adminGQLClient.request(
-      gql`
-        query GetPaymentStatus(
-          $paymentId: String!
-          $status: payment_status_enum_enum!
-        ) {
-          payment_status(
-            where: { payment_id: { _eq: $paymentId }, status: { _eq: $status } }
+    const response: { payment_status: { status: string }[] } =
+      await adminGQLClient.request(
+        gql`
+          query GetPaymentStatus(
+            $paymentId: String!
+            $status: payment_status_enum_enum!
           ) {
-            status
+            payment_status(
+              where: {
+                payment_id: { _eq: $paymentId }
+                status: { _eq: $status }
+              }
+            ) {
+              status
+            }
           }
-        }
-      `,
-      { paymentId, status }
-    );
-    if (response.length === 1 && response[0].status) {
-      return response[0].status === status;
+        `,
+        { paymentId, status }
+      );
+    if (
+      response.payment_status.length === 1 &&
+      response.payment_status[0].status
+    ) {
+      return response.payment_status[0].status === status;
     } else {
       return false;
     }
@@ -407,19 +417,17 @@ async function findSession({
 }: {
   sessionId: string;
   adminGQLClient: GraphQLClient;
-}): Promise<
-  | { data: { govUkPayment: { payment_id: string; state: { satus: string } } } }
-  | undefined
-> {
-  const { lowcal_sessions: response } = await adminGQLClient.request(
-    gql`
-      query FindLowcalSesion($sessionId: uuid!) {
-        lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
-          data
+}): Promise<{ data: SessionData } | undefined> {
+  const response: { lowcal_sessions: { data: SessionData } } =
+    await adminGQLClient.request(
+      gql`
+        query FindLowcalSesion($sessionId: uuid!) {
+          lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
+            data
+          }
         }
-      }
-    `,
-    { sessionId }
-  );
-  return response[0];
+      `,
+      { sessionId }
+    );
+  return response.lowcal_sessions[0];
 }

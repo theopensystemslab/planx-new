@@ -3,7 +3,7 @@
     "allowJs": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2021"],
+    "lib": ["ES2021", "DOM"],
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -12,7 +12,6 @@
     "strict": true,
     "noImplicitAny": false,
     "target": "es2021",
-    "typeRoots": ["./node_modules/@types", "./@types"],
     "noEmit": true
   },
   "exclude": ["node_modules"]
