@@ -73,7 +73,7 @@ const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
 
 const LeftBox = styled(Box)(() => ({
   display: "flex",
-  flexGrow: 0,
+  flexGrow: 1,
   flexShrink: 0,
   flexBasis: "140px",
   justifyContent: "start",
@@ -149,7 +149,7 @@ const SkipLink = styled("a")(({ theme }) => ({
 
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
   display: "flex",
-  flexGrow: 0,
+  flexGrow: 1,
   flexShrink: 1,
   lineHeight: LINE_HEIGHT_BASE,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,

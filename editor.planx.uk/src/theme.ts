@@ -212,6 +212,10 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           sizeLarge: {
             fontSize: "1.188rem",
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
+            width: "100%",
+            "@media (min-width: 768px)": {
+              width: "auto",
+            },
           },
         },
       },
