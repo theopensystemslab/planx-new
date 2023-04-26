@@ -14,10 +14,12 @@ export interface SectionNode extends Store.node {
 }
 
 export enum SectionStatus {
-  NotStarted = "CANNOT CONTINUE YET",
-  InProgress = "READY TO CONTINUE",
-  Completed = "COMPLETED",
   NeedsUpdated = "NEW INFORMATION NEEDED",
+  ReadyToContinue = "READY TO CONTINUE",
+  Started = "STARTED",
+  ReadyToStart = "READY TO START",
+  NotStarted = "CANNOT START YET",
+  Completed = "COMPLETED",
 }
 
 export interface NavigationStore {
@@ -29,10 +31,11 @@ export interface NavigationStore {
   initNavigationStore: () => void;
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.flow;
-  sectionStatuses: (
-    breadcrumbs?: Store.breadcrumbs,
-    updatedSectionNodeIds?: string[]
-  ) => Record<string, SectionStatus>;
+  sectionStatuses: (args?: {
+    sortedBreadcrumbs: Store.breadcrumbs;
+    isReconciliation: boolean;
+    alteredSectionIds?: string[];
+  }) => Record<string, SectionStatus>;
   getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
 }
@@ -117,52 +120,71 @@ export const navigationStore: StateCreator<
     return filteredFlow;
   },
 
-  /**
-   * Calculate the status of each section node based on the current position in a flow (eg state.cachedBreadcrumbs) or provided breadcrumbs (eg on reconciliation)
-   *   Pass updatedNodeIds on reconciliation to ensure we set an accurrate status for every previously seen section because updated sections are removed from breadcrumbs during reconciliation
-   */
-  sectionStatuses: (
-    breadcrumbs?: Store.breadcrumbs,
-    alteredSectionIds?: string[]
-  ): Record<string, SectionStatus> => {
-    const { sectionNodes, currentCard, upcomingCardIds, cachedBreadcrumbs } =
-      get();
+  // compute section statuses using breadcrumbs, cachedBreadcrumbs and currentCard
+  sectionStatuses: (args?: {
+    sortedBreadcrumbs: Store.breadcrumbs;
+    isReconciliation: boolean;
+    alteredSectionIds?: string[];
+  }): Record<string, SectionStatus> => {
+    const {
+      sectionNodes,
+      currentCard,
+      cachedBreadcrumbs,
+      breadcrumbs: storedBreadcrumbs,
+    } = get();
+    const breadcrumbs = args?.sortedBreadcrumbs || storedBreadcrumbs;
+    const alteredSectionIds = args?.alteredSectionIds || null;
+    const isReconciliation = args?.isReconciliation;
 
-    // Default to cachedBreadcrumbs unless a breadcrumbs-like object is explicitly provided (eg on reconciliation, before app state has been updated)
-    if (!breadcrumbs) breadcrumbs = cachedBreadcrumbs;
+    const seenPastNodeIds = Object.keys({ ...breadcrumbs });
+    const seenUpcomingNodeIds = Object.keys({ ...cachedBreadcrumbs });
+    const allSeenNodeIds = [...seenPastNodeIds, ...seenUpcomingNodeIds];
 
+    const sectionNodeIds = Object.keys(sectionNodes);
+    const currentCardId = currentCard()?.id;
+
+    const currentCardIsSection =
+      currentCardId && sectionNodeIds.includes(currentCardId);
+
+    let seenUpcomingSection = false;
     const sectionStatuses: Record<string, SectionStatus> = {};
-    Object.keys(sectionNodes).forEach((sectionId) => {
-      if (alteredSectionIds?.includes(sectionId)) {
-        // We only expect to receive updatedSectionNodeIds argument on reconciliation, therefore
-        //   this status should never apply to regular forwards/back/change navigation
+    for (const [index, sectionId] of Object.entries(sectionNodeIds)) {
+      // check for an altered sections
+      if (alteredSectionIds && alteredSectionIds!.includes(sectionId)) {
         sectionStatuses[sectionId] = SectionStatus.NeedsUpdated;
-      } else if (
-        currentCard()?.id === sectionId ||
-        (breadcrumbs && Object.keys(breadcrumbs).includes(sectionId))
-      ) {
-        sectionStatuses[sectionId] = SectionStatus.InProgress;
-      } else if (upcomingCardIds()?.includes(sectionId)) {
-        sectionStatuses[sectionId] = SectionStatus.NotStarted;
-      } else {
-        sectionStatuses[sectionId] = SectionStatus.Completed;
+        seenUpcomingSection = true;
+        continue;
       }
-    });
 
-    // If there is more than one in-progress section, correct all but most recent one to display as complete
-    //   ** this scenario should only be possible on reconciliation when cachedBreadcrumbs are unavailable
-    if (
-      Object.values(sectionStatuses).filter(
-        (status) => status === SectionStatus.InProgress
-      ).length > 1
-    ) {
-      const inProgressSectionIds = Object.keys(sectionStatuses).filter(
-        (sectionId) => sectionStatuses[sectionId] === SectionStatus.InProgress
-      );
-      const completedSectionIds = inProgressSectionIds.slice(0, -1);
-      completedSectionIds.forEach((sectionId) => {
-        sectionStatuses[sectionId] = SectionStatus.Completed;
-      });
+      const nextSectionId = sectionNodeIds.at(Number(index) + 1);
+      const seenNextSection =
+        nextSectionId && allSeenNodeIds.includes(nextSectionId);
+      const isLastSeenSection =
+        allSeenNodeIds.includes(sectionId) && !seenNextSection;
+
+      // check for an upcoming section
+      if (!seenUpcomingSection) {
+        if (
+          seenUpcomingNodeIds.includes(sectionId) ||
+          (isLastSeenSection && !currentCardIsSection)
+        ) {
+          sectionStatuses[sectionId] = SectionStatus.ReadyToContinue;
+          seenUpcomingSection = true;
+        } else if (!allSeenNodeIds.includes(sectionId)) {
+          sectionStatuses[sectionId] = SectionStatus.ReadyToStart;
+          seenUpcomingSection = true;
+        } else {
+          sectionStatuses[sectionId] = SectionStatus.Completed;
+        }
+        continue;
+      }
+
+      // check for remaining sections
+      if (allSeenNodeIds.includes(sectionId)) {
+        sectionStatuses[sectionId] = SectionStatus.Started;
+      } else {
+        sectionStatuses[sectionId] = SectionStatus.NotStarted;
+      }
     }
 
     return sectionStatuses;

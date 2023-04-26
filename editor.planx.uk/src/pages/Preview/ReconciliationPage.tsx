@@ -50,10 +50,11 @@ const ReconciliationPage: React.FC<Props> = ({
   );
 
   // Calculate the section statuses based on the response data from /validate-session, before it's been updated in app state
-  const reconciledSectionStatuses = sectionStatuses(
+  const reconciledSectionStatuses = sectionStatuses({
     sortedBreadcrumbs,
-    reconciliationResponse.alteredSectionIds
-  );
+    isReconciliation: reconciliationResponse.changesFound !== null,
+    alteredSectionIds: reconciliationResponse.alteredSectionIds,
+  });
 
   const theme = useTheme();
   const classes = useStyles();

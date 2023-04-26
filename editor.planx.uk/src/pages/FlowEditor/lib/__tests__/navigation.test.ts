@@ -2,6 +2,7 @@ import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag, toggleFeatureFlag } from "lib/featureFlags";
 
 import { FullStore, vanillaStore } from "../store";
+import { SectionStatus } from "../store/navigation";
 import flowWithoutSections from "./mocks/flowWithClones.json";
 import flowWithThreeSections from "./mocks/flowWithThreeSections.json";
 
@@ -163,9 +164,9 @@ test("SectionStatuses() gets the initial statuses of all sections in a flow", ()
 
   // Initial statuses are calculated correctly
   expect(statuses).toEqual({
-    firstSection: "READY TO CONTINUE",
-    secondSection: "CANNOT CONTINUE YET",
-    thirdSection: "CANNOT CONTINUE YET",
+    firstSection: SectionStatus.ReadyToStart,
+    secondSection: SectionStatus.NotStarted,
+    thirdSection: SectionStatus.NotStarted,
   });
 });
 
@@ -182,9 +183,9 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
 
   // Confirm statuses have been updated correctly
   expect(statuses).toEqual({
-    firstSection: "COMPLETED",
-    secondSection: "READY TO CONTINUE",
-    thirdSection: "CANNOT CONTINUE YET",
+    firstSection: SectionStatus.Completed,
+    secondSection: SectionStatus.ReadyToStart,
+    thirdSection: SectionStatus.NotStarted,
   });
 
   // Navigate forwards again
@@ -195,9 +196,9 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
 
   // Confirm statuses have been updated correctly
   expect(newStatuses).toEqual({
-    firstSection: "COMPLETED",
-    secondSection: "COMPLETED",
-    thirdSection: "READY TO CONTINUE",
+    firstSection: SectionStatus.Completed,
+    secondSection: SectionStatus.Completed,
+    thirdSection: SectionStatus.ReadyToStart,
   });
 });
 
@@ -205,17 +206,20 @@ test("sectionStatuses() applies the NEW INFORMATION NEEDED status if a section w
   setState({ flow: flowWithThreeSections });
   initNavigationStore();
 
-  // Navigate forwards
-  record("firstSection", { auto: false });
-  record("firstQuestion", { answers: ["firstAnswer"] });
-
-  // Mimic "reconciliation" process and pretend that the firstSection & firstQuestion have been updated in content, and therefore removed from breadcrumbs leaving an empty object
-  const statuses = sectionStatuses({}, ["firstSection", "firstQuestion"]);
+  // breadcrumbs and alteredSectionIds are passed in at reconciliation
+  const statuses = sectionStatuses({
+    isReconciliation: true,
+    sortedBreadcrumbs: {
+      firstSection: { auto: false },
+      firstQuestion: { answers: ["firstAnswer"] },
+    },
+    alteredSectionIds: ["firstSection"],
+  });
 
   expect(statuses).toEqual({
-    firstSection: "NEW INFORMATION NEEDED", // no longer considered COMPLETED
-    secondSection: "READY TO CONTINUE",
-    thirdSection: "CANNOT CONTINUE YET",
+    firstSection: SectionStatus.NeedsUpdated, // no longer considered Completed
+    secondSection: SectionStatus.NotStarted,
+    thirdSection: SectionStatus.NotStarted,
   });
 });
 
@@ -223,20 +227,21 @@ test("sectionStatuses() corrects multiple in-progress statuses on reconciliation
   setState({ flow: flowWithThreeSections });
   initNavigationStore();
 
-  // Navigate forwards
-  record("firstSection", { auto: false });
-  record("firstQuestion", { answers: ["firstAnswer"] });
-  record("secondSection", { auto: false });
-  record("secondQuestion", { answers: ["secondAnswer"] });
-
-  // Mimic "reconciliation" by explicitly passing breadcrumbs instead of relying on cachedBreadcrumbs, assume no content has changed
-  const breadcrumbs = getState().breadcrumbs;
-  const statuses = sectionStatuses(breadcrumbs);
+  // breadcrumbs are passed in at reconciliation
+  const statuses = sectionStatuses({
+    isReconciliation: true,
+    sortedBreadcrumbs: {
+      firstSection: { auto: false },
+      firstQuestion: { answers: ["firstAnswer"] },
+      secondSection: { auto: false },
+      secondQuestion: { answers: ["secondAnswer"] },
+    },
+  });
 
   expect(statuses).toEqual({
-    firstSection: "COMPLETED",
-    secondSection: "COMPLETED",
-    thirdSection: "READY TO CONTINUE",
+    firstSection: SectionStatus.Completed,
+    secondSection: SectionStatus.Completed,
+    thirdSection: SectionStatus.ReadyToStart,
   });
 });
 
@@ -244,22 +249,21 @@ test("sectionStatuses() applies the NEW INFORMATION NEEDED status and corrects m
   setState({ flow: flowWithThreeSections });
   initNavigationStore();
 
-  // Navigate forwards
-  record("firstSection", { auto: false });
-  record("firstQuestion", { answers: ["firstAnswer"] });
-  record("secondSection", { auto: false });
-  record("secondQuestion", { answers: ["secondAnswer"] });
-
-  // Mimic "reconciliation" by explicitly passing breadcrumbs instead of relying on cachedBreadcrumbs and mocking updated content in firstSection
-  const breadcrumbs = getState().breadcrumbs;
-  const statuses = sectionStatuses(breadcrumbs, [
-    "firstSection",
-    "firstQuestion",
-  ]);
+  // breadcrumbs and alteredSectionIds are passed in at reconciliation
+  const statuses = sectionStatuses({
+    isReconciliation: true,
+    sortedBreadcrumbs: {
+      firstSection: { auto: false },
+      firstQuestion: { answers: ["firstAnswer"] },
+      secondSection: { auto: false },
+      secondQuestion: { answers: ["secondAnswer"] },
+    },
+    alteredSectionIds: ["firstSection"],
+  });
 
   expect(statuses).toEqual({
-    firstSection: "NEW INFORMATION NEEDED",
-    secondSection: "COMPLETED",
-    thirdSection: "READY TO CONTINUE",
+    firstSection: SectionStatus.NeedsUpdated,
+    secondSection: SectionStatus.Started,
+    thirdSection: SectionStatus.NotStarted,
   });
 });

@@ -133,10 +133,12 @@ export function SectionsOverviewList(props: SectionsOverviewListProps) {
 
 const getTagBackgroundColor = (theme: Theme, title: string): string => {
   const backgroundColors: Record<string, string> = {
-    [SectionStatus.NotStarted]: theme.palette.grey[200],
-    [SectionStatus.InProgress]: lighten(theme.palette.primary.main, 0.9),
-    [SectionStatus.Completed]: theme.palette.success.main,
     [SectionStatus.NeedsUpdated]: theme.palette.action.focus, // GOV UK YELLOW for now, check Figma
+    [SectionStatus.ReadyToContinue]: lighten(theme.palette.primary.main, 0.9),
+    [SectionStatus.ReadyToStart]: lighten(theme.palette.primary.main, 0.9),
+    [SectionStatus.Started]: lighten(theme.palette.primary.main, 0.8),
+    [SectionStatus.NotStarted]: theme.palette.grey[200],
+    [SectionStatus.Completed]: theme.palette.success.main,
   };
 
   return backgroundColors[title];
@@ -144,12 +146,14 @@ const getTagBackgroundColor = (theme: Theme, title: string): string => {
 
 const getTagTextColor = (theme: Theme, title: string): string => {
   const textColors: Record<string, string> = {
+    [SectionStatus.NeedsUpdated]: "#000",
+    [SectionStatus.ReadyToContinue]: "#000",
+    [SectionStatus.ReadyToStart]: "#000",
+    [SectionStatus.Started]: theme.palette.primary.main,
     [SectionStatus.NotStarted]: theme.palette.getContrastText(
       theme.palette.grey[200]
     ),
-    [SectionStatus.InProgress]: theme.palette.primary.main,
     [SectionStatus.Completed]: "#FFF",
-    [SectionStatus.NeedsUpdated]: "#000",
   };
 
   return textColors[title];

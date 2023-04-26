@@ -2,7 +2,7 @@ import { expect } from "@playwright/test";
 import type { Page, Browser, Locator } from "@playwright/test";
 import { findSessionId, generateAuthenticationToken } from "./context";
 import type { Context } from "./context";
-import type { GraphQLClient } from "graphql-request";
+import { getGraphQLClient } from "./context";
 
 // utility functions
 
@@ -13,6 +13,10 @@ export function log(...args: any[]) {
 
 // a collection of useful playwright actions
 // these could evolve into fixtures: https://playwright.dev/docs/test-fixtures
+
+export async function debugPageConsole(page: Page) {
+  page.on("console", (msg) => console.log(msg.text()));
+}
 
 export async function createAuthenticatedSession({
   browser,
@@ -66,22 +70,22 @@ export async function getTeamPage({
 
 export async function saveSession({
   page,
-  adminGQLClient,
   context,
 }: {
   page: Page;
-  adminGQLClient: GraphQLClient;
   context: Context;
 }): Promise<string | undefined> {
   // ensure store has had time to update any previous answer before saving
   await new Promise((resolve) => setTimeout(resolve, 500));
 
+  const pageResponsePromise = page.waitForResponse((response) => {
+    return response.url().includes("/send-email/save");
+  });
   await page
     .locator("button", { hasText: "Save and return to this application later" })
     .click();
-  await page.waitForResponse((response) => {
-    return response.url().includes("/send-email/save");
-  });
+  await pageResponsePromise;
+  const adminGQLClient = getGraphQLClient();
   const sessionId = await findSessionId(adminGQLClient, context);
   return sessionId;
 }
@@ -90,14 +94,24 @@ export async function returnToSession({
   page,
   context,
   sessionId,
+  shouldContinue = true,
 }: {
   page: Page;
   context: Context;
   sessionId: string;
+  shouldContinue: boolean;
 }) {
   const returnURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false&sessionId=${sessionId}`;
-  await page.goto(returnURL, { waitUntil: "domcontentloaded" });
+  log(`returning to http://localhost:3000/${returnURL}`);
+  await page.goto(returnURL);
   await page.locator("#email").fill(context.user?.email);
+  if (shouldContinue) {
+    const waitPromise = page.waitForResponse((response) => {
+      return response.url().includes("/validate-session");
+    });
+    await clickContinue({ page });
+    await waitPromise;
+  }
 }
 
 export async function clickContinue({
@@ -107,13 +121,19 @@ export async function clickContinue({
   page: Page;
   waitForResponse?: boolean;
 }) {
+  const waitPromise = waitForResponse
+    ? page.waitForResponse(
+        (response) =>
+          response.url().includes("graphql") && response.status() === 200
+      )
+    : new Promise((resolve) => setTimeout(resolve, 500));
   await page.getByTestId("continue-button").click();
-  if (waitForResponse) {
-    await page.waitForResponse(
-      (response) =>
-        response.url().includes("graphql") && response.status() === 200
-    );
-  }
+  await waitPromise;
+}
+
+export async function clickBack({ page }: { page: Page }) {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  await page.getByRole("button", { name: "Back", exact: true }).click();
 }
 
 export async function fillInEmail({

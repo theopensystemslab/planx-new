@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
-import { flow } from "./flows/sections-flow";
+import { flow, updatedQuestionAnswers } from "./flows/sections-flow";
 import {
   setUpTestContext,
   tearDownTestContext,
@@ -10,16 +10,29 @@ import {
   answerQuestion,
   answerChecklist,
   clickContinue,
+  clickBack,
   expectNotice,
   expectSections,
   expectConfirmation,
   saveSession,
   returnToSession,
 } from "./helpers";
+import { gql } from "graphql-request";
 import type { Context } from "./context";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
+
+// TODO: move this type to planx-core
+// also defined in editor.planx.uk/src/pages/FlowEditor/lib/store/navigation.ts
+export enum SectionStatus {
+  NeedsUpdated = "NEW INFORMATION NEEDED",
+  ReadyToContinue = "READY TO CONTINUE",
+  Started = "STARTED",
+  ReadyToStart = "READY TO START",
+  NotStarted = "CANNOT START YET",
+  Completed = "COMPLETED",
+}
 
 test.describe("Sections", () => {
-  const adminGQLClient = getGraphQLClient();
   let context: Context = {
     user: {
       firstName: "test",
@@ -53,8 +66,8 @@ test.describe("Sections", () => {
     await tearDownTestContext(context);
   });
 
-  test.describe("simple section states", () => {
-    test("the correct section statuses are displayed for a straight-through journey", async ({
+  test.describe("a straight-through journey", () => {
+    test("not started, ready to start and complete statuses", async ({
       page,
     }) => {
       await page.goto(previewURL);
@@ -68,15 +81,15 @@ test.describe("Sections", () => {
         sections: [
           {
             title: "Section One",
-            status: "READY TO CONTINUE",
+            status: SectionStatus.ReadyToStart,
           },
           {
             title: "Section Two",
-            status: "CANNOT CONTINUE YET",
+            status: SectionStatus.NotStarted,
           },
           {
             title: "Section Three",
-            status: "CANNOT CONTINUE YET",
+            status: SectionStatus.NotStarted,
           },
         ],
       });
@@ -90,15 +103,15 @@ test.describe("Sections", () => {
         sections: [
           {
             title: "Section One",
-            status: "COMPLETED",
+            status: SectionStatus.Completed,
           },
           {
             title: "Section Two",
-            status: "READY TO CONTINUE",
+            status: SectionStatus.ReadyToStart,
           },
           {
             title: "Section Three",
-            status: "CANNOT CONTINUE YET",
+            status: SectionStatus.NotStarted,
           },
         ],
       });
@@ -131,15 +144,15 @@ test.describe("Sections", () => {
         sections: [
           {
             title: "Section One",
-            status: "COMPLETED",
+            status: SectionStatus.Completed,
           },
           {
             title: "Section Two",
-            status: "COMPLETED",
+            status: SectionStatus.Completed,
           },
           {
             title: "Section Three",
-            status: "READY TO CONTINUE",
+            status: SectionStatus.ReadyToStart,
           },
         ],
       });
@@ -150,11 +163,166 @@ test.describe("Sections", () => {
 
       await expectConfirmation({ page, text: "Application Sent" });
     });
+
+    test("started and ready to continue", async ({ page }) => {
+      await page.goto(previewURL);
+      await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
+
+      await fillInEmail({ page, context });
+      await clickContinue({ page, waitForResponse: true });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.ReadyToStart,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.NotStarted,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+      await clickContinue({ page });
+
+      await answerQuestion({ page, title: "Question 1", answer: "A" });
+      await clickContinue({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.Completed,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.ReadyToStart,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+      await clickContinue({ page });
+
+      await answerQuestion({ page, title: "Question 2", answer: "A" });
+      await clickContinue({ page });
+
+      // back to Question 2
+      await clickBack({ page });
+
+      // back to Section Two Overview
+      await clickBack({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.Completed,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.ReadyToContinue,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+      await clickContinue({ page });
+
+      // skip Question 2
+      await clickContinue({ page });
+
+      // skip end of section 2 notice
+      await clickContinue({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.Completed,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.Completed,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.ReadyToStart,
+          },
+        ],
+      });
+      await clickContinue({ page });
+
+      // back to Section Three Overview
+      await clickBack({ page });
+
+      // back to end of section 2 notice
+      await clickBack({ page });
+
+      // back to Question 2
+      await clickBack({ page });
+
+      // back to Section Two Overview
+      await clickBack({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.Completed,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.ReadyToContinue,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.Started,
+          },
+        ],
+      });
+
+      // back to Question 1
+      await clickBack({ page });
+
+      // back to Section One Overview
+      await clickBack({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.ReadyToContinue,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.Started,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.Started,
+          },
+        ],
+      });
+    });
   });
 
-  // TODO fix me
-  test.describe.skip("save and return with no service changes", () => {
-    test("the application resumes from the last unanswered question with the correct section statuses", async ({
+  test.describe("simple save and return", () => {
+    test("not started, ready to start and complete statuses", async ({
       page,
     }) => {
       await page.goto(previewURL);
@@ -168,15 +336,15 @@ test.describe("Sections", () => {
         sections: [
           {
             title: "Section One",
-            status: "READY TO CONTINUE",
+            status: SectionStatus.ReadyToStart,
           },
           {
             title: "Section Two",
-            status: "CANNOT CONTINUE YET",
+            status: SectionStatus.NotStarted,
           },
           {
             title: "Section Three",
-            status: "CANNOT CONTINUE YET",
+            status: SectionStatus.NotStarted,
           },
         ],
       });
@@ -188,28 +356,26 @@ test.describe("Sections", () => {
       const sectionsBeforeSaveAndReturn = [
         {
           title: "Section One",
-          status: "COMPLETED",
+          status: SectionStatus.Completed,
         },
         {
           title: "Section Two",
-          status: "READY TO CONTINUE",
+          status: SectionStatus.ReadyToStart,
         },
         {
           title: "Section Three",
-          status: "CANNOT CONTINUE YET",
+          status: SectionStatus.NotStarted,
         },
       ];
       await expectSections({
         page,
         sections: sectionsBeforeSaveAndReturn,
       });
-      await clickContinue({ page });
 
-      const sessionId = await saveSession({ page, adminGQLClient, context });
+      const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
 
       await returnToSession({ page, context, sessionId: sessionId! });
-      await clickContinue({ page });
 
       // sections should have not changed
       await expectSections({
@@ -217,5 +383,199 @@ test.describe("Sections", () => {
         sections: sectionsBeforeSaveAndReturn,
       });
     });
+
+    test("the ready to continue status", async ({ page }) => {
+      await page.goto(previewURL);
+      await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
+
+      await fillInEmail({ page, context });
+      await clickContinue({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.ReadyToStart,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.NotStarted,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+      await clickContinue({ page });
+
+      await answerQuestion({ page, title: "Question 1", answer: "A" });
+      await clickContinue({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.Completed,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.ReadyToStart,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+      await clickContinue({ page });
+
+      await answerQuestion({ page, title: "Question 2", answer: "B" });
+      await clickContinue({ page });
+
+      const sessionId = await saveSession({ page, context });
+      if (!sessionId) test.fail();
+
+      await returnToSession({ page, context, sessionId: sessionId! });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.Completed,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.ReadyToContinue,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+    });
+  });
+
+  test.describe("save and return with service changes (reconciliation)", () => {
+    test("needs new information and started", async ({ page }) => {
+      await page.goto(previewURL);
+      await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
+
+      await fillInEmail({ page, context });
+      await clickContinue({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.ReadyToStart,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.NotStarted,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+      await clickContinue({ page });
+
+      await answerQuestion({ page, title: "Question 1", answer: "A" });
+      await clickContinue({ page });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.Completed,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.ReadyToStart,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+      await clickContinue({ page });
+
+      await answerQuestion({ page, title: "Question 2", answer: "B" });
+      await clickContinue({ page });
+
+      const sessionId = await saveSession({ page, context });
+      if (!sessionId) test.fail();
+
+      // modify section
+      await modifyFlow({
+        context,
+        flowData: {
+          ...flow,
+          ...updatedQuestionAnswers,
+        },
+      });
+
+      await returnToSession({ page, context, sessionId: sessionId! });
+
+      await expectSections({
+        page,
+        sections: [
+          {
+            title: "Section One",
+            status: SectionStatus.NeedsUpdated,
+          },
+          {
+            title: "Section Two",
+            status: SectionStatus.Started,
+          },
+          {
+            title: "Section Three",
+            status: SectionStatus.NotStarted,
+          },
+        ],
+      });
+    });
   });
 });
+
+async function modifyFlow({
+  context,
+  flowData,
+}: {
+  context: Context;
+  flowData: FlowGraph;
+}) {
+  const adminGQLClient = getGraphQLClient();
+  if (!context.flow?.id || !context.user?.id) {
+    throw new Error("context must have a flow and user");
+  }
+  await adminGQLClient.request(
+    gql`
+      mutation UpdateTestFlow($flowId: uuid!, $userId: Int!, $data: jsonb!) {
+        update_flows_by_pk(pk_columns: { id: $flowId }, _set: { data: $data }) {
+          id
+          data
+        }
+        insert_published_flows_one(
+          object: { flow_id: $flowId, data: $data, publisher_id: $userId }
+        ) {
+          id
+        }
+      }
+    `,
+    {
+      flowId: context.flow!.id,
+      userId: context.user!.id,
+      data: flowData,
+    }
+  );
+}

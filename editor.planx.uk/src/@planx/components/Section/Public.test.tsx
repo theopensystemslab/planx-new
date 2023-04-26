@@ -68,7 +68,7 @@ describe("SectionsOverviewList component", () => {
   };
   const mockSectionStatuses = {
     section1: SectionStatus.Completed,
-    section2: SectionStatus.InProgress,
+    section2: SectionStatus.Started,
     section3: SectionStatus.NotStarted,
   };
   const defaultProps = {
@@ -86,7 +86,7 @@ describe("SectionsOverviewList component", () => {
     expect(screen.getByText(SectionStatus.Completed)).toBeInTheDocument();
 
     expect(screen.getByText("Section two")).toBeInTheDocument();
-    expect(screen.getByText(SectionStatus.InProgress)).toBeInTheDocument();
+    expect(screen.getByText(SectionStatus.Started)).toBeInTheDocument();
 
     expect(screen.getByText("Section three")).toBeInTheDocument();
     expect(screen.getByText(SectionStatus.NotStarted)).toBeInTheDocument();
