@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { log } from "./helpers";
+import { cards, fillGovUkCardDetails, getSessionId, log } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";
@@ -29,12 +29,7 @@ let context: Context = {
 };
 const previewURL = `/${context.team!.slug!}/${context.flow!
   .slug!}/preview?analytics=false`;
-// Test card numbers to be used in gov.uk sandbox environment
-// reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
-const cards = {
-  successful_card_number: "4444333322221111",
-  invalid_card_number: "4000000000000002",
-};
+
 const payButtonText = "Pay now using GOV.UK Pay";
 
 test.describe("Gov Pay @integration", async () => {
@@ -313,30 +308,6 @@ test.describe("Gov Pay @integration", async () => {
   });
 });
 
-async function fillGovUkCardDetails({
-  page,
-  cardNumber,
-}: {
-  page: Page;
-  cardNumber: string;
-}) {
-  await page.locator("#card-no").fill(cardNumber);
-  await page.getByLabel("Month").fill("12");
-  await page.getByLabel("Year").fill("2099");
-  await page.getByLabel("Name on card").fill("Test t Test");
-  await page.getByLabel("Card security code", { exact: false }).fill("123");
-
-  await page.locator("#address-line-1").fill("Test");
-  await page.locator("#address-line-2").fill("123");
-
-  await page.getByLabel("Town or city").fill("Test");
-  await page.getByLabel("Postcode").fill("HP111BB");
-  await page
-    .getByLabel("Email")
-    .fill("simulate-delivered@notifications.service.gov.uk");
-  await page.locator("button#submit-card-details").click();
-}
-
 async function navigateToPayComponent(page: Page): Promise<string> {
   await page.goto(previewURL);
   await page.getByLabel("Pay test").fill("Test");
@@ -354,15 +325,6 @@ async function waitForPaymentResponse(
     .then((req) => req.json());
   if (!paymentId) throw new Error("Bad payment response");
   return { paymentId, state };
-}
-
-async function getSessionId(page: Page): Promise<string> {
-  // the session id is not available in the url so find it in a test utility component
-  const sessionId: string | null = await page
-    .getByTestId("sessionId")
-    .getAttribute("data-sessionid");
-  if (!sessionId) throw new Error("Session ID not found on page");
-  return sessionId!;
 }
 
 async function hasPaymentStatus({
