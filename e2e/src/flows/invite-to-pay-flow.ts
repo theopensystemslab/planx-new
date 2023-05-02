@@ -30,10 +30,10 @@ const flow: FlowGraph = {
   },
   IfcqOHdMyi: {
     data: {
-      val: "alter.internal.walls",
-      text: "Alter internal walls",
+      val: "swimmingPool",
+      text: "Swimming pool",
     },
-    type: ComponentType.Answer,
+    type: ComponentType.Response,
   },
   LohvWDYd36: {
     data: {
@@ -50,17 +50,17 @@ const flow: FlowGraph = {
   },
   kId6RbgUtl: {
     data: {
-      val: "alter.decks",
-      text: "Addition or alteration of a deck",
+      val: "extension",
+      text: "Extension",
     },
-    type: ComponentType.Answer,
+    type: ComponentType.Response,
   },
   mgKUfcwq4Z: {
     data: {
-      val: "extend.porch.side",
-      text: "Addition of a side porch",
+      val: "solarPanels",
+      text: "Solar Panels",
     },
-    type: ComponentType.Answer,
+    type: ComponentType.Response,
   },
   yWXG2AYoq2: {
     data: {
