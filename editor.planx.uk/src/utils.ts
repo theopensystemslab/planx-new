@@ -1,8 +1,3 @@
-import { useQuery } from "@apollo/client";
-import { gql } from "@apollo/client";
-import { useCurrentRoute } from "react-navi";
-import { Team } from "types";
-
 export function removeAt<T>(index: number, arr: Array<T>): Array<T> {
   return arr.filter((_item, i) => {
     return i !== index;

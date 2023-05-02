@@ -9,17 +9,6 @@ import PropertyInformation, {
   PresentationalProps,
 } from "./Public";
 
-const TEAM = "southwark";
-
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      data: {
-        team: TEAM,
-      },
-    } as any)
-);
-
 const defaultPresentationalProps: PresentationalProps = {
   title: "About the property",
   description: "This is the information we currently have about the property",

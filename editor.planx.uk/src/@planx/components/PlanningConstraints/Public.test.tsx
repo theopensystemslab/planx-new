@@ -1,14 +1,11 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import * as ReactNavi from "react-navi";
 import * as SWR from "swr";
 import { axe, setup } from "testUtils";
 
 import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
 import PlanningConstraints from "./Public";
-
-const TEAM = "opensystemslab";
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
   return {
@@ -19,15 +16,6 @@ jest.spyOn(SWR, "default").mockImplementation((url: any) => {
       : null,
   } as any;
 });
-
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      data: {
-        team: TEAM,
-      },
-    } as any)
-);
 
 it("renders correctly", async () => {
   const handleSubmit = jest.fn();

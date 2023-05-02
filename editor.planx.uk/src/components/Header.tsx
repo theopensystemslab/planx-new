@@ -19,14 +19,14 @@ import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
-import React, { RefObject, use, useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
   useCurrentRoute,
   useNavigation,
 } from "react-navi";
 import { borderedFocusStyle, focusStyle } from "theme";
-import { ApplicationPath, Team } from "types";
+import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -35,9 +35,8 @@ import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 
 export const HEADER_HEIGHT = 74;
 
-const Root = styled(AppBar)(({ theme }) => ({
+const Root = styled(AppBar)(() => ({
   color: "#fff",
-  backgroundColor: theme.palette.primary.main,
 }));
 
 const BreadcrumbsRoot = styled(Box)(() => ({
@@ -174,44 +173,47 @@ const TeamLogo: React.FC = () => {
 };
 
 const Breadcrumbs: React.FC<{
-  route: Route;
   handleClick?: (href: string) => void;
-}> = ({ route, handleClick }) => (
-  <BreadcrumbsRoot>
-    <ButtonBase
-      component="span"
-      color="#999"
-      onClick={() => handleClick && handleClick("/")}
-    >
-      Plan✕
-    </ButtonBase>
+}> = ({ handleClick }) => {
+  const route = useCurrentRoute();
 
-    {route.data.team && (
-      <>
-        {" / "}
-        <Link
-          component={BreadcrumbLink}
-          href={`/${route.data.team}`}
-          prefetch={false}
-        >
-          {route.data.team}
-        </Link>
-      </>
-    )}
-    {route.data.flow && (
-      <>
-        {" / "}
-        <Link
-          component={BreadcrumbLink}
-          href={rootFlowPath(false)}
-          prefetch={false}
-        >
-          {route.data.flow}
-        </Link>
-      </>
-    )}
-  </BreadcrumbsRoot>
-);
+  return (
+    <BreadcrumbsRoot>
+      <ButtonBase
+        component="span"
+        color="#999"
+        onClick={() => handleClick && handleClick("/")}
+      >
+        Plan✕
+      </ButtonBase>
+
+      {route.data.team && (
+        <>
+          {" / "}
+          <Link
+            component={BreadcrumbLink}
+            href={`/${route.data.team}`}
+            prefetch={false}
+          >
+            {route.data.team}
+          </Link>
+        </>
+      )}
+      {route.data.flow && (
+        <>
+          {" / "}
+          <Link
+            component={BreadcrumbLink}
+            href={rootFlowPath(false)}
+            prefetch={false}
+          >
+            {route.data.flow}
+          </Link>
+        </>
+      )}
+    </BreadcrumbsRoot>
+  );
+};
 
 const NavBar: React.FC = () => {
   const [index, sectionCount, title, hasSections, saveToEmail, path] = useStore(
@@ -250,9 +252,8 @@ const NavBar: React.FC = () => {
 };
 
 const PublicToolbar: React.FC<{
-  route: Route;
   showResetButton?: boolean;
-}> = ({ route, showResetButton = true }) => {
+}> = ({ showResetButton = true }) => {
   const { navigate } = useNavigation();
   const [path, id, teamTheme] = useStore((state) => [
     state.path,
@@ -292,7 +293,7 @@ const PublicToolbar: React.FC<{
           {teamTheme?.logo ? (
             <TeamLogo />
           ) : (
-            <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
+            <Breadcrumbs handleClick={navigate} />
           )}
         </LeftBox>
         {showCentredServiceTitle && <ServiceTitle />}
@@ -350,7 +351,7 @@ const EditorToolbar: React.FC<{
     <>
       <StyledToolbar>
         <LeftBox>
-          <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
+          <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
         </LeftBox>
         <RightBox>
           {route.data.username && (
@@ -446,16 +447,23 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     case flowSlug: // Custom domains
     case "preview":
     case "unpublished":
-      return <PublicToolbar route={route} />;
+      return <PublicToolbar />;
     default:
-      return <PublicToolbar route={route} showResetButton={false} />;
+      return <PublicToolbar showResetButton={false} />;
   }
 };
 
 const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
+  const theme = useStore((state) => state.teamTheme);
   return (
-    <Root position="static" elevation={0} color="transparent" ref={headerRef}>
+    <Root
+      position="static"
+      elevation={0}
+      color="transparent"
+      ref={headerRef}
+      style={{ backgroundColor: theme?.primary || "#2c2c2c" }}
+    >
       <Toolbar headerRef={headerRef}></Toolbar>
     </Root>
   );

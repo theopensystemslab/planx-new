@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useTeamSlug } from "@planx/components/shared/hooks";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import axios from "axios";
@@ -179,7 +178,7 @@ const ResumePage: React.FC = () => {
     if (email) handleSubmit();
   }, [email]);
 
-  const teamSlug = useTeamSlug();
+  const teamSlug = useStore((state) => state.teamSlug);
 
   /**
    * Continue application following successful validation & reconciliation

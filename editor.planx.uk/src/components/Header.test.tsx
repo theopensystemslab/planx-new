@@ -43,6 +43,7 @@ describe("Header Component - Editor Route", () => {
         teamName: mockTeam1.name,
         teamSettings: mockTeam1.settings,
         teamTheme: mockTeam1.theme,
+        teamSlug: mockTeam1.slug,
       })
     );
 
@@ -55,7 +56,6 @@ describe("Header Component - Editor Route", () => {
           },
           data: {
             username: "Test User",
-            team: mockTeam1.slug,
             flow: "test-flow",
           },
         } as any)
@@ -98,7 +98,6 @@ for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
             },
             data: {
               username: "Test User",
-              team: mockTeam1.slug,
               flow: "test-flow",
             },
           } as any)
@@ -151,7 +150,6 @@ describe("Section navigation bar", () => {
           },
           data: {
             username: "Test User",
-            team: mockTeam1.slug,
             flow: "test-flow",
           },
         } as any)

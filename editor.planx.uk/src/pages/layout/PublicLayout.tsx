@@ -17,7 +17,7 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { FOOTER_ITEMS, Team } from "../../types";
+import { FOOTER_ITEMS } from "../../types";
 
 const MainContainer = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.grey[300]}`,
