@@ -36,9 +36,10 @@ export const unpublishedView = async (req: NaviRequest) => {
   state.setFlowNameFromSlug(flowSlug);
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
+  state.setTeam(flow.team);
 
   return (
-    <PublicLayout team={flow.team}>
+    <PublicLayout>
       <View />
     </PublicLayout>
   );
@@ -63,6 +64,8 @@ const fetchDataForUnpublishedView = async (
             team {
               theme
               name
+              settings
+              slug
             }
             settings
             slug

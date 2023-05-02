@@ -33,9 +33,10 @@ const standaloneView = async (req: NaviRequest) => {
   state.setFlowNameFromSlug(flowSlug);
   state.setGlobalSettings(globalSettings[0]);
   state.setFlowSettings(flowSettings);
+  state.setTeam(team);
 
   return (
-    <PublicLayout team={team}>
+    <PublicLayout>
       <View />
     </PublicLayout>
   );
@@ -61,6 +62,7 @@ const fetchDataForStandaloneView = async (
               theme
               name
               settings
+              slug
             }
             settings
           }

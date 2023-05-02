@@ -58,28 +58,5 @@ export function slugify(name: string): string {
     .replace(/^-+|-+$/g, ""); // remove leading, trailing -
 }
 
-// Exported as this is required for tests
-export const GET_TEAM_QUERY = gql`
-  query GetTeam($team: String = "") {
-    teams(where: { slug: { _eq: $team } }) {
-      theme
-      settings
-      name
-    }
-  }
-`;
-
-export const fetchCurrentTeam = (): Team | undefined => {
-  const route = useCurrentRoute();
-  const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
-  const { data } = useQuery(GET_TEAM_QUERY, {
-    skip: !Boolean(team),
-    variables: {
-      team: team,
-    },
-  });
-  return data?.teams[0];
-};
-
 export const isLiveEnv = () =>
   ["production", "staging", "pizza"].includes(process.env.NODE_ENV || "");

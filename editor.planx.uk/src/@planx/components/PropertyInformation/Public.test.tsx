@@ -4,7 +4,6 @@ import React from "react";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 
-import teamMock from "./mocks/teamMock";
 import PropertyInformation, {
   Presentational,
   PresentationalProps,
@@ -49,8 +48,8 @@ const defaultPresentationalProps: PresentationalProps = {
 };
 
 test("renders a warning for editors if address data is not in state", async () => {
-  const { user } = setup(
-    <MockedProvider mocks={teamMock} addTypename={false}>
+  setup(
+    <MockedProvider>
       <PropertyInformation
         title="About the property"
         description="This is the information we currently have about the property"
@@ -65,7 +64,7 @@ test("renders correctly when property override is enabled", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <MockedProvider mocks={teamMock} addTypename={false}>
+    <MockedProvider>
       <Presentational
         {...defaultPresentationalProps}
         showPropertyTypeOverride={true}
@@ -88,7 +87,7 @@ test("renders correctly when property override is toggled off", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <MockedProvider mocks={teamMock} addTypename={false}>
+    <MockedProvider>
       <Presentational
         {...defaultPresentationalProps}
         showPropertyTypeOverride={false}
@@ -109,7 +108,7 @@ test("renders correctly when property override is toggled off", async () => {
 
 test("retains previously submitted feedback when going back", async () => {
   const { user } = setup(
-    <MockedProvider mocks={teamMock} addTypename={false}>
+    <MockedProvider>
       <Presentational
         {...defaultPresentationalProps}
         showPropertyTypeOverride={false}

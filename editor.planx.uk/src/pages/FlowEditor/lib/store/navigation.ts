@@ -119,7 +119,7 @@ export const navigationStore: StateCreator<
 
   /**
    * Calculate the status of each section node based on the current position in a flow (eg state.cachedBreadcrumbs) or provided breadcrumbs (eg on reconciliation)
-   *   Pass updatedNodeIds on reconiliation to ensure we set an accurrate status for every previously seen section because updated sections are removed from breadcrumbs during reconciliation
+   *   Pass updatedNodeIds on reconciliation to ensure we set an accurrate status for every previously seen section because updated sections are removed from breadcrumbs during reconciliation
    */
   sectionStatuses: (
     breadcrumbs?: Store.breadcrumbs,
@@ -150,7 +150,7 @@ export const navigationStore: StateCreator<
     });
 
     // If there is more than one in-progress section, correct all but most recent one to display as complete
-    //   ** this scenario should only be possible on reconcilation when cachedBreadcrumbs are unavailable
+    //   ** this scenario should only be possible on reconciliation when cachedBreadcrumbs are unavailable
     if (
       Object.values(sectionStatuses).filter(
         (status) => status === SectionStatus.InProgress

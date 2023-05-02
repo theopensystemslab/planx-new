@@ -19,7 +19,7 @@ import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
-import React, { RefObject, useRef, useState } from "react";
+import React, { RefObject, use, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
   useCurrentRoute,
@@ -35,8 +35,9 @@ import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 
 export const HEADER_HEIGHT = 74;
 
-const Root = styled(AppBar)(() => ({
+const Root = styled(AppBar)(({ theme }) => ({
   color: "#fff",
+  backgroundColor: theme.palette.primary.main,
 }));
 
 const BreadcrumbsRoot = styled(Box)(() => ({
@@ -152,13 +153,19 @@ const SectionCount = styled(Typography)(() => ({
   fontSize: "inherit",
 }));
 
-const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
-  const altText = team?.settings?.homepage
-    ? `${team.name} Homepage (opens in a new tab)`
-    : `${team?.name} Logo`;
-  const logo = <Logo alt={altText} src={team?.theme?.logo} />;
-  return team?.settings?.homepage ? (
-    <LogoLink href={team.settings.homepage} target="_blank">
+const TeamLogo: React.FC = () => {
+  const [teamSettings, teamName, teamTheme] = useStore((state) => [
+    state.teamSettings,
+    state.teamName,
+    state.teamTheme,
+  ]);
+
+  const altText = teamSettings?.homepage
+    ? `${teamName} Homepage (opens in a new tab)`
+    : `${teamName} Logo`;
+  const logo = <Logo alt={altText} src={teamTheme?.logo} />;
+  return teamSettings?.homepage ? (
+    <LogoLink href={teamSettings?.homepage} target="_blank">
       {logo}
     </LogoLink>
   ) : (
@@ -243,12 +250,15 @@ const NavBar: React.FC = () => {
 };
 
 const PublicToolbar: React.FC<{
-  team?: Team;
   route: Route;
   showResetButton?: boolean;
-}> = ({ team, route, showResetButton = true }) => {
+}> = ({ route, showResetButton = true }) => {
   const { navigate } = useNavigation();
-  const { path, id } = useStore();
+  const [path, id, teamTheme] = useStore((state) => [
+    state.path,
+    state.id,
+    state.teamTheme,
+  ]);
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
@@ -279,8 +289,8 @@ const PublicToolbar: React.FC<{
       <SkipLink href="#main-content">Skip to main content</SkipLink>
       <StyledToolbar>
         <LeftBox>
-          {team?.theme?.logo ? (
-            <TeamLogo team={team}></TeamLogo>
+          {teamTheme?.logo ? (
+            <TeamLogo />
           ) : (
             <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
           )}
@@ -417,10 +427,9 @@ const EditorToolbar: React.FC<{
 
 interface ToolbarProps {
   headerRef: RefObject<HTMLDivElement>;
-  team?: Team;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ headerRef, team }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   const route = useCurrentRoute();
   const path = route.url.pathname.split("/").slice(-1)[0];
   const [flowSlug, previewEnvironment] = useStore((state) => [
@@ -437,30 +446,17 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef, team }) => {
     case flowSlug: // Custom domains
     case "preview":
     case "unpublished":
-      return <PublicToolbar team={team} route={route} />;
+      return <PublicToolbar route={route} />;
     default:
-      return (
-        <PublicToolbar team={team} route={route} showResetButton={false} />
-      );
+      return <PublicToolbar route={route} showResetButton={false} />;
   }
 };
 
-const Header: React.FC<{
-  bgcolor?: string;
-  team?: Team;
-}> = ({ bgcolor = "#2c2c2c", team }) => {
+const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   return (
-    <Root
-      position="static"
-      elevation={0}
-      color="transparent"
-      ref={headerRef}
-      style={{
-        backgroundColor: team?.theme?.primary || bgcolor,
-      }}
-    >
-      <Toolbar headerRef={headerRef} team={team}></Toolbar>
+    <Root position="static" elevation={0} color="transparent" ref={headerRef}>
+      <Toolbar headerRef={headerRef}></Toolbar>
     </Root>
   );
 };
