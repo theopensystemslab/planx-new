@@ -4,7 +4,7 @@ specifiers:
   '@airbrake/node': ^2.1.8
   '@babel/core': ^7.21.4
   '@babel/preset-typescript': ^7.21.4
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#74e8b44
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#46f9779
   '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#debaeca
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
@@ -79,7 +79,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.8
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/74e8b44
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/46f9779
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca
   '@types/isomorphic-fetch': 0.0.36
   adm-zip: 0.5.10
@@ -5460,6 +5460,10 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash.capitalize/4.2.1:
+    resolution: {integrity: sha512-kZzYOKspf8XVX5AvmQF94gQW0lejFVgb80G85bU4ZWzoJ6C03PQg3coYAUpSTpQWelrZELd3XWgHzw4Ck5kaIw==}
+    dev: false
+
   /lodash.get/4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
     dev: false
@@ -7563,8 +7567,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/74e8b44:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/74e8b44}
+  github.com/theopensystemslab/planx-core/46f9779:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/46f9779}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -7574,6 +7578,7 @@ packages:
       fast-xml-parser: 4.2.2
       graphql: 16.6.0
       graphql-request: 5.2.0_graphql@16.6.0
+      lodash.capitalize: 4.2.1
       lodash.get: 4.4.2
       lodash.has: 4.5.2
       lodash.isempty: 4.4.0

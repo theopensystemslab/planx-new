@@ -30,6 +30,18 @@ describe("BOPS payload endpoint", () => {
         ],
       },
     });
+
+    queryMock.mockQuery({
+      name: "GetFlowSlug",
+      variables: {
+        flowId: "456",
+      },
+      data: {
+        flows_by_pk: {
+          slug: "apply-for-a-lawful-development-certificate",
+        },
+      },
+    });
   });
 
   afterEach(() => jest.clearAllMocks());
@@ -54,7 +66,7 @@ describe("BOPS payload endpoint", () => {
 });
 
 const expectedPayload = {
-  "application_type": "TODO",
+  "application_type": "lawfulness_certificate",
   "site": {
     "uprn": "200000797602",
     "address_1": "BUCKINGHAMSHIRE COUNCIL, COUNCIL OFFICES, QUEEN VICTORIA ROAD",
