@@ -4,7 +4,7 @@ specifiers:
   '@airbrake/node': ^2.1.8
   '@babel/core': ^7.21.4
   '@babel/preset-typescript': ^7.21.4
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#16ec679
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#74e8b44
   '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#debaeca
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
@@ -79,7 +79,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.8
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/16ec679
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/74e8b44
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca
   '@types/isomorphic-fetch': 0.0.36
   adm-zip: 0.5.10
@@ -5472,6 +5472,14 @@ packages:
     resolution: {integrity: sha512-rnYUdIo6xRCJnQmbVFEwcxF144erlD+M3YcJUVesflU9paQaE8p+fJDcIQrlMYbxoANFL+AB9hZrzSBBk5PL+g==}
     dev: false
 
+  /lodash.isempty/4.4.0:
+    resolution: {integrity: sha512-oKMuF3xEeqDltrGMfDxAPGIVMSSRv8tbRSODbrs4KGsRRLEhrW8N8Rd4DRgB2+621hY8A8XwwrTVhXWpxFvMzg==}
+    dev: false
+
+  /lodash.isnil/4.0.0:
+    resolution: {integrity: sha512-up2Mzq3545mwVnMhTDMdfoG1OurpA/s5t88JmQX809eH3C8491iu2sfKhTfhQtKY78oPNhiaHJUpT/dUDAAtng==}
+    dev: false
+
   /lodash.kebabcase/4.1.1:
     resolution: {integrity: sha512-N8XRTIMMqqDgSy4VLKPnJ/+hpGZN+PHQiJnSenYqPaVV/NCqEogTnAdZLQiGKhxX+JCs8waWq2t1XHWKOmlY8g==}
     dev: false
@@ -7555,8 +7563,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/16ec679:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/16ec679}
+  github.com/theopensystemslab/planx-core/74e8b44:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/74e8b44}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -7568,6 +7576,8 @@ packages:
       graphql-request: 5.2.0_graphql@16.6.0
       lodash.get: 4.4.2
       lodash.has: 4.5.2
+      lodash.isempty: 4.4.0
+      lodash.isnil: 4.0.0
       lodash.kebabcase: 4.1.1
       lodash.property: 4.4.2
       lodash.set: 4.3.2

@@ -69,6 +69,7 @@ import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
 import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
+import { getBOPSPayload } from "./admin/session/bops";
 
 const router = express.Router();
 
@@ -408,6 +409,7 @@ app.get("/", (_req, res) => {
 app.use("/admin", useJWT)
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
+app.get("/admin/session/:sessionId/bops", getBOPSPayload);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
