@@ -66,30 +66,27 @@ const TextInput: React.FC<{
   );
 };
 
-interface Props {
-  settings?: FlowSettings;
-}
-
-const ServiceSettings: React.FC<Props> = (props) => {
+const ServiceSettings: React.FC = () => {
   const { data } = useCurrentRoute();
+  const flowSettings = useStore((state) => state.flowSettings);
 
   const formik = useFormik<FlowSettings>({
     initialValues: {
       elements: {
         legalDisclaimer: {
-          heading: props.settings?.elements?.legalDisclaimer?.heading ?? "",
-          content: props.settings?.elements?.legalDisclaimer?.content ?? "",
-          show: props.settings?.elements?.legalDisclaimer?.show ?? false,
+          heading: flowSettings?.elements?.legalDisclaimer?.heading ?? "",
+          content: flowSettings?.elements?.legalDisclaimer?.content ?? "",
+          show: flowSettings?.elements?.legalDisclaimer?.show ?? false,
         },
         help: {
-          heading: props.settings?.elements?.help?.heading ?? "",
-          content: props.settings?.elements?.help?.content ?? "",
-          show: props.settings?.elements?.help?.show ?? false,
+          heading: flowSettings?.elements?.help?.heading ?? "",
+          content: flowSettings?.elements?.help?.content ?? "",
+          show: flowSettings?.elements?.help?.show ?? false,
         },
         privacy: {
-          heading: props.settings?.elements?.privacy?.heading ?? "",
-          content: props.settings?.elements?.privacy?.content ?? "",
-          show: props.settings?.elements?.privacy?.show ?? false,
+          heading: flowSettings?.elements?.privacy?.heading ?? "",
+          content: flowSettings?.elements?.privacy?.content ?? "",
+          show: flowSettings?.elements?.privacy?.show ?? false,
         },
       },
     },

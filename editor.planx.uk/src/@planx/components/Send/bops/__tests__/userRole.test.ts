@@ -76,12 +76,13 @@ describe("when user.role =", () => {
         },
       };
 
-      const result = getBOPSParams(
+      const result = getBOPSParams({
         breadcrumbs,
         flow,
         passport,
-        "FAKE-SESSION-ID"
-      );
+        sessionId: "FAKE-SESSION-ID",
+        flowName: "Apply for a lawful development certificate",
+      });
 
       expect(result.user_role).toEqual(bopsValue);
     });

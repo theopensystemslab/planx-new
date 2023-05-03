@@ -1,5 +1,10 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["DISABLE_SAVE_AND_RETURN"] as const;
+const AVAILABLE_FEATURE_FLAGS = [
+  "DISABLE_SAVE_AND_RETURN",
+  "ALT_THEME",
+  "NAVIGATION_UI",
+  "INVITE_TO_PAY",
+] as const;
 
 type featureFlag = typeof AVAILABLE_FEATURE_FLAGS[number];
 
@@ -23,7 +28,10 @@ const activeFeatureFlags = (() => {
  * @param flag feature flag name
  * @param autoReload reload the page after change? default = true
  */
-const toggleFeatureFlag = (featureFlag: featureFlag, autoReload = true) => {
+export const toggleFeatureFlag = (
+  featureFlag: featureFlag,
+  autoReload = true
+) => {
   const supportedFlag = AVAILABLE_FEATURE_FLAGS.includes(featureFlag);
 
   if (activeFeatureFlags.has(featureFlag)) {
@@ -59,7 +67,7 @@ export const hasFeatureFlag = (featureFlag: featureFlag) =>
   has: hasFeatureFlag,
 };
 
-if (process.env.NODE_ENV !== "test") {
+if (process.env.REACT_APP_ENV !== "test") {
   // log current flag status on page load
   console.debug(
     activeFeatureFlags.size > 0

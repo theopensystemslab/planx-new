@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import { NotFoundError } from "navi";
-import { PreviewContext } from "pages/Preview/Context";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useNavigation } from "react-navi";
 import { FOOTER_ITEMS } from "types";
@@ -62,12 +62,12 @@ function Layout(props: {
 
 function ContentPage(props: { page: string }) {
   const navigation = useNavigation();
-  const context = React.useContext(PreviewContext);
+  const { flowSettings, globalSettings } = useStore();
   const isFooterItem = FOOTER_ITEMS.includes(props.page);
   // Determine if the content is a flow setting or a global setting, and only show it if it isn't hidden
   const content = (() => {
     if (isFooterItem) {
-      const flowSetting = context?.flow.settings?.elements?.[props.page];
+      const flowSetting = flowSettings?.elements?.[props.page];
 
       if (!flowSetting?.show) return;
 
@@ -76,7 +76,7 @@ function ContentPage(props: { page: string }) {
         content: flowSetting.content,
       };
     } else {
-      return context?.globalSettings?.footerContent?.[props.page];
+      return globalSettings?.footerContent?.[props.page];
     }
   })();
 

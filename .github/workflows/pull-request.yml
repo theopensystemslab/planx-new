@@ -1,7 +1,9 @@
 name: Pull Request
 on:
   pull_request:
-    types: [opened, synchronize]
+    types:
+      - opened
+      - synchronize
     branches:
       - main
 
@@ -16,7 +18,7 @@ env:
 jobs:
   changes:
     name: Check file changes
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       pull-requests: read
     outputs:
@@ -26,7 +28,15 @@ jobs:
       hasura: ${{ steps.filter.outputs.hasura }}
       infrastructure: ${{ steps.filter.outputs.infrastructure }}
       sharedb: ${{ steps.filter.outputs.sharedb }}
+      commit: ${{ steps.commit.outputs.commit }}
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get commit message
+        id: commit
+        run: |
+          echo "commit=$(git show -s --format=%s)" >> $GITHUB_OUTPUT
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -45,8 +55,8 @@ jobs:
               - 'sharedb.planx.uk/**'
 
   integration_tests:
-    name: Run Integration and E2E tests
-    runs-on: ubuntu-20.04
+    name: Run Integration tests
+    runs-on: ubuntu-22.04
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
@@ -75,38 +85,18 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: ./scripts/start-containers-for-tests.sh
-      - run: ./hasura.planx.uk/run-postgres-tests.sh
+      - name: Start test containers
+        run: ./scripts/start-containers-for-tests.sh
+      - name: Postgres Tests
+        run: ./hasura.planx.uk/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli
       - name: Hasura Tests
         run: pnpm install --frozen-lockfile && pnpm test
         working-directory: hasura.planx.uk/tests
-      - name: Install Playwright dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: e2e
-      - name: Install Playwright Browsers
-        run: pnpm playwright install --with-deps
-        working-directory: e2e
-      - name: Playwright Tests
-        run:  pnpm test:playwright
-        working-directory: e2e
-      - uses: actions/upload-artifact@v3
-        with:
-          name: playwright-report
-          path: e2e/playwright-report/
-          retention-days: 3
-      - uses: actions/upload-artifact@v3
-        with:
-          name: playwright-video
-          path: e2e/test-results/
-          retention-days: 3
-      - name: Cypress Tests
-        run: pnpm cypress install && pnpm test:cypress
-        working-directory: e2e
 
   api_tests:
     name: Run API Tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' }}
@@ -134,13 +124,16 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: api.planx.uk
       - name: Run API Tests
-        run: pnpm install --frozen-lockfile && pnpm lint --quiet && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
         working-directory: api.planx.uk
 
   test_react:
     name: Run React Tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes]
     if: ${{ needs.changes.outputs.editor == 'true' }}
     steps:
@@ -169,12 +162,16 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm build
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm test
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
   build_react_app:
     name: Build React App
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    needs: [changes]
+    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v2
       - name: Cache build assets
@@ -182,7 +179,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
       - uses: pnpm/action-setup@v2.2.2
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
@@ -198,7 +195,6 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
@@ -208,36 +204,13 @@ jobs:
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-
-  build_storybook:
-    name: Build Storybook
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache build assets
-        id: cache-storybook-assets
-        uses: actions/cache@v3
-        with:
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-storybook
-      - uses: pnpm/action-setup@v2.2.2
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install --frozen-lockfile
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
+          REACT_APP_ENV: pizza
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build-storybook
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
+        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-        # same env as above, if it's job.env it can't access existing env.[variable]
         env:
+          # same env as above, if it's job.env it can't access existing env.[variable]
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
@@ -245,10 +218,11 @@ jobs:
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
+          REACT_APP_ENV: pizza
 
   pulumi_preview:
     name: Run Pulumi Preview
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes, build_react_app]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
@@ -274,7 +248,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - uses: pulumi/actions@v3
         with:
           command: preview
@@ -286,7 +260,7 @@ jobs:
 
   hasura-change-summary:
     name: Generate Hasura Change Summary
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes]
     if: ${{ needs.changes.outputs.hasura == 'true' }}
     steps:
@@ -312,8 +286,9 @@ jobs:
 
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
-    needs: [build_react_app, build_storybook]
-    runs-on: ubuntu-20.04
+    needs: [changes, build_react_app]
+    runs-on: ubuntu-22.04
+    if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - name: Create Pizza (if it doesn't exist)
         id: create
@@ -322,7 +297,7 @@ jobs:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
-          os_id: 387
+          os_id: 1743
           plan: vc2-1c-1gb
           pullrequest_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
@@ -350,12 +325,10 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo "
-            ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
-            " > .env.temp
-            cat .env .env.temp .env.staging > .env.prod
+            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            cat .env .env.temp .env.staging > .env.pizza
 
-            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
@@ -380,15 +353,12 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo "
-            ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
-            " > .env.temp
-            cat .env .env.temp .env.staging > .env.prod
+            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            cat .env .env.temp .env.staging > .env.pizza
 
-            sh scripts/pullrequest/update.sh
+            ./scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
-
 
       - uses: actions/checkout@v2
       - name: Download React build assets
@@ -396,13 +366,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
-      - name: Download Storybook build assets
-        id: cache-storybook-assets
-        uses: actions/cache@v3
-        with:
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-storybook
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - name: upload built editor
         uses: appleboy/scp-action@master
         with:
@@ -423,7 +387,7 @@ jobs:
 
             Useful links:
               - [Editor](https://${{ env.FULL_DOMAIN }})
-              - [Storybook](https://${{ env.FULL_DOMAIN }}/storybook)
+              - [Storybook](https://storybook.${{ env.FULL_DOMAIN }})
               - [Hasura](https://hasura.${{ env.FULL_DOMAIN }})
               - [API](https://api.${{ env.FULL_DOMAIN }})
               - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
@@ -431,14 +395,16 @@ jobs:
   healthcheck:
     name: Run Healthcheck on Pizza Services
     needs: [create_or_update_vultr_instance]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: API healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
+
       - name: Hasura healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://hasura.${{ env.FULL_DOMAIN }}/healthz; do sleep 1; done"
+
       - name: Editor healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
@@ -446,7 +412,7 @@ jobs:
   lighthouse:
     name: Lighthouse
     needs: [create_or_update_vultr_instance]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Audit URLs using Lighthouse
@@ -454,9 +420,10 @@ jobs:
         id: LHCIAction
         with:
           urls: | 
+            https://editor.planx.dev/buckinghamshire/find-out-if-you-need-planning-permission/preview
             https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
+            https://editor.planx.dev/testing/lighthouse-canary-flow/unpublished
             https://${{ env.FULL_DOMAIN }}/testing/lighthouse-canary-flow/unpublished
-          # budgetPath: ./budget.json # test performance budgets
           uploadArtifacts: true # save results as an action artifacts
           temporaryPublicStorage: true # upload lighthouse report to the temporary storage
       - name: Interpolate comment text
@@ -466,17 +433,88 @@ jobs:
           script: |
             const links = JSON.parse('${{steps.LHCIAction.outputs.links}}');
             const manifests = JSON.parse('${{steps.LHCIAction.outputs.manifest}}');
-            const text = manifests
-              .map((m) => `> ${m.url}\n${getMarkdown(m.summary)}\n- [Full report](${links[m.url]})`)
-              .join("\n\n");
+
+            const text = getMarkdown(manifests, links);
             core.setOutput("text", `## Lighthouse\n\n${text}`);
 
-            function getMarkdown(summary) {
-              return Object.entries(summary)
-                .map(([name, value]) => `- ${name}: ${value}`)
-                .join("\n");
+
+            function getMarkdown(manifests, links) {
+              const urls = [
+                `buckinhamshire/FOIYNPP`,
+                `testing/canary`,
+              ];
+
+              const s = manifests.map(manifest => manifest.summary);
+              const attributes = Object.keys(s[0]);
+
+              const rows = attributes.map((attr, i) => {
+
+                const FOIYNPPDiff = (s[0][attr] - s[1][attr]).toFixed(2);
+                const FOIYNPP = `[${s[0][attr]}](${manifests[0].url}) - [${s[1][attr]}](${manifests[1].url}) = [${FOIYNPPDiff}](${links[manifests[1].url]})`;
+
+                const canaryDiff = (s[2][attr] - s[3][attr]).toFixed(2);
+                const canary = `[${s[2][attr]}](${manifests[2].url}) - [${s[3][attr]}](${manifests[3].url}) = [${canaryDiff}](${links[manifests[3].url]})`;
+                return `| ${attr} | ${FOIYNPP} | ${canary}`;
+              }).join('|\n');
+
+              const urlHeader = urls.join(' | ');
+              const middleColumns = urls.map(() => ':---:').join('|');
+
+              return `
+              |  | ${urlHeader} |
+              |------------|${middleColumns}|
+              ${rows}|
+              `;
             }
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: lighthouse
           message: ${{steps.text.outputs.text}}
+
+  end_to_end_tests:
+    name: E2E tests
+    runs-on: ubuntu-22.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: ./scripts/pull-secrets.sh
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: PNPM Install
+        run: pnpm install --frozen-lockfile
+        working-directory: e2e
+      - name: Code checks
+        run:  pnpm check
+        working-directory: e2e
+      - name: Install Playwright Dependencies
+        run: pnpm playwright install --with-deps
+        working-directory: e2e
+      - name: Start test containers
+        run: ./scripts/start-containers-for-tests.sh
+      - name: Playwright Tests
+        run:  pnpm test
+        working-directory: e2e
+      - name: Archive Playwright Test Results
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: e2e/test-results/
+          retention-days: 3

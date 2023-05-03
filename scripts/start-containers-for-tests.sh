@@ -1,22 +1,23 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+set -o errexit -o errtrace
 
-set -e
+# run from project root
+cd "$(dirname $0)/.."
 
-SCRIPT_DIR=$(dirname "$0")
-ROOT_DIR="${SCRIPT_DIR}/.."
+trap 'echo "Cleaning up…" ; docker compose logs api; docker compose down --volumes --remove-orphans' ERR
 
-echo "SCRIPT_DIR=${SCRIPT_DIR}"
-echo "ROOT_DIR=${ROOT_DIR}"
+function setupContainers(){
+  # Destroy all previous containers and data (just in case)
+  docker compose down --volumes --remove-orphans
 
-# Go to root directory
-cd "$ROOT_DIR" || exit
+  echo "Starting docker…"
+  DOCKER_BUILDKIT=1 docker compose \
+    -f docker-compose.yml \
+    -f docker-compose.e2e.yml \
+		--profile mock-services \
+    up --build --wait test-ready
 
-# Destroy all previous containers and data (just in case)
-docker-compose down --volumes --remove-orphans
+  echo "All containers ready."
+}
 
-trap 'echo "Cleaning up…" ; docker-compose down --volumes --remove-orphans' TERM INT
-
-echo "Starting docker…"
-DOCKER_BUILDKIT=1 docker-compose up --build -d api sharedb minio
-
-echo "All containers ready."
+setupContainers

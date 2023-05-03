@@ -54,6 +54,7 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Inputs">
         <option value={TYPES.TextInput}>Text Input</option>
         <option value={TYPES.FileUpload}>File Upload</option>
+        {/* <option value={TYPES.MultipleFileUpload}>Multiple File Upload</option> */}
         <option value={TYPES.NumberInput}>Number Input</option>
         <option value={TYPES.DateInput}>Date Input</option>
         <option value={TYPES.AddressInput}>Address Input</option>
@@ -69,6 +70,7 @@ const NodeTypeSelect: React.FC<{
       </optgroup>
       <optgroup label="Location">
         <option value={TYPES.FindProperty}>Find property</option>
+        <option value={TYPES.PropertyInformation}>Property information</option>
         <option value={TYPES.DrawBoundary}>Draw boundary</option>
         <option value={TYPES.PlanningConstraints}>Planning constraints</option>
       </optgroup>
@@ -76,6 +78,7 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.Filter}>Filter</option>
         <option value={TYPES.InternalPortal}>Internal Portal</option>
         <option value={TYPES.ExternalPortal}>External Portal</option>
+        <option value={TYPES.Section}>Section</option>
         <option value={TYPES.SetValue}>Set Value</option>
       </optgroup>
       <optgroup label="Payment">

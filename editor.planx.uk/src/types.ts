@@ -36,6 +36,7 @@ export interface TeamSettings {
     url: string;
   };
   supportEmail?: string;
+  boundary?: string;
 }
 
 export interface GlobalSettings {
@@ -83,16 +84,7 @@ export interface GovUKPayment {
   amount: number;
   reference: string;
   state: {
-    // https://docs.payments.service.gov.uk/api_reference/#status-and-finished
-    status:
-      | "created"
-      | "started"
-      | "submitted"
-      | "capturable"
-      | "success"
-      | "failed"
-      | "cancelled"
-      | "error";
+    status: PaymentStatus;
     finished: boolean;
   };
   payment_id: string;
@@ -115,6 +107,19 @@ export interface GovUKPayment {
       method: string;
     };
   };
+}
+
+// https://docs.payments.service.gov.uk/api_reference/#status-and-finished
+export enum PaymentStatus {
+  created = "created",
+  started = "started",
+  submitted = "submitted",
+  capturable = "capturable",
+  success = "success",
+  failed = "failed",
+  cancelled = "cancelled",
+  error = "error",
+  unknown = "unknown", // used when response status is not valid
 }
 
 /**
@@ -145,3 +150,7 @@ export type Session = {
   id: SharedStore["id"];
   govUkPayment?: GovUKPayment;
 };
+
+// re-export store types
+export interface Passport extends Store.passport {}
+export interface Breadcrumbs extends Store.breadcrumbs {}

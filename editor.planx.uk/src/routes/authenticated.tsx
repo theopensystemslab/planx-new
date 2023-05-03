@@ -1,8 +1,7 @@
-import camelcaseKeys from "camelcase-keys";
 import gql from "graphql-tag";
 import { compose, lazy, mount, route, withData, withView } from "navi";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { GlobalSettings, Maybe } from "types";
 
 import AuthenticatedLayout from "../components/AuthenticatedLayout";
 import { client } from "../lib/graphql";
@@ -42,20 +41,17 @@ const editorRoutes = compose(
       const { data } = await client.query({
         query: gql`
           query {
-            global_settings {
-              footer_content
+            globalSettings: global_settings {
+              footerContent: footer_content
             }
           }
         `,
       });
-
-      const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
-        data.global_settings[0]
-      );
+      useStore.getState().setGlobalSettings(data.globalSettings[0]);
 
       return {
         title: makeTitle("Global Settings"),
-        view: <GlobalSettingsView {...globalSettings} />,
+        view: <GlobalSettingsView />,
       };
     }),
 

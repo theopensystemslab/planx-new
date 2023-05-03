@@ -151,8 +151,11 @@ const InvalidSession: React.FC<{
  */
 const getInitialEmailValue = () => {
   const emailQueryParam = useCurrentRoute().url.query.email;
-  const isRedirectFromGovPay =
-    document.referrer === "https://www.payments.service.gov.uk/";
+  const isRedirectFromGovPay = [
+    "https://www.payments.service.gov.uk/",
+    "https://card.payments.service.gov.uk/",
+  ].includes(document.referrer);
+
   if (isRedirectFromGovPay && emailQueryParam) return emailQueryParam;
   return "";
 };

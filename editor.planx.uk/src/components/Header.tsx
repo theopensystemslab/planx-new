@@ -9,138 +9,158 @@ import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
-import Toolbar from "@mui/material/Toolbar";
+import MuiToolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/styles";
+import { TYPES } from "@planx/components/types";
+import { hasFeatureFlag } from "lib/featureFlags";
+import { clearLocalFlow } from "lib/local";
+import { capitalize } from "lodash";
 import { Route } from "navi";
-import React, { useRef, useState } from "react";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
   useCurrentRoute,
   useNavigation,
 } from "react-navi";
 import { borderedFocusStyle, focusStyle } from "theme";
-import { Team } from "types";
+import { ApplicationPath, Team } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
-import PhaseBanner from "./PhaseBanner";
 
-export const HEADER_HEIGHT = 75;
+export const HEADER_HEIGHT = 74;
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    // backgroundColor: "#2c2c2c",
-    color: "#fff",
-  },
-  breadcrumbs: {
-    cursor: "pointer",
-  },
-  breadcrumb: {
-    color: "#fff",
-    textDecoration: "none",
-  },
-  toolbar: {
-    marginTop: theme.spacing(1),
-    height: HEADER_HEIGHT,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  profileSection: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  popover: {
+const Root = styled(AppBar)(() => ({
+  color: "#fff",
+}));
+
+const BreadcrumbsRoot = styled(Box)(() => ({
+  cursor: "pointer",
+  fontSize: 20,
+}));
+
+const BreadcrumbLink = styled(ReactNaviLink)(() => ({
+  color: "#fff",
+  textDecoration: "none",
+}));
+
+const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
+  paddingLeft: theme.spacing(4),
+  paddingRight: theme.spacing(4),
+  marginTop: theme.spacing(1),
+  height: HEADER_HEIGHT,
+  display: "flex",
+  alignItems: "center",
+}));
+
+const LeftBox = styled(Box)(() => ({
+  display: "flex",
+  flex: 1,
+  justifyContent: "start",
+}));
+
+const RightBox = styled(Box)(() => ({
+  display: "flex",
+  flex: 1,
+  justifyContent: "end",
+}));
+
+const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginRight: theme.spacing(2),
+}));
+
+const StyledPopover = styled(Popover)(() => ({
+  ["& .MuiPopover-paper"]: {
     boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
     backgroundColor: "#2c2c2c",
     borderRadius: 0,
   },
-  paper: {
-    backgroundColor: "#2c2c2c",
-    color: "#fff",
-    borderRadius: 0,
-    boxShadow: "none",
-    minWidth: 180,
-    "& li": {
-      padding: theme.spacing(1.5, 2),
-    },
-  },
-  logo: {
-    height: HEADER_HEIGHT - 5,
-    width: "100%",
-    maxWidth: 140,
-    objectFit: "contain",
-  },
-  logoLink: {
-    display: "inline-block",
-    "&:focus-visible": borderedFocusStyle,
-  },
-  skipLink: {
-    width: "100vw",
-    height: HEADER_HEIGHT / 2,
-    backgroundColor: "#2c2c2c",
-    color: "#fff",
-    textDecoration: "underline",
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(3),
-    // translate off-screen with absolute position
-    position: "absolute",
-    transform: "translateY(-100%)",
-    "&:focus": {
-      // bring it into view when accessed by tab
-      transform: "translateY(0%)",
-      position: "relative",
-      ...focusStyle,
-    },
-  },
-  analyticsWarning: {
-    display: "flex",
-    backgroundColor: "#FFFB00",
-    padding: "0 24px",
-    color: "#070707",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  serviceTitle: {
-    fontSize: "1.25em",
-    fontWeight: 700,
-    paddingLeft: theme.spacing(2),
-    paddingBottom: theme.spacing(1),
-    "&::first-letter": {
-      textTransform: "capitalize",
-    },
+}));
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#2c2c2c",
+  color: "#fff",
+  borderRadius: 0,
+  boxShadow: "none",
+  minWidth: 180,
+  "& li": {
+    padding: theme.spacing(1.5, 2),
   },
 }));
 
-/**
- * Describes the differing headers, based on the primary routes through which a flow can be interacted with
- */
-export enum HeaderVariant {
-  Preview,
-  Unpublished,
-  Editor,
-}
+const Logo = styled("img")(() => ({
+  height: HEADER_HEIGHT - 5,
+  width: "100%",
+  maxWidth: 140,
+  objectFit: "contain",
+}));
+
+const LogoLink = styled(Link)(() => ({
+  display: "inline-block",
+  "&:focus-visible": borderedFocusStyle,
+}));
+
+const SkipLink = styled("a")(({ theme }) => ({
+  tabIndex: 0,
+  width: "100vw",
+  height: HEADER_HEIGHT / 2,
+  backgroundColor: "#2c2c2c",
+  color: "#fff",
+  textDecoration: "underline",
+  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(3),
+  // translate off-screen with absolute position
+  position: "absolute",
+  transform: "translateY(-100%)",
+  "&:focus": {
+    // bring it into view when accessed by tab
+    transform: "translateY(0%)",
+    position: "relative",
+    ...focusStyle,
+  },
+}));
+
+const ServiceTitleRoot = styled("span")(({ theme }) => ({
+  fontSize: "1.25em",
+  fontWeight: 700,
+  paddingLeft: theme.spacing(2),
+  paddingBottom: theme.spacing(1),
+}));
+
+const StyledNavBar = styled("nav")(({ theme }) => ({
+  height: HEADER_HEIGHT,
+  backgroundColor: theme.palette.primary.dark,
+  padding: theme.spacing(1.5),
+  paddingLeft: theme.spacing(4),
+  fontSize: 16,
+}));
+
+const SectionName = styled(Typography)(() => ({
+  fontSize: "inherit",
+  fontWeight: "bold",
+}));
+
+const SectionCount = styled(Typography)(() => ({
+  fontSize: "inherit",
+}));
 
 const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
-  const classes = useStyles();
   const altText = team?.settings?.homepage
     ? `${team.name} Homepage (opens in a new tab)`
     : `${team?.name} Logo`;
-  const logo = (
-    <img alt={altText} src={team?.theme?.logo} className={classes.logo} />
-  );
+  const logo = <Logo alt={altText} src={team?.theme?.logo} />;
   return team?.settings?.homepage ? (
-    <Link
-      href={team.settings.homepage}
-      target="_blank"
-      className={classes.logoLink}
-    >
+    <LogoLink href={team.settings.homepage} target="_blank">
       {logo}
-    </Link>
+    </LogoLink>
   ) : (
     logo
   );
@@ -149,98 +169,148 @@ const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
 const Breadcrumbs: React.FC<{
   route: Route;
   handleClick?: (href: string) => void;
-}> = ({ route, handleClick }) => {
-  const classes = useStyles();
-  return (
-    <Box className={classes.breadcrumbs} fontSize={20}>
-      <ButtonBase
-        component="span"
-        color="#999"
-        onClick={() => handleClick && handleClick("/")}
-      >
-        Plan✕
-      </ButtonBase>
+}> = ({ route, handleClick }) => (
+  <BreadcrumbsRoot>
+    <ButtonBase
+      component="span"
+      color="#999"
+      onClick={() => handleClick && handleClick("/")}
+    >
+      Plan✕
+    </ButtonBase>
 
-      {route.data.team && (
-        <>
-          {" / "}
-          <Link
-            component={ReactNaviLink}
-            href={`/${route.data.team}`}
-            prefetch={false}
-            className={classes.breadcrumb}
-          >
-            {route.data.team}
-          </Link>
-        </>
+    {route.data.team && (
+      <>
+        {" / "}
+        <Link
+          component={BreadcrumbLink}
+          href={`/${route.data.team}`}
+          prefetch={false}
+        >
+          {route.data.team}
+        </Link>
+      </>
+    )}
+    {route.data.flow && (
+      <>
+        {" / "}
+        <Link
+          component={BreadcrumbLink}
+          href={rootFlowPath(false)}
+          prefetch={false}
+        >
+          {route.data.flow}
+        </Link>
+      </>
+    )}
+  </BreadcrumbsRoot>
+);
+
+const NavBar: React.FC = () => {
+  const [index, sectionCount, title, hasSections, saveToEmail, path] = useStore(
+    (state) => [
+      state.currentSectionIndex,
+      state.sectionCount,
+      state.currentSectionTitle,
+      state.hasSections,
+      state.saveToEmail,
+      state.path,
+    ]
+  );
+  const isSaveAndReturnLandingPage =
+    path !== ApplicationPath.SingleSession &&
+    !Boolean(saveToEmail) &&
+    !hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
+  const isContentPage = useCurrentRoute()?.data?.isContentPage;
+  const { node } = useAnalyticsTracking();
+  const isSectionCard = node?.type == TYPES.Section;
+  const isVisible =
+    hasSections &&
+    !isSaveAndReturnLandingPage &&
+    !isContentPage &&
+    !isSectionCard;
+
+  return (
+    <>
+      {isVisible && (
+        <StyledNavBar data-testid="navigation-bar">
+          <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
+          <SectionName>{capitalize(title)}</SectionName>
+        </StyledNavBar>
       )}
-      {route.data.flow && (
-        <>
-          {" / "}
-          <Link
-            component={ReactNaviLink}
-            href={rootFlowPath(false)}
-            prefetch={false}
-            className={classes.breadcrumb}
-          >
-            {route.data.flow}
-          </Link>
-        </>
-      )}
-    </Box>
+    </>
   );
 };
 
 const PublicToolbar: React.FC<{
   team?: Team;
-  handleRestart?: () => void;
   route: Route;
-}> = ({ team, handleRestart, route }) => {
-  const classes = useStyles();
+  showResetButton?: boolean;
+}> = ({ team, route, showResetButton = true }) => {
   const { navigate } = useNavigation();
+  const { path, id } = useStore();
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
-  const showCenteredServiceTitle = useMediaQuery("(min-width:600px)");
+  const showCentredServiceTitle = useMediaQuery("(min-width:600px)");
+
+  const handleRestart = async () => {
+    if (
+      confirm(
+        "Are you sure you want to restart? This will delete your previous answers"
+      )
+    ) {
+      if (path === ApplicationPath.SingleSession) {
+        clearLocalFlow(id);
+        window.location.reload();
+      } else {
+        // Save & Return flow
+        // don't delete old flow for now
+        // await NEW_LOCAL.clearLocalFlow(sessionId)
+        const url = new URL(window.location.href);
+        url.searchParams.delete("sessionId");
+        window.location.href = url.href;
+      }
+    }
+  };
 
   return (
     <>
-      <a tabIndex={0} className={classes.skipLink} href="#main-content">
-        Skip to main content
-      </a>
-      <Toolbar className={classes.toolbar}>
-        {team?.theme?.logo ? (
-          <TeamLogo team={team}></TeamLogo>
-        ) : (
-          <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
-        )}
-        {showCenteredServiceTitle && <ServiceTitle route={route} />}
-        <IconButton
-          color="secondary"
-          onClick={handleRestart}
-          aria-label="Restart Application"
-          size="large"
-        >
-          <Reset color="secondary" />
-        </IconButton>
-      </Toolbar>
-      {!showCenteredServiceTitle && <ServiceTitle route={route} />}
+      <SkipLink href="#main-content">Skip to main content</SkipLink>
+      <StyledToolbar>
+        <LeftBox>
+          {team?.theme?.logo ? (
+            <TeamLogo team={team}></TeamLogo>
+          ) : (
+            <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
+          )}
+        </LeftBox>
+        {showCentredServiceTitle && <ServiceTitle />}
+        <RightBox>
+          {showResetButton && (
+            <IconButton
+              color="secondary"
+              onClick={handleRestart}
+              aria-label="Restart Application"
+              size="large"
+            >
+              <Reset color="secondary" />
+            </IconButton>
+          )}
+        </RightBox>
+      </StyledToolbar>
+      {!showCentredServiceTitle && <ServiceTitle />}
+      <NavBar />
       <AnalyticsDisabledBanner />
-      <PhaseBanner />
     </>
   );
 };
 
-const ServiceTitle: React.FC<{
-  route: Route;
-}> = ({ route }) => {
-  const classes = useStyles();
-  const { flowName } = route.data;
+const ServiceTitle: React.FC = () => {
+  const flowName = useStore((state) => state.flowName);
 
   return (
-    <span data-testid="service-title" className={classes.serviceTitle}>
-      {flowName}
-    </span>
+    <ServiceTitleRoot data-testid="service-title">{flowName}</ServiceTitleRoot>
   );
 };
 
@@ -251,7 +321,6 @@ const EditorToolbar: React.FC<{
   const [open, setOpen] = useState(false);
   const togglePreview = useStore((state) => state.togglePreview);
 
-  const classes = useStyles();
   const { navigate } = useNavigation();
 
   const handleClose = () => {
@@ -269,11 +338,13 @@ const EditorToolbar: React.FC<{
 
   return (
     <>
-      <Toolbar className={classes.toolbar}>
-        <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
-        <Box display="flex" alignItems="center">
+      <StyledToolbar>
+        <LeftBox>
+          <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
+        </LeftBox>
+        <RightBox>
           {route.data.username && (
-            <Box className={classes.profileSection} mr={2}>
+            <ProfileSection>
               {route.data.flow && (
                 <IconButton
                   color="inherit"
@@ -296,17 +367,14 @@ const EditorToolbar: React.FC<{
               >
                 <KeyboardArrowDown />
               </IconButton>
-            </Box>
+            </ProfileSection>
           )}
-        </Box>
-      </Toolbar>
-      <Popover
+        </RightBox>
+      </StyledToolbar>
+      <StyledPopover
         open={open}
         anchorEl={headerRef.current}
         onClose={handleClose}
-        classes={{
-          paper: classes.popover,
-        }}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
@@ -316,7 +384,7 @@ const EditorToolbar: React.FC<{
           horizontal: "right",
         }}
       >
-        <Paper className={classes.paper}>
+        <StyledPaper>
           {/*
           <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
           <MenuItem onClick={() => handleClick("/")}>My dashboard</MenuItem>
@@ -341,43 +409,59 @@ const EditorToolbar: React.FC<{
           )}
 
           <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
-        </Paper>
-      </Popover>
+        </StyledPaper>
+      </StyledPopover>
     </>
   );
+};
+
+interface ToolbarProps {
+  headerRef: RefObject<HTMLDivElement>;
+  team?: Team;
+}
+
+const Toolbar: React.FC<ToolbarProps> = ({ headerRef, team }) => {
+  const route = useCurrentRoute();
+  const path = route.url.pathname.split("/").slice(-1)[0];
+  const [flowSlug, previewEnvironment] = useStore((state) => [
+    state.flowSlug,
+    state.previewEnvironment,
+  ]);
+
+  // Editor and custom domains share a path, so we need to rely on previewEnvironment
+  if (previewEnvironment === "editor" && path !== "unpublished") {
+    return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
+  }
+
+  switch (path) {
+    case flowSlug: // Custom domains
+    case "preview":
+    case "unpublished":
+      return <PublicToolbar team={team} route={route} />;
+    default:
+      return (
+        <PublicToolbar team={team} route={route} showResetButton={false} />
+      );
+  }
 };
 
 const Header: React.FC<{
   bgcolor?: string;
   team?: Team;
-  handleRestart?: () => void;
-  variant: HeaderVariant;
-}> = ({ bgcolor = "#2c2c2c", team, handleRestart, variant }) => {
-  const classes = useStyles();
+}> = ({ bgcolor = "#2c2c2c", team }) => {
   const headerRef = useRef<HTMLDivElement>(null);
-  const route = useCurrentRoute();
-
   return (
-    <AppBar
+    <Root
       position="static"
       elevation={0}
-      className={classes.root}
       color="transparent"
       ref={headerRef}
       style={{
         backgroundColor: team?.theme?.primary || bgcolor,
       }}
     >
-      {variant === HeaderVariant.Editor ? (
-        <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
-      ) : (
-        <PublicToolbar
-          team={team}
-          handleRestart={handleRestart}
-          route={route}
-        />
-      )}
-    </AppBar>
+      <Toolbar headerRef={headerRef} team={team}></Toolbar>
+    </Root>
   );
 };
 

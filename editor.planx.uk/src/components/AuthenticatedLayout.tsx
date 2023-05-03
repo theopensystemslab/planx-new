@@ -3,11 +3,11 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { View } from "react-navi";
 
-import Header, { HeaderVariant } from "./Header";
+import Header from "./Header";
 
 const Layout: React.FC = () => (
   <>
-    <Header variant={HeaderVariant.Editor} />
+    <Header />
     <DndProvider backend={HTML5Backend}>
       <View />
     </DndProvider>

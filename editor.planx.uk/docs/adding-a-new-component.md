@@ -1,10 +1,18 @@
-# Adding a new component
+# Adding a new @planx component
 
 Let's add a `SetValue` component
 
-`mkdir src/@planx/components/SetValue`
+## Core directory & files 
 
-`model.ts`
+1. `src/@planx/components/types.ts`
+
+```typescript
+SetValue = 380,
+```
+
+2. `mkdir src/@planx/components/SetValue`
+
+3. `model.ts`
 
 ```typescript
 import { MoreInformation, parseMoreInformation } from "../shared";
@@ -21,7 +29,33 @@ export const parseContent = (
 });
 ```
 
-`Public.tsx`
+4. `Editor.tsx`
+
+```typescript
+type Props = EditorProps<TYPES.SetValue, SetValue>;
+
+export default SetValueComponent;
+
+function SetValueComponent(props: Props) {
+  const formik = useFormik({
+    initialValues: parseSetValue(props.node?.data),
+    onSubmit: (newValues) => {
+      props.handleSubmit?.({
+        type: TYPES.SetValue,
+        data: newValues,
+      });
+    },
+  });
+
+  return (
+    <form onSubmit={formik.handleSubmit} id="modal">
+      //... 
+    </form>
+  );
+}
+```
+
+5. `Public.tsx`
 
 ```typescript
 import { PublicProps } from "@planx/components/ui";
@@ -41,49 +75,81 @@ function SetValueComponent(props: Props) {
 }
 ```
 
-`src/pages/FlowEditor/components/forms/FormModal.tsx`
+6. `Public.test.tsx`
 
-````jsx
-  <option value={TYPES.SetValue}>SetValue</option>
-`
-
-src/@planx/components/types.ts
-`SetValue = 380,`
-
-
-src/pages/Preview/Node.tsx
 ```typescript
-import SetValue from "@planx/components/SetValue/Public";
+// SetValue doesn't have a /preview representation, but for
+//   component types that do, add at least an axe accessibility test in here
+```
 
-case TYPES.SetValue:
-  return <SetValue {...allProps} />;
-````
+## Editor configurations
 
-`src/@planx/components/Review/Public/Presentational.tsx`
+1. `src/@planx/components/ui.tsx`
 
-`[TYPES.SetValue]: undefined,`
-
-`src/@planx/components/ui.tsx`
+```typescript 
 import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 [TYPES.SetValue]: PlaylistAdd,
+```
 
-`src/pages/FlowEditor/components/Flow/components/Node.tsx`
+2. `src/pages/FlowEditor/data/types.ts`
+
+```typescript
+[TYPES.SetValue]: "set-value",
+```
+
+3. `src/pages/FlowEditor/components/Flow/components/Node.tsx`
 
 ```typescript
 case TYPES.SetValue:
   return <Question {...allProps} text="Set Value" />;
 ```
 
-`src/pages/FlowEditor/data/types.ts`
+4. `src/pages/FlowEditor/components/forms/FormModal.tsx`
 
-```typescript
-[TYPES.SetValue]: "set-value",
+```jsx
+  <option value={TYPES.SetValue}>SetValue</option>
 ```
 
-`src/pages/FlowEditor/components/forms/index.ts`
+5. `src/pages/FlowEditor/components/forms/index.ts`
 
 ```typescript
 import SetValue from "@planx/components/SetValue/Editor";
 //...
 set: SetValueComponent,
+```
+
+## Preview environment & integrations
+
+1. `src/pages/Preview/Node.tsx`
+
+If/how should this component appear to applicants?
+
+```typescript
+import SetValue from "@planx/components/SetValue/Public";
+
+case TYPES.SetValue:
+  return <SetValue {...allProps} />;
+```
+
+2. `src/@planx/components/shared/Preview/SummaryList`
+
+If/how should this component appear on the Review page?
+
+```typescript
+[TYPES.SetValue]: undefined,
+```
+
+3. `src/@planx/components/Send/bops/index`
+
+If/how should this component be formatted in Send data formats such as BOPS?
+
+```typescript
+function isTypeForBopsPayload(type?: TYPES) {
+  switch (type) {
+    // ... 
+    case TYPES.SetValue:
+      return false;
+    // ...
+  }
+}
 ```

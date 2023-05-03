@@ -4,13 +4,14 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
-import { reportError } from "airbrake";
+import { logger } from "airbrake";
+import { isEmpty } from "lodash";
 import { flatFlags } from "pages/FlowEditor/data/flags";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../../Pay/model";
 import { removeNilValues } from "../../shared/utils";
 import { TYPES } from "../../types";
@@ -50,6 +51,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.DrawBoundary:
     case TYPES.ExternalPortal:
     case TYPES.FileUpload:
+    case TYPES.MultipleFileUpload:
     case TYPES.Filter:
     case TYPES.FindProperty:
     case TYPES.Flow:
@@ -57,9 +59,11 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Notice:
     case TYPES.Pay:
     case TYPES.PlanningConstraints:
+    case TYPES.PropertyInformation:
     case TYPES.Response:
     case TYPES.Result:
     case TYPES.Review:
+    case TYPES.Section:
     case TYPES.Send:
     case TYPES.SetValue:
     case TYPES.TaskList:
@@ -104,6 +108,17 @@ const addPortalName = (
   return metadata;
 };
 
+const addSectionName = (
+  id: string,
+  metadata: QuestionMetaData
+): QuestionMetaData => {
+  const { hasSections, getSectionForNode } = useStore.getState();
+  if (hasSections) {
+    metadata.section_name = getSectionForNode(id).data.title;
+  }
+  return metadata;
+};
+
 export const makePayload = (
   flow: Store.flow,
   breadcrumbs: Store.breadcrumbs
@@ -134,7 +149,7 @@ export const makePayload = (
           }
         }
       } catch (err) {
-        reportError(err);
+        logger.notify(err);
       }
 
       // exclude answers that have been extracted into the root object
@@ -180,7 +195,7 @@ export const makePayload = (
         const metadata: ResponseMetaData = {};
 
         if (flow[id]) {
-          // XXX: this is how we get the text represenation of a node until
+          // XXX: this is how we get the text representation of a node until
           //      we have a more standardised way of retrieving it. More info
           //      https://github.com/theopensystemslab/planx-new/discussions/386
           value = flow[id].data?.text ?? flow[id].data?.title ?? "";
@@ -212,6 +227,7 @@ export const makePayload = (
         ];
       }
       metadata = addPortalName(id, flow, metadata);
+      metadata = addSectionName(id, metadata);
 
       if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
@@ -222,16 +238,29 @@ export const makePayload = (
   return { proposal_details, feedback };
 };
 
-export function getBOPSParams(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-) {
+export function getBOPSParams({
+  breadcrumbs,
+  flow,
+  passport,
+  sessionId,
+  flowName,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  passport: Store.passport;
+  sessionId: string;
+  flowName: string;
+}) {
   const data = {} as BOPSFullPayload;
 
-  // XXX: Hardcode application type for now
+  // Default application type accepted by BOPS
   data.application_type = "lawfulness_certificate";
+
+  // Overwrite application type if this isn't an LDC (relies on LDC flows having consistent slug)
+  //   eg because makeCsvData which is used across services calls this method
+  if (flowName && flowName !== "Apply for a lawful development certificate") {
+    data.application_type = flowName;
+  }
 
   // 1a. address
 
@@ -240,15 +269,24 @@ export function getBOPSParams(
   if (address) {
     const site = {} as BOPSFullPayload["site"];
 
-    site.uprn = String(address.uprn);
+    site.uprn = address.uprn && String(address.uprn);
 
-    site.address_1 = address.single_line_address.split(`, ${address.town}`)[0];
+    site.address_1 =
+      address.single_line_address?.split(`, ${address.town}`)[0] ||
+      address.title;
 
-    site.town = address.town;
+    site.town =
+      address.town ||
+      passport.data?.["property.localAuthorityDistrict"]?.join(", ");
     site.postcode = address.postcode;
 
     site.latitude = address.latitude;
     site.longitude = address.longitude;
+
+    site.x = address.x;
+    site.y = address.y;
+
+    site.source = address.source; // reflects "os" or "proposed"
 
     data.site = site;
   }
@@ -277,20 +315,6 @@ export function getBOPSParams(
         } catch (err) {}
       });
     });
-
-  // 2a. property boundary file if the user didn't draw
-
-  if (passport?.data?.[PASSPORT_UPLOAD_KEY]) {
-    data.files = data.files || [];
-    data.files.push({
-      filename: passport.data[PASSPORT_UPLOAD_KEY],
-      tags: extractTagsFromPassportKey(PASSPORT_UPLOAD_KEY),
-      applicant_description: extractFileDescriptionForPassportKey(
-        passport.data,
-        PASSPORT_UPLOAD_KEY
-      ),
-    });
-  }
 
   // 3. constraints
 
@@ -361,7 +385,7 @@ export function getBOPSParams(
     });
   } catch (err) {
     console.error("unable to get flag result");
-    reportError(err);
+    logger.notify(err);
   }
 
   // 9. user role
@@ -379,25 +403,18 @@ export function getBOPSParams(
 
   if (userRole && USER_ROLES.includes(userRole)) data.user_role = userRole;
 
-  // 10. proposal completion date
-  try {
-    const dateString = passport?.data?.["proposal.completion.date"];
-    if (dateString) {
-      // ensure that date is valid and in yyyy-mm-dd format
-      data.proposal_completion_date = new Date(dateString)
-        .toISOString()
-        .split("T")[0];
-    }
-  } catch (err) {
-    const errPayload = [
-      "unable to parse completion date",
-      {
-        date: passport?.data?.["proposal.completion.date"],
-        err,
-      },
-    ];
-    reportError(errPayload);
-  }
+  // 10. Works
+  const works: BOPSFullPayload["works"] = {};
+
+  const startedDate = parseDate(passport?.data?.["proposal.start.date"]);
+  if (startedDate) works.start_date = startedDate;
+
+  const completionDate = parseDate(
+    passport?.data?.["proposal.completion.date"]
+  );
+  if (completionDate) works.finish_date = completionDate;
+
+  if (!isEmpty(works)) data.works = works;
 
   return {
     ...data,
@@ -409,6 +426,18 @@ export function getBOPSParams(
     },
   };
 }
+
+const parseDate = (dateString: string | undefined): string | undefined => {
+  try {
+    if (dateString) {
+      // ensure that date is valid and in yyyy-mm-dd format
+      return new Date(dateString).toISOString().split("T")[0];
+    }
+  } catch (err) {
+    const errPayload = ["Unable to parse date", { dateString, err }];
+    logger.notify(errPayload);
+  }
+};
 
 export const getWorkStatus = (passport: Store.passport) => {
   // XXX: toString() is explained in XXX block above

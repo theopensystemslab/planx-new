@@ -17,8 +17,7 @@ import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
-import type { FlowSettings, TextContent } from "types";
-import type { GetState, SetState } from "zustand/vanilla";
+import type { StateCreator } from "zustand";
 
 import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
@@ -34,16 +33,18 @@ const send = (ops: Array<any>) => {
   }
 };
 
-export interface EditorUIStore extends Store.Store {
+export interface EditorUIStore {
   flowLayout: FlowLayout;
   showPreview: boolean;
   togglePreview: () => void;
 }
 
-export const editorUIStore = (
-  set: SetState<EditorUIStore>,
-  get: GetState<SharedStore & EditorUIStore>
-): EditorUIStore => ({
+export const editorUIStore: StateCreator<
+  SharedStore & EditorUIStore,
+  [],
+  [],
+  EditorUIStore
+> = (set, get) => ({
   flowLayout: FlowLayout.TOP_DOWN,
 
   showPreview: true,
@@ -77,19 +78,15 @@ export interface EditorStore extends Store.Store {
   pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
   publishFlow: (flowId: string, summary?: string) => Promise<any>;
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
-  updateFlowSettings: (
-    teamSlug: string,
-    flowSlug: string,
-    newSettings: FlowSettings
-  ) => Promise<number>;
-  updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
   updateNode: (node: any, relationships?: any) => void;
 }
 
-export const editorStore = (
-  set: SetState<EditorStore>,
-  get: GetState<SharedStore & EditorStore>
-): EditorStore => ({
+export const editorStore: StateCreator<
+  SharedStore & EditorStore,
+  [],
+  [],
+  EditorStore
+> = (set, get) => ({
   addNode: (
     { id = undefined, type, data },
     { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {}
@@ -121,12 +118,10 @@ export const editorStore = (
     (window as any)["doc"] = doc;
 
     await connectToDB(doc);
-    // set the ID of the flow to assist with deciding what to render
-    set({ id });
 
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
-      set({ flow });
+      get().setFlow({ id, flow, flowSlug: get().flowSlug });
     };
 
     // set state from initial load
@@ -413,61 +408,6 @@ export const editorStore = (
   removeNode: (id, parent) => {
     const [, ops] = remove(id, parent)(get().flow);
     send(ops);
-  },
-
-  updateFlowSettings: async (teamSlug, flowSlug, newSettings) => {
-    let response = await client.mutate({
-      mutation: gql`
-        mutation UpdateFlowSettings(
-          $team_slug: String
-          $flow_slug: String
-          $settings: jsonb
-        ) {
-          update_flows(
-            where: {
-              team: { slug: { _eq: $team_slug } }
-              slug: { _eq: $flow_slug }
-            }
-            _set: { settings: $settings }
-          ) {
-            affected_rows
-            returning {
-              id
-              slug
-              settings
-            }
-          }
-        }
-      `,
-      variables: {
-        team_slug: teamSlug,
-        flow_slug: flowSlug,
-        settings: newSettings,
-      },
-    });
-
-    return response.data.update_flows.affected_rows;
-  },
-
-  updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
-    let response = await client.mutate({
-      mutation: gql`
-        mutation UpdateGlobalSettings($new_settings: jsonb) {
-          insert_global_settings(
-            objects: { id: 1, footer_content: $new_settings }
-            on_conflict: {
-              constraint: global_settings_pkey
-              update_columns: footer_content
-            }
-          ) {
-            affected_rows
-          }
-        }
-      `,
-      variables: {
-        new_settings: newSettings,
-      },
-    });
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

@@ -16,7 +16,7 @@ env:
 jobs:
   build_react:
     name: Test and Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -48,7 +48,6 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - run: npm install -g pnpm@${{ env.PNPM_VERSION }}
-        working-directory: editor.planx.uk
       - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
       - run: pnpm build
@@ -60,6 +59,7 @@ jobs:
           REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.uk
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          REACT_APP_ENV: production
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -70,7 +70,7 @@ jobs:
   preview:
     name: Pulumi Up
     needs: build_react
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -99,14 +99,13 @@ jobs:
           stack-name: production
           work-dir: infrastructure/application
           edit-pr-comment: true
-          refresh: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
   notifications:
     name: Notifications
     needs: preview
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
@@ -130,3 +129,12 @@ jobs:
           SLACK_COLOR: "#42AC6A"
           SLACK_TITLE: ${{ env.DEPLOYMENT_ENVIRONMENT }} deploy
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
+
+  failure_notification:
+    name: Send failure notification
+    needs: preview
+    if: failure()
+    uses: ./.github/workflows/action-failure.yml
+    secrets: inherit
+    with:
+      environment: Production

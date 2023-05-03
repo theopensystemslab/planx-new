@@ -11,13 +11,16 @@ import FileUpload from "@planx/components/FileUpload/Editor";
 import Filter from "@planx/components/Filter/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import InternalPortal from "@planx/components/InternalPortal/Editor";
+import MultipleFileUpload from "@planx/components/MultipleFileUpload/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Pay from "@planx/components/Pay/Editor";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Editor";
+import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import Question from "@planx/components/Question/Editor";
 import Result from "@planx/components/Result/Editor";
 import Review from "@planx/components/Review/Editor";
+import Section from "@planx/components/Section/Editor";
 import Send from "@planx/components/Send/Editor";
 import SetValue from "@planx/components/SetValue/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
@@ -46,13 +49,16 @@ const components: {
   "find-property-merged": FindProperty,
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
+  "multiple-file-upload": MultipleFileUpload,
   notice: Notice,
   "number-input": NumberInput,
   pay: Pay,
   "planning-constraints": PlanningConstraints,
+  "property-information": PropertyInformation,
   question: Question,
   result: Result,
   review: Review,
+  section: Section,
   send: Send,
   "set-value": SetValue,
   "task-list": TaskList,

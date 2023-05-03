@@ -8,7 +8,7 @@ https://mapping.braintree.gov.uk/arcgis/rest/services/PlanX/PlanX/FeatureServer
 https://environment.data.gov.uk/arcgis/rest/services
 */
 
-const braintreeDomain = "https://mapping.braintree.gov.uk/";
+const braintreeDomain = "https://mapping.braintree.gov.uk/arcgis";
 const environmentDomain = "https://environment.data.gov.uk";
 const A4_KEY = "PARISH";
 

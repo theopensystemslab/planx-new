@@ -1,23 +1,36 @@
 {
+  "private": true,
   "scripts": {
-    "test:cypress": "./run-tests.sh",
-    "test:playwright": "./run-playwright-tests.sh",
+    "test": "playwright test",
+    "test:debug": "DEBUG_LOG=true pnpm test",
+    "test:server": "NODE_ENV=test serve ../editor.planx.uk/build --single --listen 3000",
+    "lint": "eslint './src/*.{js,ts}' && prettier -c ./src",
+    "lint:fix": "eslint --fix './src/*.{js,ts}' && prettier -w ./src",
+    "check": "tsc && pnpm lint",
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
-    "axios": "^1.1.3",
-    "cypress": "^10.8.0",
-    "dotenv": "^16.0.2",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#80a2178",
+    "axios": "^1.3.6",
+    "dotenv": "^16.0.3",
+    "graphql": "^16.6.0",
+    "graphql-request": "^5.2.0",
     "isomorphic-fetch": "^3.0.0",
-    "jsonwebtoken": "^8.5.1",
-    "serve": "^14.0.1"
+    "jsonwebtoken": "^9.0.0",
+    "serve": "^14.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.28.1",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^18.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "eslint": "^8.39.0",
+    "prettier": "^2.8.8",
+    "typescript": "^4.9.5"
   },
   "engines": {
     "node": "^16",
     "pnpm": "^7.8.0"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.28.0",
-    "@types/node": "16"
   }
 }

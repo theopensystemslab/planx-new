@@ -64,7 +64,13 @@ test("makes file object", () => {
     },
   };
 
-  const actual = getBOPSParams(breadcrumbs, flow, passport, "123").files;
+  const actual = getBOPSParams({
+    breadcrumbs,
+    flow,
+    passport,
+    sessionId: "123",
+    flowName: "Apply for a lawful development certificate",
+  }).files;
 
   const expected = [
     expect.objectContaining({

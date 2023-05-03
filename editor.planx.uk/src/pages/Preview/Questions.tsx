@@ -7,19 +7,12 @@ import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { ApplicationPath, FlowSettings } from "types";
+import { ApplicationPath } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
-import { PreviewContext } from "./Context";
 import Node, { handleSubmit } from "./Node";
 
 const useClasses = makeStyles((theme) => ({
@@ -48,10 +41,9 @@ const useClasses = makeStyles((theme) => ({
 
 interface QuestionsProps {
   previewEnvironment: PreviewEnvironment;
-  settings?: FlowSettings;
 }
 
-const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
+const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const [
     previousCard,
     record,
@@ -76,7 +68,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     state.setPreviewEnvironment,
   ]);
   const isStandalone = previewEnvironment === "standalone";
-  const flow = useContext(PreviewContext)?.flow;
   const { createAnalytics, node } = useAnalyticsTracking();
   const classes = useClasses();
   const [gotFlow, setGotFlow] = useState(false);
@@ -167,7 +158,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   );
 
   return (
-    <Box width="100%" role="main">
+    <Box width="100%" role="main" pt={5}>
       <ButtonBase
         className={classnames(classes.backButton, {
           [classes.hidden]: !showBackButton,
@@ -184,9 +175,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
             node={node}
             key={node.id}
             handleSubmit={handleSubmit(node.id!)}
-            settings={
-              previewEnvironment === "editor" ? settings : flow?.settings
-            }
           />
         </ErrorBoundary>
       )}

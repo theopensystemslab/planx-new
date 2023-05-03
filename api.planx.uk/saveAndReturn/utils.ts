@@ -1,57 +1,14 @@
+import { SiteAddress } from "@opensystemslab/planx-core/types";
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
-import { publicGraphQLClient, adminGraphQLClient } from "../hasura";
-import { EmailSubmissionNotifyConfig, LowCalSession, SaveAndReturnNotifyConfig, Team } from "../types";
-import { notifyClient } from "./notify";
+import {
+  publicGraphQLClient as publicClient,
+  adminGraphQLClient as adminClient,
+} from "../hasura";
+import { LowCalSession, Team } from "../types";
+import { Template, getClientForTemplate, sendEmail } from "../notify/utils";
 
 const DAYS_UNTIL_EXPIRY = 28;
-
-const singleSessionEmailTemplates = {
-  save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
-  reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
-  expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
-  submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
-};
-
-const multipleSessionEmailTemplates = {
-  resume: process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID,
-};
-
-const emailTemplates = {
-  ...singleSessionEmailTemplates,
-  ...multipleSessionEmailTemplates,
-};
-
-export type Template = keyof typeof emailTemplates;
-
-/**
- * Send email using the GovUK Notify client
- */
-const sendEmail = async (
-  template: Template,
-  emailAddress: string,
-  config: SaveAndReturnNotifyConfig | EmailSubmissionNotifyConfig
-) => {
-  const templateId = emailTemplates[template];
-  if (!templateId) throw new Error("Template ID is required");
-
-  try {
-    await notifyClient.sendEmail(templateId, emailAddress, config);
-    const returnValue: {
-      message: string;
-      expiryDate?: string;
-    } = { message: "Success" };
-    if (template === "expiry") softDeleteSession(config.personalisation.id!);
-    if (template === "save")
-      returnValue.expiryDate = config.personalisation.expiryDate;
-    return returnValue;
-  } catch (error: any) {
-    const notifyError = JSON.stringify(error.response.data.errors[0]);
-    throw Error(
-      `Error: Failed to send email using Notify client. ${notifyError}`
-    );
-  }
-};
 
 /**
  * Converts a flow's slug to a pretty name
@@ -94,7 +51,7 @@ const calculateExpiryDate = (createdAt: string): string => {
 };
 
 /**
- * Sends "Save", "Remind", and "Expiry" emails to Save & Return users
+ * Sends "Save", "Remind", "Expiry" and "Confirmation" emails to Save & Return users
  */
 const sendSingleApplicationEmail = async (
   template: Template,
@@ -104,7 +61,8 @@ const sendSingleApplicationEmail = async (
   try {
     const { flowSlug, team, session } = await validateSingleSessionRequest(
       email,
-      sessionId
+      sessionId,
+      template
     );
     const config = {
       personalisation: getPersonalisation(session, flowSlug, team),
@@ -125,13 +83,13 @@ const sendSingleApplicationEmail = async (
  */
 const validateSingleSessionRequest = async (
   email: string,
-  sessionId: string
+  sessionId: string,
+  template: Template
 ) => {
   try {
-    const client = publicGraphQLClient;
     const query = gql`
-      query ValidateSingleSessionRequest {
-        lowcal_sessions {
+      query ValidateSingleSessionRequest($sessionId: uuid!) {
+        lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
           id
           data
           created_at
@@ -148,10 +106,11 @@ const validateSingleSessionRequest = async (
         }
       }
     `;
+    const client = getClientForTemplate(template);
     const headers = getSaveAndReturnPublicHeaders(sessionId, email);
     const {
       lowcal_sessions: [session],
-    } = await client.request(query, null, headers);
+    } = await client.request(query, { sessionId }, headers);
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 
@@ -179,15 +138,16 @@ interface SessionDetails {
 const getSessionDetails = async (
   session: LowCalSession
 ): Promise<SessionDetails> => {
-  const projectTypes = await getHumanReadableProjectType(session);
-  const address = session?.data?.passport?.data?._address?.single_line_address;
+  const projectTypes = await getHumanReadableProjectType(session?.data?.passport?.data);
+  const address: SiteAddress | undefined = session.data?.passport?.data?._address;
+  const addressLine = address?.single_line_address || address?.title;
 
   return {
-    address: address || "Address not submitted",
+    address: addressLine || "Address not submitted",
     projectType: projectTypes || "Project type not submitted",
     id: session.id,
     expiryDate: calculateExpiryDate(session.created_at),
-    hasUserSaved: session.has_user_saved
+    hasUserSaved: session.has_user_saved,
   };
 };
 
@@ -211,11 +171,10 @@ const getPersonalisation = (
 
 /**
  * Mark a lowcal_session record as deleted
- * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
+ * Sessions older than 6 months cleaned up nightly by cron job sanitise_application_data on Hasura
  */
 const softDeleteSession = async (sessionId: string) => {
   try {
-    const client = adminGraphQLClient;
     const mutation = gql`
       mutation SoftDeleteLowcalSession($sessionId: uuid!) {
         update_lowcal_sessions_by_pk(
@@ -226,7 +185,7 @@ const softDeleteSession = async (sessionId: string) => {
         }
       }
     `;
-    await client.request(mutation, { sessionId });
+    await adminClient.request(mutation, { sessionId });
   } catch (error) {
     throw new Error(`Error deleting session ${sessionId}`);
   }
@@ -234,11 +193,10 @@ const softDeleteSession = async (sessionId: string) => {
 
 /**
  * Mark a lowcal_session record as submitted
- * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
+ * Sessions older than 6 months cleaned up nightly by cron job sanitise_application_data on Hasura
  */
 const markSessionAsSubmitted = async (sessionId: string) => {
   try {
-    const client = adminGraphQLClient;
     const mutation = gql`
       mutation MarkSessionAsSubmitted($sessionId: uuid!) {
         update_lowcal_sessions_by_pk(
@@ -249,7 +207,7 @@ const markSessionAsSubmitted = async (sessionId: string) => {
         }
       }
     `;
-    await client.request(mutation, { sessionId });
+    await adminClient.request(mutation, { sessionId });
   } catch (error) {
     throw new Error(`Error marking session ${sessionId} as submitted`);
   }
@@ -258,9 +216,11 @@ const markSessionAsSubmitted = async (sessionId: string) => {
 /**
  * Get formatted list of the session's project types
  */
-const getHumanReadableProjectType = async (session: LowCalSession): Promise<string | void>=> {
+const getHumanReadableProjectType = async (
+  sessionData: LowCalSession["data"]["passport"]["data"] | Record<string, any>
+): Promise<string | undefined> => {
   const rawProjectType =
-    session?.data?.passport?.data?.["proposal.projectType"];
+    sessionData?.["proposal.projectType"];
   if (!rawProjectType) return;
   // Get human readable values from db
   const humanReadableList = await getReadableProjectTypeFromRaw(rawProjectType);
@@ -279,7 +239,6 @@ const getHumanReadableProjectType = async (session: LowCalSession): Promise<stri
 const getReadableProjectTypeFromRaw = async (
   rawList: string[]
 ): Promise<string[]> => {
-  const client = publicGraphQLClient;
   const query = gql`
     query GetHumanReadableProjectType($rawList: [String!]) {
       project_types(where: { value: { _in: $rawList } }) {
@@ -287,7 +246,7 @@ const getReadableProjectTypeFromRaw = async (
       }
     }
   `;
-  const { project_types } = await client.request(query, { rawList });
+  const { project_types } = await publicClient.request(query, { rawList });
   const list = project_types.map(
     (result: { description: string }) => result.description
   );
@@ -325,7 +284,6 @@ const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
 // Should only run once on initial save of a session
 const setupEmailEventTriggers = async (sessionId: string) => {
   try {
-    const client = adminGraphQLClient;
     const mutation = gql`
       mutation SetupEmailNotifications($sessionId: uuid!) {
         update_lowcal_sessions_by_pk(
@@ -339,7 +297,7 @@ const setupEmailEventTriggers = async (sessionId: string) => {
     `;
     const {
       update_lowcal_sessions_by_pk: { has_user_saved: hasUserSaved },
-    } = await client.request(mutation, { sessionId });
+    } = await adminClient.request(mutation, { sessionId });
     return hasUserSaved;
   } catch (error) {
     throw new Error(
@@ -350,14 +308,13 @@ const setupEmailEventTriggers = async (sessionId: string) => {
 
 export {
   getSaveAndReturnPublicHeaders,
-  sendEmail,
   convertSlugToName,
   getResumeLink,
   sendSingleApplicationEmail,
-  singleSessionEmailTemplates,
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
   getHumanReadableProjectType,
   stringifyWithRootKeysSortedAlphabetically,
+  softDeleteSession,
 };

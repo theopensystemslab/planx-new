@@ -8,14 +8,17 @@ import DateInput from "@planx/components/DateInput/Public";
 import DrawBoundary from "@planx/components/DrawBoundary/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
+import MultipleFileUpload from "@planx/components/MultipleFileUpload/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
 import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import Pay from "@planx/components/Pay/Public";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Public";
+import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
+import Section from "@planx/components/Section/Public";
 import { getWorkStatus } from "@planx/components/Send/bops";
 import Send from "@planx/components/Send/Public";
 import SetValue from "@planx/components/SetValue/Public";
@@ -26,7 +29,7 @@ import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import type { FlowSettings, GovUKPayment } from "types";
+import type { GovUKPayment } from "types";
 
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
@@ -36,7 +39,6 @@ export type handleSubmit = (userData?: Store.userData | Event) => void;
 interface Props {
   handleSubmit: handleSubmit;
   node: Store.node;
-  settings?: FlowSettings;
   data?: any;
 }
 
@@ -50,6 +52,8 @@ const Node: React.FC<any> = (props: Props) => {
     resetPreview,
     sessionId,
     cachedBreadcrumbs,
+    flowName,
+    flowSettings,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
@@ -59,6 +63,8 @@ const Node: React.FC<any> = (props: Props) => {
     state.resetPreview,
     state.sessionId,
     state.cachedBreadcrumbs,
+    state.flowName,
+    state.flowSettings,
   ]);
 
   const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
@@ -108,14 +114,12 @@ const Node: React.FC<any> = (props: Props) => {
         passport.data?.[GOV_PAY_PASSPORT_KEY];
 
       const details = {
-        "Planning Application Reference": payment?.reference ?? sessionId,
+        "Planning application reference": payment?.reference ?? sessionId,
 
-        "Property Address": passport.data?._address?.title,
+        "Property address": passport.data?._address?.title,
 
         "Application type": [
-          // XXX: application type currently hardcoded as it's the only one being
-          //      tested, but this will need to become dynamic.
-          "Application for a Certificate of Lawfulness",
+          flowName.replace("Apply", "Application"),
           getWorkStatus(passport),
         ]
           .filter(Boolean)
@@ -153,6 +157,9 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.FileUpload:
       return <FileUpload {...allProps} />;
 
+    case TYPES.MultipleFileUpload:
+      return <MultipleFileUpload {...allProps} />;
+
     case TYPES.FindProperty:
       return <FindProperty {...allProps} />;
 
@@ -183,12 +190,15 @@ const Node: React.FC<any> = (props: Props) => {
           description={displayText.description}
           reasonsTitle="Reasons"
           responses={responses}
-          disclaimer={props.settings?.elements?.legalDisclaimer}
+          disclaimer={flowSettings?.elements?.legalDisclaimer}
         />
       );
 
     case TYPES.Review:
       return <Review {...allProps} />;
+
+    case TYPES.Section:
+      return <Section {...allProps} />;
 
     case TYPES.Send:
       return <Send {...allProps} />;
@@ -231,6 +241,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.PlanningConstraints:
       return <PlanningConstraints {...allProps} />;
+
+    case TYPES.PropertyInformation:
+      return <PropertyInformation {...allProps} />;
 
     case TYPES.ExternalPortal:
     case TYPES.Filter:

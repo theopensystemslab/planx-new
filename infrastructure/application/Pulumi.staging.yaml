@@ -22,7 +22,7 @@ config:
   application:govuk-notify-api-key:
     secure: AAABACgwjEmlLmE19ofRO8e/JpD8sHDV2lcDmSXbU/Mw8ZRh5gTgll8DZ3BVjpDWfQfIecBAIf2TFgeo9CsBSLjfaRJ7eJyKDSWm7i8LlMC2JN/PN+Ig8oeI0H0oLkqJIziNKKjx+e97zDiXO9LZ1CVzrywR
   application:hasura-admin-secret:
-    secure: AAABAFWrfRcYR8kWrKVhFQ+PedyHB+Op5r4yl5VGOfQR0DmEauoCg5lqY16fPu/vNaFc4lte0rPznxg6ak+CaOLovjE=
+    secure: AAABAGDAQe8KyGWt1sT/psdS282GOGBjHfI/KThzfcoixsDT0s/jBSnFGjwuTrAUvrDEc06hy5jhfO1rxnsLtQ==
   application:hasura-planx-api-key:
     secure: AAABANHLs3ItPxkteh0chwMP2bKuHO3ovuRLi4FsIrCqerzXVIaTLFDqNR+4KBTeMPz4cnF5tCTwsrJv9GruZdXU+lg=
   application:jwt-secret:
@@ -30,7 +30,7 @@ config:
   application:metabase-encryption-secret-key:
     secure: AAABAGmfVICD8sR+IE6mHC8BNUY1WQXGCbv5F3C1fSgA+1ADiRem3GNrwY0YRZociRYuPIo3MIRS0aIg44jt10SBCE0ik58wHamcKA==
   application:metabasePgPassword:
-    secure: AAABAI1jwOCiVQ7FdyxRXyZQh0VeN/z1R9t3Y2QXSdAgBq5cu7lT7UKRpDmtSS857F8GqOIAAedPXng11w0dmqWe1783BRtczE7tOQ==
+    secure: AAABADQYBB4/QIWKVrjBPU9A3x5KTEGlI5NcvP66CotIcn+ie2bUfApaBj3LCxxDIBI68i4DS4WEHgf9RotLhg==
   application:ordnance-survey-api-key:
     secure: AAABAKhzYRhAmGmoBY1fPF75JWSWMOTORRCUAPKqvFUJMA60U5IFDUvPZ1Y+FuLtQ6Y1sQ8Q3laXGbp0f9j3Lw==
   application:session-secret:

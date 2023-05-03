@@ -1,45 +1,45 @@
+import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
-import type { Store } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-export default SummaryList;
+export default SummaryListsBySections;
 
-const useStyles = makeStyles((theme) => ({
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 2fr 100px",
-    gridRowGap: "10px",
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-    "& > *": {
-      borderBottom: "1px solid grey",
-      paddingBottom: theme.spacing(2),
-      paddingTop: theme.spacing(2),
-      verticalAlign: "top",
-      margin: 0,
-    },
-    "& ul": {
-      listStylePosition: "inside",
-      padding: 0,
-      margin: 0,
-    },
-    "& >:nth-child(3n+1)": {
-      // left column
-      fontWeight: 700,
-    },
-    "& >:nth-child(3n+2)": {
-      // middle column
-      paddingLeft: "10px",
-    },
-    "& >:nth-child(3n+3)": {
-      // right column
-      textAlign: "right",
-    },
+const Grid = styled("dl")(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "1fr 2fr 100px",
+  gridRowGap: "10px",
+  marginTop: theme.spacing(4),
+  marginBottom: theme.spacing(4),
+  "& > *": {
+    borderBottom: "1px solid grey",
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    verticalAlign: "top",
+    margin: 0,
+  },
+  "& ul": {
+    listStylePosition: "inside",
+    padding: 0,
+    margin: 0,
+  },
+  "& dt": {
+    // left column
+    fontWeight: 700,
+  },
+  "& dd:nth-of-type(n)": {
+    // middle column
+    paddingLeft: "10px",
+  },
+  "& dd:nth-of-type(2n)": {
+    // right column
+    textAlign: "right",
   },
 }));
 
@@ -56,6 +56,7 @@ const components: {
   [TYPES.DrawBoundary]: DrawBoundary,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
+  [TYPES.MultipleFileUpload]: undefined,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: FindProperty,
   [TYPES.Flow]: undefined,
@@ -64,15 +65,59 @@ const components: {
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
+  [TYPES.PropertyInformation]: undefined,
   [TYPES.Response]: Debug,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
+  [TYPES.Section]: undefined,
   [TYPES.Send]: undefined,
   [TYPES.SetValue]: undefined,
   [TYPES.Statement]: Question,
   [TYPES.TaskList]: undefined,
   [TYPES.TextInput]: TextInput,
 };
+
+interface SummaryListsBySectionsProps extends SummaryListProps {
+  sectionComponent: React.ElementType<any> | undefined;
+}
+
+function SummaryListsBySections(props: SummaryListsBySectionsProps) {
+  const [hasSections, getSortedBreadcrumbsBySection] = useStore((state) => [
+    state.hasSections,
+    state.getSortedBreadcrumbsBySection,
+  ]);
+
+  const sections = getSortedBreadcrumbsBySection();
+
+  return hasSections ? (
+    <>
+      {sections.map((sectionBreadcrumbs, i) => (
+        <React.Fragment key={i}>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography component={props.sectionComponent || "h2"} variant="h5">
+              {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
+            </Typography>
+          </Box>
+          <SummaryList
+            breadcrumbs={sectionBreadcrumbs}
+            flow={props.flow}
+            passport={props.passport}
+            changeAnswer={props.changeAnswer}
+            showChangeButton={props.showChangeButton}
+          />
+        </React.Fragment>
+      ))}
+    </>
+  ) : (
+    <SummaryList
+      breadcrumbs={props.breadcrumbs}
+      flow={props.flow}
+      passport={props.passport}
+      changeAnswer={props.changeAnswer}
+      showChangeButton={props.showChangeButton}
+    />
+  );
+}
 
 interface SummaryListProps {
   breadcrumbs: Store.breadcrumbs;
@@ -85,14 +130,12 @@ interface SummaryListProps {
 // For applicable component types, display a list of their question & answers with a "change" link
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
-  const { grid } = useStyles();
-
   const handleClick = (nodeId: string) => {
     props.changeAnswer(nodeId);
   };
 
   return (
-    <dl className={grid}>
+    <Grid>
       {
         // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
         Object.entries(props.breadcrumbs)
@@ -136,7 +179,7 @@ function SummaryList(props: SummaryListProps) {
             );
           })
       }
-    </dl>
+    </Grid>
   );
 }
 
@@ -167,19 +210,36 @@ function Question(props: ComponentProps) {
 }
 
 function FindProperty(props: ComponentProps) {
-  const { postcode, single_line_address, town } = props.passport.data?._address;
-  return (
-    <>
-      <dt>Property</dt>
-      <dd>
-        {`${single_line_address.split(`, ${town}`)[0]}`}
-        <br />
-        {town}
-        <br />
-        {postcode}
-      </dd>
-    </>
-  );
+  const { source } = props.passport.data?._address;
+
+  if (source === "os") {
+    const { postcode, single_line_address, town } =
+      props.passport.data?._address;
+    return (
+      <>
+        <dt>Property</dt>
+        <dd>
+          {`${single_line_address.split(`, ${town}`)[0]}`}
+          <br />
+          {town}
+          <br />
+          {postcode}
+        </dd>
+      </>
+    );
+  } else {
+    const { x, y, title } = props.passport.data?._address;
+    return (
+      <>
+        <dt>Proposed address</dt>
+        <dd>
+          {`${title}`}
+          <br />
+          {`${Math.round(x)} Easting (X), ${Math.round(y)} Northing (Y)`}
+        </dd>
+      </>
+    );
+  }
 }
 
 function Checklist(props: ComponentProps) {
@@ -237,7 +297,7 @@ function DrawBoundary(props: ComponentProps) {
   const geodata = props.userData?.data?.[props.node.data?.dataFieldBoundary];
   const locationPlan = props.userData?.data?.[PASSPORT_UPLOAD_KEY];
 
-  const fileName = locationPlan ? locationPlan.split("/").pop() : "";
+  const fileName = locationPlan ? locationPlan[0].url.split("/").pop() : "";
 
   if (!geodata && !locationPlan && !props.node.data?.hideFileUpload) {
     // XXX: we always expect to have data, this is for temporary debugging

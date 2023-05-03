@@ -11,7 +11,6 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { ExternalLink, Globe, RefreshCw, Terminal } from "react-feather";
 import { useAsync } from "react-use";
-import { FlowSettings } from "types";
 import Input from "ui/Input";
 
 import { TYPES } from "../../../@planx/components/types";
@@ -97,7 +96,6 @@ function PublishChangeItem(props: any) {
 
 const PreviewBrowser: React.FC<{
   url: string;
-  settings: FlowSettings;
 }> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
@@ -202,6 +200,12 @@ const PreviewBrowser: React.FC<{
                   );
                   setDialogOpen(true);
                 } catch (error) {
+                  setLastPublishedTitle(
+                    "Error checking for changes to publish"
+                  );
+                  alert(
+                    `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`
+                  );
                   console.log(error);
                 }
               }}
@@ -256,7 +260,8 @@ const PreviewBrowser: React.FC<{
                       setLastPublishedTitle(
                         publishedFlow?.data.alteredNodes
                           ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
-                          : "No new changes to publish"
+                          : `${publishedFlow?.data?.message}` ||
+                              "No new changes to publish"
                       );
                     } catch (error) {
                       setLastPublishedTitle("Error trying to publish");
@@ -277,11 +282,7 @@ const PreviewBrowser: React.FC<{
         </Box>
       </header>
       <div className={classes.previewContainer}>
-        <Questions
-          previewEnvironment="editor"
-          key={String(key)}
-          settings={props.settings}
-        />
+        <Questions previewEnvironment="editor" key={String(key)} />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>

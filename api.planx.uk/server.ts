@@ -18,11 +18,10 @@ import {
   Profile,
   VerifyCallback,
 } from "passport-google-oauth20";
-import { responseInterceptor } from "http-proxy-middleware";
 import helmet from "helmet";
 import multer from "multer";
-import SlackNotify from "slack-notify";
 
+import { ServerError } from "./errors";
 import { locationSearch } from "./gis/index";
 import { diffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
@@ -30,17 +29,23 @@ import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
 import {
   resumeApplication,
   validateSession,
-  sendSaveAndReturnEmail,
 } from "./saveAndReturn";
-import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
+import { routeSendEmailRequest } from "./notify";
+import { makePaymentViaProxy, fetchPaymentViaProxy, makeInviteToPayPaymentViaProxy } from "./pay";
+import {
+  inviteToPay,
+  fetchPaymentRequestDetails,
+  buildPaymentPayload,
+  fetchPaymentRequestViaProxy,
+} from "./inviteToPay";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
-import { reportError } from "./airbrake";
+import airbrake from "./airbrake";
 import {
   createReminderEvent,
   createExpiryEvent,
 } from "./webhooks/lowcalSessionEvents";
-import { adminGraphQLClient, publicGraphQLClient } from "./hasura";
+import { adminGraphQLClient as adminClient, publicGraphQLClient as publicClient } from "./hasura";
 import { graphQLVoyagerHandler, introspectionHandler } from "./hasura/voyager";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
@@ -57,8 +62,13 @@ import { sendSlackNotification } from "./webhooks/sendNotifications";
 import { copyFlow } from "./editor/copyFlow";
 import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
-import { usePayProxy } from "./proxy/pay";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
+import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
+import { isLiveEnv } from "./helpers";
+import { getOneAppXML } from "./admin/session/oneAppXML";
+import { gql } from "graphql-request";
+import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
+import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 
 const router = express.Router();
 
@@ -90,7 +100,7 @@ const handleSuccess = (req: Request, res: Response) => {
     const { returnTo = process.env.EDITOR_URL_EXT } = req.session!;
 
     const domain = (() => {
-      if (process.env.NODE_ENV === "production") {
+      if (isLiveEnv()) {
         if (returnTo?.includes("editor.planx.")) {
           // user is logging in to staging from editor.planx.dev
           // or production from editor.planx.uk
@@ -119,7 +129,7 @@ const handleSuccess = (req: Request, res: Response) => {
         httpOnly: false,
       };
 
-      if (process.env.NODE_ENV === "production") {
+      if (isLiveEnv()) {
         cookie.secure = true;
         cookie.sameSite = "none";
       }
@@ -158,13 +168,11 @@ router.get(
   handleSuccess
 );
 
-const client = adminGraphQLClient;
-
 const buildJWT = async (profile: Profile, done: VerifyCallback) => {
   const { email } = profile._json;
 
-  const { users } = await client.request(
-    `
+  const { users } = await adminClient.request(
+    gql`
     query ($email: String!) {
       users(where: {email: {_eq: $email}}, limit: 1) {
         id
@@ -302,72 +310,23 @@ app.get("/download-application-files/:sessionId", downloadApplicationFiles);
 });
 
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
-// returns the url to make a gov uk payment
-app.post("/pay/:localAuthority", (req, res, next) => {
-  // confirm that this local authority (aka team) has a pay token configured before creating the proxy
-  const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
-
-  if (isSupported) {
-    // drop req.params.localAuthority from the path when redirecting
-    // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
-    usePayProxy(
-      {
-        pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
-      },
-      req
-    )(req, res, next);
-  } else {
-    next({
-      status: 400,
-      message: `GOV.UK Pay is not enabled for this local authority`,
-    });
-  }
-});
-
-assert(process.env.SLACK_WEBHOOK_URL);
+app.post("/pay/:localAuthority", makePaymentViaProxy);
 
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
-// fetches the status of the payment
-app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
-  // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
-  usePayProxy(
-    {
-      pathRewrite: () => `/${req.params.paymentId}`,
-      selfHandleResponse: true,
-      onProxyRes: responseInterceptor(async (responseBuffer) => {
-        const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+app.get("/pay/:localAuthority/:paymentId", fetchPaymentViaProxy);
 
-        // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
-        if (govUkResponse?.payment_provider !== "sandbox") {
-          try {
-            const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-            const getStatus = (state: Record<string, string>) =>
-              state.status + (state.message ? ` (${state.message})` : "");
-            const payMessage = `:coin: New GOV Pay payment *${
-              govUkResponse.payment_id
-            }* with status *${getStatus(govUkResponse.state)}* [${
-              req.params.localAuthority
-            }]`;
-            await slack.send(payMessage);
-            console.log("Payment notification posted to Slack");
-          } catch (error) {
-            next(error);
-            return "";
-          }
-        }
+app.post(
+  "/payment-request/:paymentRequest/pay",
+  fetchPaymentRequestDetails,
+  buildPaymentPayload,
+  makeInviteToPayPaymentViaProxy,
+);
 
-        // only return payment status, filter out PII
-        return JSON.stringify({
-          payment_id: govUkResponse.payment_id,
-          amount: govUkResponse.amount,
-          state: govUkResponse.state,
-        });
-      }),
-    },
-    req
-  )(req, res, next);
-});
+app.get(
+  "/payment-request/:paymentRequest/payment/:paymentId",
+  fetchPaymentRequestDetails,
+  fetchPaymentRequestViaProxy
+);
 
 // needed for storing original URL to redirect to in login flow
 app.use(
@@ -388,8 +347,8 @@ app.use("/gis", router);
 
 app.get("/hasura", async function (_req, res, next) {
   try {
-    const data = await client.request(
-      `query GetTeams {
+    const data = await adminClient.request(
+      gql`query GetTeams {
         teams {
           id
         }
@@ -407,8 +366,8 @@ app.get("/me", useJWT, async function (req, res, next) {
     next({ status: 401, message: "User ID missing from JWT" });
 
   try {
-    const user = await client.request(
-      `query ($id: Int!) {
+    const user = await adminClient.request(gql`
+      query ($id: Int!) {
         users_by_pk(id: $id) {
           id
           first_name
@@ -440,11 +399,15 @@ app.get("/gis", (_req, res, next) => {
 
 app.get("/gis/:localAuthority", locationSearch);
 
+app.get("/roads", classifiedRoadsSearch);
+
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.get("/admin/feedback", useJWT, downloadFeedbackCSV)
+app.use("/admin", useJWT)
+app.get("/admin/feedback", downloadFeedbackCSV);
+app.get("/admin/session/:sessionId/xml", getOneAppXML);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
@@ -455,7 +418,7 @@ app.get("/throw-error", () => {
 app.all(
   "/introspect",
   introspectionHandler({
-    graphQLClient: publicGraphQLClient,
+    graphQLClient: publicClient,
     validateUser: false,
   })
 );
@@ -467,7 +430,7 @@ app.all(
   "/introspect-all",
   useJWT,
   introspectionHandler({
-    graphQLClient: adminGraphQLClient,
+    graphQLClient: adminClient,
     validateUser: true,
   })
 );
@@ -493,8 +456,7 @@ app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
-    const schema = await client.request(
-      `
+    const schema = await adminClient.request(gql`
       query ($flow_id: String!) {
         get_flow_schema(args: {published_flow_id: $flow_id}) {
           node
@@ -566,8 +528,7 @@ app.get(
 
 const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   try {
-    const result = await client.request(
-      `
+    const result = await adminClient.request(gql`
       mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
         update_analytics_logs_by_pk(
           pk_columns: {id: $id},
@@ -586,8 +547,7 @@ const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
     );
 
     const analytics_id = result.update_analytics_logs_by_pk.analytics_id;
-    await client.request(
-      `
+    await adminClient.request(gql`
       mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
         update_analytics_by_pk(pk_columns: {id: $id}, _set: {ended_at: $ended_at}) {
           id
@@ -627,27 +587,44 @@ app.post(
   "/send-email/:template",
   sendEmailLimiter,
   useSendEmailAuth,
-  sendSaveAndReturnEmail
+  routeSendEmailRequest
 );
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
+app.post("/invite-to-pay/:sessionId", inviteToPay);
+
 app.use("/webhooks/hasura", useHasuraAuth);
-app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
+app.post("/webhooks/hasura/create-payment-invitation-events", createPaymentInvitationEvents);
+app.post("/webhooks/hasura/create-payment-reminder-events", createPaymentReminderEvents);
+app.post("/webhooks/hasura/create-payment-expiry-events", createPaymentExpiryEvents);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
+app.post("/webhooks/hasura/sanitise-application-data", sanitiseApplicationData);
 
 app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
 
+app.get("/error", async (res, req, next) => {
+  try {
+    throw Error("This is a test error");
+  } catch (error) {
+    next(error);
+  }
+});
+
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
-    if (errorObject.error) {
-      reportError(errorObject.error);
+    if (airbrake && (errorObject instanceof Error || errorObject instanceof ServerError)) {
+      airbrake.notify(errorObject);
+      return {
+        ...errorObject,
+        message: errorObject.message.concat(", this error has been logged"),
+      };
+    } else {
+      console.log(errorObject);
       return errorObject;
     }
-    reportError(errorObject);
-    return errorObject;
   })();
 
   res.status(status).send({

@@ -1,26 +1,42 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
-import type { GetState, SetState } from "zustand/vanilla";
+import { capitalize } from "lodash";
+import type { StateCreator } from "zustand";
 
 import type { Store } from ".";
+import { NavigationStore } from "./navigation";
 
 export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
   breadcrumbs: Store.breadcrumbs;
   childNodesOf: (id?: Store.nodeId) => Store.node[];
   flow: Store.flow;
+  flowSlug: string;
+  flowName: string;
   id: string;
-  getNode: (id: Store.nodeId) => Store.node;
+  getNode: (id: Store.nodeId) => Store.node | undefined;
   resetPreview: () => void;
-  setFlow: (id: string, flow: Store.flow) => void;
+  setFlow: ({
+    id,
+    flow,
+    flowSlug,
+  }: {
+    id: string;
+    flow: Store.flow;
+    flowSlug: string;
+  }) => void;
   wasVisited: (id: Store.nodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
+  setFlowSlug: (flowSlug: string) => void;
+  setFlowNameFromSlug: (flowSlug: string) => void;
 }
 
-export const sharedStore = (
-  set: SetState<SharedStore>,
-  get: GetState<SharedStore>
-): SharedStore => ({
+export const sharedStore: StateCreator<
+  SharedStore & NavigationStore,
+  [],
+  [],
+  SharedStore
+> = (set, get) => ({
   breadcrumbs: {},
 
   childNodesOf(id = ROOT_NODE_KEY) {
@@ -30,6 +46,10 @@ export const sharedStore = (
 
   flow: {},
 
+  flowSlug: "",
+
+  flowName: "",
+
   id: "",
   previewEnvironment: "standalone",
 
@@ -38,9 +58,11 @@ export const sharedStore = (
   },
 
   getNode(id) {
+    const node = get().flow[id];
+    if (!node) return;
     return {
       id,
-      ...get().flow[id],
+      ...node,
     };
   },
 
@@ -55,8 +77,10 @@ export const sharedStore = (
     });
   },
 
-  setFlow(id, flow) {
-    set({ id, flow });
+  setFlow({ id, flow, flowSlug }) {
+    this.setFlowNameFromSlug(flowSlug);
+    set({ id, flow, flowSlug });
+    get().initNavigationStore();
   },
 
   wasVisited(id) {
@@ -66,5 +90,14 @@ export const sharedStore = (
         ...(answers || []),
       ])
     ).has(id);
+  },
+
+  setFlowSlug(flowSlug) {
+    set({ flowSlug });
+  },
+
+  setFlowNameFromSlug(flowSlug) {
+    const flowName = capitalize(flowSlug.replaceAll?.("-", " "));
+    set({ flowName });
   },
 });

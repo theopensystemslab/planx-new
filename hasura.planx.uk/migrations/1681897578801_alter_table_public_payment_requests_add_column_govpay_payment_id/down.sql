@@ -1,0 +1,1 @@
+alter table "public"."payment_requests" drop column "govpay_payment_id";

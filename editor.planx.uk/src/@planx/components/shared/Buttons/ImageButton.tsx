@@ -75,7 +75,7 @@ const TextLabel = (props: TextLabelProps): FCReturn => {
       const totalHeight = textContentEl.current.offsetHeight;
       // It's possible to calculate the number of lines of text, but we need this
       // to align differently even if there is only one line of text in this
-      // component but more in its neighbor
+      // component but more in its neighbour
       if (totalHeight > 50) {
         setMultiline(true);
       }

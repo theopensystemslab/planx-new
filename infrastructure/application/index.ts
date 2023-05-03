@@ -9,7 +9,6 @@ import * as postgres from "@pulumi/postgresql";
 import * as mime from "mime";
 import * as tldjs from "tldjs";
 import * as url from "url";
-import * as random from "@pulumi/random";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
 import { createHasuraService } from "./services/hasura";
@@ -23,7 +22,7 @@ const data = new pulumi.StackReference(`planx/data/${env}`);
 
 // The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
 // You can generate tokens here: https://dash.cloudflare.com/profile/api-tokens
-new pulumi.Config("cloudflare").require("apiToken");
+new pulumi.Config("cloudflare").requireSecret("apiToken");
 
 const CUSTOM_DOMAINS =
   env === "production"
@@ -43,6 +42,14 @@ const CUSTOM_DOMAINS =
         {
           domain: "planningservices.doncaster.gov.uk",
           name: "doncaster",
+        },
+        {
+          domain: "planningservices.medway.gov.uk",
+          name: "medway",
+        },
+        {
+          domain: "planningservices.newcastle.gov.uk",
+          name: "newcastle",
         },
       ]
     : [];
@@ -72,7 +79,7 @@ export = async () => {
     database: pgRoot.path!.substring(1) as string,
     superuser: false,
   });
-  const metabasePgPassword = config.require("metabasePgPassword");
+  const metabasePgPassword = config.requireSecret("metabasePgPassword");
   const role = new postgres.Role(
     "metabase",
     {
@@ -101,14 +108,6 @@ export = async () => {
     securityGroups: [
       new awsx.ec2.SecurityGroup("metabase-custom-port", {
         vpc,
-        ingress: [
-          {
-            protocol: "tcp",
-            cidrBlocks: ["0.0.0.0/0"],
-            fromPort: 443,
-            toPort: 443,
-          },
-        ],
         egress: [
           {
             protocol: "tcp",
@@ -162,7 +161,7 @@ export = async () => {
       }),
       container: {
         // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.43.4",
+        image: "metabase/metabase:v0.45.3",
         portMappings: [metabaseListenerHttps],
         // When changing `memory`, also update `JAVA_OPTS` below
         memory: 4096 /*MB*/,
@@ -183,7 +182,7 @@ export = async () => {
           // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
           {
             name: "MB_ENCRYPTION_SECRET_KEY",
-            value: config.require("metabase-encryption-secret-key"),
+            value: config.requireSecret("metabase-encryption-secret-key"),
           },
         ],
       },
@@ -304,7 +303,7 @@ export = async () => {
         memory: 1024 /*MB*/,
         portMappings: [apiListenerHttps],
         environment: [
-          { name: "NODE_ENV", value: "production" },
+          { name: "NODE_ENV", value: env },
           { name: "EDITOR_URL_EXT", value: `https://${DOMAIN}` },
           { name: "AWS_S3_REGION", value: apiBucket.region },
           { name: "AWS_ACCESS_KEY", value: apiUserAccessKey.id },
@@ -316,7 +315,7 @@ export = async () => {
           { name: "AWS_S3_ACL", value: "public-read" },
           {
             name: "FILE_API_KEY",
-            value: config.require("file-api-key"),
+            value: config.requireSecret("file-api-key"),
           },
           {
             name: "GOOGLE_CLIENT_ID",
@@ -324,20 +323,20 @@ export = async () => {
           },
           {
             name: "GOOGLE_CLIENT_SECRET",
-            value: config.require("google-client-secret"),
+            value: config.requireSecret("google-client-secret"),
           },
-          { name: "SESSION_SECRET", value: config.require("session-secret") },
+          { name: "SESSION_SECRET", value: config.requireSecret("session-secret") },
           { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
           {
             name: "BOPS_API_ROOT_DOMAIN",
-            value: config.require("bops-api-root-domain"),
+            value: config.requireSecret("bops-api-root-domain"),
           },
-          { name: "BOPS_API_TOKEN", value: config.require("bops-api-token") },
-          { name: "JWT_SECRET", value: config.require("jwt-secret") },
+          { name: "BOPS_API_TOKEN", value: config.requireSecret("bops-api-token") },
+          { name: "JWT_SECRET", value: config.requireSecret("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },
           {
             name: "HASURA_GRAPHQL_ADMIN_SECRET",
-            value: config.require("hasura-admin-secret"),
+            value: config.requireSecret("hasura-admin-secret"),
           },
           {
             name: "HASURA_GRAPHQL_URL",
@@ -348,58 +347,42 @@ export = async () => {
             value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/metadata`,
           },
           {
+            name: "HASURA_SCHEMA_URL",
+            value: pulumi.interpolate`https://hasura.${DOMAIN}/v2/query`,
+          },
+          {
             name: "HASURA_PLANX_API_KEY",
-            value: config.require("hasura-planx-api-key"),
+            value: config.requireSecret("hasura-planx-api-key"),
           },
           {
             name: "AIRBRAKE_PROJECT_ID",
-            value: config.require("airbrake-project-id"),
+            value: config.requireSecret("airbrake-project-id"),
           },
           {
             name: "AIRBRAKE_PROJECT_KEY",
-            value: config.require("airbrake-project-key"),
+            value: config.requireSecret("airbrake-project-key"),
           },
           {
             name: "UNIFORM_TOKEN_URL",
-            value: config.require("uniform-token-url"),
+            value: config.requireSecret("uniform-token-url"),
           },
           {
             name: "UNIFORM_SUBMISSION_URL",
-            value: config.require("uniform-submission-url"),
+            value: config.requireSecret("uniform-submission-url"),
           },
           {
             name: "GOVUK_NOTIFY_API_KEY",
-            value: config.require("govuk-notify-api-key"),
-          },
-          {
-            name: "GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID",
-            value: "428c4dfd-a70b-44d6-9f81-b4f833d80405",
-          },
-          {
-            name: "GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID",
-            value: "c7202e07-08cf-468e-a6a4-ac528d60d2f7",
-          },
-          {
-            name: "GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID",
-            value: "43be4c11-a406-4381-b2be-056a1127455d",
-          },
-          {
-            name: "GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID",
-            value: "9619f89d-5d33-4cb0-a365-42c431ea9db3",
-          },
-          {
-            name: "GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID",
-            value: "7e77bdae-7379-4dd8-a8cc-086a0029163c",
+            value: config.requireSecret("govuk-notify-api-key"),
           },
           {
             name: "SLACK_WEBHOOK_URL",
-            value: config.require("slack-webhook-url"),
+            value: config.requireSecret("slack-webhook-url"),
           },
           {
             name: "ORDNANCE_SURVEY_API_KEY",
-            value: config.require("ordnance-survey-api-key"),
+            value: config.requireSecret("ordnance-survey-api-key"),
           },
-          ...generateTeamSecrets(config),
+          ...generateTeamSecrets(config, env),
         ],
       },
     },
@@ -410,7 +393,7 @@ export = async () => {
       ? `api.${tldjs.getSubdomain(DOMAIN)}`
       : "api",
     type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
+    zoneId: config.requireSecret("cloudflare-zone-id"),
     value: apiListenerHttps.endpoint.hostname,
     ttl: 1,
     proxied: false,
@@ -469,7 +452,7 @@ export = async () => {
           { name: "PORT", value: String(SHAREDB_PORT) },
           {
             name: "JWT_SECRET",
-            value: config.require("jwt-secret"),
+            value: config.requireSecret("jwt-secret"),
           },
           {
             name: "PG_URL",
@@ -497,7 +480,7 @@ export = async () => {
     bucket: DOMAIN,
     website: {
       indexDocument: "index.html",
-      errorDocument: "index.html",
+      errorDocument: "error.html",
     },
   });
 
@@ -541,7 +524,7 @@ export = async () => {
     }
   );
 
-  // XXX: Originally, our certificate (generated in the `certificates` stack) was created in eu-west-2 (London), however, later we wanted to add CloudFlare which only accepts certificates generated in the us-east-1 region. Hence, this here is duplicate code which should be merged into the `certificate` stack.
+  // XXX: Originally, our certificate (generated in the `certificates` stack) was created in eu-west-2 (London), however, later we wanted to add CloudFront which only accepts certificates generated in the us-east-1 region. Hence, this here is duplicate code which should be merged into the `certificate` stack.
   const usEast1 = new aws.Provider("useast1", { region: "us-east-1" });
 
   const customDomains = ((): Array<any> => {
@@ -555,17 +538,6 @@ export = async () => {
       name: string;
     }) {
       // These certificates are created on the `application` stack (as opposed to the `certificates` stack) they're certificates generated by third-party. We're just importing into AWS ACM.
-      // If, in order to send us their certificate, a council asks us to first send them a Certificate Signing Request (CSR), this is how you can generate one:
-      // $ openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr
-      // Then `server.key` should go into `ssl-${name}-key` and the other two (`-cert` and `-chain`) will be provided by the council. NB: Sometimes the certificate chain is called the intermediary certificate.
-      //
-      // If you receive the certificats in PFX format, you can use these commands to convert:
-      //  $ openssl pkcs12 -nocerts -nodes -in council.pfx -out council.key
-      //  $ openssl pkcs12 -nokeys -in council.pfx -out council.cert
-      //  NB: The `.cert` file might contain the certificate chain inside it, so please separate the first certificate in the file (the certificate body) from the rest of the certificats in the file (the certificate chain).
-      //
-      // In case you want to avoid round-trips of setting these values and waiting for CI to deploy to staging first, then to production, only to learn something is misconfigured, you can log use AWS's console to import the certificate manually first, and if that passes, you can remove it from the console again and add it properly here using Pulumi code/configs:
-      // > https://us-east-1.console.aws.amazon.com/acm/home?region=us-east-1#/certificates/import
       const certificate = new aws.acm.Certificate(
         `sslCert-${name}`,
         {
@@ -575,7 +547,8 @@ export = async () => {
           certificateBody: config.requireSecret(`ssl-${name}-cert`),
           // File starting with `-----BEGIN CERTIFICATE-----`
           // AWS calls it "Chain" but it's usually called "intermediate"
-          certificateChain: config.requireSecret(`ssl-${name}-chain`),
+          // This is optional, not all teams will provide one
+          certificateChain: config.getSecret(`ssl-${name}-chain`),
         },
         {
           provider: usEast1,
@@ -626,7 +599,7 @@ export = async () => {
   const cdn = createCdn({ domain: DOMAIN, acmCertificateArn: sslCert.arn });
 
   const frontendDnsRecord = new cloudflare.Record("frontend", {
-    name: tldjs.getSubdomain(DOMAIN) ?? "@",
+    name: tldjs.getSubdomain(DOMAIN) || "@",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
     value: cdn.domainName,

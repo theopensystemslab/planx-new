@@ -1,19 +1,20 @@
 import { Notifier } from "@airbrake/browser";
+import { isLiveEnv } from "utils";
 
-export const reportError = getErrorLogger().notify;
+export const logger = getErrorLogger();
 
 function log(...args: any[]) {
-  return process.env.DEBUG
-    ? console.log(...args)
-    : () => {
+  return process.env.SUPPRESS_LOGS
+    ? () => {
         /* silence */
-      };
+      }
+    : console.log(...args);
 }
 
 // forward all JS errors to airbrake.io
 function getErrorLogger(): ErrorLogger {
   const hasConfig =
-    process.env.NODE_ENV === "production" &&
+    isLiveEnv() &&
     process.env.REACT_APP_AIRBRAKE_PROJECT_ID &&
     process.env.REACT_APP_AIRBRAKE_PROJECT_KEY;
 

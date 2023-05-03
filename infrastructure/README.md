@@ -10,7 +10,7 @@ The code is split up into separate stacks, so as to isolate changes and minimize
 
 # CD/CI
 
-We're in the process of setting it up.
+Only the `application` stack is automatically deployed via CI via the `pulumi_preview` job. The other stacks change infrequently and need to be manually deployed. 
 
 # Provisioning the first three stacks manually
 

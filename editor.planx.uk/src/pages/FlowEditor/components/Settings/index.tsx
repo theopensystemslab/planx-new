@@ -12,7 +12,6 @@ import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
-import type { FlowSettings } from "types";
 
 import DataManagerSettings from "./DataManagerSettings";
 import DesignSettings from "./DesignSettings";
@@ -105,9 +104,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const tabsOrder = ["team", "service", "flags", "design", "data-manager"];
 
-const NavTabs: React.FC<{ tab?: string; settings?: FlowSettings }> = (
-  props
-) => {
+const NavTabs: React.FC<{ tab?: string }> = (props) => {
   const classes = useStyles();
   const { navigate } = useNavigation();
   const { data } = useCurrentRoute();
@@ -179,7 +176,7 @@ const NavTabs: React.FC<{ tab?: string; settings?: FlowSettings }> = (
         <TeamSettings />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ServiceSettings settings={props.settings} />
+        <ServiceSettings />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <ServiceFlags

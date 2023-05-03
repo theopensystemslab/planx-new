@@ -2,87 +2,51 @@ import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
-import { findGeoJSON } from "../helpers";
 import { CSVData } from "../model";
-import { UniformPayload } from "./UniformPayload/model";
 
-type UniformFile = {
-  name: string;
-  url: string;
-};
-
-export function getUniformParams(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-) {
-  // make a list of all S3 URLs & filenames from uploaded files
-  const files: UniformFile[] = [];
-  Object.entries(passport.data || {})
-    // add any files uploaded via a FileUpload component
-    .filter(([, v]: any) => v?.[0]?.url)
-    .forEach(([key, arr]) => {
-      (arr as any[]).forEach(({ url, filename }) => {
-        try {
-          files.push({ url: url, name: filename });
-        } catch (err) {}
-      });
-    });
-
-  // additionally add the property boundary file if the user didn't draw
-  if (passport?.data?.["property.uploadedFile"]) {
-    const boundaryFile = passport.data["property.uploadedFile"];
-    files.push({ url: boundaryFile.url, name: boundaryFile.file.path });
-  }
-
-  // applicants may upload the same file in multiple slots,
-  //  but we only want to send a single copy of each file to Uniform
-  const uniqueFiles: string[] = [];
-  files.forEach((file) => {
-    if (!uniqueFiles.includes(file.url)) {
-      uniqueFiles.push(file.url);
-    }
-  });
-
-  const geoJSONBoundary = findGeoJSON(flow, breadcrumbs);
-  const hasBoundary = !!geoJSONBoundary;
-
+export function getUniformParams({
+  breadcrumbs,
+  flow,
+  flowName,
+  passport,
+  sessionId,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  flowName: string;
+  passport: Store.passport;
+  sessionId: string;
+}) {
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString(passport, sessionId, uniqueFiles, hasBoundary),
-    csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
-    geojson: geoJSONBoundary,
-    files: uniqueFiles,
+    csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
+    passport,
     sessionId,
   };
 }
 
-export function makeXmlString(
-  passport: Store.passport,
-  sessionId: string,
-  files: string[],
-  hasBoundary: boolean
-): string {
-  const payload = new UniformPayload({
-    sessionId,
-    passport,
-    files,
-    hasBoundary,
-  });
-  const xml = payload.buildXML();
-  return xml;
-}
-
 // create a CSV data structure based on the payload we send to BOPs
 //   (also used in Confirmation component for user-downloadable copy of app data)
-export function makeCsvData(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-): CSVData {
-  const bopsData = getBOPSParams(breadcrumbs, flow, passport, sessionId);
+export function makeCsvData({
+  breadcrumbs,
+  flow,
+  passport,
+  sessionId,
+  flowName,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  passport: Store.passport;
+  sessionId: string;
+  flowName: string;
+}): CSVData {
+  const bopsData = getBOPSParams({
+    breadcrumbs,
+    flow,
+    flowName,
+    passport,
+    sessionId,
+  });
 
   // format dedicated BOPs properties as list of questions & responses to match proposal_details
   //   omitting debug data and keys already in confirmation details

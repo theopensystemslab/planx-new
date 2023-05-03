@@ -3,12 +3,14 @@ import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import ContactPage from "@mui/icons-material/ContactPage";
+import CopyAll from "@mui/icons-material/CopyAll";
 import Create from "@mui/icons-material/Create";
 import Event from "@mui/icons-material/Event";
 import FunctionsIcon from "@mui/icons-material/Functions";
 import Home from "@mui/icons-material/Home";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import List from "@mui/icons-material/List";
+import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
 import Map from "@mui/icons-material/Map";
 import PaymentOutlined from "@mui/icons-material/PaymentOutlined";
 import Pin from "@mui/icons-material/Pin";
@@ -20,6 +22,7 @@ import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import Send from "@mui/icons-material/Send";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
+import ViewAgenda from "@mui/icons-material/ViewAgenda";
 import { TYPES } from "@planx/components/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
@@ -61,8 +64,9 @@ export const ICONS: {
   [TYPES.Confirmation]: TextFields,
   [TYPES.DateInput]: Event,
   [TYPES.DrawBoundary]: SquareFoot,
-  [TYPES.ExternalPortal]: undefined,
+  [TYPES.ExternalPortal]: CopyAll,
   [TYPES.FileUpload]: CloudUpload,
+  [TYPES.MultipleFileUpload]: CloudUpload,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,
@@ -71,9 +75,11 @@ export const ICONS: {
   [TYPES.NumberInput]: Pin,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
+  [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Response]: undefined,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,
+  [TYPES.Section]: ViewAgenda,
   [TYPES.Send]: Send,
   [TYPES.SetValue]: PlaylistAdd,
   [TYPES.Statement]: CallSplit,

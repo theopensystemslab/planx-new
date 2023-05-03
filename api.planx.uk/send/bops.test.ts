@@ -19,11 +19,22 @@ import app from "../server";
     beforeEach(() => {
       queryMock.mockQuery({
         name: "FindApplication",
-        matchOnVariables: false,
+        matchOnVariables: true,
         data: {
           bops_applications: []
         },
-        variables: { sessionId: 123 },
+        variables: { session_id: 123 },
+      });
+
+      queryMock.mockQuery({
+        name: "FindApplication",
+        matchOnVariables: true,
+        data: {
+          bops_applications: [
+            { response: { message: "Application created", id: "bops_app_id" } }
+          ]
+        },
+        variables: { session_id: "previously_submitted_app" },
       });
 
       queryMock.mockQuery({
@@ -82,6 +93,43 @@ import app from "../server";
         .post("/bops/southwark")
         .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } }})
         .expect(401)
+    });
+
+    it("throws an error if payload is missing", async () => {
+      await supertest(app)
+        .post("/bops/southwark")
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send({ payload: null })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Missing application/);
+        });
+    });
+
+    it("throws an error if team is unsupported", async () => {
+      await supertest(app)
+        .post("/bops/unsupported-team")
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } } })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.error).toMatch(/not enabled for this local authority/);
+        });
+    });
+
+    it("does not re-send an application which has already been submitted", async () => {
+      await supertest(app)
+        .post("/bops/southwark")
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: "previously_submitted_app" } } })
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toEqual({
+            sessionId: "previously_submitted_app",
+            bopsId: "bops_app_id",
+            message: "Skipping send, already successfully submitted",
+          });
+        });
     });
   });
 });

@@ -1,7 +1,8 @@
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
-import FindProperty, { PropertyInformation } from "./";
+import PropertyInformation from "../../PropertyInformation/Public";
+import FindProperty from "./";
 
 const metadata: Meta = {
   title: "PlanX Components/FindProperty",

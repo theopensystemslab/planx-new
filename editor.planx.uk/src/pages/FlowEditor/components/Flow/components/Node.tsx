@@ -53,6 +53,13 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question {...allProps} text={node?.data?.title ?? "File upload"} />
       );
+    case TYPES.MultipleFileUpload:
+      return (
+        <Question
+          {...allProps}
+          text={node?.data?.title ?? "Multiple file upload"}
+        />
+      );
     case TYPES.Filter:
       return <Filter {...allProps} text="(Flags Filter)" />;
     case TYPES.FindProperty:
@@ -70,6 +77,13 @@ const Node: React.FC<any> = (props) => {
           text={node?.data?.title ?? "Planning constraints"}
         />
       );
+    case TYPES.PropertyInformation:
+      return (
+        <Question
+          {...allProps}
+          text={node?.data?.title ?? "Property information"}
+        />
+      );
     case TYPES.Result:
       return (
         <Question
@@ -79,6 +93,10 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.Review:
       return <Question {...allProps} text={node?.data?.title ?? "Review"} />;
+    case TYPES.Section:
+      return (
+        <Question {...allProps} text={node?.data?.title ?? "Section marker"} />
+      );
     case TYPES.Send:
       return <Question {...allProps} text={node?.data?.title ?? "Send"} />;
     case TYPES.SetValue:

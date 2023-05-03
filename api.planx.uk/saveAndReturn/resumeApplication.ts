@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { adminGraphQLClient } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import {
-  sendEmail,
   convertSlugToName,
   getResumeLink,
   calculateExpiryDate,
   getHumanReadableProjectType,
 } from "./utils";
+import { sendEmail } from "../notify/utils";
+import type { SiteAddress } from "@opensystemslab/planx-core/types";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -58,7 +59,6 @@ const validateRequest = async (
   sessions: LowCalSession[];
 }> => {
   try {
-    const client = adminGraphQLClient;
     const query = gql`
       query ValidateRequest($email: String, $teamSlug: String) {
         lowcal_sessions(
@@ -85,7 +85,7 @@ const validateRequest = async (
         }
       }
     `;
-    const { lowcal_sessions, teams } = await client.request(query, {
+    const { lowcal_sessions, teams } = await adminClient.request(query, {
       teamSlug,
       email: email.toLowerCase(),
     });
@@ -122,13 +122,17 @@ const buildContentFromSessions = async (
 ): Promise<string> => {
   const contentBuilder = async (session: LowCalSession) => {
     const service = convertSlugToName(session.flow.slug);
-    const address = session.data?.passport?.data?._address?.single_line_address;
-    const projectType = await getHumanReadableProjectType(session);
+    const address: SiteAddress | undefined =
+      session.data?.passport?.data?._address;
+    const addressLine = address?.single_line_address || address?.title;
+    const projectType = await getHumanReadableProjectType(
+      session?.data?.passport?.data
+    );
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 
     return `Service: ${service}
-      Address: ${address || "Address not submitted"}
+      Address: ${addressLine || "Address not submitted"}
       Project type: ${projectType || "Project type not submitted"}
       Expiry Date: ${expiryDate}
       Link: ${resumeLink}`;

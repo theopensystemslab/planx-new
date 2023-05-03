@@ -1,15 +1,11 @@
 version: "3.8"
 
-# If you change anything here (e.g. environment variables) remember to cascade the change to `infrastructure/`
-
 services:
   postgres:
     image: postgis/postgis:12-3.0-alpine
     restart: unless-stopped
     ports:
       - ${PG_PORT}:5432
-    volumes:
-      - data:/var/lib/postgresql/data
     command: "postgres -c listen_addresses='*'"
     healthcheck:
       test: pg_isready --username=${PG_USERNAME} --dbname=${PG_DATABASE} --quiet
@@ -23,7 +19,7 @@ services:
 
   metabase:
     # if changing, also check infrastructure/application/index.ts
-    image: metabase/metabase:v0.43.4
+    image: metabase/metabase:v0.45.3
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
@@ -51,7 +47,6 @@ services:
   hasura:
     build:
       context: ./hasura.planx.uk
-      dockerfile: Dockerfile
     depends_on:
       postgres:
         condition: service_healthy
@@ -81,10 +76,10 @@ services:
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       HASURA_PLANX_API_URL: ${HASURA_PLANX_API_URL}
+
   hasura-proxy:
     build:
       context: ./hasura.planx.uk/proxy
-      dockerfile: Dockerfile
     depends_on:
       hasura:
         condition: service_healthy
@@ -99,21 +94,19 @@ services:
       interval: 15s
       timeout: 3s
       retries: 3
+
   seed-database:
-    build:
-      context: ./scripts/seed-database
-      dockerfile: Dockerfile
+    image: postgis/postgis:12-3.0-alpine
     volumes:
-      - "./hasura.planx.uk/:/hasura"
+      - "./scripts/seed-database:/app"
+    profiles: ["seed"]
+    working_dir: "/app"
+    entrypoint: sh
+    command: -c "./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
     restart: "no"
     depends_on:
       hasura-proxy:
         condition: service_healthy
-    environment:
-      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
-      HASURA_GRAPHQL_ENDPOINT: http://hasura-proxy:7000/
-      PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
   api:
     restart: unless-stopped
     build:
@@ -122,10 +115,6 @@ services:
     depends_on:
       hasura-proxy:
         condition: service_healthy
-    volumes:
-      - "./api.planx.uk:/api"
-      - "/api/node_modules"
-      - "/api/dist"
     ports:
       - ${API_PORT}:${API_PORT}
     healthcheck:
@@ -136,8 +125,9 @@ services:
       retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
-      HASURA_METADATA_URL: http://hasura-proxy:7000/v1/metadata 
+      HASURA_GRAPHQL_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/graphql
+      HASURA_METADATA_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/metadata 
+      HASURA_SCHEMA_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v2/query
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
@@ -165,15 +155,11 @@ services:
       UNIFORM_CLIENT_LAMBETH: ${UNIFORM_CLIENT_LAMBETH}
       UNIFORM_CLIENT_SOUTHWARK: ${UNIFORM_CLIENT_SOUTHWARK}
       GOVUK_NOTIFY_API_KEY: ${GOVUK_NOTIFY_API_KEY}
-      GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID}
-      GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID}
-      GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID}
-      GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID}
-      GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID}
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       FILE_API_KEY: ${FILE_API_KEY}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
       ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
+      MINIO_PORT: ${MINIO_PORT}
 
   sharedb:
     restart: unless-stopped
@@ -192,8 +178,10 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
 
+  # used as an S3 service mock
   minio:
     image: minio/minio:RELEASE.2021-08-31T05-46-54Z
+    profiles: ["mock-services"]
     ports:
       - ${MINIO_PORT}:9000
       - ${MINIO_ADMIN_PORT}:9001
@@ -213,6 +201,3 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-
-volumes:
-  data:

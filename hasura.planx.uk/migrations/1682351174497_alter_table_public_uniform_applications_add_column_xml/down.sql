@@ -1,0 +1,1 @@
+alter table "public"."uniform_applications" drop column "xml";

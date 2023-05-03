@@ -1,4 +1,7 @@
+import type { Store } from "../../../pages/FlowEditor/lib/store";
 import { MoreInformation, parseMoreInformation } from "../shared";
+import { getBOPSParams } from "./bops";
+import { getUniformParams, makeCsvData } from "./uniform";
 
 export enum Destination {
   BOPS = "bops",
@@ -22,18 +25,93 @@ export const parseContent = (data: Record<string, any> | undefined): Send => ({
 
 export const USER_ROLES = ["applicant", "agent", "proxy"] as const;
 
+export function getCombinedEventsPayload({
+  destinations,
+  teamSlug,
+  breadcrumbs,
+  flow,
+  flowName,
+  passport,
+  sessionId,
+  email,
+}: {
+  destinations: Destination[];
+  teamSlug: string;
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  flowName: string;
+  passport: Store.passport;
+  sessionId: string;
+  email: string | undefined;
+}) {
+  let combinedEventsPayload: any = {};
+
+  // Format application user data as required by BOPS
+  if (destinations.includes(Destination.BOPS)) {
+    combinedEventsPayload[Destination.BOPS] = {
+      localAuthority: teamSlug,
+      body: getBOPSParams({ breadcrumbs, flow, flowName, passport, sessionId }),
+    };
+  }
+
+  // Format application user data as required by Idox/Uniform
+  if (destinations.includes(Destination.Uniform)) {
+    // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
+    if (teamSlug === "buckinghamshire") {
+      teamSlug = passport.data?.["property.localAuthorityDistrict"]
+        ?.filter((name: string) => name !== "Buckinghamshire")[0]
+        ?.toLowerCase()
+        ?.replace(/\W+/g, "-");
+
+      // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
+      if (teamSlug === "south-bucks") {
+        teamSlug = "chiltern";
+      }
+    }
+
+    const uniformParams = getUniformParams({
+      breadcrumbs,
+      flow,
+      flowName,
+      passport,
+      sessionId,
+    });
+
+    combinedEventsPayload[Destination.Uniform] = {
+      localAuthority: teamSlug,
+      body: uniformParams,
+    };
+  }
+
+  if (destinations.includes(Destination.Email)) {
+    combinedEventsPayload[Destination.Email] = {
+      localAuthority: teamSlug,
+      body: {
+        sessionId,
+        email,
+        csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
+        flowName,
+      },
+    };
+  }
+  return combinedEventsPayload;
+}
+
 // See minimum POST schema for /api/v1/planning_applications
 // https://ripa.bops.services/api-docs/index.html
 interface BOPSMinimumPayload {
-  application_type: "lawfulness_certificate";
+  application_type: "lawfulness_certificate" | string;
   site: {
-    uprn: string;
+    uprn?: string;
     address_1: string;
     address_2?: string;
-    town: string;
-    postcode: string;
+    town?: string;
+    postcode?: string;
     latitude: string;
     longitude: string;
+    x: string;
+    y: string;
+    source: string;
   };
   applicant_email: string;
 }
@@ -69,7 +147,10 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   planx_debug_data?: Record<string, unknown>;
   // typeof arr[number] > https://steveholgado.com/typescript-types-from-arrays
   user_role?: typeof USER_ROLES[number];
-  proposal_completion_date?: string;
+  works?: {
+    start_date?: string;
+    finish_date?: string;
+  };
 }
 
 export interface QuestionMetaData {
@@ -80,6 +161,7 @@ export interface QuestionMetaData {
     text?: string;
   }>;
   portal_name?: string;
+  section_name?: string;
   feedback?: string;
 }
 

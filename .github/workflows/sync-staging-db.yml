@@ -15,18 +15,24 @@ jobs:
       - name: Install pulumi
         uses: pulumi/setup-pulumi@v2
       - run: |
-          echo "HASURA_GRAPHQL_ADMIN_SECRET=$(pulumi config get hasura-admin-secret --stack staging)" >> $GITHUB_ENV
-        working-directory: infrastructure/application
+          echo "STAGING_PG_URL=$(pulumi stack output --stack staging --show-secrets dbRootUrl)" >> $GITHUB_ENV
+        working-directory: infrastructure/data
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      - uses: actions/setup-node@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          node-version: ${{ env.NODE_VERSION }}
-      - run: npm install -g pnpm
-        working-directory: scripts/seed-database
-      - run: pnpm install
-        working-directory: scripts/seed-database
-      - run: node ./upsert-production-flows.js --overwrite --limit 1
-        working-directory: scripts/seed-database
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: ./scripts/pull-secrets.sh
+      - name: Check if .env files exist
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          fail: true
+      - run: docker run --rm -v "$(pwd)/scripts/seed-database:/app" --workdir="/app" postgis/postgis:12-3.0-alpine "./container.sh" "${STAGING_PG_URL}" "${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
         env:
-          HASURA_GRAPHQL_URL: https://hasura.editor.planx.dev/v1/graphql
+          PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS: ${{ secrets.PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS }}

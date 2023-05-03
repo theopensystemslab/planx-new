@@ -11,7 +11,7 @@ export enum TextInputType {
   Phone = "phone",
 }
 
-const emailRegex =
+export const emailRegex =
   // eslint-disable-next-line
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -31,7 +31,7 @@ export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
           return "Your answer must be 250 characters or fewer.";
         }
         if (type === TextInputType.Email) {
-          return "Enter a valid email.";
+          return "Enter an email address in the correct format, like name@example.com";
         }
         if (type === TextInputType.Phone) {
           return "Enter a valid phone number.";

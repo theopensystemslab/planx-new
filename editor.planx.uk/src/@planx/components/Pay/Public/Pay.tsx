@@ -1,10 +1,13 @@
-import { reportError } from "airbrake";
+import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { hasFeatureFlag } from "lib/featureFlags";
+import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
-import type { GovUKPayment } from "types";
+import type { GovUKPayment, Passport, Session } from "types";
+import { PaymentStatus } from "types";
 
 import { useTeamSlug } from "../../shared/hooks";
 import { makeData, useStagingUrlIfTestApplication } from "../../shared/utils";
@@ -44,27 +47,24 @@ enum Action {
 
 function Component(props: Props) {
   const [
+    flowId,
     sessionId,
+    breadcrumbs,
     govUkPayment,
     setGovUkPayment,
     passport,
     environment,
-    sendSessionDataToHasura,
   ] = useStore((state) => [
+    state.id,
     state.sessionId,
+    state.breadcrumbs,
     state.govUkPayment,
     state.setGovUkPayment,
     state.computePassport(),
     state.previewEnvironment,
-    state.sendSessionDataToHasura,
   ]);
-
-  const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
-
   const teamSlug = useTeamSlug();
-  const govUkPayUrlForTeam = useStagingUrlIfTestApplication(passport)(
-    `${GOV_UK_PAY_URL}/${teamSlug}`
-  );
+  const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {
@@ -111,67 +111,74 @@ function Component(props: Props) {
       return;
     }
 
-    if (govUkPayment.state.status === "success") {
+    if (govUkPayment.state.status === PaymentStatus.success) {
       handleSuccess();
     } else {
       dispatch(Action.IncompletePaymentFound);
-      refetchPayment(govUkPayment.payment_id);
+      refetchPayment();
     }
   }, []);
-
-  // if this is the public-facing preview and Pay component is loading
-  if (environment === "standalone" && state.status === "indeterminate") {
-    // XXX: When the pay component is initially loaded, send the user's
-    //      session info to storage in case there's an issue with payment flow.
-    //      Will be called when this component is shown, or if it's skipped.
-    //      Will fail silently if there's an issue with the HTTP request.
-    sendSessionDataToHasura();
-  }
 
   const handleSuccess = () => {
     dispatch(Action.Success);
     props.handleSubmit(makeData(props, govUkPayment, GOV_PAY_PASSPORT_KEY));
   };
 
-  const updatePayment = (responseData: any): GovUKPayment => {
-    const payment: GovUKPayment = responseData;
-
-    const normalizedPayment = {
-      ...payment,
-      amount: toDecimal(payment.amount),
-    };
-
-    setGovUkPayment(normalizedPayment);
-
-    return normalizedPayment;
+  const normalizePaymentResponse = (responseData: any): GovUKPayment => {
+    if (!responseData?.state?.status)
+      throw new Error("Corrupted response from GOV.UK");
+    let payment: GovUKPayment = { ...responseData };
+    payment.amount = toDecimal(payment.amount);
+    return payment;
   };
 
-  const refetchPayment = async (id: string) => {
+  const resolvePaymentResponse = async (
+    responseData: any
+  ): Promise<GovUKPayment> => {
+    const payment = normalizePaymentResponse(responseData);
+    setGovUkPayment(payment);
+    // save a record of the session with the latest payment for debugging purposes
+    await saveSession({
+      breadcrumbs,
+      id: flowId,
+      passport,
+      sessionId,
+      govUkPayment: payment,
+    });
+    return payment;
+  };
+
+  const refetchPayment = async () => {
     try {
       const {
         data: { state },
-      } = await axios.get<
-        // API response has sensitive info filtered out
-        Pick<GovUKPayment, "payment_id" | "amount" | "state">
-      >(`${govUkPayUrlForTeam}/${id}`);
-
-      if (!state.status) throw new Error("Corrupted response from GOV.UK");
+      } = await axios.get<Pick<GovUKPayment, "state">>(
+        getGovUkPayUrlForTeam({
+          sessionId,
+          flowId,
+          teamSlug,
+          passport,
+          paymentId: govUkPayment?.payment_id,
+        })
+      );
 
       // Update local state with the refetched payment state
-      if (govUkPayment) setGovUkPayment({ ...govUkPayment, state });
-
-      switch (state.status) {
-        case "success":
+      if (govUkPayment) {
+        const payment = await resolvePaymentResponse({
+          ...govUkPayment,
+          state,
+        });
+        if (state.status === PaymentStatus.success) {
           handleSuccess();
-          break;
-        default:
-          dispatch(Action.IncompletePaymentConfirmed);
+          return;
+        }
       }
+      dispatch(Action.IncompletePaymentConfirmed);
     } catch (err) {
       // XXX: There's probably been an issue fetching the payment status,
       //      but there's a chance that the user might've made a successful
       //      payment. We silently log the error and the service continues.
-      reportError(err);
+      logger.notify(err);
     }
   };
 
@@ -179,21 +186,30 @@ function Component(props: Props) {
     dispatch(Action.ResumePayment);
 
     if (!govUkPayment) {
-      startNewPayment();
+      await startNewPayment();
       return;
     }
 
     switch (govUkPayment.state.status) {
-      case "cancelled":
-      case "error":
-      case "failed":
-        startNewPayment();
+      case PaymentStatus.cancelled:
+      case PaymentStatus.error:
+      case PaymentStatus.failed: {
+        await startNewPayment();
         break;
-      case "started":
-      case "created":
-      case "submitted":
-        if (govUkPayment._links.next_url?.href)
+      }
+      case PaymentStatus.started:
+      case PaymentStatus.created:
+      case PaymentStatus.submitted: {
+        if (govUkPayment._links.next_url?.href) {
           window.location.replace(govUkPayment._links.next_url.href);
+        } else {
+          logger.notify("Payment did not include a 'next_url' link.");
+        }
+        break;
+      }
+      default: {
+        logger.notify("Unhandled payment status");
+      }
     }
   };
 
@@ -205,12 +221,13 @@ function Component(props: Props) {
       handleSuccess();
       return;
     }
-
     await axios
-      .post(govUkPayUrlForTeam, createPayload(fee, sessionId))
-      .then((res) => {
-        const payment = updatePayment(res.data);
-
+      .post(
+        getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug, passport }),
+        createPayload(fee, sessionId)
+      )
+      .then(async (res) => {
+        const payment = await resolvePaymentResponse(res.data);
         if (payment._links.next_url?.href)
           window.location.replace(payment._links.next_url.href);
       })
@@ -244,17 +261,54 @@ function Component(props: Props) {
             }
           }}
           buttonTitle={
-            state.status === "init" ? "Pay using GOV.UK Pay" : "Retry payment"
+            state.status === "init"
+              ? "Pay now using GOV.UK Pay"
+              : "Retry payment"
           }
           error={
             state.status === "unsupported_team"
               ? "GOV.UK Pay is not enabled for this local authority"
               : undefined
           }
+          showInviteToPay={
+            props.allowInviteToPay &&
+            state.status !== "unsupported_team" &&
+            hasFeatureFlag("INVITE_TO_PAY")
+          }
+          paymentStatus={govUkPayment?.state?.status}
         />
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />
       )}
+      {/* session id exposed for testing purposes */}
+      <span data-testid="sessionId" data-sessionid={sessionId}></span>
     </>
   );
+}
+
+async function saveSession(session: Session) {
+  await setLocalFlow(session.sessionId, session);
+}
+
+function getGovUkPayUrlForTeam({
+  sessionId,
+  flowId,
+  teamSlug,
+  passport,
+  paymentId,
+}: {
+  sessionId: string;
+  flowId: string;
+  teamSlug: string;
+  passport: Passport;
+  paymentId?: string;
+}): string {
+  const baseURL = useStagingUrlIfTestApplication(passport)(
+    `${GOV_UK_PAY_URL}/${teamSlug}`
+  );
+  const queryString = `?sessionId=${sessionId}&flowId=${flowId}`;
+  if (paymentId) {
+    return `${baseURL}/${paymentId}${queryString}`;
+  }
+  return `${baseURL}${queryString}`;
 }

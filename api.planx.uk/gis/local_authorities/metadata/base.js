@@ -24,7 +24,7 @@ const baseSchema = {
     category: "Heritage and conservation",
   },
   "locallyListed": {
-    active: false,
+    active: true,
     neg: "is not, or is not within, a Locally Listed Building",
     pos: "is, or is within, a Locally Listed Building",
     "digital-land-datasets": ["locally-listed-building"],

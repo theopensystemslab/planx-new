@@ -3,16 +3,20 @@ import { stringify } from "csv-stringify";
 import { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import { gql } from "graphql-request";
+import capitalize from "lodash/capitalize";
 import os from "os";
 import path from "path";
 
-import { adminGraphQLClient } from "../hasura";
-import { convertSlugToName, sendEmail } from "../saveAndReturn/utils";
+import {
+  generateHTMLMapStream,
+  generateHTMLOverviewStream,
+} from "@opensystemslab/planx-document-templates";
+import { adminGraphQLClient as adminClient } from "../hasura";
+import { markSessionAsSubmitted } from "../saveAndReturn/utils";
+import { sendEmail } from "../notify/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
-import { generateDocumentReviewStream } from "./documentReview";
-import { deleteFile, downloadFile } from "./helpers";
-
-const client = adminGraphQLClient;
+import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
+import { Passport } from '@opensystemslab/planx-core';
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
@@ -25,34 +29,45 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    // Confirm this local authority (aka team) has an email configured in teams.settings
-    const { settings, notify_personalisation } = await getTeamSettings(req.params.localAuthority);
-    if (settings?.sendToEmail) {
-      // Append formatted "csv" data to lowcal_session.data so it's available later to the download-application-files endpoint
-      const updatedSessionData = await appendSessionData(payload.sessionId, payload.csv);
-
-      // TODO Prepare/improve email template
-      const config: EmailSubmissionNotifyConfig = {
-        personalisation: {
-          emailReplyToId: notify_personalisation.emailReplyToId,
-          serviceName: "Test",
-          sessionId: payload.sessionId,
-          applicantEmail: payload.email,
-          downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${settings.sendToEmail}&localAuthority=${req.params.localAuthority}`,
-        }
-      };
-
-      // Send the email
-      const response = await sendEmail("submit", settings.sendToEmail, config);
-      return res.json(response);
-
-      // TODO Mark lowcal_session as submitted, create/update audit table (and setup Slack notification trigger?)
-    } else {
+    // Confirm this local authority (aka team) has an email configured in teams.submission_email
+    const { sendToEmail, notifyPersonalisation } = await getTeamEmailSettings(req.params.localAuthority);
+    if (!sendToEmail) {
       return next({
         status: 400,
         message: "Send to email is not enabled for this local authority."
       });
     }
+
+    // Append formatted "csv" data to lowcal_session.data so it's available later to the download-application-files endpoint
+    const _updatedSessionData = await appendSessionData(payload.sessionId, payload.csv);
+
+    // TODO Prepare/improve email template
+    const config: EmailSubmissionNotifyConfig = {
+      personalisation: {
+        emailReplyToId: notifyPersonalisation.emailReplyToId,
+        serviceName: capitalize(payload?.flowName) || "PlanX",
+        sessionId: payload.sessionId,
+        applicantEmail: payload.email,
+        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${req.params.localAuthority}`,
+      }
+    };
+
+    // Send the email
+    const response = await sendEmail("submit", sendToEmail, config);
+    if (response?.message !== "Success") {
+      return next({
+        status: 500,
+        message: `Failed to send "Submit" email: ${response?.message}`,
+      });
+    };
+    // Mark session as submitted so that reminder and expiry emails are not triggered
+    markSessionAsSubmitted(payload.sessionId);
+
+    // TODO create audit table entry? setup event trigger for slack notification on new row?
+
+    return res.status(200).send({
+      message: `Successfully sent "Submit" email`,
+    });
   } catch (error) {
     return next({
       error,
@@ -72,8 +87,8 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const { settings, notify_personalisation } = await getTeamSettings(req.query.localAuthority as string);
-    if (settings?.sendToEmail != req.query.email) {
+    const { sendToEmail } = await getTeamEmailSettings(req.query.localAuthority as string);
+    if (sendToEmail !== req.query.email) {
       return next({
         status: 403,
         message: "Provided email address is not enabled to access application files"
@@ -82,100 +97,83 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 
     // Fetch this lowcal_session's data
     const sessionData = await getSessionData(sessionId);
-    if (sessionData) {
-      // Initiate an empty zip folder in memory
-      const zip = new AdmZip();
-
-      // Make a tmp directory to avoid file name collisions if simultaneous applications
-      let tmpDir = "";
-      fs.mkdtemp(path.join(os.tmpdir(), sessionId), (err, folder) => {
-        if (err) throw err;
-        tmpDir = folder;
-      });
-
-      // Build a csv file, write it locally, add it to the zip
-      if (sessionData.csv) {
-        const csvPath = path.join(tmpDir, "application.csv");
-        const csvFile = fs.createWriteStream(csvPath);
-
-        const csvStream = stringify(sessionData.csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
-        await new Promise((resolve, reject) => {
-          csvStream.on("error", reject);
-          csvStream.on("finish", resolve);
-        });
-
-        zip.addLocalFile(csvPath);
-        deleteFile(csvPath);
-      }
-
-      // If the user drew a red line boundary, add a geojson file and a html map-viewer
-      const geojson = sessionData.passport?.data?.["property.boundary.site"];
-      if (geojson) {
-        const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-        zip.addFile("boundary.geojson", geoBuff);
-
-        const mapViewPath = path.join(tmpDir, "map.html");
-        const mapViewFile = fs.createWriteStream(mapViewPath);
-        const mapViewStream = generateDocumentReviewStream({ geojson }).pipe(mapViewFile);
-
-        await new Promise((resolve, reject) => {
-          mapViewStream.on("error", reject);
-          mapViewStream.on("finish", resolve);
-        });
-
-        zip.addLocalFile(mapViewPath);
-        deleteFile(mapViewPath);
-      }
-
-      // Next iterate through the passport and pull out the urls of any user-uploaded files
-      if (sessionData.passport) {
-        const files: string[] = [];
-        Object.entries(sessionData.passport?.data || {})
-          .filter(([, v]: any) => v?.[0]?.url)
-          .forEach(([key, arr]) => {
-            (arr as any[]).forEach(({ url }) => {
-              files.push(url);
-            });
-          });
-        
-        // Additionally check if they uploaded a location plan instead of drawing
-        if (sessionData.passport?.data?.["proposal.drawing.locationPlan"]) {
-          files.push(sessionData.passport.data["proposal.drawing.locationPlan"]);
-        }
-  
-        // Download files from S3 and add them to the zip folder
-        if (files.length > 0) {
-          for (const file of files) {
-            // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-            // This ensures that all uploaded files are present in the zip, even if they are duplicates
-            const uniqueFilename = file.split("/").slice(-2).join("-");
-            const filePath = path.join(tmpDir, uniqueFilename);
-            await downloadFile(file, filePath, zip);
-          }
-        }
-      }
-
-      // Generate and save the zip locally
-      const zipName = `${sessionId}.zip`;
-      zip.writeZip(zipName);
-
-      // Send it to the client
-      const zipData = zip.toBuffer();
-      res.set('Content-Type','application/octet-stream');
-      res.set('Content-Disposition',`attachment; filename=${zipName}`);
-      res.set('Content-Length',zipData.length.toString());
-      res.status(200).send(zipData);
-
-      // Clean up the local zip file
-      deleteFile(zipName);
-
-      // TODO Record files_downloaded_at timestamp in lowcal_sessions ??
-    } else {
+    if (!sessionData) {
       return next({
         status: 400,
         message: "Failed to find session data for this sessionId"
       });
     }
+    // Initiate an empty zip folder in memory
+    const zip = new AdmZip();
+
+    // Make a tmp directory to avoid file name collisions if simultaneous applications
+    let tmpDir = "";
+    fs.mkdtemp(path.join(os.tmpdir(), sessionId), (err, folder) => {
+      if (err) throw err;
+      tmpDir = folder;
+    });
+
+    // Build a csv file, write it locally, add it to the zip
+    if (sessionData.csv) {
+      const csvPath = path.join(tmpDir, "application.csv");
+      const csvFile = fs.createWriteStream(csvPath);
+
+      const csvStream = stringify(sessionData.csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
+      await resolveStream(csvStream);
+      zip.addLocalFile(csvPath);
+      deleteFile(csvPath);
+    }
+
+    // If the user drew a red line boundary, add a geojson file
+    const geojson = sessionData.passport?.data?.["property.boundary.site"];
+    if (geojson) {
+      const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+      zip.addFile("boundary.geojson", geoBuff);
+
+      // generate and add an HTML boundary document
+      const boundaryPath = path.join(tmpDir, "LocationPlan.html");
+      const boundaryFile = fs.createWriteStream(boundaryPath);
+      const boundaryStream =
+        generateHTMLMapStream(geojson).pipe(boundaryFile);
+      await resolveStream(boundaryStream);
+      zip.addLocalFile(boundaryPath);
+      deleteFile(boundaryPath);
+    }
+
+    // As long as we csv data, add a HTML overview document for human-readability
+    if (sessionData.csv) {
+      const htmlPath = path.join(tmpDir, "application.html");
+      const htmlFile = fs.createWriteStream(htmlPath);
+      const htmlStream = generateHTMLOverviewStream(sessionData.csv).pipe(
+        htmlFile
+      );
+      await resolveStream(htmlStream);
+      zip.addLocalFile(htmlPath);
+      deleteFile(htmlPath);
+    }
+
+    if (sessionData.passport) {
+      await addTemplateFilesToZip({ zip, tmpDir, passport: sessionData.passport, sessionId });
+
+      const passport = new Passport(sessionData.passport);
+      await downloadPassportFiles({ zip, tmpDir, passport });
+    }
+
+    // Generate and save the zip locally
+    const zipName = `${sessionId}.zip`;
+    zip.writeZip(zipName);
+
+    // Send it to the client
+    const zipData = zip.toBuffer();
+    res.set('Content-Type','application/octet-stream');
+    res.set('Content-Disposition',`attachment; filename=${zipName}`);
+    res.set('Content-Length',zipData.length.toString());
+    res.status(200).send(zipData);
+
+    // Clean up the local zip file
+    deleteFile(zipName);
+
+    // TODO Record files_downloaded_at timestamp in lowcal_sessions ??
   } catch (error) {
     return next({
       error,
@@ -184,15 +182,15 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
   }
 };
 
-async function getTeamSettings(localAuthority: string) {
-  const response = await client.request(
+async function getTeamEmailSettings(localAuthority: string) {
+  const response = await adminClient.request(
     gql`
-      query getTeamSettings(
+      query GetTeamEmailSettings(
         $slug: String
       ) {
         teams(where: {slug: {_eq: $slug}}) {
-          settings
-          notify_personalisation
+          sendToEmail: submission_email
+          notifyPersonalisation: notify_personalisation
         }
       }
     `,
@@ -205,9 +203,9 @@ async function getTeamSettings(localAuthority: string) {
 }
 
 async function getSessionData(sessionId: string) {
-  const response = await client.request(
+  const response = await adminClient.request(
     gql`
-      query getSessionData(
+      query GetSessionData(
         $id: uuid!
       ) {
         lowcal_sessions_by_pk(
@@ -226,9 +224,9 @@ async function getSessionData(sessionId: string) {
 };
 
 async function appendSessionData(sessionId: string, csvData: any) {
-  const response = await client.request(
+  const response = await adminClient.request(
     gql`
-      mutation appendSessionData(
+      mutation AppendSessionData(
         $id: uuid!
         $data: jsonb
       ) {
@@ -247,6 +245,23 @@ async function appendSessionData(sessionId: string, csvData: any) {
   );
 
   return response?.update_lowcal_sessions_by_pk?.data;
+}
+
+async function downloadPassportFiles(
+  { zip, tmpDir, passport }:
+  { zip: AdmZip, tmpDir: string, passport: Passport }
+) {
+  const files = passport.getFiles();
+  // Download files from S3 and add them to the zip folder
+  if (files.length > 0) {
+    for (const file of files) {
+      // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
+      // This ensures that all uploaded files are present in the zip, even if they are duplicates
+      const uniqueFilename = file.split("/").slice(-2).join("-");
+      const filePath = path.join(tmpDir, uniqueFilename);
+      await downloadFile(file, filePath, zip);
+    }
+  }
 }
 
 export { sendToEmail, downloadApplicationFiles };
