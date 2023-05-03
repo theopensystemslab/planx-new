@@ -13,15 +13,6 @@ export interface SectionNode extends Store.node {
   };
 }
 
-export enum SectionStatus {
-  NeedsUpdated = "NEW INFORMATION NEEDED",
-  ReadyToContinue = "READY TO CONTINUE",
-  Started = "STARTED",
-  ReadyToStart = "READY TO START",
-  NotStarted = "CANNOT START YET",
-  Completed = "COMPLETED",
-}
-
 export interface NavigationStore {
   currentSectionIndex: number;
   sectionCount: number;
@@ -31,11 +22,6 @@ export interface NavigationStore {
   initNavigationStore: () => void;
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.flow;
-  sectionStatuses: (args?: {
-    sortedBreadcrumbs: Store.breadcrumbs;
-    isReconciliation: boolean;
-    alteredSectionIds?: string[];
-  }) => Record<string, SectionStatus>;
   getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
 }
@@ -103,6 +89,7 @@ export const navigationStore: StateCreator<
     const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
     const currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
     set({ currentSectionTitle, currentSectionIndex });
+    console.debug("section state updated"); // used as a transition trigger in e2e tests
   },
 
   /**
@@ -118,76 +105,6 @@ export const navigationStore: StateCreator<
         .sort(([idA], [idB]) => rootEdges.indexOf(idA) - rootEdges.indexOf(idB))
     );
     return filteredFlow;
-  },
-
-  // compute section statuses using breadcrumbs, cachedBreadcrumbs and currentCard
-  sectionStatuses: (args?: {
-    sortedBreadcrumbs: Store.breadcrumbs;
-    isReconciliation: boolean;
-    alteredSectionIds?: string[];
-  }): Record<string, SectionStatus> => {
-    const {
-      sectionNodes,
-      currentCard,
-      cachedBreadcrumbs,
-      breadcrumbs: storedBreadcrumbs,
-    } = get();
-    const breadcrumbs = args?.sortedBreadcrumbs || storedBreadcrumbs;
-    const alteredSectionIds = args?.alteredSectionIds || null;
-    const isReconciliation = args?.isReconciliation;
-
-    const seenPastNodeIds = Object.keys({ ...breadcrumbs });
-    const seenUpcomingNodeIds = Object.keys({ ...cachedBreadcrumbs });
-    const allSeenNodeIds = [...seenPastNodeIds, ...seenUpcomingNodeIds];
-
-    const sectionNodeIds = Object.keys(sectionNodes);
-    const currentCardId = currentCard()?.id;
-
-    const currentCardIsSection =
-      currentCardId && sectionNodeIds.includes(currentCardId);
-
-    let seenUpcomingSection = false;
-    const sectionStatuses: Record<string, SectionStatus> = {};
-    for (const [index, sectionId] of Object.entries(sectionNodeIds)) {
-      // check for an altered sections
-      if (alteredSectionIds && alteredSectionIds!.includes(sectionId)) {
-        sectionStatuses[sectionId] = SectionStatus.NeedsUpdated;
-        seenUpcomingSection = true;
-        continue;
-      }
-
-      const nextSectionId = sectionNodeIds.at(Number(index) + 1);
-      const seenNextSection =
-        nextSectionId && allSeenNodeIds.includes(nextSectionId);
-      const isLastSeenSection =
-        allSeenNodeIds.includes(sectionId) && !seenNextSection;
-
-      // check for an upcoming section
-      if (!seenUpcomingSection) {
-        if (
-          seenUpcomingNodeIds.includes(sectionId) ||
-          (isLastSeenSection && !currentCardIsSection)
-        ) {
-          sectionStatuses[sectionId] = SectionStatus.ReadyToContinue;
-          seenUpcomingSection = true;
-        } else if (!allSeenNodeIds.includes(sectionId)) {
-          sectionStatuses[sectionId] = SectionStatus.ReadyToStart;
-          seenUpcomingSection = true;
-        } else {
-          sectionStatuses[sectionId] = SectionStatus.Completed;
-        }
-        continue;
-      }
-
-      // check for remaining sections
-      if (allSeenNodeIds.includes(sectionId)) {
-        sectionStatuses[sectionId] = SectionStatus.Started;
-      } else {
-        sectionStatuses[sectionId] = SectionStatus.NotStarted;
-      }
-    }
-
-    return sectionStatuses;
   },
 
   // if this flow has sections, split the breadcrumbs up by sections,

@@ -1,8 +1,8 @@
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag, toggleFeatureFlag } from "lib/featureFlags";
+import { SectionStatus } from "types";
 
 import { FullStore, vanillaStore } from "../store";
-import { SectionStatus } from "../store/navigation";
 import flowWithoutSections from "./mocks/flowWithClones.json";
 import flowWithThreeSections from "./mocks/flowWithThreeSections.json";
 
@@ -150,120 +150,4 @@ test("updateSectionData() updates section title and index correctly", () => {
   ({ currentSectionTitle, currentSectionIndex } = getState());
   expect(currentSectionIndex).toBe(3);
   expect(currentSectionTitle).toEqual("Third section");
-});
-
-test("SectionStatuses() gets the initial statuses of all sections in a flow", () => {
-  setState({ flow: flowWithThreeSections });
-  initNavigationStore();
-
-  // Get initial statuses
-  const statuses = sectionStatuses();
-
-  // There's a status entry per section node in the test flow
-  expect(Object.keys(statuses)).toHaveLength(3);
-
-  // Initial statuses are calculated correctly
-  expect(statuses).toEqual({
-    firstSection: SectionStatus.ReadyToStart,
-    secondSection: SectionStatus.NotStarted,
-    thirdSection: SectionStatus.NotStarted,
-  });
-});
-
-test("sectionStatuses() updates the status of sections in a flow as you navigate forwards", () => {
-  setState({ flow: flowWithThreeSections });
-  initNavigationStore();
-
-  // Navigate forwards
-  record("firstSection", { auto: false });
-  record("firstQuestion", { answers: ["firstAnswer"] });
-
-  // Get statuses
-  const statuses = sectionStatuses();
-
-  // Confirm statuses have been updated correctly
-  expect(statuses).toEqual({
-    firstSection: SectionStatus.Completed,
-    secondSection: SectionStatus.ReadyToStart,
-    thirdSection: SectionStatus.NotStarted,
-  });
-
-  // Navigate forwards again
-  record("secondSection", { auto: false });
-  record("secondQuestion", { answers: ["secondAnswer"] });
-
-  const newStatuses = sectionStatuses();
-
-  // Confirm statuses have been updated correctly
-  expect(newStatuses).toEqual({
-    firstSection: SectionStatus.Completed,
-    secondSection: SectionStatus.Completed,
-    thirdSection: SectionStatus.ReadyToStart,
-  });
-});
-
-test("sectionStatuses() applies the NEW INFORMATION NEEDED status if a section was updated during reconciliation", () => {
-  setState({ flow: flowWithThreeSections });
-  initNavigationStore();
-
-  // breadcrumbs and alteredSectionIds are passed in at reconciliation
-  const statuses = sectionStatuses({
-    isReconciliation: true,
-    sortedBreadcrumbs: {
-      firstSection: { auto: false },
-      firstQuestion: { answers: ["firstAnswer"] },
-    },
-    alteredSectionIds: ["firstSection"],
-  });
-
-  expect(statuses).toEqual({
-    firstSection: SectionStatus.NeedsUpdated, // no longer considered Completed
-    secondSection: SectionStatus.NotStarted,
-    thirdSection: SectionStatus.NotStarted,
-  });
-});
-
-test("sectionStatuses() corrects multiple in-progress statuses on reconciliation to reflect completed sections", () => {
-  setState({ flow: flowWithThreeSections });
-  initNavigationStore();
-
-  // breadcrumbs are passed in at reconciliation
-  const statuses = sectionStatuses({
-    isReconciliation: true,
-    sortedBreadcrumbs: {
-      firstSection: { auto: false },
-      firstQuestion: { answers: ["firstAnswer"] },
-      secondSection: { auto: false },
-      secondQuestion: { answers: ["secondAnswer"] },
-    },
-  });
-
-  expect(statuses).toEqual({
-    firstSection: SectionStatus.Completed,
-    secondSection: SectionStatus.Completed,
-    thirdSection: SectionStatus.ReadyToStart,
-  });
-});
-
-test("sectionStatuses() applies the NEW INFORMATION NEEDED status and corrects multiple in-progress statuses on reconciliation", () => {
-  setState({ flow: flowWithThreeSections });
-  initNavigationStore();
-
-  // breadcrumbs and alteredSectionIds are passed in at reconciliation
-  const statuses = sectionStatuses({
-    isReconciliation: true,
-    sortedBreadcrumbs: {
-      firstSection: { auto: false },
-      firstQuestion: { answers: ["firstAnswer"] },
-      secondSection: { auto: false },
-      secondQuestion: { answers: ["secondAnswer"] },
-    },
-    alteredSectionIds: ["firstSection"],
-  });
-
-  expect(statuses).toEqual({
-    firstSection: SectionStatus.NeedsUpdated,
-    secondSection: SectionStatus.Started,
-    thirdSection: SectionStatus.NotStarted,
-  });
 });

@@ -22,7 +22,7 @@ import type { Context } from "./context";
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 
 // TODO: move this type to planx-core
-// also defined in editor.planx.uk/src/pages/FlowEditor/lib/store/navigation.ts
+// also defined in editor.planx.uk/src/types.ts
 export enum SectionStatus {
   NeedsUpdated = "NEW INFORMATION NEEDED",
   ReadyToContinue = "READY TO CONTINUE",
@@ -51,7 +51,6 @@ test.describe("Sections", () => {
       data: flow,
     },
   };
-  const previewURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false`;
 
   test.beforeAll(async () => {
     try {
@@ -62,6 +61,12 @@ test.describe("Sections", () => {
     }
   });
 
+  test.beforeEach(async ({ page }) => {
+    const previewURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false`;
+    await page.goto(previewURL);
+    await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
+  });
+
   test.afterAll(async () => {
     await tearDownTestContext(context);
   });
@@ -70,9 +75,6 @@ test.describe("Sections", () => {
     test("not started, ready to start and complete statuses", async ({
       page,
     }) => {
-      await page.goto(previewURL);
-      await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
-
       await fillInEmail({ page, context });
       await clickContinue({ page, waitForResponse: true });
 
@@ -93,10 +95,10 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectSections({
         page,
@@ -115,29 +117,29 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 2", answer: "B" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerChecklist({
         page,
         title: "Multi-select",
         answers: ["B", "C", "D"],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectNotice({ page, text: "Reached B" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectNotice({ page, text: "Reached C" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectNotice({ page, text: "Reached D" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectNotice({ page, text: "Reached the end of section two" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectSections({
         page,
@@ -156,18 +158,15 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       // send
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectConfirmation({ page, text: "Application Sent" });
     });
 
     test("started and ready to continue", async ({ page }) => {
-      await page.goto(previewURL);
-      await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
-
       await fillInEmail({ page, context });
       await clickContinue({ page, waitForResponse: true });
 
@@ -188,10 +187,10 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectSections({
         page,
@@ -210,10 +209,10 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 2", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       // back to Question 2
       await clickBack({ page });
@@ -238,13 +237,13 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       // skip Question 2
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       // skip end of section 2 notice
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectSections({
         page,
@@ -263,7 +262,7 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       // back to Section Three Overview
       await clickBack({ page });
@@ -325,11 +324,8 @@ test.describe("Sections", () => {
     test("not started, ready to start and complete statuses", async ({
       page,
     }) => {
-      await page.goto(previewURL);
-      await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
-
       await fillInEmail({ page, context });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForResponse: true });
 
       await expectSections({
         page,
@@ -348,10 +344,10 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       const sectionsBeforeSaveAndReturn = [
         {
@@ -385,11 +381,8 @@ test.describe("Sections", () => {
     });
 
     test("the ready to continue status", async ({ page }) => {
-      await page.goto(previewURL);
-      await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
-
       await fillInEmail({ page, context });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForResponse: true });
 
       await expectSections({
         page,
@@ -408,10 +401,10 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectSections({
         page,
@@ -430,10 +423,10 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 2", answer: "B" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
@@ -462,11 +455,8 @@ test.describe("Sections", () => {
 
   test.describe("save and return with service changes (reconciliation)", () => {
     test("needs new information and started", async ({ page }) => {
-      await page.goto(previewURL);
-      await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
-
       await fillInEmail({ page, context });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForResponse: true });
 
       await expectSections({
         page,
@@ -485,10 +475,10 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await expectSections({
         page,
@@ -507,10 +497,10 @@ test.describe("Sections", () => {
           },
         ],
       });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       await answerQuestion({ page, title: "Question 2", answer: "B" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();

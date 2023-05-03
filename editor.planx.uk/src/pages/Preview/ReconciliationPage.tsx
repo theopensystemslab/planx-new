@@ -35,26 +35,20 @@ const ReconciliationPage: React.FC<Props> = ({
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, hasSections, sectionNodes, sectionStatuses, changeAnswer] =
-    useStore((state) => [
+  const [flow, hasSections, sectionNodes, currentCard, changeAnswer] = useStore(
+    (state) => [
       state.flow,
       state.hasSections,
       state.sectionNodes,
-      state.sectionStatuses,
+      state.currentCard(),
       state.changeAnswer,
-    ]);
+    ]
+  );
 
   const sortedBreadcrumbs = sortBreadcrumbs(
     reconciliationResponse.reconciledSessionData.breadcrumbs,
     flow
   );
-
-  // Calculate the section statuses based on the response data from /validate-session, before it's been updated in app state
-  const reconciledSectionStatuses = sectionStatuses({
-    sortedBreadcrumbs,
-    isReconciliation: reconciliationResponse.changesFound !== null,
-    alteredSectionIds: reconciliationResponse.alteredSectionIds,
-  });
 
   const theme = useTheme();
   const classes = useStyles();
@@ -90,9 +84,12 @@ const ReconciliationPage: React.FC<Props> = ({
         </Typography>
         {hasSections ? (
           <SectionsOverviewList
-            sectionNodes={sectionNodes}
-            sectionStatuses={reconciledSectionStatuses}
+            alteredSectionIds={reconciliationResponse.alteredSectionIds}
             showChange={false}
+            isReconciliation={true}
+            sectionNodes={sectionNodes}
+            currentCard={currentCard}
+            breadcrumbs={sortedBreadcrumbs}
           />
         ) : (
           <SummaryListsBySections

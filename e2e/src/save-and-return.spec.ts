@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { GraphQLClient, gql } from "graphql-request";
+import { gql } from "graphql-request";
 import {
   simpleSendFlow,
   modifiedSimpleSendFlow,
@@ -81,7 +81,7 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
@@ -106,7 +106,7 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       let secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
@@ -131,7 +131,7 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       let secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
@@ -156,7 +156,7 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       const secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();

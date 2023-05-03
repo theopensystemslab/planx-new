@@ -14,8 +14,20 @@ export function log(...args: any[]) {
 // a collection of useful playwright actions
 // these could evolve into fixtures: https://playwright.dev/docs/test-fixtures
 
-export async function debugPageConsole(page: Page) {
+export function debugPageConsole(page: Page) {
   page.on("console", (msg) => console.log(msg.text()));
+}
+
+// used to detect `{ "setItem": ... }`, `{"getItem": ... }`
+// and "section state updated" debug messages on state transitions
+export function waitForDebugLog(page: Page) {
+  return new Promise((resolve) => {
+    page.on("console", (msg) => {
+      if (msg.type() == "debug") {
+        resolve(true);
+      }
+    });
+  });
 }
 
 export async function createAuthenticatedSession({
@@ -75,9 +87,6 @@ export async function saveSession({
   page: Page;
   context: Context;
 }): Promise<string | undefined> {
-  // ensure store has had time to update any previous answer before saving
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
   const pageResponsePromise = page.waitForResponse((response) => {
     return response.url().includes("/send-email/save");
   });
@@ -99,11 +108,11 @@ export async function returnToSession({
   page: Page;
   context: Context;
   sessionId: string;
-  shouldContinue: boolean;
+  shouldContinue?: boolean;
 }) {
   const returnURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false&sessionId=${sessionId}`;
   log(`returning to http://localhost:3000/${returnURL}`);
-  await page.goto(returnURL);
+  await page.goto(returnURL, { waitUntil: "load" });
   await page.locator("#email").fill(context.user?.email);
   if (shouldContinue) {
     const waitPromise = page.waitForResponse((response) => {
@@ -116,24 +125,30 @@ export async function returnToSession({
 
 export async function clickContinue({
   page,
+  waitForLogEvent = false,
   waitForResponse = false,
 }: {
   page: Page;
   waitForResponse?: boolean;
+  waitForLogEvent?: boolean;
 }) {
-  const waitPromise = waitForResponse
-    ? page.waitForResponse(
-        (response) =>
-          response.url().includes("graphql") && response.status() === 200
-      )
-    : new Promise((resolve) => setTimeout(resolve, 500));
-  await page.getByTestId("continue-button").click();
-  await waitPromise;
+  if (waitForLogEvent || waitForResponse) {
+    const waitPromise = waitForResponse
+      ? page.waitForResponse((response) => {
+          return response.url().includes("/graphql");
+        })
+      : waitForDebugLog(page); // assume debug message is triggered on state transition
+    await page.getByTestId("continue-button").click();
+    await waitPromise;
+  } else {
+    await page.getByTestId("continue-button").click();
+  }
 }
 
 export async function clickBack({ page }: { page: Page }) {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  const waitPromise = waitForDebugLog(page); // assume debug message is triggered on state transition
   await page.getByRole("button", { name: "Back", exact: true }).click();
+  await waitPromise;
 }
 
 export async function fillInEmail({
