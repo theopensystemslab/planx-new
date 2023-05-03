@@ -63,6 +63,7 @@ const fetchDataForStandaloneView = async (
               name
               settings
               slug
+              notifyPersonalisation: notify_personalisation
             }
             settings
           }

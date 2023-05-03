@@ -57,6 +57,7 @@ describe("Header Component - Editor Route", () => {
           data: {
             username: "Test User",
             flow: "test-flow",
+            team: mockTeam1.slug,
           },
         } as any)
     );

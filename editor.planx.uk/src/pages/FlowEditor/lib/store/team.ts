@@ -1,4 +1,4 @@
-import { TeamSettings } from "types";
+import { NotifyPersonalisation, TeamSettings } from "types";
 import { TeamTheme } from "types";
 import { Team } from "types";
 import type { StateCreator } from "zustand";
@@ -8,9 +8,10 @@ export interface TeamStore {
   teamName: string;
   teamSettings?: TeamSettings;
   teamSlug: string;
-  notifyPersonalisation: any;
+  notifyPersonalisation?: NotifyPersonalisation;
 
   setTeam: (team: Team) => void;
+  getTeam: () => Team;
 }
 
 export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
@@ -21,7 +22,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
   teamName: "",
   teamSettings: undefined,
   teamSlug: "",
-  notifyPersonalisation: {},
+  notifyPersonalisation: undefined,
 
   setTeam: (team) =>
     set({
@@ -29,5 +30,14 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
       teamName: team.name,
       teamSettings: team.settings,
       teamSlug: team.slug,
+      notifyPersonalisation: team?.notifyPersonalisation,
     }),
+
+  getTeam: () => ({
+    name: get().teamName,
+    slug: get().teamSlug,
+    settings: get().teamSettings,
+    theme: get().teamTheme,
+    notifyPersonalisation: get()?.notifyPersonalisation,
+  }),
 });
