@@ -60,7 +60,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
       <Grid container justifyContent="space-between" wrap="nowrap">
         <Grid item>
           {title && (
-            <Box mr={1} pt={1.5}>
+            <Box mr={1} pt={0.5}>
               <Typography
                 variant="h3"
                 role="heading"
