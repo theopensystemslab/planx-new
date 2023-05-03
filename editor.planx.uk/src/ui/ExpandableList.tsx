@@ -16,17 +16,16 @@ const useListClasses = makeStyles((theme) => ({
 
 const useItemClasses = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(1, 1.5),
+    borderBottom: "1px solid #B1B4B6",
   },
   title: {
-    alignItems: "flex-start",
     display: "flex",
+    alignItems: "center",
     justifyContent: "space-between",
+    padding: theme.spacing(2, 1, 2, 0),
     width: "100%",
   },
-  expanded: {
-    background: theme.palette.action.selected,
-  },
+  expanded: {},
 }));
 
 export function ExpandableList(props: { children: ReactNode }): FCReturn {
@@ -59,7 +58,7 @@ export function ExpandableListItem(props: {
         disableRipple
         onClick={handleToggle}
       >
-        <Typography variant="h6" component="h2" id={props.headingId}>
+        <Typography variant="h5" component="h2" id={props.headingId}>
           {props.title}
         </Typography>
         <Caret
