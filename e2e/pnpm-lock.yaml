@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#80a2178
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#077fe4b
   '@playwright/test': ^1.28.1
   '@types/dotenv': ^8.2.0
   '@types/node': ^18.16.0
@@ -19,7 +19,7 @@ specifiers:
   typescript: ^4.9.5
 
 dependencies:
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/80a2178
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/077fe4b
   axios: 1.3.6
   dotenv: 16.0.3
   graphql: 16.6.0
@@ -2565,8 +2565,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/80a2178:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/80a2178}
+  github.com/theopensystemslab/planx-core/077fe4b:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/077fe4b}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}

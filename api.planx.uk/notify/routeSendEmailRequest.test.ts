@@ -3,7 +3,6 @@ import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
 import {
   mockFlow,
-  mockGetHumanReadableProjectType,
   mockLowcalSession,
   mockSetupEmailNotifications,
   mockSoftDeleteLowcalSession,
@@ -14,10 +13,17 @@ import {
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 const SAVE_ENDPOINT = "/send-email/save";
 
+jest.mock("@opensystemslab/planx-core", () => {
+  return {
+    CoreDomainClient: jest.fn().mockImplementation(() => ({
+      formatRawProjectTypes: jest.fn().mockResolvedValue(["New office premises"]),
+    }))
+  }
+});
+
 describe("Send Email endpoint", () => {
   beforeEach(() => {
     queryMock.reset();
-    queryMock.mockQuery(mockGetHumanReadableProjectType);
     queryMock.mockQuery(mockValidateSingleSessionRequest);
     queryMock.mockQuery(mockSoftDeleteLowcalSession);
     queryMock.mockQuery(mockSetupEmailNotifications);
@@ -86,16 +92,6 @@ describe("Send Email endpoint", () => {
         data: {
           flows_by_pk: mockFlow,
           lowcal_sessions: [],
-        },
-      });
-
-      queryMock.mockQuery({
-        name: "GetHumanReadableProjectType",
-        data: {
-          project_types: [{ description: "New office premises" }],
-        },
-        variables: {
-          rawList: ["new.office"],
         },
       });
 
@@ -244,7 +240,6 @@ describe("Setting up send email events", () => {
 
   beforeEach(() => {
     queryMock.reset();
-    queryMock.mockQuery(mockGetHumanReadableProjectType);
     queryMock.mockQuery(mockSoftDeleteLowcalSession);
     queryMock.mockQuery(mockSetupEmailNotifications);
   });
