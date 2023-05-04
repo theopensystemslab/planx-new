@@ -17,116 +17,113 @@ describe("Send email endpoint for invite to pay templates", () => {
 
   describe("All invite to pay templates require authorisation", () => {
     const templates = [
-      "invite-to-pay", "invite-to-pay-agent", 
+      "invite-to-pay", "invite-to-pay-agent",
       "payment-reminder", "payment-reminder-agent",
       "payment-expiry", "payment-expiry-agent",
     ];
 
-    it("returns 401 UNAUTHORIZED if no auth header is provided", async () => {
-      for (const template of templates) {
-        const data = {
-          payload: {
-            paymentRequestId: TEST_PAYMENT_REQUEST_ID,
-          },
-        };
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .send(data)
-          .expect(401);
-      }
-    });
+    for (const template of templates) {
+      describe(`${template} Template`, () => {
+        it("returns 401 UNAUTHORIZED if no auth header is provided", async () => {
+          const data = {
+            payload: {
+              paymentRequestId: TEST_PAYMENT_REQUEST_ID,
+            },
+          };
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .send(data)
+            .expect(401);
+        });
 
-    it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
-      for (const template of templates) {
-        const data = {
-          payload: {
-            paymentRequestId: TEST_PAYMENT_REQUEST_ID,
-          },
-        };
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .set("Authorization", "invalid-api-key")
-          .send(data)
-          .expect(401);
-      }
-    });
+        it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
+          const data = {
+            payload: {
+              paymentRequestId: TEST_PAYMENT_REQUEST_ID,
+            },
+          };
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .set("Authorization", "invalid-api-key")
+            .send(data)
+            .expect(401);
+        });
 
-    it("returns 200 OK if the correct headers are used", async () => {
-      for (const template of templates) {
-        const data = {
-          payload: {
-            paymentRequestId: TEST_PAYMENT_REQUEST_ID,
-          },
-        };
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .set("Authorization", "testtesttest")
-          .send(data)
-          .expect(200);
-      }
-    });
+        it(`returns 200 OK if the correct headers are used`, async () => {
+          const data = {
+            payload: {
+              paymentRequestId: TEST_PAYMENT_REQUEST_ID,
+            },
+          };
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .set("Authorization", "testtesttest")
+            .send(data)
+            .expect(200);
+        });
+      });
+    };
   });
+
 
   describe("'Invite to pay' templates", () => {
     const templates = ["invite-to-pay", "invite-to-pay-agent"];
 
-    it("throws an error if required data is missing", async () => {
-      for (const template of templates) {
-        const missingPaymentRequestId = {
-          payload: {},
-        };
-  
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .set("Authorization", "testtesttest")
-          .send(missingPaymentRequestId)
-          .expect(400)
-          .then((response) => {
-            expect(response.body).toHaveProperty(
-              "error",
-              "Required value missing"
-            );
-          });
-      }
-    });
+    for (const template of templates) {
+      describe(`${template} Template`, () => {
+        it("throws an error if required data is missing", async () => {
+          const missingPaymentRequestId = {
+            payload: {},
+          };
 
-    it("sends a Notify email for a valid payment request id", async () => {
-      for (const template of templates) {
-        const data = {
-          payload: {
-            paymentRequestId: TEST_PAYMENT_REQUEST_ID,
-          },
-        };
-  
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .set("Authorization", "testtesttest")
-          .send(data)
-          .expect(200)
-          .then((response) => {
-            expect(response.body).toEqual({ "message": "Success" });
-          });
-      }
-    });
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .set("Authorization", "testtesttest")
+            .send(missingPaymentRequestId)
+            .expect(400)
+            .then((response) => {
+              expect(response.body).toHaveProperty(
+                "error",
+                "Required value missing"
+              );
+            });
+        });
 
-    it("throws an error for an invalid payment request id", async () => {
-      for (const template of templates) {
-        const data = {
-          payload: {
-            paymentRequestId: "123-wrong-456",
-          },
-        };
-  
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .set("Authorization", "testtesttest")
-          .send(data)
-          .expect(500)
-          .then((response) => {
-            expect(response.body).toHaveProperty("error");
-          });
-      }
-    });
+        it("sends a Notify email for a valid payment request id", async () => {
+          const data = {
+            payload: {
+              paymentRequestId: TEST_PAYMENT_REQUEST_ID,
+            },
+          };
+
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .set("Authorization", "testtesttest")
+            .send(data)
+            .expect(200)
+            .then((response) => {
+              expect(response.body).toEqual({ "message": "Success" });
+            });
+        });
+
+        it("throws an error for an invalid payment request id", async () => {
+          const data = {
+            payload: {
+              paymentRequestId: "123-wrong-456",
+            },
+          };
+
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .set("Authorization", "testtesttest")
+            .send(data)
+            .expect(500)
+            .then((response) => {
+              expect(response.body).toHaveProperty("error");
+            });
+        });
+      });
+    }
   });
 
   describe("'Payment Expiry' templates", () => {
