@@ -160,52 +160,50 @@ describe("Send Email endpoint", () => {
   describe("Templates which require authorisation", () => {
     const templates = ["reminder", "expiry", "confirmation"];
 
-    it("returns 401 UNAUTHORIZED if no auth header is provided", async () => {
-      for (const template of templates) {
-        const data = {
-          payload: {
-            sessionId: 123,
-            email: TEST_EMAIL,
-          },
-        };
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .send(data)
-          .expect(401);
-      }
-    });
+    for (const template of templates) {
+      describe(`${template} Template`, () => {
+        it("returns 401 UNAUTHORIZED if no auth header is provided", async () => {
+          const data = {
+            payload: {
+              sessionId: 123,
+              email: TEST_EMAIL,
+            },
+          };
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .send(data)
+            .expect(401);
+        });
 
-    it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
-      for (const template of templates) {
-        const data = {
-          payload: {
-            sessionId: 123,
-            email: TEST_EMAIL,
-          },
-        };
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .set("Authorization", "invalid-api-key")
-          .send(data)
-          .expect(401);
-      }
-    });
+        it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
+          const data = {
+            payload: {
+              sessionId: 123,
+              email: TEST_EMAIL,
+            },
+          };
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .set("Authorization", "invalid-api-key")
+            .send(data)
+            .expect(401);
+        });
 
-    it("returns 200 OK if the correct headers are used", async () => {
-      for (const template of templates) {
-        const data = {
-          payload: {
-            sessionId: 123,
-            email: TEST_EMAIL,
-          },
-        };
-        await supertest(app)
-          .post(`/send-email/${template}`)
-          .set("Authorization", "testtesttest")
-          .send(data)
-          .expect(200);
-      }
-    });
+        it("returns 200 OK if the correct headers are used", async () => {
+          const data = {
+            payload: {
+              sessionId: 123,
+              email: TEST_EMAIL,
+            },
+          };
+          await supertest(app)
+            .post(`/send-email/${template}`)
+            .set("Authorization", "testtesttest")
+            .send(data)
+            .expect(200);
+        });
+      });
+    }
   });
 
   describe("'Expiry' template", () => {
