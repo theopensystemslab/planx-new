@@ -173,7 +173,7 @@ export interface Breadcrumbs extends Store.breadcrumbs {}
 export enum SectionStatus {
   NeedsUpdated = "NEW INFORMATION NEEDED",
   ReadyToContinue = "READY TO CONTINUE",
-  Started = "STARTED",
+  Started = "CANNOT CONTINUE YET",
   ReadyToStart = "READY TO START",
   NotStarted = "CANNOT START YET",
   Completed = "COMPLETED",
