@@ -165,7 +165,7 @@ describe("Confirm component with inviteToPay", () => {
     ).toBeInTheDocument();
   });
 
-  it("displays an error if you submit an applicant display name", async () => {
+  it("displays an error if do not submit an applicant display name", async () => {
     const { user } = setup(<Confirm {...inviteProps} />);
 
     // Switch to "InviteToPay" page
