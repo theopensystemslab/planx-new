@@ -12,6 +12,8 @@ import type { SettingsStore } from "./settings";
 import { settingsStore } from "./settings";
 import type { SharedStore } from "./shared";
 import { sharedStore } from "./shared";
+import type { TeamStore } from "./team";
+import { teamStore } from "./team";
 
 export declare namespace Store {
   export type Store = Record<string | number | symbol, unknown>;
@@ -46,7 +48,8 @@ export declare namespace Store {
 export type PublicStore = SharedStore &
   PreviewStore &
   NavigationStore &
-  SettingsStore;
+  SettingsStore &
+  TeamStore;
 
 export type FullStore = PublicStore & EditorStore & EditorUIStore;
 
@@ -67,6 +70,7 @@ const createPublicStore = (): StoreApi<FullStore> =>
     ...previewStore(...args),
     ...navigationStore(...args),
     ...settingsStore(...args),
+    ...teamStore(...args),
   })) as StoreApi<FullStore>;
 
 /**
@@ -81,6 +85,7 @@ const createFullStore = (): StoreApi<FullStore> => {
     ...editorStore(...args),
     ...editorUIStore(...args),
     ...settingsStore(...args),
+    ...teamStore(...args),
   }));
 };
 

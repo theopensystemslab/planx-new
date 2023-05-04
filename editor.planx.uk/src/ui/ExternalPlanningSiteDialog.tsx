@@ -6,10 +6,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useState } from "react";
 import { TeamSettings } from "types";
-import { fetchCurrentTeam } from "utils";
 
 export enum DialogPurpose {
   MissingProjectType,
@@ -60,12 +60,11 @@ interface Props {
 
 export default function ExternalPlanningSiteDialog({
   purpose,
-  teamSettings,
 }: Props): FCReturn {
   const [isOpen, setIsOpen] = useState(false);
   const toggleModal = () => setIsOpen(!isOpen);
-  const settings = teamSettings || fetchCurrentTeam()?.settings;
-  const { title, content } = getTitleAndContent(purpose, settings);
+  const teamSettings = useStore((state) => state.teamSettings);
+  const { title, content } = getTitleAndContent(purpose, teamSettings);
   return (
     <>
       {isOpen && (
@@ -80,7 +79,7 @@ export default function ExternalPlanningSiteDialog({
             <p>
               You can apply for a Lawful Development Certificate without an
               address and postcode through{" "}
-              <strong>{settings?.externalPlanningSite?.name}</strong>.
+              <strong>{teamSettings?.externalPlanningSite?.name}</strong>.
             </p>
           </DialogContent>
           <DialogActions>
@@ -91,9 +90,12 @@ export default function ExternalPlanningSiteDialog({
             >
               <Typography variant="body2">Return to application</Typography>
             </Link>
-            <Link href={settings?.externalPlanningSite?.url} target="_blank">
+            <Link
+              href={teamSettings?.externalPlanningSite?.url}
+              target="_blank"
+            >
               <Typography variant="body2">
-                Go to {settings?.externalPlanningSite?.name}
+                Go to {teamSettings?.externalPlanningSite?.name}
                 <span style={visuallyHidden}> (opens in a new tab)</span>
               </Typography>
             </Link>

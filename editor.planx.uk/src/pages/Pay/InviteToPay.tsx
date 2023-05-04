@@ -6,6 +6,7 @@ import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
 
@@ -16,6 +17,7 @@ const List = styled("ul")(({ theme }) => ({
 const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
   const theme = useTheme();
   const expiryDate = getExpiryDateForPaymentRequest(createdAt);
+  const team = useStore((state) => state.getTeam());
 
   return (
     <>
@@ -60,19 +62,18 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
             if you have any questions about your application or this service
           </li>
         </List>
-        {/* TODO: Get this from team data (store?) */}
         <Box pt={2}>
           <Typography variant="body2" sx={{ margin: 0 }}>
-            <b>Telephone</b> 0300 131 6000
+            <b>Telephone</b> {team.notifyPersonalisation?.helpPhone}
           </Typography>
           <Typography variant="body2" sx={{ margin: 0 }}>
-            Monday to Thursday, 9am - 5.30pm (except public holidays)
+            {team.notifyPersonalisation?.helpOpeningHours}
           </Typography>
         </Box>
         <Box pt={2}>
           <b>Email</b>{" "}
-          <a href="mailto:planning.digital@buckinghamshire.gov.uk">
-            planning.digital@buckinghamshire.gov.uk
+          <a href={`mailto:${team.notifyPersonalisation?.helpEmail}`}>
+            {team.notifyPersonalisation?.helpEmail}
           </a>
           <Typography variant="body2" sx={{ margin: 0 }}>
             We aim to respond within 2 working days.

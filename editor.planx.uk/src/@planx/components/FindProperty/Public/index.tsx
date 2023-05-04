@@ -12,7 +12,6 @@ import useSWR from "swr";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
 } from "ui/ExternalPlanningSiteDialog";
-import { fetchCurrentTeam } from "utils";
 
 import {
   DEFAULT_NEW_ADDRESS_TITLE,
@@ -58,8 +57,7 @@ function Component(props: Props) {
   const [regions, setRegions] = useState<string[] | undefined>();
   const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
 
-  const flow = useStore((state) => state.flow);
-  const team = fetchCurrentTeam();
+  const teamSettings = useStore((state) => state.teamSettings);
 
   // Use the address point to fetch the Local Authority District(s) & region via Digital Land
   let options = new URLSearchParams({
@@ -75,7 +73,7 @@ function Component(props: Props) {
   const root = `https://www.planning.data.gov.uk/entity.json?`;
   const digitalLandEndpoint = root + options;
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
-  const { data, error, mutate, isValidating } = useSWR(
+  const { data, isValidating } = useSWR(
     () =>
       address?.latitude && address?.longitude ? digitalLandEndpoint : null,
     fetcher,
@@ -90,8 +88,8 @@ function Component(props: Props) {
   //   example value for team.settings.boundary is https://www.planning.data.gov.uk/entity/8600093.geojson
   const { data: geojson } = useSWR(
     () =>
-      props.allowNewAddresses && team?.settings?.boundary
-        ? team.settings?.boundary
+      props.allowNewAddresses && teamSettings?.boundary
+        ? teamSettings.boundary
         : null,
     fetcher,
     {

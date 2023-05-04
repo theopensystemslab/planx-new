@@ -1,16 +1,11 @@
-import { MockedProvider } from "@apollo/client/testing";
 import { screen } from "@testing-library/react";
 import React from "react";
-import * as ReactNavi from "react-navi";
 import * as SWR from "swr";
 import { axe, setup } from "testUtils";
 
 import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
-import teamMock from "./mocks/teamMock";
-import PlanningConstraints, { PlanningConstraintsInformation } from "./Public";
-
-const TEAM = "opensystemslab";
+import PlanningConstraints from "./Public";
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
   return {
@@ -22,27 +17,16 @@ jest.spyOn(SWR, "default").mockImplementation((url: any) => {
   } as any;
 });
 
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      data: {
-        team: TEAM,
-      },
-    } as any)
-);
-
 it("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <MockedProvider mocks={teamMock} addTypename={false}>
-      <PlanningConstraints
-        title="Planning constraints"
-        description="Things that might affect your project"
-        fn="property.constraints.planning"
-        handleSubmit={handleSubmit}
-      />
-    </MockedProvider>
+    <PlanningConstraints
+      title="Planning constraints"
+      description="Things that might affect your project"
+      fn="property.constraints.planning"
+      handleSubmit={handleSubmit}
+    />
   );
 
   expect(screen.getByText("Planning constraints")).toBeInTheDocument();
@@ -56,13 +40,11 @@ it("renders correctly", async () => {
 
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
-    <MockedProvider mocks={teamMock} addTypename={false}>
-      <PlanningConstraints
-        title="Planning constraints"
-        description="Things that might affect your project"
-        fn="property.constraints.planning"
-      />
-    </MockedProvider>
+    <PlanningConstraints
+      title="Planning constraints"
+      description="Things that might affect your project"
+      fn="property.constraints.planning"
+    />
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

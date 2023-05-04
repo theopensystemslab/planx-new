@@ -1,8 +1,3 @@
-import { useQuery } from "@apollo/client";
-import { gql } from "@apollo/client";
-import { useCurrentRoute } from "react-navi";
-import { Team } from "types";
-
 export function removeAt<T>(index: number, arr: Array<T>): Array<T> {
   return arr.filter((_item, i) => {
     return i !== index;
@@ -57,29 +52,6 @@ export function slugify(name: string): string {
     .replace(/[\s_-]+/g, "-") // swap any length of whitespace, underscore, hyphen characters with a single -
     .replace(/^-+|-+$/g, ""); // remove leading, trailing -
 }
-
-// Exported as this is required for tests
-export const GET_TEAM_QUERY = gql`
-  query GetTeam($team: String = "") {
-    teams(where: { slug: { _eq: $team } }) {
-      theme
-      settings
-      name
-    }
-  }
-`;
-
-export const fetchCurrentTeam = (): Team | undefined => {
-  const route = useCurrentRoute();
-  const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
-  const { data } = useQuery(GET_TEAM_QUERY, {
-    skip: !Boolean(team),
-    variables: {
-      team: team,
-    },
-  });
-  return data?.teams[0];
-};
 
 export const isLiveEnv = () =>
   ["production", "staging", "pizza"].includes(process.env.NODE_ENV || "");
