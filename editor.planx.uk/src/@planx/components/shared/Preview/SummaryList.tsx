@@ -164,6 +164,7 @@ function SummaryList(props: SummaryListProps) {
                     <Link
                       onClick={() => handleClick(nodeId)}
                       component="button"
+                      fontSize="body2.fontSize"
                     >
                       Change
                       <span style={visuallyHidden}>

@@ -204,7 +204,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               color: "rgba(0,0,0,1)",
             },
           },
-          containedSizeLarge: {
+          sizeMedium: {
+            fontSize: "1rem",
+            fontWeight: FONT_WEIGHT_STRONG,
+          },
+          sizeLarge: {
             fontSize: "1.188rem",
             fontWeight: FONT_WEIGHT_STRONG,
           },

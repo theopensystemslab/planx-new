@@ -188,7 +188,7 @@ const FormModal: React.FC<{
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
-                size="large"
+                size="medium"
                 onClick={() => {
                   handleDelete();
                   navigate(rootFlowPath(true));
@@ -202,7 +202,7 @@ const FormModal: React.FC<{
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
-                size="large"
+                size="medium"
                 onClick={() => {
                   makeUnique(id, parent);
                   navigate(rootFlowPath(true));
@@ -215,7 +215,7 @@ const FormModal: React.FC<{
           <Grid item xs={6} sm={4} md={3}>
             <Button
               fullWidth
-              size="large"
+              size="medium"
               type="submit"
               variant="contained"
               color="primary"
