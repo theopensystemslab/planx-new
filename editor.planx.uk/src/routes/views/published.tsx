@@ -75,6 +75,7 @@ const fetchDataForPublishedView = async (
               name
               settings
               slug
+              notifyPersonalisation: notify_personalisation
             }
             settings
             publishedFlows: published_flows(

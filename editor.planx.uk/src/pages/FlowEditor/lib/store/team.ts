@@ -30,7 +30,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
       teamName: team.name,
       teamSettings: team.settings,
       teamSlug: team.slug,
-      notifyPersonalisation: team?.notifyPersonalisation,
+      notifyPersonalisation: team.notifyPersonalisation,
     }),
 
   getTeam: () => ({
@@ -38,6 +38,6 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
     slug: get().teamSlug,
     settings: get().teamSettings,
     theme: get().teamTheme,
-    notifyPersonalisation: get()?.notifyPersonalisation,
+    notifyPersonalisation: get().notifyPersonalisation,
   }),
 });

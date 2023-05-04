@@ -66,6 +66,7 @@ const fetchDataForUnpublishedView = async (
               name
               settings
               slug
+              notifyPersonalisation: notify_personalisation
             }
             settings
             slug
