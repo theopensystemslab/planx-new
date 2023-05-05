@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
+import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import React, { useState } from "react";
 import { PaymentStatus } from "types";
 import Banner from "ui/Banner";
@@ -96,12 +96,7 @@ const PayBody: React.FC<PayBodyProps> = (props) => (
               >
                 {"Invite someone else to pay for this application"}
               </Button>
-              <Typography variant="body2">or</Typography>
-              <Link component="button">
-                <Typography variant="body2">
-                  Save and return to this application later
-                </Typography>
-              </Link>
+              <SaveResumeButton />
             </>
           )}
         </PayText>

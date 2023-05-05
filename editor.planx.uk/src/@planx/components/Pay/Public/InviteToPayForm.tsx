@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
+import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
@@ -258,12 +259,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       >
         {"I want to pay for this application myself"}
       </Button>
-      <Typography variant="body2">or</Typography>
-      <Link component="button">
-        <Typography variant="body2">
-          Save and return to this application later
-        </Typography>
-      </Link>
+      <SaveResumeButton />
     </Card>
   );
 };
