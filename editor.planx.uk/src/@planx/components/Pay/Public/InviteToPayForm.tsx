@@ -13,7 +13,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useNavigation } from "react-navi";
 import useSWRMutation from "swr/mutation";
-import { PaymentStatus } from "types";
+import { ApplicationPath, PaymentStatus } from "types";
 import ErrorWrapper from "ui/ErrorWrapper";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -83,7 +83,8 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const sessionId = useStore((state) => state.sessionId);
+  const [sessionId, path] = useStore((state) => [state.sessionId, state.path]);
+  const isSaveReturn = path === ApplicationPath.SaveAndReturn;
   const navigation = useNavigation();
 
   const postRequest = async (
@@ -259,7 +260,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       >
         {"I want to pay for this application myself"}
       </Button>
-      <SaveResumeButton />
+      {isSaveReturn && <SaveResumeButton />}
     </Card>
   );
 };
