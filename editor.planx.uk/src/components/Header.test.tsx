@@ -37,7 +37,15 @@ jest.spyOn(ReactNavi, "useNavigation").mockImplementation(
 
 describe("Header Component - Editor Route", () => {
   beforeAll(() => {
-    setState({ previewEnvironment: "editor" });
+    act(() =>
+      setState({
+        previewEnvironment: "editor",
+        teamName: mockTeam1.name,
+        teamSettings: mockTeam1.settings,
+        teamTheme: mockTeam1.theme,
+        teamSlug: mockTeam1.slug,
+      })
+    );
 
     jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
       () =>
@@ -48,8 +56,8 @@ describe("Header Component - Editor Route", () => {
           },
           data: {
             username: "Test User",
-            team: mockTeam1.slug,
             flow: "test-flow",
+            team: mockTeam1.slug,
           },
         } as any)
     );
@@ -60,20 +68,20 @@ describe("Header Component - Editor Route", () => {
   });
 
   it("displays breadcrumbs", () => {
-    setup(<Header team={mockTeam1}></Header>);
+    setup(<Header />);
     expect(screen.getByText("Plan✕")).toBeInTheDocument();
     expect(screen.getByText(mockTeam1.slug)).toBeInTheDocument();
     expect(screen.getByText("test-flow")).toBeInTheDocument();
   });
 
   it("displays avatar and settings", () => {
-    setup(<Header team={mockTeam1}></Header>);
+    setup(<Header />);
     expect(screen.getByText("T")).toBeInTheDocument();
     expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<Header team={mockTeam1}></Header>);
+    const { container } = setup(<Header />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -91,7 +99,6 @@ for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
             },
             data: {
               username: "Test User",
-              team: mockTeam1.slug,
               flow: "test-flow",
             },
           } as any)
@@ -99,7 +106,7 @@ for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
     });
 
     it("displays a logo when available", () => {
-      setup(<Header team={mockTeam1}></Header>);
+      setup(<Header />);
       expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
       expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
         "src",
@@ -108,15 +115,17 @@ for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
     });
 
     it("falls back to the PlanX link when a logo is not present", () => {
-      setup(<Header team={mockTeam2}></Header>);
+      act(() => setState({ teamTheme: mockTeam2.theme }));
+      setup(<Header />);
       expect(
         screen.queryByAltText(`${mockTeam2.name} Logo`)
       ).not.toBeInTheDocument();
       expect(screen.getByText("Plan✕")).toBeInTheDocument();
+      act(() => setState({ teamTheme: mockTeam1.theme }));
     });
 
     it("displays service title from the store", () => {
-      setup(<Header team={mockTeam1}></Header>);
+      setup(<Header />);
       act(() => setState({ flowName: "test flow" }));
 
       expect(screen.getByTestId("service-title")).toBeInTheDocument();
@@ -124,7 +133,7 @@ for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
     });
 
     it("should not have any accessibility violations", async () => {
-      const { container } = setup(<Header team={mockTeam1}></Header>);
+      const { container } = setup(<Header />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
@@ -142,7 +151,6 @@ describe("Section navigation bar", () => {
           },
           data: {
             username: "Test User",
-            team: mockTeam1.slug,
             flow: "test-flow",
           },
         } as any)
@@ -151,7 +159,7 @@ describe("Section navigation bar", () => {
 
   describe("Flow without sections", () => {
     it("does not display if the feature flag is disabled", () => {
-      setup(<Header team={mockTeam1}></Header>);
+      setup(<Header />);
       act(() => setState({ flow: flowWithoutSections }));
       act(() => getState().initNavigationStore());
 
@@ -161,7 +169,7 @@ describe("Section navigation bar", () => {
 
     it("does not display if the feature flag is enabled", () => {
       toggleFeatureFlag("NAVIGATION_UI");
-      setup(<Header team={mockTeam1}></Header>);
+      setup(<Header />);
       act(() => setState({ flow: flowWithoutSections }));
       act(() => getState().initNavigationStore());
 
@@ -180,7 +188,7 @@ describe("Section navigation bar", () => {
     it("does not display if the feature flag is disabled", () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      setup(<Header team={mockTeam1}></Header>);
+      setup(<Header />);
 
       expect(hasFeatureFlag("NAVIGATION_UI")).toBe(false);
       expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
@@ -190,7 +198,7 @@ describe("Section navigation bar", () => {
       toggleFeatureFlag("NAVIGATION_UI");
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      setup(<Header team={mockTeam1}></Header>);
+      setup(<Header />);
 
       expect(hasFeatureFlag("NAVIGATION_UI")).toBe(true);
       expect(screen.getByTestId("navigation-bar")).toBeInTheDocument();
@@ -200,7 +208,7 @@ describe("Section navigation bar", () => {
       toggleFeatureFlag("NAVIGATION_UI");
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      setup(<Header team={mockTeam1}></Header>);
+      setup(<Header />);
 
       expect(screen.getByText("Section 1 of 3")).toBeInTheDocument();
       expect(screen.getByText("First section")).toBeInTheDocument();
@@ -210,7 +218,7 @@ describe("Section navigation bar", () => {
       toggleFeatureFlag("NAVIGATION_UI");
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
-      const { container } = setup(<Header team={mockTeam1}></Header>);
+      const { container } = setup(<Header />);
 
       const results = await axe(container);
       expect(results).toHaveNoViolations();

@@ -5,7 +5,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
-import { useTeamSlug } from "../shared/hooks";
 import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
@@ -22,17 +21,25 @@ const SendComponent: React.FC<Props> = ({
   destinations = [DEFAULT_DESTINATION],
   ...props
 }) => {
-  const [breadcrumbs, flow, passport, flowId, sessionId, email, flowName] =
-    useStore((state) => [
-      state.breadcrumbs,
-      state.flow,
-      state.computePassport(),
-      state.id,
-      state.sessionId,
-      state.saveToEmail,
-      state.flowName,
-    ]);
-  let teamSlug = useTeamSlug();
+  const [
+    breadcrumbs,
+    flow,
+    passport,
+    flowId,
+    sessionId,
+    email,
+    flowName,
+    teamSlug,
+  ] = useStore((state) => [
+    state.breadcrumbs,
+    state.flow,
+    state.computePassport(),
+    state.id,
+    state.sessionId,
+    state.saveToEmail,
+    state.flowName,
+    state.teamSlug,
+  ]);
 
   // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
   const url = `${process.env.REACT_APP_API_URL}/create-send-events/${sessionId}`;

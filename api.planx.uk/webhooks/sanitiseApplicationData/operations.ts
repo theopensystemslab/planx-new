@@ -19,6 +19,7 @@ export const getOperations = (): Operation[] => [
   // Raw application data
   deleteApplicationFiles,
   sanitiseLowcalSessions,
+  deletePaymentRequests,
 
   // Audit records
   sanitiseUniformApplications,
@@ -63,8 +64,7 @@ export const getExpiredSessionIds = async (): Promise<string[]> => {
     query GetExpiredSessionIds($retentionPeriod: timestamptz) {
       lowcal_sessions(where: {
         submitted_at: {_lt: $retentionPeriod}
-        # "sanitised_at" check currently disabled - will be enabled after initial sanitation operation succeeds
-        # sanitised_at: { _is_null: true }
+        sanitised_at: { _is_null: true }
       }) {
         id
       }
@@ -185,6 +185,26 @@ export const deleteReconciliationRequests: Operation = async () => {
   `;
   const {
     delete_reconciliation_requests: { returning: result },
+  } = await adminGraphQLClient.request(mutation, {
+    retentionPeriod: getRetentionPeriod(),
+  });
+  return result;
+};
+
+export const deletePaymentRequests: Operation = async () => {
+  const mutation = gql`
+    mutation DeletePaymentRequests($retentionPeriod: timestamptz) {
+      delete_payment_requests(
+        where: { created_at: { _lt: $retentionPeriod } }
+      ) {
+        returning {
+          id
+        }
+      }
+    }
+  `;
+  const {
+    delete_payment_requests: { returning: result },
   } = await adminGraphQLClient.request(mutation, {
     retentionPeriod: getRetentionPeriod(),
   });

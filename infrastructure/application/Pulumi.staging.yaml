@@ -52,4 +52,4 @@ config:
   aws:region: eu-west-2
   certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
   cloudflare:apiToken:
-    secure: AAABAEBwzJDNq00EhPGMB83WNHOCYSC06QVtrs/pS3KSYSvpi1H9fjhoLdzs0aXwFCgqasCgjdXIy/dXFJaLQRa3OdUNluwk
+    secure: AAABABWhDm+7RstbxLXd1D8CcxkylHS6UKMqk4kOaY7Y0E7FJS4bZfvyGs0nks80hl3vjENH4eDuFbUgA82/sA4SmDlfpNXr

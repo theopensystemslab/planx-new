@@ -149,6 +149,42 @@ describe("Confirm component with inviteToPay", () => {
     ).toBeInTheDocument();
   });
 
+  it("displays an error if do not submit a nominee name", async () => {
+    const { user } = setup(<Confirm {...inviteProps} />);
+
+    // Switch to "InviteToPay" page
+    await user.click(screen.getByText(invitePrompt));
+    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+
+    await user.type(
+      await screen.findByLabelText("Email"),
+      "test@opensystemslab.io{enter}"
+    );
+    expect(
+      await screen.findByText("Enter the full name of the person paying")
+    ).toBeInTheDocument();
+  });
+
+  it("displays an error if do not submit an applicant display name", async () => {
+    const { user } = setup(<Confirm {...inviteProps} />);
+
+    // Switch to "InviteToPay" page
+    await user.click(screen.getByText(invitePrompt));
+    expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
+
+    await user.type(
+      await screen.findByLabelText("Email"),
+      "test@opensystemslab.io"
+    );
+    await user.type(
+      await screen.findByLabelText("Full name"),
+      "Mr Nominee{enter}"
+    );
+    expect(
+      await screen.findByText("Enter your name or organisation name")
+    ).toBeInTheDocument();
+  });
+
   it("disables the invite link if you already have an in-progress payment", async () => {
     setup(
       <Confirm

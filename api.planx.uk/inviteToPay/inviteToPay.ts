@@ -49,11 +49,14 @@ export async function inviteToPay(
     );
   }
   if (locked === false) {
+    const cause = new Error(
+      "this session could not be locked, perhaps because it is already locked"
+    );
     return next(
       new ServerError({
-        message: "a payment request cannot be initiated for this session",
-        status: 500,
-        cause: new Error("session could not be locked"),
+        message: `could not initiate a payment request: ${cause.message}`,
+        status: 400,
+        cause,
       })
     );
   }
@@ -72,7 +75,10 @@ export async function inviteToPay(
     await _admin.unlockSession(sessionId);
     return next(
       new ServerError({
-        message: "could not initiate a payment request",
+        message:
+          e instanceof Error
+            ? `could not initiate a payment request: ${e.message}`
+            : "could not initiate a payment request due to an unknown error",
         status: 500,
         cause: e,
       })

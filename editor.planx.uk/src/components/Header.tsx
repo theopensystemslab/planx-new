@@ -26,7 +26,7 @@ import {
   useNavigation,
 } from "react-navi";
 import { borderedFocusStyle, focusStyle } from "theme";
-import { ApplicationPath, Team } from "types";
+import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -152,13 +152,19 @@ const SectionCount = styled(Typography)(() => ({
   fontSize: "inherit",
 }));
 
-const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
-  const altText = team?.settings?.homepage
-    ? `${team.name} Homepage (opens in a new tab)`
-    : `${team?.name} Logo`;
-  const logo = <Logo alt={altText} src={team?.theme?.logo} />;
-  return team?.settings?.homepage ? (
-    <LogoLink href={team.settings.homepage} target="_blank">
+const TeamLogo: React.FC = () => {
+  const [teamSettings, teamName, teamTheme] = useStore((state) => [
+    state.teamSettings,
+    state.teamName,
+    state.teamTheme,
+  ]);
+
+  const altText = teamSettings?.homepage
+    ? `${teamName} Homepage (opens in a new tab)`
+    : `${teamName} Logo`;
+  const logo = <Logo alt={altText} src={teamTheme?.logo} />;
+  return teamSettings?.homepage ? (
+    <LogoLink href={teamSettings?.homepage} target="_blank">
       {logo}
     </LogoLink>
   ) : (
@@ -167,44 +173,47 @@ const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
 };
 
 const Breadcrumbs: React.FC<{
-  route: Route;
   handleClick?: (href: string) => void;
-}> = ({ route, handleClick }) => (
-  <BreadcrumbsRoot>
-    <ButtonBase
-      component="span"
-      color="#999"
-      onClick={() => handleClick && handleClick("/")}
-    >
-      Plan✕
-    </ButtonBase>
+}> = ({ handleClick }) => {
+  const route = useCurrentRoute();
 
-    {route.data.team && (
-      <>
-        {" / "}
-        <Link
-          component={BreadcrumbLink}
-          href={`/${route.data.team}`}
-          prefetch={false}
-        >
-          {route.data.team}
-        </Link>
-      </>
-    )}
-    {route.data.flow && (
-      <>
-        {" / "}
-        <Link
-          component={BreadcrumbLink}
-          href={rootFlowPath(false)}
-          prefetch={false}
-        >
-          {route.data.flow}
-        </Link>
-      </>
-    )}
-  </BreadcrumbsRoot>
-);
+  return (
+    <BreadcrumbsRoot>
+      <ButtonBase
+        component="span"
+        color="#999"
+        onClick={() => handleClick && handleClick("/")}
+      >
+        Plan✕
+      </ButtonBase>
+
+      {route.data.team && (
+        <>
+          {" / "}
+          <Link
+            component={BreadcrumbLink}
+            href={`/${route.data.team}`}
+            prefetch={false}
+          >
+            {route.data.team}
+          </Link>
+        </>
+      )}
+      {route.data.flow && (
+        <>
+          {" / "}
+          <Link
+            component={BreadcrumbLink}
+            href={rootFlowPath(false)}
+            prefetch={false}
+          >
+            {route.data.flow}
+          </Link>
+        </>
+      )}
+    </BreadcrumbsRoot>
+  );
+};
 
 const NavBar: React.FC = () => {
   const [index, sectionCount, title, hasSections, saveToEmail, path] = useStore(
@@ -243,12 +252,14 @@ const NavBar: React.FC = () => {
 };
 
 const PublicToolbar: React.FC<{
-  team?: Team;
-  route: Route;
   showResetButton?: boolean;
-}> = ({ team, route, showResetButton = true }) => {
+}> = ({ showResetButton = true }) => {
   const { navigate } = useNavigation();
-  const { path, id } = useStore();
+  const [path, id, teamTheme] = useStore((state) => [
+    state.path,
+    state.id,
+    state.teamTheme,
+  ]);
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
@@ -279,10 +290,10 @@ const PublicToolbar: React.FC<{
       <SkipLink href="#main-content">Skip to main content</SkipLink>
       <StyledToolbar>
         <LeftBox>
-          {team?.theme?.logo ? (
-            <TeamLogo team={team}></TeamLogo>
+          {teamTheme?.logo ? (
+            <TeamLogo />
           ) : (
-            <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
+            <Breadcrumbs handleClick={navigate} />
           )}
         </LeftBox>
         {showCentredServiceTitle && <ServiceTitle />}
@@ -340,7 +351,7 @@ const EditorToolbar: React.FC<{
     <>
       <StyledToolbar>
         <LeftBox>
-          <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
+          <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
         </LeftBox>
         <RightBox>
           {route.data.username && (
@@ -417,10 +428,9 @@ const EditorToolbar: React.FC<{
 
 interface ToolbarProps {
   headerRef: RefObject<HTMLDivElement>;
-  team?: Team;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ headerRef, team }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   const route = useCurrentRoute();
   const path = route.url.pathname.split("/").slice(-1)[0];
   const [flowSlug, previewEnvironment] = useStore((state) => [
@@ -437,30 +447,24 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef, team }) => {
     case flowSlug: // Custom domains
     case "preview":
     case "unpublished":
-      return <PublicToolbar team={team} route={route} />;
+      return <PublicToolbar />;
     default:
-      return (
-        <PublicToolbar team={team} route={route} showResetButton={false} />
-      );
+      return <PublicToolbar showResetButton={false} />;
   }
 };
 
-const Header: React.FC<{
-  bgcolor?: string;
-  team?: Team;
-}> = ({ bgcolor = "#2c2c2c", team }) => {
+const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
+  const theme = useStore((state) => state.teamTheme);
   return (
     <Root
       position="static"
       elevation={0}
       color="transparent"
       ref={headerRef}
-      style={{
-        backgroundColor: team?.theme?.primary || bgcolor,
-      }}
+      style={{ backgroundColor: theme?.primary || "#2c2c2c" }}
     >
-      <Toolbar headerRef={headerRef} team={team}></Toolbar>
+      <Toolbar headerRef={headerRef}></Toolbar>
     </Root>
   );
 };

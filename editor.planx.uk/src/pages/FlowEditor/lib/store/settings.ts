@@ -4,25 +4,24 @@ import { client } from "lib/graphql";
 import { FlowSettings, GlobalSettings, TextContent } from "types";
 import type { StateCreator } from "zustand";
 
+import { SharedStore } from "./shared";
+import { TeamStore } from "./team";
+
 export interface SettingsStore {
   flowSettings?: FlowSettings;
   setFlowSettings: (flowSettings?: FlowSettings) => void;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
-  updateFlowSettings: (
-    teamSlug: string,
-    flowSlug: string,
-    newSettings: FlowSettings
-  ) => Promise<number>;
+  updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
 }
 
 export const settingsStore: StateCreator<
-  SettingsStore,
+  SettingsStore & TeamStore & SharedStore,
   [],
   [],
   SettingsStore
-> = (set, _get) => ({
+> = (set, get) => ({
   flowSettings: undefined,
 
   setFlowSettings: (flowSettings) => set({ flowSettings }),
@@ -32,7 +31,9 @@ export const settingsStore: StateCreator<
   setGlobalSettings: (globalSettings) =>
     set({ globalSettings: camelcaseKeys(globalSettings) }),
 
-  updateFlowSettings: async (teamSlug, flowSlug, newSettings) => {
+  updateFlowSettings: async (newSettings) => {
+    const { teamSlug, flowSlug } = get();
+
     let response = await client.mutate({
       mutation: gql`
         mutation UpdateFlowSettings(
