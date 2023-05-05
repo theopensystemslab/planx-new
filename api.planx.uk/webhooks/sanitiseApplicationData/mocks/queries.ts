@@ -44,6 +44,16 @@ export const mockDeleteReconciliationRequestsMutation = {
   },
 };
 
+export const mockDeletePaymentRequests = {
+  name: "DeletePaymentRequests",
+  matchOnVariables: false,
+  data: {
+    delete_payment_requests: {
+      returning: mockIds,
+    }
+  },
+};
+
 export const mockGetExpiredSessionIdsQuery = {
   name: "GetExpiredSessionIds",
   matchOnVariables: false,
