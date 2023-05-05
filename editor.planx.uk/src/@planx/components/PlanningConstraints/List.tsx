@@ -15,8 +15,15 @@ import React, { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
+const CATEGORY_COLORS: any = {
+  "General policy": "#99C1DE",
+  "Heritage and conservation": "#EDDCD2",
+  Ecology: "#E0EFCC",
+  Trees: "#DBE7E4",
+};
+
 const StyledConstraint = styled(Box)(({ theme }) => ({
-  borderLeft: `3px solid rgba(0,0,0,0.3)`,
+  borderLeft: `3px solid lightgrey`, // TOOD pass in category color
   padding: theme.spacing(1, 1.5),
   width: `100vw`,
   color: theme.palette.text.primary,
@@ -69,9 +76,24 @@ export default function ConstraintsList({
         color="primary"
         component="div"
         key={category}
-        style={{ fontWeight: 700, padding: 0 }}
+        style={{
+          padding: 0,
+          backgroundColor: CATEGORY_COLORS[category],
+          marginBottom: "2em",
+        }}
       >
-        {category}
+        <Typography
+          variant="subtitle2"
+          component="h3"
+          style={{
+            fontWeight: 700,
+            padding: ".5em",
+            paddingLeft: "1em",
+            color: "black",
+          }}
+        >
+          {category}
+        </Typography>
         {groupedConstraints[category].map((con: any) => (
           <ConstraintListItem
             key={con.text}
@@ -79,9 +101,11 @@ export default function ConstraintsList({
               fontWeight: con.value ? 700 : 500,
               paddingTop: 0,
               paddingBottom: 0,
+              backgroundColor: "white",
             }}
             data={con.value ? con.data : null}
             metadata={metadata[con.key]}
+            category={category}
           >
             {ReactHtmlParser(con.text)}
           </ConstraintListItem>
@@ -138,17 +162,25 @@ function ConstraintListItem({ children, ...props }: any) {
   const [showConstraintData, setShowConstraintData] = useState<boolean>(false);
 
   return (
-    <ListItem dense disableGutters>
+    <ListItem disableGutters>
       <StyledConstraint {...props}>
-        {children}
-        <Button
-          style={{ margin: 0, padding: 0 }}
-          onClick={() =>
-            setShowConstraintData((showConstraintData) => !showConstraintData)
-          }
+        <Box
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
         >
-          {showConstraintData ? <ExpandLess /> : <ExpandMore />}
-        </Button>
+          {children}
+          <Button
+            style={{ margin: 0, padding: 0 }}
+            onClick={() =>
+              setShowConstraintData((showConstraintData) => !showConstraintData)
+            }
+          >
+            {showConstraintData ? <ExpandLess /> : <ExpandMore />}
+          </Button>
+        </Box>
         <Collapse in={showConstraintData}>
           {props.data?.length > 0 && (
             <>

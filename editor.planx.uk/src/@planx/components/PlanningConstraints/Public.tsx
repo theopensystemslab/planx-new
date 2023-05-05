@@ -1,3 +1,4 @@
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
@@ -12,6 +13,7 @@ import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import { stringify } from "wkt";
 
+import { WarningContainer } from "../shared/Preview/WarningContainer";
 import ConstraintsList, { ErrorSummaryContainer } from "./List";
 import type { PlanningConstraints } from "./model";
 
@@ -209,7 +211,7 @@ export function PlanningConstraintsContent(props: any) {
         metadata={metadata}
         refreshConstraints={refreshConstraints}
       />
-      {sourcedFromDigitalLand && (
+      {/* {sourcedFromDigitalLand && (
         <Box sx={{ pb: "1em" }}>
           <Typography variant="body2" color="inherit">
             Sourced from Department for Levelling Up, Housing & Communities.
@@ -226,7 +228,14 @@ export function PlanningConstraintsContent(props: any) {
             Report an inaccuracy
           </Typography>
         </CollapsibleInput>
-      </Box>
+      </Box> */}
+      <WarningContainer>
+        <ErrorOutline />
+        <Typography variant="body2" ml={2} fontWeight="bold">
+          This page does not include information about historic planning
+          conditions that may apply to this property.
+        </Typography>
+      </WarningContainer>
     </Card>
   );
 }
