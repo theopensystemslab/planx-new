@@ -18,6 +18,8 @@ const TEXT_COLOR_PRIMARY = "#0B0C0C";
 const TEXT_COLOR_SECONDARY = "#505A5F";
 const BG_COLOR_DEFAULT = "#FFFFFF";
 
+const BREAKPOINT_MD = "768";
+
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
 export const FONT_WEIGHT_BOLD = "700";
@@ -45,7 +47,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     focus: GOVUK_YELLOW,
   },
   error: {
-    main: "#E91B0C",
+    main: "#D4351C",
   },
   success: {
     main: "#4CAF50",
@@ -56,9 +58,9 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
 // https://design-system.service.gov.uk/get-started/focus-states/
 // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
 export const focusStyle = {
-  color: "black",
+  color: TEXT_COLOR_PRIMARY,
   backgroundColor: GOVUK_YELLOW,
-  boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px black`,
+  boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px ${TEXT_COLOR_PRIMARY}`,
   textDecoration: "none",
   outline: "3px solid transparent",
 };
@@ -68,7 +70,7 @@ export const borderedFocusStyle = {
   outline: `3px solid ${GOVUK_YELLOW}`,
   outlineOffset: 0,
   zIndex: 1,
-  boxShadow: "inset 0 0 0 2px black",
+  boxShadow: `inset 0 0 0 2px ${TEXT_COLOR_PRIMARY}`,
   backgroundColor: "transparent",
 };
 
@@ -172,7 +174,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             "&:focus-visible": {
               ...focusStyle,
               // !important is required here as setting disableElevation = true removes boxShadow
-              boxShadow: `inset 0 -4px 0 black !important`,
+              boxShadow: `inset 0 -4px 0 ${TEXT_COLOR_PRIMARY} !important`,
               // Hover should not overwrite focus
               "&:hover": focusStyle,
             },

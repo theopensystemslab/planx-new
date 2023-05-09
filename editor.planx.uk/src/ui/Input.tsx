@@ -36,7 +36,7 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
     },
   },
   bordered: {
-    border: `2px solid #000`,
+    border: `2px solid #0B0C0C`,
   },
   inputMultiline: {
     height: "auto",
