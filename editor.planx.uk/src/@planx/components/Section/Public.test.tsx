@@ -67,8 +67,16 @@ describe("SectionsOverviewList component", () => {
     },
   };
   const defaultProps = {
+    flow: {
+      _root: {
+        edges: ["section1", "section2", "section3"],
+      },
+      ...mockSectionNodes,
+    },
     sectionNodes: mockSectionNodes,
     showChange: true,
+    changeAnswer: () => {},
+    nextQuestion: () => {},
     isReconciliation: false,
     currentCard: null,
     breadcrumbs: {

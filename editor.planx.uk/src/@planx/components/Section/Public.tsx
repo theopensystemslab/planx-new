@@ -48,14 +48,6 @@ export default function Component(props: Props) {
       });
   }, []);
 
-  const changeFirstAnswerInSection = (sectionId: string) => {
-    const sectionIndex = flow._root.edges?.indexOf(sectionId);
-    if (sectionIndex !== undefined) {
-      const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
-      if (firstNodeInSection) changeAnswer(firstNodeInSection);
-    }
-  };
-
   return !showSection ? null : (
     <Card isValid handleSubmit={props.handleSubmit}>
       <QuestionHeader title={flowName} />
@@ -72,8 +64,10 @@ export default function Component(props: Props) {
         </Typography>
       </Box>
       <SectionsOverviewList
+        flow={flow}
         showChange={true}
-        changeFirstAnswerInSection={changeFirstAnswerInSection}
+        changeAnswer={changeAnswer}
+        nextQuestion={props.handleSubmit!}
         sectionNodes={sectionNodes}
         currentCard={currentCard}
         breadcrumbs={breadcrumbs}
@@ -84,8 +78,10 @@ export default function Component(props: Props) {
 }
 
 type SectionsOverviewListProps = {
+  flow: Store.flow;
   showChange: boolean;
-  changeFirstAnswerInSection?: (sectionId: string) => void;
+  changeAnswer: (sectionId: string) => void;
+  nextQuestion: () => void;
   sectionNodes: Record<string, SectionNode>;
   currentCard: Store.node | null;
   breadcrumbs: Store.breadcrumbs;
@@ -95,8 +91,10 @@ type SectionsOverviewListProps = {
 };
 
 export function SectionsOverviewList({
+  flow,
   showChange,
-  changeFirstAnswerInSection,
+  changeAnswer,
+  nextQuestion,
   sectionNodes,
   currentCard,
   breadcrumbs,
@@ -113,6 +111,14 @@ export function SectionsOverviewList({
     alteredSectionIds,
   });
 
+  const changeFirstAnswerInSection = (sectionId: string) => {
+    const sectionIndex = flow._root.edges?.indexOf(sectionId);
+    if (sectionIndex !== undefined) {
+      const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
+      if (firstNodeInSection) changeAnswer(firstNodeInSection);
+    }
+  };
+
   return (
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
@@ -121,10 +127,7 @@ export function SectionsOverviewList({
             {showChange &&
             sectionStatuses[sectionId] === SectionStatus.Completed ? (
               <Link
-                onClick={() =>
-                  changeFirstAnswerInSection &&
-                  changeFirstAnswerInSection(sectionId)
-                }
+                onClick={() => changeFirstAnswerInSection(sectionId)}
                 component="button"
                 sx={{ fontFamily: "inherit", fontSize: "inherit" }}
               >
@@ -138,7 +141,14 @@ export function SectionsOverviewList({
             )}
           </dt>
           <dd>
-            <Tag title={sectionStatuses[sectionId]}>
+            <Tag
+              title={sectionStatuses[sectionId]}
+              onClick={
+                getTagClickability(sectionStatuses[sectionId])
+                  ? () => nextQuestion()
+                  : () => {} // no-op
+              }
+            >
               {sectionStatuses[sectionId]}
             </Tag>
           </dd>
@@ -148,8 +158,18 @@ export function SectionsOverviewList({
   );
 }
 
-const getTagBackgroundColor = (theme: Theme, title: string): string => {
-  const backgroundColors: Record<string, string> = {
+const getTagClickability = (section: SectionStatus): boolean => {
+  return [
+    SectionStatus.NeedsUpdated,
+    SectionStatus.ReadyToContinue,
+    SectionStatus.ReadyToStart,
+  ].includes(section)
+    ? true
+    : false;
+};
+
+const getTagBackgroundColor = (theme: Theme, title: SectionStatus): string => {
+  const backgroundColors: Record<SectionStatus, string> = {
     [SectionStatus.NeedsUpdated]: "#FAFF00",
     [SectionStatus.ReadyToContinue]: "#E8F1EC",
     [SectionStatus.ReadyToStart]: "#E8F1EC",
@@ -157,12 +177,11 @@ const getTagBackgroundColor = (theme: Theme, title: string): string => {
     [SectionStatus.NotStarted]: theme.palette.background.paper,
     [SectionStatus.Completed]: theme.palette.success.dark,
   };
-
   return backgroundColors[title];
 };
 
-const getTagTextColor = (theme: Theme, title: string): string => {
-  const textColors: Record<string, string> = {
+const getTagTextColor = (theme: Theme, title: SectionStatus): string => {
+  const textColors: Record<SectionStatus, string> = {
     [SectionStatus.NeedsUpdated]: theme.palette.text.primary,
     [SectionStatus.ReadyToContinue]: theme.palette.success.dark,
     [SectionStatus.ReadyToStart]: theme.palette.success.dark,
@@ -170,22 +189,32 @@ const getTagTextColor = (theme: Theme, title: string): string => {
     [SectionStatus.NotStarted]: theme.palette.text.secondary,
     [SectionStatus.Completed]: "#FFFFFF",
   };
-
   return textColors[title];
 };
 
 const Tag = styled("div", {
   // Configure which props should be forwarded on DOM
   shouldForwardProp: (prop) => prop !== "title",
-})(({ title, theme }) => ({
-  backgroundColor: title ? getTagBackgroundColor(theme, title) : undefined,
-  color: title ? getTagTextColor(theme, title) : undefined,
-  fontWeight: 600,
-  paddingTop: theme.spacing(0.5),
-  paddingBottom: theme.spacing(0.5),
-  paddingLeft: theme.spacing(1.5),
-  paddingRight: theme.spacing(1.5),
-}));
+})(({ title, theme }) => {
+  const sectionStatus = title as SectionStatus;
+  return {
+    backgroundColor: title
+      ? getTagBackgroundColor(theme, sectionStatus)
+      : undefined,
+    color: title ? getTagTextColor(theme, sectionStatus) : undefined,
+    fontWeight: 600,
+    cursor: getTagClickability(sectionStatus) ? "pointer" : "default",
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+    paddingLeft: theme.spacing(1.5),
+    paddingRight: theme.spacing(1.5),
+    "&:hover": {
+      backgroundColor: getTagClickability(sectionStatus)
+        ? darken(getTagBackgroundColor(theme, sectionStatus), 0.05)
+        : getTagBackgroundColor(theme, sectionStatus),
+    },
+  };
+});
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
