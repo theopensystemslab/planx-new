@@ -129,7 +129,6 @@ const SkipLink = styled("a")(({ theme }) => ({
 }));
 
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
-  fontSize: "1.25em",
   fontWeight: FONT_WEIGHT_STRONG,
   paddingLeft: theme.spacing(2),
   paddingBottom: theme.spacing(1),
@@ -321,7 +320,11 @@ const ServiceTitle: React.FC = () => {
   const flowName = useStore((state) => state.flowName);
 
   return (
-    <ServiceTitleRoot data-testid="service-title">{flowName}</ServiceTitleRoot>
+    <ServiceTitleRoot data-testid="service-title">
+      <Typography component="span" variant="h5">
+        {flowName}
+      </Typography>
+    </ServiceTitleRoot>
   );
 };
 

@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import { ERROR_MESSAGE } from "@planx/components/shared/constants";
 import React, { ReactElement } from "react";
@@ -12,8 +13,8 @@ export interface Props {
 const useClasses = makeStyles((theme) => ({
   rootError: {
     width: "100%",
-    paddingLeft: theme.spacing(2),
-    borderLeft: `3px solid ${theme.palette.error.main}`,
+    paddingLeft: theme.spacing(1.5),
+    borderLeft: `5px solid ${theme.palette.error.main}`,
     // Only apply padding to child when visible to ensure no blank space
     "& > p": {
       paddingTop: theme.spacing(0.5),
@@ -38,9 +39,14 @@ export default function ErrorWrapper(props: Props): FCReturn {
       role="status"
       data-testid="error-wrapper"
     >
-      <p id={id} data-testid={id} className={classes.errorText}>
+      <Typography
+        id={id}
+        data-testid={id}
+        className={classes.errorText}
+        variant="body1"
+      >
         {props?.error}
-      </p>
+      </Typography>
       {props.children || null}
     </div>
   );

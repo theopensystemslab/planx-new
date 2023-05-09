@@ -25,7 +25,7 @@ const useClasses = makeStyles((theme) => ({
     cursor: "pointer",
     userSelect: "none",
     alignSelf: "start",
-    fontSize: 16,
+    fontSize: "inherit",
     background: "transparent",
     border: "none",
     columnGap: theme.spacing(1),
