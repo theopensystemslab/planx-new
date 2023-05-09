@@ -14,7 +14,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import { Team } from "types";
-import { fetchCurrentTeam } from "utils";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
@@ -44,7 +43,6 @@ const ErrorSummaryContainer = styled(Box)(({ theme }) => ({
 }));
 
 function Component(props: PublicProps<PropertyInformation>) {
-  const team = fetchCurrentTeam();
   const [address, propertyType, localAuthorityDistrict, overrideAnswer] =
     useStore((state) => [
       state.computePassport().data?._address,
@@ -63,7 +61,6 @@ function Component(props: PublicProps<PropertyInformation>) {
       propertyType={propertyType}
       localAuthorityDistrict={localAuthorityDistrict}
       blpuCodes={blpuCodes}
-      team={team}
       previousFeedback={props.previouslySubmittedData?.feedback}
       overrideAnswer={overrideAnswer}
       handleSubmit={props.handleSubmit}
@@ -95,7 +92,6 @@ export interface PresentationalProps {
   propertyType?: string[];
   localAuthorityDistrict?: string[];
   blpuCodes?: any;
-  team?: Team;
   previousFeedback?: string;
   overrideAnswer: (fn: string) => void;
   handleSubmit?: handleSubmit;
@@ -119,11 +115,11 @@ export function Presentational(props: PresentationalProps) {
     propertyType,
     localAuthorityDistrict,
     blpuCodes,
-    team,
     previousFeedback,
     overrideAnswer,
     handleSubmit,
   } = props;
+  const teamName = useStore((state) => state.teamName);
   const formik = useFormik({
     initialValues: {
       feedback: previousFeedback || "",
@@ -151,7 +147,7 @@ export function Presentational(props: PresentationalProps) {
     },
     {
       heading: "Local planning authority",
-      detail: localAuthorityDistrict?.join(", ") || team?.name,
+      detail: localAuthorityDistrict?.join(", ") || teamName,
     },
     {
       heading: "Property type",

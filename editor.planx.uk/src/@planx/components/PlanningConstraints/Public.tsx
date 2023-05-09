@@ -14,7 +14,6 @@ import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ReactHtmlParser from "react-html-parser";
-import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import { stringify } from "wkt";
@@ -32,8 +31,7 @@ function Component(props: Props) {
   const { x, y, longitude, latitude, usrn } =
     useStore((state) => state.computePassport().data?._address) || {};
 
-  const route = useCurrentRoute();
-  const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+  const teamSlug = useStore((state) => state.teamSlug);
 
   // Get current query parameters (eg ?analytics=false&sessionId=XXX) to determine if we should audit this response
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -75,17 +73,17 @@ function Component(props: Props) {
   };
 
   // Fetch planning constraints data for a given local authority
-  const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}?`;
+  const root: string = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
-      digitalLandOrganisations.includes(team)
+      digitalLandOrganisations.includes(teamSlug)
         ? digitalLandParams
         : customGisParams
     ).toString();
 
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
-  const { data, error, mutate, isValidating } = useSWR(
+  const { data, mutate, isValidating } = useSWR(
     () => (x && y && latitude && longitude ? teamGisEndpoint : null),
     fetcher,
     {
@@ -98,12 +96,7 @@ function Component(props: Props) {
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new non-UPRN address on the map
   const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
-  const {
-    data: roads,
-    error: errorRoads,
-    mutate: mutateRoads,
-    isValidating: isValidatingRoads,
-  } = useSWR(
+  const { data: roads, isValidating: isValidatingRoads } = useSWR(
     () => (usrn ? classifiedRoadsEndpoint + `?usrn=${usrn}` : null),
     fetcher,
     {
@@ -154,7 +147,7 @@ function Component(props: Props) {
             });
           }}
           refreshConstraints={() => mutate()}
-          sourcedFromDigitalLand={digitalLandOrganisations.includes(team)}
+          sourcedFromDigitalLand={digitalLandOrganisations.includes(teamSlug)}
         />
       ) : (
         <Card handleSubmit={props.handleSubmit} isValid>

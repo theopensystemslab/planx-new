@@ -26,7 +26,6 @@ const payRoutes = compose(
 
     return {
       mountpath: req.mountpath,
-      team: req.params.team || externalDomainTeam,
       isPreviewOnlyDomain: Boolean(externalDomainTeam),
     };
   }),

@@ -9,8 +9,6 @@ import FindProperty from "./";
 import findAddressReturnMock from "./mocks/findAddressReturnMock";
 import localAuthorityMock from "./mocks/localAuthorityMock";
 
-const TEAM = "canterbury";
-
 const osAddressProps = {
   _address: {
     __typename: "addresses",
@@ -51,15 +49,6 @@ const proposedAddressProps = {
   "property.localAuthorityDistrict": ["Southwark"],
   "property.region": ["London"],
 };
-
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      data: {
-        team: TEAM,
-      },
-    } as any)
-);
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
   return {

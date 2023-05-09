@@ -22,7 +22,7 @@ const routes = compose(
     "/": route(async (req) => {
       const { data } = await client.query({
         query: gql`
-          query GetTeam($slug: String!) {
+          query GetTeams($slug: String!) {
             teams(
               order_by: { name: asc }
               limit: 1

@@ -9,7 +9,6 @@ import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment, Passport, Session } from "types";
 import { PaymentStatus } from "types";
 
-import { useTeamSlug } from "../../shared/hooks";
 import { makeData, useStagingUrlIfTestApplication } from "../../shared/utils";
 import {
   createPayload,
@@ -54,6 +53,7 @@ function Component(props: Props) {
     setGovUkPayment,
     passport,
     environment,
+    teamSlug,
   ] = useStore((state) => [
     state.id,
     state.sessionId,
@@ -62,8 +62,8 @@ function Component(props: Props) {
     state.setGovUkPayment,
     state.computePassport(),
     state.previewEnvironment,
+    state.teamSlug,
   ]);
-  const teamSlug = useTeamSlug();
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   // Handles UI states

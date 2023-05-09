@@ -176,7 +176,6 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
         </InputLabel>
         <InputLabel label="Email" htmlFor="payeeEmail">
           <Input
-            required
             bordered
             name="payeeEmail"
             id="payeeEmail"
