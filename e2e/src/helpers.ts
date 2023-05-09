@@ -73,6 +73,9 @@ export async function saveSession({
   adminGQLClient: GraphQLClient;
   context: Context;
 }): Promise<string | undefined> {
+  // ensure store has had time to update any previous answer before saving
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
   await page
     .locator("button", { hasText: "Save and return to this application later" })
     .click();
@@ -93,7 +96,7 @@ export async function returnToSession({
   sessionId: string;
 }) {
   const returnURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false&sessionId=${sessionId}`;
-  await page.goto(returnURL);
+  await page.goto(returnURL, { waitUntil: "domcontentloaded" });
   await page.locator("#email").fill(context.user?.email);
 }
 
@@ -131,7 +134,9 @@ export async function findQuestion({
   page: Page;
   title: string;
 }): Promise<Locator> {
-  return await page.getByRole("group", { name: title });
+  const group = await page.getByRole("group", { name: title });
+  await expect(group).toBeVisible();
+  return group;
 }
 
 export async function answerQuestion({

@@ -354,8 +354,8 @@ export const previewStore: StateCreator<
     return getResultData(breadcrumbs, flow, flagSet, overrides);
   },
 
-  resumeSession(args) {
-    set(args as Partial<PreviewStore>);
+  resumeSession(session: Session) {
+    set({ ...session });
     get().updateSectionData();
   },
 

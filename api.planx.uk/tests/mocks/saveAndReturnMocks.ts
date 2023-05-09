@@ -65,6 +65,7 @@ export const mockFindSession = (breadcrumbs = {}) => ({
   },
   variables: {
     sessionId: mockLowcalSession.id,
+    email: mockLowcalSession.email,
   },
 });
 
@@ -75,6 +76,7 @@ export const mockNotFoundSession = {
   },
   variables: {
     sessionId: "not-found-id",
+    email: mockLowcalSession.email,
   },
 };
 
@@ -108,15 +110,11 @@ export const stubUpdateLowcalSessionData = {
   matchOnVariables: false,
 };
 
-export const mockGetPublishedFlowByDate = (data: Flow["data"]) => ({
-  name: "GetPublishedFlowByDate",
+export const mockGetFlowDiff = (diff: Flow["data"] | null) => ({
+  name: "GetFlowDiff",
   data: {
-    flows_by_pk: {
-      published_flows: [
-        {
-          data,
-        },
-      ],
+    diff_latest_published_flow: {
+      data: diff,
     },
   },
   matchOnVariables: false,

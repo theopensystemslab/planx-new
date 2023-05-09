@@ -123,7 +123,7 @@ export const navigationStore: StateCreator<
    */
   sectionStatuses: (
     breadcrumbs?: Store.breadcrumbs,
-    updatedNodeIds?: string[]
+    alteredSectionIds?: string[]
   ): Record<string, SectionStatus> => {
     const { sectionNodes, currentCard, upcomingCardIds, cachedBreadcrumbs } =
       get();
@@ -133,7 +133,7 @@ export const navigationStore: StateCreator<
 
     const sectionStatuses: Record<string, SectionStatus> = {};
     Object.keys(sectionNodes).forEach((sectionId) => {
-      if (updatedNodeIds?.includes(sectionId)) {
+      if (alteredSectionIds?.includes(sectionId)) {
         // We only expect to receive updatedSectionNodeIds argument on reconciliation, therefore
         //   this status should never apply to regular forwards/back/change navigation
         sectionStatuses[sectionId] = SectionStatus.NeedsUpdated;

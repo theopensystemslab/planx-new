@@ -159,6 +159,13 @@ export type Session = {
   govUkPayment?: GovUKPayment;
 };
 
+export interface ReconciliationResponse {
+  message: string;
+  changesFound: boolean | null;
+  alteredSectionIds?: string[];
+  reconciledSessionData: Session;
+}
+
 // re-export store types
 export interface Passport extends Store.passport {}
 export interface Breadcrumbs extends Store.breadcrumbs {}
