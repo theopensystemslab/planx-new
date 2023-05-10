@@ -117,6 +117,7 @@ const PreviewBrowser: React.FC<{
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet"
   );
+  const [validationMessage, setValidationMessage] = useState<string>();
   const [alteredNodes, setAlteredNodes] = useState<object[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
@@ -196,8 +197,9 @@ const PreviewBrowser: React.FC<{
                   setLastPublishedTitle(
                     alteredFlow?.data.alteredNodes
                       ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
-                      : "No new changes to publish"
+                      : alteredFlow?.data.message
                   );
+                  setValidationMessage(alteredFlow?.data.description);
                   setDialogOpen(true);
                 } catch (error) {
                   setLastPublishedTitle(
@@ -242,8 +244,10 @@ const PreviewBrowser: React.FC<{
                       onChange={(e) => setSummary(e.target.value)}
                     />
                   </>
+                ) : validationMessage ? (
+                  validationMessage
                 ) : (
-                  `No new changes to publish`
+                  lastPublishedTitle
                 )}
               </DialogContent>
               <DialogActions>
