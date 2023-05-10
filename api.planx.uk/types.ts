@@ -61,7 +61,7 @@ export interface LowCalSession {
   };
 }
 
-interface MinimumNotifyPersonalisation {
+type MinimumNotifyPersonalisation = {
   emailReplyToId: string;
   expiryDate?: string;
   helpEmail: string;
