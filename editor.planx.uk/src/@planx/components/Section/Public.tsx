@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { lighten, styled, Theme } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import type { PublicProps } from "@planx/components/ui";
@@ -150,12 +150,12 @@ export function SectionsOverviewList({
 
 const getTagBackgroundColor = (theme: Theme, title: string): string => {
   const backgroundColors: Record<string, string> = {
-    [SectionStatus.NeedsUpdated]: theme.palette.action.focus, // GOV UK YELLOW for now, check Figma
-    [SectionStatus.ReadyToContinue]: lighten(theme.palette.primary.main, 0.9),
-    [SectionStatus.ReadyToStart]: lighten(theme.palette.primary.main, 0.9),
-    [SectionStatus.Started]: lighten(theme.palette.primary.main, 0.8),
-    [SectionStatus.NotStarted]: theme.palette.grey[200],
-    [SectionStatus.Completed]: theme.palette.success.main,
+    [SectionStatus.NeedsUpdated]: "#FAFF00",
+    [SectionStatus.ReadyToContinue]: "#E8F1EC",
+    [SectionStatus.ReadyToStart]: "#E8F1EC",
+    [SectionStatus.Started]: theme.palette.background.paper,
+    [SectionStatus.NotStarted]: theme.palette.background.paper,
+    [SectionStatus.Completed]: theme.palette.success.dark,
   };
 
   return backgroundColors[title];
@@ -163,14 +163,12 @@ const getTagBackgroundColor = (theme: Theme, title: string): string => {
 
 const getTagTextColor = (theme: Theme, title: string): string => {
   const textColors: Record<string, string> = {
-    [SectionStatus.NeedsUpdated]: "#000",
-    [SectionStatus.ReadyToContinue]: "#000",
-    [SectionStatus.ReadyToStart]: "#000",
-    [SectionStatus.Started]: theme.palette.primary.main,
-    [SectionStatus.NotStarted]: theme.palette.getContrastText(
-      theme.palette.grey[200]
-    ),
-    [SectionStatus.Completed]: "#FFF",
+    [SectionStatus.NeedsUpdated]: theme.palette.text.primary,
+    [SectionStatus.ReadyToContinue]: theme.palette.success.dark,
+    [SectionStatus.ReadyToStart]: theme.palette.success.dark,
+    [SectionStatus.Started]: theme.palette.text.secondary,
+    [SectionStatus.NotStarted]: theme.palette.text.secondary,
+    [SectionStatus.Completed]: "#FFFFF",
   };
 
   return textColors[title];
