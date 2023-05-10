@@ -29,50 +29,50 @@ export function computeSectionStatuses({
   isReconciliation?: boolean;
   alteredSectionIds?: string[];
 }): Record<string, SectionStatus> {
-  const seenPastNodeIds = Object.keys({ ...breadcrumbs });
-  const seenUpcomingNodeIds = cachedBreadcrumbs
+  const visitedNodeIds = Object.keys({ ...breadcrumbs });
+  const visitedUpcomingNodeIds = cachedBreadcrumbs
     ? Object.keys({ ...cachedBreadcrumbs })
     : [];
-  const allSeenNodeIds = [...seenPastNodeIds, ...seenUpcomingNodeIds];
+  const allVisitedNodeIds = [...visitedNodeIds, ...visitedUpcomingNodeIds];
   const currentCardId = currentCard?.id;
   const sectionNodeIds = Object.keys(sectionNodes);
 
-  let hasPastCurrentSection = false;
+  let reachedCurrentSection = false;
   let sectionStatuses: Record<string, SectionStatus> = {};
   for (const [index, sectionId] of Object.entries(sectionNodeIds)) {
     // check for an altered sections
     if (alteredSectionIds && alteredSectionIds!.includes(sectionId)) {
       sectionStatuses[sectionId] = SectionStatus.NeedsUpdated;
-      hasPastCurrentSection = true;
+      reachedCurrentSection = true;
       continue;
     }
-    // check for seen/current sections
-    if (!hasPastCurrentSection) {
+    // check up until the current section
+    if (!reachedCurrentSection) {
       const nextSectionId = sectionNodeIds.at(Number(index) + 1);
-      const seenNextSection =
-        nextSectionId && allSeenNodeIds.includes(nextSectionId);
+      const visitedNextSection =
+        nextSectionId && allVisitedNodeIds.includes(nextSectionId);
       if (
-        !allSeenNodeIds.includes(sectionId) ||
-        (isReconciliation && !seenNextSection && currentCardId === sectionId)
+        !allVisitedNodeIds.includes(sectionId) ||
+        (isReconciliation && !visitedNextSection && currentCardId === sectionId)
       ) {
         sectionStatuses[sectionId] = SectionStatus.ReadyToStart;
-        hasPastCurrentSection = true;
+        reachedCurrentSection = true;
       } else if (
-        seenUpcomingNodeIds.includes(sectionId) ||
+        visitedUpcomingNodeIds.includes(sectionId) ||
         (isReconciliation &&
-          !seenNextSection &&
+          !visitedNextSection &&
           currentCardId !== sectionId &&
           !sectionNodeIds.includes(currentCardId!))
       ) {
         sectionStatuses[sectionId] = SectionStatus.ReadyToContinue;
-        hasPastCurrentSection = true;
+        reachedCurrentSection = true;
       } else {
         sectionStatuses[sectionId] = SectionStatus.Completed;
       }
       continue;
     }
-    // check for unseen sections
-    if (allSeenNodeIds.includes(sectionId)) {
+    // check sections past the current section
+    if (allVisitedNodeIds.includes(sectionId)) {
       sectionStatuses[sectionId] = SectionStatus.Started;
     } else {
       sectionStatuses[sectionId] = SectionStatus.NotStarted;
