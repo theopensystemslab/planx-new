@@ -168,7 +168,7 @@ const getTagTextColor = (theme: Theme, title: string): string => {
     [SectionStatus.ReadyToStart]: theme.palette.success.dark,
     [SectionStatus.Started]: theme.palette.text.secondary,
     [SectionStatus.NotStarted]: theme.palette.text.secondary,
-    [SectionStatus.Completed]: "#FFFFF",
+    [SectionStatus.Completed]: "#FFFFFF",
   };
 
   return textColors[title];
