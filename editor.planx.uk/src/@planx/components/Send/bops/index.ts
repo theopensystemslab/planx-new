@@ -114,7 +114,8 @@ const addSectionName = (
 ): QuestionMetaData => {
   const { hasSections, getSectionForNode } = useStore.getState();
   if (hasSections) {
-    metadata.section_name = getSectionForNode(id).data.title;
+    const section = getSectionForNode(id);
+    if (section?.data?.title) metadata.section_name = section.data.title;
   }
   return metadata;
 };

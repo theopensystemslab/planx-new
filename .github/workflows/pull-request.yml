@@ -4,8 +4,8 @@ on:
     types:
       - opened
       - synchronize
-    branches:
-      - main
+    branches-ignore:
+      - production
 
 env:
   DOMAIN: planx.pizza

@@ -1,20 +1,18 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { lighten, styled, Theme } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import type { PublicProps } from "@planx/components/ui";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { useStore } from "pages/FlowEditor/lib/store";
-import {
-  SectionNode,
-  SectionStatus,
-} from "pages/FlowEditor/lib/store/navigation";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
+import { SectionNode, SectionStatus } from "types";
 
 import Card from "../shared/Preview/Card";
 import QuestionHeader from "../shared/Preview/QuestionHeader";
 import type { Section } from "./model";
+import { computeSectionStatuses } from "./model";
 
 export type Props = PublicProps<Section>;
 
@@ -26,18 +24,20 @@ export default function Component(props: Props) {
     currentSectionIndex,
     sectionCount,
     sectionNodes,
-    sectionStatuses,
     currentCard,
     changeAnswer,
+    breadcrumbs,
+    cachedBreadcrumbs,
   ] = useStore((state) => [
     state.flow,
     state.flowName,
     state.currentSectionIndex,
     state.sectionCount,
     state.sectionNodes,
-    state.sectionStatuses(),
     state.currentCard(),
     state.changeAnswer,
+    state.breadcrumbs,
+    state.cachedBreadcrumbs,
   ]);
 
   useEffect(() => {
@@ -72,29 +72,46 @@ export default function Component(props: Props) {
         </Typography>
       </Box>
       <SectionsOverviewList
-        sectionNodes={sectionNodes}
-        sectionStatuses={sectionStatuses}
         showChange={true}
         changeFirstAnswerInSection={changeFirstAnswerInSection}
+        sectionNodes={sectionNodes}
+        currentCard={currentCard}
+        breadcrumbs={breadcrumbs}
+        cachedBreadcrumbs={cachedBreadcrumbs}
       />
     </Card>
   );
 }
 
-interface SectionsOverviewListProps {
-  sectionNodes: Record<string, SectionNode>;
-  sectionStatuses: Record<string, SectionStatus>;
+type SectionsOverviewListProps = {
   showChange: boolean;
   changeFirstAnswerInSection?: (sectionId: string) => void;
-}
+  sectionNodes: Record<string, SectionNode>;
+  currentCard: Store.node | null;
+  breadcrumbs: Store.breadcrumbs;
+  cachedBreadcrumbs?: Store.cachedBreadcrumbs;
+  isReconciliation?: boolean;
+  alteredSectionIds?: string[];
+};
 
-export function SectionsOverviewList(props: SectionsOverviewListProps) {
-  const {
+export function SectionsOverviewList({
+  showChange,
+  changeFirstAnswerInSection,
+  sectionNodes,
+  currentCard,
+  breadcrumbs,
+  cachedBreadcrumbs,
+  isReconciliation,
+  alteredSectionIds,
+}: SectionsOverviewListProps) {
+  const sectionStatuses = computeSectionStatuses({
     sectionNodes,
-    sectionStatuses,
-    showChange,
-    changeFirstAnswerInSection,
-  } = props;
+    currentCard,
+    breadcrumbs,
+    cachedBreadcrumbs,
+    isReconciliation,
+    alteredSectionIds,
+  });
 
   return (
     <DescriptionList>
@@ -133,10 +150,12 @@ export function SectionsOverviewList(props: SectionsOverviewListProps) {
 
 const getTagBackgroundColor = (theme: Theme, title: string): string => {
   const backgroundColors: Record<string, string> = {
-    [SectionStatus.NotStarted]: theme.palette.grey[200],
-    [SectionStatus.InProgress]: lighten(theme.palette.primary.main, 0.9),
-    [SectionStatus.Completed]: theme.palette.success.main,
-    [SectionStatus.NeedsUpdated]: theme.palette.action.focus, // GOV UK YELLOW for now, check Figma
+    [SectionStatus.NeedsUpdated]: "#FAFF00",
+    [SectionStatus.ReadyToContinue]: "#E8F1EC",
+    [SectionStatus.ReadyToStart]: "#E8F1EC",
+    [SectionStatus.Started]: theme.palette.background.paper,
+    [SectionStatus.NotStarted]: theme.palette.background.paper,
+    [SectionStatus.Completed]: theme.palette.success.dark,
   };
 
   return backgroundColors[title];
@@ -144,12 +163,12 @@ const getTagBackgroundColor = (theme: Theme, title: string): string => {
 
 const getTagTextColor = (theme: Theme, title: string): string => {
   const textColors: Record<string, string> = {
-    [SectionStatus.NotStarted]: theme.palette.getContrastText(
-      theme.palette.grey[200]
-    ),
-    [SectionStatus.InProgress]: theme.palette.primary.main,
-    [SectionStatus.Completed]: "#FFF",
-    [SectionStatus.NeedsUpdated]: "#000",
+    [SectionStatus.NeedsUpdated]: theme.palette.text.primary,
+    [SectionStatus.ReadyToContinue]: theme.palette.success.dark,
+    [SectionStatus.ReadyToStart]: theme.palette.success.dark,
+    [SectionStatus.Started]: theme.palette.text.secondary,
+    [SectionStatus.NotStarted]: theme.palette.text.secondary,
+    [SectionStatus.Completed]: "#FFFFFF",
   };
 
   return textColors[title];

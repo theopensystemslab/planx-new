@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { GraphQLClient, gql } from "graphql-request";
+import { gql } from "graphql-request";
 import {
   simpleSendFlow,
   modifiedSimpleSendFlow,
@@ -20,7 +20,6 @@ import {
 import type { Context } from "./context";
 
 test.describe("Save and return", () => {
-  const adminGQLClient = getGraphQLClient();
   let context: Context = {
     user: {
       firstName: "test",
@@ -82,11 +81,16 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
-      const sessionId = await saveSession({ page, adminGQLClient, context });
+      const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
-      await returnToSession({ page, context, sessionId: sessionId! });
+      await returnToSession({
+        page,
+        context,
+        sessionId: sessionId!,
+        shouldContinue: false,
+      });
 
       const reviewTitle = await page.locator("h1", {
         hasText: "Resume your application",
@@ -102,16 +106,15 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       let secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
 
-      const sessionId = await saveSession({ page, adminGQLClient, context });
+      const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
 
       await returnToSession({ page, context, sessionId: sessionId! });
-      await clickContinue({ page });
 
       // skip review page
       await clickContinue({ page });
@@ -128,16 +131,15 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       let secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
 
-      const sessionId = await saveSession({ page, adminGQLClient, context });
+      const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
 
       await returnToSession({ page, context, sessionId: sessionId! });
-      await clickContinue({ page });
 
       // skip review page
       await clickContinue({ page });
@@ -154,19 +156,18 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
       const secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
 
-      const sessionId = await saveSession({ page, adminGQLClient, context });
+      const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
 
       // flow is updated between sessions
-      await modifyFlow(adminGQLClient, context);
+      await modifyFlow(context);
 
       await returnToSession({ page, context, sessionId: sessionId! });
-      await clickContinue({ page });
 
       // skip review page
       await clickContinue({ page });
@@ -177,12 +178,11 @@ test.describe("Save and return", () => {
       });
       await expect(modifiedFirstQuestion).toBeVisible();
     });
-
-    // TODO "changes to a section are not displayed as changed during reconciliation"
   });
 });
 
-async function modifyFlow(adminGQLClient: GraphQLClient, context: Context) {
+async function modifyFlow(context: Context) {
+  const adminGQLClient = getGraphQLClient();
   if (!context.flow?.id || !context.user?.id) {
     throw new Error("context must have a flow and user");
   }
