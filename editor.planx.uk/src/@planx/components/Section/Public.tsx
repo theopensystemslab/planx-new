@@ -3,6 +3,7 @@ import Link from "@mui/material/Link";
 import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
+import Tag, { TagType } from "@planx/components/shared/Buttons/Tag";
 import type { PublicProps } from "@planx/components/ui";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -119,6 +120,29 @@ export function SectionsOverviewList({
     }
   };
 
+  const getTag = (section: SectionStatus) => {
+    const tagTypes: Record<SectionStatus, TagType> = {
+      [SectionStatus.NeedsUpdated]: TagType.Alert,
+      [SectionStatus.ReadyToStart]: TagType.Active,
+      [SectionStatus.ReadyToContinue]: TagType.Active,
+      [SectionStatus.Started]: TagType.Notice,
+      [SectionStatus.NotStarted]: TagType.Notice,
+      [SectionStatus.Completed]: TagType.Success,
+    };
+    const type = tagTypes[section];
+
+    const onClick =
+      type == TagType.Alert || type == TagType.Active
+        ? () => nextQuestion()
+        : () => {}; // no-op
+
+    return (
+      <Tag type={type} onClick={onClick}>
+        {section}
+      </Tag>
+    );
+  };
+
   return (
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
@@ -140,81 +164,12 @@ export function SectionsOverviewList({
               sectionNode.data.title
             )}
           </dt>
-          <dd>
-            <Tag
-              title={sectionStatuses[sectionId]}
-              onClick={
-                getTagClickability(sectionStatuses[sectionId])
-                  ? () => nextQuestion()
-                  : () => {} // no-op
-              }
-            >
-              {sectionStatuses[sectionId]}
-            </Tag>
-          </dd>
+          <dd> {getTag(sectionStatuses[sectionId])} </dd>
         </React.Fragment>
       ))}
     </DescriptionList>
   );
 }
-
-const getTagClickability = (section: SectionStatus): boolean => {
-  return [
-    SectionStatus.NeedsUpdated,
-    SectionStatus.ReadyToContinue,
-    SectionStatus.ReadyToStart,
-  ].includes(section)
-    ? true
-    : false;
-};
-
-const getTagBackgroundColor = (theme: Theme, title: SectionStatus): string => {
-  const backgroundColors: Record<SectionStatus, string> = {
-    [SectionStatus.NeedsUpdated]: "#FAFF00",
-    [SectionStatus.ReadyToContinue]: "#E8F1EC",
-    [SectionStatus.ReadyToStart]: "#E8F1EC",
-    [SectionStatus.Started]: theme.palette.background.paper,
-    [SectionStatus.NotStarted]: theme.palette.background.paper,
-    [SectionStatus.Completed]: theme.palette.success.dark,
-  };
-  return backgroundColors[title];
-};
-
-const getTagTextColor = (theme: Theme, title: SectionStatus): string => {
-  const textColors: Record<SectionStatus, string> = {
-    [SectionStatus.NeedsUpdated]: theme.palette.text.primary,
-    [SectionStatus.ReadyToContinue]: theme.palette.success.dark,
-    [SectionStatus.ReadyToStart]: theme.palette.success.dark,
-    [SectionStatus.Started]: theme.palette.text.secondary,
-    [SectionStatus.NotStarted]: theme.palette.text.secondary,
-    [SectionStatus.Completed]: "#FFFFFF",
-  };
-  return textColors[title];
-};
-
-const Tag = styled("div", {
-  // Configure which props should be forwarded on DOM
-  shouldForwardProp: (prop) => prop !== "title",
-})(({ title, theme }) => {
-  const sectionStatus = title as SectionStatus;
-  return {
-    backgroundColor: title
-      ? getTagBackgroundColor(theme, sectionStatus)
-      : undefined,
-    color: title ? getTagTextColor(theme, sectionStatus) : undefined,
-    fontWeight: 600,
-    cursor: getTagClickability(sectionStatus) ? "pointer" : "default",
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(0.5),
-    paddingLeft: theme.spacing(1.5),
-    paddingRight: theme.spacing(1.5),
-    "&:hover": {
-      backgroundColor: getTagClickability(sectionStatus)
-        ? darken(getTagBackgroundColor(theme, sectionStatus), 0.05)
-        : getTagBackgroundColor(theme, sectionStatus),
-    },
-  };
-});
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
