@@ -67,8 +67,16 @@ describe("SectionsOverviewList component", () => {
     },
   };
   const defaultProps = {
+    flow: {
+      _root: {
+        edges: ["section1", "section2", "section3"],
+      },
+      ...mockSectionNodes,
+    },
     sectionNodes: mockSectionNodes,
     showChange: true,
+    changeAnswer: () => {},
+    nextQuestion: () => {},
     isReconciliation: false,
     currentCard: null,
     breadcrumbs: {
@@ -88,8 +96,8 @@ describe("SectionsOverviewList component", () => {
   it("renders correctly when the NAVIGATION_UI feature flag is toggled on", () => {
     setup(<SectionsOverviewList {...defaultProps} />);
 
-    expect(screen.getByText("Section one")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toHaveTextContent("Section one");
+    const changeLink = screen.getByText("Change Section one");
+    expect(screen.getByText("Section one")).toContainElement(changeLink);
     expect(screen.getByText(SectionStatus.Completed)).toBeInTheDocument();
 
     expect(screen.getByText("Section two")).toBeInTheDocument();
@@ -104,7 +112,7 @@ describe("SectionsOverviewList component", () => {
     setup(<SectionsOverviewList {...defaultProps} showChange={false} />);
 
     expect(screen.getByText("Section one")).toBeInTheDocument();
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.queryByText("Change Section one")).not.toBeInTheDocument();
   });
 
   it("should not have any accessiblity violations", async () => {
