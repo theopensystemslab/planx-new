@@ -41,14 +41,14 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
     // Append formatted "csv" data to lowcal_session.data so it's available later to the download-application-files endpoint
     const _updatedSessionData = await appendSessionData(payload.sessionId, payload.csv);
 
-    // TODO Prepare/improve email template
+    // Prepare email template
     const config: EmailSubmissionNotifyConfig = {
       personalisation: {
-        emailReplyToId: notifyPersonalisation.emailReplyToId,
         serviceName: capitalize(payload?.flowName) || "PlanX",
         sessionId: payload.sessionId,
         applicantEmail: payload.email,
         downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${req.params.localAuthority}`,
+        ...notifyPersonalisation,
       }
     };
 

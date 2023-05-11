@@ -34,7 +34,7 @@ const getResumeLink = (
 /**
  * Construct a link to the service
  */
-const getServiceLink = (team: Team, flowSlug: string): string => {
+export const getServiceLink = (team: Team, flowSlug: string): string => {
   // Link to custom domain
   if (team.domain) return `https://${team.domain}/${flowSlug}`;
   // Fallback to PlanX domain
@@ -164,6 +164,7 @@ const getPersonalisation = (
     serviceLink: getServiceLink(team, flowSlug),
     serviceName: convertSlugToName(flowSlug),
     teamName: team.name,
+    sessionId: session.id,
     ...team.notifyPersonalisation,
     ...session,
   };
