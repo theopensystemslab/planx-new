@@ -1,0 +1,2 @@
+DROP TRIGGER IF EXISTS delete_payment_request_scheduled_email_events_trigger ON payment_requests;
+DROP FUNCTION IF EXISTS delete_payment_request_scheduled_email_events;

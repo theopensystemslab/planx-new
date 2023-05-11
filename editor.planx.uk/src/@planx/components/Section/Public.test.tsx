@@ -1,8 +1,8 @@
 import { screen } from "@testing-library/react";
 import { toggleFeatureFlag } from "lib/featureFlags";
-import { SectionStatus } from "pages/FlowEditor/lib/store/navigation";
 import React from "react";
 import { axe, setup } from "testUtils";
+import { SectionStatus } from "types";
 
 import Section, { SectionsOverviewList } from "./Public";
 
@@ -66,19 +66,26 @@ describe("SectionsOverviewList component", () => {
       },
     },
   };
-  const mockSectionStatuses = {
-    section1: SectionStatus.Completed,
-    section2: SectionStatus.InProgress,
-    section3: SectionStatus.NotStarted,
-  };
   const defaultProps = {
     sectionNodes: mockSectionNodes,
-    sectionStatuses: mockSectionStatuses,
     showChange: true,
+    isReconciliation: false,
+    currentCard: null,
+    breadcrumbs: {
+      section1: {
+        auto: false,
+      },
+      firstQuestion: {
+        auto: false,
+        answers: ["firstAnswer"],
+      },
+      secondSection: {
+        auto: false,
+      },
+    },
   };
 
   it("renders correctly when the NAVIGATION_UI feature flag is toggled on", () => {
-    toggleFeatureFlag("NAVIGATION_UI");
     setup(<SectionsOverviewList {...defaultProps} />);
 
     expect(screen.getByText("Section one")).toBeInTheDocument();
@@ -86,7 +93,7 @@ describe("SectionsOverviewList component", () => {
     expect(screen.getByText(SectionStatus.Completed)).toBeInTheDocument();
 
     expect(screen.getByText("Section two")).toBeInTheDocument();
-    expect(screen.getByText(SectionStatus.InProgress)).toBeInTheDocument();
+    expect(screen.getByText(SectionStatus.ReadyToStart)).toBeInTheDocument();
 
     expect(screen.getByText("Section three")).toBeInTheDocument();
     expect(screen.getByText(SectionStatus.NotStarted)).toBeInTheDocument();

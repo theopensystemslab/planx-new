@@ -2,7 +2,7 @@ import assert from "node:assert";
 import { log } from "./helpers";
 import { sign } from "jsonwebtoken";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { GraphQLClient } from "graphql-request";
+import { GraphQLClient, gql } from "graphql-request";
 
 export interface Context {
   user: {
@@ -112,7 +112,6 @@ export function getCoreDomainClient(): CoreDomainClient {
   });
 }
 
-// used for teardown only
 export function getGraphQLClient(): GraphQLClient {
   const API = process.env.HASURA_GRAPHQL_URL!.replace(
     "${HASURA_PROXY_PORT}",
@@ -145,11 +144,17 @@ export async function findSessionId(
   // get the session id
   const response: { lowcal_sessions: { id: string }[] } =
     await adminGQLClient.request(
-      `query GetSession( $flowId: uuid!, $email: String!) {
-        lowcal_sessions(where: {flow_id: {_eq: $flowId}, email: {_eq: $email}}) {
-          id
+      gql`
+        query GetSession($flowId: uuid!, $email: String!) {
+          lowcal_sessions(
+            where: { flow_id: { _eq: $flowId }, email: { _eq: $email } }
+            order_by: { created_at: desc }
+            limit: 1
+          ) {
+            id
+          }
         }
-      }`,
+      `,
       { flowId, email: context.user?.email }
     );
   if (response.lowcal_sessions.length && response.lowcal_sessions[0].id) {

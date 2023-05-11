@@ -14,6 +14,17 @@ export interface Flow {
   team_id: number;
 }
 
+export interface PublishedFlow {
+  id: number;
+  data: {
+    [key: string]: Node;
+  };
+  created_at: string;
+  flow_id: string;
+  publisher_id: number;
+  summary: string;
+}
+
 export interface UserData {
   answers?: Array<string>;
   data?: Record<string, any>;

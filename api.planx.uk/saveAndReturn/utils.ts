@@ -263,23 +263,6 @@ const getSaveAndReturnPublicHeaders = (sessionId: string, email: string) => ({
   "x-hasura-lowcal-email": email.toLowerCase(),
 });
 
-/**
- * Helper method to preserve session data order during reconciliation
- * XXX: This function is also maintained at editor.planx.uk/src/lib/lowcalStorage.ts
- */
-const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
-  JSON.stringify(
-    Object.keys(ob)
-      .sort()
-      .reduce(
-        (acc, curr) => ({
-          ...acc,
-          [curr]: ob[curr as keyof typeof ob],
-        }),
-        {}
-      )
-  );
-
 // Update lowcal_sessions.has_user_saved column to kick-off the setup_lowcal_expiry_events &
 // setup_lowcal_reminder_events event triggers in Hasura
 // Should only run once on initial save of a session
@@ -316,6 +299,5 @@ export {
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
   getHumanReadableProjectType,
-  stringifyWithRootKeysSortedAlphabetically,
   softDeleteSession,
 };

@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
+import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
@@ -12,7 +13,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useNavigation } from "react-navi";
 import useSWRMutation from "swr/mutation";
-import { PaymentStatus } from "types";
+import { ApplicationPath, PaymentStatus } from "types";
 import ErrorWrapper from "ui/ErrorWrapper";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -82,7 +83,8 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const sessionId = useStore((state) => state.sessionId);
+  const [sessionId, path] = useStore((state) => [state.sessionId, state.path]);
+  const isSaveReturn = path === ApplicationPath.SaveAndReturn;
   const navigation = useNavigation();
 
   const postRequest = async (
@@ -258,12 +260,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       >
         {"I want to pay for this application myself"}
       </Button>
-      <Typography variant="body2">or</Typography>
-      <Link component="button">
-        <Typography variant="body2">
-          Save and return to this application later
-        </Typography>
-      </Link>
+      {isSaveReturn && <SaveResumeButton />}
     </Card>
   );
 };
