@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled, Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import Tag, { TagType } from "@planx/components/shared/Buttons/Tag";
 import type { PublicProps } from "@planx/components/ui";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import React from "react";
 import { SectionNode, SectionStatus } from "types";
 
 import Card from "../shared/Preview/Card";
@@ -38,14 +38,6 @@ export default function Component(props: Props) {
     state.breadcrumbs,
     state.cachedBreadcrumbs,
   ]);
-
-  useEffect(() => {
-    // if the feature flag is toggled off, hide this node (by auto-answering it) when navigating through a flow
-    !showSection &&
-      props.handleSubmit?.({
-        auto: true,
-      });
-  }, []);
 
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
