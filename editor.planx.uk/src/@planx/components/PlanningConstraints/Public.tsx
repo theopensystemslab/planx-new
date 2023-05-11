@@ -97,7 +97,10 @@ function Component(props: Props) {
   //   skip if the applicant plotted a new non-UPRN address on the map
   const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
   const { data: roads, isValidating: isValidatingRoads } = useSWR(
-    () => (usrn ? classifiedRoadsEndpoint + `?usrn=${usrn}` : null),
+    () =>
+      usrn && digitalLandOrganisations.includes(teamSlug)
+        ? classifiedRoadsEndpoint + `?usrn=${usrn}`
+        : null,
     fetcher,
     {
       shouldRetryOnError: true,

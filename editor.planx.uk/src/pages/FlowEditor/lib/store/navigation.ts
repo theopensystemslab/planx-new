@@ -1,5 +1,4 @@
 import { TYPES } from "@planx/components/types";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { findLast, pick } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
@@ -52,9 +51,7 @@ export const navigationStore: StateCreator<
       SectionNode
     >;
     const sectionCount = Object.keys(sectionNodes).length;
-    const hasSections = Boolean(
-      sectionCount && hasFeatureFlag("NAVIGATION_UI")
-    );
+    const hasSections = Boolean(sectionCount);
     const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
 
     set({

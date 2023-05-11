@@ -1,5 +1,4 @@
 import { TYPES } from "@planx/components/types";
-import { hasFeatureFlag, toggleFeatureFlag } from "lib/featureFlags";
 import { SectionStatus } from "types";
 
 import { FullStore, vanillaStore } from "../store";
@@ -14,9 +13,6 @@ let initialState: FullStore;
 
 beforeEach(() => {
   initialState = getState();
-  if (hasFeatureFlag("NAVIGATION_UI")) {
-    toggleFeatureFlag("NAVIGATION_UI");
-  }
 });
 
 afterEach(() => setState(initialState));
@@ -77,25 +73,6 @@ test("initNavigationStore() sets expected initial values for flow with sections"
   );
 });
 
-test("initNavigationStore() sets 'hasSections' to false when feature flag not enabled", () => {
-  setState({ flow: flowWithThreeSections });
-  initNavigationStore();
-  const { hasSections } = getState();
-
-  expect(hasFeatureFlag("NAVIGATION_UI")).toBe(false);
-  expect(hasSections).toBe(false);
-});
-
-test("initNavigationStore() sets 'hasSections' to true when feature flag enabled", () => {
-  toggleFeatureFlag("NAVIGATION_UI");
-  setState({ flow: flowWithThreeSections });
-  initNavigationStore();
-  const { hasSections } = getState();
-
-  expect(hasFeatureFlag("NAVIGATION_UI")).toBe(true);
-  expect(hasSections).toBe(true);
-});
-
 test("updateSectionData() does not update state if there are no sections in the flow", () => {
   setState({ flow: flowWithoutSections });
   initNavigationStore();
@@ -115,7 +92,6 @@ test("updateSectionData() does not update state if there are no sections in the 
 });
 
 test("updateSectionData() updates section title and index correctly", () => {
-  toggleFeatureFlag("NAVIGATION_UI");
   let currentSectionTitle, currentSectionIndex;
   setState({ flow: flowWithThreeSections });
   initNavigationStore();

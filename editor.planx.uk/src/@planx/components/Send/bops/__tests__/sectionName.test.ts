@@ -1,5 +1,4 @@
-import { act, waitFor } from "@testing-library/react";
-import { toggleFeatureFlag } from "lib/featureFlags";
+import { act } from "@testing-library/react";
 import { FullStore, Store } from "pages/FlowEditor/lib/store";
 import { vanillaStore } from "pages/FlowEditor/lib/store";
 
@@ -97,7 +96,6 @@ const simpleFlow: Store.flow = {
 describe("Flow with sections", () => {
   beforeAll(() => {
     initialState = getState();
-    toggleFeatureFlag("NAVIGATION_UI");
     act(() =>
       setState({ flow: flowWithThreeSections, breadcrumbs: sectionBreadcrumbs })
     );
@@ -105,7 +103,6 @@ describe("Flow with sections", () => {
   });
 
   afterAll(() => {
-    toggleFeatureFlag("NAVIGATION_UI");
     setState(initialState);
   });
 

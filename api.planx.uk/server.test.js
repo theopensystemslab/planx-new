@@ -152,6 +152,20 @@ describe("fetching status of a GOV.UK payment", () => {
     payment_provider: "sandbox", // don't trigger a Slack notification
     provider_id: "10987654321",
     return_url: "https://your.service.gov.uk/completed",
+    _links: {
+      self: {
+        href: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93",
+        method: "GET",
+      },
+      events: {
+        href: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93/events",
+        method: "GET",
+      },
+      refunds: {
+        href: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93/refunds",
+        method: "GET",
+      },
+    },
   };
 
   it("proxies request and returns filtered response object", async () => {
@@ -176,6 +190,7 @@ describe("fetching status of a GOV.UK payment", () => {
             status: "success",
             finished: true,
           },
+          _links: {}
         });
       });
   });

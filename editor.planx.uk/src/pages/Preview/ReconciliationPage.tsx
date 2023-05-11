@@ -84,7 +84,10 @@ const ReconciliationPage: React.FC<Props> = ({
         </Typography>
         {hasSections ? (
           <SectionsOverviewList
+            flow={flow}
             alteredSectionIds={reconciliationResponse.alteredSectionIds}
+            changeAnswer={changeAnswer}
+            nextQuestion={onButtonClick!}
             showChange={false}
             isReconciliation={true}
             sectionNodes={sectionNodes}

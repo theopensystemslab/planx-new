@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled, Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
+import Tag, { TagType } from "@planx/components/shared/Buttons/Tag";
 import type { PublicProps } from "@planx/components/ui";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import React from "react";
 import { SectionNode, SectionStatus } from "types";
 
 import Card from "../shared/Preview/Card";
@@ -17,7 +17,6 @@ import { computeSectionStatuses } from "./model";
 export type Props = PublicProps<Section>;
 
 export default function Component(props: Props) {
-  const showSection = hasFeatureFlag("NAVIGATION_UI");
   const [
     flow,
     flowName,
@@ -40,23 +39,7 @@ export default function Component(props: Props) {
     state.cachedBreadcrumbs,
   ]);
 
-  useEffect(() => {
-    // if the feature flag is toggled off, hide this node (by auto-answering it) when navigating through a flow
-    !showSection &&
-      props.handleSubmit?.({
-        auto: true,
-      });
-  }, []);
-
-  const changeFirstAnswerInSection = (sectionId: string) => {
-    const sectionIndex = flow._root.edges?.indexOf(sectionId);
-    if (sectionIndex !== undefined) {
-      const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
-      if (firstNodeInSection) changeAnswer(firstNodeInSection);
-    }
-  };
-
-  return !showSection ? null : (
+  return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <QuestionHeader title={flowName} />
       <Box sx={{ lineHeight: ".5em" }}>
@@ -72,8 +55,10 @@ export default function Component(props: Props) {
         </Typography>
       </Box>
       <SectionsOverviewList
+        flow={flow}
         showChange={true}
-        changeFirstAnswerInSection={changeFirstAnswerInSection}
+        changeAnswer={changeAnswer}
+        nextQuestion={props.handleSubmit!}
         sectionNodes={sectionNodes}
         currentCard={currentCard}
         breadcrumbs={breadcrumbs}
@@ -84,8 +69,10 @@ export default function Component(props: Props) {
 }
 
 type SectionsOverviewListProps = {
+  flow: Store.flow;
   showChange: boolean;
-  changeFirstAnswerInSection?: (sectionId: string) => void;
+  changeAnswer: (sectionId: string) => void;
+  nextQuestion: () => void;
   sectionNodes: Record<string, SectionNode>;
   currentCard: Store.node | null;
   breadcrumbs: Store.breadcrumbs;
@@ -95,8 +82,10 @@ type SectionsOverviewListProps = {
 };
 
 export function SectionsOverviewList({
+  flow,
   showChange,
-  changeFirstAnswerInSection,
+  changeAnswer,
+  nextQuestion,
   sectionNodes,
   currentCard,
   breadcrumbs,
@@ -113,6 +102,37 @@ export function SectionsOverviewList({
     alteredSectionIds,
   });
 
+  const changeFirstAnswerInSection = (sectionId: string) => {
+    const sectionIndex = flow._root.edges?.indexOf(sectionId);
+    if (sectionIndex !== undefined) {
+      const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
+      if (firstNodeInSection) changeAnswer(firstNodeInSection);
+    }
+  };
+
+  const getTag = (section: SectionStatus) => {
+    const tagTypes: Record<SectionStatus, TagType> = {
+      [SectionStatus.NeedsUpdated]: TagType.Alert,
+      [SectionStatus.ReadyToStart]: TagType.Active,
+      [SectionStatus.ReadyToContinue]: TagType.Active,
+      [SectionStatus.Started]: TagType.Notice,
+      [SectionStatus.NotStarted]: TagType.Notice,
+      [SectionStatus.Completed]: TagType.Success,
+    };
+    const type = tagTypes[section];
+
+    const onClick =
+      type == TagType.Alert || type == TagType.Active
+        ? () => nextQuestion()
+        : () => {}; // no-op
+
+    return (
+      <Tag type={type} onClick={onClick}>
+        {section}
+      </Tag>
+    );
+  };
+
   return (
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
@@ -121,10 +141,7 @@ export function SectionsOverviewList({
             {showChange &&
             sectionStatuses[sectionId] === SectionStatus.Completed ? (
               <Link
-                onClick={() =>
-                  changeFirstAnswerInSection &&
-                  changeFirstAnswerInSection(sectionId)
-                }
+                onClick={() => changeFirstAnswerInSection(sectionId)}
                 component="button"
                 sx={{ fontFamily: "inherit", fontSize: "inherit" }}
               >
@@ -137,55 +154,12 @@ export function SectionsOverviewList({
               sectionNode.data.title
             )}
           </dt>
-          <dd>
-            <Tag title={sectionStatuses[sectionId]}>
-              {sectionStatuses[sectionId]}
-            </Tag>
-          </dd>
+          <dd> {getTag(sectionStatuses[sectionId])} </dd>
         </React.Fragment>
       ))}
     </DescriptionList>
   );
 }
-
-const getTagBackgroundColor = (theme: Theme, title: string): string => {
-  const backgroundColors: Record<string, string> = {
-    [SectionStatus.NeedsUpdated]: "#FAFF00",
-    [SectionStatus.ReadyToContinue]: "#E8F1EC",
-    [SectionStatus.ReadyToStart]: "#E8F1EC",
-    [SectionStatus.Started]: theme.palette.background.paper,
-    [SectionStatus.NotStarted]: theme.palette.background.paper,
-    [SectionStatus.Completed]: theme.palette.success.dark,
-  };
-
-  return backgroundColors[title];
-};
-
-const getTagTextColor = (theme: Theme, title: string): string => {
-  const textColors: Record<string, string> = {
-    [SectionStatus.NeedsUpdated]: theme.palette.text.primary,
-    [SectionStatus.ReadyToContinue]: theme.palette.success.dark,
-    [SectionStatus.ReadyToStart]: theme.palette.success.dark,
-    [SectionStatus.Started]: theme.palette.text.secondary,
-    [SectionStatus.NotStarted]: theme.palette.text.secondary,
-    [SectionStatus.Completed]: "#FFFFFF",
-  };
-
-  return textColors[title];
-};
-
-const Tag = styled("div", {
-  // Configure which props should be forwarded on DOM
-  shouldForwardProp: (prop) => prop !== "title",
-})(({ title, theme }) => ({
-  backgroundColor: title ? getTagBackgroundColor(theme, title) : undefined,
-  color: title ? getTagTextColor(theme, title) : undefined,
-  fontWeight: 600,
-  paddingTop: theme.spacing(0.5),
-  paddingBottom: theme.spacing(0.5),
-  paddingLeft: theme.spacing(1.5),
-  paddingRight: theme.spacing(1.5),
-}));
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
