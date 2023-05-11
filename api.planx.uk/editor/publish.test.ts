@@ -124,7 +124,7 @@ it("does not update if there are sections, but there is not a section in the fir
 });
 
 it("does not update if invite to pay is enabled, but there is not a Send component", async () => {  
-  let { "Send": _, ...invalidatedFlow } = flowWithInviteToPay;
+  const { Send, ...invalidatedFlow } = flowWithInviteToPay;
   invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Send"));
   
   queryMock.mockQuery({
@@ -148,7 +148,7 @@ it("does not update if invite to pay is enabled, but there is not a Send compone
 });
 
 it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
-  let { "FindProperty": _, ...invalidatedFlow } = flowWithInviteToPay;
+  const { FindProperty, ...invalidatedFlow } = flowWithInviteToPay;
   invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("FindProperty"));
   
   queryMock.mockQuery({
@@ -172,7 +172,7 @@ it("does not update if invite to pay is enabled, but there is not a FindProperty
 });
 
 it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
-  let { "Checklist": _, "ChecklistOptionOne": __, "ChecklistOptionTwo": ___, ...invalidatedFlow } = flowWithInviteToPay;
+  const { Checklist, ChecklistOptionOne, ChecklistOptionTwo, ...invalidatedFlow } = flowWithInviteToPay;
   invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Checklist"));
   
   queryMock.mockQuery({

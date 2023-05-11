@@ -210,7 +210,7 @@ const inviteToPayEnabled = (flow: Record<string, any>): boolean => {
 };
 
 const hasComponentType = (flow: Record<string, any>, type: ComponentType, fn?: string): boolean => {
-  let nodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === type);
+  const nodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === type);
   if (fn) {
     nodeIds?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)?.map(([nodeId, _nodeData]) => nodeId);
   } else {
