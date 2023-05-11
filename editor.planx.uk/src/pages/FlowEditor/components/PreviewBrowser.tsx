@@ -104,14 +104,14 @@ const PreviewBrowser: React.FC<{
     publishFlow,
     lastPublished,
     lastPublisher,
-    diffFlow,
+    validateAndDiffFlow,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
     state.publishFlow,
     state.lastPublished,
     state.lastPublisher,
-    state.diffFlow,
+    state.validateAndDiffFlow,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -188,7 +188,7 @@ const PreviewBrowser: React.FC<{
               onClick={async () => {
                 try {
                   setLastPublishedTitle("Checking for changes...");
-                  const alteredFlow = await diffFlow(flowId);
+                  const alteredFlow = await validateAndDiffFlow(flowId);
                   setAlteredNodes(
                     alteredFlow?.data.alteredNodes
                       ? alteredFlow.data.alteredNodes
