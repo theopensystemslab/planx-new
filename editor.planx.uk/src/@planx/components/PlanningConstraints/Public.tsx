@@ -98,7 +98,7 @@ function Component(props: Props) {
   const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
   const { data: roads, isValidating: isValidatingRoads } = useSWR(
     () =>
-      usrn && teamSlug !== "scotland"
+      usrn && digitalLandOrganisations.includes(teamSlug)
         ? classifiedRoadsEndpoint + `?usrn=${usrn}`
         : null,
     fetcher,
