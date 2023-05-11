@@ -123,16 +123,82 @@ it("does not update if there are sections, but there is not a section in the fir
     });
 });
 
-it.todo("does not update if invite to pay is enabled, but there is not a Send component");
+it("does not update if invite to pay is enabled, but there is not a Send component", async () => {  
+  let { "Send": _, ...invalidatedFlow } = flowWithInviteToPay;
+  invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Send"));
+  
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: invalidatedFlow,
+      },
+    },
+  });
 
-it.todo("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component");
+  await supertest(app)
+    .post("/flows/1/diff")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body.message).toEqual("Cannot publish an invalid flow");
+      expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Send");
+    });
+});
 
-it.todo("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`");
+it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
+  let { "FindProperty": _, ...invalidatedFlow } = flowWithInviteToPay;
+  invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("FindProperty"));
+  
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: invalidatedFlow,
+      },
+    },
+  });
+
+  await supertest(app)
+    .post("/flows/1/diff")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body.message).toEqual("Cannot publish an invalid flow");
+      expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a FindProperty");
+    });
+});
+
+it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
+  let { "Checklist": _, "ChecklistOptionOne": __, "ChecklistOptionTwo": ___, ...invalidatedFlow } = flowWithInviteToPay;
+  invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Checklist"));
+  
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: invalidatedFlow,
+      },
+    },
+  });
+
+  await supertest(app)
+    .post("/flows/1/diff")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body.message).toEqual("Cannot publish an invalid flow");
+      expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`");
+    });
+});
 
 it("updates published flow and returns altered nodes if there have been changes", async () => {
   const alteredFlow = {
     ...mockFlowData,
-    "4CJgXe8Ttl": {
+    "ResultNode": {
       data: {
         flagSet: "Planning permission",
         overrides: {
@@ -173,7 +239,7 @@ it("updates published flow and returns altered nodes if there have been changes"
       expect(res.body).toEqual({
         alteredNodes: [
           {
-            id: "4CJgXe8Ttl",
+            id: "ResultNode",
             type: 3,
             data: {
               flagSet: "Planning permission",
@@ -192,26 +258,26 @@ it("updates published flow and returns altered nodes if there have been changes"
 const mockFlowData: Flow["data"] = {
   _root: {
     edges: [
-      "sectionNodeId",
-      "RYYckLE2cH",
-      "R99ncwKifm",
-      "3qssvGXmMO",
-      "SEp0QeNsTS",
-      "q8Foul9hRN",
-      "4CJgXe8Ttl",
-      "dnVqd6zt4N",
+      "SectionOne",
+      "QuestionOne",
+      "InternalPortalNode",
+      "FindPropertyNode",
+      "PayNode",
+      "SendNode",
+      "ResultNode",
+      "ConfirmationNode",
     ],
   },
-  "sectionNodeId": {
+  "SectionOne": {
     type: 360,
     data: {
       title: "Section 1",
     },
   },
-  "3qssvGXmMO": {
+  "FindPropertyNode": {
     type: 9,
   },
-  "4CJgXe8Ttl": {
+  "ResultNode": {
     data: {
       flagSet: "Planning permission",
       overrides: {
@@ -222,40 +288,40 @@ const mockFlowData: Flow["data"] = {
     },
     type: 3,
   },
-  "5sWfsvXphd": {
+  "AnswerOne": {
     data: {
       text: "?",
     },
     type: 200,
   },
-  BV2VJhOC0I: {
+  QuestionInPortal: {
     data: {
       text: "internal question",
     },
     type: 100,
-    edges: ["ScjaYmpbVK", "b7j9tq22dj"],
+    edges: ["AnswerInPortalOne", "AnswerInPortalTwo"],
   },
-  OL9JENldcI: {
+  AnswerTwo: {
     data: {
       text: "!!",
     },
     type: 200,
   },
-  R99ncwKifm: {
+  InternalPortalNode: {
     data: {
       text: "portal",
     },
     type: 300,
-    edges: ["BV2VJhOC0I"],
+    edges: ["QuestionInPortal"],
   },
-  RYYckLE2cH: {
+  QuestionOne: {
     data: {
       text: "Question",
     },
     type: 100,
-    edges: ["5sWfsvXphd", "OL9JENldcI"],
+    edges: ["AnswerOne", "AnswerTwo"],
   },
-  SEp0QeNsTS: {
+  PayNode: {
     data: {
       fn: "application.fee.payable",
       url: "http://localhost:7002/pay",
@@ -266,19 +332,19 @@ const mockFlowData: Flow["data"] = {
     },
     type: 400,
   },
-  ScjaYmpbVK: {
+  AnswerInPortalOne: {
     data: {
       text: "?",
     },
     type: 200,
   },
-  b7j9tq22dj: {
+  AnswerInPortalTwo: {
     data: {
       text: "*",
     },
     type: 200,
   },
-  dnVqd6zt4N: {
+  ConfirmationNode: {
     data: {
       heading: "Application sent",
       moreInfo:
@@ -291,10 +357,86 @@ const mockFlowData: Flow["data"] = {
     },
     type: 725,
   },
-  q8Foul9hRN: {
+  SendNode: {
     data: {
       url: "http://localhost:7002/bops/southwark",
     },
     type: 650,
   },
 };
+
+const flowWithInviteToPay: Flow["data"] = {
+  "_root": {
+    "edges": [
+      "FindProperty",
+      "Checklist",
+      "SetValue",
+      "Pay",
+      "Send"
+    ]
+  },
+  "Pay": {
+    "data": {
+      "fn": "fee",
+      "title": "Pay for your application",
+      "bannerTitle": "The planning fee for this application is",
+      "description": "<p>The planning fee covers the cost of processing your application.         Find out more about how planning fees are calculated          <a href=\"https://www.gov.uk/guidance/fees-for-planning-applications\" target=\"_self\">here</a>.</p>",
+      "nomineeTitle": "Details of the person paying",
+      "allowInviteToPay": true,
+      "yourDetailsLabel": "Your name or organisation name",
+      "yourDetailsTitle": "Your details",
+      "instructionsTitle": "How to pay",
+      "secondaryPageTitle": "Invite someone else to pay for this application",
+      "instructionsDescription": "<p>You can pay for your application by using GOV.UK Pay.</p>         <p>Your application will be sent after you have paid the fee.          Wait until you see an application sent message before closing your browser.</p>"
+    },
+    "type": 400
+  },
+  "SetValue": {
+    "type": 380,
+    "data": {
+      "fn": "fee",
+      "val": "1"
+    }
+  },
+  "FindProperty": {
+    "type": 9,
+    "data": {
+      "allowNewAddresses": false
+    }
+  },
+  "Send": {
+    "type": 650,
+    "data": {
+      "title": "Send",
+      "destinations": [
+        "email"
+      ]
+    }
+  },
+  "Checklist": {
+    "type": 105,
+    "data": {
+      "allRequired": false,
+      "fn": "proposal.projectType",
+      "text": "What do the works involve?"
+    },
+    "edges": [
+      "ChecklistOptionOne",
+      "ChecklistOptionTwo"
+    ]
+  },
+  "ChecklistOptionOne": {
+    "data": {
+      "text": "Alter",
+      "val": "alter"
+    },
+    "type": 200
+  },
+  "ChecklistOptionTwo": {
+    "data": {
+      "text": "Build new",
+      "val": "build"
+    },
+    "type": 200
+  }
+}

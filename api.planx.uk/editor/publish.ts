@@ -172,15 +172,24 @@ const allSectionsOnRoot = (flow: Record<string, any>): boolean => {
 };
 
 const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
-  if (inviteToPayEnabled(flow)) {
-    if (!hasFindProperty(flow)) {
+  if (hasComponentType(flow, ComponentType.Pay) && inviteToPayEnabled(flow)) {
+    if(!hasComponentType(flow, ComponentType.Send)) {
       return {
         isValid: false,
         message: "Cannot publish an invalid flow",
-        description: "When using Invite to Pay, your flow must have a Find Property",
+        description: "When using Invite to Pay, your flow must have a Send",
       };
     }
-    if (!hasChecklistWithPassportFn(flow, "proposal.projectType")) {
+    
+    if (!hasComponentType(flow, ComponentType.FindProperty)) {
+      return {
+        isValid: false,
+        message: "Cannot publish an invalid flow",
+        description: "When using Invite to Pay, your flow must have a FindProperty",
+      };
+    } 
+    
+    if (!hasComponentType(flow, ComponentType.Checklist, "proposal.projectType")) {
       return {
         isValid: false,
         message: "Cannot publish an invalid flow",
@@ -196,19 +205,18 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
 };
 
 const inviteToPayEnabled = (flow: Record<string, any>): boolean => {
-  // TODO account for flows with > 1 Pay node in future, if any have InviteToPay enabled then return true
-  const firstPayNode = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Pay)[0][1];
-  return firstPayNode?.data.allowInviteToPay;
+  const payNodeStatuses = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Pay)?.map(([_nodeId, nodeData]) => nodeData?.data?.allowInviteToPay);
+  return payNodeStatuses.every(status => status === true);
 };
 
-const hasFindProperty = (flow: Record<string, any>): boolean => {
-  const findPropertyNodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.FindProperty)?.map(([nodeId, _nodeData]) => nodeId);
-  return Boolean(findPropertyNodeIds.length);
-};
-
-const hasChecklistWithPassportFn = (flow: Record<string, any>, fn: string): boolean => {
-  const checklistNodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Checklist && nodeData?.data?.fn === fn)?.map(([nodeId, _nodeData]) => nodeId);
-  return Boolean(checklistNodeIds.length);
+const hasComponentType = (flow: Record<string, any>, type: ComponentType, fn?: string): boolean => {
+  let nodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === type);
+  if (fn) {
+    nodeIds?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)?.map(([nodeId, _nodeData]) => nodeId);
+  } else {
+    nodeIds?.map(([nodeId, _nodeData]) => nodeId);
+  }
+  return Boolean(nodeIds?.length);
 };
 
 export { validateAndDiffFlow, publishFlow };
