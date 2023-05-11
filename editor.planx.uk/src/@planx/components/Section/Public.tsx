@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import Tag, { TagType } from "@planx/components/shared/Buttons/Tag";
 import type { PublicProps } from "@planx/components/ui";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { SectionNode, SectionStatus } from "types";
@@ -18,7 +17,6 @@ import { computeSectionStatuses } from "./model";
 export type Props = PublicProps<Section>;
 
 export default function Component(props: Props) {
-  const showSection = hasFeatureFlag("NAVIGATION_UI");
   const [
     flow,
     flowName,
@@ -49,7 +47,7 @@ export default function Component(props: Props) {
       });
   }, []);
 
-  return !showSection ? null : (
+  return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <QuestionHeader title={flowName} />
       <Box sx={{ lineHeight: ".5em" }}>

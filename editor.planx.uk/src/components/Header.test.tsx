@@ -1,5 +1,4 @@
 import { screen } from "@testing-library/react";
-import { hasFeatureFlag, toggleFeatureFlag } from "lib/featureFlags";
 import { vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -158,54 +157,25 @@ describe("Section navigation bar", () => {
   });
 
   describe("Flow without sections", () => {
-    it("does not display if the feature flag is disabled", () => {
-      setup(<Header />);
+    it("does not display", () => {
+      setup(<Header/>);
       act(() => setState({ flow: flowWithoutSections }));
       act(() => getState().initNavigationStore());
 
-      expect(hasFeatureFlag("NAVIGATION_UI")).toBe(false);
-      expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
-    });
-
-    it("does not display if the feature flag is enabled", () => {
-      toggleFeatureFlag("NAVIGATION_UI");
-      setup(<Header />);
-      act(() => setState({ flow: flowWithoutSections }));
-      act(() => getState().initNavigationStore());
-
-      expect(hasFeatureFlag("NAVIGATION_UI")).toBe(true);
       expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
     });
   });
 
   describe("Flow with sections", () => {
-    beforeEach(() => {
-      if (hasFeatureFlag("NAVIGATION_UI")) {
-        toggleFeatureFlag("NAVIGATION_UI");
-      }
-    });
-
-    it("does not display if the feature flag is disabled", () => {
+    it("displays as expected", () => {
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
       setup(<Header />);
 
-      expect(hasFeatureFlag("NAVIGATION_UI")).toBe(false);
-      expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
-    });
-
-    it("displays if the feature flag is enabled", () => {
-      toggleFeatureFlag("NAVIGATION_UI");
-      act(() => setState({ flow: flowWithThreeSections }));
-      act(() => getState().initNavigationStore());
-      setup(<Header />);
-
-      expect(hasFeatureFlag("NAVIGATION_UI")).toBe(true);
       expect(screen.getByTestId("navigation-bar")).toBeInTheDocument();
     });
 
     it("display the correct information from the store", () => {
-      toggleFeatureFlag("NAVIGATION_UI");
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
       setup(<Header />);
@@ -215,7 +185,6 @@ describe("Section navigation bar", () => {
     });
 
     it("should not have any accessibility violations", async () => {
-      toggleFeatureFlag("NAVIGATION_UI");
       act(() => setState({ flow: flowWithThreeSections }));
       act(() => getState().initNavigationStore());
       const { container } = setup(<Header />);
