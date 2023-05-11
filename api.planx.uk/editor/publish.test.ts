@@ -41,218 +41,224 @@ beforeEach(() => {
   });
 });
 
-it("does not update if there are no new changes", async () => {
-  await supertest(app)
-    .post("/flows/1/publish")
-    .set(authHeader())
-    .expect(200)
-    .then((res) => {
-      expect(res.body).toEqual({
-        alteredNodes: null,
-        message: "No new changes to publish",
+describe("publish", () => {
+  it("does not update if there are no new changes", async () => {
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          alteredNodes: null,
+          message: "No new changes to publish",
+        });
       });
-    });
-});
-
-it("does not update if there are sections in an external portal", async () => {
-  const alteredFlow = {
-    ...mockFlowData,
-    "externalPortalNodeId": {
-      edges: ["newSectionNodeId"],
-      type: 310,
-    },
-    "newSectionNodeId": {
-      type: 360,
-    },
-  };
-
-  queryMock.mockQuery({
-    name: "GetFlowData",
-    matchOnVariables: false,
-    data: {
-      flows_by_pk: {
-        data: alteredFlow,
-      },
-    },
   });
 
-  await supertest(app)
-    .post("/flows/1/diff")
-    .set(authHeader())
-    .expect(200)
-    .then((res) => {
-      expect(res.body).toEqual({
-        alteredNodes: null,
-        message: "Cannot publish an invalid flow",
-        description: "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
-      });
-    });
-});
-
-it("does not update if there are sections, but there is not a section in the first position", async () => {
-  const flowWithSections: Flow["data"] = {
-    _root: {
-      edges: ["questionNode", "sectionNode"]
-    },
-    questionNode: {},
-    sectionNode: {
-      type: 360,
-    },
-  };
-
-  queryMock.mockQuery({
-    name: "GetFlowData",
-    matchOnVariables: false,
-    data: {
-      flows_by_pk: {
-        data: flowWithSections,
-      },
-    },
-  });
-
-  await supertest(app)
-    .post("/flows/1/diff")
-    .set(authHeader())
-    .expect(200)
-    .then((res) => {
-      expect(res.body).toEqual({
-        alteredNodes: null,
-        message: "Cannot publish an invalid flow",
-        description: "When using Sections, your flow must start with a Section"
-      });
-    });
-});
-
-it("does not update if invite to pay is enabled, but there is not a Send component", async () => {  
-  const { Send, ...invalidatedFlow } = flowWithInviteToPay;
-  invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Send"));
-  
-  queryMock.mockQuery({
-    name: "GetFlowData",
-    matchOnVariables: false,
-    data: {
-      flows_by_pk: {
-        data: invalidatedFlow,
-      },
-    },
-  });
-
-  await supertest(app)
-    .post("/flows/1/diff")
-    .set(authHeader())
-    .expect(200)
-    .then((res) => {
-      expect(res.body.message).toEqual("Cannot publish an invalid flow");
-      expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Send");
-    });
-});
-
-it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
-  const { FindProperty, ...invalidatedFlow } = flowWithInviteToPay;
-  invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("FindProperty"));
-  
-  queryMock.mockQuery({
-    name: "GetFlowData",
-    matchOnVariables: false,
-    data: {
-      flows_by_pk: {
-        data: invalidatedFlow,
-      },
-    },
-  });
-
-  await supertest(app)
-    .post("/flows/1/diff")
-    .set(authHeader())
-    .expect(200)
-    .then((res) => {
-      expect(res.body.message).toEqual("Cannot publish an invalid flow");
-      expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a FindProperty");
-    });
-});
-
-it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
-  const { Checklist, ChecklistOptionOne, ChecklistOptionTwo, ...invalidatedFlow } = flowWithInviteToPay;
-  invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Checklist"));
-  
-  queryMock.mockQuery({
-    name: "GetFlowData",
-    matchOnVariables: false,
-    data: {
-      flows_by_pk: {
-        data: invalidatedFlow,
-      },
-    },
-  });
-
-  await supertest(app)
-    .post("/flows/1/diff")
-    .set(authHeader())
-    .expect(200)
-    .then((res) => {
-      expect(res.body.message).toEqual("Cannot publish an invalid flow");
-      expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`");
-    });
-});
-
-it("updates published flow and returns altered nodes if there have been changes", async () => {
-  const alteredFlow = {
-    ...mockFlowData,
-    "ResultNode": {
-      data: {
-        flagSet: "Planning permission",
-        overrides: {
-          NO_APP_REQUIRED: {
-            heading: "Some Other Heading",
+  it("updates published flow and returns altered nodes if there have been changes", async () => {
+    const alteredFlow = {
+      ...mockFlowData,
+      "ResultNode": {
+        data: {
+          flagSet: "Planning permission",
+          overrides: {
+            NO_APP_REQUIRED: {
+              heading: "Some Other Heading",
+            },
           },
         },
+        type: 3,
       },
-      type: 3,
-    },
-  };
-
-  queryMock.mockQuery({
-    name: "GetFlowData",
-    matchOnVariables: false,
-    data: {
-      flows_by_pk: {
-        data: alteredFlow,
+    };
+  
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flows_by_pk: {
+          data: alteredFlow,
+        },
       },
-    },
-  });
-
-  queryMock.mockQuery({
-    name: "PublishFlow",
-    matchOnVariables: false,
-    data: {
-      insert_published_flows_one: {
-        data: alteredFlow,
+    });
+  
+    queryMock.mockQuery({
+      name: "PublishFlow",
+      matchOnVariables: false,
+      data: {
+        insert_published_flows_one: {
+          data: alteredFlow,
+        },
       },
-    },
-  });
-
-  await supertest(app)
-    .post("/flows/1/publish")
-    .set(authHeader())
-    .expect(200)
-    .then((res) => {
-      expect(res.body).toEqual({
-        alteredNodes: [
-          {
-            id: "ResultNode",
-            type: 3,
-            data: {
-              flagSet: "Planning permission",
-              overrides: {
-                NO_APP_REQUIRED: {
-                  heading: "Some Other Heading",
+    });
+  
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          alteredNodes: [
+            {
+              id: "ResultNode",
+              type: 3,
+              data: {
+                flagSet: "Planning permission",
+                overrides: {
+                  NO_APP_REQUIRED: {
+                    heading: "Some Other Heading",
+                  },
                 },
               },
             },
-          },
-        ],
+          ],
+        });
       });
+  });
+});
+
+describe("sections validation on diff", () => {
+  it("does not update if there are sections in an external portal", async () => {
+    const alteredFlow = {
+      ...mockFlowData,
+      "externalPortalNodeId": {
+        edges: ["newSectionNodeId"],
+        type: 310,
+      },
+      "newSectionNodeId": {
+        type: 360,
+      },
+    };
+  
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flows_by_pk: {
+          data: alteredFlow,
+        },
+      },
     });
+  
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          alteredNodes: null,
+          message: "Cannot publish an invalid flow",
+          description: "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
+        });
+      });
+  });
+  
+  it("does not update if there are sections, but there is not a section in the first position", async () => {
+    const flowWithSections: Flow["data"] = {
+      _root: {
+        edges: ["questionNode", "sectionNode"]
+      },
+      questionNode: {},
+      sectionNode: {
+        type: 360,
+      },
+    };
+  
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flows_by_pk: {
+          data: flowWithSections,
+        },
+      },
+    });
+  
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          alteredNodes: null,
+          message: "Cannot publish an invalid flow",
+          description: "When using Sections, your flow must start with a Section"
+        });
+      });
+  });
+});
+
+describe("invite to pay validation on diff", () => {
+  it("does not update if invite to pay is enabled, but there is not a Send component", async () => {  
+    const { Send, ...invalidatedFlow } = flowWithInviteToPay;
+    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Send"));
+    
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flows_by_pk: {
+          data: invalidatedFlow,
+        },
+      },
+    });
+  
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Cannot publish an invalid flow");
+        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Send");
+      });
+  });
+  
+  it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
+    const { FindProperty, ...invalidatedFlow } = flowWithInviteToPay;
+    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("FindProperty"));
+    
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flows_by_pk: {
+          data: invalidatedFlow,
+        },
+      },
+    });
+  
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Cannot publish an invalid flow");
+        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a FindProperty");
+      });
+  });
+  
+  it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
+    const { Checklist, ChecklistOptionOne, ChecklistOptionTwo, ...invalidatedFlow } = flowWithInviteToPay;
+    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Checklist"));
+    
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flows_by_pk: {
+          data: invalidatedFlow,
+        },
+      },
+    });
+  
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Cannot publish an invalid flow");
+        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`");
+      });
+  });
 });
 
 const mockFlowData: Flow["data"] = {
