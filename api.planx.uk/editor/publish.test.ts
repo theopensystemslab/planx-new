@@ -49,7 +49,7 @@ it("does not update if there are no new changes", async () => {
     .then((res) => {
       expect(res.body).toEqual({
         alteredNodes: null,
-        message: "No new changes",
+        message: "No new changes to publish",
       });
     });
 });
@@ -77,13 +77,14 @@ it("does not update if there are sections in an external portal", async () => {
   });
 
   await supertest(app)
-    .post("/flows/1/publish")
+    .post("/flows/1/diff")
     .set(authHeader())
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({
         alteredNodes: null,
-        message: "Error publishing: found Sections in one or more External Portals, but Sections are only allowed in main flow",
+        message: "Cannot publish an invalid flow",
+        description: "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
       });
     });
 });
@@ -110,16 +111,23 @@ it("does not update if there are sections, but there is not a section in the fir
   });
 
   await supertest(app)
-    .post("/flows/1/publish")
+    .post("/flows/1/diff")
     .set(authHeader())
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({
         alteredNodes: null,
-        message: "Error publishing: when using Sections, your flow needs to start with a Section",
+        message: "Cannot publish an invalid flow",
+        description: "When using Sections, your flow must start with a Section"
       });
     });
 });
+
+it.todo("does not update if invite to pay is enabled, but there is not a Send component");
+
+it.todo("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component");
+
+it.todo("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`");
 
 it("updates published flow and returns altered nodes if there have been changes", async () => {
   const alteredFlow = {

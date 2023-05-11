@@ -6,7 +6,7 @@ import { gql } from "graphql-request";
 import intersection from "lodash/intersection";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 
-const diffFlow = async (
+const validateAndDiffFlow = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -173,18 +173,18 @@ const allSectionsOnRoot = (flow: Record<string, any>): boolean => {
 
 const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
   if (inviteToPayEnabled(flow)) {
-    if (!hasFindPropertyOnRoot(flow)) {
+    if (!hasFindProperty(flow)) {
       return {
         isValid: false,
         message: "Cannot publish an invalid flow",
-        description: "When using Invite to Pay, your flow must have a FindProperty node on the _root",
+        description: "When using Invite to Pay, your flow must have a Find Property",
       };
     }
-    if (!setsPassportVariableOnRoot(flow, "proposal.projectType")) {
+    if (!hasChecklistWithPassportFn(flow, "proposal.projectType")) {
       return {
         isValid: false,
         message: "Cannot publish an invalid flow",
-        description: "When using Invite to Pay, your flow must set the passport variable `proposal.projectType` on a _root node",
+        description: "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`",
       };
     }
   }
@@ -201,16 +201,14 @@ const inviteToPayEnabled = (flow: Record<string, any>): boolean => {
   return firstPayNode?.data.allowInviteToPay;
 };
 
-const hasFindPropertyOnRoot = (flow: Record<string, any>): boolean => {
+const hasFindProperty = (flow: Record<string, any>): boolean => {
   const findPropertyNodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.FindProperty)?.map(([nodeId, _nodeData]) => nodeId);
-  const intersectingNodeIds = intersection(flow["_root"].edges, findPropertyNodeIds);
-  return Boolean(intersectingNodeIds.length);
+  return Boolean(findPropertyNodeIds.length);
 };
 
-const setsPassportVariableOnRoot = (flow: Record<string, any>, fn: string): boolean => {
-  const nodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)?.map(([nodeId, _nodeData]) => nodeId);
-  const intersectingNodeIds = intersection(flow["_root"].edges, nodeIds);
-  return Boolean(intersectingNodeIds.length);
+const hasChecklistWithPassportFn = (flow: Record<string, any>, fn: string): boolean => {
+  const checklistNodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Checklist && nodeData?.data?.fn === fn)?.map(([nodeId, _nodeData]) => nodeId);
+  return Boolean(checklistNodeIds.length);
 };
 
-export { diffFlow, publishFlow };
+export { validateAndDiffFlow, publishFlow };
