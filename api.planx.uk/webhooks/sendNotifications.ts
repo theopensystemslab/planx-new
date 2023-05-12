@@ -2,7 +2,7 @@ import SlackNotify from 'slack-notify';
 import { Request, Response, NextFunction } from 'express';
 
 const sendSlackNotification = async (req: Request, res: Response, next: NextFunction): Promise<Response | void>  => {
-  const supportedTypes = ["bops-submission", "uniform-submission"];
+  const supportedTypes = ["bops-submission", "uniform-submission", "email-submission"];
   if (!req.body?.event || !req.query?.type || !supportedTypes.includes(req.query.type as string)) {
     return res.status(404).send({
       message: "Missing info required to send a Slack notification"
