@@ -10,7 +10,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
-import { FONT_WEIGHT_STRONG } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Notice>;
@@ -47,7 +47,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     flex: 1,
   },
   title: {
-    fontWeight: FONT_WEIGHT_STRONG,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
     margin: 0,
   },
   description: {

@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import { getFeedbackMetadata } from "lib/feedback";
 import React, { useEffect, useState } from "react";
 import { Link as ReactNaviLink } from "react-navi";
-import { FONT_WEIGHT_STRONG } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 const Root = styled("footer")(({ theme }) => ({
   color: theme.palette.common.white,
@@ -158,7 +158,7 @@ function FooterItem(props: {
   const title = (
     <Typography
       variant="body2"
-      sx={{ fontWeight: props.bold ? FONT_WEIGHT_STRONG : "regular" }}
+      sx={{ fontWeight: props.bold ? FONT_WEIGHT_SEMI_BOLD : "regular" }}
     >
       {props.title.toLowerCase()}
     </Typography>

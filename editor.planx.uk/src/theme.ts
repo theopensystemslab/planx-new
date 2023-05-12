@@ -19,7 +19,8 @@ const TEXT_COLOR_SECONDARY = "#505A5F";
 const BG_COLOR_DEFAULT = "#FFFFFF";
 
 // Type styles
-export const FONT_WEIGHT_STRONG = "600";
+export const FONT_WEIGHT_SEMI_BOLD = "600";
+export const FONT_WEIGHT_BOLD = "700";
 const SPACING_TIGHT = "-0.02em";
 const LINE_HEIGHT_BASE = "1.33";
 
@@ -102,24 +103,24 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       h1: {
         fontSize: "3rem",
         letterSpacing: SPACING_TIGHT,
-        fontWeight: FONT_WEIGHT_STRONG,
+        fontWeight: FONT_WEIGHT_BOLD,
       },
       h3: {
         fontSize: "2.25rem",
         letterSpacing: SPACING_TIGHT,
-        fontWeight: FONT_WEIGHT_STRONG,
+        fontWeight: FONT_WEIGHT_BOLD,
       },
       h4: {
         fontSize: "1.5rem",
-        fontWeight: FONT_WEIGHT_STRONG,
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       h5: {
         fontSize: "1.188rem",
-        fontWeight: FONT_WEIGHT_STRONG,
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       h6: {
         fontSize: "1rem",
-        fontWeight: FONT_WEIGHT_STRONG,
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       subtitle1: {
         fontSize: "1.5rem",
@@ -152,10 +153,10 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       MuiCssBaseline: {
         styleOverrides: {
           strong: {
-            fontWeight: FONT_WEIGHT_STRONG,
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
           },
           b: {
-            fontWeight: FONT_WEIGHT_STRONG,
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
           },
           body: {
             backgroundColor: BG_COLOR_DEFAULT,
@@ -206,11 +207,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
           sizeMedium: {
             fontSize: "1rem",
-            fontWeight: FONT_WEIGHT_STRONG,
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
           },
           sizeLarge: {
             fontSize: "1.188rem",
-            fontWeight: FONT_WEIGHT_STRONG,
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
           },
         },
       },

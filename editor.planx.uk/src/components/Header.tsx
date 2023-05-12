@@ -25,7 +25,7 @@ import {
   useCurrentRoute,
   useNavigation,
 } from "react-navi";
-import { borderedFocusStyle, focusStyle, FONT_WEIGHT_STRONG } from "theme";
+import { borderedFocusStyle, focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ApplicationPath, Team } from "types";
 import Reset from "ui/icons/Reset";
 
@@ -129,7 +129,7 @@ const SkipLink = styled("a")(({ theme }) => ({
 }));
 
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
-  fontWeight: FONT_WEIGHT_STRONG,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
   paddingLeft: theme.spacing(2),
   paddingBottom: theme.spacing(1),
 }));
@@ -144,7 +144,7 @@ const StyledNavBar = styled("nav")(({ theme }) => ({
 
 const SectionName = styled(Typography)(() => ({
   fontSize: "inherit",
-  fontWeight: FONT_WEIGHT_STRONG,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
 const SectionCount = styled(Typography)(() => ({

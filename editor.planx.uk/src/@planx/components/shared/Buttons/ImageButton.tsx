@@ -4,7 +4,7 @@ import { Theme, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { FONT_WEIGHT_STRONG } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Checkbox from "ui/Checkbox";
 
 import ButtonBase, { Props as ButtonBaseProps } from "./ButtonBase";
@@ -42,7 +42,7 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
       marginTop: theme.spacing(1),
     },
     bold: {
-      fontWeight: FONT_WEIGHT_STRONG,
+      fontWeight: FONT_WEIGHT_SEMI_BOLD,
     },
     label: {
       cursor: "pointer",

@@ -8,7 +8,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import { borderedFocusStyle, FONT_WEIGHT_STRONG } from "theme";
+import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
 
@@ -50,10 +50,10 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
     height: 50,
     fontSize: 25,
     width: "100%",
-    fontWeight: FONT_WEIGHT_STRONG,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
   bold: {
-    fontWeight: FONT_WEIGHT_STRONG,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
   data: {
     backgroundColor: "#fafafa",

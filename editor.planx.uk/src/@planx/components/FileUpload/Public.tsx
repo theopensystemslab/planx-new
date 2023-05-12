@@ -17,7 +17,7 @@ import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
-import { FONT_WEIGHT_STRONG } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { array } from "yup";
 
@@ -325,7 +325,7 @@ function Dropzone(props: any) {
             <Box flexGrow={1}>
               <Box
                 fontSize="body2.fontSize"
-                fontWeight={FONT_WEIGHT_STRONG}
+                fontWeight={FONT_WEIGHT_SEMI_BOLD}
                 color="text.secondary"
               >
                 File {index + 1}
