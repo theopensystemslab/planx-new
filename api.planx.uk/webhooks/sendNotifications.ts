@@ -40,6 +40,19 @@ const sendSlackNotification = async (req: Request, res: Response, next: NextFunc
       await slack.send(uniformMessage);
       return res.status(200).send({ message: "Posted to Slack", data: uniformMessage });
     }
+
+    if (req.query.type === "email-submission") {
+      const isEmailStaging = !data?.response?.personalisation?.downloadLink?.startsWith("https://api.editor.planx.uk");
+      if (isEmailStaging) {
+        return res.status(200).send({
+          message: `Staging application submitted, skipping Slack notification`
+        });
+      }
+
+      const emailMessage = `:incoming_envelope: New email submission "${data?.request?.personalisation?.serviceName}" *${data?.session_id}* [${data?.team_slug}]`;
+      await slack.send(emailMessage);
+      return res.status(200).send({ message: "Posted to Slack", data: emailMessage });
+    }
   } catch (error) {
     return next({
       error,
