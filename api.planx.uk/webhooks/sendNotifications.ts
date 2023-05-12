@@ -42,7 +42,7 @@ const sendSlackNotification = async (req: Request, res: Response, next: NextFunc
     }
 
     if (req.query.type === "email-submission") {
-      const isEmailStaging = !data?.response?.personalisation?.downloadLink?.startsWith("https://api.editor.planx.uk");
+      const isEmailStaging = !data?.request?.personalisation?.downloadLink?.startsWith("https://api.editor.planx.uk");
       if (isEmailStaging) {
         return res.status(200).send({
           message: `Staging application submitted, skipping Slack notification`
