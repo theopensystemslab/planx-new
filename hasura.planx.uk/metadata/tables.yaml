@@ -88,6 +88,9 @@
   is_enum: true
 - table:
     schema: public
+    name: email_applications
+- table:
+    schema: public
     name: flow_document_templates
   object_relationships:
     - name: flow
