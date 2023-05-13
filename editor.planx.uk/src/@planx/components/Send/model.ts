@@ -50,7 +50,7 @@ export function getCombinedEventsPayload({
   if (destinations.includes(Destination.BOPS)) {
     combinedEventsPayload[Destination.BOPS] = {
       localAuthority: teamSlug,
-      body: getBOPSParams({ breadcrumbs, flow, flowName, passport, sessionId }),
+      body: { sessionId },
     };
   }
 
@@ -146,7 +146,7 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   };
   planx_debug_data?: Record<string, unknown>;
   // typeof arr[number] > https://steveholgado.com/typescript-types-from-arrays
-  user_role?: typeof USER_ROLES[number];
+  user_role?: (typeof USER_ROLES)[number];
   works?: {
     start_date?: string;
     finish_date?: string;
