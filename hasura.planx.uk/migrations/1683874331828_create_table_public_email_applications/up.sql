@@ -5,9 +5,9 @@ CREATE TABLE "public"."email_applications" (
   "recipient" text NOT NULL, 
   "request" jsonb NOT NULL,
   "response" jsonb NOT NULL, 
-  "created_at" Timestamp NOT NULL DEFAULT now(), 
+  "created_at" timestamptz NOT NULL DEFAULT now(), 
   "sanitised_at" timestamptz, 
-  PRIMARY KEY ("id") , 
+  PRIMARY KEY ("id"), 
   UNIQUE ("id")
 );
 
