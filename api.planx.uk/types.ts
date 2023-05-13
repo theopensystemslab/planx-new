@@ -14,6 +14,17 @@ export interface Flow {
   team_id: number;
 }
 
+export interface PublishedFlow {
+  id: number;
+  data: {
+    [key: string]: Node;
+  };
+  created_at: string;
+  flow_id: string;
+  publisher_id: number;
+  summary: string;
+}
+
 export interface UserData {
   answers?: Array<string>;
   data?: Record<string, any>;
@@ -61,53 +72,50 @@ export interface LowCalSession {
   };
 }
 
+type MinimumNotifyPersonalisation = {
+  emailReplyToId: string;
+  expiryDate?: string;
+  helpEmail: string;
+  helpOpeningHours: string;
+  helpPhone: string;
+  serviceLink?: string;
+  serviceName?: string;
+  sessionId?: string;
+}
+
+interface SaveAndReturnNotifyPersonalisation extends MinimumNotifyPersonalisation {
+  address?: any;
+  projectType?: string;
+  resumeLink?: string;
+  teamName: string;
+}
+
 export interface SaveAndReturnNotifyConfig {
-  personalisation: {
-    address?: any;
-    emailReplyToId: string;
-    expiryDate?: string;
-    helpEmail: string;
-    helpOpeningHours: string;
-    helpPhone: string;
-    id?: string;
-    projectType?: string;
-    resumeLink?: string;
-    serviceLink?: string;
-    serviceName?: string;
-    teamName: string;
-  };
+  personalisation: SaveAndReturnNotifyPersonalisation;
+}
+
+interface EmailSubmissionNotifyPersonalisation extends MinimumNotifyPersonalisation {
+  applicantEmail: string;
+  downloadLink: string;
 }
 
 export interface EmailSubmissionNotifyConfig {
-  personalisation: {
-    applicantEmail: string;
-    downloadLink: string;
-    emailReplyToId: string;
-    expiryDate?: string;
-    id?: string;
-    serviceName: string;
-    sessionId: string;
-  };
+  personalisation: EmailSubmissionNotifyPersonalisation;
+}
+
+interface InviteToPayNotifyPersonalisation extends MinimumNotifyPersonalisation {
+  address?: string;
+  agentName?: string;
+  fee?: string;
+  payeeEmail: string;
+  payeeName?: string;
+  paymentLink?: string;
+  paymentRequestId: string;
+  projectType?: string;
 }
 
 export interface InviteToPayNotifyConfig {
-  personalisation: {
-    paymentRequestId: string;
-    payeeEmail: string;
-    payeeName?: string;
-    agentName?: string;
-    paymentLink?: string;
-    fee?: string;
-    projectType?: string;
-    address?: string;
-    expiryDate?: string;
-    id: string; // sessionId
-    serviceName: string;
-    emailReplyToId: string;
-    helpEmail: string;
-    helpOpeningHours: string;
-    helpPhone: string;
-  };
+  personalisation: InviteToPayNotifyPersonalisation;
 }
 
 // https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response

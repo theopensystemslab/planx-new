@@ -1,12 +1,13 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
+import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import { PaymentStatus } from "types";
+import { ApplicationPath, PaymentStatus } from "types";
 import Banner from "ui/Banner";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -53,74 +54,74 @@ const ErrorSummary = styled(Box)(({ theme }) => ({
   border: `5px solid ${theme.palette.error.main}`,
 }));
 
-const PayBody: React.FC<PayBodyProps> = (props) => (
-  <>
-    {!props.error ? (
-      <Card>
-        <PayText>
-          <Typography
-            variant="h3"
-            component={props.hideFeeBanner ? "h2" : "h3"}
-          >
-            {props.instructionsTitle || "How to pay"}
-          </Typography>
-          <Typography variant="body2">
-            <ReactMarkdownOrHtml
-              source={
-                props.instructionsDescription ||
-                `<p>You can pay for your application by using GOV.UK Pay.</p>\
+const PayBody: React.FC<PayBodyProps> = (props) => {
+  const path = useStore((state) => state.path);
+  const isSaveReturn = path === ApplicationPath.SaveAndReturn;
+
+  return (
+    <>
+      {!props.error ? (
+        <Card>
+          <PayText>
+            <Typography
+              variant="h3"
+              component={props.hideFeeBanner ? "h2" : "h3"}
+            >
+              {props.instructionsTitle || "How to pay"}
+            </Typography>
+            <Typography variant="body2">
+              <ReactMarkdownOrHtml
+                source={
+                  props.instructionsDescription ||
+                  `<p>You can pay for your application by using GOV.UK Pay.</p>\
                    <p>Your application will be sent after you have paid the fee. \
                    Wait until you see an application sent message before closing your browser.</p>`
-              }
-              openLinksOnNewTab
-            />
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={props.onConfirm}
-          >
-            {props.buttonTitle || "Pay now using GOV.UK Pay"}
-          </Button>
-          {props.showInviteToPay && (
-            <>
-              <Button
-                variant="contained"
-                color="secondary"
-                style={{ borderBottom: `solid 2px lightgrey` }}
-                size="large"
-                onClick={props.changePage}
-                disabled={Boolean(props?.paymentStatus)}
-                data-testid="invite-page-link"
-              >
-                {"Invite someone else to pay for this application"}
-              </Button>
-              <Typography variant="body2">or</Typography>
-              <Link component="button">
-                <Typography variant="body2">
-                  Save and return to this application later
-                </Typography>
-              </Link>
-            </>
-          )}
-        </PayText>
-      </Card>
-    ) : (
-      <Card handleSubmit={props.onConfirm} isValid>
-        <ErrorSummary role="status" data-testid="error-summary">
-          <Typography variant="h5" component="h3" gutterBottom>
-            {props.error}
-          </Typography>
-          <Typography variant="body2">
-            Click continue to skip payment and proceed with your application for
-            testing.
-          </Typography>
-        </ErrorSummary>
-      </Card>
-    )}
-  </>
-);
+                }
+                openLinksOnNewTab
+              />
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={props.onConfirm}
+            >
+              {props.buttonTitle || "Pay now using GOV.UK Pay"}
+            </Button>
+            {props.showInviteToPay && (
+              <>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  style={{ borderBottom: `solid 2px lightgrey` }}
+                  size="large"
+                  onClick={props.changePage}
+                  disabled={Boolean(props?.paymentStatus)}
+                  data-testid="invite-page-link"
+                >
+                  {"Invite someone else to pay for this application"}
+                </Button>
+              </>
+            )}
+            {isSaveReturn && <SaveResumeButton />}
+          </PayText>
+        </Card>
+      ) : (
+        <Card handleSubmit={props.onConfirm} isValid>
+          <ErrorSummary role="status" data-testid="error-summary">
+            <Typography variant="h5" component="h3" gutterBottom>
+              {props.error}
+            </Typography>
+            <Typography variant="body2">
+              Click continue to skip payment and proceed with your application
+              for testing.
+            </Typography>
+          </ErrorSummary>
+        </Card>
+      )}
+    </>
+  );
+};
 
 export default function Confirm(props: Props) {
   const theme = useTheme();

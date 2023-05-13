@@ -1,10 +1,19 @@
 import { screen } from "@testing-library/react";
+import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { act } from "react-dom/test-utils";
 import { axe, setup } from "testUtils";
-import { PaymentStatus } from "types";
+import { ApplicationPath, PaymentStatus } from "types";
 
 import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
+
+const { getState, setState } = vanillaStore;
+
+let initialState: FullStore;
+
+const resumeButtonText = "Resume an application you have already started";
+const saveButtonText = "Save and return to this application later";
 
 it("renders correctly (is hidden) with <= £0 fee", () => {
   const handleSubmit = jest.fn();
@@ -37,6 +46,9 @@ const defaultProps = {
 };
 
 describe("Confirm component without inviteToPay", () => {
+  beforeAll(() => (initialState = getState()));
+  afterEach(() => act(() => setState(initialState)));
+
   it("renders correctly", () => {
     setup(<Confirm {...defaultProps} />);
 
@@ -56,7 +68,7 @@ describe("Confirm component without inviteToPay", () => {
     expect(screen.getByText("£103.00")).toBeInTheDocument();
   });
 
-  it("correctly adjusts the heading heirarchy when the fee banner is hidden", async () => {
+  it("correctly adjusts the heading hierarchy when the fee banner is hidden", async () => {
     setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
@@ -103,9 +115,32 @@ describe("Confirm component without inviteToPay", () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
+  it("displays the Save/Resume option if the application path requires it", () => {
+    act(() =>
+      setState({
+        path: ApplicationPath.SaveAndReturn,
+        saveToEmail: "test@opensystemsla.b.io",
+      })
+    );
+    setup(<Confirm {...defaultProps} />);
+
+    expect(screen.getByText(saveButtonText)).toBeInTheDocument();
+    expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
+  });
+
+  it("hides the Save/Resume option if the application path does not require it", () => {
+    setup(<Confirm {...defaultProps} />);
+
+    expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
+    expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
+  });
 });
 
 describe("Confirm component with inviteToPay", () => {
+  beforeAll(() => (initialState = getState()));
+  afterEach(() => act(() => setState(initialState)));
+
   const inviteProps: Props = {
     ...defaultProps,
     showInviteToPay: true,
@@ -224,6 +259,26 @@ describe("Confirm component with inviteToPay", () => {
     await user.click(screen.getByText(invitePrompt));
     expect(screen.getByText("Details of your nominee")).toBeInTheDocument();
     expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
+  });
+
+  it("displays the Save/Resume option if the application path requires it", () => {
+    act(() =>
+      setState({
+        path: ApplicationPath.SaveAndReturn,
+        saveToEmail: "test@opensystemsla.b.io",
+      })
+    );
+    setup(<Confirm {...inviteProps} />);
+
+    expect(screen.getByText(saveButtonText)).toBeInTheDocument();
+    expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
+  });
+
+  it("hides the Save/Resume option if the application path does not require it", () => {
+    setup(<Confirm {...inviteProps} />);
+
+    expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
+    expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {

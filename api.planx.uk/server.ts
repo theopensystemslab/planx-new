@@ -23,7 +23,7 @@ import multer from "multer";
 
 import { ServerError } from "./errors";
 import { locationSearch } from "./gis/index";
-import { diffFlow, publishFlow } from "./editor/publish";
+import { validateAndDiffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
 import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
 import {
@@ -444,7 +444,7 @@ app.get(
 
 app.post("/flows/:flowId/copy", useJWT, copyFlow);
 
-app.post("/flows/:flowId/diff", useJWT, diffFlow);
+app.post("/flows/:flowId/diff", useJWT, validateAndDiffFlow);
 
 app.post("/flows/:flowId/move/:teamSlug", useJWT, moveFlow);
 

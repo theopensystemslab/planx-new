@@ -1,5 +1,9 @@
 import { test, expect } from "@playwright/test";
-import simpleSendFlow from "./flows/simple-send-flow.json";
+import { gql } from "graphql-request";
+import {
+  simpleSendFlow,
+  modifiedSimpleSendFlow,
+} from "./flows/save-and-return-flows";
 import {
   getGraphQLClient,
   setUpTestContext,
@@ -16,7 +20,6 @@ import {
 import type { Context } from "./context";
 
 test.describe("Save and return", () => {
-  const adminGQLClient = getGraphQLClient();
   let context: Context = {
     user: {
       firstName: "test",
@@ -78,11 +81,16 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
-      const sessionId = await saveSession({ page, adminGQLClient, context });
+      const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
-      await returnToSession({ page, context, sessionId: sessionId! });
+      await returnToSession({
+        page,
+        context,
+        sessionId: sessionId!,
+        shouldContinue: false,
+      });
 
       const reviewTitle = await page.locator("h1", {
         hasText: "Resume your application",
@@ -90,8 +98,7 @@ test.describe("Save and return", () => {
       await expect(reviewTitle).toBeVisible();
     });
 
-    // TODO - fix failing test
-    test.skip("the application resumes from the last unanswered question", async ({
+    test("the application resumes from the last unanswered question", async ({
       page,
     }) => {
       await page.goto(previewURL);
@@ -99,30 +106,104 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForResponse: true });
 
       await answerQuestion({ page, title: "Question 1", answer: "A" });
-      await clickContinue({ page });
+      await clickContinue({ page, waitForLogEvent: true });
 
-      let secondQuestion = await findQuestion({
-        page,
-        title: "Question 2",
-      });
+      let secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
 
-      const sessionId = await saveSession({ page, adminGQLClient, context });
+      const sessionId = await saveSession({ page, context });
       if (!sessionId) test.fail();
 
       await returnToSession({ page, context, sessionId: sessionId! });
-      await clickContinue({ page });
 
       // skip review page
-      await page.getByRole("button", { name: "Continue" }).click();
+      await clickContinue({ page });
 
-      secondQuestion = await findQuestion({
-        page,
-        title: "Question 2",
-      });
+      secondQuestion = await findQuestion({ page, title: "Question 2" });
+      await expect(secondQuestion).toBeVisible();
+    });
+  });
+
+  test.describe("session reconciliation", () => {
+    test("the application resumes with no modifications", async ({ page }) => {
+      await page.goto(previewURL);
+      await fillInEmail({ page, context });
+      await clickContinue({ page, waitForResponse: true });
+
+      await answerQuestion({ page, title: "Question 1", answer: "A" });
+      await clickContinue({ page, waitForLogEvent: true });
+
+      let secondQuestion = await findQuestion({ page, title: "Question 2" });
+      await expect(secondQuestion).toBeVisible();
+
+      const sessionId = await saveSession({ page, context });
+      if (!sessionId) test.fail();
+
+      await returnToSession({ page, context, sessionId: sessionId! });
+
+      // skip review page
+      await clickContinue({ page });
+
+      secondQuestion = await findQuestion({ page, title: "Question 2" });
       await expect(secondQuestion).toBeVisible();
     });
 
-    // TODO "changes to a section are not displayed as changed during reconciliation"
+    test("the application resumes from the first modified question", async ({
+      page,
+    }) => {
+      await page.goto(previewURL);
+      await fillInEmail({ page, context });
+      await clickContinue({ page, waitForResponse: true });
+
+      await answerQuestion({ page, title: "Question 1", answer: "A" });
+      await clickContinue({ page, waitForLogEvent: true });
+
+      const secondQuestion = await findQuestion({ page, title: "Question 2" });
+      await expect(secondQuestion).toBeVisible();
+
+      const sessionId = await saveSession({ page, context });
+      if (!sessionId) test.fail();
+
+      // flow is updated between sessions
+      await modifyFlow(context);
+
+      await returnToSession({ page, context, sessionId: sessionId! });
+
+      // skip review page
+      await clickContinue({ page });
+
+      const modifiedFirstQuestion = await findQuestion({
+        page,
+        title: "Question One",
+      });
+      await expect(modifiedFirstQuestion).toBeVisible();
+    });
   });
 });
+
+async function modifyFlow(context: Context) {
+  const adminGQLClient = getGraphQLClient();
+  if (!context.flow?.id || !context.user?.id) {
+    throw new Error("context must have a flow and user");
+  }
+  await adminGQLClient.request(
+    gql`
+      mutation UpdateTestFlow($flowId: uuid!, $userId: Int!, $data: jsonb!) {
+        update_flows_by_pk(pk_columns: { id: $flowId }, _set: { data: $data }) {
+          id
+          data
+        }
+        insert_published_flows_one(
+          object: { flow_id: $flowId, data: $data, publisher_id: $userId }
+        ) {
+          id
+        }
+      }
+    `,
+    {
+      flowId: context.flow!.id,
+      userId: context.user!.id,
+      data: modifiedSimpleSendFlow,
+    }
+  );
+}
