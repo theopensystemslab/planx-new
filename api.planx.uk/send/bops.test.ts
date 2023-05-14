@@ -2,7 +2,7 @@ import nock from "nock";
 import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
 import app from "../server";
-import { mockFlow, mockSession } from "../admin/session/bops.test";
+import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
 
 [
   {
