@@ -59,8 +59,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     target,
     selfHandleResponse: true,
     onProxyReq: (proxyReq, req) => {
-      // Only forward the payload BoPS, not the entire Hasura event
-      req.body = payload;
+      req.body = bopsFullPayload;
       fixRequestBody(proxyReq, req);
     },
     onProxyRes: responseInterceptor(

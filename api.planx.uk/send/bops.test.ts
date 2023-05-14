@@ -2,6 +2,7 @@ import nock from "nock";
 import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
 import app from "../server";
+import { mockFlow, mockSession } from "../admin/session/bops.test";
 
 [
   {
@@ -57,6 +58,42 @@ import app from "../server";
         },
         variables: { sessionId: 123 },
       });
+
+      queryMock.mockQuery({
+        name: "GetSessionById",
+        variables: {
+          id: 123,
+        },
+        data: {
+          lowcal_sessions_by_pk: mockSession,
+        },
+      });
+
+      queryMock.mockQuery({
+        name: "GetLatestPublishedFlowData",
+        variables: {
+          flowId: "456",
+        },
+        data: {
+          published_flows: [
+            {
+              data: mockFlow,
+            },
+          ],
+        },
+      });
+  
+      queryMock.mockQuery({
+        name: "GetFlowSlug",
+        variables: {
+          flowId: "456",
+        },
+        data: {
+          flows_by_pk: {
+            slug: "apply-for-a-lawful-development-certificate",
+          },
+        },
+      });
     });
 
     beforeAll(() => {
@@ -79,7 +116,7 @@ import app from "../server";
       await supertest(app)
         .post("/bops/southwark")
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } }})
+        .send({ payload: { sessionId: 123 }})
         .expect(200)
         .then((res) => {
           expect(res.body).toEqual({
@@ -91,7 +128,7 @@ import app from "../server";
     it("requires auth", async () => {      
       await supertest(app)
         .post("/bops/southwark")
-        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } }})
+        .send({ payload: { sessionId: 123 }})
         .expect(401)
     });
 
@@ -110,7 +147,7 @@ import app from "../server";
       await supertest(app)
         .post("/bops/unsupported-team")
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } } })
+        .send({ payload: { sessionId: 123 }})
         .expect(400)
         .then((res) => {
           expect(res.body.error).toMatch(/not enabled for this local authority/);
@@ -121,7 +158,7 @@ import app from "../server";
       await supertest(app)
         .post("/bops/southwark")
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: "previously_submitted_app" } } })
+        .send({ payload: { sessionId: "previously_submitted_app" }})
         .expect(200)
         .then((res) => {
           expect(res.body).toEqual({

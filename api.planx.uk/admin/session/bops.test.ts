@@ -5,7 +5,7 @@ import { queryMock } from "../../tests/graphqlQueryMock";
 
 const endpoint = (strings: TemplateStringsArray) => `/admin/session/${strings[0]}/bops`;
 
-describe("BOPS payload endpoint", () => {
+describe("BOPS payload admin endpoint", () => {
   beforeEach(() => {
     queryMock.mockQuery({
       name: "GetSessionById",
@@ -248,7 +248,7 @@ const expectedPayload = {
   }
 };
 
-const mockSession = {
+export const mockSession = {
   id: "123",
   flowId: "456",
   data: {
@@ -390,7 +390,7 @@ const mockSession = {
   },
 };
 
-const mockFlow = {
+export const mockFlow = {
   "_root": {
     "edges": [
       "LwaXZEGsoH",
