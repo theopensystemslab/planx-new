@@ -1,9 +1,10 @@
 import { gql } from "graphql-request";
-import { calculateExpiryDate, convertSlugToName, getHumanReadableProjectType, getServiceLink } from "../saveAndReturn/utils";
+import { calculateExpiryDate, convertSlugToName, getServiceLink } from "../saveAndReturn/utils";
 import { Template, getClientForTemplate, sendEmail } from "../notify/utils";
 import { InviteToPayNotifyConfig } from "../types";
 import { Team } from '../types';
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
+import { _admin } from '../client';
 
 interface SessionDetails {
   email: string;
@@ -88,7 +89,7 @@ const getInviteToPayNotifyConfig = async (session: SessionDetails, paymentReques
     agentName: paymentRequest.applicantName,
     address: (paymentRequest.sessionPreviewData?._address as Record<"title", string>).title,
     fee: getFee(paymentRequest),
-    projectType: await getHumanReadableProjectType(paymentRequest.sessionPreviewData) || "Project type not submitted",
+    projectType: await _admin.formatRawProjectTypes(paymentRequest.sessionPreviewData?.["proposal.projectType"] as string[]) || "Project type not submitted",
     serviceName: convertSlugToName(session.flow.slug),
     serviceLink: getServiceLink(session.flow.team, session.flow.slug),
     expiryDate: calculateExpiryDate(paymentRequest.createdAt),

@@ -145,15 +145,3 @@ export const validatePaymentRequestNotFoundQueryMock = {
     paymentRequestId: "123-wrong-456",
   },
 };
-
-export const getHumanReadableProjectTypeQueryMock = {
-  name: "GetHumanReadableProjectType",
-  data: {
-    project_types: [
-      { description: "New office premises" }
-    ],
-  },
-  variables: {
-    rawList: ["new.office"],
-  }
-};
