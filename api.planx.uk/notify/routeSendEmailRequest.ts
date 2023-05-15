@@ -1,44 +1,106 @@
 import { NextFunction, Request, Response } from "express";
-import { sendSinglePaymentEmail } from "../inviteToPay";
+import {
+  sendSinglePaymentEmail,
+  sendAgentAndPayeeConfirmationEmail,
+} from "../inviteToPay";
 import { sendSingleApplicationEmail } from "../saveAndReturn/utils";
-import { Template } from "./utils";
+import { Template } from "./notify";
+import { ServerError } from "../errors";
 
-const routeSendEmailRequest = async (
+export async function routeSendEmailRequest(
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+) {
   try {
-    const { email, sessionId, paymentRequestId } = req.body.payload;
+    const { email, sessionId, paymentRequestId, isLocked } = req.body.payload;
     const template = req.params.template as Template;
-    
-    if (paymentRequestId) {
-      const response = await sendSinglePaymentEmail(
-        template,
-        paymentRequestId,
-      );
-      return res.json(response);
-    } else if (email && sessionId) {
-      const response = await sendSingleApplicationEmail(
+
+    const invalidTemplate = (_unknownTemplate?: never) => {
+      throw new ServerError({
+        message: "Invalid template",
+        status: 400,
+      });
+    };
+
+    const handleSingleApplicationEmail = async () => {
+      if (!email || !sessionId) {
+        throw new ServerError({
+          status: 400,
+          message: "Required value missing",
+        });
+      }
+      const response = await sendSingleApplicationEmail({
         template,
         email,
-        sessionId
-      );
-      return res.json(response);
-    } else if (!email || !sessionId || !paymentRequestId) {
-      return next({
-        status: 400,
-        message: "Required value missing",
+        sessionId,
       });
+      return res.json(response);
+    };
+
+    const handlePaymentEmails = async () => {
+      if (!paymentRequestId) {
+        throw new ServerError({
+          status: 400,
+          message: "Required `paymentRequestId` missing",
+        });
+      }
+      const response = await sendSinglePaymentEmail({
+        template,
+        paymentRequestId,
+      });
+      return res.json(response);
+    };
+
+    const handleInviteToPayConfirmationEmails = async () => {
+      if (!sessionId) {
+        throw new ServerError({
+          status: 400,
+          message: "Required `sessionId` missing",
+        });
+      }
+      const response = await sendAgentAndPayeeConfirmationEmail(sessionId);
+      return res.json(response);
+    };
+
+    switch (template) {
+      case "reminder":
+      case "expiry":
+      case "resume":
+      case "save":
+      case "submit":
+        return await handleSingleApplicationEmail();
+      case "invite-to-pay":
+      case "invite-to-pay-agent":
+      case "payment-reminder":
+      case "payment-reminder-agent":
+      case "payment-expiry":
+      case "payment-expiry-agent":
+        return await handlePaymentEmails();
+      case "confirmation": {
+        // if the session is locked we can infer that a payment request has been initiated
+        const paymentRequestInitiated = isLocked;
+        if (paymentRequestInitiated) {
+          return await handleInviteToPayConfirmationEmails();
+        } else {
+          return await handleSingleApplicationEmail();
+        }
+      }
+      case "confirmation-agent":
+      case "confirmation-payee":
+        // templates that are already handled by other routes
+        return invalidTemplate();
+      default:
+        return invalidTemplate(template);
     }
   } catch (error) {
-    return next({
-      error,
-      message: `Failed to send ${req.params.template} email. ${
-        (error as Error).message
-      }`,
-    });
+    next(
+      new ServerError({
+        status: error instanceof ServerError ? error.status : undefined,
+        message: `Failed to send "${req.params.template}" email. ${
+          (error as Error).message
+        }`,
+      })
+    );
   }
-};
-
-export { routeSendEmailRequest };
+}
