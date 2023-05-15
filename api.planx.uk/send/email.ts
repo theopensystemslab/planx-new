@@ -63,7 +63,8 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(payload.sessionId);
 
-    // TODO create audit table entry? setup event trigger for slack notification on new row?
+    // Create audit table entry, which triggers a Slack notification on `insert` if production
+    insertAuditEntry(payload.sessionId, req.params.localAuthority, sendToEmail, config, response);
 
     return res.status(200).send({
       message: `Successfully sent "Submit" email`,
@@ -262,6 +263,47 @@ async function downloadPassportFiles(
       await downloadFile(file, filePath, zip);
     }
   }
+}
+
+async function insertAuditEntry(
+  sessionId: string, 
+  teamSlug: string, 
+  recipient: string, 
+  notifyRequest: EmailSubmissionNotifyConfig,
+  sendEmailResponse: {
+    message: string;
+    expiryDate?: string;
+  }) {
+  const response = await adminClient.request(
+    gql`
+      mutation CreateEmailApplication(
+        $session_id: String = "",
+        $team_slug: String = "",
+        $recipient: String = "",
+        $request: jsonb = "",
+        $response: jsonb = ""
+      ) {
+        insert_email_applications_one(object: {
+          session_id: $session_id,
+          team_slug: $team_slug,
+          recipient: $recipient,
+          request: $request,
+          response: $response
+        }) {
+          id
+        }
+      }
+    `,
+    {
+      session_id: sessionId,
+      team_slug: teamSlug,
+      recipient: recipient,
+      request: notifyRequest,
+      response: sendEmailResponse
+    }
+  );
+
+  return response?.insert_email_applications_one?.id;
 }
 
 export { sendToEmail, downloadApplicationFiles };
