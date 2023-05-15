@@ -5,15 +5,12 @@ import omit from "lodash/omit"
 import { useProxy } from "../proxy";
 import { NextFunction, Request, Response } from 'express';
 import { gql } from "graphql-request";
-
-interface BOPSFullPayload {
-  planx_debug_data: {
-    session_id: string
-  }
-}
+import { _admin } from "../client";
 
 interface SendToBOPSRequest {
-  payload: BOPSFullPayload
+  payload: { 
+    sessionId: string; 
+  }
 }
 
 const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,10 +24,10 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   // confirm that this session has not already been successfully submitted before proceeding
-  const submittedApp = await checkBOPSAuditTable(payload?.planx_debug_data?.session_id);
+  const submittedApp = await checkBOPSAuditTable(payload?.sessionId);
   if (submittedApp?.message === "Application created") {
     return res.status(200).send({
-      sessionId: payload?.planx_debug_data?.session_id,
+      sessionId: payload?.sessionId,
       bopsId: submittedApp?.id,
       message: `Skipping send, already successfully submitted`,
     });
@@ -51,6 +48,8 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
   const target = `${domain}/api/v1/planning_applications`;
 
+  const bopsFullPayload = await _admin.generateBOPSPayload(payload?.sessionId);
+
   useProxy({
     headers: {
       ...(req.headers as Record<string, string | string[]>),
@@ -60,14 +59,13 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     target,
     selfHandleResponse: true,
     onProxyReq: (proxyReq, req) => {
-      // Only forward the payload BoPS, not the entire Hasura event
-      req.body = payload;
+      req.body = bopsFullPayload;
       fixRequestBody(proxyReq, req);
     },
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, _res) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
-        markSessionAsSubmitted(payload?.planx_debug_data?.session_id);
+        markSessionAsSubmitted(payload?.sessionId);
 
         const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
@@ -98,11 +96,11 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
           {
             bops_id: bopsResponse.id,
             destination_url: target,
-            request: payload,
+            request: bopsFullPayload,
             req_headers: omit(req.headers, ["authorization"]),
             response: bopsResponse,
             response_headers: proxyRes.headers,
-            session_id: payload?.planx_debug_data?.session_id,
+            session_id: payload?.sessionId,
           }
         );
 

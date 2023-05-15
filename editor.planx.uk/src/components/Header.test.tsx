@@ -158,7 +158,7 @@ describe("Section navigation bar", () => {
 
   describe("Flow without sections", () => {
     it("does not display", () => {
-      setup(<Header/>);
+      setup(<Header />);
       act(() => setState({ flow: flowWithoutSections }));
       act(() => getState().initNavigationStore());
 
