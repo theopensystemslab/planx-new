@@ -2,7 +2,7 @@ import SlackNotify from 'slack-notify';
 import { Request, Response, NextFunction } from 'express';
 
 const sendSlackNotification = async (req: Request, res: Response, next: NextFunction): Promise<Response | void>  => {
-  const supportedTypes = ["bops-submission", "uniform-submission"];
+  const supportedTypes = ["bops-submission", "uniform-submission", "email-submission"];
   if (!req.body?.event || !req.query?.type || !supportedTypes.includes(req.query.type as string)) {
     return res.status(404).send({
       message: "Missing info required to send a Slack notification"
@@ -39,6 +39,19 @@ const sendSlackNotification = async (req: Request, res: Response, next: NextFunc
       const uniformMessage = `:incoming_envelope: New Uniform submission *${data?.submission_reference}* [${data?.response?.organisation}]`;
       await slack.send(uniformMessage);
       return res.status(200).send({ message: "Posted to Slack", data: uniformMessage });
+    }
+
+    if (req.query.type === "email-submission") {
+      const isEmailStaging = !data?.request?.personalisation?.downloadLink?.startsWith("https://api.editor.planx.uk");
+      if (isEmailStaging) {
+        return res.status(200).send({
+          message: `Staging application submitted, skipping Slack notification`
+        });
+      }
+
+      const emailMessage = `:incoming_envelope: New email submission "${data?.request?.personalisation?.serviceName}" *${data?.session_id}* [${data?.team_slug}]`;
+      await slack.send(emailMessage);
+      return res.status(200).send({ message: "Posted to Slack", data: emailMessage });
     }
   } catch (error) {
     return next({
