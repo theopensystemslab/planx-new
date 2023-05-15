@@ -1,4 +1,4 @@
-import Check from "@mui/icons-material/CheckCircleOutlineOutlined";
+import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
