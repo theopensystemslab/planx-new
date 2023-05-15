@@ -1,6 +1,7 @@
 import { _admin as $admin } from "../client";
 import { sendEmail } from "../notify";
 import { gql } from "graphql-request";
+import {  convertSlugToName } from "../saveAndReturn/utils";
 import type { AgentAndPayeeSubmissionNotifyConfig } from "../types";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
@@ -95,10 +96,3 @@ async function getDataForPayeeAndAgentEmails(
     payeeEmail,
   };
 }
-
-/**
- * Converts a flow's slug to a pretty name
- * XXX: This relies on pretty names not having dashes in them, which may not always be true (e.g. Na h-Eileanan Siar, Stoke-on-Trent)
- */
-const convertSlugToName = (slug: string): string =>
-  slug[0].toUpperCase() + slug.substring(1).replaceAll("-", " ");
