@@ -96,13 +96,6 @@ export async function validateSession(
     const { reconciledSessionData, alteredSectionIds } =
       await reconcileSessionData({ sessionData, alteredNodes });
 
-    // store reconciled session data
-    await updateLowcalSessionData({
-      sessionId,
-      sessionData: reconciledSessionData,
-      email,
-    });
-
     const responseData: ValidationResponse = {
       message:
         "This service has been updated since you last saved your application." +
@@ -255,34 +248,6 @@ async function findSession({
   return response.lowcal_sessions.length
     ? response.lowcal_sessions[0]
     : undefined;
-}
-
-async function updateLowcalSessionData({
-  sessionId,
-  sessionData,
-  email,
-}: {
-  sessionId: string;
-  sessionData: LowCalSession["data"];
-  email: string;
-}): Promise<LowCalSession> {
-  const query = gql`
-    mutation UpdateLowcalSessionData($sessionId: uuid!, $data: jsonb!) {
-      update_lowcal_sessions_by_pk(
-        pk_columns: { id: $sessionId }
-        _set: { data: $data }
-      ) {
-        data
-      }
-    }
-  `;
-  const headers = getSaveAndReturnPublicHeaders(sessionId, email);
-  const response = await publicClient.request(
-    query,
-    { sessionId, data: sessionData },
-    headers
-  );
-  return response.update_lowcal_sessions_by_pk?.data;
 }
 
 async function createAuditEntry(
