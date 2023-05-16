@@ -3,6 +3,7 @@ import { log } from "./helpers";
 import { sign } from "jsonwebtoken";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient, gql } from "graphql-request";
+import { PaymentRequest } from "@opensystemslab/planx-core/types";
 
 export interface Context {
   user: {
@@ -26,6 +27,7 @@ export interface Context {
     data?: object;
   };
   sessionIds?: string[];
+  paymentRequest?: Partial<PaymentRequest>;
 }
 
 export const contextDefaults = {
