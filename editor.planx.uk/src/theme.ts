@@ -18,8 +18,6 @@ const TEXT_COLOR_PRIMARY = "#0B0C0C";
 const TEXT_COLOR_SECONDARY = "#505A5F";
 const BG_COLOR_DEFAULT = "#FFFFFF";
 
-const BREAKPOINT_MD = "768";
-
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
 export const FONT_WEIGHT_BOLD = "700";
