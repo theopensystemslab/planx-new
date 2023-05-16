@@ -1,12 +1,10 @@
 import { SiteAddress } from "@opensystemslab/planx-core/types";
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
-import {
-  adminGraphQLClient as adminClient,
-} from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import { Template, getClientForTemplate, sendEmail } from "../notify/utils";
-import { _admin } from "../client";
+import { _admin as $admin } from "../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
 
@@ -138,8 +136,13 @@ interface SessionDetails {
 const getSessionDetails = async (
   session: LowCalSession
 ): Promise<SessionDetails> => {
-  const projectTypes = await _admin.formatRawProjectTypes(session.data.passport?.data?.["proposal.projectType"]);
-  const address: SiteAddress | undefined = session.data?.passport?.data?._address;
+  const passportProtectTypes =
+    session.data.passport?.data?.["proposal.projectType"];
+  const projectTypes =
+    passportProtectTypes &&
+    (await $admin.formatRawProjectTypes(passportProtectTypes));
+  const address: SiteAddress | undefined =
+    session.data?.passport?.data?._address;
   const addressLine = address?.single_line_address || address?.title;
 
   return {
