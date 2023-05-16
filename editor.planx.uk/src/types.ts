@@ -159,6 +159,28 @@ export type Session = {
   govUkPayment?: GovUKPayment;
 };
 
+export interface ReconciliationResponse {
+  message: string;
+  changesFound: boolean | null;
+  alteredSectionIds?: string[];
+  reconciledSessionData: Session;
+}
+
 // re-export store types
 export interface Passport extends Store.passport {}
 export interface Breadcrumbs extends Store.breadcrumbs {}
+
+export enum SectionStatus {
+  NeedsUpdated = "NEW INFORMATION NEEDED",
+  ReadyToContinue = "READY TO CONTINUE",
+  Started = "CANNOT CONTINUE YET",
+  ReadyToStart = "READY TO START",
+  NotStarted = "CANNOT START YET",
+  Completed = "COMPLETED",
+}
+
+export interface SectionNode extends Store.node {
+  data: {
+    title: string;
+  };
+}

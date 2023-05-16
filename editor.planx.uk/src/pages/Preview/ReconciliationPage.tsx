@@ -10,12 +10,12 @@ import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
+import type { ReconciliationResponse } from "types";
 import Banner from "ui/Banner";
 
 interface Props {
   bannerHeading: string;
-  diffMessage: string;
-  data: any;
+  reconciliationResponse: ReconciliationResponse;
   buttonText?: string;
   onButtonClick?: () => void;
 }
@@ -31,31 +31,23 @@ const useStyles = makeStyles((theme) => ({
 
 const ReconciliationPage: React.FC<Props> = ({
   bannerHeading,
-  diffMessage,
-  data,
+  reconciliationResponse,
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, hasSections, sectionNodes, sectionStatuses, changeAnswer] =
-    useStore((state) => [
+  const [flow, hasSections, sectionNodes, currentCard, changeAnswer] = useStore(
+    (state) => [
       state.flow,
       state.hasSections,
       state.sectionNodes,
-      state.sectionStatuses,
+      state.currentCard(),
       state.changeAnswer,
-    ]);
-
-  const sortedBreadcrumbs = sortBreadcrumbs(
-    data?.reconciledSessionData?.breadcrumbs,
-    flow
+    ]
   );
 
-  // Calculate the section statuses based on the response data from /validate-session, before it's been updated in app state
-  const removedNodeIds: string[] | undefined =
-    data?.removedBreadcrumbs && Object.keys(data.removedBreadcrumbs);
-  const reconciledSectionStatuses = sectionStatuses(
-    sortedBreadcrumbs,
-    removedNodeIds
+  const sortedBreadcrumbs = sortBreadcrumbs(
+    reconciliationResponse.reconciledSessionData.breadcrumbs,
+    flow
   );
 
   const theme = useTheme();
@@ -74,34 +66,39 @@ const ReconciliationPage: React.FC<Props> = ({
       </Box>
       <Card>
         {/* Only show a warning if the content change has affected the user's path */}
-        {data?.removedBreadcrumbs &&
-          Object.keys(data.removedBreadcrumbs).length > 0 && (
-            <Box display="flex" mb={4}>
-              <Warning
-                titleAccess="Warning"
-                color="primary"
-                fontSize="large"
-                className={classes.warningIcon}
-              />
-              <Typography variant="body2" className={classes.warningMessage}>
-                {diffMessage}
-              </Typography>
-            </Box>
-          )}
+        {reconciliationResponse.changesFound && (
+          <Box display="flex" mb={4}>
+            <Warning
+              titleAccess="Warning"
+              color="primary"
+              fontSize="large"
+              className={classes.warningIcon}
+            />
+            <Typography variant="body2" className={classes.warningMessage}>
+              {reconciliationResponse.message}
+            </Typography>
+          </Box>
+        )}
         <Typography variant="h3" component="h2">
           Review your {hasSections ? "progress" : "answers"} so far
         </Typography>
         {hasSections ? (
           <SectionsOverviewList
-            sectionNodes={sectionNodes}
-            sectionStatuses={reconciledSectionStatuses}
+            flow={flow}
+            alteredSectionIds={reconciliationResponse.alteredSectionIds}
+            changeAnswer={changeAnswer}
+            nextQuestion={onButtonClick!}
             showChange={false}
+            isReconciliation={true}
+            sectionNodes={sectionNodes}
+            currentCard={currentCard}
+            breadcrumbs={sortedBreadcrumbs}
           />
         ) : (
           <SummaryListsBySections
             breadcrumbs={sortedBreadcrumbs}
             flow={flow}
-            passport={data?.reconciledSessionData?.passport}
+            passport={reconciliationResponse.reconciledSessionData.passport}
             changeAnswer={changeAnswer}
             showChangeButton={false}
             sectionComponent="h3"
@@ -112,6 +109,7 @@ const ReconciliationPage: React.FC<Props> = ({
             variant="contained"
             color="primary"
             size="large"
+            data-testid="continue-button"
             onClick={onButtonClick}
           >
             {buttonText}

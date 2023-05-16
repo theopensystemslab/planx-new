@@ -15,7 +15,7 @@
     "@mui/styles": "5.11.9",
     "@mui/utils": "5.11.9",
     "@opensystemslab/map": "^0.7.4",
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#80a2178",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#026f43f",
     "@opensystemslab/planx-document-templates": "github:theopensystemslab/planx-document-templates#debaeca",
     "@tiptap/core": "^2.0.3",
     "@tiptap/extension-bold": "^2.0.3",
@@ -163,6 +163,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "mkdir -p build && build-storybook --quiet --output-dir ./build/storybook",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
+    "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier -w ./src",
+    "check": "tsc --noEmit && pnpm lint && prettier -c ./src",
     "prepare": "cd .. && husky install editor.planx.uk/.husky"
   },
   "eslintConfig": {

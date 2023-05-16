@@ -4,89 +4,94 @@ import type { FlowGraph } from "@opensystemslab/planx-core/types";
 export const flow: FlowGraph = {
   _root: {
     edges: [
-      "XBZN1QCNo9",
-      "3DI2GtpCAb",
-      "4veEdqnLTW",
-      "Z1R1LRmLbY",
-      "vPr0ukG8JE",
-      "pWCcG9ToZY",
-      "Fz3VuXRlTb",
-      "NUpGwW4Pqe",
-      "rZePKmcD73",
+      "Section1",
+      "Question1",
+      "Section2",
+      "Question2",
+      "EndOfSection2Notice",
+      "Section3",
+      "PreSendContent",
+      "Send",
+      "Confirmation",
     ],
   },
-  "1hJpwGw4Je": {
+  ChecklistOptionC: {
     data: { text: "C" },
     type: ComponentType.Answer,
-    edges: ["7URtB1N5zG"],
+    edges: ["NoticeC"],
   },
-  "3DI2GtpCAb": {
+  Question1: {
     data: { text: "Question 1" },
     type: ComponentType.Question,
-    edges: ["kLK7wbmOEZ", "5bebjoffUb", "JHLgiz66t4"],
+    edges: ["Question1AnswerA", "Question1AnswerB", "Question1AnswerC"],
   },
-  "4veEdqnLTW": { data: { title: "Section Two" }, type: ComponentType.Section },
-  "5bebjoffUb": { data: { text: "B" }, type: ComponentType.Answer },
-  "7URtB1N5zG": {
+  Section2: { data: { title: "Section Two" }, type: ComponentType.Section },
+  Question1AnswerB: { data: { text: "B" }, type: ComponentType.Answer },
+  NoticeC: {
     data: { color: "#EFEFEF", title: "Reached C", resetButton: false },
     type: ComponentType.Notice,
   },
-  Fz3VuXRlTb: {
+  PreSendContent: {
     data: { content: "<p>About to send</p>" },
     type: ComponentType.Content,
   },
-  JHLgiz66t4: { data: { text: "C" }, type: ComponentType.Answer },
-  NUFNkSkxqR: {
+  Question1AnswerC: { data: { text: "C" }, type: ComponentType.Answer },
+  NoticeB: {
     data: { color: "#EFEFEF", title: "Reached B", resetButton: false },
     type: ComponentType.Notice,
   },
-  NUpGwW4Pqe: {
+  Send: {
     data: { title: "Send", destinations: ["email"] },
     type: ComponentType.Send,
   },
-  OzCQoqgcAs: {
+  NoticeD: {
     data: { color: "#EFEFEF", title: "Reached D", resetButton: false },
     type: ComponentType.Notice,
   },
-  PErULqxbIf: {
+  NoticeA: {
     data: { color: "#EFEFEF", title: "Reached A", resetButton: false },
     type: ComponentType.Notice,
   },
-  SBzvpSq8DD: {
+  ChecklistOptionB: {
     data: { text: "B" },
     type: ComponentType.Answer,
-    edges: ["NUFNkSkxqR"],
+    edges: ["NoticeB"],
   },
-  T1X91EICsC: {
+  Checklist1: {
     data: { text: "Multi-select", allRequired: false },
     type: ComponentType.Checklist,
-    edges: ["oLkOyC2LeL", "SBzvpSq8DD", "1hJpwGw4Je", "WdKErxvyoo"],
+    edges: [
+      "ChecklistOptionA",
+      "ChecklistOptionB",
+      "ChecklistOptionC",
+      "ChecklistOptionD",
+    ],
   },
-  WMwJZHKJE3: { data: { text: "A" }, type: ComponentType.Answer },
-  WdKErxvyoo: {
+  Question2AnswerA: { data: { text: "A" }, type: ComponentType.Answer },
+  ChecklistOptionD: {
     data: { text: "D" },
     type: ComponentType.Answer,
-    edges: ["OzCQoqgcAs"],
+    edges: ["NoticeD"],
   },
-  XBZN1QCNo9: { data: { title: "Section One" }, type: ComponentType.Section },
-  Z1R1LRmLbY: {
+  Section1: { data: { title: "Section One" }, type: ComponentType.Section },
+  Question2: {
     data: { text: "Question 2" },
     type: ComponentType.Question,
-    edges: ["WMwJZHKJE3", "nSBYMoHnwE"],
+    edges: ["Question2AnswerA", "Question2AnswerB"],
   },
-  kLK7wbmOEZ: { data: { text: "A" }, type: ComponentType.Answer },
-  nSBYMoHnwE: {
+  Question1AnswerA: { data: { text: "A" }, type: ComponentType.Answer },
+  Question2AnswerB: {
     data: { text: "B" },
     type: ComponentType.Answer,
-    edges: ["T1X91EICsC"],
+    edges: ["Checklist1"],
   },
-  oLkOyC2LeL: {
+  ChecklistOptionA: {
     data: { text: "A" },
     type: ComponentType.Answer,
-    edges: ["PErULqxbIf"],
+    edges: ["NoticeA"],
   },
-  pWCcG9ToZY: { data: { title: "Section Three" }, type: ComponentType.Section },
-  rZePKmcD73: {
+  Section3: { data: { title: "Section Three" }, type: ComponentType.Section },
+  Confirmation: {
     data: {
       heading: "Application sent",
       moreInfo: "<h2>You will be contacted</h2>",
@@ -94,7 +99,7 @@ export const flow: FlowGraph = {
     },
     type: ComponentType.Confirmation,
   },
-  vPr0ukG8JE: {
+  EndOfSection2Notice: {
     data: {
       color: "#EFEFEF",
       title: "Reached the end of section two",
@@ -102,4 +107,10 @@ export const flow: FlowGraph = {
     },
     type: ComponentType.Notice,
   },
+};
+
+export const updatedQuestionAnswers = {
+  Question1AnswerA: { data: { text: "Aaa" }, type: ComponentType.Answer },
+  Question1AnswerB: { data: { text: "Bee" }, type: ComponentType.Answer },
+  Question1AnswerC: { data: { text: "Cee" }, type: ComponentType.Answer },
 };

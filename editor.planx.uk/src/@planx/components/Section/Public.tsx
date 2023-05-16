@@ -1,62 +1,45 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { lighten, styled, Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
+import Tag, { TagType } from "@planx/components/shared/Buttons/Tag";
 import type { PublicProps } from "@planx/components/ui";
-import { hasFeatureFlag } from "lib/featureFlags";
-import { useStore } from "pages/FlowEditor/lib/store";
-import {
-  SectionNode,
-  SectionStatus,
-} from "pages/FlowEditor/lib/store/navigation";
-import React, { useEffect } from "react";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
+import React from "react";
+import { SectionNode, SectionStatus } from "types";
 
 import Card from "../shared/Preview/Card";
 import QuestionHeader from "../shared/Preview/QuestionHeader";
 import type { Section } from "./model";
+import { computeSectionStatuses } from "./model";
 
 export type Props = PublicProps<Section>;
 
 export default function Component(props: Props) {
-  const showSection = hasFeatureFlag("NAVIGATION_UI");
   const [
     flow,
     flowName,
     currentSectionIndex,
     sectionCount,
     sectionNodes,
-    sectionStatuses,
     currentCard,
     changeAnswer,
+    breadcrumbs,
+    cachedBreadcrumbs,
   ] = useStore((state) => [
     state.flow,
     state.flowName,
     state.currentSectionIndex,
     state.sectionCount,
     state.sectionNodes,
-    state.sectionStatuses(),
     state.currentCard(),
     state.changeAnswer,
+    state.breadcrumbs,
+    state.cachedBreadcrumbs,
   ]);
 
-  useEffect(() => {
-    // if the feature flag is toggled off, hide this node (by auto-answering it) when navigating through a flow
-    !showSection &&
-      props.handleSubmit?.({
-        auto: true,
-      });
-  }, []);
-
-  const changeFirstAnswerInSection = (sectionId: string) => {
-    const sectionIndex = flow._root.edges?.indexOf(sectionId);
-    if (sectionIndex !== undefined) {
-      const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
-      if (firstNodeInSection) changeAnswer(firstNodeInSection);
-    }
-  };
-
-  return !showSection ? null : (
+  return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <QuestionHeader title={flowName} />
       <Box sx={{ lineHeight: ".5em" }}>
@@ -72,29 +55,83 @@ export default function Component(props: Props) {
         </Typography>
       </Box>
       <SectionsOverviewList
-        sectionNodes={sectionNodes}
-        sectionStatuses={sectionStatuses}
+        flow={flow}
         showChange={true}
-        changeFirstAnswerInSection={changeFirstAnswerInSection}
+        changeAnswer={changeAnswer}
+        nextQuestion={props.handleSubmit!}
+        sectionNodes={sectionNodes}
+        currentCard={currentCard}
+        breadcrumbs={breadcrumbs}
+        cachedBreadcrumbs={cachedBreadcrumbs}
       />
     </Card>
   );
 }
 
-interface SectionsOverviewListProps {
-  sectionNodes: Record<string, SectionNode>;
-  sectionStatuses: Record<string, SectionStatus>;
+type SectionsOverviewListProps = {
+  flow: Store.flow;
   showChange: boolean;
-  changeFirstAnswerInSection?: (sectionId: string) => void;
-}
+  changeAnswer: (sectionId: string) => void;
+  nextQuestion: () => void;
+  sectionNodes: Record<string, SectionNode>;
+  currentCard: Store.node | null;
+  breadcrumbs: Store.breadcrumbs;
+  cachedBreadcrumbs?: Store.cachedBreadcrumbs;
+  isReconciliation?: boolean;
+  alteredSectionIds?: string[];
+};
 
-export function SectionsOverviewList(props: SectionsOverviewListProps) {
-  const {
+export function SectionsOverviewList({
+  flow,
+  showChange,
+  changeAnswer,
+  nextQuestion,
+  sectionNodes,
+  currentCard,
+  breadcrumbs,
+  cachedBreadcrumbs,
+  isReconciliation,
+  alteredSectionIds,
+}: SectionsOverviewListProps) {
+  const sectionStatuses = computeSectionStatuses({
     sectionNodes,
-    sectionStatuses,
-    showChange,
-    changeFirstAnswerInSection,
-  } = props;
+    currentCard,
+    breadcrumbs,
+    cachedBreadcrumbs,
+    isReconciliation,
+    alteredSectionIds,
+  });
+
+  const changeFirstAnswerInSection = (sectionId: string) => {
+    const sectionIndex = flow._root.edges?.indexOf(sectionId);
+    if (sectionIndex !== undefined) {
+      const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
+      if (firstNodeInSection) changeAnswer(firstNodeInSection);
+    }
+  };
+
+  const getTag = (section: SectionStatus) => {
+    const tagTypes: Record<SectionStatus, TagType> = {
+      [SectionStatus.NeedsUpdated]: TagType.Alert,
+      [SectionStatus.ReadyToStart]: TagType.Active,
+      [SectionStatus.ReadyToContinue]: TagType.Active,
+      [SectionStatus.Started]: TagType.Notice,
+      [SectionStatus.NotStarted]: TagType.Notice,
+      [SectionStatus.Completed]: TagType.Success,
+    };
+    const type = tagTypes[section];
+
+    const onClick =
+      type == TagType.Alert || type == TagType.Active
+        ? () => nextQuestion()
+        : () => {}; // no-op
+
+    return (
+      <Tag type={type} onClick={onClick}>
+        {section}
+      </Tag>
+    );
+  };
 
   return (
     <DescriptionList>
@@ -104,10 +141,7 @@ export function SectionsOverviewList(props: SectionsOverviewListProps) {
             {showChange &&
             sectionStatuses[sectionId] === SectionStatus.Completed ? (
               <Link
-                onClick={() =>
-                  changeFirstAnswerInSection &&
-                  changeFirstAnswerInSection(sectionId)
-                }
+                onClick={() => changeFirstAnswerInSection(sectionId)}
                 component="button"
                 sx={{ fontFamily: "inherit", fontSize: "inherit" }}
               >
@@ -120,53 +154,12 @@ export function SectionsOverviewList(props: SectionsOverviewListProps) {
               sectionNode.data.title
             )}
           </dt>
-          <dd>
-            <Tag title={sectionStatuses[sectionId]}>
-              {sectionStatuses[sectionId]}
-            </Tag>
-          </dd>
+          <dd> {getTag(sectionStatuses[sectionId])} </dd>
         </React.Fragment>
       ))}
     </DescriptionList>
   );
 }
-
-const getTagBackgroundColor = (theme: Theme, title: string): string => {
-  const backgroundColors: Record<string, string> = {
-    [SectionStatus.NotStarted]: theme.palette.grey[200],
-    [SectionStatus.InProgress]: lighten(theme.palette.primary.main, 0.9),
-    [SectionStatus.Completed]: theme.palette.success.main,
-    [SectionStatus.NeedsUpdated]: theme.palette.action.focus, // GOV UK YELLOW for now, check Figma
-  };
-
-  return backgroundColors[title];
-};
-
-const getTagTextColor = (theme: Theme, title: string): string => {
-  const textColors: Record<string, string> = {
-    [SectionStatus.NotStarted]: theme.palette.getContrastText(
-      theme.palette.grey[200]
-    ),
-    [SectionStatus.InProgress]: theme.palette.primary.main,
-    [SectionStatus.Completed]: "#FFF",
-    [SectionStatus.NeedsUpdated]: "#000",
-  };
-
-  return textColors[title];
-};
-
-const Tag = styled("div", {
-  // Configure which props should be forwarded on DOM
-  shouldForwardProp: (prop) => prop !== "title",
-})(({ title, theme }) => ({
-  backgroundColor: title ? getTagBackgroundColor(theme, title) : undefined,
-  color: title ? getTagTextColor(theme, title) : undefined,
-  fontWeight: 600,
-  paddingTop: theme.spacing(0.5),
-  paddingBottom: theme.spacing(0.5),
-  paddingLeft: theme.spacing(1.5),
-  paddingRight: theme.spacing(1.5),
-}));
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",

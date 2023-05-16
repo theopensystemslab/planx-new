@@ -34,6 +34,16 @@ export const mockSanitiseBOPSApplicationsMutation = {
   },
 };
 
+export const mockSanitiseEmailApplicationsMutation = {
+  name: "SanitiseEmailApplications",
+  matchOnVariables: false,
+  data: {
+    update_email_applications: {
+      returning: mockIds,
+    }
+  },
+};
+
 export const mockDeleteReconciliationRequestsMutation = {
   name: "DeleteReconciliationRequests",
   matchOnVariables: false,

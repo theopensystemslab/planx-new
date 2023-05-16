@@ -4,6 +4,7 @@ import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import axios from "axios";
+import { _public } from "client";
 import { format } from "date-fns";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -38,6 +39,10 @@ const States = {
   ReadyToRetry: {
     button: "Retry payment",
     loading: "Reconnecting to GOV.UK Pay",
+  },
+  Reset: {
+    button: "Retry payment",
+    loading: "Connecting to GOV.UK Pay",
   },
 } as const;
 
@@ -106,7 +111,7 @@ export default function MakePayment({
         setState(States.ReadyToRetry);
         break;
       case PaymentState.Failed:
-        setState(States.ReadyToRetry);
+        setState(States.Reset);
         setPayment(undefined);
         break;
       case PaymentState.Completed:
@@ -163,6 +168,18 @@ export default function MakePayment({
     );
 
   const PaymentDetails = () => {
+    const [projectType, setProjectType] = useState<string | undefined>();
+
+    useEffect(() => {
+      const fetchProjectType = async () => {
+        const projectType = await _public.formatRawProjectTypes(
+          rawProjectTypes
+        );
+        setProjectType(projectType);
+      };
+      fetchProjectType();
+    }, []);
+
     const data = [
       { term: "Application type", details: flowName },
       {
@@ -175,7 +192,7 @@ export default function MakePayment({
       },
       {
         term: "Project type",
-        details: rawProjectTypes.join(", "),
+        details: projectType || "Project type not submitted",
       },
     ];
 
@@ -213,6 +230,7 @@ export default function MakePayment({
       <Header />
       <PaymentDetails />
       {(currentState === States.Ready ||
+        currentState === States.Reset ||
         currentState === States.ReadyToRetry) &&
         !isLoading && (
           <Confirm
@@ -269,12 +287,14 @@ function computePaymentState(govUkPayment: GovUKPayment | null): PaymentState {
   if (govUkPayment.state.status === PaymentStatus.success) {
     return PaymentState.Completed;
   }
+  const paymentHasNextLinks = !!govUkPayment._links?.next_url?.href;
   if (
     [
       PaymentStatus.started,
       PaymentStatus.created,
       PaymentStatus.submitted,
-    ].includes(govUkPayment.state.status)
+    ].includes(govUkPayment.state.status) &&
+    paymentHasNextLinks
   ) {
     return PaymentState.Pending;
   }

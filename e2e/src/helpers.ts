@@ -2,7 +2,7 @@ import { expect } from "@playwright/test";
 import type { Page, Browser, Locator } from "@playwright/test";
 import { findSessionId, generateAuthenticationToken } from "./context";
 import type { Context } from "./context";
-import type { GraphQLClient } from "graphql-request";
+import { getGraphQLClient } from "./context";
 
 // utility functions
 
@@ -13,6 +13,22 @@ export function log(...args: any[]) {
 
 // a collection of useful playwright actions
 // these could evolve into fixtures: https://playwright.dev/docs/test-fixtures
+
+export function debugPageConsole(page: Page) {
+  page.on("console", (msg) => console.log(msg.text()));
+}
+
+// used to detect `{ "setItem": ... }`, `{"getItem": ... }`
+// and "section state updated" debug messages on state transitions
+export function waitForDebugLog(page: Page) {
+  return new Promise((resolve) => {
+    page.on("console", (msg) => {
+      if (msg.type() == "debug") {
+        resolve(true);
+      }
+    });
+  });
+}
 
 export async function createAuthenticatedSession({
   browser,
@@ -66,19 +82,19 @@ export async function getTeamPage({
 
 export async function saveSession({
   page,
-  adminGQLClient,
   context,
 }: {
   page: Page;
-  adminGQLClient: GraphQLClient;
   context: Context;
 }): Promise<string | undefined> {
+  const pageResponsePromise = page.waitForResponse((response) => {
+    return response.url().includes("/send-email/save");
+  });
   await page
     .locator("button", { hasText: "Save and return to this application later" })
     .click();
-  await page.waitForResponse((response) => {
-    return response.url().includes("/send-email/save");
-  });
+  await pageResponsePromise;
+  const adminGQLClient = getGraphQLClient();
   const sessionId = await findSessionId(adminGQLClient, context);
   return sessionId;
 }
@@ -87,30 +103,52 @@ export async function returnToSession({
   page,
   context,
   sessionId,
+  shouldContinue = true,
 }: {
   page: Page;
   context: Context;
   sessionId: string;
+  shouldContinue?: boolean;
 }) {
   const returnURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false&sessionId=${sessionId}`;
-  await page.goto(returnURL);
+  log(`returning to http://localhost:3000/${returnURL}`);
+  await page.goto(returnURL, { waitUntil: "load" });
   await page.locator("#email").fill(context.user?.email);
+  if (shouldContinue) {
+    const waitPromise = page.waitForResponse((response) => {
+      return response.url().includes("/validate-session");
+    });
+    await clickContinue({ page });
+    await waitPromise;
+  }
 }
 
 export async function clickContinue({
   page,
+  waitForLogEvent = false,
   waitForResponse = false,
 }: {
   page: Page;
   waitForResponse?: boolean;
+  waitForLogEvent?: boolean;
 }) {
-  await page.getByTestId("continue-button").click();
-  if (waitForResponse) {
-    await page.waitForResponse(
-      (response) =>
-        response.url().includes("graphql") && response.status() === 200
-    );
+  if (waitForLogEvent || waitForResponse) {
+    const waitPromise = waitForResponse
+      ? page.waitForResponse((response) => {
+          return response.url().includes("/graphql");
+        })
+      : waitForDebugLog(page); // assume debug message is triggered on state transition
+    await page.getByTestId("continue-button").click();
+    await waitPromise;
+  } else {
+    await page.getByTestId("continue-button").click();
   }
+}
+
+export async function clickBack({ page }: { page: Page }) {
+  const waitPromise = waitForDebugLog(page); // assume debug message is triggered on state transition
+  await page.getByRole("button", { name: "Back", exact: true }).click();
+  await waitPromise;
 }
 
 export async function fillInEmail({
@@ -131,7 +169,9 @@ export async function findQuestion({
   page: Page;
   title: string;
 }): Promise<Locator> {
-  return await page.getByRole("group", { name: title });
+  const group = await page.getByRole("group", { name: title });
+  await expect(group).toBeVisible();
+  return group;
 }
 
 export async function answerQuestion({
