@@ -17,6 +17,7 @@ specifiers:
   prettier: ^2.8.8
   serve: ^14.2.0
   typescript: ^4.9.5
+  uuid: ^9.0.0
 
 dependencies:
   '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/80235c0
@@ -27,6 +28,7 @@ dependencies:
   isomorphic-fetch: 3.0.0
   jsonwebtoken: 9.0.0
   serve: 14.2.0
+  uuid: 9.0.0
 
 devDependencies:
   '@playwright/test': 1.28.1
@@ -348,10 +350,6 @@ packages:
       '@emotion/styled':
         optional: true
       '@types/react':
-        optional: true
-      react:
-        optional: true
-      react-dom:
         optional: true
     dependencies:
       '@babel/runtime': 7.21.5
@@ -2491,6 +2489,11 @@ packages:
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+    dev: false
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
     dev: false
 
   /vary/1.1.2:

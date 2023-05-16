@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { cards, fillGovUkCardDetails, getSessionId, log } from "./helpers";
+import { cards, fillGovUkCardDetails, getSessionId, log, waitForPaymentResponse } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";
@@ -59,7 +59,7 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -90,7 +90,7 @@ test.describe("Gov Pay @integration", async () => {
     await fillGovUkCardDetails({ page, cardNumber: cards.invalid_card_number });
     await page.locator("#return-url").click();
 
-    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page);
+    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page, context);
     expect(failedPaymentRef).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -115,7 +115,7 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -145,7 +145,7 @@ test.describe("Gov Pay @integration", async () => {
     await page.getByText(payButtonText).click();
     await page.locator("#cancel-payment").click();
     await page.locator("#return-url").click();
-    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page);
+    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page, context);
     expect(failedPaymentRef).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -163,7 +163,7 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -221,7 +221,7 @@ test.describe("Gov Pay @integration", async () => {
     await page.getByText("Continue with your payment").click();
     await page.locator("#confirm").click();
 
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -271,7 +271,7 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page);
+    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page, context);
 
     // ensure that data stored in the session matches the latest payment attempt
     const session = await findSession({
@@ -296,7 +296,7 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page);
+    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page, context);
     await expect(page.getByText("Application sent")).toBeVisible();
     await expect(page.getByText(actualPaymentId)).toBeVisible();
 
@@ -313,18 +313,6 @@ async function navigateToPayComponent(page: Page): Promise<string> {
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();
   return getSessionId(page);
-}
-
-async function waitForPaymentResponse(
-  page: Page
-): Promise<{ paymentId: string; state?: { status: string } }> {
-  const { payment_id: paymentId, state } = await page
-    .waitForResponse((response) => {
-      return response.url().includes(`pay/${context.team!.slug!}`);
-    })
-    .then((req) => req.json());
-  if (!paymentId) throw new Error("Bad payment response");
-  return { paymentId, state };
 }
 
 async function hasPaymentStatus({
@@ -380,7 +368,7 @@ async function findSession({
   const response: { lowcal_sessions: { data: SessionData } } =
     await adminGQLClient.request(
       gql`
-        query FindLowcalSesion($sessionId: uuid!) {
+        query FindLowcalSession($sessionId: uuid!) {
           lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
             data
           }

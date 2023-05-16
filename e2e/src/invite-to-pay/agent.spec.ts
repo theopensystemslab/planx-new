@@ -60,15 +60,30 @@ test.describe("Agent journey", async () => {
 
     await answerInviteToPayForm(page);
     await page.getByText("Send invitation to pay").click();
-    await page.waitForNavigation();
-    const successMessage = await page.getByText("Payment invitation sent");
-    expect(successMessage).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    const errorMessage = await page.getByText("Error generating payment request, please try again");
+    expect(errorMessage).not.toBeVisible();
 
     const paymentRequest = await getPaymentRequestBySessionId({ sessionId, adminGQLClient });
     expect(paymentRequest).toBeDefined();
     expect(paymentRequest).toMatchObject(mockPaymentRequest);
-    
-    // TODO: Check emails have been sent. Event log? Mock inbox?
+
+    const successMessage = await page.getByText("Payment invitation sent");
+    expect(successMessage).toBeVisible();
   });
 
+  test("agent cannot send a payment request after initialising a normal payment", async ({ page }) => {
+    await setFeatureFlag(page, "INVITE_TO_PAY");
+    await navigateToPayComponent(page, context);
+    await addSessionToContext(page, context);
+    const toggleInviteToPayButton = page.getByRole("button", { name: "Invite someone else to pay for this application" });
+
+    await page.getByText("Pay now using GOV.UK Pay").click();
+    await page.getByText("Cancel payment").click();
+    await page.getByText("Continue").click();
+    await page.getByLabel("email").fill(context.user.email);
+    await page.getByText("Continue").click();
+    await page.waitForLoadState("networkidle");
+    expect(toggleInviteToPayButton).toBeDisabled();
+  });
 });

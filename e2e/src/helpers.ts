@@ -323,3 +323,16 @@ export async function addSessionToContext(page: Page, context: Context) {
   await context.sessionIds!.push(sessionId);
   return sessionId;
 }
+
+export async function waitForPaymentResponse(
+  page: Page,
+  context: Context,
+): Promise<{ paymentId: string; state?: { status: string } }> {
+  const { payment_id: paymentId, state } = await page
+    .waitForResponse((response) => {
+      return response.url().includes(`pay/${context.team!.slug!}`);
+    })
+    .then((req) => req.json());
+  if (!paymentId) throw new Error("Bad payment response");
+  return { paymentId, state };
+}

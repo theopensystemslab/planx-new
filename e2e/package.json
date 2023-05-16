@@ -19,7 +19,8 @@
     "graphql-request": "^5.2.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.0",
-    "serve": "^14.2.0"
+    "serve": "^14.2.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
