@@ -105,9 +105,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       setPreviewEnvironment(previewEnvironment);
       if (isStandalone) {
         NEW.getLocalFlow(sessionId).then((state) => {
-          if (state) {
-            resumeSession(state);
-          }
+          // session data is resumed by ./ResumePage.tsx
           createAnalytics(state ? "resume" : "init");
           setGotFlow(true);
         });
