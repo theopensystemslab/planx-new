@@ -54,6 +54,28 @@ describe(`sending an application by email to a planning office`, () => {
       },
       variables: { sessionId: 123 },
     });
+
+    queryMock.mockQuery({
+      name: "CreateEmailApplication",
+      matchOnVariables: false,
+      data: {
+        insert_email_applications_one: { id: 1 }
+      },
+      variables: { 
+        sessionId: 123,
+        teamSlug: "southwark",
+        recipient: "planning.office.example@southwark.gov.uk",
+        request: {
+          personalisation: {
+            serviceName: "Apply for something",
+            downloadLink: "https://api.editor.planx.uk/test/123",
+          }
+        },
+        response: {
+          message: "Success"
+        }
+      },
+    });
   });
 
   it("succeeds when provided with valid data", async () => {

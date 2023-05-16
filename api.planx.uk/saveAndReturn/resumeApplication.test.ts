@@ -12,22 +12,17 @@ type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
 
-describe("buildContentFromSessions function", () => {
+const mockFormatRawProjectTypes = jest.fn().mockResolvedValue(["New office premises"]);
 
-  beforeEach(() => {
-    queryMock.reset();
-    queryMock.mockQuery({
-      name: "GetHumanReadableProjectType",
-      data: {
-        project_types: [
-          { description: "New office premises" }
-        ],
-      },
-      variables: {
-        rawList: ["new.office"],
-      }
-    });
-  });
+jest.mock("@opensystemslab/planx-core", () => {
+  return {
+    CoreDomainClient: jest.fn().mockImplementation(() => ({
+      formatRawProjectTypes: () => mockFormatRawProjectTypes(),
+    }))
+  }
+});
+
+describe("buildContentFromSessions function", () => {
 
   it("should return correctly formatted content for a single session", async () => {
     const sessions: DeepPartial<LowCalSession>[] = [{
@@ -150,6 +145,7 @@ describe("buildContentFromSessions function", () => {
   });
 
   it("should handle an empty project type field", async () => {
+    mockFormatRawProjectTypes.mockResolvedValueOnce("");
     const sessions: DeepPartial<LowCalSession>[] = [{
       data: {
         passport: {
@@ -157,7 +153,6 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "1 High Street"
             },
-            // Missing project type
           }
         }
       },
@@ -179,21 +174,6 @@ describe("buildContentFromSessions function", () => {
 });
 
 describe("Resume Application endpoint", () => {
-
-  beforeEach(() => {
-    queryMock.reset();
-    queryMock.mockQuery({
-      name: "GetHumanReadableProjectType",
-      data: {
-        project_types: [
-          { description: "New office premises" }
-        ],
-      },
-      variables: {
-        rawList: ["new.office"],
-      }
-    });
-  });
 
   it("throws an error for if required data is missing", async () => {
 
