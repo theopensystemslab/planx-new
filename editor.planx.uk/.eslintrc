@@ -2,6 +2,7 @@
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint",
+    "react-hooks",
     "simple-import-sort",
     "jsx-a11y",
     "testing-library",
@@ -16,6 +17,8 @@
     "plugin:jest/recommended"
   ],
   "rules": {
+    "react-hooks/rules-of-hooks": "warn",
+    "react-hooks/exhaustive-deps": "warn",
     "simple-import-sort/imports": "warn",
     "simple-import-sort/exports": "warn",
     "no-restricted-imports": [
