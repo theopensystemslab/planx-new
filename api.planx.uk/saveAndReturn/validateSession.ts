@@ -4,7 +4,6 @@ import {
   adminGraphQLClient as adminClient,
   publicGraphQLClient as publicClient,
 } from "../hasura";
-import { getSaveAndReturnPublicHeaders } from "./utils";
 import { getMostRecentPublishedFlow } from "../helpers";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
@@ -123,17 +122,9 @@ async function reconcileSessionData({
   alteredNodes: Array<Node>;
 }): Promise<ReconciledSession> {
   const sessionData = { ...originalData }; // copy original data for modification
-  const alteredSectionIds: string[] = [];
+  const alteredSectionIds = new Set<string>();
 
   const currentFlow = await getMostRecentPublishedFlow(sessionData.id);
-
-  const findParentNode = (nodeId: string): string | undefined => {
-    const [parentId, _] =
-      Object.entries(currentFlow).find(([_, node]) =>
-        node.edges?.includes(nodeId)
-      ) || [];
-    return parentId;
-  };
 
   // create ordered breadcrumbs to be able to look up section IDs later
   const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
@@ -141,39 +132,56 @@ async function reconcileSessionData({
     sessionData.breadcrumbs
   );
 
-  const removeBreadcrumb = (nodeId: string) => {
-    if (sessionData.breadcrumbs[nodeId]) {
-      delete sessionData.breadcrumbs[nodeId];
-    }
+  const removeBreadcrumb = (nodeId: string): NormalizedCrumb | undefined => {
     const crumb: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
-      (crumb) => crumb.id === nodeId!
+      (crumb) => crumb.id === nodeId || (crumb?.answers || []).includes(nodeId)
     );
+
+    if (!crumb) return;
+
+    // delete crumb
+    if (sessionData.breadcrumbs[crumb.id]) {
+      delete sessionData.breadcrumbs[crumb.id];
+    }
+
+    // delete crumb's section
     if (
       crumb &&
       crumb?.sectionId &&
       sessionData.breadcrumbs[crumb.sectionId!]
     ) {
       delete sessionData.breadcrumbs[crumb.sectionId!];
-      alteredSectionIds.push(crumb.sectionId);
+      alteredSectionIds.add(crumb.sectionId);
+    }
+
+    return crumb;
+  };
+
+  const findAndDeleteBreadcrumbsWithMatchingVal = (value: any) => {
+    for (const [id, node] of Object.entries(currentFlow)) {
+      if (node.data?.val && node.data?.val === value) {
+        removeBreadcrumb(id);
+      }
     }
   };
 
-  // TODO - ensure all passport keys are cleaned up
-  const removePassportValue = (nodeId: string) => {
-    // a flow schema can store the planx variable name under any of these keys
-    const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
-    planx_keys.forEach((key) => {
-      // check if a removed breadcrumb has a passport var based on the published content at save point
-      if (sessionData && currentFlow[nodeId]?.data?.[key]) {
-        // if it does, remove that passport variable from our session so we don't auto-answer changed questions before the user sees them
-        delete sessionData.passport?.data?.[currentFlow[nodeId].data?.[key]];
+  const removeAutoAnsweredBreadcrumbs = (nodeId: string) => {
+    const nodeData = currentFlow[nodeId]?.data;
+    if (!nodeData) return;
+    for (const [key, value] of Object.entries(nodeData)) {
+      if (key === "val") {
+        findAndDeleteBreadcrumbsWithMatchingVal(value);
       }
-    });
+    }
   };
 
   const removeSessionDataForNodeId = (nodeId: string) => {
-    removeBreadcrumb(nodeId);
-    removePassportValue(nodeId);
+    const removedCrumb = removeBreadcrumb(nodeId);
+    if (removedCrumb && removedCrumb.answers) {
+      for (const childId of removedCrumb.answers) {
+        removeAutoAnsweredBreadcrumbs(childId);
+      }
+    }
   };
 
   // update breadcrumbs
@@ -183,18 +191,11 @@ async function reconcileSessionData({
       continue;
     }
     removeSessionDataForNodeId(node.id!);
-    // if an answer has changed, find it's parent and remove that from breadcrumbs
-    if (node.type === ComponentType.Answer) {
-      const parentId = findParentNode(node.id!);
-      if (parentId && sessionData.breadcrumbs[parentId!]) {
-        removeSessionDataForNodeId(parentId!);
-      }
-    }
   }
 
   return {
     reconciledSessionData: sessionData,
-    alteredSectionIds,
+    alteredSectionIds: [...alteredSectionIds],
   };
 }
 
