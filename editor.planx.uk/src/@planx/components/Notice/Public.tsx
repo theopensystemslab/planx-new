@@ -1,8 +1,8 @@
 import { mostReadable } from "@ctrl/tinycolor";
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Theme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -17,51 +17,54 @@ interface StyleProps {
   color: string;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  container: {
-    position: "relative",
-    width: "100%",
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    backgroundColor: (props) => props.color,
-    color: (props) =>
-      mostReadable(props.color, ["#fff", "#000"])?.toHexString(),
-    "&:before": {
-      content: "' '",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: 10,
-      bottom: 0,
-      backgroundColor: (props) =>
-        mostReadable(props.color, ["#fff", "#000"])?.toHexString(),
-      opacity: 0.3,
-    },
-    padding: theme.spacing(2),
-    paddingLeft: `calc(${theme.spacing(2)} + 10px)`,
+const Container = styled(Box)<StyleProps>(({ theme, color }) => ({
+  position: "relative",
+  width: "100%",
+  display: "flex",
+  alignItems: "flex-start",
+  justifyContent: "space-between",
+  backgroundColor: color,
+  color: mostReadable(color, ["#fff", "#000"])?.toHexString(),
+  "&:before": {
+    content: "' '",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: 10,
+    bottom: 0,
+    backgroundColor: mostReadable(color, ["#fff", "#000"])?.toHexString(),
+    opacity: 0.3,
   },
-  content: {
-    flex: 1,
-  },
-  title: {
-    fontSize: theme.typography.pxToRem(25),
-    fontWeight: 700,
-    margin: 0,
-  },
-  description: {
+  padding: theme.spacing(2),
+  paddingLeft: `calc(${theme.spacing(2)} + 10px)`,
+}));
+
+const Content = styled(Box)(() => ({
+  flex: 1,
+}));
+
+const Title = styled("h3")(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(25),
+  fontWeight: 700,
+  margin: 0,
+}));
+
+interface DescriptionProps {
+  color: string;
+}
+
+const Description = styled(ReactMarkdownOrHtml)<DescriptionProps>(
+  ({ theme, color }) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: 400,
     margin: theme.spacing(2, 0, 0, 0),
     "& a": {
-      color: (props) =>
-        getContrastTextColor(props.color, theme.palette.primary.main),
+      color: getContrastTextColor(color, theme.palette.primary.main),
     },
-  },
-}));
+  })
+);
 
 const NoticeComponent: React.FC<Props> = (props) => {
-  const styles = useStyles({ color: props.color || "#EFEFEF" });
   const handleSubmit = !props.resetButton
     ? () => props.handleSubmit?.()
     : undefined;
@@ -73,16 +76,13 @@ const NoticeComponent: React.FC<Props> = (props) => {
           policyRef={props.policyRef}
           howMeasured={props.howMeasured}
         />
-        <div className={styles.container}>
-          <div className={styles.content}>
-            <h3 className={styles.title}>{props.title}</h3>
-            <ReactMarkdownOrHtml
-              className={styles.description}
-              source={props.description}
-            />
-          </div>
+        <Container color={props.color || "#EFEFEF"}>
+          <Content>
+            <Title>{props.title}</Title>
+            <Description color={props.color} source={props.description} />
+          </Content>
           <ErrorOutline />
-        </div>
+        </Container>
         {props.resetButton && (
           <Button
             variant="contained"
