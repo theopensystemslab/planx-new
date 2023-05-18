@@ -16,6 +16,11 @@ import type { Node, Flow, Breadcrumb } from "../types";
 const validateSessionPath = "/validate-session";
 
 describe("Validate Session endpoint", () => {
+  const reconciledData = {
+    ...mockLowcalSession.data,
+    passport: { data: {} },
+  };
+
   afterEach(() => {
     queryMock.reset();
   });
@@ -76,9 +81,7 @@ describe("Validate Session endpoint", () => {
     const expected = {
       message: "No content changes since last save point",
       changesFound: false,
-      reconciledSessionData: {
-        ...mockLowcalSession.data,
-      },
+      reconciledSessionData: reconciledData,
     };
 
     await supertest(app)
@@ -130,9 +133,7 @@ describe("Validate Session endpoint", () => {
     };
 
     const expected = {
-      reconciledSessionData: {
-        ...mockLowcalSession.data,
-      },
+      reconciledSessionData: reconciledData,
       message:
         "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
       alteredSectionIds: [],
@@ -214,7 +215,7 @@ describe("Validate Session endpoint", () => {
 
     const expected = {
       reconciledSessionData: {
-        ...mockLowcalSession.data,
+        ...reconciledData,
         breadcrumbs: {
           question2: {
             auto: false,
@@ -348,7 +349,7 @@ describe("Validate Session endpoint", () => {
 
     const expected = {
       reconciledSessionData: {
-        ...mockLowcalSession.data,
+        ...reconciledData,
         breadcrumbs: {
           section2: {
             auto: false,
@@ -467,7 +468,7 @@ describe("Validate Session endpoint", () => {
 
     const expected = {
       reconciledSessionData: {
-        ...mockLowcalSession.data,
+        ...reconciledData,
         breadcrumbs,
       },
       message:
@@ -556,7 +557,7 @@ describe("Validate Session endpoint", () => {
 
     const expected = {
       reconciledSessionData: {
-        ...mockLowcalSession.data,
+        ...reconciledData,
         breadcrumbs: {},
       },
       message:

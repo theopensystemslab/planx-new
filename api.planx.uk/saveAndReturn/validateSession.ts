@@ -28,7 +28,6 @@ export type ReconciledSession = {
 
 // TODO - Ensure reconciliation handles:
 //  * collected flags
-//  * auto-answered
 //  * component dependencies like FindProperty, DrawBoundary, PlanningConstraints
 export async function validateSession(
   req: Request,
@@ -55,7 +54,12 @@ export async function validateSession(
         message: "Unable to find your session",
       });
     }
-    const sessionData = fetchedSession.data!;
+
+    const sessionData = {
+      ...fetchedSession.data!,
+      // remove passport data (reconstructed in the editor by `computePassport`)
+      passport: { data: {} },
+    };
     const sessionUpdatedAt = fetchedSession.updated_at!;
     const flowId = fetchedSession.flow_id!;
 
@@ -157,40 +161,20 @@ async function reconcileSessionData({
     return crumb;
   };
 
-  const findAndDeleteBreadcrumbsWithMatchingVal = (value: any) => {
-    for (const [id, node] of Object.entries(currentFlow)) {
-      if (node.data?.val && node.data?.val === value) {
-        removeBreadcrumb(id);
-      }
-    }
-  };
-
-  const removeAutoAnsweredBreadcrumbs = (nodeId: string) => {
-    const nodeData = currentFlow[nodeId]?.data;
-    if (!nodeData) return;
-    for (const [key, value] of Object.entries(nodeData)) {
-      if (key === "val") {
-        findAndDeleteBreadcrumbsWithMatchingVal(value);
-      }
-    }
-  };
-
-  const removeSessionDataForNodeId = (nodeId: string) => {
-    const removedCrumb = removeBreadcrumb(nodeId);
-    if (removedCrumb && removedCrumb.answers) {
-      for (const childId of removedCrumb.answers) {
-        removeAutoAnsweredBreadcrumbs(childId);
-      }
-    }
-  };
-
   // update breadcrumbs
   for (const node of alteredNodes) {
     if (node.type === ComponentType.Section) {
       // ignore section content changes and do not included these in alteredSectionIds
       continue;
     }
-    removeSessionDataForNodeId(node.id!);
+    if (node.id) removeBreadcrumb(node.id);
+  }
+
+  // remove all auto-answered breadcrumbs (reconstructed in the editor by `upcomingCards`)
+  for (const [id, crumb] of Object.entries(sessionData.breadcrumbs)) {
+    if (crumb.auto === true && sessionData.breadcrumbs[id]) {
+      delete sessionData.breadcrumbs[id];
+    }
   }
 
   return {
