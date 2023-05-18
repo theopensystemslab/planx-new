@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
@@ -20,15 +19,6 @@ interface Props {
   buttonText?: string;
   onButtonClick?: () => void;
 }
-
-const useStyles = makeStyles((theme) => ({
-  warningIcon: {
-    padding: theme.spacing(2.5),
-  },
-  warningMessage: {
-    paddingLeft: theme.spacing(1),
-  },
-}));
 
 const ReconciliationPage: React.FC<Props> = ({
   bannerHeading,
@@ -62,7 +52,6 @@ const ReconciliationPage: React.FC<Props> = ({
   );
 
   const theme = useTheme();
-  const classes = useStyles();
 
   return (
     <>
@@ -83,9 +72,9 @@ const ReconciliationPage: React.FC<Props> = ({
               titleAccess="Warning"
               color="primary"
               fontSize="large"
-              className={classes.warningIcon}
+              sx={{ p: 2.5 }}
             />
-            <Typography variant="body2" className={classes.warningMessage}>
+            <Typography variant="body2" sx={{ pl: 1 }}>
               {reconciliationResponse.message}
             </Typography>
           </Box>
