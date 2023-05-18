@@ -1,13 +1,12 @@
 import Box from "@mui/material/Box";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 
-const useClasses = makeStyles((theme) => ({
-  section: {
-    paddingBottom: theme.spacing(3),
-    "& + $section": {
-      borderTop: `0.5px solid #bbb`,
-    },
+const Section = styled(Box)(({ theme }) => ({
+  paddingBottom: theme.spacing(3),
+  // TODO: Check this
+  ["& + $section"]: {
+    borderTop: `0.5px solid #bbb`,
   },
 }));
 
@@ -16,6 +15,5 @@ export default function ModalSection({
 }: {
   children: ReactNode;
 }): FCReturn {
-  const classes = useClasses();
-  return <Box className={classes.section}>{children}</Box>;
+  return <Section>{children}</Section>;
 }
