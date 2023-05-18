@@ -1,39 +1,48 @@
 import Box from "@mui/material/Box";
-import { Theme } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import React from "react";
 import { borderedFocusStyle } from "theme";
 
-export const useClasses = makeStyles<Theme, Props>((theme) => ({
-  box: {
-    display: "inline-flex",
-    position: "relative",
-    width: 32,
-    height: 32,
-    borderColor: (props) => props.color || theme.palette.text.primary,
-    border: "1px solid",
-    background: "transparent",
-    "&:focus-within": borderedFocusStyle,
-  },
-  input: {
-    opacity: 0,
-    width: 24,
-    height: 24,
-    cursor: "pointer",
-  },
-  icon: {
-    display: (props) => (props.checked ? "block" : "none"),
-    content: "''",
-    position: "absolute",
-    height: 18,
-    width: 10,
-    borderColor: (props) => props.color || theme.palette.text.primary,
-    borderBottom: "2.5px solid",
-    borderRight: "2.5px solid",
-    left: "50%",
-    top: "42%",
-    transform: "translate(-50%, -50%) rotate(45deg)",
-  },
+interface RootProps {
+  color?: string;
+}
+
+const Root = styled(Box)<RootProps>(({ theme, color }) => ({
+  display: "inline-flex",
+  position: "relative",
+  width: 32,
+  height: 32,
+  borderColor: color || theme.palette.text.primary,
+  border: "1px solid",
+  background: "transparent",
+  "&:focus-within": borderedFocusStyle,
+}));
+
+const Input = styled("input")(() => ({
+  opacity: 0,
+  width: 24,
+  height: 24,
+  cursor: "pointer",
+}));
+
+interface IconProps {
+  checked: boolean;
+  color?: string;
+}
+
+const Icon = styled("span")<IconProps>(({ theme, checked, color }) => ({
+  display: checked ? "block" : "none",
+  content: "''",
+  position: "absolute",
+  height: 18,
+  width: 10,
+  borderColor: color || theme.palette.text.primary,
+  borderBottom: "2.5px solid",
+  borderRight: "2.5px solid",
+  left: "50%",
+  top: "42%",
+  transform: "translate(-50%, -50%) rotate(45deg)",
 }));
 
 export interface Props {
@@ -43,20 +52,18 @@ export interface Props {
   onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
+// TODO: Check this!
 export default function Checkbox(props: Props): FCReturn {
-  const classes = useClasses(props);
-
   return (
-    <Box className={classes.box} onClick={() => props.onChange()}>
-      <input
+    <Root onClick={() => props.onChange()}>
+      <Input
         defaultChecked={props.checked}
-        className={classes.input}
         type="checkbox"
         id={props.id}
         data-testid={props.id}
         onChange={() => props.onChange()}
       />
-      <span className={classes.icon}></span>
-    </Box>
+      <Icon checked={props.checked} />
+    </Root>
   );
 }
