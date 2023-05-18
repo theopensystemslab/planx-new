@@ -136,45 +136,54 @@ async function reconcileSessionData({
     sessionData.breadcrumbs
   );
 
-  const removeBreadcrumb = (nodeId: string): NormalizedCrumb | undefined => {
-    const crumb: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
-      (crumb) => crumb.id === nodeId || (crumb?.answers || []).includes(nodeId)
-    );
-
-    if (!crumb) return;
-
-    // delete crumb
-    if (sessionData.breadcrumbs[crumb.id]) {
-      delete sessionData.breadcrumbs[crumb.id];
-    }
-
-    // delete crumb's section
-    if (
-      crumb &&
-      crumb?.sectionId &&
-      sessionData.breadcrumbs[crumb.sectionId!]
-    ) {
-      delete sessionData.breadcrumbs[crumb.sectionId!];
-      alteredSectionIds.add(crumb.sectionId);
-    }
-
-    return crumb;
+  const findParentNode = (nodeId: string): string | undefined => {
+    const [parentId, _] =
+      Object.entries(currentFlow).find(([_, node]) =>
+        node.edges?.includes(nodeId)
+      ) || [];
+    return parentId;
   };
 
-  // update breadcrumbs
-  for (const node of alteredNodes) {
-    if (node.type === ComponentType.Section) {
-      // ignore section content changes and do not included these in alteredSectionIds
-      continue;
-    }
-    if (node.id) removeBreadcrumb(node.id);
-  }
+  const removeAlteredAndAffectedBreadcrumb = (nodeId: string) => {
+    const foundParentId = findParentNode(nodeId);
+    const matchingCrumbs: NormalizedCrumb[] = orderedBreadcrumbs.filter(
+      (crumb) =>
+        crumb.id === nodeId || (foundParentId && crumb.id === foundParentId)
+    );
 
-  // remove all auto-answered breadcrumbs (reconstructed in the editor by `upcomingCards`)
+    for (const crumb of matchingCrumbs) {
+      // delete crumb
+      if (sessionData.breadcrumbs[crumb.id]) {
+        delete sessionData.breadcrumbs[crumb.id];
+      }
+
+      // delete crumb's section
+      if (
+        crumb &&
+        crumb?.sectionId &&
+        sessionData.breadcrumbs[crumb.sectionId!]
+      ) {
+        delete sessionData.breadcrumbs[crumb.sectionId!];
+        alteredSectionIds.add(crumb.sectionId);
+      }
+    }
+  };
+
+  // remove all auto-answered breadcrumbs
+  // (auto-answers are reconstructed in the editor by `upcomingCards`)
   for (const [id, crumb] of Object.entries(sessionData.breadcrumbs)) {
     if (crumb.auto === true && sessionData.breadcrumbs[id]) {
       delete sessionData.breadcrumbs[id];
     }
+  }
+
+  // remove any altered or affected breadcrumbs
+  for (const node of alteredNodes) {
+    // ignore section content changes and do not included these in alteredSectionIds
+    if (node.type === ComponentType.Section) {
+      continue;
+    }
+    if (node.id) removeAlteredAndAffectedBreadcrumb(node.id);
   }
 
   return {
