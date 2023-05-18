@@ -127,6 +127,11 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
   }
 
+  // scroll to top on any update to breadcrumbs
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [breadcrumbs]);
+
   const handleSubmit =
     (id: string): handleSubmit =>
     (userData) => {
