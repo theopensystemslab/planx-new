@@ -57,13 +57,31 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
         ],
       },
     });
+    queryMock.mockQuery({
+      name: "LookupHumanReadableProjectType",
+      variables: {
+        rawList: [
+          "alter.internal",
+          "alter.openings.add.doors.rear",
+          "alter.facades.paint",
+        ],
+      },
+      data: {
+        projectTypes: [
+          { description: "internal alterations" },
+          { description: "addition of doorways to the rear of the building" },
+          { description: "painting of facades" },
+        ],
+      },
+    });
+
     const expectedConfig = {
       personalisation: {
         applicantName: "xyz",
         payeeName: "payeeName",
         address: "123 PLACE",
         projectType:
-          "alter.internal, alter.openings.add.doors.rear, alter.facades.paint",
+          "Internal alterations, addition of doorways to the rear of the building, and painting of facades",
         emailReplyToId: "123",
         helpEmail: "help@email.com",
         helpOpeningHours: "9-5",

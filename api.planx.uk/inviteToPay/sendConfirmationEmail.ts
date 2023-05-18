@@ -7,10 +7,13 @@ import type { AgentAndPayeeSubmissionNotifyConfig } from "../types";
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
   const { personalisation, applicantEmail, payeeEmail, projectTypes } =
     await getDataForPayeeAndAgentEmails(sessionId);
+  const projectType = projectTypes.length
+    ? await $admin.formatRawProjectTypes(projectTypes)
+    : "Project type not submitted";
   const config: AgentAndPayeeSubmissionNotifyConfig = {
     personalisation: {
       ...personalisation,
-      projectType: projectTypes.join(", "), // TODO: human-readable
+      projectType,
     },
   };
   await sendEmail("confirmation-agent", applicantEmail, config);
@@ -51,7 +54,7 @@ async function getDataForPayeeAndAgentEmails(
           order_by: { created_at: desc }
           limit: 1
         ) {
-          address: session_preview_data(path: "_address")
+          address: session_preview_data(path: "_address.title")
           projectTypes: session_preview_data(path: "['proposal.projectType']")
           payeeEmail: payee_email
           payeeName: payee_name
