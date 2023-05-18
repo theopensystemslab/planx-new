@@ -1,26 +1,23 @@
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 
 import { logger } from "../airbrake";
 
-const useStyles = makeStyles((theme) => ({
-  errorSummary: {
-    marginTop: theme.spacing(1),
-    padding: theme.spacing(3),
-    border: `5px solid #E91B0C`,
-  },
+const ErrorSummary = styled(Box)(({ theme }) => ({
+  marginTop: theme.spacing(1),
+  padding: theme.spacing(3),
+  border: `5px solid #E91B0C`,
 }));
 
 function ErrorFallback(props: { error: Error }) {
   logger.notify(props.error);
 
-  const classes = useStyles();
-
   return (
     <Card>
-      <div className={classes.errorSummary} role="alert">
+      <ErrorSummary role="alert">
         <Typography variant="h5" component="h1" gutterBottom>
           Something went wrong
         </Typography>
@@ -32,7 +29,7 @@ function ErrorFallback(props: { error: Error }) {
         <Typography variant="body2">
           This bug has been automatically logged and our team will see it soon.
         </Typography>
-      </div>
+      </ErrorSummary>
     </Card>
   );
 }
