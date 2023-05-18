@@ -4,9 +4,9 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import makeStyles from "@mui/styles/makeStyles";
 import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
@@ -56,20 +56,16 @@ interface LinkTabProps {
   href?: string;
 }
 
-const tabStyles = makeStyles(() => ({
-  tab: {
-    position: "relative",
-    zIndex: 1,
-    textTransform: "none",
-  },
+const StyledTab = styled(Tab)(() => ({
+  position: "relative",
+  zIndex: 1,
+  textTransform: "none",
 }));
 
 function LinkTab(props: LinkTabProps) {
-  const classes = tabStyles();
   return (
-    <Tab
+    <StyledTab
       component="a"
-      className={classes.tab}
       disableRipple
       onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         if (!event.metaKey) {
@@ -81,20 +77,25 @@ function LinkTab(props: LinkTabProps) {
   );
 }
 
-const useStyles = makeStyles(() => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: "#f2f2f2",
-    position: "absolute",
-    top: HEADER_HEIGHT,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  tabs: {
+const PREFIX = "Settings";
+
+const classes = {
+  tabs: `${PREFIX}-tabs`,
+  tabIndicator: `${PREFIX}-tabIndicator`,
+};
+
+const Root = styled(Box)(() => ({
+  flexGrow: 1,
+  backgroundColor: "#f2f2f2",
+  position: "absolute",
+  top: HEADER_HEIGHT,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  [`& .${classes.tabs}`]: {
     backgroundColor: "#ddd",
   },
-  tabIndicator: {
+  [`& .${classes.tabIndicator}`]: {
     height: "100%",
     backgroundColor: "#f2f2f2",
     zIndex: 0,
@@ -104,7 +105,6 @@ const useStyles = makeStyles(() => ({
 const tabsOrder = ["team", "service", "flags", "design", "data-manager"];
 
 const NavTabs: React.FC<{ tab?: string }> = (props) => {
-  const classes = useStyles();
   const { navigate } = useNavigation();
   const { data } = useCurrentRoute();
 
@@ -120,7 +120,7 @@ const NavTabs: React.FC<{ tab?: string }> = (props) => {
   const value = tabsOrder.indexOf(props.tab || "");
 
   return (
-    <div className={classes.root}>
+    <Root>
       <AppBar position="static" color="default" enableColorOnDark elevation={0}>
         <Grid container wrap="nowrap">
           <Grid item xs={12}>
@@ -206,7 +206,7 @@ const NavTabs: React.FC<{ tab?: string }> = (props) => {
       <TabPanel value={value} index={4}>
         <DataManagerSettings />
       </TabPanel>
-    </div>
+    </Root>
   );
 };
 
