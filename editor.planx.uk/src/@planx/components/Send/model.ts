@@ -1,6 +1,6 @@
 import type { Store } from "../../../pages/FlowEditor/lib/store";
 import { MoreInformation, parseMoreInformation } from "../shared";
-import { getUniformParams, makeCsvData } from "./uniform";
+import { makeCsvData } from "./uniform";
 
 export enum Destination {
   BOPS = "bops",
