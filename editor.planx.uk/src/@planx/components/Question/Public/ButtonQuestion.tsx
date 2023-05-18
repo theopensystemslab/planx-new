@@ -1,6 +1,6 @@
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { useTheme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled, useTheme } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import DescriptionButton from "@planx/components/shared/Buttons/DescriptionButton";
@@ -13,22 +13,15 @@ import React from "react";
 
 import { IQuestion, QuestionLayout } from "./Question";
 
-const useClasses = makeStyles(() => ({
-  fieldset: {
-    border: 0,
-    padding: 0,
-  },
-  gridContainer: {
-    // Overwrite Mui Grid style to align with "Continue" button
-    "& > .MuiGrid-item": {
-      padding: "0px 0px 8px 2px",
-    },
+const StyledGrid = styled(Grid)(() => ({
+  // Overwrite Mui Grid style to align with "Continue" button
+  "& > .MuiGrid-item": {
+    padding: "0px 0px 8px 2px",
   },
 }));
 
 const ButtonQuestion: React.FC<IQuestion> = (props) => {
   const theme = useTheme();
-  const classes = useClasses();
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
@@ -67,8 +60,9 @@ const ButtonQuestion: React.FC<IQuestion> = (props) => {
       isValid={Boolean(formik.values.selected.id)}
     >
       <form>
-        <fieldset
-          className={classes.fieldset}
+        <Box
+          component="fieldset"
+          sx={{ p: 0, border: 0 }}
           aria-describedby={props.description ? DESCRIPTION_TEXT : ""}
         >
           <legend style={visuallyHidden}>{props.text}</legend>
@@ -81,10 +75,9 @@ const ButtonQuestion: React.FC<IQuestion> = (props) => {
             definitionImg={props.definitionImg}
             img={props.img}
           />
-          <Grid
+          <StyledGrid
             container
             spacing={layout === QuestionLayout.Descriptions ? 2 : 1}
-            className={classes.gridContainer}
           >
             {!props.text?.startsWith("Sorry") &&
               props.responses?.map((response) => {
@@ -129,8 +122,8 @@ const ButtonQuestion: React.FC<IQuestion> = (props) => {
                     );
                 }
               })}
-          </Grid>
-        </fieldset>
+          </StyledGrid>
+        </Box>
       </form>
     </Card>
   );
