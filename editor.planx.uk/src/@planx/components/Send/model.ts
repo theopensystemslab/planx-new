@@ -68,17 +68,9 @@ export function getCombinedEventsPayload({
       }
     }
 
-    const uniformParams = getUniformParams({
-      breadcrumbs,
-      flow,
-      flowName,
-      passport,
-      sessionId,
-    });
-
     combinedEventsPayload[Destination.Uniform] = {
       localAuthority: teamSlug,
-      body: uniformParams,
+      body: { sessionId },
     };
   }
 

@@ -1,29 +1,8 @@
+import { _public as $public } from "client";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { getBOPSParams } from "../bops";
 import { CSVData } from "../model";
-
-export function getUniformParams({
-  breadcrumbs,
-  flow,
-  flowName,
-  passport,
-  sessionId,
-}: {
-  breadcrumbs: Store.breadcrumbs;
-  flow: Store.flow;
-  flowName: string;
-  passport: Store.passport;
-  sessionId: string;
-}) {
-  // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
-  return {
-    csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
-    passport,
-    sessionId,
-  };
-}
 
 // create a CSV data structure based on the payload we send to BOPs
 //   (also used in Confirmation component for user-downloadable copy of app data)
@@ -40,13 +19,7 @@ export function makeCsvData({
   sessionId: string;
   flowName: string;
 }): CSVData {
-  const bopsData = getBOPSParams({
-    breadcrumbs,
-    flow,
-    flowName,
-    passport,
-    sessionId,
-  });
+  const bopsData = $public.generateBOPSPayload(sessionId) as any;
 
   // format dedicated BOPs properties as list of questions & responses to match proposal_details
   //   omitting debug data and keys already in confirmation details
@@ -67,7 +40,7 @@ export function makeCsvData({
     responses: any;
     metadata: string;
   }[] = [];
-  bopsData["files"]?.forEach((file) => {
+  bopsData["files"]?.forEach((file: any) => {
     formattedFiles.push({
       question: file.tags
         ? `File upload: ${file.tags.join(", ")}`
