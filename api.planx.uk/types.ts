@@ -123,7 +123,10 @@ export interface InviteToPayNotifyConfig {
 
 export interface AgentAndPayeeSubmissionNotifyPersonalisation
   extends MinimumNotifyPersonalisation {
-  applicantEmail: string;
+  applicantName: string;
+  payeeName: string;
+  address: string;
+  projectType: string;
 }
 
 export interface AgentAndPayeeSubmissionNotifyConfig {

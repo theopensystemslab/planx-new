@@ -42,9 +42,14 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
             },
             paymentRequests: [
               {
+                address: "123 PLACE",
+                projectTypes: [
+                  "alter.internal",
+                  "alter.openings.add.doors.rear",
+                  "alter.facades.paint",
+                ],
                 payeeEmail,
                 payeeName: "payeeName",
-                paymentAmount: "20",
                 applicantName: "xyz",
               },
             ],
@@ -54,7 +59,11 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
     });
     const expectedConfig = {
       personalisation: {
-        applicantEmail: agentEmail,
+        applicantName: "xyz",
+        payeeName: "payeeName",
+        address: "123 PLACE",
+        projectType:
+          "alter.internal, alter.openings.add.doors.rear, alter.facades.paint",
         emailReplyToId: "123",
         helpEmail: "help@email.com",
         helpOpeningHours: "9-5",
@@ -82,7 +91,7 @@ describe("Invite to pay confirmation templates cannot be sent individually", () 
       const data = {
         payload: {
           sessionId: "TestSesionID",
-          isLocked: true,
+          lockedAt: "2023-05-18T12:49:22.839068+00:00",
         },
       };
       await supertest(app)

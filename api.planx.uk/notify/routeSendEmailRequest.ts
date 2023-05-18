@@ -13,7 +13,7 @@ export async function routeSendEmailRequest(
   next: NextFunction
 ) {
   try {
-    const { email, sessionId, paymentRequestId, isLocked } = req.body.payload;
+    const { email, sessionId, paymentRequestId, lockedAt } = req.body.payload;
     const template = req.params.template as Template;
 
     const invalidTemplate = (_unknownTemplate?: never) => {
@@ -79,7 +79,7 @@ export async function routeSendEmailRequest(
         return await handlePaymentEmails();
       case "confirmation": {
         // if the session is locked we can infer that a payment request has been initiated
-        const paymentRequestInitiated = isLocked;
+        const paymentRequestInitiated = Boolean(lockedAt);
         if (paymentRequestInitiated) {
           return await handleInviteToPayConfirmationEmails();
         } else {

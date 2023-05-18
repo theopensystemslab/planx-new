@@ -1,14 +1,19 @@
 import { _admin as $admin } from "../client";
 import { sendEmail } from "../notify";
 import { gql } from "graphql-request";
-import {  convertSlugToName } from "../saveAndReturn/utils";
+import { convertSlugToName } from "../saveAndReturn/utils";
 import type { AgentAndPayeeSubmissionNotifyConfig } from "../types";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
-  const { personalisation, agentEmail, payeeEmail } =
+  const { personalisation, applicantEmail, payeeEmail, projectTypes } =
     await getDataForPayeeAndAgentEmails(sessionId);
-  const config = { personalisation };
-  await sendEmail("confirmation-agent", agentEmail, config);
+  const config: AgentAndPayeeSubmissionNotifyConfig = {
+    personalisation: {
+      ...personalisation,
+      projectType: projectTypes.join(", "), // TODO: human-readable
+    },
+  };
+  await sendEmail("confirmation-agent", applicantEmail, config);
   await sendEmail("confirmation-payee", payeeEmail, config);
   return { message: "Success" };
 }
@@ -16,14 +21,17 @@ export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
 type PayeeAndAgentEmailData = {
   personalisation: {
     emailReplyToId: string;
-    applicantEmail: string;
     helpEmail: string;
     helpOpeningHours: string;
     helpPhone: string;
     serviceName: string;
+    payeeName: string;
+    address: string;
+    applicantName: string;
   };
-  agentEmail: string;
+  applicantEmail: string;
   payeeEmail: string;
+  projectTypes: string[];
 };
 
 async function getDataForPayeeAndAgentEmails(
@@ -31,11 +39,7 @@ async function getDataForPayeeAndAgentEmails(
 ): Promise<PayeeAndAgentEmailData> {
   const query = gql`
     query GetDataForPayeeAndAgentEmails($sessionId: uuid!) {
-      lowcal_sessions(
-        where: { id: { _eq: $sessionId } }
-        locked_at: { _is_null: false }
-        limit: 1
-      ) {
+      lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
         email
         flow {
           slug
@@ -47,9 +51,10 @@ async function getDataForPayeeAndAgentEmails(
           order_by: { created_at: desc }
           limit: 1
         ) {
+          address: session_preview_data(path: "_address")
+          projectTypes: session_preview_data(path: "['proposal.projectType']")
           payeeEmail: payee_email
           payeeName: payee_name
-          paymentAmount: payment_amount
           applicantName: applicant_name
         }
       }
@@ -70,9 +75,10 @@ async function getDataForPayeeAndAgentEmails(
         };
       };
       paymentRequests: {
+        address: string;
+        projectTypes: string[];
         payeeEmail: string;
         payeeName: string;
-        paymentAmount: string;
         applicantName: string;
       }[];
     }[];
@@ -82,17 +88,21 @@ async function getDataForPayeeAndAgentEmails(
     data.flow.team.notifyPersonalisation;
   const serviceName = convertSlugToName(data.flow.slug);
   const applicantEmail = data.email;
-  const payeeEmail = data.paymentRequests[0].payeeEmail;
+  const { payeeEmail, payeeName, address, projectTypes, applicantName } =
+    data.paymentRequests[0];
   return {
     personalisation: {
-      applicantEmail,
       emailReplyToId,
       helpEmail,
       helpOpeningHours,
       helpPhone,
       serviceName,
+      payeeName,
+      address,
+      applicantName,
     },
-    agentEmail: applicantEmail,
+    applicantEmail,
     payeeEmail,
+    projectTypes,
   };
 }
