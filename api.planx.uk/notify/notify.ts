@@ -34,8 +34,8 @@ const privateEmailTemplates = {
   expiry: "9619f89d-5d33-4cb0-a365-42c431ea9db3",
   submit: "7e77bdae-7379-4dd8-a8cc-086a0029163c",
   confirmation: "8b82b606-defa-4daa-8fdb-e78b852b8ffb",
-  "confirmation-agent": "c7202e07-08cf-468e-a6a4-ac528d60d2f7", // TODO update template
-  "confirmation-payee": "c7202e07-08cf-468e-a6a4-ac528d60d2f7", // TODO update template
+  "confirmation-agent": "a030e73f-b708-4208-80d3-f1ea97723479",
+  "confirmation-payee": "0c8e8b26-01cd-4896-91e6-12c38ef25387",
   "invite-to-pay": "7bdbc880-4f4e-400b-a838-74de401dfa92",
   "invite-to-pay-agent": "a964d10a-5442-42fa-b94b-b6623450cd68",
   "payment-reminder": "3208bf39-152d-4259-9064-ef5e192aeaa6",
