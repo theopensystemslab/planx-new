@@ -1,7 +1,7 @@
 import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -14,22 +14,17 @@ import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { makeCsvData } from "../Send/uniform";
 import type { Confirmation } from "./model";
 
-const useClasses = makeStyles((theme) => ({
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    "& tr": {
-      borderBottom: `1px solid ${theme.palette.grey[400]}`,
-      "&:last-of-type": {
-        border: "none",
-      },
-      "& td": {
-        padding: theme.spacing(1.5, 1),
-      },
+const Table = styled("table")(({ theme }) => ({
+  width: "100%",
+  borderCollapse: "collapse",
+  "& tr": {
+    borderBottom: `1px solid ${theme.palette.grey[400]}`,
+    "&:last-of-type": {
+      border: "none",
     },
-  },
-  listHeading: {
-    marginBottom: theme.spacing(2),
+    "& td": {
+      padding: theme.spacing(1.5, 1),
+    },
   },
 }));
 
@@ -55,8 +50,6 @@ export default function ConfirmationComponent(props: Props) {
     sessionId,
   });
 
-  const classes = useClasses();
-
   return (
     <Box width="100%">
       <Banner
@@ -73,7 +66,7 @@ export default function ConfirmationComponent(props: Props) {
       </Banner>
       <Card>
         {props.details && (
-          <table className={classes.table}>
+          <Table>
             <tbody>
               {Object.entries(props.details).map((item, i) => (
                 <tr key={i}>
@@ -84,7 +77,7 @@ export default function ConfirmationComponent(props: Props) {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         )}
 
         {
@@ -98,11 +91,7 @@ export default function ConfirmationComponent(props: Props) {
 
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
-            <Typography
-              variant="h3"
-              component="h2"
-              className={classes.listHeading}
-            >
+            <Typography variant="h3" component="h2" sx={{ mb: 2 }}>
               What happens next?
             </Typography>
             <NumberedList items={props.nextSteps} heading="h3" />
