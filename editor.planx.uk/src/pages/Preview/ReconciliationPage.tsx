@@ -7,6 +7,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
+import { TYPES } from "@planx/components/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
@@ -35,15 +36,25 @@ const ReconciliationPage: React.FC<Props> = ({
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, hasSections, sectionNodes, currentCard, changeAnswer] = useStore(
-    (state) => [
+  const [flow, hasSections, sectionNodes, currentCard, changeAnswer, record] =
+    useStore((state) => [
       state.flow,
       state.hasSections,
       state.sectionNodes,
       state.currentCard(),
       state.changeAnswer,
-    ]
-  );
+      state.record,
+    ]);
+
+  const nextQuestion = () => {
+    if (onButtonClick) {
+      onButtonClick();
+    }
+    // skip current card if it is a section
+    if (currentCard && currentCard.id && currentCard.type === TYPES.Section) {
+      record(currentCard.id, { auto: false });
+    }
+  };
 
   const sortedBreadcrumbs = sortBreadcrumbs(
     reconciliationResponse.reconciledSessionData.breadcrumbs,
@@ -87,7 +98,7 @@ const ReconciliationPage: React.FC<Props> = ({
             flow={flow}
             alteredSectionIds={reconciliationResponse.alteredSectionIds}
             changeAnswer={changeAnswer}
-            nextQuestion={onButtonClick!}
+            nextQuestion={nextQuestion}
             showChange={false}
             isReconciliation={true}
             sectionNodes={sectionNodes}
@@ -110,7 +121,7 @@ const ReconciliationPage: React.FC<Props> = ({
             color="primary"
             size="large"
             data-testid="continue-button"
-            onClick={onButtonClick}
+            onClick={nextQuestion}
           >
             {buttonText}
           </Button>

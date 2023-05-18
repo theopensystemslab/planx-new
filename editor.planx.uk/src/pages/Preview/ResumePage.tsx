@@ -178,6 +178,7 @@ const ResumePage: React.FC = () => {
   }, [email]);
 
   const teamSlug = useStore((state) => state.teamSlug);
+  const resumeSession = useStore((state) => state.resumeSession);
 
   /**
    * Continue application following successful validation & reconciliation
@@ -228,7 +229,7 @@ const ResumePage: React.FC = () => {
         if (response.data) {
           const reconciledSessionData = response.data.reconciledSessionData;
           setReconciliationResponse(response.data);
-          useStore.getState().resumeSession(reconciledSessionData);
+          resumeSession(reconciledSessionData);
           // Skip reconciliation page if applicant has started payment
           isPaymentCreated(reconciledSessionData)
             ? continueApplication()
