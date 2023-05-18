@@ -3,9 +3,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -21,34 +20,41 @@ interface IResultReason {
   showChangeButton?: boolean;
 }
 
-const useClasses = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-    alignItems: "baseline",
+const PREFIX = "Result";
+
+const classes = {
+  removeTopBorder: `${PREFIX}-removeTopBorder`,
+};
+
+const Root = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "baseline",
+}));
+
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+  cursor: "pointer",
+  width: "100%",
+  marginBottom: theme.spacing(0.5),
+  backgroundColor: theme.palette.background.paper,
+  "&:hover": {
+    background: theme.palette.grey,
   },
-  accordion: {
-    cursor: "pointer",
-    width: "100%",
-    marginBottom: theme.spacing(0.5),
-    backgroundColor: theme.palette.background.paper,
-    "&:hover": {
-      background: theme.palette.grey,
-    },
-  },
-  moreInfo: {
-    paddingLeft: theme.spacing(2),
-    color: theme.palette.text.primary,
-  },
-  changeLink: {
-    marginLeft: theme.spacing(2),
-    marginBottom: theme.spacing(0.5),
-  },
-  removeTopBorder: {
+  [`& .${classes.removeTopBorder}`]: {
     "&:before": {
       display: "none",
     },
   },
 }));
+
+const MoreInfo = styled(Box)(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
+  color: theme.palette.text.primary,
+}));
+
+const ChangeLink = styled(Link)(({ theme }) => ({
+  marginLeft: theme.spacing(2),
+  marginBottom: theme.spacing(0.5),
+})) as typeof Link;
 
 const ResultReason: React.FC<IResultReason> = ({
   id,
@@ -58,8 +64,6 @@ const ResultReason: React.FC<IResultReason> = ({
 }) => {
   const changeAnswer = useStore((state) => state.changeAnswer);
   const [expanded, setExpanded] = React.useState(false);
-
-  const classes = useClasses();
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
   const toggleAdditionalInfo = () => setExpanded(!expanded);
@@ -71,9 +75,8 @@ const ResultReason: React.FC<IResultReason> = ({
   }`;
 
   return (
-    <Box className={classes.root}>
-      <Accordion
-        className={classes.accordion}
+    <Root>
+      <StyledAccordion
         classes={{ root: classes.removeTopBorder }}
         onChange={() => hasMoreInfo && toggleAdditionalInfo()}
         expanded={expanded}
@@ -118,7 +121,7 @@ const ResultReason: React.FC<IResultReason> = ({
         </AccordionSummary>
         {hasMoreInfo && (
           <AccordionDetails>
-            <Box className={classes.moreInfo}>
+            <MoreInfo>
               {question.data.info && (
                 <ReactMarkdownOrHtml
                   source={question.data.info}
@@ -131,14 +134,13 @@ const ResultReason: React.FC<IResultReason> = ({
                   openLinksOnNewTab
                 />
               )}
-            </Box>
+            </MoreInfo>
           </AccordionDetails>
         )}
-      </Accordion>
+      </StyledAccordion>
       <Box>
         {showChangeButton && (
-          <Link
-            className={classes.changeLink}
+          <ChangeLink
             component="button"
             onClick={(event) => {
               event.stopPropagation();
@@ -149,10 +151,10 @@ const ResultReason: React.FC<IResultReason> = ({
             <span style={visuallyHidden}>
               your response to {question.data.text || "this question"}
             </span>
-          </Link>
+          </ChangeLink>
         )}
       </Box>
-    </Box>
+    </Root>
   );
 };
 
