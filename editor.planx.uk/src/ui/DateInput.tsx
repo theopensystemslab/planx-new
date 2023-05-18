@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import React, { ChangeEvent, FocusEvent } from "react";
 
 import ErrorWrapper from "./ErrorWrapper";
@@ -15,53 +15,40 @@ export interface Props {
   onChange: (newDate: string, eventType: string) => void;
 }
 
-const useClasses = makeStyles((theme) => ({
-  root: {},
-  editor: {
-    display: "flex",
-    alignItems: "center",
-    // Adds a uniform horizontal spacing between all child elements.
-    // The `* + *` selector makes sure the first element doesn't get this margin.
-    "& > * + *": {
-      marginLeft: theme.spacing(2),
-    },
+const Editor = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  // Adds a uniform horizontal spacing between all child elements.
+  // The `* + *` selector makes sure the first element doesn't get this margin.
+  "& > * + *": {
+    marginLeft: theme.spacing(2),
   },
-  editorLabel: {
-    minWidth: 60,
-    alignSelf: "end",
-    marginBottom: theme.spacing(1.5),
-  },
-  label: {
-    paddingBottom: theme.spacing(0.5),
-  },
-  dayContainer: {
-    width: 60,
-  },
-  monthContainer: {
-    width: 60,
-  },
-  yearContainer: {
-    width: 90,
-  },
+}));
+
+const EditorLabel = styled(Typography)(({ theme }) => ({
+  minWidth: 60,
+  alignSelf: "end",
+  marginBottom: theme.spacing(1.5),
+}));
+
+const Label = styled(Typography)(({ theme }) => ({
+  paddingBottom: theme.spacing(0.5),
 }));
 
 export default function DateInput(props: Props): FCReturn {
   const [year, month, day] = (props.value || "").split("-");
-  const classes = useClasses();
 
   return (
     <ErrorWrapper error={props.error} id={props.id}>
-      <div className={classes.root}>
-        <div className={classes.editor}>
+      <Box>
+        <Editor>
           {props.label && (
-            <Typography className={classes.editorLabel} variant="body1">
-              {props.label}:
-            </Typography>
+            <EditorLabel variant="body1">{props.label}:</EditorLabel>
           )}
-          <Box className={classes.dayContainer}>
-            <Typography variant="body1" className={classes.label}>
+          <Box sx={{ width: "60px" }}>
+            <Label variant="body1">
               <label htmlFor="day">Day</label>
-            </Typography>
+            </Label>
             <Input
               value={day || ""}
               inputProps={{ maxLength: "2" }}
@@ -82,10 +69,10 @@ export default function DateInput(props: Props): FCReturn {
               }}
             />
           </Box>
-          <Box className={classes.monthContainer}>
-            <Typography variant="body1" className={classes.label}>
+          <Box sx={{ width: "60px" }}>
+            <Label variant="body1">
               <label htmlFor="month">Month</label>
-            </Typography>
+            </Label>
             <Input
               value={month || ""}
               placeholder="MM"
@@ -106,10 +93,10 @@ export default function DateInput(props: Props): FCReturn {
               }}
             />
           </Box>
-          <Box className={classes.yearContainer}>
-            <Typography variant="body1" className={classes.label}>
+          <Box sx={{ width: "90px" }}>
+            <Label variant="body1">
               <label htmlFor="year">Year</label>
-            </Typography>
+            </Label>
             <Input
               value={year || ""}
               placeholder="YYYY"
@@ -124,8 +111,8 @@ export default function DateInput(props: Props): FCReturn {
               }}
             />
           </Box>
-        </div>
-      </div>
+        </Editor>
+      </Box>
     </ErrorWrapper>
   );
 }
