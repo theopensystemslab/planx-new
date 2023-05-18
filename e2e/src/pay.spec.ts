@@ -6,21 +6,18 @@ import { gql, GraphQLClient } from "graphql-request";
 import type { SessionData } from "@opensystemslab/planx-core/types";
 import type { Context } from "./context";
 import {
+  contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
 } from "./context";
 
 let context: Context = {
-  user: {
-    firstName: "test",
-    lastName: "test",
-    email: "e2epaytest@test.com",
-  },
+  ...contextDefaults,
   team: {
     name: "Buckinghamshire",
     slug: "buckinghamshire",
-    logo: "https://placedog.net/250/250",
+    logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
     primaryColor: "#F30415",
     homepage: "example.com",
   },
@@ -40,7 +37,7 @@ const cards = {
 };
 const payButtonText = "Pay now using GOV.UK Pay";
 
-test.describe("Payment flow", async () => {
+test.describe("Gov Pay @integration", async () => {
   const adminGQLClient = getGraphQLClient();
 
   test.beforeAll(async () => {
