@@ -1,8 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
-import makeStyles from "@mui/styles/makeStyles";
-import classnames from "classnames";
+import { styled } from "@mui/material/styles";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -15,27 +14,21 @@ import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { handleSubmit } from "./Node";
 
-const useClasses = makeStyles((theme) => ({
-  backButton: {
-    marginLeft: "10px",
-    marginBottom: "10px",
-    visibility: "visible",
-    pointerEvents: "auto",
-    display: "flex",
-    cursor: "pointer",
-    userSelect: "none",
-    alignSelf: "start",
-    fontSize: 16,
-    background: "transparent",
-    border: "none",
-    columnGap: theme.spacing(1),
-    "&:hover": {
-      textDecoration: "underline",
-    },
-  },
-  hidden: {
-    visibility: "hidden",
-    pointerEvents: "none",
+const BackButton = styled(ButtonBase)(({ theme }) => ({
+  marginLeft: "10px",
+  marginBottom: "10px",
+  visibility: "visible",
+  pointerEvents: "auto",
+  display: "flex",
+  cursor: "pointer",
+  userSelect: "none",
+  alignSelf: "start",
+  fontSize: 16,
+  background: "transparent",
+  border: "none",
+  columnGap: theme.spacing(1),
+  "&:hover": {
+    textDecoration: "underline",
   },
 }));
 
@@ -69,7 +62,6 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, node } = useAnalyticsTracking();
-  const classes = useClasses();
   const [gotFlow, setGotFlow] = useState(false);
   const isSingleSession =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
@@ -162,16 +154,13 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   return (
     <Box width="100%" role="main" pt={5}>
-      <ButtonBase
-        className={classnames(classes.backButton, {
-          [classes.hidden]: !showBackButton,
-        })}
-        onClick={() => goBack()}
-      >
-        <ArrowBackIcon fontSize="small"></ArrowBackIcon>
-        Back
-      </ButtonBase>
-
+      {/* TODO: Check this! */}
+      {showBackButton && (
+        <BackButton onClick={() => goBack()}>
+          <ArrowBackIcon fontSize="small"></ArrowBackIcon>
+          Back
+        </BackButton>
+      )}
       {node && (
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Node
