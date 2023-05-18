@@ -1,20 +1,62 @@
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Collapse from "@mui/material/Collapse";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
-import classNames from "classnames";
 import React from "react";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
-const useClasses = makeStyles((theme) => ({
-  panel: {
-    backgroundColor: theme.palette.background.default,
-    position: "relative",
-    paddingBottom: theme.spacing(1.25),
+const Panel = styled("li")(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  position: "relative",
+  paddingBottom: theme.spacing(1.25),
+}));
+
+const NumberedListRoot = styled("ol")(() => ({
+  listStyle: "none",
+  margin: 0,
+  padding: 0,
+}));
+
+const Summary = styled(ButtonBase)(({ theme }) => ({
+  fontWeight: 700,
+  minHeight: theme.spacing(6),
+  padding: theme.spacing(2, 0),
+  paddingLeft: theme.spacing(7),
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  [theme.breakpoints.up("sm")]: {},
+}));
+
+const Content = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  paddingTop: theme.spacing(3),
+  paddingBottom: theme.spacing(3),
+  paddingLeft: theme.spacing(7),
+  paddingRight: theme.spacing(2),
+  lineHeight: 1.6,
+  display: "block",
+  [theme.breakpoints.up("sm")]: {
+    paddingLeft: theme.spacing(13.5),
+    paddingRight: theme.spacing(13.5),
   },
-  stepIndicator: {
+  "& p": {
+    marginTop: 0,
+    "&:last-child": {
+      marginBottom: 0,
+    },
+  },
+}));
+
+interface StepIndicatorProps {
+  isFirst: boolean;
+  isLast: boolean;
+}
+
+const StepIndicator = styled(Box)<StepIndicatorProps>(
+  ({ theme, isFirst, isLast }) => ({
     position: "absolute",
     width: theme.spacing(7),
     height: "100%",
@@ -32,8 +74,8 @@ const useClasses = makeStyles((theme) => ({
       display: "block",
       width: 1,
       backgroundColor: "currentColor",
-      height: "100%",
-      top: 0,
+      height: isLast ? theme.spacing(4.5) : "100%",
+      top: isFirst ? theme.spacing(4.5) : 0,
       position: "absolute",
       left: "48%",
       [theme.breakpoints.up("sm")]: {
@@ -58,52 +100,8 @@ const useClasses = makeStyles((theme) => ({
         height: theme.spacing(4.5),
       },
     },
-  },
-  isFirst: {
-    "&::after": {
-      top: theme.spacing(4.5),
-    },
-  },
-  isLast: {
-    "&::after": {
-      height: theme.spacing(4.5),
-    },
-  },
-  summary: {
-    fontWeight: 700,
-    minHeight: theme.spacing(6),
-    padding: theme.spacing(2, 0),
-    paddingLeft: theme.spacing(7),
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    [theme.breakpoints.up("sm")]: {},
-  },
-  content: {
-    backgroundColor: theme.palette.background.default,
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    paddingLeft: theme.spacing(7),
-    paddingRight: theme.spacing(2),
-    lineHeight: 1.6,
-    display: "block",
-    [theme.breakpoints.up("sm")]: {
-      paddingLeft: theme.spacing(13.5),
-      paddingRight: theme.spacing(13.5),
-    },
-    "& p": {
-      marginTop: 0,
-      "&:last-child": {
-        marginBottom: 0,
-      },
-    },
-  },
-  numberedList: {
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-  },
-}));
+  })
+);
 
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 interface Item {
@@ -118,20 +116,12 @@ function ListItem(
   const handleChange = () => {
     setExpanded(!expanded);
   };
-  const classes = useClasses();
   return (
-    <li className={classes.panel}>
-      <div
-        className={classNames(
-          classes.stepIndicator,
-          props.index === 0 && classes.isFirst,
-          props.isLast && classes.isLast
-        )}
-      >
+    <Panel>
+      <StepIndicator isFirst={props.index === 0} isLast={props.isLast}>
         <i>{props.index + 1}</i>
-      </div>
-      <ButtonBase
-        className={classes.summary}
+      </StepIndicator>
+      <Summary
         onClick={handleChange}
         aria-expanded={expanded}
         aria-controls={`group-${props.index}-content`}
@@ -149,27 +139,24 @@ function ListItem(
           expanded={expanded}
           titleAccess={expanded ? "Less Information" : "More Information"}
         />
-      </ButtonBase>
+      </Summary>
       {props.description && (
         <Collapse in={expanded}>
-          <Box
-            className={classes.content}
+          <Content
             id={`group-${props.index}-content`}
             aria-labelledby={`group-${props.index}-heading`}
           >
             <ReactMarkdownOrHtml source={props.description} />
-          </Box>
+          </Content>
         </Collapse>
       )}
-    </li>
+    </Panel>
   );
 }
 
 function NumberedList(props: { items: Item[]; heading?: HeadingLevel }) {
-  const classes = useClasses();
-
   return (
-    <ol className={classes.numberedList}>
+    <NumberedListRoot>
       {props.items?.map((item, i) => (
         <ListItem
           {...item}
@@ -179,7 +166,7 @@ function NumberedList(props: { items: Item[]; heading?: HeadingLevel }) {
           heading={props.heading}
         />
       ))}
-    </ol>
+    </NumberedListRoot>
   );
 }
 
