@@ -1,6 +1,6 @@
 import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
-import { Theme, useTheme } from "@mui/material/styles";
+import { styled, Theme, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import React, { useLayoutEffect, useRef, useState } from "react";
@@ -17,48 +17,47 @@ export interface Props extends ButtonBaseProps {
   selected: boolean;
 }
 
-const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
-  return {
-    img: {
-      width: "100%",
-      height: "100%",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      objectFit: "contain",
-      backgroundColor: "white",
-    },
-    key: {
-      opacity: 0.3,
-    },
-    keySelected: {
-      opacity: 0.7,
-    },
-    title: {
-      marginLeft: theme.spacing(1.5),
-    },
-    subtitle: {
-      marginTop: theme.spacing(1),
-    },
-    bold: {
-      fontWeight: "bold",
-    },
-    label: {
-      cursor: "pointer",
-    },
-    textLabelWrapper: {
-      width: "100%",
-      backgroundColor: (props) => props.bgColor,
-      color: (props) =>
-        props.selected ? theme.palette.primary.contrastText : "black",
-      display: "flex",
-      flexGrow: 1,
-    },
-    imageButton: {
-      alignItems: "flex-start",
-    },
-  };
-});
+const imageStyle = {
+  width: "100%",
+  height: "100%",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  objectFit: "contain",
+  backgroundColor: "white",
+} as const;
+
+const ImageBox = styled(Box)(() => ({
+  ...imageStyle,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "secondary.dark",
+}));
+
+const Image = styled("img")(() => ({
+  ...imageStyle,
+}));
+
+interface TextLabelWrapperProps {
+  selected: boolean;
+  bgColor: string;
+}
+
+const TextLabelWrapper = styled(Box)<TextLabelWrapperProps>(
+  ({ theme, selected, bgColor }) => ({
+    width: "100%",
+    backgroundColor: bgColor,
+    color: selected ? theme.palette.primary.contrastText : "black",
+    display: "flex",
+    flexGrow: 1,
+    padding: theme.spacing(1),
+  })
+);
+
+const ImageButton = styled(ButtonBase)(() => ({
+  alignItems: "flex-start",
+}));
 
 interface TextLabelProps extends Props {
   bgColor: string;
@@ -82,17 +81,12 @@ const TextLabel = (props: TextLabelProps): FCReturn => {
     }
   });
 
-  const classes = useStyles(props);
-
   // Ensure we do not return one interactive element inside another (checkbox inside a button)
   if (checkbox) {
     return (
-      <Box
+      <TextLabelWrapper
         {...({ ref: textContentEl } as any)}
         alignItems={multiline ? "flex-start" : "center"}
-        px={1}
-        py={1}
-        className={classes.textLabelWrapper}
       >
         <Checkbox
           id={id}
@@ -100,39 +94,30 @@ const TextLabel = (props: TextLabelProps): FCReturn => {
           color={selected ? "primary.contrastText" : "text.primary"}
           onChange={onClick}
         />
-        <Typography variant="body2" className={classes.title}>
+        <Typography variant="body2" sx={{ ml: 1.5 }}>
           {title}
         </Typography>
-      </Box>
+      </TextLabelWrapper>
     );
   } else {
     const descriptionId = description ? `${id}-description` : undefined;
     return (
-      <ButtonBase
-        selected={props.selected}
-        onClick={props.onClick}
-        id={id}
-        className={classes.imageButton}
-      >
+      <ImageButton selected={props.selected} onClick={props.onClick} id={id}>
         <Box {...({ ref: textContentEl } as any)} px={2.25} py={1.75}>
           <Typography
             variant="body1"
-            className={classes.bold}
+            sx={{ fontWeight: "bold" }}
             aria-describedby={descriptionId}
           >
             {title}
           </Typography>
           {Boolean(description) && (
-            <Typography
-              variant="body2"
-              className={classes.subtitle}
-              id={descriptionId}
-            >
+            <Typography variant="body2" sx={{ mt: 1 }} id={descriptionId}>
               {description}
             </Typography>
           )}
         </Box>
-      </ButtonBase>
+      </ImageButton>
     );
   }
 };
@@ -146,7 +131,6 @@ interface ImageLabelProps {
 const ImageLabel = (props: ImageLabelProps): FCReturn => {
   const { bgColor, img, alt } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
-  const classes = useStyles(props);
   const onError = () => {
     if (!imgError) {
       setImgError(true);
@@ -166,18 +150,11 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
       bgcolor="background.default"
     >
       {imgError ? (
-        <Box
-          className={classes.img}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          color="secondary.dark"
-        >
+        <ImageBox>
           <ImageIcon />
-        </Box>
+        </ImageBox>
       ) : (
-        <img
-          className={classes.img}
+        <Image
           src={img}
           onError={onError}
           // Use a null alt to indicate that this image can be ignored by screen readers
@@ -189,7 +166,6 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
 };
 
 function ImageResponse(props: Props): FCReturn {
-  const classes = useStyles(props);
   const { selected, img, checkbox, description, title, id } = props;
   const theme = useTheme();
   const bgColor = selected
@@ -199,7 +175,11 @@ function ImageResponse(props: Props): FCReturn {
   const altText = description ? `${title} - ${description}` : title;
 
   return (
-    <label htmlFor={checkbox ? id : undefined} className={classes.label}>
+    <Box
+      component="label"
+      htmlFor={checkbox ? id : undefined}
+      sx={{ cursor: "pointer" }}
+    >
       <Box
         display="flex"
         flexDirection="column"
@@ -210,7 +190,7 @@ function ImageResponse(props: Props): FCReturn {
         <ImageLabel bgColor={bgColor} img={img} alt={altText} />
         <TextLabel bgColor={bgColor} {...props}></TextLabel>
       </Box>
-    </label>
+    </Box>
   );
 }
 
