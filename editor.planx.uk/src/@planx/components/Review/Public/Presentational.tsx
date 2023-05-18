@@ -1,4 +1,5 @@
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
@@ -9,11 +10,10 @@ import React from "react";
 
 export default Component;
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& *": {
-      fontFamily: "Inter, sans-serif",
-    },
+// TODO: Is this really needed? Why isn't it being picked up from the theme?
+const Root = styled(Box)(({ theme }) => ({
+  "& *": {
+    fontFamily: "Inter, sans-serif",
   },
 }));
 
@@ -29,8 +29,6 @@ interface Props {
 }
 
 function Component(props: Props) {
-  const { root } = useStyles();
-
   // ensure questions & answers display in expected order
   const sortedBreadcrumbs: Store.breadcrumbs = sortBreadcrumbs(
     props.breadcrumbs,
@@ -39,7 +37,7 @@ function Component(props: Props) {
 
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
-      <div className={root}>
+      <Root>
         <QuestionHeader title={props.title} description={props.description} />
         <SummaryListsBySections
           breadcrumbs={sortedBreadcrumbs}
@@ -49,7 +47,7 @@ function Component(props: Props) {
           showChangeButton={props.showChangeButton}
           sectionComponent="h2"
         />
-      </div>
+      </Root>
     </Card>
   );
 }
