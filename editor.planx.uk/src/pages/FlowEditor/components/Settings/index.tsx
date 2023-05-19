@@ -60,7 +60,7 @@ const StyledTab = styled(Tab)(() => ({
   position: "relative",
   zIndex: 1,
   textTransform: "none",
-}));
+})) as typeof Tab;
 
 function LinkTab(props: LinkTabProps) {
   return (

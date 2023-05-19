@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
-import { styled, Theme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import { borderedFocusStyle } from "theme";
 

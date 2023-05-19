@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";

@@ -1,8 +1,7 @@
 import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
-import { styled, Theme, useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/Checkbox";
 
