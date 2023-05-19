@@ -48,10 +48,9 @@ export interface Props {
   id?: string;
   checked: boolean;
   color?: string;
-  onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onChange: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
-// TODO: Check this!
 export default function Checkbox(props: Props): FCReturn {
   return (
     <Root onClick={() => props.onChange()}>

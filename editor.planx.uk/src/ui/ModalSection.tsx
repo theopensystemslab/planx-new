@@ -4,9 +4,8 @@ import React, { ReactNode } from "react";
 
 const Section = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(3),
-  // TODO: Check this
-  ["& + $section"]: {
-    borderTop: `0.5px solid #bbb`,
+  "& + .modalSection": {
+    borderTop: "0.5px solid #bbb",
   },
 }));
 
@@ -15,5 +14,5 @@ export default function ModalSection({
 }: {
   children: ReactNode;
 }): FCReturn {
-  return <Section>{children}</Section>;
+  return <Section className="modalSection">{children}</Section>;
 }

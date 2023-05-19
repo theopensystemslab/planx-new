@@ -11,7 +11,6 @@ const Root = styled(MuiButtonBase)<RootProps>(({ theme, selected }) => ({
   backgroundColor: selected
     ? theme.palette.primary.main
     : theme.palette.background.paper,
-  // TODO: Check this!
   color: selected ? theme.palette.primary.contrastText : "inherit",
   fontSize: 15,
   fontFamily: "inherit",
@@ -33,7 +32,9 @@ export interface Props {
   children?: React.ReactNode;
   className?: string;
   id?: string;
-  onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick: (
+    event?: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>
+  ) => void;
 }
 
 export default function ButtonBase(props: Props): FCReturn {

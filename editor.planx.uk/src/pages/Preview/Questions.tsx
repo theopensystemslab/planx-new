@@ -154,7 +154,6 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   return (
     <Box width="100%" role="main" pt={5}>
-      {/* TODO: Check this! */}
       {showBackButton && (
         <BackButton onClick={() => goBack()}>
           <ArrowBackIcon fontSize="small"></ArrowBackIcon>
