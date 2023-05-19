@@ -1,16 +1,16 @@
-import { ButtonBaseProps } from "@material-ui/core";
 import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/Close";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { uploadPrivateFile } from "api/upload";
+import classNames from "classnames";
 import ImagePreview from "components/ImagePreview";
 import { nanoid } from "nanoid";
 import { Store } from "pages/FlowEditor/lib/store";
@@ -32,106 +32,101 @@ interface Props extends MoreInformation {
   previouslySubmittedData?: Store.userData;
 }
 
-const FileItem = styled(Box)(({ theme }) => ({
-  position: "relative",
-  height: theme.spacing(14),
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.background.paper}`,
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(1.5),
-  marginBottom: theme.spacing(2),
-  "& > *": {
-    zIndex: 1,
-  },
-}));
-
-const DeleteIconButton = styled(IconButton)(({ theme }) => ({
-  position: "absolute",
-  top: theme.spacing(1),
-  right: theme.spacing(1),
-}));
-
-const ProgressBar = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  height: "100%",
-  left: 0,
-  top: 0,
-  backgroundColor: theme.palette.background.default,
-  zIndex: 0,
-}));
-
-const FilePreview = styled(Box)(({ theme }) => ({
-  height: theme.spacing(14),
-  width: theme.spacing(14),
-  marginLeft: -theme.spacing(1.5),
-  marginRight: theme.spacing(1.5),
-  opacity: 0.5,
-  position: "relative",
-  overflow: "hidden",
-  "& img": {
-    position: "absolute",
-    width: "100%",
-    left: "50%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
-  },
-  "& svg": {
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
-    width: theme.spacing(5),
-    height: theme.spacing(5),
-  },
-}));
-
-const UnderlinedLink = styled("span")(({ theme }) => ({
-  textDecoration: "underline",
-  color: theme.palette.primary.main,
-}));
-
-const FileSize = styled(Box)(() => ({
-  color: "text.secondary",
-  alignSelf: "flex-end",
-  whiteSpace: "nowrap",
-}));
-
-interface RootProps extends ButtonBaseProps {
-  isDragActive: boolean;
-}
-
-const Root = styled(ButtonBase, {
-  shouldForwardProp: (prop) => prop !== "isDragActive",
-})<RootProps>(({ theme, isDragActive }) => ({
-  height: theme.spacing(14),
-  backgroundColor: isDragActive
-    ? theme.palette.background.default
-    : theme.palette.background.paper,
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(1.5),
-  position: "relative",
-  width: "100%",
-  fontSize: "medium",
-  zIndex: 10,
-  "&::before": {
-    content: "''",
-    position: "absolute",
-    left: -theme.spacing(0.75),
-    top: -theme.spacing(0.75),
-    width: `calc(100% + ${theme.spacing(1.5)})`,
-    height: `calc(100% + ${theme.spacing(1.5)})`,
-    display: "block",
-    border: `2px dashed ${theme.palette.secondary.light}`,
-    opacity: isDragActive ? 1 : 0,
-    transform: isDragActive ? "scale(1)" : "scale(0.8)",
-    zIndex: -1,
-    transformOrigin: "center center",
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: theme.spacing(14),
     backgroundColor: theme.palette.background.paper,
-    transition: theme.transitions.create(["opacity", "transform"], {
-      duration: "0.2s",
-    }),
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(1.5),
+    position: "relative",
+    width: "100%",
+    fontSize: "medium",
+    zIndex: 10,
+    "&::before": {
+      content: "''",
+      position: "absolute",
+      left: -theme.spacing(0.75),
+      top: -theme.spacing(0.75),
+      width: `calc(100% + ${theme.spacing(1.5)})`,
+      height: `calc(100% + ${theme.spacing(1.5)})`,
+      display: "block",
+      border: `2px dashed ${theme.palette.secondary.light}`,
+      opacity: 0,
+      transform: "scale(0.8)",
+      zIndex: -1,
+      transformOrigin: "center center",
+      backgroundColor: theme.palette.background.paper,
+      transition: [
+        theme.transitions.create(["opacity", "transform"], {
+          duration: "0.2s",
+        }),
+      ],
+    },
+  },
+  dragActive: {
+    backgroundColor: theme.palette.background.default,
+    "&::before": {
+      opacity: 1,
+      transform: "scale(1)",
+    },
+  },
+  file: {
+    position: "relative",
+    height: theme.spacing(14),
+    backgroundColor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.background.paper}`,
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(1.5),
+    marginBottom: theme.spacing(2),
+    "& > *": {
+      zIndex: 1,
+    },
+  },
+  deleteIcon: {
+    position: "absolute",
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+  },
+  filePreview: {
+    height: theme.spacing(14),
+    width: theme.spacing(14),
+    marginLeft: -theme.spacing(1.5),
+    marginRight: theme.spacing(1.5),
+    opacity: 0.5,
+    position: "relative",
+    overflow: "hidden",
+    "& img": {
+      position: "absolute",
+      width: "100%",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+    },
+    "& svg": {
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+      width: theme.spacing(5),
+      height: theme.spacing(5),
+    },
+  },
+  progress: {
+    position: "absolute",
+    height: "100%",
+    left: 0,
+    top: 0,
+    backgroundColor: theme.palette.background.default,
+    zIndex: 0,
+  },
+  underlinedLink: {
+    textDecoration: "underline",
+    color: theme.palette.primary.main,
+  },
+  fileSize: {
+    whiteSpace: "nowrap",
   },
 }));
 
@@ -230,6 +225,7 @@ const FileUpload: React.FC<Props> = (props) => {
 
 function Dropzone(props: any) {
   const { slots, setSlots, fileUploadStatus, setFileUploadStatus } = props;
+  const classes = useStyles();
   const MAX_UPLOAD_SIZE_MB = 30;
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -295,11 +291,12 @@ function Dropzone(props: any) {
 
   return (
     <>
-      {slots.map(({ id, file, status, progress, url }: any, index: number) => {
+      {slots.map(({ id, file, progress, url }: any, index: number) => {
         return (
-          <FileItem key={id}>
-            <DeleteIconButton
+          <Box key={id} className={classes.file}>
+            <IconButton
               size="small"
+              className={classes.deleteIcon}
               aria-label={`Delete ${file.path}`}
               title={`Delete ${file.path}`}
               onClick={() => {
@@ -310,19 +307,20 @@ function Dropzone(props: any) {
               }}
             >
               <DeleteIcon />
-            </DeleteIconButton>
-            <ProgressBar
+            </IconButton>
+            <Box
+              className={classes.progress}
               width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
               role="progressbar"
               aria-valuenow={progress * 100 || 0}
             />
-            <FilePreview>
+            <Box className={classes.filePreview}>
               {file instanceof File && file?.type?.includes("image") ? (
                 <ImagePreview file={file} url={url} />
               ) : (
                 <FileIcon />
               )}
-            </FilePreview>
+            </Box>
             <Box flexGrow={1}>
               <Box
                 fontSize="caption.fontSize"
@@ -333,8 +331,14 @@ function Dropzone(props: any) {
               </Box>
               {file.path}
             </Box>
-            <FileSize>{formatBytes(file.size)}</FileSize>
-          </FileItem>
+            <Box
+              color="text.secondary"
+              alignSelf="flex-end"
+              className={classes.fileSize}
+            >
+              {formatBytes(file.size)}
+            </Box>
+          </Box>
         );
       })}
       {fileUploadStatus && (
@@ -342,7 +346,10 @@ function Dropzone(props: any) {
           {fileUploadStatus}
         </p>
       )}
-      <Root isDragActive {...getRootProps({ role: "button" })}>
+      <ButtonBase
+        className={classNames(classes.root, isDragActive && classes.dragActive)}
+        {...getRootProps({ role: "button" })}
+      >
         <input {...getInputProps()} />
         <Box pl={3} pr={4} color="text.secondary">
           <CloudUpload />
@@ -354,7 +361,7 @@ function Dropzone(props: any) {
             ) : (
               <>
                 Drag files here or{" "}
-                <UnderlinedLink>choose a file</UnderlinedLink>
+                <span className={classes.underlinedLink}>choose a file</span>
               </>
             )}
           </Box>
@@ -363,7 +370,7 @@ function Dropzone(props: any) {
         <Box color="text.secondary" alignSelf="flex-end">
           max size {MAX_UPLOAD_SIZE_MB}MB
         </Box>
-      </Root>
+      </ButtonBase>
     </>
   );
 }
