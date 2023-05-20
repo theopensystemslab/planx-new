@@ -105,9 +105,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       setPreviewEnvironment(previewEnvironment);
       if (isStandalone) {
         NEW.getLocalFlow(sessionId).then((state) => {
-          if (state) {
-            resumeSession(state);
-          }
+          // session data is resumed by ./ResumePage.tsx
           createAnalytics(state ? "resume" : "init");
           setGotFlow(true);
         });
@@ -126,6 +124,11 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       }
     }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
   }
+
+  // scroll to top on any update to breadcrumbs
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [breadcrumbs]);
 
   const handleSubmit =
     (id: string): handleSubmit =>
