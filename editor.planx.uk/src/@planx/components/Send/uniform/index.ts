@@ -1,7 +1,7 @@
-import { _public as $public } from "client";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
+import { getBOPSParams } from "../bops";
 import { CSVData } from "../model";
 
 // create a CSV data structure based on the payload we send to BOPs
@@ -19,7 +19,15 @@ export function makeCsvData({
   sessionId: string;
   flowName: string;
 }): CSVData {
-  const bopsData = $public.generateBOPSPayload(sessionId) as any;
+  // TODO: Replace with `const bopsData = $public.generateBOPSPayload(sessionId) as any;`
+  //   once public client is updated to have optional headers to access session data
+  const bopsData = getBOPSParams({
+    breadcrumbs,
+    flow,
+    flowName,
+    passport,
+    sessionId,
+  });
 
   // format dedicated BOPs properties as list of questions & responses to match proposal_details
   //   omitting debug data and keys already in confirmation details
@@ -40,7 +48,7 @@ export function makeCsvData({
     responses: any;
     metadata: string;
   }[] = [];
-  bopsData["files"]?.forEach((file: any) => {
+  bopsData["files"]?.forEach((file) => {
     formattedFiles.push({
       question: file.tags
         ? `File upload: ${file.tags.join(", ")}`

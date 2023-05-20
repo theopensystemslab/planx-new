@@ -67,6 +67,15 @@ describe("createUniformSubmissionZip", () => {
     mockHasRequiredDataForTemplate.mockClear();
   });
 
+  test("the csv is added to the zip", async () => {
+    const payload = {
+      sessionId: "1234",
+    };
+    await createUniformSubmissionZip(payload.sessionId);
+    expect(mockAddLocalFile).toHaveBeenCalledWith("application.csv");
+    expect(mockWriteZip).toHaveBeenCalledTimes(1);
+  });
+
   test("the document viewer is added to zip", async () => {
     const payload = {
       sessionId: "1234",

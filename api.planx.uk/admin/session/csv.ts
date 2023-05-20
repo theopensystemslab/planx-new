@@ -1,6 +1,6 @@
 import { stringify } from "csv-stringify";
 import { NextFunction, Request, Response } from "express";
-import { _admin } from "../../client";
+import { _admin as $admin } from "../../client";
 
 export const getCSVData = async (
   req: Request,
@@ -8,9 +8,9 @@ export const getCSVData = async (
   next: NextFunction
 ) => {
   try {
-    const data = await _admin.generateCSVData(req.params.sessionId);
+    const data = await $admin.generateCSVData(req.params.sessionId);
 
-    if (Boolean(req.query?.download)) {
+    if (req.query?.download) {
       stringify(data, { 
         columns: ["question", "responses", "metadata"],
         header: true 
