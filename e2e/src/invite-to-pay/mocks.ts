@@ -1,4 +1,5 @@
-import type { PaymentRequest, SessionData } from "@opensystemslab/planx-core/types";
+import { ComponentType, FlowGraph, PaymentRequest, SessionData } from "@opensystemslab/planx-core/types";
+import inviteToPayFlow from "../flows/invite-to-pay-flow";
 
 export const mockPaymentRequest: Partial<PaymentRequest> = {
   payeeEmail: "testNominee@opensystemslab.com",
@@ -8,8 +9,8 @@ export const mockPaymentRequest: Partial<PaymentRequest> = {
       "title": "123, Test Street, Testville"
     },
     "proposal.projectType": [
-      "extension",
-      "swimmingPool"
+      "alter.decks",
+      "alter.internal.walls",
     ]
   },
   paymentAmount: 12345,
@@ -48,8 +49,8 @@ export const mockSessionData: Omit<SessionData, "id"> = {
         "South East"
       ],
       "proposal.projectType": [
-        "extension",
-        "swimmingPool"
+        "alter.decks",
+        "alter.internal.walls"
       ],
       "applicant.agent.email": "testAgent@opensystemslab.com",
       "application.fee.payable": 123.45,
@@ -140,4 +141,21 @@ export const mockSessionData: Omit<SessionData, "id"> = {
       }
     }
   }
+}
+
+export const modifiedInviteToPayFlow: FlowGraph = {
+  ...inviteToPayFlow,
+  "9U4P2rUZnZ": {
+    data: {
+      fn: "proposal.projectType",
+      text: "What is your project type? (CHANGE!)",
+      allRequired: false
+    },
+    type: ComponentType.Checklist,
+    edges: [
+      "kId6RbgUtl",
+      "IfcqOHdMyi",
+      "mgKUfcwq4Z"
+    ]
+  },
 }

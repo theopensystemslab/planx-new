@@ -4,6 +4,8 @@ import type { Page, Browser, Locator } from "@playwright/test";
 import { findSessionId, generateAuthenticationToken } from "./context";
 import type { Context } from "./context";
 import { getGraphQLClient } from "./context";
+import { gql } from 'graphql-request';
+import { FlowGraph } from '@opensystemslab/planx-core/types';
 
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
@@ -335,4 +337,31 @@ export async function waitForPaymentResponse(
     .then((req) => req.json());
   if (!paymentId) throw new Error("Bad payment response");
   return { paymentId, state };
+}
+
+export async function modifyFlow({ context, modifiedFlow }: { context: Context, modifiedFlow: FlowGraph } ) {
+  const adminGQLClient = getGraphQLClient();
+  if (!context.flow?.id || !context.user?.id) {
+    throw new Error("context must have a flow and user");
+  }
+  await adminGQLClient.request(
+    gql`
+      mutation UpdateTestFlow($flowId: uuid!, $userId: Int!, $data: jsonb!) {
+        update_flows_by_pk(pk_columns: { id: $flowId }, _set: { data: $data }) {
+          id
+          data
+        }
+        insert_published_flows_one(
+          object: { flow_id: $flowId, data: $data, publisher_id: $userId }
+        ) {
+          id
+        }
+      }
+    `,
+    {
+      flowId: context.flow!.id,
+      userId: context.user!.id,
+      data: modifiedFlow,
+    }
+  );
 }

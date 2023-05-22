@@ -1,4 +1,4 @@
-import { answerChecklist, log, answerFindProperty, answerContactInput } from "../helpers";
+import { answerChecklist, log, answerFindProperty, answerContactInput, addSessionToContext } from "../helpers";
 import type { Page } from "@playwright/test";
 import { gql, GraphQLClient } from "graphql-request";
 import { fillInEmail } from "../helpers";
@@ -16,7 +16,7 @@ export async function navigateToPayComponent(page: Page, context: Context) {
   await fillInEmail({ page, context });
   await page.getByText("Continue").click();
 
-  await answerChecklist({ page, title: "What is your project type?", answers: ["Extension", "Swimming pool"] });
+  await answerChecklist({ page, title: "What is your project type?", answers: ["Addition or alteration of a deck", "Alter internal walls"] });
   await page.getByText("Continue").click();
 
   await answerFindProperty(page);
@@ -67,4 +67,16 @@ export async function getPaymentRequestBySessionId({
   } catch (e) {
     log("Payment request not found: ", e);
   }
+}
+
+export async function makePaymentRequest({ page, context }: { page: Page, context: Context }) {
+  await navigateToPayComponent(page, context);
+  const sessionId = await addSessionToContext(page, context);
+  const toggleInviteToPayButton = page.getByRole("button", { name: "Invite someone else to pay for this application" });
+  await toggleInviteToPayButton.click();
+  await answerInviteToPayForm(page);
+  await page.getByText("Send invitation to pay").click();
+  await page.waitForLoadState("networkidle");
+
+  return sessionId;
 }

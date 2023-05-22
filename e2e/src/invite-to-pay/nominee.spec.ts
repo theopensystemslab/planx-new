@@ -55,20 +55,22 @@ test.describe("Nominee journey", async () => {
     }
   });
 
+  test.beforeEach(async ({ page }) => await setFeatureFlag(page, "INVITE_TO_PAY"));
+
   test.afterAll(async () => {
     await tearDownTestContext(context);
   });
 
-  test("responding to a payment request", async ({ page, request }) => {
+  test("responding to a valid payment request", async ({ page, request }) => {
     const { paymentRequest, sessionId } = await setupPaymentRequest(page, request);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
     expect(await page.getByRole("heading", { name: "Pay for your application" })).toBeVisible();
     expect(await page.locator("#main-content").getByText("Invite to pay test")).toBeVisible();
     expect(await page.getByText("123, Test Street, Testville")).toBeVisible();
-    // TODO: check real values here
-    expect(await page.getByText("Project type not submitted")).toBeVisible();
-    
+
+    const formattedProjectType = "Alteration of internal walls and addition or alteration of a deck";
+    expect(await page.getByText(formattedProjectType)).toBeVisible();
 
     const payButton = await page.getByRole("button", { name: "Pay using GOV.UK Pay" })
     expect(payButton).toBeVisible();
@@ -78,11 +80,20 @@ test.describe("Nominee journey", async () => {
       page,
       cardNumber: cards.successful_card_number,
     });
-    await page.locator("#submit-card-details").click();
+    await page.getByRole("button", { name: "Confirm payment" }).click();
+    await page.waitForURL("**/invite-to-pay-test/**");
+
+    // Wait for GovPay re-request to update paymentRequest status
+    await page.waitForLoadState("networkidle");
+
     expect(await page.getByText("Payment received")).toBeVisible();
     const updatedPaymentRequest = await getPaymentRequestBySessionId({ sessionId, adminGQLClient });
     expect(updatedPaymentRequest?.paidAt).toBeDefined();
   });
+
+  // test.todo("responding to an expired payment request");
+  // test.todo("responding to a paid payment request");
+  // test.todo("responding to an invalid url");
 });
 
 async function navigateToPaymentRequestPage(paymentRequest, page: Page) {
@@ -92,7 +103,6 @@ async function navigateToPaymentRequestPage(paymentRequest, page: Page) {
 }
 
 async function setupPaymentRequest(page: Page, request: APIRequestContext): Promise<Record<"paymentRequest", PaymentRequest> & Record<"sessionId", string>> {
-  await setFeatureFlag(page, "INVITE_TO_PAY");
   const sessionId = uuidV4();
   context.sessionIds?.push(sessionId);
   await createSession({ client: adminGQLClient, context, sessionId });
@@ -131,7 +141,8 @@ async function createSession({ context, client, sessionId }: { context: Context,
 }
 
 /** 
- * What is this??
+ * Create PaymentRequest via API
+ * This method ensures that session is locked
  */
 async function createPaymentRequest(request: APIRequestContext, sessionId: string) {
   const response = await request.post(`http://localhost:${process.env.API_PORT}/invite-to-pay/${sessionId}`, {

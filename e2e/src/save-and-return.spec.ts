@@ -1,12 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { gql } from "graphql-request";
 import {
   simpleSendFlow,
   modifiedSimpleSendFlow,
 } from "./flows/save-and-return-flows";
 import {
   contextDefaults,
-  getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
 } from "./context";
@@ -17,6 +15,7 @@ import {
   answerQuestion,
   returnToSession,
   saveSession,
+  modifyFlow,
 } from "./helpers";
 import type { Context } from "./context";
 
@@ -155,7 +154,7 @@ test.describe("Save and return", () => {
       if (!sessionId) test.fail();
 
       // flow is updated between sessions
-      await modifyFlow(context);
+      await modifyFlow({ context, modifiedFlow: modifiedSimpleSendFlow });
 
       await returnToSession({ page, context, sessionId: sessionId! });
 
@@ -171,29 +170,3 @@ test.describe("Save and return", () => {
   });
 });
 
-async function modifyFlow(context: Context) {
-  const adminGQLClient = getGraphQLClient();
-  if (!context.flow?.id || !context.user?.id) {
-    throw new Error("context must have a flow and user");
-  }
-  await adminGQLClient.request(
-    gql`
-      mutation UpdateTestFlow($flowId: uuid!, $userId: Int!, $data: jsonb!) {
-        update_flows_by_pk(pk_columns: { id: $flowId }, _set: { data: $data }) {
-          id
-          data
-        }
-        insert_published_flows_one(
-          object: { flow_id: $flowId, data: $data, publisher_id: $userId }
-        ) {
-          id
-        }
-      }
-    `,
-    {
-      flowId: context.flow!.id,
-      userId: context.user!.id,
-      data: modifiedSimpleSendFlow,
-    }
-  );
-}
