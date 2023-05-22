@@ -132,7 +132,4 @@ BEGIN;
 
   \copy flow_document_templates FROM '/tmp/flow_document_templates.csv' WITH (FORMAT csv, DELIMITER ';');
 
-  -- [are published flows useful to migrate?]
-  --\copy published_flows (id, data, flow_id, summary, publisher_id) FROM '/tmp/published_flows.csv' WITH (FORMAT csv, DELIMITER ';');
-
 COMMIT;
