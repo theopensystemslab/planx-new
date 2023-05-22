@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
 import React from "react";
 import { Link } from "react-navi";
 

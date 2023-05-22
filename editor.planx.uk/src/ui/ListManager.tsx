@@ -3,7 +3,7 @@ import DragHandle from "@mui/icons-material/DragHandle";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/styles";
+import { styled } from "@mui/material/styles";
 import { arrayMoveImmutable } from "array-move";
 import React, { useRef } from "react";
 import {

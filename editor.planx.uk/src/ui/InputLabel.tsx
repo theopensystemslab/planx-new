@@ -1,5 +1,5 @@
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
 import { visuallyHidden } from "@mui/utils";
 import React, { ReactNode } from "react";
 
