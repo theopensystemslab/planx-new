@@ -1,26 +1,34 @@
 #!/usr/bin/env bash
-# This is the script that runs inside the container
-# Usage: container.sh <local_pg_url> <remote_pg_url>
+set -eo pipefail
+cd $(dirname ${0})
 
-# cd to this script's directory
-cd "$(dirname "$0")" || exit
+# set db connection strings
+LOCAL_PG=${1}
+REMOTE_PG=${2}
 
-set -ex
+echo downloading public data from production
 
-LOCAL_PG="$1"
-REMOTE_PG="$2"
+# set-up tmp dir for remote data
+mkdir -p /tmp
 
-# fetch users
-psql --command="\\COPY (SELECT * FROM users) TO '/tmp/users.csv' (FORMAT CSV, DELIMITER ';')" "${REMOTE_PG}"
+# run copy commands on remote  db
+for read_script in read/*; do
+  filename=$(basename ${read_script})
+  name=${filename%%.*}
+  target=/tmp/${name}.csv
 
-# fetch teams
-psql --command="\\COPY (SELECT id, name, slug, theme, settings, notify_personalisation FROM teams) TO '/tmp/teams.csv' (FORMAT CSV, DELIMITER ';')" "${REMOTE_PG}"
+  # [are published flows useful to migrate?]
+  if [ ${name} == "published_flows" ]; then
+    continue;
+  fi
 
-# fetch flows
-psql --command="\\COPY (SELECT * FROM flows) TO '/tmp/flows.csv' (FORMAT CSV, DELIMITER ';')" "${REMOTE_PG}"
+  psql ${REMOTE_PG} -f ${read_script} > ${target}
+  echo ${name} downloaded
+done
 
-# fetch published_flows (the last two)
-psql --command="\\COPY (SELECT id, data, flow_id, summary, publisher_id FROM (SELECT id, data, flow_id, summary, publisher_id, ROW_NUMBER() OVER (PARTITION BY flow_id ORDER BY created_at DESC) as row_num FROM published_flows) as subquery WHERE row_num <= 2) TO '/tmp/published_flows.csv' (FORMAT CSV);" "${REMOTE_PG}"
+echo beginning write transaction
+psql ${LOCAL_PG} -f write.sql --echo-errors
 
-# run container.sql
-psql "${LOCAL_PG}" < container.sql
+# clean-up tmp dir
+rm -rf /tmp
+echo done
