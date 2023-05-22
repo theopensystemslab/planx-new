@@ -52,7 +52,16 @@ jest.mock("../client", () => {
       getDocumentTemplateNamesForSession: jest
         .fn()
         .mockResolvedValue(["X", "Y"]),
-      getSessionById: jest.fn(() => mockLowcalSession),
+      getSessionById: jest.fn((id: string) => {
+        if (id === "noGeoJSON") {
+          const mockLowcalSessionCopy: any = { ...mockLowcalSession };
+          delete mockLowcalSessionCopy.data.passport.data[
+            "property.boundary.site"
+          ];
+          return mockLowcalSessionCopy;
+        }
+        return mockLowcalSession;
+      }),
       generateCSVData: jest
         .fn()
         .mockResolvedValue([
@@ -138,7 +147,7 @@ describe("createUniformSubmissionZip", () => {
 
   test("geojson and location plan is excluded when not present", async () => {
     const payload = {
-      sessionId: "1234",
+      sessionId: "noGeoJSON",
     };
     await createUniformSubmissionZip(payload.sessionId);
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlan.htm");
