@@ -10,6 +10,9 @@ import { _admin } from "../client";
 interface SendToBOPSRequest {
   payload: { 
     sessionId: string; 
+    planx_debug_data?: {
+      session_id: string
+    };
   }
 }
 
@@ -23,11 +26,18 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
+  // Temporary fix whilst production payloads can be posted to staging API ("test test" user)
+  const sessionId = 
+    payload.sessionId ||
+    payload.planx_debug_data?.session_id;
+
+  if (!sessionId) throw Error("Session ID required to submit BOPS application");
+
   // confirm that this session has not already been successfully submitted before proceeding
-  const submittedApp = await checkBOPSAuditTable(payload?.sessionId);
+  const submittedApp = await checkBOPSAuditTable(sessionId);
   if (submittedApp?.message === "Application created") {
     return res.status(200).send({
-      sessionId: payload?.sessionId,
+      sessionId,
       bopsId: submittedApp?.id,
       message: `Skipping send, already successfully submitted`,
     });
