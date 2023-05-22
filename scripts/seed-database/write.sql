@@ -35,11 +35,15 @@ BEGIN;
     name text,
     slug text,
     theme jsonb,
+    created_at timestamptz,
+    updated_at timestamptz,
     settings jsonb,
-    notify_personalisation jsonb
+    notify_personalisation jsonb,
+    domain text,
+    submission_email text
   );
 
-  \copy sync_teams (id, name, slug, theme, settings, notify_personalisation) FROM '/tmp/teams.csv' WITH (FORMAT csv, DELIMITER ';');
+  \copy sync_teams FROM '/tmp/teams.csv' WITH (FORMAT csv, DELIMITER ';');
 
   INSERT INTO teams (
     id,
@@ -47,7 +51,9 @@ BEGIN;
     slug,
     theme,
     settings,
-    notify_personalisation
+    notify_personalisation,
+    domain,
+    submission_email
   )
   SELECT
   id,
@@ -55,7 +61,9 @@ BEGIN;
   slug,
   theme,
   settings,
-  notify_personalisation
+  notify_personalisation,
+  domain,
+  submission_email
   FROM sync_teams
   ON CONFLICT (id) DO NOTHING;
 

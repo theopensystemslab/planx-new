@@ -11,23 +11,18 @@ echo downloading public data from production
 # set-up tmp dir for remote data
 mkdir -p /tmp
 
+tables=(flows users teams flow_document_templates)
+
 # run copy commands on remote  db
-for read_script in read/*; do
-  filename=$(basename ${read_script})
-  name=${filename%%.*}
-  target=/tmp/${name}.csv
-
-  # [are published flows useful to migrate?]
-  if [ ${name} == "published_flows" ]; then
-    continue;
-  fi
-
-  psql ${REMOTE_PG} -f ${read_script} > ${target}
-  echo ${name} downloaded
+for table in "${tables[@]}"; do
+  target=/tmp/${table}.csv
+  cmd="\\copy (SELECT * FROM ${table}) TO ${target} WITH (FORMAT csv, DELIMITER ';');"
+  psql --quiet ${REMOTE_PG} --command="${cmd}"
+  echo ${table} downloaded
 done
 
 echo beginning write transaction
-psql ${LOCAL_PG} -f write.sql --echo-errors
+psql --quiet ${LOCAL_PG} -f write.sql
 
 # clean-up tmp dir
 rm -rf /tmp
