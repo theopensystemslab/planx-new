@@ -10,7 +10,7 @@ import {
 } from "../context";
 import { mockPaymentRequest, mockSessionData } from "./mocks";
 import { GraphQLClient, gql } from "graphql-request";
-import { Session } from "@opensystemslab/planx-core/types";
+import { PaymentRequest, Session } from "@opensystemslab/planx-core/types";
 import { getPaymentRequestBySessionId } from "./helpers";
 
 let context: Context = {
@@ -36,7 +36,7 @@ let context: Context = {
 
 const paymentRequestDetails = {
   applicantName: "Mr Nominee",
-  payeeName: "Mrs Agent" ,
+  payeeName: "Mrs Agent",
   payeeEmail: "testAgent@opensystemslab.io",
   sessionPreviewKeys: [["_address", "title"], ["proposal.projectType"]],
 }
@@ -62,7 +62,7 @@ test.describe("Nominee journey", async () => {
   });
 
   test("responding to a valid payment request", async ({ page, request }) => {
-    const { paymentRequest, sessionId } = await setupPaymentRequest(page, request);
+    const { paymentRequest, sessionId } = await setupPaymentRequest(request);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
     expect(await page.getByRole("heading", { name: "Pay for your application" })).toBeVisible();
@@ -91,18 +91,49 @@ test.describe("Nominee journey", async () => {
     expect(updatedPaymentRequest?.paidAt).toBeDefined();
   });
 
-  // test.todo("responding to an expired payment request");
-  // test.todo("responding to a paid payment request");
-  // test.todo("responding to an invalid url");
+  test("navigating to a URL with an invalid ID", async ({ page }) => {
+    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flow!
+      .slug!}/pay?analytics=false&paymentRequestId=INVALID-ID`;
+    await page.goto(invalidPaymentRequestURL);
+    await page.waitForLoadState("networkidle");
+
+    expect(await page.getByText("Payment request not found")).toBeVisible();
+  });
+
+  test("navigating to a URL without a paymentRequestId", async ({ page }) => {
+    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flow!
+      .slug!}/pay?analytics=false`;
+    await page.goto(invalidPaymentRequestURL);
+    await page.waitForLoadState("networkidle");
+
+    expect(await page.getByText("Payment request not found")).toBeVisible();
+  });
+
+  test("responding to a payment request which has been paid", async ({ page, request }) => {
+    const { paymentRequest } = await setupPaymentRequest(request);
+    await markPaymentRequestAsPaid(paymentRequest);
+    await navigateToPaymentRequestPage(paymentRequest, page);
+
+    expect(await page.getByText("Payment request not found")).toBeVisible();
+  });
+
+  test("responding to a payment request which has expired", async ({ page, request }) => {
+    const { paymentRequest } = await setupPaymentRequest(request);
+    await markPaymentRequestAsExpired(paymentRequest);
+    await navigateToPaymentRequestPage(paymentRequest, page);
+
+    expect(await page.getByText("Payment request not found")).toBeVisible();
+  });
 });
 
-async function navigateToPaymentRequestPage(paymentRequest, page: Page) {
+async function navigateToPaymentRequestPage(paymentRequest: PaymentRequest, page: Page) {
   const paymentRequestURL = `/${context.team!.slug!}/${context.flow!
     .slug!}/pay?analytics=false&paymentRequestId=${paymentRequest.id}`;
   await page.goto(paymentRequestURL);
+  await page.waitForLoadState("networkidle");
 }
 
-async function setupPaymentRequest(page: Page, request: APIRequestContext): Promise<Record<"paymentRequest", PaymentRequest> & Record<"sessionId", string>> {
+async function setupPaymentRequest(request: APIRequestContext): Promise<Record<"paymentRequest", PaymentRequest> & Record<"sessionId", string>> {
   const sessionId = uuidV4();
   context.sessionIds?.push(sessionId);
   await createSession({ client: adminGQLClient, context, sessionId });
@@ -142,11 +173,43 @@ async function createSession({ context, client, sessionId }: { context: Context,
 
 /** 
  * Create PaymentRequest via API
- * This method ensures that session is locked
+ * This method ensures that the session is locked
  */
 async function createPaymentRequest(request: APIRequestContext, sessionId: string) {
   const response = await request.post(`http://localhost:${process.env.API_PORT}/invite-to-pay/${sessionId}`, {
     data: paymentRequestDetails
   })
   return response.json();
+}
+
+async function markPaymentRequestAsPaid(paymentRequest: PaymentRequest) {
+  const mutation = gql`
+    mutation MarkPaymentRequestAsPaid($id: uuid!) {
+      update_payment_requests_by_pk(
+        pk_columns: {id: $id}, 
+        _set: { paid_at: "now()" }
+      ) {
+        id
+      }
+    }
+  `;
+  await adminGQLClient.request(mutation, {
+    id: paymentRequest.id
+  });
+}
+
+async function markPaymentRequestAsExpired(paymentRequest: PaymentRequest) {
+  const mutation = gql`
+    mutation MarkPaymentRequestAsPaid($id: uuid!) {
+      update_payment_requests_by_pk(
+        pk_columns: {id: $id}, 
+        _set: { created_at: "2020-02-02" }
+      ) {
+        id
+      }
+    }
+  `;
+  await adminGQLClient.request(mutation, {
+    id: paymentRequest.id
+  });
 }
