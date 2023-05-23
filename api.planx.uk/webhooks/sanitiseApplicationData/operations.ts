@@ -24,7 +24,6 @@ export const getOperations = (): Operation[] => [
   // Audit records
   sanitiseUniformApplications,
   sanitiseBOPSApplications,
-  sanitiseEmailApplications,
   deleteReconciliationRequests,
 
   // Event logs
@@ -166,30 +165,6 @@ export const sanitiseBOPSApplications: Operation = async () => {
   `;
   const {
     update_bops_applications: { returning: result },
-  } = await adminGraphQLClient.request(mutation, {
-    retentionPeriod: getRetentionPeriod(),
-  });
-  return result;
-};
-
-export const sanitiseEmailApplications: Operation = async () => {
-  const mutation = gql`
-    mutation SanitiseEmailApplications($retentionPeriod: timestamptz) {
-      update_email_applications(
-        _set: { request: {}, sanitised_at: "now()" }
-        where: {
-          sanitised_at: { _is_null: true }
-          created_at: { _lt: $retentionPeriod }
-        }
-      ) {
-        returning {
-          id
-        }
-      }
-    }
-  `;
-  const { 
-    update_email_applications: { returning: result },
   } = await adminGraphQLClient.request(mutation, {
     retentionPeriod: getRetentionPeriod(),
   });

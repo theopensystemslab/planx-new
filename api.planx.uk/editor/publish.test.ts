@@ -41,249 +41,169 @@ beforeEach(() => {
   });
 });
 
-describe("publish", () => {
-  it("does not update if there are no new changes", async () => {
-    await supertest(app)
-      .post("/flows/1/publish")
-      .set(authHeader())
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({
-          alteredNodes: null,
-          message: "No new changes to publish",
-        });
+it("does not update if there are no new changes", async () => {
+  await supertest(app)
+    .post("/flows/1/publish")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body).toEqual({
+        alteredNodes: null,
+        message: "No new changes",
       });
+    });
+});
+
+it("does not update if there are sections in an external portal", async () => {
+  const alteredFlow = {
+    ...mockFlowData,
+    "externalPortalNodeId": {
+      edges: ["newSectionNodeId"],
+      type: 310,
+    },
+    "newSectionNodeId": {
+      type: 360,
+    },
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: alteredFlow,
+      },
+    },
   });
 
-  it("updates published flow and returns altered nodes if there have been changes", async () => {
-    const alteredFlow = {
-      ...mockFlowData,
-      "ResultNode": {
-        data: {
-          flagSet: "Planning permission",
-          overrides: {
-            NO_APP_REQUIRED: {
-              heading: "Some Other Heading",
-            },
+  await supertest(app)
+    .post("/flows/1/publish")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body).toEqual({
+        alteredNodes: null,
+        message: "Error publishing: found Sections in one or more External Portals, but Sections are only allowed in main flow",
+      });
+    });
+});
+
+it("does not update if there are sections, but there is not a section in the first position", async () => {
+  const flowWithSections: Flow["data"] = {
+    _root: {
+      edges: ["questionNode", "sectionNode"]
+    },
+    questionNode: {},
+    sectionNode: {
+      type: 360,
+    },
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: flowWithSections,
+      },
+    },
+  });
+
+  await supertest(app)
+    .post("/flows/1/publish")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body).toEqual({
+        alteredNodes: null,
+        message: "Error publishing: when using Sections, your flow needs to start with a Section",
+      });
+    });
+});
+
+it("updates published flow and returns altered nodes if there have been changes", async () => {
+  const alteredFlow = {
+    ...mockFlowData,
+    "4CJgXe8Ttl": {
+      data: {
+        flagSet: "Planning permission",
+        overrides: {
+          NO_APP_REQUIRED: {
+            heading: "Some Other Heading",
           },
         },
-        type: 3,
       },
-    };
-  
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flows_by_pk: {
-          data: alteredFlow,
-        },
+      type: 3,
+    },
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: alteredFlow,
       },
-    });
-  
-    queryMock.mockQuery({
-      name: "PublishFlow",
-      matchOnVariables: false,
-      data: {
-        insert_published_flows_one: {
-          data: alteredFlow,
-        },
+    },
+  });
+
+  queryMock.mockQuery({
+    name: "PublishFlow",
+    matchOnVariables: false,
+    data: {
+      insert_published_flows_one: {
+        data: alteredFlow,
       },
-    });
-  
-    await supertest(app)
-      .post("/flows/1/publish")
-      .set(authHeader())
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({
-          alteredNodes: [
-            {
-              id: "ResultNode",
-              type: 3,
-              data: {
-                flagSet: "Planning permission",
-                overrides: {
-                  NO_APP_REQUIRED: {
-                    heading: "Some Other Heading",
-                  },
+    },
+  });
+
+  await supertest(app)
+    .post("/flows/1/publish")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body).toEqual({
+        alteredNodes: [
+          {
+            id: "4CJgXe8Ttl",
+            type: 3,
+            data: {
+              flagSet: "Planning permission",
+              overrides: {
+                NO_APP_REQUIRED: {
+                  heading: "Some Other Heading",
                 },
               },
             },
-          ],
-        });
+          },
+        ],
       });
-  });
-});
-
-describe("sections validation on diff", () => {
-  it("does not update if there are sections in an external portal", async () => {
-    const alteredFlow = {
-      ...mockFlowData,
-      "externalPortalNodeId": {
-        edges: ["newSectionNodeId"],
-        type: 310,
-      },
-      "newSectionNodeId": {
-        type: 360,
-      },
-    };
-  
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flows_by_pk: {
-          data: alteredFlow,
-        },
-      },
     });
-  
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(authHeader())
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({
-          alteredNodes: null,
-          message: "Cannot publish an invalid flow",
-          description: "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
-        });
-      });
-  });
-  
-  it("does not update if there are sections, but there is not a section in the first position", async () => {
-    const flowWithSections: Flow["data"] = {
-      _root: {
-        edges: ["questionNode", "sectionNode"]
-      },
-      questionNode: {},
-      sectionNode: {
-        type: 360,
-      },
-    };
-  
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flows_by_pk: {
-          data: flowWithSections,
-        },
-      },
-    });
-  
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(authHeader())
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({
-          alteredNodes: null,
-          message: "Cannot publish an invalid flow",
-          description: "When using Sections, your flow must start with a Section"
-        });
-      });
-  });
-});
-
-describe("invite to pay validation on diff", () => {
-  it("does not update if invite to pay is enabled, but there is not a Send component", async () => {  
-    const { Send, ...invalidatedFlow } = flowWithInviteToPay;
-    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Send"));
-    
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flows_by_pk: {
-          data: invalidatedFlow,
-        },
-      },
-    });
-  
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(authHeader())
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Send");
-      });
-  });
-  
-  it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
-    const { FindProperty, ...invalidatedFlow } = flowWithInviteToPay;
-    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("FindProperty"));
-    
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flows_by_pk: {
-          data: invalidatedFlow,
-        },
-      },
-    });
-  
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(authHeader())
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a FindProperty");
-      });
-  });
-  
-  it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
-    const { Checklist, ChecklistOptionOne, ChecklistOptionTwo, ...invalidatedFlow } = flowWithInviteToPay;
-    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Checklist"));
-    
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flows_by_pk: {
-          data: invalidatedFlow,
-        },
-      },
-    });
-  
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(authHeader())
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`");
-      });
-  });
 });
 
 const mockFlowData: Flow["data"] = {
   _root: {
     edges: [
-      "SectionOne",
-      "QuestionOne",
-      "InternalPortalNode",
-      "FindPropertyNode",
-      "PayNode",
-      "SendNode",
-      "ResultNode",
-      "ConfirmationNode",
+      "sectionNodeId",
+      "RYYckLE2cH",
+      "R99ncwKifm",
+      "3qssvGXmMO",
+      "SEp0QeNsTS",
+      "q8Foul9hRN",
+      "4CJgXe8Ttl",
+      "dnVqd6zt4N",
     ],
   },
-  "SectionOne": {
+  "sectionNodeId": {
     type: 360,
     data: {
       title: "Section 1",
     },
   },
-  "FindPropertyNode": {
+  "3qssvGXmMO": {
     type: 9,
   },
-  "ResultNode": {
+  "4CJgXe8Ttl": {
     data: {
       flagSet: "Planning permission",
       overrides: {
@@ -294,40 +214,40 @@ const mockFlowData: Flow["data"] = {
     },
     type: 3,
   },
-  "AnswerOne": {
+  "5sWfsvXphd": {
     data: {
       text: "?",
     },
     type: 200,
   },
-  QuestionInPortal: {
+  BV2VJhOC0I: {
     data: {
       text: "internal question",
     },
     type: 100,
-    edges: ["AnswerInPortalOne", "AnswerInPortalTwo"],
+    edges: ["ScjaYmpbVK", "b7j9tq22dj"],
   },
-  AnswerTwo: {
+  OL9JENldcI: {
     data: {
       text: "!!",
     },
     type: 200,
   },
-  InternalPortalNode: {
+  R99ncwKifm: {
     data: {
       text: "portal",
     },
     type: 300,
-    edges: ["QuestionInPortal"],
+    edges: ["BV2VJhOC0I"],
   },
-  QuestionOne: {
+  RYYckLE2cH: {
     data: {
       text: "Question",
     },
     type: 100,
-    edges: ["AnswerOne", "AnswerTwo"],
+    edges: ["5sWfsvXphd", "OL9JENldcI"],
   },
-  PayNode: {
+  SEp0QeNsTS: {
     data: {
       fn: "application.fee.payable",
       url: "http://localhost:7002/pay",
@@ -338,19 +258,19 @@ const mockFlowData: Flow["data"] = {
     },
     type: 400,
   },
-  AnswerInPortalOne: {
+  ScjaYmpbVK: {
     data: {
       text: "?",
     },
     type: 200,
   },
-  AnswerInPortalTwo: {
+  b7j9tq22dj: {
     data: {
       text: "*",
     },
     type: 200,
   },
-  ConfirmationNode: {
+  dnVqd6zt4N: {
     data: {
       heading: "Application sent",
       moreInfo:
@@ -363,86 +283,10 @@ const mockFlowData: Flow["data"] = {
     },
     type: 725,
   },
-  SendNode: {
+  q8Foul9hRN: {
     data: {
       url: "http://localhost:7002/bops/southwark",
     },
     type: 650,
   },
 };
-
-const flowWithInviteToPay: Flow["data"] = {
-  "_root": {
-    "edges": [
-      "FindProperty",
-      "Checklist",
-      "SetValue",
-      "Pay",
-      "Send"
-    ]
-  },
-  "Pay": {
-    "data": {
-      "fn": "fee",
-      "title": "Pay for your application",
-      "bannerTitle": "The planning fee for this application is",
-      "description": "<p>The planning fee covers the cost of processing your application.         Find out more about how planning fees are calculated          <a href=\"https://www.gov.uk/guidance/fees-for-planning-applications\" target=\"_self\">here</a>.</p>",
-      "nomineeTitle": "Details of the person paying",
-      "allowInviteToPay": true,
-      "yourDetailsLabel": "Your name or organisation name",
-      "yourDetailsTitle": "Your details",
-      "instructionsTitle": "How to pay",
-      "secondaryPageTitle": "Invite someone else to pay for this application",
-      "instructionsDescription": "<p>You can pay for your application by using GOV.UK Pay.</p>         <p>Your application will be sent after you have paid the fee.          Wait until you see an application sent message before closing your browser.</p>"
-    },
-    "type": 400
-  },
-  "SetValue": {
-    "type": 380,
-    "data": {
-      "fn": "fee",
-      "val": "1"
-    }
-  },
-  "FindProperty": {
-    "type": 9,
-    "data": {
-      "allowNewAddresses": false
-    }
-  },
-  "Send": {
-    "type": 650,
-    "data": {
-      "title": "Send",
-      "destinations": [
-        "email"
-      ]
-    }
-  },
-  "Checklist": {
-    "type": 105,
-    "data": {
-      "allRequired": false,
-      "fn": "proposal.projectType",
-      "text": "What do the works involve?"
-    },
-    "edges": [
-      "ChecklistOptionOne",
-      "ChecklistOptionTwo"
-    ]
-  },
-  "ChecklistOptionOne": {
-    "data": {
-      "text": "Alter",
-      "val": "alter"
-    },
-    "type": 200
-  },
-  "ChecklistOptionTwo": {
-    "data": {
-      "text": "Build new",
-      "val": "build"
-    },
-    "type": 200
-  }
-}

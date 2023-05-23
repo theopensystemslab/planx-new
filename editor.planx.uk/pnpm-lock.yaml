@@ -60,7 +60,7 @@ specifiers:
   '@mui/styles': 5.11.9
   '@mui/utils': 5.11.9
   '@opensystemslab/map': ^0.7.4
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#026f43f
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#80a2178
   '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#debaeca
   '@react-theming/storybook-addon': ^1.1.10
   '@storybook/addon-actions': ^6.5.16
@@ -203,8 +203,8 @@ dependencies:
   '@mui/styles': 5.11.9_yuz6bkerhkjfjuf6zeb7j6ybc4
   '@mui/utils': 5.11.9_react@18.2.0
   '@opensystemslab/map': 0.7.4
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/026f43f_@types+react@18.0.35
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_@types+react@18.0.35
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/80a2178_swbholdm6gktzi6tajgqaxwuv4
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_swbholdm6gktzi6tajgqaxwuv4
   '@tiptap/core': 2.0.3_@tiptap+pm@2.0.3
   '@tiptap/extension-bold': 2.0.3_@tiptap+core@2.0.3
   '@tiptap/extension-bubble-menu': 2.0.3_7qxxgdyo6i4mk7xrbxa2xtsga4
@@ -319,7 +319,7 @@ devDependencies:
   esbuild: 0.14.54
   esbuild-jest: 0.5.0_esbuild@0.14.54
   eslint: 8.38.0
-  eslint-plugin-jest: 27.2.1_ze6bmax3gcsfve3yrzu6npguhe
+  eslint-plugin-jest: 27.2.1_j5saftnsz2nigfm32cmyey4kee
   eslint-plugin-jsx-a11y: 6.7.1_eslint@8.38.0
   eslint-plugin-simple-import-sort: 7.0.0_eslint@8.38.0
   eslint-plugin-testing-library: 5.10.3_ze6bmax3gcsfve3yrzu6npguhe
@@ -3467,7 +3467,7 @@ packages:
       '@rollup/pluginutils': 3.1.0_rollup@2.61.1
       rollup: 2.61.1
 
-  /@rollup/plugin-commonjs/23.0.7:
+  /@rollup/plugin-commonjs/23.0.7_rollup@2.61.1:
     resolution: {integrity: sha512-hsSD5Qzyuat/swzrExGG5l7EuIlPhwTsT7KwKbSCQzIcJWjRxiimi/0tyMYY2bByitNb3i1p+6JWEDGa0NvT0Q==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3476,12 +3476,13 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2
+      '@rollup/pluginutils': 5.0.2_rollup@2.61.1
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.27.0
+      rollup: 2.61.1
     dev: false
 
   /@rollup/plugin-node-resolve/11.2.1_rollup@2.61.1:
@@ -3518,7 +3519,7 @@ packages:
       picomatch: 2.3.1
       rollup: 2.61.1
 
-  /@rollup/pluginutils/5.0.2:
+  /@rollup/pluginutils/5.0.2_rollup@2.61.1:
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3530,6 +3531,7 @@ packages:
       '@types/estree': 1.0.0
       estree-walker: 2.0.2
       picomatch: 2.3.1
+      rollup: 2.61.1
     dev: false
 
   /@rushstack/eslint-patch/1.1.0:
@@ -9650,7 +9652,7 @@ packages:
       - supports-color
       - typescript
 
-  /eslint-plugin-jest/27.2.1_ze6bmax3gcsfve3yrzu6npguhe:
+  /eslint-plugin-jest/27.2.1_j5saftnsz2nigfm32cmyey4kee:
     resolution: {integrity: sha512-l067Uxx7ZT8cO9NJuf+eJHvt6bqJyz2Z29wykyEdz/OtmcELQl2MQGQLX8J94O1cSJWAwUSEvCjwjA7KEK3Hmg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
@@ -9665,6 +9667,7 @@ packages:
     dependencies:
       '@typescript-eslint/utils': 5.36.1_ze6bmax3gcsfve3yrzu6npguhe
       eslint: 8.38.0
+      jest: 27.4.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -13213,10 +13216,6 @@ packages:
 
   /lodash-es/4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-    dev: false
-
-  /lodash.capitalize/4.2.1:
-    resolution: {integrity: sha512-kZzYOKspf8XVX5AvmQF94gQW0lejFVgb80G85bU4ZWzoJ6C03PQg3coYAUpSTpQWelrZELd3XWgHzw4Ck5kaIw==}
     dev: false
 
   /lodash.curry/4.1.1:
@@ -20183,20 +20182,19 @@ packages:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: true
 
-  github.com/theopensystemslab/planx-core/026f43f_@types+react@18.0.35:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/026f43f}
-    id: github.com/theopensystemslab/planx-core/026f43f
+  github.com/theopensystemslab/planx-core/80a2178_swbholdm6gktzi6tajgqaxwuv4:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/80a2178}
+    id: github.com/theopensystemslab/planx-core/80a2178
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
     prepare: true
     requiresBuild: true
     dependencies:
-      '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_@types+react@18.0.35
+      '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_swbholdm6gktzi6tajgqaxwuv4
       fast-xml-parser: 4.2.2
       graphql: 16.6.0
       graphql-request: 5.2.0_graphql@16.6.0
-      lodash.capitalize: 4.2.1
       lodash.get: 4.4.2
       lodash.has: 4.5.2
       lodash.isempty: 4.4.0
@@ -20212,7 +20210,7 @@ packages:
       - rollup
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/debaeca_@types+react@18.0.35:
+  github.com/theopensystemslab/planx-document-templates/debaeca_swbholdm6gktzi6tajgqaxwuv4:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/debaeca}
     id: github.com/theopensystemslab/planx-document-templates/debaeca
     name: '@opensystemslab/planx-document-templates'
@@ -20225,7 +20223,7 @@ packages:
       '@emotion/styled': 11.10.6_bpa2amdickk76qs7xzoz3lzv3m
       '@lit-labs/ssr': 2.3.0
       '@mui/material': 5.11.9_rg2yyp2bpmu7sjcft7cf5grtye
-      '@rollup/plugin-commonjs': 23.0.7
+      '@rollup/plugin-commonjs': 23.0.7_rollup@2.61.1
       docx: 7.8.2
       lodash.groupby: 4.6.0
       lodash.startcase: 4.4.0

@@ -4,7 +4,6 @@ import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import axios from "axios";
-import { _public } from "client";
 import { format } from "date-fns";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -168,18 +167,6 @@ export default function MakePayment({
     );
 
   const PaymentDetails = () => {
-    const [projectType, setProjectType] = useState<string | undefined>();
-
-    useEffect(() => {
-      const fetchProjectType = async () => {
-        const projectType = await _public.formatRawProjectTypes(
-          rawProjectTypes
-        );
-        setProjectType(projectType);
-      };
-      fetchProjectType();
-    }, []);
-
     const data = [
       { term: "Application type", details: flowName },
       {
@@ -192,7 +179,7 @@ export default function MakePayment({
       },
       {
         term: "Project type",
-        details: projectType || "Project type not submitted",
+        details: rawProjectTypes.join(", "),
       },
     ];
 

@@ -58,7 +58,7 @@ export default function Component(props: Props) {
         flow={flow}
         showChange={true}
         changeAnswer={changeAnswer}
-        nextQuestion={() => props.handleSubmit && props.handleSubmit()}
+        nextQuestion={props.handleSubmit!}
         sectionNodes={sectionNodes}
         currentCard={currentCard}
         breadcrumbs={breadcrumbs}

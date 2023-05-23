@@ -1,17 +1,16 @@
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
-import { getRetentionPeriod } from "lib/pay";
 import {
   compose,
   mount,
   NaviRequest,
+  NotFoundError,
   redirect,
   route,
   withData,
   withView,
 } from "navi";
-import ErrorPage from "pages/ErrorPage";
 import InviteToPay from "pages/Pay/InviteToPay";
 import MakePayment from "pages/Pay/MakePayment";
 import React from "react";
@@ -39,17 +38,6 @@ const payRoutes = compose(
   mount({
     "/": route(async (req) => {
       const paymentRequest = await getPaymentRequest(req);
-      if (!paymentRequest) {
-        return {
-          title: makeTitle("Payment request not found"),
-          view: (
-            <ErrorPage title={"Payment request not found"}>
-              Your payment link may have expired. Please contact the person who
-              requested payment from you.
-            </ErrorPage>
-          ),
-        };
-      }
       return {
         title: makeTitle("Make a payment"),
         view: <MakePayment {...paymentRequest} />,
@@ -57,12 +45,6 @@ const payRoutes = compose(
     }),
     "/invite": route(async (req) => {
       const paymentRequest = await getPaymentRequest(req);
-      if (!paymentRequest) {
-        return {
-          title: makeTitle("Failed to generate payment request"),
-          view: <ErrorPage title={"Failed to generate payment request"} />,
-        };
-      }
       return {
         title: makeTitle("Invite to pay"),
         view: <InviteToPay {...paymentRequest} />,
@@ -77,35 +59,24 @@ const payRoutes = compose(
   })
 );
 
-const getPaymentRequest = async (
-  req: NaviRequest
-): Promise<PaymentRequest | undefined> => {
+const getPaymentRequest = async (req: NaviRequest) => {
   const paymentRequestId = req.params["paymentRequestId"];
-  if (paymentRequestId) {
-    const paymentRequest = await fetchPaymentRequest(paymentRequestId);
-    return paymentRequest;
-  }
+  if (!paymentRequestId) throw new NotFoundError(req.originalUrl);
+  const paymentRequest = await fetchPaymentRequest(paymentRequestId);
+  if (!paymentRequest) throw new NotFoundError(req.originalUrl);
+  return paymentRequest;
 };
 
 const fetchPaymentRequest = async (paymentRequestId: string) => {
   try {
     const {
-      data: {
-        paymentRequests: [paymentRequest],
-      },
+      data: { paymentRequest },
     } = await client.query<{
-      paymentRequests: PaymentRequest[];
+      paymentRequest: PaymentRequest;
     }>({
       query: gql`
-        query GetPaymentRequestById($id: uuid!, $retentionPeriod: timestamptz) {
-          paymentRequests: payment_requests(
-            limit: 1
-            where: {
-              id: { _eq: $id }
-              paid_at: { _is_null: true }
-              created_at: { _gt: $retentionPeriod }
-            }
-          ) {
+        query GetPaymentRequestById($id: uuid!) {
+          paymentRequest: payment_requests_by_pk(id: $id) {
             id
             sessionPreviewData: session_preview_data
             createdAt: created_at
@@ -117,7 +88,6 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
       `,
       variables: {
         id: paymentRequestId,
-        retentionPeriod: getRetentionPeriod(),
       },
       context: {
         headers: {

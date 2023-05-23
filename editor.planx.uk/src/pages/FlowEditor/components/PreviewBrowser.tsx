@@ -104,20 +104,19 @@ const PreviewBrowser: React.FC<{
     publishFlow,
     lastPublished,
     lastPublisher,
-    validateAndDiffFlow,
+    diffFlow,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
     state.publishFlow,
     state.lastPublished,
     state.lastPublisher,
-    state.validateAndDiffFlow,
+    state.diffFlow,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet"
   );
-  const [validationMessage, setValidationMessage] = useState<string>();
   const [alteredNodes, setAlteredNodes] = useState<object[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
@@ -188,7 +187,7 @@ const PreviewBrowser: React.FC<{
               onClick={async () => {
                 try {
                   setLastPublishedTitle("Checking for changes...");
-                  const alteredFlow = await validateAndDiffFlow(flowId);
+                  const alteredFlow = await diffFlow(flowId);
                   setAlteredNodes(
                     alteredFlow?.data.alteredNodes
                       ? alteredFlow.data.alteredNodes
@@ -197,9 +196,8 @@ const PreviewBrowser: React.FC<{
                   setLastPublishedTitle(
                     alteredFlow?.data.alteredNodes
                       ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
-                      : alteredFlow?.data.message
+                      : "No new changes to publish"
                   );
-                  setValidationMessage(alteredFlow?.data.description);
                   setDialogOpen(true);
                 } catch (error) {
                   setLastPublishedTitle(
@@ -244,10 +242,8 @@ const PreviewBrowser: React.FC<{
                       onChange={(e) => setSummary(e.target.value)}
                     />
                   </>
-                ) : validationMessage ? (
-                  validationMessage
                 ) : (
-                  lastPublishedTitle
+                  `No new changes to publish`
                 )}
               </DialogContent>
               <DialogActions>

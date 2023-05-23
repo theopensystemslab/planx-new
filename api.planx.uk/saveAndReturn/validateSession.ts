@@ -4,6 +4,7 @@ import {
   adminGraphQLClient as adminClient,
   publicGraphQLClient as publicClient,
 } from "../hasura";
+import { getSaveAndReturnPublicHeaders } from "./utils";
 import { getMostRecentPublishedFlow } from "../helpers";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
@@ -28,6 +29,7 @@ export type ReconciledSession = {
 
 // TODO - Ensure reconciliation handles:
 //  * collected flags
+//  * auto-answered
 //  * component dependencies like FindProperty, DrawBoundary, PlanningConstraints
 export async function validateSession(
   req: Request,
@@ -54,12 +56,7 @@ export async function validateSession(
         message: "Unable to find your session",
       });
     }
-
-    const sessionData = {
-      ...fetchedSession.data!,
-      // remove passport data (reconstructed in the editor by `computePassport`)
-      passport: { data: {} },
-    };
+    const sessionData = fetchedSession.data!;
     const sessionUpdatedAt = fetchedSession.updated_at!;
     const flowId = fetchedSession.flow_id!;
 
@@ -99,6 +96,13 @@ export async function validateSession(
     const { reconciledSessionData, alteredSectionIds } =
       await reconcileSessionData({ sessionData, alteredNodes });
 
+    // store reconciled session data
+    await updateLowcalSessionData({
+      sessionId,
+      sessionData: reconciledSessionData,
+      email,
+    });
+
     const responseData: ValidationResponse = {
       message:
         "This service has been updated since you last saved your application." +
@@ -126,15 +130,9 @@ async function reconcileSessionData({
   alteredNodes: Array<Node>;
 }): Promise<ReconciledSession> {
   const sessionData = { ...originalData }; // copy original data for modification
-  const alteredSectionIds = new Set<string>();
+  const alteredSectionIds: string[] = [];
 
   const currentFlow = await getMostRecentPublishedFlow(sessionData.id);
-
-  // create ordered breadcrumbs to be able to look up section IDs later
-  const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
-    currentFlow as FlowGraph,
-    sessionData.breadcrumbs
-  );
 
   const findParentNode = (nodeId: string): string | undefined => {
     const [parentId, _] =
@@ -144,51 +142,66 @@ async function reconcileSessionData({
     return parentId;
   };
 
-  const removeAlteredAndAffectedBreadcrumb = (nodeId: string) => {
-    const foundParentId = findParentNode(nodeId);
-    const matchingCrumbs: NormalizedCrumb[] = orderedBreadcrumbs.filter(
-      (crumb) =>
-        crumb.id === nodeId || (foundParentId && crumb.id === foundParentId)
+  // create ordered breadcrumbs to be able to look up section IDs later
+  const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
+    currentFlow as FlowGraph,
+    sessionData.breadcrumbs
+  );
+
+  const removeBreadcrumb = (nodeId: string) => {
+    if (sessionData.breadcrumbs[nodeId]) {
+      delete sessionData.breadcrumbs[nodeId];
+    }
+    const crumb: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
+      (crumb) => crumb.id === nodeId!
     );
-
-    for (const crumb of matchingCrumbs) {
-      // delete crumb
-      if (sessionData.breadcrumbs[crumb.id]) {
-        delete sessionData.breadcrumbs[crumb.id];
-      }
-
-      // delete crumb's section
-      if (
-        crumb &&
-        crumb?.sectionId &&
-        sessionData.breadcrumbs[crumb.sectionId!]
-      ) {
-        delete sessionData.breadcrumbs[crumb.sectionId!];
-        alteredSectionIds.add(crumb.sectionId);
-      }
+    if (
+      crumb &&
+      crumb?.sectionId &&
+      sessionData.breadcrumbs[crumb.sectionId!]
+    ) {
+      delete sessionData.breadcrumbs[crumb.sectionId!];
+      alteredSectionIds.push(crumb.sectionId);
     }
   };
 
-  // remove all auto-answered breadcrumbs
-  // (auto-answers are reconstructed in the editor by `upcomingCards`)
-  for (const [id, crumb] of Object.entries(sessionData.breadcrumbs)) {
-    if (crumb.auto === true && sessionData.breadcrumbs[id]) {
-      delete sessionData.breadcrumbs[id];
-    }
-  }
+  // TODO - ensure all passport keys are cleaned up
+  const removePassportValue = (nodeId: string) => {
+    // a flow schema can store the planx variable name under any of these keys
+    const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
+    planx_keys.forEach((key) => {
+      // check if a removed breadcrumb has a passport var based on the published content at save point
+      if (sessionData && currentFlow[nodeId]?.data?.[key]) {
+        // if it does, remove that passport variable from our session so we don't auto-answer changed questions before the user sees them
+        delete sessionData.passport?.data?.[currentFlow[nodeId].data?.[key]];
+      }
+    });
+  };
 
-  // remove any altered or affected breadcrumbs
+  const removeSessionDataForNodeId = (nodeId: string) => {
+    removeBreadcrumb(nodeId);
+    removePassportValue(nodeId);
+  };
+
+  // update breadcrumbs
   for (const node of alteredNodes) {
-    // ignore section content changes and do not included these in alteredSectionIds
     if (node.type === ComponentType.Section) {
+      // ignore section content changes and do not included these in alteredSectionIds
       continue;
     }
-    if (node.id) removeAlteredAndAffectedBreadcrumb(node.id);
+    removeSessionDataForNodeId(node.id!);
+    // if an answer has changed, find it's parent and remove that from breadcrumbs
+    if (node.type === ComponentType.Answer) {
+      const parentId = findParentNode(node.id!);
+      if (parentId && sessionData.breadcrumbs[parentId!]) {
+        removeSessionDataForNodeId(parentId!);
+      }
+    }
   }
 
   return {
     reconciledSessionData: sessionData,
-    alteredSectionIds: [...alteredSectionIds],
+    alteredSectionIds,
   };
 }
 
@@ -242,6 +255,34 @@ async function findSession({
   return response.lowcal_sessions.length
     ? response.lowcal_sessions[0]
     : undefined;
+}
+
+async function updateLowcalSessionData({
+  sessionId,
+  sessionData,
+  email,
+}: {
+  sessionId: string;
+  sessionData: LowCalSession["data"];
+  email: string;
+}): Promise<LowCalSession> {
+  const query = gql`
+    mutation UpdateLowcalSessionData($sessionId: uuid!, $data: jsonb!) {
+      update_lowcal_sessions_by_pk(
+        pk_columns: { id: $sessionId }
+        _set: { data: $data }
+      ) {
+        data
+      }
+    }
+  `;
+  const headers = getSaveAndReturnPublicHeaders(sessionId, email);
+  const response = await publicClient.request(
+    query,
+    { sessionId, data: sessionData },
+    headers
+  );
+  return response.update_lowcal_sessions_by_pk?.data;
 }
 
 async function createAuditEntry(

@@ -16,11 +16,6 @@ import type { Node, Flow, Breadcrumb } from "../types";
 const validateSessionPath = "/validate-session";
 
 describe("Validate Session endpoint", () => {
-  const reconciledData = {
-    ...mockLowcalSession.data,
-    passport: { data: {} },
-  };
-
   afterEach(() => {
     queryMock.reset();
   });
@@ -81,7 +76,9 @@ describe("Validate Session endpoint", () => {
     const expected = {
       message: "No content changes since last save point",
       changesFound: false,
-      reconciledSessionData: reconciledData,
+      reconciledSessionData: {
+        ...mockLowcalSession.data,
+      },
     };
 
     await supertest(app)
@@ -104,11 +101,11 @@ describe("Validate Session endpoint", () => {
         type: 100,
       },
       one: {
-        data: { val: "answer1", text: "1" },
+        data: { val: "answer", text: "1" },
         type: 200,
       },
       two: {
-        data: { val: "answer2", text: "2" },
+        data: { val: "answer", text: "2" },
         type: 200,
       },
     };
@@ -119,8 +116,8 @@ describe("Validate Session endpoint", () => {
         edges: ["one", "two"],
         type: 100,
       },
-      one: { data: { text: "1", val: "answer1" }, type: 200 },
-      two: { data: { text: "2", val: "answer2" }, type: 200 },
+      one: { data: { text: "1", val: "answer" }, type: 200 },
+      two: { data: { text: "2", val: "answer" }, type: 200 },
     };
 
     mockQueryWithFlowDiff({ flow, diff });
@@ -133,7 +130,9 @@ describe("Validate Session endpoint", () => {
     };
 
     const expected = {
-      reconciledSessionData: reconciledData,
+      reconciledSessionData: {
+        ...mockLowcalSession.data,
+      },
       message:
         "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
       alteredSectionIds: [],
@@ -165,19 +164,19 @@ describe("Validate Session endpoint", () => {
         edges: ["a", "b"],
       },
       one: {
-        data: { val: "answer1", text: "One (1)" },
+        data: { val: "answer", text: "One (1)" },
         type: 200,
       },
       two: {
-        data: { val: "answer2", text: "Two (2)" },
+        data: { val: "answer", text: "Two (2)" },
         type: 200,
       },
       a: {
-        data: { val: "answerA", text: "A" },
+        data: { val: "answer", text: "A" },
         type: 200,
       },
       b: {
-        data: { val: "answerB", text: "B or Other" },
+        data: { val: "answer", text: "B or Other" },
         type: 200,
       },
     };
@@ -195,11 +194,11 @@ describe("Validate Session endpoint", () => {
 
     const diff = {
       one: {
-        data: { val: "answer1", text: "One (1)" },
+        data: { val: "answer", text: "One (1)" },
         type: 200,
       },
       two: {
-        data: { val: "answer2", text: "Two (2)" },
+        data: { val: "answer", text: "Two (2)" },
         type: 200,
       },
     };
@@ -215,7 +214,7 @@ describe("Validate Session endpoint", () => {
 
     const expected = {
       reconciledSessionData: {
-        ...reconciledData,
+        ...mockLowcalSession.data,
         breadcrumbs: {
           question2: {
             auto: false,
@@ -263,11 +262,11 @@ describe("Validate Session endpoint", () => {
         edges: ["one", "two"],
       },
       one: {
-        data: { val: "answer1", text: "One" },
+        data: { val: "answer", text: "One" },
         type: 200,
       },
       two: {
-        data: { val: "answer2", text: "Two" },
+        data: { val: "answer", text: "Two" },
         type: 200,
       },
       question2: {
@@ -276,11 +275,11 @@ describe("Validate Session endpoint", () => {
         edges: ["yes", "no"],
       },
       yes: {
-        data: { val: "answerYes", text: "Yes" },
+        data: { val: "answer", text: "Yes" },
         type: 200,
       },
       no: {
-        data: { val: "answerNo", text: "No" },
+        data: { val: "answer", text: "No" },
         type: 200,
       },
       section2: {
@@ -295,11 +294,11 @@ describe("Validate Session endpoint", () => {
         edges: ["a", "b"],
       },
       a: {
-        data: { val: "answerA", text: "A" },
+        data: { val: "answer", text: "A" },
         type: 200,
       },
       b: {
-        data: { val: "answerB", text: "B" },
+        data: { val: "answer", text: "B" },
         type: 200,
       },
     };
@@ -349,7 +348,7 @@ describe("Validate Session endpoint", () => {
 
     const expected = {
       reconciledSessionData: {
-        ...reconciledData,
+        ...mockLowcalSession.data,
         breadcrumbs: {
           section2: {
             auto: false,
@@ -468,7 +467,7 @@ describe("Validate Session endpoint", () => {
 
     const expected = {
       reconciledSessionData: {
-        ...reconciledData,
+        ...mockLowcalSession.data,
         breadcrumbs,
       },
       message:
@@ -487,97 +486,6 @@ describe("Validate Session endpoint", () => {
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
             []
-          )
-        ).toBe(false);
-      });
-  });
-
-  test('auto-answered breadcrumbs with matching "data.val" values are also removed', async () => {
-    const flow: Flow["data"] = {
-      _root: {
-        edges: ["question1", "question2"],
-      },
-      question1: {
-        data: { fn: "question", text: "Is it 'X' or 'Y'" },
-        type: 100,
-        edges: ["one", "two"],
-      },
-      question2: {
-        data: { fn: "question", text: "Is it 'X' or 'Y'" },
-        type: 100,
-        edges: ["a", "b"],
-      },
-      one: {
-        data: { val: "question.x", text: "1: X" },
-        type: 200,
-      },
-      two: {
-        data: { val: "question.y", text: "2: Y" },
-        type: 200,
-      },
-      a: {
-        data: { val: "question.x", text: "A: X" },
-        type: 200,
-      },
-      b: {
-        data: { val: "question.y", text: "B: Y" },
-        type: 200,
-      },
-    };
-
-    const breadcrumbs: Breadcrumb = {
-      question1: {
-        auto: false,
-        answers: ["two"],
-      },
-      question2: {
-        auto: true,
-        answers: ["b"],
-      },
-    };
-
-    // a change to answer "two" means that "question1" should be removed
-    // but it also means that the auto-answered "question2" should be removed
-    // because the question's answer "b" shares the same "val"
-    const diff = {
-      two: {
-        data: { val: "question.y", text: "2: YYY" },
-        type: 200,
-      },
-    };
-
-    mockQueryWithFlowDiff({ flow, diff, breadcrumbs });
-
-    const data = {
-      payload: {
-        sessionId: mockLowcalSession.id,
-        email: mockLowcalSession.email,
-      },
-    };
-
-    const expected = {
-      reconciledSessionData: {
-        ...reconciledData,
-        breadcrumbs: {},
-      },
-      message:
-        "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
-      alteredSectionIds: [],
-      changesFound: true,
-    };
-
-    const removedBreadcrumbIds = ["question1", "question2"];
-
-    await supertest(app)
-      .post(validateSessionPath)
-      .send(data)
-      .expect(200)
-      .then((response) => {
-        expect(response.body).toEqual(expected);
-        expect(
-          objectContainsKeys(
-            response.body.reconciledSessionData.breadcrumbs,
-            removedBreadcrumbIds
           )
         ).toBe(false);
       });

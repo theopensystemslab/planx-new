@@ -62,7 +62,7 @@ export interface EditorStore extends Store.Store {
   copyNode: (id: Store.nodeId) => void;
   createFlow: (teamId: any, newSlug: any) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
-  validateAndDiffFlow: (flowId: string) => Promise<any>;
+  diffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<any>;
   isClone: (id: Store.nodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
@@ -237,7 +237,7 @@ export const editorStore: StateCreator<
     return response;
   },
 
-  validateAndDiffFlow(flowId: string) {
+  diffFlow(flowId: string) {
     const token = getCookie("jwt");
 
     return axios.post(

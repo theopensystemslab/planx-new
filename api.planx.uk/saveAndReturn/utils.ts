@@ -1,10 +1,12 @@
 import { SiteAddress } from "@opensystemslab/planx-core/types";
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
-import { adminGraphQLClient as adminClient } from "../hasura";
+import {
+  publicGraphQLClient as publicClient,
+  adminGraphQLClient as adminClient,
+} from "../hasura";
 import { LowCalSession, Team } from "../types";
 import { Template, getClientForTemplate, sendEmail } from "../notify/utils";
-import { _admin as $admin } from "../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
 
@@ -136,13 +138,8 @@ interface SessionDetails {
 const getSessionDetails = async (
   session: LowCalSession
 ): Promise<SessionDetails> => {
-  const passportProtectTypes =
-    session.data.passport?.data?.["proposal.projectType"];
-  const projectTypes =
-    passportProtectTypes &&
-    (await $admin.formatRawProjectTypes(passportProtectTypes));
-  const address: SiteAddress | undefined =
-    session.data?.passport?.data?._address;
+  const projectTypes = await getHumanReadableProjectType(session?.data?.passport?.data);
+  const address: SiteAddress | undefined = session.data?.passport?.data?._address;
   const addressLine = address?.single_line_address || address?.title;
 
   return {
@@ -218,6 +215,46 @@ const markSessionAsSubmitted = async (sessionId: string) => {
 };
 
 /**
+ * Get formatted list of the session's project types
+ */
+const getHumanReadableProjectType = async (
+  sessionData: LowCalSession["data"]["passport"]["data"] | Record<string, any>
+): Promise<string | undefined> => {
+  const rawProjectType =
+    sessionData?.["proposal.projectType"];
+  if (!rawProjectType) return;
+  // Get human readable values from db
+  const humanReadableList = await getReadableProjectTypeFromRaw(rawProjectType);
+  // Join in readable format - en-US ensures we use Oxford commas
+  const formatter = new Intl.ListFormat("en-US", { type: "conjunction" });
+  const joinedList = formatter.format(humanReadableList);
+  // Convert first character to uppercase
+  const humanReadableString =
+    joinedList.charAt(0).toUpperCase() + joinedList.slice(1);
+  return humanReadableString;
+};
+
+/**
+ * Query DB to get human readable project type values, based on passport variables
+ */
+const getReadableProjectTypeFromRaw = async (
+  rawList: string[]
+): Promise<string[]> => {
+  const query = gql`
+    query GetHumanReadableProjectType($rawList: [String!]) {
+      project_types(where: { value: { _in: $rawList } }) {
+        description
+      }
+    }
+  `;
+  const { project_types } = await publicClient.request(query, { rawList });
+  const list = project_types.map(
+    (result: { description: string }) => result.description
+  );
+  return list;
+};
+
+/**
  * Scope Save & Return requests for Public role
  * SessionId and Email is required to access a lowcal_sessions record
  */
@@ -261,5 +298,6 @@ export {
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
+  getHumanReadableProjectType,
   softDeleteSession,
 };

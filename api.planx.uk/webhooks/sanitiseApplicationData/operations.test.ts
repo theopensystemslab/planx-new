@@ -3,7 +3,6 @@ import { queryMock } from "../../tests/graphqlQueryMock";
 import {
   mockIds,
   mockSanitiseBOPSApplicationsMutation,
-  mockSanitiseEmailApplicationsMutation,
   mockSanitiseLowcalSessionsMutation,
   mockDeleteReconciliationRequestsMutation,
   mockSanitiseUniformApplicationsMutation,
@@ -16,7 +15,6 @@ import {
   getRetentionPeriod,
   operationHandler,
   sanitiseBOPSApplications,
-  sanitiseEmailApplications,
   sanitiseLowcalSessions,
   deleteReconciliationRequests,
   sanitiseUniformApplications,
@@ -114,10 +112,6 @@ describe("Data sanitation operations", () => {
       {
         operation: sanitiseBOPSApplications,
         query: mockSanitiseBOPSApplicationsMutation,
-      },
-      {
-        operation: sanitiseEmailApplications,
-        query: mockSanitiseEmailApplicationsMutation,
       },
       {
         operation: deleteReconciliationRequests,

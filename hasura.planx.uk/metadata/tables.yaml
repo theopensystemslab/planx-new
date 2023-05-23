@@ -88,30 +88,6 @@
   is_enum: true
 - table:
     schema: public
-    name: email_applications
-  event_triggers:
-    - name: setup_email_applications_notifications
-      definition:
-        enable_manual: false
-        insert:
-          columns: '*'
-      retry_conf:
-        num_retries: 1
-        interval_sec: 30
-        timeout_sec: 60
-      webhook_from_env: HASURA_PLANX_API_URL
-      headers:
-        - name: authorization
-          value_from_env: HASURA_PLANX_API_KEY
-      request_transform:
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
-        method: POST
-        version: 2
-        query_params:
-          type: email-submission
-        template_engine: Kriti
-- table:
-    schema: public
     name: flow_document_templates
   object_relationships:
     - name: flow
