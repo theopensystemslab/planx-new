@@ -4,7 +4,7 @@ specifiers:
   '@airbrake/node': ^2.1.8
   '@babel/core': ^7.21.4
   '@babel/preset-typescript': ^7.21.4
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#026f43f
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#80235c0
   '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#debaeca
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
@@ -79,7 +79,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.8
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/026f43f
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/80235c0
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca
   '@types/isomorphic-fetch': 0.0.36
   adm-zip: 0.5.10
@@ -5496,6 +5496,10 @@ packages:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
 
+  /lodash.omit/4.5.0:
+    resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
+    dev: false
+
   /lodash.property/4.4.2:
     resolution: {integrity: sha512-WVnsHSCea5NFrsWGdZilCFJWhHFtb/nqVrDXzR1bIXmOxIykrsAKOpRaYu9rCYoHYuq1SnG6G4A0inMwShV4dg==}
     dev: false
@@ -7567,8 +7571,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/026f43f:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/026f43f}
+  github.com/theopensystemslab/planx-core/80235c0:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/80235c0}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -7585,6 +7589,7 @@ packages:
       lodash.isempty: 4.4.0
       lodash.isnil: 4.0.0
       lodash.kebabcase: 4.1.1
+      lodash.omit: 4.5.0
       lodash.property: 4.4.2
       lodash.set: 4.3.2
       type-fest: 3.8.0

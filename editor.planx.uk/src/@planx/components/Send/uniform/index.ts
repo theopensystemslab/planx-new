@@ -4,27 +4,6 @@ import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
 import { CSVData } from "../model";
 
-export function getUniformParams({
-  breadcrumbs,
-  flow,
-  flowName,
-  passport,
-  sessionId,
-}: {
-  breadcrumbs: Store.breadcrumbs;
-  flow: Store.flow;
-  flowName: string;
-  passport: Store.passport;
-  sessionId: string;
-}) {
-  // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
-  return {
-    csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
-    passport,
-    sessionId,
-  };
-}
-
 // create a CSV data structure based on the payload we send to BOPs
 //   (also used in Confirmation component for user-downloadable copy of app data)
 export function makeCsvData({
@@ -40,6 +19,8 @@ export function makeCsvData({
   sessionId: string;
   flowName: string;
 }): CSVData {
+  // TODO: Replace with `const bopsData = $public.generateBOPSPayload(sessionId) as any;`
+  //   once public client is updated to have optional headers to access session data
   const bopsData = getBOPSParams({
     breadcrumbs,
     flow,

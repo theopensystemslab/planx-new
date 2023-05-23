@@ -18,7 +18,7 @@ import { gql } from "graphql-request";
 import { Passport as IPassport } from "../types";
 import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
 import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
-import { _admin } from "../client";
+import { _admin as $admin } from "../client";
 import { Passport } from "@opensystemslab/planx-core"
 
 interface UniformClient {
@@ -55,8 +55,6 @@ interface UniformApplication {
 
 interface SendToUniformPayload {
   sessionId: string,
-  passport: IPassport,
-  csv: PlanXExportData[],
 }
 
 /**
@@ -111,7 +109,7 @@ const sendToUniform = async (req: Request, res: Response, next: NextFunction) =>
     );
 
     // 3/4 - Create & attach the zip
-    const zipPath = await createUniformSubmissionZip(payload);
+    const zipPath = await createUniformSubmissionZip(payload.sessionId);
 
     const attachmentAdded = await attachArchive(
       token,
@@ -172,12 +170,9 @@ async function checkUniformAuditTable(sessionId: string): Promise<UniformSubmiss
   return application?.uniform_applications[0]?.response;
 }
 
-export async function createUniformSubmissionZip({
-  csv,
-  sessionId,
-  passport,
-}: SendToUniformPayload) {
-  // initiate an empty zip folder
+export async function createUniformSubmissionZip(sessionId: string) {
+  const sessionData = await $admin.getSessionById(sessionId);
+  const passport = sessionData.data?.passport as IPassport;
   const zip = new AdmZip();
 
   // make a tmp directory to avoid file name collisions if simultaneous applications
@@ -205,6 +200,7 @@ export async function createUniformSubmissionZip({
   // build a CSV, write it to the tmp directory, add it to the zip
   const csvPath = path.join(tmpDir, "application.csv");
   const csvFile = fs.createWriteStream(csvPath);
+  const csv = await $admin.generateCSVData(sessionId);
   const csvStream = stringify(csv, {
     columns: ["question", "responses", "metadata"],
     header: true,
@@ -219,13 +215,13 @@ export async function createUniformSubmissionZip({
   // generate and add an HTML overview document for the submission to zip
   const overviewPath = path.join(tmpDir, "Overview.htm");
   const overviewFile = fs.createWriteStream(overviewPath);
-  const overviewStream = generateHTMLOverviewStream(csv).pipe(overviewFile);
+  const overviewStream = generateHTMLOverviewStream(csv as PlanXExportData[]).pipe(overviewFile);
   await resolveStream(overviewStream);
   zip.addLocalFile(overviewPath);
   deleteFile(overviewPath);
 
   // add an optional GeoJSON file to zip
-  const geojson = passport?.data["property.boundary.site"];
+  const geojson = passport?.data?.["property.boundary.site"];
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
     zip.addFile("LocationPlanGeoJSON.geojson", geoBuff);
@@ -414,7 +410,7 @@ const createUniformApplicationAuditRecord = async ({
   localAuthority: string,
   submissionDetails: UniformSubmissionResponse,
   }): Promise<UniformApplication> => {
-  const xml = await _admin.generateOneAppXML(payload?.sessionId);
+  const xml = await $admin.generateOneAppXML(payload?.sessionId);
 
   const application: Record<"insert_uniform_applications_one", UniformApplication> = await adminClient.request(gql`
     mutation CreateUniformApplication(
@@ -463,7 +459,7 @@ const addOneAppXMLToZip = async (
   try {
     const xmlPath = path.join(tmpDir, "proposal.xml"); // must be named "proposal.xml" to be processed by Uniform
     const xmlFile = fs.createWriteStream(xmlPath);
-    const xml = await _admin.generateOneAppXML(sessionId);
+    const xml = await $admin.generateOneAppXML(sessionId);
     const xmlStream = str(xml.trim()).pipe(xmlFile);
     await resolveStream(xmlStream);
     zip.addLocalFile(xmlPath);

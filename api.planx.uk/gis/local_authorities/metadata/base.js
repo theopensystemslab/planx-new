@@ -115,12 +115,6 @@ const baseSchema = {
     "digital-land-datasets": ["ancient-woodland"],
     category: "Ecology",
   },
-  "road.classified": {
-    active: false,
-    neg: "does not intersect with a Classified Road",
-    pos: "intersects with a Classified Road",
-    category: "Roads",
-  },
   "flood.zone1": {
     active: false,
     neg: "is not within a Flood Zone 1 (low risk)",

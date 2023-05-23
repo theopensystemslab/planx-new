@@ -1,6 +1,5 @@
 import type { Store } from "../../../pages/FlowEditor/lib/store";
 import { MoreInformation, parseMoreInformation } from "../shared";
-import { getUniformParams, makeCsvData } from "./uniform";
 
 export enum Destination {
   BOPS = "bops",
@@ -27,21 +26,13 @@ export const USER_ROLES = ["applicant", "agent", "proxy"] as const;
 export function getCombinedEventsPayload({
   destinations,
   teamSlug,
-  breadcrumbs,
-  flow,
-  flowName,
   passport,
   sessionId,
-  email,
 }: {
   destinations: Destination[];
   teamSlug: string;
-  breadcrumbs: Store.breadcrumbs;
-  flow: Store.flow;
-  flowName: string;
   passport: Store.passport;
   sessionId: string;
-  email: string | undefined;
 }) {
   let combinedEventsPayload: any = {};
 
@@ -68,29 +59,16 @@ export function getCombinedEventsPayload({
       }
     }
 
-    const uniformParams = getUniformParams({
-      breadcrumbs,
-      flow,
-      flowName,
-      passport,
-      sessionId,
-    });
-
     combinedEventsPayload[Destination.Uniform] = {
       localAuthority: teamSlug,
-      body: uniformParams,
+      body: { sessionId },
     };
   }
 
   if (destinations.includes(Destination.Email)) {
     combinedEventsPayload[Destination.Email] = {
       localAuthority: teamSlug,
-      body: {
-        sessionId,
-        email,
-        csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
-        flowName,
-      },
+      body: { sessionId },
     };
   }
   return combinedEventsPayload;

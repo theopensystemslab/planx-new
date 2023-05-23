@@ -34,7 +34,7 @@ type PlanningConstraintBody = {
   value: boolean;
   text: string;
   data?: OSFeatures["features"];
-  category: string;
+  category?: string;
 };
 
 // Passport key comes from Digital Planning Schemas googlesheet
