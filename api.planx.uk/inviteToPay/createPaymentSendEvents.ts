@@ -1,9 +1,17 @@
+import { ComponentType } from '@opensystemslab/planx-core/types';
 import { NextFunction, Request, Response } from 'express';
-import { createScheduledEvent } from "../hasura/metadata";
+import { gql } from 'graphql-request';
 import { _admin as $admin } from '../client';
+import { adminGraphQLClient as adminClient } from "../hasura";
+import { createScheduledEvent } from "../hasura/metadata";
 import { getMostRecentPublishedFlow } from '../helpers';
+import { Flow, Team } from '../types';
 
-type Destination = "bops" | "uniform" | "email";
+enum Destination {
+  BOPS = "bops",
+  Uniform = "uniform",
+  Email = "email",
+}
 
 interface CombinedResponse {
   bops?: Record<string, string>;
@@ -15,54 +23,104 @@ interface CombinedResponse {
 const createPaymentSendEvents = async (req: Request, res: Response, next: NextFunction): 
   Promise<NextFunction | Response | void> => {
   try {
+    const { payload } = req.body;
+    if (!payload.sessionId) {
+      return next({
+        status: 400,
+        message: `Missing payload data to create payment send events`,
+      });
+    }
+
     const now = new Date();
     const combinedResponse: CombinedResponse = {};
 
-    // TODO Get this session's published flow data, find it's Send component, determine which "destinations" we need to queue up events for
-    const session = await $admin.getSessionById(req.params.sessionId);
+    const session = await $admin.getSessionById(payload.sessionId);
     const publishedFlowData = await getMostRecentPublishedFlow(session.flowId);
-    const destinations: Destination[] = [];
+    if (!session || !publishedFlowData) {
+      return next({
+        status: 400,
+        message: `Cannot fetch session or flow data to create payment send events`,
+      });
+    }
 
-    // TODO Determine which local authority it should send to based on team & destination    
+    // This this sessions Send component, determine which "destinations" we need to queue up events for
+    const destinations: Destination[] = Object.entries(publishedFlowData).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Send)?.map(([_nodeId, nodeData]) => nodeData.data?.destinations);
+    let teamSlug = await getTeamSlugByFlowId(session.flowId);
+    if (!destinations || !teamSlug) {
+      return next({
+        status: 400,
+        message: `Cannot find Send destinations or local authority to create payment send events`,
+      });
+    }
 
-    const eventPayload = { sessionId: req.params.sessionId };
-    if ("bops" in destinations) {
+    const eventPayload = { sessionId: payload.sessionId };
+    if (destinations.includes(Destination.BOPS)) {
       const bopsEvent = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/bops/${req.body.bops.localAuthority}`,
+        webhook: `{{HASURA_PLANX_API_URL}}/bops/${teamSlug}`,
         schedule_at: now,
         payload: eventPayload,
-        comment: `bops_submission_${req.params.sessionId}`,
+        comment: `bops_submission_${payload.sessionId}`,
       });
-      combinedResponse["bops"] = bopsEvent;
+      combinedResponse[Destination.BOPS] = bopsEvent;
     }
 
-    if ("uniform" in destinations) {
+    if (destinations.includes(Destination.Uniform)) {
+      // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
+      if (teamSlug === "buckinghamshire") {
+        teamSlug = session.data.passport.data?.["property.localAuthorityDistrict"]
+          ?.filter((name: string) => name !== "Buckinghamshire")[0]
+          ?.toLowerCase()
+          ?.replace(/\W+/g, "-");
+
+        // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
+        if (teamSlug === "south-bucks") {
+          teamSlug = "chiltern";
+        }
+      }
+
       const uniformEvent = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/uniform/${req.body.uniform.localAuthority}`,
+        webhook: `{{HASURA_PLANX_API_URL}}/uniform/${teamSlug}`,
         schedule_at: now,
         payload: eventPayload,
-        comment: `uniform_submission_${req.params.sessionId}`,
+        comment: `uniform_submission_${payload.sessionId}`,
       });
-      combinedResponse["uniform"] = uniformEvent;
+      combinedResponse[Destination.Uniform] = uniformEvent;
     }
 
-    if ("email" in destinations) {
+    if (destinations.includes(Destination.Email)) {
       const emailSubmissionEvent = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/email-submission/${req.body.email.localAuthority}`,
+        webhook: `{{HASURA_PLANX_API_URL}}/email-submission/${teamSlug}`,
         schedule_at: now,
         payload: eventPayload,
-        comment: `email_submission_${req.params.sessionId}`,
+        comment: `email_submission_${payload.sessionId}`,
       });
-      combinedResponse["email"] = emailSubmissionEvent;
+      combinedResponse[Destination.Email] = emailSubmissionEvent;
     }
 
     return res.json(combinedResponse);
   } catch (error) {
     return next({
       error,
-      message: `Failed to create payment send event(s) for session ${req.params.sessionId}. Error: ${error}`,
+      message: `Failed to create payment send event(s). Error: ${error}`,
     });
   }
+};
+
+const getTeamSlugByFlowId = async (id: Flow["id"]): Promise<Team["slug"]> => {
+  const data = await adminClient.request(
+    gql`
+      query GetFlowData($id: uuid!) {
+        flows_by_pk(id: $id) {
+          team {
+            slug
+          }
+        }
+      }
+    `,
+    { id }
+  );
+
+  return data.flows_by_pk.team.slug;
 };
 
 export { createPaymentSendEvents };
