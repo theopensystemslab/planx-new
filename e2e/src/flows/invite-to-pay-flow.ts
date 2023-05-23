@@ -33,7 +33,7 @@ const flow: FlowGraph = {
       val: "swimmingPool",
       text: "Swimming pool",
     },
-    type: ComponentType.Answer
+    type: ComponentType.Answer,
   },
   LohvWDYd36: {
     data: {
@@ -53,14 +53,14 @@ const flow: FlowGraph = {
       val: "extension",
       text: "Extension",
     },
-    type: ComponentType.Answer
+    type: ComponentType.Answer,
   },
   mgKUfcwq4Z: {
     data: {
       val: "solarPanels",
       text: "Solar Panels",
     },
-    type: ComponentType.Answer
+    type: ComponentType.Answer,
   },
   yWXG2AYoq2: {
     data: {
