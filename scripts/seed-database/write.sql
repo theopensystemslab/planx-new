@@ -1,6 +1,6 @@
 BEGIN;
 
-  -- upsert users
+  -- insert users skipping conflicts
   CREATE TEMPORARY TABLE sync_users (
     id integer,
     first_name text,
@@ -29,7 +29,8 @@ BEGIN;
   FROM sync_users
   ON CONFLICT (id) DO NOTHING;
 
-  -- upsert teams
+
+  -- insert teams skipping conflicts
   CREATE TEMPORARY TABLE sync_teams (
     id integer,
     name text,
@@ -52,23 +53,21 @@ BEGIN;
     theme,
     settings,
     notify_personalisation,
-    domain,
     submission_email
   )
   SELECT
-  id,
-  name,
-  slug,
-  theme,
-  settings,
-  notify_personalisation,
-  domain,
-  submission_email
+    id,
+    name,
+    slug,
+    theme,
+    settings,
+    notify_personalisation,
+    submission_email
   FROM sync_teams
   ON CONFLICT (id) DO NOTHING;
 
 
-  -- upsert flows
+  -- insert flows skipping conflicts
   CREATE TEMPORARY TABLE sync_flows (
     id uuid,
     team_id int,
@@ -127,9 +126,23 @@ BEGIN;
   FROM flows
   ON CONFLICT DO NOTHING;
 
-  -- overwrite document templates
-  TRUNCATE table flow_document_templates;
 
-  \copy flow_document_templates FROM '/tmp/flow_document_templates.csv' WITH (FORMAT csv, DELIMITER ';');
+  -- insert flow_document_templates skipping conflicts
+  CREATE TEMPORARY TABLE sync_flow_document_templates (
+    flow_id uuid,
+    document_template text
+  );
+
+  \copy sync_flow_document_templates FROM '/tmp/flow_document_templates.csv' WITH (FORMAT csv, DELIMITER ';');
+
+  INSERT INTO flow_document_templates (
+    flow_id,
+    document_template
+  )
+  SELECT
+    flow_id,
+    document_template
+  FROM sync_flow_document_templates
+  ON CONFLICT (flow_id, document_template) DO NOTHING;
 
 COMMIT;

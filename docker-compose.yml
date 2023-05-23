@@ -101,8 +101,7 @@ services:
       - "./scripts/seed-database:/app"
     profiles: ["seed"]
     working_dir: "/app"
-    entrypoint: "bash"
-    command: -c "./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
+    entrypoint: ./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}
     restart: "no"
     depends_on:
       hasura-proxy:
