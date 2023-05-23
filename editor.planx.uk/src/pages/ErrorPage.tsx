@@ -1,46 +1,47 @@
 import Box from "@mui/material/Box";
-import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
-import React from "react";
+import { styled } from "@mui/styles";
+import React, { PropsWithChildren } from "react";
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    backgroundColor: "#fff",
-    color: "#2C2C2C",
-    width: "100%",
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  dashboard: {
-    backgroundColor: "#fff",
-    color: "#2C2C2C",
-    width: "100%",
-    maxWidth: 600,
-    margin: "auto",
-    padding: theme.spacing(8, 0, 4, 0),
-  },
+const Root = styled(Box)(() => ({
+  backgroundColor: "#fff",
+  color: "#2C2C2C",
+  width: "100%",
+  flex: 1,
+  justifyContent: "flex-start",
+  alignItems: "center",
 }));
 
-const ErrorPage: React.FC<{ title: string }> = ({ title }) => {
-  const classes = useStyles();
+const Dashboard = styled(Box)(({ theme }) => ({
+  backgroundColor: "#fff",
+  color: "#2C2C2C",
+  width: "100%",
+  maxWidth: 600,
+  margin: "auto",
+  padding: theme.spacing(8, 0, 4, 0),
+}));
 
-  return (
-    <Box className={classes.root}>
-      <Box className={classes.dashboard}>
-        <Box pl={2} pb={2}>
-          <Typography variant="h1" gutterBottom>
-            {title}
-          </Typography>
-          <Typography variant="body1">
-            This bug has been automatically logged and our team will see it
-            soon. Refreshing this page will not resolve the issue.
-          </Typography>
-        </Box>
+interface ErrorPageProps {
+  title: string;
+}
+
+const DEFAULT_MESSAGE =
+  "This bug has been automatically logged and our team will see it soon. Refreshing this page will not resolve the issue.";
+
+const ErrorPage: React.FC<PropsWithChildren<ErrorPageProps>> = ({
+  title,
+  children,
+}) => (
+  <Root>
+    <Dashboard>
+      <Box pl={2} pb={2}>
+        <Typography variant="h1" gutterBottom>
+          {title}
+        </Typography>
+        <Typography variant="body1">{children || DEFAULT_MESSAGE}</Typography>
       </Box>
-    </Box>
-  );
-};
+    </Dashboard>
+  </Root>
+);
 
 export default ErrorPage;

@@ -120,16 +120,6 @@ export const mockGetFlowDiff = (diff: Flow["data"] | null) => ({
   matchOnVariables: false,
 });
 
-export const mockGetHumanReadableProjectType = {
-  name: "GetHumanReadableProjectType",
-  data: {
-    project_types: [{ description: "New office premises" }],
-  },
-  variables: {
-    rawList: ["new.office"],
-  },
-};
-
 export const mockValidateSingleSessionRequest = {
   name: "ValidateSingleSessionRequest",
   data: {
