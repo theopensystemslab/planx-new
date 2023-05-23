@@ -1,21 +1,15 @@
 import { test, expect } from "@playwright/test";
 import { createAuthenticatedSession } from "./helpers";
-import { setUpTestContext, tearDownTestContext } from "./context";
+import {
+  contextDefaults,
+  setUpTestContext,
+  tearDownTestContext,
+} from "./context";
 import type { Context } from "./context";
 
 test.describe("Login", () => {
   let context: Context = {
-    user: {
-      firstName: "test",
-      lastName: "test",
-      email: "e2etest@test.com",
-    },
-    team: {
-      name: "BadInternetClub",
-      logo: "https://placedog.net/250/250",
-      primaryColor: "#000000",
-      homepage: "example.com",
-    },
+    ...contextDefaults,
   };
 
   test.beforeAll(async () => {

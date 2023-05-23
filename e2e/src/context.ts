@@ -28,6 +28,23 @@ export interface Context {
   sessionIds?: string[];
 }
 
+export const contextDefaults = {
+  user: {
+    firstName: "Test",
+    lastName: "Test",
+    // Gov.uk Notify requests testing service use smoke test email addresses
+    // see https://docs.notifications.service.gov.uk/rest-api.html#smoke-testing
+    email: "simulate-delivered@notifications.service.gov.uk",
+  },
+  team: {
+    name: "E2E Test Team",
+    slug: "e2e-test-team",
+    logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
+    primaryColor: "#444444",
+    homepage: "planx.uk",
+  },
+};
+
 export async function setUpTestContext(
   initialContext: Context
 ): Promise<Context> {

@@ -5,6 +5,7 @@ import {
   modifiedSimpleSendFlow,
 } from "./flows/save-and-return-flows";
 import {
+  contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
@@ -21,18 +22,7 @@ import type { Context } from "./context";
 
 test.describe("Save and return", () => {
   let context: Context = {
-    user: {
-      firstName: "test",
-      lastName: "test",
-      email: "e2etest@test.com",
-    },
-    team: {
-      name: "E2E Test Team",
-      slug: "e2e-test-team",
-      logo: "https://placedog.net/250/250",
-      primaryColor: "#F30415",
-      homepage: "example.com",
-    },
+    ...contextDefaults,
     flow: {
       slug: "e2e-save-and-return-test-flow",
       data: simpleSendFlow,
