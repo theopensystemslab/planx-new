@@ -1,6 +1,7 @@
 import { createUniformSubmissionZip } from "./uniform";
 import * as helpers from "./helpers";
 import { mockLowcalSession } from "../tests/mocks/saveAndReturnMocks";
+import { omit } from "lodash";
 
 jest.mock("fs");
 
@@ -45,6 +46,10 @@ const mockGenerateOneAppXML = jest
   .fn()
   .mockResolvedValue("<dummy:xml></dummy:xml>");
 
+const mockGetSessionById = jest
+  .fn()
+  .mockResolvedValue(mockLowcalSession);
+
 jest.mock("../client", () => {
   return {
     _admin: {
@@ -52,16 +57,7 @@ jest.mock("../client", () => {
       getDocumentTemplateNamesForSession: jest
         .fn()
         .mockResolvedValue(["X", "Y"]),
-      getSessionById: jest.fn((id: string) => {
-        if (id === "noGeoJSON") {
-          const mockLowcalSessionCopy: any = { ...mockLowcalSession };
-          delete mockLowcalSessionCopy.data.passport.data[
-            "property.boundary.site"
-          ];
-          return mockLowcalSessionCopy;
-        }
-        return mockLowcalSession;
-      }),
+      getSessionById: () => mockGetSessionById(),
       generateCSVData: jest
         .fn()
         .mockResolvedValue([
@@ -146,10 +142,18 @@ describe("createUniformSubmissionZip", () => {
   });
 
   test("geojson and location plan is excluded when not present", async () => {
+    // const lowcalSessionWithoutBoundary = { ...mockLowcalSession };
+    const lowcalSessionWithoutBoundary = omit(mockLowcalSession, ['data.passport.data["property.boundary.site"]']);
+
+    // delete lowcalSessionWithoutBoundary.data.passport.data["property.boundary.site"];
+
+    mockGetSessionById.mockResolvedValue(lowcalSessionWithoutBoundary);
+
     const payload = {
       sessionId: "noGeoJSON",
     };
     await createUniformSubmissionZip(payload.sessionId);
+
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlan.htm");
     expect(mockAddLocalFile).not.toHaveBeenCalledWith(
       "LocationPlanGeoJSON.geojson"
