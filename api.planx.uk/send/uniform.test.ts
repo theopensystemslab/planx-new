@@ -33,20 +33,42 @@ jest.mock("@opensystemslab/planx-document-templates", () => {
   };
 });
 
-const mockGenerateOneAppXML = jest.fn().mockResolvedValue("<dummy:xml></dummy:xml>");
-const mockGenerateCSVData = jest.fn().mockResolvedValue([{ question: "Test", responses: [{ value: "Answer" }], metadata: {}}]);
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({
       getFiles: jest.fn().mockImplementation(() => []),
     })),
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+  };
+});
+
+const mockGenerateOneAppXML = jest
+  .fn()
+  .mockResolvedValue("<dummy:xml></dummy:xml>");
+
+jest.mock("../client", () => {
+  return {
+    _admin: {
       generateOneAppXML: () => mockGenerateOneAppXML(),
-      getDocumentTemplateNamesForSession: jest.fn().mockResolvedValue(["X", "Y"]),
-      getSessionById: () => jest.fn().mockResolvedValue(mockLowcalSession),
-      generateCSVData: () => mockGenerateCSVData(),
-    }))
-  }
+      getDocumentTemplateNamesForSession: jest
+        .fn()
+        .mockResolvedValue(["X", "Y"]),
+      getSessionById: jest.fn((id: string) => {
+        if (id === "noGeoJSON") {
+          const mockLowcalSessionCopy: any = { ...mockLowcalSession };
+          delete mockLowcalSessionCopy.data.passport.data[
+            "property.boundary.site"
+          ];
+          return mockLowcalSessionCopy;
+        }
+        return mockLowcalSession;
+      }),
+      generateCSVData: jest
+        .fn()
+        .mockResolvedValue([
+          { question: "Test", responses: [{ value: "Answer" }], metadata: {} },
+        ]),
+    },
+  };
 });
 
 jest.mock("csv-stringify", () => {
@@ -125,7 +147,7 @@ describe("createUniformSubmissionZip", () => {
 
   test("geojson and location plan is excluded when not present", async () => {
     const payload = {
-      sessionId: "1234",
+      sessionId: "noGeoJSON",
     };
     await createUniformSubmissionZip(payload.sessionId);
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlan.htm");
@@ -136,19 +158,21 @@ describe("createUniformSubmissionZip", () => {
   });
 
   it("calls addTemplateFilesToZip", async () => {
-    const spy = jest.spyOn(helpers, "addTemplateFilesToZip")
+    const spy = jest.spyOn(helpers, "addTemplateFilesToZip");
     const payload = {
       sessionId: "1234",
     };
     await createUniformSubmissionZip(payload.sessionId);
     expect(spy).toHaveBeenCalled();
-  })
+  });
 
   it("throws an error when XML generation fails", async () => {
-    mockGenerateOneAppXML.mockRejectedValue(new Error())
+    mockGenerateOneAppXML.mockRejectedValue(new Error());
     const payload = {
       sessionId: "1234",
     };
-    await expect(createUniformSubmissionZip(payload.sessionId)).rejects.toThrow(/Failed to generate OneApp XML/);
+    await expect(createUniformSubmissionZip(payload.sessionId)).rejects.toThrow(
+      /Failed to generate OneApp XML/
+    );
   });
 });
