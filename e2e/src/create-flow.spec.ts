@@ -1,22 +1,15 @@
 import { test, expect, Browser } from "@playwright/test";
-import { setUpTestContext, tearDownTestContext } from "./context";
+import {
+  contextDefaults,
+  setUpTestContext,
+  tearDownTestContext,
+} from "./context";
 import { getTeamPage, createAuthenticatedSession } from "./helpers";
 import type { Context } from "./context";
 
 test.describe("Navigation", () => {
   let context: Context = {
-    user: {
-      firstName: "test",
-      lastName: "test",
-      email: "e2etest@test.com",
-    },
-    team: {
-      name: "E2E Navigation Test",
-      slug: "e2e-navigation-test",
-      logo: "https://placedog.net/250/250",
-      primaryColor: "#000000",
-      homepage: "example.com",
-    },
+    ...contextDefaults,
   };
   const serviceProps = {
     name: "A Test Service",

@@ -34,6 +34,7 @@ type PlanningConstraintBody = {
   value: boolean;
   text: string;
   data?: OSFeatures["features"];
+  category?: string;
 };
 
 // Passport key comes from Digital Planning Schemas googlesheet
@@ -91,6 +92,7 @@ export const classifiedRoadsSearch = async (
           value: true,
           text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
           data: features,
+          category: "General policy",
         }
       } as PlanningConstraintResponse)
     } else {
@@ -98,6 +100,7 @@ export const classifiedRoadsSearch = async (
         [PASSPORT_FN]: {
           value: false,
           text: "is not on a Classified Road",
+          category: "General policy",
         }
       } as PlanningConstraintResponse)
     }

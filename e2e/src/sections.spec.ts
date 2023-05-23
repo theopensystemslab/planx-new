@@ -1,6 +1,7 @@
 import { test } from "@playwright/test";
 import { flow, updatedQuestionAnswers } from "./flows/sections-flow";
 import {
+  contextDefaults,
   setUpTestContext,
   tearDownTestContext,
   getGraphQLClient,
@@ -34,18 +35,7 @@ export enum SectionStatus {
 
 test.describe("Sections", () => {
   let context: Context = {
-    user: {
-      firstName: "test",
-      lastName: "test",
-      email: "e2etest@test.com",
-    },
-    team: {
-      name: "E2E Test Team",
-      slug: "e2e-test-team",
-      logo: "https://placedog.net/250/250",
-      primaryColor: "#F30415",
-      homepage: "example.com",
-    },
+    ...contextDefaults,
     flow: {
       slug: "sections-test-flow",
       data: flow,

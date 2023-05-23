@@ -33,6 +33,6 @@ jobs:
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - run: docker run --rm -v "$(pwd)/scripts/seed-database:/app" --workdir="/app" postgis/postgis:12-3.0-alpine "./container.sh" "${STAGING_PG_URL}" "${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
+      - run: docker run --rm -v "$(pwd)/scripts/seed-database:/app" --workdir="/app" postgis/postgis:12-3.0-alpine "./container.sh" "${STAGING_PG_URL}" "${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}" "reset_flows" "include_published_flows"
         env:
           PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS: ${{ secrets.PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS }}
