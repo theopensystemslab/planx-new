@@ -3,13 +3,15 @@ import { queryMock } from "../tests/graphqlQueryMock";
 import app from "../server";
 import * as helpers from "./helpers";
 
+const mockGenerateCSVData = jest.fn().mockResolvedValue([{ question: "Is this a test?", responses: [{ value: "Yes" }], metadata: {}}]);
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({
       getFiles: jest.fn().mockImplementation(() => []),
     })),
     CoreDomainClient: jest.fn().mockImplementation(() => ({
-      getDocumentTemplateNamesForSession: jest.fn()
+      getDocumentTemplateNamesForSession: jest.fn(),
+      generateCSVData: () => mockGenerateCSVData(),
     }))
   }
 });
@@ -38,12 +40,12 @@ describe(`sending an application by email to a planning office`, () => {
     });
 
     queryMock.mockQuery({
-      name: "AppendSessionData",
+      name: "GetSessionEmailDetails",
       matchOnVariables: false,
       data: {
-        update_lowcal_sessions_by_pk: { data: {} }
+        lowcal_sessions_by_pk: { email: "applicant@test.com", flow: { slug: "test-flow" }}
       },
-      variables: { id: "123", data: { "csv": [] }},
+      variables: { id: "123" },
     });
 
     queryMock.mockQuery({
@@ -82,7 +84,7 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
+      .send({ payload: { sessionId: "123" }})
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -94,7 +96,7 @@ describe(`sending an application by email to a planning office`, () => {
   it("fails without authorization header", async () => {
     await supertest(app)
       .post("/email-submission/southwark")
-      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
+      .send({ payload: { sessionId: "123" }})
       .expect(401);
   });
 
@@ -102,7 +104,7 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-      .send({ payload: { email: "applicant@test.com", csv: [] }})
+      .send({ payload: { somethingElse: "123" }})
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
@@ -127,7 +129,7 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/other-council")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
+      .send({ payload: { sessionId: "123" }})
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({

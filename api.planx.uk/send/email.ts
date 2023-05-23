@@ -17,11 +17,13 @@ import { sendEmail } from "../notify/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
 import { Passport } from '@opensystemslab/planx-core';
+import { _admin as $admin } from "../client";
+import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
   const { payload } = req.body;
-  if (!payload?.sessionId || !payload?.csv || !payload?.email) {
+  if (!payload?.sessionId) {
     return next({
       status: 400,
       message: `Missing application payload data to send to email`,
@@ -38,15 +40,16 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    // Append formatted "csv" data to lowcal_session.data so it's available later to the download-application-files endpoint
-    const _updatedSessionData = await appendSessionData(payload.sessionId, payload.csv);
+    // Get the applicant email and flow slug associated with the session
+    const { email, flow } = await getSessionEmailDetailsById(payload.sessionId);
+    const flowName = capitalize(flow?.slug?.replaceAll("-", " "));
 
     // Prepare email template
     const config: EmailSubmissionNotifyConfig = {
       personalisation: {
-        serviceName: capitalize(payload?.flowName) || "PlanX",
+        serviceName: flowName || "PlanX",
         sessionId: payload.sessionId,
-        applicantEmail: payload.email,
+        applicantEmail: email,
         downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${req.params.localAuthority}`,
         ...notifyPersonalisation,
       }
@@ -115,11 +118,12 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
     });
 
     // Build a csv file, write it locally, add it to the zip
-    if (sessionData.csv) {
+    const csvData = await $admin.generateCSVData(sessionId);
+    if (csvData) {
       const csvPath = path.join(tmpDir, "application.csv");
       const csvFile = fs.createWriteStream(csvPath);
-
-      const csvStream = stringify(sessionData.csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
+  
+      const csvStream = stringify(csvData, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
       await resolveStream(csvStream);
       zip.addLocalFile(csvPath);
       deleteFile(csvPath);
@@ -142,10 +146,10 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
     }
 
     // As long as we csv data, add a HTML overview document for human-readability
-    if (sessionData.csv) {
+    if (csvData) {
       const htmlPath = path.join(tmpDir, "application.html");
       const htmlFile = fs.createWriteStream(htmlPath);
-      const htmlStream = generateHTMLOverviewStream(sessionData.csv).pipe(
+      const htmlStream = generateHTMLOverviewStream(csvData as PlanXExportData[]).pipe(
         htmlFile
       );
       await resolveStream(htmlStream);
@@ -203,6 +207,30 @@ async function getTeamEmailSettings(localAuthority: string) {
   return response?.teams[0];
 }
 
+async function getSessionEmailDetailsById(sessionId: string) {
+  const response = await adminClient.request(
+    gql`
+      query GetSessionEmailDetails(
+        $id: uuid!
+      ) {
+        lowcal_sessions_by_pk(
+          id: $id
+        ) {
+          email
+          flow {
+            slug
+          }
+        }
+      }
+    `,
+    {
+      id: sessionId
+    }
+  );
+
+  return response?.lowcal_sessions_by_pk;
+}
+
 async function getSessionData(sessionId: string) {
   const response = await adminClient.request(
     gql`
@@ -223,30 +251,6 @@ async function getSessionData(sessionId: string) {
 
   return response?.lowcal_sessions_by_pk?.data;
 };
-
-async function appendSessionData(sessionId: string, csvData: any) {
-  const response = await adminClient.request(
-    gql`
-      mutation AppendSessionData(
-        $id: uuid!
-        $data: jsonb
-      ) {
-        update_lowcal_sessions_by_pk(
-          pk_columns: {id: $id},
-          _append: {data: $data}
-        ) {
-          data
-        }
-      }
-    `,
-    {
-      id: sessionId,
-      data: { "csv": csvData }
-    }
-  );
-
-  return response?.update_lowcal_sessions_by_pk?.data;
-}
 
 async function downloadPassportFiles(
   { zip, tmpDir, passport }:

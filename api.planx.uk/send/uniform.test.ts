@@ -142,11 +142,7 @@ describe("createUniformSubmissionZip", () => {
   });
 
   test("geojson and location plan is excluded when not present", async () => {
-    // const lowcalSessionWithoutBoundary = { ...mockLowcalSession };
     const lowcalSessionWithoutBoundary = omit(mockLowcalSession, ['data.passport.data["property.boundary.site"]']);
-
-    // delete lowcalSessionWithoutBoundary.data.passport.data["property.boundary.site"];
-
     mockGetSessionById.mockResolvedValue(lowcalSessionWithoutBoundary);
 
     const payload = {

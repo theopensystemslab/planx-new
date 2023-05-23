@@ -20,23 +20,9 @@ const SendComponent: React.FC<Props> = ({
   destinations = [DEFAULT_DESTINATION],
   ...props
 }) => {
-  const [
-    breadcrumbs,
-    flow,
-    passport,
-    flowId,
-    sessionId,
-    email,
-    flowName,
-    teamSlug,
-  ] = useStore((state) => [
-    state.breadcrumbs,
-    state.flow,
+  const [passport, sessionId, teamSlug] = useStore((state) => [
     state.computePassport(),
-    state.id,
     state.sessionId,
-    state.saveToEmail,
-    state.flowName,
     state.teamSlug,
   ]);
 
@@ -46,12 +32,8 @@ const SendComponent: React.FC<Props> = ({
     const combinedEventsPayload = getCombinedEventsPayload({
       destinations,
       teamSlug,
-      breadcrumbs,
-      flow,
-      flowName,
       passport,
       sessionId,
-      email,
     });
 
     return axios.post(
