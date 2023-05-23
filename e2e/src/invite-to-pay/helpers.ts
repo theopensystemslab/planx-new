@@ -1,8 +1,14 @@
-import { answerChecklist, log, answerFindProperty, answerContactInput, addSessionToContext } from "../helpers";
+import {
+  answerChecklist,
+  log,
+  answerFindProperty,
+  answerContactInput,
+  addSessionToContext,
+} from "../helpers";
 import type { Page } from "@playwright/test";
 import { gql, GraphQLClient } from "graphql-request";
 import { fillInEmail } from "../helpers";
-import { PaymentRequest } from '@opensystemslab/planx-core/dist/types';
+import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
 import { Context } from "../context";
 
 /**
@@ -16,13 +22,22 @@ export async function navigateToPayComponent(page: Page, context: Context) {
   await fillInEmail({ page, context });
   await page.getByText("Continue").click();
 
-  await answerChecklist({ page, title: "What is your project type?", answers: ["Addition or alteration of a deck", "Alter internal walls"] });
+  await answerChecklist({
+    page,
+    title: "What is your project type?",
+    answers: ["Addition or alteration of a deck", "Alter internal walls"],
+  });
   await page.getByText("Continue").click();
 
   await answerFindProperty(page);
   await page.getByText("Continue").click();
 
-  await answerContactInput(page, { firstName: "agentFirst", lastName: "agentLast", email: "testAgent@opensystemslab.com", phoneNumber: "(0123) 456789" });
+  await answerContactInput(page, {
+    firstName: "agentFirst",
+    lastName: "agentLast",
+    email: "testAgent@opensystemslab.com",
+    phoneNumber: "(0123) 456789",
+  });
   await page.getByText("Continue").click();
 }
 
@@ -43,13 +58,9 @@ export async function getPaymentRequestBySessionId({
     const { paymentRequests }: { paymentRequests: PaymentRequest[] } =
       await adminGQLClient.request(
         gql`
-          query GetPaymentRequestBySessionId(
-            $sessionId: uuid!
-          ) {
+          query GetPaymentRequestBySessionId($sessionId: uuid!) {
             paymentRequests: payment_requests(
-              where: {
-                session_id: { _eq: $sessionId }
-              }
+              where: { session_id: { _eq: $sessionId } }
             ) {
               id
               payeeEmail: payee_email
@@ -69,10 +80,18 @@ export async function getPaymentRequestBySessionId({
   }
 }
 
-export async function makePaymentRequest({ page, context }: { page: Page, context: Context }) {
+export async function makePaymentRequest({
+  page,
+  context,
+}: {
+  page: Page;
+  context: Context;
+}) {
   await navigateToPayComponent(page, context);
   const sessionId = await addSessionToContext(page, context);
-  const toggleInviteToPayButton = page.getByRole("button", { name: "Invite someone else to pay for this application" });
+  const toggleInviteToPayButton = page.getByRole("button", {
+    name: "Invite someone else to pay for this application",
+  });
   await toggleInviteToPayButton.click();
   await answerInviteToPayForm(page);
   await page.getByText("Send invitation to pay").click();

@@ -31,7 +31,7 @@ let context: Context = {
     data: inviteToPayFlow,
   },
   sessionIds: [], // used to collect and clean up sessions
-  paymentRequest: mockPaymentRequest
+  paymentRequest: mockPaymentRequest,
 };
 
 const paymentRequestDetails = {
@@ -39,12 +39,11 @@ const paymentRequestDetails = {
   payeeName: "Mrs Agent",
   payeeEmail: "testAgent@opensystemslab.io",
   sessionPreviewKeys: [["_address", "title"], ["proposal.projectType"]],
-}
+};
 
 const adminGQLClient = getGraphQLClient();
 
 test.describe("Nominee journey", async () => {
-
   test.beforeAll(async () => {
     try {
       context = await setUpTestContext(context);
@@ -55,7 +54,9 @@ test.describe("Nominee journey", async () => {
     }
   });
 
-  test.beforeEach(async ({ page }) => await setFeatureFlag(page, "INVITE_TO_PAY"));
+  test.beforeEach(
+    async ({ page }) => await setFeatureFlag(page, "INVITE_TO_PAY")
+  );
 
   test.afterAll(async () => {
     await tearDownTestContext(context);
@@ -65,14 +66,21 @@ test.describe("Nominee journey", async () => {
     const { paymentRequest, sessionId } = await setupPaymentRequest(request);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
-    expect(await page.getByRole("heading", { name: "Pay for your application" })).toBeVisible();
-    expect(await page.locator("#main-content").getByText("Invite to pay test")).toBeVisible();
+    expect(
+      await page.getByRole("heading", { name: "Pay for your application" })
+    ).toBeVisible();
+    expect(
+      await page.locator("#main-content").getByText("Invite to pay test")
+    ).toBeVisible();
     expect(await page.getByText("123, Test Street, Testville")).toBeVisible();
 
-    const formattedProjectType = "Alteration of internal walls and addition or alteration of a deck";
+    const formattedProjectType =
+      "Alteration of internal walls and addition or alteration of a deck";
     expect(await page.getByText(formattedProjectType)).toBeVisible();
 
-    const payButton = await page.getByRole("button", { name: "Pay using GOV.UK Pay" })
+    const payButton = await page.getByRole("button", {
+      name: "Pay using GOV.UK Pay",
+    });
     expect(payButton).toBeVisible();
 
     await payButton.click();
@@ -87,7 +95,10 @@ test.describe("Nominee journey", async () => {
     await page.waitForLoadState("networkidle");
 
     expect(await page.getByText("Payment received")).toBeVisible();
-    const updatedPaymentRequest = await getPaymentRequestBySessionId({ sessionId, adminGQLClient });
+    const updatedPaymentRequest = await getPaymentRequestBySessionId({
+      sessionId,
+      adminGQLClient,
+    });
     expect(updatedPaymentRequest?.paidAt).toBeDefined();
   });
 
@@ -109,7 +120,10 @@ test.describe("Nominee journey", async () => {
     expect(await page.getByText("Payment request not found")).toBeVisible();
   });
 
-  test("responding to a payment request which has been paid", async ({ page, request }) => {
+  test("responding to a payment request which has been paid", async ({
+    page,
+    request,
+  }) => {
     const { paymentRequest } = await setupPaymentRequest(request);
     await markPaymentRequestAsPaid(paymentRequest);
     await navigateToPaymentRequestPage(paymentRequest, page);
@@ -117,7 +131,10 @@ test.describe("Nominee journey", async () => {
     expect(await page.getByText("Payment request not found")).toBeVisible();
   });
 
-  test("responding to a payment request which has expired", async ({ page, request }) => {
+  test("responding to a payment request which has expired", async ({
+    page,
+    request,
+  }) => {
     const { paymentRequest } = await setupPaymentRequest(request);
     await markPaymentRequestAsExpired(paymentRequest);
     await navigateToPaymentRequestPage(paymentRequest, page);
@@ -126,22 +143,37 @@ test.describe("Nominee journey", async () => {
   });
 });
 
-async function navigateToPaymentRequestPage(paymentRequest: PaymentRequest, page: Page) {
+async function navigateToPaymentRequestPage(
+  paymentRequest: PaymentRequest,
+  page: Page
+) {
   const paymentRequestURL = `/${context.team!.slug!}/${context.flow!
     .slug!}/pay?analytics=false&paymentRequestId=${paymentRequest.id}`;
   await page.goto(paymentRequestURL);
   await page.waitForLoadState("networkidle");
 }
 
-async function setupPaymentRequest(request: APIRequestContext): Promise<Record<"paymentRequest", PaymentRequest> & Record<"sessionId", string>> {
+async function setupPaymentRequest(
+  request: APIRequestContext
+): Promise<
+  Record<"paymentRequest", PaymentRequest> & Record<"sessionId", string>
+> {
   const sessionId = uuidV4();
   context.sessionIds?.push(sessionId);
   await createSession({ client: adminGQLClient, context, sessionId });
-  const paymentRequest = await createPaymentRequest(request, sessionId)
+  const paymentRequest = await createPaymentRequest(request, sessionId);
   return { paymentRequest, sessionId };
 }
 
-async function createSession({ context, client, sessionId }: { context: Context, client: GraphQLClient, sessionId: string }) {
+async function createSession({
+  context,
+  client,
+  sessionId,
+}: {
+  context: Context;
+  client: GraphQLClient;
+  sessionId: string;
+}) {
   const mutation = gql`
     mutation CreateSession(
       $data: jsonb!
@@ -151,34 +183,37 @@ async function createSession({ context, client, sessionId }: { context: Context,
     ) {
       session: insert_lowcal_sessions_one(
         object: { data: $data, id: $id, email: $email, flow_id: $flowId }
-        on_conflict: {
-          constraint: lowcal_sessions_pkey
-          update_columns: data
-          }
-        ) {
+        on_conflict: { constraint: lowcal_sessions_pkey, update_columns: data }
+      ) {
         id
       }
     }
-  `
-  await client.request<Record<"session", Pick<Session, "id">[]>>(mutation, { 
+  `;
+  await client.request<Record<"session", Pick<Session, "id">[]>>(mutation, {
     id: sessionId,
-    data: { 
+    data: {
       id: context.flow?.id,
-      ...mockSessionData
+      ...mockSessionData,
     },
     email: context.user.email,
     flowId: context.flow?.id,
   });
 }
 
-/** 
+/**
  * Create PaymentRequest via API
  * This method ensures that the session is locked
  */
-async function createPaymentRequest(request: APIRequestContext, sessionId: string) {
-  const response = await request.post(`http://localhost:${process.env.API_PORT}/invite-to-pay/${sessionId}`, {
-    data: paymentRequestDetails
-  })
+async function createPaymentRequest(
+  request: APIRequestContext,
+  sessionId: string
+) {
+  const response = await request.post(
+    `http://localhost:${process.env.API_PORT}/invite-to-pay/${sessionId}`,
+    {
+      data: paymentRequestDetails,
+    }
+  );
   return response.json();
 }
 
@@ -186,7 +221,7 @@ async function markPaymentRequestAsPaid(paymentRequest: PaymentRequest) {
   const mutation = gql`
     mutation MarkPaymentRequestAsPaid($id: uuid!) {
       update_payment_requests_by_pk(
-        pk_columns: {id: $id}, 
+        pk_columns: { id: $id }
         _set: { paid_at: "now()" }
       ) {
         id
@@ -194,7 +229,7 @@ async function markPaymentRequestAsPaid(paymentRequest: PaymentRequest) {
     }
   `;
   await adminGQLClient.request(mutation, {
-    id: paymentRequest.id
+    id: paymentRequest.id,
   });
 }
 
@@ -202,7 +237,7 @@ async function markPaymentRequestAsExpired(paymentRequest: PaymentRequest) {
   const mutation = gql`
     mutation MarkPaymentRequestAsPaid($id: uuid!) {
       update_payment_requests_by_pk(
-        pk_columns: {id: $id}, 
+        pk_columns: { id: $id }
         _set: { created_at: "2020-02-02" }
       ) {
         id
@@ -210,6 +245,6 @@ async function markPaymentRequestAsExpired(paymentRequest: PaymentRequest) {
     }
   `;
   await adminGQLClient.request(mutation, {
-    id: paymentRequest.id
+    id: paymentRequest.id,
   });
 }

@@ -1,11 +1,11 @@
-import { mockOSPlacesResponse } from './mocks/osPlacesResponse';
+import { mockOSPlacesResponse } from "./mocks/osPlacesResponse";
 import { expect } from "@playwright/test";
 import type { Page, Browser, Locator } from "@playwright/test";
 import { findSessionId, generateAuthenticationToken } from "./context";
 import type { Context } from "./context";
 import { getGraphQLClient } from "./context";
-import { gql } from 'graphql-request';
-import { FlowGraph } from '@opensystemslab/planx-core/types';
+import { gql } from "graphql-request";
+import { FlowGraph } from "@opensystemslab/planx-core/types";
 
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
@@ -294,13 +294,26 @@ export async function answerFindProperty(page: Page) {
 }
 
 async function setupOSMockResponse(page: Page) {
-  const ordnanceSurveryPlacesEndpoint = new RegExp(/proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/);
-  await page.route(ordnanceSurveryPlacesEndpoint, async route => {
-    await route.fulfill({ status: 200, body: JSON.stringify(mockOSPlacesResponse) });
+  const ordnanceSurveryPlacesEndpoint = new RegExp(
+    /proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/
+  );
+  await page.route(ordnanceSurveryPlacesEndpoint, async (route) => {
+    await route.fulfill({
+      status: 200,
+      body: JSON.stringify(mockOSPlacesResponse),
+    });
   });
 }
 
-export async function answerContactInput(page: Page, { firstName, lastName, phoneNumber, email }: { firstName: string, lastName: string, phoneNumber: string, email: string }) {
+export async function answerContactInput(
+  page: Page,
+  {
+    firstName,
+    lastName,
+    phoneNumber,
+    email,
+  }: { firstName: string; lastName: string; phoneNumber: string; email: string }
+) {
   await page.getByLabel("First name").fill(firstName);
   await page.getByLabel("Last name").fill(lastName);
   await page.getByLabel("Phone number").fill(phoneNumber);
@@ -308,15 +321,21 @@ export async function answerContactInput(page: Page, { firstName, lastName, phon
 }
 
 export async function setFeatureFlag(page: Page, featureFlag: string) {
-  await page.addInitScript((featureFlag: string) => 
-    window.localStorage.setItem("FEATURE_FLAGS", JSON.stringify([ featureFlag ])), featureFlag
+  await page.addInitScript(
+    (featureFlag: string) =>
+      window.localStorage.setItem(
+        "FEATURE_FLAGS",
+        JSON.stringify([featureFlag])
+      ),
+    featureFlag
   );
 }
 
 export async function getSessionIdFromURL(page: Page): Promise<string> {
   const url = await new URL(page.url());
-  const sessionId = url.searchParams.get("sessionId")
-  if (!sessionId) throw Error("Session ID missing from page. URL " + url.toString());
+  const sessionId = url.searchParams.get("sessionId");
+  if (!sessionId)
+    throw Error("Session ID missing from page. URL " + url.toString());
   return sessionId;
 }
 
@@ -328,7 +347,7 @@ export async function addSessionToContext(page: Page, context: Context) {
 
 export async function waitForPaymentResponse(
   page: Page,
-  context: Context,
+  context: Context
 ): Promise<{ paymentId: string; state?: { status: string } }> {
   const { payment_id: paymentId, state } = await page
     .waitForResponse((response) => {
@@ -339,7 +358,13 @@ export async function waitForPaymentResponse(
   return { paymentId, state };
 }
 
-export async function modifyFlow({ context, modifiedFlow }: { context: Context, modifiedFlow: FlowGraph } ) {
+export async function modifyFlow({
+  context,
+  modifiedFlow,
+}: {
+  context: Context;
+  modifiedFlow: FlowGraph;
+}) {
   const adminGQLClient = getGraphQLClient();
   if (!context.flow?.id || !context.user?.id) {
     throw new Error("context must have a flow and user");

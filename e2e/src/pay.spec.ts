@@ -1,5 +1,11 @@
 import { test, expect } from "@playwright/test";
-import { cards, fillGovUkCardDetails, getSessionId, log, waitForPaymentResponse } from "./helpers";
+import {
+  cards,
+  fillGovUkCardDetails,
+  getSessionId,
+  log,
+  waitForPaymentResponse,
+} from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";
@@ -90,7 +96,10 @@ test.describe("Gov Pay @integration", async () => {
     await fillGovUkCardDetails({ page, cardNumber: cards.invalid_card_number });
     await page.locator("#return-url").click();
 
-    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page, context);
+    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(
+      page,
+      context
+    );
     expect(failedPaymentRef).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -145,7 +154,10 @@ test.describe("Gov Pay @integration", async () => {
     await page.getByText(payButtonText).click();
     await page.locator("#cancel-payment").click();
     await page.locator("#return-url").click();
-    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page, context);
+    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(
+      page,
+      context
+    );
     expect(failedPaymentRef).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -271,7 +283,10 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page, context);
+    const { paymentId: actualPaymentId } = await waitForPaymentResponse(
+      page,
+      context
+    );
 
     // ensure that data stored in the session matches the latest payment attempt
     const session = await findSession({
@@ -296,7 +311,10 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page, context);
+    const { paymentId: actualPaymentId } = await waitForPaymentResponse(
+      page,
+      context
+    );
     await expect(page.getByText("Application sent")).toBeVisible();
     await expect(page.getByText(actualPaymentId)).toBeVisible();
 

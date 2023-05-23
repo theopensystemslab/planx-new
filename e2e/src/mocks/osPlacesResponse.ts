@@ -53,8 +53,8 @@ export const mockOSPlacesResponse = {
         LPI_LOGICAL_STATUS_CODE_DESCRIPTION: "APPROVED",
         LANGUAGE: "EN",
         MATCH: 1,
-        MATCH_DESCRIPTION: "EXACT"
-      }
-    }
-  ]
-}
+        MATCH_DESCRIPTION: "EXACT",
+      },
+    },
+  ],
+};
