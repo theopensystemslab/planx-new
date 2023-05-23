@@ -277,11 +277,11 @@ async function insertAuditEntry(
   const response = await adminClient.request(
     gql`
       mutation CreateEmailApplication(
-        $session_id: uuid! = "",
-        $team_slug: String = "",
-        $recipient: String = "",
-        $request: jsonb = "",
-        $response: jsonb = ""
+        $session_id: uuid!,
+        $team_slug: String,
+        $recipient: String,
+        $request: jsonb,
+        $response: jsonb
       ) {
         insert_email_applications_one(object: {
           session_id: $session_id,
