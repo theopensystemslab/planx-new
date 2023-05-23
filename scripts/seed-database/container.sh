@@ -6,9 +6,12 @@ cd $(dirname ${0})
 LOCAL_PG=${1}
 REMOTE_PG=${2}
 
-# RESET flag set to "reset_flows" will truncate flow data during sync
-# RESET flag set to "reset_all" will truncate all synced tables
+# RESET set to "reset_flows" will truncate flow data during sync
+# RESET set to "reset_all" will truncate all synced tables
 RESET=${3}
+
+# INCLUDE_PUBLISHED_FLOWS set to "include_published_flows" will sync published flows
+INCLUDE_PUBLISHED_FLOWS=${4}
 
 echo downloading public data from production
 
@@ -33,8 +36,17 @@ if [[ ${RESET} == "reset_flows" ]]; then
   psql ${LOCAL_PG} --command="TRUNCATE TABLE flows CASCADE;"
 fi
 
+if [[ ${INCLUDE_PUBLISHED_FLOWS} == "include_published_flows" ]]; then
+  psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
+  echo published_flows downloaded
+fi
+
 echo beginning write transaction
-psql --quiet ${LOCAL_PG} -f write.sql
+psql --quiet ${LOCAL_PG} -f write/main.sql
+
+if [[ ${INCLUDE_PUBLISHED_FLOWS} == "include_published_flows" ]]; then
+  psql --quiet ${LOCAL_PG} -f write/published_flows.sql
+fi
 
 # clean-up tmp dir
 rm -rf /tmp
