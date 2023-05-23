@@ -1,5 +1,7 @@
 import { createUniformSubmissionZip } from "./uniform";
 import * as helpers from "./helpers";
+import { mockLowcalSession } from "../tests/mocks/saveAndReturnMocks";
+import { omit } from "lodash";
 
 jest.mock("fs");
 
@@ -32,17 +34,37 @@ jest.mock("@opensystemslab/planx-document-templates", () => {
   };
 });
 
-const mockGenerateOneAppXML = jest.fn().mockResolvedValue("<dummy:xml></dummy:xml>");
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({
       getFiles: jest.fn().mockImplementation(() => []),
     })),
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+  };
+});
+
+const mockGenerateOneAppXML = jest
+  .fn()
+  .mockResolvedValue("<dummy:xml></dummy:xml>");
+
+const mockGetSessionById = jest
+  .fn()
+  .mockResolvedValue(mockLowcalSession);
+
+jest.mock("../client", () => {
+  return {
+    _admin: {
       generateOneAppXML: () => mockGenerateOneAppXML(),
-      getDocumentTemplateNamesForSession: jest.fn().mockResolvedValue(["X", "Y"]),
-    }))
-  }
+      getDocumentTemplateNamesForSession: jest
+        .fn()
+        .mockResolvedValue(["X", "Y"]),
+      getSessionById: () => mockGetSessionById(),
+      generateCSVData: jest
+        .fn()
+        .mockResolvedValue([
+          { question: "Test", responses: [{ value: "Answer" }], metadata: {} },
+        ]),
+    },
+  };
 });
 
 jest.mock("csv-stringify", () => {
@@ -63,15 +85,20 @@ describe("createUniformSubmissionZip", () => {
     mockHasRequiredDataForTemplate.mockClear();
   });
 
+  test("the csv is added to the zip", async () => {
+    const payload = {
+      sessionId: "1234",
+    };
+    await createUniformSubmissionZip(payload.sessionId);
+    expect(mockAddLocalFile).toHaveBeenCalledWith("application.csv");
+    expect(mockWriteZip).toHaveBeenCalledTimes(1);
+  });
+
   test("the document viewer is added to zip", async () => {
     const payload = {
       sessionId: "1234",
-      passport: { data: {} },
-      csv: [],
-      files: [],
-      geojson: null,
     };
-    await createUniformSubmissionZip(payload);
+    await createUniformSubmissionZip(payload.sessionId);
     expect(mockAddLocalFile).toHaveBeenCalledWith("Overview.htm");
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
@@ -95,16 +122,9 @@ describe("createUniformSubmissionZip", () => {
     };
     const payload = {
       sessionId: "1234",
-      passport: {
-        data: {
-          "property.boundary.site": geojson,
-        },
-      },
-      csv: [],
-      files: [],
     };
     const expectedBuffer = Buffer.from(JSON.stringify(geojson, null, 2));
-    await createUniformSubmissionZip(payload);
+    await createUniformSubmissionZip(payload.sessionId);
     expect(mockAddFile).toHaveBeenCalledWith(
       "LocationPlanGeoJSON.geojson",
       expectedBuffer
@@ -113,45 +133,27 @@ describe("createUniformSubmissionZip", () => {
   });
 
   test("the location plan is added to zip", async () => {
-    const geojson = {
-      type: "Feature",
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [-0.07626448954420499, 51.48571252157308],
-            [-0.0762916416717913, 51.48561932090584],
-            [-0.07614058275089933, 51.485617225458554],
-            [-0.07611118911905082, 51.4857099488319],
-            [-0.07626448954420499, 51.48571252157308],
-          ],
-        ],
-      },
-      properties: null,
-    };
     const payload = {
       sessionId: "1234",
-      passport: {
-        data: {
-          "property.boundary.site": geojson,
-        },
-      },
-      csv: [],
-      files: [],
     };
-    await createUniformSubmissionZip(payload);
+    await createUniformSubmissionZip(payload.sessionId);
     expect(mockAddLocalFile).toHaveBeenCalledWith("LocationPlan.htm");
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 
   test("geojson and location plan is excluded when not present", async () => {
+    // const lowcalSessionWithoutBoundary = { ...mockLowcalSession };
+    const lowcalSessionWithoutBoundary = omit(mockLowcalSession, ['data.passport.data["property.boundary.site"]']);
+
+    // delete lowcalSessionWithoutBoundary.data.passport.data["property.boundary.site"];
+
+    mockGetSessionById.mockResolvedValue(lowcalSessionWithoutBoundary);
+
     const payload = {
-      sessionId: "1234",
-      passport: { data: {} },
-      csv: [],
-      files: [],
+      sessionId: "noGeoJSON",
     };
-    await createUniformSubmissionZip(payload);
+    await createUniformSubmissionZip(payload.sessionId);
+
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlan.htm");
     expect(mockAddLocalFile).not.toHaveBeenCalledWith(
       "LocationPlanGeoJSON.geojson"
@@ -160,25 +162,21 @@ describe("createUniformSubmissionZip", () => {
   });
 
   it("calls addTemplateFilesToZip", async () => {
-    const spy = jest.spyOn(helpers, "addTemplateFilesToZip")
+    const spy = jest.spyOn(helpers, "addTemplateFilesToZip");
     const payload = {
       sessionId: "1234",
-      passport: { data: {} },
-      csv: [],
-      files: [],
     };
-    await createUniformSubmissionZip(payload);
+    await createUniformSubmissionZip(payload.sessionId);
     expect(spy).toHaveBeenCalled();
-  })
+  });
 
   it("throws an error when XML generation fails", async () => {
-    mockGenerateOneAppXML.mockRejectedValue(new Error())
+    mockGenerateOneAppXML.mockRejectedValue(new Error());
     const payload = {
       sessionId: "1234",
-      passport: { data: {} },
-      csv: [],
-      files: [],
     };
-    await expect(createUniformSubmissionZip(payload)).rejects.toThrow(/Failed to generate OneApp XML/);
+    await expect(createUniformSubmissionZip(payload.sessionId)).rejects.toThrow(
+      /Failed to generate OneApp XML/
+    );
   });
 });

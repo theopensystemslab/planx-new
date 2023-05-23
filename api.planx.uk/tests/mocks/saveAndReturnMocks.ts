@@ -24,6 +24,22 @@ export const mockLowcalSession = {
           single_line_address: "1 High Street",
         },
         "proposal.projectType": ["new.office"],
+        "property.boundary.site": {
+          type: "Feature",
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [-0.07626448954420499, 51.48571252157308],
+                [-0.0762916416717913, 51.48561932090584],
+                [-0.07614058275089933, 51.485617225458554],
+                [-0.07611118911905082, 51.4857099488319],
+                [-0.07626448954420499, 51.48571252157308],
+              ],
+            ],
+          },
+          properties: null,
+        },
       },
     },
     breadcrumbs: {},
