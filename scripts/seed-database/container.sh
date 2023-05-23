@@ -13,7 +13,7 @@ RESET=${3}
 # INCLUDE_PUBLISHED_FLOWS set to "include_published_flows" will sync published flows
 INCLUDE_PUBLISHED_FLOWS=${4}
 
-echo downloading public data from production
+echo downloading data from production
 
 # set-up tmp dir for remote data
 mkdir -p /tmp

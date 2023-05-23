@@ -20,8 +20,7 @@ INSERT INTO teams (
   slug,
   theme,
   settings,
-  notify_personalisation,
-  submission_email
+  notify_personalisation
 )
 SELECT
   id,
@@ -29,7 +28,6 @@ SELECT
   slug,
   theme,
   settings,
-  notify_personalisation,
-  submission_email
+  notify_personalisation
 FROM sync_teams
 ON CONFLICT (id) DO NOTHING;
