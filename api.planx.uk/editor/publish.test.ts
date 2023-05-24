@@ -211,6 +211,37 @@ describe("invite to pay validation on diff", () => {
         expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Send");
       });
   });
+
+  it("does not update if invite to pay is enabled, but there is more than one Send component", async () => {
+    const alteredFlow = {
+      ...flowWithInviteToPay,
+      "secondSend": {
+        type: 650,
+        data: {
+          destinations: ["bops", "email"]
+        }
+      }
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flows_by_pk: {
+          data: alteredFlow,
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Cannot publish an invalid flow");
+        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations");
+      });
+  });
   
   it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
     const { FindProperty, ...invalidatedFlow } = flowWithInviteToPay;
