@@ -5,7 +5,7 @@ import { _admin as $admin } from '../client';
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { createScheduledEvent } from "../hasura/metadata";
 import { getMostRecentPublishedFlow } from '../helpers';
-import { Flow, Team } from '../types';
+import { Flow, Node, Team } from '../types';
 
 enum Destination {
   BOPS = "bops",
@@ -43,17 +43,13 @@ const createPaymentSendEvents = async (req: Request, res: Response, next: NextFu
       });
     }
 
-    // This this sessions Send component, determine which "destinations" we need to queue up events for
-    const destinations: Destination[] = Object.entries(publishedFlowData).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Send)?.map(([_nodeId, nodeData]) => nodeData.data?.destinations);
-    let teamSlug = await getTeamSlugByFlowId(session.flowId);
-    if (!destinations || !teamSlug) {
-      return next({
-        status: 400,
-        message: `Cannot find Send destinations or local authority to create payment send events`,
-      });
-    }
+    // Find this sessions Send component, determine which "destinations" we need to queue up events for
+    const sendNode: [string, Node] | undefined = Object.entries(publishedFlowData).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
+    const destinations: Destination[] = sendNode?.[1]?.data?.destinations;
 
+    let teamSlug = await getTeamSlugByFlowId(session.flowId);
     const eventPayload = { sessionId: payload.sessionId };
+
     if (destinations.includes(Destination.BOPS)) {
       const bopsEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/bops/${teamSlug}`,
@@ -67,7 +63,7 @@ const createPaymentSendEvents = async (req: Request, res: Response, next: NextFu
     if (destinations.includes(Destination.Uniform)) {
       // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
       if (teamSlug === "buckinghamshire") {
-        teamSlug = session.data.passport.data?.["property.localAuthorityDistrict"]
+        teamSlug = session.data?.passport?.data?.["property.localAuthorityDistrict"]
           ?.filter((name: string) => name !== "Buckinghamshire")[0]
           ?.toLowerCase()
           ?.replace(/\W+/g, "-");
