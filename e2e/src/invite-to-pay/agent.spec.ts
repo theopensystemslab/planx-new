@@ -9,6 +9,7 @@ import {
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import {
   Context,
+  contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
@@ -22,11 +23,7 @@ import {
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
 
 let context: Context = {
-  user: {
-    firstName: "test",
-    lastName: "test",
-    email: "e2epaytest@opensystemslab.com",
-  },
+  ...contextDefaults,
   team: {
     name: "Buckinghamshire",
     slug: "buckinghamshire",

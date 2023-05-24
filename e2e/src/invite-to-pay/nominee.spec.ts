@@ -4,21 +4,18 @@ import { setFeatureFlag, fillGovUkCardDetails, cards } from "../helpers";
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import {
   Context,
+  contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
 } from "../context";
-import { mockPaymentRequest, mockSessionData } from "./mocks";
+import { mockPaymentRequestDetails, mockSessionData } from "./mocks";
 import { GraphQLClient, gql } from "graphql-request";
 import { PaymentRequest, Session } from "@opensystemslab/planx-core/types";
 import { getPaymentRequestBySessionId } from "./helpers";
 
 let context: Context = {
-  user: {
-    firstName: "test",
-    lastName: "test",
-    email: "e2epaytest@opensystemslab.com",
-  },
+  ...contextDefaults,
   team: {
     name: "Buckinghamshire",
     slug: "buckinghamshire",
@@ -31,14 +28,6 @@ let context: Context = {
     data: inviteToPayFlow,
   },
   sessionIds: [], // used to collect and clean up sessions
-  paymentRequest: mockPaymentRequest,
-};
-
-const paymentRequestDetails = {
-  applicantName: "Mr Nominee",
-  payeeName: "Mrs Agent",
-  payeeEmail: "testAgent@opensystemslab.io",
-  sessionPreviewKeys: [["_address", "title"], ["proposal.projectType"]],
 };
 
 const adminGQLClient = getGraphQLClient();
@@ -211,7 +200,7 @@ async function createPaymentRequest(
   const response = await request.post(
     `http://localhost:${process.env.API_PORT}/invite-to-pay/${sessionId}`,
     {
-      data: paymentRequestDetails,
+      data: mockPaymentRequestDetails,
     }
   );
   return response.json();

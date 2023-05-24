@@ -134,3 +134,10 @@ export const modifiedInviteToPayFlow: FlowGraph = {
     edges: ["kId6RbgUtl", "IfcqOHdMyi", "mgKUfcwq4Z"],
   },
 };
+
+export const mockPaymentRequestDetails = {
+  applicantName: "Mr Nominee",
+  payeeName: "Mrs Agent",
+  payeeEmail: "testAgent@opensystemslab.io",
+  sessionPreviewKeys: [["_address", "title"], ["proposal.projectType"]],
+};
