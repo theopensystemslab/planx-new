@@ -1,13 +1,16 @@
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
-import { useCurrentRoute } from "react-navi";
+import { useCurrentRoute, useNavigation } from "react-navi";
+import { Link as ReactNaviLink } from "react-navi";
 import type { ReconciliationResponse, Session } from "types";
 import { ApplicationPath, SendEmailPayload } from "types";
 import Input from "ui/Input";
@@ -25,6 +28,18 @@ enum Status {
   InvalidSession,
   Success,
   Error,
+  LockedSession,
+}
+// A minimal representation of a PaymentRequest for display purposes
+type MinPaymentRequest = Pick<
+  PaymentRequest,
+  "id" | "payeeEmail" | "payeeName"
+>;
+
+interface LockedSessionResponse {
+  paymentRequest: MinPaymentRequest;
+  status: number;
+  message: string;
 }
 
 const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
@@ -143,6 +158,36 @@ const InvalidSession: React.FC<{
   </StatusPage>
 );
 
+const LockedSession: React.FC<{ paymentRequest?: MinPaymentRequest }> = ({
+  paymentRequest,
+}) => (
+  <StatusPage
+    bannerHeading="Your application is locked"
+    additionalOption="startNewApplication"
+  >
+    <Typography variant="body2">
+      This is because you have requested that <b>{paymentRequest?.payeeName}</b>{" "}
+      (
+      <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
+        {paymentRequest?.payeeEmail}
+      </Link>
+      ) pay for the application.
+      <br />
+      <br />
+      At this point you can make no further changes to the application.
+      <br />
+      <br />
+      To pay for this application yourself go to{" "}
+      <Link
+        component={ReactNaviLink}
+        href={`../pay?paymentRequestId=${paymentRequest?.id}`}
+      >
+        the payment page
+      </Link>
+    </Typography>
+  </StatusPage>
+);
+
 /**
  * If an email is passed in as a query param, do not prompt a user for this
  * Currently only used for redirects back from GovUK Pay
@@ -169,6 +214,7 @@ const getInitialEmailValue = () => {
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>(getInitialEmailValue());
+  const [paymentRequest, setPaymentRequest] = useState<MinPaymentRequest>();
   const sessionId = useCurrentRoute().url.query.sessionId;
   const [reconciliationResponse, setReconciliationResponse] =
     useState<ReconciliationResponse>();
@@ -236,7 +282,16 @@ const ResumePage: React.FC = () => {
             : setPageStatus(Status.Validated);
         }
       });
-    } catch (error) {
+    } catch (error: unknown | AxiosError) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 403) {
+          const lockedSessionResponse = error.response
+            .data as LockedSessionResponse;
+          setPaymentRequest(lockedSessionResponse.paymentRequest);
+          setPageStatus(Status.LockedSession);
+          return;
+        }
+      }
       console.debug(error);
       setPageStatus(Status.InvalidSession);
     }
@@ -274,6 +329,7 @@ const ResumePage: React.FC = () => {
     [Status.InvalidSession]: (
       <InvalidSession retry={retryWithNewEmailAddress} />
     ),
+    [Status.LockedSession]: <LockedSession paymentRequest={paymentRequest} />,
     [Status.Success]: <EmailSuccess />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} />,
   }[pageStatus];

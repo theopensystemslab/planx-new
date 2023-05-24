@@ -1,9 +1,6 @@
 import { gql } from "graphql-request";
 import { NextFunction, Request, Response } from "express";
-import {
-  adminGraphQLClient as adminClient,
-  publicGraphQLClient as publicClient,
-} from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { getMostRecentPublishedFlow } from "../helpers";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
@@ -52,6 +49,16 @@ export async function validateSession(
       return next({
         status: 404,
         message: "Unable to find your session",
+      });
+    }
+
+    if (fetchedSession.locked_at) {
+      return res.status(403).send({
+        status: 403,
+        message: "Session locked",
+        paymentRequest: {
+          ...fetchedSession.paymentRequests?.[0]
+        }
       });
     }
 
@@ -234,6 +241,12 @@ async function findSession({
             flow_id
             data
             updated_at
+            locked_at
+            paymentRequests: payment_requests {
+              id
+              payeeName: payee_name
+              payeeEmail: payee_email
+            }
           }
         }
       `,
