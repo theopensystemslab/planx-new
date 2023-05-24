@@ -591,12 +591,7 @@ app.post(
   useSendEmailAuth,
   routeSendEmailRequest
 );
-app.post(
-  "/resume-application",
-  sendEmailLimiter,
-  useSendEmailAuth,
-  resumeApplication
-);
+app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
 app.post("/invite-to-pay/:sessionId", inviteToPay);

@@ -50,7 +50,6 @@ const useSendEmailAuth = (
     // Requires authorization - can only be triggered by Hasura scheduled events
     case "reminder":
     case "expiry":
-    case "submit":
     case "confirmation":
     case "invite-to-pay":
     case "invite-to-pay-agent":
@@ -63,6 +62,9 @@ const useSendEmailAuth = (
       return useHasuraAuth(req, res, next);
     // Public access
     case "save":
+      return next();
+    // Handled by other routes
+    case "submit":
     case "resume":
       return next();
     default: {
