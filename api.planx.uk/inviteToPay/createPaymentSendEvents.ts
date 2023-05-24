@@ -105,7 +105,7 @@ const createPaymentSendEvents = async (req: Request, res: Response, next: NextFu
 const getTeamSlugByFlowId = async (id: Flow["id"]): Promise<Team["slug"]> => {
   const data = await adminClient.request(
     gql`
-      query GetFlowData($id: uuid!) {
+      query GetTeamSlugByFlowId($id: uuid!) {
         flows_by_pk(id: $id) {
           team {
             slug

@@ -402,7 +402,7 @@ const mockFlowData: Flow["data"] = {
   },
 };
 
-const flowWithInviteToPay: Flow["data"] = {
+export const flowWithInviteToPay: Flow["data"] = {
   "_root": {
     "edges": [
       "FindProperty",

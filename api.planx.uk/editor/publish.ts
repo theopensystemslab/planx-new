@@ -195,7 +195,7 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
         message: "Cannot publish an invalid flow",
         description: "When using Invite to Pay, your flow must have a FindProperty",
       };
-    } 
+    }
     
     if (!hasComponentType(flow, ComponentType.Checklist, "proposal.projectType")) {
       return {
