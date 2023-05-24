@@ -2,7 +2,7 @@ import supertest from "supertest";
 import app from "../server";
 import { createScheduledEvent } from "../hasura/metadata";
 import { queryMock } from "../tests/graphqlQueryMock";
-import { flowWithInviteToPay } from "../editor/publish.test";
+import { flowWithInviteToPay } from "../tests/mocks/inviteToPayData";
 
 jest.mock("../hasura/metadata")
 const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<typeof createScheduledEvent>;

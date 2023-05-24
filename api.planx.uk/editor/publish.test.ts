@@ -4,6 +4,7 @@ import { queryMock } from "../tests/graphqlQueryMock";
 import { authHeader } from "../tests/mockJWT";
 import app from "../server";
 import { Flow } from "../types";
+import { flowWithInviteToPay } from "../tests/mocks/inviteToPayData";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -401,79 +402,3 @@ const mockFlowData: Flow["data"] = {
     type: 650,
   },
 };
-
-export const flowWithInviteToPay: Flow["data"] = {
-  "_root": {
-    "edges": [
-      "FindProperty",
-      "Checklist",
-      "SetValue",
-      "Pay",
-      "Send"
-    ]
-  },
-  "Pay": {
-    "data": {
-      "fn": "fee",
-      "title": "Pay for your application",
-      "bannerTitle": "The planning fee for this application is",
-      "description": "<p>The planning fee covers the cost of processing your application.         Find out more about how planning fees are calculated          <a href=\"https://www.gov.uk/guidance/fees-for-planning-applications\" target=\"_self\">here</a>.</p>",
-      "nomineeTitle": "Details of the person paying",
-      "allowInviteToPay": true,
-      "yourDetailsLabel": "Your name or organisation name",
-      "yourDetailsTitle": "Your details",
-      "instructionsTitle": "How to pay",
-      "secondaryPageTitle": "Invite someone else to pay for this application",
-      "instructionsDescription": "<p>You can pay for your application by using GOV.UK Pay.</p>         <p>Your application will be sent after you have paid the fee.          Wait until you see an application sent message before closing your browser.</p>"
-    },
-    "type": 400
-  },
-  "SetValue": {
-    "type": 380,
-    "data": {
-      "fn": "fee",
-      "val": "1"
-    }
-  },
-  "FindProperty": {
-    "type": 9,
-    "data": {
-      "allowNewAddresses": false
-    }
-  },
-  "Send": {
-    "type": 650,
-    "data": {
-      "title": "Send",
-      "destinations": [
-        "email"
-      ]
-    }
-  },
-  "Checklist": {
-    "type": 105,
-    "data": {
-      "allRequired": false,
-      "fn": "proposal.projectType",
-      "text": "What do the works involve?"
-    },
-    "edges": [
-      "ChecklistOptionOne",
-      "ChecklistOptionTwo"
-    ]
-  },
-  "ChecklistOptionOne": {
-    "data": {
-      "text": "Alter",
-      "val": "alter"
-    },
-    "type": 200
-  },
-  "ChecklistOptionTwo": {
-    "data": {
-      "text": "Build new",
-      "val": "build"
-    },
-    "type": 200
-  }
-}
