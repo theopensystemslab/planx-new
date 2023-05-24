@@ -59,7 +59,6 @@ const editorRoutes = mount({
 
 const mountPayRoutes = () =>
   map(async () => {
-    if (!hasFeatureFlag("INVITE_TO_PAY")) throw new NotFoundError("/pay");
     return lazy(() => import("./pay"));
   });
 
