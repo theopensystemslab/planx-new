@@ -52,7 +52,7 @@ export async function validateSession(
       });
     }
 
-    if (fetchedSession.locked_at) {
+    if (fetchedSession.lockedAt) {
       return res.status(403).send({
         status: 403,
         message: "Session locked",
@@ -241,7 +241,7 @@ async function findSession({
             flow_id
             data
             updated_at
-            locked_at
+            lockedAt: locked_at
             paymentRequests: payment_requests {
               id
               payeeName: payee_name

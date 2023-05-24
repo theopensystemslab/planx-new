@@ -27,7 +27,6 @@ export interface Context {
     data?: object;
   };
   sessionIds?: string[];
-  paymentRequest?: Partial<PaymentRequest>;
 }
 
 export const contextDefaults = {

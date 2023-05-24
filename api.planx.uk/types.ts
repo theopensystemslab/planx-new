@@ -72,7 +72,7 @@ export interface LowCalSession {
   flow: {
     slug: string;
   };
-  locked_at?: string;
+  lockedAt?: string;
   paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[]
 }
 
