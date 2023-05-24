@@ -4,8 +4,8 @@ specifiers:
   '@airbrake/node': ^2.1.8
   '@babel/core': ^7.21.4
   '@babel/preset-typescript': ^7.21.4
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#80235c0
-  '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#debaeca
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#4298b19
+  '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#99f29fa
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
   '@types/cookie-parser': ^1.4.3
@@ -79,8 +79,8 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.8
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/80235c0
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/4298b19
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/99f29fa
   '@types/isomorphic-fetch': 0.0.36
   adm-zip: 0.5.10
   aws-sdk: 2.1358.0
@@ -7571,8 +7571,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/80235c0:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/80235c0}
+  github.com/theopensystemslab/planx-core/4298b19:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4298b19}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -7597,6 +7597,29 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - encoding
+      - rollup
+    dev: false
+
+  github.com/theopensystemslab/planx-document-templates/99f29fa:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/99f29fa}
+    name: '@opensystemslab/planx-document-templates'
+    version: 1.0.0
+    engines: {node: ^16, pnpm: ^7.8.0}
+    prepare: true
+    requiresBuild: true
+    dependencies:
+      '@emotion/react': 11.10.6_react@18.2.0
+      '@emotion/styled': 11.10.6_3og6jmu6wvzuytygvdoxepq3x4
+      '@lit-labs/ssr': 2.3.0
+      '@mui/material': 5.11.9_fbxtuirhogpez7m7qjkm3itwca
+      '@rollup/plugin-commonjs': 23.0.7
+      docx: 7.8.2
+      lodash.groupby: 4.6.0
+      lodash.startcase: 4.4.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - '@types/react'
       - rollup
     dev: false
 
