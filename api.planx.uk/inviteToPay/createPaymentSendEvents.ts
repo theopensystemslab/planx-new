@@ -60,6 +60,16 @@ const createPaymentSendEvents = async (req: Request, res: Response, next: NextFu
       combinedResponse[Destination.BOPS] = bopsEvent;
     }
 
+    if (destinations.includes(Destination.Email)) {
+      const emailSubmissionEvent = await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/email-submission/${teamSlug}`,
+        schedule_at: now,
+        payload: eventPayload,
+        comment: `email_submission_${payload.sessionId}`,
+      });
+      combinedResponse[Destination.Email] = emailSubmissionEvent;
+    }
+
     if (destinations.includes(Destination.Uniform)) {
       // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
       if (teamSlug === "buckinghamshire") {
@@ -81,16 +91,6 @@ const createPaymentSendEvents = async (req: Request, res: Response, next: NextFu
         comment: `uniform_submission_${payload.sessionId}`,
       });
       combinedResponse[Destination.Uniform] = uniformEvent;
-    }
-
-    if (destinations.includes(Destination.Email)) {
-      const emailSubmissionEvent = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/email-submission/${teamSlug}`,
-        schedule_at: now,
-        payload: eventPayload,
-        comment: `email_submission_${payload.sessionId}`,
-      });
-      combinedResponse[Destination.Email] = emailSubmissionEvent;
     }
 
     return res.json(combinedResponse);
