@@ -66,9 +66,7 @@ export async function routeSendEmailRequest(
     switch (template) {
       case "reminder":
       case "expiry":
-      case "resume":
       case "save":
-      case "submit":
         return await handleSingleApplicationEmail();
       case "invite-to-pay":
       case "invite-to-pay-agent":
@@ -86,6 +84,8 @@ export async function routeSendEmailRequest(
           return await handleSingleApplicationEmail();
         }
       }
+      case "resume":
+      case "submit":
       case "confirmation-agent":
       case "confirmation-payee":
         // templates that are already handled by other routes
