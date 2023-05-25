@@ -43,10 +43,6 @@ test.describe("Nominee journey", async () => {
     }
   });
 
-  test.beforeEach(
-    async ({ page }) => await setFeatureFlag(page, "INVITE_TO_PAY")
-  );
-
   test.afterAll(async () => {
     await tearDownTestContext(context);
   });
