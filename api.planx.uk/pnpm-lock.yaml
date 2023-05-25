@@ -5,7 +5,7 @@ specifiers:
   '@babel/core': ^7.21.4
   '@babel/preset-typescript': ^7.21.4
   '@opensystemslab/planx-core': github:theopensystemslab/planx-core#4298b19
-  '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#99f29fa
+  '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#baf18b8
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
   '@types/cookie-parser': ^1.4.3
@@ -80,7 +80,7 @@ specifiers:
 dependencies:
   '@airbrake/node': 2.1.8
   '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/4298b19
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/99f29fa
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/baf18b8
   '@types/isomorphic-fetch': 0.0.36
   adm-zip: 0.5.10
   aws-sdk: 2.1358.0
@@ -7510,7 +7510,7 @@ packages:
     resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}
     engines: {node: '>=4.0.0'}
     dependencies:
-      sax: 1.2.1
+      sax: 1.2.4
       xmlbuilder: 11.0.1
     dev: false
 
@@ -7600,8 +7600,8 @@ packages:
       - rollup
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/99f29fa:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/99f29fa}
+  github.com/theopensystemslab/planx-document-templates/baf18b8:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/baf18b8}
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
