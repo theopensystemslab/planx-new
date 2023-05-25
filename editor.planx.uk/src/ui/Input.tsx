@@ -8,7 +8,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import { borderedFocusStyle } from "theme";
+import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
 
@@ -26,7 +26,8 @@ export interface Props extends InputBaseProps {
 export const useClasses = makeStyles<Theme, Props>((theme) => ({
   input: {
     backgroundColor: "#fff",
-    fontSize: 15,
+    // Maintain 16px minimum input size to prevent zoom on iOS
+    fontSize: "1rem",
     width: "100%",
     padding: theme.spacing(0, 1.5),
     height: 50,
@@ -49,10 +50,10 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
     height: 50,
     fontSize: 25,
     width: "100%",
-    fontWeight: 700,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
   bold: {
-    fontWeight: 700,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
   data: {
     backgroundColor: "#fafafa",

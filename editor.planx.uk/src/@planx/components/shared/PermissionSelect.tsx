@@ -14,7 +14,10 @@ const PermissionSelect: React.FC<SelectInputProps> = (props) => {
       <MenuItem
         key={id}
         value={id}
-        style={{ borderLeft: `1em solid ${flag.bgColor || "transparent"}` }}
+        style={{
+          borderLeft: `1em solid ${flag.bgColor || "transparent"}`,
+          fontSize: "1rem",
+        }}
       >
         {flag.text}
       </MenuItem>

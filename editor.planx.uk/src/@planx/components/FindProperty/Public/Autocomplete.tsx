@@ -30,11 +30,11 @@ const AutocompleteWrapper = styled(Box)(({ theme }) => ({
   // Autocomplete style overrides
   "--autocomplete__label__font-size": "18px",
   "--autocomplete__input__padding": "6px 40px 7px 12px",
-  "--autocomplete__input__font-size": "15px",
+  "--autocomplete__input__font-size": "1rem",
   "--autocomplete__input__height": "50px",
   "--autocomplete__dropdown-arrow-down__top": "16px",
   "--autocomplete__dropdown-arrow-down__z-index": "2",
-  "--autocomplete__option__font-size": "15px",
+  "--autocomplete__option__font-size": "1rem",
   "--autocomplete__option__padding": "6px 12px 7px 12px",
   "--autocomplete__menu__max-height": "336px",
   "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.grey[800]}`,
