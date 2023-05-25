@@ -41,10 +41,6 @@ test.describe("Agent journey", async () => {
     }
   });
 
-  test.beforeEach(
-    async ({ page }) => await setFeatureFlag(page, "INVITE_TO_PAY")
-  );
-
   test.afterAll(async () => await tearDownTestContext(context));
 
   test("agent can send a payment request", async ({ page }) => {
