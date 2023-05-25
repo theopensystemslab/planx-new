@@ -294,7 +294,8 @@
             {
               "payload": {
                 "sessionId": {{$body.event.data.new.id}},
-                "email": {{$body.event.data.new.email}}
+                "email": {{$body.event.data.new.email}},
+                "lockedAt": {{$body.event.data.new.locked_at}}
               }
             }
         url: '{{$base_url}}/send-email/confirmation'

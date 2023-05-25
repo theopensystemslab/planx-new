@@ -264,7 +264,11 @@ async function fetchPayment({
 async function startNewPayment(
   paymentRequestId: string
 ): Promise<GovUKPayment> {
-  const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/pay?returnURL=${window.location.href}`;
+  const paymentURL = `${
+    process.env.REACT_APP_API_URL
+  }/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
+    window.location.href
+  )}`;
   const response = await axios.post<GovUKPayment>(paymentURL);
   return response.data;
 }

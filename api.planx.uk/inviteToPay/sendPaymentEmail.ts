@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 import { calculateExpiryDate, convertSlugToName, getServiceLink } from "../saveAndReturn/utils";
-import { Template, getClientForTemplate, sendEmail } from "../notify/utils";
+import { Template, getClientForTemplate, sendEmail } from "../notify";
 import { InviteToPayNotifyConfig } from "../types";
 import { Team } from '../types';
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
@@ -18,10 +18,13 @@ interface ValidatePaymentRequest {
   query: PaymentRequest & { session: SessionDetails }
 };
 
-const sendSinglePaymentEmail = async (
+const sendSinglePaymentEmail = async ({
+  template,
+  paymentRequestId
+}: {
   template: Template,
   paymentRequestId: string,
-) => {
+}) => {
   try {
     const { session, paymentRequest } = await validatePaymentRequest(paymentRequestId, template);
     if (!session || !paymentRequest) throw Error(`Invalid payment request: ${paymentRequestId}`);
