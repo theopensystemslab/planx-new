@@ -1,4 +1,3 @@
-import { useStagingUrlIfTestApplication } from "@planx/components/shared/utils";
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -41,9 +40,7 @@ function handleUpload(
   // Private uploads for test applications should be handled by the staging environment
   const paths = {
     public: `${process.env.REACT_APP_API_URL}/public-file-upload`,
-    private: useStagingUrlIfTestApplication(passport)(
-      `${process.env.REACT_APP_API_URL}/private-file-upload`
-    ),
+    private: `${process.env.REACT_APP_API_URL}/private-file-upload`,
   };
 
   const endpoint = paths[path];

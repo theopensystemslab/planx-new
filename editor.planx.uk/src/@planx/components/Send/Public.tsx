@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
 import Card from "../shared/Preview/Card";
-import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
+import { makeData } from "../shared/utils";
 import { PublicProps } from "../ui";
 import {
   DEFAULT_DESTINATION,
@@ -36,10 +36,7 @@ const SendComponent: React.FC<Props> = ({
       sessionId,
     });
 
-    return axios.post(
-      useStagingUrlIfTestApplication(passport)(url),
-      combinedEventsPayload
-    );
+    return axios.post(url, combinedEventsPayload);
   });
 
   useEffect(() => {
