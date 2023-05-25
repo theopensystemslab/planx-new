@@ -102,7 +102,7 @@ services:
     profiles: ["seed"]
     working_dir: "/app"
     entrypoint: ./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}
-    command: ["reset_flows", "include_published_flows"]
+    command: ["include_published_flows"]
     restart: "no"
     depends_on:
       hasura-proxy:
