@@ -7,7 +7,7 @@ import {
   getResumeLink,
   calculateExpiryDate,
 } from "./utils";
-import { sendEmail } from "../notify/utils";
+import { sendEmail } from "../notify";
 import type { SiteAddress } from "@opensystemslab/planx-core/types";
 import { _admin } from '../client';
 

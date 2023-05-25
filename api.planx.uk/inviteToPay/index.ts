@@ -1,3 +1,4 @@
 export * from "./inviteToPay";
 export * from "./paymentRequest";
-export { sendSinglePaymentEmail } from "./sendPaymentEmail";
+export * from "./sendPaymentEmail";
+export * from "./sendConfirmationEmail";

@@ -1,14 +1,20 @@
 import supertest from "supertest";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
-import { validatePaymentRequestNotFoundQueryMock,validatePaymentRequestQueryMock } from "../tests/mocks/inviteToPayMocks";
+
+import {
+  validatePaymentRequestNotFoundQueryMock,
+  validatePaymentRequestQueryMock,
+} from "../tests/mocks/inviteToPayMocks";
 
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
-      formatRawProjectTypes: jest.fn().mockResolvedValue(["New office premises"]),
-    }))
-  }
+      formatRawProjectTypes: jest
+        .fn()
+        .mockResolvedValue(["New office premises"]),
+    })),
+  };
 });
 
 const TEST_PAYMENT_REQUEST_ID = "09655c28-3f34-4619-9385-cd57312acc44";
@@ -22,9 +28,12 @@ describe("Send email endpoint for invite to pay templates", () => {
 
   describe("All invite to pay templates require authorisation", () => {
     const templates = [
-      "invite-to-pay", "invite-to-pay-agent",
-      "payment-reminder", "payment-reminder-agent",
-      "payment-expiry", "payment-expiry-agent",
+      "invite-to-pay",
+      "invite-to-pay-agent",
+      "payment-reminder",
+      "payment-reminder-agent",
+      "payment-expiry",
+      "payment-expiry-agent",
     ];
 
     for (const template of templates) {
@@ -67,9 +76,8 @@ describe("Send email endpoint for invite to pay templates", () => {
             .expect(200);
         });
       });
-    };
+    }
   });
-
 
   describe("'Invite to pay' templates", () => {
     const templates = ["invite-to-pay", "invite-to-pay-agent"];
@@ -89,7 +97,7 @@ describe("Send email endpoint for invite to pay templates", () => {
             .then((response) => {
               expect(response.body).toHaveProperty(
                 "error",
-                "Required value missing"
+                `Failed to send "${template}" email. Required \`paymentRequestId\` missing`
               );
             });
         });
@@ -107,7 +115,7 @@ describe("Send email endpoint for invite to pay templates", () => {
             .send(data)
             .expect(200)
             .then((response) => {
-              expect(response.body).toEqual({ "message": "Success" });
+              expect(response.body).toEqual({ message: "Success" });
             });
         });
 
@@ -133,6 +141,8 @@ describe("Send email endpoint for invite to pay templates", () => {
 
   describe("'Payment Expiry' templates", () => {
     const templates = ["payment-expiry", "payment-expiry-agent"];
-    it.todo("soft deletes the payment_request when a payment expiry email is sent");
+    it.todo(
+      "soft deletes the payment_request when a payment expiry email is sent"
+    );
   });
 });

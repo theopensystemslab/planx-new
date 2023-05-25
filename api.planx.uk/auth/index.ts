@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
 import assert from "assert";
+import { ServerError } from "../errors";
+import { Template } from "../notify";
 
 /**
  * Validate that a provided string (e.g. API key) matches the expected value
@@ -37,7 +39,14 @@ const useSendEmailAuth = (
   res: Response,
   next: NextFunction
 ): void => {
-  switch (req.params.template) {
+  const handleInvalidTemplate = (template?: never) => {
+    throw new ServerError({
+      message: "Invalid template",
+      status: 400,
+    });
+  };
+  const template: Template = req.params.template as Template;
+  switch (template) {
     // Requires authorization - can only be triggered by Hasura scheduled events
     case "reminder":
     case "expiry":
@@ -48,15 +57,18 @@ const useSendEmailAuth = (
     case "payment-reminder-agent":
     case "payment-expiry":
     case "payment-expiry-agent":
+    case "confirmation-agent":
+    case "confirmation-payee":
       return useHasuraAuth(req, res, next);
     // Public access
     case "save":
       return next();
+    // Handled by other routes
+    case "submit":
+    case "resume":
+      return next();
     default: {
-      return next({
-        status: 400,
-        message: "Invalid template",
-      });
+      return handleInvalidTemplate(template);
     }
   }
 };
@@ -72,7 +84,7 @@ const useFilePermission = (
 ): void => {
   const isAuthenticated = isEqual(
     req.headers["api-key"] as string,
-    process.env.FILE_API_KEY!,
+    process.env.FILE_API_KEY!
   );
   if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
   return next();

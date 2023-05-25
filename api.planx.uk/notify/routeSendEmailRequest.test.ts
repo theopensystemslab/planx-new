@@ -44,7 +44,7 @@ describe("Send Email endpoint", () => {
           .then((response) => {
             expect(response.body).toHaveProperty(
               "error",
-              "Required value missing"
+              'Failed to send "save" email. Required value missing'
             );
           });
       }
