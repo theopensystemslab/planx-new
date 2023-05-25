@@ -25,10 +25,11 @@ const useClasses = makeStyles((theme) => ({
     cursor: "pointer",
     userSelect: "none",
     alignSelf: "start",
-    fontSize: 16,
+    fontSize: "inherit",
     background: "transparent",
     border: "none",
     columnGap: theme.spacing(1),
+    padding: theme.spacing(1, 1, 1, 0),
     "&:hover": {
       textDecoration: "underline",
     },
@@ -161,7 +162,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   );
 
   return (
-    <Box width="100%" role="main" pt={5}>
+    <Box width="100%" role="main" pt={1}>
       <ButtonBase
         className={classnames(classes.backButton, {
           [classes.hidden]: !showBackButton,

@@ -89,7 +89,6 @@ const useStyles = makeStyles(() => ({
     top: HEADER_HEIGHT,
     left: 0,
     right: 0,
-    bottom: 0,
   },
   tabs: {
     backgroundColor: "#ddd",

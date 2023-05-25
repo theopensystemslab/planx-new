@@ -8,6 +8,7 @@ import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export default SummaryListsBySections;
 
@@ -31,7 +32,7 @@ const Grid = styled("dl")(({ theme }) => ({
   },
   "& dt": {
     // left column
-    fontWeight: 700,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
   "& dd:nth-of-type(n)": {
     // middle column
@@ -163,6 +164,7 @@ function SummaryList(props: SummaryListProps) {
                     <Link
                       onClick={() => handleClick(nodeId)}
                       component="button"
+                      fontSize="body2.fontSize"
                     >
                       Change
                       <span style={visuallyHidden}>

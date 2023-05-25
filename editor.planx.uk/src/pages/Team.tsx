@@ -64,16 +64,20 @@ const useStyles = makeStyles((theme) => ({
   },
   dashboardListItem: {
     position: "relative",
-    padding: theme.spacing(3, 2),
+    padding: theme.spacing(2.5, 2),
   },
   dashboardLink: {
     display: "block",
-    fontSize: theme.typography.h3.fontSize,
+    fontSize: theme.typography.h4.fontSize,
     textDecoration: "none",
     color: "currentColor",
     fontWeight: 600,
     marginBottom: theme.spacing(1.5),
     marginTop: 0,
+  },
+  dashboardLinkWrap: {
+    // Add padding to allow text wrap before menu icon
+    paddingRight: theme.spacing(4),
   },
   menu: {
     position: "absolute",
@@ -141,7 +145,7 @@ const Confirm = ({
 const useAddButtonStyles = makeStyles((theme) => ({
   addButton: {
     width: "100%",
-    padding: theme.spacing(6),
+    padding: theme.spacing(4),
     fontSize: 20,
     backgroundColor: "rgba(255,255,255,0.25)",
     display: "block",
@@ -248,15 +252,17 @@ const FlowItem: React.FC<FlowItemProps> = ({
         />
       )}
       <li key={flow.slug} className={classes.dashboardListItem}>
-        <Link
-          href={`./${flow.slug}`}
-          className={classes.dashboardLink}
-          prefetch={false}
-        >
-          {flow.slug}
-        </Link>
-        <Box className={classes.linkSubText}>
-          {flowInfoHelper(flow.updated_at, flow.operations)}
+        <Box className={classes.dashboardLinkWrap}>
+          <Link
+            href={`./${flow.slug}`}
+            className={classes.dashboardLink}
+            prefetch={false}
+          >
+            {flow.slug}
+          </Link>
+          <Box className={classes.linkSubText}>
+            {flowInfoHelper(flow.updated_at, flow.operations)}
+          </Box>
         </Box>
         <SimpleMenu
           className={classes.menu}
@@ -349,7 +355,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
     <Box className={classes.root}>
       <Box className={classes.dashboard}>
         <Box pl={2} pb={2}>
-          <Typography variant="h1" gutterBottom>
+          <Typography variant="h3" component="h1" gutterBottom>
             My services
           </Typography>
         </Box>

@@ -15,6 +15,9 @@ export interface Props {
   onChange: (newDate: string, eventType: string) => void;
 }
 
+const INPUT_DATE_WIDTH = "65px";
+const INPUT_YEAR_WIDTH = "80px";
+
 const useClasses = makeStyles((theme) => ({
   root: {},
   editor: {
@@ -27,7 +30,7 @@ const useClasses = makeStyles((theme) => ({
     },
   },
   editorLabel: {
-    minWidth: 60,
+    minWidth: INPUT_DATE_WIDTH,
     alignSelf: "end",
     marginBottom: theme.spacing(1.5),
   },
@@ -35,13 +38,13 @@ const useClasses = makeStyles((theme) => ({
     paddingBottom: theme.spacing(0.5),
   },
   dayContainer: {
-    width: 60,
+    width: INPUT_DATE_WIDTH,
   },
   monthContainer: {
-    width: 60,
+    width: INPUT_DATE_WIDTH,
   },
   yearContainer: {
-    width: 90,
+    width: INPUT_YEAR_WIDTH,
   },
 }));
 

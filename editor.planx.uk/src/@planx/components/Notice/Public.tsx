@@ -2,6 +2,7 @@ import { mostReadable } from "@ctrl/tinycolor";
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Button from "@mui/material/Button";
 import { Theme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
@@ -9,6 +10,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Notice>;
@@ -45,12 +47,10 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     flex: 1,
   },
   title: {
-    fontSize: theme.typography.pxToRem(25),
-    fontWeight: 700,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
     margin: 0,
   },
   description: {
-    fontSize: theme.typography.pxToRem(15),
     fontWeight: 400,
     margin: theme.spacing(2, 0, 0, 0),
     "& a": {
@@ -75,7 +75,9 @@ const NoticeComponent: React.FC<Props> = (props) => {
         />
         <div className={styles.container}>
           <div className={styles.content}>
-            <h3 className={styles.title}>{props.title}</h3>
+            <Typography component="h3" variant="h4" className={styles.title}>
+              {props.title}
+            </Typography>
             <ReactMarkdownOrHtml
               className={styles.description}
               source={props.description}

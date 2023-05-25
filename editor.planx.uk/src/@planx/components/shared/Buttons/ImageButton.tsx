@@ -4,6 +4,7 @@ import { Theme, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import React, { useLayoutEffect, useRef, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Checkbox from "ui/Checkbox";
 
 import ButtonBase, { Props as ButtonBaseProps } from "./ButtonBase";
@@ -41,7 +42,7 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
       marginTop: theme.spacing(1),
     },
     bold: {
-      fontWeight: "bold",
+      fontWeight: FONT_WEIGHT_SEMI_BOLD,
     },
     label: {
       cursor: "pointer",
@@ -160,7 +161,7 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
       position="relative"
       height={0}
       overflow="hidden"
-      border={`1px solid ${bgColor}`}
+      border={`1px solid #B1B4B6`}
       zIndex={2}
       borderBottom="none"
       bgcolor="background.default"
@@ -194,7 +195,7 @@ function ImageResponse(props: Props): FCReturn {
   const theme = useTheme();
   const bgColor = selected
     ? theme?.palette?.primary?.main
-    : theme?.palette?.secondary?.main;
+    : theme?.palette?.background.paper;
 
   const altText = description ? `${title} - ${description}` : title;
 

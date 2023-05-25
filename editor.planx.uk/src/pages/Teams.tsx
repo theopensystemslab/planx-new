@@ -41,7 +41,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
     <Box className={classes.root}>
       <Box className={classes.dashboard}>
         <Box pl={2} pb={2}>
-          <Typography variant="h1" gutterBottom>
+          <Typography variant="h3" component="h1" gutterBottom>
             Select a team
           </Typography>
         </Box>
@@ -52,7 +52,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
             prefetch={false}
             className={classes.linkBox}
           >
-            <Box mb={4} p={4} component={Card}>
+            <Box mb={2.5} px={2.5} py={3} mx={2} component={Card}>
               <Typography variant="h5" component="h2">
                 {name}
               </Typography>

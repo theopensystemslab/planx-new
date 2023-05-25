@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -70,7 +71,7 @@ const useClasses = makeStyles((theme) => ({
     },
   },
   summary: {
-    fontWeight: 700,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
     minHeight: theme.spacing(6),
     padding: theme.spacing(2, 0),
     paddingLeft: theme.spacing(7),
