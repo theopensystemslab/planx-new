@@ -1,3 +1,5 @@
+import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
+
 export interface Node {
   id?: string;
   data?: Record<string, any>;
@@ -70,6 +72,8 @@ export interface LowCalSession {
   flow: {
     slug: string;
   };
+  lockedAt?: string;
+  paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[]
 }
 
 type MinimumNotifyPersonalisation = {
