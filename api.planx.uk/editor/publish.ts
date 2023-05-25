@@ -180,6 +180,14 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
         description: "When using Invite to Pay, your flow must have a Send",
       };
     }
+
+    if (numberOfComponentType(flow, ComponentType.Send) > 1) {
+      return {
+        isValid: false,
+        message: "Cannot publish an invalid flow",
+        description: "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
+      };
+    }
     
     if (!hasComponentType(flow, ComponentType.FindProperty)) {
       return {
@@ -187,7 +195,7 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
         message: "Cannot publish an invalid flow",
         description: "When using Invite to Pay, your flow must have a FindProperty",
       };
-    } 
+    }
     
     if (!hasComponentType(flow, ComponentType.Checklist, "proposal.projectType")) {
       return {
@@ -218,5 +226,15 @@ const hasComponentType = (flow: Record<string, any>, type: ComponentType, fn?: s
   }
   return Boolean(nodeIds?.length);
 };
+
+const numberOfComponentType = (flow: Record<string, any>, type: ComponentType, fn?: string): number => {
+  const nodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === type);
+  if (fn) {
+    nodeIds?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)?.map(([nodeId, _nodeData]) => nodeId);
+  } else {
+    nodeIds?.map(([nodeId, _nodeData]) => nodeId);
+  }
+  return nodeIds?.length;
+}
 
 export { validateAndDiffFlow, publishFlow };
