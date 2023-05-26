@@ -1,5 +1,11 @@
 import { test, expect } from "@playwright/test";
-import { log } from "./helpers";
+import {
+  cards,
+  fillGovUkCardDetails,
+  getSessionId,
+  log,
+  waitForPaymentResponse,
+} from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";
@@ -29,12 +35,7 @@ let context: Context = {
 };
 const previewURL = `/${context.team!.slug!}/${context.flow!
   .slug!}/preview?analytics=false`;
-// Test card numbers to be used in gov.uk sandbox environment
-// reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
-const cards = {
-  successful_card_number: "4444333322221111",
-  invalid_card_number: "4000000000000002",
-};
+
 const payButtonText = "Pay now using GOV.UK Pay";
 
 test.describe("Gov Pay @integration", async () => {
@@ -64,7 +65,7 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -95,7 +96,10 @@ test.describe("Gov Pay @integration", async () => {
     await fillGovUkCardDetails({ page, cardNumber: cards.invalid_card_number });
     await page.locator("#return-url").click();
 
-    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page);
+    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(
+      page,
+      context
+    );
     expect(failedPaymentRef).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -120,7 +124,7 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -150,7 +154,10 @@ test.describe("Gov Pay @integration", async () => {
     await page.getByText(payButtonText).click();
     await page.locator("#cancel-payment").click();
     await page.locator("#return-url").click();
-    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page);
+    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(
+      page,
+      context
+    );
     expect(failedPaymentRef).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -168,7 +175,7 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -226,7 +233,7 @@ test.describe("Gov Pay @integration", async () => {
     await page.getByText("Continue with your payment").click();
     await page.locator("#confirm").click();
 
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -276,7 +283,10 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page);
+    const { paymentId: actualPaymentId } = await waitForPaymentResponse(
+      page,
+      context
+    );
 
     // ensure that data stored in the session matches the latest payment attempt
     const session = await findSession({
@@ -301,7 +311,10 @@ test.describe("Gov Pay @integration", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page);
+    const { paymentId: actualPaymentId } = await waitForPaymentResponse(
+      page,
+      context
+    );
     await expect(page.getByText("Application sent")).toBeVisible();
     await expect(page.getByText(actualPaymentId)).toBeVisible();
 
@@ -313,56 +326,11 @@ test.describe("Gov Pay @integration", async () => {
   });
 });
 
-async function fillGovUkCardDetails({
-  page,
-  cardNumber,
-}: {
-  page: Page;
-  cardNumber: string;
-}) {
-  await page.locator("#card-no").fill(cardNumber);
-  await page.getByLabel("Month").fill("12");
-  await page.getByLabel("Year").fill("2099");
-  await page.getByLabel("Name on card").fill("Test t Test");
-  await page.getByLabel("Card security code", { exact: false }).fill("123");
-
-  await page.locator("#address-line-1").fill("Test");
-  await page.locator("#address-line-2").fill("123");
-
-  await page.getByLabel("Town or city").fill("Test");
-  await page.getByLabel("Postcode").fill("HP111BB");
-  await page
-    .getByLabel("Email")
-    .fill("simulate-delivered@notifications.service.gov.uk");
-  await page.locator("button#submit-card-details").click();
-}
-
 async function navigateToPayComponent(page: Page): Promise<string> {
   await page.goto(previewURL);
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();
   return getSessionId(page);
-}
-
-async function waitForPaymentResponse(
-  page: Page
-): Promise<{ paymentId: string; state?: { status: string } }> {
-  const { payment_id: paymentId, state } = await page
-    .waitForResponse((response) => {
-      return response.url().includes(`pay/${context.team!.slug!}`);
-    })
-    .then((req) => req.json());
-  if (!paymentId) throw new Error("Bad payment response");
-  return { paymentId, state };
-}
-
-async function getSessionId(page: Page): Promise<string> {
-  // the session id is not available in the url so find it in a test utility component
-  const sessionId: string | null = await page
-    .getByTestId("sessionId")
-    .getAttribute("data-sessionid");
-  if (!sessionId) throw new Error("Session ID not found on page");
-  return sessionId!;
 }
 
 async function hasPaymentStatus({
@@ -418,7 +386,7 @@ async function findSession({
   const response: { lowcal_sessions: { data: SessionData } } =
     await adminGQLClient.request(
       gql`
-        query FindLowcalSesion($sessionId: uuid!) {
+        query FindLowcalSession($sessionId: uuid!) {
           lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
             data
           }

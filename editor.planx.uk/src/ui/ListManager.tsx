@@ -174,7 +174,7 @@ export default function ListManager<T, EditorExtraProps>(
         )}
       </Droppable>
       <Button
-        size="large"
+        size="medium"
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}

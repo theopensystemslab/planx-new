@@ -14,21 +14,31 @@ import { hasFeatureFlag } from "lib/featureFlags";
 const GOVUK_YELLOW = "#FFDD00";
 
 const DEFAULT_PRIMARY_COLOR = "#000661";
+const TEXT_COLOR_PRIMARY = "#0B0C0C";
+const TEXT_COLOR_SECONDARY = "#505A5F";
+const BG_COLOR_DEFAULT = "#FFFFFF";
+
+// Type styles
+export const FONT_WEIGHT_SEMI_BOLD = "600";
+export const FONT_WEIGHT_BOLD = "700";
+const SPACING_TIGHT = "-0.02em";
+const LINE_HEIGHT_BASE = "1.33";
 
 const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   primary: {
     main: DEFAULT_PRIMARY_COLOR,
-    contrastText: "#fff",
+    contrastText: BG_COLOR_DEFAULT,
   },
   background: {
-    default: "#fff",
-    paper: "#f2f2f2",
+    default: BG_COLOR_DEFAULT,
+    paper: "#F9F8F8",
   },
   secondary: {
-    main: "#EFEFEF",
+    main: "#B1B4B6",
   },
   text: {
-    secondary: "rgba(0,0,0,0.6)",
+    primary: TEXT_COLOR_PRIMARY,
+    secondary: TEXT_COLOR_SECONDARY,
   },
   action: {
     selected: "#F8F8F8",
@@ -86,37 +96,42 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
   const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
 
   const themeOptions: ThemeOptions = {
+    // Set default spacing unit to match GOV.UK
+    spacing: 10,
     typography: {
-      fontFamily: "'Inter', Arial",
+      fontFamily: "'Inter', Arial, sans-serif",
       h1: {
-        fontSize: 40,
-        letterSpacing: "-0.02em",
-        fontWeight: 700,
+        fontSize: "3rem",
+        letterSpacing: SPACING_TIGHT,
+        fontWeight: FONT_WEIGHT_BOLD,
       },
       h3: {
-        fontSize: 25,
-        letterSpacing: "-0.02em",
-        fontWeight: 700,
+        fontSize: "2.25rem",
+        letterSpacing: SPACING_TIGHT,
+        fontWeight: FONT_WEIGHT_BOLD,
       },
       h4: {
-        fontSize: 20,
+        fontSize: "1.5rem",
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       h5: {
-        fontSize: 20,
-        fontWeight: 700,
+        fontSize: "1.188rem",
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       h6: {
-        fontSize: 15,
-        fontWeight: 600,
+        fontSize: "1rem",
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       subtitle1: {
-        fontSize: 20,
+        fontSize: "1.5rem",
+        lineHeight: LINE_HEIGHT_BASE,
+        color: TEXT_COLOR_SECONDARY,
       },
       body1: {
-        fontSize: 18,
+        fontSize: "1.188rem",
       },
       body2: {
-        fontSize: 15,
+        fontSize: "1rem",
       },
     },
     palette,
@@ -137,11 +152,16 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
     components: {
       MuiCssBaseline: {
         styleOverrides: {
+          strong: {
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
+          b: {
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
           body: {
-            backgroundColor: "#efefef",
-            fontSize: "0.875rem",
-            lineHeight: 1.43,
-            letterSpacing: "0.01071em",
+            backgroundColor: BG_COLOR_DEFAULT,
+            fontSize: "1rem",
+            lineHeight: LINE_HEIGHT_BASE,
           },
         },
       },
@@ -152,7 +172,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             "&:focus-visible": {
               ...focusStyle,
               // !important is required here as setting disableElevation = true removes boxShadow
-              boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px black !important`,
+              boxShadow: `inset 0 -4px 0 black !important`,
               // Hover should not overwrite focus
               "&:hover": focusStyle,
             },
@@ -176,6 +196,8 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           root: {
             borderRadius: 0,
             textTransform: "none",
+            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
+            padding: "0.5em 1.1em",
           },
           text: {
             color: "rgba(0,0,0,0.4)",
@@ -183,8 +205,13 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               color: "rgba(0,0,0,1)",
             },
           },
-          containedSizeLarge: {
-            fontWeight: 700,
+          sizeMedium: {
+            fontSize: "1rem",
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
+          sizeLarge: {
+            fontSize: "1.188rem",
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
           },
         },
       },
@@ -233,9 +260,6 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
 const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
   const themeOptions = getThemeOptions(primaryColor);
   const altThemeOptions: ThemeOptions = {
-    typography: {
-      fontFamily: "Arial",
-    },
     components: {
       MuiRadio: {
         defaultProps: {

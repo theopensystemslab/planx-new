@@ -1,8 +1,18 @@
+import { mockOSPlacesResponse } from "./mocks/osPlacesResponse";
 import { expect } from "@playwright/test";
 import type { Page, Browser, Locator } from "@playwright/test";
 import { findSessionId, generateAuthenticationToken } from "./context";
 import type { Context } from "./context";
 import { getGraphQLClient } from "./context";
+import { gql } from "graphql-request";
+import { FlowGraph } from "@opensystemslab/planx-core/types";
+
+// Test card numbers to be used in gov.uk sandbox environment
+// reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
+export const cards = {
+  successful_card_number: "4444333322221111",
+  invalid_card_number: "4000000000000002",
+};
 
 // utility functions
 
@@ -241,4 +251,142 @@ export async function expectSections({
   const pageStatuses = await page.locator("dl > dd");
   await expect(pageSections).toContainText(sections.map((s) => s.title));
   await expect(pageStatuses).toContainText(sections.map((s) => s.status));
+}
+
+export async function getSessionId(page: Page): Promise<string> {
+  // the session id is not available in the url so find it in a test utility component
+  const sessionId: string | null = await page
+    .getByTestId("sessionId")
+    .getAttribute("data-sessionid");
+  if (!sessionId) throw new Error("Session ID not found on page");
+  return sessionId!;
+}
+
+export async function fillGovUkCardDetails({
+  page,
+  cardNumber,
+}: {
+  page: Page;
+  cardNumber: string;
+}) {
+  await page.locator("#card-no").fill(cardNumber);
+  await page.getByLabel("Month").fill("12");
+  await page.getByLabel("Year").fill("2099");
+  await page.getByLabel("Name on card").fill("Test t Test");
+  await page.getByLabel("Card security code", { exact: false }).fill("123");
+
+  await page.locator("#address-line-1").fill("Test");
+  await page.locator("#address-line-2").fill("123");
+
+  await page.getByLabel("Town or city").fill("Test");
+  await page.getByLabel("Postcode").fill("HP111BB");
+  await page
+    .getByLabel("Email")
+    .fill("simulate-delivered@notifications.service.gov.uk");
+  await page.locator("button#submit-card-details").click();
+}
+
+export async function answerFindProperty(page: Page) {
+  await setupOSMockResponse(page);
+  await page.getByLabel("Postcode").fill("SW1 1AA");
+  await page.getByLabel("Select an address").click();
+  await page.getByRole("option").first().click();
+}
+
+async function setupOSMockResponse(page: Page) {
+  const ordnanceSurveryPlacesEndpoint = new RegExp(
+    /proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/
+  );
+  await page.route(ordnanceSurveryPlacesEndpoint, async (route) => {
+    await route.fulfill({
+      status: 200,
+      body: JSON.stringify(mockOSPlacesResponse),
+    });
+  });
+}
+
+export async function answerContactInput(
+  page: Page,
+  {
+    firstName,
+    lastName,
+    phoneNumber,
+    email,
+  }: { firstName: string; lastName: string; phoneNumber: string; email: string }
+) {
+  await page.getByLabel("First name").fill(firstName);
+  await page.getByLabel("Last name").fill(lastName);
+  await page.getByLabel("Phone number").fill(phoneNumber);
+  await page.getByLabel("Email address").fill(email);
+}
+
+export async function setFeatureFlag(page: Page, featureFlag: string) {
+  await page.addInitScript(
+    (featureFlag: string) =>
+      window.localStorage.setItem(
+        "FEATURE_FLAGS",
+        JSON.stringify([featureFlag])
+      ),
+    featureFlag
+  );
+}
+
+export async function getSessionIdFromURL(page: Page): Promise<string> {
+  const url = await new URL(page.url());
+  const sessionId = url.searchParams.get("sessionId");
+  if (!sessionId)
+    throw Error("Session ID missing from page. URL " + url.toString());
+  return sessionId;
+}
+
+export async function addSessionToContext(page: Page, context: Context) {
+  const sessionId = await getSessionIdFromURL(page);
+  await context.sessionIds!.push(sessionId);
+  return sessionId;
+}
+
+export async function waitForPaymentResponse(
+  page: Page,
+  context: Context
+): Promise<{ paymentId: string; state?: { status: string } }> {
+  const { payment_id: paymentId, state } = await page
+    .waitForResponse((response) => {
+      return response.url().includes(`pay/${context.team!.slug!}`);
+    })
+    .then((req) => req.json());
+  if (!paymentId) throw new Error("Bad payment response");
+  return { paymentId, state };
+}
+
+export async function modifyFlow({
+  context,
+  modifiedFlow,
+}: {
+  context: Context;
+  modifiedFlow: FlowGraph;
+}) {
+  const adminGQLClient = getGraphQLClient();
+  if (!context.flow?.id || !context.user?.id) {
+    throw new Error("context must have a flow and user");
+  }
+  await adminGQLClient.request(
+    gql`
+      mutation UpdateTestFlow($flowId: uuid!, $userId: Int!, $data: jsonb!) {
+        update_flows_by_pk(pk_columns: { id: $flowId }, _set: { data: $data }) {
+          id
+          data
+        }
+        insert_published_flows_one(
+          object: { flow_id: $flowId, data: $data, publisher_id: $userId }
+        ) {
+          id
+        }
+      }
+    `,
+    {
+      flowId: context.flow!.id,
+      userId: context.user!.id,
+      data: modifiedFlow,
+    }
+  );
 }

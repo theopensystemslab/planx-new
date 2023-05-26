@@ -60,8 +60,8 @@ specifiers:
   '@mui/styles': 5.11.9
   '@mui/utils': 5.11.9
   '@opensystemslab/map': ^0.7.4
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#80235c0
-  '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#debaeca
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#4298b19
+  '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#baf18b8
   '@react-theming/storybook-addon': ^1.1.10
   '@storybook/addon-actions': ^6.5.16
   '@storybook/addon-essentials': ^6.5.16
@@ -203,8 +203,8 @@ dependencies:
   '@mui/styles': 5.11.9_yuz6bkerhkjfjuf6zeb7j6ybc4
   '@mui/utils': 5.11.9_react@18.2.0
   '@opensystemslab/map': 0.7.4
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/80235c0_@types+react@18.0.35
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_@types+react@18.0.35
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/4298b19_@types+react@18.0.35
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/baf18b8_@types+react@18.0.35
   '@tiptap/core': 2.0.3_@tiptap+pm@2.0.3
   '@tiptap/extension-bold': 2.0.3_@tiptap+core@2.0.3
   '@tiptap/extension-bubble-menu': 2.0.3_7qxxgdyo6i4mk7xrbxa2xtsga4
@@ -20187,9 +20187,9 @@ packages:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: true
 
-  github.com/theopensystemslab/planx-core/80235c0_@types+react@18.0.35:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/80235c0}
-    id: github.com/theopensystemslab/planx-core/80235c0
+  github.com/theopensystemslab/planx-core/4298b19_@types+react@18.0.35:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4298b19}
+    id: github.com/theopensystemslab/planx-core/4298b19
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -20214,6 +20214,30 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - encoding
+      - rollup
+    dev: false
+
+  github.com/theopensystemslab/planx-document-templates/baf18b8_@types+react@18.0.35:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/baf18b8}
+    id: github.com/theopensystemslab/planx-document-templates/baf18b8
+    name: '@opensystemslab/planx-document-templates'
+    version: 1.0.0
+    engines: {node: ^16, pnpm: ^7.8.0}
+    prepare: true
+    requiresBuild: true
+    dependencies:
+      '@emotion/react': 11.10.6_yuz6bkerhkjfjuf6zeb7j6ybc4
+      '@emotion/styled': 11.10.6_bpa2amdickk76qs7xzoz3lzv3m
+      '@lit-labs/ssr': 2.3.0
+      '@mui/material': 5.11.9_rg2yyp2bpmu7sjcft7cf5grtye
+      '@rollup/plugin-commonjs': 23.0.7
+      docx: 7.8.2
+      lodash.groupby: 4.6.0
+      lodash.startcase: 4.4.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - '@types/react'
       - rollup
     dev: false
 

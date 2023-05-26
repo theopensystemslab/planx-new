@@ -1,3 +1,5 @@
+import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
+
 export interface Node {
   id?: string;
   data?: Record<string, any>;
@@ -70,6 +72,8 @@ export interface LowCalSession {
   flow: {
     slug: string;
   };
+  lockedAt?: string;
+  paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[]
 }
 
 type MinimumNotifyPersonalisation = {
@@ -81,9 +85,10 @@ type MinimumNotifyPersonalisation = {
   serviceLink?: string;
   serviceName?: string;
   sessionId?: string;
-}
+};
 
-interface SaveAndReturnNotifyPersonalisation extends MinimumNotifyPersonalisation {
+interface SaveAndReturnNotifyPersonalisation
+  extends MinimumNotifyPersonalisation {
   address?: any;
   projectType?: string;
   resumeLink?: string;
@@ -94,7 +99,8 @@ export interface SaveAndReturnNotifyConfig {
   personalisation: SaveAndReturnNotifyPersonalisation;
 }
 
-interface EmailSubmissionNotifyPersonalisation extends MinimumNotifyPersonalisation {
+interface EmailSubmissionNotifyPersonalisation
+  extends MinimumNotifyPersonalisation {
   applicantEmail: string;
   downloadLink: string;
 }
@@ -103,7 +109,8 @@ export interface EmailSubmissionNotifyConfig {
   personalisation: EmailSubmissionNotifyPersonalisation;
 }
 
-interface InviteToPayNotifyPersonalisation extends MinimumNotifyPersonalisation {
+interface InviteToPayNotifyPersonalisation
+  extends MinimumNotifyPersonalisation {
   address?: string;
   agentName?: string;
   fee?: string;
@@ -117,6 +124,24 @@ interface InviteToPayNotifyPersonalisation extends MinimumNotifyPersonalisation 
 export interface InviteToPayNotifyConfig {
   personalisation: InviteToPayNotifyPersonalisation;
 }
+
+export interface AgentAndPayeeSubmissionNotifyPersonalisation
+  extends MinimumNotifyPersonalisation {
+  applicantName: string;
+  payeeName: string;
+  address: string;
+  projectType: string;
+}
+
+export interface AgentAndPayeeSubmissionNotifyConfig {
+  personalisation: AgentAndPayeeSubmissionNotifyPersonalisation;
+}
+
+export type NotifyConfig =
+  | SaveAndReturnNotifyConfig
+  | EmailSubmissionNotifyConfig
+  | InviteToPayNotifyConfig
+  | AgentAndPayeeSubmissionNotifyConfig;
 
 // https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response
 export interface GovUKPayment {

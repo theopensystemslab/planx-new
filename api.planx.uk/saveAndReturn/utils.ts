@@ -3,7 +3,7 @@ import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
-import { Template, getClientForTemplate, sendEmail } from "../notify/utils";
+import { Template, getClientForTemplate, sendEmail } from "../notify";
 import { _admin as $admin } from "../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
@@ -51,11 +51,15 @@ const calculateExpiryDate = (createdAt: string): string => {
 /**
  * Sends "Save", "Remind", "Expiry" and "Confirmation" emails to Save & Return users
  */
-const sendSingleApplicationEmail = async (
-  template: Template,
-  email: string,
-  sessionId: string
-) => {
+const sendSingleApplicationEmail = async ({
+  template,
+  email,
+  sessionId,
+}: {
+  template: Template;
+  email: string;
+  sessionId: string;
+}) => {
   try {
     const { flowSlug, team, session } = await validateSingleSessionRequest(
       email,

@@ -294,7 +294,8 @@
             {
               "payload": {
                 "sessionId": {{$body.event.data.new.id}},
-                "email": {{$body.event.data.new.email}}
+                "email": {{$body.event.data.new.email}},
+                "lockedAt": {{$body.event.data.new.locked_at}}
               }
             }
         url: '{{$base_url}}/send-email/confirmation'
@@ -474,6 +475,35 @@
               }
             }
         url: '{{$base_url}}/webhooks/hasura/create-payment-reminder-events'
+        method: POST
+        version: 2
+        query_params: {}
+        template_engine: Kriti
+    - name: setup_payment_send_events
+      definition:
+        enable_manual: false
+        update:
+          columns:
+            - paid_at
+      retry_conf:
+        num_retries: 3
+        interval_sec: 10
+        timeout_sec: 60
+      webhook_from_env: HASURA_PLANX_API_URL
+      headers:
+        - name: authorization
+          value_from_env: HASURA_PLANX_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "createdAt": {{$body.event.data.new.created_at}},
+              "payload": {
+                "sessionId": {{$body.event.data.new.session_id}}
+              }
+            }
+        url: '{{$base_url}}/webhooks/hasura/create-payment-send-events'
         method: POST
         version: 2
         query_params: {}

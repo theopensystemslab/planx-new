@@ -2,8 +2,8 @@ name: Weekly staging database sync
 
 on:
   schedule:
-    # Runs Sunday at 00:00 (https://crontab.guru/#0_0_*_*_0)
-    - cron: '0 0 * * 0'
+    # Runs nightly at 00:00 (https://crontab.guru/#0_0_*_*_*)
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:

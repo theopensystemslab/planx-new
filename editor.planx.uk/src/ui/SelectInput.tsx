@@ -30,11 +30,12 @@ const useClasses = makeStyles((theme) => ({
     justifyContent: "flex-start",
   },
   icon: {
-    right: theme.spacing(1.5),
+    right: theme.spacing(0.5),
     color: "rgba(0,0,0,0.25)",
   },
   select: {
     backgroundColor: "transparent",
+    fontSize: "1rem",
     "&:focus": {
       backgroundColor: "transparent",
     },

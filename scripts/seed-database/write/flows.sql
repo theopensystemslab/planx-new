@@ -36,6 +36,9 @@ SELECT
 FROM sync_flows
 ON CONFLICT (id) DO NOTHING;
 
+-- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
+UPDATE flows SET version = 1;
+
 -- insert an operation for each flow (to make sharedb happy)
 INSERT INTO operations (flow_id, data, version)
 SELECT
