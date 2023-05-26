@@ -216,3 +216,32 @@ it("should not have any accessibility violations while in the error state", asyn
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+
+test("does not allow the name 'Test Test' to be used", async () => {
+  const handleSubmit = jest.fn();
+  const dataField = "applicant";
+
+  const { user } = setup(
+    <ContactInput
+      handleSubmit={handleSubmit}
+      title="Enter your contact details"
+      fn={dataField}
+    />
+  );
+
+  await fillInFieldsUsingLabel(user, {
+    "First name": "Test",
+    "Last name": "Test",
+    "Phone number": "0123456789",
+    "Email address": "test@gov.uk",
+  });
+
+  await user.click(screen.getByTestId("continue-button"));
+
+  expect(handleSubmit).not.toHaveBeenCalled();
+
+  const errorMessage = await screen.findByText(
+    "'Test Test' is not a valid name - please submit test applications via the staging environment"
+  );
+  expect(errorMessage).toBeVisible();
+});
