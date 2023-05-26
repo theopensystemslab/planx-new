@@ -3,6 +3,7 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { Value } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
@@ -88,15 +89,37 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     state.getSortedBreadcrumbsBySection,
   ]);
 
+  const isValidComponent = ([nodeId, value]: [Store.nodeId, Value]) => {
+    const node = props.flow[nodeId];
+    const Component = node.type && components[node.type];
+
+    const isPresentationalComponent = Boolean(Component);
+    const doesNodeExist = Boolean(props.flow[nodeId]);
+    const isAutoAnswered = (value as Store.userData).auto;
+
+    return doesNodeExist && !isAutoAnswered && isPresentationalComponent;
+  };
+
+  const removeNonPresentationalNodes = (section: Store.breadcrumbs) =>
+    Object.fromEntries(
+      Object.entries(section.breadcrumbs).filter(isValidComponent)
+    );
+
   const sections = getSortedBreadcrumbsBySection();
+  const sectionsWithFilteredBreadcrumbs = sections
+    .map(removeNonPresentationalNodes)
+    .filter((section) => section.length) as Store.breadcrumbs[];
 
   return hasSections ? (
     <>
-      {sections.map((sectionBreadcrumbs, i) => (
+      {sectionsWithFilteredBreadcrumbs.map((sectionBreadcrumbs, i) => (
         <React.Fragment key={i}>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography component={props.sectionComponent || "h2"} variant="h5">
-              {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
+              {
+                props.flow[`${Object.keys(sectionsWithFilteredBreadcrumbs)[0]}`]
+                  ?.data?.title
+              }
             </Typography>
           </Box>
           <SummaryList
@@ -137,50 +160,39 @@ function SummaryList(props: SummaryListProps) {
 
   return (
     <Grid>
-      {
-        // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
-        Object.entries(props.breadcrumbs)
-          // ensure node exists, need to find the root cause but for now this should fix
-          // https://john-opensystemslab-io.airbrake.io/projects/329753/groups/3049111363214482333
-          .filter(([nodeId]) => Boolean(props.flow[nodeId]))
-          .map(([nodeId, value], i) => {
-            const node = props.flow[nodeId];
-            const Component = node.type && components[node.type];
-            // Hide questions if they lack a presentation component or are auto-answered
-            if (Component === undefined || value.auto) {
-              return null;
-            }
-            return (
-              <React.Fragment key={i}>
-                <Component
-                  nodeId={nodeId}
-                  node={node}
-                  userData={value}
-                  flow={props.flow}
-                  passport={props.passport}
-                />
-                {props.showChangeButton ? (
-                  <dd>
-                    <Link
-                      onClick={() => handleClick(nodeId)}
-                      component="button"
-                      fontSize="body2.fontSize"
-                    >
-                      Change
-                      <span style={visuallyHidden}>
-                        {node.data?.title || node.data?.text || "this answer"}
-                      </span>
-                    </Link>
-                  </dd>
-                ) : (
-                  <dd>
-                    {/** ensure there's always a third column to not break styling, even when showChange is false */}
-                  </dd>
-                )}
-              </React.Fragment>
-            );
-          })
-      }
+      {Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
+        const node = props.flow[nodeId];
+        const Component = node.type && components[node.type];
+        return (
+          <React.Fragment key={i}>
+            <Component
+              nodeId={nodeId}
+              node={node}
+              userData={value}
+              flow={props.flow}
+              passport={props.passport}
+            />
+            {props.showChangeButton ? (
+              <dd>
+                <Link
+                  onClick={() => handleClick(nodeId)}
+                  component="button"
+                  fontSize="body2.fontSize"
+                >
+                  Change
+                  <span style={visuallyHidden}>
+                    {node.data?.title || node.data?.text || "this answer"}
+                  </span>
+                </Link>
+              </dd>
+            ) : (
+              <dd>
+                {/** ensure there's always a third column to not break styling, even when showChange is false */}
+              </dd>
+            )}
+          </React.Fragment>
+        );
+      })}
     </Grid>
   );
 }
