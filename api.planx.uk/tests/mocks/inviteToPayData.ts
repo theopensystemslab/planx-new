@@ -37,7 +37,7 @@ export const validSession: Session = {
     id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
     passport: {
       data: {
-        amountToPay: paymentAmountPounds,
+        "application.fee.payable": paymentAmountPounds,
         ...sessionPreviewData,
       },
     },
@@ -95,14 +95,14 @@ export const flowGraph: FlowGraph = {
   },
   NATwM9rXTQ: {
     data: {
-      fn: "amountToPay",
+      fn: "application.fee.payable",
       val: paymentAmountPounds,
     },
     type: 380,
   },
   fgl2iSPlB7: {
     data: {
-      fn: "amountToPay",
+      fn: "application.fee.payable",
       color: "#EFEFEF",
       title: "Pay for your application",
       bannerTitle: "The planning fee for this application is",
