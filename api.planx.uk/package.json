@@ -5,7 +5,7 @@
   "dependencies": {
     "@airbrake/node": "^2.1.8",
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#4298b19",
-    "@opensystemslab/planx-document-templates": "github:theopensystemslab/planx-document-templates#99f29fa",
+    "@opensystemslab/planx-document-templates": "github:theopensystemslab/planx-document-templates#baf18b8",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "aws-sdk": "^2.1358.0",
