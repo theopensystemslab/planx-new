@@ -1,7 +1,4 @@
 import isNil from "lodash/isNil";
-import { Store } from "pages/FlowEditor/lib/store";
-
-import { bopsDictionary } from "../Send/bops";
 
 export const validateEmail = (email: string) => {
   // eslint-disable-next-line
@@ -48,36 +45,6 @@ export const makeData = <T>(
       data: { [overwriteKey ?? fnOrDefaultPassportKey(props)]: value },
     };
 };
-
-/**
- * Replaces a URL containing planx.uk with planx.dev
- * if the passport appears to contain test data.
- * Explanation: https://bit.ly/3AypxGW
- *
- * @example
- * useStagingUrlIfTestApplication(passport)("https://api.editor.planx.uk/test")
- * // when applicant's full name is 'Test Test'
- * // => "https://api.editor.planx.dev/test"
- * // otherwise
- * // => "https://api.editor.planx.uk/test"
- */
-export const useStagingUrlIfTestApplication =
-  (passport: Store.passport) => (urlThatMightBeReplaced: string) => {
-    if (
-      [
-        passport.data?.[bopsDictionary.applicant_first_name],
-        passport.data?.[bopsDictionary.applicant_last_name],
-      ]
-        .map((x) => String(x).toLowerCase().trim())
-        .join("|") === "test|test"
-    ) {
-      const url = new URL(urlThatMightBeReplaced);
-      url.hostname = url.hostname.replace("planx.uk", "planx.dev");
-      return url.href;
-    }
-
-    return urlThatMightBeReplaced;
-  };
 
 export const getPreviouslySubmittedData = ({
   id,

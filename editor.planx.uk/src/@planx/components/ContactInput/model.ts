@@ -23,6 +23,22 @@ export const userDataSchema: SchemaOf<Contact> = object({
       "Enter an email address in the correct format, like name@example.com"
     )
     .required("Enter an email address"),
+}).test({
+  name: "Test Test is not used for applications",
+  test: ({ firstName, lastName }, context) => {
+    const isValid =
+      [firstName, lastName]
+        .map((x) => String(x).toLowerCase().trim())
+        .join("|") !== "test|test";
+
+    if (isValid) return true;
+
+    return context.createError({
+      path: "firstName",
+      message:
+        "'Test Test' is not a valid name - please submit test applications via the staging environment",
+    });
+  },
 });
 
 export interface ContactInput extends MoreInformation {

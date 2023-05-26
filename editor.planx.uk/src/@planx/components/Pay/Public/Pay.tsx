@@ -9,7 +9,7 @@ import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment, Passport, Session } from "types";
 import { PaymentStatus } from "types";
 
-import { makeData, useStagingUrlIfTestApplication } from "../../shared/utils";
+import { makeData } from "../../shared/utils";
 import {
   createPayload,
   GOV_PAY_PASSPORT_KEY,
@@ -157,7 +157,6 @@ function Component(props: Props) {
           sessionId,
           flowId,
           teamSlug,
-          passport,
           paymentId: govUkPayment?.payment_id,
         })
       );
@@ -223,7 +222,7 @@ function Component(props: Props) {
     }
     await axios
       .post(
-        getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug, passport }),
+        getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
         createPayload(fee, sessionId)
       )
       .then(async (res) => {
@@ -292,18 +291,14 @@ function getGovUkPayUrlForTeam({
   sessionId,
   flowId,
   teamSlug,
-  passport,
   paymentId,
 }: {
   sessionId: string;
   flowId: string;
   teamSlug: string;
-  passport: Passport;
   paymentId?: string;
 }): string {
-  const baseURL = useStagingUrlIfTestApplication(passport)(
-    `${GOV_UK_PAY_URL}/${teamSlug}`
-  );
+  const baseURL = `${GOV_UK_PAY_URL}/${teamSlug}`;
   const queryString = `?sessionId=${sessionId}&flowId=${flowId}`;
   if (paymentId) {
     return `${baseURL}/${paymentId}${queryString}`;
