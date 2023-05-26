@@ -104,7 +104,7 @@ export default function ConstraintsList({
               backgroundColor: "white",
             }}
             data={con.value ? con.data : null}
-            metadata={metadata[con]}
+            metadata={metadata[con.key]}
             category={category}
           >
             {ReactHtmlParser(con.text)}

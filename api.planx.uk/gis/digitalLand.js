@@ -99,6 +99,7 @@ async function go(localAuthority, geom, extras) {
           text: baseSchema[key].pos,
           data: [omitGeometry(entity)],
           category: baseSchema[key].category,
+          key: key,
         };
       }
     });
@@ -116,6 +117,7 @@ async function go(localAuthority, geom, extras) {
       value: false, 
       text: baseSchema[not].neg, 
       category: baseSchema[not].category, 
+      key: not,
     };
   });
 

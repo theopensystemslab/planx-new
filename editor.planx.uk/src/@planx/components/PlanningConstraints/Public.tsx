@@ -1,5 +1,4 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -10,12 +9,12 @@ import { submitFeedback } from "lib/feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import useSWR from "swr";
-import CollapsibleInput from "ui/CollapsibleInput";
 import { stringify } from "wkt";
 
+import SimpleExpand from "../shared/Preview/SimpleExpand";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import ConstraintsList, { ErrorSummaryContainer } from "./List";
-import type { PlanningConstraints } from "./model";
+import type { GISResponse, PlanningConstraints } from "./model";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -81,11 +80,7 @@ function Component(props: Props) {
   const { data, mutate, isValidating } = useSWR(
     () => (x && y && latitude && longitude ? teamGisEndpoint : null),
     fetcher,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 1,
-    }
+    { revalidateOnFocus: false }
   );
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
@@ -97,20 +92,16 @@ function Component(props: Props) {
         ? classifiedRoadsEndpoint + `?usrn=${usrn}`
         : null,
     fetcher,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 1,
-    }
+    { revalidateOnFocus: false }
   );
 
   // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
-  const constraints: Record<string, any> | undefined = {
+  const constraints: GISResponse["constraints"] | undefined = {
     ...(data?.constraints || data),
     ...roads,
   };
 
-  const metadata: Record<string, any> | undefined = data?.metadata;
+  const metadata: GISResponse["metadata"] = data?.metadata;
 
   return (
     <>
@@ -206,14 +197,64 @@ export function PlanningConstraintsContent(props: any) {
     },
   });
 
+  const positiveConstraints = Object.values(constraints).filter(
+    ({ value }: any) => value
+  );
+  const negativeConstraints = Object.values(constraints).filter(
+    ({ value }: any) => !value
+  );
+
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
-      <ConstraintsList
-        data={constraints}
-        metadata={metadata}
-        refreshConstraints={refreshConstraints}
-      />
+      {positiveConstraints.length > 0 && (
+        <>
+          <Typography variant="h4" component="h2" gutterBottom>
+            These are the planning constraints we think apply to this property
+          </Typography>
+          <ConstraintsList
+            data={positiveConstraints}
+            metadata={metadata}
+            refreshConstraints={refreshConstraints}
+          />
+          {negativeConstraints.length > 0 && (
+            <SimpleExpand
+              buttonText={{
+                open: "Constraints that don't apply to this property",
+                closed: "Hide constraints that don't apply",
+              }}
+            >
+              <ConstraintsList
+                data={negativeConstraints}
+                metadata={metadata}
+                refreshConstraints={refreshConstraints}
+              />
+            </SimpleExpand>
+          )}
+        </>
+      )}
+      {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
+        <>
+          <Typography variant="h4" component="h2">
+            It looks like there are no constraints on this property
+          </Typography>
+          <Typography variant="body2">
+            Continue with your application to tell us more about your project
+          </Typography>
+          <SimpleExpand
+            buttonText={{
+              open: "Show the things we checked",
+              closed: "Hide constraints that don't apply",
+            }}
+          >
+            <ConstraintsList
+              data={negativeConstraints}
+              metadata={metadata}
+              refreshConstraints={refreshConstraints}
+            />
+          </SimpleExpand>
+        </>
+      )}
       {/* {sourcedFromDigitalLand && (
         <Box sx={{ pb: "1em" }}>
           <Typography variant="body2" color="inherit">

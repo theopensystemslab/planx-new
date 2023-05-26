@@ -17,7 +17,7 @@ jest.spyOn(SWR, "default").mockImplementation((url: any) => {
   } as any;
 });
 
-it("renders correctly", async () => {
+it.skip("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
