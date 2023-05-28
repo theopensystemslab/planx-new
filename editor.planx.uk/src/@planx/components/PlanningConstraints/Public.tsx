@@ -6,6 +6,7 @@ import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
+import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import useSWR from "swr";
@@ -139,7 +140,6 @@ function Component(props: Props) {
             });
           }}
           refreshConstraints={() => mutate()}
-          sourcedFromDigitalLand={digitalLandOrganisations.includes(teamSlug)}
         />
       ) : (
         <Card handleSubmit={props.handleSubmit} isValid>
@@ -178,7 +178,6 @@ export function PlanningConstraintsContent(props: any) {
     metadata,
     handleSubmit,
     refreshConstraints,
-    sourcedFromDigitalLand,
     previousFeedback,
   } = props;
   const formik = useFormik({
@@ -196,27 +195,31 @@ export function PlanningConstraintsContent(props: any) {
       handleSubmit?.(values);
     },
   });
+  const error = constraints.error || undefined;
+  const showError = error || !Object.values(constraints)?.length;
 
-  const positiveConstraints = Object.values(constraints).filter(
-    ({ value }: any) => value
-  );
-  const negativeConstraints = Object.values(constraints).filter(
-    ({ value }: any) => !value
-  );
+  const positiveConstraints = Object.values(constraints)
+    .filter(({ text }: any) => text)
+    .filter(({ value }: any) => value);
+  const negativeConstraints = Object.values(constraints)
+    .filter(({ text }: any) => text)
+    .filter(({ value }: any) => !value);
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
+      {showError && (
+        <ConstraintsError
+          error={error}
+          refreshConstraints={refreshConstraints}
+        />
+      )}
       {positiveConstraints.length > 0 && (
         <>
           <Typography variant="h4" component="h2" gutterBottom>
             These are the planning constraints we think apply to this property
           </Typography>
-          <ConstraintsList
-            data={positiveConstraints}
-            metadata={metadata}
-            refreshConstraints={refreshConstraints}
-          />
+          <ConstraintsList data={positiveConstraints} metadata={metadata} />
           {negativeConstraints.length > 0 && (
             <SimpleExpand
               buttonText={{
@@ -224,13 +227,10 @@ export function PlanningConstraintsContent(props: any) {
                 closed: "Hide constraints that don't apply",
               }}
             >
-              <ConstraintsList
-                data={negativeConstraints}
-                metadata={metadata}
-                refreshConstraints={refreshConstraints}
-              />
+              <ConstraintsList data={negativeConstraints} metadata={metadata} />
             </SimpleExpand>
           )}
+          <PlanningConditionsInfo />
         </>
       )}
       {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
@@ -247,39 +247,48 @@ export function PlanningConstraintsContent(props: any) {
               closed: "Hide constraints that don't apply",
             }}
           >
-            <ConstraintsList
-              data={negativeConstraints}
-              metadata={metadata}
-              refreshConstraints={refreshConstraints}
-            />
+            <ConstraintsList data={negativeConstraints} metadata={metadata} />
           </SimpleExpand>
+          <PlanningConditionsInfo />
         </>
       )}
-      {/* {sourcedFromDigitalLand && (
-        <Box sx={{ pb: "1em" }}>
-          <Typography variant="body2" color="inherit">
-            Sourced from Department for Levelling Up, Housing & Communities.
-          </Typography>
-        </Box>
-      )}
-      <Box color="text.secondary" textAlign="right">
-        <CollapsibleInput
-          name="feedback"
-          handleChange={formik.handleChange}
-          value={formik.values.feedback}
-        >
-          <Typography variant="body2" color="inherit">
-            Report an inaccuracy
-          </Typography>
-        </CollapsibleInput>
-      </Box> */}
-      <WarningContainer>
-        <ErrorOutline />
-        <Typography variant="body2" ml={2} fontWeight="bold">
-          This page does not include information about historic planning
-          conditions that may apply to this property.
-        </Typography>
-      </WarningContainer>
     </Card>
+  );
+}
+
+function ConstraintsError({ error, refreshConstraints }: any) {
+  return (
+    <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
+      <Typography variant="h5" component="h2" gutterBottom>
+        No information available
+      </Typography>
+      {error &&
+      typeof error === "string" &&
+      error.endsWith("local authority") ? (
+        <Typography variant="body2">{capitalize(error)}</Typography>
+      ) : (
+        <>
+          <Typography variant="body2">
+            We couldn't find any information about your property. Click search
+            again to try again. You can continue your application without this
+            information but it might mean we ask additional questions about your
+            project.
+          </Typography>
+          <button onClick={refreshConstraints}>Search again</button>
+        </>
+      )}
+    </ErrorSummaryContainer>
+  );
+}
+
+function PlanningConditionsInfo() {
+  return (
+    <WarningContainer>
+      <ErrorOutline />
+      <Typography variant="body2" ml={2} fontWeight="bold">
+        This page does not include information about historic planning
+        conditions that may apply to this property.
+      </Typography>
+    </WarningContainer>
   );
 }
