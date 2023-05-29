@@ -1,6 +1,4 @@
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import Link from "@mui/material/Link";
@@ -12,7 +10,10 @@ import Typography from "@mui/material/Typography";
 import groupBy from "lodash/groupBy";
 import React, { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
+import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+
+import { Constraint } from "./model";
 
 const CATEGORY_COLORS: any = {
   "General policy": "#99C1DE",
@@ -21,16 +22,24 @@ const CATEGORY_COLORS: any = {
   Trees: "#DBE7E4",
 };
 
-const StyledConstraint = styled(Box)(({ theme }) => ({
-  borderLeft: `3px solid lightgrey`, // TOOD pass in category color
-  padding: theme.spacing(1, 1.5),
+interface StyledConstraintProps extends BoxProps {
+  category: string;
+}
+
+const StyledConstraint = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "category",
+})<StyledConstraintProps>(({ theme, category }) => ({
+  borderLeft: `5px solid ${CATEGORY_COLORS[category]}`,
+  borderBottom: `2px solid ${CATEGORY_COLORS[category]}`,
+  padding: theme.spacing(1, 1),
+  paddingRight: 0,
   width: `100vw`,
   color: theme.palette.text.primary,
 }));
 
 export default function ConstraintsList({ data, metadata }: any) {
-  const constraints: any[] = Object.values(data);
-  const groupedConstraints = groupBy(constraints, (constraint: any) => {
+  const constraints: Constraint[] = Object.values(data);
+  const groupedConstraints = groupBy(constraints, (constraint: Constraint) => {
     return constraint.category;
   });
 
@@ -100,12 +109,17 @@ function ConstraintListItem({ children, ...props }: any) {
         >
           {children}
           <Button
-            style={{ margin: 0, padding: 0 }}
+            disableRipple
             onClick={() =>
               setShowConstraintData((showConstraintData) => !showConstraintData)
             }
           >
-            {showConstraintData ? <ExpandLess /> : <ExpandMore />}
+            <Caret
+              expanded={showConstraintData}
+              titleAccess={
+                showConstraintData ? "Less Information" : "More Information"
+              }
+            />
           </Button>
         </Box>
         <Collapse in={showConstraintData}>
