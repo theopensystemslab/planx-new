@@ -44,12 +44,6 @@ type PlanningConstraintBody = {
 // Passport key comes from Digital Planning Schemas googlesheet
 export const PASSPORT_FN = "road.classified";
 
-// Hardcode basic metadata fields to match Digital Land's `dataset` response
-const metadata = {
-  name: "Classified road",
-  plural: "Classified roads",
-}
-
 export const classifiedRoadsSearch = async (
   req: Request, 
   res: Response, 
@@ -96,9 +90,19 @@ export const classifiedRoadsSearch = async (
         return classifiedFeatures;
       });
 
+    const baseResponse = {
+      url: url.split("key=")[0],
+      metadata: {
+        [PASSPORT_FN]: {
+          name: "Classified road",
+          plural: "Classified roads",
+        }
+      }
+    };
+
     if (features?.length) {
       return res.json({
-        url: url,
+        ...baseResponse,
         constraints: {
           [PASSPORT_FN]: {
             value: true,
@@ -106,23 +110,17 @@ export const classifiedRoadsSearch = async (
             data: features,
             category: "General policy",
           }
-        },
-        metadata: {
-          [PASSPORT_FN]: metadata
         }
       } as PlanningConstraintResponse)
     } else {
       return res.json({
-        url: url,
+        ...baseResponse,
         constraints: {
           [PASSPORT_FN]: {
             value: false,
             text: "is not on a Classified Road",
             category: "General policy",
           }
-        },
-        metadata: {
-          [PASSPORT_FN]: metadata
         }
       } as PlanningConstraintResponse)
     }

@@ -12,9 +12,10 @@ import React from "react";
 import useSWR from "swr";
 import { stringify } from "wkt";
 
+import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
-import ConstraintsList, { ErrorSummaryContainer } from "./List";
+import ConstraintsList from "./List";
 import type { GISResponse, PlanningConstraints } from "./model";
 
 type Props = PublicProps<PlanningConstraints>;
