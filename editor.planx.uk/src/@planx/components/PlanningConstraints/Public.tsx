@@ -99,10 +99,13 @@ function Component(props: Props) {
   // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
   const constraints: GISResponse["constraints"] | undefined = {
     ...(data?.constraints || data),
-    ...roads,
+    ...roads?.constraints,
   };
 
-  const metadata: GISResponse["metadata"] = data?.metadata;
+  const metadata: GISResponse["metadata"] = {
+    ...data?.metadata,
+    ...roads?.metadata,
+  };
 
   return (
     <>

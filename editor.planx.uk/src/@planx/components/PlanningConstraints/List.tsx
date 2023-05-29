@@ -50,63 +50,56 @@ export const ErrorSummaryContainer = styled(Box)(({ theme }) => ({
 
 export default function ConstraintsList({ data, metadata }: any) {
   const constraints: any[] = Object.values(data);
-
-  // group constraints by category, preserving previous sort (categories with positive constraints will display first, rather than static category order)
   const groupedConstraints = groupBy(constraints, (constraint: any) => {
     return constraint.category;
   });
 
-  // TODO: confirm/figure out accessible heirarchy for list with subheaders
-  const groupedVisibleConstraints = Object.keys(groupedConstraints).map(
-    (category: string) => (
-      <ListSubheader
-        disableGutters
-        disableSticky
-        color="primary"
-        component="div"
-        key={category}
-        style={{
-          padding: 0,
-          backgroundColor: CATEGORY_COLORS[category],
-          marginBottom: "2em",
-        }}
-      >
-        <Typography
-          variant="subtitle2"
-          component="h3"
-          style={{
-            fontWeight: 700,
-            padding: ".5em",
-            paddingLeft: "1em",
-            color: "black",
-          }}
-        >
-          {category}
-        </Typography>
-        {groupedConstraints[category].map((con: any) => (
-          <ConstraintListItem
-            key={con.text}
-            style={{
-              fontWeight: con.value ? 700 : 500,
-              paddingTop: 0,
-              paddingBottom: 0,
-              backgroundColor: "white",
-            }}
-            data={con.value ? con.data : null}
-            metadata={metadata[con.key]}
-            category={category}
-          >
-            {ReactHtmlParser(con.text)}
-          </ConstraintListItem>
-        ))}
-      </ListSubheader>
-    )
-  );
-
   return (
     <Box mb={3}>
       <List dense disablePadding>
-        {groupedVisibleConstraints}
+        {Object.keys(groupedConstraints).map((category: string) => (
+          <ListSubheader
+            disableGutters
+            disableSticky
+            color="primary"
+            component="div"
+            key={category}
+            style={{
+              padding: 0,
+              backgroundColor: CATEGORY_COLORS[category],
+              marginBottom: "2em",
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              component="h3"
+              style={{
+                fontWeight: 700,
+                padding: ".5em",
+                paddingLeft: "1em",
+                color: "black",
+              }}
+            >
+              {category}
+            </Typography>
+            {groupedConstraints[category].map((con: any) => (
+              <ConstraintListItem
+                key={con.text}
+                style={{
+                  paddingTop: 0,
+                  paddingBottom: 0,
+                  backgroundColor: "white",
+                }}
+                content={con.text}
+                data={con.value ? con.data : null}
+                metadata={metadata[con.key]}
+                category={category}
+              >
+                {metadata[con.key]?.plural || ReactHtmlParser(con.text)}
+              </ConstraintListItem>
+            ))}
+          </ListSubheader>
+        ))}
       </List>
     </Box>
   );
@@ -116,7 +109,7 @@ function ConstraintListItem({ children, ...props }: any) {
   const [showConstraintData, setShowConstraintData] = useState<boolean>(false);
 
   return (
-    <ListItem disableGutters>
+    <ListItem disableGutters disablePadding>
       <StyledConstraint {...props}>
         <Box
           style={{
@@ -136,15 +129,15 @@ function ConstraintListItem({ children, ...props }: any) {
           </Button>
         </Box>
         <Collapse in={showConstraintData}>
-          {props.data?.length > 0 && (
-            <>
-              <Typography variant="body2" component="h2" fontWeight={700}>
-                Entities that intersect with your property
-              </Typography>
+          <>
+            <Typography variant="subtitle1" component="h4" gutterBottom>
+              {`This property ${props?.content}`}
+            </Typography>
+            {props.data?.length > 0 && (
               <List
                 dense
                 disablePadding
-                sx={{ listStyleType: "disc", pl: 4, pb: 2 }}
+                sx={{ listStyleType: "disc", pl: 4, pb: 1 }}
               >
                 {props.data.map(
                   (record: any) =>
@@ -155,7 +148,7 @@ function ConstraintListItem({ children, ...props }: any) {
                         disableGutters
                         sx={{ display: "list-item" }}
                       >
-                        <Box style={{ fontWeight: 500, lineHeight: 1 }}>
+                        <Box style={{ fontWeight: 700, lineHeight: 1 }}>
                           {record.name}{" "}
                           {record.name && record["documentation-url"] && (
                             <span>
@@ -164,7 +157,7 @@ function ConstraintListItem({ children, ...props }: any) {
                                 href={record["documentation-url"]}
                                 target="_blank"
                               >
-                                Source
+                                source
                               </Link>
                               )
                             </span>
@@ -174,11 +167,8 @@ function ConstraintListItem({ children, ...props }: any) {
                     )
                 )}
               </List>
-            </>
-          )}
-          <Typography variant="body2" component="h2" fontWeight={700}>
-            How it is defined
-          </Typography>
+            )}
+          </>
           <Typography variant="body2">
             <ReactMarkdownOrHtml
               source={props.metadata?.text?.replaceAll(

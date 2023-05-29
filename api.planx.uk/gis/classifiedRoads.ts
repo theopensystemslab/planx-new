@@ -28,7 +28,11 @@ type OSHighwayFeature = {
   FormsPartOf: string;
 };
 
-type PlanningConstraintResponse = Record<string, PlanningConstraintBody>;
+type PlanningConstraintResponse = {
+  url?: string;
+  constraints: Record<string, PlanningConstraintBody>;
+  metadata?: Record<string, any>;
+}
 
 type PlanningConstraintBody = {
   value: boolean;
@@ -39,6 +43,12 @@ type PlanningConstraintBody = {
 
 // Passport key comes from Digital Planning Schemas googlesheet
 export const PASSPORT_FN = "road.classified";
+
+// Hardcode basic metadata fields to match Digital Land's `dataset` response
+const metadata = {
+  name: "Classified road",
+  plural: "Classified roads",
+}
 
 export const classifiedRoadsSearch = async (
   req: Request, 
@@ -88,19 +98,31 @@ export const classifiedRoadsSearch = async (
 
     if (features?.length) {
       return res.json({
-        [PASSPORT_FN]: {
-          value: true,
-          text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
-          data: features,
-          category: "General policy",
+        url: url,
+        constraints: {
+          [PASSPORT_FN]: {
+            value: true,
+            text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
+            data: features,
+            category: "General policy",
+          }
+        },
+        metadata: {
+          [PASSPORT_FN]: metadata
         }
       } as PlanningConstraintResponse)
     } else {
       return res.json({
-        [PASSPORT_FN]: {
-          value: false,
-          text: "is not on a Classified Road",
-          category: "General policy",
+        url: url,
+        constraints: {
+          [PASSPORT_FN]: {
+            value: false,
+            text: "is not on a Classified Road",
+            category: "General policy",
+          }
+        },
+        metadata: {
+          [PASSPORT_FN]: metadata
         }
       } as PlanningConstraintResponse)
     }
