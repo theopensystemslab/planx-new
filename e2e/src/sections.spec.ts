@@ -1,5 +1,6 @@
 import { test } from "@playwright/test";
 import { flow, updatedQuestionAnswers } from "./flows/sections-flow";
+import { flowWithEmptySections } from "./flows/flow-with-empty-sections";
 import {
   contextDefaults,
   setUpTestContext,
@@ -33,7 +34,7 @@ export enum SectionStatus {
   Completed = "COMPLETED",
 }
 
-test.describe("Sections", () => {
+test.describe("Section statuses", () => {
   let context: Context = {
     ...contextDefaults,
     flow: {
@@ -523,6 +524,89 @@ test.describe("Sections", () => {
         ],
       });
     });
+  });
+});
+
+test.describe("Section headers", () => {
+  let context: Context = {
+    ...contextDefaults,
+    flow: {
+      slug: "empty-sections-test-flow",
+      data: flowWithEmptySections,
+    },
+  };
+
+  test.beforeAll(async () => {
+    try {
+      context = await setUpTestContext(context);
+    } catch (e) {
+      await tearDownTestContext(context);
+      throw e;
+    }
+  });
+
+  test.beforeEach(async ({ page }) => {
+    const previewURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false`;
+    await page.goto(previewURL);
+  });
+
+  test.afterAll(async () => {
+    await tearDownTestContext(context);
+  });
+
+  test("section headers display as expected", async ({ page }) => {
+    // Start of first section
+    await expectSections({
+      page,
+      sections: [
+        {
+          title: "This is a real section",
+          status: SectionStatus.ReadyToStart,
+        },
+        {
+          title: "This is an empty section",
+          status: SectionStatus.NotStarted,
+        },
+        {
+          title: "This is a section without presentational components",
+          status: SectionStatus.NotStarted,
+        },
+      ],
+    });
+    await clickContinue({ page, waitForLogEvent: true });
+
+    await answerQuestion({ page, title: "Question 1", answer: "a" });
+    await clickContinue({ page, waitForLogEvent: true });
+
+    // Start of second (empty) section
+    await clickContinue({ page, waitForLogEvent: true });
+
+    // Start of third section
+    await clickContinue({ page, waitForLogEvent: true });
+
+    // Land on "Review" component
+    const componentTitle = await page.getByRole("heading", {
+      name: "Check your answers before sending your application",
+    });
+    test.expect(componentTitle).toBeVisible();
+
+    // Section with presentational components is displayed
+    const firstSectionTitle = page.getByRole("heading", {
+      name: "This is a real section",
+    });
+    test.expect(firstSectionTitle).toBeVisible();
+
+    // Section without components is not displayed
+    const secondSectionTitle = page.getByRole("heading", {
+      name: "This is an empty section",
+    });
+    test.expect(secondSectionTitle).not.toBeVisible();
+
+    // Section without presentational components is not displayed
+    const thirdSectionTitle = page.getByRole("heading", {
+      name: "This is a section without presentational components",
+    });
+    test.expect(thirdSectionTitle).not.toBeVisible();
   });
 });
 
