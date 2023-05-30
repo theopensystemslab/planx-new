@@ -1,18 +1,14 @@
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { uploadPrivateFile } from "api/upload";
-import { nanoid } from "nanoid";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
-import { FileWithPath, useDropzone } from "react-dropzone";
-import { Dropzone } from "ui/Dropzone";
+import { FileWithPath } from "react-dropzone";
 import ErrorWrapper from "ui/ErrorWrapper";
-import { UploadedFileCard } from "ui/UploadedFileCard";
 import { array } from "yup";
 
-import handleRejectedUpload from "../shared/handleRejectedUpload";
+import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
 interface Props extends MoreInformation {
@@ -53,7 +49,6 @@ const FileUpload: React.FC<Props> = (props) => {
   );
   const [slots, setSlots] = useState<FileUploadSlot[]>(recoveredSlots ?? []);
   const [validationError, setValidationError] = useState<string>();
-  const [fileUploadStatus, setFileUploadStatus] = useState<string>();
 
   const handleSubmit = () => {
     slotsSchema
@@ -115,117 +110,9 @@ const FileUpload: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
       />
       <ErrorWrapper error={validationError} id={props.id}>
-        <PrivateFileUpload
-          slots={slots}
-          setSlots={setSlots}
-          fileUploadStatus={fileUploadStatus}
-          setFileUploadStatus={setFileUploadStatus}
-        />
+        <PrivateFileUpload slots={slots} setSlots={setSlots} />
       </ErrorWrapper>
     </Card>
-  );
-};
-
-interface PrivateFileUploadProps {
-  slots: FileUploadSlot[];
-  setSlots: React.Dispatch<React.SetStateAction<FileUploadSlot[]>>;
-  fileUploadStatus?: string;
-  setFileUploadStatus: React.Dispatch<React.SetStateAction<string | undefined>>;
-}
-
-const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
-  slots,
-  setSlots,
-  fileUploadStatus,
-  setFileUploadStatus,
-}) => {
-  const MAX_UPLOAD_SIZE_MB = 30;
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: {
-      "image/jpeg": [".jpg", ".jpeg"],
-      "image/png": [".png"],
-      "application/pdf": [".pdf"],
-    },
-    maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
-    multiple: true,
-    onDrop: (acceptedFiles: FileWithPath[]) => {
-      setSlots((slots) => {
-        return [
-          ...slots,
-          ...acceptedFiles.map((file) => {
-            // XXX: This is a non-blocking promise chain
-            //      If a file is removed while it's being uploaded, nothing should break because we're using map()
-            uploadPrivateFile(file, {
-              onProgress: (progress) => {
-                setSlots((_files) =>
-                  _files.map((_file) =>
-                    _file.file === file ? { ..._file, progress } : _file
-                  )
-                );
-              },
-            })
-              .then((url: string) => {
-                setSlots((_files) =>
-                  _files.map((_file) =>
-                    _file.file === file
-                      ? { ..._file, url, status: "success" }
-                      : _file
-                  )
-                );
-                setFileUploadStatus(() =>
-                  acceptedFiles.length > 1
-                    ? `Files ${acceptedFiles
-                        .map((file) => file.path)
-                        .join(", ")} were uploaded`
-                    : `File ${acceptedFiles[0].path} was uploaded`
-                );
-              })
-              .catch((error) => {
-                console.error(error);
-                setSlots((_files) =>
-                  _files.map((_file) =>
-                    _file.file === file ? { ..._file, status: "error" } : _file
-                  )
-                );
-              });
-            return {
-              file,
-              status: "uploading" as FileUploadSlot["status"],
-              progress: 0,
-              id: nanoid(),
-            };
-          }),
-        ];
-      });
-    },
-    onDropRejected: handleRejectedUpload,
-  });
-
-  return (
-    <>
-      {slots.map((slot, index) => {
-        return (
-          <UploadedFileCard
-            {...slot}
-            key={slot.id}
-            index={index}
-            onClick={() => {
-              setSlots((slots) =>
-                slots.filter((currentSlot) => currentSlot.file !== slot.file)
-              );
-              setFileUploadStatus(() => `${slot.file.path} was deleted`);
-            }}
-          />
-        );
-      })}
-      <Dropzone
-        getRootProps={getRootProps}
-        getInputProps={getInputProps}
-        isDragActive={isDragActive}
-        fileUploadStatus={fileUploadStatus}
-      />
-    </>
   );
 };
 

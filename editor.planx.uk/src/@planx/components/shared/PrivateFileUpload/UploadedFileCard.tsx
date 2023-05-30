@@ -10,7 +10,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props extends FileUploadSlot {
   index?: number;
-  onClick: () => void;
+  removeFile: () => void;
 }
 
 const Root = styled(Box)(({ theme }) => ({
@@ -78,14 +78,14 @@ export const UploadedFileCard: React.FC<Props> = ({
   progress,
   url,
   index,
-  onClick,
+  removeFile,
 }) => (
   <Root>
     <DeleteIconButton
       size="small"
       aria-label={`Delete ${file.path}`}
       title={`Delete ${file.path}`}
-      onClick={onClick}
+      onClick={removeFile}
     >
       <DeleteIcon />
     </DeleteIconButton>
