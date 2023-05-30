@@ -5,9 +5,8 @@ import React from "react";
 
 const useStyles = makeStyles(() => ({
   root: {
-    height: 8,
-    width: 19,
-    transition: "transform 0.25s ease-out",
+    height: 11,
+    width: 22,
   },
   expanded: {
     transform: "rotate(180deg)",
@@ -27,7 +26,12 @@ export default function Caret({
       })}
       viewBox="0 0 14 8"
     >
-      <path d="M1 1L7 7L13 1" stroke="currentColor" fill="none" />
+      <path
+        d="M1 1L7 7L13 1"
+        stroke="currentColor"
+        strokeWidth="1.333px"
+        fill="none"
+      />
     </SvgIcon>
   );
 }

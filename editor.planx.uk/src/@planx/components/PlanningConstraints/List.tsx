@@ -30,11 +30,19 @@ const StyledConstraint = styled(Box, {
   shouldForwardProp: (prop) => prop !== "category",
 })<StyledConstraintProps>(({ theme, category }) => ({
   borderLeft: `5px solid ${CATEGORY_COLORS[category]}`,
-  borderBottom: `2px solid ${CATEGORY_COLORS[category]}`,
-  padding: theme.spacing(1, 1),
   paddingRight: 0,
-  width: `100vw`,
+  width: "100%",
   color: theme.palette.text.primary,
+  position: "relative",
+  "&::after": {
+    content: "''",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    height: "1px",
+    background: theme.palette.secondary.main,
+  },
 }));
 
 export default function ConstraintsList({ data, metadata }: any) {
@@ -60,12 +68,13 @@ export default function ConstraintsList({ data, metadata }: any) {
             }}
           >
             <Typography
-              variant="subtitle2"
+              variant="body1"
               component="h3"
+              py={1}
+              px={2}
+              pl={2.5}
               style={{
                 fontWeight: 700,
-                padding: ".5em",
-                paddingLeft: "1em",
                 color: "black",
               }}
             >
@@ -107,15 +116,27 @@ function ConstraintListItem({ children, ...props }: any) {
             justifyContent: "space-between",
           }}
         >
-          {children}
           <Button
             disableRipple
             onClick={() =>
               setShowConstraintData((showConstraintData) => !showConstraintData)
             }
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+              boxShadow: "none",
+              color: "#0B0C0C",
+              fontWeight: "400",
+              padding: 15,
+              paddingLeft: 20,
+            }}
           >
+            <Box>{children}</Box>
             <Caret
               expanded={showConstraintData}
+              color="primary"
               titleAccess={
                 showConstraintData ? "Less Information" : "More Information"
               }
@@ -123,55 +144,57 @@ function ConstraintListItem({ children, ...props }: any) {
           </Button>
         </Box>
         <Collapse in={showConstraintData}>
-          <>
-            <Typography variant="subtitle1" component="h4" gutterBottom>
-              {`This property ${props?.content}`}
-            </Typography>
-            {props.data?.length > 0 && (
-              <List
-                dense
-                disablePadding
-                sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
-              >
-                {props.data.map(
-                  (record: any) =>
-                    record.name && (
-                      <ListItem
-                        key={record.entity}
-                        dense
-                        disableGutters
-                        sx={{ display: "list-item", lineHeight: 1.33 }} // import LINE_HEIGHT_BASE via theme??
-                      >
-                        <Typography variant="body2">
-                          {record.name}{" "}
-                          {record.name && record["documentation-url"] && (
-                            <span>
-                              (
-                              <Link
-                                href={record["documentation-url"]}
-                                target="_blank"
-                              >
-                                source
-                              </Link>
-                              )
-                            </span>
-                          )}
-                        </Typography>
-                      </ListItem>
-                    )
-                )}
-              </List>
-            )}
-          </>
-          <Typography variant="body2">
-            <ReactMarkdownOrHtml
-              source={props.metadata?.text?.replaceAll(
-                "(/",
-                "(https://www.planning.data.gov.uk/"
+          <Box py={1.5} px={2}>
+            <>
+              <Typography variant="h4" component="h4" gutterBottom>
+                {`This property ${props?.content}`}
+              </Typography>
+              {props.data?.length > 0 && (
+                <List
+                  dense
+                  disablePadding
+                  sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
+                >
+                  {props.data.map(
+                    (record: any) =>
+                      record.name && (
+                        <ListItem
+                          key={record.entity}
+                          dense
+                          disableGutters
+                          sx={{ display: "list-item", lineHeight: 1.33 }} // import LINE_HEIGHT_BASE via theme??
+                        >
+                          <Typography variant="body2">
+                            {record.name}{" "}
+                            {record.name && record["documentation-url"] && (
+                              <span>
+                                (
+                                <Link
+                                  href={record["documentation-url"]}
+                                  target="_blank"
+                                >
+                                  source
+                                </Link>
+                                )
+                              </span>
+                            )}
+                          </Typography>
+                        </ListItem>
+                      )
+                  )}
+                </List>
               )}
-              openLinksOnNewTab
-            />
-          </Typography>
+            </>
+            <Typography variant="body2">
+              <ReactMarkdownOrHtml
+                source={props.metadata?.text?.replaceAll(
+                  "(/",
+                  "(https://www.planning.data.gov.uk/"
+                )}
+                openLinksOnNewTab
+              />
+            </Typography>
+          </Box>
         </Collapse>
       </StyledConstraint>
     </ListItem>
