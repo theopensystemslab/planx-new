@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import {
   MapContainer,
@@ -14,10 +15,10 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 
 import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
-import Upload, { FileUpload } from "./Upload";
+import Upload from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
-export type SelectedFile = FileUpload;
+export type SelectedFile = FileUploadSlot;
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);

@@ -24,25 +24,34 @@ interface Props extends MoreInformation {
   previouslySubmittedData?: Store.userData;
 }
 
+export interface FileUploadSlot {
+  file: FileWithPath;
+  status: "success" | "error" | "uploading";
+  progress: number;
+  id: string;
+  url?: string;
+  cachedSlot?: Omit<FileUploadSlot, "cachedSlot">;
+}
+
 const slotsSchema = array()
   .required()
   .test({
     name: "nonUploading",
     message: "Upload at least one file.",
-    test: (slots?: Array<any>) => {
+    test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
           slots.length > 0 &&
-          !slots.some((slot: any) => slot.status === "uploading")
+          !slots.some((slot) => slot.status === "uploading")
       );
     },
   });
 
 const FileUpload: React.FC<Props> = (props) => {
   const recoveredSlots = getPreviouslySubmittedData(props)?.map(
-    (slot: any) => slot.cachedSlot
+    (slot: FileUploadSlot) => slot.cachedSlot
   );
-  const [slots, setSlots] = useState<any[]>(recoveredSlots ?? []);
+  const [slots, setSlots] = useState<FileUploadSlot[]>(recoveredSlots ?? []);
   const [validationError, setValidationError] = useState<string>();
   const [fileUploadStatus, setFileUploadStatus] = useState<string>();
 
@@ -53,7 +62,7 @@ const FileUpload: React.FC<Props> = (props) => {
         props.handleSubmit(
           makeData(
             props,
-            slots.map((slot: any) => ({
+            slots.map((slot) => ({
               url: slot.url,
               filename: slot.file.path,
               cachedSlot: {
@@ -106,7 +115,7 @@ const FileUpload: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
       />
       <ErrorWrapper error={validationError} id={props.id}>
-        <Upload
+        <PrivateFileUpload
           slots={slots}
           setSlots={setSlots}
           fileUploadStatus={fileUploadStatus}
@@ -117,8 +126,19 @@ const FileUpload: React.FC<Props> = (props) => {
   );
 };
 
-function Upload(props: any) {
-  const { slots, setSlots, fileUploadStatus, setFileUploadStatus } = props;
+interface PrivateFileUploadProps {
+  slots: FileUploadSlot[];
+  setSlots: React.Dispatch<React.SetStateAction<FileUploadSlot[]>>;
+  fileUploadStatus?: string;
+  setFileUploadStatus: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
+
+const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
+  slots,
+  setSlots,
+  fileUploadStatus,
+  setFileUploadStatus,
+}) => {
   const MAX_UPLOAD_SIZE_MB = 30;
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -130,7 +150,7 @@ function Upload(props: any) {
     maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: true,
     onDrop: (acceptedFiles: FileWithPath[]) => {
-      setSlots((slots: any) => {
+      setSlots((slots) => {
         return [
           ...slots,
           ...acceptedFiles.map((file) => {
@@ -138,16 +158,16 @@ function Upload(props: any) {
             //      If a file is removed while it's being uploaded, nothing should break because we're using map()
             uploadPrivateFile(file, {
               onProgress: (progress) => {
-                setSlots((_files: any) =>
-                  _files.map((_file: any) =>
+                setSlots((_files) =>
+                  _files.map((_file) =>
                     _file.file === file ? { ..._file, progress } : _file
                   )
                 );
               },
             })
-              .then((url) => {
-                setSlots((_files: any) =>
-                  _files.map((_file: any) =>
+              .then((url: string) => {
+                setSlots((_files) =>
+                  _files.map((_file) =>
                     _file.file === file
                       ? { ..._file, url, status: "success" }
                       : _file
@@ -156,22 +176,22 @@ function Upload(props: any) {
                 setFileUploadStatus(() =>
                   acceptedFiles.length > 1
                     ? `Files ${acceptedFiles
-                        .map((file: any) => file.path)
+                        .map((file) => file.path)
                         .join(", ")} were uploaded`
                     : `File ${acceptedFiles[0].path} was uploaded`
                 );
               })
               .catch((error) => {
                 console.error(error);
-                setSlots((_files: any) =>
-                  _files.map((_file: any) =>
+                setSlots((_files) =>
+                  _files.map((_file) =>
                     _file.file === file ? { ..._file, status: "error" } : _file
                   )
                 );
               });
             return {
               file,
-              status: "uploading",
+              status: "uploading" as FileUploadSlot["status"],
               progress: 0,
               id: nanoid(),
             };
@@ -184,17 +204,15 @@ function Upload(props: any) {
 
   return (
     <>
-      {slots.map((slot: any, index: number) => {
+      {slots.map((slot, index) => {
         return (
           <UploadedFileCard
             {...slot}
             key={slot.id}
             index={index}
             onClick={() => {
-              setSlots(
-                slots.filter(
-                  (currentSlot: any) => currentSlot.file !== slot.file
-                )
+              setSlots((slots) =>
+                slots.filter((currentSlot) => currentSlot.file !== slot.file)
               );
               setFileUploadStatus(() => `${slot.file.path} was deleted`);
             }}
@@ -209,6 +227,6 @@ function Upload(props: any) {
       />
     </>
   );
-}
+};
 
 export default FileUpload;

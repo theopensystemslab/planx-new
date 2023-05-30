@@ -3,22 +3,14 @@ import DeleteIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-interface FileSlot {
-  path: string;
-  size: number;
-} // is this File?
-
-interface Props {
-  id: string;
-  file: FileSlot; // TODO: Tighten this up
-  progress: number;
-  url?: string;
+interface Props extends FileUploadSlot {
   index?: number;
-  onClick: any;
+  onClick: () => void;
 }
 
 const Root = styled(Box)(({ theme }) => ({
@@ -123,7 +115,7 @@ export const UploadedFileCard: React.FC<Props> = ({
   </Root>
 );
 
-function formatBytes(a: any, b = 2) {
+function formatBytes(a: number, b = 2) {
   if (0 === a) return "0 Bytes";
   const c = 0 > b ? 0 : b,
     d = Math.floor(Math.log(a) / Math.log(1024));

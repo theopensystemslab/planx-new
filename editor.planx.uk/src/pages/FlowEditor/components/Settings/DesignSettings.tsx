@@ -98,7 +98,7 @@ const DesignSettings: React.FC = () => {
               <Typography variant="h5">Logo</Typography>
             </InputRowLabel>
             <InputRowItem width={50}>
-              <PublicFileUploadButton></PublicFileUploadButton>
+              <PublicFileUploadButton />
             </InputRowItem>
             <Box color="text.secondary" pl={2} alignSelf="center">
               .png or .svg

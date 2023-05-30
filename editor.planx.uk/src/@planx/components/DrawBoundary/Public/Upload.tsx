@@ -1,3 +1,4 @@
+import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import { uploadPrivateFile } from "api/upload";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
@@ -7,21 +8,15 @@ import { UploadedFileCard } from "ui/UploadedFileCard";
 
 import handleRejectedUpload from "../../shared/handleRejectedUpload";
 
-export interface FileUpload<T extends File = any> {
-  file: T;
-  status: "success" | "error" | "uploading";
-  progress: number;
-  id: string;
-  url?: string;
-}
-
 interface Props {
-  setFile: (file?: FileUpload) => void;
-  initialFile?: FileUpload;
+  setFile: (file?: FileUploadSlot) => void;
+  initialFile?: FileUploadSlot;
 }
 
 export default function FileUpload(props: Props) {
-  const [slot, setSlot] = useState<FileUpload | undefined>(props.initialFile);
+  const [slot, setSlot] = useState<FileUploadSlot | undefined>(
+    props.initialFile
+  );
   const [fileUploadStatus, setFileUploadStatus] = useState<string>();
   const MAX_UPLOAD_SIZE_MB = 30;
 
@@ -40,16 +35,22 @@ export default function FileUpload(props: Props) {
       // XXX: This is a non-blocking promise chain
       uploadPrivateFile(file, {
         onProgress: (progress) => {
-          setSlot((_file: any) => ({ ..._file, progress }));
+          setSlot((_file) =>
+            _file?.file === file ? { ..._file, progress } : _file
+          );
         },
       })
-        .then((url) => {
-          setSlot((_file: any) => ({ ..._file, url, status: "success" }));
+        .then((url: string) => {
+          setSlot((_file) =>
+            _file?.file === file ? { ..._file, url, status: "success" } : _file
+          );
           setFileUploadStatus(() => `File ${file.path} was uploaded`);
         })
         .catch((error) => {
           console.error(error);
-          setSlot((_file: any) => ({ ..._file, status: "error" }));
+          setSlot((_file) =>
+            _file?.file === file ? { ..._file, status: "error" } : _file
+          );
         });
       setSlot({
         file,

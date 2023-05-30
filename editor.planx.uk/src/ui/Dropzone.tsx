@@ -5,12 +5,13 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import React from "react";
+import type { DropzoneState } from "react-dropzone";
 
 interface Props {
   isDragActive: boolean;
-  getRootProps: any;
-  getInputProps: any;
-  fileUploadStatus: any;
+  getRootProps: DropzoneState["getRootProps"];
+  getInputProps: DropzoneState["getInputProps"];
+  fileUploadStatus?: string;
 }
 
 interface RootProps extends ButtonBaseProps {
@@ -59,7 +60,7 @@ export const Dropzone: React.FC<Props> = ({
   getInputProps,
   fileUploadStatus,
 }) => (
-  <Root isDragActive={isDragActive} {...getRootProps()}>
+  <Root isDragActive={isDragActive} {...getRootProps({ role: "button" })}>
     {fileUploadStatus && (
       <p role="status" style={visuallyHidden}>
         {fileUploadStatus}
