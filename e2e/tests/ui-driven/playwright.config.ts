@@ -6,13 +6,13 @@ import { devices } from "@playwright/test";
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: "../../../.env" });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-  testDir: "tests/ui-driven",
+  testDir: "src",
   /* Maximum time one test can run for. */
   timeout: 45 * 1000,
   expect: {
@@ -27,7 +27,7 @@ const config: PlaywrightTestConfig = {
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1,
   /* Opt out of parallel tests */
   workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */

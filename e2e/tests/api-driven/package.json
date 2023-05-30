@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "cucumber-js"
+  },
+  "dependencies": {
+    "@cucumber/cucumber": "^9.1.2",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#main"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "@types/node": "18",
+    "typescript": "^5.0.4"
+  },
+  "engines": {
+    "node": "^16",
+    "pnpm": "^7.8.0"
+  }
+}

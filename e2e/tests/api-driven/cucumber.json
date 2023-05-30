@@ -1,0 +1,12 @@
+{
+  "default": {
+    "requireModule": ["ts-node/register"],
+    "paths": ["src/**/*.feature"],
+    "require": ["src/**/*.ts"],
+    "format": ["summary"],
+    "publishQuiet": true,
+    "formatOptions": {
+      "snippetInterface": "async-await"
+    }
+  }
+}
