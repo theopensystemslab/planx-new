@@ -181,6 +181,14 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
       };
     }
 
+    if (numberOfComponentType(flow, ComponentType.Pay) > 1) {
+      return {
+        isValid: false,
+        message: "Cannot publish an invalid flow",
+        description: "When using Invite to Pay, your flow must have exactly ONE Pay",
+      };
+    }
+
     if (numberOfComponentType(flow, ComponentType.Send) > 1) {
       return {
         isValid: false,
