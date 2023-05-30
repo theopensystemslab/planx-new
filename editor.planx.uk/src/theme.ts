@@ -127,6 +127,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         lineHeight: LINE_HEIGHT_BASE,
         color: TEXT_COLOR_SECONDARY,
       },
+      subtitle2: {
+        fontSize: "1.375rem",
+        lineHeight: LINE_HEIGHT_BASE,
+        color: TEXT_COLOR_SECONDARY,
+      },
       body1: {
         fontSize: "1.188rem",
       },
