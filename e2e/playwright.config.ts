@@ -12,7 +12,7 @@ dotenv.config({ path: "../.env" });
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-  testDir: "./src",
+  testDir: "tests/ui-driven",
   /* Maximum time one test can run for. */
   timeout: 45 * 1000,
   expect: {
@@ -44,7 +44,7 @@ const config: PlaywrightTestConfig = {
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `pnpm test:server`,
+    command: `pnpm ui`,
     port: 3000,
     reuseExistingServer: false,
   },
