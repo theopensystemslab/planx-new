@@ -1,17 +1,14 @@
-import FileIcon from "@mui/icons-material/AttachFile";
-import DeleteIcon from "@mui/icons-material/Close";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
-import IconButton from "@mui/material/IconButton";
 import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import { uploadPrivateFile } from "api/upload";
 import classNames from "classnames";
-import ImagePreview from "components/ImagePreview";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
+import { UploadedFileCard } from "ui/UploadedFileCard";
 
 import handleRejectedUpload from "../../shared/handleRejectedUpload";
 
@@ -54,62 +51,9 @@ const useStyles = makeStyles((theme) => ({
       transform: "scale(1)",
     },
   },
-  file: {
-    position: "relative",
-    height: theme.spacing(14),
-    backgroundColor: theme.palette.background.paper,
-    border: `1px solid ${theme.palette.background.paper}`,
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(1.5),
-    marginBottom: theme.spacing(2),
-    "& > *": {
-      zIndex: 1,
-    },
-  },
-  deleteIcon: {
-    position: "absolute",
-    top: theme.spacing(1),
-    right: theme.spacing(1),
-  },
-  filePreview: {
-    height: theme.spacing(14),
-    width: theme.spacing(14),
-    marginLeft: -theme.spacing(1.5),
-    marginRight: theme.spacing(1.5),
-    opacity: 0.5,
-    position: "relative",
-    overflow: "hidden",
-    "& img": {
-      position: "absolute",
-      width: "100%",
-      left: "50%",
-      top: "50%",
-      transform: "translate(-50%, -50%)",
-    },
-    "& svg": {
-      position: "absolute",
-      left: "50%",
-      top: "50%",
-      transform: "translate(-50%, -50%)",
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-    },
-  },
-  progress: {
-    position: "absolute",
-    height: "100%",
-    left: 0,
-    top: 0,
-    backgroundColor: theme.palette.background.default,
-    zIndex: 0,
-  },
   underlinedLink: {
     textDecoration: "underline",
     color: theme.palette.primary.main,
-  },
-  fileSize: {
-    whiteSpace: "nowrap",
   },
 }));
 
@@ -120,6 +64,7 @@ export interface FileUpload<T extends File = any> {
   id: string;
   url?: string;
 }
+
 interface Props {
   setFile: (file?: FileUpload) => void;
   initialFile?: FileUpload;
@@ -170,51 +115,13 @@ export default function FileUpload(props: Props) {
   return (
     <>
       {slot && (
-        <Box className={classes.file}>
-          <IconButton
-            size="small"
-            className={classes.deleteIcon}
-            aria-label={`Delete ${slot?.file.path}`}
-            title={`Delete ${slot?.file.path}`}
-            onClick={() => {
-              setSlot(undefined);
-              setFileUploadStatus(() => `${slot?.file.path} was deleted`);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-          <Box
-            className={classes.progress}
-            width={`${Math.min(Math.ceil(slot?.progress * 100), 100)}%`}
-            role="progressbar"
-            aria-valuenow={slot?.progress * 100 || 0}
-          />
-          <Box className={classes.filePreview}>
-            {slot?.file instanceof File &&
-            slot?.file?.type?.includes("image") ? (
-              <ImagePreview file={slot?.file} />
-            ) : (
-              <FileIcon />
-            )}
-          </Box>
-          <Box flexGrow={1}>
-            <Box
-              fontSize="caption.fontSize"
-              fontWeight={700}
-              color="text.secondary"
-            >
-              File
-            </Box>
-            {slot?.file.path}
-          </Box>
-          <Box
-            color="text.secondary"
-            alignSelf="flex-end"
-            className={classes.fileSize}
-          >
-            {formatBytes(slot?.file.size)}
-          </Box>
-        </Box>
+        <UploadedFileCard
+          {...slot}
+          onClick={() => {
+            setSlot(undefined);
+            setFileUploadStatus(() => `${slot?.file.path} was deleted`);
+          }}
+        />
       )}
       {fileUploadStatus && (
         <p role="status" style={visuallyHidden}>
@@ -247,16 +154,5 @@ export default function FileUpload(props: Props) {
         </Box>
       </ButtonBase>
     </>
-  );
-}
-
-function formatBytes(a: any, b = 2) {
-  if (0 === a) return "0 Bytes";
-  const c = 0 > b ? 0 : b,
-    d = Math.floor(Math.log(a) / Math.log(1024));
-  return (
-    parseFloat((a / Math.pow(1024, d)).toFixed(c)) +
-    " " +
-    ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"][d]
   );
 }

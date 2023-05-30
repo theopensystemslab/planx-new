@@ -1,9 +1,6 @@
-import FileIcon from "@mui/icons-material/AttachFile";
-import DeleteIcon from "@mui/icons-material/Close";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
-import IconButton from "@mui/material/IconButton";
 import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import { MoreInformation } from "@planx/components/shared";
@@ -11,14 +8,13 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { uploadPrivateFile } from "api/upload";
 import classNames from "classnames";
-import ImagePreview from "components/ImagePreview";
 import { nanoid } from "nanoid";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ErrorWrapper from "ui/ErrorWrapper";
+import { UploadedFileCard } from "ui/UploadedFileCard";
 import { array } from "yup";
 
 import handleRejectedUpload from "../shared/handleRejectedUpload";
@@ -72,62 +68,9 @@ const useStyles = makeStyles((theme) => ({
       transform: "scale(1)",
     },
   },
-  file: {
-    position: "relative",
-    height: theme.spacing(14),
-    backgroundColor: theme.palette.background.paper,
-    border: `1px solid ${theme.palette.background.paper}`,
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(1.5),
-    marginBottom: theme.spacing(2),
-    "& > *": {
-      zIndex: 1,
-    },
-  },
-  deleteIcon: {
-    position: "absolute",
-    top: theme.spacing(1),
-    right: theme.spacing(1),
-  },
-  filePreview: {
-    height: theme.spacing(14),
-    width: theme.spacing(14),
-    marginLeft: -theme.spacing(1.5),
-    marginRight: theme.spacing(1.5),
-    opacity: 0.5,
-    position: "relative",
-    overflow: "hidden",
-    "& img": {
-      position: "absolute",
-      width: "100%",
-      left: "50%",
-      top: "50%",
-      transform: "translate(-50%, -50%)",
-    },
-    "& svg": {
-      position: "absolute",
-      left: "50%",
-      top: "50%",
-      transform: "translate(-50%, -50%)",
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-    },
-  },
-  progress: {
-    position: "absolute",
-    height: "100%",
-    left: 0,
-    top: 0,
-    backgroundColor: theme.palette.background.default,
-    zIndex: 0,
-  },
   underlinedLink: {
     textDecoration: "underline",
     color: theme.palette.primary.main,
-  },
-  fileSize: {
-    whiteSpace: "nowrap",
   },
 }));
 
@@ -292,54 +235,20 @@ function Dropzone(props: any) {
 
   return (
     <>
-      {slots.map(({ id, file, status, progress, url }: any, index: number) => {
+      {slots.map((slot: any, index: number) => {
         return (
-          <Box key={id} className={classes.file}>
-            <IconButton
-              size="small"
-              className={classes.deleteIcon}
-              aria-label={`Delete ${file.path}`}
-              title={`Delete ${file.path}`}
-              onClick={() => {
-                setSlots((slots: any) =>
-                  slots.filter((slot: any) => slot.file !== file)
-                );
-                setFileUploadStatus(() => `${file.path} was deleted`);
-              }}
-            >
-              <DeleteIcon />
-            </IconButton>
-            <Box
-              className={classes.progress}
-              width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
-              role="progressbar"
-              aria-valuenow={progress * 100 || 0}
-            />
-            <Box className={classes.filePreview}>
-              {file instanceof File && file?.type?.includes("image") ? (
-                <ImagePreview file={file} url={url} />
-              ) : (
-                <FileIcon />
-              )}
-            </Box>
-            <Box flexGrow={1}>
-              <Box
-                fontSize="body2.fontSize"
-                fontWeight={FONT_WEIGHT_SEMI_BOLD}
-                color="text.secondary"
-              >
-                File {index + 1}
-              </Box>
-              {file.path}
-            </Box>
-            <Box
-              color="text.secondary"
-              alignSelf="flex-end"
-              className={classes.fileSize}
-            >
-              {formatBytes(file.size)}
-            </Box>
-          </Box>
+          <UploadedFileCard
+            {...slot}
+            index={index}
+            onClick={() => {
+              setSlots(
+                slots.filter(
+                  (currentSlot: any) => currentSlot.file !== slot.file
+                )
+              );
+              setFileUploadStatus(() => `${slot.file.path} was deleted`);
+            }}
+          />
         );
       })}
       {fileUploadStatus && (
@@ -373,17 +282,6 @@ function Dropzone(props: any) {
         </Box>
       </ButtonBase>
     </>
-  );
-}
-
-function formatBytes(a: any, b = 2) {
-  if (0 === a) return "0 Bytes";
-  const c = 0 > b ? 0 : b,
-    d = Math.floor(Math.log(a) / Math.log(1024));
-  return (
-    parseFloat((a / Math.pow(1024, d)).toFixed(c)) +
-    " " +
-    ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"][d]
   );
 }
 
