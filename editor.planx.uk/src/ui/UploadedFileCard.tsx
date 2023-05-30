@@ -82,14 +82,13 @@ const FileSize = styled(Box)(({ theme }) => ({
 }));
 
 export const UploadedFileCard: React.FC<Props> = ({
-  id,
   file,
   progress,
   url,
   index,
   onClick,
 }) => (
-  <Root key={id}>
+  <Root>
     <DeleteIconButton
       size="small"
       aria-label={`Delete ${file.path}`}
