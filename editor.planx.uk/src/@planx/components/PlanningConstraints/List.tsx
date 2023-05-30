@@ -131,7 +131,7 @@ function ConstraintListItem({ children, ...props }: any) {
               <List
                 dense
                 disablePadding
-                sx={{ listStyleType: "disc", pl: 4, pb: 1 }}
+                sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
               >
                 {props.data.map(
                   (record: any) =>
@@ -140,9 +140,9 @@ function ConstraintListItem({ children, ...props }: any) {
                         key={record.entity}
                         dense
                         disableGutters
-                        sx={{ display: "list-item" }}
+                        sx={{ display: "list-item", lineHeight: 1.33 }} // import LINE_HEIGHT_BASE via theme??
                       >
-                        <Box style={{ fontWeight: 700, lineHeight: 1 }}>
+                        <Typography variant="body2">
                           {record.name}{" "}
                           {record.name && record["documentation-url"] && (
                             <span>
@@ -156,7 +156,7 @@ function ConstraintListItem({ children, ...props }: any) {
                               )
                             </span>
                           )}
-                        </Box>
+                        </Typography>
                       </ListItem>
                     )
                 )}

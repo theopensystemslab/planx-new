@@ -174,7 +174,20 @@ function Component(props: Props) {
   );
 }
 
-export function PlanningConstraintsContent(props: any) {
+type PlanningConstraintsContentProps = {
+  title: string;
+  description: string;
+  fn: string;
+  constraints: GISResponse["constraints"];
+  metadata: GISResponse["metadata"];
+  handleSubmit: (values: { feedback: string }) => void;
+  refreshConstraints: () => void;
+  previousFeedback?: string;
+};
+
+export function PlanningConstraintsContent(
+  props: PlanningConstraintsContentProps
+) {
   const {
     title,
     description,
@@ -203,11 +216,12 @@ export function PlanningConstraintsContent(props: any) {
   const showError = error || !Object.values(constraints)?.length;
 
   const positiveConstraints = Object.values(constraints)
-    .filter(({ text }: any) => text)
-    .filter(({ value }: any) => value);
+    .filter(({ text }) => text)
+    .filter(({ value }) => value);
+
   const negativeConstraints = Object.values(constraints)
-    .filter(({ text }: any) => text)
-    .filter(({ value }: any) => !value);
+    .filter(({ text }) => text)
+    .filter(({ value }) => !value);
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
