@@ -270,9 +270,7 @@ function Component(props: Props) {
               : undefined
           }
           showInviteToPay={
-            props.allowInviteToPay &&
-            state.status !== "unsupported_team" &&
-            hasFeatureFlag("INVITE_TO_PAY")
+            props.allowInviteToPay && state.status !== "unsupported_team"
           }
           paymentStatus={govUkPayment?.state?.status}
         />
