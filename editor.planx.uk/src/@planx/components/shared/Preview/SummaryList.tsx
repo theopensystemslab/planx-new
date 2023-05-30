@@ -3,7 +3,6 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { Value } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
@@ -46,7 +45,7 @@ const Grid = styled("dl")(({ theme }) => ({
 }));
 
 const components: {
-  [key in TYPES]: React.FC<any> | undefined;
+  [key in TYPES]: React.FC<ComponentProps> | undefined;
 } = {
   [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
@@ -77,10 +76,31 @@ const components: {
   [TYPES.Statement]: Question,
   [TYPES.TaskList]: undefined,
   [TYPES.TextInput]: TextInput,
-};
+} as const;
 
-interface SummaryListsBySectionsProps extends SummaryListProps {
+type BreadcrumbEntry = [Store.nodeId, Store.breadcrumbs];
+
+interface SummaryListBaseProps {
+  flow: Store.flow;
+  passport: Store.passport;
+  changeAnswer: (id: Store.nodeId) => void;
+  showChangeButton: boolean;
+}
+
+interface SummaryListsBySectionsProps extends SummaryListBaseProps {
+  breadcrumbs: Store.breadcrumbs;
   sectionComponent: React.ElementType<any> | undefined;
+}
+
+interface SummaryBreadcrumb {
+  component: React.FC<ComponentProps>;
+  nodeId: Store.nodeId;
+  userData: Store.userData;
+  node: Store.node;
+}
+
+interface SummaryListProps extends SummaryListBaseProps {
+  summaryBreadcrumbs: SummaryBreadcrumb[];
 }
 
 function SummaryListsBySections(props: SummaryListsBySectionsProps) {
@@ -89,66 +109,86 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     state.getSortedBreadcrumbsBySection,
   ]);
 
-  const isValidComponent = ([nodeId, value]: [Store.nodeId, Value]) => {
+  const isValidComponent = ([nodeId, userData]: BreadcrumbEntry) => {
     const node = props.flow[nodeId];
     const Component = node.type && components[node.type];
 
     const isPresentationalComponent = Boolean(Component);
     const doesNodeExist = Boolean(props.flow[nodeId]);
-    const isAutoAnswered = (value as Store.userData).auto;
+    const isAutoAnswered = userData.auto;
 
     return doesNodeExist && !isAutoAnswered && isPresentationalComponent;
   };
 
-  const removeNonPresentationalNodes = (section: Store.breadcrumbs) =>
-    Object.fromEntries(
-      Object.entries(section.breadcrumbs).filter(isValidComponent)
+  const removeNonPresentationalNodes = (
+    section: Store.breadcrumbs
+  ): BreadcrumbEntry[] => {
+    // Typecast to preserve Store.userData
+    const entries = Object.entries(section) as BreadcrumbEntry[];
+    return entries.filter(isValidComponent);
+  };
+
+  const makeSummaryBreadcrumb = ([
+    nodeId,
+    userData,
+  ]: BreadcrumbEntry): SummaryBreadcrumb => {
+    const node = props.flow[nodeId];
+    const Component = node.type && components[node.type];
+
+    return {
+      component: Component!,
+      nodeId,
+      userData,
+      node,
+    };
+  };
+
+  if (hasSections) {
+    const sections = getSortedBreadcrumbsBySection();
+    const sectionsWithFilteredBreadcrumbs = sections
+      .map(removeNonPresentationalNodes)
+      .map((section) => section.map(makeSummaryBreadcrumb));
+
+    return (
+      <>
+        {sectionsWithFilteredBreadcrumbs.map(
+          (filteredBreadcrumbs, i) =>
+            Boolean(filteredBreadcrumbs.length) && (
+              <React.Fragment key={i}>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography
+                    component={props.sectionComponent || "h2"}
+                    variant="h5"
+                  >
+                    {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
+                  </Typography>
+                </Box>
+                <SummaryList
+                  summaryBreadcrumbs={filteredBreadcrumbs}
+                  flow={props.flow}
+                  passport={props.passport}
+                  changeAnswer={props.changeAnswer}
+                  showChangeButton={props.showChangeButton}
+                />
+              </React.Fragment>
+            )
+        )}
+      </>
     );
-
-  const sections = getSortedBreadcrumbsBySection();
-  const sectionsWithFilteredBreadcrumbs = sections
-    .map(removeNonPresentationalNodes)
-    .filter((section) => section.length) as Store.breadcrumbs[];
-
-  return hasSections ? (
-    <>
-      {sectionsWithFilteredBreadcrumbs.map((sectionBreadcrumbs, i) => (
-        <React.Fragment key={i}>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography component={props.sectionComponent || "h2"} variant="h5">
-              {
-                props.flow[`${Object.keys(sectionsWithFilteredBreadcrumbs)[0]}`]
-                  ?.data?.title
-              }
-            </Typography>
-          </Box>
-          <SummaryList
-            breadcrumbs={sectionBreadcrumbs}
-            flow={props.flow}
-            passport={props.passport}
-            changeAnswer={props.changeAnswer}
-            showChangeButton={props.showChangeButton}
-          />
-        </React.Fragment>
-      ))}
-    </>
-  ) : (
-    <SummaryList
-      breadcrumbs={props.breadcrumbs}
-      flow={props.flow}
-      passport={props.passport}
-      changeAnswer={props.changeAnswer}
-      showChangeButton={props.showChangeButton}
-    />
-  );
-}
-
-interface SummaryListProps {
-  breadcrumbs: Store.breadcrumbs;
-  flow: Store.flow;
-  passport: Store.passport;
-  changeAnswer: (id: Store.nodeId) => void;
-  showChangeButton: boolean;
+  } else {
+    const filteredBreadcrumbs = removeNonPresentationalNodes(
+      props.breadcrumbs
+    ).map(makeSummaryBreadcrumb);
+    return (
+      <SummaryList
+        summaryBreadcrumbs={filteredBreadcrumbs}
+        flow={props.flow}
+        passport={props.passport}
+        changeAnswer={props.changeAnswer}
+        showChangeButton={props.showChangeButton}
+      />
+    );
+  }
 }
 
 // For applicable component types, display a list of their question & answers with a "change" link
@@ -160,15 +200,13 @@ function SummaryList(props: SummaryListProps) {
 
   return (
     <Grid>
-      {Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
-        const node = props.flow[nodeId];
-        const Component = node.type && components[node.type];
-        return (
+      {props.summaryBreadcrumbs.map(
+        ({ component: Component, nodeId, node, userData }, i) => (
           <React.Fragment key={i}>
             <Component
               nodeId={nodeId}
               node={node}
-              userData={value}
+              userData={userData}
               flow={props.flow}
               passport={props.passport}
             />
@@ -191,8 +229,8 @@ function SummaryList(props: SummaryListProps) {
               </dd>
             )}
           </React.Fragment>
-        );
-      })}
+        )
+      )}
     </Grid>
   );
 }
