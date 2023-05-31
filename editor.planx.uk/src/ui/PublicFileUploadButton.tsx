@@ -25,7 +25,7 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-export default function FileUpload(props: Props): FCReturn {
+export default function PublicFileUploadButton(props: Props): FCReturn {
   const { onChange } = props;
 
   const [status, setStatus] = useState<
