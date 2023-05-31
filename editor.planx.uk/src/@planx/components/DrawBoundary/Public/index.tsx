@@ -177,7 +177,7 @@ export default function Component(props: Props) {
           boundary && area && props.dataFieldBoundary
             ? area / 10000
             : undefined,
-        [PASSPORT_UPLOAD_KEY]: slots,
+        [PASSPORT_UPLOAD_KEY]: slots.length ? slots : undefined,
       };
     })();
 
