@@ -9,6 +9,7 @@ import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
+import { Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -289,7 +290,9 @@ const PublicToolbar: React.FC<{
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
-  const showCentredServiceTitle = useMediaQuery("(min-width:768px)");
+  const showCentredServiceTitle = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up("md")
+  );
 
   const handleRestart = async () => {
     if (
