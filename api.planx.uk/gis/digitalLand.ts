@@ -28,7 +28,7 @@ const localAuthorityMetadata: Record<string, any> = {
  */
 async function go(localAuthority: string, geom: string, extras: Record<string, string>) {
   // generate list of digital land datasets we should query based on 'active' planx schema variables
-  let activeDatasets: string[] = [];
+  const activeDatasets: string[] = [];
   Object.keys(baseSchema).forEach((key) => {
     if (baseSchema[key]["active"]) {
       baseSchema[key]["digital-land-datasets"]?.forEach((dataset: string) => {
@@ -38,17 +38,17 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
   });
 
   // set up request query params per https://www.planning.data.gov.uk/docs
-  let options = {
+  const options = {
     entries: "current",
     geometry: geom,
     geometry_relation: "intersects",
     limit: "100", // TODO handle pagination in future for large polygons & many datasets, but should be well within this limit now
   };
   // 'dataset' param is not array[string] per docs, instead re-specify param name per unique dataset
-  let datasets = `&dataset=${[...new Set(activeDatasets)].join(`&dataset=`)}`;
+  const datasets = `&dataset=${[...new Set(activeDatasets)].join(`&dataset=`)}`;
 
   // fetch records from digital land, will return '{ count: 0, entities: [], links: {..} }' if no intersections
-  let url = `https://www.planning.data.gov.uk/entity.json?${new URLSearchParams(
+  const url = `https://www.planning.data.gov.uk/entity.json?${new URLSearchParams(
     options
   )}${datasets}`;
   const res = await fetch(url)
@@ -196,7 +196,7 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
 
   // --- METADATA ---
   // additionally fetch metadata from Digital Land's "dataset" endpoint for extra context
-  let metadata: Record<string, Metadata> = {};
+  const metadata: Record<string, Metadata> = {};
   const urls = activeDatasets.map((dataset) => `https://www.planning.data.gov.uk/dataset/${dataset}.json`);
   await Promise.all(urls.map(url => 
     fetch(url)
