@@ -138,7 +138,7 @@ const ChecklistComponent: React.FC<Props> = ({
       />
 
       <ErrorWrapper error={formik.errors.checked} id={id}>
-        <Grid container spacing={layout === ChecklistLayout.Images ? 1 : 0}>
+        <Grid container spacing={layout === ChecklistLayout.Images ? 2 : 0}>
           {options ? (
             options.map((option: any) =>
               layout === ChecklistLayout.Basic ? (

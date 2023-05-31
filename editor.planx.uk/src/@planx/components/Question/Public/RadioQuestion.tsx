@@ -79,7 +79,7 @@ const RadioQuestion: React.FC<IQuestion> = (props) => {
         >
           <Grid
             container
-            spacing={layout === QuestionLayout.Descriptions ? 2 : 1}
+            spacing={layout === QuestionLayout.Basic ? 1 : 2}
             alignItems="stretch"
           >
             {!props.text?.startsWith("Sorry") &&
@@ -95,7 +95,7 @@ const RadioQuestion: React.FC<IQuestion> = (props) => {
                 switch (layout) {
                   case QuestionLayout.Basic:
                     return (
-                      <Grid item xs={12} key={response.id}>
+                      <Grid item xs={12} ml={1} key={response.id}>
                         <BasicRadio
                           {...buttonProps}
                           {...response}
@@ -107,8 +107,8 @@ const RadioQuestion: React.FC<IQuestion> = (props) => {
                     return (
                       <Grid
                         item
-                        xs={6}
-                        sm={4}
+                        xs={12}
+                        sm={6}
                         key={response.id}
                         data-testid="description-radio"
                       >

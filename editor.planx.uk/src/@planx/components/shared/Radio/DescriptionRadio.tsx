@@ -13,11 +13,16 @@ export interface Props {
 }
 
 const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
-  border: "2px lightgray solid",
+  // Missing logic for border change when selected
+  border: `2px solid ${theme.palette.secondary.main}`,
   padding: theme.spacing(1.5),
   cursor: "pointer",
   display: "block",
   height: "100%",
+  color: theme.palette.text.primary,
+  "& > p": {
+    color: theme.palette.text.secondary,
+  },
 }));
 
 const DescriptionRadio: React.FC<Props> = ({
@@ -27,9 +32,9 @@ const DescriptionRadio: React.FC<Props> = ({
   id,
 }) => (
   <StyledFormLabel focused={false}>
-    <Box sx={{ paddingBottom: 2, display: "flex", alignItems: "center" }}>
+    <Box sx={{ paddingBottom: 1, display: "flex", alignItems: "center" }}>
       <Radio value={id} onChange={onChange} />
-      <Typography>{title}</Typography>
+      <Typography variant="body1">{title}</Typography>
     </Box>
     <Typography variant="body2">{description}</Typography>
   </StyledFormLabel>

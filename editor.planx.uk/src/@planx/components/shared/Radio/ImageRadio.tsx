@@ -49,7 +49,6 @@ const ImageLabelRoot = styled(Box)(() => ({
   overflow: "hidden",
   zIndex: 2,
   borderBottom: "none",
-  bgcolor: "background.default",
 }));
 
 const TextLabelRoot = styled(Box)(() => ({
@@ -57,18 +56,22 @@ const TextLabelRoot = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
   flexGrow: 1,
-  padding: 1,
 }));
 
-const TextLabelContainer = styled(Box)(() => ({
-  paddingBottom: 2,
+const TextLabelContainer = styled(Box)(({ theme }) => ({
+  paddingBottom: theme.spacing(1),
   display: "flex",
   alignItems: "center",
+  color: theme.palette.text.primary,
+  "& > p": {
+    color: theme.palette.text.secondary,
+  },
 }));
 
 const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
-  border: "2px lightgray solid",
-  padding: theme.spacing(1.5),
+  // Missing logic for border change when selected
+  border: `2px solid ${theme.palette.secondary.main}`,
+  padding: theme.spacing(1),
   cursor: "pointer",
   display: "block",
   height: "100%",
@@ -95,7 +98,7 @@ const TextLabel = (props: Props): FCReturn => {
   return (
     <TextLabelRoot
       {...({ ref: textContentEl } as any)}
-      sx={{ alignItems: multiline ? "flex-start" : "center" }}
+      sx={{ alignItems: multiline ? "flex-start" : "center", padding: 0.5 }}
     >
       <TextLabelContainer>
         <Radio value={id} onChange={onChange} />

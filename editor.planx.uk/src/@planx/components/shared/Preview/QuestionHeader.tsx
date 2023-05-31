@@ -56,7 +56,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   };
 
   return (
-    <Box mb={2}>
+    <Box mb={1}>
       <Grid container justifyContent="space-between" wrap="nowrap">
         <Grid item>
           {title && (
