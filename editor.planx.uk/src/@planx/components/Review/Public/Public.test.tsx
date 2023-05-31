@@ -4,6 +4,11 @@ import React from "react";
 import { axe, setup } from "testUtils";
 
 import {
+  breadcrumbsWithEmptySections,
+  flowWithEmptySections,
+  passportWithEmptySections,
+} from "./mocks/emptySections";
+import {
   drawBoundaryFlow,
   fileUploadBreadcrumbs,
   fileUploadFlow,
@@ -19,6 +24,12 @@ import {
 } from "./mocks/sections";
 import { mockedBreadcrumbs, mockedFlow, mockedPassport } from "./mocks/simple";
 import Review from "./Presentational";
+
+const { getState, setState } = vanillaStore;
+
+let initialState: FullStore;
+
+beforeAll(() => (initialState = getState()));
 
 describe("Simple flow", () => {
   it("renders correctly", async () => {
@@ -128,18 +139,19 @@ describe("File uploads", () => {
 });
 
 describe("Flow with sections", () => {
-  const { getState, setState } = vanillaStore;
+  beforeEach(() => {
+    act(() => {
+      setState({
+        flow: flowWithSections,
+        breadcrumbs: breadcrumbsWithSections,
+      });
+      getState().initNavigationStore();
+    });
+  });
 
-  let initialState: FullStore;
-
-  beforeAll(() => (initialState = getState()));
   afterEach(() => act(() => setState(initialState)));
 
   it("renders correctly", async () => {
-    act(() =>
-      setState({ flow: flowWithSections, breadcrumbs: breadcrumbsWithSections })
-    );
-    act(() => getState().initNavigationStore());
     const handleSubmit = jest.fn();
 
     const { user } = setup(
@@ -149,7 +161,7 @@ describe("Flow with sections", () => {
         flow={flowWithSections}
         breadcrumbs={breadcrumbsWithSections}
         passport={passportWithSections}
-        changeAnswer={() => {}}
+        changeAnswer={jest.fn()}
         handleSubmit={handleSubmit}
         showChangeButton={true}
       />
@@ -166,5 +178,86 @@ describe("Flow with sections", () => {
 
     await user.click(screen.getByTestId("continue-button"));
     expect(handleSubmit).toHaveBeenCalled();
+  });
+
+  it("should not have any accessibility violations", async () => {
+    const { container } = setup(
+      <Review
+        title="Review with sections"
+        description="Check your answers before submitting"
+        flow={flowWithSections}
+        breadcrumbs={breadcrumbsWithSections}
+        passport={passportWithSections}
+        changeAnswer={jest.fn()}
+        handleSubmit={jest.fn()}
+        showChangeButton={true}
+      />
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});
+
+describe("Flow with empty sections", () => {
+  beforeEach(() => {
+    act(() => {
+      setState({
+        flow: flowWithEmptySections,
+        breadcrumbs: breadcrumbsWithEmptySections,
+      });
+      getState().initNavigationStore();
+    });
+  });
+
+  afterEach(() => act(() => setState(initialState)));
+
+  test("headers display as expected", async () => {
+    setup(
+      <Review
+        title="Review with empty sections"
+        description="Check your answers before submitting"
+        flow={flowWithEmptySections}
+        breadcrumbs={breadcrumbsWithEmptySections}
+        passport={passportWithEmptySections}
+        changeAnswer={jest.fn()}
+        handleSubmit={jest.fn()}
+        showChangeButton={true}
+      />
+    );
+
+    // Overall header displays
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Review with empty sections"
+    );
+
+    // Section with presentational components is displayed
+    expect(screen.getByText("This is a real section")).toBeInTheDocument();
+
+    // Section without components is not displayed
+    expect(
+      screen.queryByText("This is an empty section")
+    ).not.toBeInTheDocument();
+
+    // Section without presentational components is not displayed
+    expect(
+      screen.queryByText("This is a section without presentational components")
+    ).not.toBeInTheDocument();
+  });
+
+  it("should not have any accessibility violations", async () => {
+    const { container } = setup(
+      <Review
+        title="Review with empty sections"
+        description="Check your answers before submitting"
+        flow={flowWithEmptySections}
+        breadcrumbs={breadcrumbsWithEmptySections}
+        passport={passportWithEmptySections}
+        changeAnswer={jest.fn()}
+        handleSubmit={jest.fn()}
+        showChangeButton={true}
+      />
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

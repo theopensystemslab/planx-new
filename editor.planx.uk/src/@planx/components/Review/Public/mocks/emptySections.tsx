@@ -1,7 +1,4 @@
-import { FlowGraph } from "@opensystemslab/planx-core/dist/types";
-import { ComponentType } from "@opensystemslab/planx-core/types";
-
-export const flowWithEmptySections: FlowGraph = {
+export const flowWithEmptySections = {
   _root: {
     edges: [
       "w74b4ik7z1",
@@ -16,13 +13,13 @@ export const flowWithEmptySections: FlowGraph = {
     data: {
       text: "a",
     },
-    type: ComponentType.Answer,
+    type: 200,
   },
   "7FncYdK9d8": {
     data: {
       title: "This is an empty section",
     },
-    type: ComponentType.Section,
+    type: 360,
   },
   DdbCFDRZH0: {
     data: {
@@ -35,13 +32,13 @@ export const flowWithEmptySections: FlowGraph = {
     data: {
       title: "This is a section without presentational components",
     },
-    type: ComponentType.Section,
+    type: 360,
   },
   mQeG6jHNoQ: {
     data: {
       title: "Check your answers before sending your application",
     },
-    type: ComponentType.Review,
+    type: 600,
   },
   pVnEmZvHNa: {
     data: {
@@ -53,18 +50,38 @@ export const flowWithEmptySections: FlowGraph = {
       description:
         "A payment receipt has been emailed to you. You will also receive an email to confirm when your application has been received.",
     },
-    type: ComponentType.Confirmation,
+    type: 725,
   },
   rSNMzMODm3: {
     data: {
       text: "b",
     },
-    type: ComponentType.Answer,
+    type: 200,
   },
   w74b4ik7z1: {
     data: {
       title: "This is a real section",
     },
-    type: ComponentType.Section,
+    type: 360,
   },
+};
+
+export const breadcrumbsWithEmptySections = {
+  w74b4ik7z1: {
+    auto: false,
+  },
+  DdbCFDRZH0: {
+    auto: false,
+    answers: ["3FJ2Du4RpG"],
+  },
+  "7FncYdK9d8": {
+    auto: false,
+  },
+  TF5I8NHpk1: {
+    auto: false,
+  },
+};
+
+export const passportWithEmptySections = {
+  data: {},
 };
