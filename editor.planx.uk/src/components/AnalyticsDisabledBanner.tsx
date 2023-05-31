@@ -9,7 +9,7 @@ import AnalyticsChart from "ui/icons/AnalyticsChart";
 const AnalyticsWarning = styled(Box)(({ theme }) => ({
   display: "flex",
   backgroundColor: "#FFFB00",
-  padding: `0 ${theme.spacing(4)}`,
+  padding: theme.spacing(0.5, 2),
   color: "#070707",
   justifyContent: "space-between",
   alignItems: "center",
@@ -33,10 +33,10 @@ const AnalyticsDisabledBanner: React.FC = () => {
         <AnalyticsWarning>
           <Box display="flex" alignItems="center">
             <AnalyticsChart />
-            <Typography variant="body2">
-              <b>Analytics off</b> This is a preview link for testing. No usage
-              data is being recorded.{"  "}
-              <Link href={enableAnalytics()} color="inherit">
+            <Typography variant="body2" ml={1}>
+              <strong>Analytics off</strong> This is a preview link for testing.
+              No usage data is being recorded.{"  "}
+              <Link href={enableAnalytics()} color="inherit" mr={1}>
                 Go to normal link
               </Link>
             </Typography>
