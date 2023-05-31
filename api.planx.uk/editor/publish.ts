@@ -1,5 +1,5 @@
 import * as jsondiffpatch from "jsondiffpatch";
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 import { gql } from "graphql-request";
@@ -17,21 +17,29 @@ const validateAndDiffFlow = async (
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
 
-    const { isValid: sectionsAreValid, message: sectionsValidationMessage, description: sectionsValidationDescription } = validateSections(flattenedFlow);
+    const {
+      isValid: sectionsAreValid,
+      message: sectionsValidationMessage,
+      description: sectionsValidationDescription,
+    } = validateSections(flattenedFlow);
     if (!sectionsAreValid) {
       return res.json({
         alteredNodes: null,
         message: sectionsValidationMessage,
-        description: sectionsValidationDescription
+        description: sectionsValidationDescription,
       });
     }
 
-    const { isValid: payIsValid, message: payValidationMessage, description: payValidationDescription } = validateInviteToPay(flattenedFlow);
+    const {
+      isValid: payIsValid,
+      message: payValidationMessage,
+      description: payValidationDescription,
+    } = validateInviteToPay(flattenedFlow);
     if (!payIsValid) {
       return res.json({
         alteredNodes: null,
         message: payValidationMessage,
-        description: payValidationDescription
+        description: payValidationDescription,
       });
     }
 
@@ -41,11 +49,11 @@ const validateAndDiffFlow = async (
     if (delta) {
       const alteredNodes = Object.keys(delta).map((key) => ({
         id: key,
-        ...flattenedFlow[key]
+        ...flattenedFlow[key],
       }));
 
       return res.json({
-        alteredNodes
+        alteredNodes,
       });
     } else {
       return res.json({
@@ -75,17 +83,19 @@ const publishFlow = async (
       const response = await adminClient.request(
         gql`
           mutation PublishFlow(
-            $data: jsonb = {},
-            $flow_id: uuid,
-            $publisher_id: Int,
-            $summary: String,
+            $data: jsonb = {}
+            $flow_id: uuid
+            $publisher_id: Int
+            $summary: String
           ) {
-            insert_published_flows_one(object: {
-              data: $data,
-              flow_id: $flow_id,
-              publisher_id: $publisher_id,
-              summary: $summary,
-            }) {
+            insert_published_flows_one(
+              object: {
+                data: $data
+                flow_id: $flow_id
+                publisher_id: $publisher_id
+                summary: $summary
+              }
+            ) {
               id
               flow_id
               publisher_id
@@ -126,10 +136,10 @@ const publishFlow = async (
 };
 
 type ValidationResponse = {
-  isValid: boolean,
+  isValid: boolean;
   message: string;
-  description?: string,
-}
+  description?: string;
+};
 
 const validateSections = (flow: Record<string, any>): ValidationResponse => {
   if (getSectionNodeIds(flow)?.length > 0) {
@@ -137,7 +147,7 @@ const validateSections = (flow: Record<string, any>): ValidationResponse => {
       return {
         isValid: false,
         message: "Cannot publish an invalid flow",
-        description: "When using Sections, your flow must start with a Section"
+        description: "When using Sections, your flow must start with a Section",
       };
     }
 
@@ -145,19 +155,22 @@ const validateSections = (flow: Record<string, any>): ValidationResponse => {
       return {
         isValid: false,
         message: "Cannot publish an invalid flow",
-        description: "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
+        description:
+          "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
       };
     }
   }
 
-  return { 
-    isValid: true, 
-    message: "This flow has valid Sections or is not using Sections" 
+  return {
+    isValid: true,
+    message: "This flow has valid Sections or is not using Sections",
   };
 };
 
 const getSectionNodeIds = (flow: Record<string, any>): string[] => {
-  return Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Section)?.map(([nodeId, _nodeData]) => nodeId);
+  return Object.entries(flow)
+    .filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Section)
+    ?.map(([nodeId, _nodeData]) => nodeId);
 };
 
 const sectionIsInFirstPosition = (flow: Record<string, any>): boolean => {
@@ -167,82 +180,116 @@ const sectionIsInFirstPosition = (flow: Record<string, any>): boolean => {
 
 const allSectionsOnRoot = (flow: Record<string, any>): boolean => {
   const sectionTypeNodeIds = getSectionNodeIds(flow);
-  const intersectingNodeIds = intersection(flow["_root"].edges, sectionTypeNodeIds);
+  const intersectingNodeIds = intersection(
+    flow["_root"].edges,
+    sectionTypeNodeIds
+  );
   return intersectingNodeIds.length === sectionTypeNodeIds.length;
 };
 
 const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
-  if (hasComponentType(flow, ComponentType.Pay) && inviteToPayEnabled(flow)) {
-    if(!hasComponentType(flow, ComponentType.Send)) {
+  const invalidResponseTemplate = {
+    isValid: false,
+    message: "Cannot publish an invalid flow",
+  };
+  if (inviteToPayEnabled(flow)) {
+    if (!hasComponentType(flow, ComponentType.Pay)) {
       return {
-        isValid: false,
-        message: "Cannot publish an invalid flow",
-        description: "When using Invite to Pay, your flow must have a Send",
+        ...invalidResponseTemplate,
+        description: "When using Invite to Pay, your flow must have a Pay",
       };
     }
 
     if (numberOfComponentType(flow, ComponentType.Pay) > 1) {
       return {
-        isValid: false,
-        message: "Cannot publish an invalid flow",
-        description: "When using Invite to Pay, your flow must have exactly ONE Pay",
+        ...invalidResponseTemplate,
+        description:
+          "When using Invite to Pay, your flow must have exactly ONE Pay",
+      };
+    }
+
+    if (!hasComponentType(flow, ComponentType.Send)) {
+      return {
+        ...invalidResponseTemplate,
+        description: "When using Invite to Pay, your flow must have a Send",
       };
     }
 
     if (numberOfComponentType(flow, ComponentType.Send) > 1) {
       return {
-        isValid: false,
-        message: "Cannot publish an invalid flow",
-        description: "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
+        ...invalidResponseTemplate,
+        description:
+          "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
       };
     }
-    
+
     if (!hasComponentType(flow, ComponentType.FindProperty)) {
       return {
-        isValid: false,
-        message: "Cannot publish an invalid flow",
-        description: "When using Invite to Pay, your flow must have a FindProperty",
+        ...invalidResponseTemplate,
+        description:
+          "When using Invite to Pay, your flow must have a FindProperty",
       };
     }
-    
-    if (!hasComponentType(flow, ComponentType.Checklist, "proposal.projectType")) {
+
+    if (
+      !hasComponentType(flow, ComponentType.Checklist, "proposal.projectType")
+    ) {
       return {
-        isValid: false,
-        message: "Cannot publish an invalid flow",
-        description: "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`",
+        ...invalidResponseTemplate,
+        description:
+          "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`",
       };
     }
   }
 
   return {
     isValid: true,
-    message: "This flow is valid for Invite to Pay or is not using Invite to Pay",
+    message:
+      "This flow is valid for Invite to Pay or is not using Invite to Pay",
   };
 };
 
 const inviteToPayEnabled = (flow: Record<string, any>): boolean => {
-  const payNodeStatuses = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Pay)?.map(([_nodeId, nodeData]) => nodeData?.data?.allowInviteToPay);
-  return payNodeStatuses.every(status => status === true);
+  const payNodeStatuses = Object.entries(flow)
+    .filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Pay)
+    ?.map(([_nodeId, nodeData]) => nodeData?.data?.allowInviteToPay);
+  return payNodeStatuses.every((status) => status === true);
 };
 
-const hasComponentType = (flow: Record<string, any>, type: ComponentType, fn?: string): boolean => {
-  const nodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === type);
+const hasComponentType = (
+  flow: Record<string, any>,
+  type: ComponentType,
+  fn?: string
+): boolean => {
+  const nodeIds = Object.entries(flow).filter(
+    ([_nodeId, nodeData]) => nodeData?.type === type
+  );
   if (fn) {
-    nodeIds?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)?.map(([nodeId, _nodeData]) => nodeId);
+    nodeIds
+      ?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)
+      ?.map(([nodeId, _nodeData]) => nodeId);
   } else {
     nodeIds?.map(([nodeId, _nodeData]) => nodeId);
   }
   return Boolean(nodeIds?.length);
 };
 
-const numberOfComponentType = (flow: Record<string, any>, type: ComponentType, fn?: string): number => {
-  const nodeIds = Object.entries(flow).filter(([_nodeId, nodeData]) => nodeData?.type === type);
+const numberOfComponentType = (
+  flow: Record<string, any>,
+  type: ComponentType,
+  fn?: string
+): number => {
+  const nodeIds = Object.entries(flow).filter(
+    ([_nodeId, nodeData]) => nodeData?.type === type
+  );
   if (fn) {
-    nodeIds?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)?.map(([nodeId, _nodeData]) => nodeId);
+    nodeIds
+      ?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)
+      ?.map(([nodeId, _nodeData]) => nodeId);
   } else {
     nodeIds?.map(([nodeId, _nodeData]) => nodeId);
   }
   return nodeIds?.length;
-}
+};
 
 export { validateAndDiffFlow, publishFlow };
