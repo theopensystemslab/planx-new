@@ -49,10 +49,6 @@ const responses: { [key in QuestionLayout]: IQuestion["responses"] } = {
 };
 describe("Question component", () => {
   ["Radio", "Button"].forEach((type) => {
-    beforeAll(() => {
-      if (type === "Radio") toggleFeatureFlag("ALT_THEME");
-    });
-
     describe(`${type} type`, () => {
       [
         QuestionLayout.Basic,

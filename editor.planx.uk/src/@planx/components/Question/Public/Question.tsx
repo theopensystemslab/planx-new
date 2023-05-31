@@ -1,9 +1,7 @@
-import { hasFeatureFlag } from "lib/featureFlags";
 import { Store } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
-import ButtonQuestion from "./ButtonQuestion";
 import RadioQuestion from "./RadioQuestion";
 
 export interface IQuestion {
@@ -32,14 +30,6 @@ export enum QuestionLayout {
   Descriptions,
 }
 
-const Question: React.FC<IQuestion> = (props) => {
-  const isUsingAltTheme = hasFeatureFlag("ALT_THEME");
-
-  return isUsingAltTheme ? (
-    <RadioQuestion {...props} />
-  ) : (
-    <ButtonQuestion {...props} />
-  );
-};
+const Question: React.FC<IQuestion> = (props) => <RadioQuestion {...props} />;
 
 export default Question;

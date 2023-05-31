@@ -277,16 +277,6 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
         ],
       },
-    },
-  };
-
-  return themeOptions;
-};
-
-const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
-  const themeOptions = getThemeOptions(primaryColor);
-  const altThemeOptions: ThemeOptions = {
-    components: {
       MuiRadio: {
         defaultProps: {
           disableRipple: true,
@@ -345,16 +335,15 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
       },
     },
   };
-  return deepmerge(themeOptions, altThemeOptions);
+
+  return themeOptions;
 };
 
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
   primaryColor: string = DEFAULT_PRIMARY_COLOR
 ): Theme => {
-  const themeOptions = hasFeatureFlag("ALT_THEME")
-    ? getAltThemeOptions(primaryColor)
-    : getThemeOptions(primaryColor);
+  const themeOptions = getThemeOptions(primaryColor);
   const theme = responsiveFontSizes(createTheme(themeOptions));
   return theme;
 };
