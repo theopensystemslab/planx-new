@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
 import Radio, { RadioProps } from "@mui/material/Radio";
+import { useRadioGroup } from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
@@ -12,9 +13,17 @@ export interface Props {
   onChange: RadioProps["onChange"];
 }
 
-const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
-  // Missing logic for border change when selected
-  border: `2px solid ${theme.palette.secondary.main}`,
+interface StyledFormLabelProps {
+  isSelected: boolean;
+}
+
+const StyledFormLabel = styled(FormLabel, {
+  shouldForwardProp: (prop) => prop !== "isSelected",
+})<StyledFormLabelProps>(({ theme, isSelected }) => ({
+  border: "2px solid",
+  borderColor: isSelected
+    ? theme.palette.primary.main
+    : theme.palette.secondary.main,
   padding: theme.spacing(1.5),
   cursor: "pointer",
   display: "block",
@@ -30,14 +39,19 @@ const DescriptionRadio: React.FC<Props> = ({
   description,
   onChange,
   id,
-}) => (
-  <StyledFormLabel focused={false}>
-    <Box sx={{ paddingBottom: 1, display: "flex", alignItems: "center" }}>
-      <Radio value={id} onChange={onChange} />
-      <Typography variant="body1">{title}</Typography>
-    </Box>
-    <Typography variant="body2">{description}</Typography>
-  </StyledFormLabel>
-);
+}) => {
+  const radioGroupState = useRadioGroup();
+  const isSelected = radioGroupState?.value === id;
+
+  return (
+    <StyledFormLabel focused={false} isSelected={isSelected}>
+      <Box sx={{ paddingBottom: 1, display: "flex", alignItems: "center" }}>
+        <Radio value={id} onChange={onChange} />
+        <Typography variant="body1">{title}</Typography>
+      </Box>
+      <Typography variant="body2">{description}</Typography>
+    </StyledFormLabel>
+  );
+};
 
 export default DescriptionRadio;

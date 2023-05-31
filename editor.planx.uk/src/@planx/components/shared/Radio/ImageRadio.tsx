@@ -2,6 +2,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
 import Radio, { RadioProps } from "@mui/material/Radio";
+import { useRadioGroup } from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useLayoutEffect, useRef, useState } from "react";
@@ -68,9 +69,17 @@ const TextLabelContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
-  // Missing logic for border change when selected
-  border: `2px solid ${theme.palette.secondary.main}`,
+interface StyledFormLabelProps {
+  isSelected: boolean;
+}
+
+const StyledFormLabel = styled(FormLabel, {
+  shouldForwardProp: (prop) => prop !== "isSelected",
+})<StyledFormLabelProps>(({ theme, isSelected }) => ({
+  border: "2px solid",
+  borderColor: isSelected
+    ? theme.palette.primary.main
+    : theme.palette.secondary.main,
   padding: theme.spacing(1),
   cursor: "pointer",
   display: "block",
@@ -137,11 +146,16 @@ const ImageLabel = (props: Props): FCReturn => {
   );
 };
 
-const ImageRadio: React.FC<Props> = (props: Props) => (
-  <StyledFormLabel focused={false}>
-    <ImageLabel {...props} />
-    <TextLabel {...props} />
-  </StyledFormLabel>
-);
+const ImageRadio: React.FC<Props> = (props: Props) => {
+  const radioGroupState = useRadioGroup();
+  const isSelected = radioGroupState?.value === props.id;
+
+  return (
+    <StyledFormLabel focused={false} isSelected={isSelected}>
+      <ImageLabel {...props} />
+      <TextLabel {...props} />
+    </StyledFormLabel>
+  );
+};
 
 export default ImageRadio;
