@@ -139,7 +139,8 @@ export const Dropzone: React.FC<Props> = ({
             "Drop the files here"
           ) : (
             <>
-              Drag files here or <Link>choose a file</Link>
+              Drag {maxFiles === 1 ? "file" : "files"} here or{" "}
+              <Link>choose a file</Link>
             </>
           )}
         </Box>
