@@ -3,8 +3,8 @@ import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
 import { getFeedbackMetadata } from "lib/feedback";
 import React, { useEffect, useState } from "react";
 
