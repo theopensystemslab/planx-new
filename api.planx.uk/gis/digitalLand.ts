@@ -5,8 +5,15 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { addDesignatedVariable, omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
 
+interface LocalAuthorityMetadata {
+  planningConstraints: {
+    article4: {
+      records: Record<string, string>
+    }
+  }
+}
 
-const localAuthorityMetadata: Record<string, any> = {
+const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   buckinghamshire: require("./local_authorities/metadata/buckinghamshire.js"),
   canterbury: require("./local_authorities/metadata/canterbury.js"),
   doncaster: require("./local_authorities/metadata/doncaster.js"),
