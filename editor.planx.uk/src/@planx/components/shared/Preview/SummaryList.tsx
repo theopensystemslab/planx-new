@@ -44,7 +44,7 @@ const Grid = styled("dl")(({ theme }) => ({
   },
 }));
 
-const components: {
+const presentationalComponents: {
   [key in TYPES]: React.FC<ComponentProps> | undefined;
 } = {
   [TYPES.AddressInput]: AddressInput,
@@ -111,7 +111,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 
   const isValidComponent = ([nodeId, userData]: BreadcrumbEntry) => {
     const node = props.flow[nodeId];
-    const Component = node.type && components[node.type];
+    const Component = node.type && presentationalComponents[node.type];
 
     const isPresentationalComponent = Boolean(Component);
     const doesNodeExist = Boolean(props.flow[nodeId]);
@@ -133,7 +133,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     userData,
   ]: BreadcrumbEntry): SummaryBreadcrumb => {
     const node = props.flow[nodeId];
-    const Component = node.type && components[node.type];
+    const Component = node.type && presentationalComponents[node.type];
 
     return {
       component: Component!,
@@ -210,8 +210,8 @@ function SummaryList(props: SummaryListProps) {
               flow={props.flow}
               passport={props.passport}
             />
-            {props.showChangeButton ? (
-              <dd>
+            <dd>
+              {props.showChangeButton && (
                 <Link
                   onClick={() => handleClick(nodeId)}
                   component="button"
@@ -222,12 +222,8 @@ function SummaryList(props: SummaryListProps) {
                     {node.data?.title || node.data?.text || "this answer"}
                   </span>
                 </Link>
-              </dd>
-            ) : (
-              <dd>
-                {/** ensure there's always a third column to not break styling, even when showChange is false */}
-              </dd>
-            )}
+              )}
+            </dd>
           </React.Fragment>
         )
       )}
