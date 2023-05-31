@@ -280,37 +280,6 @@ describe("invite to pay validation on diff", () => {
       });
   });
 
-  it("does not update if invite to pay is enabled, but there is no Pay component", async () => {
-    const invalidFlow = {
-      ...flowWithInviteToPay,
-      Pay: undefined,
-      _root: {
-        edges: flowWithInviteToPay._root.edges!.filter((id) => id !== "Pay"),
-      },
-    };
-
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flows_by_pk: {
-          data: invalidFlow,
-        },
-      },
-    });
-
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(authHeader())
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have a Pay"
-        );
-      });
-  });
-
   it("does not update if invite to pay is enabled, but there is more than one Pay component", async () => {
     const invalidFlow = {
       ...flowWithInviteToPay,

@@ -192,14 +192,8 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
     isValid: false,
     message: "Cannot publish an invalid flow",
   };
-  if (inviteToPayEnabled(flow)) {
-    if (!hasComponentType(flow, ComponentType.Pay)) {
-      return {
-        ...invalidResponseTemplate,
-        description: "When using Invite to Pay, your flow must have a Pay",
-      };
-    }
 
+  if (inviteToPayEnabled(flow)) {
     if (numberOfComponentType(flow, ComponentType.Pay) > 1) {
       return {
         ...invalidResponseTemplate,
@@ -253,7 +247,10 @@ const inviteToPayEnabled = (flow: Record<string, any>): boolean => {
   const payNodeStatuses = Object.entries(flow)
     .filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Pay)
     ?.map(([_nodeId, nodeData]) => nodeData?.data?.allowInviteToPay);
-  return payNodeStatuses.every((status) => status === true);
+  return (
+    payNodeStatuses.length > 0 &&
+    payNodeStatuses.every((status) => status === true)
+  );
 };
 
 const hasComponentType = (
