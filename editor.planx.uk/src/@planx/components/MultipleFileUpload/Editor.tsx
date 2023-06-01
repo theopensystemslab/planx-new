@@ -13,15 +13,19 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
-import { MultipleFileUpload,parseContent } from "./model";
+import { MultipleFileUpload, parseContent } from "./model";
+import { multipleFileUploadSchema } from "./schema";
 
 type Props = EditorProps<TYPES.MultipleFileUpload, MultipleFileUpload>;
 
 export default MultipleFileUpload;
 
 function MultipleFileUpload(props: Props) {
-  const formik = useFormik({
+  const formik = useFormik<MultipleFileUpload>({
     initialValues: parseContent(props.node?.data),
+    validationSchema: multipleFileUploadSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (newValues) => {
       props.handleSubmit?.({
         type: TYPES.MultipleFileUpload,
@@ -29,6 +33,8 @@ function MultipleFileUpload(props: Props) {
       });
     },
   });
+
+  console.log(formik);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
