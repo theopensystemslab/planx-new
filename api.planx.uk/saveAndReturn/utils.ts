@@ -165,7 +165,7 @@ const getSessionDetails = async (
 const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
-  team: Team,
+  team: Team
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),

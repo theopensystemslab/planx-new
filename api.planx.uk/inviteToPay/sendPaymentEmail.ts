@@ -23,7 +23,7 @@ const sendSinglePaymentEmail = async ({
   paymentRequestId
 }: {
   template: Template,
-  paymentRequestId: string
+  paymentRequestId: string,
 }) => {
   try {
     const { session, paymentRequest } = await validatePaymentRequest(paymentRequestId, template);
@@ -96,7 +96,7 @@ const getInviteToPayNotifyConfig = async (session: SessionDetails, paymentReques
     serviceName: convertSlugToName(session.flow.slug),
     serviceLink: getServiceLink(session.flow.team, session.flow.slug),
     expiryDate: calculateExpiryDate(paymentRequest.createdAt),
-    paymentLink: getPaymentLink(session, paymentRequest)
+    paymentLink: getPaymentLink(session, paymentRequest),
   }
 });
 
