@@ -20,13 +20,6 @@ import {
 
 let context: Context = {
   ...contextDefaults,
-  team: {
-    name: "Buckinghamshire",
-    slug: "buckinghamshire",
-    logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
-    primaryColor: "#F30415",
-    homepage: "example.com",
-  },
   flow: {
     slug: "pay-test",
     data: payFlow,

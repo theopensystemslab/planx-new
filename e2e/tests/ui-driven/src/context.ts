@@ -18,6 +18,7 @@ export interface Context {
     logo: string;
     primaryColor: string;
     homepage: string;
+    submissionEmail: string;
   };
   flow?: {
     id?: string;
@@ -38,10 +39,11 @@ export const contextDefaults = {
   },
   team: {
     name: "E2E Test Team",
-    slug: "e2e-test-team",
+    slug: "e2e",
     logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
     primaryColor: "#444444",
     homepage: "planx.uk",
+    submissionEmail: "simulate-delivered@notifications.service.gov.uk",
   },
 };
 
@@ -55,11 +57,12 @@ export async function setUpTestContext(
   }
   if (context.team) {
     context.team.id = await core.createTeam({
-      name: context.team.name,
       slug: context.team.slug,
+      name: context.team.name,
       logo: context.team.logo,
       primaryColor: context.team.primaryColor,
       homepage: context.team.homepage,
+      submissionEmail: context.team.submissionEmail,
     });
   }
   if (
