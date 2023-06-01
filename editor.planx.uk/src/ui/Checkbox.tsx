@@ -35,8 +35,6 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
     top: "42%",
     transform: "translate(-50%, -50%) rotate(45deg)",
     cursor: "pointer",
-    // Prevent conflict with click event on image button components
-    pointerEvents: "none",
   },
 }));
 

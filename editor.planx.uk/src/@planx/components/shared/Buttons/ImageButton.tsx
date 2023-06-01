@@ -38,6 +38,7 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
       width: "100%",
       border: "2px solid",
       borderColor: (props) => props.borderColor,
+      pointerEvents: "none",
       borderTop: "none",
       display: "flex",
       flexGrow: 1,

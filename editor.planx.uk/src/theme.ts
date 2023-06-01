@@ -13,7 +13,6 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
-import { hasFeatureFlag } from "lib/featureFlags";
 
 const GOVUK_YELLOW = "#FFDD00";
 
