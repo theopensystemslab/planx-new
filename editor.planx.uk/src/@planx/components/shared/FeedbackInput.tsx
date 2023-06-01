@@ -1,5 +1,5 @@
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import CollapsibleInput from "ui/CollapsibleInput";

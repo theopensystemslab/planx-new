@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import styled from "@mui/styles/styled";
 import { visuallyHidden } from "@mui/utils";
 import {
   DESCRIPTION_TEXT,
