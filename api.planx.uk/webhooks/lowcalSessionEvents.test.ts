@@ -65,12 +65,12 @@ describe("Create reminder event webhook", () => {
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
     expect(mockArgs.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/reminder");
     expect(mockArgs.payload).toMatchObject(body.payload);
-    expect(mockArgs.comment).toBe(`reminder_${body.payload.sessionId}_7days`);
+    expect(mockArgs.comment).toBe(`reminder_${body.payload.sessionId}_7day`);
 
     const mockArgsSecondEvent = mockedCreateScheduledEvent.mock.calls[1][0];
     expect(mockArgsSecondEvent.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/reminder");
     expect(mockArgsSecondEvent.payload).toMatchObject(body.payload);
-    expect(mockArgsSecondEvent.comment).toBe(`reminder_${body.payload.sessionId}_1days`);
+    expect(mockArgsSecondEvent.comment).toBe(`reminder_${body.payload.sessionId}_1day`);
   });
 
   it("returns a 500 on event setup failure", async () => {

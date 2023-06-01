@@ -93,7 +93,6 @@ interface SaveAndReturnNotifyPersonalisation
   projectType?: string;
   resumeLink?: string;
   teamName: string;
-  reminderDays?: string;
 }
 
 export interface SaveAndReturnNotifyConfig {
@@ -120,7 +119,6 @@ interface InviteToPayNotifyPersonalisation
   paymentLink?: string;
   paymentRequestId: string;
   projectType?: string;
-  reminderDays?: string;
 }
 
 export interface InviteToPayNotifyConfig {

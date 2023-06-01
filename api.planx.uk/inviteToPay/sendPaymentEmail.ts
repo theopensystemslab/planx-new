@@ -20,17 +20,15 @@ interface ValidatePaymentRequest {
 
 const sendSinglePaymentEmail = async ({
   template,
-  paymentRequestId,
-  reminderDays
+  paymentRequestId
 }: {
   template: Template,
-  paymentRequestId: string,
-  reminderDays?: number,
+  paymentRequestId: string
 }) => {
   try {
     const { session, paymentRequest } = await validatePaymentRequest(paymentRequestId, template);
     if (!session || !paymentRequest) throw Error(`Invalid payment request: ${paymentRequestId}`);
-    const config = await getInviteToPayNotifyConfig(session, paymentRequest, reminderDays);
+    const config = await getInviteToPayNotifyConfig(session, paymentRequest);
     const recipient = template.includes("-agent") ? session.email : paymentRequest.payeeEmail;
     return await sendEmail(template, recipient, config);
   } catch (error) {
@@ -84,7 +82,7 @@ const validatePaymentRequest = async (
   }
 };
 
-const getInviteToPayNotifyConfig = async (session: SessionDetails, paymentRequest: PaymentRequest, reminderDays?: number): Promise<InviteToPayNotifyConfig> => ({
+const getInviteToPayNotifyConfig = async (session: SessionDetails, paymentRequest: PaymentRequest): Promise<InviteToPayNotifyConfig> => ({
   personalisation: {
     ...session.flow.team.notifyPersonalisation,
     sessionId: paymentRequest.sessionId,
@@ -98,8 +96,7 @@ const getInviteToPayNotifyConfig = async (session: SessionDetails, paymentReques
     serviceName: convertSlugToName(session.flow.slug),
     serviceLink: getServiceLink(session.flow.team, session.flow.slug),
     expiryDate: calculateExpiryDate(paymentRequest.createdAt),
-    paymentLink: getPaymentLink(session, paymentRequest),
-    reminderDays: reminderDays === 1 ? `${reminderDays} day` : `${reminderDays} days`,
+    paymentLink: getPaymentLink(session, paymentRequest)
   }
 });
 

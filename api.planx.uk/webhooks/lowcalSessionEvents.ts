@@ -19,11 +19,8 @@ const createReminderEvent = async (req: Request, res: Response, next: NextFuncti
       createScheduledEvent({
         webhook: "{{HASURA_PLANX_API_URL}}/send-email/reminder",
         schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - day)),
-        payload: {
-          ...payload,
-          reminderDays: day,
-        },
-        comment: `reminder_${payload.sessionId}_${day}days`,
+        payload: payload,
+        comment: `reminder_${payload.sessionId}_${day}day`,
       })
     )));
     res.json(response);

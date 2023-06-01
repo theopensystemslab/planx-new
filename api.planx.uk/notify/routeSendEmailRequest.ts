@@ -13,7 +13,7 @@ export async function routeSendEmailRequest(
   next: NextFunction
 ) {
   try {
-    const { email, sessionId, paymentRequestId, lockedAt, reminderDays } = req.body.payload;
+    const { email, sessionId, paymentRequestId, lockedAt } = req.body.payload;
     const template = req.params.template as Template;
 
     const invalidTemplate = (_unknownTemplate?: never) => {
@@ -34,7 +34,6 @@ export async function routeSendEmailRequest(
         template,
         email,
         sessionId,
-        reminderDays,
       });
       return res.json(response);
     };
@@ -49,7 +48,6 @@ export async function routeSendEmailRequest(
       const response = await sendSinglePaymentEmail({
         template,
         paymentRequestId,
-        reminderDays,
       });
       return res.json(response);
     };
