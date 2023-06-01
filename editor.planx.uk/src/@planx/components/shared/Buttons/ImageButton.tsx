@@ -4,10 +4,9 @@ import { Theme, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Checkbox from "ui/Checkbox";
 
-import ButtonBase, { Props as ButtonBaseProps } from "./ButtonBase";
+import { Props as ButtonBaseProps } from "./ButtonBase";
 
 export interface Props extends ButtonBaseProps {
   title: string;
@@ -29,20 +28,8 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
       objectFit: "contain",
       backgroundColor: theme.palette.background.default,
     },
-    key: {
-      opacity: 0.3,
-    },
-    keySelected: {
-      opacity: 0.7,
-    },
     title: {
       marginLeft: theme.spacing(1.5),
-    },
-    subtitle: {
-      marginTop: theme.spacing(1),
-    },
-    bold: {
-      fontWeight: FONT_WEIGHT_SEMI_BOLD,
     },
     label: {
       cursor: "pointer",
@@ -60,10 +47,6 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
         color: theme.palette.text.secondary,
       },
     },
-    imageButton: {
-      alignItems: "flex-start",
-      border: "2px solid pink",
-    },
   };
 });
 
@@ -72,7 +55,7 @@ interface TextLabelProps extends Props {
 }
 
 const TextLabel = (props: TextLabelProps): FCReturn => {
-  const { selected, title, checkbox, id, onClick, description } = props;
+  const { selected, title, id, onClick } = props;
   const [multiline, setMultiline] = useState(false);
 
   const textContentEl = useRef<HTMLDivElement>(null);
@@ -91,57 +74,25 @@ const TextLabel = (props: TextLabelProps): FCReturn => {
 
   const classes = useStyles(props);
 
-  // Ensure we do not return one interactive element inside another (checkbox inside a button)
-  if (checkbox) {
-    return (
-      <Box
-        {...({ ref: textContentEl } as any)}
-        alignItems={multiline ? "flex-start" : "center"}
-        px={1}
-        py={1}
-        className={classes.textLabelWrapper}
-      >
-        <Checkbox
-          id={id}
-          checked={selected}
-          color={selected ? "primary.contrastText" : "text.primary"}
-          onChange={onClick}
-        />
-        <Typography variant="body1" className={classes.title}>
-          {title}
-        </Typography>
-      </Box>
-    );
-  } else {
-    const descriptionId = description ? `${id}-description` : undefined;
-    return (
-      <ButtonBase
-        selected={props.selected}
-        onClick={props.onClick}
+  return (
+    <Box
+      {...({ ref: textContentEl } as any)}
+      alignItems={multiline ? "flex-start" : "center"}
+      px={1}
+      py={1}
+      className={classes.textLabelWrapper}
+    >
+      <Checkbox
         id={id}
-        className={classes.imageButton}
-      >
-        <Box {...({ ref: textContentEl } as any)} px={2.25} py={1.75}>
-          <Typography
-            variant="body1"
-            className={classes.bold}
-            aria-describedby={descriptionId}
-          >
-            {title}
-          </Typography>
-          {Boolean(description) && (
-            <Typography
-              variant="body2"
-              className={classes.subtitle}
-              id={descriptionId}
-            >
-              {description}
-            </Typography>
-          )}
-        </Box>
-      </ButtonBase>
-    );
-  }
+        checked={selected}
+        color={selected ? "primary.contrastText" : "text.primary"}
+        onChange={onClick}
+      />
+      <Typography variant="body1" className={classes.title}>
+        {title}
+      </Typography>
+    </Box>
+  );
 };
 
 interface ImageLabelProps {
