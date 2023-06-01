@@ -16,13 +16,6 @@ import { getPaymentRequestBySessionId } from "./helpers";
 
 let context: Context = {
   ...contextDefaults,
-  team: {
-    name: "Buckinghamshire",
-    slug: "buckinghamshire",
-    logo: "https://placedog.net/250/250",
-    primaryColor: "#F30415",
-    homepage: "example.com",
-  },
   flow: {
     slug: "invite-to-pay-test",
     data: inviteToPayFlow,
