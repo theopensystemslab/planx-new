@@ -5,13 +5,13 @@ import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/ColorPicker";
-import FileUpload from "ui/FileUpload";
 import Input, { Props as InputProps } from "ui/Input";
 import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 import InputRowLabel from "ui/InputRowLabel";
 import OptionButton from "ui/OptionButton";
+import PublicFileUploadButton from "ui/PublicFileUploadButton";
 
 const TextInput: React.FC<{
   title: string;
@@ -98,7 +98,7 @@ const DesignSettings: React.FC = () => {
               <Typography variant="h5">Logo</Typography>
             </InputRowLabel>
             <InputRowItem width={50}>
-              <FileUpload></FileUpload>
+              <PublicFileUploadButton />
             </InputRowItem>
             <Box color="text.secondary" pl={2} alignSelf="center">
               .png or .svg
