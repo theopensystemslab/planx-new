@@ -93,6 +93,7 @@ interface SaveAndReturnNotifyPersonalisation
   projectType?: string;
   resumeLink?: string;
   teamName: string;
+  reminderDays?: string;
 }
 
 export interface SaveAndReturnNotifyConfig {

@@ -7,6 +7,7 @@ import { Template, getClientForTemplate, sendEmail } from "../notify";
 import { _admin as $admin } from "../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
+const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
 
 /**
  * Converts a flow's slug to a pretty name
@@ -55,10 +56,12 @@ const sendSingleApplicationEmail = async ({
   template,
   email,
   sessionId,
+  reminderDays,
 }: {
   template: Template;
   email: string;
   sessionId: string;
+  reminderDays?: string;
 }) => {
   try {
     const { flowSlug, team, session } = await validateSingleSessionRequest(
@@ -67,7 +70,7 @@ const sendSingleApplicationEmail = async ({
       template
     );
     const config = {
-      personalisation: getPersonalisation(session, flowSlug, team),
+      personalisation: getPersonalisation(session, flowSlug, team, reminderDays),
       reference: null,
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
@@ -164,7 +167,8 @@ const getSessionDetails = async (
 const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
-  team: Team
+  team: Team,
+  reminderDays?: string,
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),
@@ -172,6 +176,7 @@ const getPersonalisation = (
     serviceName: convertSlugToName(flowSlug),
     teamName: team.name,
     sessionId: session.id,
+    reminderDays: reminderDays,
     ...team.notifyPersonalisation,
     ...session,
   };
@@ -264,6 +269,7 @@ export {
   sendSingleApplicationEmail,
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
+  REMINDER_DAYS_FROM_EXPIRY,
   calculateExpiryDate,
   softDeleteSession,
 };
