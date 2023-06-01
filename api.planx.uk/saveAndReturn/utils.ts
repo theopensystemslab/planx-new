@@ -61,7 +61,7 @@ const sendSingleApplicationEmail = async ({
   template: Template;
   email: string;
   sessionId: string;
-  reminderDays?: string;
+  reminderDays?: number;
 }) => {
   try {
     const { flowSlug, team, session } = await validateSingleSessionRequest(
@@ -168,7 +168,7 @@ const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
   team: Team,
-  reminderDays?: string,
+  reminderDays?: number,
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),
@@ -176,7 +176,7 @@ const getPersonalisation = (
     serviceName: convertSlugToName(flowSlug),
     teamName: team.name,
     sessionId: session.id,
-    reminderDays: reminderDays,
+    reminderDays: reminderDays === 1 ? `${reminderDays} day` : `${reminderDays} days`,
     ...team.notifyPersonalisation,
     ...session,
   };

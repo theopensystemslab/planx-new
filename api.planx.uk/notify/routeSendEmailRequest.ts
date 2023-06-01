@@ -49,6 +49,7 @@ export async function routeSendEmailRequest(
       const response = await sendSinglePaymentEmail({
         template,
         paymentRequestId,
+        reminderDays,
       });
       return res.json(response);
     };

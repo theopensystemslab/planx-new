@@ -120,6 +120,7 @@ interface InviteToPayNotifyPersonalisation
   paymentLink?: string;
   paymentRequestId: string;
   projectType?: string;
+  reminderDays?: string;
 }
 
 export interface InviteToPayNotifyConfig {
