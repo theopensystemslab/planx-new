@@ -4,7 +4,12 @@ import {
   setUpTestContext,
   tearDownTestContext,
 } from "./context";
-import { getTeamPage, createAuthenticatedSession } from "./helpers";
+import {
+  getTeamPage,
+  createAuthenticatedSession,
+  answerQuestion,
+  clickContinue,
+} from "./helpers";
 import type { Context } from "./context";
 
 test.describe("Navigation", () => {
@@ -96,8 +101,8 @@ test.describe("Navigation", () => {
       `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`
     );
 
-    await page.locator("form").getByText("Yes").click();
-    await page.locator("button").filter({ hasText: "Continue" }).click();
+    await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
+    await clickContinue({ page });
     await expect(
       page.locator("h3", { hasText: "Yes! this is a test" })
     ).toBeVisible();
@@ -107,8 +112,8 @@ test.describe("Navigation", () => {
       .getByRole("button", { name: "Back" })
       .click();
 
-    await page.locator("form").getByText("No").click();
-    await page.locator("button").filter({ hasText: "Continue" }).click();
+    await answerQuestion({ page, title: "Is this a test?", answer: "No" });
+    await clickContinue({ page });
     await expect(
       page.locator("h3", { hasText: "Sorry, this is a test" })
     ).toBeVisible();
