@@ -1,3 +1,4 @@
+import { strict as assert } from "node:assert";
 import {
   Given,
   When,
@@ -14,6 +15,7 @@ import {
   buildPaymentRequestForSession,
   markPaymentRequestAsPaid,
   getSendResponse,
+  getSessionSubmittedAt,
   waitForResponse,
   tearDownTestContext,
 } from "./helpers";
@@ -85,9 +87,14 @@ Then(
       retries: 5,
       delay: 10000,
     });
-    return Boolean(response);
+    assert(response);
   }
 );
+
+Then("the session's `submitted_at` date should be set", async () => {
+  const submittedAt = await getSessionSubmittedAt(context.sessionId!);
+  assert(submittedAt);
+});
 
 // tear down each example but not user and team
 After(async () => {
