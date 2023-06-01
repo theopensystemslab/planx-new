@@ -16,9 +16,14 @@ export async function makePaymentViaProxy(
   res: Response,
   next: NextFunction
 ) {
+  // allow e2e team to present as "buckinghamshire"
+  const localAuthority = req.params.localAuthority == "e2e"
+    ? "buckinghamshire"
+    : req.params.localAuthority
+
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
+    process.env[`GOV_UK_PAY_TOKEN_${localAuthority.toUpperCase()}`];
 
   if (!isSupported) {
     return next({
@@ -29,7 +34,7 @@ export async function makePaymentViaProxy(
 
   const flowId = req.query?.flowId as string | undefined;
   const sessionId = req.query?.sessionId as string | undefined;
-  const teamSlug = req.params.localAuthority;
+  const teamSlug = localAuthority;
 
   // drop req.params.localAuthority from the path when redirecting
   // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
@@ -60,9 +65,14 @@ export async function makeInviteToPayPaymentViaProxy(
   res: Response,
   next: NextFunction
 ) {
+  // allow e2e team to present as "buckinghamshire"
+  const localAuthority = req.params.localAuthority == "e2e"
+    ? "buckinghamshire"
+    : req.params.localAuthority
+
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
+    process.env[`GOV_UK_PAY_TOKEN_${localAuthority.toUpperCase()}`];
 
   if (!isSupported) {
     return next({
@@ -74,7 +84,7 @@ export async function makeInviteToPayPaymentViaProxy(
   const flowId = req.query?.flowId as string | undefined;
   const sessionId = req.query?.sessionId as string | undefined;
   const paymentRequestId = req.params?.paymentRequest as string;
-  const teamSlug = req.params.localAuthority;
+  const teamSlug = localAuthority;
 
   // drop req.params.localAuthority from the path when redirecting
   // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
@@ -119,9 +129,14 @@ export function fetchPaymentViaProxyWithCallback(
   callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
+  // allow e2e team to present as "buckinghamshire"
+  const localAuthority = req.params.localAuthority == "e2e"
+    ? "buckinghamshire"
+    : req.params.localAuthority
+
     const flowId = req.query?.flowId as string | undefined;
     const sessionId = req.query?.sessionId as string | undefined;
-    const teamSlug = req.params.localAuthority;
+    const teamSlug = localAuthority;
 
     // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
     usePayProxy(
