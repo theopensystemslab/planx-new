@@ -9,7 +9,9 @@ https://gis.lambeth.gov.uk/arcgis/rest/services
 https://environment.data.gov.uk/arcgis/rest/services
 */
 
-const planningConstraints = {
+import { LocalAuthorityMetadata } from "../../digitalLand";
+
+const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {
     // Planx granular values link to Lambeth's source data in the following ways:
     //   * exact match of Digital Land entity.name (aka "NAME" in source data)

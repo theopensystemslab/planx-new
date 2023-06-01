@@ -8,7 +8,9 @@ https://www.planning.data.gov.uk/entity/?dataset=article-4-direction-area&geomet
 https://trello.com/c/cpNv0iyO/42-input-your-article-4-direction-information-into-this-spreadsheet
 */
 
-const planningConstraints = {
+import { LocalAuthorityMetadata } from "../../digitalLand";
+
+const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {
     // Planx granular values link to Medways's source data in the following ways:
     //   * exact match of Digital Land's entity.reference

@@ -5,7 +5,7 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { addDesignatedVariable, omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
 
-interface LocalAuthorityMetadata {
+export interface LocalAuthorityMetadata {
   planningConstraints: {
     article4: {
       records: Record<string, string>
@@ -14,13 +14,13 @@ interface LocalAuthorityMetadata {
 }
 
 const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
-  buckinghamshire: require("./local_authorities/metadata/buckinghamshire.js"),
-  canterbury: require("./local_authorities/metadata/canterbury.js"),
-  doncaster: require("./local_authorities/metadata/doncaster.js"),
-  lambeth: require("./local_authorities/metadata/lambeth.js"),
-  medway: require("./local_authorities/metadata/medway.js"),
-  newcastle: require("./local_authorities/metadata/newcastle.js"),
-  southwark: require("./local_authorities/metadata/southwark.js"),
+  buckinghamshire: require("./local_authorities/metadata/buckinghamshire.ts"),
+  canterbury: require("./local_authorities/metadata/canterbury.ts"),
+  doncaster: require("./local_authorities/metadata/doncaster.ts"),
+  lambeth: require("./local_authorities/metadata/lambeth.ts"),
+  medway: require("./local_authorities/metadata/medway.ts"),
+  newcastle: require("./local_authorities/metadata/newcastle.ts"),
+  southwark: require("./local_authorities/metadata/southwark.ts"),
 };
 
 /**
@@ -33,7 +33,7 @@ const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
  * @param extras (dict) - optional query params like "analytics" & "sessionId" used to decide if we should audit the raw response
  *
  */
-async function go(localAuthority: string, geom: string, extras: Record<string, string>) {
+async function go(localAuthority: string, geom: string, extras: Record<string, string>): Promise<GISResponse> {
   // generate list of digital land datasets we should query based on 'active' planx schema variables
   const activeDatasets: string[] = [];
   Object.keys(baseSchema).forEach((key) => {
@@ -217,7 +217,7 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
     });
   }).catch(error => console.log(error));
 
-  return { url: url, constraints: formattedResult, metadata: metadata } as GISResponse;
+  return { url: url, constraints: formattedResult, metadata: metadata };
 }
 
 async function locationSearch(localAuthority: string, geom: string, extras: Record<string, string>) {
