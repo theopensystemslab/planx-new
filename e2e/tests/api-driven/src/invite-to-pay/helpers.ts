@@ -132,6 +132,13 @@ export async function waitForResponse({
   throw new Error("awaited response not returned");
 }
 
+export async function getSessionSubmittedAt(
+  sessionId: string
+): Promise<string | undefined> {
+  const detailedSession = await $admin.session.findDetails(sessionId);
+  return detailedSession?.submittedAt;
+}
+
 export async function tearDownTestContext({
   teamId,
   userId,
