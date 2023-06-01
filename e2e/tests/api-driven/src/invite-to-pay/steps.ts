@@ -1,50 +1,105 @@
-import { Given, When, Then } from "@cucumber/cucumber";
-import type { Session, PaymentRequest } from "@opensystemslab/planx-core/types";
 import {
-  buildITPFlowWithDestination,
+  Given,
+  When,
+  Then,
+  BeforeAll,
+  After,
+  AfterAll,
+} from "@cucumber/cucumber";
+import {
+  createTeam,
+  createUser,
+  buildITPFlow,
   buildSessionForFlow,
   buildPaymentRequestForSession,
-  setSessionPaidAtToNow,
+  markPaymentRequestAsPaid,
   getSendResponse,
+  waitForResponse,
+  tearDownTestContext,
 } from "./helpers";
 
 const context: {
-  flow?: { id: string };
-  session?: Session;
-  paymentRequest?: PaymentRequest;
+  teamId?: number;
+  userId?: number;
+  flowId?: string;
+  publishedFlowId?: number;
+  sessionId?: string;
+  paymentRequestId?: string;
 } = {};
+
+BeforeAll(async () => {
+  context.teamId = await createTeam();
+  if (!context.teamId) {
+    throw new Error("team not found");
+  }
+  context.userId = await createUser();
+  if (!context.userId) {
+    throw new Error("user not found");
+  }
+});
 
 Given(
   "a session with a payment request for an invite to pay flow where {string} is a send destination",
   async (destination) => {
-    context.flow = await buildITPFlowWithDestination(destination);
-    if (!context.flow) {
+    const { flowId, publishedFlowId } = await buildITPFlow({
+      destination,
+      teamId: context.teamId!,
+      userId: context.userId!,
+    });
+    context.flowId = flowId;
+    if (!context.flowId) {
       throw new Error("flow not found");
     }
-    context.session = await buildSessionForFlow(context.flow.id);
-    if (!context.session) {
+    context.publishedFlowId = publishedFlowId;
+    if (!context.publishedFlowId) {
+      throw new Error("publishedFlowId not found");
+    }
+    context.sessionId = await buildSessionForFlow(context.flowId);
+    if (!context.sessionId) {
       throw new Error("session not found");
     }
-    context.paymentRequest = await buildPaymentRequestForSession(
-      context.session.id
+    const paymentRequest = await buildPaymentRequestForSession(
+      context.sessionId
     );
+    context.paymentRequestId = paymentRequest.id;
   }
 );
 
-When("the session's `paid_at` date is modified", async () => {
-  if (!context.session) {
-    throw new Error("session not found");
+When("the payment request's `paid_at` date is set", async () => {
+  if (!context.paymentRequestId) {
+    throw new Error("payment request not found");
   }
-  await setSessionPaidAtToNow(context.session.id);
+  await markPaymentRequestAsPaid(context.paymentRequestId);
 });
 
 Then(
   "there should be an entry in the {string} table for a successful {string} submission",
-  async (auditTable, _destination) => {
-    if (!context.session) {
+  { timeout: 6 * 10000 + 1000 },
+  async (auditTable, destination) => {
+    if (!context.sessionId) {
       throw new Error("session not found");
     }
-    const response = await getSendResponse(auditTable, context.session.id);
+    const response = await waitForResponse({
+      name: `Application submission for ${destination}`,
+      request: getSendResponse.bind(null, auditTable, context.sessionId!),
+      retries: 5,
+      delay: 10000,
+    });
     return Boolean(response);
   }
 );
+
+// tear down each example but not user and team
+After(async () => {
+  await tearDownTestContext({
+    flowId: context.flowId,
+    publishedFlowId: context.publishedFlowId,
+    sessionId: context.sessionId,
+    paymentRequestId: context.paymentRequestId,
+  });
+});
+
+// tear down everything
+AfterAll(async () => {
+  await tearDownTestContext(context);
+});
