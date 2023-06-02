@@ -125,9 +125,9 @@ describe("Create payment reminder events webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
-        // it's queued up x2 reminders: one for the payee and one for the agent
-        expect(response.body).toHaveLength(2);
-        expect(response.body).toStrictEqual(["test", "test"]);
+        // it's queued up x4 reminders: 2 for the payee and 2 for the agent at 7 days and 1 day from expiry
+        expect(response.body).toHaveLength(4);
+        expect(response.body).toStrictEqual(["test", "test", "test", "test"]);
       });
   });
 
@@ -140,19 +140,29 @@ describe("Create payment reminder events webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toHaveLength(2);
-        expect(response.body).toStrictEqual(["test", "test"])
+        expect(response.body).toHaveLength(4);
+        expect(response.body).toStrictEqual(["test", "test", "test", "test"])
       });
     
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
     expect(mockArgs.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/payment-reminder");
     expect(mockArgs.payload).toMatchObject(body.payload);
-    expect(mockArgs.comment).toBe(`payment_reminder_${body.payload.paymentRequestId}`);
+    expect(mockArgs.comment).toBe(`payment_reminder_${body.payload.paymentRequestId}_7day`);
 
     const mockArgsSecondEvent = mockedCreateScheduledEvent.mock.calls[1][0];
-    expect(mockArgsSecondEvent.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/payment-reminder-agent");
+    expect(mockArgsSecondEvent.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/payment-reminder");
     expect(mockArgsSecondEvent.payload).toMatchObject(body.payload);
-    expect(mockArgsSecondEvent.comment).toBe(`payment_reminder_agent_${body.payload.paymentRequestId}`);
+    expect(mockArgsSecondEvent.comment).toBe(`payment_reminder_${body.payload.paymentRequestId}_1day`);
+
+    const mockArgsThirdEvent = mockedCreateScheduledEvent.mock.calls[2][0];
+    expect(mockArgsThirdEvent.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/payment-reminder-agent");
+    expect(mockArgsThirdEvent.payload).toMatchObject(body.payload);
+    expect(mockArgsThirdEvent.comment).toBe(`payment_reminder_agent_${body.payload.paymentRequestId}_7day`);
+
+    const mockArgsFourthEvent = mockedCreateScheduledEvent.mock.calls[3][0];
+    expect(mockArgsFourthEvent.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/payment-reminder-agent");
+    expect(mockArgsFourthEvent.payload).toMatchObject(body.payload);
+    expect(mockArgsFourthEvent.comment).toBe(`payment_reminder_agent_${body.payload.paymentRequestId}_1day`);
   });
 
   it("returns a 500 on event setup failure", async () => {
