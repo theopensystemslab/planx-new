@@ -8,7 +8,9 @@ https://www.planning.data.gov.uk/entity/?dataset=article-4-direction-area&geomet
 https://docs.google.com/spreadsheets/d/1GhxQEuKeSnrchZ_quxg6Rg7fHEWPDUr7/edit#gid=915271261
 */
 
-const planningConstraints = {
+import { LocalAuthorityMetadata } from "../../digitalLand";
+
+const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {
     // Planx granular values link to Newcastle's source data in the following ways:
     //   * exact match of Digital Land's entity.reference
