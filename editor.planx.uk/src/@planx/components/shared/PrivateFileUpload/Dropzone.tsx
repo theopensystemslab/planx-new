@@ -24,7 +24,8 @@ interface RootProps extends ButtonBaseProps {
 const Root = styled(ButtonBase, {
   shouldForwardProp: (prop) => prop !== "isDragActive",
 })<RootProps>(({ theme, isDragActive }) => ({
-  height: theme.spacing(14),
+  height: "100%",
+  minHeight: theme.spacing(14),
   backgroundColor: isDragActive
     ? theme.palette.background.default
     : theme.palette.background.paper,

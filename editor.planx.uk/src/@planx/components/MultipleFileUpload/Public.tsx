@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import React, { useState } from "react";
+import { FONT_WEIGHT_BOLD } from "theme";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import Card from "../shared/Preview/Card";
@@ -25,9 +26,6 @@ function Component(props: Props) {
     <Card handleSubmit={props.handleSubmit} isValid>
       <QuestionHeader title={props.title} description={props.description} />
       <Box>
-        <Typography variant="h2" style={{ color: "orangered" }}>
-          UNDER DEVELOPMENT
-        </Typography>
         <FileStatus status={fileUploadStatus} />
         <Box sx={{ display: "flex", mb: 4, gap: 2 }}>
           <Box sx={{ flex: "50%" }}>
@@ -38,13 +36,12 @@ function Component(props: Props) {
             />
           </Box>
           <Box sx={{ flex: "50%" }}>
-            <ul>
-              <li>File 1</li>
-              <li>File 2</li>
-              <li>File 3</li>
-              <li>File 4</li>
-              <li>File 5</li>
-            </ul>
+            <Typography fontWeight={FONT_WEIGHT_BOLD}>
+              Required files
+            </Typography>
+            {props.fileTypes.map((fileType) => (
+              <p key={fileType.key}>{fileType.key}</p>
+            ))}
           </Box>
         </Box>
         {slots.map((slot, index) => {

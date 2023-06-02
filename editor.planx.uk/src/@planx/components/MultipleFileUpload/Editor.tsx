@@ -1,5 +1,6 @@
 import RuleIcon from "@mui/icons-material/Rule";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -65,7 +66,8 @@ function MultipleFileUpload(props: Props) {
     },
   });
 
-  console.log(formik);
+  console.log({ value: formik.values });
+  console.log({ errors: formik.errors });
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -85,6 +87,7 @@ function MultipleFileUpload(props: Props) {
           </InputRow>
           <InputRow>
             <RichTextInput
+              multiline
               name="description"
               placeholder="Description"
               value={formik.values.description}
@@ -125,7 +128,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
   const isConditionalRule = checkIfConditionalRule(props.value.rule.condition);
 
   return (
-    <Box sx={{ flex: 1, gap: 2 }}>
+    <Box sx={{ flex: 1 }}>
       <ModalSubtitle title="File" />
       <InputRow>
         <Input
@@ -202,7 +205,8 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
       )}
       <ModalSubtitle title="Additional file information" />
       <InputRow>
-        <Input
+        <RichTextInput
+          multiline
           name="info"
           value={props.value.moreInformation?.info}
           onChange={(e) => {
@@ -210,12 +214,13 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
               merge(props.value, { moreInformation: { info: e.target.value } })
             );
           }}
-          placeholder="Why this matters"
+          placeholder="Why it matters"
         />
       </InputRow>
       <InputRow>
-        <Input
-          name="info"
+        <RichTextInput
+          multiline
+          name="policyRef"
           value={props.value.moreInformation?.policyRef}
           onChange={(e) => {
             props.onChange(
@@ -228,7 +233,8 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         />
       </InputRow>
       <InputRow>
-        <Input
+        <RichTextInput
+          multiline
           name="howMeasured"
           value={props.value.moreInformation?.howMeasured}
           onChange={(e) => {
@@ -244,6 +250,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           <PublicFileUploadButton />
         </InputRowItem>
       </InputRow>
+      <Divider sx={{ mb: 2, mt: 4 }} />
     </Box>
   );
 }

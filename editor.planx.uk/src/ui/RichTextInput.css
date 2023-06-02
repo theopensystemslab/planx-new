@@ -1,6 +1,7 @@
 .ProseMirror {
-  padding: 10px;
+  padding: 15px;
   background-color: #fff;
+  min-height: 50px;
 }
 
 .ProseMirror > * {

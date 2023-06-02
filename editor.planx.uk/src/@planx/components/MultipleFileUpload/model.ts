@@ -48,14 +48,15 @@ export interface FileType {
   rule: Rule;
   moreInformation?: MoreInformation;
 }
+
 // Type canaries....
 const requiredFileType: FileType = {
   key: "floorplan",
   fn: "location.data",
   rule: {
     condition: Condition.RequiredIf,
-    val: "value",
-    fn: "fn",
+    val: "localAuthority",
+    fn: "lambeth",
     operator: Operator.Equals,
   },
 };
