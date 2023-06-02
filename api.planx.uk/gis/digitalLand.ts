@@ -14,13 +14,13 @@ export interface LocalAuthorityMetadata {
 }
 
 const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
-  buckinghamshire: require("./local_authorities/metadata/buckinghamshire.ts"),
-  canterbury: require("./local_authorities/metadata/canterbury.ts"),
-  doncaster: require("./local_authorities/metadata/doncaster.ts"),
-  lambeth: require("./local_authorities/metadata/lambeth.ts"),
-  medway: require("./local_authorities/metadata/medway.ts"),
-  newcastle: require("./local_authorities/metadata/newcastle.ts"),
-  southwark: require("./local_authorities/metadata/southwark.ts"),
+  buckinghamshire: require("./local_authorities/metadata/buckinghamshire"),
+  canterbury: require("./local_authorities/metadata/canterbury"),
+  doncaster: require("./local_authorities/metadata/doncaster"),
+  lambeth: require("./local_authorities/metadata/lambeth"),
+  medway: require("./local_authorities/metadata/medway"),
+  newcastle: require("./local_authorities/metadata/newcastle"),
+  southwark: require("./local_authorities/metadata/southwark"),
 };
 
 /**
