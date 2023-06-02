@@ -6,7 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import makeStyles from "@mui/styles/makeStyles";
 import React, { useMemo, useState } from "react";
 
-import FileUpload from "./FileUpload";
+import PublicFileUploadButton from "./PublicFileUploadButton";
 
 const useClasses = makeStyles((theme) => ({
   imageUploadContainer: {
@@ -79,7 +79,7 @@ export default function ImgInput({
   ) : (
     <Tooltip title="Drop file here">
       <div className={classes.imageUploadContainer}>
-        <FileUpload
+        <PublicFileUploadButton
           onChange={(newUrl) => {
             setAnchorEl(null);
             onChange && onChange(newUrl);

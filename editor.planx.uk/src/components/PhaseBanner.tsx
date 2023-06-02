@@ -1,9 +1,10 @@
+import { Span } from "@airbrake/browser/dist/metrics";
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
 import { getFeedbackMetadata } from "lib/feedback";
 import React, { useEffect, useState } from "react";
 
@@ -14,8 +15,13 @@ const Root = styled(ButtonBase)(({ theme }) => ({
   backgroundColor: "white",
   display: "flex",
   justifyContent: "start",
-  [theme.breakpoints.up("sm")]: {
-    padding: theme.spacing(1, 2),
+  alignItems: "start",
+  padding: theme.spacing(1, 2),
+  [theme.breakpoints.up("md")]: {
+    padding: theme.spacing(1, 3),
+  },
+  [theme.breakpoints.up("lg")]: {
+    padding: theme.spacing(1, 4),
   },
 }));
 
@@ -51,19 +57,25 @@ export default function PhaseBanner(): FCReturn {
           bgcolor="primary.main"
           color="white"
           display="flex"
-          alignItems="center"
+          alignItems="flex-start"
           flexBasis={0}
-          px={2}
-          mr={2}
+          px={1}
+          mr={1}
           py={0.5}
-          fontSize={15}
+          fontSize={14}
           textAlign="center"
           whiteSpace="nowrap"
           fontWeight={600}
         >
           PUBLIC BETA
         </BetaFlag>
-        <Typography variant="body2" color="textPrimary">
+        <Typography
+          variant="body2"
+          fontSize={14}
+          color="textPrimary"
+          textAlign="left"
+          mt="0.25em"
+        >
           This is a new service. Your <Link>feedback</Link> will help us improve
           it.
         </Typography>

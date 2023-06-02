@@ -2,22 +2,22 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import {
   MapContainer,
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
 import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 
 import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
-import Upload, { FileUpload } from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
-export type SelectedFile = FileUpload;
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
@@ -26,19 +26,17 @@ export default function Component(props: Props) {
   const previousArea =
     props.previouslySubmittedData?.data?.[props.dataFieldArea];
   const previousFile =
-    props.previouslySubmittedData?.data?.[PASSPORT_UPLOAD_KEY]?.[0];
+    props.previouslySubmittedData?.data?.[PASSPORT_UPLOAD_KEY];
   const startPage = previousFile ? "upload" : "draw";
   const [page, setPage] = useState<"draw" | "upload">(startPage);
   const passport = useStore((state) => state.computePassport());
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
-  const [selectedFile, setSelectedFile] = useState<SelectedFile | undefined>(
-    previousFile
-  );
+  const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
   const [area, setArea] = useState<number | undefined>(previousArea);
   const environment = useStore((state) => state.previewEnvironment);
 
   useEffect(() => {
-    if (isMounted.current) setSelectedFile(undefined);
+    if (isMounted.current) setSlots([]);
     isMounted.current = true;
 
     const areaChangeHandler = ({ detail }: { detail: string }) => {
@@ -66,14 +64,12 @@ export default function Component(props: Props) {
       map?.removeEventListener("areaChange", areaChangeHandler);
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
-  }, [page, setArea, setBoundary, setSelectedFile]);
+  }, [page, setArea, setBoundary, setSlots]);
 
   return (
     <Card
       handleSubmit={handleSubmit}
-      isValid={
-        props.hideFileUpload ? true : Boolean(boundary || selectedFile?.url)
-      }
+      isValid={props.hideFileUpload ? true : Boolean(boundary || slots[0]?.url)}
     >
       {getBody()}
     </Card>
@@ -152,12 +148,12 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <Upload setFile={setSelectedFile} initialFile={selectedFile} />
+          <PrivateFileUpload slots={slots} setSlots={setSlots} maxFiles={1} />
           <Box sx={{ textAlign: "right" }}>
             <Link
               component="button"
               onClick={() => setPage("draw")}
-              disabled={Boolean(selectedFile?.url)}
+              disabled={Boolean(slots[0]?.url)}
             >
               <Typography variant="body2">
                 Draw the boundary on a map instead
@@ -181,7 +177,7 @@ export default function Component(props: Props) {
           boundary && area && props.dataFieldBoundary
             ? area / 10000
             : undefined,
-        [PASSPORT_UPLOAD_KEY]: selectedFile ? [selectedFile] : undefined,
+        [PASSPORT_UPLOAD_KEY]: slots.length ? slots : undefined,
       };
     })();
 

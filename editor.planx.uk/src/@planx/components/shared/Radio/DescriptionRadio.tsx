@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
 import Radio, { RadioProps } from "@mui/material/Radio";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
 import React from "react";
 
 export interface Props {

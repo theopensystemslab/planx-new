@@ -15,7 +15,13 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 const Root = styled("footer")(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: theme.palette.common.black,
-  padding: theme.spacing(2, 4),
+  padding: theme.spacing(2, 2),
+  [theme.breakpoints.up("md")]: {
+    padding: theme.spacing(3, 3),
+  },
+  [theme.breakpoints.up("lg")]: {
+    padding: theme.spacing(3, 4),
+  },
 }));
 
 const ButtonGroup = styled(Box)(({ theme }) => ({
@@ -125,7 +131,7 @@ export default function Footer(props: Props) {
 
   return (
     <Root>
-      <ButtonGroup>
+      <ButtonGroup py={0.5}>
         {items
           ?.filter((item) => item.title)
           .map((item) => (
@@ -138,13 +144,15 @@ export default function Footer(props: Props) {
             )}
             <FeedbackFish projectId={feedbackFishId} metadata={metadata}>
               <Link color="inherit" component="button">
-                <Typography variant="body2">Feedback</Typography>
+                <Typography variant="body2" textAlign="left">
+                  Feedback
+                </Typography>
               </Link>
             </FeedbackFish>
           </>
         )}
       </ButtonGroup>
-      <Box py={4}>{children}</Box>
+      <Box py={2}>{children}</Box>
     </Root>
   );
 }

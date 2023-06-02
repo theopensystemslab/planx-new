@@ -8,7 +8,9 @@ https://maps.doncaster.gov.uk/portal/apps/webappviewer/index.html?id=2435bce5ee1
 https://www.doncaster.gov.uk/services/planning/houses-in-multiple-occupation-article-4-direction
 */
 
-const planningConstraints = {
+import { LocalAuthorityMetadata } from "../../digitalLand";
+
+const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {
     // Planx granular values link to Digital Land entity.reference
     records: {

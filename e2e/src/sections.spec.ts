@@ -33,7 +33,7 @@ export enum SectionStatus {
   Completed = "COMPLETED",
 }
 
-test.describe("Sections", () => {
+test.describe("Section statuses", () => {
   let context: Context = {
     ...contextDefaults,
     flow: {

@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
 import React, { PropsWithChildren } from "react";
 
 const Root = styled(Box)(() => ({
