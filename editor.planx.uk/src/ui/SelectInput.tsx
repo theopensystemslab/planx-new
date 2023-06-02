@@ -14,17 +14,17 @@ export interface Props extends SelectProps {
 const useClasses = makeStyles((theme) => ({
   root: {
     width: "100%",
+    padding: theme.spacing(0, 1.5),
+    height: 50,
     backgroundColor: "#fff",
     "& $selectRoot": {
       paddingRight: theme.spacing(6),
     },
   },
   selectRoot: {
-    height: 50,
     boxSizing: "border-box",
     backgroundColor: "#fff",
     color: theme.palette.text.primary,
-    paddingLeft: theme.spacing(1.5),
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
@@ -41,7 +41,7 @@ const useClasses = makeStyles((theme) => ({
     },
   },
   menuRoot: {
-    marginLeft: 42,
+    // marginLeft: 42,
   },
   menuPaper: {
     border: `2px solid ${theme.palette.primary.light}`,
@@ -95,7 +95,7 @@ export default function SelectInput({
       MenuProps={{
         anchorOrigin: {
           vertical: "bottom",
-          horizontal: "right",
+          horizontal: "center",
         },
         classes: {
           root: classes.menuRoot,

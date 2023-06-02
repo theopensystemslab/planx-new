@@ -12,13 +12,25 @@ export enum Operator {
   Equals = "Equals",
 }
 
+interface SimpleRuleProperties {
+  val?: undefined;
+  fn?: undefined;
+  operator?: undefined;
+}
+
+interface ConditionalRuleProperties {
+  val: string;
+  fn: string;
+  operator: Operator;
+}
+
 // Mapping of additional rule properties to Condition
 type RuleProperties<T extends Condition> = {
-  [Condition.NotRequired]: {};
-  [Condition.AlwaysRequired]: {};
-  [Condition.AlwaysRecommended]: {};
-  [Condition.RequiredIf]: { val: string; fn: string; operator: Operator };
-  [Condition.RecommendedIf]: { val: string; fn: string; operator: Operator };
+  [Condition.NotRequired]: SimpleRuleProperties;
+  [Condition.AlwaysRequired]: SimpleRuleProperties;
+  [Condition.AlwaysRecommended]: SimpleRuleProperties;
+  [Condition.RequiredIf]: ConditionalRuleProperties;
+  [Condition.RecommendedIf]: ConditionalRuleProperties;
 }[T];
 
 export type ConditionalRule<T extends Condition> = {
@@ -69,11 +81,22 @@ export const parseContent = (
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
   fn: data?.fn || "",
-  fileTypes: data?.fileTypes, // TODO: Parse this, inc each file's moreInfo
+  fileTypes: data?.fileTypes || [newFileType()],
   ...parseMoreInformation(data),
 });
 
 const DEFAULT_TITLE = "Upload multiple files";
+
+export const newFileType = (): FileType => ({
+  key: "",
+  fn: "",
+  rule: {
+    condition: Condition.AlwaysRequired,
+  },
+});
+
+export const checkIfConditionalRule = (condition: Condition) =>
+  [Condition.RecommendedIf, Condition.RequiredIf].includes(condition);
 
 // handleSumbit()
 

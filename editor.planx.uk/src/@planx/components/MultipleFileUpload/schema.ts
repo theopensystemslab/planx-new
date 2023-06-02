@@ -2,6 +2,7 @@ import { array, mixed, object, SchemaOf, string } from "yup";
 
 import { MoreInformation } from "../shared";
 import {
+  checkIfConditionalRule,
   Condition,
   FileType,
   MultipleFileUpload,
@@ -17,10 +18,16 @@ const moreInformationSchema: SchemaOf<MoreInformation> = object({
   definitionImg: string(),
 });
 
-const conditionalRuleSchema = string().when("condition", {
-  is: (condition: Condition) =>
-    [Condition.RequiredIf, Condition.RecommendedIf].includes(condition),
+const valFnSchema = mixed().when("condition", {
+  is: checkIfConditionalRule,
   then: (schema) => schema.required(),
+  otherwise: (schema) => schema.equals([undefined]),
+});
+
+const operatorSchema = mixed().when("condition", {
+  is: checkIfConditionalRule,
+  then: (schema) => schema.equals([Operator.Equals]).required(),
+  otherwise: (schema) => schema.equals([undefined]),
 });
 
 const ruleSchema: SchemaOf<Rule> = object({
@@ -34,9 +41,9 @@ const ruleSchema: SchemaOf<Rule> = object({
     ])
     .required(),
   // condition: mixed<Condition>().required().oneOf(Object.values(Condition)),
-  operator: conditionalRuleSchema,
-  val: conditionalRuleSchema,
-  fn: conditionalRuleSchema,
+  operator: operatorSchema,
+  val: valFnSchema,
+  fn: valFnSchema,
 });
 
 const fileTypeSchema: SchemaOf<FileType> = object({
