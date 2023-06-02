@@ -1,5 +1,5 @@
 -- update scheduled event cleanup functions to account for multiple reminder emails with comment suffix `_7day`, `_1day` etc
-DROP FUNCTION IF EXISTS delete_lowcal_session_scheduled_events;
+DROP FUNCTION IF EXISTS delete_lowcal_session_scheduled_events CASCADE;
 CREATE OR REPLACE FUNCTION 
 	delete_lowcal_session_scheduled_events()
 RETURNS TRIGGER AS $$ 
@@ -19,7 +19,7 @@ EXECUTE PROCEDURE delete_lowcal_session_scheduled_events();
 COMMENT ON TRIGGER delete_lowcal_session_scheduled_events_trigger ON lowcal_sessions
 IS 'Delete linked scheduled events (reminder and expiry emails) when submitting or deleting a lowcal_session';
 
-DROP FUNCTION IF EXISTS delete_payment_request_scheduled_email_events;
+DROP FUNCTION IF EXISTS delete_payment_request_scheduled_email_events CASCADE;
 CREATE OR REPLACE FUNCTION delete_payment_request_scheduled_email_events()
 RETURNS TRIGGER AS $$
 BEGIN
