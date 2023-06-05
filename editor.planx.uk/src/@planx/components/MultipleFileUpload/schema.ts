@@ -29,7 +29,7 @@ const operatorSchema = mixed().when("condition", {
   otherwise: (schema) => schema.equals([undefined]),
 });
 
-const ruleSchema: SchemaOf<Rule> = object({
+export const ruleSchema: SchemaOf<Rule> = object({
   condition: string()
     .equals([
       "AlwaysRequired",
@@ -44,7 +44,7 @@ const ruleSchema: SchemaOf<Rule> = object({
   fn: valFnSchema,
 });
 
-const fileTypeSchema: SchemaOf<FileType> = object({
+export const fileTypeSchema: SchemaOf<FileType> = object({
   key: string().required(),
   fn: string().required(),
   rule: ruleSchema,

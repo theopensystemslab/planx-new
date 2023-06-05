@@ -50,7 +50,7 @@ Operator.defaultProps = {
   variant: "body2",
 };
 
-function MultipleFileUpload(props: Props) {
+function MultipleFileUploadComponent(props: Props) {
   const formik = useFormik<MultipleFileUpload>({
     initialValues: {
       ...parseContent(props.node?.data),
@@ -126,7 +126,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
   const isConditionalRule = checkIfConditionalRule(props.value.rule.condition);
 
   return (
-    <Box sx={{ flex: 1 }}>
+    <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
       <ModalSubtitle title="File" />
       <InputRow>
         <Input
@@ -276,4 +276,4 @@ const setCondition = (condition: Condition, fileType: FileType): FileType => {
   return updateFileType;
 };
 
-export default MultipleFileUpload;
+export default MultipleFileUploadComponent;

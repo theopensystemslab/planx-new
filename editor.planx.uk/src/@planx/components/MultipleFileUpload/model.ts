@@ -53,26 +53,6 @@ export interface FileType {
   moreInformation?: MoreInformation;
 }
 
-// Type canaries....
-const requiredFileType: FileType = {
-  key: "floorplan",
-  fn: "location.data",
-  rule: {
-    condition: Condition.RequiredIf,
-    val: "localAuthority",
-    fn: "lambeth",
-    operator: Operator.Equals,
-  },
-};
-
-const alwaysRecommendedFileType: FileType = {
-  key: "floorplan",
-  fn: "location.data",
-  rule: {
-    condition: Condition.AlwaysRecommended,
-  },
-};
-
 export interface MultipleFileUpload extends MoreInformation {
   title: string;
   description?: string;
