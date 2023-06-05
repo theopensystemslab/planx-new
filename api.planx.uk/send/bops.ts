@@ -1,16 +1,16 @@
 import { fixRequestBody, responseInterceptor } from "http-proxy-middleware";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
-import omit from "lodash/omit"
+import omit from "lodash/omit";
 import { useProxy } from "../proxy";
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { _admin } from "../client";
 
 interface SendToBOPSRequest {
-  payload: { 
-    sessionId: string; 
-  }
+  payload: {
+    sessionId: string;
+  };
 }
 
 const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
@@ -35,7 +35,9 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
 
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
-  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(req.params.localAuthority.toUpperCase());
+  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(
+    req.params.localAuthority.toUpperCase()
+  );
   if (!isSupported) {
     return next({
       status: 400,
@@ -63,38 +65,49 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       fixRequestBody(proxyReq, req);
     },
     onProxyRes: responseInterceptor(
-      async (responseBuffer, proxyRes, req, _res) => {
+      async (responseBuffer, proxyRes, req, res) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
         markSessionAsSubmitted(payload?.sessionId);
 
-        const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
+        const bopsRawResponse = responseBuffer.toString("utf8");
 
-        const applicationId = await adminClient.request(gql`
-          mutation CreateApplication(
-            $bops_id: String = "",
-            $destination_url: String = "",
-            $request: jsonb = "",
-            $req_headers: jsonb = "",
-            $response: jsonb = "",
-            $response_headers: jsonb = "",
-            $session_id: String = "",
-          ) {
-            insert_bops_applications_one(object: {
-              bops_id: $bops_id,
-              destination_url: $destination_url,
-              request: $request,
-              req_headers: $req_headers,
-              response: $response,
-              response_headers: $response_headers,
-              session_id: $session_id,
-            }) {
-              id
-              bops_id
+        let bopsResponse: { id: string } | undefined;
+        try {
+          bopsResponse = JSON.parse(bopsRawResponse);
+        } catch (e) {
+          res.statusCode = 502; // Bad Gateway - invalid response from the upstream server
+          return bopsRawResponse;
+        }
+
+        const applicationId = await adminClient.request(
+          gql`
+            mutation CreateBopsApplication(
+              $bops_id: String!
+              $destination_url: String!
+              $request: jsonb!
+              $req_headers: jsonb!
+              $response: jsonb!
+              $response_headers: jsonb!
+              $session_id: String!
+            ) {
+              insert_bops_applications_one(
+                object: {
+                  bops_id: $bops_id
+                  destination_url: $destination_url
+                  request: $request
+                  req_headers: $req_headers
+                  response: $response
+                  response_headers: $response_headers
+                  session_id: $session_id
+                }
+              ) {
+                id
+                bops_id
+              }
             }
-          }
-        `,
+          `,
           {
-            bops_id: bopsResponse.id,
+            bops_id: bopsResponse?.id,
             destination_url: target,
             request: bopsFullPayload,
             req_headers: omit(req.headers, ["authorization"]),
@@ -118,26 +131,26 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
 /**
  * Query the BOPS audit table to see if we already have an application for this session
  */
-async function checkBOPSAuditTable(sessionId: string): Promise<Record<string, string>> {
-  const application = await adminClient.request(gql`
-    query FindApplication(
-    $session_id: String = ""
-    ) {
-      bops_applications(
-        where: {
-          session_id: {_eq: $session_id}
-        },
-        order_by: {created_at: desc}
-      ) {
-        response
+async function checkBOPSAuditTable(
+  sessionId: string
+): Promise<Record<string, string>> {
+  const application = await adminClient.request(
+    gql`
+      query FindApplication($session_id: String = "") {
+        bops_applications(
+          where: { session_id: { _eq: $session_id } }
+          order_by: { created_at: desc }
+        ) {
+          response
+        }
       }
-    }`,
+    `,
     {
-      session_id: sessionId
+      session_id: sessionId,
     }
   );
 
   return application?.bops_applications[0]?.response;
-};
+}
 
 export { sendToBOPS };
