@@ -26,3 +26,5 @@ SELECT
   is_admin
 FROM sync_users
 ON CONFLICT (id) DO NOTHING;
+
+SELECT setval('users_id_seq', max(id)) FROM users;
