@@ -66,9 +66,6 @@ function MultipleFileUpload(props: Props) {
     },
   });
 
-  console.log({ value: formik.values });
-  console.log({ errors: formik.errors });
-
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -78,6 +75,7 @@ function MultipleFileUpload(props: Props) {
         >
           <InputRow>
             <Input
+              required
               format="large"
               name="title"
               placeholder={formik.values.title}
@@ -132,6 +130,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
       <ModalSubtitle title="File" />
       <InputRow>
         <Input
+          required
           name="key"
           value={props.value.key}
           onChange={(e) =>
@@ -142,6 +141,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
       </InputRow>
       <InputRow>
         <Input
+          required
           name="fn"
           value={props.value.fn}
           onChange={(e) =>
@@ -173,6 +173,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
       {isConditionalRule && (
         <InputRow>
           <Input
+            required
             name="fn"
             value={props.value.rule.fn}
             onChange={(e) =>
@@ -188,6 +189,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           />
           <Operator>Equals</Operator>
           <Input
+            required
             name="val"
             value={props.value.rule.val}
             onChange={(e) =>

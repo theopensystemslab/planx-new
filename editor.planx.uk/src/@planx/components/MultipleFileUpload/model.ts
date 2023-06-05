@@ -1,11 +1,15 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
+/**
+ * Conditions which can apply to a rule
+ * Order is significant - these represent the hierarchy of these rules
+ */
 export enum Condition {
-  NotRequired = "NotRequired",
   AlwaysRequired = "AlwaysRequired",
   AlwaysRecommended = "AlwaysRecommended",
   RequiredIf = "RequiredIf",
   RecommendedIf = "RecommendedIf",
+  NotRequired = "NotRequired",
 }
 
 export enum Operator {
@@ -26,11 +30,11 @@ interface ConditionalRuleProperties {
 
 // Mapping of additional rule properties to Condition
 type RuleProperties<T extends Condition> = {
-  [Condition.NotRequired]: SimpleRuleProperties;
   [Condition.AlwaysRequired]: SimpleRuleProperties;
   [Condition.AlwaysRecommended]: SimpleRuleProperties;
   [Condition.RequiredIf]: ConditionalRuleProperties;
   [Condition.RecommendedIf]: ConditionalRuleProperties;
+  [Condition.NotRequired]: SimpleRuleProperties;
 }[T];
 
 export type ConditionalRule<T extends Condition> = {
@@ -98,39 +102,3 @@ export const newFileType = (): FileType => ({
 
 export const checkIfConditionalRule = (condition: Condition) =>
   [Condition.RecommendedIf, Condition.RequiredIf].includes(condition);
-
-// handleSumbit()
-
-// interface userUploadedFile extends currentFileThing {
-//   name: string
-//   rule: Rule
-// }
-
-// const passport = {
-//   data: {
-//     floorPlan: {
-//       fileUrl: "http://my-file-with-lots-of-things",
-//       name: "something",
-//       rule: {
-//         condition: "Recommended"
-//       },
-//     },
-//     elevationPlan: {
-//       fileUrl: "http://my-file-with-lots-of-things",
-//       name: "something",
-//       rule: {
-//         condition: "Recommended"
-//       }
-//     }
-//   },
-//   files: [
-//     {
-//       url: "unique http1",
-//       tags: ["floorplan", "bill", "something else"]
-//     },
-//     {
-//       url: "unique http1",
-//       tags: ["elevation", "photo", "render", "floorplan"]
-//     },
-//   ],
-// };
