@@ -40,9 +40,6 @@ const useClasses = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
-  menuRoot: {
-    // marginLeft: 42,
-  },
   menuPaper: {
     border: `2px solid ${theme.palette.primary.light}`,
     borderTop: 0,
@@ -98,7 +95,6 @@ export default function SelectInput({
           horizontal: "center",
         },
         classes: {
-          root: classes.menuRoot,
           paper: classes.menuPaper,
         },
       }}

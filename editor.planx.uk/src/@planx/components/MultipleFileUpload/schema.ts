@@ -3,6 +3,7 @@ import { array, mixed, object, SchemaOf, string } from "yup";
 import { MoreInformation } from "../shared";
 import {
   checkIfConditionalRule,
+  Condition,
   FileType,
   MultipleFileUpload,
   Operator,
@@ -30,15 +31,7 @@ const operatorSchema = mixed().when("condition", {
 });
 
 export const ruleSchema: SchemaOf<Rule> = object({
-  condition: string()
-    .equals([
-      "AlwaysRequired",
-      "AlwaysRecommended",
-      "RequiredIf",
-      "RecommendedIf",
-      "NotRequired",
-    ])
-    .required(),
+  condition: mixed().oneOf(Object.values(Condition)).required(),
   operator: operatorSchema,
   val: valFnSchema,
   fn: valFnSchema,
