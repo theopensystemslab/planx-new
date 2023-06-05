@@ -1,9 +1,5 @@
 import assert from "node:assert";
-import dotenv from "dotenv";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
-
-// load env
-dotenv.config({ path: "../../../.env" });
 
 // check env variables are defined
 assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);

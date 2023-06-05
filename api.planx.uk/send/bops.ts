@@ -37,9 +37,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
 
   // allow e2e team to present as "lambeth"
   const localAuthority =
-    req.params.localAuthority == "e2e"
-      ? "lambeth"
-      : req.params.localAuthority;
+    req.params.localAuthority == "e2e" ? "lambeth" : req.params.localAuthority;
 
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"

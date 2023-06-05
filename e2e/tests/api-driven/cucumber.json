@@ -1,8 +1,8 @@
 {
   "default": {
     "requireModule": ["ts-node/register"],
+    "require": ["src/env.ts", "src/**/*.ts"],
     "paths": ["src/**/*.feature"],
-    "require": ["src/**/*.ts"],
     "format": ["summary"],
     "publishQuiet": true,
     "formatOptions": {
