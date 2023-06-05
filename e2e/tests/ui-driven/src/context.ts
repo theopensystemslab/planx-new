@@ -133,14 +133,7 @@ export function getCoreDomainClient(): CoreDomainClient {
 }
 
 export function getGraphQLClient(): GraphQLClient {
-  const API = process.env.HASURA_GRAPHQL_URL!.replace(
-    "${HASURA_PROXY_PORT}",
-    process.env.HASURA_PROXY_PORT!
-  );
-  const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
-  return new GraphQLClient(API, {
-    headers: { "X-Hasura-Admin-Secret": SECRET },
-  });
+  return getCoreDomainClient().client;
 }
 
 export async function findSessionId(
