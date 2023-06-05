@@ -40,6 +40,21 @@ BeforeAll(async () => {
   }
 });
 
+// tear down each example but not user and team
+After(async () => {
+  await tearDownTestContext({
+    flowId: context.flowId,
+    publishedFlowId: context.publishedFlowId,
+    sessionId: context.sessionId,
+    paymentRequestId: context.paymentRequestId,
+  });
+});
+
+// tear down everything
+AfterAll(async () => {
+  await tearDownTestContext(context);
+});
+
 Given(
   "a session with a payment request for an invite to pay flow where {string} is a send destination",
   async (destination) => {
@@ -71,21 +86,23 @@ When("the payment request's `paid_at` date is set", async () => {
   if (!context.paymentRequestId) {
     throw new Error("payment request not found");
   }
-  await markPaymentRequestAsPaid(context.paymentRequestId);
+  const operationSucceeded = await markPaymentRequestAsPaid(
+    context.paymentRequestId
+  );
+  if (!operationSucceeded) {
+    throw new Error("payment request was not marked as paid");
+  }
 });
 
 Then(
-  "there should be an entry in the {string} table for a successful {string} submission",
-  { timeout: 6 * 10000 + 1000 },
-  async (auditTable, destination) => {
-    if (!context.sessionId) {
-      throw new Error("session not found");
-    }
+  "there should be an audit entry for a successful {string} submission",
+  { timeout: 6 * 5000 + 1000 },
+  async (destination) => {
     const response = await waitForResponse({
       name: `Application submission for ${destination}`,
-      request: getSendResponse.bind(null, auditTable, context.sessionId!),
+      request: getSendResponse.bind(null, destination, context.sessionId!),
       retries: 5,
-      delay: 10000,
+      delay: 5000,
     });
     assert(response);
   }
@@ -94,19 +111,4 @@ Then(
 Then("the session's `submitted_at` date should be set", async () => {
   const submittedAt = await getSessionSubmittedAt(context.sessionId!);
   assert(submittedAt);
-});
-
-// tear down each example but not user and team
-After(async () => {
-  await tearDownTestContext({
-    flowId: context.flowId,
-    publishedFlowId: context.publishedFlowId,
-    sessionId: context.sessionId,
-    paymentRequestId: context.paymentRequestId,
-  });
-});
-
-// tear down everything
-AfterAll(async () => {
-  await tearDownTestContext(context);
 });
