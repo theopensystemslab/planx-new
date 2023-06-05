@@ -7,7 +7,8 @@
     "test:debug": "DEBUG_LOG=true pnpm test",
     "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
     "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
-    "check": "tsc && pnpm lint"
+    "check": "tsc && pnpm lint",
+    "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install"
   },
   "devDependencies": {
     "@types/node": "16",

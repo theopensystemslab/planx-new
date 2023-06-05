@@ -500,12 +500,6 @@ jobs:
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
         working-directory: e2e
-      - name: PNPM Install for API Driven tests
-        run: pnpm install --frozen-lockfile
-        working-directory: e2e/tests/api-driven
-      - name: PNPM Install for UI Driven tests
-        run: pnpm install --frozen-lockfile
-        working-directory: e2e/tests/ui-driven
       - name: Code checks
         run:  pnpm check
         working-directory: e2e
