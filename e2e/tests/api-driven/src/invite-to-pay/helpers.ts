@@ -87,20 +87,20 @@ export async function buildPaymentRequestForSession(
 
 export async function markPaymentRequestAsPaid(
   paymentRequestId: string
-): Promise<void> {
-  await $admin.paymentRequest._markAsPaid(paymentRequestId);
+): Promise<boolean> {
+  return await $admin.paymentRequest._markAsPaid(paymentRequestId);
 }
 
 export async function getSendResponse(
-  auditTable: string,
+  destination: string,
   sessionId: string
 ): Promise<unknown> {
-  switch (auditTable) {
-    case "bops_applications":
+  switch (destination.toLowerCase()) {
+    case "bops":
       return $admin.application.bopsResponse(sessionId);
-    case "email_applications":
+    case "email":
       return $admin.application.emailResponse(sessionId);
-    case "uniform_applications":
+    case "uniform":
       return $admin.application.uniformResponse(sessionId);
     default:
       throw new Error("unhandled audit table");
@@ -158,6 +158,7 @@ export async function tearDownTestContext({
     await $admin.paymentRequest._destroy(paymentRequestId);
   }
   if (sessionId) {
+    await $admin.application._destroyAll(sessionId);
     await $admin.session._destroy(sessionId);
   }
   if (publishedFlowId) {
