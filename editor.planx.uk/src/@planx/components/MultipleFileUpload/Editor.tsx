@@ -52,9 +52,7 @@ Operator.defaultProps = {
 
 function MultipleFileUploadComponent(props: Props) {
   const formik = useFormik<MultipleFileUpload>({
-    initialValues: {
-      ...parseContent(props.node?.data),
-    },
+    initialValues: parseContent(props.node?.data),
     validationSchema: multipleFileUploadSchema,
     validateOnBlur: true,
     validateOnChange: false,
