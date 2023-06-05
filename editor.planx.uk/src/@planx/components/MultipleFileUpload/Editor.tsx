@@ -174,6 +174,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         <InputRow>
           <Input
             required
+            name="fn"
             value={props.value.rule.fn}
             onChange={(e) =>
               props.onChange(
@@ -184,7 +185,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
                 })
               )
             }
-            placeholder="Date field"
+            placeholder="Data field"
           />
           <Operator>Equals</Operator>
           <Input
