@@ -34,14 +34,7 @@ function Component(props: Props) {
 
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
-      <QuestionHeader
-        title={props.title}
-        description={props.description}
-        info={props.info}
-        policyRef={props.policyRef}
-        howMeasured={props.howMeasured}
-        definitionImg={props.definitionImg}
-      />
+<QuestionHeader {...props}/>
       <Box>
         <FileStatus status={fileUploadStatus} />
         <Box sx={{ display: "flex", mb: 4, gap: 2 }}>
