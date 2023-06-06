@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import MoreInfoIcon from "ui/icons/MoreInfo";
@@ -90,12 +91,14 @@ interface FileListItemProps {
 
 const InteractiveFileListItem = (props: FileListItemProps) => {
   const [open, setOpen] = React.useState(false);
-
+  const { trackHelpClick } = useAnalyticsTracking();
   const { info, policyRef, howMeasured, definitionImg } =
     props.moreInformation || {};
 
   const handleHelpClick = () => {
     setOpen(true);
+    // TODO: track granularity of file name in analytics, currently only knows help was clicked for this overall component type/node id
+    trackHelpClick(); // This returns a promise but we don't need to await for it
   };
 
   return (
