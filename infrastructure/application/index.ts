@@ -260,6 +260,7 @@ export = async () => {
     external: true,
     vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
+    idleTimeout: 120,
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const API_PORT = 80;
