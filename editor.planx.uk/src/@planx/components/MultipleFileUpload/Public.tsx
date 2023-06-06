@@ -126,12 +126,12 @@ function Component(props: Props) {
             ))}
           </Box>
         </Box>
-        {slots.map((slot, index) => {
+        {slots.map((slot) => {
           return (
             <UploadedFileCard
               {...slot}
               key={slot.id}
-              index={index}
+              tags={["Test1", "Test2", "Test3"]}
               removeFile={() => {
                 setSlots(
                   slots.filter((currentSlot) => currentSlot.file !== slot.file)
