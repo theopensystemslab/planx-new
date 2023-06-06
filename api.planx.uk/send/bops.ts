@@ -14,6 +14,8 @@ interface SendToBOPSRequest {
 }
 
 const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
+  req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
+
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload }: SendToBOPSRequest = req.body;
   if (!payload) {
