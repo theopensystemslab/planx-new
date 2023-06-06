@@ -67,9 +67,9 @@ interface SendToUniformPayload {
 const sendToUniform = async (req: Request, res: Response, next: NextFunction) => {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
-  // allow e2e team to present as "buckinghamshire"
+  // allow e2e team to present as "lambeth"
   const localAuthority = req.params.localAuthority == "e2e"
-    ? "buckinghamshire"
+    ? "lambeth"
     : req.params.localAuthority
 
   const uniformClient = getUniformClient(localAuthority);

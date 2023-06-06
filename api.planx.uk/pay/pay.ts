@@ -16,10 +16,10 @@ export async function makePaymentViaProxy(
   res: Response,
   next: NextFunction
 ) {
-  // allow e2e team to present as "buckinghamshire"
+  // allow e2e team to present as "lambeth"
   const localAuthority =
     req.params.localAuthority == "e2e"
-      ? "buckinghamshire"
+      ? "lambeth"
       : req.params.localAuthority;
 
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
@@ -66,10 +66,10 @@ export async function makeInviteToPayPaymentViaProxy(
   res: Response,
   next: NextFunction
 ) {
-  // allow e2e team to present as "buckinghamshire"
+  // allow e2e team to present as "lambeth"
   const localAuthority =
     req.params.localAuthority == "e2e"
-      ? "buckinghamshire"
+      ? "lambeth"
       : req.params.localAuthority;
 
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
@@ -131,10 +131,10 @@ export function fetchPaymentViaProxyWithCallback(
   callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    // allow e2e team to present as "buckinghamshire"
+    // allow e2e team to present as "lambeth"
     const localAuthority =
       req.params.localAuthority == "e2e"
-        ? "buckinghamshire"
+        ? "lambeth"
         : req.params.localAuthority;
 
     const flowId = req.query?.flowId as string | undefined;
