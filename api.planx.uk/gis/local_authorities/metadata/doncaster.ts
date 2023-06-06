@@ -15,6 +15,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
     // Planx granular values link to Digital Land entity.reference
     records: {
       "article4.doncaster.hmo": "1001", // https://www.digital-land.info/entity/7010002217
+      "article4.doncaster.demolition": "TBD",
     },
   },
 };
