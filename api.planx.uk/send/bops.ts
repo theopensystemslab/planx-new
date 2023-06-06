@@ -35,10 +35,10 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  // allow e2e team to present as "buckinghamshire"
+  // allow e2e team to present as "lambeth"
   const localAuthority =
     req.params.localAuthority == "e2e"
-      ? "buckinghamshire"
+      ? "lambeth"
       : req.params.localAuthority;
 
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy

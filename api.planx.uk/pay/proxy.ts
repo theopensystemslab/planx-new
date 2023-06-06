@@ -3,9 +3,9 @@ import { fixRequestBody, Options } from "http-proxy-middleware";
 import { useProxy } from "../proxy";
 
 export const usePayProxy = (options: Partial<Options>, req: Request) => {
-  // allow e2e team to present as "buckinghamshire"
+  // allow e2e team to present as "lambeth"
   const localAuthority = req.params.localAuthority == "e2e"
-    ? "buckinghamshire"
+    ? "lambeth"
     : req.params.localAuthority
 
   return useProxy({
