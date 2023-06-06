@@ -3,10 +3,19 @@ import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
+import MoreInfoIcon from "ui/icons/MoreInfo";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import { emptyContent } from "ui/RichTextInput";
 
 import { FileUploadSlot } from "../FileUpload/Public";
+import { MoreInformation } from "../shared";
 import Card from "../shared/Preview/Card";
-import QuestionHeader from "../shared/Preview/QuestionHeader";
+import MoreInfo from "../shared/Preview/MoreInfo";
+import MoreInfoSection from "../shared/Preview/MoreInfoSection";
+import QuestionHeader, {
+  Image,
+  StyledIconButton,
+} from "../shared/Preview/QuestionHeader";
 import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -24,7 +33,14 @@ function Component(props: Props) {
 
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
-      <QuestionHeader title={props.title} description={props.description} />
+      <QuestionHeader
+        title={props.title}
+        description={props.description}
+        info={props.info}
+        policyRef={props.policyRef}
+        howMeasured={props.howMeasured}
+        definitionImg={props.definitionImg}
+      />
       <Box>
         <FileStatus status={fileUploadStatus} />
         <Box sx={{ display: "flex", mb: 4, gap: 2 }}>
@@ -40,7 +56,10 @@ function Component(props: Props) {
               Required files
             </Typography>
             {props.fileTypes.map((fileType) => (
-              <p key={fileType.key}>{fileType.key}</p>
+              <InteractiveFileListItem
+                name={fileType.key}
+                moreInformation={fileType.moreInformation}
+              />
             ))}
           </Box>
         </Box>
@@ -63,3 +82,59 @@ function Component(props: Props) {
     </Card>
   );
 }
+
+interface FileListItemProps {
+  name: string;
+  moreInformation?: MoreInformation;
+}
+
+const InteractiveFileListItem = (props: FileListItemProps) => {
+  const [open, setOpen] = React.useState(false);
+
+  const { info, policyRef, howMeasured, definitionImg } =
+    props.moreInformation || {};
+
+  const handleHelpClick = () => {
+    setOpen(true);
+  };
+
+  return (
+    <Box
+      key={props.name}
+      style={{ display: "flex", justifyContent: "space-between" }}
+    >
+      <p>{props.name}</p>
+      {!!(info || policyRef || howMeasured) && (
+        <StyledIconButton
+          title={`More information`}
+          aria-label={`See more information about "${props.name}"`}
+          onClick={handleHelpClick}
+          aria-haspopup="dialog"
+          size="large"
+        >
+          <MoreInfoIcon />
+        </StyledIconButton>
+      )}
+      <MoreInfo open={open} handleClose={() => setOpen(false)}>
+        {info && info !== emptyContent ? (
+          <MoreInfoSection title="Why does it matter?">
+            <ReactMarkdownOrHtml source={info} openLinksOnNewTab />
+          </MoreInfoSection>
+        ) : undefined}
+        {policyRef && policyRef !== emptyContent ? (
+          <MoreInfoSection title="Source">
+            <ReactMarkdownOrHtml source={policyRef} openLinksOnNewTab />
+          </MoreInfoSection>
+        ) : undefined}
+        {howMeasured && howMeasured !== emptyContent ? (
+          <MoreInfoSection title="How is it defined?">
+            <>
+              {definitionImg && <Image src={definitionImg} alt="definition" />}
+              <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab />
+            </>
+          </MoreInfoSection>
+        ) : undefined}
+      </MoreInfo>
+    </Box>
+  );
+};
