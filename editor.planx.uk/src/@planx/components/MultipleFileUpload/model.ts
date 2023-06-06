@@ -1,3 +1,7 @@
+import { sortBy } from "lodash";
+import { Store } from "pages/FlowEditor/lib/store";
+
+import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 /**
@@ -82,3 +86,82 @@ export const newFileType = (): FileType => ({
 
 export const checkIfConditionalRule = (condition: Condition) =>
   [Condition.RecommendedIf, Condition.RequiredIf].includes(condition);
+
+export interface UserFiles extends FileType {
+  slot?: FileUploadSlot;
+}
+
+export interface FileList {
+  required: UserFiles[];
+  recommended: UserFiles[];
+  optional: UserFiles[];
+}
+
+export const createFileList = ({
+  passport,
+  fileTypes,
+}: {
+  passport: Readonly<Store.passport>;
+  fileTypes: FileType[];
+}): FileList => {
+  const fileList: FileList = { required: [], recommended: [], optional: [] };
+  const sortedFileTypes = sortFileTypes(fileTypes);
+  const uniqueKeys: string[] = [];
+  sortedFileTypes.forEach((fileType) => {
+    const isUnique = !uniqueKeys.includes(fileType.key);
+    if (isUnique) {
+      uniqueKeys.push(fileType.key);
+      populateFileList({ fileList, fileType, passport });
+    }
+  });
+  return fileList;
+};
+
+const sortFileTypes = (fileTypes: FileType[]): FileType[] => {
+  const hierarchyOfConditions = (fileType: FileType) =>
+    Object.values(Condition).indexOf(fileType.rule.condition);
+  const sortedFileTypes = sortBy(fileTypes, hierarchyOfConditions);
+  return sortedFileTypes;
+};
+
+const populateFileList = ({
+  fileList,
+  fileType,
+  passport,
+}: {
+  fileList: FileList;
+  fileType: FileType;
+  passport: Store.passport;
+}) => {
+  switch (fileType.rule.condition) {
+    case Condition.AlwaysRequired:
+      fileList.required.push(fileType);
+      break;
+    case Condition.AlwaysRecommended:
+      fileList.recommended.push(fileType);
+      break;
+    case Condition.RequiredIf:
+      if (isRuleMet(passport, fileType.rule)) {
+        fileList.required.push(fileType);
+      }
+      break;
+    case Condition.RecommendedIf:
+      if (isRuleMet(passport, fileType.rule)) {
+        fileList.recommended.push(fileType);
+      }
+      break;
+    case Condition.NotRequired:
+      fileList.optional.push(fileType);
+      break;
+  }
+};
+
+const isRuleMet = (
+  passport: Store.passport,
+  rule: ConditionalRule<Condition.RequiredIf | Condition.RecommendedIf>
+) => {
+  return (
+    passport.data?.[rule.fn] === rule.val ||
+    passport.data?.[rule.fn]?.includes(rule.val)
+  );
+};

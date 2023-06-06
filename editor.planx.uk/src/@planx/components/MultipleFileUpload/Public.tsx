@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import ErrorWrapper from "ui/ErrorWrapper";
@@ -24,11 +25,9 @@ import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import { MultipleFileUpload } from "./model";
+import { createFileList, FileList, MultipleFileUpload } from "./model";
 
 type Props = PublicProps<MultipleFileUpload>;
-
-export default Component;
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   display: "grid",
@@ -106,6 +105,18 @@ function Component(props: Props) {
       setValidationError(undefined);
     }
   }, [slots]);
+  
+  const [fileList, setFileList] = useState<FileList>({
+    required: [],
+    recommended: [],
+    optional: [],
+  });
+
+  useEffect(() => {
+    const passport = useStore.getState().computePassport();
+    const fileList = createFileList({ passport, fileTypes: props.fileTypes });
+    setFileList(fileList);
+  }, []);
 
   return (
     <Card
@@ -114,6 +125,7 @@ function Component(props: Props) {
     >
       <QuestionHeader {...props} />
         <DropzoneContainer>
+          <FileStatus status={fileUploadStatus} />
           <ErrorWrapper error={validationError} id={props.id}>
           <Dropzone
             slots={slots}
@@ -125,7 +137,7 @@ function Component(props: Props) {
             <Typography fontWeight={FONT_WEIGHT_BOLD}>
               Required files
             </Typography>
-            {props.fileTypes.map((fileType) => (
+            {fileList.required.map((fileType) => (
               <InteractiveFileListItem
                 name={fileType.key}
                 moreInformation={fileType.moreInformation}
@@ -214,3 +226,5 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
     </Box>
   );
 };
+
+export default Component;
