@@ -28,13 +28,13 @@ const Description = styled(Box)(({ theme }) => ({
   },
 }));
 
-const StyledIconButton = styled(IconButton)(() => ({
+export const StyledIconButton = styled(IconButton)(() => ({
   "&:hover": {
     backgroundColor: "transparent",
   },
 }));
 
-const Image = styled("img")(() => ({
+export const Image = styled("img")(() => ({
   maxWidth: "100%",
 }));
 
