@@ -1,0 +1,987 @@
+[
+  {
+    "data": {
+      "id": "67f22b71-5d06-489d-8259-583cac99c362",
+      "passport": {
+        "data": {
+          "_nots": {
+            "property.constraints.planning": [
+              "listed",
+              "locallyListed",
+              "registeredPark",
+              "designated.AONB",
+              "designated.nationalPark",
+              "designated.nationalPark.broads",
+              "designated.WHS",
+              "designated.SPA",
+              "monument",
+              "tpo",
+              "nature.SSSI",
+              "nature.SAC",
+              "nature.ASNW",
+              "article4.lambeth.streathamLodge",
+              "article4.lambeth.stockwell",
+              "article4.lambeth.leigham",
+              "article4.lambeth.stMarks",
+              "article4.lambeth.hanover",
+              "article4.lambeth.parkHall",
+              "article4.lambeth.lansdowne",
+              "article4.lambeth.albert",
+              "article4.lambeth.hydeFarm",
+              "article4.lambeth.kiba",
+              "article4.lambeth.kiba.clapham",
+              "article4.lambeth.caz"
+            ]
+          },
+          "_address": {
+            "x": 530902.74,
+            "y": 175062.3,
+            "pao": "8",
+            "town": "LONDON",
+            "uprn": "010093378979",
+            "usrn": "21900236",
+            "title": "8, BRIXTON HILL, LONDON",
+            "source": "os",
+            "street": "BRIXTON HILL",
+            "latitude": 51.4594094,
+            "postcode": "SW2 1EG",
+            "blpu_code": "2",
+            "longitude": -0.1171833,
+            "planx_value": "commercial.medical.dentist",
+            "organisation": null,
+            "planx_description": "Dentist",
+            "single_line_address": "8, BRIXTON HILL, LONDON, LAMBETH, SW2 1EG"
+          },
+          "user.role": ["applicant"],
+          "project.type": ["alter.equipment.solar.pv"],
+          "property.EPC": ["unknown"],
+          "property.type": [
+            "commercial.medical.dentist",
+            "alter.equipment.solar.pv"
+          ],
+          "proposal.time": ["future"],
+          "proposal.type": ["proposed"],
+          "applicant.type": ["individual"],
+          "applicant.email": "benjamin+itp-payee@opensystemslab.io",
+          "property.region": ["London"],
+          "application.type": ["ldc.proposed"],
+          "proposal.siteArea": 21.6,
+          "uniform.isRelated": ["false"],
+          "uniform.siteVisit": ["true"],
+          "_contact.applicant": {
+            "applicant": {
+              "email": "benjamin+itp-payee@opensystemslab.io",
+              "phone": "123",
+              "title": "",
+              "lastName": "X",
+              "firstName": "X",
+              "organisation": ""
+            }
+          },
+          "applicant.interest": ["owner.sole"],
+          "applicant.resident": ["true"],
+          "application.reason": [
+            "It looks like the changes fall within the scope of permitted development."
+          ],
+          "digitalLandRequest": "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POLYGON+%28%28-0.11720319399697778+51.4594343591549%2C+-0.11713791264097685+51.4594232372167%2C+-0.11716474348955974+51.45938381246296%2C+-0.11722883214330372+51.45939690860942%2C+-0.11720319399697778+51.4594343591549%29%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=locally-listed-building&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
+          "uniform.personRole": ["Applicant"],
+          "applicant.name.last": "X",
+          "proposal.start.date": "2024-01-28",
+          "applicant.agent.form": ["No"],
+          "applicant.name.first": "X",
+          "property.titleNumber": ["unknown"],
+          "proposal.description": "Blah...",
+          "proposal.projectType": ["alter.equipment.solar"],
+          "applicant.siteContact": ["applicant"],
+          "uniform.applicationTo": ["N5660"],
+          "uniform.consentRegime": ["Certificate of Lawfulness"],
+          "application.about.form": ["Proposed building works"],
+          "property.EPCKnown.form": ["No"],
+          "property.boundary.site": {
+            "type": "Feature",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [-0.11720319399697778, 51.4594343591549],
+                  [-0.11713791264097685, 51.4594232372167],
+                  [-0.11716474348955974, 51.45938381246296],
+                  [-0.11722883214330372, 51.45939690860942],
+                  [-0.11720319399697778, 51.4594343591549]
+                ]
+              ]
+            },
+            "properties": null
+          },
+          "proposal.treeWorksOnly": ["false"],
+          "uniform.scenarioNumber": ["15"],
+          "applicant.interest.form": ["Sole owner"],
+          "applicant.phone.primary": "123",
+          "application.fee.payable": 117,
+          "proposal.vehicleParking": ["none"],
+          "application.preAppAdvice": ["false"],
+          "application.resubmission": ["false"],
+          "proposal.completion.date": "2024-01-30",
+          "proposal.drawing.section": [
+            {
+              "url": "https://api.editor.planx.dev/file/private/yifrfefc/Lochaber_Centre_Site_Plan.jpg",
+              "filename": "Lochaber_Centre_Site_Plan.jpg",
+              "cachedSlot": {
+                "id": "Bfz1_WDGEGj5av3OqKrzb",
+                "url": "https://api.editor.planx.dev/file/private/yifrfefc/Lochaber_Centre_Site_Plan.jpg",
+                "file": {
+                  "path": "Lochaber_Centre_Site_Plan.jpg",
+                  "size": 142989,
+                  "type": "image/jpeg"
+                },
+                "status": "success",
+                "progress": 1
+              }
+            }
+          ],
+          "proposal.droppedKerbOnly": ["false"],
+          "property.drawing.sitePlan": [
+            {
+              "url": "https://api.editor.planx.dev/file/private/qr9wzxx4/Lochaber_Centre_Site_Plan.jpg",
+              "filename": "Lochaber_Centre_Site_Plan.jpg",
+              "cachedSlot": {
+                "id": "6rT23KqIT7nBHzz5H_RbP",
+                "url": "https://api.editor.planx.dev/file/private/qr9wzxx4/Lochaber_Centre_Site_Plan.jpg",
+                "file": {
+                  "path": "Lochaber_Centre_Site_Plan.jpg",
+                  "size": 142989,
+                  "type": "image/jpeg"
+                },
+                "status": "success",
+                "progress": 1
+              }
+            }
+          ],
+          "proposal.drawing.sitePlan": [
+            {
+              "url": "https://api.editor.planx.dev/file/private/n9eygau3/Lochaber_Centre_Site_Plan.jpg",
+              "filename": "Lochaber_Centre_Site_Plan.jpg",
+              "cachedSlot": {
+                "id": "fDdX4Yxi-FrDPlXfTAhXq",
+                "url": "https://api.editor.planx.dev/file/private/n9eygau3/Lochaber_Centre_Site_Plan.jpg",
+                "file": {
+                  "path": "Lochaber_Centre_Site_Plan.jpg",
+                  "size": 142989,
+                  "type": "image/jpeg"
+                },
+                "status": "success",
+                "progress": 1
+              }
+            }
+          ],
+          "uniform.applicantInterest": ["Owner"],
+          "uniform.proposedUseStatus": ["permanent"],
+          "applicant.sameAddress.form": ["Yes"],
+          "application.fee.calculated": 117,
+          "proposal.siteArea.hectares": 0.00216,
+          "proposal.changeNumberOfHomes": ["other"],
+          "application.basisOfLawfulness": ["permittedDevelopment"],
+          "application.preAppAdvice.form": ["No"],
+          "property.constraints.planning": [
+            "article4.lambeth.kiba.brixton",
+            "designated.conservationArea",
+            "road.classified"
+          ],
+          "proposal.solarPanels.location": ["roofs"],
+          "property.titleNumberKnown.form": ["No"],
+          "applicant.ownership.certificate": ["a"],
+          "property.localAuthorityDistrict": ["Lambeth"],
+          "proposal.visibleFromPublicRealm": ["Information not provided"],
+          "application.declaration.accurate": ["true"],
+          "application.fee.reduction.sports": ["false"],
+          "proposal.changeNumberOfHomes.form": ["No"],
+          "application.declaration.connection": ["none"],
+          "application.showTreesConsentResult": ["false"],
+          "application.fee.exemption.disability": ["false"],
+          "application.declaration.accurate.form": ["Yes"],
+          "application.fee.reduction.alternative": ["false"],
+          "application.fee.exemption.resubmission": ["false"],
+          "application.declaration.connection.form": ["No connections"],
+          "application.fee.reduction.parishCouncil": ["false"]
+        }
+      },
+      "sessionId": "d4d9249a-dc1e-4996-9bfc-15fd3adab242",
+      "breadcrumbs": {
+        "0Ssv1a0L4B": {
+          "auto": true,
+          "answers": ["v2b6eYzfAa"]
+        },
+        "0WkoPIRtSH": {
+          "auto": true,
+          "data": {
+            "application.about.form": ["Proposed building works"]
+          }
+        },
+        "0vyk3XWTXQ": {
+          "auto": true,
+          "answers": ["fVDHpGgdVT"]
+        },
+        "1brLbfr0VI": {
+          "auto": true,
+          "data": {
+            "application.showTreesConsentResult": ["false"]
+          }
+        },
+        "2fPL5miNqx": {
+          "auto": true,
+          "answers": ["ywnW81Ru65"]
+        },
+        "3SY7XLmpEE": {
+          "auto": false,
+          "data": {
+            "proposal.drawing.sitePlan": [
+              {
+                "url": "https://api.editor.planx.dev/file/private/n9eygau3/Lochaber_Centre_Site_Plan.jpg",
+                "filename": "Lochaber_Centre_Site_Plan.jpg",
+                "cachedSlot": {
+                  "id": "fDdX4Yxi-FrDPlXfTAhXq",
+                  "url": "https://api.editor.planx.dev/file/private/n9eygau3/Lochaber_Centre_Site_Plan.jpg",
+                  "file": {
+                    "path": "Lochaber_Centre_Site_Plan.jpg",
+                    "size": 142989,
+                    "type": "image/jpeg"
+                  },
+                  "status": "success",
+                  "progress": 1
+                }
+              }
+            ]
+          }
+        },
+        "4SS9lmuihO": {
+          "auto": false,
+          "data": {
+            "proposal.start.date": "2024-01-28"
+          }
+        },
+        "5BvOSdcGqe": {
+          "auto": false,
+          "answers": ["phNHyuVqvs"]
+        },
+        "62LXDzCN9t": {
+          "auto": false
+        },
+        "66LkiZhvhd": {
+          "auto": true,
+          "answers": ["QApjNg6Tqj"]
+        },
+        "6AiepUVV19": {
+          "auto": true,
+          "answers": ["CqHwMfPIHR"]
+        },
+        "6guFEqvCGT": {
+          "auto": true,
+          "answers": ["yD843IY3m1"]
+        },
+        "7lGOSkEFAA": {
+          "auto": true,
+          "answers": ["QEK62asTM4"]
+        },
+        "8Wz7TKJbeD": {
+          "auto": false,
+          "answers": ["8qqEbCGj97"]
+        },
+        "8kaCyhvpH7": {
+          "auto": false,
+          "answers": ["PsRnXEO2x7"]
+        },
+        "9jgV3s3kMq": {
+          "auto": true,
+          "data": {
+            "property.titleNumber": ["unknown"]
+          }
+        },
+        "ADEFuGG2xF": {
+          "auto": false,
+          "data": {
+            "property.drawing.sitePlan": [
+              {
+                "url": "https://api.editor.planx.dev/file/private/qr9wzxx4/Lochaber_Centre_Site_Plan.jpg",
+                "filename": "Lochaber_Centre_Site_Plan.jpg",
+                "cachedSlot": {
+                  "id": "6rT23KqIT7nBHzz5H_RbP",
+                  "url": "https://api.editor.planx.dev/file/private/qr9wzxx4/Lochaber_Centre_Site_Plan.jpg",
+                  "file": {
+                    "path": "Lochaber_Centre_Site_Plan.jpg",
+                    "size": 142989,
+                    "type": "image/jpeg"
+                  },
+                  "status": "success",
+                  "progress": 1
+                }
+              }
+            ]
+          }
+        },
+        "AXaUG0hqW3": {
+          "auto": false,
+          "answers": ["QRbcuwI2zJ"]
+        },
+        "B3QUuAVXW4": {
+          "auto": false,
+          "answers": ["g3GoOjJgaN"]
+        },
+        "BEOIGLHpsD": {
+          "auto": true,
+          "answers": ["eCfyydxyzW"]
+        },
+        "BWqBgdJp1E": {
+          "auto": false,
+          "answers": ["aImPfdJp1E"]
+        },
+        "BZ7i3DZDA2": {
+          "auto": true,
+          "data": {
+            "application.reason": [
+              "It looks like the changes fall within the scope of permitted development."
+            ]
+          }
+        },
+        "Bb95NObUU3": {
+          "auto": false,
+          "data": {
+            "proposal.drawing.section": [
+              {
+                "url": "https://api.editor.planx.dev/file/private/yifrfefc/Lochaber_Centre_Site_Plan.jpg",
+                "filename": "Lochaber_Centre_Site_Plan.jpg",
+                "cachedSlot": {
+                  "id": "Bfz1_WDGEGj5av3OqKrzb",
+                  "url": "https://api.editor.planx.dev/file/private/yifrfefc/Lochaber_Centre_Site_Plan.jpg",
+                  "file": {
+                    "path": "Lochaber_Centre_Site_Plan.jpg",
+                    "size": 142989,
+                    "type": "image/jpeg"
+                  },
+                  "status": "success",
+                  "progress": 1
+                }
+              }
+            ]
+          }
+        },
+        "BnAgyyY3hX": {
+          "auto": false,
+          "answers": ["7ebH217ewZ"]
+        },
+        "Bv7z9hsFNV": {
+          "auto": true,
+          "data": {
+            "proposal.type": ["proposed"]
+          }
+        },
+        "D5kuDFxTjM": {
+          "auto": false,
+          "data": {
+            "_nots": {
+              "property.constraints.planning": [
+                "listed",
+                "locallyListed",
+                "registeredPark",
+                "designated.AONB",
+                "designated.nationalPark",
+                "designated.nationalPark.broads",
+                "designated.WHS",
+                "designated.SPA",
+                "monument",
+                "tpo",
+                "nature.SSSI",
+                "nature.SAC",
+                "nature.ASNW",
+                "article4.lambeth.streathamLodge",
+                "article4.lambeth.stockwell",
+                "article4.lambeth.leigham",
+                "article4.lambeth.stMarks",
+                "article4.lambeth.hanover",
+                "article4.lambeth.parkHall",
+                "article4.lambeth.lansdowne",
+                "article4.lambeth.albert",
+                "article4.lambeth.hydeFarm",
+                "article4.lambeth.kiba",
+                "article4.lambeth.kiba.clapham",
+                "article4.lambeth.caz"
+              ]
+            },
+            "digitalLandRequest": "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POLYGON+%28%28-0.11720319399697778+51.4594343591549%2C+-0.11713791264097685+51.4594232372167%2C+-0.11716474348955974+51.45938381246296%2C+-0.11722883214330372+51.45939690860942%2C+-0.11720319399697778+51.4594343591549%29%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=locally-listed-building&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
+            "property.constraints.planning": [
+              "article4",
+              "article4.lambeth.kiba.brixton",
+              "designated",
+              "designated.conservationArea",
+              "road.classified"
+            ]
+          }
+        },
+        "DRDCupIVGF": {
+          "auto": false,
+          "answers": ["qJOuaBYmPV"]
+        },
+        "DXsMmdJp1E": {
+          "auto": true,
+          "answers": ["zib8JdJp1E"]
+        },
+        "DZ0IgdJp1E": {
+          "auto": false,
+          "answers": ["prE5GdJp1E"]
+        },
+        "E63e1zXlP8": {
+          "auto": false,
+          "answers": ["Ldu681Wb3o"]
+        },
+        "EC5hH9fbuj": {
+          "auto": false
+        },
+        "ESWiV3ERRm": {
+          "auto": false,
+          "answers": ["IjRj3fYJHm"]
+        },
+        "Ee6KoNMnoz": {
+          "auto": false,
+          "answers": ["dXedv9G09U"]
+        },
+        "FX0MC6Bwwe": {
+          "auto": false,
+          "answers": ["r9ZglIWEN2"]
+        },
+        "Ft7nQ96FWN": {
+          "auto": true,
+          "answers": ["HpbTYicfdV"]
+        },
+        "GaECfZWk0z": {
+          "auto": false,
+          "answers": ["eywHe59zCo"]
+        },
+        "GzQpqiOMyb": {
+          "auto": false,
+          "data": {
+            "_address": {
+              "x": 530902.74,
+              "y": 175062.3,
+              "pao": "8",
+              "town": "LONDON",
+              "uprn": "010093378979",
+              "usrn": "21900236",
+              "title": "8, BRIXTON HILL, LONDON",
+              "source": "os",
+              "street": "BRIXTON HILL",
+              "latitude": 51.4594094,
+              "postcode": "SW2 1EG",
+              "blpu_code": "2",
+              "longitude": -0.1171833,
+              "planx_value": "commercial.medical.dentist",
+              "organisation": null,
+              "planx_description": "Dentist",
+              "single_line_address": "8, BRIXTON HILL, LONDON, LAMBETH, SW2 1EG"
+            },
+            "property.type": ["commercial.medical.dentist"],
+            "property.region": ["London"],
+            "property.localAuthorityDistrict": ["Lambeth"]
+          }
+        },
+        "H149aYxMJs": {
+          "auto": true,
+          "data": {
+            "application.fee.reduction.alternative": ["false"]
+          }
+        },
+        "I03hRPF3ck": {
+          "auto": true,
+          "answers": ["hrVQ3UrdMQ"]
+        },
+        "ID9WMI7OEi": {
+          "auto": true,
+          "answers": ["x9Ed6ECDRt"]
+        },
+        "InAdSdJp1E": {
+          "auto": true,
+          "answers": ["4VYPMdJp1E"]
+        },
+        "JsQ6stbSoR": {
+          "auto": true,
+          "data": {
+            "uniform.scenarioNumber": ["15"]
+          }
+        },
+        "L6RlHOAmz3": {
+          "auto": false,
+          "answers": ["JpD8CZ5aCu"]
+        },
+        "LKIH1WsOMk": {
+          "auto": true,
+          "answers": ["22Pf5UOwiP"]
+        },
+        "LU5xin8PHs": {
+          "auto": true,
+          "answers": ["WVQ0zdfUXz"]
+        },
+        "MJXLDEEfQl": {
+          "auto": false,
+          "answers": ["htF4WmFFqI"]
+        },
+        "MZxqLLRlpU": {
+          "auto": true,
+          "answers": ["iCA0Zh7mWZ"]
+        },
+        "MiRvDdJp1E": {
+          "auto": false,
+          "answers": ["CutfkdJp1E"]
+        },
+        "NpxV0KPCFD": {
+          "auto": true,
+          "answers": ["kgaFUFF9ER"]
+        },
+        "OE4iwSIBEh": {
+          "auto": true,
+          "answers": ["KJYBgEBrp4"]
+        },
+        "OOA81d7i3v": {
+          "auto": true,
+          "answers": ["nAQzgzcoRF"]
+        },
+        "OOiDESNCgm": {
+          "auto": false,
+          "answers": ["V4YA9x9t4E"]
+        },
+        "OPdu2dxcS9": {
+          "auto": true,
+          "data": {
+            "applicant.ownership.certificate": ["a"]
+          }
+        },
+        "PEsJYwW5SO": {
+          "auto": true,
+          "answers": ["st8Gv2ju9Q"]
+        },
+        "PrOPyE0sgC": {
+          "auto": true,
+          "data": {
+            "uniform.proposedUseStatus": ["permanent"]
+          }
+        },
+        "PsPDXO23J4": {
+          "auto": true,
+          "answers": ["0raZXaqEZk"]
+        },
+        "Q1N3zdJp1E": {
+          "auto": false,
+          "answers": ["yQ1xIdJp1E"]
+        },
+        "Q5d9bU965F": {
+          "auto": true,
+          "data": {
+            "proposal.changeNumberOfHomes": ["other"]
+          }
+        },
+        "QAZWTVrm3T": {
+          "auto": true,
+          "data": {
+            "application.fee.reduction.parishCouncil": ["false"]
+          }
+        },
+        "QEw7EiwKAH": {
+          "auto": true,
+          "data": {
+            "application.declaration.connection.form": ["No connections"]
+          }
+        },
+        "QoMCXqj0Jq": {
+          "auto": true,
+          "answers": ["SrN40HwUhR"]
+        },
+        "Qt5a88c2yt": {
+          "auto": true,
+          "data": {
+            "property.EPCKnown.form": ["No"]
+          }
+        },
+        "RQsUof5f4e": {
+          "auto": true,
+          "answers": ["iMgDYwC1fA"]
+        },
+        "RxPc59DoKO": {
+          "auto": false,
+          "answers": ["XE2ySAiGyh"]
+        },
+        "SJRiZ1gkrY": {
+          "auto": true,
+          "data": {
+            "applicant.sameAddress.form": ["Yes"]
+          }
+        },
+        "SoLrKSKj7H": {
+          "auto": true,
+          "answers": ["QUedStxP6e"]
+        },
+        "Stank2Znpc": {
+          "auto": false
+        },
+        "SxNNsZLWST": {
+          "auto": true,
+          "answers": ["ZlDSurJAk0"]
+        },
+        "T2QtM64BpR": {
+          "auto": true,
+          "data": {
+            "applicant.agent.form": ["No"]
+          }
+        },
+        "T4MfGcERNk": {
+          "auto": true,
+          "answers": ["EYYxyiA9Rd"]
+        },
+        "T90yMz6IQ3": {
+          "auto": false
+        },
+        "Te5bFBjYME": {
+          "auto": false
+        },
+        "TfzRoHL6KI": {
+          "auto": true,
+          "data": {
+            "uniform.personRole": ["Applicant"]
+          }
+        },
+        "UuwpIDjRL8": {
+          "auto": false
+        },
+        "VjKjvZOyUI": {
+          "auto": false,
+          "data": {
+            "proposal.description": "Blah..."
+          }
+        },
+        "W8i3I50jmu": {
+          "auto": true,
+          "answers": ["zqkl9v4qVU"]
+        },
+        "WAUEgMY1RL": {
+          "auto": true,
+          "answers": ["AfMV3SF44Q"]
+        },
+        "WBkwbvfPBi": {
+          "auto": true,
+          "answers": ["Zuv7Q2EMh7"]
+        },
+        "WtKRa7H01E": {
+          "auto": true,
+          "data": {
+            "proposal.changeNumberOfHomes.form": ["No"]
+          }
+        },
+        "XaYzOFuZeG": {
+          "auto": true,
+          "data": {
+            "uniform.consentRegime": ["Certificate of Lawfulness"]
+          }
+        },
+        "YwWoUdJp1E": {
+          "auto": false,
+          "answers": ["nCWTidJp1E"]
+        },
+        "ZVPE5MjeNd": {
+          "auto": true,
+          "answers": ["FJCgycNn2P"]
+        },
+        "c99PIyjsL2": {
+          "auto": false
+        },
+        "cmBf4kpgFO": {
+          "auto": true,
+          "data": {
+            "application.type": ["ldc.proposed"]
+          }
+        },
+        "dTKxWBS9rN": {
+          "auto": true,
+          "answers": ["Lp0ubA5pu2"]
+        },
+        "dknMGLlZaS": {
+          "auto": true,
+          "answers": ["oaEgqmt3Mj"]
+        },
+        "dyszZMv887": {
+          "auto": true,
+          "answers": ["pCewlBWKex"]
+        },
+        "e8oyeaCnEY": {
+          "auto": true,
+          "data": {
+            "application.fee.calculated": 117
+          }
+        },
+        "e9KicD0vDS": {
+          "auto": true,
+          "data": {
+            "proposal.treeWorksOnly": ["false"]
+          }
+        },
+        "eUMKf5626P": {
+          "auto": false,
+          "data": {
+            "proposal.completion.date": "2024-01-30"
+          }
+        },
+        "eY70iFnHC8": {
+          "auto": true,
+          "data": {
+            "property.titleNumberKnown.form": ["No"]
+          }
+        },
+        "eiN5C9wgDe": {
+          "auto": false,
+          "answers": ["Rq9v1QgDe4"]
+        },
+        "euXtGY7BRJ": {
+          "auto": false
+        },
+        "fLVlIcYbXD": {
+          "auto": false,
+          "answers": ["06bA9iXPTC"]
+        },
+        "fVYkQz2pgh": {
+          "auto": true,
+          "data": {
+            "uniform.applicantInterest": ["Owner"]
+          }
+        },
+        "fcVT5E1mS9": {
+          "auto": true,
+          "answers": ["lUduBLCNPp"]
+        },
+        "g01FztvfL0": {
+          "auto": true,
+          "data": {
+            "application.fee.reduction.sports": ["false"]
+          }
+        },
+        "gJdVz9RvIB": {
+          "auto": true,
+          "answers": ["HHRai2SkTA"]
+        },
+        "gWdARYduWf": {
+          "auto": false,
+          "answers": ["fADA2zqqWZ"]
+        },
+        "hwylHZOZXA": {
+          "auto": true,
+          "answers": ["3j3XmhxCQ5"]
+        },
+        "hy4BpkgxiS": {
+          "auto": true,
+          "data": {
+            "application.preAppAdvice.form": ["No"]
+          }
+        },
+        "ifKSiqpfjA": {
+          "auto": true,
+          "data": {
+            "application.fee.exemption.resubmission": ["false"]
+          }
+        },
+        "jB8QnwHCeA": {
+          "auto": true,
+          "answers": ["2c0L50Fpmg"]
+        },
+        "jElHa4maz7": {
+          "auto": true,
+          "answers": ["SXIAJm69Ab"]
+        },
+        "jhW9joqZF3": {
+          "auto": true,
+          "answers": ["aAYpMkBdaU"]
+        },
+        "jkGS7LGAID": {
+          "auto": true,
+          "answers": ["pDbALmkBdg"]
+        },
+        "kH8LltzXsC": {
+          "auto": true,
+          "answers": ["bKvEooIOQF"]
+        },
+        "kjyrSk55Us": {
+          "auto": true,
+          "data": {
+            "uniform.applicationTo": ["N5660"]
+          }
+        },
+        "lCfRyXcbqm": {
+          "auto": false,
+          "answers": ["GCh1PmH3vR"]
+        },
+        "lMy9g3WJeI": {
+          "auto": false,
+          "answers": ["9ciucqOCIv"]
+        },
+        "m1ywRbgU2j": {
+          "auto": true,
+          "data": {
+            "application.declaration.accurate.form": ["Yes"]
+          }
+        },
+        "mDWfLWeRi2": {
+          "auto": true,
+          "answers": ["WokD08hww8"]
+        },
+        "mFKz9j9Teo": {
+          "auto": true,
+          "answers": ["Ci4VZyOPcm"]
+        },
+        "mRevTOrtYj": {
+          "auto": true,
+          "answers": ["2MlqAY7JKX"]
+        },
+        "mpDYAZBWJO": {
+          "auto": true,
+          "answers": ["R34ldvRJHr"]
+        },
+        "n9ufFdJp1E": {
+          "auto": false,
+          "answers": ["UHgfYdJp1E"]
+        },
+        "o0HHHdJp1E": {
+          "auto": false,
+          "answers": ["eAJWMdJp1E"]
+        },
+        "o3pjW1Ewvt": {
+          "auto": true,
+          "data": {
+            "uniform.isRelated": ["false"]
+          }
+        },
+        "oztOfel6Jl": {
+          "auto": true,
+          "data": {
+            "application.fee.exemption.disability": ["false"]
+          }
+        },
+        "p11Ci13HQ3": {
+          "auto": false,
+          "data": {
+            "applicant.email": "benjamin+itp-payee@opensystemslab.io",
+            "_contact.applicant": {
+              "applicant": {
+                "email": "benjamin+itp-payee@opensystemslab.io",
+                "phone": "123",
+                "title": "",
+                "lastName": "X",
+                "firstName": "X",
+                "organisation": ""
+              }
+            },
+            "applicant.name.last": "X",
+            "applicant.name.first": "X",
+            "applicant.phone.primary": "123"
+          }
+        },
+        "pZnDl2vCR1": {
+          "auto": true,
+          "data": {
+            "applicant.interest.form": ["Sole owner"]
+          }
+        },
+        "qA052dJp1E": {
+          "auto": true,
+          "answers": ["bpWChdJp1E"]
+        },
+        "sfReldJp1E": {
+          "auto": false,
+          "answers": ["TudaXdJp1E"]
+        },
+        "t0L64Ni9x5": {
+          "auto": true,
+          "answers": ["EyB8pxExzA"]
+        },
+        "tClUld3roO": {
+          "auto": true,
+          "answers": ["kPCoaFGwwR"]
+        },
+        "uCJDR1VzzH": {
+          "auto": true,
+          "data": {
+            "application.basisOfLawfulness": ["permittedDevelopment"]
+          }
+        },
+        "uCpFOkZnVA": {
+          "auto": true,
+          "data": {
+            "application.fee.payable": 117
+          }
+        },
+        "uEWi5CUULe": {
+          "auto": true,
+          "answers": ["tDVRgcxKqj"]
+        },
+        "uwymCdJp1E": {
+          "auto": false,
+          "answers": ["WhFTZdJp1E"]
+        },
+        "wMA7jr45yt": {
+          "auto": false,
+          "data": {
+            "proposal.siteArea": 21.6,
+            "property.boundary.site": {
+              "type": "Feature",
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [-0.11720319399697778, 51.4594343591549],
+                    [-0.11713791264097685, 51.4594232372167],
+                    [-0.11716474348955974, 51.45938381246296],
+                    [-0.11722883214330372, 51.45939690860942],
+                    [-0.11720319399697778, 51.4594343591549]
+                  ]
+                ]
+              },
+              "properties": null
+            },
+            "proposal.siteArea.hectares": 0.00216
+          }
+        },
+        "wPBtMEpnx8": {
+          "auto": false
+        },
+        "wWmFvdJp1E": {
+          "auto": false,
+          "answers": ["QwRutdJp1E"]
+        },
+        "wnfLSSZCat": {
+          "auto": true,
+          "data": {
+            "proposal.droppedKerbOnly": ["false"]
+          }
+        },
+        "x86Gqqn9ol": {
+          "auto": true,
+          "data": {
+            "uniform.siteVisit": ["true"]
+          }
+        },
+        "xBoPLwdyeb": {
+          "auto": true,
+          "answers": ["yXmPsNK3z2"]
+        },
+        "yPJSNETmd7": {
+          "auto": true,
+          "data": {
+            "proposal.visibleFromPublicRealm": ["Information not provided"]
+          }
+        }
+      }
+    },
+    "email": "benjamin+itp-applicant@opensystemslab.io",
+    "created_at": "2023-06-06T11:18:56.951761+00:00",
+    "deleted_at": null,
+    "locked_at": "2023-06-06T11:26:11.316647+00:00",
+    "submitted_at": null,
+    "updated_at": "2023-06-06T11:26:11.316647+00:00",
+    "flow_id": "67f22b71-5d06-489d-8259-583cac99c362",
+    "id": "d4d9249a-dc1e-4996-9bfc-15fd3adab242",
+    "has_user_saved": false,
+    "sanitised_at": null
+  }
+]

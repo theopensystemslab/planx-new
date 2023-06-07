@@ -6,6 +6,7 @@ import {
   inviteToPayFlowGraph,
   sendNodeWithDestination,
   mockBreadcrumbs,
+  mockPassport,
 } from "./mocks";
 import { $admin } from "../client";
 
@@ -59,15 +60,7 @@ export async function buildSessionForFlow(flowId: string): Promise<string> {
     flowId,
     data: {
       breadcrumbs: mockBreadcrumbs,
-      passport: {
-        data: {
-          _address: {
-            title: "some place",
-          },
-          "proposal.projectType": ["alter.internal"],
-          fee: 42,
-        },
-      },
+      passport: mockPassport,
     },
   });
 }
