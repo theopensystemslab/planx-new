@@ -10,6 +10,7 @@ import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import useSWR from "swr";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { stringify } from "wkt";
 
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
@@ -257,7 +258,12 @@ export function PlanningConstraintsContent(
             It looks like there are no constraints on this property
           </Typography>
           <Typography variant="body2">
-            Continue with your application to tell us more about your project
+            Based on the information you've given it looks like there's no
+            planning constraints on your property that might limit what you can
+            do.
+          </Typography>
+          <Typography variant="body2">
+            Continue with your application to tell us more about your project.
           </Typography>
           <SimpleExpand
             buttonText={{
@@ -303,7 +309,7 @@ function PlanningConditionsInfo() {
   return (
     <WarningContainer>
       <ErrorOutline />
-      <Typography variant="body2" ml={2} fontWeight="bold">
+      <Typography variant="body1" ml={2} fontWeight={FONT_WEIGHT_SEMI_BOLD}>
         This page does not include information about historic planning
         conditions that may apply to this property.
       </Typography>
