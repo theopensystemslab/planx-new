@@ -1,0 +1,281 @@
+import { Store } from "pages/FlowEditor/lib/store";
+
+import { mockFileTypes } from "./mocks";
+import {
+  Condition,
+  createFileList,
+  FileList,
+  FileType,
+  Operator,
+} from "./model";
+
+describe("createFileList function", () => {
+  it("adds 'AlwaysRequired' FileTypes to the 'required' array", () => {
+    const fileTypes = [mockFileTypes[Condition.AlwaysRequired]];
+    const passport: Store.passport = { data: {} };
+
+    const expected: FileList = {
+      required: [mockFileTypes[Condition.AlwaysRequired]],
+      recommended: [],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("adds 'AlwaysRecommended' FileTypes to the 'recommended' array", () => {
+    const fileTypes = [mockFileTypes[Condition.AlwaysRecommended]];
+    const passport: Store.passport = { data: {} };
+
+    const expected: FileList = {
+      required: [],
+      recommended: [mockFileTypes[Condition.AlwaysRecommended]],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("adds 'RequiredIf' FileTypes to the 'required' array if the rule is met", () => {
+    const fileTypes = [mockFileTypes[Condition.RequiredIf]];
+    const passport: Store.passport = { data: { testFn: "testVal" } };
+
+    const expected: FileList = {
+      required: [mockFileTypes[Condition.RequiredIf]],
+      recommended: [],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("does not add 'RequiredIf' FileTypes to the 'required' array if the rule is not met", () => {
+    const fileTypes = [mockFileTypes[Condition.RequiredIf]];
+    const passport: Store.passport = { data: {} };
+
+    const expected: FileList = {
+      required: [],
+      recommended: [],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("adds 'RecommendedIf' FileTypes to the 'recommended' array if the rule is met", () => {
+    const fileTypes = [mockFileTypes[Condition.RecommendedIf]];
+    const passport: Store.passport = { data: { testFn: "testVal" } };
+
+    const expected: FileList = {
+      required: [],
+      recommended: [mockFileTypes[Condition.RecommendedIf]],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("does not add 'RecommendedIf' FileTypes to the 'recommended' array if the rule is not met", () => {
+    const fileTypes = [mockFileTypes[Condition.RecommendedIf]];
+    const passport: Store.passport = { data: {} };
+
+    const expected: FileList = {
+      required: [],
+      recommended: [],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("adds 'NotRequired' FileTypes to the 'optional' array", () => {
+    const fileTypes = [mockFileTypes[Condition.NotRequired]];
+    const passport: Store.passport = { data: {} };
+
+    const expected: FileList = {
+      required: [],
+      recommended: [],
+      optional: [mockFileTypes[Condition.NotRequired]],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("handles unique keys within a single condition", () => {
+    const fileTypes = [
+      mockFileTypes[Condition.AlwaysRequired],
+      mockFileTypes[Condition.AlwaysRequired],
+      mockFileTypes[Condition.AlwaysRequired],
+    ];
+    const passport: Store.passport = { data: {} };
+
+    const expected: FileList = {
+      required: [mockFileTypes[Condition.AlwaysRequired]],
+      recommended: [],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("handles unique keys across multiple conditions", () => {
+    const fileTypes = [
+      mockFileTypes[Condition.AlwaysRequired],
+      mockFileTypes[Condition.AlwaysRecommended],
+      mockFileTypes[Condition.RequiredIf],
+      mockFileTypes[Condition.RecommendedIf],
+      mockFileTypes[Condition.NotRequired],
+    ];
+    const passport: Store.passport = { data: { testFn: "testVal" } };
+
+    const expected: FileList = {
+      required: [mockFileTypes[Condition.AlwaysRequired]],
+      recommended: [],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("handles a complex list of FileTypes", () => {
+    const fileTypes: FileType[] = [
+      {
+        key: "key0",
+        fn: "fn0",
+        rule: {
+          condition: Condition.AlwaysRequired,
+        },
+      },
+      {
+        key: "key1",
+        fn: "fn1",
+        rule: {
+          condition: Condition.AlwaysRecommended,
+        },
+      },
+      {
+        key: "key2",
+        fn: "fn2",
+        rule: {
+          condition: Condition.RequiredIf,
+          operator: Operator.Equals,
+          fn: "required.file",
+          val: "true",
+        },
+      },
+      {
+        key: "key3",
+        fn: "fn3",
+        rule: {
+          condition: Condition.RecommendedIf,
+          operator: Operator.Equals,
+          fn: "recommended.file",
+          val: "true",
+        },
+      },
+      {
+        key: "key4",
+        fn: "fn4",
+        rule: {
+          condition: Condition.NotRequired,
+        },
+      },
+    ];
+    const passport: Store.passport = {
+      data: { "required.file": "true", "recommended.file": ["true"] },
+    };
+
+    const expected: FileList = {
+      required: [fileTypes[0], fileTypes[2]],
+      recommended: [fileTypes[1], fileTypes[3]],
+      optional: [fileTypes[4]],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
+  it("handles a complex, unsorted, list of FileTypes", () => {
+    const fileTypes: FileType[] = [
+      {
+        key: "key0",
+        fn: "fn0",
+        rule: {
+          condition: Condition.NotRequired,
+        },
+      },
+      {
+        key: "key1",
+        fn: "fn1",
+        rule: {
+          condition: Condition.RecommendedIf,
+          operator: Operator.Equals,
+          fn: "recommended.file",
+          val: "true",
+        },
+      },
+      {
+        key: "key2",
+        fn: "fn2",
+        rule: {
+          condition: Condition.RequiredIf,
+          operator: Operator.Equals,
+          fn: "required.file",
+          val: "true",
+        },
+      },
+      {
+        key: "key3",
+        fn: "fn3",
+        rule: {
+          condition: Condition.AlwaysRecommended,
+        },
+      },
+      {
+        key: "key4",
+        fn: "fn4",
+        rule: {
+          condition: Condition.AlwaysRequired,
+        },
+      },
+      {
+        key: "key4",
+        fn: "fn4",
+        rule: {
+          condition: Condition.AlwaysRequired,
+        },
+      },
+      {
+        key: "key5",
+        fn: "fn5",
+        rule: {
+          condition: Condition.RequiredIf,
+          operator: Operator.Equals,
+          fn: "required.file",
+          val: "false",
+        },
+      },
+    ];
+    const passport: Store.passport = {
+      data: { "required.file": "true", "recommended.file": ["true"] },
+    };
+
+    const expected: FileList = {
+      required: [fileTypes[4], fileTypes[2]],
+      recommended: [fileTypes[3], fileTypes[1]],
+      optional: [fileTypes[0]],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+});

@@ -183,7 +183,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
                 })
               )
             }
-            placeholder="Date field"
+            placeholder="Data field"
           />
           <Operator>Equals</Operator>
           <Input
