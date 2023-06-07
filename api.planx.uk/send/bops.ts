@@ -82,13 +82,13 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
         const applicationId = await adminClient.request(
           gql`
             mutation CreateBopsApplication(
-              $bops_id: String!
-              $destination_url: String!
-              $request: jsonb!
-              $req_headers: jsonb!
-              $response: jsonb!
-              $response_headers: jsonb!
-              $session_id: String!
+              $bops_id: String = ""
+              $destination_url: String = ""
+              $request: jsonb = ""
+              $req_headers: jsonb = ""
+              $response: jsonb = ""
+              $response_headers: jsonb = ""
+              $session_id: String = ""
             ) {
               insert_bops_applications_one(
                 object: {
