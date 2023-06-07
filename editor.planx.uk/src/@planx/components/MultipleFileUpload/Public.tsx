@@ -1,15 +1,11 @@
 import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
-import { DEFAULT_PRIMARY_COLOR, FONT_WEIGHT_BOLD } from "theme";
+import { FONT_WEIGHT_BOLD } from "theme";
 import ErrorWrapper from "ui/ErrorWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
@@ -29,6 +25,7 @@ import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
+import { FileTaggingModal } from "./Modal";
 import { createFileList, FileList, MultipleFileUpload } from "./model";
 
 type Props = PublicProps<MultipleFileUpload>;
@@ -231,57 +228,6 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         ) : undefined}
       </MoreInfo>
     </Box>
-  );
-};
-
-const TagsPerFileContainer = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-}));
-
-interface FileTaggingModalProps {
-  uploadedFiles: FileUploadSlot[];
-  setShowModal: (value: React.SetStateAction<boolean>) => void;
-}
-
-const FileTaggingModal = (props: FileTaggingModalProps) => {
-  return (
-    <Dialog
-      open
-      onClose={() => props.setShowModal(false)}
-      data-testid="file-tagging-dialog"
-      maxWidth="xl"
-      PaperProps={{
-        sx: {
-          borderRadius: 0,
-          borderTop: (theme) => `10px solid ${theme.palette.primary.main}`,
-        },
-      }}
-    >
-      <DialogContent>
-        {props.uploadedFiles.map((slot) => (
-          <TagsPerFileContainer>
-            <UploadedFileCard {...slot} key={slot.id} />
-            <span>What does this file show?</span>
-          </TagsPerFileContainer>
-        ))}
-      </DialogContent>
-      <DialogActions style={{ display: "flex", justifyContent: "flex-start" }}>
-        <Link
-          component="button"
-          onClick={() => props.setShowModal(false)}
-          sx={{ paddingLeft: 2 }}
-        >
-          <Typography variant="body2">Done</Typography>
-        </Link>
-        <Link
-          component="button"
-          onClick={() => props.setShowModal(false)}
-          sx={{ paddingLeft: 2 }}
-        >
-          <Typography variant="body2">Cancel</Typography>
-        </Link>
-      </DialogActions>
-    </Dialog>
   );
 };
 
