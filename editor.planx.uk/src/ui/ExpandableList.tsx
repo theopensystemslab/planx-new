@@ -16,7 +16,7 @@ const useListClasses = makeStyles((theme) => ({
 
 const useItemClasses = makeStyles((theme) => ({
   root: {
-    borderBottom: "1px solid #B1B4B6",
+    borderBottom: `1px solid ${theme.palette.secondary.main}`,
   },
   title: {
     display: "flex",
