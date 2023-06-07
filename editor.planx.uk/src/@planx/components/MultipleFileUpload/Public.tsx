@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -28,6 +29,16 @@ import { MultipleFileUpload } from "./model";
 type Props = PublicProps<MultipleFileUpload>;
 
 export default Component;
+
+const DropzoneContainer = styled(Box)(({ theme }) => ({
+  display: "grid",
+  marginBottom: theme.spacing(4),
+  gap: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    gridAutoFlow: "column",
+    gridAutoColumns: "1fr",
+  },
+}));
 
 const slotsSchema = array()
   .required()
@@ -102,19 +113,15 @@ function Component(props: Props) {
       isValid={slots.every((slot) => slot.url && slot.status === "success")}
     >
       <QuestionHeader {...props} />
-      <Box>
-        <FileStatus status={fileUploadStatus} />
-        <Box sx={{ display: "flex", mb: 4, gap: 2 }}>
+        <DropzoneContainer>
           <ErrorWrapper error={validationError} id={props.id}>
-            <Box sx={{ flex: "50%" }}>
-              <Dropzone
-                slots={slots}
-                setSlots={setSlots}
-                setFileUploadStatus={setFileUploadStatus}
-              />
-            </Box>
+          <Dropzone
+            slots={slots}
+            setSlots={setSlots}
+            setFileUploadStatus={setFileUploadStatus}
+          />
           </ErrorWrapper>
-          <Box sx={{ flex: "50%" }}>
+          <Box>
             <Typography fontWeight={FONT_WEIGHT_BOLD}>
               Required files
             </Typography>
@@ -125,7 +132,12 @@ function Component(props: Props) {
               />
             ))}
           </Box>
-        </Box>
+        </DropzoneContainer>
+        {Boolean(slots.length) && (
+          <Typography mb={2} fontWeight={FONT_WEIGHT_BOLD}>
+            Your uploaded files
+          </Typography>
+        )}
         {slots.map((slot) => {
           return (
             <UploadedFileCard
@@ -141,7 +153,6 @@ function Component(props: Props) {
             />
           );
         })}
-      </Box>
     </Card>
   );
 }
