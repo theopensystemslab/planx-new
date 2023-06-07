@@ -253,7 +253,7 @@ const FileTaggingModal = (props: FileTaggingModalProps) => {
       PaperProps={{
         sx: {
           borderRadius: 0,
-          borderTop: `10px solid ${DEFAULT_PRIMARY_COLOR}`,
+          borderTop: (theme) => `10px solid ${theme.palette.primary.main}`,
         },
       }}
     >
