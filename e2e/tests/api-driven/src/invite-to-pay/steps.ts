@@ -96,13 +96,13 @@ When("the payment request's `paid_at` date is set", async () => {
 
 Then(
   "there should be an audit entry for a successful {string} submission",
-  { timeout: 6 * 5000 + 1000 },
+  { timeout: 6 * 15000 + 1000 },
   async (destination) => {
     const response = await waitForResponse({
       name: `Application submission for ${destination}`,
       request: getSendResponse.bind(null, destination, context.sessionId!),
       retries: 5,
-      delay: 5000,
+      delay: 15000,
     });
     assert(response);
   }
