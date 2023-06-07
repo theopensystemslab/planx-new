@@ -23,12 +23,11 @@ export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
 
   return (
     <>
-      {slots.map((slot, index) => {
+      {slots.map((slot) => {
         return (
           <UploadedFileCard
             {...slot}
             key={slot.id}
-            index={index}
             removeFile={() => {
               setSlots(
                 slots.filter((currentSlot) => currentSlot.file !== slot.file)

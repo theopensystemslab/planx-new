@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
 import { uploadPrivateFile } from "api/upload";
@@ -35,6 +36,7 @@ const Root = styled(ButtonBase, {
   position: "relative",
   width: "100%",
   fontSize: "medium",
+  border: `2px dashed ${theme.palette.text.primary}`,
   zIndex: 10,
   "&::before": {
     content: "''",
@@ -43,8 +45,8 @@ const Root = styled(ButtonBase, {
     top: -theme.spacing(0.75),
     width: `calc(100% + ${theme.spacing(1.5)})`,
     height: `calc(100% + ${theme.spacing(1.5)})`,
+    border: `2px dashed ${theme.palette.text.primary}`,
     display: "block",
-    border: `2px dashed ${theme.palette.secondary.light}`,
     opacity: isDragActive ? 1 : 0,
     transform: isDragActive ? "scale(1)" : "scale(0.8)",
     zIndex: -1,
@@ -131,24 +133,26 @@ export const Dropzone: React.FC<Props> = ({
   return (
     <Root isDragActive={isDragActive} {...getRootProps({ role: "button" })}>
       <input data-testid="upload-boundary-input" {...getInputProps()} />
-      <Box pl={3} pr={4} color="text.secondary">
+      <Box pl={2} pr={3} color="text.secondary">
         <CloudUpload />
       </Box>
-      <Box flexGrow={1}>
+      <Box sx={{ textAlign: "left" }}>
         <Box>
           {isDragActive ? (
             "Drop the files here"
           ) : (
             <>
-              Drag {maxFiles === 1 ? "file" : "files"} here or{" "}
-              <Link>choose a file</Link>
+              Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
+              <Link>choose a file</Link> to upload
             </>
           )}
         </Box>
-        <Box color="text.secondary">pdf, jpg or png</Box>
-      </Box>
-      <Box color="text.secondary" alignSelf="flex-end">
-        max size 30MB
+        <Typography color="text.secondary" variant="body2">
+          pdf, jpg, png
+        </Typography>
+        <Typography color="text.secondary" variant="body2" fontSize={14} pt={1}>
+          Max size per file 30MB
+        </Typography>
       </Box>
     </Root>
   );
