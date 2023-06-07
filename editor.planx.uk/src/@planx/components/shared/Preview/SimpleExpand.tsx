@@ -4,10 +4,23 @@ import Collapse from "@mui/material/Collapse";
 import { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import React from "react";
+import Caret from "ui/icons/Caret";
 
 const useClasses = makeStyles((theme: Theme) => ({
   root: {
-    paddingBottom: theme.spacing(0.5),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+  },
+  button: {
+    boxShadow: "none",
+    color: "black",
+    fontSize: "1.125rem",
+    fontWeight: "600",
+    width: "100%",
+    "& > svg": {
+      marginLeft: "0.25em",
+      color: theme.palette.text.secondary,
+    },
   },
 }));
 
@@ -18,12 +31,12 @@ const SimpleExpand = ({ children, buttonText }: any) => {
     <>
       <Box className={classes.root}>
         <Button
-          size="large"
-          fullWidth
-          color="inherit"
+          className={classes.button}
           onClick={() => setShow(!show)}
+          // Needs aria-controls, aria-expanded
         >
           {show ? buttonText.closed : buttonText.open}
+          <Caret />
         </Button>
       </Box>
       <Collapse in={show}>{children}</Collapse>
