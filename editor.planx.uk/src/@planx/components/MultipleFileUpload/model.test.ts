@@ -1,11 +1,12 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
-import { mockFileTypes } from "./mocks";
+import { mockFileList, mockFileTypes } from "./mocks";
 import {
   Condition,
   createFileList,
   FileList,
   FileType,
+  generatePayload,
   Operator,
 } from "./model";
 
@@ -277,5 +278,45 @@ describe("createFileList function", () => {
     const result = createFileList({ passport, fileTypes });
 
     expect(result).toEqual(expected);
+  });
+});
+
+describe("generatePayload function", () => {
+  it("maps the FileList to the correct format", () => {
+    const result = generatePayload(mockFileList);
+
+    // Passport data constructed
+    expect(result).toHaveProperty("data");
+
+    // fn values mapped as passport keys
+    expect(result.data).toHaveProperty("requiredFileFn");
+    expect(result.data).toHaveProperty("recommendedFileFn");
+    expect(result.data).toHaveProperty("optionalFileFn");
+
+    // Value in passport matches expected shape
+    expect(result.data?.requiredFileFn).toMatchObject({
+      url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
+      filename: "PXL_20230511_093922923.jpg",
+      rule: {
+        condition: Condition.AlwaysRequired,
+      },
+    });
+  });
+
+  it("ignores files without a slot", () => {
+    const mockFileListWithEmptySlot = {
+      ...mockFileList,
+      optional: [
+        {
+          ...mockFileList.recommended[0],
+          slot: undefined,
+        },
+      ],
+    } as FileList;
+
+    const result = generatePayload(mockFileListWithEmptySlot);
+    expect(result.data).toHaveProperty("requiredFileFn");
+    expect(result.data).toHaveProperty("recommendedFileFn");
+    expect(result.data).not.toHaveProperty("optionalFileFn");
   });
 });
