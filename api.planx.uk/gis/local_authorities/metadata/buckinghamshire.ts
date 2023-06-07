@@ -9,7 +9,9 @@ https://environment.data.gov.uk/arcgis/rest/services
 https://inspire.wycombe.gov.uk/ (legacy)
 */
 
-const planningConstraints = {
+import { LocalAuthorityMetadata } from "../../digitalLand";
+
+const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {
     // Planx granular values link to Buck's source data in the following ways:
     //   * exact match of Digital Land entity.name after removing line break/return characters (aka "DEV_TYPE" in source data)

@@ -644,8 +644,9 @@ app.use(errorHandler);
 
 const server = new Server(app);
 
-server.keepAliveTimeout = 30000; // 30s
+server.keepAliveTimeout = (30000); // 30s
 server.headersTimeout = 35000; // 35s
+server.setTimeout(60 * 1000); // 60s
 
 export default server;
 

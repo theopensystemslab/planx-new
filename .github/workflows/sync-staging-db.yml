@@ -1,4 +1,4 @@
-name: Weekly staging database sync
+name: Nightly staging database sync
 
 on:
   schedule:

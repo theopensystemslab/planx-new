@@ -65,6 +65,8 @@ interface SendToUniformPayload {
  *   finally, insert a record into uniform_applications for future auditing
  */
 const sendToUniform = async (req: Request, res: Response, next: NextFunction) => {
+  req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
+  
   const uniformClient = getUniformClient(req.params.localAuthority);
   
   if (!uniformClient) {

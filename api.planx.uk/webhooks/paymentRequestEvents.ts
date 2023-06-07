@@ -2,7 +2,7 @@ import { addDays } from 'date-fns';
 import { Request, Response, NextFunction } from 'express';
 
 import { createScheduledEvent } from '../hasura/metadata';
-import { DAYS_UNTIL_EXPIRY } from '../saveAndReturn/utils';
+import { DAYS_UNTIL_EXPIRY, REMINDER_DAYS_FROM_EXPIRY } from '../saveAndReturn/utils';
 
 /** 
  * Create two "invitation" events for a payments_request record: one for the nominee and one for the agent
@@ -38,9 +38,8 @@ const createPaymentInvitationEvents = async (req: Request, res: Response, next: 
   };
 };
 
-
 /**
- * Create two "reminder" events for a payment_requests record: one for the nominee and one for the agent
+ * Create "reminder" events for a payment_requests record: one for the nominee and one for the agent
  */
 const createPaymentReminderEvents = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -50,21 +49,23 @@ const createPaymentReminderEvents = async (req: Request, res: Response, next: Ne
         status: 400,
         message: "Required value missing"
       });
-    const response = await Promise.all([
-        createScheduledEvent({
-          webhook: "{{HASURA_PLANX_API_URL}}/send-email/payment-reminder",
-          schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
-          payload: payload,
-          comment: `payment_reminder_${payload.paymentRequestId}`,
-        }),
-        createScheduledEvent({
-          webhook: "{{HASURA_PLANX_API_URL}}/send-email/payment-reminder-agent",
-          schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
-          payload: payload,
-          comment: `payment_reminder_agent_${payload.paymentRequestId}`,
-        }),
-      ]);
-    res.json(response);
+    const applicantResponse = await Promise.all(REMINDER_DAYS_FROM_EXPIRY.map((day: number) => (
+      createScheduledEvent({
+        webhook: "{{HASURA_PLANX_API_URL}}/send-email/payment-reminder",
+        schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - day)),
+        payload: payload,
+        comment: `payment_reminder_${payload.paymentRequestId}_${day}day`,
+      })
+    )));
+    const agentResponse = await Promise.all(REMINDER_DAYS_FROM_EXPIRY.map((day: number) => (
+      createScheduledEvent({
+        webhook: "{{HASURA_PLANX_API_URL}}/send-email/payment-reminder-agent",
+        schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - day)),
+        payload: payload,
+        comment: `payment_reminder_agent_${payload.paymentRequestId}_${day}day`,
+      })
+    )));
+    res.json([...applicantResponse, ...agentResponse]);
   } catch (error) {
     return next({
       error,

@@ -8,7 +8,9 @@ https://geo.southwark.gov.uk/connect/analyst/mobile/#/main
 https://environment.data.gov.uk/arcgis/rest/services
 */
 
-const planningConstraints = {
+import { LocalAuthorityMetadata } from "../../digitalLand";
+
+const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {
     // Planx granular values link to Southwark's source data in the following ways:
     //   * exact match of Digital Land entity.json.description (aka "ARTICLE_4_DIRECTION" in source data)

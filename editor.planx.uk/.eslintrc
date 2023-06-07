@@ -38,6 +38,11 @@
             "name": "@testing-library/react",
             "importNames": ["render"],
             "message": "Please import setup() from testUtils to render test component"
+          },
+          {
+            "name": "@mui/styles",
+            "importNames": ["styled"],
+            "message": "Please import styled from '@mui/material/styles'. Reason: https://mui.com/system/styled/#what-problems-does-it-solve"
           }
         ],
         "patterns": ["@mui/*/*/*"]

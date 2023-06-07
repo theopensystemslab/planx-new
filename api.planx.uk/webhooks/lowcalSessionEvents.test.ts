@@ -44,7 +44,9 @@ describe("Create reminder event webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toBe("test")
+        // it's queued up x2 reminders for 7 days and 1 day from expiry
+        expect(response.body).toHaveLength(2);
+        expect(response.body).toStrictEqual(["test", "test"]);
       });
   });
 
@@ -57,13 +59,19 @@ describe("Create reminder event webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toBe("test")
+        expect(response.body).toStrictEqual(["test", "test"]);
       });
+
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
     expect(mockArgs.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/reminder");
     expect(mockArgs.payload).toMatchObject(body.payload);
-    expect(mockArgs.comment).toBe(`reminder_${body.payload.sessionId}`);
-  })
+    expect(mockArgs.comment).toBe(`reminder_${body.payload.sessionId}_7day`);
+
+    const mockArgsSecondEvent = mockedCreateScheduledEvent.mock.calls[1][0];
+    expect(mockArgsSecondEvent.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/reminder");
+    expect(mockArgsSecondEvent.payload).toMatchObject(body.payload);
+    expect(mockArgsSecondEvent.comment).toBe(`reminder_${body.payload.sessionId}_1day`);
+  });
 
   it("returns a 500 on event setup failure", async () => {
     const body = { createdAt: new Date(), payload: { sessionId: "123" } };

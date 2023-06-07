@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     flex: 1,
     background: "#fff",
-    paddingTop: theme.spacing(3),
+    padding: theme.spacing(3),
   },
   refreshButton: {
     color: "inherit",

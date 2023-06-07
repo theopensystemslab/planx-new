@@ -1,7 +1,17 @@
+type PlanningConstraintConfig = {
+  active: boolean;
+  neg: string;
+  pos: string;
+  "digital-land-datasets"?: string[];
+  "digital-land-entities"?: number[];
+  category: string;
+}
+type PlanningConstraintsBaseSchema = Record<string, PlanningConstraintConfig>;
+
 // planx schema variables and their attributes (in the future, maybe these are managed in Editor?)
 //   flag as 'active' based on dataset status/availability here https://www.planning.data.gov.uk/dataset/
 //   planx passport variable names & categories come from https://docs.google.com/spreadsheets/d/1ePihRD37-2071Wq6t2Y7QtBt7juySWuVP6SAF6T-0vo/edit?usp=sharing
-const baseSchema = {
+const baseSchema: PlanningConstraintsBaseSchema = {
   article4: {
     active: true,
     neg: "is not subject to local permitted development restrictions (known as Article 4 directions)",

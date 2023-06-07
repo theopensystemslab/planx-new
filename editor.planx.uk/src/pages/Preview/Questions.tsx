@@ -17,8 +17,8 @@ import Node, { handleSubmit } from "./Node";
 
 const useClasses = makeStyles((theme) => ({
   backButton: {
-    marginLeft: "10px",
-    marginBottom: "10px",
+    marginLeft: theme.spacing(2),
+    marginBottom: theme.spacing(1),
     visibility: "visible",
     pointerEvents: "auto",
     display: "flex",
@@ -30,8 +30,9 @@ const useClasses = makeStyles((theme) => ({
     border: "none",
     columnGap: theme.spacing(1),
     padding: theme.spacing(1, 1, 1, 0),
+    textDecoration: "underline",
     "&:hover": {
-      textDecoration: "underline",
+      textDecorationThickness: "3px",
     },
   },
   hidden: {

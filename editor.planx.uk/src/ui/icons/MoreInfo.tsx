@@ -10,6 +10,7 @@ export default function MoreInfoIcon() {
     borderRadius: "50%",
     height: 32,
     width: 32,
+    padding: 0,
     "&:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
@@ -22,8 +23,9 @@ export default function MoreInfoIcon() {
       <QuestionMarkIcon
         sx={{
           position: "absolute",
-          left: 16,
-          top: 16,
+          left: 18,
+          top: 15,
+          width: 20,
         }}
       />
     </Root>

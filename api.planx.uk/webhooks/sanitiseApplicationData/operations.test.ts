@@ -23,6 +23,7 @@ import {
   getExpiredSessionIds,
   deleteApplicationFiles,
   deletePaymentRequests,
+  deleteHasuraScheduledEventsForSubmittedSessions,
 } from "./operations";
 
 jest.mock("../../hasura/schema")
@@ -158,6 +159,17 @@ describe("Data sanitation operations", () => {
       const deletedFiles = await deleteApplicationFiles();
       const fileCount = mockIds.length * filesPerMockSessionCount
       expect(deletedFiles).toHaveLength(fileCount)
+    });
+  });
+
+  describe("deleteHasuraScheduledEventsForSubmittedSessions", () => {
+    it("returns a QueryResult on success", async () => {
+      mockRunSQL.mockResolvedValue({
+        result: [ ["id"], [mockIds[0]], [mockIds[1]], [mockIds[2]] ]
+      })
+      const result = await deleteHasuraScheduledEventsForSubmittedSessions();
+      expect(mockRunSQL).toHaveBeenCalled();
+      expect(result).toEqual(mockIds);
     });
   });
 });

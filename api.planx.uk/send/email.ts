@@ -21,6 +21,8 @@ import { _admin as $admin } from "../client";
 import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
+  req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
+
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
   const { payload } = req.body;
   if (!payload?.sessionId) {
