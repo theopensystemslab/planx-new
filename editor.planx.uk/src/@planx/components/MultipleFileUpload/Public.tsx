@@ -1,11 +1,16 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
-import { FONT_WEIGHT_BOLD } from "theme";
+import { DEFAULT_PRIMARY_COLOR, FONT_WEIGHT_BOLD } from "theme";
 import ErrorWrapper from "ui/ErrorWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
@@ -62,6 +67,7 @@ function Component(props: Props) {
     undefined
   );
   const [validationError, setValidationError] = useState<string | undefined>();
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleSubmit = () => {
     slotsSchema
@@ -105,7 +111,7 @@ function Component(props: Props) {
       setValidationError(undefined);
     }
   }, [slots]);
-  
+
   const [fileList, setFileList] = useState<FileList>({
     required: [],
     recommended: [],
@@ -124,47 +130,49 @@ function Component(props: Props) {
       isValid={slots.every((slot) => slot.url && slot.status === "success")}
     >
       <QuestionHeader {...props} />
-        <DropzoneContainer>
-          <FileStatus status={fileUploadStatus} />
-          <ErrorWrapper error={validationError} id={props.id}>
+      <DropzoneContainer>
+        <FileStatus status={fileUploadStatus} />
+        <ErrorWrapper error={validationError} id={props.id}>
           <Dropzone
             slots={slots}
             setSlots={setSlots}
             setFileUploadStatus={setFileUploadStatus}
           />
-          </ErrorWrapper>
-          <Box>
-            <Typography fontWeight={FONT_WEIGHT_BOLD}>
-              Required files
-            </Typography>
-            {fileList.required.map((fileType) => (
-              <InteractiveFileListItem
-                name={fileType.key}
-                moreInformation={fileType.moreInformation}
-              />
-            ))}
-          </Box>
-        </DropzoneContainer>
-        {Boolean(slots.length) && (
-          <Typography mb={2} fontWeight={FONT_WEIGHT_BOLD}>
-            Your uploaded files
-          </Typography>
-        )}
-        {slots.map((slot) => {
-          return (
-            <UploadedFileCard
-              {...slot}
-              key={slot.id}
-              tags={["Test1", "Test2", "Test3"]}
-              removeFile={() => {
-                setSlots(
-                  slots.filter((currentSlot) => currentSlot.file !== slot.file)
-                );
-                setFileUploadStatus(`${slot.file.path} was deleted`);
-              }}
+        </ErrorWrapper>
+        <Box>
+          <Typography fontWeight={FONT_WEIGHT_BOLD}>Required files</Typography>
+          {fileList.required.map((fileType) => (
+            <InteractiveFileListItem
+              name={fileType.key}
+              moreInformation={fileType.moreInformation}
             />
-          );
-        })}
+          ))}
+        </Box>
+      </DropzoneContainer>
+      {Boolean(slots.length) && (
+        <Typography mb={2} fontWeight={FONT_WEIGHT_BOLD}>
+          Your uploaded files
+        </Typography>
+      )}
+      {showModal && (
+        <FileTaggingModal uploadedFiles={slots} setShowModal={setShowModal} />
+      )}
+      {slots.map((slot) => {
+        return (
+          <UploadedFileCard
+            {...slot}
+            key={slot.id}
+            tags={["Test1", "Test2", "Test3"]}
+            onChange={() => setShowModal(true)}
+            removeFile={() => {
+              setSlots(
+                slots.filter((currentSlot) => currentSlot.file !== slot.file)
+              );
+              setFileUploadStatus(`${slot.file.path} was deleted`);
+            }}
+          />
+        );
+      })}
     </Card>
   );
 }
@@ -224,6 +232,57 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         ) : undefined}
       </MoreInfo>
     </Box>
+  );
+};
+
+const TagsPerFileContainer = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+}));
+
+interface FileTaggingModalProps {
+  uploadedFiles: FileUploadSlot[];
+  setShowModal: (value: React.SetStateAction<boolean>) => void;
+}
+
+const FileTaggingModal = (props: FileTaggingModalProps) => {
+  return (
+    <Dialog
+      open
+      onClose={() => props.setShowModal(false)}
+      data-testid="file-tagging-dialog"
+      maxWidth="xl"
+      PaperProps={{
+        sx: {
+          borderRadius: 0,
+          borderTop: `10px solid ${DEFAULT_PRIMARY_COLOR}`,
+        },
+      }}
+    >
+      <DialogContent>
+        {props.uploadedFiles.map((slot) => (
+          <TagsPerFileContainer>
+            <UploadedFileCard {...slot} key={slot.id} />
+            <span>What does this file show?</span>
+          </TagsPerFileContainer>
+        ))}
+      </DialogContent>
+      <DialogActions style={{ display: "flex", justifyContent: "flex-start" }}>
+        <Link
+          component="button"
+          onClick={() => props.setShowModal(false)}
+          sx={{ paddingLeft: 2 }}
+        >
+          <Typography variant="body2">Done</Typography>
+        </Link>
+        <Link
+          component="button"
+          onClick={() => props.setShowModal(false)}
+          sx={{ paddingLeft: 2 }}
+        >
+          <Typography variant="body2">Cancel</Typography>
+        </Link>
+      </DialogActions>
+    </Dialog>
   );
 };
 

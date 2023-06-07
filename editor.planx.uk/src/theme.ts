@@ -13,7 +13,7 @@ import { hasFeatureFlag } from "lib/featureFlags";
 
 const GOVUK_YELLOW = "#FFDD00";
 
-const DEFAULT_PRIMARY_COLOR = "#000661";
+export const DEFAULT_PRIMARY_COLOR = "#000661";
 const TEXT_COLOR_PRIMARY = "#0B0C0C";
 const TEXT_COLOR_SECONDARY = "#505A5F";
 const BG_COLOR_DEFAULT = "#FFFFFF";
