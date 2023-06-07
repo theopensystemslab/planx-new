@@ -301,7 +301,7 @@ export = async () => {
           context: "../../api.planx.uk",
           target: "production",
         }),
-        memory: 1024 /*MB*/,
+        memory: 2048 /*MB*/,
         portMappings: [apiListenerHttps],
         environment: [
           { name: "NODE_ENV", value: env },
