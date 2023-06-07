@@ -10,7 +10,6 @@ import ErrorWrapper from "ui/ErrorWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { emptyContent } from "ui/RichTextInput";
-import { array } from "yup";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
@@ -24,9 +23,15 @@ import QuestionHeader, {
 import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
-import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import { FileTaggingModal } from "./Modal";
-import { createFileList, FileList, MultipleFileUpload } from "./model";
+import { getPreviouslySubmittedData } from "../shared/utils";
+import {
+  createFileList,
+  FileList,
+  generatePayload,
+  MultipleFileUpload,
+} from "./model";
+import { fileListSchema, slotsSchema } from "./schema";
 
 type Props = PublicProps<MultipleFileUpload>;
 
@@ -40,20 +45,6 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const slotsSchema = array()
-  .required()
-  .test({
-    name: "nonUploading",
-    message: "Upload at least one file",
-    test: (slots?: Array<FileUploadSlot>) => {
-      return Boolean(
-        slots &&
-          slots.length > 0 &&
-          !slots.some((slot) => slot.status === "uploading")
-      );
-    },
-  });
-
 function Component(props: Props) {
   const recoveredSlots = getPreviouslySubmittedData(props)?.map(
     (slot: FileUploadSlot) => slot.cachedSlot
@@ -66,26 +57,13 @@ function Component(props: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleSubmit = () => {
-    slotsSchema
-      .validate(slots)
+    Promise.all([
+      slotsSchema.validate(slots),
+      fileListSchema.validate(fileList),
+    ])
       .then(() => {
-        props.handleSubmit?.(
-          makeData(
-            props,
-            slots.map((slot) => ({
-              url: slot.url,
-              filename: slot.file.path,
-              cachedSlot: {
-                ...slot,
-                file: {
-                  path: slot.file.path,
-                  type: slot.file.type,
-                  size: slot.file.size,
-                },
-              },
-            }))
-          )
-        );
+        const payload = generatePayload(fileList);
+        props.handleSubmit?.(payload);
       })
       .catch((err) => {
         setValidationError(err.message);
