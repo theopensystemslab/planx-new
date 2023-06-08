@@ -1,4 +1,5 @@
 import { Store } from "pages/FlowEditor/lib/store";
+import { FileWithPath } from "react-dropzone";
 
 import { mockFileList, mockFileTypes } from "./mocks";
 import {
@@ -7,7 +8,9 @@ import {
   FileList,
   FileType,
   generatePayload,
+  getRecoveredSlots,
   Operator,
+  UserFile,
 } from "./model";
 
 describe("createFileList function", () => {
@@ -318,5 +321,31 @@ describe("generatePayload function", () => {
     expect(result.data).toHaveProperty("requiredFileFn");
     expect(result.data).toHaveProperty("recommendedFileFn");
     expect(result.data).not.toHaveProperty("optionalFileFn");
+  });
+});
+
+describe("getRecoveredSlots function", () => {
+  it("recovers a previously uploaded file from the passport", () => {
+    const mockCachedSlot: NonNullable<UserFile["slot"]>["cachedSlot"] = {
+      id: "abc123",
+      file: {
+        path: "filePath.png",
+      } as FileWithPath,
+      status: "success",
+      progress: 1,
+    };
+
+    // Mock breadcrumb data with FileType.fn -> UserFile mapped
+    const previouslySubmittedData: Store.userData = {
+      data: {
+        requiredFileFn: {
+          cachedSlot: mockCachedSlot,
+        },
+      },
+    };
+
+    const result = getRecoveredSlots(previouslySubmittedData, mockFileList);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject(mockCachedSlot);
   });
 });

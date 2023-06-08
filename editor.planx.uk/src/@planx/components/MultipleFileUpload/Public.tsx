@@ -24,11 +24,11 @@ import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
 import { FileTaggingModal } from "./Modal";
-import { getPreviouslySubmittedData } from "../shared/utils";
 import {
   createFileList,
   FileList,
   generatePayload,
+  getRecoveredSlots,
   MultipleFileUpload,
 } from "./model";
 import { fileListSchema, slotsSchema } from "./schema";
@@ -46,17 +46,44 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
 }));
 
 function Component(props: Props) {
-  const recoveredSlots = getPreviouslySubmittedData(props)?.map(
-    (slot: FileUploadSlot) => slot.cachedSlot
-  );
-  const [slots, setSlots] = useState<FileUploadSlot[]>(recoveredSlots ?? []);
+  const [fileList, setFileList] = useState<FileList>({
+    required: [],
+    recommended: [],
+    optional: [],
+  });
+
+  useEffect(() => {
+    const passport = useStore.getState().computePassport();
+    const fileList = createFileList({ passport, fileTypes: props.fileTypes });
+    setFileList(fileList);
+  }, []);
+
+  useEffect(() => {
+    // TODO: Re-map slots to userfiles also?
+    const recoveredSlots: FileUploadSlot[] = getRecoveredSlots(
+      props.previouslySubmittedData,
+      fileList
+    );
+    setSlots(recoveredSlots);
+  }, [props.previouslySubmittedData, fileList]);
+
+  const [slots, setSlots] = useState<FileUploadSlot[]>([]);
+
   const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
     undefined
   );
+
   const [validationError, setValidationError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleSubmit = () => {
+    // This is a temp cheat to bypass tagging
+    // The first slot is mapped to a single required file
+
+    // const fileListWithTaggedFile = {...fileList}
+    // fileListWithTaggedFile.required[0].slot = slots[0]
+    // setFileList(fileListWithTaggedFile);
+
     Promise.all([
       slotsSchema.validate(slots),
       fileListSchema.validate(fileList),
@@ -85,18 +112,6 @@ function Component(props: Props) {
       setValidationError(undefined);
     }
   }, [slots]);
-
-  const [fileList, setFileList] = useState<FileList>({
-    required: [],
-    recommended: [],
-    optional: [],
-  });
-
-  useEffect(() => {
-    const passport = useStore.getState().computePassport();
-    const fileList = createFileList({ passport, fileTypes: props.fileTypes });
-    setFileList(fileList);
-  }, []);
 
   return (
     <Card

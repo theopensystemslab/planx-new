@@ -209,3 +209,20 @@ export const generatePayload = (fileList: FileList): Store.userData => {
 
   return { data: newPassportData };
 };
+
+export const getRecoveredSlots = (
+  previouslySubmittedData: Store.userData | undefined,
+  fileList: FileList
+): FileUploadSlot[] => {
+  const allFiles = [
+    ...fileList.required,
+    ...fileList.recommended,
+    ...fileList.optional,
+  ];
+
+  const recoveredSlots = allFiles
+    .map((userFile) => previouslySubmittedData?.data?.[userFile.fn]?.cachedSlot)
+    .filter(Boolean);
+
+  return recoveredSlots;
+};

@@ -59,15 +59,23 @@ export const slotsSchema = array()
   .test({
     name: "nonUploading",
     message: "Please wait for upload to complete",
-    test: (slots?: Array<FileUploadSlot>) =>
-      !slots?.some((slot) => slot.status === "uploading"),
+    test: (slots?: Array<FileUploadSlot>) => {
+      const isEveryUploadComplete = Boolean(
+        slots?.every((slot) => slot.status === "success")
+      );
+      return isEveryUploadComplete;
+    },
   });
 
 export const fileListSchema = object({
   required: array().test({
     name: "allRequiredFilesUploaded",
-    message: "Please upload all required files",
-    test: (userFile?: UserFile[]) =>
-      !userFile?.every((userFile) => userFile?.slot),
+    message: "Please upload and tag all required files",
+    test: (userFile?: UserFile[]) => {
+      const isEverySlotFilled = Boolean(
+        userFile?.every((userFile) => userFile?.slot)
+      );
+      return isEverySlotFilled;
+    },
   }),
 });
