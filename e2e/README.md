@@ -11,7 +11,7 @@ We use [Playwright](https://playwright.dev/docs/api/class-test) to run UI driven
 
 ## API driven tests
 
-We use [Ghurkin](https://cucumber.io/docs/gherkin/reference) to run API tests where interactions are simulated via automated network requests.
+We use [Gherkin](https://cucumber.io/docs/gherkin/reference) to run API tests where interactions are simulated via automated network requests.
 
 
 # Running Tests
