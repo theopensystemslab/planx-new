@@ -340,10 +340,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
     expect(screen.getByTestId("new-address-input")).toBeInTheDocument();
 
     // keyUp should trigger the error message to display
-    await user.type(
-      await screen.findByLabelText("Describe this site"),
-      "{enter}"
-    );
+    await user.type(await screen.findByLabelText("Name the site"), "{enter}");
     expect(
       screen.getByText(`Enter a site description such as "Land at..."`)
     ).toBeInTheDocument();

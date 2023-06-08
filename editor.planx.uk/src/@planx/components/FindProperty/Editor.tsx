@@ -8,7 +8,9 @@ import {
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import OptionButton from "ui/OptionButton";
@@ -16,6 +18,7 @@ import RichTextInput from "ui/RichTextInput";
 
 import type { FindProperty } from "./model";
 import {
+  DEFAULT_NEW_ADDRESS_LABEL,
   DEFAULT_NEW_ADDRESS_TITLE,
   DEFAULT_TITLE,
   parseFindProperty,
@@ -93,6 +96,19 @@ function FindPropertyComponent(props: Props) {
                   onChange={formik.handleChange}
                 />
               </InputRow>
+              <InputGroup label="New address description label">
+                <InputRow>
+                  <InputRowItem width="100%">
+                    <Input
+                      id="new-address-description-label"
+                      placeholder={DEFAULT_NEW_ADDRESS_LABEL}
+                      name="newAddressDescriptionLabel"
+                      value={formik.values.newAddressDescriptionLabel}
+                      onChange={formik.handleChange}
+                    />
+                  </InputRowItem>
+                </InputRow>
+              </InputGroup>
             </>
           ) : (
             <></>

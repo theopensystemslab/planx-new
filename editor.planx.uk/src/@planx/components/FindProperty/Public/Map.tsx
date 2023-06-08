@@ -26,6 +26,7 @@ interface PlotNewAddressProps {
   boundary?: GeoJSONObject | undefined;
   id?: string;
   description?: string;
+  descriptionLabel?: string;
 }
 
 type Coordinates = {
@@ -154,7 +155,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
       </MapContainer>
       <DescriptionInput data-testid="new-address-input">
         <InputLabel
-          label="Describe this site"
+          label={props.descriptionLabel || ""}
           htmlFor={`${props.id}-siteDescription`}
         >
           <Input
