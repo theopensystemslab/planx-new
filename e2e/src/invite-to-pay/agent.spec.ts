@@ -1,9 +1,5 @@
 import { test, expect } from "@playwright/test";
-import {
-  setFeatureFlag,
-  addSessionToContext,
-  modifyFlow,
-} from "../helpers";
+import { setFeatureFlag, addSessionToContext, modifyFlow } from "../helpers";
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import {
   Context,
