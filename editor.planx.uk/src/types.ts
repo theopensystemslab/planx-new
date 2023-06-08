@@ -67,17 +67,6 @@ export interface TextContent {
   show: boolean;
 }
 
-export interface Flag {
-  category: string;
-  value?: string;
-  text: string;
-  bgColor: string;
-  color: string;
-  // XXX: will be removed when flags are more dynamic. For the immediate future
-  //      it's convenient to store a definition for BOPS users with the data.
-  officerDescription?: string;
-}
-
 export interface Node {
   id: string;
   data: {

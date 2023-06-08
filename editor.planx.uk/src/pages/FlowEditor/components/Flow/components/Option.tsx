@@ -1,8 +1,8 @@
+import { flatFlags } from "@opensystemslab/planx-core/types";
 import classNames from "classnames";
 import React from "react";
 import { Link } from "react-navi";
 
-import { flatFlags } from "../../../data/flags";
 import { useStore } from "../../../lib/store";
 import Hanger from "./Hanger";
 import Node from "./Node";

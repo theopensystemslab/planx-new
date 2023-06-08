@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
+import { Flag, FlagSet, flatFlags } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import flags, { FlagSet } from "pages/FlowEditor/data/flags";
+import groupBy from "lodash/groupBy";
 import React, { useState } from "react";
-import { Flag } from "types";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
@@ -13,6 +13,8 @@ import ModalSectionContent from "ui/ModalSectionContent";
 import { TYPES } from "../types";
 import { ICONS } from "../ui";
 import type { Result } from "./model";
+
+const flags = groupBy(flatFlags, (f) => f.category);
 
 interface FormData {
   flagSet: FlagSet;
@@ -89,8 +91,7 @@ const ResultComponent: React.FC<Result> = (props) => {
     validate: () => {},
   });
 
-  const allFlagsForSet: { [flagId: string]: Flag } =
-    flags[formik.values.flagSet];
+  const allFlagsForSet = flags[formik.values.flagSet];
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

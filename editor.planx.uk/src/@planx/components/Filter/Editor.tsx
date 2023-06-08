@@ -1,6 +1,9 @@
+import {
+  DEFAULT_FLAG_CATEGORY,
+  flatFlags,
+} from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
 import { useFormik } from "formik";
-import { DEFAULT_FLAG_CATEGORY, flatFlags } from "pages/FlowEditor/data/flags";
 import React from "react";
 
 export interface Props {

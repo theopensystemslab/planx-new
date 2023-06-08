@@ -5,12 +5,12 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import {
+  flatFlags,
   GOV_PAY_PASSPORT_KEY,
   GovUKPayment,
 } from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import { isEmpty } from "lodash";
-import { flatFlags } from "pages/FlowEditor/data/flags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 
@@ -385,7 +385,7 @@ export function getBOPSParams({
     data.result = removeNilValues({
       flag: [flag.category, flag.text].join(" / "),
       heading: flag.text,
-      description: flag.officerDescription,
+      description: flag.description,
       override: passport?.data?.["application.resultOverride.reason"],
     });
   } catch (err) {
