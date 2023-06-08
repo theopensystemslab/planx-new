@@ -90,10 +90,10 @@ export default function ConstraintsList({ data, metadata }: any) {
                 }}
                 content={con.text}
                 data={con.value ? con.data : null}
-                metadata={metadata[con.key]}
+                metadata={metadata[con.fn]}
                 category={category}
               >
-                {metadata[con.key]?.plural || ReactHtmlParser(con.text)}
+                {metadata[con.fn]?.plural || ReactHtmlParser(con.text)}
               </ConstraintListItem>
             ))}
           </ListSubheader>

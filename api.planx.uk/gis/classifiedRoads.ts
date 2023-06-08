@@ -105,7 +105,7 @@ export const classifiedRoadsSearch = async (
         ...baseResponse,
         constraints: {
           [PASSPORT_FN]: {
-            key: PASSPORT_FN,
+            fn: PASSPORT_FN,
             value: true,
             text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
             data: features,
@@ -118,7 +118,7 @@ export const classifiedRoadsSearch = async (
         ...baseResponse,
         constraints: {
           [PASSPORT_FN]: {
-            key: PASSPORT_FN,
+            fn: PASSPORT_FN,
             value: false,
             text: "is not on a Classified Road",
             category: "General policy",
