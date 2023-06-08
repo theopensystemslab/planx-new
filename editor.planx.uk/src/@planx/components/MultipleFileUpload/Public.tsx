@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
@@ -138,10 +139,12 @@ function Component(props: Props) {
         <Box>
           <Typography fontWeight={FONT_WEIGHT_BOLD}>Required files</Typography>
           {fileList.required.map((fileType) => (
-            <InteractiveFileListItem
-              name={fileType.key}
-              moreInformation={fileType.moreInformation}
-            />
+            <ListItem key={fileType.key} disablePadding>
+              <InteractiveFileListItem
+                name={fileType.key}
+                moreInformation={fileType.moreInformation}
+              />
+            </ListItem>
           ))}
         </Box>
       </DropzoneContainer>
@@ -191,10 +194,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
   };
 
   return (
-    <Box
-      key={props.name}
-      style={{ display: "flex", justifyContent: "space-between" }}
-    >
+    <Box style={{ display: "flex", justifyContent: "space-between" }}>
       <p>{props.name}</p>
       {!!(info || policyRef || howMeasured) && (
         <StyledIconButton
