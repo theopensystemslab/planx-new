@@ -1,5 +1,6 @@
 import { array, mixed, object, SchemaOf, string } from "yup";
 
+import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
 import {
   checkIfConditionalRule,
@@ -8,6 +9,7 @@ import {
   MultipleFileUpload,
   Operator,
   Rule,
+  UserFile,
 } from "./model";
 
 const moreInformationSchema: SchemaOf<MoreInformation> = object({
@@ -50,3 +52,30 @@ export const multipleFileUploadSchema: SchemaOf<MultipleFileUpload> = object({
   fn: string(),
   fileTypes: array().of(fileTypeSchema).required().min(1),
 }).concat(moreInformationSchema);
+
+export const slotsSchema = array()
+  .min(1, "Upload at least one file")
+  .required()
+  .test({
+    name: "nonUploading",
+    message: "Please wait for upload to complete",
+    test: (slots?: Array<FileUploadSlot>) => {
+      const isEveryUploadComplete = Boolean(
+        slots?.every((slot) => slot.status === "success")
+      );
+      return isEveryUploadComplete;
+    },
+  });
+
+export const fileListSchema = object({
+  required: array().test({
+    name: "allRequiredFilesUploaded",
+    message: "Please upload and tag all required files",
+    test: (userFile?: UserFile[]) => {
+      const isEverySlotFilled = Boolean(
+        userFile?.every((userFile) => userFile?.slot)
+      );
+      return isEverySlotFilled;
+    },
+  }),
+});

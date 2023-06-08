@@ -11,7 +11,6 @@ import ErrorWrapper from "ui/ErrorWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { emptyContent } from "ui/RichTextInput";
-import { array } from "yup";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
@@ -25,9 +24,15 @@ import QuestionHeader, {
 import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
-import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import { FileTaggingModal } from "./Modal";
-import { createFileList, FileList, MultipleFileUpload } from "./model";
+import {
+  createFileList,
+  FileList,
+  generatePayload,
+  getRecoveredSlots,
+  MultipleFileUpload,
+} from "./model";
+import { fileListSchema, slotsSchema } from "./schema";
 
 type Props = PublicProps<MultipleFileUpload>;
 
@@ -41,52 +46,52 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const slotsSchema = array()
-  .required()
-  .test({
-    name: "nonUploading",
-    message: "Upload at least one file",
-    test: (slots?: Array<FileUploadSlot>) => {
-      return Boolean(
-        slots &&
-          slots.length > 0 &&
-          !slots.some((slot) => slot.status === "uploading")
-      );
-    },
+function Component(props: Props) {
+  const [fileList, setFileList] = useState<FileList>({
+    required: [],
+    recommended: [],
+    optional: [],
   });
 
-function Component(props: Props) {
-  const recoveredSlots = getPreviouslySubmittedData(props)?.map(
-    (slot: FileUploadSlot) => slot.cachedSlot
-  );
-  const [slots, setSlots] = useState<FileUploadSlot[]>(recoveredSlots ?? []);
+  useEffect(() => {
+    const passport = useStore.getState().computePassport();
+    const fileList = createFileList({ passport, fileTypes: props.fileTypes });
+    setFileList(fileList);
+  }, []);
+
+  useEffect(() => {
+    // TODO: Re-map slots to userfiles also?
+    const recoveredSlots: FileUploadSlot[] = getRecoveredSlots(
+      props.previouslySubmittedData,
+      fileList
+    );
+    setSlots(recoveredSlots);
+  }, [props.previouslySubmittedData, fileList]);
+
+  const [slots, setSlots] = useState<FileUploadSlot[]>([]);
+
   const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
     undefined
   );
+
   const [validationError, setValidationError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleSubmit = () => {
-    slotsSchema
-      .validate(slots)
+    // This is a temp cheat to bypass tagging
+    // The first slot is mapped to a single required file
+
+    // const fileListWithTaggedFile = {...fileList}
+    // fileListWithTaggedFile.required[0].slot = slots[0]
+    // setFileList(fileListWithTaggedFile);
+
+    Promise.all([
+      slotsSchema.validate(slots),
+      fileListSchema.validate(fileList),
+    ])
       .then(() => {
-        props.handleSubmit?.(
-          makeData(
-            props,
-            slots.map((slot) => ({
-              url: slot.url,
-              filename: slot.file.path,
-              cachedSlot: {
-                ...slot,
-                file: {
-                  path: slot.file.path,
-                  type: slot.file.type,
-                  size: slot.file.size,
-                },
-              },
-            }))
-          )
-        );
+        const payload = generatePayload(fileList);
+        props.handleSubmit?.(payload);
       })
       .catch((err) => {
         setValidationError(err.message);
@@ -108,18 +113,6 @@ function Component(props: Props) {
       setValidationError(undefined);
     }
   }, [slots]);
-
-  const [fileList, setFileList] = useState<FileList>({
-    required: [],
-    recommended: [],
-    optional: [],
-  });
-
-  useEffect(() => {
-    const passport = useStore.getState().computePassport();
-    const fileList = createFileList({ passport, fileTypes: props.fileTypes });
-    setFileList(fileList);
-  }, []);
 
   return (
     <Card
