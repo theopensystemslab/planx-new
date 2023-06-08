@@ -7,15 +7,18 @@ import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import type {
+  Constraint,
+  GISResponse,
+  Metadata,
+} from "@opensystemslab/planx-core/types";
 import groupBy from "lodash/groupBy";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
-import { Constraint } from "./model";
-
-const CATEGORY_COLORS: any = {
+const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",
   "Heritage and conservation": "#EDDCD2",
   Ecology: "#E0EFCC",
@@ -45,9 +48,16 @@ const StyledConstraint = styled(Box, {
   },
 }));
 
-export default function ConstraintsList({ data, metadata }: any) {
-  const constraints: Constraint[] = Object.values(data);
-  const groupedConstraints = groupBy(constraints, (constraint: Constraint) => {
+interface ConstraintsListProps {
+  data: Constraint[];
+  metadata: GISResponse["metadata"];
+}
+
+export default function ConstraintsList({
+  data,
+  metadata,
+}: ConstraintsListProps) {
+  const groupedConstraints = groupBy(data, (constraint: Constraint) => {
     return constraint.category;
   });
 
@@ -90,10 +100,10 @@ export default function ConstraintsList({ data, metadata }: any) {
                 }}
                 content={con.text}
                 data={con.value ? con.data : null}
-                metadata={metadata[con.fn]}
+                metadata={metadata?.[con.fn]}
                 category={category}
               >
-                {metadata[con.fn]?.plural || ReactHtmlParser(con.text)}
+                {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
               </ConstraintListItem>
             ))}
           </ListSubheader>
@@ -103,7 +113,17 @@ export default function ConstraintsList({ data, metadata }: any) {
   );
 }
 
-function ConstraintListItem({ children, ...props }: any) {
+interface ConstraintListItemProps {
+  key: string;
+  content: string;
+  data: Constraint["data"] | null;
+  metadata?: Metadata;
+  category: string;
+  style: Record<string, any>;
+  children: ReactNode;
+}
+
+function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const [showConstraintData, setShowConstraintData] = useState<boolean>(false);
 
   return (
@@ -149,39 +169,40 @@ function ConstraintListItem({ children, ...props }: any) {
               <Typography variant="h4" component="h4" gutterBottom>
                 {`This property ${props?.content}`}
               </Typography>
-              {props.data?.length > 0 && (
+              {Boolean(props.data?.length) && (
                 <List
                   dense
                   disablePadding
                   sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
                 >
-                  {props.data.map(
-                    (record: any) =>
-                      record.name && (
-                        <ListItem
-                          key={record.entity}
-                          dense
-                          disableGutters
-                          sx={{ display: "list-item", lineHeight: 1.33 }} // import LINE_HEIGHT_BASE via theme??
-                        >
-                          <Typography variant="body2">
-                            {record.name}{" "}
-                            {record.name && record["documentation-url"] && (
-                              <span>
-                                (
-                                <Link
-                                  href={record["documentation-url"]}
-                                  target="_blank"
-                                >
-                                  source
-                                </Link>
-                                )
-                              </span>
-                            )}
-                          </Typography>
-                        </ListItem>
-                      )
-                  )}
+                  {props.data &&
+                    props.data.map(
+                      (record: any) =>
+                        record.name && (
+                          <ListItem
+                            key={record.entity}
+                            dense
+                            disableGutters
+                            sx={{ display: "list-item", lineHeight: 1.33 }} // import LINE_HEIGHT_BASE via theme??
+                          >
+                            <Typography variant="body2">
+                              {record.name}{" "}
+                              {record.name && record["documentation-url"] && (
+                                <span>
+                                  (
+                                  <Link
+                                    href={record["documentation-url"]}
+                                    target="_blank"
+                                  >
+                                    source
+                                  </Link>
+                                  )
+                                </span>
+                              )}
+                            </Typography>
+                          </ListItem>
+                        )
+                    )}
                 </List>
               )}
             </>

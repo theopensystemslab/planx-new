@@ -1,5 +1,6 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
+import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
@@ -17,7 +18,7 @@ import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import ConstraintsList from "./List";
-import type { GISResponse, PlanningConstraints } from "./model";
+import type { PlanningConstraints } from "./model";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -216,13 +217,13 @@ export function PlanningConstraintsContent(
   const error = constraints.error || undefined;
   const showError = error || !Object.values(constraints)?.length;
 
-  const positiveConstraints = Object.values(constraints)
-    .filter(({ text }) => text)
-    .filter(({ value }) => value);
+  const positiveConstraints = Object.values(constraints).filter(
+    (v: Constraint, _i) => v.text && v.value
+  );
 
-  const negativeConstraints = Object.values(constraints)
-    .filter(({ text }) => text)
-    .filter(({ value }) => !value);
+  const negativeConstraints = Object.values(constraints).filter(
+    (v: Constraint, _i) => v.text && !v.value
+  );
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
