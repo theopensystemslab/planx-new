@@ -7,16 +7,19 @@ import React from "react";
 import Caret from "ui/icons/Caret";
 
 const useClasses = makeStyles((theme: Theme) => ({
+  root: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+  },
   button: {
     boxShadow: "none",
-    color: theme.palette.text.primary,
+    color: "black",
+    fontSize: "1.125rem",
+    fontWeight: "600",
     width: "100%",
-    lineHeight: "1.333",
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
     "& > svg": {
       marginLeft: "0.25em",
-      color: theme.palette.primary.main,
+      color: theme.palette.text.secondary,
     },
   },
 }));
@@ -26,16 +29,17 @@ const SimpleExpand = ({ children, buttonText }: any) => {
   const classes = useClasses();
   return (
     <>
-      <Button
-        size="large"
-        disableRipple
-        className={classes.button}
-        onClick={() => setShow(!show)}
-        // Needs aria-controls, aria-expanded
-      >
-        {show ? buttonText.closed : buttonText.open}
-        <Caret expanded={show} />
-      </Button>
+      <Box className={classes.root}>
+        <Button
+          className={classes.button}
+          onClick={() => setShow(!show)}
+          aria-expanded={show}
+          // Needs aria-controls
+        >
+          {show ? buttonText.closed : buttonText.open}
+          <Caret />
+        </Button>
+      </Box>
       <Collapse in={show}>{children}</Collapse>
     </>
   );

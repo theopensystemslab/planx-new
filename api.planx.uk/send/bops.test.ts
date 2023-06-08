@@ -39,7 +39,7 @@ import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
       });
 
       queryMock.mockQuery({
-        name: "CreateApplication",
+        name: "CreateBopsApplication",
         matchOnVariables: false,
         data: {
           insert_bops_applications_one: { id: 22 },
