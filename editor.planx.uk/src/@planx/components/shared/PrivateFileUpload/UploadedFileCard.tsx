@@ -1,14 +1,15 @@
 import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/DeleteOutline";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import { darken, lighten, styled } from "@mui/material/styles";
+import ListItem from "@mui/material/ListItem";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props extends FileUploadSlot {
   removeFile?: () => void;
@@ -84,14 +85,6 @@ const TagRoot = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1.5),
 }));
 
-const Tag = styled(Box)(({ theme }) => ({
-  backgroundColor: lighten(theme.palette.success.main, 0.8),
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  borderRadius: theme.spacing(2),
-  padding: theme.spacing(0.25, 1),
-  color: darken(theme.palette.success.main, 0.8),
-}));
-
 export const UploadedFileCard: React.FC<Props> = ({
   file,
   progress,
@@ -137,7 +130,9 @@ export const UploadedFileCard: React.FC<Props> = ({
       <TagRoot>
         <Box sx={{ display: "flex", gap: 1 }}>
           {tags.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
+            <ListItem key={tag} disablePadding>
+              <Chip label={tag} variant="uploadedFileTag" size="small" />
+            </ListItem>
           ))}
         </Box>
         <Link
