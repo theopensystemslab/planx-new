@@ -54,13 +54,15 @@ export interface Passport {
   data: Record<string, any>;
 }
 
+export interface LowCalSessionData {
+  passport: Passport;
+  breadcrumbs: Breadcrumb;
+  govUkPayment?: GovUKPayment;
+  id: string;
+}
+
 export interface LowCalSession {
-  data: {
-    passport: Passport;
-    breadcrumbs: Breadcrumb;
-    govUkPayment?: GovUKPayment;
-    id: string;
-  };
+  data: LowCalSessionData;
   id: string;
   email: string;
   flow_id: string;
@@ -73,7 +75,7 @@ export interface LowCalSession {
     slug: string;
   };
   lockedAt?: string;
-  paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[]
+  paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[];
 }
 
 type MinimumNotifyPersonalisation = {
