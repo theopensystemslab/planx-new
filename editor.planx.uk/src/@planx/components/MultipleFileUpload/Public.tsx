@@ -25,6 +25,7 @@ import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
+import { FileTaggingModal } from "./Modal";
 import { createFileList, FileList, MultipleFileUpload } from "./model";
 
 type Props = PublicProps<MultipleFileUpload>;
@@ -62,6 +63,7 @@ function Component(props: Props) {
     undefined
   );
   const [validationError, setValidationError] = useState<string | undefined>();
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleSubmit = () => {
     slotsSchema
@@ -105,7 +107,7 @@ function Component(props: Props) {
       setValidationError(undefined);
     }
   }, [slots]);
-  
+
   const [fileList, setFileList] = useState<FileList>({
     required: [],
     recommended: [],
@@ -124,47 +126,49 @@ function Component(props: Props) {
       isValid={slots.every((slot) => slot.url && slot.status === "success")}
     >
       <QuestionHeader {...props} />
-        <DropzoneContainer>
-          <FileStatus status={fileUploadStatus} />
-          <ErrorWrapper error={validationError} id={props.id}>
+      <DropzoneContainer>
+        <FileStatus status={fileUploadStatus} />
+        <ErrorWrapper error={validationError} id={props.id}>
           <Dropzone
             slots={slots}
             setSlots={setSlots}
             setFileUploadStatus={setFileUploadStatus}
           />
-          </ErrorWrapper>
-          <Box>
-            <Typography fontWeight={FONT_WEIGHT_BOLD}>
-              Required files
-            </Typography>
-            {fileList.required.map((fileType) => (
-              <InteractiveFileListItem
-                name={fileType.key}
-                moreInformation={fileType.moreInformation}
-              />
-            ))}
-          </Box>
-        </DropzoneContainer>
-        {Boolean(slots.length) && (
-          <Typography mb={2} fontWeight={FONT_WEIGHT_BOLD}>
-            Your uploaded files
-          </Typography>
-        )}
-        {slots.map((slot) => {
-          return (
-            <UploadedFileCard
-              {...slot}
-              key={slot.id}
-              tags={["Test1", "Test2", "Test3"]}
-              removeFile={() => {
-                setSlots(
-                  slots.filter((currentSlot) => currentSlot.file !== slot.file)
-                );
-                setFileUploadStatus(`${slot.file.path} was deleted`);
-              }}
+        </ErrorWrapper>
+        <Box>
+          <Typography fontWeight={FONT_WEIGHT_BOLD}>Required files</Typography>
+          {fileList.required.map((fileType) => (
+            <InteractiveFileListItem
+              name={fileType.key}
+              moreInformation={fileType.moreInformation}
             />
-          );
-        })}
+          ))}
+        </Box>
+      </DropzoneContainer>
+      {Boolean(slots.length) && (
+        <Typography mb={2} fontWeight={FONT_WEIGHT_BOLD}>
+          Your uploaded files
+        </Typography>
+      )}
+      {showModal && (
+        <FileTaggingModal uploadedFiles={slots} setShowModal={setShowModal} />
+      )}
+      {slots.map((slot) => {
+        return (
+          <UploadedFileCard
+            {...slot}
+            key={slot.id}
+            tags={["Test1", "Test2", "Test3"]}
+            onChange={() => setShowModal(true)}
+            removeFile={() => {
+              setSlots(
+                slots.filter((currentSlot) => currentSlot.file !== slot.file)
+              );
+              setFileUploadStatus(`${slot.file.path} was deleted`);
+            }}
+          />
+        );
+      })}
     </Card>
   );
 }

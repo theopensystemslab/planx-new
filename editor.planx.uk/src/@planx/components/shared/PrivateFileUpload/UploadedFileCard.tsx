@@ -11,7 +11,7 @@ import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props extends FileUploadSlot {
-  removeFile: () => void;
+  removeFile?: () => void;
   onChange?: () => void;
   tags?: string[];
 }
@@ -121,14 +121,16 @@ export const UploadedFileCard: React.FC<Props> = ({
           <Typography variant="body2">{file.path}</Typography>
           <FileSize>{formatBytes(file.size)}</FileSize>
         </Box>
-        <IconButton
-          size="small"
-          aria-label={`Delete ${file.path}`}
-          title={`Delete ${file.path}`}
-          onClick={removeFile}
-        >
-          <DeleteIcon />
-        </IconButton>
+        {removeFile && (
+          <IconButton
+            size="small"
+            aria-label={`Delete ${file.path}`}
+            title={`Delete ${file.path}`}
+            onClick={removeFile}
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
       </Box>
     </FileCard>
     {tags && (
