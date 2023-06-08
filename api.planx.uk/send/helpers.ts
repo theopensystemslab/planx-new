@@ -156,7 +156,6 @@ async function insertPaymentStatus({
       status,
     }
   );
-  console.log(response);
 }
 
 export const addTemplateFilesToZip = async ({
