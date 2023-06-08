@@ -1,6 +1,9 @@
 name: Automated Tests
 on:
   workflow_dispatch:
+  schedule:
+    # Runs every morning at 06:00 (https://crontab.guru/#0_6_*_*_*)
+    - cron: '0 6 * * *'
 
 env:
   EDITOR_DIRECTORY: editor.planx.uk
@@ -151,7 +154,7 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: End-to-end Tests
-        run:  pnpm test
+        run:  pnpm test:regression
         working-directory: e2e
       - name: Archive Playwright Test Results
         if: ${{ failure() }}

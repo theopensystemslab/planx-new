@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "test": "cucumber-js"
+    "test": "cucumber-js --tags 'not @regression'",
+    "test:regression": "cucumber-js"
   },
   "dependencies": {
     "@cucumber/cucumber": "^9.1.2",

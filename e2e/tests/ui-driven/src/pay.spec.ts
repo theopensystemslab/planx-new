@@ -31,7 +31,7 @@ const previewURL = `/${context.team!.slug!}/${context.flow!
 
 const payButtonText = "Pay now using GOV.UK Pay";
 
-test.describe("Gov Pay @integration", async () => {
+test.describe("Gov Pay integration @regression", async () => {
   const adminGQLClient = getGraphQLClient();
 
   test.beforeAll(async () => {
