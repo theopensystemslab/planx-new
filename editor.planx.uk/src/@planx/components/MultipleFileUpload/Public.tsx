@@ -151,7 +151,11 @@ function Component(props: Props) {
         </Typography>
       )}
       {showModal && (
-        <FileTaggingModal uploadedFiles={slots} setShowModal={setShowModal} />
+        <FileTaggingModal
+          uploadedFiles={slots}
+          fileList={fileList}
+          setShowModal={setShowModal}
+        />
       )}
       {slots.map((slot) => {
         return (
