@@ -36,15 +36,23 @@ const ReconciliationPage: React.FC<Props> = ({
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, hasSections, sectionNodes, currentCard, changeAnswer, record] =
-    useStore((state) => [
-      state.flow,
-      state.hasSections,
-      state.sectionNodes,
-      state.currentCard(),
-      state.changeAnswer,
-      state.record,
-    ]);
+  const [
+    flow,
+    hasSections,
+    sectionNodes,
+    currentCard,
+    changeAnswer,
+    record,
+    passport,
+  ] = useStore((state) => [
+    state.flow,
+    state.hasSections,
+    state.sectionNodes,
+    state.currentCard(),
+    state.changeAnswer,
+    state.record,
+    state.computePassport(),
+  ]);
 
   const nextQuestion = () => {
     if (onButtonClick) {
@@ -109,7 +117,7 @@ const ReconciliationPage: React.FC<Props> = ({
           <SummaryListsBySections
             breadcrumbs={sortedBreadcrumbs}
             flow={flow}
-            passport={reconciliationResponse.reconciledSessionData.passport}
+            passport={passport}
             changeAnswer={changeAnswer}
             showChangeButton={false}
             sectionComponent="h3"
