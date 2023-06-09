@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import useSWR from "swr";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -30,6 +31,7 @@ function Component(props: Props) {
   );
   const { x, y, longitude, latitude, usrn } =
     useStore((state) => state.computePassport().data?._address) || {};
+  const showGraphError: boolean = !x && !y && !longitude && !latitude;
 
   const teamSlug = useStore((state) => state.teamSlug);
 
@@ -100,7 +102,7 @@ function Component(props: Props) {
   );
 
   // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
-  const constraints: GISResponse["constraints"] | undefined = {
+  const constraints: GISResponse["constraints"] = {
     ...(data?.constraints || data),
     ...roads?.constraints,
   };
@@ -112,7 +114,9 @@ function Component(props: Props) {
 
   return (
     <>
-      {!isValidating && !isValidatingRoads && constraints ? (
+      {showGraphError ? (
+        <ConstraintsGraphError {...props} />
+      ) : !isValidating && !isValidatingRoads && constraints ? (
         <PlanningConstraintsContent
           title={props.title}
           description={props.description || ""}
@@ -153,23 +157,7 @@ function Component(props: Props) {
             title={props.title}
             description={props.description || ""}
           />
-          {x && y && longitude && latitude ? (
-            <DelayedLoadingIndicator text="Fetching data..." />
-          ) : (
-            <ErrorSummaryContainer
-              role="status"
-              data-testid="error-summary-invalid-graph"
-            >
-              <Typography variant="h5" component="h2" gutterBottom>
-                Invalid graph
-              </Typography>
-              <Typography variant="body2">
-                Edit this flow so that "Planning constraints" is positioned
-                after "Find property"; an address or site boundary drawing is
-                required to fetch data.
-              </Typography>
-            </ErrorSummaryContainer>
-          )}
+          <DelayedLoadingIndicator text="Fetching data..." />
         </Card>
       )}
     </>
@@ -229,7 +217,7 @@ export function PlanningConstraintsContent(
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       {showError && (
-        <ConstraintsError
+        <ConstraintsFetchError
           error={error}
           refreshConstraints={refreshConstraints}
         />
@@ -259,7 +247,7 @@ export function PlanningConstraintsContent(
             It looks like there are no constraints on this property
           </Typography>
           <Typography variant="body2">
-            Based on the information you've given it looks like there's no
+            Based on the information you've given it looks like there are no
             planning constraints on your property that might limit what you can
             do.
           </Typography>
@@ -281,39 +269,65 @@ export function PlanningConstraintsContent(
   );
 }
 
-function ConstraintsError({ error, refreshConstraints }: any) {
-  return (
-    <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
-      <Typography variant="h5" component="h2" gutterBottom>
-        No information available
-      </Typography>
-      {error &&
-      typeof error === "string" &&
-      error.endsWith("local authority") ? (
-        <Typography variant="body2">{capitalize(error)}</Typography>
-      ) : (
-        <>
-          <Typography variant="body2">
-            We couldn't find any information about your property. Click search
-            again to try again. You can continue your application without this
-            information but it might mean we ask additional questions about your
-            project.
-          </Typography>
-          <button onClick={refreshConstraints}>Search again</button>
-        </>
-      )}
-    </ErrorSummaryContainer>
-  );
+const PlanningConditionsInfo = () => (
+  <WarningContainer>
+    <ErrorOutline />
+    <Typography variant="body1" ml={2} fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+      This page does not include information about historic planning conditions
+      that may apply to this property.
+    </Typography>
+  </WarningContainer>
+);
+
+interface ConstraintsFetchErrorProps {
+  error: any;
+  refreshConstraints: () => void;
 }
 
-function PlanningConditionsInfo() {
-  return (
-    <WarningContainer>
-      <ErrorOutline />
-      <Typography variant="body1" ml={2} fontWeight={FONT_WEIGHT_SEMI_BOLD}>
-        This page does not include information about historic planning
-        conditions that may apply to this property.
-      </Typography>
-    </WarningContainer>
-  );
+const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
+  <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
+    <Typography variant="h5" component="h2" gutterBottom>
+      No information available
+    </Typography>
+    {props.error &&
+    typeof props.error === "string" &&
+    props.error.endsWith("local authority") ? (
+      <Typography variant="body2">{capitalize(props.error)}</Typography>
+    ) : (
+      <>
+        <Typography variant="body2">
+          We couldn't find any information about your property. Click search
+          again to try again. You can continue your application without this
+          information but it might mean we ask additional questions about your
+          project.
+        </Typography>
+        <button onClick={props.refreshConstraints}>Search again</button>
+      </>
+    )}
+  </ErrorSummaryContainer>
+);
+
+interface ConstraintsGraphErrorProps {
+  title: string;
+  description: string;
+  handleSubmit?: handleSubmit;
 }
+
+const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (
+  <Card handleSubmit={props.handleSubmit} isValid>
+    <QuestionHeader title={props.title} description={props.description || ""} />
+    <ErrorSummaryContainer
+      role="status"
+      data-testid="error-summary-invalid-graph"
+    >
+      <Typography variant="h5" component="h2" gutterBottom>
+        Invalid graph
+      </Typography>
+      <Typography variant="body2">
+        Edit this flow so that "Planning constraints" is positioned after "Find
+        property"; an address or site boundary drawing is required to fetch
+        data.
+      </Typography>
+    </ErrorSummaryContainer>
+  </Card>
+);
