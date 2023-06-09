@@ -193,7 +193,7 @@ describe("render states", () => {
 
     // confirm that site description & coordinates are empty
     const siteDescriptionInput = screen.getByLabelText(
-      "Describe this site"
+      "Name the site"
     ) as HTMLInputElement;
     expect(siteDescriptionInput).toHaveValue("");
 

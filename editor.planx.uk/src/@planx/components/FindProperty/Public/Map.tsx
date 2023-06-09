@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 
-import type { SiteAddress } from "../model";
+import { DEFAULT_NEW_ADDRESS_LABEL, SiteAddress } from "../model";
 
 interface PlotNewAddressProps {
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
@@ -155,7 +155,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
       </MapContainer>
       <DescriptionInput data-testid="new-address-input">
         <InputLabel
-          label={props.descriptionLabel || ""}
+          label={props.descriptionLabel || DEFAULT_NEW_ADDRESS_LABEL}
           htmlFor={`${props.id}-siteDescription`}
         >
           <Input
