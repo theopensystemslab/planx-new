@@ -9,10 +9,12 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import Link from "@mui/material/Link";
 import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import capitalize from "lodash/capitalize";
 import React from "react";
 
 import { FileUploadSlot } from "../FileUpload/Public";
@@ -77,6 +79,7 @@ interface SelectMultipleProps extends SelectProps {
 }
 
 const SelectMultiple = (props: SelectMultipleProps) => {
+  const { name, fileList } = props;
   const [tags, setTags] = React.useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
@@ -90,10 +93,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
   };
 
   return (
-    <FormControl
-      key={props.name}
-      sx={{ display: "flex", flexDirection: "column" }}
-    >
+    <FormControl key={name} sx={{ display: "flex", flexDirection: "column" }}>
       <InputLabel id="select-mutliple-file-tags-label">
         What does this file show?
       </InputLabel>
@@ -106,7 +106,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         onChange={handleChange}
         IconComponent={ArrowIcon}
         input={<Input />}
-        inputProps={{ name: props.name }}
+        inputProps={{ name }}
         renderValue={(selected) => selected.join(", ")}
         MenuProps={{
           anchorOrigin: {
@@ -115,12 +115,33 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           },
         }}
       >
-        {props.fileList.required.map((fileType) => (
-          <MenuItem key={fileType.key} value={fileType.key}>
-            <Checkbox checked={tags.indexOf(fileType.key) > -1} />
-            <ListItemText primary={fileType.key} />
-          </MenuItem>
-        ))}
+        {(Object.keys(fileList) as Array<keyof typeof fileList>).map(
+          (fileListCategory) => (
+            // TODO revisit to conditionally render categories with > 0 files
+            <Box key={`wrapper-${fileListCategory}-files-${name}`}>
+              <ListSubheader
+                key={`subheader-${fileListCategory}-files-${name}`}
+              >
+                {`${capitalize(fileListCategory)} files`}
+              </ListSubheader>
+              {fileList[fileListCategory].map((fileType) => (
+                <MenuItem
+                  key={`menuitem-${fileType.key}-${name}`}
+                  value={fileType.key}
+                >
+                  <Checkbox
+                    key={`checkbox-${fileType.key}-${name}`}
+                    checked={tags.indexOf(fileType.key) > -1}
+                  />
+                  <ListItemText
+                    key={`listitemtext-${fileType.key}-${name}`}
+                    primary={fileType.key}
+                  />
+                </MenuItem>
+              ))}
+            </Box>
+          )
+        )}
       </Select>
     </FormControl>
   );
