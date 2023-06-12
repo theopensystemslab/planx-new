@@ -1,6 +1,7 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
+import Chip from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -93,13 +94,17 @@ const SelectMultiple = (props: SelectMultipleProps) => {
   };
 
   return (
-    <FormControl key={name} sx={{ display: "flex", flexDirection: "column" }}>
-      <InputLabel id="select-mutliple-file-tags-label">
+    <FormControl
+      key={`form-${name}`}
+      sx={{ display: "flex", flexDirection: "column" }}
+    >
+      <InputLabel id={`select-mutliple-file-tags-label-${name}`}>
         What does this file show?
       </InputLabel>
       <Select
-        id="select-multiple-file-tags"
-        labelId="select-multiple-file-tags-label"
+        key={`select-${name}`}
+        id={`select-multiple-file-tags-${name}`}
+        labelId={`select-multiple-file-tags-label-${name}`}
         variant="standard"
         multiple
         value={tags}
@@ -107,7 +112,13 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         IconComponent={ArrowIcon}
         input={<Input />}
         inputProps={{ name }}
-        renderValue={(selected) => selected.join(", ")}
+        renderValue={(selected) => (
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+            {selected.map((value) => (
+              <Chip label={value} variant="uploadedFileTag" size="small" />
+            ))}
+          </Box>
+        )}
         MenuProps={{
           anchorOrigin: {
             vertical: "bottom",
@@ -119,9 +130,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           .filter((fileListCategory) => fileList[fileListCategory].length > 0)
           .map((fileListCategory) => {
             return [
-              <ListSubheader
-                key={`subheader-${fileListCategory}-files-${name}`}
-              >
+              <ListSubheader key={`subheader-${fileListCategory}-${name}`}>
                 {`${capitalize(fileListCategory)} files`}
               </ListSubheader>,
               ...fileList[fileListCategory].map((fileType) => {
