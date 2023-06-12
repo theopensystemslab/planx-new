@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 
-import type { SiteAddress } from "../model";
+import { DEFAULT_NEW_ADDRESS_LABEL, SiteAddress } from "../model";
 
 interface PlotNewAddressProps {
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
@@ -26,6 +26,7 @@ interface PlotNewAddressProps {
   boundary?: GeoJSONObject | undefined;
   id?: string;
   description?: string;
+  descriptionLabel?: string;
 }
 
 type Coordinates = {
@@ -154,7 +155,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
       </MapContainer>
       <DescriptionInput data-testid="new-address-input">
         <InputLabel
-          label="Describe this site"
+          label={props.descriptionLabel || DEFAULT_NEW_ADDRESS_LABEL}
           htmlFor={`${props.id}-siteDescription`}
         >
           <Input
