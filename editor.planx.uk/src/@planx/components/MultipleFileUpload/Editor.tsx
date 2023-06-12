@@ -129,10 +129,10 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
       <InputRow>
         <Input
           required
-          name="key"
-          value={props.value.key}
+          name="name"
+          value={props.value.name}
           onChange={(e) =>
-            props.onChange(merge(props.value, { key: e.target.value }))
+            props.onChange(merge(props.value, { name: e.target.value }))
           }
           placeholder="File type"
         />

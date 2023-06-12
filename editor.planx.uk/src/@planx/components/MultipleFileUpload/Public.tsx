@@ -144,9 +144,9 @@ function Component(props: Props) {
                   {`${capitalize(fileListCategory)} files`}
                 </ListSubheader>
                 {fileList[fileListCategory].map((fileType) => (
-                  <ListItem key={fileType.key} disablePadding>
+                  <ListItem key={fileType.name} disablePadding>
                     <InteractiveFileListItem
-                      name={fileType.key}
+                      name={fileType.name}
                       moreInformation={fileType.moreInformation}
                     />
                   </ListItem>

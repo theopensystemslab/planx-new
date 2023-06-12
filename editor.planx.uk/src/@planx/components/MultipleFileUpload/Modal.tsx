@@ -126,16 +126,16 @@ const SelectMultiple = (props: SelectMultipleProps) => {
               </ListSubheader>
               {fileList[fileListCategory].map((fileType) => (
                 <MenuItem
-                  key={`menuitem-${fileType.key}-${name}`}
-                  value={fileType.key}
+                  key={`menuitem-${fileType.name}-${name}`}
+                  value={fileType.name}
                 >
                   <Checkbox
-                    key={`checkbox-${fileType.key}-${name}`}
-                    checked={tags.indexOf(fileType.key) > -1}
+                    key={`checkbox-${fileType.name}-${name}`}
+                    checked={tags.indexOf(fileType.name) > -1}
                   />
                   <ListItemText
-                    key={`listitemtext-${fileType.key}-${name}`}
-                    primary={fileType.key}
+                    key={`listitemtext-${fileType.name}-${name}`}
+                    primary={fileType.name}
                   />
                 </MenuItem>
               ))}

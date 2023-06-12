@@ -30,19 +30,19 @@ describe("ruleSchema", () => {
 });
 
 describe("fileTypeSchema", () => {
-  it("requires a key", async () => {
+  it("requires a name", async () => {
     await expect(() =>
       fileTypeSchema.validate({
         fn: "Test fn",
         rule: mockRules.AlwaysRequired,
       })
-    ).rejects.toThrow(/key is a required field/);
+    ).rejects.toThrow(/name is a required field/);
   });
 
   it("requires an fn value", async () => {
     await expect(() =>
       fileTypeSchema.validate({
-        key: "Test key",
+        name: "Test key",
         rule: mockRules.AlwaysRequired,
       })
     ).rejects.toThrow(/fn is a required field/);
@@ -51,7 +51,7 @@ describe("fileTypeSchema", () => {
   it("requires a rule", async () => {
     await expect(() =>
       fileTypeSchema.validate({
-        key: "Test key",
+        name: "Test key",
         fn: "Test fn",
       })
     ).rejects.toThrow(/rule.condition is a required field/);
@@ -59,7 +59,7 @@ describe("fileTypeSchema", () => {
 
   it("accepts a valid FileType", async () => {
     const mockFileType: FileType = {
-      key: "Test key",
+      name: "Test key",
       fn: "Test fn",
       rule: mockRules.AlwaysRecommended,
     };
@@ -94,7 +94,7 @@ describe("multipleFileUploadSchema", () => {
         fn: "test fn",
         fileTypes: [
           {
-            key: "test key",
+            name: "test key",
             fn: "test fn",
             rule: {
               condition: Condition.AlwaysRecommended,
