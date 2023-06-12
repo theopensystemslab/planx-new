@@ -1,6 +1,9 @@
 name: Automated Tests
 on:
   workflow_dispatch:
+  schedule:
+    # Runs every morning at 06:00 (https://crontab.guru/#0_6_*_*_*)
+    - cron: '0 6 * * *'
 
 env:
   EDITOR_DIRECTORY: editor.planx.uk
@@ -151,7 +154,7 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: End-to-end Tests
-        run:  pnpm test
+        run:  pnpm test:regression
         working-directory: e2e
       - name: Archive Playwright Test Results
         if: ${{ failure() }}
@@ -160,3 +163,12 @@ jobs:
           name: playwright-report
           path: e2e/tests/ui-driven/test-results/
           retention-days: 3
+      - name: Slack Notification
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: planx-notifications-internal
+          SLACK_USERNAME: Automated Tests
+          SLACK_COLOR: "#FF5733"
+          SLACK_TITLE: Regression Test Failure
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
