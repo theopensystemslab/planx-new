@@ -132,7 +132,7 @@ export const Dropzone: React.FC<Props> = ({
 
   return (
     <Root isDragActive={isDragActive} {...getRootProps({ role: "button" })}>
-      <input data-testid="upload-boundary-input" {...getInputProps()} />
+      <input data-testid="upload-input" {...getInputProps()} />
       <Box pl={2} pr={3} color="text.secondary">
         <CloudUpload />
       </Box>
