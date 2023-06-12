@@ -30,11 +30,17 @@ describe("Basic state and setup", () => {
     expect(screen.getByText("testKey")).toBeVisible();
   });
 
-  it.skip("should not have any accessibility violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const { container } = setup(
       <MultipleFileUploadComponent
         title="Test title"
-        fileTypes={[mockFileTypes.AlwaysRequired]}
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
       />
     );
     const results = await axe(container);

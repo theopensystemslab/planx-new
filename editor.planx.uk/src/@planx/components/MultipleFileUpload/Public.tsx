@@ -143,24 +143,22 @@ function Component(props: Props) {
         <List disablePadding sx={{ width: "100%" }}>
           {(Object.keys(fileList) as Array<keyof typeof fileList>)
             .filter((fileListCategory) => fileList[fileListCategory].length > 0)
-            .map((fileListCategory) => (
-              <Box key={`wrapper-${fileListCategory}-files`}>
-                <ListSubheader
-                  key={`subheader-${fileListCategory}-files`}
-                  disableGutters
-                >
-                  {`${capitalize(fileListCategory)} files`}
-                </ListSubheader>
-                {fileList[fileListCategory].map((fileType) => (
-                  <ListItem key={fileType.name} disablePadding>
-                    <InteractiveFileListItem
-                      name={fileType.name}
-                      moreInformation={fileType.moreInformation}
-                    />
-                  </ListItem>
-                ))}
-              </Box>
-            ))}
+            .flatMap((fileListCategory) => [
+              <ListSubheader
+                key={`subheader-${fileListCategory}-files`}
+                disableGutters
+              >
+                {`${capitalize(fileListCategory)} files`}
+              </ListSubheader>,
+              fileList[fileListCategory].map((fileType) => (
+                <ListItem key={fileType.name} disablePadding>
+                  <InteractiveFileListItem
+                    name={fileType.name}
+                    moreInformation={fileType.moreInformation}
+                  />
+                </ListItem>
+              ))
+            ])}
         </List>
       </DropzoneContainer>
       {Boolean(slots.length) && (
