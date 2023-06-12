@@ -26,7 +26,9 @@ function ErrorFallback(props: { error: Error }) {
         </Typography>
         <Typography>
           {props.error?.message && (
-            <pre style={{ color: "#E91B0C" }}>{props.error.message}</pre>
+            <pre style={{ color: "#E91B0C", whiteSpace: "pre-line" }}>
+              {props.error.message}
+            </pre>
           )}
         </Typography>
         <Typography variant="body2">
