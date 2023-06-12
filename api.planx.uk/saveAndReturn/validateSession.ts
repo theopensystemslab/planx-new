@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+import omit from "lodash.omit";
 import { NextFunction, Request, Response } from "express";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { getMostRecentPublishedFlow } from "../helpers";
@@ -9,18 +10,23 @@ import type {
   OrderedBreadcrumbs,
   FlowGraph,
 } from "@opensystemslab/planx-core/types";
-import type { LowCalSession, PublishedFlow, Node } from "../types";
+import type {
+  LowCalSession,
+  LowCalSessionData,
+  PublishedFlow,
+  Node,
+} from "../types";
 
 export interface ValidationResponse {
   message: string;
   changesFound: boolean | null;
   alteredSectionIds?: Array<string>;
-  reconciledSessionData: LowCalSession["data"];
+  reconciledSessionData: Omit<LowCalSessionData, "passport">;
 }
 
 export type ReconciledSession = {
   alteredSectionIds: Array<string>;
-  reconciledSessionData: LowCalSession["data"];
+  reconciledSessionData: Omit<LowCalSessionData, "passport">;
 };
 
 // TODO - Ensure reconciliation handles:
@@ -57,16 +63,12 @@ export async function validateSession(
         status: 403,
         message: "Session locked",
         paymentRequest: {
-          ...fetchedSession.paymentRequests?.[0]
-        }
+          ...fetchedSession.paymentRequests?.[0],
+        },
       });
     }
 
-    const sessionData = {
-      ...fetchedSession.data!,
-      // remove passport data (reconstructed in the editor by `computePassport`)
-      passport: { data: {} },
-    };
+    const sessionData = omit(fetchedSession.data!, "passport");
     const sessionUpdatedAt = fetchedSession.updated_at!;
     const flowId = fetchedSession.flow_id!;
 
@@ -129,7 +131,7 @@ async function reconcileSessionData({
   sessionData: originalData,
   alteredNodes,
 }: {
-  sessionData: LowCalSession["data"];
+  sessionData: Omit<LowCalSessionData, "passport">;
   alteredNodes: Array<Node>;
 }): Promise<ReconciledSession> {
   const sessionData = { ...originalData }; // copy original data for modification

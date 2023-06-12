@@ -87,14 +87,14 @@ export const newFileType = (): FileType => ({
 export const checkIfConditionalRule = (condition: Condition) =>
   [Condition.RecommendedIf, Condition.RequiredIf].includes(condition);
 
-export interface UserFiles extends FileType {
+export interface UserFile extends FileType {
   slot?: FileUploadSlot;
 }
 
 export interface FileList {
-  required: UserFiles[];
-  recommended: UserFiles[];
-  optional: UserFiles[];
+  required: UserFile[];
+  recommended: UserFile[];
+  optional: UserFile[];
 }
 
 export const createFileList = ({
@@ -164,4 +164,65 @@ const isRuleMet = (
     passport.data?.[rule.fn] === rule.val ||
     passport.data?.[rule.fn]?.includes(rule.val)
   );
+};
+
+interface UserFileWithSlot extends UserFile {
+  slot: NonNullable<UserFile["slot"]>;
+}
+
+const formatUserFile = (userFile: UserFileWithSlot) => ({
+  rule: userFile.rule,
+  url: userFile.slot.url,
+  filename: userFile.slot.file.path,
+  cachedSlot: {
+    ...userFile.slot,
+    file: {
+      path: userFile.slot.file.path,
+      type: userFile.slot.file.type,
+      size: userFile.slot.file.size,
+    },
+  },
+});
+
+/**
+ * Type guard to coerce UserFile -> UserFileWithSlot
+ */
+const hasSlot = (userFile: UserFile): userFile is UserFileWithSlot =>
+  Boolean(userFile?.slot);
+
+/**
+ * Generate payload for MultipleFileUpload breadcrumb
+ * Not responsible for validation - this happens at the component level
+ */
+export const generatePayload = (fileList: FileList): Store.userData => {
+  const newPassportData: Store.userData["data"] = {};
+
+  const uploadedFiles = [
+    ...fileList.required,
+    ...fileList.recommended,
+    ...fileList.optional,
+  ].filter(hasSlot);
+
+  uploadedFiles.forEach((userFile) => {
+    newPassportData[userFile.fn] = formatUserFile(userFile);
+  });
+
+  return { data: newPassportData };
+};
+
+export const getRecoveredSlots = (
+  previouslySubmittedData: Store.userData | undefined,
+  fileList: FileList
+): FileUploadSlot[] => {
+  const allFiles = [
+    ...fileList.required,
+    ...fileList.recommended,
+    ...fileList.optional,
+  ];
+
+  const recoveredSlots = allFiles
+    .map((userFile) => previouslySubmittedData?.data?.[userFile.fn]?.cachedSlot)
+    .filter(Boolean);
+
+  return recoveredSlots;
 };

@@ -1,5 +1,9 @@
+import "themeOverrides.d.ts";
+
 import {
   createTheme,
+  darken,
+  lighten,
   responsiveFontSizes,
   Theme,
   ThemeOptions,
@@ -266,6 +270,18 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             lineHeight: LINE_HEIGHT_BASE,
           },
         },
+      },
+      MuiChip: {
+        variants: [
+          {
+            props: { variant: "uploadedFileTag", size: "small" },
+            style: {
+              backgroundColor: lighten(palette.success.main, 0.8),
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              color: darken(palette.success.main, 0.8),
+            },
+          },
+        ],
       },
     },
   };

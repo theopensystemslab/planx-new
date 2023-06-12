@@ -1,4 +1,4 @@
-import { Condition, FileType, Operator, Rule } from "./model";
+import { Condition, FileList, FileType, Operator, Rule } from "./model";
 
 const mockAlwaysRequiredRule: Rule = {
   condition: Condition.AlwaysRequired,
@@ -71,3 +71,60 @@ export const mockFileTypes: Record<keyof typeof Condition, FileType> = {
   [Condition.RecommendedIf]: mockRecommendedIfFileType,
   [Condition.NotRequired]: mockNotRequiredFileType,
 };
+
+export const mockFileList = {
+  required: [
+    {
+      fn: "requiredFileFn",
+      key: "firstFile",
+      rule: {
+        condition: "AlwaysRequired",
+      },
+      slot: {
+        file: {
+          path: "PXL_20230511_093922923.jpg",
+        },
+        status: "success",
+        progress: 1,
+        id: "EFGI1yU8s5s_cSBxnnYau",
+        url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
+      },
+    },
+  ],
+  recommended: [
+    {
+      fn: "recommendedFileFn",
+      key: "secondFile",
+      rule: {
+        condition: "AlwaysRecommended",
+      },
+      slot: {
+        file: {
+          path: "PXL_20230507_150205350~2.jpg",
+        },
+        status: "success",
+        progress: 1,
+        id: "ZrGNE4siV36zvA7u1QZQD",
+        url: "http://localhost:7002/file/private/82wo7bev/PXL_20230507_150205350~2.jpg",
+      },
+    },
+  ],
+  optional: [
+    {
+      fn: "optionalFileFn",
+      key: "thirdFile",
+      rule: {
+        condition: "NotRequired",
+      },
+      slot: {
+        file: {
+          path: "PXL_20230511_093922923.jpg",
+        },
+        status: "success",
+        progress: 1,
+        id: "6bZBneLnY-L6qiqOblu8t",
+        url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
+      },
+    },
+  ],
+} as FileList;

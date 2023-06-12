@@ -30,7 +30,7 @@ export function debugPageConsole(page: Page) {
 
 // used to detect `{ "setItem": ... }`, `{"getItem": ... }`
 // and "section state updated" debug messages on state transitions
-export function waitForDebugLog(page: Page) {
+export async function waitForDebugLog(page: Page) {
   return new Promise((resolve) => {
     page.on("console", (msg) => {
       if (msg.type() == "debug") {

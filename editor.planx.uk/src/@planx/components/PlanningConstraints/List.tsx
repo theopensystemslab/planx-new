@@ -95,11 +95,6 @@ export default function ConstraintsList({
               {groupedConstraints[category].map((con: any) => (
                 <ConstraintListItem
                   key={con.text}
-                  style={{
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                    backgroundColor: "white",
-                  }}
                   content={con.text}
                   data={con.value ? con.data : null}
                   metadata={metadata?.[con.fn]}
@@ -129,7 +124,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const [showConstraintData, setShowConstraintData] = useState<boolean>(false);
 
   return (
-    <ListItem disableGutters disablePadding>
+    <ListItem disablePadding sx={{ backgroundColor: "white" }}>
       <StyledConstraint {...props}>
         <Box
           style={{

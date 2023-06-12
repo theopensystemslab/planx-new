@@ -12,7 +12,7 @@ import {
   MoreInformation,
 } from "@planx/components/ui";
 import { useFormik } from "formik";
-import { capitalize, merge } from "lodash";
+import { lowerCase, merge, upperFirst } from "lodash";
 import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
@@ -163,7 +163,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         >
           {Object.entries(Condition).map(([key, value]) => (
             <MenuItem key={key} value={value}>
-              {capitalize(value)}
+              {upperFirst(lowerCase(value))}
             </MenuItem>
           ))}
         </SelectInput>

@@ -58,20 +58,21 @@ test.describe("Agent journey", async () => {
     const toggleInviteToPayButton = page.getByRole("button", {
       name: "Invite someone else to pay for this application",
     });
-    expect(toggleInviteToPayButton).toBeVisible();
+    await expect(toggleInviteToPayButton).toBeVisible();
     await toggleInviteToPayButton.click();
     const inviteToPayFormHeader = await page.getByText(
       "Invite someone else to pay for this application"
     );
-    expect(inviteToPayFormHeader).toBeVisible();
+    await expect(inviteToPayFormHeader).toBeVisible();
 
     await answerInviteToPayForm(page);
     await page.getByText("Send invitation to pay").click();
     await page.waitForLoadState("networkidle");
+
     const errorMessage = await page.getByText(
       "Error generating payment request, please try again"
     );
-    expect(errorMessage).not.toBeVisible();
+    await expect(errorMessage).not.toBeVisible();
 
     const paymentRequest = await getPaymentRequestBySessionId({
       sessionId,
@@ -81,7 +82,7 @@ test.describe("Agent journey", async () => {
     expect(paymentRequest).toMatchObject(mockPaymentRequest);
 
     const successMessage = await page.getByText("Payment invitation sent");
-    expect(successMessage).toBeVisible();
+    await expect(successMessage).toBeVisible();
   });
 
   test("agent cannot send a payment request after initialising a normal payment", async ({
@@ -99,7 +100,8 @@ test.describe("Agent journey", async () => {
     await page.getByLabel("email").fill(context.user.email);
     await page.getByText("Continue").click();
     await page.waitForLoadState("networkidle");
-    expect(toggleInviteToPayButton).toBeDisabled();
+
+    await expect(toggleInviteToPayButton).toBeDisabled();
   });
 
   test("agent cannot make changes after sending a payment request - session is locked", async ({
@@ -113,7 +115,7 @@ test.describe("Agent journey", async () => {
       .slug!}/preview?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
-    expect(
+    await expect(
       await secondPage.getByRole("heading", {
         name: "Resume your application",
       })
@@ -121,12 +123,12 @@ test.describe("Agent journey", async () => {
     await secondPage.getByLabel("Email address").fill(context.user.email);
     await secondPage.getByTestId("continue-button").click();
 
-    expect(
+    await expect(
       await secondPage.getByRole("heading", {
         name: "Your application is locked",
       })
     ).toBeVisible();
-    expect(secondPage.getByTestId("continue-button")).not.toBeVisible();
+    await expect(secondPage.getByTestId("continue-button")).not.toBeVisible();
   });
 
   test("reconciliation does not apply to sessions with open payment requests", async ({
@@ -143,7 +145,7 @@ test.describe("Agent journey", async () => {
       .slug!}/preview?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
-    expect(
+    await expect(
       await secondPage.getByRole("heading", { name: "Resume your application" })
     ).toBeVisible();
     await secondPage.getByLabel("Email address").fill(context.user.email);
@@ -153,14 +155,14 @@ test.describe("Agent journey", async () => {
     const reconciliationText = await secondPage.getByText(
       "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue."
     );
-    expect(reconciliationText).not.toBeVisible();
+    await expect(reconciliationText).not.toBeVisible();
 
     // Locked application message displayed
-    expect(
+    await expect(
       await secondPage.getByRole("heading", {
         name: "Your application is locked",
       })
     ).toBeVisible();
-    expect(secondPage.getByTestId("continue-button")).not.toBeVisible();
+    await expect(secondPage.getByTestId("continue-button")).not.toBeVisible();
   });
 });
