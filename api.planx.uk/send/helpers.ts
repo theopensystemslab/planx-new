@@ -10,7 +10,7 @@ import {
   generateDocxTemplateStream,
 } from "@opensystemslab/planx-document-templates";
 import { _admin } from "../client";
-import { Passport } from '../types';
+import { Passport } from "../types";
 
 /**
  * Helper method to locally download S3 files, add them to the zip, then clean them up
@@ -126,7 +126,7 @@ async function insertPaymentStatus({
   teamSlug: string;
   status: string;
 }): Promise<void> {
-  await adminGraphQLClient.request(
+  const response = await adminGraphQLClient.request(
     gql`
       mutation InsertPaymentStatus(
         $flowId: uuid!
@@ -158,11 +158,20 @@ async function insertPaymentStatus({
   );
 }
 
-export const addTemplateFilesToZip = async (
-  { zip, tmpDir, passport, sessionId }: 
-  { zip: AdmZip, tmpDir: string, passport: Passport, sessionId: string }
-) => {
-  const templateNames = await _admin.getDocumentTemplateNamesForSession(sessionId);
+export const addTemplateFilesToZip = async ({
+  zip,
+  tmpDir,
+  passport,
+  sessionId,
+}: {
+  zip: AdmZip;
+  tmpDir: string;
+  passport: Passport;
+  sessionId: string;
+}) => {
+  const templateNames = await _admin.getDocumentTemplateNamesForSession(
+    sessionId
+  );
   if (templateNames?.length) {
     for (const templateName of templateNames) {
       let isTemplateSupported = false;
@@ -172,9 +181,11 @@ export const addTemplateFilesToZip = async (
           templateName,
         });
       } catch (e) {
-        console.log(`Template "${templateName}" could not be generated so has been skipped`);
-        console.log(e)
-        continue
+        console.log(
+          `Template "${templateName}" could not be generated so has been skipped`
+        );
+        console.log(e);
+        continue;
       }
       if (isTemplateSupported) {
         const templatePath = path.join(tmpDir, `${templateName}.doc`);
@@ -189,4 +200,4 @@ export const addTemplateFilesToZip = async (
       }
     }
   }
-}
+};

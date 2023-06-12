@@ -7,7 +7,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "rootDir": ".",
+    "rootDir": "tests",
     "skipLibCheck": true,
     "strict": true,
     "noImplicitAny": false,

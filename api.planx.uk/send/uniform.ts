@@ -66,9 +66,14 @@ interface SendToUniformPayload {
  */
 const sendToUniform = async (req: Request, res: Response, next: NextFunction) => {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
-  
-  const uniformClient = getUniformClient(req.params.localAuthority);
-  
+
+  // allow e2e team to present as "lambeth"
+  const localAuthority = req.params.localAuthority == "e2e"
+    ? "lambeth"
+    : req.params.localAuthority
+
+  const uniformClient = getUniformClient(localAuthority);
+
   if (!uniformClient) {
     return next({
       status: 400,
@@ -467,7 +472,7 @@ const addOneAppXMLToZip = async (
     zip.addLocalFile(xmlPath);
     deleteFile(xmlPath);
   } catch (error) {
-    throw Error(`Failed to generate OneApp XML. Error - ${error}`)
+  throw Error(`Failed to generate OneApp XML. Error - ${error}`)
   }
 }
 

@@ -35,10 +35,14 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
+  // allow e2e team to present as "lambeth"
+  const localAuthority =
+    req.params.localAuthority == "e2e" ? "lambeth" : req.params.localAuthority;
+
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
   const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(
-    req.params.localAuthority.toUpperCase()
+    localAuthority.toUpperCase()
   );
   if (!isSupported) {
     return next({
@@ -49,7 +53,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
 
   // a local or staging API instance should send to the BOPS staging endpoint
   // production should send to the BOPS production endpoint
-  const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
+  const domain = `https://${localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
   const target = `${domain}/api/v1/planning_applications`;
 
   const bopsFullPayload = await _admin.generateBOPSPayload(payload?.sessionId);

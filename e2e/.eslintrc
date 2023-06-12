@@ -4,8 +4,7 @@
   "plugins": ["@typescript-eslint"],
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:playwright/playwright-test"
+    "plugin:@typescript-eslint/recommended"
   ],
 
   "rules": {
@@ -18,5 +17,5 @@
     ],
     "@typescript-eslint/no-non-null-assertion": "off"
   },
-  "ignorePatterns": "dist/**"
+  "ignorePatterns": [ "dist/**", "pnpm-lock.yaml" ]
 }
