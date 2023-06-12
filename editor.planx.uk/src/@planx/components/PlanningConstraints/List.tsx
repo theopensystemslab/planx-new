@@ -122,7 +122,6 @@ interface ConstraintListItemProps {
   data: Constraint["data"] | null;
   metadata?: Metadata;
   category: string;
-  style: Record<string, any>;
   children: ReactNode;
 }
 
