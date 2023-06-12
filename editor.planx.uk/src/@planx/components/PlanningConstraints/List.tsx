@@ -64,50 +64,53 @@ export default function ConstraintsList({
   return (
     <Box mb={3}>
       <List dense disablePadding>
-        {Object.keys(groupedConstraints).map((category: string) => (
-          <ListSubheader
-            disableGutters
-            disableSticky
-            color="primary"
-            component="div"
-            key={category}
-            style={{
-              padding: 0,
-              backgroundColor: CATEGORY_COLORS[category],
-              marginBottom: "2em",
-            }}
-          >
-            <Typography
-              variant="body1"
-              component="h3"
-              py={1}
-              px={2}
-              pl={2.5}
-              style={{
-                fontWeight: 700,
-                color: "black",
-              }}
-            >
-              {category}
-            </Typography>
-            {groupedConstraints[category].map((con: any) => (
-              <ConstraintListItem
-                key={con.text}
+        {Object.keys(groupedConstraints).map(
+          (category: string, index: number) => (
+            <React.Fragment key={index}>
+              <ListSubheader
+                disableGutters
+                disableSticky
+                color="primary"
+                key={category}
                 style={{
-                  paddingTop: 0,
-                  paddingBottom: 0,
-                  backgroundColor: "white",
+                  padding: 0,
+                  backgroundColor: CATEGORY_COLORS[category],
+                  marginTop: index > 0 ? "2em" : 0,
                 }}
-                content={con.text}
-                data={con.value ? con.data : null}
-                metadata={metadata?.[con.fn]}
-                category={category}
               >
-                {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
-              </ConstraintListItem>
-            ))}
-          </ListSubheader>
-        ))}
+                <Typography
+                  variant="body1"
+                  component="h3"
+                  py={1}
+                  px={2}
+                  pl={2.5}
+                  style={{
+                    fontWeight: 700,
+                    color: "black",
+                  }}
+                >
+                  {category}
+                </Typography>
+              </ListSubheader>
+              {groupedConstraints[category].map((con: any) => (
+                <ConstraintListItem
+                  key={con.text}
+                  style={{
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    backgroundColor: "white",
+                  }}
+                  content={con.text}
+                  data={con.value ? con.data : null}
+                  metadata={metadata?.[con.fn]}
+                  category={category}
+                >
+                  {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
+                </ConstraintListItem>
+              ))}
+            </React.Fragment>
+          )
+        )}
       </List>
     </Box>
   );
@@ -183,7 +186,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                             key={record.entity}
                             dense
                             disableGutters
-                            sx={{ display: "list-item", lineHeight: 1.33 }} // import LINE_HEIGHT_BASE via theme??
+                            sx={{ display: "list-item" }}
                           >
                             <Typography variant="body2">
                               {record.name}{" "}
