@@ -106,11 +106,11 @@ export const createFileList = ({
 }): FileList => {
   const fileList: FileList = { required: [], recommended: [], optional: [] };
   const sortedFileTypes = sortFileTypes(fileTypes);
-  const uniqueKeys: string[] = [];
+  const uniqueNames: string[] = [];
   sortedFileTypes.forEach((fileType) => {
-    const isUnique = !uniqueKeys.includes(fileType.name);
+    const isUnique = !uniqueNames.includes(fileType.name);
     if (isUnique) {
-      uniqueKeys.push(fileType.name);
+      uniqueNames.push(fileType.name);
       populateFileList({ fileList, fileType, passport });
     }
   });
