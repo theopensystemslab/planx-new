@@ -115,33 +115,34 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           },
         }}
       >
-        {(Object.keys(fileList) as Array<keyof typeof fileList>).map(
-          (fileListCategory) => (
-            // TODO revisit to conditionally render categories with > 0 files
-            <Box key={`wrapper-${fileListCategory}-files-${name}`}>
+        {(Object.keys(fileList) as Array<keyof typeof fileList>)
+          .filter((fileListCategory) => fileList[fileListCategory].length > 0)
+          .map((fileListCategory) => {
+            return [
               <ListSubheader
                 key={`subheader-${fileListCategory}-files-${name}`}
               >
                 {`${capitalize(fileListCategory)} files`}
-              </ListSubheader>
-              {fileList[fileListCategory].map((fileType) => (
-                <MenuItem
-                  key={`menuitem-${fileType.name}-${name}`}
-                  value={fileType.name}
-                >
-                  <Checkbox
-                    key={`checkbox-${fileType.name}-${name}`}
-                    checked={tags.indexOf(fileType.name) > -1}
-                  />
-                  <ListItemText
-                    key={`listitemtext-${fileType.name}-${name}`}
-                    primary={fileType.name}
-                  />
-                </MenuItem>
-              ))}
-            </Box>
-          )
-        )}
+              </ListSubheader>,
+              ...fileList[fileListCategory].map((fileType) => {
+                return [
+                  <MenuItem
+                    key={`menuitem-${fileType.name}-${name}`}
+                    value={fileType.name}
+                  >
+                    <Checkbox
+                      key={`checkbox-${fileType.name}-${name}`}
+                      checked={tags.indexOf(fileType.name) > -1}
+                    />
+                    <ListItemText
+                      key={`listitemtext-${fileType.name}-${name}`}
+                      primary={fileType.name}
+                    />
+                  </MenuItem>,
+                ];
+              }),
+            ];
+          })}
       </Select>
     </FormControl>
   );

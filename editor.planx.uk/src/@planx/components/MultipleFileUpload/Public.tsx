@@ -133,9 +133,9 @@ function Component(props: Props) {
           />
         </ErrorWrapper>
         <List disablePadding sx={{ width: "100%" }}>
-          {(Object.keys(fileList) as Array<keyof typeof fileList>).map(
-            (fileListCategory) => (
-              // TODO revisit to conditionally render categories with > 0 files
+          {(Object.keys(fileList) as Array<keyof typeof fileList>)
+            .filter((fileListCategory) => fileList[fileListCategory].length > 0)
+            .map((fileListCategory) => (
               <Box key={`wrapper-${fileListCategory}-files`}>
                 <ListSubheader
                   key={`subheader-${fileListCategory}-files`}
@@ -152,8 +152,7 @@ function Component(props: Props) {
                   </ListItem>
                 ))}
               </Box>
-            )
-          )}
+            ))}
         </List>
       </DropzoneContainer>
       {Boolean(slots.length) && (
