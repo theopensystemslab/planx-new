@@ -6,13 +6,15 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
+import { getHeaderPadding } from "./Header";
+
 const AnalyticsWarning = styled(Box)(({ theme }) => ({
   display: "flex",
   backgroundColor: "#FFFB00",
-  padding: theme.spacing(0.5, 2),
   color: "#070707",
   justifyContent: "space-between",
   alignItems: "center",
+  ...getHeaderPadding(theme),
 }));
 
 const AnalyticsDisabledBanner: React.FC = () => {

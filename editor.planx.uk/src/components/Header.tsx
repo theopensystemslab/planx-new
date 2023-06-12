@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { deepmerge } from "@mui/utils";
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { clearLocalFlow } from "lib/local";
@@ -32,7 +33,7 @@ import {
   FONT_WEIGHT_SEMI_BOLD,
   LINE_HEIGHT_BASE,
 } from "theme";
-import { ApplicationPath, Team } from "types";
+import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -55,11 +56,7 @@ const StyledLink = styled(ReactNaviLink)(() => ({
   textDecoration: "none",
 })) as typeof Link;
 
-const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
-  minHeight: HEADER_HEIGHT,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
+export const getHeaderPadding = (theme: Theme): React.CSSProperties => ({
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
   [theme.breakpoints.up("md")]: {
@@ -70,6 +67,14 @@ const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
   },
+});
+
+const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
+  height: HEADER_HEIGHT,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  ...getHeaderPadding(theme),
 }));
 
 const LeftBox = styled(Box)(() => ({
@@ -165,9 +170,13 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
 const StyledNavBar = styled("nav")(({ theme }) => ({
   height: HEADER_HEIGHT,
   backgroundColor: theme.palette.primary.dark,
-  padding: theme.spacing(1.5),
-  paddingLeft: theme.spacing(4),
   fontSize: 16,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  ...getHeaderPadding(theme),
 }));
 
 const SectionName = styled(Typography)(() => ({
@@ -317,7 +326,7 @@ const PublicToolbar: React.FC<{
   return (
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
-      <StyledToolbar>
+      <StyledToolbar disableGutters>
         <LeftBox>
           {teamTheme?.logo ? (
             <TeamLogo />
