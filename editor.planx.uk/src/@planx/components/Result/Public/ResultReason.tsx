@@ -99,7 +99,7 @@ const useClasses = makeStyles((theme: Theme) => ({
     left: "0",
     width: "10px",
     height: "100%",
-    backgroundColor: "#82E6A1",
+    backgroundColor: theme.palette.background.paper, // TODO match to flag color
     zIndex: "1",
   },
   accordionHeader: {
