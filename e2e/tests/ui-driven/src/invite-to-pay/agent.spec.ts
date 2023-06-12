@@ -1,4 +1,4 @@
-import { test, expect, Page, Browser, BrowserContext } from "@playwright/test";
+import { test, expect, Page, BrowserContext } from "@playwright/test";
 import { setFeatureFlag, addSessionToContext, modifyFlow } from "../helpers";
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import {
@@ -68,7 +68,7 @@ test.describe("Agent journey", async () => {
     const errorMessage = await page.getByText(
       "Error generating payment request, please try again"
     );
-    await expect(errorMessage).not.toBeVisible();
+    await expect(errorMessage).toBeHidden();
 
     const paymentRequest = await getPaymentRequestBySessionId({
       sessionId,
@@ -124,7 +124,7 @@ test.describe("Agent journey", async () => {
         name: "Your application is locked",
       })
     ).toBeVisible();
-    await expect(secondPage.getByTestId("continue-button")).not.toBeVisible();
+    await expect(secondPage.getByTestId("continue-button")).toBeHidden();
   });
 
   test("reconciliation does not apply to sessions with open payment requests", async ({
@@ -151,7 +151,7 @@ test.describe("Agent journey", async () => {
     const reconciliationText = await secondPage.getByText(
       "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue."
     );
-    await expect(reconciliationText).not.toBeVisible();
+    await expect(reconciliationText).toBeHidden();
 
     // Locked application message displayed
     await expect(
@@ -159,7 +159,7 @@ test.describe("Agent journey", async () => {
         name: "Your application is locked",
       })
     ).toBeVisible();
-    await expect(secondPage.getByTestId("continue-button")).not.toBeVisible();
+    await expect(secondPage.getByTestId("continue-button")).toBeHidden();
   });
 
   test("agent cannot make payment after sending a payment request in another tab", async ({
@@ -214,7 +214,7 @@ const parallelITPJourneys = async ({ page, browserContext }: { page: Page, brows
   await navigateToPayComponent(page, context);
   await addSessionToContext(page, context);
   const sessionId = await saveSession({ page, context });
-  if (!sessionId) throw Error("Missing sessionId, cannot proceed")
+  expect(sessionId).toBeDefined();
 
   // Make two tabs, and proceed in parallel
   const tab1 = await browserContext.newPage();
@@ -238,7 +238,7 @@ const parallelITPJourneys = async ({ page, browserContext }: { page: Page, brows
   await expect(tab2ToggleITPButton).toBeVisible();
 
   return {
-    sessionId,
+    sessionId: sessionId!,
     tabs: [tab1, tab2]
   }
 }
