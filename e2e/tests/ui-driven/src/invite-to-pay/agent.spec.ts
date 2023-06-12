@@ -166,13 +166,18 @@ test.describe("Agent journey", async () => {
     page,
     context: browserContext,
   }) => {
-    const { sessionId, tabs: [ tab1, tab2 ] } = await parallelITPJourneys({ page, browserContext })
+    const {
+      sessionId,
+      tabs: [tab1, tab2],
+    } = await parallelITPJourneys({ page, browserContext });
 
     // Make payment request in tab 1
     await tab1.getByTestId("invite-page-link").click();
     await answerInviteToPayForm(tab1);
     await tab1.getByText("Send invitation to pay").click();
-    await tab1.waitForResponse(resp => resp.url().includes("/v1/graphql") && resp.status() === 200)
+    await tab1.waitForResponse(
+      (resp) => resp.url().includes("/v1/graphql") && resp.status() === 200
+    );
     const paymentRequest = await getPaymentRequestBySessionId({
       sessionId,
       adminGQLClient,
@@ -183,7 +188,9 @@ test.describe("Agent journey", async () => {
     await tab2.getByText("Pay now using GOV.UK Pay").click();
 
     // ...and fail to do so
-    const errorMessage = tab2.getByText("Cannot initialise a new payment for locked session");
+    const errorMessage = tab2.getByText(
+      "Cannot initialise a new payment for locked session"
+    );
     await expect(errorMessage).toBeVisible();
   });
 
@@ -191,7 +198,9 @@ test.describe("Agent journey", async () => {
     page,
     context: browserContext,
   }) => {
-    const { tabs: [tab1, tab2] } = await parallelITPJourneys({ page, browserContext })
+    const {
+      tabs: [tab1, tab2],
+    } = await parallelITPJourneys({ page, browserContext });
 
     // Start to make payment in tab 1
     await tab1.getByText("Pay now using GOV.UK Pay").click();
@@ -204,13 +213,20 @@ test.describe("Agent journey", async () => {
     await tab2.getByText("Send invitation to pay").click();
 
     // ...and fail to do so
-    const errorMessage = tab2.getByText("Error generating payment request, please try again");
+    const errorMessage = tab2.getByText(
+      "Error generating payment request, please try again"
+    );
     await expect(errorMessage).toBeVisible();
   });
 });
 
-
-const parallelITPJourneys = async ({ page, browserContext }: { page: Page, browserContext: BrowserContext }): Promise<{sessionId: string, tabs: [Page, Page]}> => {
+const parallelITPJourneys = async ({
+  page,
+  browserContext,
+}: {
+  page: Page;
+  browserContext: BrowserContext;
+}): Promise<{ sessionId: string; tabs: [Page, Page] }> => {
   await navigateToPayComponent(page, context);
   await addSessionToContext(page, context);
   const sessionId = await saveSession({ page, context });
@@ -239,6 +255,6 @@ const parallelITPJourneys = async ({ page, browserContext }: { page: Page, brows
 
   return {
     sessionId: sessionId!,
-    tabs: [tab1, tab2]
-  }
-}
+    tabs: [tab1, tab2],
+  };
+};
