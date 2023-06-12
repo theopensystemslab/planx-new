@@ -55,22 +55,22 @@ test.describe("Nominee journey", async () => {
     const { paymentRequest, sessionId } = await setupPaymentRequest(request);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
-    expect(
+    await expect(
       await page.getByRole("heading", { name: "Pay for your application" })
     ).toBeVisible();
-    expect(
-      await page.locator("#main-content").getByText("Invite to pay test")
+    await expect(
+      page.locator("#main-content").getByText("Invite to pay test")
     ).toBeVisible();
-    expect(await page.getByText("123, Test Street, Testville")).toBeVisible();
+    await expect(page.getByText("123, Test Street, Testville")).toBeVisible();
 
     const formattedProjectType =
       "Alteration of internal walls and addition or alteration of a deck";
-    expect(await page.getByText(formattedProjectType)).toBeVisible();
+    await expect(page.getByText(formattedProjectType)).toBeVisible();
 
     const payButton = await page.getByRole("button", {
       name: "Pay using GOV.UK Pay",
     });
-    expect(payButton).toBeVisible();
+    await expect(payButton).toBeVisible();
 
     await payButton.click();
     await fillGovUkCardDetails({
@@ -83,7 +83,7 @@ test.describe("Nominee journey", async () => {
     // Wait for GovPay re-request to update paymentRequest status
     await page.waitForLoadState("networkidle");
 
-    expect(await page.getByText("Payment received")).toBeVisible();
+    await expect(page.getByText("Payment received")).toBeVisible();
     const updatedPaymentRequest = await getPaymentRequestBySessionId({
       sessionId,
       adminGQLClient,
@@ -97,7 +97,7 @@ test.describe("Nominee journey", async () => {
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
 
-    expect(await page.getByText("Payment request not found")).toBeVisible();
+    await expect(page.getByText("Payment request not found")).toBeVisible();
   });
 
   test("navigating to a URL without a paymentRequestId", async ({ page }) => {
@@ -106,7 +106,7 @@ test.describe("Nominee journey", async () => {
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
 
-    expect(await page.getByText("Payment request not found")).toBeVisible();
+    await expect(page.getByText("Payment request not found")).toBeVisible();
   });
 
   test("responding to a payment request which has been paid", async ({
@@ -117,7 +117,7 @@ test.describe("Nominee journey", async () => {
     await markPaymentRequestAsPaid(paymentRequest);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
-    expect(await page.getByText("Payment request not found")).toBeVisible();
+    await expect(page.getByText("Payment request not found")).toBeVisible();
   });
 
   test("responding to a payment request which has expired", async ({
@@ -128,7 +128,7 @@ test.describe("Nominee journey", async () => {
     await markPaymentRequestAsExpired(paymentRequest);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
-    expect(await page.getByText("Payment request not found")).toBeVisible();
+    await expect(page.getByText("Payment request not found")).toBeVisible();
   });
 });
 
