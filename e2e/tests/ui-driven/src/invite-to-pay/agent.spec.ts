@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page, Browser, BrowserContext } from "@playwright/test";
 import { setFeatureFlag, addSessionToContext, modifyFlow } from "../helpers";
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import {
@@ -15,6 +15,9 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
+import { saveSession } from "../helpers";
+import { returnToSession } from "../helpers";
+import { clickContinue } from "../helpers";
 
 let context: Context = {
   ...contextDefaults,
@@ -158,4 +161,84 @@ test.describe("Agent journey", async () => {
     ).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).not.toBeVisible();
   });
+
+  test("agent cannot make payment after sending a payment request in another tab", async ({
+    page,
+    context: browserContext,
+  }) => {
+    const { sessionId, tabs: [ tab1, tab2 ] } = await parallelITPJourneys({ page, browserContext })
+
+    // Make payment request in tab 1
+    await tab1.getByTestId("invite-page-link").click();
+    await answerInviteToPayForm(tab1);
+    await tab1.getByText("Send invitation to pay").click();
+    await tab1.waitForResponse(resp => resp.url().includes("/v1/graphql") && resp.status() === 200)
+    const paymentRequest = await getPaymentRequestBySessionId({
+      sessionId,
+      adminGQLClient,
+    });
+    await expect(paymentRequest).toBeDefined();
+
+    // Attempt to make payment in tab 2...
+    await tab2.getByText("Pay now using GOV.UK Pay").click();
+
+    // ...and fail to do so
+    const errorMessage = tab2.getByText("Cannot initialise a new payment for locked session");
+    await expect(errorMessage).toBeVisible();
+  });
+
+  test("agent cannot generate payment request after starting payment in another tab", async ({
+    page,
+    context: browserContext,
+  }) => {
+    const { tabs: [tab1, tab2] } = await parallelITPJourneys({ page, browserContext })
+
+    // Start to make payment in tab 1
+    await tab1.getByText("Pay now using GOV.UK Pay").click();
+    const govPayHeader = tab1.getByText("Enter card details");
+    await expect(govPayHeader).toBeVisible();
+
+    // Attempt to generate payment request in tab 2...
+    await tab2.getByTestId("invite-page-link").click();
+    await answerInviteToPayForm(tab2);
+    await tab2.getByText("Send invitation to pay").click();
+
+    // ...and fail to do so
+    const errorMessage = tab2.getByText("Error generating payment request, please try again");
+    await expect(errorMessage).toBeVisible();
+  });
 });
+
+
+const parallelITPJourneys = async ({ page, browserContext }: { page: Page, browserContext: BrowserContext }): Promise<{sessionId: string, tabs: [Page, Page]}> => {
+  await navigateToPayComponent(page, context);
+  await addSessionToContext(page, context);
+  const sessionId = await saveSession({ page, context });
+  if (!sessionId) throw Error("Missing sessionId, cannot proceed")
+
+  // Make two tabs, and proceed in parallel
+  const tab1 = await browserContext.newPage();
+  const tab2 = await browserContext.newPage();
+
+  await returnToSession({ page: tab1, context, sessionId: sessionId! });
+  await returnToSession({ page: tab2, context, sessionId: sessionId! });
+
+  // Skip review page
+  await clickContinue({ page: tab1 });
+  await clickContinue({ page: tab2 });
+
+  // Land back on pay component
+  const tab1ToggleITPButton = tab1.getByRole("button", {
+    name: "Invite someone else to pay for this application",
+  });
+  const tab2ToggleITPButton = tab2.getByRole("button", {
+    name: "Invite someone else to pay for this application",
+  });
+  await expect(tab1ToggleITPButton).toBeVisible();
+  await expect(tab2ToggleITPButton).toBeVisible();
+
+  return {
+    sessionId,
+    tabs: [tab1, tab2]
+  }
+}
