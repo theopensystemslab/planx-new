@@ -163,3 +163,12 @@ jobs:
           name: playwright-report
           path: e2e/tests/ui-driven/test-results/
           retention-days: 3
+      - name: Slack Notification
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: planx-notifications-internal
+          SLACK_USERNAME: Automated Tests
+          SLACK_COLOR: "#FF5733"
+          SLACK_TITLE: Regression Test Failure
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
