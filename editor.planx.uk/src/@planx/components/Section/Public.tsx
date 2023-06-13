@@ -169,7 +169,7 @@ export function SectionsOverviewList({
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 200px",
+  gridTemplateColumns: "1fr 220px",
   gridRowGap: "5px",
   paddingTop: theme.spacing(3),
   paddingBottom: theme.spacing(2),
