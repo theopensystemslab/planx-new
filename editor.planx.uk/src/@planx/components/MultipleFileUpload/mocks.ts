@@ -80,15 +80,17 @@ export const mockFileList = {
       rule: {
         condition: "AlwaysRequired",
       },
-      slot: {
-        file: {
-          path: "PXL_20230511_093922923.jpg",
+      slots: [
+        {
+          file: {
+            path: "PXL_20230511_093922923.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "EFGI1yU8s5s_cSBxnnYau",
+          url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
         },
-        status: "success",
-        progress: 1,
-        id: "EFGI1yU8s5s_cSBxnnYau",
-        url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
-      },
+      ],
     },
   ],
   recommended: [
@@ -98,15 +100,17 @@ export const mockFileList = {
       rule: {
         condition: "AlwaysRecommended",
       },
-      slot: {
-        file: {
-          path: "PXL_20230507_150205350~2.jpg",
+      slots: [
+        {
+          file: {
+            path: "PXL_20230507_150205350~2.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "ZrGNE4siV36zvA7u1QZQD",
+          url: "http://localhost:7002/file/private/82wo7bev/PXL_20230507_150205350~2.jpg",
         },
-        status: "success",
-        progress: 1,
-        id: "ZrGNE4siV36zvA7u1QZQD",
-        url: "http://localhost:7002/file/private/82wo7bev/PXL_20230507_150205350~2.jpg",
-      },
+      ],
     },
   ],
   optional: [
@@ -116,15 +120,17 @@ export const mockFileList = {
       rule: {
         condition: "NotRequired",
       },
-      slot: {
-        file: {
-          path: "PXL_20230511_093922923.jpg",
+      slots: [
+        {
+          file: {
+            path: "PXL_20230511_093922923.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "6bZBneLnY-L6qiqOblu8t",
+          url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
         },
-        status: "success",
-        progress: 1,
-        id: "6bZBneLnY-L6qiqOblu8t",
-        url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
-      },
+      ],
     },
   ],
 } as FileList;

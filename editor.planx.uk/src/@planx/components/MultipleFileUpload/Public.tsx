@@ -93,7 +93,7 @@ function Component(props: Props) {
     // The first slot is mapped to a single required file
 
     // const fileListWithTaggedFile = {...fileList}
-    // fileListWithTaggedFile.required[0].slot = slots[0]
+    // fileListWithTaggedFile.required[0].slots = [ slots[0], slots[1] ]
     // setFileList(fileListWithTaggedFile);
 
     Promise.all([
@@ -157,7 +157,7 @@ function Component(props: Props) {
                     moreInformation={fileType.moreInformation}
                   />
                 </ListItem>
-              ))
+              )),
             ])}
         </List>
       </DropzoneContainer>

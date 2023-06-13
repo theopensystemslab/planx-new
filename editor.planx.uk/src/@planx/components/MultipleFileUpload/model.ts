@@ -88,7 +88,7 @@ export const checkIfConditionalRule = (condition: Condition) =>
   [Condition.RecommendedIf, Condition.RequiredIf].includes(condition);
 
 export interface UserFile extends FileType {
-  slot?: FileUploadSlot;
+  slots?: FileUploadSlot[];
 }
 
 export interface FileList {
@@ -166,29 +166,30 @@ const isRuleMet = (
   );
 };
 
-interface UserFileWithSlot extends UserFile {
-  slot: NonNullable<UserFile["slot"]>;
+interface UserFileWithSlots extends UserFile {
+  slots: NonNullable<UserFile["slots"]>;
 }
 
-const formatUserFile = (userFile: UserFileWithSlot) => ({
-  rule: userFile.rule,
-  url: userFile.slot.url,
-  filename: userFile.slot.file.path,
-  cachedSlot: {
-    ...userFile.slot,
-    file: {
-      path: userFile.slot.file.path,
-      type: userFile.slot.file.type,
-      size: userFile.slot.file.size,
+const formatUserFile = (userFile: UserFileWithSlots) =>
+  userFile.slots.map((slot) => ({
+    rule: userFile.rule,
+    url: slot.url,
+    filename: slot.file.path,
+    cachedSlot: {
+      ...slot,
+      file: {
+        path: slot.file.path,
+        type: slot.file.type,
+        size: slot.file.size,
+      },
     },
-  },
-});
+  }));
 
 /**
  * Type guard to coerce UserFile -> UserFileWithSlot
  */
-const hasSlot = (userFile: UserFile): userFile is UserFileWithSlot =>
-  Boolean(userFile?.slot);
+const hasSlots = (userFile: UserFile): userFile is UserFileWithSlots =>
+  Boolean(userFile?.slots);
 
 /**
  * Generate payload for MultipleFileUpload breadcrumb
@@ -201,7 +202,7 @@ export const generatePayload = (fileList: FileList): Store.userData => {
     ...fileList.required,
     ...fileList.recommended,
     ...fileList.optional,
-  ].filter(hasSlot);
+  ].filter(hasSlots);
 
   uploadedFiles.forEach((userFile) => {
     newPassportData[userFile.fn] = formatUserFile(userFile);

@@ -297,13 +297,15 @@ describe("generatePayload function", () => {
     expect(result.data).toHaveProperty("optionalFileFn");
 
     // Value in passport matches expected shape
-    expect(result.data?.requiredFileFn).toMatchObject({
-      url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
-      filename: "PXL_20230511_093922923.jpg",
-      rule: {
-        condition: Condition.AlwaysRequired,
+    expect(result.data?.requiredFileFn).toMatchObject([
+      {
+        url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
+        filename: "PXL_20230511_093922923.jpg",
+        rule: {
+          condition: Condition.AlwaysRequired,
+        },
       },
-    });
+    ]);
   });
 
   it("ignores files without a slot", () => {
@@ -312,7 +314,7 @@ describe("generatePayload function", () => {
       optional: [
         {
           ...mockFileList.recommended[0],
-          slot: undefined,
+          slots: undefined,
         },
       ],
     } as FileList;
@@ -326,7 +328,7 @@ describe("generatePayload function", () => {
 
 describe("getRecoveredSlots function", () => {
   it("recovers a previously uploaded file from the passport", () => {
-    const mockCachedSlot: NonNullable<UserFile["slot"]>["cachedSlot"] = {
+    const mockCachedSlot: NonNullable<UserFile["slots"]>[0]["cachedSlot"] = {
       id: "abc123",
       file: {
         path: "filePath.png",
