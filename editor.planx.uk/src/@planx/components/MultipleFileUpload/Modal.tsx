@@ -16,7 +16,7 @@ import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -52,7 +52,7 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
           <TagsPerFileContainer>
             <UploadedFileCard {...slot} key={slot.id} />
             <SelectMultiple
-              name={slot.id}
+              uploadedFile={slot}
               fileList={props.fileList}
               setFileList={props.setFileList}
             />
@@ -80,14 +80,14 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
 };
 
 interface SelectMultipleProps extends SelectProps {
-  name: string;
+  uploadedFile: FileUploadSlot;
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
 }
 
 const SelectMultiple = (props: SelectMultipleProps) => {
-  const { name, fileList, setFileList } = props;
-  const [tags, setTags] = React.useState<string[]>([]);
+  const { uploadedFile, fileList, setFileList } = props;
+  const [tags, setTags] = useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
     const {
@@ -99,34 +99,46 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     );
   };
 
-  useEffect(() => {
-    console.log("here", name, tags, fileList);
+  const handleUpdateFileList = () => {
     const updatedFileList = { ...fileList };
-
-    // const updatedFileList = {...fileList};
-    // updatedFileList[category].find(fileType => fileType.name === name).slot = slot;
-    // setFileList(updatedFileList);
-  }, [tags]);
+    tags.forEach((tag) => {
+      (
+        Object.keys(updatedFileList) as Array<keyof typeof updatedFileList>
+      ).forEach((category) => {
+        const updatedUserFileIndex = updatedFileList[category].findIndex(
+          (fileType) => fileType.name === tag
+        );
+        if (updatedUserFileIndex > -1) {
+          updatedFileList[category][updatedUserFileIndex] = {
+            ...updatedFileList[category][updatedUserFileIndex],
+            slot: uploadedFile,
+          };
+          setFileList(updatedFileList);
+        }
+      });
+    });
+  };
 
   return (
     <FormControl
-      key={`form-${name}`}
+      key={`form-${uploadedFile.id}`}
       sx={{ display: "flex", flexDirection: "column" }}
     >
-      <InputLabel id={`select-mutliple-file-tags-label-${name}`}>
+      <InputLabel id={`select-mutliple-file-tags-label-${uploadedFile.id}`}>
         What does this file show?
       </InputLabel>
       <Select
-        key={`select-${name}`}
-        id={`select-multiple-file-tags-${name}`}
-        labelId={`select-multiple-file-tags-label-${name}`}
+        key={`select-${uploadedFile.id}`}
+        id={`select-multiple-file-tags-${uploadedFile.id}`}
+        labelId={`select-multiple-file-tags-label-${uploadedFile.id}`}
         variant="standard"
         multiple
         value={tags}
         onChange={handleChange}
+        onClose={handleUpdateFileList}
         IconComponent={ArrowIcon}
         input={<Input />}
-        inputProps={{ name }}
+        inputProps={{ name: uploadedFile.id }}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
@@ -145,21 +157,23 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           .filter((fileListCategory) => fileList[fileListCategory].length > 0)
           .map((fileListCategory) => {
             return [
-              <ListSubheader key={`subheader-${fileListCategory}-${name}`}>
+              <ListSubheader
+                key={`subheader-${fileListCategory}-${uploadedFile.id}`}
+              >
                 {`${capitalize(fileListCategory)} files`}
               </ListSubheader>,
               ...fileList[fileListCategory].map((fileType) => {
                 return [
                   <MenuItem
-                    key={`menuitem-${fileType.name}-${name}`}
+                    key={`menuitem-${fileType.name}-${uploadedFile.id}`}
                     value={fileType.name}
                   >
                     <Checkbox
-                      key={`checkbox-${fileType.name}-${name}`}
+                      key={`checkbox-${fileType.name}-${uploadedFile.id}`}
                       checked={tags.indexOf(fileType.name) > -1}
                     />
                     <ListItemText
-                      key={`listitemtext-${fileType.name}-${name}`}
+                      key={`listitemtext-${fileType.name}-${uploadedFile.id}`}
                       primary={fileType.name}
                     />
                   </MenuItem>,
