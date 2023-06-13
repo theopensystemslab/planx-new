@@ -16,7 +16,7 @@ import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -29,6 +29,7 @@ const TagsPerFileContainer = styled(Box)(({ theme }) => ({
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
   fileList: FileList;
+  setFileList: (value: React.SetStateAction<FileList>) => void;
   setShowModal: (value: React.SetStateAction<boolean>) => void;
 }
 
@@ -50,7 +51,11 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
         {props.uploadedFiles.map((slot) => (
           <TagsPerFileContainer>
             <UploadedFileCard {...slot} key={slot.id} />
-            <SelectMultiple name={slot.id} fileList={props.fileList} />
+            <SelectMultiple
+              name={slot.id}
+              fileList={props.fileList}
+              setFileList={props.setFileList}
+            />
           </TagsPerFileContainer>
         ))}
       </DialogContent>
@@ -77,10 +82,11 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
 interface SelectMultipleProps extends SelectProps {
   name: string;
   fileList: FileList;
+  setFileList: (value: React.SetStateAction<FileList>) => void;
 }
 
 const SelectMultiple = (props: SelectMultipleProps) => {
-  const { name, fileList } = props;
+  const { name, fileList, setFileList } = props;
   const [tags, setTags] = React.useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
@@ -92,6 +98,15 @@ const SelectMultiple = (props: SelectMultipleProps) => {
       typeof value === "string" ? value.split(",") : value
     );
   };
+
+  useEffect(() => {
+    console.log("here", name, tags, fileList);
+    const updatedFileList = { ...fileList };
+
+    // const updatedFileList = {...fileList};
+    // updatedFileList[category].find(fileType => fileType.name === name).slot = slot;
+    // setFileList(updatedFileList);
+  }, [tags]);
 
   return (
     <FormControl

@@ -164,6 +164,7 @@ function Component(props: Props) {
         <FileTaggingModal
           uploadedFiles={slots}
           fileList={fileList}
+          setFileList={setFileList}
           setShowModal={setShowModal}
         />
       )}
