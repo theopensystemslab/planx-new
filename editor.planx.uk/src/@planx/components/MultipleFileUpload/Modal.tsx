@@ -49,7 +49,7 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
     >
       <DialogContent>
         {props.uploadedFiles.map((slot) => (
-          <TagsPerFileContainer>
+          <TagsPerFileContainer key={`tags-per-file-container-${slot.id}`}>
             <UploadedFileCard {...slot} key={slot.id} />
             <SelectMultiple
               uploadedFile={slot}
@@ -97,9 +97,10 @@ const SelectMultiple = (props: SelectMultipleProps) => {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+    // handleUpdateFileList();
   };
 
-  useEffect(() => {
+  const handleUpdateFileList = () => {
     const updatedFileList = { ...fileList };
     tags.forEach((tag) => {
       (
@@ -117,7 +118,11 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         }
       });
     });
-  }, []);
+  };
+
+  useEffect(() => {
+    handleUpdateFileList();
+  }, [tags]);
 
   return (
     <FormControl
@@ -136,12 +141,17 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         value={tags}
         onChange={handleChange}
         IconComponent={ArrowIcon}
-        input={<Input />}
+        input={<Input key={`select-input-${uploadedFile.id}`} />}
         inputProps={{ name: uploadedFile.id }}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
-              <Chip label={value} variant="uploadedFileTag" size="small" />
+              <Chip
+                key={`chip-${value}-${uploadedFile.id}`}
+                label={value}
+                variant="uploadedFileTag"
+                size="small"
+              />
             ))}
           </Box>
         )}
