@@ -16,7 +16,7 @@ import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -99,7 +99,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     );
   };
 
-  const handleUpdateFileList = () => {
+  useEffect(() => {
     const updatedFileList = { ...fileList };
     tags.forEach((tag) => {
       (
@@ -117,7 +117,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         }
       });
     });
-  };
+  }, []);
 
   return (
     <FormControl
@@ -135,7 +135,6 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         multiple
         value={tags}
         onChange={handleChange}
-        onClose={handleUpdateFileList}
         IconComponent={ArrowIcon}
         input={<Input />}
         inputProps={{ name: uploadedFile.id }}

@@ -88,6 +88,8 @@ function Component(props: Props) {
   const [validationError, setValidationError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  console.log(fileList);
+
   const handleSubmit = () => {
     // This is a temp cheat to bypass tagging
     // The first slot is mapped to a single required file
@@ -157,7 +159,7 @@ function Component(props: Props) {
                     moreInformation={fileType.moreInformation}
                   />
                 </ListItem>
-              ))
+              )),
             ])}
         </List>
       </DropzoneContainer>
