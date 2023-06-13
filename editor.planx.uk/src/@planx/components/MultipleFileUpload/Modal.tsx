@@ -97,11 +97,10 @@ const SelectMultiple = (props: SelectMultipleProps) => {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
-    // handleUpdateFileList();
   };
 
-  const handleUpdateFileList = () => {
-    const updatedFileList = { ...fileList };
+  useEffect(() => {
+    const updatedFileList = fileList;
     tags.forEach((tag) => {
       (
         Object.keys(updatedFileList) as Array<keyof typeof updatedFileList>
@@ -118,10 +117,6 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         }
       });
     });
-  };
-
-  useEffect(() => {
-    handleUpdateFileList();
   }, [tags]);
 
   return (
