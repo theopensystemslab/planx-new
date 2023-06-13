@@ -57,21 +57,6 @@ describe("sending a payment to GOV.UK Pay", () => {
         expect(res.body).toEqual(govUKResponse);
       });
   });
-
-  it.skip("succeeds with missing query string", async () => {
-    await supertest(app)
-      .post("/pay/southwark")
-      .send({
-        amount: 100,
-        reference: "12343543",
-        description: "New application",
-        return_url: "https://editor.planx.uk",
-      })
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual(govUKResponse);
-      });
-  });
 });
 
 describe("fetching status of a GOV.UK payment", () => {
