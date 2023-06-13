@@ -51,7 +51,7 @@ export type Rule = {
 }[Condition];
 
 export interface FileType {
-  key: string;
+  name: string;
   fn: string;
   rule: Rule;
   moreInformation?: MoreInformation;
@@ -77,7 +77,7 @@ export const parseContent = (
 const DEFAULT_TITLE = "Upload multiple files";
 
 export const newFileType = (): FileType => ({
-  key: "",
+  name: "",
   fn: "",
   rule: {
     condition: Condition.AlwaysRequired,
@@ -106,11 +106,11 @@ export const createFileList = ({
 }): FileList => {
   const fileList: FileList = { required: [], recommended: [], optional: [] };
   const sortedFileTypes = sortFileTypes(fileTypes);
-  const uniqueKeys: string[] = [];
+  const uniqueNames: string[] = [];
   sortedFileTypes.forEach((fileType) => {
-    const isUnique = !uniqueKeys.includes(fileType.key);
+    const isUnique = !uniqueNames.includes(fileType.name);
     if (isUnique) {
-      uniqueKeys.push(fileType.key);
+      uniqueNames.push(fileType.name);
       populateFileList({ fileList, fileType, passport });
     }
   });

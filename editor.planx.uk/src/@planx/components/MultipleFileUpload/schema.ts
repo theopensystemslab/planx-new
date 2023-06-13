@@ -40,7 +40,7 @@ export const ruleSchema: SchemaOf<Rule> = object({
 });
 
 export const fileTypeSchema: SchemaOf<FileType> = object({
-  key: string().required(),
+  name: string().required(),
   fn: string().required(),
   rule: ruleSchema,
   moreInformation: moreInformationSchema.optional(),

@@ -153,21 +153,21 @@ describe("createFileList function", () => {
   it("handles a complex list of FileTypes", () => {
     const fileTypes: FileType[] = [
       {
-        key: "key0",
+        name: "key0",
         fn: "fn0",
         rule: {
           condition: Condition.AlwaysRequired,
         },
       },
       {
-        key: "key1",
+        name: "key1",
         fn: "fn1",
         rule: {
           condition: Condition.AlwaysRecommended,
         },
       },
       {
-        key: "key2",
+        name: "key2",
         fn: "fn2",
         rule: {
           condition: Condition.RequiredIf,
@@ -177,7 +177,7 @@ describe("createFileList function", () => {
         },
       },
       {
-        key: "key3",
+        name: "key3",
         fn: "fn3",
         rule: {
           condition: Condition.RecommendedIf,
@@ -187,7 +187,7 @@ describe("createFileList function", () => {
         },
       },
       {
-        key: "key4",
+        name: "key4",
         fn: "fn4",
         rule: {
           condition: Condition.NotRequired,
@@ -211,14 +211,14 @@ describe("createFileList function", () => {
   it("handles a complex, unsorted, list of FileTypes", () => {
     const fileTypes: FileType[] = [
       {
-        key: "key0",
+        name: "key0",
         fn: "fn0",
         rule: {
           condition: Condition.NotRequired,
         },
       },
       {
-        key: "key1",
+        name: "key1",
         fn: "fn1",
         rule: {
           condition: Condition.RecommendedIf,
@@ -228,7 +228,7 @@ describe("createFileList function", () => {
         },
       },
       {
-        key: "key2",
+        name: "key2",
         fn: "fn2",
         rule: {
           condition: Condition.RequiredIf,
@@ -238,28 +238,28 @@ describe("createFileList function", () => {
         },
       },
       {
-        key: "key3",
+        name: "key3",
         fn: "fn3",
         rule: {
           condition: Condition.AlwaysRecommended,
         },
       },
       {
-        key: "key4",
+        name: "key4",
         fn: "fn4",
         rule: {
           condition: Condition.AlwaysRequired,
         },
       },
       {
-        key: "key4",
+        name: "key4",
         fn: "fn4",
         rule: {
           condition: Condition.AlwaysRequired,
         },
       },
       {
-        key: "key5",
+        name: "key5",
         fn: "fn5",
         rule: {
           condition: Condition.RequiredIf,

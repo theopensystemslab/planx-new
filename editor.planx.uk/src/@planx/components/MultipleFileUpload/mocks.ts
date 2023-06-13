@@ -35,31 +35,31 @@ export const mockRules: Record<keyof typeof Condition, Rule> = {
 };
 
 const mockAlwaysRequiredFileType: FileType = {
-  key: "testKey",
+  name: "testKey",
   fn: "testFn",
   rule: mockRules.AlwaysRequired,
 };
 
 const mockAlwaysRecommendedFileType: FileType = {
-  key: "testKey",
+  name: "testKey",
   fn: "testFn",
   rule: mockRules.AlwaysRecommended,
 };
 
 const mockRequiredIfFileType: FileType = {
-  key: "testKey",
+  name: "testKey",
   fn: "testFn",
   rule: mockRules.RequiredIf,
 };
 
 const mockRecommendedIfFileType: FileType = {
-  key: "testKey",
+  name: "testKey",
   fn: "testFn",
   rule: mockRules.RecommendedIf,
 };
 
 const mockNotRequiredFileType: FileType = {
-  key: "testKey",
+  name: "testKey",
   fn: "testFn",
   rule: mockRules.NotRequired,
 };
@@ -76,7 +76,7 @@ export const mockFileList = {
   required: [
     {
       fn: "requiredFileFn",
-      key: "firstFile",
+      name: "firstFile",
       rule: {
         condition: "AlwaysRequired",
       },
@@ -94,7 +94,7 @@ export const mockFileList = {
   recommended: [
     {
       fn: "recommendedFileFn",
-      key: "secondFile",
+      name: "secondFile",
       rule: {
         condition: "AlwaysRecommended",
       },
@@ -112,7 +112,7 @@ export const mockFileList = {
   optional: [
     {
       fn: "optionalFileFn",
-      key: "thirdFile",
+      name: "thirdFile",
       rule: {
         condition: "NotRequired",
       },

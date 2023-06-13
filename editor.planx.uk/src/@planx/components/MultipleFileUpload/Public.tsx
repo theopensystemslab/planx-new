@@ -1,8 +1,11 @@
 import Box from "@mui/material/Box";
+import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
+import capitalize from "lodash/capitalize";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
@@ -129,17 +132,28 @@ function Component(props: Props) {
             setFileUploadStatus={setFileUploadStatus}
           />
         </ErrorWrapper>
-        <Box>
-          <Typography fontWeight={FONT_WEIGHT_BOLD}>Required files</Typography>
-          {fileList.required.map((fileType) => (
-            <ListItem key={fileType.key} disablePadding>
-              <InteractiveFileListItem
-                name={fileType.key}
-                moreInformation={fileType.moreInformation}
-              />
-            </ListItem>
-          ))}
-        </Box>
+        <List disablePadding sx={{ width: "100%" }}>
+          {(Object.keys(fileList) as Array<keyof typeof fileList>)
+            .filter((fileListCategory) => fileList[fileListCategory].length > 0)
+            .map((fileListCategory) => (
+              <Box key={`wrapper-${fileListCategory}-files`}>
+                <ListSubheader
+                  key={`subheader-${fileListCategory}-files`}
+                  disableGutters
+                >
+                  {`${capitalize(fileListCategory)} files`}
+                </ListSubheader>
+                {fileList[fileListCategory].map((fileType) => (
+                  <ListItem key={fileType.name} disablePadding>
+                    <InteractiveFileListItem
+                      name={fileType.name}
+                      moreInformation={fileType.moreInformation}
+                    />
+                  </ListItem>
+                ))}
+              </Box>
+            ))}
+        </List>
       </DropzoneContainer>
       {Boolean(slots.length) && (
         <Typography mb={2} fontWeight={FONT_WEIGHT_BOLD}>
@@ -147,7 +161,11 @@ function Component(props: Props) {
         </Typography>
       )}
       {showModal && (
-        <FileTaggingModal uploadedFiles={slots} setShowModal={setShowModal} />
+        <FileTaggingModal
+          uploadedFiles={slots}
+          fileList={fileList}
+          setShowModal={setShowModal}
+        />
       )}
       {slots.map((slot) => {
         return (
