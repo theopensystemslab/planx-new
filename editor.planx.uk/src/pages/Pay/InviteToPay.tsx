@@ -55,10 +55,6 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
         </Typography>
         <List>
           <li>
-            if you do not receive an email confirming that we have received your
-            application within 24 hours or the next working day
-          </li>
-          <li>
             if you have any questions about your application or this service
           </li>
         </List>
