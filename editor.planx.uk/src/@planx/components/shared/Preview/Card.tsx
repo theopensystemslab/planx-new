@@ -52,7 +52,7 @@ const Card: React.FC<Props> = ({
       mountOnEnter={true}
       unmountOnExit={true}
     >
-      <Container maxWidth="md">
+      <Container maxWidth="contentWrap">
         <InnerContainer
           bgcolor="background.default"
           py={{ xs: 2, md: 4 }}

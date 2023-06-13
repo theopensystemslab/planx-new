@@ -27,6 +27,17 @@ export const FONT_WEIGHT_BOLD = "700";
 export const LINE_HEIGHT_BASE = "1.33";
 const SPACING_TIGHT = "-0.02em";
 
+declare module "@mui/material/styles" {
+  interface BreakpointOverrides {
+    xs: true;
+    sm: true;
+    md: true;
+    lg: true;
+    xl: true;
+    contentWrap: true;
+  }
+}
+
 const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   primary: {
     main: DEFAULT_PRIMARY_COLOR,
@@ -158,6 +169,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         md: 768, // Used with Container as general max-width
         lg: 1280,
         xl: 1920,
+        contentWrap: 1020,
       },
     },
     transitions: {

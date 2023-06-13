@@ -12,14 +12,21 @@ interface MapContainerProps {
  * and maintains a consistent right margin
  */
 const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
-  const mainContainerWidth = `${theme.breakpoints.values.md}px`;
-  const mainContainerMargin = `((100vw - ${mainContainerWidth}) / 2)`;
-  const mapMarginRight = "150px";
+  const mainContainerWidth = `${theme.breakpoints.values.contentWrap}px`;
+  const pageGutter = "60px";
 
   const style = {
+    width: "100%",
+    height: "70vh",
     [theme.breakpoints.up("md")]: {
-      height: "70vh",
-      width: `calc(${mainContainerMargin} + ${mainContainerWidth} - ${mapMarginRight})`,
+      width: `calc(100vw - ${pageGutter})`,
+    },
+    [theme.breakpoints.up("contentWrap")]: {
+      width: `calc(${mainContainerWidth} - ${pageGutter})`,
+      height: "80vh",
+    },
+    [theme.breakpoints.up("lg")]: {
+      width: `${mainContainerWidth}`,
     },
   };
 
