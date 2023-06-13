@@ -264,6 +264,13 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
         },
       },
+      MuiListItem: {
+        styleOverrides: {
+          root: {
+            lineHeight: LINE_HEIGHT_BASE,
+          },
+        },
+      },
       MuiChip: {
         variants: [
           {

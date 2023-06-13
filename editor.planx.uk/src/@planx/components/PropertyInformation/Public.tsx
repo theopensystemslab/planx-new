@@ -13,34 +13,14 @@ import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import { Team } from "types";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
 import FeedbackInput from "../shared/FeedbackInput";
+import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import type { PropertyInformation } from "./model";
 
 export default Component;
-
-const ErrorSummaryContainer = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  padding: theme.spacing(3),
-  border: `5px solid #E91B0C`,
-  "& button": {
-    background: "none",
-    borderStyle: "none",
-    color: "#E91B0C",
-    cursor: "pointer",
-    fontSize: "medium",
-    fontWeight: 700,
-    textDecoration: "underline",
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(0),
-  },
-  "& button:hover": {
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
 
 function Component(props: PublicProps<PropertyInformation>) {
   const [address, propertyType, localAuthorityDistrict, overrideAnswer] =

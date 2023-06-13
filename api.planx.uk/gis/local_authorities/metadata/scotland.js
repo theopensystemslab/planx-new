@@ -18,6 +18,7 @@ const planningConstraints = {
       text: "is in a Conservation Area",
       description: data.DES_TITLE,
     }),
+    category: "Heritage and conservation",
   },
   "designated.nationalPark.cairngorms": {
     key: "designated.nationalPark.cairngorms",
@@ -30,6 +31,7 @@ const planningConstraints = {
       text: "is in Cairngorms National Park",
       description: data.npname,
     }),
+    category: "Heritage and conservation",
   },
   "designated.nationalPark.lochLomondTrossachs": {
     key: "designated.nationalPark.lochLomondTrossachs",
@@ -42,6 +44,7 @@ const planningConstraints = {
       text: "is in Loch Lomond and The Trossachs National Park",
       description: data.npname, 
     }),
+    category: "Heritage and conservation",
   },
   "designated.nationalScenicArea": {
     key: "designated.nationalScenicArea",
@@ -54,6 +57,7 @@ const planningConstraints = {
       text: "is in a National Scenic Area",
       description: data.nsaname,
     }),
+    category: "Heritage and conservation",
   },
   "designated.WHS": {
     key: "designated.WHS",
@@ -66,6 +70,7 @@ const planningConstraints = {
       text: "is, or is within, an UNESCO World Heritage Site",
       description: data.DES_TITLE,
     }),
+    category: "Heritage and conservation",
   },
   listed: {
     key: "listed",
@@ -78,6 +83,7 @@ const planningConstraints = {
       text: `is, or is within, a Listed Building (Category ${data.CATEGORY})`,
       description: data.DES_TITLE,
     }),
+    category: "Heritage and conservation",
   },
   monument: {
     key: "monument",
@@ -90,6 +96,7 @@ const planningConstraints = {
       text: "is the site of a Scheduled Monument",
       description: data.DES_TITLE,
     }),
+    category: "Heritage and conservation",
   },
   tpo: { value: false },
 };
