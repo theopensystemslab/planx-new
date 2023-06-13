@@ -34,6 +34,7 @@ import {
   FileList,
   generatePayload,
   getRecoveredSlots,
+  getTagsForSlot,
   MultipleFileUpload,
 } from "./model";
 import { fileListSchema, slotsSchema } from "./schema";
@@ -87,8 +88,6 @@ function Component(props: Props) {
 
   const [validationError, setValidationError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
-
-  console.log(fileList);
 
   const handleSubmit = () => {
     // This is a temp cheat to bypass tagging
@@ -181,7 +180,7 @@ function Component(props: Props) {
           <UploadedFileCard
             {...slot}
             key={slot.id}
-            tags={["Test1", "Test2", "Test3"]}
+            tags={getTagsForSlot(slot.id, fileList)}
             onChange={() => setShowModal(true)}
             removeFile={() => {
               setSlots(

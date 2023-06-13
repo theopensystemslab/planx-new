@@ -16,11 +16,12 @@ import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
+import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
-import { FileList } from "./model";
+import { FileList, getTagsForSlot } from "./model";
 
 const TagsPerFileContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
@@ -87,7 +88,9 @@ interface SelectMultipleProps extends SelectProps {
 
 const SelectMultiple = (props: SelectMultipleProps) => {
   const { uploadedFile, fileList, setFileList } = props;
-  const [tags, setTags] = useState<string[]>([]);
+
+  const initialTags = getTagsForSlot(uploadedFile.id, fileList);
+  const [tags, setTags] = useState<string[]>(initialTags);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
     const {
@@ -100,7 +103,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
   };
 
   useEffect(() => {
-    const updatedFileList = fileList;
+    const updatedFileList: FileList = merge(fileList);
     tags.forEach((tag) => {
       (
         Object.keys(updatedFileList) as Array<keyof typeof updatedFileList>

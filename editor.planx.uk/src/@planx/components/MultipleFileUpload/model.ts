@@ -226,3 +226,20 @@ export const getRecoveredSlots = (
 
   return recoveredSlots;
 };
+
+export const getTagsForSlot = (
+  slotId: FileUploadSlot["id"],
+  fileList: FileList
+): string[] => {
+  const allFiles = [
+    ...fileList.required,
+    ...fileList.recommended,
+    ...fileList.optional,
+  ];
+
+  const tags = allFiles
+    .filter((userFile) => userFile?.slot?.id === slotId)
+    .map((userFile) => userFile.name);
+
+  return tags;
+};
