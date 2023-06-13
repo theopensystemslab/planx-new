@@ -73,7 +73,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           )}
           {description && (
             <Description>
-              <Typography variant="subtitle2" component="div">
+              <Typography variant="subtitle1" component="div">
                 <ReactMarkdownOrHtml
                   source={description}
                   id={DESCRIPTION_TEXT}

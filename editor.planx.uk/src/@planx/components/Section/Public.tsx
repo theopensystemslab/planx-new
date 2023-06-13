@@ -42,11 +42,11 @@ export default function Component(props: Props) {
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <QuestionHeader title={flowName} />
-      <Box sx={{ lineHeight: ".5em" }}>
-        <Typography variant="body1" component="h2" sx={{ fontWeight: "bold" }}>
+      <Box>
+        <Typography variant="h4" component="h2" pb="0.15em">
           Application incomplete.
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="subtitle2" component="h3">
           {`You have completed ${
             Object.keys(sectionNodes)[0] === currentCard?.id
               ? 0
@@ -138,21 +138,27 @@ export function SectionsOverviewList({
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
         <React.Fragment key={sectionId}>
           <dt>
-            {showChange &&
-            sectionStatuses[sectionId] === SectionStatus.Completed ? (
-              <Link
-                onClick={() => changeFirstAnswerInSection(sectionId)}
-                component="button"
-                sx={{ fontFamily: "inherit", fontSize: "inherit" }}
-              >
-                {sectionNode.data.title}
-                <span style={visuallyHidden}>
-                  {`Change ${sectionNode.data.title}`}
-                </span>
-              </Link>
-            ) : (
-              sectionNode.data.title
-            )}
+            <Typography variant="body1" component="div">
+              {showChange &&
+              sectionStatuses[sectionId] === SectionStatus.Completed ? (
+                <Link
+                  onClick={() => changeFirstAnswerInSection(sectionId)}
+                  component="button"
+                  sx={{
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                    textAlign: "left",
+                  }}
+                >
+                  {sectionNode.data.title}
+                  <span style={visuallyHidden}>
+                    {`Change ${sectionNode.data.title}`}
+                  </span>
+                </Link>
+              ) : (
+                sectionNode.data.title
+              )}
+            </Typography>
           </dt>
           <dd> {getTag(sectionStatuses[sectionId])} </dd>
         </React.Fragment>
@@ -165,14 +171,17 @@ const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "1fr 200px",
   gridRowGap: "5px",
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
+  paddingTop: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
   "& > *": {
-    borderBottom: "1px solid grey",
-    paddingBottom: theme.spacing(2),
-    paddingTop: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.secondary.main}`,
+    paddingBottom: theme.spacing(1.5),
+    paddingTop: theme.spacing(1.5),
     verticalAlign: "top",
     margin: 0,
+  },
+  "& > dt:first-of-type, & > dd:first-of-type": {
+    borderTop: `1px solid ${theme.palette.secondary.main}`,
   },
   "& ul": {
     listStylePosition: "inside",
@@ -181,11 +190,16 @@ const Grid = styled("dl")(({ theme }) => ({
   },
   "& dt": {
     // left column
-    fontWeight: 500,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   "& dd:nth-of-type(1n)": {
     // right column
-    textAlign: "center",
+    textAlign: "right",
+    "& > button": {
+      width: "auto",
+    },
   },
 }));
 

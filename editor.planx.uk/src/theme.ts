@@ -126,12 +126,12 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       subtitle1: {
-        fontSize: "1.5rem",
+        fontSize: "1.375rem",
         lineHeight: LINE_HEIGHT_BASE,
         color: TEXT_COLOR_SECONDARY,
       },
       subtitle2: {
-        fontSize: "1.375rem",
+        fontSize: "1.188rem",
         lineHeight: LINE_HEIGHT_BASE,
         color: TEXT_COLOR_SECONDARY,
       },
