@@ -73,7 +73,8 @@ test.describe("Save and return", () => {
       await clickContinue({ page, waitForLogEvent: true });
 
       const sessionId = await saveSession({ page, context });
-      if (!sessionId) test.fail();
+      expect(sessionId).toBeDefined();
+
       await returnToSession({
         page,
         context,
@@ -101,7 +102,7 @@ test.describe("Save and return", () => {
       await expect(secondQuestion).toBeVisible();
 
       const sessionId = await saveSession({ page, context });
-      if (!sessionId) test.fail();
+      expect(sessionId).toBeDefined();
 
       await returnToSession({ page, context, sessionId: sessionId! });
 
@@ -126,7 +127,7 @@ test.describe("Save and return", () => {
       await expect(secondQuestion).toBeVisible();
 
       const sessionId = await saveSession({ page, context });
-      if (!sessionId) test.fail();
+      expect(sessionId).toBeDefined();
 
       await returnToSession({ page, context, sessionId: sessionId! });
 
@@ -151,7 +152,7 @@ test.describe("Save and return", () => {
       await expect(secondQuestion).toBeVisible();
 
       const sessionId = await saveSession({ page, context });
-      if (!sessionId) test.fail();
+      expect(sessionId).toBeDefined();
 
       // flow is updated between sessions
       await modifyFlow({ context, modifiedFlow: modifiedSimpleSendFlow });

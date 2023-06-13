@@ -6,7 +6,8 @@ import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
-import type { GovUKPayment, Passport, Session } from "types";
+import { useErrorHandler } from "react-error-boundary";
+import type { GovUKPayment, Session } from "types";
 import { PaymentStatus } from "types";
 
 import { makeData } from "../../shared/utils";
@@ -99,6 +100,8 @@ function Component(props: Props) {
     status: "indeterminate",
     displayText: "Loading...",
   });
+
+  const handleError = useErrorHandler();
 
   useEffect(() => {
     if (isNaN(fee) || fee <= 0) {
@@ -235,8 +238,10 @@ function Component(props: Props) {
           // Show a custom message if this team isn't set up to use Pay yet
           dispatch(Action.StartNewPaymentError);
         } else {
+          const apiErrorMessage: string | undefined =
+            error.response?.data?.error;
           // Throw all other errors so they're caught by our ErrorBoundary
-          throw error;
+          handleError(apiErrorMessage ? { message: apiErrorMessage } : error);
         }
       });
   };
