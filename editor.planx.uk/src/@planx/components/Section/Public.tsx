@@ -180,9 +180,6 @@ const Grid = styled("dl")(({ theme }) => ({
     verticalAlign: "top",
     margin: 0,
   },
-  "& > dt:first-of-type, & > dd:first-of-type": {
-    borderTop: `1px solid ${theme.palette.secondary.main}`,
-  },
   "& ul": {
     listStylePosition: "inside",
     padding: 0,
