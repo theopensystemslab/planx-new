@@ -94,7 +94,7 @@ export async function makePaymentRequest({
   });
   await toggleInviteToPayButton.click();
   await answerInviteToPayForm(page);
-  await page.getByText("Send invitation to pay").click();
+  await page.getByRole("button", { name: "Send invitation to pay" }).click();
   await page.waitForLoadState("networkidle");
 
   return sessionId;

@@ -62,7 +62,7 @@ test.describe("Agent journey", async () => {
     await expect(inviteToPayFormHeader).toBeVisible();
 
     await answerInviteToPayForm(page);
-    await page.getByText("Send invitation to pay").click();
+    await page.getByRole("button", { name: "Send invitation to pay" }).click();
     await page.waitForLoadState("networkidle");
 
     const errorMessage = await page.getByText(
@@ -174,7 +174,7 @@ test.describe("Agent journey", async () => {
     // Make payment request in tab 1
     await tab1.getByTestId("invite-page-link").click();
     await answerInviteToPayForm(tab1);
-    await tab1.getByText("Send invitation to pay").click();
+    await tab1.getByRole("button", { name: "Send invitation to pay" }).click();
     await tab1.waitForResponse(
       (resp) => resp.url().includes("/v1/graphql") && resp.status() === 200
     );
@@ -210,7 +210,7 @@ test.describe("Agent journey", async () => {
     // Attempt to generate payment request in tab 2...
     await tab2.getByTestId("invite-page-link").click();
     await answerInviteToPayForm(tab2);
-    await tab2.getByText("Send invitation to pay").click();
+    await tab2.getByRole("button", { name: "Send invitation to pay" }).click();
 
     // ...and fail to do so
     const errorMessage = tab2.getByText(

@@ -236,8 +236,8 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
         <WarningContainer>
           <ErrorOutline />
           <Typography variant="body2" ml={2} fontWeight="bold">
-            Selecting "continue" locks your application and you'll no longer be
-            able to make changes.
+            Selecting "Send invitation to pay" locks your application and you'll
+            no longer be able to make changes.
           </Typography>
         </WarningContainer>
         {error ? (

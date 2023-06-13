@@ -474,7 +474,7 @@ interface ToolbarProps {
 
 const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0];
+  const path = route.url.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
     state.flowSlug,
     state.previewEnvironment,
@@ -489,6 +489,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     case flowSlug: // Custom domains
     case "preview":
     case "unpublished":
+    case "pay":
       return <PublicToolbar />;
     default:
       return <PublicToolbar showResetButton={false} />;
