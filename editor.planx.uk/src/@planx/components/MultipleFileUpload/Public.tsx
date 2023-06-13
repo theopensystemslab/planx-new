@@ -9,6 +9,7 @@ import capitalize from "lodash/capitalize";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
+import { usePrevious } from "react-use";
 import { FONT_WEIGHT_BOLD } from "theme";
 import ErrorWrapper from "ui/ErrorWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
@@ -73,6 +74,13 @@ function Component(props: Props) {
 
   const [slots, setSlots] = useState<FileUploadSlot[]>([]);
 
+  // Track number of slots, and open modal when this increases
+  const previousSlotCount = usePrevious(slots.length);
+  useEffect(() => {
+    if (previousSlotCount === undefined) return;
+    if (slots.length > previousSlotCount) setShowModal(true);
+  }, [slots.length]);
+
   const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
     undefined
   );
@@ -135,24 +143,22 @@ function Component(props: Props) {
         <List disablePadding sx={{ width: "100%" }}>
           {(Object.keys(fileList) as Array<keyof typeof fileList>)
             .filter((fileListCategory) => fileList[fileListCategory].length > 0)
-            .map((fileListCategory) => (
-              <Box key={`wrapper-${fileListCategory}-files`}>
-                <ListSubheader
-                  key={`subheader-${fileListCategory}-files`}
-                  disableGutters
-                >
-                  {`${capitalize(fileListCategory)} files`}
-                </ListSubheader>
-                {fileList[fileListCategory].map((fileType) => (
-                  <ListItem key={fileType.name} disablePadding>
-                    <InteractiveFileListItem
-                      name={fileType.name}
-                      moreInformation={fileType.moreInformation}
-                    />
-                  </ListItem>
-                ))}
-              </Box>
-            ))}
+            .flatMap((fileListCategory) => [
+              <ListSubheader
+                key={`subheader-${fileListCategory}-files`}
+                disableGutters
+              >
+                {`${capitalize(fileListCategory)} files`}
+              </ListSubheader>,
+              fileList[fileListCategory].map((fileType) => (
+                <ListItem key={fileType.name} disablePadding>
+                  <InteractiveFileListItem
+                    name={fileType.name}
+                    moreInformation={fileType.moreInformation}
+                  />
+                </ListItem>
+              ))
+            ])}
         </List>
       </DropzoneContainer>
       {Boolean(slots.length) && (
