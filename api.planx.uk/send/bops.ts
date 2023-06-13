@@ -49,7 +49,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     );
   }
   const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
-  const bopsFullPayload = await $admin.generateBOPSPayload(payload?.sessionId);
+  const bopsFullPayload = await $admin.export.bopsPayload(payload?.sessionId);
 
   try {
     const bopsResponse = await axios({

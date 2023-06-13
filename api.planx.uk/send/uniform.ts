@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import type { Writable as WritableStream } from "node:stream";
 import { NextFunction, Request, Response } from "express";
 import os from "os";
 import { Buffer } from "node:buffer";
@@ -190,7 +191,14 @@ export async function createUniformSubmissionZip(sessionId: string) {
     );
   }
   const passport = sessionData.data?.passport as IPassport;
+
   const zip = new AdmZip();
+
+  const addToZip = async (stream: WritableStream, path: string) => {
+    await resolveStream(stream);
+    zip.addLocalFile(path);
+    deleteFile(path);
+  };
 
   // make a tmp directory to avoid file name collisions if simultaneous applications
   let tmpDir = "";
@@ -214,17 +222,19 @@ export async function createUniformSubmissionZip(sessionId: string) {
     }
   }
 
-  // build a CSV, write it to the tmp directory, add it to the zip
+  // generate csv data
+  const { responses, redactedResponses } = await $admin.export.csvData(
+    sessionId
+  );
+
+  // write csv to the tmp directory, add it to the zip
   const csvPath = path.join(tmpDir, "application.csv");
   const csvFile = fs.createWriteStream(csvPath);
-  const csv = await $admin.generateCSVData(sessionId);
-  const csvStream = stringify(csv, {
+  const csvStream = stringify(responses, {
     columns: ["question", "responses", "metadata"],
     header: true,
   }).pipe(csvFile);
-  await resolveStream(csvStream);
-  zip.addLocalFile(csvPath);
-  deleteFile(csvPath);
+  await addToZip(csvStream, csvPath);
 
   await addOneAppXMLToZip({ zip, tmpDir, sessionId });
   await addTemplateFilesToZip({ zip, tmpDir, passport, sessionId });
@@ -233,11 +243,17 @@ export async function createUniformSubmissionZip(sessionId: string) {
   const overviewPath = path.join(tmpDir, "Overview.htm");
   const overviewFile = fs.createWriteStream(overviewPath);
   const overviewStream = generateHTMLOverviewStream(
-    csv as PlanXExportData[]
+    responses as PlanXExportData[]
   ).pipe(overviewFile);
-  await resolveStream(overviewStream);
-  zip.addLocalFile(overviewPath);
-  deleteFile(overviewPath);
+  await addToZip(overviewStream, overviewPath);
+
+  // generate and add an HTML overview document for the submission to zip
+  const redactedOverviewPath = path.join(tmpDir, "RedactedOverview.htm");
+  const redactedOverviewFile = fs.createWriteStream(redactedOverviewPath);
+  const redactedOverviewStream = generateHTMLOverviewStream(
+    redactedResponses as PlanXExportData[]
+  ).pipe(redactedOverviewFile);
+  await addToZip(redactedOverviewStream, redactedOverviewPath);
 
   // add an optional GeoJSON file to zip
   const geojson = passport?.data?.["property.boundary.site"];
@@ -249,9 +265,7 @@ export async function createUniformSubmissionZip(sessionId: string) {
     const boundaryPath = path.join(tmpDir, "LocationPlan.htm");
     const boundaryFile = fs.createWriteStream(boundaryPath);
     const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
-    await resolveStream(boundaryStream);
-    zip.addLocalFile(boundaryPath);
-    deleteFile(boundaryPath);
+    await addToZip(boundaryStream, boundaryPath);
   }
 
   // create the zip file

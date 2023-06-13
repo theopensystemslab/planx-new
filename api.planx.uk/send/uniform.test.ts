@@ -46,9 +46,7 @@ const mockGenerateOneAppXML = jest
   .fn()
   .mockResolvedValue("<dummy:xml></dummy:xml>");
 
-const mockGetSessionById = jest
-  .fn()
-  .mockResolvedValue(mockLowcalSession);
+const mockGetSessionById = jest.fn().mockResolvedValue(mockLowcalSession);
 
 jest.mock("../client", () => {
   return {
@@ -60,9 +58,16 @@ jest.mock("../client", () => {
       getSessionById: () => mockGetSessionById(),
       generateCSVData: jest
         .fn()
-        .mockResolvedValue([
-          { question: "Test", responses: [{ value: "Answer" }], metadata: {} },
-        ]),
+        .mockResolvedValue({
+          exportData: [
+            {
+              question: "Test",
+              responses: [{ value: "Answer" }],
+              metadata: {},
+            },
+          ],
+          redactedExportData: [],
+        }),
     },
   };
 });
@@ -142,7 +147,9 @@ describe("createUniformSubmissionZip", () => {
   });
 
   test("geojson and location plan is excluded when not present", async () => {
-    const lowcalSessionWithoutBoundary = omit(mockLowcalSession, ['data.passport.data["property.boundary.site"]']);
+    const lowcalSessionWithoutBoundary = omit(mockLowcalSession, [
+      'data.passport.data["property.boundary.site"]',
+    ]);
     mockGetSessionById.mockResolvedValue(lowcalSessionWithoutBoundary);
 
     const payload = {
