@@ -134,3 +134,46 @@ export const mockFileList = {
     },
   ],
 } as FileList;
+
+export const mockFileListMultiple = {
+  required: [
+    {
+      fn: "fileFn",
+      name: "firstFileType",
+      rule: {
+        condition: "AlwaysRequired",
+      },
+      slots: [
+        {
+          file: {
+            path: "first.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "001",
+          url: "http://localhost:7002/file/private/jjpmkz8g/first.jpg",
+        },
+        {
+          file: {
+            path: "second.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "002",
+          url: "http://localhost:7002/file/private/jjpmkz8g/second.jpg",
+        },
+        {
+          file: {
+            path: "third.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "003",
+          url: "http://localhost:7002/file/private/jjpmkz8g/third.jpg",
+        },
+      ],
+    },
+  ],
+  recommended: [],
+  optional: [],
+} as unknown as FileList;

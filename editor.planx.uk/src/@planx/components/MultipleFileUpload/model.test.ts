@@ -1,7 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
-import { mockFileList, mockFileTypes } from "./mocks";
+import { mockFileList, mockFileListMultiple, mockFileTypes } from "./mocks";
 import {
   Condition,
   createFileList,
@@ -323,6 +323,15 @@ describe("generatePayload function", () => {
     expect(result.data).toHaveProperty("requiredFileFn");
     expect(result.data).toHaveProperty("recommendedFileFn");
     expect(result.data).not.toHaveProperty("optionalFileFn");
+  });
+
+  it("maps multiple different user uploaded files, tagged as the same fileType, to a single passport key", () => {
+    const result = generatePayload(mockFileListMultiple);
+    expect(result.data).toHaveProperty("fileFn");
+    expect(result.data?.fileFn).toHaveLength(3);
+    expect(result.data?.fileFn?.[0].filename).toEqual("first.jpg");
+    expect(result.data?.fileFn?.[1].filename).toEqual("second.jpg");
+    expect(result.data?.fileFn?.[2].filename).toEqual("third.jpg");
   });
 });
 
