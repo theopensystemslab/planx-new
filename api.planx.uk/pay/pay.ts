@@ -55,7 +55,7 @@ export async function makePaymentViaProxy(
   if (session?.lockedAt) {
     return next(
       new ServerError({
-        message: `Cannot initialise a new payment for locked session ${sessionId}`,
+        message: `**THIS IS A TEST ERROR** Cannot initialise a new payment for locked session ${sessionId}`,
         status: 400,
       })
     )

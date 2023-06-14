@@ -189,7 +189,7 @@ test.describe("Agent journey", async () => {
 
     // ...and fail to do so
     const errorMessage = tab2.getByText(
-      "Cannot initialise a new payment for locked session"
+      "**THIS IS A TEST ERROR** Cannot initialise a new payment for locked session"
     );
     await expect(errorMessage).toBeVisible();
   });
