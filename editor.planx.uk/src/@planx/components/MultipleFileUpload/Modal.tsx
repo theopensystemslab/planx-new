@@ -16,11 +16,17 @@ import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { usePrevious } from "react-use";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
-import { FileList, getTagsForSlot } from "./model";
+import {
+  addOrAppendSlots,
+  FileList,
+  getTagsForSlot,
+  removeAllSlots,
+} from "./model";
 
 const TagsPerFileContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
@@ -99,6 +105,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
   const [tags, setTags] = useState<string[]>(initialTags);
+  const previousTags = usePrevious(tags);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
     const {
@@ -110,36 +117,37 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     );
   };
 
-  const updateFileListWithTags = () => {
-    const updatedFileList: FileList = merge(fileList);
-    const categories = Object.keys(updatedFileList) as Array<
-      keyof typeof updatedFileList
-    >;
+  const updateFileListWithTags = (
+    previousTags: string[] | undefined,
+    currentTags: string[]
+  ) => {
+    let updatedFileList: FileList = merge(fileList);
+    const updatedTags = currentTags.filter(
+      (tag) => !previousTags?.includes(tag)
+    );
 
-    tags.forEach((tag) => {
-      categories.forEach((category) => {
-        const updatedUserFileIndex = updatedFileList[category].findIndex(
-          (fileType) => fileType.name === tag
-        );
-        if (updatedUserFileIndex > -1) {
-          const updatedFileType =
-            updatedFileList[category][updatedUserFileIndex];
-          if (updatedFileType.slots) {
-            updatedFileList[category][updatedUserFileIndex].slots?.push(
-              uploadedFile
-            );
-          } else {
-            updatedFileList[category][updatedUserFileIndex] = {
-              ...updatedFileList[category][updatedUserFileIndex],
-              slots: [uploadedFile],
-            };
-          }
-        }
-      });
-    });
+    if (
+      (!previousTags || previousTags?.length === 0) &&
+      currentTags.length > 0
+    ) {
+      updatedFileList = addOrAppendSlots(currentTags, uploadedFile, fileList);
+    }
+
+    if (currentTags.length === 0 && previousTags) {
+      updatedFileList = removeAllSlots(fileList);
+    }
+
+    // TODO better handle cases where one of many tags is removed
+    if (updatedTags.length > 0) {
+      updatedFileList = addOrAppendSlots(updatedTags, uploadedFile, fileList);
+    }
 
     setFileList(updatedFileList);
   };
+
+  useEffect(() => {
+    updateFileListWithTags(previousTags, tags);
+  }, [tags]);
 
   return (
     <FormControl
@@ -160,7 +168,6 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         multiple
         value={tags}
         onChange={handleChange}
-        onClose={updateFileListWithTags}
         IconComponent={ArrowIcon}
         input={<Input key={`select-input-${uploadedFile.id}`} />}
         inputProps={{ name: uploadedFile.id }}

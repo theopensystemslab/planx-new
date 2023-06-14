@@ -1,4 +1,5 @@
-import { sortBy } from "lodash";
+import merge from "lodash/merge";
+import sortBy from "lodash/sortBy";
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { FileUploadSlot } from "../FileUpload/Public";
@@ -243,4 +244,53 @@ export const getTagsForSlot = (
     .map((userFile) => userFile.name);
 
   return tags;
+};
+
+export const addOrAppendSlots = (
+  tags: string[],
+  uploadedFile: FileUploadSlot,
+  fileList: FileList
+): FileList => {
+  const updatedFileList: FileList = merge(fileList);
+  const categories = Object.keys(updatedFileList) as Array<
+    keyof typeof updatedFileList
+  >;
+
+  tags.forEach((tag) => {
+    categories.forEach((category) => {
+      const updatedUserFileIndex = updatedFileList[category].findIndex(
+        (fileType) => fileType.name === tag
+      );
+      if (updatedUserFileIndex > -1) {
+        const updatedFileType = updatedFileList[category][updatedUserFileIndex];
+        if (updatedFileType.slots) {
+          updatedFileList[category][updatedUserFileIndex].slots?.push(
+            uploadedFile
+          );
+        } else {
+          updatedFileList[category][updatedUserFileIndex] = {
+            ...updatedFileList[category][updatedUserFileIndex],
+            slots: [uploadedFile],
+          };
+        }
+      }
+    });
+  });
+
+  return updatedFileList;
+};
+
+export const removeAllSlots = (fileList: FileList): FileList => {
+  const updatedFileList: FileList = merge(fileList);
+  const categories = Object.keys(updatedFileList) as Array<
+    keyof typeof updatedFileList
+  >;
+
+  categories.forEach((category) => {
+    updatedFileList[category]
+      .filter((userFile) => userFile.slots)
+      .forEach((userFile) => delete userFile.slots);
+  });
+
+  return updatedFileList;
 };
