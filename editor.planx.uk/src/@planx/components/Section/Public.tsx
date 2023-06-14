@@ -138,29 +138,22 @@ export function SectionsOverviewList({
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
         <React.Fragment key={sectionId}>
           <dt>
-            <Typography variant="body1" component="div">
-              {showChange &&
-              sectionStatuses[sectionId] === SectionStatus.Completed ? (
-                <Link
-                  onClick={() => changeFirstAnswerInSection(sectionId)}
-                  component="button"
-                  sx={{
-                    fontFamily: "inherit",
-                    fontSize: "inherit",
-                    textAlign: "left",
-                  }}
-                >
-            <Typography variant="body2">
+            {showChange &&
+            sectionStatuses[sectionId] === SectionStatus.Completed ? (
+              <Link
+                onClick={() => changeFirstAnswerInSection(sectionId)}
+                component="button"
+              >
+                <Typography variant="body1" align="left">
                   {sectionNode.data.title}
-            </Typography>
-                  <span style={visuallyHidden}>
-                    {`Change ${sectionNode.data.title}`}
-                  </span>
-                </Link>
-              ) : (
-                sectionNode.data.title
-              )}
-            </Typography>
+                </Typography>
+                <span style={visuallyHidden}>
+                  {`Change ${sectionNode.data.title}`}
+                </span>
+              </Link>
+            ) : (
+              <Typography variant="body1">{sectionNode.data.title}</Typography>
+            )}
           </dt>
           <dd> {getTag(sectionStatuses[sectionId])} </dd>
         </React.Fragment>
