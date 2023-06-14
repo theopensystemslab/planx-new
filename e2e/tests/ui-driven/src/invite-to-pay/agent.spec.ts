@@ -121,7 +121,7 @@ test.describe("Agent journey", async () => {
 
     await expect(
       await secondPage.getByRole("heading", {
-        name: "Your application is locked",
+        name: "Sorry, you can't make changes to this application",
       })
     ).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).toBeHidden();
@@ -156,7 +156,7 @@ test.describe("Agent journey", async () => {
     // Locked application message displayed
     await expect(
       await secondPage.getByRole("heading", {
-        name: "Your application is locked",
+        name: "Sorry, you can't make changes to this application",
       })
     ).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).toBeHidden();
