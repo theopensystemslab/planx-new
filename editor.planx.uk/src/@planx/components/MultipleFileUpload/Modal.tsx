@@ -25,7 +25,8 @@ import {
   addOrAppendSlots,
   FileList,
   getTagsForSlot,
-  removeAllSlots,
+  removeSlots,
+  resetAllSlots,
 } from "./model";
 
 const TagsPerFileContainer = styled(Box)(({ theme }) => ({
@@ -119,27 +120,22 @@ const SelectMultiple = (props: SelectMultipleProps) => {
 
   const updateFileListWithTags = (
     previousTags: string[] | undefined,
-    currentTags: string[]
+    tags: string[]
   ) => {
     let updatedFileList: FileList = merge(fileList);
-    const updatedTags = currentTags.filter(
-      (tag) => !previousTags?.includes(tag)
-    );
+    const updatedTags = tags.filter((tag) => !previousTags?.includes(tag));
+    const removedTags = previousTags?.filter((tag) => !tags?.includes(tag));
 
-    if (
-      (!previousTags || previousTags?.length === 0) &&
-      currentTags.length > 0
-    ) {
-      updatedFileList = addOrAppendSlots(currentTags, uploadedFile, fileList);
-    }
-
-    if (currentTags.length === 0 && previousTags) {
-      updatedFileList = removeAllSlots(fileList);
-    }
-
-    // TODO better handle cases where one of many tags is removed
     if (updatedTags.length > 0) {
       updatedFileList = addOrAppendSlots(updatedTags, uploadedFile, fileList);
+    }
+
+    if (removedTags && removedTags.length > 0) {
+      updatedFileList = removeSlots(removedTags, uploadedFile, fileList);
+    }
+
+    if (tags.length === 0 && previousTags) {
+      updatedFileList = resetAllSlots(fileList);
     }
 
     setFileList(updatedFileList);

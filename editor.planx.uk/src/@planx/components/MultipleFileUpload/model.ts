@@ -263,7 +263,10 @@ export const addOrAppendSlots = (
       );
       if (updatedUserFileIndex > -1) {
         const updatedFileType = updatedFileList[category][updatedUserFileIndex];
-        if (updatedFileType.slots) {
+        if (
+          updatedFileType.slots &&
+          !updatedFileType.slots.includes(uploadedFile)
+        ) {
           updatedFileList[category][updatedUserFileIndex].slots?.push(
             uploadedFile
           );
@@ -280,7 +283,43 @@ export const addOrAppendSlots = (
   return updatedFileList;
 };
 
-export const removeAllSlots = (fileList: FileList): FileList => {
+export const removeSlots = (
+  tags: string[],
+  uploadedFile: FileUploadSlot,
+  fileList: FileList
+): FileList => {
+  let updatedFileList: FileList = merge(fileList);
+  const categories = Object.keys(updatedFileList) as Array<
+    keyof typeof updatedFileList
+  >;
+
+  tags.forEach((tag) => {
+    categories.forEach((category) => {
+      const updatedUserFileIndex = updatedFileList[category].findIndex(
+        (fileType) => fileType.name === tag
+      );
+      if (updatedUserFileIndex > -1) {
+        const updatedFileType = updatedFileList[category][updatedUserFileIndex];
+        if (updatedFileType.slots) {
+          const indexToRemove = updatedFileType.slots?.findIndex(
+            (slot) => slot.id === uploadedFile.id
+          );
+          if (indexToRemove > -1) {
+            // TODO debug here
+            updatedFileList[category][updatedUserFileIndex].slots?.splice(
+              indexToRemove,
+              1
+            );
+          }
+        }
+      }
+    });
+  });
+
+  return updatedFileList;
+};
+
+export const resetAllSlots = (fileList: FileList): FileList => {
   const updatedFileList: FileList = merge(fileList);
   const categories = Object.keys(updatedFileList) as Array<
     keyof typeof updatedFileList
