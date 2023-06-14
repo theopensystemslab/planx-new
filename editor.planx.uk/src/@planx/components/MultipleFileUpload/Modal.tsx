@@ -102,24 +102,39 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     );
   };
 
-  useEffect(() => {
+  const updateFileListWithTags = () => {
     const updatedFileList: FileList = merge(fileList);
+    const categories = Object.keys(updatedFileList) as Array<
+      keyof typeof updatedFileList
+    >;
+
     tags.forEach((tag) => {
-      (
-        Object.keys(updatedFileList) as Array<keyof typeof updatedFileList>
-      ).forEach((category) => {
+      categories.forEach((category) => {
         const updatedUserFileIndex = updatedFileList[category].findIndex(
           (fileType) => fileType.name === tag
         );
         if (updatedUserFileIndex > -1) {
-          updatedFileList[category][updatedUserFileIndex] = {
-            ...updatedFileList[category][updatedUserFileIndex],
-            slot: uploadedFile,
-          };
-          setFileList(updatedFileList);
+          const updatedFileType =
+            updatedFileList[category][updatedUserFileIndex];
+          if (updatedFileType.slots) {
+            updatedFileList[category][updatedUserFileIndex].slots?.push(
+              uploadedFile
+            );
+          } else {
+            updatedFileList[category][updatedUserFileIndex] = {
+              ...updatedFileList[category][updatedUserFileIndex],
+              slots: [uploadedFile],
+            };
+          }
         }
       });
     });
+
+    setFileList(updatedFileList);
+  };
+
+  useEffect(() => {
+    updateFileListWithTags();
   }, [tags]);
 
   return (

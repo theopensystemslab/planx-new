@@ -239,7 +239,7 @@ export const getTagsForSlot = (
   ];
 
   const tags = allFiles
-    .filter((userFile) => userFile?.slot?.id === slotId)
+    .filter((userFile) => userFile?.slots?.some((slot) => slot.id === slotId))
     .map((userFile) => userFile.name);
 
   return tags;
