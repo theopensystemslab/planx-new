@@ -73,7 +73,7 @@ export const fileListSchema = object({
     message: "Please upload and tag all required files",
     test: (userFile?: UserFile[]) => {
       const isEverySlotFilled = Boolean(
-        userFile?.every((userFile) => userFile?.slot)
+        userFile?.every((userFile) => userFile?.slots)
       );
       return isEverySlotFilled;
     },
