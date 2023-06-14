@@ -153,7 +153,7 @@ function Component(props: Props) {
                   padding: "1.5em 0 1em",
                 }}
               >
-                <Typography variant="h4">
+                <Typography variant="h4" component="h2">
                   {`${capitalize(fileListCategory)} files`}
                 </Typography>
               </ListSubheader>,
