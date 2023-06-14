@@ -7,6 +7,19 @@ interface MapContainerProps {
   size?: "large";
 }
 
+export const fullWidthContent = (theme: Theme): React.CSSProperties => ({
+  width: "100%",
+  [theme.breakpoints.up("md")]: {
+    width: `calc(100vw - 60px)`,
+  },
+  [theme.breakpoints.up("contentWrap")]: {
+    width: `calc(${theme.breakpoints.values.contentWrap}px - 60px)`,
+  },
+  [theme.breakpoints.up("lg")]: {
+    width: `${theme.breakpoints.values.contentWrap}px`,
+  },
+});
+
 /**
  * Generate a style which increases the map size as the window grows
  * and maintains a consistent right margin
