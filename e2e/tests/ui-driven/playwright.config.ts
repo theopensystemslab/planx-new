@@ -44,9 +44,12 @@ const config: PlaywrightTestConfig = {
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `pnpm ui`,
+    command: "pnpm ui",
     port: 3000,
     reuseExistingServer: false,
+    env: {
+      NODE_ENV: "test",
+    },
   },
   /* Configure projects for major browsers */
   projects: [
