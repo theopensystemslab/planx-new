@@ -145,11 +145,9 @@ export function SectionsOverviewList({
                 component="button"
               >
                 <Typography variant="body1" align="left">
+                  <span style={visuallyHidden}>{`Change `}</span>
                   {sectionNode.data.title}
                 </Typography>
-                <span style={visuallyHidden}>
-                  {`Change ${sectionNode.data.title}`}
-                </span>
               </Link>
             ) : (
               <Typography variant="body1">{sectionNode.data.title}</Typography>
