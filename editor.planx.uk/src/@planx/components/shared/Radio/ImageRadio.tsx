@@ -2,6 +2,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
 import Radio, { RadioProps } from "@mui/material/Radio";
+import { useRadioGroup } from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useLayoutEffect, useRef, useState } from "react";
@@ -49,7 +50,6 @@ const ImageLabelRoot = styled(Box)(() => ({
   overflow: "hidden",
   zIndex: 2,
   borderBottom: "none",
-  bgcolor: "background.default",
 }));
 
 const TextLabelRoot = styled(Box)(() => ({
@@ -57,18 +57,30 @@ const TextLabelRoot = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
   flexGrow: 1,
-  padding: 1,
 }));
 
-const TextLabelContainer = styled(Box)(() => ({
-  paddingBottom: 2,
+const TextLabelContainer = styled(Box)(({ theme }) => ({
+  paddingBottom: theme.spacing(1),
   display: "flex",
   alignItems: "center",
+  color: theme.palette.text.primary,
+  "& > p": {
+    color: theme.palette.text.secondary,
+  },
 }));
 
-const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
-  border: "2px lightgray solid",
-  padding: theme.spacing(1.5),
+interface StyledFormLabelProps {
+  isSelected: boolean;
+}
+
+const StyledFormLabel = styled(FormLabel, {
+  shouldForwardProp: (prop) => prop !== "isSelected",
+})<StyledFormLabelProps>(({ theme, isSelected }) => ({
+  border: "2px solid",
+  borderColor: isSelected
+    ? theme.palette.primary.main
+    : theme.palette.secondary.main,
+  padding: theme.spacing(1),
   cursor: "pointer",
   display: "block",
   height: "100%",
@@ -95,7 +107,7 @@ const TextLabel = (props: Props): FCReturn => {
   return (
     <TextLabelRoot
       {...({ ref: textContentEl } as any)}
-      sx={{ alignItems: multiline ? "flex-start" : "center" }}
+      sx={{ alignItems: multiline ? "flex-start" : "center", padding: 0.5 }}
     >
       <TextLabelContainer>
         <Radio value={id} onChange={onChange} />
@@ -134,11 +146,16 @@ const ImageLabel = (props: Props): FCReturn => {
   );
 };
 
-const ImageRadio: React.FC<Props> = (props: Props) => (
-  <StyledFormLabel focused={false}>
-    <ImageLabel {...props} />
-    <TextLabel {...props} />
-  </StyledFormLabel>
-);
+const ImageRadio: React.FC<Props> = (props: Props) => {
+  const radioGroupState = useRadioGroup();
+  const isSelected = radioGroupState?.value === props.id;
+
+  return (
+    <StyledFormLabel focused={false} isSelected={isSelected}>
+      <ImageLabel {...props} />
+      <TextLabel {...props} />
+    </StyledFormLabel>
+  );
+};
 
 export default ImageRadio;

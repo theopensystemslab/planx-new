@@ -162,27 +162,23 @@ const LockedSession: React.FC<{ paymentRequest?: MinPaymentRequest }> = ({
   paymentRequest,
 }) => (
   <StatusPage
-    bannerHeading="Your application is locked"
+    bannerHeading="Sorry, you can't make changes to this application"
     additionalOption="startNewApplication"
   >
     <Typography variant="body2">
-      This is because you have requested that <b>{paymentRequest?.payeeName}</b>{" "}
-      (
+      This is because you've invited {paymentRequest?.payeeName} (
       <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
         {paymentRequest?.payeeEmail}
       </Link>
-      ) pay for the application.
+      ) to pay for this application and changes might affect the fee.
       <br />
       <br />
-      At this point you can make no further changes to the application.
-      <br />
-      <br />
-      To pay for this application yourself go to{" "}
+      You can{" "}
       <Link
         component={ReactNaviLink}
         href={`../pay?paymentRequestId=${paymentRequest?.id}`}
       >
-        the payment page
+        pay for this application yourself on the payment page
       </Link>
     </Typography>
   </StatusPage>

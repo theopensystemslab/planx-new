@@ -179,7 +179,7 @@ export async function findQuestion({
   page: Page;
   title: string;
 }): Promise<Locator> {
-  const group = await page.getByRole("group", { name: title });
+  const group = await page.getByRole("radiogroup", { name: title });
   await expect(group).toBeVisible();
   return group;
 }
@@ -194,7 +194,7 @@ export async function answerQuestion({
   answer: string;
 }) {
   const group = await findQuestion({ page, title });
-  await group.getByRole("button", { name: answer }).click();
+  await group.getByRole("radio", { name: answer }).click();
 }
 
 export async function answerChecklist({

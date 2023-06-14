@@ -13,7 +13,6 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
-import { hasFeatureFlag } from "lib/featureFlags";
 
 const GOVUK_YELLOW = "#FFDD00";
 
@@ -138,6 +137,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       },
       body1: {
         fontSize: "1.188rem",
+        lineHeight: LINE_HEIGHT_BASE,
       },
       body2: {
         fontSize: "1rem",
@@ -264,6 +264,13 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
         },
       },
+      MuiListItem: {
+        styleOverrides: {
+          root: {
+            lineHeight: LINE_HEIGHT_BASE,
+          },
+        },
+      },
       MuiChip: {
         variants: [
           {
@@ -276,38 +283,73 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
         ],
       },
-    },
-  };
-
-  return themeOptions;
-};
-
-const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
-  const themeOptions = getThemeOptions(primaryColor);
-  const altThemeOptions: ThemeOptions = {
-    components: {
       MuiRadio: {
         defaultProps: {
+          disableRipple: true,
           disableFocusRipple: true,
           sx: {
+            position: "relative",
+            flexShrink: 0,
+            width: "44px",
+            height: "44px",
+            padding: 0,
+            margin: "0.25em 0.75em 0.25em 0",
+            color: TEXT_COLOR_PRIMARY,
             "& .MuiSvgIcon-root": {
-              fontSize: 32,
+              // Hide default MUI SVG, we'll use pseudo elements as Gov.uk
+              visibility: "hidden",
+            },
+            "&::before": {
+              // Styles for radio icon border
+              content: "''",
+              position: "absolute",
+              top: "2px",
+              left: "2px",
+              width: "40px",
+              height: "40px",
+              color: TEXT_COLOR_PRIMARY,
+              border: "2px solid currentcolor",
+              borderRadius: "50%",
+              background: "rgba(0,0,0,0)",
+            },
+            "&::after": {
+              // Styles for radio icon dot
+              content: "''",
+              position: "absolute",
+              top: "11px",
+              left: "11px",
+              width: 0,
+              height: 0,
+              color: TEXT_COLOR_PRIMARY,
+              border: "11px solid currentcolor",
+              borderRadius: "50%",
+              background: "currentcolor",
+              // Hide by default, show if checked
+              opacity: 0,
+            },
+            "&.Mui-checked::after": {
+              opacity: 1,
+            },
+            "&.Mui-focusVisible::before": {
+              borderWidth: "4px",
+              outline: "3px solid rgba(0,0,0,0)",
+              outlineOffset: "1px",
+              boxShadow: `0 0 0 4px ${GOVUK_YELLOW}`,
             },
           },
         },
       },
     },
   };
-  return deepmerge(themeOptions, altThemeOptions);
+
+  return themeOptions;
 };
 
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
   primaryColor: string = DEFAULT_PRIMARY_COLOR
 ): Theme => {
-  const themeOptions = hasFeatureFlag("ALT_THEME")
-    ? getAltThemeOptions(primaryColor)
-    : getThemeOptions(primaryColor);
+  const themeOptions = getThemeOptions(primaryColor);
   const theme = responsiveFontSizes(createTheme(themeOptions));
   return theme;
 };

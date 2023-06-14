@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -21,12 +20,6 @@ interface Props {
   additionalOption?: "startNewApplication";
   children?: React.ReactNode;
 }
-
-const useStyles = makeStyles((theme) => ({
-  link: {
-    marginTop: theme.spacing(2.5),
-  },
-}));
 
 const StatusPage: React.FC<Props> = ({
   bannerHeading,
@@ -57,7 +50,6 @@ const StatusPage: React.FC<Props> = ({
   });
 
   const theme = useTheme();
-  const classes = useStyles();
 
   // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
   const startNewApplication = () => {
@@ -105,7 +97,7 @@ const StatusPage: React.FC<Props> = ({
             <Link
               component="button"
               onClick={startNewApplication}
-              className={classes.link}
+              sx={{ mt: 2.5 }}
             >
               <Typography variant="body2">Start new application</Typography>
             </Link>

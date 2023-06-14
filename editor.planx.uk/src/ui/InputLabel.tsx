@@ -1,18 +1,13 @@
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import React, { ReactNode } from "react";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "block",
+const Root = styled("label")(() => ({
+  display: "block",
+  width: "100%",
+  "& > :not(:first-child)": {
     width: "100%",
-    "& > :not(:first-child)": {
-      width: "100%",
-    },
-  },
-  labelText: {
-    paddingBottom: theme.spacing(1),
   },
 }));
 
@@ -22,17 +17,16 @@ export default function InputLabel(props: {
   hidden?: boolean;
   htmlFor?: string;
 }) {
-  const classes = useStyles();
   return (
-    <label className={classes.root} htmlFor={props.htmlFor}>
+    <Root htmlFor={props.htmlFor}>
       <Typography
-        className={classes.labelText}
+        sx={{ pb: 1 }}
         variant="body1"
         style={props.hidden ? visuallyHidden : undefined}
       >
         {props.label}
       </Typography>
       {props.children}
-    </label>
+    </Root>
   );
 }

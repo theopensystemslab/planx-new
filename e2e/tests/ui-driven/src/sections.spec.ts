@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { flow, updatedQuestionAnswers } from "./flows/sections-flow";
 import {
   contextDefaults,
@@ -358,7 +358,7 @@ test.describe("Section statuses", () => {
       });
 
       const sessionId = await saveSession({ page, context });
-      if (!sessionId) test.fail();
+      expect(sessionId).toBeDefined();
 
       await returnToSession({ page, context, sessionId: sessionId! });
 
@@ -418,7 +418,7 @@ test.describe("Section statuses", () => {
       await clickContinue({ page, waitForLogEvent: true });
 
       const sessionId = await saveSession({ page, context });
-      if (!sessionId) test.fail();
+      expect(sessionId).toBeDefined();
 
       await returnToSession({ page, context, sessionId: sessionId! });
 
@@ -492,7 +492,7 @@ test.describe("Section statuses", () => {
       await clickContinue({ page, waitForLogEvent: true });
 
       const sessionId = await saveSession({ page, context });
-      if (!sessionId) test.fail();
+      expect(sessionId).toBeDefined();
 
       // modify section
       await modifyFlow({

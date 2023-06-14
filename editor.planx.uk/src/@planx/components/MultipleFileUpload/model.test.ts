@@ -1,7 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
-import { mockFileList, mockFileTypes } from "./mocks";
+import { mockFileList, mockFileListMultiple, mockFileTypes } from "./mocks";
 import {
   Condition,
   createFileList,
@@ -297,13 +297,15 @@ describe("generatePayload function", () => {
     expect(result.data).toHaveProperty("optionalFileFn");
 
     // Value in passport matches expected shape
-    expect(result.data?.requiredFileFn).toMatchObject({
-      url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
-      filename: "PXL_20230511_093922923.jpg",
-      rule: {
-        condition: Condition.AlwaysRequired,
+    expect(result.data?.requiredFileFn).toMatchObject([
+      {
+        url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
+        filename: "PXL_20230511_093922923.jpg",
+        rule: {
+          condition: Condition.AlwaysRequired,
+        },
       },
-    });
+    ]);
   });
 
   it("ignores files without a slot", () => {
@@ -312,7 +314,7 @@ describe("generatePayload function", () => {
       optional: [
         {
           ...mockFileList.recommended[0],
-          slot: undefined,
+          slots: undefined,
         },
       ],
     } as FileList;
@@ -322,11 +324,20 @@ describe("generatePayload function", () => {
     expect(result.data).toHaveProperty("recommendedFileFn");
     expect(result.data).not.toHaveProperty("optionalFileFn");
   });
+
+  it("maps multiple different user uploaded files, tagged as the same fileType, to a single passport key", () => {
+    const result = generatePayload(mockFileListMultiple);
+    expect(result.data).toHaveProperty("fileFn");
+    expect(result.data?.fileFn).toHaveLength(3);
+    expect(result.data?.fileFn?.[0].filename).toEqual("first.jpg");
+    expect(result.data?.fileFn?.[1].filename).toEqual("second.jpg");
+    expect(result.data?.fileFn?.[2].filename).toEqual("third.jpg");
+  });
 });
 
 describe("getRecoveredSlots function", () => {
   it("recovers a previously uploaded file from the passport", () => {
-    const mockCachedSlot: NonNullable<UserFile["slot"]>["cachedSlot"] = {
+    const mockCachedSlot: NonNullable<UserFile["slots"]>[0]["cachedSlot"] = {
       id: "abc123",
       file: {
         path: "filePath.png",

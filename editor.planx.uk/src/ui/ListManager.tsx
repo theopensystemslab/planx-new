@@ -3,7 +3,7 @@ import DragHandle from "@mui/icons-material/DragHandle";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import { arrayMoveImmutable } from "array-move";
 import React, { useRef } from "react";
 import {
@@ -33,12 +33,9 @@ export interface Props<T, EditorExtraProps = {}> {
   disableDragAndDrop?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
-  list: {},
-  item: {
-    display: "flex",
-    marginBottom: theme.spacing(1),
-  },
+const Item = styled(Box)(({ theme }) => ({
+  display: "flex",
+  marginBottom: theme.spacing(1),
 }));
 
 export default function ListManager<T, EditorExtraProps>(
@@ -48,14 +45,12 @@ export default function ListManager<T, EditorExtraProps>(
   // Initialize a random ID when the component mounts
   const randomId = useRef(String(Math.random()));
 
-  const classes = useStyles();
-
   return props.disableDragAndDrop ? (
     <>
-      <div className={classes.list}>
+      <Box>
         {props.values.map((item, index) => {
           return (
-            <div className={classes.item} key={index}>
+            <Item key={index}>
               <Box>
                 <IconButton
                   disableRipple
@@ -85,10 +80,10 @@ export default function ListManager<T, EditorExtraProps>(
                   <Delete />
                 </IconButton>
               </Box>
-            </div>
+            </Item>
           );
         })}
-      </div>
+      </Box>
       <Button
         size="large"
         onClick={() => {
@@ -115,11 +110,7 @@ export default function ListManager<T, EditorExtraProps>(
     >
       <Droppable droppableId={randomId.current}>
         {(provided: DroppableProvided) => (
-          <div
-            ref={provided.innerRef}
-            className={classes.list}
-            {...provided.droppableProps}
-          >
+          <Box ref={provided.innerRef} {...provided.droppableProps}>
             {props.values.map((item, index) => {
               return (
                 <Draggable
@@ -128,11 +119,7 @@ export default function ListManager<T, EditorExtraProps>(
                   key={index}
                 >
                   {(provided: DraggableProvided) => (
-                    <div
-                      className={classes.item}
-                      {...provided.draggableProps}
-                      ref={provided.innerRef}
-                    >
+                    <Item {...provided.draggableProps} ref={provided.innerRef}>
                       <Box>
                         <IconButton
                           disableRipple
@@ -164,13 +151,13 @@ export default function ListManager<T, EditorExtraProps>(
                           <Delete />
                         </IconButton>
                       </Box>
-                    </div>
+                    </Item>
                   )}
                 </Draggable>
               );
             })}
             {provided.placeholder}
-          </div>
+          </Box>
         )}
       </Droppable>
       <Button

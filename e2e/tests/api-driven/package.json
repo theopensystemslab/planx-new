@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@cucumber/cucumber": "^9.1.2",
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#3d6f53b",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#1f18f5e",
     "dotenv": "^16.1.1"
   },
   "devDependencies": {

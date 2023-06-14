@@ -33,7 +33,8 @@ const SimpleExpand = ({ children, buttonText }: any) => {
         <Button
           className={classes.button}
           onClick={() => setShow(!show)}
-          // Needs aria-controls, aria-expanded
+          aria-expanded={show}
+          // Needs aria-controls
         >
           {show ? buttonText.closed : buttonText.open}
           <Caret />

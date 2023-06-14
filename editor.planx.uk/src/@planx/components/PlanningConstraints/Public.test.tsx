@@ -32,7 +32,7 @@ it("renders correctly", async () => {
   expect(screen.getByText("Planning constraints")).toBeInTheDocument();
 
   // TODO mock passport _address so that SWR request is actually triggered to return mock response
-  expect(screen.getByTestId("error-summary-no-info")).toBeInTheDocument();
+  expect(screen.getByTestId("error-summary-invalid-graph")).toBeInTheDocument();
 
   await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);

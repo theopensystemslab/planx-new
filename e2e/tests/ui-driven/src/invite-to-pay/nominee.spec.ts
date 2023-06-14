@@ -23,6 +23,8 @@ let context: Context = {
   sessionIds: [], // used to collect and clean up sessions
 };
 
+const PAYMENT_NOT_FOUND_TEXT = "Sorry, we can’t find that payment link";
+
 const adminGQLClient = getGraphQLClient();
 
 test.describe("Nominee journey", async () => {
@@ -90,7 +92,7 @@ test.describe("Nominee journey", async () => {
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
 
-    await expect(page.getByText("Payment request not found")).toBeVisible();
+    await expect(page.getByText(PAYMENT_NOT_FOUND_TEXT)).toBeVisible();
   });
 
   test("navigating to a URL without a paymentRequestId", async ({ page }) => {
@@ -99,7 +101,7 @@ test.describe("Nominee journey", async () => {
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
 
-    await expect(page.getByText("Payment request not found")).toBeVisible();
+    await expect(page.getByText(PAYMENT_NOT_FOUND_TEXT)).toBeVisible();
   });
 
   test("responding to a payment request which has been paid", async ({
@@ -110,7 +112,7 @@ test.describe("Nominee journey", async () => {
     await markPaymentRequestAsPaid(paymentRequest);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
-    await expect(page.getByText("Payment request not found")).toBeVisible();
+    await expect(page.getByText(PAYMENT_NOT_FOUND_TEXT)).toBeVisible();
   });
 
   test("responding to a payment request which has expired", async ({
@@ -121,7 +123,7 @@ test.describe("Nominee journey", async () => {
     await markPaymentRequestAsExpired(paymentRequest);
     await navigateToPaymentRequestPage(paymentRequest, page);
 
-    await expect(page.getByText("Payment request not found")).toBeVisible();
+    await expect(page.getByText(PAYMENT_NOT_FOUND_TEXT)).toBeVisible();
   });
 });
 

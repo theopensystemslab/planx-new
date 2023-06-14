@@ -77,6 +77,7 @@ async function go(x, y, siteBoundary, extras) {
               value: true,
               type: "warning",
               data: properties,
+              category: planningConstraints[key].category,
             };
           } else {
             if (!acc[k]) {
@@ -85,6 +86,7 @@ async function go(x, y, siteBoundary, extras) {
                 value: false,
                 type: "check",
                 data: {},
+                category: planningConstraints[key].category,
               };
             }
           }

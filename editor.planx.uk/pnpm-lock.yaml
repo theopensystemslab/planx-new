@@ -60,7 +60,7 @@ specifiers:
   '@mui/styles': 5.11.9
   '@mui/utils': 5.11.9
   '@opensystemslab/map': ^0.7.4
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#67570b5
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#1f18f5e
   '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#baf18b8
   '@react-theming/storybook-addon': ^1.1.10
   '@storybook/addon-actions': ^6.5.16
@@ -203,7 +203,7 @@ dependencies:
   '@mui/styles': 5.11.9_yuz6bkerhkjfjuf6zeb7j6ybc4
   '@mui/utils': 5.11.9_react@18.2.0
   '@opensystemslab/map': 0.7.4
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/67570b5_swbholdm6gktzi6tajgqaxwuv4
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/1f18f5e_swbholdm6gktzi6tajgqaxwuv4
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/baf18b8_swbholdm6gktzi6tajgqaxwuv4
   '@tiptap/core': 2.0.3_@tiptap+pm@2.0.3
   '@tiptap/extension-bold': 2.0.3_@tiptap+core@2.0.3
@@ -19334,6 +19334,11 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
 
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
+
   /uvu/0.5.2:
     resolution: {integrity: sha512-m2hLe7I2eROhh+tm3WE5cTo/Cv3WQA7Oc9f7JB6uWv+/zVKvfAm53bMyOoGOSZeQ7Ov2Fu9pLhFr7p07bnT20w==}
     engines: {node: '>=8'}
@@ -20190,9 +20195,9 @@ packages:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: true
 
-  github.com/theopensystemslab/planx-core/67570b5_swbholdm6gktzi6tajgqaxwuv4:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/67570b5}
-    id: github.com/theopensystemslab/planx-core/67570b5
+  github.com/theopensystemslab/planx-core/1f18f5e_swbholdm6gktzi6tajgqaxwuv4:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/1f18f5e}
+    id: github.com/theopensystemslab/planx-core/1f18f5e
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -20213,6 +20218,7 @@ packages:
       lodash.property: 4.4.2
       lodash.set: 4.3.2
       type-fest: 3.8.0
+      uuid: 9.0.0
       zod: 3.21.4
     transitivePeerDependencies:
       - '@types/react'
