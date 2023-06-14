@@ -1,5 +1,6 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import Chip from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
@@ -8,13 +9,11 @@ import DialogContent from "@mui/material/DialogContent";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
-import Link from "@mui/material/Link";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
 import React, { useState } from "react";
@@ -43,8 +42,10 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
       maxWidth="xl"
       PaperProps={{
         sx: {
+          width: "100%",
+          maxWidth: (theme) => theme.breakpoints.values.md,
           borderRadius: 0,
-          borderTop: (theme) => `10px solid ${theme.palette.primary.main}`,
+          borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
         },
       }}
     >
@@ -60,21 +61,28 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
           </TagsPerFileContainer>
         ))}
       </DialogContent>
-      <DialogActions style={{ display: "flex", justifyContent: "flex-start" }}>
-        <Link
-          component="button"
+      <DialogActions
+        sx={{
+          display: "flex",
+          justifyContent: "flex-start",
+          padding: (theme) => theme.spacing(2),
+        }}
+      >
+        <Button
+          variant="contained"
           onClick={() => props.setShowModal(false)}
           sx={{ paddingLeft: 2 }}
         >
-          <Typography variant="body2">Done</Typography>
-        </Link>
-        <Link
-          component="button"
+          Done
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
           onClick={() => props.setShowModal(false)}
           sx={{ paddingLeft: 2 }}
         >
-          <Typography variant="body2">Cancel</Typography>
-        </Link>
+          Cancel
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -138,7 +146,10 @@ const SelectMultiple = (props: SelectMultipleProps) => {
       key={`form-${uploadedFile.id}`}
       sx={{ display: "flex", flexDirection: "column" }}
     >
-      <InputLabel id={`select-mutliple-file-tags-label-${uploadedFile.id}`}>
+      <InputLabel
+        id={`select-mutliple-file-tags-label-${uploadedFile.id}`}
+        sx={{ top: "15%", color: (theme) => theme.palette.text.primary }}
+      >
         What does this file show?
       </InputLabel>
       <Select
@@ -153,8 +164,20 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         IconComponent={ArrowIcon}
         input={<Input key={`select-input-${uploadedFile.id}`} />}
         inputProps={{ name: uploadedFile.id }}
+        sx={{
+          border: (theme) => `1px solid ${theme.palette.text.primary}`,
+          minHeight: "44px",
+        }}
         renderValue={(selected) => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              gap: 0.5,
+              padding: "0 0.5em",
+            }}
+          >
             {selected.map((value) => (
               <Chip
                 key={`chip-${value}-${uploadedFile.id}`}

@@ -32,7 +32,7 @@ const Root = styled(ButtonBase, {
     : theme.palette.background.paper,
   display: "flex",
   alignItems: "center",
-  padding: theme.spacing(1.5),
+  padding: theme.spacing(1.5, 3.5, 1.5, 1.5),
   position: "relative",
   width: "100%",
   fontSize: "medium",
@@ -143,7 +143,7 @@ export const Dropzone: React.FC<Props> = ({
           ) : (
             <>
               Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
-              <Link>choose a file</Link> to upload
+              <Link sx={{ whiteSpace: "nowrap" }}>choose a file</Link> to upload
             </>
           )}
         </Box>

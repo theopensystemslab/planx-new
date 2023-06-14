@@ -142,15 +142,22 @@ function Component(props: Props) {
             setFileUploadStatus={setFileUploadStatus}
           />
         </ErrorWrapper>
-        <List disablePadding sx={{ width: "100%" }}>
+        <List disablePadding sx={{ width: "100%", marginTop: "-1em" }}>
           {(Object.keys(fileList) as Array<keyof typeof fileList>)
             .filter((fileListCategory) => fileList[fileListCategory].length > 0)
             .flatMap((fileListCategory) => [
               <ListSubheader
                 key={`subheader-${fileListCategory}-files`}
                 disableGutters
+                sx={{
+                  background: "transparent",
+                  color: "unset",
+                  padding: "1.5em 0 1em",
+                }}
               >
-                {`${capitalize(fileListCategory)} files`}
+                <Typography variant="h4" component="h2">
+                  {`${capitalize(fileListCategory)} files`}
+                </Typography>
               </ListSubheader>,
               fileList[fileListCategory].map((fileType) => (
                 <ListItem key={fileType.name} disablePadding>
@@ -217,24 +224,30 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
 
   return (
     <Box
-      style={{
+      sx={{
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        width: "100%",
+        borderBottom: (theme) => `1px solid ${theme.palette.secondary.main}`,
+        minHeight: "50px",
       }}
     >
-      <CheckCircleIcon
-        color={props.completed ? "success" : "disabled"}
-        sx={{ paddingRight: (theme) => theme.spacing(0.5) }}
-      />
-      <p>{props.name}</p>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <CheckCircleIcon
+          color={props.completed ? "success" : "disabled"}
+          fontSize="large"
+          sx={{ paddingRight: (theme) => theme.spacing(0.5) }}
+        />
+        <Typography variant="body1">{props.name}</Typography>
+      </Box>
       {!!(info || policyRef || howMeasured) && (
         <StyledIconButton
           title={`More information`}
           aria-label={`See more information about "${props.name}"`}
           onClick={handleHelpClick}
           aria-haspopup="dialog"
-          size="large"
+          size="small"
         >
           <MoreInfoIcon />
         </StyledIconButton>
