@@ -150,7 +150,9 @@ export function SectionsOverviewList({
                     textAlign: "left",
                   }}
                 >
+            <Typography variant="body2">
                   {sectionNode.data.title}
+            </Typography>
                   <span style={visuallyHidden}>
                     {`Change ${sectionNode.data.title}`}
                   </span>
