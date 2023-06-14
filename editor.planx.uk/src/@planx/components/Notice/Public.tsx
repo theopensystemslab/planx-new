@@ -58,8 +58,8 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     alignItems: "center",
   },
   icon: {
-    width: 30,
-    height: 30,
+    width: 34,
+    height: 34,
   },
   title: {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
@@ -72,6 +72,9 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     "& a": {
       color: (props) =>
         getContrastTextColor(props.color, theme.palette.primary.main),
+    },
+    "& p:last-of-type": {
+      marginBottom: 0,
     },
   },
 }));
