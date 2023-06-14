@@ -27,7 +27,7 @@ const createSendEvents = async (req: Request, res: Response, next: NextFunction)
     if ("uniform" in req.body) {
       const uniformEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/uniform/${req.body.uniform.localAuthority}`,
-        schedule_at: now,
+        schedule_at: new Date(now.getTime() + (30 * 1000)),
         payload: req.body.uniform.body,
         comment: `uniform_submission_${req.params.sessionId}`,
       });
@@ -37,7 +37,7 @@ const createSendEvents = async (req: Request, res: Response, next: NextFunction)
     if ("email" in req.body) {
       const emailSubmissionEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/email-submission/${req.body.email.localAuthority}`,
-        schedule_at: now,
+        schedule_at: new Date(now.getTime() + (60 * 1000)),
         payload: req.body.email.body,
         comment: `email_submission_${req.params.sessionId}`,
       });
