@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -133,10 +133,6 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     setFileList(updatedFileList);
   };
 
-  useEffect(() => {
-    updateFileListWithTags();
-  }, [tags]);
-
   return (
     <FormControl
       key={`form-${uploadedFile.id}`}
@@ -153,6 +149,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         multiple
         value={tags}
         onChange={handleChange}
+        onClose={updateFileListWithTags}
         IconComponent={ArrowIcon}
         input={<Input key={`select-input-${uploadedFile.id}`} />}
         inputProps={{ name: uploadedFile.id }}

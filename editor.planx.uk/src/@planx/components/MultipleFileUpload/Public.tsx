@@ -1,3 +1,4 @@
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -155,6 +156,7 @@ function Component(props: Props) {
                 <ListItem key={fileType.name} disablePadding>
                   <InteractiveFileListItem
                     name={fileType.name}
+                    completed={Boolean(fileType.slots?.length)}
                     moreInformation={fileType.moreInformation}
                   />
                 </ListItem>
@@ -197,6 +199,7 @@ function Component(props: Props) {
 
 interface FileListItemProps {
   name: string;
+  completed: boolean;
   moreInformation?: MoreInformation;
 }
 
@@ -213,7 +216,17 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
   };
 
   return (
-    <Box style={{ display: "flex", justifyContent: "space-between" }}>
+    <Box
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <CheckCircleIcon
+        color={props.completed ? "success" : "disabled"}
+        sx={{ paddingRight: (theme) => theme.spacing(0.5) }}
+      />
       <p>{props.name}</p>
       {!!(info || policyRef || howMeasured) && (
         <StyledIconButton
