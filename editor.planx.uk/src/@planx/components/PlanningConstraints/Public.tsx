@@ -54,6 +54,7 @@ function Component(props: Props) {
     "opensystemslab",
     "buckinghamshire",
     "canterbury",
+    "camden",
     "doncaster",
     "lambeth",
     "medway",
