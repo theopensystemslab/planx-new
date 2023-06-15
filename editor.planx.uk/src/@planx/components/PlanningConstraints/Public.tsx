@@ -56,6 +56,7 @@ function Component(props: Props) {
     "canterbury",
     "camden",
     "doncaster",
+    "gloucester",
     "lambeth",
     "medway",
     "newcastle",
