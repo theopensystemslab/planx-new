@@ -7,6 +7,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
+import merge from "lodash/merge";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
@@ -37,6 +38,7 @@ import {
   getRecoveredSlots,
   getTagsForSlot,
   MultipleFileUpload,
+  removeSlots,
 } from "./model";
 import { fileListSchema, slotsSchema } from "./schema";
 
@@ -196,6 +198,7 @@ function Component(props: Props) {
                 slots.filter((currentSlot) => currentSlot.file !== slot.file)
               );
               setFileUploadStatus(`${slot.file.path} was deleted`);
+              removeSlots(getTagsForSlot(slot.id, fileList), slot, fileList);
             }}
           />
         );

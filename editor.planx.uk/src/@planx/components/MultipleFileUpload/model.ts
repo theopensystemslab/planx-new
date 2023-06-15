@@ -305,7 +305,6 @@ export const removeSlots = (
             (slot) => slot.id === uploadedFile.id
           );
           if (indexToRemove > -1) {
-            // TODO debug here
             updatedFileList[category][updatedUserFileIndex].slots?.splice(
               indexToRemove,
               1
