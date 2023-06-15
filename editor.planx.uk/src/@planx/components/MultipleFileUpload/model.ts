@@ -258,21 +258,19 @@ export const addOrAppendSlots = (
 
   tags.forEach((tag) => {
     categories.forEach((category) => {
-      const updatedUserFileIndex = updatedFileList[category].findIndex(
+      const index = updatedFileList[category].findIndex(
         (fileType) => fileType.name === tag
       );
-      if (updatedUserFileIndex > -1) {
-        const updatedFileType = updatedFileList[category][updatedUserFileIndex];
+      if (index > -1) {
+        const updatedFileType = updatedFileList[category][index];
         if (
           updatedFileType.slots &&
           !updatedFileType.slots.includes(uploadedFile)
         ) {
-          updatedFileList[category][updatedUserFileIndex].slots?.push(
-            uploadedFile
-          );
+          updatedFileList[category][index].slots?.push(uploadedFile);
         } else {
-          updatedFileList[category][updatedUserFileIndex] = {
-            ...updatedFileList[category][updatedUserFileIndex],
+          updatedFileList[category][index] = {
+            ...updatedFileList[category][index],
             slots: [uploadedFile],
           };
         }
@@ -295,20 +293,17 @@ export const removeSlots = (
 
   tags.forEach((tag) => {
     categories.forEach((category) => {
-      const updatedUserFileIndex = updatedFileList[category].findIndex(
+      const index = updatedFileList[category].findIndex(
         (fileType) => fileType.name === tag
       );
-      if (updatedUserFileIndex > -1) {
-        const updatedFileType = updatedFileList[category][updatedUserFileIndex];
+      if (index > -1) {
+        const updatedFileType = updatedFileList[category][index];
         if (updatedFileType.slots) {
           const indexToRemove = updatedFileType.slots?.findIndex(
             (slot) => slot.id === uploadedFile.id
           );
           if (indexToRemove > -1) {
-            updatedFileList[category][updatedUserFileIndex].slots?.splice(
-              indexToRemove,
-              1
-            );
+            updatedFileList[category][index].slots?.splice(indexToRemove, 1);
           }
         }
       }

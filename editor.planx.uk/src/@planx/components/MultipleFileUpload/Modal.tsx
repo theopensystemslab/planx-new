@@ -13,7 +13,6 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
-import { styled } from "@mui/material/styles";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
@@ -28,10 +27,6 @@ import {
   removeSlots,
   resetAllSlots,
 } from "./model";
-
-const TagsPerFileContainer = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-}));
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -58,21 +53,21 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
     >
       <DialogContent>
         {props.uploadedFiles.map((slot) => (
-          <TagsPerFileContainer key={`tags-per-file-container-${slot.id}`}>
+          <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
             <UploadedFileCard {...slot} key={slot.id} />
             <SelectMultiple
               uploadedFile={slot}
               fileList={props.fileList}
               setFileList={props.setFileList}
             />
-          </TagsPerFileContainer>
+          </Box>
         ))}
       </DialogContent>
       <DialogActions
         sx={{
           display: "flex",
           justifyContent: "flex-start",
-          padding: (theme) => theme.spacing(2),
+          padding: 2,
         }}
       >
         <Button
