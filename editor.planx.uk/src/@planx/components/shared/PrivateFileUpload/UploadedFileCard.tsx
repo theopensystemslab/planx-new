@@ -19,7 +19,8 @@ interface Props extends FileUploadSlot {
 
 const Root = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.secondary.main}`,
-  marginBottom: theme.spacing(2),
+  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(2),
 }));
 
 const FileCard = styled(Box)(({ theme }) => ({
@@ -68,7 +69,7 @@ const ProgressBar = styled(Box)(({ theme }) => ({
 }));
 
 const FileSize = styled(Box)(({ theme }) => ({
-  fontSize: "0.8rem",
+  fontSize: "0.875rem",
   whiteSpace: "nowrap",
   color: theme.palette.text.secondary,
   alignSelf: "flex-end",
@@ -111,7 +112,9 @@ export const UploadedFileCard: React.FC<Props> = ({
         sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}
       >
         <Box mr={2}>
-          <Typography variant="body2">{file.path}</Typography>
+          <Typography variant="body1" pb="0.25em">
+            {file.path}
+          </Typography>
           <FileSize>{formatBytes(file.size)}</FileSize>
         </Box>
         {removeFile && (

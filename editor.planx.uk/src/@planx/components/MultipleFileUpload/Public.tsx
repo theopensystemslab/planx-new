@@ -144,7 +144,13 @@ function Component(props: Props) {
             setFileUploadStatus={setFileUploadStatus}
           />
         </ErrorWrapper>
-        <List disablePadding sx={{ width: "100%", marginTop: "-1em" }}>
+        <List
+          disablePadding
+          sx={{
+            width: "100%",
+            marginTop: { md: "-1em" },
+          }}
+        >
           {(Object.keys(fileList) as Array<keyof typeof fileList>)
             .filter((fileListCategory) => fileList[fileListCategory].length > 0)
             .flatMap((fileListCategory) => [
