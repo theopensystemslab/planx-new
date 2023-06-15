@@ -42,7 +42,7 @@ export interface Props {
   id?: string;
   checked: boolean;
   color?: string;
-  onChange: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export default function Checkbox(props: Props): FCReturn {

@@ -29,7 +29,7 @@ interface Props {
   id?: string;
   label: string;
   checked: boolean;
-  onChange: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export default function ChecklistItem({

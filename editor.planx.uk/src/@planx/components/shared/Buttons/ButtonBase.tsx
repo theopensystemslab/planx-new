@@ -11,7 +11,6 @@ const Root = styled(MuiButtonBase)<RootProps>(({ theme, selected }) => ({
   backgroundColor: selected
     ? theme.palette.primary.main
     : theme.palette.background.paper,
-  // TODO: Check this!
   color: selected ? theme.palette.primary.contrastText : "inherit",
   fontSize: 15,
   fontFamily: "inherit",
