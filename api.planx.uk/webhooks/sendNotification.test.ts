@@ -4,14 +4,14 @@ import SlackNotify from "slack-notify";
 
 const ENDPOINT = "/webhooks/hasura/send-slack-notification";
 
-const mockSend = jest.fn()
-jest.mock('slack-notify', () =>
-  jest.fn().mockImplementation(() => {
-    return { send: mockSend };
-  }),
+const mockSend = jest.fn();
+jest.mock("slack-notify", () =>
+  jest.fn().mockImplementation(() => ({
+    send: (args: string) => mockSend(args),
+  }))
 );
 
-const { post } = supertest(app)
+const { post } = supertest(app);
 
 describe("Send Slack notifications endpoint", () => {
   describe("authentication and validation", () => {
@@ -24,7 +24,7 @@ describe("Send Slack notifications endpoint", () => {
           });
         });
     });
-  
+
     it("returns a 404 if 'type' is missing", async () => {
       const body = { event: {} };
       await post(ENDPOINT)
@@ -37,7 +37,7 @@ describe("Send Slack notifications endpoint", () => {
           });
         });
     });
-  
+
     it("returns a 404 if 'type' is incorrect", async () => {
       const body = { event: {} };
       await post(ENDPOINT + "?type=test-submission")
@@ -50,7 +50,7 @@ describe("Send Slack notifications endpoint", () => {
           });
         });
     });
-  
+
     it("returns a 404 if 'event' is missing", async () => {
       await post(ENDPOINT + "?type=bops-submission")
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -62,9 +62,9 @@ describe("Send Slack notifications endpoint", () => {
         });
     });
   });
-  
+
   const destinations = [
-    { 
+    {
       name: "BOPS",
       type: "bops-submission",
       stagingBody: {
@@ -72,21 +72,21 @@ describe("Send Slack notifications endpoint", () => {
           data: {
             new: {
               destination_url: "https://www.bops-staging.com",
-            }
-          }
-        }
+            },
+          },
+        },
       },
       prodBody: {
         event: {
           data: {
             new: {
               destination_url: "https://www.bops-production.com",
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     },
-    { 
+    {
       name: "Uniform",
       type: "uniform-submission",
       stagingBody: {
@@ -96,13 +96,13 @@ describe("Send Slack notifications endpoint", () => {
               response: {
                 _links: {
                   self: {
-                    href: "https://www.uniform-staging.com"
-                  }
-                }
-              }
-            }
-          }
-        }
+                    href: "https://www.uniform-staging.com",
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       prodBody: {
         event: {
@@ -111,16 +111,16 @@ describe("Send Slack notifications endpoint", () => {
               response: {
                 _links: {
                   self: {
-                    href: "https://www.uniform-production.com"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    href: "https://www.uniform-production.com",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
-  ]
+  ];
 
   for (const destination of destinations) {
     describe(`${destination.name} notifications`, () => {
@@ -132,7 +132,9 @@ describe("Send Slack notifications endpoint", () => {
           .send(destination.stagingBody)
           .expect(200)
           .then((response) => {
-            expect(response.body.message).toMatch(/skipping Slack notification/);
+            expect(response.body.message).toMatch(
+              /skipping Slack notification/
+            );
           });
       });
 
@@ -144,7 +146,9 @@ describe("Send Slack notifications endpoint", () => {
           .send(destination.prodBody)
           .expect(200)
           .then((response) => {
-            expect(SlackNotify).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK_URL);
+            expect(SlackNotify).toHaveBeenCalledWith(
+              process.env.SLACK_WEBHOOK_URL
+            );
             expect(mockSend).toHaveBeenCalledTimes(1);
             expect(response.body.message).toBe("Posted to Slack");
           });

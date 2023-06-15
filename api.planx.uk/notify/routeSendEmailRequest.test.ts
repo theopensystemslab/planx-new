@@ -16,9 +16,11 @@ const SAVE_ENDPOINT = "/send-email/save";
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
-      formatRawProjectTypes: jest.fn().mockResolvedValue(["New office premises"]),
-    }))
-  }
+      formatRawProjectTypes: jest
+        .fn()
+        .mockResolvedValue(["New office premises"]),
+    })),
+  };
 });
 
 describe("Send Email endpoint", () => {
@@ -92,6 +94,9 @@ describe("Send Email endpoint", () => {
         data: {
           flows_by_pk: mockFlow,
           lowcal_sessions: [],
+        },
+        variables: {
+          sessionId: 123,
         },
       });
 

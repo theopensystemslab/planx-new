@@ -1,10 +1,9 @@
 import nock from "nock";
-import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
-import app from "../server";
 import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
+import { sendToBOPS } from "./bops";
 
-[
+const environments = [
   {
     env: "production",
     bopsApiRootDomain: "bops.services",
@@ -13,7 +12,9 @@ import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
     env: "staging",
     bopsApiRootDomain: "bops-staging.services",
   },
-].forEach(({ env, bopsApiRootDomain }) => {
+];
+
+environments.forEach(({ env, bopsApiRootDomain }) => {
   describe(`sending an application to BOPS ${env}`, () => {
     const ORIGINAL_BOPS_API_ROOT_DOMAIN = process.env.BOPS_API_ROOT_DOMAIN;
 
@@ -22,9 +23,9 @@ import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
         name: "FindApplication",
         matchOnVariables: true,
         data: {
-          bops_applications: []
+          bops_applications: [],
         },
-        variables: { session_id: 123 },
+        variables: { session_id: "123" },
       });
 
       queryMock.mockQuery({
@@ -32,8 +33,8 @@ import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
         matchOnVariables: true,
         data: {
           bops_applications: [
-            { response: { message: "Application created", id: "bops_app_id" } }
-          ]
+            { response: { message: "Application created", id: "bops_app_id" } },
+          ],
         },
         variables: { session_id: "previously_submitted_app" },
       });
@@ -54,15 +55,15 @@ import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
         name: "MarkSessionAsSubmitted",
         matchOnVariables: false,
         data: {
-          update_lowcal_sessions_by_pk: { id: 123 }
+          update_lowcal_sessions_by_pk: { id: "123" },
         },
-        variables: { sessionId: 123 },
+        variables: { sessionId: "123" },
       });
 
       queryMock.mockQuery({
         name: "GetSessionById",
         variables: {
-          id: 123,
+          id: "123",
         },
         data: {
           lowcal_sessions_by_pk: mockSession,
@@ -82,7 +83,7 @@ import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
           ],
         },
       });
-  
+
       queryMock.mockQuery({
         name: "GetFlowSlug",
         variables: {
@@ -108,65 +109,30 @@ import { mockFlow, mockSession } from "../tests/mocks/bopsMocks";
       nock(
         `https://southwark.${bopsApiRootDomain}/api/v1/planning_applications`
       )
-      .post("")
-      .reply(200, {
-        application: "0000123",
+        .post("")
+        .reply(200, {
+          application: "0000123",
+        });
+
+      const response = await sendToBOPS({
+        sessionId: "123",
+        localAuthority: "southwark",
       });
-      
-      await supertest(app)
-        .post("/bops/southwark")
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-        .send({ payload: { sessionId: 123 }})
-        .expect(200)
-        .then((res) => {
-          expect(res.body).toEqual({
-            application: { id: 22, bopsResponse: { application: "0000123" } },
-          });
-        });
-    });
-
-    it("requires auth", async () => {      
-      await supertest(app)
-        .post("/bops/southwark")
-        .send({ payload: { sessionId: 123 }})
-        .expect(401)
-    });
-
-    it("throws an error if payload is missing", async () => {
-      await supertest(app)
-        .post("/bops/southwark")
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-        .send({ payload: null })
-        .expect(400)
-        .then((res) => {
-          expect(res.body.error).toMatch(/Missing application/);
-        });
+      expect(response).toEqual({
+        application: { id: 22, bopsResponse: { application: "0000123" } },
+      });
     });
 
     it("throws an error if team is unsupported", async () => {
-      await supertest(app)
-        .post("/bops/unsupported-team")
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-        .send({ payload: { sessionId: 123 }})
-        .expect(400)
-        .then((res) => {
-          expect(res.body.error).toMatch(/not enabled for this local authority/);
-        });
-    });
-
-    it("does not re-send an application which has already been submitted", async () => {
-      await supertest(app)
-        .post("/bops/southwark")
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-        .send({ payload: { sessionId: "previously_submitted_app" }})
-        .expect(200)
-        .then((res) => {
-          expect(res.body).toEqual({
-            sessionId: "previously_submitted_app",
-            bopsId: "bops_app_id",
-            message: "Skipping send, already successfully submitted",
-          });
-        });
+      const response = sendToBOPS({
+        sessionId: "123",
+        localAuthority: "not-found",
+      });
+      await expect(response).rejects.toEqual(
+        new Error(
+          `Back-office Planning System (BOPS) is not enabled for this local authority`
+        )
+      );
     });
   });
 });

@@ -54,10 +54,7 @@ import {
   publicDownloadController,
   publicUploadController,
 } from "./s3";
-import { sendToBOPS } from "./send/bops";
-import { createSendEvents } from "./send/createSendEvents";
-import { downloadApplicationFiles, sendToEmail } from "./send/email";
-import { sendToUniform } from "./send/uniform";
+import { sendToDestinations, downloadApplicationFiles } from "./send";
 import { sendSlackNotification } from "./webhooks/sendNotifications";
 import { copyFlow } from "./editor/copyFlow";
 import { moveFlow } from "./editor/moveFlow";
@@ -291,20 +288,14 @@ app.use(apiLimiter);
 // Secure Express by setting various HTTP headers
 app.use(helmet());
 
-// Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-app.post("/create-send-events/:sessionId", createSendEvents);
-
 assert(process.env.HASURA_PLANX_API_KEY);
-
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
-app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
-
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
-app.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
 
-app.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
+// Send submissions to destinations (bops, email, uniform, etc)
+app.post("/send/:sessionId", useHasuraAuth, sendToDestinations);
 
 app.get("/download-application-files/:sessionId", downloadApplicationFiles);
 
