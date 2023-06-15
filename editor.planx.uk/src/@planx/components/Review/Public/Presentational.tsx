@@ -10,13 +10,6 @@ import React from "react";
 
 export default Component;
 
-// TODO: Is this really needed? Why isn't it being picked up from the theme?
-const Root = styled(Box)(({ theme }) => ({
-  "& *": {
-    fontFamily: "Inter, sans-serif",
-  },
-}));
-
 interface Props {
   title: string;
   description: string;
@@ -37,17 +30,15 @@ function Component(props: Props) {
 
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
-      <Root>
-        <QuestionHeader title={props.title} description={props.description} />
-        <SummaryListsBySections
-          breadcrumbs={sortedBreadcrumbs}
-          flow={props.flow}
-          passport={props.passport}
-          changeAnswer={props.changeAnswer}
-          showChangeButton={props.showChangeButton}
-          sectionComponent="h2"
-        />
-      </Root>
+      <QuestionHeader title={props.title} description={props.description} />
+      <SummaryListsBySections
+        breadcrumbs={sortedBreadcrumbs}
+        flow={props.flow}
+        passport={props.passport}
+        changeAnswer={props.changeAnswer}
+        showChangeButton={props.showChangeButton}
+        sectionComponent="h2"
+      />
     </Card>
   );
 }
