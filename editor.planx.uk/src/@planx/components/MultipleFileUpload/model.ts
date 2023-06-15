@@ -1,4 +1,5 @@
-import { sortBy } from "lodash";
+import merge from "lodash/merge";
+import sortBy from "lodash/sortBy";
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { FileUploadSlot } from "../FileUpload/Public";
@@ -226,4 +227,103 @@ export const getRecoveredSlots = (
     .filter(Boolean);
 
   return recoveredSlots;
+};
+
+export const getTagsForSlot = (
+  slotId: FileUploadSlot["id"],
+  fileList: FileList
+): string[] => {
+  const allFiles = [
+    ...fileList.required,
+    ...fileList.recommended,
+    ...fileList.optional,
+  ];
+
+  const tags = allFiles
+    .filter((userFile) => userFile?.slots?.some((slot) => slot.id === slotId))
+    .map((userFile) => userFile.name);
+
+  return tags;
+};
+
+export const addOrAppendSlots = (
+  tags: string[],
+  uploadedFile: FileUploadSlot,
+  fileList: FileList
+): FileList => {
+  const updatedFileList: FileList = merge(fileList);
+  const categories = Object.keys(updatedFileList) as Array<
+    keyof typeof updatedFileList
+  >;
+
+  tags.forEach((tag) => {
+    categories.forEach((category) => {
+      const index = updatedFileList[category].findIndex(
+        (fileType) => fileType.name === tag
+      );
+      if (index > -1) {
+        const updatedFileType = updatedFileList[category][index];
+        if (
+          updatedFileType.slots &&
+          !updatedFileType.slots.includes(uploadedFile)
+        ) {
+          updatedFileList[category][index].slots?.push(uploadedFile);
+        } else {
+          updatedFileList[category][index] = {
+            ...updatedFileList[category][index],
+            slots: [uploadedFile],
+          };
+        }
+      }
+    });
+  });
+
+  return updatedFileList;
+};
+
+export const removeSlots = (
+  tags: string[],
+  uploadedFile: FileUploadSlot,
+  fileList: FileList
+): FileList => {
+  let updatedFileList: FileList = merge(fileList);
+  const categories = Object.keys(updatedFileList) as Array<
+    keyof typeof updatedFileList
+  >;
+
+  tags.forEach((tag) => {
+    categories.forEach((category) => {
+      const index = updatedFileList[category].findIndex(
+        (fileType) => fileType.name === tag
+      );
+      if (index > -1) {
+        const updatedFileType = updatedFileList[category][index];
+        if (updatedFileType.slots) {
+          const indexToRemove = updatedFileType.slots?.findIndex(
+            (slot) => slot.id === uploadedFile.id
+          );
+          if (indexToRemove > -1) {
+            updatedFileList[category][index].slots?.splice(indexToRemove, 1);
+          }
+        }
+      }
+    });
+  });
+
+  return updatedFileList;
+};
+
+export const resetAllSlots = (fileList: FileList): FileList => {
+  const updatedFileList: FileList = merge(fileList);
+  const categories = Object.keys(updatedFileList) as Array<
+    keyof typeof updatedFileList
+  >;
+
+  categories.forEach((category) => {
+    updatedFileList[category]
+      .filter((userFile) => userFile.slots)
+      .forEach((userFile) => delete userFile.slots);
+  });
+
+  return updatedFileList;
 };

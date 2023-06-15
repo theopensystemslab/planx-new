@@ -9,27 +9,29 @@ import DialogContent from "@mui/material/DialogContent";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
-import Link from "@mui/material/Link";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
-import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React from "react";
+import merge from "lodash/merge";
+import React, { useEffect, useState } from "react";
+import { usePrevious } from "react-use";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
-import { FileList } from "./model";
-
-const TagsPerFileContainer = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-}));
+import {
+  addOrAppendSlots,
+  FileList,
+  getTagsForSlot,
+  removeSlots,
+  resetAllSlots,
+} from "./model";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
   fileList: FileList;
+  setFileList: (value: React.SetStateAction<FileList>) => void;
   setShowModal: (value: React.SetStateAction<boolean>) => void;
 }
 
@@ -51,17 +53,21 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
     >
       <DialogContent>
         {props.uploadedFiles.map((slot) => (
-          <TagsPerFileContainer>
+          <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
             <UploadedFileCard {...slot} key={slot.id} />
-            <SelectMultiple name={slot.id} fileList={props.fileList} />
-          </TagsPerFileContainer>
+            <SelectMultiple
+              uploadedFile={slot}
+              fileList={props.fileList}
+              setFileList={props.setFileList}
+            />
+          </Box>
         ))}
       </DialogContent>
       <DialogActions
         sx={{
           display: "flex",
           justifyContent: "flex-start",
-          padding: (theme) => theme.spacing(2),
+          padding: 2,
         }}
       >
         <Button
@@ -85,13 +91,17 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
 };
 
 interface SelectMultipleProps extends SelectProps {
-  name: string;
+  uploadedFile: FileUploadSlot;
   fileList: FileList;
+  setFileList: (value: React.SetStateAction<FileList>) => void;
 }
 
 const SelectMultiple = (props: SelectMultipleProps) => {
-  const { name, fileList } = props;
-  const [tags, setTags] = React.useState<string[]>([]);
+  const { uploadedFile, fileList, setFileList } = props;
+
+  const initialTags = getTagsForSlot(uploadedFile.id, fileList);
+  const [tags, setTags] = useState<string[]>(initialTags);
+  const previousTags = usePrevious(tags);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
     const {
@@ -103,28 +113,55 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     );
   };
 
+  const updateFileListWithTags = (
+    previousTags: string[] | undefined,
+    tags: string[]
+  ) => {
+    let updatedFileList: FileList = merge(fileList);
+    const updatedTags = tags.filter((tag) => !previousTags?.includes(tag));
+    const removedTags = previousTags?.filter((tag) => !tags?.includes(tag));
+
+    if (updatedTags.length > 0) {
+      updatedFileList = addOrAppendSlots(updatedTags, uploadedFile, fileList);
+    }
+
+    if (removedTags && removedTags.length > 0) {
+      updatedFileList = removeSlots(removedTags, uploadedFile, fileList);
+    }
+
+    if (tags.length === 0 && previousTags) {
+      updatedFileList = resetAllSlots(fileList);
+    }
+
+    setFileList(updatedFileList);
+  };
+
+  useEffect(() => {
+    updateFileListWithTags(previousTags, tags);
+  }, [tags]);
+
   return (
     <FormControl
-      key={`form-${name}`}
+      key={`form-${uploadedFile.id}`}
       sx={{ display: "flex", flexDirection: "column" }}
     >
       <InputLabel
-        id={`select-mutliple-file-tags-label-${name}`}
+        id={`select-mutliple-file-tags-label-${uploadedFile.id}`}
         sx={{ top: "15%", color: (theme) => theme.palette.text.primary }}
       >
         What does this file show?
       </InputLabel>
       <Select
-        key={`select-${name}`}
-        id={`select-multiple-file-tags-${name}`}
-        labelId={`select-multiple-file-tags-label-${name}`}
+        key={`select-${uploadedFile.id}`}
+        id={`select-multiple-file-tags-${uploadedFile.id}`}
+        labelId={`select-multiple-file-tags-label-${uploadedFile.id}`}
         variant="standard"
         multiple
         value={tags}
         onChange={handleChange}
         IconComponent={ArrowIcon}
-        input={<Input />}
-        inputProps={{ name }}
+        input={<Input key={`select-input-${uploadedFile.id}`} />}
+        inputProps={{ name: uploadedFile.id }}
         sx={{
           border: (theme) => `1px solid ${theme.palette.text.primary}`,
           minHeight: "44px",
@@ -140,7 +177,12 @@ const SelectMultiple = (props: SelectMultipleProps) => {
             }}
           >
             {selected.map((value) => (
-              <Chip label={value} variant="uploadedFileTag" size="small" />
+              <Chip
+                key={`chip-${value}-${uploadedFile.id}`}
+                label={value}
+                variant="uploadedFileTag"
+                size="small"
+              />
             ))}
           </Box>
         )}
@@ -155,21 +197,23 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           .filter((fileListCategory) => fileList[fileListCategory].length > 0)
           .map((fileListCategory) => {
             return [
-              <ListSubheader key={`subheader-${fileListCategory}-${name}`}>
+              <ListSubheader
+                key={`subheader-${fileListCategory}-${uploadedFile.id}`}
+              >
                 {`${capitalize(fileListCategory)} files`}
               </ListSubheader>,
               ...fileList[fileListCategory].map((fileType) => {
                 return [
                   <MenuItem
-                    key={`menuitem-${fileType.name}-${name}`}
+                    key={`menuitem-${fileType.name}-${uploadedFile.id}`}
                     value={fileType.name}
                   >
                     <Checkbox
-                      key={`checkbox-${fileType.name}-${name}`}
+                      key={`checkbox-${fileType.name}-${uploadedFile.id}`}
                       checked={tags.indexOf(fileType.name) > -1}
                     />
                     <ListItemText
-                      key={`listitemtext-${fileType.name}-${name}`}
+                      key={`listitemtext-${fileType.name}-${uploadedFile.id}`}
                       primary={fileType.name}
                     />
                   </MenuItem>,

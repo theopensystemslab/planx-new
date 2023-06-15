@@ -1,3 +1,4 @@
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -6,6 +7,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
+import merge from "lodash/merge";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
@@ -34,7 +36,9 @@ import {
   FileList,
   generatePayload,
   getRecoveredSlots,
+  getTagsForSlot,
   MultipleFileUpload,
+  removeSlots,
 } from "./model";
 import { fileListSchema, slotsSchema } from "./schema";
 
@@ -161,6 +165,7 @@ function Component(props: Props) {
                 <ListItem key={fileType.name} disablePadding>
                   <InteractiveFileListItem
                     name={fileType.name}
+                    completed={Boolean(fileType.slots?.length)}
                     moreInformation={fileType.moreInformation}
                   />
                 </ListItem>
@@ -177,6 +182,7 @@ function Component(props: Props) {
         <FileTaggingModal
           uploadedFiles={slots}
           fileList={fileList}
+          setFileList={setFileList}
           setShowModal={setShowModal}
         />
       )}
@@ -185,13 +191,14 @@ function Component(props: Props) {
           <UploadedFileCard
             {...slot}
             key={slot.id}
-            tags={["Test1", "Test2", "Test3"]}
+            tags={getTagsForSlot(slot.id, fileList)}
             onChange={() => setShowModal(true)}
             removeFile={() => {
               setSlots(
                 slots.filter((currentSlot) => currentSlot.file !== slot.file)
               );
               setFileUploadStatus(`${slot.file.path} was deleted`);
+              removeSlots(getTagsForSlot(slot.id, fileList), slot, fileList);
             }}
           />
         );
@@ -202,6 +209,7 @@ function Component(props: Props) {
 
 interface FileListItemProps {
   name: string;
+  completed: boolean;
   moreInformation?: MoreInformation;
 }
 
@@ -228,7 +236,14 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         minHeight: "50px",
       }}
     >
-      <Typography variant="body1">{props.name}</Typography>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <CheckCircleIcon
+          color={props.completed ? "success" : "disabled"}
+          fontSize="large"
+          sx={{ paddingRight: (theme) => theme.spacing(0.5) }}
+        />
+        <Typography variant="body1">{props.name}</Typography>
+      </Box>
       {!!(info || policyRef || howMeasured) && (
         <StyledIconButton
           title={`More information`}
