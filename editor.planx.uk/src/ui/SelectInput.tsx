@@ -30,7 +30,7 @@ const useClasses = makeStyles((theme) => ({
     justifyContent: "flex-start",
   },
   icon: {
-    right: theme.spacing(0.5),
+    right: theme.spacing(1),
     color: "rgba(0,0,0,0.25)",
   },
   select: {

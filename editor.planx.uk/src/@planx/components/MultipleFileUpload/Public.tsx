@@ -47,7 +47,7 @@ type Props = PublicProps<MultipleFileUpload>;
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   display: "grid",
   marginBottom: theme.spacing(4),
-  gap: theme.spacing(2),
+  gap: theme.spacing(3),
   [theme.breakpoints.up("md")]: {
     gridAutoFlow: "column",
     gridAutoColumns: "1fr",
@@ -157,6 +157,7 @@ function Component(props: Props) {
               <ListSubheader
                 key={`subheader-${fileListCategory}-files`}
                 disableGutters
+                disableSticky
                 sx={{
                   background: "transparent",
                   color: "unset",
@@ -180,7 +181,7 @@ function Component(props: Props) {
         </List>
       </DropzoneContainer>
       {Boolean(slots.length) && (
-        <Typography mb={2} fontWeight={FONT_WEIGHT_BOLD}>
+        <Typography variant="h4" component="h3" mb={2}>
           Your uploaded files
         </Typography>
       )}
@@ -240,13 +241,17 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         width: "100%",
         borderBottom: (theme) => `1px solid ${theme.palette.secondary.main}`,
         minHeight: "50px",
+        padding: (theme) => theme.spacing(0.5, 0),
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <CheckCircleIcon
           color={props.completed ? "success" : "disabled"}
           fontSize="large"
-          sx={{ paddingRight: (theme) => theme.spacing(0.5) }}
+          sx={{
+            marginRight: (theme) => theme.spacing(0.25),
+            paddingRight: (theme) => theme.spacing(0.5),
+          }}
         />
         <Typography variant="body1">{props.name}</Typography>
       </Box>

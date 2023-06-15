@@ -25,10 +25,10 @@ const Root = styled(Box)(({ theme }) => ({
 
 const FileCard = styled(Box)(({ theme }) => ({
   position: "relative",
-  height: theme.spacing(10),
+  height: "auto",
   display: "flex",
   alignItems: "center",
-  padding: theme.spacing(1.5),
+  padding: theme.spacing(0.5, 1.5),
   "& > *": {
     zIndex: 1,
   },
@@ -37,9 +37,9 @@ const FileCard = styled(Box)(({ theme }) => ({
 const FilePreview = styled(Box)(({ theme }) => ({
   height: theme.spacing(10),
   width: theme.spacing(10),
-  marginLeft: -theme.spacing(1.5),
+  marginLeft: theme.spacing(-1),
   marginRight: theme.spacing(1.5),
-  opacity: 0.5,
+  opacity: 0.75,
   position: "relative",
   overflow: "hidden",
   "& img": {
@@ -69,7 +69,6 @@ const ProgressBar = styled(Box)(({ theme }) => ({
 }));
 
 const FileSize = styled(Box)(({ theme }) => ({
-  fontSize: "0.875rem",
   whiteSpace: "nowrap",
   color: theme.palette.text.secondary,
   alignSelf: "flex-end",
@@ -77,13 +76,11 @@ const FileSize = styled(Box)(({ theme }) => ({
 
 const TagRoot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  fontSize: "0.8rem",
-  height: theme.spacing(4),
   borderTop: `1px solid ${theme.palette.secondary.main}`,
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: theme.spacing(1.5),
+  padding: theme.spacing(1),
 }));
 
 export const UploadedFileCard: React.FC<Props> = ({
@@ -131,9 +128,9 @@ export const UploadedFileCard: React.FC<Props> = ({
     </FileCard>
     {tags && (
       <TagRoot>
-        <Box sx={{ display: "flex", gap: 1 }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
           {tags.map((tag) => (
-            <ListItem key={tag} disablePadding>
+            <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
               <Chip label={tag} variant="uploadedFileTag" size="small" />
             </ListItem>
           ))}
@@ -142,6 +139,7 @@ export const UploadedFileCard: React.FC<Props> = ({
           onClick={() => onChange && onChange()}
           sx={{ fontFamily: "inherit", fontSize: "inherit" }}
           component="button"
+          variant="body2"
         >
           Change
         </Link>

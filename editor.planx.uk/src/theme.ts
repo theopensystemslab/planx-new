@@ -278,7 +278,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             style: {
               backgroundColor: lighten(palette.success.main, 0.8),
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
-              color: darken(palette.success.main, 0.8),
+              color: darken(palette.info.main, 0.8),
             },
           },
         ],
