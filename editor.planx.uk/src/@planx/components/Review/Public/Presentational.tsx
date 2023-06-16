@@ -1,5 +1,3 @@
-import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
