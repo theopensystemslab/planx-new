@@ -10,6 +10,7 @@ import {
   generatePayload,
   getRecoveredSlots,
   Operator,
+  resetAllSlots,
   UserFile,
 } from "./model";
 
@@ -358,5 +359,39 @@ describe("getRecoveredSlots function", () => {
     const result = getRecoveredSlots(previouslySubmittedData, mockFileList);
     expect(result).toHaveLength(1);
     expect(result[0]).toMatchObject(mockCachedSlot);
+  });
+});
+
+describe("getTagsForSlot function", () => {
+  it.todo("returns a list of tags for a given slot");
+});
+
+describe("addOrAppendSlots function", () => {
+  it.todo("adds a new slot to a file that does not have any slots yet");
+
+  it.todo("adds a new slot to a file that has other existing slots");
+
+  it.todo("skips if this file already includes this slot");
+});
+
+describe("removeSlots function", () => {
+  it.todo("removes a slot from a file with only one slot");
+
+  it.todo("removes the correct slot from a file that has many slots");
+});
+
+describe("resetAllSlots function", () => {
+  it("removes the `slots` property from all items in a FileList", () => {
+    const result = resetAllSlots(mockFileList);
+
+    result.required.map((userFile) =>
+      expect(userFile).not.toHaveProperty("slots")
+    );
+    result.recommended.map((userFile) =>
+      expect(userFile).not.toHaveProperty("slots")
+    );
+    result.optional.map((userFile) =>
+      expect(userFile).not.toHaveProperty("slots")
+    );
   });
 });

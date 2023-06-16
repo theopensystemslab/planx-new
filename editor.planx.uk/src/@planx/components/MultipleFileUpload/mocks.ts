@@ -1,3 +1,4 @@
+import { FileUploadSlot } from "../FileUpload/Public";
 import { Condition, FileList, FileType, Operator, Rule } from "./model";
 
 const mockAlwaysRequiredRule: Rule = {
@@ -177,3 +178,13 @@ export const mockFileListMultiple = {
   recommended: [],
   optional: [],
 } as unknown as FileList;
+
+export const mockSlot = {
+  file: {
+    path: "PXL_20230511_093922923.jpg",
+  },
+  status: "success",
+  progress: 1,
+  id: "6bZBneLnY-L6qiqOblu8t",
+  url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
+} as FileUploadSlot;
