@@ -179,6 +179,99 @@ export const mockFileListMultiple = {
   optional: [],
 } as unknown as FileList;
 
+export const mockFileListManyTagsOneSlot = {
+  required: [
+    {
+      fn: "requiredFileFn",
+      name: "firstFile",
+      rule: {
+        condition: "AlwaysRequired",
+      },
+      slots: [
+        {
+          file: {
+            path: "PXL_20230511_093922923.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "6bZBneLnY-L6qiqOblu8t",
+          url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
+        },
+      ],
+    },
+  ],
+  recommended: [
+    {
+      fn: "recommendedFileFn",
+      name: "secondFile",
+      rule: {
+        condition: "AlwaysRecommended",
+      },
+      slots: [
+        {
+          file: {
+            path: "PXL_20230511_093922923.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "6bZBneLnY-L6qiqOblu8t",
+          url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
+        },
+      ],
+    },
+  ],
+  optional: [
+    {
+      fn: "optionalFileFn",
+      name: "thirdFile",
+      rule: {
+        condition: "NotRequired",
+      },
+      slots: [
+        {
+          file: {
+            path: "PXL_20230511_093922923.jpg",
+          },
+          status: "success",
+          progress: 1,
+          id: "6bZBneLnY-L6qiqOblu8t",
+          url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
+        },
+      ],
+    },
+  ],
+} as FileList;
+
+export const mockFileListWithoutSlots = {
+  required: [
+    {
+      fn: "requiredFileFn",
+      name: "firstFile",
+      rule: {
+        condition: "AlwaysRequired",
+      },
+    },
+  ],
+  recommended: [
+    {
+      fn: "recommendedFileFn",
+      name: "secondFile",
+      rule: {
+        condition: "AlwaysRecommended",
+      },
+    },
+  ],
+  optional: [
+    {
+      fn: "optionalFileFn",
+      name: "thirdFile",
+      rule: {
+        condition: "NotRequired",
+      },
+    },
+  ],
+} as FileList;
+
 export const mockSlot = {
   file: {
     path: "PXL_20230511_093922923.jpg",

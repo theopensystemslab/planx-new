@@ -1,14 +1,23 @@
 import { Store } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
-import { mockFileList, mockFileListMultiple, mockFileTypes } from "./mocks";
 import {
+  mockFileList,
+  mockFileListManyTagsOneSlot,
+  mockFileListMultiple,
+  mockFileListWithoutSlots,
+  mockFileTypes,
+  mockSlot,
+} from "./mocks";
+import {
+  addOrAppendSlots,
   Condition,
   createFileList,
   FileList,
   FileType,
   generatePayload,
   getRecoveredSlots,
+  getTagsForSlot,
   Operator,
   resetAllSlots,
   UserFile,
@@ -363,15 +372,80 @@ describe("getRecoveredSlots function", () => {
 });
 
 describe("getTagsForSlot function", () => {
-  it.todo("returns a list of tags for a given slot");
+  it("returns a list of tags for a slot with one tag", () => {
+    const result = getTagsForSlot(mockSlot.id, mockFileList);
+    expect(result).toEqual(["thirdFile"]);
+  });
+
+  it("returns a list of tags for a slot with many tags", () => {
+    const result = getTagsForSlot(mockSlot.id, mockFileListManyTagsOneSlot);
+    expect(result).toEqual(["firstFile", "secondFile", "thirdFile"]);
+  });
 });
 
 describe("addOrAppendSlots function", () => {
-  it.todo("adds a new slot to a file that does not have any slots yet");
+  it("adds a new slot to a file that does not have any slots yet when one tag is added", () => {
+    const result = addOrAppendSlots(
+      ["firstFile"],
+      mockSlot,
+      mockFileListWithoutSlots
+    );
 
-  it.todo("adds a new slot to a file that has other existing slots");
+    result.required.map((userFile) => {
+      expect(userFile).toHaveProperty("slots");
+      expect(userFile?.slots?.[0]).toEqual(mockSlot);
+    });
 
-  it.todo("skips if this file already includes this slot");
+    result.recommended.map((userFile) =>
+      expect(userFile).not.toHaveProperty("slots")
+    );
+    result.optional.map((userFile) =>
+      expect(userFile).not.toHaveProperty("slots")
+    );
+  });
+
+  it("adds a new slot to a file that does not have any slots yet when many tags are added", () => {
+    const result = addOrAppendSlots(
+      ["firstFile", "secondFile", "thirdFile"],
+      mockSlot,
+      mockFileListWithoutSlots
+    );
+
+    result.required.map((userFile) => {
+      expect(userFile).toHaveProperty("slots");
+      expect(userFile?.slots?.[0]).toEqual(mockSlot);
+    });
+
+    result.recommended.map((userFile) => {
+      expect(userFile).toHaveProperty("slots");
+      expect(userFile?.slots?.[0]).toEqual(mockSlot);
+    });
+
+    result.optional.map((userFile) => {
+      expect(userFile).toHaveProperty("slots");
+      expect(userFile?.slots?.[0]).toEqual(mockSlot);
+    });
+  });
+
+  it("adds a new slot to a tagged file that has other existing slots", () => {
+    const result = addOrAppendSlots(["secondFile"], mockSlot, mockFileList);
+
+    result.recommended.map((userFile) => {
+      expect(userFile).toHaveProperty("slots");
+      expect(userFile?.slots).toHaveLength(2);
+      expect(userFile?.slots).toContain(mockSlot);
+    });
+  });
+
+  it.skip("does not duplicate if this file already includes this slot", () => {
+    const result = addOrAppendSlots(["thirdFile"], mockSlot, mockFileList);
+
+    result.optional.map((userFile) => {
+      expect(userFile).toHaveProperty("slots");
+      expect(userFile?.slots).toHaveLength(1);
+      expect(userFile?.slots).toEqual([mockSlot]);
+    });
+  });
 });
 
 describe("removeSlots function", () => {
