@@ -28,7 +28,7 @@ const PreviewContainer = styled(Box)(({ theme }) => ({
   overflow: "auto",
   flex: 1,
   background: "#fff",
-  paddingTop: theme.spacing(3),
+  padding: theme.spacing(3),
 }));
 
 const Header = styled("header")(() => ({
