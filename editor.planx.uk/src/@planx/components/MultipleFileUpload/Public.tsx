@@ -71,6 +71,7 @@ function Component(props: Props) {
       );
       setSlots(recoverredData.slots);
       setFileList(recoverredData.fileList);
+      setIsUserReturningToNode(true);
     }
   }, []);
 
@@ -80,6 +81,8 @@ function Component(props: Props) {
   const previousSlotCount = usePrevious(slots.length);
   useEffect(() => {
     if (previousSlotCount === undefined) return;
+    // Only stop modal opening on initial return to node
+    if (isUserReturningToNode) return setIsUserReturningToNode(false);
     if (slots.length > previousSlotCount) setShowModal(true);
   }, [slots.length]);
 
@@ -89,6 +92,8 @@ function Component(props: Props) {
 
   const [validationError, setValidationError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [isUserReturningToNode, setIsUserReturningToNode] =
+    useState<boolean>(false);
 
   const handleSubmit = () => {
     Promise.all([
