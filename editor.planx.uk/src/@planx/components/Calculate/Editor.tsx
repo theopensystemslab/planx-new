@@ -19,7 +19,7 @@ import { evaluate, getVariables, parseCalculate } from "./model";
 
 export type Props = EditorProps<TYPES.Calculate, Calculate>;
 
-const Were = styled("span")(() => ({
+const ConditionLabel = styled("span")(() => ({
   alignSelf: "center",
   margin: "auto 1rem",
   textAlign: "center",
@@ -123,7 +123,7 @@ export default function Component(props: Props) {
               {variables.map((variable) => (
                 <InputRow key={variable}>
                   <Input value={variable} disabled />
-                  <Were>were</Were>
+                  <ConditionLabel>were</ConditionLabel>
                   <Input
                     name={`samples['${variable}']`}
                     value={formik.values.samples[variable]}
