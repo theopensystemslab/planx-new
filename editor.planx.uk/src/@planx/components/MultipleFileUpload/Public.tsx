@@ -238,6 +238,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <CheckCircleIcon
+          data-testid={props.completed ? "complete-icon" : "incomplete-icon"}
           color={props.completed ? "success" : "disabled"}
           fontSize="large"
           sx={{ paddingRight: (theme) => theme.spacing(0.5) }}
