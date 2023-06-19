@@ -1,4 +1,4 @@
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -19,17 +19,14 @@ import { evaluate, getVariables, parseCalculate } from "./model";
 
 export type Props = EditorProps<TYPES.Calculate, Calculate>;
 
-const useClasses = makeStyles((_theme) => ({
-  were: {
-    alignSelf: "center",
-    margin: "auto 1rem",
-    textAlign: "center",
-  },
+const ConditionLabel = styled("span")(() => ({
+  alignSelf: "center",
+  margin: "auto 1rem",
+  textAlign: "center",
 }));
 
 const UNKNOWN = "unknown";
 export default function Component(props: Props) {
-  const classes = useClasses();
   const formik = useFormik({
     initialValues: parseCalculate(props.node?.data),
     onSubmit: (newValues) => {
@@ -123,10 +120,10 @@ export default function Component(props: Props) {
           {variables?.length ? (
             <>
               <p>If</p>
-              {variables.map((variable, i) => (
+              {variables.map((variable) => (
                 <InputRow key={variable}>
                   <Input value={variable} disabled />
-                  <span className={classes.were}>were</span>
+                  <ConditionLabel>were</ConditionLabel>
                   <Input
                     name={`samples['${variable}']`}
                     value={formik.values.samples[variable]}
