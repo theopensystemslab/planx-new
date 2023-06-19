@@ -383,6 +383,11 @@ describe("getTagsForSlot function", () => {
     const result = getTagsForSlot(mockSlot.id, mockFileListManyTagsOneSlot);
     expect(result).toEqual(["firstFile", "secondFile", "thirdFile"]);
   });
+
+  it("returns an empty array for a slot with no tags", () => {
+    const result = getTagsForSlot(mockSlot.id, mockFileListWithoutSlots);
+    expect(result).toEqual([]);
+  });
 });
 
 describe("addOrAppendSlots function", () => {
