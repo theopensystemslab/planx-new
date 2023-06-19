@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -110,7 +111,9 @@ const FileUpload: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
       />
       <ErrorWrapper error={validationError} id={props.id}>
-        <PrivateFileUpload slots={slots} setSlots={setSlots} />
+        <Box mb={2}>
+          <PrivateFileUpload slots={slots} setSlots={setSlots} />
+        </Box>
       </ErrorWrapper>
     </Card>
   );
