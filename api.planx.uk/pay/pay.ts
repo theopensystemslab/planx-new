@@ -6,7 +6,7 @@ import { logPaymentStatus } from "../send/helpers";
 import { usePayProxy } from "./proxy";
 import type { GovUKPayment } from "../types";
 import { addGovPayPaymentIdToPaymentRequest } from "../inviteToPay";
-import { _admin } from "../client";
+import { $admin } from "../client";
 import { ServerError } from "../errors";
 
 assert(process.env.SLACK_WEBHOOK_URL);
@@ -50,7 +50,7 @@ export async function makePaymentViaProxy(
     );
   }
 
-  const session = await _admin.session.findDetails(sessionId);
+  const session = await $admin.session.findDetails(sessionId);
 
   if (session?.lockedAt) {
     return next(

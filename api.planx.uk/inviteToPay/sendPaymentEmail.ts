@@ -4,7 +4,7 @@ import { Template, getClientForTemplate, sendEmail } from "../notify";
 import { InviteToPayNotifyConfig } from "../types";
 import { Team } from '../types';
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
-import { _admin } from '../client';
+import { $admin } from '../client';
 
 interface SessionDetails {
   email: string;
@@ -92,7 +92,7 @@ const getInviteToPayNotifyConfig = async (session: SessionDetails, paymentReques
     agentName: paymentRequest.applicantName,
     address: (paymentRequest.sessionPreviewData?._address as Record<"title", string>).title,
     fee: getFee(paymentRequest),
-    projectType: await _admin.formatRawProjectTypes(paymentRequest.sessionPreviewData?.["proposal.projectType"] as string[]) || "Project type not submitted",
+    projectType: await $admin.formatRawProjectTypes(paymentRequest.sessionPreviewData?.["proposal.projectType"] as string[]) || "Project type not submitted",
     serviceName: convertSlugToName(session.flow.slug),
     serviceLink: getServiceLink(session.flow.team, session.flow.slug),
     expiryDate: calculateExpiryDate(paymentRequest.createdAt),

@@ -52,7 +52,7 @@ const mockGetSessionById = jest
 
 jest.mock("../client", () => {
   return {
-    _admin: {
+    $admin: {
       generateOneAppXML: () => mockGenerateOneAppXML(),
       getDocumentTemplateNamesForSession: jest
         .fn()

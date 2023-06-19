@@ -1,6 +1,6 @@
 import { stringify } from "csv-stringify";
 import { NextFunction, Request, Response } from "express";
-import { _admin as $admin } from "../../client";
+import { $admin } from "../../client";
 
 export const getCSVData = async (
   req: Request,
