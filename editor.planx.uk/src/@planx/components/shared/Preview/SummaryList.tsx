@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
+import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -50,18 +51,18 @@ const presentationalComponents: {
   [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
+  [TYPES.Confirmation]: undefined,
   [TYPES.ContactInput]: ContactInput,
   [TYPES.Content]: undefined,
-  [TYPES.Confirmation]: undefined,
   [TYPES.DateInput]: DateInput,
   [TYPES.DrawBoundary]: DrawBoundary,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
-  [TYPES.MultipleFileUpload]: undefined,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: FindProperty,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
+  [TYPES.MultipleFileUpload]: MultipleFileUpload,
   [TYPES.Notice]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
@@ -449,6 +450,27 @@ function ContactInput(props: ComponentProps) {
         {phone}
         <br />
         {email}
+      </dd>
+    </>
+  );
+}
+
+function MultipleFileUpload(props: ComponentProps) {
+  const userFiles = Object.entries(props?.userData?.data || {});
+  const allFilenames: string[] = userFiles
+    .map(([_key, value]) => value.map((file: any) => file.filename))
+    .flat();
+  const uniqueFilenames = [...new Set(allFilenames)];
+
+  return (
+    <>
+      <dt>{props.node.data.title ?? "Multiple file upload"}</dt>
+      <dd>
+        <ul>
+          {uniqueFilenames.map((filename, index) => (
+            <li key={index}>{filename}</li>
+          ))}
+        </ul>
       </dd>
     </>
   );
