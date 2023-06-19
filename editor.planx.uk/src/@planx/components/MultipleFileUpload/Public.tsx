@@ -98,7 +98,7 @@ function Component(props: Props) {
   const handleSubmit = () => {
     Promise.all([
       slotsSchema.validate(slots),
-      fileListSchema.validate(fileList),
+      fileListSchema.validate(fileList, { context: { slots } }),
     ])
       .then(() => {
         const payload = generatePayload(fileList);
