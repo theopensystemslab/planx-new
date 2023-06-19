@@ -1,4 +1,4 @@
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
 import {
   DateInput,
@@ -20,13 +20,6 @@ import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
 export type Props = PublicProps<DateInput, UserData>;
 
-const useClasses = makeStyles(() => ({
-  fieldset: {
-    border: 0,
-    padding: 0,
-  },
-}));
-
 const DateInputPublic: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
@@ -42,12 +35,11 @@ const DateInputPublic: React.FC<Props> = (props) => {
     }),
   });
 
-  const classes = useClasses();
-
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <fieldset
-        className={classes.fieldset}
+      <Box
+        component="fieldset"
+        sx={{ p: 0, border: 0 }}
         role="group"
         aria-describedby={[
           props.description ? DESCRIPTION_TEXT : "",
@@ -76,7 +68,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
             id={props.id}
           />
         </InputRow>
-      </fieldset>
+      </Box>
     </Card>
   );
 };
