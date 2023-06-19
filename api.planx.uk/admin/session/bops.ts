@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { _admin } from "../../client";
+import { $admin } from "../../client";
 
 export const getBOPSPayload = async (
   req: Request,
@@ -7,7 +7,7 @@ export const getBOPSPayload = async (
   next: NextFunction
 ) => {
   try {
-    const payload = await _admin.generateBOPSPayload(req.params.sessionId);
+    const payload = await $admin.generateBOPSPayload(req.params.sessionId);
     res.set("content-type", "application/json")
     return res.send(payload)
   } catch (error) {

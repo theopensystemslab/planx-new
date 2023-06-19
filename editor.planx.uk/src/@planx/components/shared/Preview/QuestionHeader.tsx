@@ -91,6 +91,8 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               onClick={handleHelpClick}
               aria-haspopup="dialog"
               size="large"
+              // Maintain alignment with tabled icons
+              sx={{ mr: "-7px" }}
             >
               <MoreInfoIcon />
             </StyledIconButton>

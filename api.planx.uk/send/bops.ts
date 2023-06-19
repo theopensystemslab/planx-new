@@ -5,7 +5,7 @@ import omit from "lodash/omit";
 import { useProxy } from "../proxy";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { _admin } from "../client";
+import { $admin } from "../client";
 
 interface SendToBOPSRequest {
   payload: {
@@ -56,7 +56,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   const domain = `https://${localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
   const target = `${domain}/api/v1/planning_applications`;
 
-  const bopsFullPayload = await _admin.generateBOPSPayload(payload?.sessionId);
+  const bopsFullPayload = await $admin.generateBOPSPayload(payload?.sessionId);
 
   useProxy({
     headers: {

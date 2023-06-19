@@ -15,6 +15,8 @@ const useClasses = makeStyles((theme) => ({
     width: "100%",
     paddingLeft: theme.spacing(1.5),
     borderLeft: `5px solid ${theme.palette.error.main}`,
+    display: "flex",
+    flexDirection: "column",
     // Only apply padding to child when visible to ensure no blank space
     "& > p": {
       paddingTop: theme.spacing(0.5),

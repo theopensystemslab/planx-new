@@ -9,7 +9,7 @@ import {
   hasRequiredDataForTemplate,
   generateDocxTemplateStream,
 } from "@opensystemslab/planx-document-templates";
-import { _admin } from "../client";
+import { $admin } from "../client";
 import { Passport } from "../types";
 
 /**
@@ -169,7 +169,7 @@ export const addTemplateFilesToZip = async ({
   passport: Passport;
   sessionId: string;
 }) => {
-  const templateNames = await _admin.getDocumentTemplateNamesForSession(
+  const templateNames = await $admin.getDocumentTemplateNamesForSession(
     sessionId
   );
   if (templateNames?.length) {
