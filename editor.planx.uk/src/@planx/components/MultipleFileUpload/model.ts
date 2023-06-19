@@ -265,7 +265,9 @@ export const addOrAppendSlots = (
         const updatedFileType = updatedFileList[category][index];
         if (
           updatedFileType.slots &&
-          !updatedFileType.slots.includes(uploadedFile)
+          !updatedFileType.slots
+            .map((slot) => slot.id)
+            .includes(uploadedFile.id)
         ) {
           updatedFileList[category][index].slots?.push(uploadedFile);
         } else {

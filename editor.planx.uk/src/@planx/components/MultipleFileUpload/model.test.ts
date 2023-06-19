@@ -1,6 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
+import { FileUploadSlot } from "../FileUpload/Public";
 import {
   mockFileList,
   mockFileListManyTagsOneSlot,
@@ -19,6 +20,7 @@ import {
   getRecoveredSlots,
   getTagsForSlot,
   Operator,
+  removeSlots,
   resetAllSlots,
   UserFile,
 } from "./model";
@@ -437,7 +439,7 @@ describe("addOrAppendSlots function", () => {
     });
   });
 
-  it.skip("does not duplicate if this file already includes this slot", () => {
+  it("does not duplicate if this file is already tagged with this slot", () => {
     const result = addOrAppendSlots(["thirdFile"], mockSlot, mockFileList);
 
     result.optional.map((userFile) => {
@@ -449,9 +451,36 @@ describe("addOrAppendSlots function", () => {
 });
 
 describe("removeSlots function", () => {
-  it.todo("removes a slot from a file with only one slot");
+  it("removes a slot from a file with only one slot", () => {
+    const result = removeSlots(["thirdFile"], mockSlot, mockFileList);
 
-  it.todo("removes the correct slot from a file that has many slots");
+    result.optional.map((userFile) => {
+      expect(userFile).toHaveProperty("slots");
+      expect(userFile?.slots).toHaveLength(0);
+      expect(userFile?.slots).toEqual([]);
+    });
+  });
+
+  it("removes the correct slot from a file that has many slots", () => {
+    const slot = {
+      file: {
+        path: "first.jpg",
+      },
+      status: "success",
+      progress: 1,
+      id: "001",
+      url: "http://localhost:7002/file/private/jjpmkz8g/first.jpg",
+    } as FileUploadSlot;
+    const result = removeSlots(["firstFileType"], slot, mockFileListMultiple);
+
+    result.required.map((userFile) => {
+      expect(userFile).toHaveProperty("slots");
+      expect(userFile?.slots).toHaveLength(2);
+
+      expect(userFile?.slots?.map((slot) => slot.id)).not.toContain("001");
+      expect(userFile?.slots?.map((slot) => slot.id)).toEqual(["002", "003"]);
+    });
+  });
 });
 
 describe("resetAllSlots function", () => {
