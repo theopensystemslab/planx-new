@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled, Theme, useTheme } from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ApplicationPath } from "types";
@@ -15,9 +15,16 @@ interface Props {
   handleSubmit?: (data?: any) => void;
 }
 
+export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
+  marginTop: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    marginTop: theme.spacing(2.5),
+  },
+});
+
 const InnerContainer = styled(Box)(({ theme }) => ({
   "& > * + *": {
-    marginTop: theme.spacing(2.5),
+    ...contentFlowSpacing(theme),
   },
 }));
 
@@ -64,6 +71,7 @@ const Card: React.FC<Props> = ({
               disabled={!isValid}
               onClick={async () => await handleSubmit()}
               data-testid="continue-button"
+              sx={{ ...contentFlowSpacing(theme) }}
             >
               Continue
             </Button>
