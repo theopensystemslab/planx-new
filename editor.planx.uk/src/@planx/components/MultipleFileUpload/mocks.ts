@@ -73,6 +73,33 @@ export const mockFileTypes: Record<keyof typeof Condition, FileType> = {
   [Condition.NotRequired]: mockNotRequiredFileType,
 };
 
+export const mockFileTypesUniqueKeys: FileType[] = [
+  {
+    fn: "roofPlan",
+    name: "Roof plan",
+    rule: {
+      condition: Condition.AlwaysRequired,
+    },
+  },
+  {
+    fn: "heritage",
+    name: "Heritage statement",
+    rule: {
+      condition: Condition.AlwaysRecommended,
+    },
+    moreInformation: {
+      info: "<p>Help text</p>",
+    },
+  },
+  {
+    fn: "utilityBill",
+    name: "Utility bill",
+    rule: {
+      condition: Condition.NotRequired,
+    },
+  },
+];
+
 export const mockFileList = {
   required: [
     {
