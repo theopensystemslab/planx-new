@@ -7,6 +7,7 @@ import { useTheme } from "@mui/styles";
 import { visuallyHidden } from "@mui/utils";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
+import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
@@ -89,7 +90,7 @@ const Question: React.FC<IQuestion> = (props) => {
         definitionImg={props.definitionImg}
         img={props.img}
       />
-      <FormControl sx={{ width: "100% " }}>
+      <FormControl sx={{ ...contentFlowSpacing(theme), width: "100%" }}>
         <FormHelperText style={visuallyHidden}>
           {props.description ? DESCRIPTION_TEXT : ""}
         </FormHelperText>

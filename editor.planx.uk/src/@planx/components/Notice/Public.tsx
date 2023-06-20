@@ -3,9 +3,11 @@ import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Button from "@mui/material/Button";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
+import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
@@ -81,6 +83,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 const NoticeComponent: React.FC<Props> = (props) => {
   const styles = useStyles({ color: props.color || "#F9F8F8" });
+  const theme = useTheme();
   const handleSubmit = !props.resetButton
     ? () => props.handleSubmit?.()
     : undefined;
@@ -112,6 +115,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
             size="large"
             type="submit"
             onClick={props.resetPreview}
+            sx={{ ...contentFlowSpacing(theme) }}
           >
             Back to start
           </Button>
