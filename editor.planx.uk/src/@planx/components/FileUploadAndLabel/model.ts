@@ -77,7 +77,7 @@ export const parseContent = (
   ...parseMoreInformation(data),
 });
 
-const DEFAULT_TITLE = "Upload multiple files";
+const DEFAULT_TITLE = "Upload and label";
 
 export const newFileType = (): FileType => ({
   name: "",
