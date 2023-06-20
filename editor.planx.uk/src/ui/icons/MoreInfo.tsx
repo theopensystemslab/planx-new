@@ -20,7 +20,7 @@ export default function MoreInfoIcon() {
   }));
 
   return (
-    <Root>
+    <Root data-testid="more-info-icon">
       <QuestionMarkIcon
         sx={{
           position: "absolute",

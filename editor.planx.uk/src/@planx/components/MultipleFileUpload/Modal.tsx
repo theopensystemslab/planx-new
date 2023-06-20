@@ -163,6 +163,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         What does this file show?
       </InputLabel>
       <Select
+        native={false}
         key={`select-${uploadedFile.id}`}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
         labelId={`select-multiple-file-tags-label-${uploadedFile.id}`}
@@ -172,7 +173,10 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         onChange={handleChange}
         IconComponent={ArrowIcon}
         input={<Input key={`select-input-${uploadedFile.id}`} />}
-        inputProps={{ name: uploadedFile.id }}
+        inputProps={{
+          name: uploadedFile.id,
+          "data-testid": "select",
+        }}
         sx={{
           border: (theme) => `1px solid ${theme.palette.secondary.main}`,
           background: (theme) => theme.palette.background.paper,
@@ -219,10 +223,12 @@ const SelectMultiple = (props: SelectMultipleProps) => {
                   <MenuItem
                     key={`menuitem-${fileType.name}-${uploadedFile.id}`}
                     value={fileType.name}
+                    data-testid="select-menuitem"
                   >
                     <Checkbox
                       key={`checkbox-${fileType.name}-${uploadedFile.id}`}
                       checked={tags.indexOf(fileType.name) > -1}
+                      data-testid="select-checkbox"
                     />
                     <ListItemText
                       key={`listitemtext-${fileType.name}-${uploadedFile.id}`}

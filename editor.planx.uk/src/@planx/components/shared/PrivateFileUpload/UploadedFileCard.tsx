@@ -131,7 +131,12 @@ export const UploadedFileCard: React.FC<Props> = ({
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
           {tags.map((tag) => (
             <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
-              <Chip label={tag} variant="uploadedFileTag" size="small" />
+              <Chip
+                label={tag}
+                variant="uploadedFileTag"
+                size="small"
+                data-testid="uploaded-file-chip"
+              />
             </ListItem>
           ))}
         </Box>

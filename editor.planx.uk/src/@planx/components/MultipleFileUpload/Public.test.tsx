@@ -1,9 +1,10 @@
-import { screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import axios from "axios";
 import React from "react";
 import { axe, setup } from "testUtils";
 
-import { mockFileTypes } from "./mocks";
+import { mockFileTypes, mockFileTypesUniqueKeys } from "./mocks";
+import { Condition } from "./model";
 import MultipleFileUploadComponent from "./Public";
 
 jest.mock("axios");
@@ -45,6 +46,19 @@ describe("Basic state and setup", () => {
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  test("shows help icons for header and applicable file", async () => {
+    setup(
+      <MultipleFileUploadComponent
+        title="Test title"
+        fileTypes={mockFileTypesUniqueKeys}
+        howMeasured="This is sample help text for the whole component"
+      />
+    );
+
+    const helpIcons = screen.getAllByTestId("more-info-icon");
+    expect(helpIcons).toHaveLength(2);
   });
 });
 
@@ -206,5 +220,135 @@ describe("Modal trigger", () => {
 
     // Modal not open
     expect(fileTaggingModal).not.toBeVisible();
+  });
+});
+
+describe("Adding tags and syncing state", () => {
+  test("Can continue when all required file types are uploaded and tagged", async () => {
+    const handleSubmit = jest.fn();
+    const { user } = setup(
+      <MultipleFileUploadComponent
+        title="Test title"
+        handleSubmit={handleSubmit}
+        fileTypes={mockFileTypesUniqueKeys}
+      />
+    );
+
+    // No file requirements have been satisfied yet
+    let incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    expect(incompleteIcons).toHaveLength(3);
+
+    // Upload one file
+    mockedAxios.post.mockResolvedValueOnce({
+      data: {
+        file_type: "image/png",
+        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
+      },
+    });
+
+    const file1 = new File(["test1"], "test1.png", { type: "image/png" });
+    const input = screen.getByTestId("upload-input");
+    await user.upload(input, [file1]);
+
+    // Modal opened automatically
+    const fileTaggingModal = await within(document.body).findByTestId(
+      "file-tagging-dialog"
+    );
+
+    // The number of selects in the modal matches the number of uploaded files
+    const selects = await within(document.body).findAllByTestId("select");
+    expect(selects).toHaveLength(1);
+
+    // Apply multiple tags to this file
+    fireEvent.change(selects[0], { target: { value: "Roof plan" } });
+
+    // Close modal
+    const submitModalButton = await within(fileTaggingModal).findByText("Done");
+    expect(submitModalButton).toBeVisible();
+    user.click(submitModalButton);
+    await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
+
+    // Uploaded file displayed as card with chip tags
+    expect(screen.getByText("test1.png")).toBeVisible();
+    const chips = screen.getAllByTestId("uploaded-file-chip");
+    expect(chips).toHaveLength(1);
+    expect(chips[0]).toHaveTextContent("Roof plan");
+
+    // Requirements list reflects successfully tagged uploads
+    const completeIcons = screen.getAllByTestId("complete-icon");
+    expect(completeIcons).toHaveLength(1);
+    incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    expect(incompleteIcons).toHaveLength(2);
+
+    // "Continue" onto to the next node
+    expect(screen.getByText("Continue")).toBeEnabled();
+    await user.click(screen.getByText("Continue"));
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  test("Cannot continue when only an optional file type is uploaded and tagged", async () => {
+    const handleSubmit = jest.fn();
+    const { user } = setup(
+      <MultipleFileUploadComponent
+        title="Test title"
+        handleSubmit={handleSubmit}
+        fileTypes={mockFileTypesUniqueKeys}
+      />
+    );
+
+    // No file requirements have been satisfied yet
+    let incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    expect(incompleteIcons).toHaveLength(3);
+
+    // Upload one file
+    mockedAxios.post.mockResolvedValueOnce({
+      data: {
+        file_type: "image/png",
+        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
+      },
+    });
+
+    const file1 = new File(["test1"], "test1.png", { type: "image/png" });
+    const input = screen.getByTestId("upload-input");
+    await user.upload(input, [file1]);
+
+    // Modal opened automatically
+    const fileTaggingModal = await within(document.body).findByTestId(
+      "file-tagging-dialog"
+    );
+
+    // The number of selects in the modal matches the number of uploaded files
+    const selects = await within(document.body).findAllByTestId("select");
+    expect(selects).toHaveLength(1);
+
+    // Apply multiple tags to this file
+    fireEvent.change(selects[0], { target: { value: "Utility bill" } });
+
+    // Close modal
+    const submitModalButton = await within(fileTaggingModal).findByText("Done");
+    expect(submitModalButton).toBeVisible();
+    user.click(submitModalButton);
+    await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
+
+    // Uploaded file displayed as card with chip tags
+    expect(screen.getByText("test1.png")).toBeVisible();
+    const chips = screen.getAllByTestId("uploaded-file-chip");
+    expect(chips).toHaveLength(1);
+    expect(chips[0]).toHaveTextContent("Utility bill");
+
+    // Requirements list reflects successfully tagged uploads
+    const completeIcons = screen.getAllByTestId("complete-icon");
+    expect(completeIcons).toHaveLength(1);
+    incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    expect(incompleteIcons).toHaveLength(2);
+
+    // Show error when attempting to "Continue" onto to the next node
+    expect(screen.getByText("Continue")).toBeEnabled();
+    await user.click(screen.getByText("Continue"));
+    expect(handleSubmit).toHaveBeenCalledTimes(0);
+    const error = await within(document.body).findByText(
+      "Please upload and tag all required files"
+    );
+    expect(error).toBeVisible();
   });
 });
