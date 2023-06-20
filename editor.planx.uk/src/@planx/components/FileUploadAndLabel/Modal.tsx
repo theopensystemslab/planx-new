@@ -180,7 +180,14 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         sx={{
           border: (theme) => `1px solid ${theme.palette.secondary.main}`,
           background: (theme) => theme.palette.background.paper,
-          minHeight: "50px",
+          "& > div": {
+            minHeight: "50px",
+            paddingTop: (theme) => theme.spacing(1),
+            paddingBottom: (theme) => theme.spacing(1),
+          },
+          "& > div:focus": {
+            background: (theme) => theme.palette.action.focus,
+          },
         }}
         renderValue={(selected) => (
           <Box
@@ -198,6 +205,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
                 label={value}
                 variant="uploadedFileTag"
                 size="small"
+                sx={{ pointerEvents: "none" }}
               />
             ))}
           </Box>
@@ -224,6 +232,8 @@ const SelectMultiple = (props: SelectMultipleProps) => {
                     key={`menuitem-${fileType.name}-${uploadedFile.id}`}
                     value={fileType.name}
                     data-testid="select-menuitem"
+                    disableRipple
+                    disableTouchRipple
                   >
                     <Checkbox
                       key={`checkbox-${fileType.name}-${uploadedFile.id}`}

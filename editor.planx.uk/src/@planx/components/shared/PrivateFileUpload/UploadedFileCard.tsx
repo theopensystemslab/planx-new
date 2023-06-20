@@ -68,7 +68,7 @@ const ProgressBar = styled(Box)(({ theme }) => ({
   zIndex: 0,
 }));
 
-const FileSize = styled(Box)(({ theme }) => ({
+const FileSize = styled(Typography)(({ theme }) => ({
   whiteSpace: "nowrap",
   color: theme.palette.text.secondary,
   alignSelf: "flex-end",
@@ -112,7 +112,7 @@ export const UploadedFileCard: React.FC<Props> = ({
           <Typography variant="body1" pb="0.25em">
             {file.path}
           </Typography>
-          <FileSize>{formatBytes(file.size)}</FileSize>
+          <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
         </Box>
         {removeFile && (
           <IconButton
