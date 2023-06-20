@@ -13,6 +13,7 @@ import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
@@ -201,9 +202,9 @@ const PropertyDetailsList = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
   "& > *": {
-    borderBottom: `1px solid ${theme.palette.background.paper}`,
-    paddingBottom: theme.spacing(1),
-    paddingTop: theme.spacing(1),
+    borderBottom: `1px solid ${theme.palette.secondary.main}`,
+    paddingBottom: theme.spacing(1.5),
+    paddingTop: theme.spacing(1.5),
     verticalAlign: "top",
     margin: 0,
   },
@@ -214,7 +215,7 @@ const PropertyDetailsList = styled(Box)(({ theme }) => ({
   },
   "& dt": {
     // left column
-    fontWeight: 700,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
   "& dd:nth-of-type(n)": {
     // middle column

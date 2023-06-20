@@ -21,6 +21,9 @@ const useClasses = makeStyles((theme: Theme) => ({
       marginLeft: "0.25em",
       color: theme.palette.text.secondary,
     },
+    "&[aria-expanded=true] > svg": {
+      transform: "rotate(180deg)",
+    },
   },
 }));
 

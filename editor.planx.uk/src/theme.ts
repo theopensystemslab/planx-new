@@ -169,7 +169,6 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
           body: {
             backgroundColor: BG_COLOR_DEFAULT,
-            fontSize: "1rem",
             lineHeight: LINE_HEIGHT_BASE,
           },
         },
