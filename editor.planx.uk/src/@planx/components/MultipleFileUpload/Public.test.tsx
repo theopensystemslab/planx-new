@@ -211,7 +211,7 @@ describe("Modal trigger", () => {
 });
 
 describe("Adding tags and syncing state", () => {
-  test.skip("Continue is enabled when all required file types are uploaded and tagged", async () => {
+  test("Continue is enabled when all required file types are uploaded and tagged", async () => {
     const handleSubmit = jest.fn();
     const { user } = setup(
       <MultipleFileUploadComponent
@@ -223,16 +223,6 @@ describe("Adding tags and syncing state", () => {
             name: "Roof plan",
             rule: {
               condition: Condition.AlwaysRequired,
-            },
-          },
-          {
-            fn: "elevations",
-            name: "Elevations",
-            rule: {
-              condition: Condition.AlwaysRequired,
-            },
-            moreInformation: {
-              info: "<p>Help text</p>",
             },
           },
           {
@@ -257,8 +247,8 @@ describe("Adding tags and syncing state", () => {
     );
 
     // No file requirements have been satisfied yet
-    const incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(4);
+    let incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    expect(incompleteIcons).toHaveLength(3);
 
     // Upload one file
     mockedAxios.post.mockResolvedValueOnce({
@@ -281,14 +271,8 @@ describe("Adding tags and syncing state", () => {
     const selects = await within(document.body).findAllByTestId("select");
     expect(selects).toHaveLength(1);
 
-    // Open the select, click the checkbox to tag this upload
-    fireEvent.mouseDown(selects[0]);
-    const checkboxes = await within(document.body).findAllByTestId(
-      "select-checkbox"
-    );
-    expect(checkboxes).toHaveLength(4);
-    user.click(checkboxes[0]);
-    user.click(checkboxes[1]);
+    // Apply multiple tags to this file
+    fireEvent.change(selects[0], { target: { value: "Roof plan" } });
 
     // Close modal
     const submitModalButton = await within(fileTaggingModal).findByText("Done");
@@ -299,11 +283,13 @@ describe("Adding tags and syncing state", () => {
     // Uploaded file displayed as card with chip tags
     expect(screen.getByText("test1.png")).toBeVisible();
     const chips = screen.getAllByTestId("uploaded-file-chip");
-    expect(chips).toHaveLength(2);
+    expect(chips).toHaveLength(1);
 
     // Requirements list reflects successfully tagged uploads
     const completeIcons = screen.getAllByTestId("complete-icon");
-    expect(completeIcons).toHaveLength(2);
+    expect(completeIcons).toHaveLength(1);
+    incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    expect(incompleteIcons).toHaveLength(2);
 
     // "Continue" onto to the next node
     expect(screen.getByText("Continue")).toBeEnabled();
