@@ -68,7 +68,7 @@ function MultipleFileUploadComponent(props: Props) {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Multiple file upload"
+          title="Upload and label"
           Icon={ICONS[TYPES.MultipleFileUpload]}
         >
           <InputRow>

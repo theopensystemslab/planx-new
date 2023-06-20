@@ -13,7 +13,7 @@ describe("MultipleFileUpload - Editor Modal", () => {
         <MultipleFileUploadComponent id="test" />
       </DndProvider>
     );
-    expect(screen.getByText("Multiple file upload")).toBeInTheDocument();
+    expect(screen.getByText("Upload and label")).toBeInTheDocument();
   });
 
   it("initialises with a single rule", () => {

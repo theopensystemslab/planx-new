@@ -464,7 +464,7 @@ function MultipleFileUpload(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title ?? "Multiple file upload"}</dt>
+      <dt>{props.node.data.title ?? "Upload and label"}</dt>
       <dd>
         <ul>
           {uniqueFilenames.map((filename, index) => (

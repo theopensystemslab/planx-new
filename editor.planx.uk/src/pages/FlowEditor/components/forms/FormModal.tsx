@@ -50,7 +50,7 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Inputs">
         <option value={TYPES.TextInput}>Text Input</option>
         <option value={TYPES.FileUpload}>File Upload</option>
-        <option value={TYPES.MultipleFileUpload}>Multiple File Upload</option>
+        <option value={TYPES.MultipleFileUpload}>Upload and label</option>
         <option value={TYPES.NumberInput}>Number Input</option>
         <option value={TYPES.DateInput}>Date Input</option>
         <option value={TYPES.AddressInput}>Address Input</option>
