@@ -17,7 +17,7 @@ import {
   FileList,
   FileType,
   generatePayload,
-  getRecoveredSlots,
+  getRecoveredData,
   getTagsForSlot,
   Operator,
   removeSlots,
@@ -347,8 +347,8 @@ describe("generatePayload function", () => {
   });
 });
 
-describe("getRecoveredSlots function", () => {
-  it("recovers a previously uploaded file from the passport", () => {
+describe("getRecoveredData function", () => {
+  it("recovers a single slot from the passport", () => {
     const mockCachedSlot: NonNullable<UserFile["slots"]>[0]["cachedSlot"] = {
       id: "abc123",
       file: {
@@ -361,15 +361,20 @@ describe("getRecoveredSlots function", () => {
     // Mock breadcrumb data with FileType.fn -> UserFile mapped
     const previouslySubmittedData: Store.userData = {
       data: {
-        requiredFileFn: {
-          cachedSlot: mockCachedSlot,
-        },
+        requiredFileFn: [
+          {
+            cachedSlot: mockCachedSlot,
+          },
+        ],
       },
     };
 
-    const result = getRecoveredSlots(previouslySubmittedData, mockFileList);
+    const { slots: result } = getRecoveredData(
+      previouslySubmittedData,
+      mockFileList
+    );
     expect(result).toHaveLength(1);
-    expect(result[0]).toMatchObject(mockCachedSlot);
+    expect(result?.[0]).toMatchObject(mockCachedSlot);
   });
 });
 

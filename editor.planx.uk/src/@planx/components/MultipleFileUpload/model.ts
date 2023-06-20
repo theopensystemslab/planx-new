@@ -1,5 +1,7 @@
+import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import sortBy from "lodash/sortBy";
+import uniqBy from "lodash/uniqBy";
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { FileUploadSlot } from "../FileUpload/Public";
@@ -212,21 +214,67 @@ export const generatePayload = (fileList: FileList): Store.userData => {
   return { data: newPassportData };
 };
 
-export const getRecoveredSlots = (
+const getCachedSlotsFromPreviousData = (
+  userFile: UserFile,
+  previouslySubmittedData: Store.userData | undefined
+): FileUploadSlot =>
+  previouslySubmittedData?.data?.[userFile.fn]?.map(
+    (file: any) => file.cachedSlot
+  );
+
+const getRecoveredSlots = (
   previouslySubmittedData: Store.userData | undefined,
   fileList: FileList
-): FileUploadSlot[] => {
+) => {
   const allFiles = [
     ...fileList.required,
     ...fileList.recommended,
     ...fileList.optional,
   ];
 
-  const recoveredSlots = allFiles
-    .map((userFile) => previouslySubmittedData?.data?.[userFile.fn]?.cachedSlot)
+  const allSlots = allFiles
+    .flatMap((userFile) =>
+      getCachedSlotsFromPreviousData(userFile, previouslySubmittedData)
+    )
     .filter(Boolean);
 
+  const recoveredSlots = uniqBy(allSlots, "id");
+
   return recoveredSlots;
+};
+
+const getRecoveredFileList = (
+  previouslySubmittedData: Store.userData | undefined,
+  fileList: FileList
+) => {
+  const recoveredFileList = cloneDeep(fileList);
+  const categories = Object.keys(fileList) as Array<keyof typeof fileList>;
+
+  categories.forEach((category) =>
+    recoveredFileList[category].forEach(
+      (fileType) =>
+        (fileType.slots = fileList[category].flatMap((userFile) =>
+          getCachedSlotsFromPreviousData(userFile, previouslySubmittedData)
+        ))
+    )
+  );
+
+  return recoveredFileList;
+};
+
+export const getRecoveredData = (
+  previouslySubmittedData: Store.userData | undefined,
+  fileList: FileList
+): any => {
+  if (!previouslySubmittedData) return undefined;
+
+  const recoveredSlots = getRecoveredSlots(previouslySubmittedData, fileList);
+  const recoveredFileList = getRecoveredFileList(
+    previouslySubmittedData,
+    fileList
+  );
+
+  return { slots: recoveredSlots, fileList: recoveredFileList };
 };
 
 export const getTagsForSlot = (

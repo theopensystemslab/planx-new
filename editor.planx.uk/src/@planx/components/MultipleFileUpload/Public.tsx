@@ -7,12 +7,10 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
-import merge from "lodash/merge";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { usePrevious } from "react-use";
-import { FONT_WEIGHT_BOLD } from "theme";
 import ErrorWrapper from "ui/ErrorWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
@@ -35,7 +33,7 @@ import {
   createFileList,
   FileList,
   generatePayload,
-  getRecoveredSlots,
+  getRecoveredData,
   getTagsForSlot,
   MultipleFileUpload,
   removeSlots,
@@ -65,16 +63,17 @@ function Component(props: Props) {
     const passport = useStore.getState().computePassport();
     const fileList = createFileList({ passport, fileTypes: props.fileTypes });
     setFileList(fileList);
-  }, []);
 
-  useEffect(() => {
-    // TODO: Re-map slots to userfiles also?
-    const recoveredSlots: FileUploadSlot[] = getRecoveredSlots(
-      props.previouslySubmittedData,
-      fileList
-    );
-    setSlots(recoveredSlots);
-  }, [props.previouslySubmittedData, fileList]);
+    if (props.previouslySubmittedData) {
+      const recoverredData = getRecoveredData(
+        props.previouslySubmittedData,
+        fileList
+      );
+      setSlots(recoverredData.slots);
+      setFileList(recoverredData.fileList);
+      setIsUserReturningToNode(true);
+    }
+  }, []);
 
   const [slots, setSlots] = useState<FileUploadSlot[]>([]);
 
@@ -82,6 +81,8 @@ function Component(props: Props) {
   const previousSlotCount = usePrevious(slots.length);
   useEffect(() => {
     if (previousSlotCount === undefined) return;
+    // Only stop modal opening on initial return to node
+    if (isUserReturningToNode) return setIsUserReturningToNode(false);
     if (slots.length > previousSlotCount) setShowModal(true);
   }, [slots.length]);
 
@@ -91,18 +92,13 @@ function Component(props: Props) {
 
   const [validationError, setValidationError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [isUserReturningToNode, setIsUserReturningToNode] =
+    useState<boolean>(false);
 
   const handleSubmit = () => {
-    // This is a temp cheat to bypass tagging
-    // The first slot is mapped to a single required file
-
-    // const fileListWithTaggedFile = {...fileList}
-    // fileListWithTaggedFile.required[0].slots = [ slots[0], slots[1] ]
-    // setFileList(fileListWithTaggedFile);
-
     Promise.all([
       slotsSchema.validate(slots),
-      fileListSchema.validate(fileList),
+      fileListSchema.validate(fileList, { context: { slots } }),
     ])
       .then(() => {
         const payload = generatePayload(fileList);
