@@ -31,15 +31,15 @@ import {
   checkIfConditionalRule,
   Condition,
   FileType,
-  MultipleFileUpload,
+  FileUploadAndLabel,
   newFileType,
   Operator as OperatorEnum,
   parseContent,
   Rule,
 } from "./model";
-import { multipleFileUploadSchema } from "./schema";
+import { fileUploadAndLabelSchema } from "./schema";
 
-type Props = EditorProps<TYPES.MultipleFileUpload, MultipleFileUpload>;
+type Props = EditorProps<TYPES.FileUploadAndLabel, FileUploadAndLabel>;
 
 const Operator = styled(Typography)(({ theme }) => ({
   alignSelf: "center",
@@ -50,15 +50,15 @@ Operator.defaultProps = {
   variant: "body2",
 };
 
-function MultipleFileUploadComponent(props: Props) {
-  const formik = useFormik<MultipleFileUpload>({
+function FileUploadAndLabelComponent(props: Props) {
+  const formik = useFormik<FileUploadAndLabel>({
     initialValues: parseContent(props.node?.data),
-    validationSchema: multipleFileUploadSchema,
+    validationSchema: fileUploadAndLabelSchema,
     validateOnBlur: true,
     validateOnChange: false,
     onSubmit: (newValues) => {
       props.handleSubmit?.({
-        type: TYPES.MultipleFileUpload,
+        type: TYPES.FileUploadAndLabel,
         data: newValues,
       });
     },
@@ -68,8 +68,8 @@ function MultipleFileUploadComponent(props: Props) {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Multiple file upload"
-          Icon={ICONS[TYPES.MultipleFileUpload]}
+          title="Upload and label"
+          Icon={ICONS[TYPES.FileUploadAndLabel]}
         >
           <InputRow>
             <Input
@@ -274,4 +274,4 @@ const setCondition = (condition: Condition, fileType: FileType): FileType => {
   return updateFileType;
 };
 
-export default MultipleFileUploadComponent;
+export default FileUploadAndLabelComponent;

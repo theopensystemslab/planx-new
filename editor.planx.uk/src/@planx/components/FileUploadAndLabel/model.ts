@@ -60,7 +60,7 @@ export interface FileType {
   moreInformation?: MoreInformation;
 }
 
-export interface MultipleFileUpload extends MoreInformation {
+export interface FileUploadAndLabel extends MoreInformation {
   title: string;
   description?: string;
   fn?: string;
@@ -69,7 +69,7 @@ export interface MultipleFileUpload extends MoreInformation {
 
 export const parseContent = (
   data: Record<string, any> | undefined
-): MultipleFileUpload => ({
+): FileUploadAndLabel => ({
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
   fn: data?.fn || "",
@@ -77,7 +77,7 @@ export const parseContent = (
   ...parseMoreInformation(data),
 });
 
-const DEFAULT_TITLE = "Upload multiple files";
+const DEFAULT_TITLE = "Upload and label";
 
 export const newFileType = (): FileType => ({
   name: "",
@@ -195,7 +195,7 @@ const hasSlots = (userFile: UserFile): userFile is UserFileWithSlots =>
   Boolean(userFile?.slots);
 
 /**
- * Generate payload for MultipleFileUpload breadcrumb
+ * Generate payload for FileUploadAndLabel breadcrumb
  * Not responsible for validation - this happens at the component level
  */
 export const generatePayload = (fileList: FileList): Store.userData => {

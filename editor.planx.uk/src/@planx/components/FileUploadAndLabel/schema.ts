@@ -7,8 +7,8 @@ import {
   Condition,
   FileList,
   FileType,
+  FileUploadAndLabel,
   getTagsForSlot,
-  MultipleFileUpload,
   Operator,
   Rule,
   UserFile,
@@ -48,7 +48,7 @@ export const fileTypeSchema: SchemaOf<FileType> = object({
   moreInformation: moreInformationSchema.optional(),
 });
 
-export const multipleFileUploadSchema: SchemaOf<MultipleFileUpload> = object({
+export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> = object({
   title: string().required(),
   description: string(),
   fn: string(),
