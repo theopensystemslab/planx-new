@@ -1,11 +1,13 @@
-import { array, mixed, object, SchemaOf, string } from "yup";
+import { array, mixed, object, SchemaOf, string, TestContext } from "yup";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
 import {
   checkIfConditionalRule,
   Condition,
+  FileList,
   FileType,
+  getTagsForSlot,
   MultipleFileUpload,
   Operator,
   Rule,
@@ -67,15 +69,34 @@ export const slotsSchema = array()
     },
   });
 
+interface FileListSchemaTextContext extends TestContext {
+  slots: FileUploadSlot[];
+}
+
 export const fileListSchema = object({
   required: array().test({
     name: "allRequiredFilesUploaded",
     message: "Please upload and tag all required files",
     test: (userFile?: UserFile[]) => {
       const isEverySlotFilled = Boolean(
-        userFile?.every((userFile) => userFile?.slots)
+        userFile?.every(
+          (userFile) => userFile?.slots && userFile.slots.length > 0
+        )
       );
       return isEverySlotFilled;
     },
   }),
+}).test({
+  name: "allFilesTagged",
+  message: "Please tag all files",
+  test: (fileList, { options: { context } }) => {
+    if (!context) throw new Error("Missing context for fileListSchema");
+    const { slots } = context as FileListSchemaTextContext;
+    const isEveryFileTagged = Boolean(
+      slots?.every(
+        (slot) => getTagsForSlot(slot.id, fileList as FileList).length
+      )
+    );
+    return isEveryFileTagged;
+  },
 });

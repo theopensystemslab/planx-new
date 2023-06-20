@@ -1,7 +1,7 @@
 import { ComponentType } from '@opensystemslab/planx-core/types';
 import { NextFunction, Request, Response } from 'express';
 import { gql } from 'graphql-request';
-import { _admin as $admin } from '../client';
+import { $admin } from '../client';
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { createScheduledEvent } from "../hasura/metadata";
 import { getMostRecentPublishedFlow } from '../helpers';

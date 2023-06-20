@@ -48,6 +48,7 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
           maxWidth: (theme) => theme.breakpoints.values.md,
           borderRadius: 0,
           borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
+          background: "#FFF",
         },
       }}
     >
@@ -147,7 +148,17 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     >
       <InputLabel
         id={`select-mutliple-file-tags-label-${uploadedFile.id}`}
-        sx={{ top: "15%", color: (theme) => theme.palette.text.primary }}
+        sx={{
+          top: "16%",
+          textDecoration: "underline",
+          color: (theme) => theme.palette.primary.main,
+          "&[data-shrink=true]": {
+            textDecoration: "none",
+            color: (theme) => theme.palette.text.primary,
+            top: "0",
+            transform: "translate(14px, -5px) scale(0.85)",
+          },
+        }}
       >
         What does this file show?
       </InputLabel>
@@ -165,8 +176,9 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         input={<Input key={`select-input-${uploadedFile.id}`} />}
         inputProps={{ name: uploadedFile.id }}
         sx={{
-          border: (theme) => `1px solid ${theme.palette.text.primary}`,
-          minHeight: "44px",
+          border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+          background: (theme) => theme.palette.background.paper,
+          minHeight: "50px",
         }}
         renderValue={(selected) => (
           <Box

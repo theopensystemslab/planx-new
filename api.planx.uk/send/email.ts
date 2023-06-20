@@ -17,7 +17,7 @@ import { sendEmail } from "../notify";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
 import { Passport } from '@opensystemslab/planx-core';
-import { _admin as $admin } from "../client";
+import { $admin } from "../client";
 import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {

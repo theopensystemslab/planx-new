@@ -7,12 +7,10 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
-import merge from "lodash/merge";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { usePrevious } from "react-use";
-import { FONT_WEIGHT_BOLD } from "theme";
 import ErrorWrapper from "ui/ErrorWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
@@ -35,7 +33,7 @@ import {
   createFileList,
   FileList,
   generatePayload,
-  getRecoveredSlots,
+  getRecoveredData,
   getTagsForSlot,
   MultipleFileUpload,
   removeSlots,
@@ -47,7 +45,7 @@ type Props = PublicProps<MultipleFileUpload>;
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   display: "grid",
   marginBottom: theme.spacing(4),
-  gap: theme.spacing(2),
+  gap: theme.spacing(3),
   [theme.breakpoints.up("md")]: {
     gridAutoFlow: "column",
     gridAutoColumns: "1fr",
@@ -65,16 +63,17 @@ function Component(props: Props) {
     const passport = useStore.getState().computePassport();
     const fileList = createFileList({ passport, fileTypes: props.fileTypes });
     setFileList(fileList);
-  }, []);
 
-  useEffect(() => {
-    // TODO: Re-map slots to userfiles also?
-    const recoveredSlots: FileUploadSlot[] = getRecoveredSlots(
-      props.previouslySubmittedData,
-      fileList
-    );
-    setSlots(recoveredSlots);
-  }, [props.previouslySubmittedData, fileList]);
+    if (props.previouslySubmittedData) {
+      const recoverredData = getRecoveredData(
+        props.previouslySubmittedData,
+        fileList
+      );
+      setSlots(recoverredData.slots);
+      setFileList(recoverredData.fileList);
+      setIsUserReturningToNode(true);
+    }
+  }, []);
 
   const [slots, setSlots] = useState<FileUploadSlot[]>([]);
 
@@ -82,6 +81,8 @@ function Component(props: Props) {
   const previousSlotCount = usePrevious(slots.length);
   useEffect(() => {
     if (previousSlotCount === undefined) return;
+    // Only stop modal opening on initial return to node
+    if (isUserReturningToNode) return setIsUserReturningToNode(false);
     if (slots.length > previousSlotCount) setShowModal(true);
   }, [slots.length]);
 
@@ -91,18 +92,13 @@ function Component(props: Props) {
 
   const [validationError, setValidationError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [isUserReturningToNode, setIsUserReturningToNode] =
+    useState<boolean>(false);
 
   const handleSubmit = () => {
-    // This is a temp cheat to bypass tagging
-    // The first slot is mapped to a single required file
-
-    // const fileListWithTaggedFile = {...fileList}
-    // fileListWithTaggedFile.required[0].slots = [ slots[0], slots[1] ]
-    // setFileList(fileListWithTaggedFile);
-
     Promise.all([
       slotsSchema.validate(slots),
-      fileListSchema.validate(fileList),
+      fileListSchema.validate(fileList, { context: { slots } }),
     ])
       .then(() => {
         const payload = generatePayload(fileList);
@@ -144,13 +140,20 @@ function Component(props: Props) {
             setFileUploadStatus={setFileUploadStatus}
           />
         </ErrorWrapper>
-        <List disablePadding sx={{ width: "100%", marginTop: "-1em" }}>
+        <List
+          disablePadding
+          sx={{
+            width: "100%",
+            marginTop: { md: "-1em" },
+          }}
+        >
           {(Object.keys(fileList) as Array<keyof typeof fileList>)
             .filter((fileListCategory) => fileList[fileListCategory].length > 0)
             .flatMap((fileListCategory) => [
               <ListSubheader
                 key={`subheader-${fileListCategory}-files`}
                 disableGutters
+                disableSticky
                 sx={{
                   background: "transparent",
                   color: "unset",
@@ -174,7 +177,7 @@ function Component(props: Props) {
         </List>
       </DropzoneContainer>
       {Boolean(slots.length) && (
-        <Typography mb={2} fontWeight={FONT_WEIGHT_BOLD}>
+        <Typography variant="h4" component="h3" mb={2}>
           Your uploaded files
         </Typography>
       )}
@@ -234,6 +237,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         width: "100%",
         borderBottom: (theme) => `1px solid ${theme.palette.secondary.main}`,
         minHeight: "50px",
+        padding: (theme) => theme.spacing(0.5, 0),
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -241,7 +245,10 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
           data-testid={props.completed ? "complete-icon" : "incomplete-icon"}
           color={props.completed ? "success" : "disabled"}
           fontSize="large"
-          sx={{ paddingRight: (theme) => theme.spacing(0.5) }}
+          sx={{
+            marginRight: (theme) => theme.spacing(0.25),
+            paddingRight: (theme) => theme.spacing(0.5),
+          }}
         />
         <Typography variant="body1">{props.name}</Typography>
       </Box>

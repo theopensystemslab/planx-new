@@ -89,6 +89,7 @@ const useStyles = makeStyles(() => ({
     top: HEADER_HEIGHT,
     left: 0,
     right: 0,
+    minHeight: `calc(100% - ${HEADER_HEIGHT}px)`,
   },
   tabs: {
     backgroundColor: "#ddd",

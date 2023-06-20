@@ -1,4 +1,4 @@
-import { _admin as $admin } from "../client";
+import { $admin } from "../client";
 import { sendEmail } from "../notify";
 import { gql } from "graphql-request";
 import { convertSlugToName } from "../saveAndReturn/utils";

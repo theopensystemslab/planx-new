@@ -18,7 +18,7 @@ import { gql } from "graphql-request";
 import { Passport as IPassport } from "../types";
 import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
 import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
-import { _admin as $admin } from "../client";
+import { $admin } from "../client";
 import { Passport } from "@opensystemslab/planx-core"
 
 interface UniformClient {
