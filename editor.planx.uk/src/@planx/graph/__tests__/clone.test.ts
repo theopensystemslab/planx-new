@@ -118,4 +118,16 @@ describe("error handling", () => {
       })
     ).toThrow("cannot clone sections");
   });
+
+  test("cannot clone external portals", () => {
+    expect(() =>
+      clone("externalPortalNodeId", { toParent: "a" })({
+        _root: {
+          edges: ["a", "externalPortalNodeId"],
+        },
+        a: {},
+        externalPortalNodeId: { type: 310 },
+      })
+    ).toThrow("cannot clone external portals");
+  });
 });

@@ -40,6 +40,9 @@ const isSomething = (x: any): boolean =>
 const isSectionNodeType = (id: string, graph: Graph): boolean =>
   graph[id]?.type === TYPES.Section;
 
+const isExternalPortalNodeType = (id: string, graph: Graph): boolean =>
+  graph[id]?.type === TYPES.ExternalPortal;
+
 const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
     return trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, ""));
@@ -222,6 +225,8 @@ export const clone =
         throw new Error("cannot clone to same parent");
       else if (isSectionNodeType(id, graph))
         throw new Error("cannot clone sections");
+      else if (isExternalPortalNodeType(id, graph))
+        throw new Error("cannot clone external portals");
 
       const toParentNode = draft[toParent];
 
