@@ -83,7 +83,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 const NoticeComponent: React.FC<Props> = (props) => {
   const styles = useStyles({ color: props.color || "#F9F8F8" });
-  const theme = useTheme();
   const handleSubmit = !props.resetButton
     ? () => props.handleSubmit?.()
     : undefined;
@@ -115,7 +114,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
             size="large"
             type="submit"
             onClick={props.resetPreview}
-            sx={{ ...contentFlowSpacing(theme) }}
+            sx={contentFlowSpacing}
           >
             Back to start
           </Button>
