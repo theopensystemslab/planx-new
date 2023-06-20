@@ -4,8 +4,7 @@ import React from "react";
 import { axe, setup } from "testUtils";
 
 import { mockFileTypes, mockFileTypesUniqueKeys } from "./mocks";
-import { Condition } from "./model";
-import MultipleFileUploadComponent from "./Public";
+import FileUploadAndLabelComponent from "./Public";
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -15,7 +14,7 @@ window.URL.createObjectURL = jest.fn();
 describe("Basic state and setup", () => {
   test("renders correctly", async () => {
     setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
           mockFileTypes.AlwaysRequired,
@@ -33,7 +32,7 @@ describe("Basic state and setup", () => {
 
   it("should not have any accessibility violations", async () => {
     const { container } = setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
           mockFileTypes.AlwaysRequired,
@@ -50,7 +49,7 @@ describe("Basic state and setup", () => {
 
   test("shows help icons for header and applicable file", async () => {
     setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={mockFileTypesUniqueKeys}
         howMeasured="This is sample help text for the whole component"
@@ -67,7 +66,7 @@ describe("Modal trigger", () => {
 
   test("Modal does not open on initial component render", async () => {
     setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
           mockFileTypes.AlwaysRequired,
@@ -86,7 +85,7 @@ describe("Modal trigger", () => {
 
   test("Modal opens when a single file is uploaded", async () => {
     const { user } = setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
           mockFileTypes.AlwaysRequired,
@@ -117,7 +116,7 @@ describe("Modal trigger", () => {
 
   test("Modal opens when multiple files are uploaded", async () => {
     const { user } = setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
           mockFileTypes.AlwaysRequired,
@@ -162,7 +161,7 @@ describe("Modal trigger", () => {
 
   test("Modal does not open when a file is deleted", async () => {
     const { user } = setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
           mockFileTypes.AlwaysRequired,
@@ -227,7 +226,7 @@ describe("Adding tags and syncing state", () => {
   test("Can continue when all required file types are uploaded and tagged", async () => {
     const handleSubmit = jest.fn();
     const { user } = setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
         fileTypes={mockFileTypesUniqueKeys}
@@ -289,7 +288,7 @@ describe("Adding tags and syncing state", () => {
   test("Cannot continue when only an optional file type is uploaded and tagged", async () => {
     const handleSubmit = jest.fn();
     const { user } = setup(
-      <MultipleFileUploadComponent
+      <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
         fileTypes={mockFileTypesUniqueKeys}

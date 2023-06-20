@@ -53,7 +53,7 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question {...allProps} text={node?.data?.title ?? "File upload"} />
       );
-    case TYPES.MultipleFileUpload:
+    case TYPES.FileUploadAndLabel:
       return (
         <Question
           {...allProps}

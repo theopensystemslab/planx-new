@@ -4,7 +4,7 @@ import { Condition, FileType, Operator } from "./model";
 import {
   fileListSchema,
   fileTypeSchema,
-  multipleFileUploadSchema,
+  fileUploadAndLabelSchema,
   ruleSchema,
   slotsSchema,
 } from "./schema";
@@ -75,10 +75,10 @@ describe("fileTypeSchema", () => {
   });
 });
 
-describe("multipleFileUploadSchema", () => {
+describe("fileUploadAndLabelSchema", () => {
   it("requires a title", async () => {
     await expect(() =>
-      multipleFileUploadSchema.validate({
+      fileUploadAndLabelSchema.validate({
         fn: "Test Fn",
         fileTypes: [mockFileTypes.AlwaysRecommended],
       })
@@ -87,7 +87,7 @@ describe("multipleFileUploadSchema", () => {
 
   it("requires at least one FileType", async () => {
     await expect(() =>
-      multipleFileUploadSchema.validate({
+      fileUploadAndLabelSchema.validate({
         fn: "Test Fn",
         fileTypes: [],
       })
@@ -96,7 +96,7 @@ describe("multipleFileUploadSchema", () => {
 
   it("requires at least one valid FileType", async () => {
     await expect(() =>
-      multipleFileUploadSchema.validate({
+      fileUploadAndLabelSchema.validate({
         title: "test title",
         fn: "test fn",
         fileTypes: [
@@ -117,7 +117,7 @@ describe("multipleFileUploadSchema", () => {
   });
 
   it("allows multiple FileTypes with a mixture of rules", async () => {
-    const mockMultipleFileUpload = {
+    const mockFileUploadAndLabel = {
       title: "Test Title",
       fn: "Test Fn",
       fileTypes: [
@@ -129,15 +129,15 @@ describe("multipleFileUploadSchema", () => {
       ],
     };
 
-    const result = await multipleFileUploadSchema.isValid(
-      mockMultipleFileUpload
+    const result = await fileUploadAndLabelSchema.isValid(
+      mockFileUploadAndLabel
     );
 
     expect(result).toBe(true);
   });
 
   it("rejects invalid fileTypes", async () => {
-    const mockMultipleFileUpload = {
+    const mockFileUploadAndLabel = {
       title: "Test Title",
       fn: "Test Fn",
       fileTypes: [
@@ -149,8 +149,8 @@ describe("multipleFileUploadSchema", () => {
       ],
     };
 
-    const result = await multipleFileUploadSchema.isValid(
-      mockMultipleFileUpload
+    const result = await fileUploadAndLabelSchema.isValid(
+      mockFileUploadAndLabel
     );
 
     expect(result).toBe(true);

@@ -32,15 +32,15 @@ import { FileTaggingModal } from "./Modal";
 import {
   createFileList,
   FileList,
+  FileUploadAndLabel,
   generatePayload,
   getRecoveredData,
   getTagsForSlot,
-  MultipleFileUpload,
   removeSlots,
 } from "./model";
 import { fileListSchema, slotsSchema } from "./schema";
 
-type Props = PublicProps<MultipleFileUpload>;
+type Props = PublicProps<FileUploadAndLabel>;
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   display: "grid",

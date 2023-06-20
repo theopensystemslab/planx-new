@@ -62,7 +62,7 @@ const presentationalComponents: {
   [TYPES.FindProperty]: FindProperty,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
-  [TYPES.MultipleFileUpload]: MultipleFileUpload,
+  [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.Notice]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
@@ -455,7 +455,7 @@ function ContactInput(props: ComponentProps) {
   );
 }
 
-function MultipleFileUpload(props: ComponentProps) {
+function FileUploadAndLabel(props: ComponentProps) {
   const userFiles = Object.entries(props?.userData?.data || {});
   const allFilenames: string[] = userFiles
     .map(([_key, value]) => value.map((file: any) => file.filename))
