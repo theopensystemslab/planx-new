@@ -153,7 +153,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await client.mutate({
         mutation: gql`
-          mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb) {
+          mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb = {}) {
             update_analytics_logs_by_pk(
               pk_columns: { id: $id }
               _set: { has_clicked_help: true }
