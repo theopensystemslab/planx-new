@@ -2,7 +2,7 @@ import type { Constraint, GISResponse, Metadata } from "@opensystemslab/planx-co
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
 import { adminGraphQLClient as adminClient } from "../hasura";
-import { addDesignatedVariable, omitGeometry } from "./helpers";
+import { omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
 
 export interface LocalAuthorityMetadata {
@@ -130,9 +130,6 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
   });
 
   // --- DESIGNATED LAND ---
-  // add top-level 'designated' variable based on granular query results
-  formattedResult = addDesignatedVariable(formattedResult);
-
   // set granular `designated.nationalPark.broads` based on entity id (eventually extract to helper method if other cases like this)
   const broads = "designated.nationalPark.broads";
   if (
