@@ -163,8 +163,18 @@ jobs:
           name: playwright-report
           path: e2e/tests/ui-driven/test-results/
           retention-days: 3
+
+  notify:
+    name: Notify On Failure
+    runs-on: ubuntu-22.04
+    needs:
+      - integration_tests
+      - api_tests
+      - test_react
+      - end_to_end_tests
+    if: ${{ failure() }}
+    steps:
       - name: Slack Notification
-        if: ${{ failure() }}
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: planx-notifications-internal
