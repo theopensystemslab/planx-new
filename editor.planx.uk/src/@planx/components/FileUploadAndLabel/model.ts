@@ -159,14 +159,21 @@ const populateFileList = ({
   }
 };
 
-const isRuleMet = (
+export const isRuleMet = (
   passport: Store.passport,
   rule: ConditionalRule<Condition.RequiredIf | Condition.RecommendedIf>
-) => {
-  return (
-    passport.data?.[rule.fn] === rule.val ||
-    passport.data?.[rule.fn]?.includes(rule.val)
-  );
+): Boolean => {
+  const passportVal = passport.data?.[rule.fn];
+  if (!passportVal) return false;
+
+  const isExactMatch = passportVal === rule.val;
+  const isArray = Array.isArray(passportVal);
+  const isExactMatchInArray = isArray && passportVal.includes(rule.val);
+  const re = new RegExp(`^${rule.val}(\\..+| $)`);
+  const isGranularMatchInArray =
+    isArray && passportVal.some((value: string) => re.test(value));
+
+  return isExactMatch || isExactMatchInArray || isGranularMatchInArray;
 };
 
 interface UserFileWithSlots extends UserFile {
