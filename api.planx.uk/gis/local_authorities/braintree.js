@@ -5,7 +5,6 @@ import {
   makeEsriUrl,
   setEsriGeometryType,
   setEsriGeometry,
-  addDesignatedVariable,
   squashResultLayers,
   rollupResultLayers,
 } from "../helpers.js";
@@ -134,10 +133,7 @@ async function go(x, y, siteBoundary, extras) {
     "listed"
   );
 
-  // Add summary "designated" key to response
-  const obWithDesignated = addDesignatedVariable(obWithSingleListed);
-
-  return obWithDesignated;
+  return obWithSingleListed;
 }
 
 async function locationSearch(x, y, siteBoundary, extras) {

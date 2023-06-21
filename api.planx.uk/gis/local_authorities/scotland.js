@@ -5,7 +5,6 @@ import {
   makeEsriUrl,
   setEsriGeometryType,
   setEsriGeometry,
-  addDesignatedVariable,
   rollupResultLayers,
 } from "../helpers.js";
 import { planningConstraints } from "./metadata/scotland";
@@ -112,10 +111,7 @@ async function go(x, y, siteBoundary, extras) {
     "designated.nationalPark",
   );
 
-  // Add summary "designated" key to response
-  const obWithDesignated = addDesignatedVariable(obWithOneNationalPark);
-
-  return obWithDesignated;
+  return obWithOneNationalPark;
 }
 
 async function locationSearch(x, y, siteBoundary, extras) {

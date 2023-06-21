@@ -2,7 +2,7 @@ import type { Constraint, GISResponse, Metadata } from "@opensystemslab/planx-co
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
 import { adminGraphQLClient as adminClient } from "../hasura";
-import { addDesignatedVariable, omitGeometry } from "./helpers";
+import { omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
 
 export interface LocalAuthorityMetadata {
@@ -89,7 +89,7 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
 
   // --- INTERSECTIONS ---
   // check for & add any 'positive' constraints to the formattedResult
-  let formattedResult: Record<string, Constraint> = {};
+  const formattedResult: Record<string, Constraint> = {};
   if (res && res.count > 0 && res.entities) {
     res.entities.forEach((entity: { dataset: any; }) => {
       // get the planx variable that corresponds to this entity's 'dataset', should never be null because our initial request is filtered on 'dataset'
@@ -130,9 +130,6 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
   });
 
   // --- DESIGNATED LAND ---
-  // add top-level 'designated' variable based on granular query results
-  formattedResult = addDesignatedVariable(formattedResult);
-
   // set granular `designated.nationalPark.broads` based on entity id (eventually extract to helper method if other cases like this)
   const broads = "designated.nationalPark.broads";
   if (
@@ -210,7 +207,7 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
       .then((response: { json: () => any; }) => response.json())
       .catch((error: any) => console.log(error))
   )).then((responses) => {
-    responses.forEach((response) => {
+    responses.forEach((response: any) => {
       // get the planx variable that corresponds to this 'dataset', should never be null because we only requested known datasets
       const key = Object.keys(baseSchema).find((key) => baseSchema[key]["digital-land-datasets"]?.includes(response.dataset));
       if (key) metadata[key] = response;
