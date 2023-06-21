@@ -5,7 +5,6 @@ import {
   makeEsriUrl,
   setEsriGeometryType,
   setEsriGeometry,
-  addDesignatedVariable,
   rollupResultLayers,
 } from "../helpers.js";
 import { planningConstraints } from "./metadata/scotland";
