@@ -106,7 +106,7 @@ const Question: React.FC<IQuestion> = (props) => {
         >
           <Grid
             container
-            spacing={layout === QuestionLayout.Basic ? 1 : 2}
+            spacing={layout === QuestionLayout.Basic ? 0 : 2}
             alignItems="stretch"
           >
             {!props.text?.startsWith("Sorry") &&
