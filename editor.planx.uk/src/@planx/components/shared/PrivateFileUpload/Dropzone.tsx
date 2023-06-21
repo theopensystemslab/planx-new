@@ -22,6 +22,12 @@ interface RootProps extends ButtonBaseProps {
   isDragActive: boolean;
 }
 
+const FauxLink = styled(Box)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: "underline",
+  whiteSpace: "nowrap",
+}));
+
 const Root = styled(ButtonBase, {
   shouldForwardProp: (prop) => prop !== "isDragActive",
 })<RootProps>(({ theme, isDragActive }) => ({
@@ -144,7 +150,7 @@ export const Dropzone: React.FC<Props> = ({
           ) : (
             <>
               Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
-              <Link sx={{ whiteSpace: "nowrap" }}>choose a file</Link> to upload
+              <FauxLink component="span">choose a file</FauxLink> to upload
             </>
           )}
         </Box>
