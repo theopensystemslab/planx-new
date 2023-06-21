@@ -1,4 +1,3 @@
-import Container from "@mui/material/Container";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { TaskList } from "@planx/components/TaskList/model";
@@ -18,9 +17,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <Container maxWidth="md">
-        <NumberedList items={props.tasks} heading={"h2"} />
-      </Container>
+      <NumberedList items={props.tasks} heading={"h2"} />
     </Card>
   );
 };

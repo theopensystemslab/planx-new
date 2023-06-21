@@ -9,72 +9,75 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
+const STEP_DIAMETER = "45px";
+const STEP_SPACER = "60px";
+
 const useClasses = makeStyles((theme) => ({
   panel: {
     backgroundColor: theme.palette.background.default,
     position: "relative",
-    paddingBottom: theme.spacing(1.25),
+    "&::after": {
+      content: "''",
+      position: "absolute",
+      width: `calc(100% - ${STEP_SPACER})`,
+      height: "1px",
+      background: theme.palette.secondary.main,
+      bottom: "0",
+      left: STEP_SPACER,
+    },
   },
   stepIndicator: {
     position: "absolute",
-    width: theme.spacing(7),
+    width: STEP_DIAMETER,
     height: "100%",
     textAlign: "center",
     top: 0,
     left: 0,
     overflow: "hidden",
-    [theme.breakpoints.up("sm")]: {
-      paddingTop: theme.spacing(1.25),
-      width: theme.spacing(13.5),
-      textAlign: "left",
-    },
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    pointerEvents: "none",
     "&::after": {
       content: `''`,
       display: "block",
-      width: 1,
+      width: 2,
       backgroundColor: "currentColor",
       height: "100%",
       top: 0,
       position: "absolute",
-      left: "48%",
-      [theme.breakpoints.up("sm")]: {
-        left: "16%",
-      },
+      left: "50%",
+      transform: "translateX(-50%)",
     },
     "& > i": {
-      width: theme.spacing(4.5),
-      height: theme.spacing(4.5),
+      width: STEP_DIAMETER,
+      height: STEP_DIAMETER,
       display: "inline-block",
-      lineHeight: theme.spacing(4.5),
-      border: `1px solid ${theme.palette.text.primary}`,
+      lineHeight: theme.spacing(4.25),
+      border: `2px solid ${theme.palette.text.primary}`,
       backgroundColor: theme.palette.background.default,
       borderRadius: "50%",
       position: "relative",
       fontStyle: "normal",
       textAlign: "center",
       zIndex: 2,
-      [theme.breakpoints.up("sm")]: {
-        lineHeight: theme.spacing(4.5),
-        width: theme.spacing(4.5),
-        height: theme.spacing(4.5),
-      },
+      fontWeight: FONT_WEIGHT_SEMI_BOLD,
     },
   },
   isFirst: {
     "&::after": {
-      top: theme.spacing(4.5),
+      top: STEP_DIAMETER,
     },
   },
   isLast: {
     "&::after": {
-      height: theme.spacing(4.5),
+      height: STEP_DIAMETER,
     },
   },
   summary: {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
-    minHeight: theme.spacing(6),
-    padding: theme.spacing(2, 0),
-    paddingLeft: theme.spacing(7),
+    minHeight: STEP_SPACER,
+    padding: theme.spacing(2, 1, 2, 0),
+    paddingLeft: STEP_SPACER,
     width: "100%",
     display: "flex",
     justifyContent: "space-between",
@@ -82,16 +85,11 @@ const useClasses = makeStyles((theme) => ({
   },
   content: {
     backgroundColor: theme.palette.background.default,
-    paddingTop: theme.spacing(3),
+    paddingTop: theme.spacing(1.5),
     paddingBottom: theme.spacing(3),
-    paddingLeft: theme.spacing(7),
+    paddingLeft: STEP_SPACER,
     paddingRight: theme.spacing(2),
-    lineHeight: 1.6,
     display: "block",
-    [theme.breakpoints.up("sm")]: {
-      paddingLeft: theme.spacing(13.5),
-      paddingRight: theme.spacing(13.5),
-    },
     "& p": {
       marginTop: 0,
       "&:last-child": {
@@ -136,12 +134,15 @@ function ListItem(
         onClick={handleChange}
         aria-expanded={expanded}
         aria-controls={`group-${props.index}-content`}
+        disableRipple
+        disableTouchRipple
       >
         <Box>
           <Typography
-            variant="h5"
+            variant="h4"
             component={props.heading || "h5"}
             id={`group-${props.index}-heading`}
+            align="left"
           >
             {props.title}
           </Typography>
@@ -149,6 +150,7 @@ function ListItem(
         <Caret
           expanded={expanded}
           titleAccess={expanded ? "Less Information" : "More Information"}
+          color="primary"
         />
       </ButtonBase>
       {props.description && (
