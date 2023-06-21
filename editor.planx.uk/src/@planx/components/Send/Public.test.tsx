@@ -8,9 +8,7 @@ import SendComponent from "./Public";
 
 jest.spyOn(axios, "default").mockImplementation((url: any) => {
   return {
-    value: url()?.startsWith(
-      `${process.env.REACT_APP_API_URL}/create-send-events/`
-    )
+    value: url()?.startsWith(`${process.env.REACT_APP_API_URL}/send/`)
       ? hasuraEventsResponseMock
       : null,
   } as any;

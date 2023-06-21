@@ -479,7 +479,7 @@
         version: 2
         query_params: {}
         template_engine: Kriti
-    - name: setup_payment_send_events
+    - name: requested_payment_received
       definition:
         enable_manual: false
         update:
@@ -503,7 +503,7 @@
                 "sessionId": {{$body.event.data.new.session_id}}
               }
             }
-        url: '{{$base_url}}/webhooks/hasura/create-payment-send-events'
+        url: '{{$base_url}}/webhooks/hasura/requested-payment-received'
         method: POST
         version: 2
         query_params: {}

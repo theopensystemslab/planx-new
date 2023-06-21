@@ -114,8 +114,6 @@ function createSubmissionTask({
   localAuthority: string;
 }): string {
   const task = SUBMISSION_QUEUE[sessionId];
-  if (!task.session)
-    throw new Error("queued submission does not have a session");
   const retryCount = task.destinations[destination].retryCount;
   task.destinations[destination].retryCount = retryCount ? retryCount + 1 : 0;
   const submissionFn = submissionHandlers[destination].submissionFn;
@@ -139,10 +137,8 @@ async function resolveQueuedSubmission(sessionId: string) {
   );
 
   // calculate and log the total duration
-  const duration = secondsSince(task.createdAt);
-  console.log(
-    `submission for session ${sessionId} was resolved in ${duration}`
-  );
+  //const duration = secondsSince(task.createdAt);
+  //console.log(`submission for session ${sessionId} was resolved in ${duration}`);
 
   // clean-up the queued job
   delete SUBMISSION_QUEUE[sessionId];
@@ -151,11 +147,10 @@ async function resolveQueuedSubmission(sessionId: string) {
   for (const [destination, errorMessage] of Object.entries(collectedErrors)) {
     const dest: SubmissionDestinationsEntry = destinationList[destination];
     const retries = dest.retryCount || 0;
-    const msg = `${retries} of ${MAX_RETRIES} retries reached for ${destination} submission for session ${sessionId} which encountered an error:\n${errorMessage}`;
-    console.log(msg);
     if (retries < MAX_RETRIES) {
       await queueSubmissions(sessionId, destinationList);
     } else {
+      const msg = `${retries} of ${MAX_RETRIES} retries reached for ${destination} submission for session ${sessionId} which encountered an error:\n${errorMessage}`;
       await slack.send(msg);
     }
   }

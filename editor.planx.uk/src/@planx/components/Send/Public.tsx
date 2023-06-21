@@ -27,7 +27,7 @@ const SendComponent: React.FC<Props> = ({
   ]);
 
   // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
-  const url = `${process.env.REACT_APP_API_URL}/create-send-events/${sessionId}`;
+  const url = `${process.env.REACT_APP_API_URL}/send/${sessionId}`;
   const request: any = useAsync(async () => {
     const combinedEventsPayload = getCombinedEventsPayload({
       destinations,

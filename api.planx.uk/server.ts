@@ -68,7 +68,7 @@ import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPayment
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 import { getBOPSPayload } from "./admin/session/bops";
 import { getCSVData } from "./admin/session/csv";
-import { createPaymentSendEvents } from "./inviteToPay/createPaymentSendEvents";
+import { requestedPaymentReceived } from "./inviteToPay/requestedPaymentReceived";
 
 const router = express.Router();
 
@@ -596,7 +596,7 @@ app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
 app.post("/webhooks/hasura/create-payment-invitation-events", createPaymentInvitationEvents);
 app.post("/webhooks/hasura/create-payment-reminder-events", createPaymentReminderEvents);
 app.post("/webhooks/hasura/create-payment-expiry-events", createPaymentExpiryEvents);
-app.post("/webhooks/hasura/create-payment-send-events", createPaymentSendEvents);
+app.post("/webhooks/hasura/requested-payment-received", requestedPaymentReceived);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 app.post("/webhooks/hasura/sanitise-application-data", sanitiseApplicationData);
 
