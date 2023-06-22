@@ -75,8 +75,8 @@ function Component(props: Props) {
     ...params,
   };
   const customGisParams: Record<string, string> = {
-    x: x.toString(),
-    y: y.toString(),
+    x: x?.toString(),
+    y: y?.toString(),
     siteBoundary: JSON.stringify(coordinates),
     version: "1",
   };
