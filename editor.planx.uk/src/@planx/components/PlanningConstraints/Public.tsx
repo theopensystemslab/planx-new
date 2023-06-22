@@ -19,6 +19,7 @@ import useSWR, { Fetcher } from "swr";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { stringify } from "wkt";
 
+import { SiteAddress } from "../FindProperty/model";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
@@ -34,8 +35,10 @@ function Component(props: Props) {
     (state) => state.computePassport().data?.["property.boundary.site"]
   );
   const { x, y, longitude, latitude, usrn } =
-    useStore((state) => state.computePassport().data?._address) || {};
-  const showGraphError: boolean = !x && !y && !longitude && !latitude;
+    (useStore(
+      (state) => state.computePassport().data?._address
+    ) as SiteAddress) || {};
+  const showGraphError = !x && !y && !longitude && !latitude;
 
   const teamSlug = useStore((state) => state.teamSlug);
 
@@ -71,11 +74,11 @@ function Component(props: Props) {
     geom: wktPolygon || wktPoint,
     ...params,
   };
-  const customGisParams: Record<string, any> = {
-    x: x,
-    y: y,
+  const customGisParams: Record<string, string> = {
+    x: x.toString(),
+    y: y.toString(),
     siteBoundary: JSON.stringify(coordinates),
-    version: 1,
+    version: "1",
   };
 
   // Fetch planning constraints data for a given local authority
@@ -99,16 +102,13 @@ function Component(props: Props) {
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new non-UPRN address on the map
-  const roadsParams: Record<string, any> = {
-    usrn: usrn,
-  };
   const classifiedRoadsEndpoint: string =
     `${process.env.REACT_APP_API_URL}/roads?` +
-    new URLSearchParams(roadsParams).toString();
+    new URLSearchParams(usrn ? { usrn: usrn } : undefined)?.toString();
 
   const { data: roads, isValidating: isValidatingRoads } = useSWR(
     () =>
-      digitalLandOrganisations.includes(teamSlug)
+      usrn && digitalLandOrganisations.includes(teamSlug)
         ? classifiedRoadsEndpoint
         : null,
     fetcher,
@@ -159,7 +159,7 @@ function Component(props: Props) {
 
             const _nots: any = {};
             const intersectingConstraints: IntersectingConstraints = {};
-            Object.entries(constraints).forEach(([key, data]: any) => {
+            Object.entries(constraints).forEach(([key, data]) => {
               if (data.value) {
                 intersectingConstraints[props.fn] ||= [];
                 intersectingConstraints[props.fn].push(key);
