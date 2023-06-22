@@ -157,17 +157,22 @@ function Component(props: Props) {
               if (data) _constraints.push(data as GISResponse["constraints"]);
             }
 
-            const newPassportData: IntersectingConstraints = {};
+            const _nots: any = {};
+            const intersectingConstraints: IntersectingConstraints = {};
             Object.entries(constraints).forEach(([key, data]: any) => {
               if (data.value) {
-                newPassportData[props.fn] ||= [];
-                newPassportData[props.fn].push(key);
+                intersectingConstraints[props.fn] ||= [];
+                intersectingConstraints[props.fn].push(key);
+              } else {
+                _nots[props.fn] ||= [];
+                _nots[props.fn].push(key);
               }
             });
 
             const passportData = {
               _constraints,
-              ...newPassportData,
+              _nots,
+              ...intersectingConstraints,
             };
 
             props.handleSubmit?.({

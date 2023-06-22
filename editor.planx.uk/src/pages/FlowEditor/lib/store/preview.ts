@@ -367,7 +367,7 @@ export const previewStore: StateCreator<
     const knownNotVals = knownNots(
       flow,
       breadcrumbs,
-      // _nots is created by FindProperty/Public atm
+      // _nots is created by PlanningConstraints/Public
       computePassport().data?._nots
     );
 

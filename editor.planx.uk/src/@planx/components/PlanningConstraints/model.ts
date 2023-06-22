@@ -1,5 +1,3 @@
-import { EnhancedGISResponse } from "@opensystemslab/planx-core/types";
-
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface PlanningConstraints extends MoreInformation {
