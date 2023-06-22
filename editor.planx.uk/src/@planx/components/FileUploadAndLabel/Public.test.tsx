@@ -198,9 +198,7 @@ describe("Modal trigger", () => {
     );
 
     // Close modal
-    const closeModalButton = await within(fileTaggingModal).findByText(
-      "Cancel"
-    );
+    const closeModalButton = await within(fileTaggingModal).findByText("Done");
     expect(closeModalButton).toBeVisible();
     user.click(closeModalButton);
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
