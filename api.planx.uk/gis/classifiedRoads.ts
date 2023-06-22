@@ -1,3 +1,4 @@
+import { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
 import { NextFunction, Request, Response } from "express";
 import fetch from "isomorphic-fetch";
 
@@ -28,18 +29,9 @@ type OSHighwayFeature = {
   FormsPartOf: string;
 };
 
-type PlanningConstraintResponse = {
-  url?: string;
-  constraints: Record<string, PlanningConstraintBody>;
-  metadata?: Record<string, any>;
-}
-
-type PlanningConstraintBody = {
-  value: boolean;
-  text: string;
+interface RoadConstraint extends Constraint {
   data?: OSFeatures["features"];
-  category?: string;
-};
+}
 
 // Passport key comes from Digital Planning Schemas googlesheet
 export const PASSPORT_FN = "road.classified";
@@ -91,7 +83,7 @@ export const classifiedRoadsSearch = async (
       });
 
     const baseResponse = {
-      url: url.split("key=")[0],
+      sourceRequest: url.split("key=")[0],
       metadata: {
         [PASSPORT_FN]: {
           name: "Classified road",
@@ -110,9 +102,9 @@ export const classifiedRoadsSearch = async (
             text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
             data: features,
             category: "General policy",
-          }
+          } as RoadConstraint
         }
-      } as PlanningConstraintResponse)
+      } as GISResponse)
     } else {
       return res.json({
         ...baseResponse,
@@ -122,9 +114,9 @@ export const classifiedRoadsSearch = async (
             value: false,
             text: "is not on a Classified Road",
             category: "General policy",
-          }
+          } as RoadConstraint
         }
-      } as PlanningConstraintResponse)
+      } as GISResponse)
     }
   } catch (error: any) {
     return next({ message: "Failed to fetch classified roads: " + error?.message });

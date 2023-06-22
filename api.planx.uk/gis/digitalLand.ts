@@ -210,14 +210,14 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
       .then((response: { json: () => any; }) => response.json())
       .catch((error: any) => console.log(error))
   )).then((responses) => {
-    responses.forEach((response) => {
+    responses.forEach((response: any) => {
       // get the planx variable that corresponds to this 'dataset', should never be null because we only requested known datasets
       const key = Object.keys(baseSchema).find((key) => baseSchema[key]["digital-land-datasets"]?.includes(response.dataset));
       if (key) metadata[key] = response;
     });
   }).catch(error => console.log(error));
 
-  return { url: url, constraints: formattedResult, metadata: metadata };
+  return { sourceRequest: url, constraints: formattedResult, metadata: metadata };
 }
 
 async function locationSearch(localAuthority: string, geom: string, extras: Record<string, string>) {

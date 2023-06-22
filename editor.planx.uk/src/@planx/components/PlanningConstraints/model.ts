@@ -1,3 +1,5 @@
+import { EnhancedGISResponse } from "@opensystemslab/planx-core/types";
+
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface PlanningConstraints extends MoreInformation {
@@ -16,3 +18,5 @@ export const parseContent = (
   fn: data?.fn || "property.constraints.planning",
   ...parseMoreInformation(data),
 });
+
+export type IntersectingConstraints = Record<string, string[]>;
