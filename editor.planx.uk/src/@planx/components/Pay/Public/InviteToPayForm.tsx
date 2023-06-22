@@ -1,6 +1,5 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
@@ -253,7 +252,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       <Button
         variant="contained"
         color="secondary"
-        style={{ borderBottom: `solid 2px lightgrey` }}
+        sx={{ mt: 2, borderBottom: "solid 2px lightgrey" }}
         size="large"
         onClick={changePage}
         disabled={Boolean(paymentStatus)}
