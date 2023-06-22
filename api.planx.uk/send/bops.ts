@@ -68,7 +68,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     selfHandleResponse: true,
     onProxyReq: (proxyReq, req) => {
       req.body = bopsFullPayload;
-      fixRequestBody(proxyReq, req);
+      //fixRequestBody(proxyReq, req);  // is this redundant since body parser isn't setting the body?
     },
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
