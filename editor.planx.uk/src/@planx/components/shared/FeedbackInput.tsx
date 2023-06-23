@@ -13,6 +13,7 @@ interface Props {
 const StyledReactMarkdown = styled(ReactMarkdown)(() => ({
   "& p": {
     margin: 0,
+    textAlign: "left",
   },
 }));
 
