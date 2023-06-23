@@ -1,49 +1,62 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
-import { Theme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
-import React from "react";
+import { styled } from "@mui/material/styles";
+import React, { PropsWithChildren } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 
-const useClasses = makeStyles((theme: Theme) => ({
-  root: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-  button: {
-    boxShadow: "none",
-    color: "black",
-    fontSize: "1.125rem",
-    fontWeight: "600",
-    width: "100%",
-    "& > svg": {
-      marginLeft: "0.25em",
-      color: theme.palette.text.secondary,
-    },
-    "&[aria-expanded=true] > svg": {
+interface StyledButtonProps extends ButtonProps {
+  show: boolean;
+}
+
+const StyledButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== "show",
+})<StyledButtonProps>(({ theme, show }) => ({
+  boxShadow: "none",
+  color: "black",
+  fontSize: "1.125rem",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  width: "100%",
+  "& > svg": {
+    marginLeft: "0.25em",
+    color: theme.palette.text.secondary,
+    ...(show && {
       transform: "rotate(180deg)",
-    },
+    }),
   },
 }));
 
-const SimpleExpand = ({ children, buttonText }: any) => {
+interface Props {
+  buttonText: {
+    open: string;
+    closed: string;
+  };
+  id: string;
+}
+
+const SimpleExpand: React.FC<PropsWithChildren<Props>> = ({
+  children,
+  buttonText,
+  id,
+}) => {
   const [show, setShow] = React.useState(false);
-  const classes = useClasses();
   return (
     <>
-      <Box className={classes.root}>
-        <Button
-          className={classes.button}
+      <Box mx={1}>
+        <StyledButton
           onClick={() => setShow(!show)}
           aria-expanded={show}
-          // Needs aria-controls
+          show={show}
+          aria-controls={id}
         >
           {show ? buttonText.closed : buttonText.open}
           <Caret />
-        </Button>
+        </StyledButton>
       </Box>
-      <Collapse in={show}>{children}</Collapse>
+      <Collapse in={show} id={id}>
+        {children}
+      </Collapse>
     </>
   );
 };
