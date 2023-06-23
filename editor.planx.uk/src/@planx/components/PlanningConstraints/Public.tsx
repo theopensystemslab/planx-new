@@ -38,7 +38,7 @@ function Component(props: Props) {
     (useStore(
       (state) => state.computePassport().data?._address
     ) as SiteAddress) || {};
-  const showGraphError = !x && !y && !longitude && !latitude;
+  const showGraphError = !x || !y || !longitude || !latitude;
 
   const teamSlug = useStore((state) => state.teamSlug);
 
