@@ -39,6 +39,7 @@ import Reset from "ui/icons/Reset";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
+import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
 export const HEADER_HEIGHT = 74;
 
@@ -351,6 +352,7 @@ const PublicToolbar: React.FC<{
       {!showCentredServiceTitle && <ServiceTitle />}
       <NavBar />
       <AnalyticsDisabledBanner />
+      <TestEnvironmentBanner />
     </>
   );
 };
