@@ -1,37 +1,27 @@
 import MuiButtonBase from "@mui/material/ButtonBase";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
-import classnames from "classnames";
 import React, { ReactNode } from "react";
 
 import Caret from "./icons/Caret";
 
-const useListClasses = makeStyles((theme) => ({
-  root: {
-    listStyle: "none",
-    padding: 0,
-    margin: 0,
-  },
-}));
-
-const useItemClasses = makeStyles((theme) => ({
-  root: {
-    borderBottom: `1px solid ${theme.palette.secondary.main}`,
-  },
-  title: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: theme.spacing(2, 1, 2, 0),
-    width: "100%",
-  },
-  expanded: {},
-}));
-
 export function ExpandableList(props: { children: ReactNode }): FCReturn {
-  const classes = useListClasses();
-  return <ul className={classes.root}>{props.children}</ul>;
+  return (
+    <List disablePadding sx={{ m: 0, listStyle: "none" }}>
+      {props.children}
+    </List>
+  );
 }
+
+const TitleButton = styled(MuiButtonBase)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: theme.spacing(2, 1, 2, 0),
+  width: "100%",
+}));
 
 export function ExpandableListItem(props: {
   title: string;
@@ -41,20 +31,20 @@ export function ExpandableListItem(props: {
   headingId: string;
   groupId: string;
 }): FCReturn {
-  const classes = useItemClasses();
-
   const handleToggle = () => {
     props.onToggle && props.onToggle();
   };
 
   return (
-    <li
-      className={classnames(classes.root, props.expanded && classes.expanded)}
+    <ListItem
+      sx={{
+        borderBottom: (theme) => `1px solid ${theme.palette.secondary.main}`,
+        display: "block",
+      }}
     >
-      <MuiButtonBase
+      <TitleButton
         aria-controls={props.groupId}
         aria-expanded={props.expanded}
-        className={classes.title}
         disableRipple
         onClick={handleToggle}
       >
@@ -65,8 +55,8 @@ export function ExpandableListItem(props: {
           expanded={props.expanded}
           titleAccess={props.expanded ? "Less Information" : "More Information"}
         />
-      </MuiButtonBase>
+      </TitleButton>
       {props.expanded && props.children}
-    </li>
+    </ListItem>
   );
 }
