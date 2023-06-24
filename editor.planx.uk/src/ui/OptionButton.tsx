@@ -1,65 +1,50 @@
 import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
-import type { Theme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
-import classNames from "classnames";
+import { styled } from "@mui/material/styles";
 import React from "react";
 
 interface Props extends ButtonBaseProps {
   selected?: boolean;
-  color?: string;
+  backgroundColor?: string;
 }
 
-const useClasses = makeStyles<Theme, { backgroundColor: string }>((theme) => ({
-  root: {
-    height: 50,
-    paddingLeft: 50,
-    paddingRight: theme.spacing(3),
-    fontSize: 15,
-    position: "relative",
-    fontFamily: "inherit",
-    display: "block",
-    width: "auto",
-    minWidth: 200,
-    textAlign: "left",
-    "&:hover:not($selected)": {
+const Root = styled(ButtonBase, {
+  shouldForwardProp: (prop) =>
+    ["selected", "backgroundColor"].includes(prop.toString()),
+})<Props>(({ theme, selected, backgroundColor }) => ({
+  height: 50,
+  paddingLeft: 50,
+  paddingRight: theme.spacing(3),
+  fontSize: 15,
+  position: "relative",
+  fontFamily: "inherit",
+  display: "block",
+  width: "auto",
+  minWidth: 200,
+  textAlign: "left",
+  "&::before": {
+    content: "''",
+    position: "absolute",
+    height: 10,
+    width: 10,
+    left: 20,
+    top: 20,
+    borderRadius: "50%",
+    backgroundColor: theme.palette.grey[500],
+  },
+  ...(!selected && {
+    "&:hover": {
       backgroundColor: "rgba(0,0,0,0.1)",
     },
-    "&::before": {
-      content: "''",
-      position: "absolute",
-      height: 10,
-      width: 10,
-      left: 20,
-      top: 20,
-      borderRadius: "50%",
-      backgroundColor: theme.palette.grey[500],
-    },
-  },
-  selected: (props) => ({
+  }),
+  ...(selected && {
     backgroundColor: theme.palette.grey[300],
     "&::before": {
       color: "#fff",
-      backgroundColor: props.backgroundColor
-        ? props.backgroundColor
-        : theme.palette.primary.light,
+      backgroundColor: backgroundColor || theme.palette.primary.light,
     },
   }),
 }));
 
 export default function OptionButton(props: Props): FCReturn {
-  const { selected, color, ...restProps } = props;
-
-  const colorProps = { backgroundColor: color || "#0ECE83" };
-  const classes = useClasses(colorProps);
-
-  return (
-    <ButtonBase
-      classes={{
-        root: classNames(classes.root, selected && classes.selected),
-      }}
-      {...restProps}
-    >
-      {restProps.children}
-    </ButtonBase>
-  );
+  return <Root {...props}>{props.children}</Root>;
 }
