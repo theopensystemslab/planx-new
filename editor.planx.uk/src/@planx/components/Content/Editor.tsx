@@ -10,7 +10,10 @@ import {
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/ColorPicker";
+import ImgInput from "ui/ImgInput";
+import Input from "ui/Input";
 import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
@@ -31,6 +34,39 @@ const ContentComponent: React.FC<Props> = (props) => {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Content" Icon={ICONS[TYPES.Content]}>
+          <InputRow>
+            <InputRowItem>
+              <Input
+                name="title"
+                value={formik.values.title}
+                errorMessage={formik.errors.title}
+                onChange={formik.handleChange}
+                placeholder="Title"
+              />
+            </InputRowItem>
+          </InputRow>
+          <InputRow>
+            <InputRowItem width={"100%"}>
+              <Input
+                name="alt"
+                value={formik.values.alt}
+                errorMessage={formik.errors.alt}
+                onChange={formik.handleChange}
+                placeholder="Image alt text"
+                required={Boolean(formik.values.image)}
+              />
+            </InputRowItem>
+            <InputRowItem>
+              <ImgInput
+                img={formik.values.image}
+                onChange={(newUrl) =>
+                  formik.handleChange({
+                    target: { name: "image", value: newUrl },
+                  })
+                }
+              />
+            </InputRowItem>
+          </InputRow>
           <InputRow>
             <RichTextInput
               placeholder="Content"

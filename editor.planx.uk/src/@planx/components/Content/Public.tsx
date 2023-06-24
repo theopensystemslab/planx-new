@@ -5,7 +5,7 @@ import type { Content } from "@planx/components/Content/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
-import React from "react";
+import React, { useState } from "react";
 import { getContrastTextColor } from "styleUtils";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -21,16 +21,38 @@ const Content = styled(Box, {
   "& a": {
     color: getContrastTextColor(color || "#fff", theme.palette.primary.main),
   },
+  image: {
+    maxWidth: "100%",
+  },
 }));
 
 const ContentComponent: React.FC<Props> = (props) => {
+  const [imgError, setImgError] = useState(
+    !(props.image && props.image.length)
+  );
+
+  const onError = () => {
+    if (!imgError) {
+      setImgError(true);
+    }
+  };
+
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
       <QuestionHeader
+        title={props.title}
         info={props.info}
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
+      {props.image && (
+        <img
+          // className={classes.image}
+          src={props.image}
+          onError={onError}
+          alt={props.alt}
+        />
+      )}
       <Content {...props} data-testid="content">
         <ReactMarkdownOrHtml
           source={props.content}
