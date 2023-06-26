@@ -7,6 +7,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React, { useState } from "react";
 import { getContrastTextColor } from "styleUtils";
+import { FallbackImage } from "ui/FallbackImage";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Content>;
@@ -21,47 +22,40 @@ const Content = styled(Box, {
   "& a": {
     color: getContrastTextColor(color || "#fff", theme.palette.primary.main),
   },
-  image: {
-    maxWidth: "100%",
-  },
 }));
 
-const ContentComponent: React.FC<Props> = (props) => {
-  const [imgError, setImgError] = useState(
-    !(props.image && props.image.length)
-  );
-
+const Image: React.FC<Props> = ({ image, alt }) => {
+  const [imgError, setImgError] = useState(Boolean(!image?.length));
   const onError = () => {
     if (!imgError) {
       setImgError(true);
     }
   };
 
-  return (
-    <Card handleSubmit={props.handleSubmit} isValid>
-      <QuestionHeader
-        title={props.title}
-        info={props.info}
-        policyRef={props.policyRef}
-        howMeasured={props.howMeasured}
-      />
-      {props.image && (
-        <img
-          // className={classes.image}
-          src={props.image}
-          onError={onError}
-          alt={props.alt}
-        />
-      )}
-      <Content {...props} data-testid="content">
-        <ReactMarkdownOrHtml
-          source={props.content}
-          openLinksOnNewTab
-          manuallyIncrementHeaders
-        />
-      </Content>
-    </Card>
+  return imgError ? (
+    <FallbackImage />
+  ) : (
+    <img src={image} onError={onError} alt={alt} style={{ maxWidth: "100%" }} />
   );
 };
+
+const ContentComponent: React.FC<Props> = (props) => (
+  <Card handleSubmit={props.handleSubmit} isValid>
+    <QuestionHeader
+      title={props.title}
+      info={props.info}
+      policyRef={props.policyRef}
+      howMeasured={props.howMeasured}
+    />
+    {props.image && <Image {...props} />}
+    <Content {...props} data-testid="content">
+      <ReactMarkdownOrHtml
+        source={props.content}
+        openLinksOnNewTab
+        manuallyIncrementHeaders
+      />
+    </Content>
+  </Card>
+);
 
 export default ContentComponent;

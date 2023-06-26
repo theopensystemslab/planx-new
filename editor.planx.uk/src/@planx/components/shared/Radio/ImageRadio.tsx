@@ -1,4 +1,3 @@
-import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
 import Radio, { RadioProps } from "@mui/material/Radio";
@@ -6,6 +5,7 @@ import { useRadioGroup } from "@mui/material/RadioGroup";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useLayoutEffect, useRef, useState } from "react";
+import { FallbackImage } from "ui/FallbackImage";
 
 export interface Props {
   id: string;
@@ -15,19 +15,6 @@ export interface Props {
   img?: string;
   onChange: RadioProps["onChange"];
 }
-
-const FallbackImage = styled(Box)({
-  alignItems: "center",
-  backgroundColor: "white",
-  display: "flex",
-  height: "100%",
-  justifyContent: "center",
-  left: 0,
-  objectFit: "contain",
-  position: "absolute",
-  top: 0,
-  width: "100%",
-});
 
 const Image = styled("img")({
   alignItems: "center",
@@ -131,9 +118,7 @@ const ImageLabel = (props: Props): FCReturn => {
   return (
     <ImageLabelRoot>
       {imgError ? (
-        <FallbackImage>
-          <ImageIcon />
-        </FallbackImage>
+        <FallbackImage />
       ) : (
         <Image
           src={img}

@@ -1,10 +1,10 @@
-import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
 import { Theme, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/Checkbox";
+import { FallbackImage } from "ui/FallbackImage";
 
 import { Props as ButtonBaseProps } from "./ButtonBase";
 
@@ -120,15 +120,7 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
       bgcolor="background.default"
     >
       {imgError ? (
-        <Box
-          className={classes.img}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          color="secondary.dark"
-        >
-          <ImageIcon />
-        </Box>
+        <FallbackImage />
       ) : (
         <img
           className={classes.img}
