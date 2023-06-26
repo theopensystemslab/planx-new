@@ -67,8 +67,6 @@ const Question: React.FC<IQuestion> = (props) => {
     validate: () => {},
   });
 
-  const { a } = formik.values.selected;
-
   let layout = QuestionLayout.Basic;
   if (props.responses.find((r) => r.img && r.img.length)) {
     layout = QuestionLayout.Images;
@@ -118,9 +116,7 @@ const Question: React.FC<IQuestion> = (props) => {
                   formik.setFieldValue("selected.id", response.id);
                   formik.setFieldValue("selected.a", response.responseKey);
                 };
-                const selected = a === response.responseKey;
                 const buttonProps = {
-                  selected,
                   onChange,
                 };
 

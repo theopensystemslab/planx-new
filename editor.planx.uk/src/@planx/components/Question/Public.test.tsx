@@ -80,7 +80,7 @@ describe("Question component", () => {
       );
     });
 
-    it(`should display previously selected answers when going back or changing in the ${QuestionLayout[type]} layout`, async () => {
+    it(`should display previously selected answer on back or change in the ${QuestionLayout[type]} layout`, async () => {
       const handleSubmit = jest.fn();
       const { user } = setup(
         <Question
