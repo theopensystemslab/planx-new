@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@cucumber/cucumber': ^9.1.2
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#5b18b5d
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#36f7aa8
   '@types/node': '18'
   dotenv: ^16.1.1
   ts-node: ^10.9.1
@@ -10,7 +10,7 @@ specifiers:
 
 dependencies:
   '@cucumber/cucumber': 9.1.2
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/5b18b5d
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/36f7aa8
   dotenv: 16.1.1
 
 devDependencies:
@@ -1925,8 +1925,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/5b18b5d:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5b18b5d}
+  github.com/theopensystemslab/planx-core/36f7aa8:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/36f7aa8}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
