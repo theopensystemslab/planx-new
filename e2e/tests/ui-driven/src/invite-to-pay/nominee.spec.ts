@@ -1,6 +1,6 @@
 import { test, expect, Page, APIRequestContext } from "@playwright/test";
 import { v4 as uuidV4 } from "uuid";
-import { setFeatureFlag, fillGovUkCardDetails, cards } from "../helpers";
+import { fillGovUkCardDetails, cards } from "../helpers";
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import {
   Context,
@@ -37,10 +37,6 @@ test.describe("Nominee journey", async () => {
       throw e;
     }
   });
-
-  test.beforeEach(
-    async ({ page }) => await setFeatureFlag(page, "INVITE_TO_PAY")
-  );
 
   test.afterAll(async () => {
     await tearDownTestContext(context);

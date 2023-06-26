@@ -1,8 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = [
-  "DISABLE_SAVE_AND_RETURN",
-  "INVITE_TO_PAY",
-] as const;
+const AVAILABLE_FEATURE_FLAGS = ["DISABLE_SAVE_AND_RETURN"] as const;
 
 type featureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
