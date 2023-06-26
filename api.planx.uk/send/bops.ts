@@ -1,8 +1,6 @@
-import { fixRequestBody, responseInterceptor } from "http-proxy-middleware";
+import axios, { AxiosResponse } from "axios";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
-import omit from "lodash/omit";
-import { useProxy } from "../proxy";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { $admin } from "../client";
@@ -14,8 +12,6 @@ interface SendToBOPSRequest {
 }
 
 const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
-  req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
-
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload }: SendToBOPSRequest = req.body;
   if (!payload) {
@@ -58,80 +54,63 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
 
   const bopsFullPayload = await $admin.generateBOPSPayload(payload?.sessionId);
 
-  useProxy({
+  const bopsResponse = await axios({
+    method: "POST",
+    url: target,
     headers: {
-      ...(req.headers as Record<string, string | string[]>),
+      "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
     },
-    pathRewrite: () => "",
-    target,
-    selfHandleResponse: true,
-    onProxyReq: (proxyReq, req) => {
-      req.body = bopsFullPayload;
-      fixRequestBody(proxyReq, req);
-    },
-    onProxyRes: responseInterceptor(
-      async (responseBuffer, proxyRes, req, res) => {
-        // Mark session as submitted so that reminder and expiry emails are not triggered
-        markSessionAsSubmitted(payload?.sessionId);
+    data: bopsFullPayload,
+  }).then(async (res: AxiosResponse<{ id: string }>) => {
+    // Mark session as submitted so that reminder and expiry emails are not triggered
+    markSessionAsSubmitted(payload?.sessionId);
 
-        const bopsRawResponse = responseBuffer.toString("utf8");
-
-        let bopsResponse: { id: string } | undefined;
-        try {
-          bopsResponse = JSON.parse(bopsRawResponse);
-        } catch (e) {
-          res.statusCode = 502; // Bad Gateway - invalid response from the upstream server
-          return bopsRawResponse;
-        }
-
-        const applicationId = await adminClient.request(
-          gql`
-            mutation CreateBopsApplication(
-              $bops_id: String = ""
-              $destination_url: String = ""
-              $request: jsonb = ""
-              $req_headers: jsonb = ""
-              $response: jsonb = ""
-              $response_headers: jsonb = ""
-              $session_id: String = ""
-            ) {
-              insert_bops_applications_one(
-                object: {
-                  bops_id: $bops_id
-                  destination_url: $destination_url
-                  request: $request
-                  req_headers: $req_headers
-                  response: $response
-                  response_headers: $response_headers
-                  session_id: $session_id
-                }
-              ) {
-                id
-                bops_id
-              }
+    const applicationId = await adminClient.request(
+      gql`
+        mutation CreateBopsApplication(
+          $bops_id: String = ""
+          $destination_url: String!
+          $request: jsonb!
+          $req_headers: jsonb = {}
+          $response: jsonb = {}
+          $response_headers: jsonb = {}
+          $session_id: String!
+        ) {
+          insert_bops_applications_one(
+            object: {
+              bops_id: $bops_id
+              destination_url: $destination_url
+              request: $request
+              req_headers: $req_headers
+              response: $response
+              response_headers: $response_headers
+              session_id: $session_id
             }
-          `,
-          {
-            bops_id: bopsResponse?.id,
-            destination_url: target,
-            request: bopsFullPayload,
-            req_headers: omit(req.headers, ["authorization"]),
-            response: bopsResponse,
-            response_headers: proxyRes.headers,
-            session_id: payload?.sessionId,
+          ) {
+            id
+            bops_id
           }
-        );
-
-        return JSON.stringify({
-          application: {
-            ...applicationId.insert_bops_applications_one,
-            bopsResponse,
-          },
-        });
+        }
+      `,
+      {
+        bops_id: res.data.id,
+        destination_url: target,
+        request: bopsFullPayload,
+        response: res.data,
+        response_headers: res.headers,
+        session_id: payload?.sessionId,
       }
-    ),
-  })(req, res, next);
+    );
+
+    return {
+      application: {
+        ...applicationId.insert_bops_applications_one,
+        bopsResponse: res.data,
+      },
+    };
+  });
+  res.send(bopsResponse);
 };
 
 /**
