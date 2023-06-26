@@ -10,7 +10,6 @@ export interface Props {
   id?: string;
   title: string;
   description?: string;
-  selected: boolean;
   onChange: RadioProps["onChange"];
 }
 
@@ -39,11 +38,13 @@ const DescriptionRadio: React.FC<Props> = ({
   title,
   description,
   onChange,
-  selected,
   id,
 }) => {
+  const radioGroupState = useRadioGroup();
+  const isSelected = radioGroupState?.value === id;
+
   return (
-    <StyledFormLabel focused={false} isSelected={selected}>
+    <StyledFormLabel focused={false} isSelected={isSelected}>
       <Box sx={{ paddingBottom: 1, display: "flex", alignItems: "center" }}>
         <Radio value={id} onChange={onChange} />
         <Typography variant="body1">{title}</Typography>

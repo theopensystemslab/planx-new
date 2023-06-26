@@ -13,7 +13,6 @@ export interface Props {
   description?: string;
   responseKey?: string | number;
   img?: string;
-  selected: boolean;
   onChange: RadioProps["onChange"];
 }
 
@@ -148,8 +147,11 @@ const ImageLabel = (props: Props): FCReturn => {
 };
 
 const ImageRadio: React.FC<Props> = (props: Props) => {
+  const radioGroupState = useRadioGroup();
+  const isSelected = radioGroupState?.value === props.id;
+
   return (
-    <StyledFormLabel focused={false} isSelected={props.selected}>
+    <StyledFormLabel focused={false} isSelected={isSelected}>
       <ImageLabel {...props} />
       <TextLabel {...props} />
     </StyledFormLabel>

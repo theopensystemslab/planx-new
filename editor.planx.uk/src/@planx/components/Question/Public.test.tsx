@@ -80,6 +80,38 @@ describe("Question component", () => {
       );
     });
 
+    it(`should display previously selected answers when going back or changing in the ${QuestionLayout[type]} layout`, async () => {
+      const handleSubmit = jest.fn();
+      const { user } = setup(
+        <Question
+          text="Best food"
+          responses={responses[type]}
+          previouslySubmittedData={{
+            answers: ["celery_id"],
+            auto: false,
+          }}
+          handleSubmit={handleSubmit}
+        />
+      );
+
+      expect(screen.getByRole("heading")).toHaveTextContent("Best food");
+
+      let celeryRadio: HTMLElement | undefined;
+      if (QuestionLayout[type] === "Basic") {
+        celeryRadio = screen.getByRole("radio", { name: "Celery" });
+      } else if (QuestionLayout[type] === "Descriptions") {
+        celeryRadio = screen.getByRole("radio", {
+          name: "Celery This is celery",
+        });
+      } else if (QuestionLayout[type] === "Images") {
+        celeryRadio = screen.getByRole("radio", { name: "Celery Celery" });
+      }
+      expect(celeryRadio).toBeChecked();
+
+      const continueButton = screen.getByTestId("continue-button");
+      expect(continueButton).toBeEnabled();
+    });
+
     it(`should not have any accessibility violations in the ${QuestionLayout[type]} layout`, async () => {
       const handleSubmit = jest.fn();
       const { container } = setup(

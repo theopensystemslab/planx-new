@@ -105,6 +105,7 @@ const Question: React.FC<IQuestion> = (props) => {
         <RadioGroup
           aria-labelledby={`radio-buttons-group-label-${props.id}`}
           name={`radio-buttons-group-${props.id}`}
+          value={previousResponseId}
         >
           <Grid
             container
