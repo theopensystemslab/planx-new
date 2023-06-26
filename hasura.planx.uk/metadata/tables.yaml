@@ -45,6 +45,7 @@
       permission:
         columns:
           - has_clicked_help
+          - metadata
         filter: {}
         check: null
 - table:
