@@ -119,15 +119,15 @@ export function SectionsOverviewList({
       [SectionStatus.NotStarted]: TagType.Notice,
       [SectionStatus.Completed]: TagType.Success,
     };
-    const type = tagTypes[section];
+    const tagType = tagTypes[section];
 
     const onClick =
-      type == TagType.Alert || type == TagType.Active
+      tagType == TagType.Alert || tagType == TagType.Active
         ? () => nextQuestion()
         : () => {}; // no-op
 
     return (
-      <Tag type={type} onClick={onClick}>
+      <Tag tagType={tagType} onClick={onClick}>
         {section}
       </Tag>
     );
