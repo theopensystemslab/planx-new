@@ -15,6 +15,9 @@ const useClasses = makeStyles((theme) => ({
     "& p:last-of-type": {
       marginBottom: 0,
     },
+    "& img": {
+      maxWidth: "100%",
+    },
   },
 }));
 

@@ -18,6 +18,7 @@ import { type Editor, type JSONContent } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
 import Document from "@tiptap/extension-document";
+import Dropcursor from "@tiptap/extension-dropcursor";
 import HardBreak from "@tiptap/extension-hard-break";
 import Heading from "@tiptap/extension-heading";
 import History from "@tiptap/extension-history";
@@ -51,6 +52,8 @@ import tippy, { type Instance } from "tippy.js";
 import { create } from "zustand";
 
 import Input from "./Input";
+import PublicFileUploadButton from "./PublicFileUploadButton";
+import CustomImage from "./RichTextImage";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -79,6 +82,8 @@ const commonExtensions = [
   BulletList,
   OrderedList,
   ListItem,
+  CustomImage,
+  Dropcursor,
 ];
 
 // Tiptap editor extensions used to convert between HTML and Prosemirror document state (used internally by tiptap)
@@ -559,6 +564,11 @@ const RichTextInput: FC<Props> = (props) => {
               <LinkIcon />
             </IconButton>
           )}
+          <PublicFileUploadButton
+            onChange={(url) =>
+              editor?.chain().focus().setImage({ src: url }).run()
+            }
+          />
         </BubbleMenu>
       )}
       <EditorContent editor={editor} />
