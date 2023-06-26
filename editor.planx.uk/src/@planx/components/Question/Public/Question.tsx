@@ -110,47 +110,46 @@ const Question: React.FC<IQuestion> = (props) => {
             spacing={layout === QuestionLayout.Basic ? 0 : 2}
             alignItems="stretch"
           >
-            {!props.text?.startsWith("Sorry") &&
-              props.responses?.map((response) => {
-                const onChange = () => {
-                  formik.setFieldValue("selected.id", response.id);
-                  formik.setFieldValue("selected.a", response.responseKey);
-                };
-                const buttonProps = {
-                  onChange,
-                };
+            {props.responses?.map((response) => {
+              const onChange = () => {
+                formik.setFieldValue("selected.id", response.id);
+                formik.setFieldValue("selected.a", response.responseKey);
+              };
+              const buttonProps = {
+                onChange,
+              };
 
-                switch (layout) {
-                  case QuestionLayout.Basic:
-                    return (
-                      <Grid item xs={12} ml={1} key={response.id}>
-                        <BasicRadio
-                          {...buttonProps}
-                          {...response}
-                          data-testid="basic-radio"
-                        />
-                      </Grid>
-                    );
-                  case QuestionLayout.Descriptions:
-                    return (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        key={response.id}
-                        data-testid="description-radio"
-                      >
-                        <DescriptionRadio {...buttonProps} {...response} />
-                      </Grid>
-                    );
-                  case QuestionLayout.Images:
-                    return (
-                      <Grid item xs={12} sm={6} key={response.id}>
-                        <ImageRadio {...buttonProps} {...response} />
-                      </Grid>
-                    );
-                }
-              })}
+              switch (layout) {
+                case QuestionLayout.Basic:
+                  return (
+                    <Grid item xs={12} ml={1} key={response.id}>
+                      <BasicRadio
+                        {...buttonProps}
+                        {...response}
+                        data-testid="basic-radio"
+                      />
+                    </Grid>
+                  );
+                case QuestionLayout.Descriptions:
+                  return (
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      key={response.id}
+                      data-testid="description-radio"
+                    >
+                      <DescriptionRadio {...buttonProps} {...response} />
+                    </Grid>
+                  );
+                case QuestionLayout.Images:
+                  return (
+                    <Grid item xs={12} sm={6} key={response.id}>
+                      <ImageRadio {...buttonProps} {...response} />
+                    </Grid>
+                  );
+              }
+            })}
           </Grid>
         </RadioGroup>
       </FormControl>
