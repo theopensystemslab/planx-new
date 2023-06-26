@@ -1,4 +1,5 @@
 import supertest from "supertest";
+import omit from "lodash.omit";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
 import {
@@ -16,10 +17,7 @@ import type { Node, Flow, Breadcrumb } from "../types";
 const validateSessionPath = "/validate-session";
 
 describe("Validate Session endpoint", () => {
-  const reconciledData = {
-    ...mockLowcalSession.data,
-    passport: { data: {} },
-  };
+  const reconciledData = omit(mockLowcalSession.data, "passport");
 
   afterEach(() => {
     queryMock.reset();

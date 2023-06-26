@@ -28,13 +28,13 @@ const Description = styled(Box)(({ theme }) => ({
   },
 }));
 
-const StyledIconButton = styled(IconButton)(() => ({
+export const StyledIconButton = styled(IconButton)(() => ({
   "&:hover": {
     backgroundColor: "transparent",
   },
 }));
 
-const Image = styled("img")(() => ({
+export const Image = styled("img")(() => ({
   maxWidth: "100%",
 }));
 
@@ -56,11 +56,11 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   };
 
   return (
-    <Box mb={2}>
+    <Box mb={1}>
       <Grid container justifyContent="space-between" wrap="nowrap">
         <Grid item>
           {title && (
-            <Box mr={1} pt={1.5}>
+            <Box mr={1} pt={0.5}>
               <Typography
                 variant="h3"
                 role="heading"
@@ -91,6 +91,8 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               onClick={handleHelpClick}
               aria-haspopup="dialog"
               size="large"
+              // Maintain alignment with tabled icons
+              sx={{ mr: "-7px" }}
             >
               <MoreInfoIcon />
             </StyledIconButton>

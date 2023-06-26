@@ -11,32 +11,36 @@ export enum TagType {
   Success = "success",
 }
 
+const BG_ALERT = "#FAFF00";
+const BG_ACTIVE = "#E5F1EB";
+const BG_NOTICE = "#F3F2F1";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     fontSize: theme.typography.body2.fontSize,
     fontWeight: 600,
     width: "100%",
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(0.5),
-    paddingLeft: theme.spacing(1.5),
-    paddingRight: theme.spacing(1.5),
+    paddingTop: theme.spacing(0.75),
+    paddingBottom: theme.spacing(0.75),
+    paddingLeft: theme.spacing(1.25),
+    paddingRight: theme.spacing(1.25),
   },
   [TagType.Alert]: {
     color: theme.palette.text.primary,
-    backgroundColor: "#FAFF00",
+    backgroundColor: BG_ALERT,
     "&:hover": {
-      backgroundColor: darken("#FAFF00", 0.05),
+      backgroundColor: darken(BG_ALERT, 0.05),
     },
   },
   [TagType.Active]: {
-    backgroundColor: "#E8F1EC",
+    backgroundColor: BG_ACTIVE,
     color: theme.palette.success.dark,
     "&:hover": {
-      backgroundColor: darken("#E8F1EC", 0.05),
+      backgroundColor: darken(BG_ACTIVE, 0.05),
     },
   },
   [TagType.Notice]: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: BG_NOTICE,
     color: theme.palette.text.secondary,
   },
   [TagType.Success]: {

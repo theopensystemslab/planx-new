@@ -2,6 +2,7 @@ import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
 import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
@@ -55,10 +56,6 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
         </Typography>
         <List>
           <li>
-            if you do not receive an email confirming that we have received your
-            application within 24 hours or the next working day
-          </li>
-          <li>
             if you have any questions about your application or this service
           </li>
         </List>
@@ -71,13 +68,21 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
           </Typography>
         </Box>
         <Box pt={2}>
-          <b>Email</b>{" "}
-          <a href={`mailto:${team.notifyPersonalisation?.helpEmail}`}>
-            {team.notifyPersonalisation?.helpEmail}
-          </a>
+          <Typography variant="body2" sx={{ margin: 0 }}>
+            <b>Email</b>{" "}
+            <Link href={`mailto:${team.notifyPersonalisation?.helpEmail}`}>
+              {team.notifyPersonalisation?.helpEmail}
+            </Link>
+          </Typography>
           <Typography variant="body2" sx={{ margin: 0 }}>
             We aim to respond within 2 working days.
           </Typography>
+          <Divider sx={{ pt: 4 }} />
+          <Box sx={{ pt: 4 }}>
+            <Link href="../preview" variant="body2">
+              Start a new application
+            </Link>
+          </Box>
         </Box>
       </Container>
     </>

@@ -137,6 +137,7 @@ function Component(props: Props) {
             boundary={boundary}
             id={props.id}
             description={props.newAddressDescription || ""}
+            descriptionLabel={props.newAddressDescriptionLabel || ""}
           />
         </>
       );

@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { useFormik } from "formik";
 import flags, { FlagSet } from "pages/FlowEditor/data/flags";
 import React, { useState } from "react";
@@ -25,19 +24,12 @@ interface FlagDisplayText {
   description?: string;
 }
 
-const useClasses = makeStyles({
-  flagEditor: {
-    cursor: "pointer",
-  },
-});
-
 const FlagEditor: React.FC<{
   flag: Flag;
   existingOverrides?: FlagDisplayText;
   onChange: (newValues: any) => any;
 }> = (props) => {
   const { flag, existingOverrides } = props;
-  const classes = useClasses();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -45,7 +37,7 @@ const FlagEditor: React.FC<{
 
   return (
     <Box
-      className={classes.flagEditor}
+      sx={{ cursor: "pointer" }}
       padding={1}
       bgcolor={flag.bgColor}
       color={flag.color}

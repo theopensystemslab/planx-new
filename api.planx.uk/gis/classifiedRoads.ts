@@ -28,7 +28,11 @@ type OSHighwayFeature = {
   FormsPartOf: string;
 };
 
-type PlanningConstraintResponse = Record<string, PlanningConstraintBody>;
+type PlanningConstraintResponse = {
+  url?: string;
+  constraints: Record<string, PlanningConstraintBody>;
+  metadata?: Record<string, any>;
+}
 
 type PlanningConstraintBody = {
   value: boolean;
@@ -86,21 +90,39 @@ export const classifiedRoadsSearch = async (
         return classifiedFeatures;
       });
 
+    const baseResponse = {
+      url: url.split("key=")[0],
+      metadata: {
+        [PASSPORT_FN]: {
+          name: "Classified road",
+          plural: "Classified roads",
+        }
+      }
+    };
+
     if (features?.length) {
       return res.json({
-        [PASSPORT_FN]: {
-          value: true,
-          text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
-          data: features,
-          category: "General policy",
+        ...baseResponse,
+        constraints: {
+          [PASSPORT_FN]: {
+            fn: PASSPORT_FN,
+            value: true,
+            text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
+            data: features,
+            category: "General policy",
+          }
         }
       } as PlanningConstraintResponse)
     } else {
       return res.json({
-        [PASSPORT_FN]: {
-          value: false,
-          text: "is not on a Classified Road",
-          category: "General policy",
+        ...baseResponse,
+        constraints: {
+          [PASSPORT_FN]: {
+            fn: PASSPORT_FN,
+            value: false,
+            text: "is not on a Classified Road",
+            category: "General policy",
+          }
         }
       } as PlanningConstraintResponse)
     }

@@ -31,3 +31,5 @@ SELECT
   notify_personalisation
 FROM sync_teams
 ON CONFLICT (id) DO NOTHING;
+
+SELECT setval('teams_id_seq', max(id)) FROM teams;

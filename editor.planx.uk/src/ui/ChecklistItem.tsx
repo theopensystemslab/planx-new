@@ -8,16 +8,19 @@ import Checkbox from "./Checkbox";
 export const useClasses = makeStyles((theme) => ({
   root: {
     width: "100%",
-    cursor: "pointer",
-    marginBottom: theme.spacing(1.5),
-    paddingRight: theme.spacing(1),
-    display: "inline-flex",
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    display: "flex",
     alignItems: "center",
+    cursor: "pointer",
   },
   label: {
-    marginLeft: theme.spacing(1.5),
+    display: "flex",
+    flexGrow: 2,
     "& > label": {
       cursor: "pointer",
+      flexGrow: 2,
+      padding: theme.spacing(0.75, 1.5),
     },
   },
 }));
@@ -26,7 +29,7 @@ interface Props {
   id?: string;
   label: string;
   checked: boolean;
-  onChange: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export default function ChecklistItem({
@@ -40,7 +43,7 @@ export default function ChecklistItem({
   return (
     <Box className={classes.root}>
       <Checkbox checked={checked} id={id} onChange={onChange} />
-      <Typography variant="body2" className={classes.label}>
+      <Typography variant="body1" className={classes.label}>
         <label htmlFor={id}>{label}</label>
       </Typography>
     </Box>

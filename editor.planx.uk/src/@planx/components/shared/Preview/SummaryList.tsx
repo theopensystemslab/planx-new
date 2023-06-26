@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
+import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -19,7 +20,7 @@ const Grid = styled("dl")(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(4),
   "& > *": {
-    borderBottom: "1px solid grey",
+    borderBottom: `1px solid ${theme.palette.secondary.main}`,
     paddingBottom: theme.spacing(2),
     paddingTop: theme.spacing(2),
     verticalAlign: "top",
@@ -44,24 +45,24 @@ const Grid = styled("dl")(({ theme }) => ({
   },
 }));
 
-const components: {
-  [key in TYPES]: React.FC<any> | undefined;
+const presentationalComponents: {
+  [key in TYPES]: React.FC<ComponentProps> | undefined;
 } = {
   [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
+  [TYPES.Confirmation]: undefined,
   [TYPES.ContactInput]: ContactInput,
   [TYPES.Content]: undefined,
-  [TYPES.Confirmation]: undefined,
   [TYPES.DateInput]: DateInput,
   [TYPES.DrawBoundary]: DrawBoundary,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
-  [TYPES.MultipleFileUpload]: undefined,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: FindProperty,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
+  [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.Notice]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
@@ -76,10 +77,31 @@ const components: {
   [TYPES.Statement]: Question,
   [TYPES.TaskList]: undefined,
   [TYPES.TextInput]: TextInput,
-};
+} as const;
 
-interface SummaryListsBySectionsProps extends SummaryListProps {
+type BreadcrumbEntry = [Store.nodeId, Store.breadcrumbs];
+
+interface SummaryListBaseProps {
+  flow: Store.flow;
+  passport: Store.passport;
+  changeAnswer: (id: Store.nodeId) => void;
+  showChangeButton: boolean;
+}
+
+interface SummaryListsBySectionsProps extends SummaryListBaseProps {
+  breadcrumbs: Store.breadcrumbs;
   sectionComponent: React.ElementType<any> | undefined;
+}
+
+interface SummaryBreadcrumb {
+  component: React.FC<ComponentProps>;
+  nodeId: Store.nodeId;
+  userData: Store.userData;
+  node: Store.node;
+}
+
+interface SummaryListProps extends SummaryListBaseProps {
+  summaryBreadcrumbs: SummaryBreadcrumb[];
 }
 
 function SummaryListsBySections(props: SummaryListsBySectionsProps) {
@@ -88,44 +110,86 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     state.getSortedBreadcrumbsBySection,
   ]);
 
-  const sections = getSortedBreadcrumbsBySection();
+  const isValidComponent = ([nodeId, userData]: BreadcrumbEntry) => {
+    const node = props.flow[nodeId];
+    const Component = node.type && presentationalComponents[node.type];
 
-  return hasSections ? (
-    <>
-      {sections.map((sectionBreadcrumbs, i) => (
-        <React.Fragment key={i}>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography component={props.sectionComponent || "h2"} variant="h5">
-              {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
-            </Typography>
-          </Box>
-          <SummaryList
-            breadcrumbs={sectionBreadcrumbs}
-            flow={props.flow}
-            passport={props.passport}
-            changeAnswer={props.changeAnswer}
-            showChangeButton={props.showChangeButton}
-          />
-        </React.Fragment>
-      ))}
-    </>
-  ) : (
-    <SummaryList
-      breadcrumbs={props.breadcrumbs}
-      flow={props.flow}
-      passport={props.passport}
-      changeAnswer={props.changeAnswer}
-      showChangeButton={props.showChangeButton}
-    />
-  );
-}
+    const isPresentationalComponent = Boolean(Component);
+    const doesNodeExist = Boolean(props.flow[nodeId]);
+    const isAutoAnswered = userData.auto;
 
-interface SummaryListProps {
-  breadcrumbs: Store.breadcrumbs;
-  flow: Store.flow;
-  passport: Store.passport;
-  changeAnswer: (id: Store.nodeId) => void;
-  showChangeButton: boolean;
+    return doesNodeExist && !isAutoAnswered && isPresentationalComponent;
+  };
+
+  const removeNonPresentationalNodes = (
+    section: Store.breadcrumbs
+  ): BreadcrumbEntry[] => {
+    // Typecast to preserve Store.userData
+    const entries = Object.entries(section) as BreadcrumbEntry[];
+    return entries.filter(isValidComponent);
+  };
+
+  const makeSummaryBreadcrumb = ([
+    nodeId,
+    userData,
+  ]: BreadcrumbEntry): SummaryBreadcrumb => {
+    const node = props.flow[nodeId];
+    const Component = node.type && presentationalComponents[node.type];
+
+    return {
+      component: Component!,
+      nodeId,
+      userData,
+      node,
+    };
+  };
+
+  if (hasSections) {
+    const sections = getSortedBreadcrumbsBySection();
+    const sectionsWithFilteredBreadcrumbs = sections
+      .map(removeNonPresentationalNodes)
+      .map((section) => section.map(makeSummaryBreadcrumb));
+
+    return (
+      <>
+        {sectionsWithFilteredBreadcrumbs.map(
+          (filteredBreadcrumbs, i) =>
+            Boolean(filteredBreadcrumbs.length) && (
+              <React.Fragment key={i}>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography
+                    component={props.sectionComponent || "h2"}
+                    variant="h5"
+                  >
+                    {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
+                  </Typography>
+                </Box>
+                <SummaryList
+                  summaryBreadcrumbs={filteredBreadcrumbs}
+                  flow={props.flow}
+                  passport={props.passport}
+                  changeAnswer={props.changeAnswer}
+                  showChangeButton={props.showChangeButton}
+                />
+              </React.Fragment>
+            )
+        )}
+      </>
+    );
+  } else {
+    const filteredBreadcrumbs = removeNonPresentationalNodes(
+      props.breadcrumbs
+    ).map(makeSummaryBreadcrumb);
+    return (
+      <SummaryList
+        summaryBreadcrumbs={filteredBreadcrumbs}
+        flow={props.flow}
+        passport={props.passport}
+        changeAnswer={props.changeAnswer}
+        showChangeButton={props.showChangeButton}
+      />
+    );
+  }
 }
 
 // For applicable component types, display a list of their question & answers with a "change" link
@@ -137,50 +201,33 @@ function SummaryList(props: SummaryListProps) {
 
   return (
     <Grid>
-      {
-        // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
-        Object.entries(props.breadcrumbs)
-          // ensure node exists, need to find the root cause but for now this should fix
-          // https://john-opensystemslab-io.airbrake.io/projects/329753/groups/3049111363214482333
-          .filter(([nodeId]) => Boolean(props.flow[nodeId]))
-          .map(([nodeId, value], i) => {
-            const node = props.flow[nodeId];
-            const Component = node.type && components[node.type];
-            // Hide questions if they lack a presentation component or are auto-answered
-            if (Component === undefined || value.auto) {
-              return null;
-            }
-            return (
-              <React.Fragment key={i}>
-                <Component
-                  nodeId={nodeId}
-                  node={node}
-                  userData={value}
-                  flow={props.flow}
-                  passport={props.passport}
-                />
-                {props.showChangeButton ? (
-                  <dd>
-                    <Link
-                      onClick={() => handleClick(nodeId)}
-                      component="button"
-                      fontSize="body2.fontSize"
-                    >
-                      Change
-                      <span style={visuallyHidden}>
-                        {node.data?.title || node.data?.text || "this answer"}
-                      </span>
-                    </Link>
-                  </dd>
-                ) : (
-                  <dd>
-                    {/** ensure there's always a third column to not break styling, even when showChange is false */}
-                  </dd>
-                )}
-              </React.Fragment>
-            );
-          })
-      }
+      {props.summaryBreadcrumbs.map(
+        ({ component: Component, nodeId, node, userData }, i) => (
+          <React.Fragment key={i}>
+            <Component
+              nodeId={nodeId}
+              node={node}
+              userData={userData}
+              flow={props.flow}
+              passport={props.passport}
+            />
+            <dd>
+              {props.showChangeButton && (
+                <Link
+                  onClick={() => handleClick(nodeId)}
+                  component="button"
+                  fontSize="body2.fontSize"
+                >
+                  Change
+                  <span style={visuallyHidden}>
+                    {node.data?.title || node.data?.text || "this answer"}
+                  </span>
+                </Link>
+              )}
+            </dd>
+          </React.Fragment>
+        )
+      )}
     </Grid>
   );
 }
@@ -403,6 +450,27 @@ function ContactInput(props: ComponentProps) {
         {phone}
         <br />
         {email}
+      </dd>
+    </>
+  );
+}
+
+function FileUploadAndLabel(props: ComponentProps) {
+  const userFiles = Object.entries(props?.userData?.data || {});
+  const allFilenames: string[] = userFiles
+    .map(([_key, value]) => value.map((file: any) => file.filename))
+    .flat();
+  const uniqueFilenames = [...new Set(allFilenames)];
+
+  return (
+    <>
+      <dt>{props.node.data.title ?? "Upload and label"}</dt>
+      <dd>
+        <ul>
+          {uniqueFilenames.map((filename, index) => (
+            <li key={index}>{filename}</li>
+          ))}
+        </ul>
       </dd>
     </>
   );

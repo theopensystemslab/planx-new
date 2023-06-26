@@ -163,7 +163,7 @@ export interface ReconciliationResponse {
   message: string;
   changesFound: boolean | null;
   alteredSectionIds?: string[];
-  reconciledSessionData: Session;
+  reconciledSessionData: Omit<Session, "passport">;
 }
 
 // re-export store types

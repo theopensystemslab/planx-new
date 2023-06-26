@@ -18,7 +18,7 @@ import { gql } from "graphql-request";
 import { Passport as IPassport } from "../types";
 import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
 import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
-import { _admin as $admin } from "../client";
+import { $admin } from "../client";
 import { Passport } from "@opensystemslab/planx-core"
 
 interface UniformClient {
@@ -65,8 +65,15 @@ interface SendToUniformPayload {
  *   finally, insert a record into uniform_applications for future auditing
  */
 const sendToUniform = async (req: Request, res: Response, next: NextFunction) => {
-  const uniformClient = getUniformClient(req.params.localAuthority);
-  
+  req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
+
+  // allow e2e team to present as "lambeth"
+  const localAuthority = req.params.localAuthority == "e2e"
+    ? "lambeth"
+    : req.params.localAuthority
+
+  const uniformClient = getUniformClient(localAuthority);
+
   if (!uniformClient) {
     return next({
       status: 400,
@@ -465,7 +472,7 @@ const addOneAppXMLToZip = async (
     zip.addLocalFile(xmlPath);
     deleteFile(xmlPath);
   } catch (error) {
-    throw Error(`Failed to generate OneApp XML. Error - ${error}`)
+  throw Error(`Failed to generate OneApp XML. Error - ${error}`)
   }
 }
 

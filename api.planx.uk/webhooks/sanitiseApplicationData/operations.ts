@@ -29,6 +29,9 @@ export const getOperations = (): Operation[] => [
 
   // Event logs
   deleteHasuraEventLogs,
+
+  // Queued up scheduled events (backup method to PG function/trigger)
+  deleteHasuraScheduledEventsForSubmittedSessions,
 ];
 
 export const operationHandler = async (
@@ -249,6 +252,22 @@ export const deleteHasuraEventLogs: Operation = async () => {
     WHERE (delivered = true OR error = true)
     AND created_at < now() - interval '6 months'
     RETURNING id;
+  `);
+  const [_column_name, ...ids] = response.result.flat();
+  return ids;
+};
+
+export const deleteHasuraScheduledEventsForSubmittedSessions: Operation = async () => {
+  const response = await runSQL(`
+    DELETE FROM hdb_catalog.hdb_scheduled_events hse
+    WHERE EXISTS (
+        SELECT id
+        FROM public.lowcal_sessions
+        WHERE submitted_at IS NOT NULL
+          AND (hse.comment LIKE 'reminder_' || id || '%' OR hse.comment = 'expiry_' || id)
+          AND hse.status = 'scheduled'
+    )
+    RETURNING hse.id;
   `);
   const [_column_name, ...ids] = response.result.flat();
   return ids;

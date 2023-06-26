@@ -5,7 +5,6 @@ import {
   makeEsriUrl,
   setEsriGeometryType,
   setEsriGeometry,
-  addDesignatedVariable,
   rollupResultLayers,
 } from "../helpers.js";
 import { planningConstraints } from "./metadata/scotland";
@@ -79,6 +78,7 @@ async function go(x, y, siteBoundary, extras) {
               value: true,
               type: "warning",
               data: properties,
+              category: planningConstraints[key].category,
             };
           } else {
             if (!acc[k]) {
@@ -87,6 +87,7 @@ async function go(x, y, siteBoundary, extras) {
                 value: false,
                 type: "check",
                 data: {},
+                category: planningConstraints[key].category,
               };
             }
           }
@@ -110,10 +111,7 @@ async function go(x, y, siteBoundary, extras) {
     "designated.nationalPark",
   );
 
-  // Add summary "designated" key to response
-  const obWithDesignated = addDesignatedVariable(obWithOneNationalPark);
-
-  return obWithDesignated;
+  return obWithOneNationalPark;
 }
 
 async function locationSearch(x, y, siteBoundary, extras) {

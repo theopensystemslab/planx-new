@@ -59,7 +59,7 @@ describe("publish", () => {
   it("updates published flow and returns altered nodes if there have been changes", async () => {
     const alteredFlow = {
       ...mockFlowData,
-      "ResultNode": {
+      ResultNode: {
         data: {
           flagSet: "Planning permission",
           overrides: {
@@ -71,7 +71,7 @@ describe("publish", () => {
         type: 3,
       },
     };
-  
+
     queryMock.mockQuery({
       name: "GetFlowData",
       matchOnVariables: false,
@@ -81,7 +81,7 @@ describe("publish", () => {
         },
       },
     });
-  
+
     queryMock.mockQuery({
       name: "PublishFlow",
       matchOnVariables: false,
@@ -91,7 +91,7 @@ describe("publish", () => {
         },
       },
     });
-  
+
     await supertest(app)
       .post("/flows/1/publish")
       .set(authHeader())
@@ -121,15 +121,15 @@ describe("sections validation on diff", () => {
   it("does not update if there are sections in an external portal", async () => {
     const alteredFlow = {
       ...mockFlowData,
-      "externalPortalNodeId": {
+      externalPortalNodeId: {
         edges: ["newSectionNodeId"],
         type: 310,
       },
-      "newSectionNodeId": {
+      newSectionNodeId: {
         type: 360,
       },
     };
-  
+
     queryMock.mockQuery({
       name: "GetFlowData",
       matchOnVariables: false,
@@ -139,7 +139,7 @@ describe("sections validation on diff", () => {
         },
       },
     });
-  
+
     await supertest(app)
       .post("/flows/1/diff")
       .set(authHeader())
@@ -148,22 +148,23 @@ describe("sections validation on diff", () => {
         expect(res.body).toEqual({
           alteredNodes: null,
           message: "Cannot publish an invalid flow",
-          description: "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
+          description:
+            "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
         });
       });
   });
-  
+
   it("does not update if there are sections, but there is not a section in the first position", async () => {
     const flowWithSections: Flow["data"] = {
       _root: {
-        edges: ["questionNode", "sectionNode"]
+        edges: ["questionNode", "sectionNode"],
       },
       questionNode: {},
       sectionNode: {
         type: 360,
       },
     };
-  
+
     queryMock.mockQuery({
       name: "GetFlowData",
       matchOnVariables: false,
@@ -173,7 +174,7 @@ describe("sections validation on diff", () => {
         },
       },
     });
-  
+
     await supertest(app)
       .post("/flows/1/diff")
       .set(authHeader())
@@ -182,17 +183,20 @@ describe("sections validation on diff", () => {
         expect(res.body).toEqual({
           alteredNodes: null,
           message: "Cannot publish an invalid flow",
-          description: "When using Sections, your flow must start with a Section"
+          description:
+            "When using Sections, your flow must start with a Section",
         });
       });
   });
 });
 
 describe("invite to pay validation on diff", () => {
-  it("does not update if invite to pay is enabled, but there is not a Send component", async () => {  
+  it("does not update if invite to pay is enabled, but there is not a Send component", async () => {
     const { Send, ...invalidatedFlow } = flowWithInviteToPay;
-    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Send"));
-    
+    invalidatedFlow["_root"].edges?.splice(
+      invalidatedFlow["_root"].edges?.indexOf("Send")
+    );
+
     queryMock.mockQuery({
       name: "GetFlowData",
       matchOnVariables: false,
@@ -202,26 +206,28 @@ describe("invite to pay validation on diff", () => {
         },
       },
     });
-  
+
     await supertest(app)
       .post("/flows/1/diff")
       .set(authHeader())
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Send");
+        expect(res.body.description).toEqual(
+          "When using Invite to Pay, your flow must have a Send"
+        );
       });
   });
 
   it("does not update if invite to pay is enabled, but there is more than one Send component", async () => {
     const alteredFlow = {
       ...flowWithInviteToPay,
-      "secondSend": {
+      secondSend: {
         type: 650,
         data: {
-          destinations: ["bops", "email"]
-        }
-      }
+          destinations: ["bops", "email"],
+        },
+      },
     };
 
     queryMock.mockQuery({
@@ -240,14 +246,18 @@ describe("invite to pay validation on diff", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations");
+        expect(res.body.description).toEqual(
+          "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations"
+        );
       });
   });
-  
+
   it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
     const { FindProperty, ...invalidatedFlow } = flowWithInviteToPay;
-    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("FindProperty"));
-    
+    invalidatedFlow["_root"].edges?.splice(
+      invalidatedFlow["_root"].edges?.indexOf("FindProperty")
+    );
+
     queryMock.mockQuery({
       name: "GetFlowData",
       matchOnVariables: false,
@@ -257,21 +267,61 @@ describe("invite to pay validation on diff", () => {
         },
       },
     });
-  
+
     await supertest(app)
       .post("/flows/1/diff")
       .set(authHeader())
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a FindProperty");
+        expect(res.body.description).toEqual(
+          "When using Invite to Pay, your flow must have a FindProperty"
+        );
       });
   });
-  
+
+  it("does not update if invite to pay is enabled, but there is more than one Pay component", async () => {
+    const invalidFlow = {
+      ...flowWithInviteToPay,
+      PayTwo: { ...flowWithInviteToPay.Pay },
+      _root: {
+        edges: [...flowWithInviteToPay._root.edges!, "PayTwo"],
+      },
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flows_by_pk: {
+          data: invalidFlow,
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(authHeader())
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Cannot publish an invalid flow");
+        expect(res.body.description).toEqual(
+          "When using Invite to Pay, your flow must have exactly ONE Pay"
+        );
+      });
+  });
+
   it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
-    const { Checklist, ChecklistOptionOne, ChecklistOptionTwo, ...invalidatedFlow } = flowWithInviteToPay;
-    invalidatedFlow["_root"].edges?.splice(invalidatedFlow["_root"].edges?.indexOf("Checklist"));
-    
+    const {
+      Checklist,
+      ChecklistOptionOne,
+      ChecklistOptionTwo,
+      ...invalidatedFlow
+    } = flowWithInviteToPay;
+    invalidatedFlow["_root"].edges?.splice(
+      invalidatedFlow["_root"].edges?.indexOf("Checklist")
+    );
+
     queryMock.mockQuery({
       name: "GetFlowData",
       matchOnVariables: false,
@@ -281,14 +331,16 @@ describe("invite to pay validation on diff", () => {
         },
       },
     });
-  
+
     await supertest(app)
       .post("/flows/1/diff")
       .set(authHeader())
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual("When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`");
+        expect(res.body.description).toEqual(
+          "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`"
+        );
       });
   });
 });
@@ -306,16 +358,16 @@ const mockFlowData: Flow["data"] = {
       "ConfirmationNode",
     ],
   },
-  "SectionOne": {
+  SectionOne: {
     type: 360,
     data: {
       title: "Section 1",
     },
   },
-  "FindPropertyNode": {
+  FindPropertyNode: {
     type: 9,
   },
-  "ResultNode": {
+  ResultNode: {
     data: {
       flagSet: "Planning permission",
       overrides: {
@@ -326,7 +378,7 @@ const mockFlowData: Flow["data"] = {
     },
     type: 3,
   },
-  "AnswerOne": {
+  AnswerOne: {
     data: {
       text: "?",
     },

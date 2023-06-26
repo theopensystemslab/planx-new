@@ -1,4 +1,3 @@
-import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
@@ -8,14 +7,6 @@ import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 export default Component;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& *": {
-      fontFamily: "Inter, sans-serif",
-    },
-  },
-}));
 
 interface Props {
   title: string;
@@ -29,8 +20,6 @@ interface Props {
 }
 
 function Component(props: Props) {
-  const { root } = useStyles();
-
   // ensure questions & answers display in expected order
   const sortedBreadcrumbs: Store.breadcrumbs = sortBreadcrumbs(
     props.breadcrumbs,
@@ -39,17 +28,15 @@ function Component(props: Props) {
 
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
-      <div className={root}>
-        <QuestionHeader title={props.title} description={props.description} />
-        <SummaryListsBySections
-          breadcrumbs={sortedBreadcrumbs}
-          flow={props.flow}
-          passport={props.passport}
-          changeAnswer={props.changeAnswer}
-          showChangeButton={props.showChangeButton}
-          sectionComponent="h2"
-        />
-      </div>
+      <QuestionHeader title={props.title} description={props.description} />
+      <SummaryListsBySections
+        breadcrumbs={sortedBreadcrumbs}
+        flow={props.flow}
+        passport={props.passport}
+        changeAnswer={props.changeAnswer}
+        showChangeButton={props.showChangeButton}
+        sectionComponent="h2"
+      />
     </Card>
   );
 }

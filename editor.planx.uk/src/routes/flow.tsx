@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { TYPES } from "@planx/components/types";
 import ErrorFallback from "components/ErrorFallback";
+import TestEnvironmentBanner from "components/TestEnvironmentBanner";
 import natsort from "natsort";
 import {
   compose,
@@ -209,6 +210,7 @@ const routes = compose(
     return (
       <>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <TestEnvironmentBanner />
           <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
         </ErrorBoundary>
         <View />

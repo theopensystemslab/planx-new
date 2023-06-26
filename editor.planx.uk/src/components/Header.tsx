@@ -9,10 +9,12 @@ import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
+import { Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { styled } from "@mui/styles";
+import { deepmerge } from "@mui/utils";
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { clearLocalFlow } from "lib/local";
@@ -25,13 +27,19 @@ import {
   useCurrentRoute,
   useNavigation,
 } from "react-navi";
-import { borderedFocusStyle, focusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
-import { ApplicationPath, Team } from "types";
+import {
+  borderedFocusStyle,
+  focusStyle,
+  FONT_WEIGHT_SEMI_BOLD,
+  LINE_HEIGHT_BASE,
+} from "theme";
+import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
+import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
 export const HEADER_HEIGHT = 74;
 
@@ -44,29 +52,45 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   fontSize: 20,
 }));
 
-const BreadcrumbLink = styled(ReactNaviLink)(() => ({
+const StyledLink = styled(ReactNaviLink)(() => ({
   color: "#fff",
   textDecoration: "none",
-}));
+})) as typeof Link;
+
+export const getHeaderPadding = (theme: Theme): React.CSSProperties => ({
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+  },
+  [theme.breakpoints.up("lg")]: {
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
+  },
+});
 
 const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
-  paddingLeft: theme.spacing(4),
-  paddingRight: theme.spacing(4),
-  marginTop: theme.spacing(1),
   height: HEADER_HEIGHT,
   display: "flex",
   alignItems: "center",
+  justifyContent: "space-between",
+  ...getHeaderPadding(theme),
 }));
 
 const LeftBox = styled(Box)(() => ({
   display: "flex",
-  flex: 1,
+  flexGrow: 1,
+  flexShrink: 0,
+  flexBasis: "140px",
   justifyContent: "start",
 }));
 
 const RightBox = styled(Box)(() => ({
   display: "flex",
-  flex: 1,
+  flexGrow: 0,
+  flexShrink: 0,
+  flexBasis: "140px",
   justifyContent: "end",
 }));
 
@@ -100,11 +124,13 @@ const Logo = styled("img")(() => ({
   height: HEADER_HEIGHT - 5,
   width: "100%",
   maxWidth: 140,
+  maxHeight: HEADER_HEIGHT - 20,
   objectFit: "contain",
 }));
 
 const LogoLink = styled(Link)(() => ({
-  display: "inline-block",
+  display: "flex",
+  alignItems: "center",
   "&:focus-visible": borderedFocusStyle,
 }));
 
@@ -129,17 +155,29 @@ const SkipLink = styled("a")(({ theme }) => ({
 }));
 
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
+  display: "flex",
+  flexGrow: 1,
+  flexShrink: 1,
+  lineHeight: LINE_HEIGHT_BASE,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
   paddingLeft: theme.spacing(2),
-  paddingBottom: theme.spacing(1),
+  paddingRight: theme.spacing(2),
+  paddingBottom: theme.spacing(1.5),
+  [theme.breakpoints.up("md")]: {
+    paddingBottom: 0,
+  },
 }));
 
 const StyledNavBar = styled("nav")(({ theme }) => ({
   height: HEADER_HEIGHT,
   backgroundColor: theme.palette.primary.dark,
-  padding: theme.spacing(1.5),
-  paddingLeft: theme.spacing(4),
   fontSize: 16,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  ...getHeaderPadding(theme),
 }));
 
 const SectionName = styled(Typography)(() => ({
@@ -189,25 +227,25 @@ const Breadcrumbs: React.FC<{
       {route.data.team && (
         <>
           {" / "}
-          <Link
-            component={BreadcrumbLink}
+          <StyledLink
+            component={ReactNaviLink}
             href={`/${route.data.team}`}
             prefetch={false}
           >
             {route.data.team}
-          </Link>
+          </StyledLink>
         </>
       )}
       {route.data.flow && (
         <>
           {" / "}
-          <Link
-            component={BreadcrumbLink}
+          <StyledLink
+            component={ReactNaviLink}
             href={rootFlowPath(false)}
             prefetch={false}
           >
             {route.data.flow}
-          </Link>
+          </StyledLink>
         </>
       )}
     </BreadcrumbsRoot>
@@ -262,7 +300,9 @@ const PublicToolbar: React.FC<{
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
-  const showCentredServiceTitle = useMediaQuery("(min-width:600px)");
+  const showCentredServiceTitle = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up("md")
+  );
 
   const handleRestart = async () => {
     if (
@@ -287,7 +327,7 @@ const PublicToolbar: React.FC<{
   return (
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
-      <StyledToolbar>
+      <StyledToolbar disableGutters>
         <LeftBox>
           {teamTheme?.logo ? (
             <TeamLogo />
@@ -312,6 +352,7 @@ const PublicToolbar: React.FC<{
       {!showCentredServiceTitle && <ServiceTitle />}
       <NavBar />
       <AnalyticsDisabledBanner />
+      <TestEnvironmentBanner />
     </>
   );
 };
@@ -435,7 +476,7 @@ interface ToolbarProps {
 
 const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0];
+  const path = route.url.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
     state.flowSlug,
     state.previewEnvironment,
@@ -450,6 +491,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     case flowSlug: // Custom domains
     case "preview":
     case "unpublished":
+    case "pay":
       return <PublicToolbar />;
     default:
       return <PublicToolbar showResetButton={false} />;

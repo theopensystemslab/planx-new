@@ -18,7 +18,6 @@ const useClasses = makeStyles((theme) => ({
       },
       "&:last-child": {
         marginRight: 0,
-        flexShrink: 0,
       },
     },
   },

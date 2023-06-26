@@ -260,6 +260,7 @@ export = async () => {
     external: true,
     vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
+    idleTimeout: 120,
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const API_PORT = 80;
@@ -300,7 +301,7 @@ export = async () => {
           context: "../../api.planx.uk",
           target: "production",
         }),
-        memory: 1024 /*MB*/,
+        memory: 2048 /*MB*/,
         portMappings: [apiListenerHttps],
         environment: [
           { name: "NODE_ENV", value: env },

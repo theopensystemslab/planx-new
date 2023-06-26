@@ -69,17 +69,15 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
             >
               {props.instructionsTitle || "How to pay"}
             </Typography>
-            <Typography variant="body2">
-              <ReactMarkdownOrHtml
-                source={
-                  props.instructionsDescription ||
-                  `<p>You can pay for your application by using GOV.UK Pay.</p>\
-                   <p>Your application will be sent after you have paid the fee. \
-                   Wait until you see an application sent message before closing your browser.</p>`
-                }
-                openLinksOnNewTab
-              />
-            </Typography>
+            <ReactMarkdownOrHtml
+              source={
+                props.instructionsDescription ||
+                `<p>You can pay for your application by using GOV.UK Pay.</p>\
+                  <p>Your application will be sent after you have paid the fee. \
+                  Wait until you see an application sent message before closing your browser.</p>`
+              }
+              openLinksOnNewTab
+            />
             <Button
               variant="contained"
               color="primary"

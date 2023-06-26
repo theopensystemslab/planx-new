@@ -5,7 +5,6 @@ import {
   makeEsriUrl,
   setEsriGeometryType,
   setEsriGeometry,
-  addDesignatedVariable,
   squashResultLayers,
   rollupResultLayers,
 } from "../helpers.js";
@@ -77,6 +76,7 @@ async function go(x, y, siteBoundary, extras) {
               value: true,
               type: "warning",
               data: properties,
+              category: planningConstraints[key].category,
             };
           } else {
             if (!acc[k]) {
@@ -85,6 +85,7 @@ async function go(x, y, siteBoundary, extras) {
                 value: false,
                 type: "check",
                 data: {},
+                category: planningConstraints[key].category,
               };
             }
           }
@@ -132,10 +133,7 @@ async function go(x, y, siteBoundary, extras) {
     "listed"
   );
 
-  // Add summary "designated" key to response
-  const obWithDesignated = addDesignatedVariable(obWithSingleListed);
-
-  return obWithDesignated;
+  return obWithSingleListed;
 }
 
 async function locationSearch(x, y, siteBoundary, extras) {

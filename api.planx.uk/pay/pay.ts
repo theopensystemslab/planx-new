@@ -6,6 +6,8 @@ import { logPaymentStatus } from "../send/helpers";
 import { usePayProxy } from "./proxy";
 import type { GovUKPayment } from "../types";
 import { addGovPayPaymentIdToPaymentRequest } from "../inviteToPay";
+import { $admin } from "../client";
+import { ServerError } from "../errors";
 
 assert(process.env.SLACK_WEBHOOK_URL);
 
@@ -16,20 +18,48 @@ export async function makePaymentViaProxy(
   res: Response,
   next: NextFunction
 ) {
+  // allow e2e team to present as "lambeth"
+  const localAuthority =
+    req.params.localAuthority == "e2e"
+      ? "lambeth"
+      : req.params.localAuthority;
+
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
+    process.env[`GOV_UK_PAY_TOKEN_${localAuthority.toUpperCase()}`];
 
   if (!isSupported) {
-    return next({
-      status: 400,
-      message: `GOV.UK Pay is not enabled for this local authority`,
-    });
+    return next(
+      new ServerError({
+        message: "GOV.UK Pay is not enabled for this local authority",
+        status: 400,
+      })
+    );
   }
 
   const flowId = req.query?.flowId as string | undefined;
   const sessionId = req.query?.sessionId as string | undefined;
   const teamSlug = req.params.localAuthority;
+
+  if (!flowId || !sessionId || !teamSlug ) {
+    return next(
+      new ServerError({
+        message: "Missing required query param",
+        status: 400,
+      })
+    );
+  }
+
+  const session = await $admin.session.findDetails(sessionId);
+
+  if (session?.lockedAt) {
+    return next(
+      new ServerError({
+        message: `Cannot initialise a new payment for locked session ${sessionId}`,
+        status: 400,
+      })
+    )
+  };
 
   // drop req.params.localAuthority from the path when redirecting
   // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
@@ -60,9 +90,15 @@ export async function makeInviteToPayPaymentViaProxy(
   res: Response,
   next: NextFunction
 ) {
+  // allow e2e team to present as "lambeth"
+  const localAuthority =
+    req.params.localAuthority == "e2e"
+      ? "lambeth"
+      : req.params.localAuthority;
+
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
+    process.env[`GOV_UK_PAY_TOKEN_${localAuthority.toUpperCase()}`];
 
   if (!isSupported) {
     return next({
@@ -119,6 +155,12 @@ export function fetchPaymentViaProxyWithCallback(
   callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
+    // allow e2e team to present as "lambeth"
+    const localAuthority =
+      req.params.localAuthority == "e2e"
+        ? "lambeth"
+        : req.params.localAuthority;
+
     const flowId = req.query?.flowId as string | undefined;
     const sessionId = req.query?.sessionId as string | undefined;
     const teamSlug = req.params.localAuthority;

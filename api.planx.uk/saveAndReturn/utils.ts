@@ -4,9 +4,10 @@ import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import { Template, getClientForTemplate, sendEmail } from "../notify";
-import { _admin as $admin } from "../client";
+import { $admin } from "../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
+const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
 
 /**
  * Converts a flow's slug to a pretty name
@@ -264,6 +265,7 @@ export {
   sendSingleApplicationEmail,
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
+  REMINDER_DAYS_FROM_EXPIRY,
   calculateExpiryDate,
   softDeleteSession,
 };

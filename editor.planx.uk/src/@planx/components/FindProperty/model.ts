@@ -6,6 +6,7 @@ export interface FindProperty extends MoreInformation {
   allowNewAddresses?: boolean;
   newAddressTitle?: string;
   newAddressDescription?: string;
+  newAddressDescriptionLabel?: string;
 }
 
 export const parseFindProperty = (
@@ -16,6 +17,7 @@ export const parseFindProperty = (
   allowNewAddresses: data?.allowNewAddresses || false,
   newAddressTitle: data?.newAddressTitle || "",
   newAddressDescription: data?.newAddressDescription || "",
+  newAddressDescriptionLabel: data?.newAddressDescriptionLabel || "",
   ...parseMoreInformation(data),
 });
 
@@ -53,3 +55,4 @@ export interface SiteAddress extends MinimumSiteAddress {
 
 export const DEFAULT_TITLE = "Find the property" as const;
 export const DEFAULT_NEW_ADDRESS_TITLE = "Propose a new address" as const;
+export const DEFAULT_NEW_ADDRESS_LABEL = "Name the site" as const;

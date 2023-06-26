@@ -66,7 +66,7 @@ export const ICONS: {
   [TYPES.DrawBoundary]: SquareFoot,
   [TYPES.ExternalPortal]: CopyAll,
   [TYPES.FileUpload]: CloudUpload,
-  [TYPES.MultipleFileUpload]: CloudUpload,
+  [TYPES.FileUploadAndLabel]: CloudUpload,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,

@@ -42,11 +42,11 @@ export default function Component(props: Props) {
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <QuestionHeader title={flowName} />
-      <Box sx={{ lineHeight: ".5em" }}>
-        <Typography variant="body1" component="h2" sx={{ fontWeight: "bold" }}>
+      <Box>
+        <Typography variant="h4" component="h2" pb="0.15em">
           Application incomplete.
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="subtitle2" component="h3">
           {`You have completed ${
             Object.keys(sectionNodes)[0] === currentCard?.id
               ? 0
@@ -143,15 +143,14 @@ export function SectionsOverviewList({
               <Link
                 onClick={() => changeFirstAnswerInSection(sectionId)}
                 component="button"
-                sx={{ fontFamily: "inherit", fontSize: "inherit" }}
               >
-                {sectionNode.data.title}
-                <span style={visuallyHidden}>
-                  {`Change ${sectionNode.data.title}`}
-                </span>
+                <Typography variant="body1" align="left">
+                  <span style={visuallyHidden}>{`Change `}</span>
+                  {sectionNode.data.title}
+                </Typography>
               </Link>
             ) : (
-              sectionNode.data.title
+              <Typography variant="body1">{sectionNode.data.title}</Typography>
             )}
           </dt>
           <dd> {getTag(sectionStatuses[sectionId])} </dd>
@@ -163,14 +162,14 @@ export function SectionsOverviewList({
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 200px",
+  gridTemplateColumns: "1fr 220px",
   gridRowGap: "5px",
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
+  paddingTop: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
   "& > *": {
-    borderBottom: "1px solid grey",
-    paddingBottom: theme.spacing(2),
-    paddingTop: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.secondary.main}`,
+    paddingBottom: theme.spacing(1.5),
+    paddingTop: theme.spacing(1.5),
     verticalAlign: "top",
     margin: 0,
   },
@@ -181,11 +180,16 @@ const Grid = styled("dl")(({ theme }) => ({
   },
   "& dt": {
     // left column
-    fontWeight: 500,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   "& dd:nth-of-type(1n)": {
     // right column
-    textAlign: "center",
+    textAlign: "right",
+    "& > button": {
+      width: "auto",
+    },
   },
 }));
 
