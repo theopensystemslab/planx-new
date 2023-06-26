@@ -2,13 +2,16 @@ import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { linkStyle } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
 const useClasses = makeStyles((theme) => ({
   htmlRoot: {
     "& a": linkStyle(theme.palette.primary.main),
     "& h2": theme.typography.h3,
     "& h3": theme.typography.h5,
+    "& strong": {
+      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+    },
   },
 }));
 
