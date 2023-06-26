@@ -11,6 +11,7 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useNavigation } from "react-navi";
+import { isPreviewOnlyDomain } from "routes/utils";
 import useSWRMutation from "swr/mutation";
 import { ApplicationPath, PaymentStatus } from "types";
 import ErrorWrapper from "ui/ErrorWrapper";
@@ -120,11 +121,11 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       redirectToConfirmationPage(paymentRequest.id);
   };
 
-  // TODO: This fails in the editor
-  // TODO: Test on prod custom domains
   const redirectToConfirmationPage = (paymentRequestId: string) => {
     const params = new URLSearchParams({ paymentRequestId }).toString();
-    const inviteToPayURL = `./pay/invite?${params}`;
+    const inviteToPayURL = isPreviewOnlyDomain
+      ? `/pay/invite?${params}`
+      : `./pay/invite?${params}`;
     navigation.navigate(inviteToPayURL);
   };
 
