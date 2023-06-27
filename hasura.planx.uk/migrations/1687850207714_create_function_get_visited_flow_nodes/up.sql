@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION get_visited_flow_nodes (session_id text) 
-    returns jsonb
+    RETURNS jsonb
 AS $$
 WITH session_summary AS (
         SELECT

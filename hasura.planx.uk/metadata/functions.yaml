@@ -4,3 +4,6 @@
 - function:
     schema: public
     name: get_flow_schema
+- function:
+    schema: public
+    name: get_visited_flow_nodes_tracked
