@@ -15,9 +15,6 @@ export const fullWidthContent = (theme: Theme): React.CSSProperties => ({
   [theme.breakpoints.up("contentWrap")]: {
     width: `calc(${theme.breakpoints.values.contentWrap}px - 60px)`,
   },
-  [theme.breakpoints.up("lg")]: {
-    width: `${theme.breakpoints.values.contentWrap}px`,
-  },
 });
 
 /**
@@ -25,22 +22,9 @@ export const fullWidthContent = (theme: Theme): React.CSSProperties => ({
  * and maintains a consistent right margin
  */
 const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
-  const mainContainerWidth = `${theme.breakpoints.values.contentWrap}px`;
-  const pageGutter = "60px";
-
   const style = {
-    width: "100%",
+    ...fullWidthContent(theme),
     height: "70vh",
-    [theme.breakpoints.up("md")]: {
-      width: `calc(100vw - ${pageGutter})`,
-    },
-    [theme.breakpoints.up("contentWrap")]: {
-      width: `calc(${mainContainerWidth} - ${pageGutter})`,
-      height: "80vh",
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: `${mainContainerWidth}`,
-    },
   };
 
   return style;

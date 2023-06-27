@@ -1,13 +1,16 @@
+import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
+import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/styles";
 import { visuallyHidden } from "@mui/utils";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
+import { fullWidthContent } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
@@ -42,6 +45,11 @@ export enum QuestionLayout {
   Images,
   Descriptions,
 }
+
+const FormWrapper = styled(Box)(({ theme }) => ({
+  width: theme.breakpoints.values.formWrap,
+  maxWidth: "100%",
+}));
 
 const Question: React.FC<IQuestion> = (props) => {
   const theme = useTheme();
@@ -90,7 +98,9 @@ const Question: React.FC<IQuestion> = (props) => {
         definitionImg={props.definitionImg}
         img={props.img}
       />
-      <FormControl sx={{ ...contentFlowSpacing(theme), width: "100%" }}>
+      <FormControl
+        sx={{ ...contentFlowSpacing(theme), ...fullWidthContent(theme) }}
+      >
         <FormHelperText style={visuallyHidden}>
           {props.description ? DESCRIPTION_TEXT : ""}
         </FormHelperText>
@@ -122,13 +132,15 @@ const Question: React.FC<IQuestion> = (props) => {
               switch (layout) {
                 case QuestionLayout.Basic:
                   return (
-                    <Grid item xs={12} ml={1} key={response.id}>
-                      <BasicRadio
-                        {...buttonProps}
-                        {...response}
-                        data-testid="basic-radio"
-                      />
-                    </Grid>
+                    <FormWrapper>
+                      <Grid item xs={12} ml={1} key={response.id}>
+                        <BasicRadio
+                          {...buttonProps}
+                          {...response}
+                          data-testid="basic-radio"
+                        />
+                      </Grid>
+                    </FormWrapper>
                   );
                 case QuestionLayout.Descriptions:
                   return (
@@ -136,6 +148,7 @@ const Question: React.FC<IQuestion> = (props) => {
                       item
                       xs={12}
                       sm={6}
+                      contentWrap={4}
                       key={response.id}
                       data-testid="description-radio"
                     >
@@ -144,7 +157,7 @@ const Question: React.FC<IQuestion> = (props) => {
                   );
                 case QuestionLayout.Images:
                   return (
-                    <Grid item xs={12} sm={6} key={response.id}>
+                    <Grid item xs={12} sm={6} contentWrap={4} key={response.id}>
                       <ImageRadio {...buttonProps} {...response} />
                     </Grid>
                   );

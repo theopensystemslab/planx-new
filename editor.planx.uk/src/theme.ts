@@ -34,6 +34,7 @@ declare module "@mui/material/styles" {
     md: true;
     lg: true;
     xl: true;
+    formWrap: true;
     contentWrap: true;
   }
 }
@@ -169,6 +170,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         md: 768, // Used with Container as general max-width
         lg: 1280,
         xl: 1920,
+        formWrap: 690,
         contentWrap: 1020,
       },
     },

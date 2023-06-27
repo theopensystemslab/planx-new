@@ -23,6 +23,8 @@ export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
 });
 
 const InnerContainer = styled(Box)(({ theme }) => ({
+  width: theme.breakpoints.values.formWrap,
+  maxWidth: "100%",
   "& > * + *": {
     ...contentFlowSpacing(theme),
   },
