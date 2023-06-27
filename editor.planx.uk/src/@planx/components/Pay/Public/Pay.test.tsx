@@ -2,6 +2,7 @@ import { screen } from "@testing-library/react";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
+import * as ReactNavi from "react-navi";
 import { axe, setup } from "testUtils";
 import { ApplicationPath, PaymentStatus } from "types";
 
@@ -11,6 +12,10 @@ import Pay from "./Pay";
 const { getState, setState } = vanillaStore;
 
 let initialState: FullStore;
+
+jest
+  .spyOn(ReactNavi, "useCurrentRoute")
+  .mockImplementation(() => ({ data: { mountpath: "mountpath" } } as any));
 
 const resumeButtonText = "Resume an application you have already started";
 const saveButtonText = "Save and return to this application later";
