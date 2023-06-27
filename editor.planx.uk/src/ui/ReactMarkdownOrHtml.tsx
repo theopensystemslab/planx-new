@@ -12,6 +12,9 @@ const useClasses = makeStyles((theme) => ({
     "& strong": {
       fontWeight: FONT_WEIGHT_SEMI_BOLD,
     },
+    "& p:last-of-type": {
+      marginBottom: 0,
+    },
   },
 }));
 
@@ -28,7 +31,7 @@ export const incrementHeaderElements = (source: string): string => {
 
 export default function ReactMarkdownOrHtml(props: {
   source?: string;
-  className?: string;
+  textColor?: string;
   openLinksOnNewTab?: boolean;
   id?: string;
   manuallyIncrementHeaders?: boolean;
@@ -47,15 +50,16 @@ export default function ReactMarkdownOrHtml(props: {
 
     return (
       <div
-        className={classNames(props.className, classes.htmlRoot)}
+        color={props.textColor}
+        className={classNames(classes.htmlRoot)}
         dangerouslySetInnerHTML={{ __html: incrementHeaders }}
         id={props.id}
       />
     );
   }
   return (
-    <div id={props.id}>
-      <ReactMarkdown className={classNames(props.className, classes.htmlRoot)}>
+    <div id={props.id} color={props.textColor}>
+      <ReactMarkdown className={classNames(classes.htmlRoot)}>
         {props.source}
       </ReactMarkdown>
     </div>
