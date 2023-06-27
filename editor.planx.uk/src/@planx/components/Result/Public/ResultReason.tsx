@@ -30,16 +30,16 @@ const Root = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   margin: "0",
-  marginRight: theme.spacing(7),
+  marginRight: theme.spacing(8),
   position: "relative",
 }));
 
 const ChangeLink = styled(Box)(({ theme }) => ({
   position: "absolute",
-  right: theme.spacing(-7),
+  right: theme.spacing(-8),
   top: 0,
   height: "100%",
-  minWidth: theme.spacing(7),
+  minWidth: theme.spacing(8),
   display: "flex",
   justifyContent: "flex-end",
   alignItems: "center",
@@ -69,7 +69,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     transition: "none",
   },
   "& svg": {
-    color: theme.palette.text.secondary,
+    color: theme.palette.primary.main,
   },
 }));
 

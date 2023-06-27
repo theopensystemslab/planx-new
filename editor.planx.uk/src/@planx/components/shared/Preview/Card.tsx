@@ -52,11 +52,10 @@ const Card: React.FC<Props> = ({
       mountOnEnter={true}
       unmountOnExit={true}
     >
-      <Container disableGutters maxWidth="md">
+      <Container maxWidth="md">
         <InnerContainer
           bgcolor="background.default"
           py={{ xs: 2, md: 4 }}
-          px={{ xs: 2, md: 3, lg: 0 }}
           mb={4}
           {...props}
         >
