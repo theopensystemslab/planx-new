@@ -7,7 +7,9 @@
   "dependencies": {
     "@cucumber/cucumber": "^9.1.2",
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#36f7aa8",
-    "dotenv": "^16.1.1"
+    "axios": "^1.4.0",
+    "dotenv": "^16.1.1",
+    "nock": "^13.3.1"
   },
   "devDependencies": {
     "@types/node": "18",

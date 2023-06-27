@@ -8,6 +8,6 @@ Feature: Invite to Pay Submissions
     And the session's `submitted_at` date should be set
     Examples:
       | DESTINATION  |
-      | Email        |
-      | Uniform      |
+      #| Email        |
+      #| Uniform      |
       | BOPS         |

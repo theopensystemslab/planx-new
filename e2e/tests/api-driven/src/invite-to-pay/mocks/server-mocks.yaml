@@ -1,0 +1,41 @@
+# BOPS submissions
+- request:
+    method: POST
+    path: /api/v1/planning_applications
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      { "messsage": "MOCKED RESPONSE" }
+
+# UNIFORM token generation
+- request:
+    path: /
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      {
+        "access_token": "MOCKED",
+        "organisation-name": "MOCKED",
+        "organisation-id": "MOCKED",
+      }
+
+# UNIFORM submissions
+- request:
+    method: POST
+    path: /secure/submission
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      { "messsage": "MOCKED RESPONSE" }
+- request:
+    path:
+      matcher: ShouldMatch
+      value: /secure/submission/*
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      { "messsage": "MOCKED RESPONSE" }

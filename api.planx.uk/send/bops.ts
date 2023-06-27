@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { NextFunction, Request, Response } from "express";
@@ -36,80 +36,93 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     req.params.localAuthority == "e2e" ? "lambeth" : req.params.localAuthority;
 
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
-  //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
-  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(
-    localAuthority.toUpperCase()
-  );
+  // a local or staging API instance should send to the BOPS staging endpoint
+  // production should send to the BOPS production endpoint
+  const bopsSubmissionURLEnvName = `BOPS_SUBMISSION_URL_${localAuthority.toUpperCase()}`;
+  const bopsSubmissionURL = `${process.env[bopsSubmissionURLEnvName]}`;
+  const isSupported = domain !== "";
   if (!isSupported) {
     return next({
       status: 400,
       message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
     });
   }
-
-  // a local or staging API instance should send to the BOPS staging endpoint
-  // production should send to the BOPS production endpoint
-  const domain = `https://${localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
-  const target = `${domain}/api/v1/planning_applications`;
+  const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
 
   const bopsFullPayload = await $admin.generateBOPSPayload(payload?.sessionId);
 
   const bopsResponse = await axios({
     method: "POST",
     url: target,
+    adapter: "http",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
     },
     data: bopsFullPayload,
-  }).then(async (res: AxiosResponse<{ id: string }>) => {
-    // Mark session as submitted so that reminder and expiry emails are not triggered
-    markSessionAsSubmitted(payload?.sessionId);
+  })
+    .then(async (res: AxiosResponse<{ id: string }>) => {
+      // Mark session as submitted so that reminder and expiry emails are not triggered
+      markSessionAsSubmitted(payload?.sessionId);
 
-    const applicationId = await adminClient.request(
-      gql`
-        mutation CreateBopsApplication(
-          $bops_id: String = ""
-          $destination_url: String!
-          $request: jsonb!
-          $req_headers: jsonb = {}
-          $response: jsonb = {}
-          $response_headers: jsonb = {}
-          $session_id: String!
-        ) {
-          insert_bops_applications_one(
-            object: {
-              bops_id: $bops_id
-              destination_url: $destination_url
-              request: $request
-              req_headers: $req_headers
-              response: $response
-              response_headers: $response_headers
-              session_id: $session_id
-            }
+      const applicationId = await adminClient.request(
+        gql`
+          mutation CreateBopsApplication(
+            $bops_id: String = ""
+            $destination_url: String!
+            $request: jsonb!
+            $req_headers: jsonb = {}
+            $response: jsonb = {}
+            $response_headers: jsonb = {}
+            $session_id: String!
           ) {
-            id
-            bops_id
+            insert_bops_applications_one(
+              object: {
+                bops_id: $bops_id
+                destination_url: $destination_url
+                request: $request
+                req_headers: $req_headers
+                response: $response
+                response_headers: $response_headers
+                session_id: $session_id
+              }
+            ) {
+              id
+              bops_id
+            }
           }
+        `,
+        {
+          bops_id: res.data.id,
+          destination_url: target,
+          request: bopsFullPayload,
+          response: res.data,
+          response_headers: res.headers,
+          session_id: payload?.sessionId,
         }
-      `,
-      {
-        bops_id: res.data.id,
-        destination_url: target,
-        request: bopsFullPayload,
-        response: res.data,
-        response_headers: res.headers,
-        session_id: payload?.sessionId,
-      }
-    );
+      );
 
-    return {
-      application: {
-        ...applicationId.insert_bops_applications_one,
-        bopsResponse: res.data,
-      },
-    };
-  });
+      return {
+        application: {
+          ...applicationId.insert_bops_applications_one,
+          bopsResponse: res.data,
+        },
+      };
+    })
+    .catch((error) => {
+      if (error.response) {
+        return `sending to BOPS failed:\n${JSON.stringify(
+          error.response.data,
+          null,
+          2
+        )}`;
+      } else if (error.request) {
+        return `sending to BOPS failed:\n--NO RESPONSE--`;
+      } else {
+        // re-throw other errors
+        throw error;
+      }
+    });
   res.send(bopsResponse);
 };
 

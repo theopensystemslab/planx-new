@@ -1,3 +1,5 @@
+import axios from "axios";
+import { readFileSync } from "node:fs";
 import type {
   FlowGraph,
   PaymentRequest,
@@ -9,6 +11,18 @@ import {
   mockPassport,
 } from "./mocks";
 import { $admin } from "../client";
+
+export async function setUpMocks() {
+  const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
+  return axios({
+    method: "POST",
+    url: "http://localhost:8081/mocks?reset=true",
+    headers: {
+      "Content-Type": "application/x-yaml",
+    },
+    data: serverMockFile,
+  });
+}
 
 export async function createTeam() {
   return $admin.team.create({
