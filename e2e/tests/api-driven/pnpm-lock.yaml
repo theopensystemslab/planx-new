@@ -6,6 +6,7 @@ specifiers:
   '@types/node': '18'
   axios: ^1.4.0
   dotenv: ^16.1.1
+  dotenv-expand: ^10.0.0
   nock: ^13.3.1
   ts-node: ^10.9.1
   typescript: ^5.0.4
@@ -15,6 +16,7 @@ dependencies:
   '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/36f7aa8
   axios: 1.4.0
   dotenv: 16.1.1
+  dotenv-expand: 10.0.0
   nock: 13.3.1
 
 devDependencies:
@@ -953,6 +955,11 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.3
       csstype: 3.1.2
+    dev: false
+
+  /dotenv-expand/10.0.0:
+    resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
+    engines: {node: '>=12'}
     dev: false
 
   /dotenv/16.1.1:

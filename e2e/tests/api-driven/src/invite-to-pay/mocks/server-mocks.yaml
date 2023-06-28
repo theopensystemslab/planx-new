@@ -10,17 +10,14 @@
 
 # UNIFORM token generation
 - request:
-    method: GET
+    method: POST
     path: /
+    body: client_id=e2e&client_secret=123&grant_type=client_credentials
   response:
     headers:
-      Content-Type: application/json
+      Content-Type: application/x-www-form-urlencoded
     body: >
-      {
-        "access_token": "MOCKED",
-        "organisation-name": "MOCKED",
-        "organisation-id": "MOCKED",
-      }
+      access_token=TEST_TOKEN&organisataion-name=MOCKED&organisation-id=MOCKED
 
 # UNIFORM submissions
 - request:

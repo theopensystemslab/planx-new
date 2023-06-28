@@ -9,6 +9,7 @@
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#36f7aa8",
     "axios": "^1.4.0",
     "dotenv": "^16.1.1",
+    "dotenv-expand": "^10.0.0",
     "nock": "^13.3.1"
   },
   "devDependencies": {

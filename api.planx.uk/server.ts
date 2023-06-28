@@ -296,8 +296,10 @@ app.post("/create-send-events/:sessionId", createSendEvents);
 
 assert(process.env.HASURA_PLANX_API_KEY);
 
-assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
+assert(process.env.BOPS_SUBMISSION_URL_LAMBETH);
+assert(process.env.BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE);
+assert(process.env.BOPS_SUBMISSION_URL_SOUTHWARK);
 app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
 
 assert(process.env.UNIFORM_TOKEN_URL);

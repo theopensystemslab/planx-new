@@ -274,7 +274,7 @@ async function authenticate({
   clientId,
   clientSecret,
 }: UniformClient): Promise<UniformAuthResponse> {
-  const isTest = clientId.toUpperCase() == "E2E";
+  const isTest = clientId.toUpperCase() === "E2E";
 
   const target = isTest
     ? process.env.E2E_MOCK_SERVER!
@@ -297,8 +297,9 @@ async function authenticate({
   };
 
   const response = await axios.request<RawUniformAuthResponse>(authConfig);
-  if (!response.data.access_token)
+  if (!response.data.access_token) {
     throw Error("Failed to authenticate to Uniform");
+  }
 
   const uniformAuthResponse: UniformAuthResponse = {
     token: isTest ? "TEST_TOKEN" : response.data.access_token,
@@ -318,7 +319,7 @@ async function createSubmission(
   organisationId: string,
   sessionId = "TEST"
 ): Promise<string> {
-  const isTest = token == "TEST_TOKEN";
+  const isTest = token === "TEST_TOKEN";
 
   const submissionURL = isTest
     ? process.env.E2E_MOCK_SERVER!

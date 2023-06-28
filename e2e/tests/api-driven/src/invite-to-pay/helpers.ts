@@ -16,7 +16,7 @@ export async function setUpMocks() {
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
   return axios({
     method: "POST",
-    url: "http://localhost:8081/mocks?reset=true",
+    url: `${process.env.E2E_MOCK_SERVER_INTERFACE}/mocks?reset=true`,
     headers: {
       "Content-Type": "application/x-yaml",
     },
