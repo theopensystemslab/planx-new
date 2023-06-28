@@ -280,13 +280,15 @@ async function authenticate({
     ? process.env.E2E_MOCK_SERVER!
     : process.env.UNIFORM_TOKEN_URL!;
 
+  const authString = Buffer.from(`${clientId}:${clientSecret}`).toString(
+    "base64"
+  );
+
   const authConfig: AxiosRequestConfig = {
     method: "POST",
     url: target,
     headers: {
-      Authorization:
-        "Basic " +
-        Buffer.from(clientId + ":" + clientSecret).toString("base64"),
+      Authorization: `Basic ${authString}`,
       "Content-type": "application/x-www-form-urlencoded",
     },
     data: new URLSearchParams({
@@ -297,6 +299,7 @@ async function authenticate({
   };
 
   const response = await axios.request<RawUniformAuthResponse>(authConfig);
+
   if (!response.data.access_token) {
     throw Error("Failed to authenticate to Uniform");
   }
@@ -306,6 +309,7 @@ async function authenticate({
     organisation: response.data["organisation-name"],
     organisationId: response.data["organisation-id"],
   };
+
   return uniformAuthResponse;
 }
 

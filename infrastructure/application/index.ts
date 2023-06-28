@@ -305,6 +305,7 @@ export = async () => {
         portMappings: [apiListenerHttps],
         environment: [
           { name: "NODE_ENV", value: env },
+          { name: "APP_ENVIRONMENT", value: env },
           { name: "EDITOR_URL_EXT", value: `https://${DOMAIN}` },
           { name: "AWS_S3_REGION", value: apiBucket.region },
           { name: "AWS_ACCESS_KEY", value: apiUserAccessKey.id },
