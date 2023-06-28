@@ -4,14 +4,14 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-const Wrapper = styled(Box)(() => ({
+const Wrapper = styled(Box)(({ theme }) => ({
   width: "100vw",
   height: "100vh",
   lineHeight: "1.333",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  background: "#1279ab",
+  background: theme.palette.primary.main,
 }));
 
 const Container = styled(Box)(() => ({
