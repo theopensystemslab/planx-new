@@ -40,7 +40,7 @@ function Banner(props: BannerProps) {
       color={props.color && props.color.text}
     >
       <Container
-        maxWidth="md"
+        maxWidth="contentWrap"
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         {props.Icon && (

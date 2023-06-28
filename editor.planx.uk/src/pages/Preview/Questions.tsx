@@ -1,6 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
+import Container from "@mui/material/Container";
 import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
@@ -17,7 +18,6 @@ import Node, { handleSubmit } from "./Node";
 
 const useClasses = makeStyles((theme) => ({
   backButton: {
-    marginLeft: theme.spacing(2),
     marginBottom: theme.spacing(1),
     visibility: "visible",
     pointerEvents: "auto",
@@ -164,15 +164,17 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   return (
     <Box width="100%" role="main" pt={1}>
-      <ButtonBase
-        className={classnames(classes.backButton, {
-          [classes.hidden]: !showBackButton,
-        })}
-        onClick={() => goBack()}
-      >
-        <ArrowBackIcon fontSize="small"></ArrowBackIcon>
-        Back
-      </ButtonBase>
+      <Container maxWidth="xl">
+        <ButtonBase
+          className={classnames(classes.backButton, {
+            [classes.hidden]: !showBackButton,
+          })}
+          onClick={() => goBack()}
+        >
+          <ArrowBackIcon fontSize="small"></ArrowBackIcon>
+          Back
+        </ButtonBase>
+      </Container>
 
       {node && (
         <ErrorBoundary FallbackComponent={ErrorFallback}>

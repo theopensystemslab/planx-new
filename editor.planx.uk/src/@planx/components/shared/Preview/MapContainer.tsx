@@ -9,12 +9,7 @@ interface MapContainerProps {
 
 export const fullWidthContent = (theme: Theme): React.CSSProperties => ({
   width: "100%",
-  [theme.breakpoints.up("md")]: {
-    width: `calc(100vw - 60px)`,
-  },
-  [theme.breakpoints.up("contentWrap")]: {
-    width: `calc(${theme.breakpoints.values.contentWrap}px - 60px)`,
-  },
+  maxWidth: "none",
 });
 
 /**
@@ -34,6 +29,7 @@ export const MapContainer = styled(Box)<MapContainerProps>(
   ({ theme, environment, size }) => ({
     padding: theme.spacing(1, 0, 6, 0),
     width: "100%",
+    maxWidth: "none",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
     ...(size === "large" &&
