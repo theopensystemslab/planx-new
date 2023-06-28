@@ -15,7 +15,7 @@ const BG_ACTIVE = "#E5F1EB";
 const BG_NOTICE = "#F3F2F1";
 
 const Root = styled(MuiButtonBase, {
-  shouldForwardProp: (prop) => prop !== "type",
+  shouldForwardProp: (prop) => prop !== "tagType",
 })<ButtonBaseProps & Props>(({ theme, tagType }) => ({
   fontSize: theme.typography.body2.fontSize,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
