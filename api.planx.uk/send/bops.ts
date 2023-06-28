@@ -31,16 +31,12 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  // allow e2e team to present as "lambeth"
-  const localAuthority =
-    req.params.localAuthority == "e2e" ? "lambeth" : req.params.localAuthority;
-
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   // a local or staging API instance should send to the BOPS staging endpoint
   // production should send to the BOPS production endpoint
-  const bopsSubmissionURLEnvName = `BOPS_SUBMISSION_URL_${localAuthority.toUpperCase()}`;
+  const bopsSubmissionURLEnvName = `BOPS_SUBMISSION_URL_${req.params.localAuthority.toUpperCase()}`;
   const bopsSubmissionURL = `${process.env[bopsSubmissionURLEnvName]}`;
-  const isSupported = domain !== "";
+  const isSupported = bopsSubmissionURL !== "";
   if (!isSupported) {
     return next({
       status: 400,

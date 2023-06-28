@@ -18,15 +18,9 @@ export async function makePaymentViaProxy(
   res: Response,
   next: NextFunction
 ) {
-  // allow e2e team to present as "lambeth"
-  const localAuthority =
-    req.params.localAuthority == "e2e"
-      ? "lambeth"
-      : req.params.localAuthority;
-
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${localAuthority.toUpperCase()}`];
+    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
 
   if (!isSupported) {
     return next(
@@ -90,15 +84,9 @@ export async function makeInviteToPayPaymentViaProxy(
   res: Response,
   next: NextFunction
 ) {
-  // allow e2e team to present as "lambeth"
-  const localAuthority =
-    req.params.localAuthority == "e2e"
-      ? "lambeth"
-      : req.params.localAuthority;
-
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${localAuthority.toUpperCase()}`];
+    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
 
   if (!isSupported) {
     return next({
@@ -155,12 +143,6 @@ export function fetchPaymentViaProxyWithCallback(
   callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    // allow e2e team to present as "lambeth"
-    const localAuthority =
-      req.params.localAuthority == "e2e"
-        ? "lambeth"
-        : req.params.localAuthority;
-
     const flowId = req.query?.flowId as string | undefined;
     const sessionId = req.query?.sessionId as string | undefined;
     const teamSlug = req.params.localAuthority;

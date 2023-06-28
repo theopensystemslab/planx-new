@@ -10,6 +10,7 @@
 
 # UNIFORM token generation
 - request:
+    method: GET
     path: /
   response:
     headers:
@@ -31,6 +32,17 @@
     body: >
       { "messsage": "MOCKED RESPONSE" }
 - request:
+    method: POST
+    path:
+      matcher: ShouldMatch
+      value: /secure/submission/*/archive
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      { "messsage": "MOCKED RESPONSE" }
+- request:
+    method: GET
     path:
       matcher: ShouldMatch
       value: /secure/submission/*

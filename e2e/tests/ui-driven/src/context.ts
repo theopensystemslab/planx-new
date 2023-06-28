@@ -39,7 +39,7 @@ export const contextDefaults = {
   },
   team: {
     name: "E2E Test Team",
-    slug: "e2e",
+    slug: "E2E",
     logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
     primaryColor: "#444444",
     homepage: "planx.uk",

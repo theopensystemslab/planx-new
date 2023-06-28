@@ -27,7 +27,7 @@ export async function setUpMocks() {
 export async function createTeam() {
   return $admin.team.create({
     name: "E2E Test Team",
-    slug: "e2e",
+    slug: "E2E",
     logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
     primaryColor: "#444444",
     submissionEmail: "simulate-delivered@notifications.service.gov.uk",

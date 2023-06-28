@@ -3,11 +3,6 @@ import { fixRequestBody, Options } from "http-proxy-middleware";
 import { useProxy } from "../proxy";
 
 export const usePayProxy = (options: Partial<Options>, req: Request) => {
-  // allow e2e team to present as "lambeth"
-  const localAuthority = req.params.localAuthority == "e2e"
-    ? "lambeth"
-    : req.params.localAuthority
-
   return useProxy({
     target: "https://publicapi.payments.service.gov.uk/v1/payments",
     onProxyReq: fixRequestBody,
@@ -16,7 +11,7 @@ export const usePayProxy = (options: Partial<Options>, req: Request) => {
       "content-type": "application/json",
       Authorization: `Bearer ${
         process.env[
-          `GOV_UK_PAY_TOKEN_${localAuthority}`.toUpperCase()
+          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
         ]
       }`,
     },
