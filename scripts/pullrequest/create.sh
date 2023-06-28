@@ -6,8 +6,6 @@ cd "$(dirname $0)/../.."
 
 echo "root:$SSH_PASSWORD" | chpasswd
 
-apt-get update -y
-
 # check if swap space is available - see link for more on updating swap:
 # https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
 swapon --show
@@ -18,7 +16,6 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --batch --yes --de
 echo \
   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-apt-get update -y
 apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 
 # set env for this shell
