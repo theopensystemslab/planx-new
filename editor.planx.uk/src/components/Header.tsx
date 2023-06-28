@@ -88,7 +88,7 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginRight: theme.spacing(2),
+  marginRight: theme.spacing(1),
 }));
 
 const StyledPopover = styled(Popover)(() => ({
@@ -394,38 +394,42 @@ const EditorToolbar: React.FC<{
 
   return (
     <>
-      <StyledToolbar>
-        <LeftBox>
-          <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
-        </LeftBox>
-        <RightBox>
-          {route.data.username && (
-            <ProfileSection>
-              {route.data.flow && (
-                <IconButton
-                  color="inherit"
-                  onClick={togglePreview}
-                  aria-label="Toggle Preview"
-                  size="large"
-                >
-                  <MenuOpenIcon />
-                </IconButton>
+      <StyledToolbar disableGutters>
+        <Container maxWidth="xl">
+          <InnerContainer>
+            <LeftBox>
+              <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
+            </LeftBox>
+            <RightBox>
+              {route.data.username && (
+                <ProfileSection disableGutters>
+                  {route.data.flow && (
+                    <IconButton
+                      color="inherit"
+                      onClick={togglePreview}
+                      aria-label="Toggle Preview"
+                      size="large"
+                    >
+                      <MenuOpenIcon />
+                    </IconButton>
+                  )}
+                  <Box mr={1}>
+                    <Avatar>{route.data.username[0]}</Avatar>
+                  </Box>
+                  <IconButton
+                    edge="end"
+                    color="inherit"
+                    aria-label="Toggle Menu"
+                    onClick={handleMenuToggle}
+                    size="large"
+                  >
+                    <KeyboardArrowDown />
+                  </IconButton>
+                </ProfileSection>
               )}
-              <Box mr={1}>
-                <Avatar>{route.data.username[0]}</Avatar>
-              </Box>
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="Toggle Menu"
-                onClick={handleMenuToggle}
-                size="large"
-              >
-                <KeyboardArrowDown />
-              </IconButton>
-            </ProfileSection>
-          )}
-        </RightBox>
+            </RightBox>
+          </InnerContainer>
+        </Container>
       </StyledToolbar>
       <StyledPopover
         open={open}
