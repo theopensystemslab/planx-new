@@ -8,7 +8,7 @@ on:
 env:
   EDITOR_DIRECTORY: editor.planx.uk
   PNPM_VERSION: 7.8.0
-  NODE_VERSION: 16.13.1
+  NODE_VERSION: 18.16.1 # 18.16.1 = LTS
 
 jobs:
   integration_tests:
