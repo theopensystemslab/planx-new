@@ -111,7 +111,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
   "&.Mui-expanded": {
     margin: "0",
   },
-  [`& .${classes.removeTopBorder}`]: {
+  [`&.${classes.removeTopBorder}`]: {
     "&:before": {
       display: "none",
     },

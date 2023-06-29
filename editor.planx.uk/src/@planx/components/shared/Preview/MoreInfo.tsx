@@ -30,7 +30,7 @@ const Root = styled(Drawer, {
     marginRight: "-100%",
   },
 
-  [`& .${classes.drawerPaper}`]: {
+  [`&.${classes.drawerPaper}`]: {
     width: drawerWidth,
     backgroundColor: theme.palette.background.default,
     border: 0,
