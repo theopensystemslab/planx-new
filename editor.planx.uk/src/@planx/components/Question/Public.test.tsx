@@ -96,17 +96,15 @@ describe("Question component", () => {
 
       expect(screen.getByRole("heading")).toHaveTextContent("Best food");
 
-      let celeryRadio: HTMLElement | undefined;
-      if (QuestionLayout[type] === "Basic") {
-        celeryRadio = screen.getByRole("radio", { name: "Celery" });
-      } else if (QuestionLayout[type] === "Descriptions") {
-        celeryRadio = screen.getByRole("radio", {
-          name: "Celery This is celery",
-        });
-      } else if (QuestionLayout[type] === "Images") {
-        celeryRadio = screen.getByRole("radio", { name: "Celery Celery" });
-      }
+      const celeryRadio = screen.getByRole("radio", { name: /Celery/ });
+      const pizzaRadio = screen.getByRole("radio", { name: /Pizza/ });
+
+      // State is preserved...
       expect(celeryRadio).toBeChecked();
+
+      // ...and can be updated
+      await user.click(pizzaRadio);
+      expect(pizzaRadio).toBeChecked();
 
       const continueButton = screen.getByTestId("continue-button");
       expect(continueButton).toBeEnabled();
