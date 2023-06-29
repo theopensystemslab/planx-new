@@ -1,6 +1,6 @@
 ## BASE ##
 # 16.13.1 = LTS (outdated: LTS is now node 18)
-FROM node:16.13.1-alpine as base
+FROM node:20.3.1-alpine as base
 
 RUN apk add --no-cache git # required for fetching git dependencies
 
@@ -19,7 +19,7 @@ RUN pnpm install --recursive --prefer-offline
 RUN pnpm build
 RUN pnpm prune --production
 
-FROM node:16.13.1-alpine as production
+FROM node:20.3.1-alpine as production
 WORKDIR /api
 
 ## PRODUCTION ##
