@@ -53,6 +53,9 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   success: {
     main: "#4CAF50",
   },
+  dafsCustomColor: {
+    main: "hotpink",
+  },
 };
 
 // GOVUK Focus style

@@ -71,6 +71,7 @@ export const getHeaderPadding = (theme: Theme): React.CSSProperties => ({
 });
 
 const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
+  backgroundColor: theme.palette.dafsCustomColor.main,
   height: HEADER_HEIGHT,
   display: "flex",
   alignItems: "center",
