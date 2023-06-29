@@ -9,7 +9,7 @@ interface Props extends ButtonBaseProps {
 
 const Root = styled(ButtonBase, {
   shouldForwardProp: (prop) =>
-    ["selected", "backgroundColor"].includes(prop.toString()),
+    !["selected", "backgroundColor"].includes(prop.toString()),
 })<Props>(({ theme, selected, backgroundColor }) => ({
   height: 50,
   paddingLeft: 50,
@@ -30,6 +30,10 @@ const Root = styled(ButtonBase, {
     top: 20,
     borderRadius: "50%",
     backgroundColor: theme.palette.grey[500],
+    ...(selected && {
+      color: "#fff",
+      backgroundColor: backgroundColor || theme.palette.success.light,
+    }),
   },
   ...(!selected && {
     "&:hover": {
@@ -38,10 +42,6 @@ const Root = styled(ButtonBase, {
   }),
   ...(selected && {
     backgroundColor: theme.palette.grey[300],
-    "&::before": {
-      color: "#fff",
-      backgroundColor: backgroundColor || theme.palette.primary.light,
-    },
   }),
 }));
 
