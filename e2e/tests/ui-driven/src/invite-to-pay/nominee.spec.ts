@@ -27,7 +27,7 @@ const PAYMENT_NOT_FOUND_TEXT = "Sorry, we can’t find that payment link";
 
 const adminGQLClient = getGraphQLClient();
 
-test.describe("Nominee journey", async () => {
+test.describe("Nominee journey @regression", async () => {
   test.beforeAll(async () => {
     try {
       context = await setUpTestContext(context);
