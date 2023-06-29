@@ -17,7 +17,7 @@ const Root = styled(Box)(({ theme, color, bgcolor }) => ({
   display: "flex",
   justifyContent: "center",
   textAlign: "left",
-  py: theme.spacing(6),
+  padding: theme.spacing(6, 0),
   position: "relative",
   width: "100%",
   minHeight: theme.spacing(10),
@@ -27,7 +27,7 @@ const Root = styled(Box)(({ theme, color, bgcolor }) => ({
       theme.palette.primary.main
     ),
   },
-  ...(color && {
+  ...(!color && {
     backgroundColor: theme.palette.background.paper,
     color: "currentColor",
   }),
