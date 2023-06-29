@@ -44,6 +44,9 @@ updates:
     open-pull-requests-limit: 1
     reviewers:
       - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "hasura/graphql-engine"
+        versions: ["x.cli-migrations-v3"]
 
   - package-ecosystem: "docker"
     directory: "/hasura.planx.uk/proxy"
