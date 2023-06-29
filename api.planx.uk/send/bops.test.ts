@@ -29,8 +29,6 @@ const environments = [
 
 environments.forEach(({ env, bopsApiRootDomain }) => {
   describe(`sending an application to BOPS ${env}`, () => {
-    const ORIGINAL_BOPS_API_ROOT_DOMAIN = process.env.BOPS_API_ROOT_DOMAIN;
-
     beforeEach(() => {
       queryMock.mockQuery({
         name: "FindApplication",
@@ -49,17 +47,9 @@ environments.forEach(({ env, bopsApiRootDomain }) => {
       });
     });
 
-    beforeAll(() => {
-      process.env.BOPS_API_ROOT_DOMAIN = bopsApiRootDomain;
-    });
-
-    afterAll(() => {
-      process.env.BOPS_API_ROOT_DOMAIN = ORIGINAL_BOPS_API_ROOT_DOMAIN;
-    });
-
     it("proxies request and returns hasura id", async () => {
       nock(
-        `https://southwark.${bopsApiRootDomain}/api/v1/planning_applications`
+        `${process.env.BOPS_SUBMISSION_URL_SOUTHWARK}/api/v1/planning_applications`
       )
         .post("")
         .reply(200, {
