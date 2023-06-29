@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -14,7 +15,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   background: theme.palette.primary.main,
 }));
 
-const Container = styled(Box)(() => ({
+const LoginContainer = styled(Container)(() => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -22,17 +23,17 @@ const Container = styled(Box)(() => ({
   color: "#FFF",
 }));
 
-const Beta = styled("span")(() => ({
+const PhaseText = styled("span")(() => ({
   color: "rgba(255, 255, 255, 0.49);",
 }));
 
 const Login: React.FC = () => {
   return (
     <Wrapper>
-      <Container>
+      <LoginContainer>
         <Typography mb={1} mt={1} variant="h1" fontWeight="400">
           Plan✕
-          <Beta>beta</Beta>
+          <PhaseText>beta</PhaseText>
         </Typography>
         <Link
           variant="body1"
@@ -44,7 +45,7 @@ const Login: React.FC = () => {
         >
           Login with Google
         </Link>
-      </Container>
+      </LoginContainer>
     </Wrapper>
   );
 };
