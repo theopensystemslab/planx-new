@@ -15,6 +15,9 @@ env:
   PNPM_VERSION: 7.8.0
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
+permissions:
+  pull-requests: write
+
 jobs:
   changes:
     name: Check file changes
