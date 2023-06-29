@@ -52,7 +52,7 @@ export default function PhaseBanner(): FCReturn {
   return (
     <FeedbackFish projectId={feedbackFishId} metadata={metadata}>
       <Root>
-        <Container maxWidth="xl">
+        <Container maxWidth={false}>
           <Inner aria-label="This is a new service. Click here to provide feedback.">
             <BetaFlag
               bgcolor="primary.main"

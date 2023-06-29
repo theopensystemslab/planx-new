@@ -25,7 +25,7 @@ const TestEnvironmentBanner: React.FC = () => {
       {isTestEnvironment() && showWarning && (
         <TestEnvironmentWarning>
           <Container
-            maxWidth="xl"
+            maxWidth={false}
             sx={{
               display: "flex",
               alignItems: "center",

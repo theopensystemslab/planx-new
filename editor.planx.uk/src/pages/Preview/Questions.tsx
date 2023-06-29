@@ -164,7 +164,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   return (
     <Box width="100%" role="main" pt={1}>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <ButtonBase
           className={classnames(classes.backButton, {
             [classes.hidden]: !showBackButton,
