@@ -9,11 +9,13 @@ import { Store, useStore } from "./store";
 export type AnalyticsType = "init" | "resume";
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
+export type HelpClickMetadata = Record<string, string>;
+
 let lastAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
-  trackHelpClick: () => Promise<void>;
+  trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
@@ -147,14 +149,15 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     lastAnalyticsLogId = id;
   }
 
-  async function trackHelpClick() {
+  async function trackHelpClick(metadata?: HelpClickMetadata) {
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await client.mutate({
         mutation: gql`
-          mutation UpdateHasClickedHelp($id: bigint!) {
+          mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb = {}) {
             update_analytics_logs_by_pk(
               pk_columns: { id: $id }
               _set: { has_clicked_help: true }
+              _append: { metadata: $metadata }
             ) {
               id
             }
@@ -162,6 +165,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         `,
         variables: {
           id: lastAnalyticsLogId,
+          metadata,
         },
       });
     }

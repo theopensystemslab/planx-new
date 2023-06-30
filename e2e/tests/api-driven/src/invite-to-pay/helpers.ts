@@ -1,3 +1,5 @@
+import axios from "axios";
+import { readFileSync } from "node:fs";
 import type {
   FlowGraph,
   PaymentRequest,
@@ -10,10 +12,22 @@ import {
 } from "./mocks";
 import { $admin } from "../client";
 
+export async function setUpMocks() {
+  const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
+  return axios({
+    method: "POST",
+    url: `${process.env.E2E_MOCK_SERVER_INTERFACE}/mocks?reset=true`,
+    headers: {
+      "Content-Type": "application/x-yaml",
+    },
+    data: serverMockFile,
+  });
+}
+
 export async function createTeam() {
   return $admin.team.create({
     name: "E2E Test Team",
-    slug: "e2e",
+    slug: "E2E",
     logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
     primaryColor: "#444444",
     submissionEmail: "simulate-delivered@notifications.service.gov.uk",

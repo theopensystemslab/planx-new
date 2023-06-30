@@ -8,6 +8,7 @@ import {
   AfterAll,
 } from "@cucumber/cucumber";
 import {
+  setUpMocks,
   createTeam,
   createUser,
   buildITPFlow,
@@ -30,6 +31,7 @@ const context: {
 } = {};
 
 BeforeAll(async () => {
+  await setUpMocks();
   context.teamId = await createTeam();
   if (!context.teamId) {
     throw new Error("team not found");

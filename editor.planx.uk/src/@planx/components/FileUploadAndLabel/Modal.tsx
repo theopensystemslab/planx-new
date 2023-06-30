@@ -78,14 +78,6 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
         >
           Done
         </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => props.setShowModal(false)}
-          sx={{ paddingLeft: 2 }}
-        >
-          Cancel
-        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -147,7 +139,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
       sx={{ display: "flex", flexDirection: "column" }}
     >
       <InputLabel
-        id={`select-mutliple-file-tags-label-${uploadedFile.id}`}
+        id={`select-multiple-file-tags-label-${uploadedFile.id}`}
         sx={{
           top: "16%",
           textDecoration: "underline",

@@ -4,7 +4,7 @@ specifiers:
   '@airbrake/node': ^2.1.8
   '@babel/core': ^7.21.4
   '@babel/preset-typescript': ^7.21.4
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#a1434c1
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#c625da8
   '@opensystemslab/planx-document-templates': github:theopensystemslab/planx-document-templates#baf18b8
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
@@ -29,7 +29,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.58.0
   adm-zip: ^0.5.10
   aws-sdk: ^2.1358.0
-  axios: ^0.27.2
+  axios: ^1.4.0
   body-parser: ^1.20.2
   cookie-parser: ^1.4.6
   cookie-session: ^1.4.0
@@ -81,12 +81,12 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.8
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/a1434c1
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/c625da8
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/baf18b8
   '@types/isomorphic-fetch': 0.0.36
   adm-zip: 0.5.10
   aws-sdk: 2.1358.0
-  axios: 0.27.2
+  axios: 1.4.0
   body-parser: 1.20.2
   cookie-parser: 1.4.6
   cookie-session: 1.4.0
@@ -2376,11 +2376,12 @@ packages:
       - debug
     dev: false
 
-  /axios/0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+  /axios/1.4.0:
+    resolution: {integrity: sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==}
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -6296,6 +6297,10 @@ packages:
       ipaddr.js: 1.9.1
     dev: false
 
+  /proxy-from-env/1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+    dev: false
+
   /pump/3.0.0:
     resolution: {integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==}
     dependencies:
@@ -7580,8 +7585,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/a1434c1:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a1434c1}
+  github.com/theopensystemslab/planx-core/c625da8:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c625da8}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}

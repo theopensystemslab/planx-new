@@ -80,6 +80,36 @@ describe("Question component", () => {
       );
     });
 
+    it(`should display previously selected answer on back or change in the ${QuestionLayout[type]} layout`, async () => {
+      const handleSubmit = jest.fn();
+      const { user } = setup(
+        <Question
+          text="Best food"
+          responses={responses[type]}
+          previouslySubmittedData={{
+            answers: ["celery_id"],
+            auto: false,
+          }}
+          handleSubmit={handleSubmit}
+        />
+      );
+
+      expect(screen.getByRole("heading")).toHaveTextContent("Best food");
+
+      const celeryRadio = screen.getByRole("radio", { name: /Celery/ });
+      const pizzaRadio = screen.getByRole("radio", { name: /Pizza/ });
+
+      // State is preserved...
+      expect(celeryRadio).toBeChecked();
+
+      // ...and can be updated
+      await user.click(pizzaRadio);
+      expect(pizzaRadio).toBeChecked();
+
+      const continueButton = screen.getByTestId("continue-button");
+      expect(continueButton).toBeEnabled();
+    });
+
     it(`should not have any accessibility violations in the ${QuestionLayout[type]} layout`, async () => {
       const handleSubmit = jest.fn();
       const { container } = setup(

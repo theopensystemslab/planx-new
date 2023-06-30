@@ -83,12 +83,7 @@ const TextLabel = (props: TextLabelProps): FCReturn => {
       py={1}
       className={classes.textLabelWrapper}
     >
-      <Checkbox
-        id={id}
-        checked={selected}
-        color={selected ? "primary.contrastText" : "text.primary"}
-        onChange={onClick}
-      />
+      <Checkbox id={id} checked={selected} onChange={onClick} />
       <Typography variant="body1" className={classes.title}>
         {title}
       </Typography>

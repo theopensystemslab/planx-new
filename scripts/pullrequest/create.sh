@@ -6,8 +6,6 @@ cd "$(dirname $0)/../.."
 
 echo "root:$SSH_PASSWORD" | chpasswd
 
-apt-get update -y
-
 # check if swap space is available - see link for more on updating swap:
 # https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
 swapon --show

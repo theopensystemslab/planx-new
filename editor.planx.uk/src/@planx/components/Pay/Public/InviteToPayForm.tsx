@@ -1,6 +1,5 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
@@ -10,8 +9,9 @@ import { WarningContainer } from "@planx/components/shared/Preview/WarningContai
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
-import { useNavigation } from "react-navi";
+import React, { useEffect } from "react";
+import { useCurrentRoute, useNavigation } from "react-navi";
+import { isPreviewOnlyDomain } from "routes/utils";
 import useSWRMutation from "swr/mutation";
 import { ApplicationPath, PaymentStatus } from "types";
 import ErrorWrapper from "ui/ErrorWrapper";
@@ -86,6 +86,14 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   const [sessionId, path] = useStore((state) => [state.sessionId, state.path]);
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
   const navigation = useNavigation();
+  const {
+    data: { mountpath },
+  } = useCurrentRoute();
+
+  // Scroll to top when loading component
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const postRequest = async (
     url: string,
@@ -121,11 +129,11 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       redirectToConfirmationPage(paymentRequest.id);
   };
 
-  // TODO: This fails in the editor
-  // TODO: Test on prod custom domains
   const redirectToConfirmationPage = (paymentRequestId: string) => {
     const params = new URLSearchParams({ paymentRequestId }).toString();
-    const inviteToPayURL = `./pay/invite?${params}`;
+    const inviteToPayURL = isPreviewOnlyDomain
+      ? `${mountpath}/pay/invite?${params}`
+      : `./pay/invite?${params}`;
     navigation.navigate(inviteToPayURL);
   };
 
@@ -253,7 +261,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       <Button
         variant="contained"
         color="secondary"
-        style={{ borderBottom: `solid 2px lightgrey` }}
+        sx={{ mt: 2, borderBottom: "solid 2px lightgrey" }}
         size="large"
         onClick={changePage}
         disabled={Boolean(paymentStatus)}

@@ -261,6 +261,7 @@ export function PlanningConstraintsContent(
           <ConstraintsList data={positiveConstraints} metadata={metadata} />
           {negativeConstraints.length > 0 && (
             <SimpleExpand
+              id="negative-constraints-list"
               buttonText={{
                 open: "Constraints that don't apply to this property",
                 closed: "Hide constraints that don't apply",
@@ -286,6 +287,7 @@ export function PlanningConstraintsContent(
             Continue with your application to tell us more about your project.
           </Typography>
           <SimpleExpand
+            id="negative-constraints-list"
             buttonText={{
               open: "Show the things we checked",
               closed: "Hide constraints that don't apply",

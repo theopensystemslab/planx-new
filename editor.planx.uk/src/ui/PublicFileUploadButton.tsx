@@ -1,9 +1,9 @@
 import ErrorIcon from "@mui/icons-material/Error";
 import Image from "@mui/icons-material/Image";
-import ButtonBase from "@mui/material/ButtonBase";
+import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import CircularProgress from "@mui/material/CircularProgress";
+import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
-import makeStyles from "@mui/styles/makeStyles";
 import { uploadPublicFile } from "api/upload";
 import React, { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
@@ -12,17 +12,17 @@ export interface Props {
   onChange?: (image: string) => void;
 }
 
-const useClasses = makeStyles((theme) => ({
-  inputIconButton: {
-    borderRadius: 0,
-    height: 50,
-    width: 50,
-    backgroundColor: "#fff",
-    color: theme.palette.primary.main,
-  },
-  dragging: {
+const Root = styled(ButtonBase, {
+  shouldForwardProp: (prop) => prop !== "isDragActive",
+})<ButtonBaseProps & { isDragActive?: boolean }>(({ theme, isDragActive }) => ({
+  borderRadius: 0,
+  height: 50,
+  width: 50,
+  backgroundColor: "#fff",
+  color: theme.palette.primary.main,
+  ...(isDragActive && {
     border: `2px dashed ${theme.palette.primary.dark}`,
-  },
+  }),
 }));
 
 export default function PublicFileUploadButton(props: Props): FCReturn {
@@ -75,47 +75,29 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
       "image/*": [".jpg", ".jpeg", ".png", ".svg"],
     },
   });
-  const classes = useClasses();
 
   if (status.type === "loading") {
     return (
-      <ButtonBase
-        key="status-loading"
-        classes={{
-          root: classes.inputIconButton,
-        }}
-      >
+      <Root key="status-loading">
         <CircularProgress size={24} />
-      </ButtonBase>
+      </Root>
     );
   }
 
   if (status.type === "error") {
     return (
       <Tooltip open title={status.msg}>
-        <ButtonBase
-          classes={{
-            root: classes.inputIconButton,
-          }}
-        >
+        <Root>
           <ErrorIcon titleAccess="Error" />
-        </ButtonBase>
+        </Root>
       </Tooltip>
     );
   }
 
   return (
-    <ButtonBase
-      key="status-none"
-      classes={{
-        root: `${classes.inputIconButton} ${
-          isDragActive ? classes.dragging : ""
-        }`,
-      }}
-      {...getRootProps()}
-    >
+    <Root isDragActive={isDragActive} key="status-none" {...getRootProps()}>
       <input data-testid="upload-file-input" {...getInputProps()} />
       <Image />
-    </ButtonBase>
+    </Root>
   );
 }

@@ -1,6 +1,6 @@
 import { test, expect, Page, APIRequestContext } from "@playwright/test";
 import { v4 as uuidV4 } from "uuid";
-import { setFeatureFlag, fillGovUkCardDetails, cards } from "../helpers";
+import { fillGovUkCardDetails, cards } from "../helpers";
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import {
   Context,
@@ -27,7 +27,7 @@ const PAYMENT_NOT_FOUND_TEXT = "Sorry, we can’t find that payment link";
 
 const adminGQLClient = getGraphQLClient();
 
-test.describe("Nominee journey", async () => {
+test.describe("Nominee journey @regression", async () => {
   test.beforeAll(async () => {
     try {
       context = await setUpTestContext(context);
@@ -37,10 +37,6 @@ test.describe("Nominee journey", async () => {
       throw e;
     }
   });
-
-  test.beforeEach(
-    async ({ page }) => await setFeatureFlag(page, "INVITE_TO_PAY")
-  );
 
   test.afterAll(async () => {
     await tearDownTestContext(context);

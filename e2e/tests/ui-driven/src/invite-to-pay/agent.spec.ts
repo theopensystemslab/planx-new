@@ -1,5 +1,5 @@
 import { test, expect, Page, BrowserContext } from "@playwright/test";
-import { setFeatureFlag, addSessionToContext, modifyFlow } from "../helpers";
+import { addSessionToContext, modifyFlow } from "../helpers";
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import {
   Context,
@@ -28,7 +28,7 @@ let context: Context = {
   sessionIds: [], // used to collect and clean up sessions
 };
 
-test.describe("Agent journey", async () => {
+test.describe("Agent journey @regression", async () => {
   const adminGQLClient = getGraphQLClient();
 
   test.beforeAll(async () => {
@@ -40,10 +40,6 @@ test.describe("Agent journey", async () => {
       throw e;
     }
   });
-
-  test.beforeEach(
-    async ({ page }) => await setFeatureFlag(page, "INVITE_TO_PAY")
-  );
 
   test.afterAll(async () => await tearDownTestContext(context));
 

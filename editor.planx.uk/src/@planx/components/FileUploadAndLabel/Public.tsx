@@ -7,7 +7,10 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import {
+  HelpClickMetadata,
+  useAnalyticsTracking,
+} from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { usePrevious } from "react-use";
@@ -168,6 +171,7 @@ function Component(props: Props) {
                 <ListItem key={fileType.name} disablePadding>
                   <InteractiveFileListItem
                     name={fileType.name}
+                    fn={fileType.fn}
                     completed={Boolean(fileType.slots?.length)}
                     moreInformation={fileType.moreInformation}
                   />
@@ -212,6 +216,7 @@ function Component(props: Props) {
 
 interface FileListItemProps {
   name: string;
+  fn: string;
   completed: boolean;
   moreInformation?: MoreInformation;
 }
@@ -222,10 +227,9 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
   const { info, policyRef, howMeasured, definitionImg } =
     props.moreInformation || {};
 
-  const handleHelpClick = () => {
+  const handleHelpClick = (metadata: HelpClickMetadata) => {
     setOpen(true);
-    // TODO: track granularity of file name in analytics, currently only knows help was clicked for this overall component type/node id
-    trackHelpClick(); // This returns a promise but we don't need to await for it
+    trackHelpClick(metadata); // This returns a promise but we don't need to await for it
   };
 
   return (
@@ -256,7 +260,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         <StyledIconButton
           title={`More information`}
           aria-label={`See more information about "${props.name}"`}
-          onClick={handleHelpClick}
+          onClick={() => handleHelpClick({ [props.fn]: props.name })}
           aria-haspopup="dialog"
           size="small"
         >

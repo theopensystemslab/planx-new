@@ -16,7 +16,7 @@ import { deepmerge } from "@mui/utils";
 
 const GOVUK_YELLOW = "#FFDD00";
 
-export const DEFAULT_PRIMARY_COLOR = "#000661";
+export const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const TEXT_COLOR_PRIMARY = "#0B0C0C";
 const TEXT_COLOR_SECONDARY = "#505A5F";
 const BG_COLOR_DEFAULT = "#FFFFFF";
@@ -315,12 +315,13 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               // Styles for radio icon dot
               content: "''",
               position: "absolute",
-              top: "11px",
-              left: "11px",
+              top: "50%",
+              left: "50%",
               width: 0,
               height: 0,
+              transform: "translate(-50%, -50%)",
               color: TEXT_COLOR_PRIMARY,
-              border: "11px solid currentcolor",
+              border: "10px solid currentcolor",
               borderRadius: "50%",
               background: "currentcolor",
               // Hide by default, show if checked

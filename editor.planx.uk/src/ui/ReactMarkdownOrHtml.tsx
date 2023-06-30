@@ -2,13 +2,19 @@ import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { linkStyle } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
 const useClasses = makeStyles((theme) => ({
   htmlRoot: {
     "& a": linkStyle(theme.palette.primary.main),
     "& h2": theme.typography.h3,
     "& h3": theme.typography.h5,
+    "& strong": {
+      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+    },
+    "& p:last-of-type": {
+      marginBottom: 0,
+    },
   },
 }));
 
@@ -25,7 +31,7 @@ export const incrementHeaderElements = (source: string): string => {
 
 export default function ReactMarkdownOrHtml(props: {
   source?: string;
-  className?: string;
+  textColor?: string;
   openLinksOnNewTab?: boolean;
   id?: string;
   manuallyIncrementHeaders?: boolean;
@@ -44,15 +50,16 @@ export default function ReactMarkdownOrHtml(props: {
 
     return (
       <div
-        className={classNames(props.className, classes.htmlRoot)}
+        color={props.textColor}
+        className={classNames(classes.htmlRoot)}
         dangerouslySetInnerHTML={{ __html: incrementHeaders }}
         id={props.id}
       />
     );
   }
   return (
-    <div id={props.id}>
-      <ReactMarkdown className={classNames(props.className, classes.htmlRoot)}>
+    <div id={props.id} color={props.textColor}>
+      <ReactMarkdown className={classNames(classes.htmlRoot)}>
         {props.source}
       </ReactMarkdown>
     </div>

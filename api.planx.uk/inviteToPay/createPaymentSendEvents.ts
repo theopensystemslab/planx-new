@@ -4,8 +4,8 @@ import { gql } from 'graphql-request';
 import { $admin } from '../client';
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { createScheduledEvent } from "../hasura/metadata";
-import { getMostRecentPublishedFlow } from '../helpers';
-import { Flow, Node, Team } from '../types';
+import { getMostRecentPublishedFlow } from "../helpers";
+import { Flow, Node, Team } from "../types";
 
 enum Destination {
   BOPS = "bops",
@@ -20,8 +20,11 @@ interface CombinedResponse {
 }
 
 // Create "One-off Scheduled Events" in Hasura when a payment request is paid
-const createPaymentSendEvents = async (req: Request, res: Response, next: NextFunction): 
-  Promise<NextFunction | Response | void> => {
+const createPaymentSendEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<NextFunction | Response | void> => {
   try {
     const { payload } = req.body;
     if (!payload.sessionId) {
@@ -35,16 +38,25 @@ const createPaymentSendEvents = async (req: Request, res: Response, next: NextFu
     const combinedResponse: CombinedResponse = {};
 
     const session = await $admin.getSessionById(payload.sessionId);
-    const publishedFlowData = await getMostRecentPublishedFlow(session.flowId);
-    if (!session || !publishedFlowData) {
+    if (!session) {
       return next({
         status: 400,
-        message: `Cannot fetch session or flow data to create payment send events`,
+        message: `Cannot fetch session to create payment send events`,
+      });
+    }
+
+    const publishedFlowData = await getMostRecentPublishedFlow(session.flowId);
+    if (!publishedFlowData) {
+      return next({
+        status: 400,
+        message: `Cannot fetch flow data to create payment send events`,
       });
     }
 
     // Find this sessions Send component, determine which "destinations" we need to queue up events for
-    const sendNode: [string, Node] | undefined = Object.entries(publishedFlowData).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
+    const sendNode: [string, Node] | undefined = Object.entries(
+      publishedFlowData
+    ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
     const destinations: Destination[] = sendNode?.[1]?.data?.destinations;
 
     let teamSlug = await getTeamSlugByFlowId(session.flowId);
@@ -73,7 +85,9 @@ const createPaymentSendEvents = async (req: Request, res: Response, next: NextFu
     if (destinations.includes(Destination.Uniform)) {
       // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
       if (teamSlug === "buckinghamshire") {
-        teamSlug = session.data?.passport?.data?.["property.localAuthorityDistrict"]
+        teamSlug = session.data?.passport?.data?.[
+          "property.localAuthorityDistrict"
+        ]
           ?.filter((name: string) => name !== "Buckinghamshire")[0]
           ?.toLowerCase()
           ?.replace(/\W+/g, "-");

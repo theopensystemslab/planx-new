@@ -1,0 +1,58 @@
+# BOPS submissions
+- request:
+    method: POST
+    path: /api/v1/planning_applications
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      {
+        "id": "0",
+        "messsage": "MOCKED RESPONSE"
+      }
+
+# UNIFORM token generation
+- request:
+    method: POST
+    path: /
+    body: client_id=e2e&client_secret=123&grant_type=client_credentials
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      {
+        "access_token": "TEST_TOKEN",
+        "organisataion-name": "MOCKED",
+        "organisation-id": "MOCKED"
+      }
+
+# UNIFORM submissions
+- request:
+    method: POST
+    path: /secure/submission
+  response:
+    status: 201
+    headers:
+      Content-Type: application/json
+      Location: https://the.mocked.location/xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    body: >
+      { "messsage": "MOCKED RESPONSE" }
+- request:
+    method: POST
+    path: /secure/submission/xxxx-xxxx-xxxx-xxxxxxxxxxxx/archive
+  response:
+    status: 204
+    headers:
+      Content-Type: application/json
+    body: >
+      { "messsage": "MOCKED RESPONSE" }
+- request:
+    method: GET
+    path:
+      matcher: ShouldMatch
+      value: /secure/submission/*
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      { "messsage": "MOCKED RESPONSE" }

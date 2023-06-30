@@ -15,6 +15,9 @@ env:
   PNPM_VERSION: 7.8.0
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
+permissions:
+  pull-requests: write
+
 jobs:
   changes:
     name: Check file changes
@@ -71,7 +74,7 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
@@ -112,7 +115,7 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
@@ -148,7 +151,7 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
@@ -314,6 +317,8 @@ jobs:
           password: ${{ steps.create.outputs.default_password }}
           command_timeout: 20m
           script: |
+            apt-get update -y
+
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
@@ -341,6 +346,8 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           command_timeout: 10m
           script: |
+            apt-get update -y
+
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git add . && git stash
@@ -379,6 +386,7 @@ jobs:
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: vultr
           message: |
             ## Pizza
@@ -397,6 +405,8 @@ jobs:
     needs: [create_or_update_vultr_instance]
     runs-on: ubuntu-22.04
     steps:
+      - name: Wait for Vultr to warm up
+        run: bash -c "sleep 30s"
       - name: API healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
@@ -408,68 +418,6 @@ jobs:
       - name: Editor healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
-
-  lighthouse:
-    name: Lighthouse
-    needs: [create_or_update_vultr_instance]
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - name: Audit URLs using Lighthouse
-        uses: treosh/lighthouse-ci-action@v9
-        id: LHCIAction
-        with:
-          urls: |
-            https://editor.planx.dev/buckinghamshire/find-out-if-you-need-planning-permission/preview
-            https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
-            https://editor.planx.dev/testing/lighthouse-canary-flow/unpublished
-            https://${{ env.FULL_DOMAIN }}/testing/lighthouse-canary-flow/unpublished
-          uploadArtifacts: true # save results as an action artifacts
-          temporaryPublicStorage: true # upload lighthouse report to the temporary storage
-      - name: Interpolate comment text
-        id: text
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const links = JSON.parse('${{steps.LHCIAction.outputs.links}}');
-            const manifests = JSON.parse('${{steps.LHCIAction.outputs.manifest}}');
-
-            const text = getMarkdown(manifests, links);
-            core.setOutput("text", `## Lighthouse\n\n${text}`);
-
-
-            function getMarkdown(manifests, links) {
-              const urls = [
-                `buckinhamshire/FOIYNPP`,
-                `testing/canary`,
-              ];
-
-              const s = manifests.map(manifest => manifest.summary);
-              const attributes = Object.keys(s[0]);
-
-              const rows = attributes.map((attr, i) => {
-
-                const FOIYNPPDiff = (s[0][attr] - s[1][attr]).toFixed(2);
-                const FOIYNPP = `[${s[0][attr]}](${manifests[0].url}) - [${s[1][attr]}](${manifests[1].url}) = [${FOIYNPPDiff}](${links[manifests[1].url]})`;
-
-                const canaryDiff = (s[2][attr] - s[3][attr]).toFixed(2);
-                const canary = `[${s[2][attr]}](${manifests[2].url}) - [${s[3][attr]}](${manifests[3].url}) = [${canaryDiff}](${links[manifests[3].url]})`;
-                return `| ${attr} | ${FOIYNPP} | ${canary}`;
-              }).join('|\n');
-
-              const urlHeader = urls.join(' | ');
-              const middleColumns = urls.map(() => ':---:').join('|');
-
-              return `
-              |  | ${urlHeader} |
-              |------------|${middleColumns}|
-              ${rows}|
-              `;
-            }
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: lighthouse
-          message: ${{steps.text.outputs.text}}
 
   end_to_end_tests:
     name: E2E tests

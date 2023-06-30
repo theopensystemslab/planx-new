@@ -140,6 +140,7 @@ const Result: React.FC<Props> = ({
 
           {hiddenResponses.length > 0 && (
             <SimpleExpand
+              id="hidden-responses"
               buttonText={{
                 open: "Show all responses",
                 closed: "Hide other responses",

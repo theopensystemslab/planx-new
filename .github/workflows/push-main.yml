@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
       - name: NPM cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-npm
         with:
@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: PNPM cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-pnpm
         with:
@@ -61,7 +61,7 @@ jobs:
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_ENV: staging
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: build
           path: ./editor.planx.uk/build

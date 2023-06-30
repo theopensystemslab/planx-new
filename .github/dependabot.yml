@@ -1,0 +1,190 @@
+version: 2
+updates:
+  # Root
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "root"
+      - "docker"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+
+  # Editor
+  - package-ecosystem: "npm"
+    directory: "/editor.planx.uk"
+    schedule:
+      interval: "daily"
+    labels:
+      - "editor"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+
+  # Hasura
+  - package-ecosystem: "npm"
+    directory: "/hasura.planx.uk"
+    schedule:
+      interval: "daily"
+    labels:
+      - "hasura"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "docker"
+    directory: "/hasura.planx.uk"
+    schedule:
+      interval: "daily"
+    labels:
+      - "hasura"
+      - "docker"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "hasura/graphql-engine"
+        versions: ["x.cli-migrations-v3"]
+
+  - package-ecosystem: "docker"
+    directory: "/hasura.planx.uk/proxy"
+    schedule:
+      interval: "daily"
+    labels:
+      - "hasura"
+      - "caddy"
+      - "docker"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "npm"
+    directory: "/hasura.planx.uk/tests"
+    schedule:
+      interval: "daily"
+    labels:
+      - "hasura tests"
+    open-pull-requests-limit: 1
+    commit-message:
+      prefix: "[skip pizza] "
+    reviewers:
+      - "theopensystemslab/planx"
+  
+  # ShareDB
+  - package-ecosystem: "npm"
+    directory: "/sharedb.planx.uk"
+    schedule:
+      interval: "daily"
+    labels:
+      - "sharedb"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "docker"
+    directory: "/sharedb.planx.uk"
+    schedule:
+      interval: "daily"
+    labels:
+      - "sharedb"
+      - "docker"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+
+  # API
+  - package-ecosystem: "npm"
+    directory: "/api.planx.uk"
+    schedule:
+      interval: "daily"
+    labels:
+      - "api"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "docker"
+    directory: "/api.planx.uk"
+    schedule:
+      interval: "daily"
+    labels:
+      - "api"
+      - "docker"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"
+
+  # E2E tests
+  - package-ecosystem: "npm"
+    directory: "/e2e"
+    schedule:
+      interval: "daily"
+    labels:
+      - "e2e"
+    open-pull-requests-limit: 1
+    commit-message:
+      prefix: "[skip pizza] "
+    reviewers:
+      - "theopensystemslab/planx"
+  
+  # Infrastructure
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/application"
+    schedule:
+      interval: "daily"
+    labels:
+      - "infra/application"
+    open-pull-requests-limit: 1
+    commit-message:
+      prefix: "[skip pizza] "
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/certificates"
+    schedule:
+      interval: "daily"
+    labels:
+      - "infra/certificates"
+    open-pull-requests-limit: 1
+    commit-message:
+      prefix: "[skip pizza] "
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/data"
+    schedule:
+      interval: "daily"
+    labels:
+      - "infra/data"
+    open-pull-requests-limit: 1
+    commit-message:
+      prefix: "[skip pizza] "
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "npm"
+    directory: "/infrastructure/networking"
+    schedule:
+      interval: "daily"
+    labels:
+      - "infra/networking"
+    open-pull-requests-limit: 1
+    commit-message:
+      prefix: "[skip pizza] "
+    reviewers:
+      - "theopensystemslab/planx"
+
+  # GitHub actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "github actions"
+    open-pull-requests-limit: 1
+    reviewers:
+      - "theopensystemslab/planx"

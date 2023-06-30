@@ -1,11 +1,10 @@
-import { fixRequestBody, responseInterceptor } from "http-proxy-middleware";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
-import omit from "lodash/omit";
-import { useProxy } from "../proxy";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { $admin } from "../client";
+import { ServerError } from "../errors";
 
 interface SendToBOPSRequest {
   payload: {
@@ -14,15 +13,15 @@ interface SendToBOPSRequest {
 }
 
 const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
-  req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
-
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload }: SendToBOPSRequest = req.body;
   if (!payload) {
-    return next({
-      status: 400,
-      message: `Missing application payload data to send to BOPS`,
-    });
+    return next(
+      new ServerError({
+        status: 400,
+        message: `Missing application payload data to send to BOPS`,
+      })
+    );
   }
 
   // confirm that this session has not already been successfully submitted before proceeding
@@ -35,66 +34,48 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  // allow e2e team to present as "lambeth"
-  const localAuthority =
-    req.params.localAuthority == "e2e" ? "lambeth" : req.params.localAuthority;
-
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
-  //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
-  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(
-    localAuthority.toUpperCase()
-  );
-  if (!isSupported) {
-    return next({
-      status: 400,
-      message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
-    });
-  }
-
   // a local or staging API instance should send to the BOPS staging endpoint
   // production should send to the BOPS production endpoint
-  const domain = `https://${localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
-  const target = `${domain}/api/v1/planning_applications`;
-
+  const bopsSubmissionURLEnvName = `BOPS_SUBMISSION_URL_${req.params.localAuthority.toUpperCase()}`;
+  const bopsSubmissionURL = process.env[bopsSubmissionURLEnvName];
+  const isSupported = Boolean(bopsSubmissionURL);
+  if (!isSupported) {
+    return next(
+      new ServerError({
+        status: 400,
+        message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
+      })
+    );
+  }
+  const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
   const bopsFullPayload = await $admin.generateBOPSPayload(payload?.sessionId);
 
-  useProxy({
-    headers: {
-      ...(req.headers as Record<string, string | string[]>),
-      Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
-    },
-    pathRewrite: () => "",
-    target,
-    selfHandleResponse: true,
-    onProxyReq: (proxyReq, req) => {
-      req.body = bopsFullPayload;
-      fixRequestBody(proxyReq, req);
-    },
-    onProxyRes: responseInterceptor(
-      async (responseBuffer, proxyRes, req, res) => {
+  try {
+    const bopsResponse = await axios({
+      method: "POST",
+      url: target,
+      adapter: "http",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
+      },
+      data: bopsFullPayload,
+    })
+      .then(async (res: AxiosResponse<{ id: string }>) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
         markSessionAsSubmitted(payload?.sessionId);
-
-        const bopsRawResponse = responseBuffer.toString("utf8");
-
-        let bopsResponse: { id: string } | undefined;
-        try {
-          bopsResponse = JSON.parse(bopsRawResponse);
-        } catch (e) {
-          res.statusCode = 502; // Bad Gateway - invalid response from the upstream server
-          return bopsRawResponse;
-        }
 
         const applicationId = await adminClient.request(
           gql`
             mutation CreateBopsApplication(
               $bops_id: String = ""
-              $destination_url: String = ""
-              $request: jsonb = ""
-              $req_headers: jsonb = ""
-              $response: jsonb = ""
-              $response_headers: jsonb = ""
-              $session_id: String = ""
+              $destination_url: String!
+              $request: jsonb!
+              $req_headers: jsonb = {}
+              $response: jsonb = {}
+              $response_headers: jsonb = {}
+              $session_id: String!
             ) {
               insert_bops_applications_one(
                 object: {
@@ -113,25 +94,46 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
             }
           `,
           {
-            bops_id: bopsResponse?.id,
+            bops_id: res.data.id,
             destination_url: target,
             request: bopsFullPayload,
-            req_headers: omit(req.headers, ["authorization"]),
-            response: bopsResponse,
-            response_headers: proxyRes.headers,
+            response: res.data,
+            response_headers: res.headers,
             session_id: payload?.sessionId,
           }
         );
 
-        return JSON.stringify({
+        return {
           application: {
             ...applicationId.insert_bops_applications_one,
-            bopsResponse,
+            bopsResponse: res.data,
           },
-        });
-      }
-    ),
-  })(req, res, next);
+        };
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw new Error(
+            `Sending to BOPS failed:\n${JSON.stringify(
+              error.response.data,
+              null,
+              2
+            )}`
+          );
+        } else {
+          // re-throw other errors
+          throw new Error(`Sending to BOPS failed:\n${error}`);
+        }
+      });
+    res.send(bopsResponse);
+  } catch (err) {
+    next(
+      new ServerError({
+        status: 500,
+        message: "Sending to BOPS failed",
+        cause: err,
+      })
+    );
+  }
 };
 
 /**
