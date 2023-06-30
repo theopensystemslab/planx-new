@@ -1,5 +1,5 @@
 # 16.13.1 = LTS
-FROM node:16.13.1-alpine as base
+FROM node:18.16.1-alpine as base
 
 WORKDIR /sharedb
 RUN npm install -g pnpm@7.8.0
