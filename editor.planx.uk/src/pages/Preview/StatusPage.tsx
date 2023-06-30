@@ -87,6 +87,7 @@ const StatusPage: React.FC<Props> = ({
             color="primary"
             size="large"
             onClick={onButtonClick}
+            sx={{ mt: 4 }}
           >
             {buttonText}
           </Button>
