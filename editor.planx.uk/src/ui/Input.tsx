@@ -14,7 +14,6 @@ const PREFIX = "Input";
 
 const classes = {
   multiline: `${PREFIX}-multiline`,
-  adornedEnd: `${PREFIX}-adornedEnd`,
   focused: `${PREFIX}-focused`,
 };
 
@@ -63,17 +62,14 @@ const StyledInputBase = styled(InputBase, {
     width: "100%",
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
   }),
-  [`& .${classes.multiline}`]: {
+  [`&.${classes.multiline}`]: {
     height: "auto",
     "& textarea": {
       padding: theme.spacing(1.5, 0),
       lineHeight: 1.6,
     },
   },
-  [`& .${classes.adornedEnd}`]: {
-    paddingRight: 2,
-  },
-  [`& .${classes.focused}`]: {
+  [`&.${classes.focused}`]: {
     ...(bordered && borderedFocusStyle),
   },
 }));

@@ -25,7 +25,7 @@ const Root = styled(Select)(({ theme }) => ({
   padding: theme.spacing(0, 1.5),
   height: 50,
   backgroundColor: "#fff",
-  [`& .${classes.rootSelect}`]: {
+  [`&.${classes.rootSelect}`]: {
     paddingRight: theme.spacing(6),
     boxSizing: "border-box",
     backgroundColor: "#fff",
@@ -34,11 +34,11 @@ const Root = styled(Select)(({ theme }) => ({
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  [`& .${classes.icon}`]: {
+  [`&.${classes.icon}`]: {
     right: theme.spacing(1),
     color: "rgba(0,0,0,0.25)",
   },
-  [`& .${classes.menuPaper}`]: {
+  [`&.${classes.menuPaper}`]: {
     border: `2px solid ${theme.palette.primary.light}`,
     borderTop: 0,
     marginTop: -2,
@@ -59,7 +59,7 @@ const Root = styled(Select)(({ theme }) => ({
       height: "auto",
     },
   },
-  [`& .${classes.inputSelect}`]: {
+  [`&.${classes.inputSelect}`]: {
     backgroundColor: "transparent",
     fontSize: "1rem",
     "&:focus": {
