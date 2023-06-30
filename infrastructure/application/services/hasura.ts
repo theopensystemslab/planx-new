@@ -1,6 +1,7 @@
 "use strict";
 
 import * as awsx from "@pulumi/awsx";
+import * as aws from "@pulumi/aws";
 import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
@@ -61,6 +62,10 @@ export const createHasuraService = async ({
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
+      logGroup: new aws.cloudwatch.LogGroup("hasura", {
+        namePrefix: "hasura",
+        retentionInDays: 30,
+      }),
       containers: {
         hasuraProxy: {
           image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
