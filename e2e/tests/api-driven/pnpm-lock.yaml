@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@cucumber/cucumber': ^9.1.2
-  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#36f7aa8
+  '@opensystemslab/planx-core': github:theopensystemslab/planx-core#fb8178b
   '@types/node': '18'
   axios: ^1.4.0
   dotenv: ^16.1.1
@@ -13,7 +13,7 @@ specifiers:
 
 dependencies:
   '@cucumber/cucumber': 9.1.2
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/36f7aa8
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/fb8178b
   axios: 1.4.0
   dotenv: 16.1.1
   dotenv-expand: 10.0.0
@@ -435,10 +435,6 @@ packages:
       '@emotion/styled':
         optional: true
       '@types/react':
-        optional: true
-      react:
-        optional: true
-      react-dom:
         optional: true
     dependencies:
       '@babel/runtime': 7.22.3
@@ -2002,8 +1998,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/36f7aa8:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/36f7aa8}
+  github.com/theopensystemslab/planx-core/fb8178b:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fb8178b}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
