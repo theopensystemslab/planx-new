@@ -16,3 +16,5 @@ export const parseContent = (
   fn: data?.fn || "property.constraints.planning",
   ...parseMoreInformation(data),
 });
+
+export type IntersectingConstraints = Record<string, string[]>;

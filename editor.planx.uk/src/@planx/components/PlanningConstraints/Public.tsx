@@ -1,6 +1,10 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
-import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
+import type {
+  Constraint,
+  EnhancedGISResponse,
+  GISResponse,
+} from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
@@ -11,15 +15,16 @@ import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import useSWR from "swr";
+import useSWR, { Fetcher } from "swr";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { stringify } from "wkt";
 
+import { SiteAddress } from "../FindProperty/model";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import ConstraintsList from "./List";
-import type { PlanningConstraints } from "./model";
+import type { IntersectingConstraints, PlanningConstraints } from "./model";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -30,8 +35,10 @@ function Component(props: Props) {
     (state) => state.computePassport().data?.["property.boundary.site"]
   );
   const { x, y, longitude, latitude, usrn } =
-    useStore((state) => state.computePassport().data?._address) || {};
-  const showGraphError: boolean = !x && !y && !longitude && !latitude;
+    (useStore(
+      (state) => state.computePassport().data?._address
+    ) as SiteAddress) || {};
+  const showGraphError = !x || !y || !longitude || !latitude;
 
   const teamSlug = useStore((state) => state.teamSlug);
 
@@ -67,11 +74,11 @@ function Component(props: Props) {
     geom: wktPolygon || wktPoint,
     ...params,
   };
-  const customGisParams: Record<string, any> = {
-    x: x,
-    y: y,
+  const customGisParams: Record<string, string> = {
+    x: x?.toString(),
+    y: y?.toString(),
     siteBoundary: JSON.stringify(coordinates),
-    version: 1,
+    version: "1",
   };
 
   // Fetch planning constraints data for a given local authority
@@ -84,7 +91,9 @@ function Component(props: Props) {
         : customGisParams
     ).toString();
 
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
+  const fetcher: Fetcher<GISResponse | GISResponse["constraints"]> = (
+    url: string
+  ) => fetch(url).then((r) => r.json());
   const { data, mutate, isValidating } = useSWR(
     () => (x && y && latitude && longitude ? teamGisEndpoint : null),
     fetcher,
@@ -93,23 +102,26 @@ function Component(props: Props) {
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new non-UPRN address on the map
-  const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
+  const classifiedRoadsEndpoint: string =
+    `${process.env.REACT_APP_API_URL}/roads?` +
+    new URLSearchParams(usrn ? { usrn: usrn } : undefined)?.toString();
+
   const { data: roads, isValidating: isValidatingRoads } = useSWR(
     () =>
       usrn && digitalLandOrganisations.includes(teamSlug)
-        ? classifiedRoadsEndpoint + `?usrn=${usrn}`
+        ? classifiedRoadsEndpoint
         : null,
     fetcher,
     { revalidateOnFocus: false }
   );
 
   // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
-  const constraints: GISResponse["constraints"] = {
+  const constraints: GISResponse["constraints"] | {} = {
     ...(data?.constraints || data),
     ...roads?.constraints,
   };
 
-  const metadata: GISResponse["metadata"] = {
+  const metadata: GISResponse["metadata"] | {} = {
     ...data?.metadata,
     ...roads?.metadata,
   };
@@ -127,13 +139,30 @@ function Component(props: Props) {
           metadata={metadata}
           previousFeedback={props.previouslySubmittedData?.feedback}
           handleSubmit={(values: { feedback?: string }) => {
-            const _nots: any = {};
-            const newPassportData: any = {};
+            const _constraints: Array<
+              EnhancedGISResponse | GISResponse["constraints"]
+            > = [];
+            if (digitalLandOrganisations.includes(teamSlug)) {
+              if (data)
+                _constraints.push({
+                  ...data,
+                  planxRequest: teamGisEndpoint,
+                } as EnhancedGISResponse);
+              if (roads)
+                _constraints.push({
+                  ...roads,
+                  planxRequest: classifiedRoadsEndpoint,
+                } as EnhancedGISResponse);
+            } else {
+              if (data) _constraints.push(data as GISResponse["constraints"]);
+            }
 
-            Object.entries(constraints).forEach(([key, data]: any) => {
+            const _nots: any = {};
+            const intersectingConstraints: IntersectingConstraints = {};
+            Object.entries(constraints).forEach(([key, data]) => {
               if (data.value) {
-                newPassportData[props.fn] ||= [];
-                newPassportData[props.fn].push(key);
+                intersectingConstraints[props.fn] ||= [];
+                intersectingConstraints[props.fn].push(key);
               } else {
                 _nots[props.fn] ||= [];
                 _nots[props.fn].push(key);
@@ -141,9 +170,9 @@ function Component(props: Props) {
             });
 
             const passportData = {
+              _constraints,
               _nots,
-              ...newPassportData,
-              ...{ digitalLandRequest: data?.url || "" },
+              ...intersectingConstraints,
             };
 
             props.handleSubmit?.({

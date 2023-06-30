@@ -214,7 +214,7 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
     });
   }).catch(error => console.log(error));
 
-  return { url: url, constraints: formattedResult, metadata: metadata };
+  return { sourceRequest: url, constraints: formattedResult, metadata: metadata };
 }
 
 async function locationSearch(localAuthority: string, geom: string, extras: Record<string, string>) {
