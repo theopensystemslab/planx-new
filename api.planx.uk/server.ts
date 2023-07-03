@@ -71,6 +71,7 @@ import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPayment
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 import { getBOPSPayload } from "./admin/session/bops";
 import { getCSVData, getRedactedCSVData } from "./admin/session/csv";
+import { getHTMLExport, getRedactedHTMLExport } from "./admin/session/html";
 import { createPaymentSendEvents } from "./inviteToPay/createPaymentSendEvents";
 
 const router = express.Router();
@@ -416,6 +417,8 @@ app.get("/admin/session/:sessionId/xml", getOneAppXML);
 app.get("/admin/session/:sessionId/bops", getBOPSPayload);
 app.get("/admin/session/:sessionId/csv", getCSVData);
 app.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
+app.get("/admin/session/:sessionId/html", getHTMLExport);
+app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
