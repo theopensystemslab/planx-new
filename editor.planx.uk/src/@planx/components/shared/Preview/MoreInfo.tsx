@@ -31,13 +31,11 @@ const Root = styled(Drawer, {
   },
 
   [`& .${classes.drawerPaper}`]: {
-    width: drawerWidth,
+    width: "100%",
+    maxWidth: drawerWidth,
     backgroundColor: theme.palette.background.default,
     border: 0,
     boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
-    [theme.breakpoints.only("xs")]: {
-      width: "100%",
-    },
     padding: theme.spacing(1),
   },
 }));
