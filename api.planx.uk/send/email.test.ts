@@ -4,14 +4,14 @@ import app from "../server";
 import * as helpers from "./helpers";
 
 const mockGenerateCSVData = jest.fn().mockResolvedValue({
-  exportData: [
+  responses: [
     {
       question: "Is this a test?",
       responses: [{ value: "Yes" }],
       metadata: {},
     },
   ],
-  redactedExportData: [],
+  redactedResponses: [],
 });
 jest.mock("@opensystemslab/planx-core", () => {
   return {
@@ -20,7 +20,9 @@ jest.mock("@opensystemslab/planx-core", () => {
     })),
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       getDocumentTemplateNamesForSession: jest.fn(),
-      generateCSVData: () => mockGenerateCSVData(),
+      export: {
+        csvData: () => mockGenerateCSVData(),
+      },
     })),
   };
 });

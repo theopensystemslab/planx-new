@@ -184,7 +184,7 @@ async function checkUniformAuditTable(
 }
 
 export async function createUniformSubmissionZip(sessionId: string) {
-  const sessionData = await $admin.getSessionById(sessionId);
+  const sessionData = await $admin.session.find(sessionId);
   if (!sessionData) {
     throw new Error(
       `session ${sessionId} not found so could not create Uniform submission zip`

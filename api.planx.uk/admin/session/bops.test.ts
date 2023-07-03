@@ -11,7 +11,9 @@ const mockGenerateBOPSPayload = jest.fn().mockResolvedValue(expectedPayload);
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
-      generateBOPSPayload: () => mockGenerateBOPSPayload(),
+      export: {
+        bopsPayload: () => mockGenerateBOPSPayload(),
+      },
     })),
   };
 });

@@ -55,10 +55,11 @@ jest.mock("../client", () => {
       getDocumentTemplateNamesForSession: jest
         .fn()
         .mockResolvedValue(["X", "Y"]),
-      getSessionById: () => mockGetSessionById(),
-      generateCSVData: jest
-        .fn()
-        .mockResolvedValue({
+      session: {
+        find: () => mockGetSessionById(),
+      },
+      export: {
+        csvData: jest.fn().mockResolvedValue({
           exportData: [
             {
               question: "Test",
@@ -68,6 +69,7 @@ jest.mock("../client", () => {
           ],
           redactedExportData: [],
         }),
+      },
     },
   };
 });
