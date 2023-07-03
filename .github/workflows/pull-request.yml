@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -106,7 +106,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -142,7 +142,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -231,7 +231,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
@@ -428,7 +428,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
