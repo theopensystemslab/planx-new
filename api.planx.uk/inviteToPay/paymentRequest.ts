@@ -6,7 +6,7 @@ import {
   postPaymentNotificationToSlack,
   fetchPaymentViaProxyWithCallback,
 } from "../pay";
-import type { GovUKPayment } from "../types";
+import { GovUKPayment } from "@opensystemslab/planx-core/types";
 
 // middleware used by routes:
 //  * /payment-request/:paymentRequest/pay

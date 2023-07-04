@@ -4,15 +4,18 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
+import {
+  GOV_PAY_PASSPORT_KEY,
+  GovUKPayment,
+} from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import { isEmpty } from "lodash";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
-import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { GOV_PAY_PASSPORT_KEY, toPence } from "../../Pay/model";
+import { toPence } from "../../Pay/model";
 import { removeNilValues } from "../../shared/utils";
 import { TYPES } from "../../types";
 import { findGeoJSON } from "../helpers";

@@ -3,11 +3,12 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import { ApplicationPath, PaymentStatus } from "types";
+import { ApplicationPath } from "types";
 import Banner from "ui/Banner";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 

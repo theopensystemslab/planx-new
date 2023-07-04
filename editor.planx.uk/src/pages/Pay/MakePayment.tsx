@@ -2,7 +2,11 @@ import Check from "@mui/icons-material/Check";
 import Container from "@mui/material/Container";
 import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import type { PaymentRequest } from "@opensystemslab/planx-core/types";
+import {
+  type PaymentRequest,
+  GovUKPayment,
+  PaymentStatus,
+} from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { _public } from "client";
 import { format } from "date-fns";
@@ -20,7 +24,6 @@ import {
 import Confirm from "../../@planx/components/Pay/Public/Confirm";
 import { logger } from "../../airbrake";
 import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator";
-import { GovUKPayment, PaymentStatus } from "../../types";
 
 const States = {
   Init: {
