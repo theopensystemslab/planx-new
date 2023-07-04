@@ -1,26 +1,26 @@
 import MoreVert from "@mui/icons-material/MoreVert";
+import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
-import makeStyles from "@mui/styles/makeStyles";
 import React, { useMemo, useState } from "react";
 
 import PublicFileUploadButton from "./PublicFileUploadButton";
 
-const useClasses = makeStyles((theme) => ({
-  imageUploadContainer: {
-    height: 50,
-    width: 50,
-    position: "relative",
-  },
-  menu: {
-    position: "absolute",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    color: theme.palette.common.white,
-    top: 0,
-    right: 0,
-  },
+const ImageUploadContainer = styled(Box)(() => ({
+  height: 50,
+  width: 50,
+  position: "relative",
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  position: "absolute",
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  color: theme.palette.common.white,
+  top: 0,
+  right: 0,
 }));
 
 /** Uploads an image and returns corresponding URL */
@@ -31,8 +31,6 @@ export default function ImgInput({
   img?: string;
   onChange?: (newUrl?: string) => void;
 }): FCReturn {
-  const classes = useClasses();
-
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   // Auto-generate a random ID on mount
@@ -41,11 +39,10 @@ export default function ImgInput({
   }, []);
 
   return img ? (
-    <div className={classes.imageUploadContainer}>
-      <IconButton
+    <ImageUploadContainer>
+      <StyledIconButton
         id={`${menuId}-trigger`}
         color="inherit"
-        className={classes.menu}
         size="small"
         aria-label="Options"
         onClick={(ev) => {
@@ -53,7 +50,7 @@ export default function ImgInput({
         }}
       >
         <MoreVert />
-      </IconButton>
+      </StyledIconButton>
       <Menu
         id={`${menuId}`}
         anchorEl={anchorEl}
@@ -75,17 +72,17 @@ export default function ImgInput({
         </MenuItem>
       </Menu>
       <img width={50} height={50} src={img} alt="embedded img" />
-    </div>
+    </ImageUploadContainer>
   ) : (
     <Tooltip title="Drop file here">
-      <div className={classes.imageUploadContainer}>
+      <ImageUploadContainer>
         <PublicFileUploadButton
           onChange={(newUrl) => {
             setAnchorEl(null);
             onChange && onChange(newUrl);
           }}
         />
-      </div>
+      </ImageUploadContainer>
     </Tooltip>
   );
 }
