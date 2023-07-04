@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/ColorPicker";
@@ -11,18 +11,13 @@ import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 import InputRowLabel from "ui/InputRowLabel";
 
-export const serviceFlagsStyles = makeStyles((theme) => ({
-  root: {
-    color: "currentColor",
-  },
-  swatch: {
-    width: 18,
-    height: 18,
-    display: "inline-block",
-    marginRight: theme.spacing(1),
-    verticalAlign: "middle",
-    marginTop: -3,
-  },
+const Swatch = styled(Box)(({ theme }) => ({
+  width: 18,
+  height: 18,
+  display: "inline-block",
+  marginRight: theme.spacing(1),
+  verticalAlign: "middle",
+  marginTop: -3,
 }));
 
 export interface IServiceFlags {
@@ -40,7 +35,6 @@ export interface IServiceFlags {
 }
 
 const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
-  const classes = serviceFlagsStyles();
   const formik = useFormik({
     initialValues: {
       flagSets,
@@ -168,10 +162,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
                           </InputRowItem>
                         ) : (
                           <InputRowLabel>
-                            <Box
-                              className={classes.swatch}
-                              bgcolor={flag.color}
-                            />
+                            <Swatch bgcolor={flag.color} />
                             {flag.color}
                           </InputRowLabel>
                         )}
