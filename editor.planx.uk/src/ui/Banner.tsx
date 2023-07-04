@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { styled } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
@@ -46,9 +46,9 @@ function Banner(props: BannerProps) {
         {props.Icon && (
           <props.Icon
             sx={{
-              marginBottom: 1,
-              height: 5,
-              width: 5,
+              marginBottom: (theme: Theme) => theme.spacing(1),
+              height: (theme: Theme) => theme.spacing(5),
+              width: (theme: Theme) => theme.spacing(5),
               border: "3px solid",
               borderRadius: "50%",
             }}
