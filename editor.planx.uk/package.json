@@ -108,6 +108,7 @@
     "@storybook/preset-create-react-app": "^7.0.25",
     "@storybook/react": "^7.0.25",
     "@storybook/react-webpack5": "^7.0.25",
+    "@storybook/testing-library": "^0.2.0",
     "@storybook/theming": "^7.0.25",
     "@testing-library/dom": "^8.20.1",
     "@testing-library/jest-dom": "^5.16.5",

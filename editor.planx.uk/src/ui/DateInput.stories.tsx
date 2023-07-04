@@ -15,7 +15,6 @@ export const Basic = {
   render: (args: { value: string }) => (
     <DateInput {...args} bordered onChange={() => {}} />
   ),
-
   args: { value: "2020-20-02" },
 };
 

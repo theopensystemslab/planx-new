@@ -1,7 +1,6 @@
-import { Meta, StoryFn } from "@storybook/react";
-import React from "react";
+import { Meta } from "@storybook/react";
 
-import Input, { Props } from "./Input";
+import Input from "./Input";
 
 const metadata: Meta = {
   title: "Design System/Atoms/Form Elements/Input",
