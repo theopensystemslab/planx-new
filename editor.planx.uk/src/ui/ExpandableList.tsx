@@ -37,6 +37,7 @@ export function ExpandableListItem(props: {
 
   return (
     <ListItem
+      disablePadding
       sx={{
         borderBottom: (theme) => `1px solid ${theme.palette.secondary.main}`,
         display: "block",
