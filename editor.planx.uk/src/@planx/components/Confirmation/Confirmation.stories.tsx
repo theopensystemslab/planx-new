@@ -1,4 +1,4 @@
-import { Story } from "@storybook/react/types-6-0";
+import { StoryFn } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
@@ -10,7 +10,7 @@ export default {
   component: Confirmation,
 };
 
-const Template: Story<Props> = (args: Props) => <Confirmation {...args} />;
+const Template: StoryFn<Props> = (args: Props) => <Confirmation {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {

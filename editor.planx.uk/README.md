@@ -27,4 +27,4 @@ you can opt-out of type checking by setting the environment variable
 
 We use [Storybook](https://storybook.js.org/) for our UI component library.
 
-Start the development server `pnpm start-storybook`
+Start the development server `pnpm storybook`

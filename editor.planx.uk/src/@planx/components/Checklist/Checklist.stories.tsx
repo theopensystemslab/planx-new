@@ -1,4 +1,4 @@
-import type { Story } from "@storybook/react/types-6-0";
+import type { StoryFn } from "@storybook/react";
 import React from "react";
 
 import type { Props } from "./Public";
@@ -17,7 +17,7 @@ export default {
   },
 };
 
-const Template: Story<Props> = (args: Props) => <Checklist {...args} />;
+const Template: StoryFn<Props> = (args: Props) => <Checklist {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
@@ -76,8 +76,7 @@ WithImages.args = {
       data: {
         val: "a",
         text: "Apples",
-        img:
-          "https://www.applesfromny.com/wp-content/uploads/2020/05/Jonagold_NYAS-Apples2.png",
+        img: "https://www.applesfromny.com/wp-content/uploads/2020/05/Jonagold_NYAS-Apples2.png",
       },
     },
     {
@@ -85,8 +84,7 @@ WithImages.args = {
       data: {
         val: "b",
         text: "Bananas",
-        img:
-          "https://images.everydayhealth.com/images/diet-nutrition/how-many-calories-are-in-a-banana-1440x810.jpg",
+        img: "https://images.everydayhealth.com/images/diet-nutrition/how-many-calories-are-in-a-banana-1440x810.jpg",
       },
     },
     { id: "c", data: { val: "c", text: "Canteloupes" } },

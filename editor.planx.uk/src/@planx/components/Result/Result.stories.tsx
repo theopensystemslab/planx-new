@@ -1,4 +1,4 @@
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 
 import Public, { Props } from "./Public";
@@ -11,7 +11,7 @@ const metadata: Meta = {
   },
 };
 
-export const Basic: Story<Props> = (args) => <Public {...args} />;
+export const Basic: StoryFn<Props> = (args) => <Public {...args} />;
 Basic.args = {
   headingColor: {
     background: "#ADFF00",
@@ -97,8 +97,7 @@ Basic.args = {
       question: {
         id: "3333",
         data: {
-          text:
-            "A question with more information and a policy reference and it's really long",
+          text: "A question with more information and a policy reference and it's really long",
           info: "Some more information",
           policyRef: "https://beta.planx.uk/southwark",
         },
@@ -116,7 +115,7 @@ Basic.args = {
   ],
 };
 
-export const WithDisclaimer: Story<Props> = (args) => <Public {...args} />;
+export const WithDisclaimer: StoryFn<Props> = (args) => <Public {...args} />;
 WithDisclaimer.args = {
   headingTitle: "Heading",
   headingColor: { background: "palegoldenrod", text: "black" },

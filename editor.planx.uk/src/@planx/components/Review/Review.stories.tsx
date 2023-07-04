@@ -1,4 +1,4 @@
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 
 import Presentational from "./Public/Presentational";
@@ -263,7 +263,7 @@ const flow = {
   },
 };
 
-export const Frontend: Story<{}> = () => {
+export const Frontend: StoryFn<{}> = () => {
   return (
     <Presentational
       title="Review"
