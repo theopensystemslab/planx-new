@@ -33,7 +33,7 @@ const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
  * @param extras (dict) - optional query params like "analytics" & "sessionId" used to decide if we should audit the raw response
  *
  */
-async function go(localAuthority: string, geom: string, extras: Record<string, string>) {
+async function go(localAuthority: string, geom: string, extras: Record<string, string>): Promise<GISResponse> {
   // generate list of digital land datasets we should query based on 'active' planx schema variables
   const activeDatasets: string[] = [];
   Object.keys(baseSchema).forEach((key) => {
