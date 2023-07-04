@@ -18,6 +18,7 @@ export const SLUGS: {
   [TYPES.Flow]: "flow",
   [TYPES.InternalPortal]: "internal-portal",
   [TYPES.FileUploadAndLabel]: "file-upload-and-label",
+  [TYPES.NextSteps]: "next-steps",
   [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",
   [TYPES.Pay]: "pay",

@@ -56,6 +56,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.FindProperty:
     case TYPES.Flow:
     case TYPES.InternalPortal:
+    case TYPES.NextSteps:
     case TYPES.Notice:
     case TYPES.Pay:
     case TYPES.PlanningConstraints:

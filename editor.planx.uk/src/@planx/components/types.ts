@@ -29,4 +29,5 @@ export enum TYPES {
   Send = 650,
   Calculate = 700,
   Confirmation = 725,
+  NextSteps = 730,
 }
