@@ -7,9 +7,9 @@ export const getBOPSPayload = async (
   next: NextFunction
 ) => {
   try {
-    const payload = await $admin.export.bopsPayload(req.params.sessionId);
-    res.set("content-type", "application/json");
-    return res.send(payload);
+    const { exportData } = await $admin.export.bopsPayload(req.params.sessionId);
+    res.set("content-type", "application/json")
+    return res.send(exportData)
   } catch (error) {
     return next({
       message: "Failed to get BOPS payload: " + (error as Error).message,

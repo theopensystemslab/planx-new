@@ -1,32 +1,18 @@
-import AdmZip from "adm-zip";
-import { stringify } from "csv-stringify";
 import type { NextFunction, Request, Response } from "express";
-import type { Writable as WritableStream } from "node:stream";
-import fs from "fs";
 import { gql } from "graphql-request";
 import capitalize from "lodash/capitalize";
-import os from "os";
-import path from "path";
-
-import {
-  generateHTMLMapStream,
-  generateHTMLOverviewStream,
-} from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { sendEmail } from "../notify";
 import { EmailSubmissionNotifyConfig } from "../types";
-import {
-  addTemplateFilesToZip,
-  deleteFile,
-  downloadFile,
-  resolveStream,
-} from "./helpers";
-import { Passport } from "@opensystemslab/planx-core";
-import { $admin } from "../client";
-import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
+import { deleteFile } from "./helpers";
+import { buildSubmissionExportZip } from "./exportZip";
 
-const sendToEmail = async (req: Request, res: Response, next: NextFunction) => {
+export async function sendToEmail(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
@@ -94,13 +80,13 @@ const sendToEmail = async (req: Request, res: Response, next: NextFunction) => {
       message: `Failed to send "Submit" email. ${(error as Error).message}`,
     });
   }
-};
+}
 
-const downloadApplicationFiles = async (
+export async function downloadApplicationFiles(
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+) {
   const sessionId: string = req.params?.sessionId;
   if (!sessionId || !req.query?.email || !req.query?.localAuthority) {
     return next({
@@ -130,97 +116,19 @@ const downloadApplicationFiles = async (
         message: "Failed to find session data for this sessionId",
       });
     }
-    // Initiate an empty zip folder in memory
-    const zip = new AdmZip();
 
-    const addToZip = async (stream: WritableStream, path: string) => {
-      await resolveStream(stream);
-      zip.addLocalFile(path);
-      deleteFile(path);
-    };
-
-    // Make a tmp directory to avoid file name collisions if simultaneous applications
-    let tmpDir = "";
-    fs.mkdtemp(path.join(os.tmpdir(), sessionId), (err, folder) => {
-      if (err) throw err;
-      tmpDir = folder;
-    });
-
-    // generate csv data
-    const { responses, redactedResponses } = await $admin.export.csvData(
-      sessionId
-    );
-
-    // write csv locally, add it to the zip
-    if (responses) {
-      const csvPath = path.join(tmpDir, "application.csv");
-      const csvFile = fs.createWriteStream(csvPath);
-
-      const csvStream = stringify(responses, {
-        columns: ["question", "responses", "metadata"],
-        header: true,
-      }).pipe(csvFile);
-      await addToZip(csvStream, csvPath);
-    }
-
-    // If the user drew a red line boundary, add a geojson file
-    const geojson = sessionData.passport?.data?.["property.boundary.site"];
-    if (geojson) {
-      const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-      zip.addFile("boundary.geojson", geoBuff);
-
-      // generate and add an HTML boundary document
-      const boundaryPath = path.join(tmpDir, "LocationPlan.html");
-      const boundaryFile = fs.createWriteStream(boundaryPath);
-      const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
-      await addToZip(boundaryStream, boundaryPath);
-    }
-
-    // Add a HTML overview document for human-readability
-    if (responses) {
-      const htmlPath = path.join(tmpDir, "application.html");
-      const htmlFile = fs.createWriteStream(htmlPath);
-      const htmlStream = generateHTMLOverviewStream(
-        responses as PlanXExportData[]
-      ).pipe(htmlFile);
-      await addToZip(htmlStream, htmlPath);
-    }
-
-    // Add redacted HTML overview document
-    if (redactedResponses) {
-      const redactedHtmlPath = path.join(tmpDir, "application_redacted.html");
-      const redactedHtmlFile = fs.createWriteStream(redactedHtmlPath);
-      const redactedHtmlStream = generateHTMLOverviewStream(
-        redactedResponses as PlanXExportData[]
-      ).pipe(redactedHtmlFile);
-      await addToZip(redactedHtmlStream, redactedHtmlPath);
-    }
-
-    if (sessionData.passport) {
-      await addTemplateFilesToZip({
-        zip,
-        tmpDir,
-        passport: sessionData.passport,
-        sessionId,
-      });
-
-      const passport = new Passport(sessionData.passport);
-      await downloadPassportFiles({ zip, tmpDir, passport });
-    }
-
-    // Generate and save the zip locally
-    const zipName = `${sessionId}.zip`;
-    zip.writeZip(zipName);
+    // create the submission zip
+    const zip = await buildSubmissionExportZip({ sessionId });
 
     // Send it to the client
     const zipData = zip.toBuffer();
     res.set("Content-Type", "application/octet-stream");
-    res.set("Content-Disposition", `attachment; filename=${zipName}`);
+    res.set("Content-Disposition", `attachment; filename=${zip.zipName}`);
     res.set("Content-Length", zipData.length.toString());
     res.status(200).send(zipData);
 
     // Clean up the local zip file
-    deleteFile(zipName);
+    deleteFile(zip.zipName);
 
     // TODO Record files_downloaded_at timestamp in lowcal_sessions ??
   } catch (error) {
@@ -229,7 +137,7 @@ const downloadApplicationFiles = async (
       message: `Failed to download application files. ${error}`,
     });
   }
-};
+}
 
 async function getTeamEmailSettings(localAuthority: string) {
   const response = await adminClient.request(
@@ -286,28 +194,6 @@ async function getSessionData(sessionId: string) {
   return response?.lowcal_sessions_by_pk?.data;
 }
 
-async function downloadPassportFiles({
-  zip,
-  tmpDir,
-  passport,
-}: {
-  zip: AdmZip;
-  tmpDir: string;
-  passport: Passport;
-}) {
-  const files = passport.getFiles();
-  // Download files from S3 and add them to the zip folder
-  if (files.length > 0) {
-    for (const file of files) {
-      // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-      // This ensures that all uploaded files are present in the zip, even if they are duplicates
-      const uniqueFilename = file.split("/").slice(-2).join("-");
-      const filePath = path.join(tmpDir, uniqueFilename);
-      await downloadFile(file, filePath, zip);
-    }
-  }
-}
-
 async function insertAuditEntry(
   sessionId: string,
   teamSlug: string,
@@ -351,5 +237,3 @@ async function insertAuditEntry(
 
   return response?.insert_email_applications_one?.id;
 }
-
-export { sendToEmail, downloadApplicationFiles };
