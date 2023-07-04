@@ -247,7 +247,7 @@ export async function createUniformSubmissionZip(sessionId: string) {
   ).pipe(overviewFile);
   await addToZip(overviewStream, overviewPath);
 
-  // generate and add an HTML overview document for the submission to zip
+  // generate and add a redacted HTML overview document for the submission to zip
   const redactedOverviewPath = path.join(tmpDir, "RedactedOverview.htm");
   const redactedOverviewFile = fs.createWriteStream(redactedOverviewPath);
   const redactedOverviewStream = generateHTMLOverviewStream(
