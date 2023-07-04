@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from "@storybook/react";
+import { Meta, StoryFn,StoryObj } from "@storybook/react";
 import React from "react";
 
 import Question, { IQuestion } from "./Question";
@@ -11,9 +11,10 @@ const metadata: Meta = {
   },
 };
 
-const Template = (args: IQuestion) => <Question {...args} />;
+export const Basic: StoryObj<IQuestion> = {
+  args: basicArgs,
+};
 
-export const Basic: StoryFn<IQuestion> = Template.bind({});
 const basicArgs: IQuestion = {
   text: "What is your favorite fruit?",
   description:
@@ -28,9 +29,11 @@ const basicArgs: IQuestion = {
     { id: "c", responseKey: "c", title: "Canteloupe" },
   ],
 };
-Basic.args = basicArgs;
 
-export const WithDescriptions: StoryFn<IQuestion> = Template.bind({});
+export const WithDescriptions: StoryObj<IQuestion> = {
+  args: descArgs,
+};
+
 const descArgs: IQuestion = {
   ...basicArgs,
   responses: [
@@ -39,9 +42,11 @@ const descArgs: IQuestion = {
     { id: "c", responseKey: "c", title: "Canteloupe" },
   ],
 };
-WithDescriptions.args = descArgs;
 
-export const WithImages: StoryFn<IQuestion> = Template.bind({});
+export const WithImages: StoryObj<IQuestion> = {
+  args: imagesArgs,
+};
+
 const imagesArgs: IQuestion = {
   ...basicArgs,
   responses: [
@@ -55,6 +60,5 @@ const imagesArgs: IQuestion = {
     { id: "c", responseKey: "c", title: "Canteloupe" },
   ],
 };
-WithImages.args = imagesArgs;
 
 export default metadata;

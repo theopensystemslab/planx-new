@@ -1,9 +1,9 @@
-import { Story } from "@storybook/react";
+import { StoryFn } from "@storybook/react";
 import React from "react";
 
 import PhaseBanner from "./PhaseBanner";
 
-export const Basic: Story = () => {
+export const Basic: StoryFn = () => {
   return <PhaseBanner />;
 };
 

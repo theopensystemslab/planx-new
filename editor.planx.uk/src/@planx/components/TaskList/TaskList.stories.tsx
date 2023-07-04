@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from "@storybook/react";
+import { Meta, StoryFn,StoryObj } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
@@ -14,18 +14,19 @@ const metadata: Meta = {
   },
 };
 
-export const Frontend: StoryFn<PublicProps> = (args) => <Public {...args} />;
-Frontend.args = {
-  title: "Your Next Steps",
-  description: "To reverse climate change",
-  tasks: [
-    { title: "Do this first", description: "It's a very important task." },
-    { title: "Do this next", description: "It's also very important." },
-    {
-      title: "Don't forget this",
-      description: "It's the most important of all.",
-    },
-  ],
+export const Frontend: StoryObj<PublicProps> = {
+  args: {
+    title: "Your Next Steps",
+    description: "To reverse climate change",
+    tasks: [
+      { title: "Do this first", description: "It's a very important task." },
+      { title: "Do this next", description: "It's also very important." },
+      {
+        title: "Don't forget this",
+        description: "It's the most important of all.",
+      },
+    ],
+  },
 };
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;

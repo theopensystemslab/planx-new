@@ -12,9 +12,10 @@ const metadata: Meta = {
   },
 };
 
-export const Basic = (args: Props) => <Checkbox {...args} />;
-Basic.args = {
-  checked: false,
+export const Basic = {
+  args: {
+    checked: false,
+  },
 };
 
 export default metadata;

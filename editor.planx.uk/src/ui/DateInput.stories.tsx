@@ -11,9 +11,12 @@ const metadata: Meta = {
   },
 };
 
-export const Basic = (args: { value: string }) => (
-  <DateInput {...args} bordered onChange={() => {}} />
-);
-Basic.args = { value: "2020-20-02" };
+export const Basic = {
+  render: (args: { value: string }) => (
+    <DateInput {...args} bordered onChange={() => {}} />
+  ),
+
+  args: { value: "2020-20-02" },
+};
 
 export default metadata;

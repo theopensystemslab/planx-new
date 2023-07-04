@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from "@storybook/react";
+import { Meta, StoryFn,StoryObj } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
@@ -14,24 +14,24 @@ const metadata: Meta = {
   },
 };
 
-const Template = (args: Props) => <Public {...args} />;
-
-export const Frontend: StoryFn<Props> = Template.bind({});
-Frontend.args = {
-  title: "How was your day?",
-  description: "Be as descriptive as you can.",
-  type: TextInputType.Short,
+export const Frontend: StoryObj<Props> = {
+  args: {
+    title: "How was your day?",
+    description: "Be as descriptive as you can.",
+    type: TextInputType.Short,
+  },
 };
 
-export const FrontendEmail: StoryFn<Props> = Template.bind({});
-FrontendEmail.args = {
-  title: "What's your email?",
-  type: TextInputType.Email,
-  description: "",
-};
+export const FrontendEmail: StoryObj<Props> = {
+  args: {
+    title: "What's your email?",
+    type: TextInputType.Email,
+    description: "",
+  },
 
-FrontendEmail.argTypes = {
-  type: { control: { disable: true } },
+  argTypes: {
+    type: { control: { disable: true } },
+  },
 };
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
