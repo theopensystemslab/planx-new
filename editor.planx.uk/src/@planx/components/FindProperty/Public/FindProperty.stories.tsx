@@ -1,4 +1,4 @@
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 
 import PropertyInformation from "../../PropertyInformation/Public";
@@ -24,9 +24,9 @@ const metadata: Meta = {
 };
 export default metadata;
 
-export const Basic: Story<any> = (args) => <FindProperty {...args} />;
+export const Basic: StoryFn<any> = (args) => <FindProperty {...args} />;
 
-export const PropInfo: Story<any> = (args) => (
+export const PropInfo: StoryFn<any> = (args) => (
   <PropertyInformation
     {...{
       title: "About the property",

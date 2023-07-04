@@ -1,4 +1,4 @@
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
@@ -14,7 +14,7 @@ const metadata: Meta = {
   },
 };
 
-export const Frontend: Story<PublicProps> = (args) => <Public {...args} />;
+export const Frontend: StoryFn<PublicProps> = (args) => <Public {...args} />;
 Frontend.args = {
   title: "Your Next Steps",
   description: "To reverse climate change",

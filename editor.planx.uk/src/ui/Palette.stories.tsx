@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import React from "react";
 import { defaultTheme } from "theme";
 

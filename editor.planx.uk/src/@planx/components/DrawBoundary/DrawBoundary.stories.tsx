@@ -1,5 +1,5 @@
 import Wrapper from "@planx/components/fixtures/Wrapper";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import React from "react";
 
 import Editor from "./Editor";

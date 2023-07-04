@@ -1,4 +1,4 @@
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 import InputField from "ui/InputField";
 
@@ -7,7 +7,7 @@ const metadata: Meta = {
   component: InputField,
 };
 
-export const Basic: Story<{}> = () => (
+export const Basic: StoryFn<{}> = () => (
   <InputField
     name="text"
     multiline={true}

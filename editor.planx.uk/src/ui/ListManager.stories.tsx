@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import React, { ChangeEvent, useState } from "react";
 
 import ColorPicker from "./ColorPicker";

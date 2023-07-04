@@ -1,5 +1,5 @@
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import React, { useState } from "react";
 
 import CollapsibleInput, { Props } from "./CollapsibleInput";
@@ -9,7 +9,7 @@ const metadata: Meta = {
   component: CollapsibleInput,
 };
 
-export const Basic: Story<Props> = (_args: Props) => {
+export const Basic: StoryFn<Props> = (_args: Props) => {
   const [text, setText] = useState("");
   return (
     <FeedbackInput

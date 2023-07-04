@@ -1,4 +1,4 @@
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import React from "react";
 
 import Question, { IQuestion } from "./Question";
@@ -13,7 +13,7 @@ const metadata: Meta = {
 
 const Template = (args: IQuestion) => <Question {...args} />;
 
-export const Basic: Story<IQuestion> = Template.bind({});
+export const Basic: StoryFn<IQuestion> = Template.bind({});
 const basicArgs: IQuestion = {
   text: "What is your favorite fruit?",
   description:
@@ -30,7 +30,7 @@ const basicArgs: IQuestion = {
 };
 Basic.args = basicArgs;
 
-export const WithDescriptions: Story<IQuestion> = Template.bind({});
+export const WithDescriptions: StoryFn<IQuestion> = Template.bind({});
 const descArgs: IQuestion = {
   ...basicArgs,
   responses: [
@@ -41,7 +41,7 @@ const descArgs: IQuestion = {
 };
 WithDescriptions.args = descArgs;
 
-export const WithImages: Story<IQuestion> = Template.bind({});
+export const WithImages: StoryFn<IQuestion> = Template.bind({});
 const imagesArgs: IQuestion = {
   ...basicArgs,
   responses: [
@@ -49,8 +49,7 @@ const imagesArgs: IQuestion = {
       id: "a",
       responseKey: "a",
       title: "Apple",
-      img:
-        "https://i2.wp.com/ceklog.kindel.com/wp-content/uploads/2013/02/firefox_2018-07-10_07-50-11.png",
+      img: "https://i2.wp.com/ceklog.kindel.com/wp-content/uploads/2013/02/firefox_2018-07-10_07-50-11.png",
     },
     { id: "b", responseKey: "b", title: "Banana" },
     { id: "c", responseKey: "c", title: "Canteloupe" },
