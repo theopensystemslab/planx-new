@@ -14,7 +14,7 @@ export default Component;
 function Component(props: Props) {
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
-      <QuestionHeader title={props.title} description={props.description} />
+      <QuestionHeader {...props} />
       <Box>
         <Typography variant="h2" style={{ color: "orangered" }}>
           UNDER DEVELOPMENT
