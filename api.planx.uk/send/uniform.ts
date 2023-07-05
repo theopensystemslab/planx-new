@@ -274,19 +274,13 @@ async function authenticate({
   clientId,
   clientSecret,
 }: UniformClient): Promise<UniformAuthResponse> {
-  const isTest = clientId.toUpperCase() === "E2E";
-
-  const target = isTest
-    ? process.env.E2E_MOCK_SERVER!
-    : process.env.UNIFORM_TOKEN_URL!;
-
   const authString = Buffer.from(`${clientId}:${clientSecret}`).toString(
     "base64"
   );
 
   const authConfig: AxiosRequestConfig = {
     method: "POST",
-    url: target,
+    url: process.env.UNIFORM_TOKEN_URL!,
     headers: {
       Authorization: `Basic ${authString}`,
       "Content-type": "application/x-www-form-urlencoded",
@@ -305,7 +299,7 @@ async function authenticate({
   }
 
   const uniformAuthResponse: UniformAuthResponse = {
-    token: isTest ? "TEST_TOKEN" : response.data.access_token,
+    token: response.data.access_token,
     organisation: response.data["organisation-name"],
     organisationId: response.data["organisation-id"],
   };
@@ -323,15 +317,9 @@ async function createSubmission(
   organisationId: string,
   sessionId = "TEST"
 ): Promise<string> {
-  const isTest = token === "TEST_TOKEN";
+  const createSubmissionEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission`;
 
-  const submissionURL = isTest
-    ? process.env.E2E_MOCK_SERVER!
-    : process.env.UNIFORM_SUBMISSION_URL!;
-
-  const createSubmissionEndpoint = `${submissionURL}/secure/submission`;
-
-  const isStaging = isTest || submissionURL.includes("staging");
+  const isStaging = ["mock-server", "staging"].some(hostname => createSubmissionEndpoint.includes(hostname));
 
   const createSubmissionConfig: AxiosRequestConfig = {
     url: createSubmissionEndpoint,
@@ -380,13 +368,8 @@ async function attachArchive(
     );
     return false;
   }
-  const isTest = token === "TEST_TOKEN";
 
-  const submissionURL = isTest
-    ? process.env.E2E_MOCK_SERVER!
-    : process.env.UNIFORM_SUBMISSION_URL!;
-
-  const attachArchiveEndpoint = `${submissionURL}/secure/submission/${submissionId}/archive`;
+  const attachArchiveEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
@@ -417,13 +400,7 @@ async function retrieveSubmission(
   token: string,
   submissionId: string
 ): Promise<UniformSubmissionResponse> {
-  const isTest = token === "TEST_TOKEN";
-
-  const submissionURL = isTest
-    ? process.env.E2E_MOCK_SERVER!
-    : process.env.UNIFORM_SUBMISSION_URL!;
-
-  const getSubmissionEndpoint = `${submissionURL}/secure/submission/${submissionId}`;
+  const getSubmissionEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
 
   const getSubmissionConfig: AxiosRequestConfig = {
     url: getSubmissionEndpoint,
