@@ -24,6 +24,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 1. Download and install the following dependencies if you don't have them already:
 - [Docker](https://docs.docker.com/get-docker/)
 - [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@8.2.0`
+- [Node](https://nodejs.org) `pnpm env use --global 18.16.1`
 
 1. Clone this repository. You'll need to get some additional environment variable files that aren't published here. Find instructions for copying these in 1password under the AWS Staging IAM user role entry
 

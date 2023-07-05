@@ -1,27 +1,63 @@
 {
-  "private": true,
-  "scripts": {
-    "test": "pnpm test:api && pnpm test:ui",
-    "test:ui": "cd tests/ui-driven && pnpm test",
-    "test:api": "cd tests/api-driven && pnpm test",
-    "test:regression": "pnpm test:api-regression && pnpm test:ui-regression",
-    "test:ui-regression": "cd tests/ui-driven && pnpm test:regression",
-    "test:api-regression": "cd tests/api-driven && pnpm test:regression",
-    "test:debug": "DEBUG_LOG=true pnpm test",
-    "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
-    "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
-    "check": "tsc && pnpm lint",
-    "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install"
-  },
-  "devDependencies": {
-    "@types/node": "16",
-    "@typescript-eslint/eslint-plugin": "^5.59.1",
-    "@typescript-eslint/parser": "^5.59.1",
-    "eslint": "^8.39.0",
-    "prettier": "^2.8.8",
-    "typescript": "^4.9.5"
-  },
-  "engines": {
-    "node": "^18"
+  "0": {
+    "buildIndex": 0,
+    "manifest": {
+      "private": true,
+      "scripts": {
+        "test": "pnpm test:api && pnpm test:ui",
+        "test:ui": "cd tests/ui-driven && pnpm test",
+        "test:api": "cd tests/api-driven && pnpm test",
+        "test:regression": "pnpm test:api-regression && pnpm test:ui-regression",
+        "test:ui-regression": "cd tests/ui-driven && pnpm test:regression",
+        "test:api-regression": "cd tests/api-driven && pnpm test:regression",
+        "test:debug": "DEBUG_LOG=true pnpm test",
+        "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
+        "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
+        "check": "tsc && pnpm lint",
+        "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install"
+      },
+      "devDependencies": {
+        "@types/node": "16",
+        "@typescript-eslint/eslint-plugin": "^5.59.1",
+        "@typescript-eslint/parser": "^5.59.1",
+        "eslint": "^8.39.0",
+        "prettier": "^2.8.8",
+        "typescript": "^4.9.5"
+      },
+      "engines": {
+        "node": "^18"
+      }
+    },
+    "rootDir": "/home/benjaminjosephw/spaces/builditben/OSL/repos/planX/e2e",
+    "binsDir": "/home/benjaminjosephw/spaces/builditben/OSL/repos/planX/e2e/node_modules/.bin",
+    "id": ".",
+    "modulesDir": "/home/benjaminjosephw/spaces/builditben/OSL/repos/planX/e2e/node_modules",
+    "originalManifest": {
+      "private": true,
+      "scripts": {
+        "test": "pnpm test:api && pnpm test:ui",
+        "test:ui": "cd tests/ui-driven && pnpm test",
+        "test:api": "cd tests/api-driven && pnpm test",
+        "test:regression": "pnpm test:api-regression && pnpm test:ui-regression",
+        "test:ui-regression": "cd tests/ui-driven && pnpm test:regression",
+        "test:api-regression": "cd tests/api-driven && pnpm test:regression",
+        "test:debug": "DEBUG_LOG=true pnpm test",
+        "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
+        "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
+        "check": "tsc && pnpm lint",
+        "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install"
+      },
+      "devDependencies": {
+        "@types/node": "16",
+        "@typescript-eslint/eslint-plugin": "^5.59.1",
+        "@typescript-eslint/parser": "^5.59.1",
+        "eslint": "^8.39.0",
+        "prettier": "^2.8.8",
+        "typescript": "^4.9.5"
+      },
+      "engines": {
+        "node": "^18"
+      }
+    }
   }
 }
