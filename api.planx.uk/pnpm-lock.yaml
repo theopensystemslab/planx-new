@@ -8,8 +8,8 @@ dependencies:
     specifier: github:theopensystemslab/planx-core#74a3542
     version: github.com/theopensystemslab/planx-core/74a3542
   '@opensystemslab/planx-document-templates':
-    specifier: github:theopensystemslab/planx-document-templates#main
-    version: github.com/theopensystemslab/planx-document-templates/28e07055714e87be3be72d1fffa0bc9759296723
+    specifier: github:theopensystemslab/planx-document-templates#3b6b345
+    version: github.com/theopensystemslab/planx-document-templates/3b6b345
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -7578,11 +7578,10 @@ packages:
       - rollup
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/28e07055714e87be3be72d1fffa0bc9759296723:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/28e07055714e87be3be72d1fffa0bc9759296723}
+  github.com/theopensystemslab/planx-document-templates/3b6b345:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/3b6b345}
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
-    engines: {node: ^18}
     prepare: true
     requiresBuild: true
     dependencies:
