@@ -5,8 +5,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: github:theopensystemslab/planx-core#5082cc3
-    version: github.com/theopensystemslab/planx-core/5082cc3
+    specifier: github:theopensystemslab/planx-core#7679dd7
+    version: github.com/theopensystemslab/planx-core/7679dd7
   '@opensystemslab/planx-document-templates':
     specifier: github:theopensystemslab/planx-document-templates#b2797ff
     version: github.com/theopensystemslab/planx-document-templates/b2797ff
@@ -7590,8 +7590,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/5082cc3:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5082cc3}
+  github.com/theopensystemslab/planx-core/7679dd7:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7679dd7}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^18}
