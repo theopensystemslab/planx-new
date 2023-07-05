@@ -48,8 +48,8 @@ dependencies:
     specifier: github:theopensystemslab/planx-core#main
     version: github.com/theopensystemslab/planx-core/3d56c2139bb753ca0a1013ad277a96642c2cb713(@types/react@18.2.14)(rollup@2.61.1)
   '@opensystemslab/planx-document-templates':
-    specifier: github:theopensystemslab/planx-document-templates#baf18b8
-    version: github.com/theopensystemslab/planx-document-templates/baf18b8(@types/react@18.2.14)(rollup@2.61.1)
+    specifier: github:theopensystemslab/planx-document-templates#main
+    version: github.com/theopensystemslab/planx-document-templates/28e07055714e87be3be72d1fffa0bc9759296723(@types/react@18.2.14)(rollup@2.61.1)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -19704,12 +19704,12 @@ packages:
       - rollup
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/baf18b8(@types/react@18.2.14)(rollup@2.61.1):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/baf18b8}
-    id: github.com/theopensystemslab/planx-document-templates/baf18b8
+  github.com/theopensystemslab/planx-document-templates/28e07055714e87be3be72d1fffa0bc9759296723(@types/react@18.2.14)(rollup@2.61.1):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/28e07055714e87be3be72d1fffa0bc9759296723}
+    id: github.com/theopensystemslab/planx-document-templates/28e07055714e87be3be72d1fffa0bc9759296723
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
-    engines: {node: ^16, pnpm: ^7.8.0}
+    engines: {node: ^18}
     prepare: true
     requiresBuild: true
     dependencies:
