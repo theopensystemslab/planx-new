@@ -5,8 +5,8 @@ dependencies:
     specifier: ^9.1.2
     version: 9.1.2
   '@opensystemslab/planx-core':
-    specifier: github:theopensystemslab/planx-core#fb8178b
-    version: github.com/theopensystemslab/planx-core/fb8178b
+    specifier: github:theopensystemslab/planx-core#main
+    version: github.com/theopensystemslab/planx-core/3d56c2139bb753ca0a1013ad277a96642c2cb713
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -1993,15 +1993,15 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/fb8178b:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fb8178b}
+  github.com/theopensystemslab/planx-core/3d56c2139bb753ca0a1013ad277a96642c2cb713:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3d56c2139bb753ca0a1013ad277a96642c2cb713}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    engines: {node: ^16, pnpm: ^7.8.0}
+    engines: {node: ^18}
     prepare: true
     requiresBuild: true
     dependencies:
-      '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca
+      '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/28e0705
       fast-xml-parser: 4.2.2
       graphql: 16.6.0
       graphql-request: 5.2.0(graphql@16.6.0)
@@ -2023,11 +2023,11 @@ packages:
       - rollup
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/debaeca:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/debaeca}
+  github.com/theopensystemslab/planx-document-templates/28e0705:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/28e0705}
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
-    engines: {node: ^16, pnpm: ^7.8.0}
+    engines: {node: ^18}
     prepare: true
     requiresBuild: true
     dependencies:
