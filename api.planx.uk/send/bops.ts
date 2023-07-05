@@ -49,7 +49,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     );
   }
   const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
-  const bopsFullPayload = await $admin.export.bopsPayload(payload?.sessionId);
+  const { exportData } = await $admin.export.bopsPayload(payload?.sessionId);
 
   try {
     const bopsResponse = await axios({
@@ -60,7 +60,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
       },
-      data: bopsFullPayload,
+      data: exportData,
     })
       .then(async (res: AxiosResponse<{ id: string }>) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
@@ -96,7 +96,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
           {
             bops_id: res.data.id,
             destination_url: target,
-            request: bopsFullPayload,
+            request: exportData,
             response: res.data,
             response_headers: res.headers,
             session_id: payload?.sessionId,
