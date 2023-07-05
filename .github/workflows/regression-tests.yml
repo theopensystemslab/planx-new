@@ -7,8 +7,6 @@ on:
 
 env:
   EDITOR_DIRECTORY: editor.planx.uk
-  PNPM_VERSION: 7.8.0
-  NODE_VERSION: 18.16.1 # 18.16.1 = LTS
 
 jobs:
   integration_tests:
@@ -32,10 +30,10 @@ jobs:
           fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
@@ -71,10 +69,10 @@ jobs:
           fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install dependencies
@@ -105,10 +103,10 @@ jobs:
           fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
@@ -135,11 +133,11 @@ jobs:
       - name: Setup PNPM
         uses: pnpm/action-setup@v2.2.2
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: PNPM Install
