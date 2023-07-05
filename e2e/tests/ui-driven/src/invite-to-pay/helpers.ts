@@ -8,7 +8,7 @@ import {
 import type { Page } from "@playwright/test";
 import { gql, GraphQLClient } from "graphql-request";
 import { fillInEmail } from "../helpers";
-import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
+import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { Context } from "../context";
 
 /**

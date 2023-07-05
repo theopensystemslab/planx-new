@@ -1,4 +1,4 @@
-import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
+import { PaymentRequest } from "@opensystemslab/planx-core/types";
 
 export interface Node {
   id?: string;
