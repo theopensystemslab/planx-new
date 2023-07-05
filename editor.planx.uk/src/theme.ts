@@ -204,6 +204,9 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             backgroundColor: BG_COLOR_DEFAULT,
             lineHeight: LINE_HEIGHT_BASE,
           },
+          hr: {
+            marginLeft: 0,
+          },
         },
       },
       MuiButtonBase: {

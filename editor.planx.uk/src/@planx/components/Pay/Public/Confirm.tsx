@@ -55,6 +55,11 @@ const ErrorSummary = styled(Box)(({ theme }) => ({
   border: `5px solid ${theme.palette.error.main}`,
 }));
 
+const FormWrapper = styled(Box)(({ theme }) => ({
+  width: theme.breakpoints.values.formWrap,
+  maxWidth: "100%",
+}));
+
 const PayBody: React.FC<PayBodyProps> = (props) => {
   const path = useStore((state) => state.path);
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
@@ -147,7 +152,7 @@ export default function Confirm(props: Props) {
   return (
     <Box textAlign="left" width="100%">
       <>
-        <Container maxWidth="md">
+        <Container maxWidth="contentWrap">
           <Typography variant="h2" component="h1" align="left" pb={3}>
             {page === "Pay" ? props.title : props.secondaryPageTitle}
           </Typography>
@@ -159,7 +164,7 @@ export default function Confirm(props: Props) {
               text: theme.palette.text.primary,
             }}
           >
-            <Container maxWidth="md">
+            <FormWrapper>
               <Typography
                 variant="h3"
                 gutterBottom
@@ -183,7 +188,7 @@ export default function Confirm(props: Props) {
                   openLinksOnNewTab
                 />
               </Typography>
-            </Container>
+            </FormWrapper>
           </Banner>
         )}
         {page === "Pay" ? (
