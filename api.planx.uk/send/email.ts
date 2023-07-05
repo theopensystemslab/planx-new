@@ -188,7 +188,7 @@ const downloadApplicationFiles = async (
 
     // Add redacted HTML overview document
     if (redactedResponses) {
-      const redactedHtmlPath = path.join(tmpDir, "redacted_application.html");
+      const redactedHtmlPath = path.join(tmpDir, "application_redacted.html");
       const redactedHtmlFile = fs.createWriteStream(redactedHtmlPath);
       const redactedHtmlStream = generateHTMLOverviewStream(
         redactedResponses as PlanXExportData[]
