@@ -53,6 +53,9 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   success: {
     main: "#4CAF50",
   },
+  info: {
+    main: "#2196F3",
+  },
 };
 
 // GOVUK Focus style

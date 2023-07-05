@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { styled, useTheme } from "@mui/material/styles";
+import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
@@ -147,20 +147,20 @@ export default function Confirm(props: Props) {
     <Box textAlign="left" width="100%">
       <>
         <Container maxWidth="md">
-          <Typography variant="h1" gutterBottom align="left">
+          <Typography variant="h3" component="h1" align="left" pb={3}>
             {page === "Pay" ? props.title : props.secondaryPageTitle}
           </Typography>
         </Container>
         {page === "Pay" && !props.hideFeeBanner && (
           <Banner
             color={{
-              background: theme.palette.primary.main,
-              text: theme.palette.primary.contrastText,
+              background: lighten(theme.palette.info.main, 0.9),
+              text: theme.palette.text.primary,
             }}
           >
             <Container maxWidth="md">
               <Typography
-                variant="h5"
+                variant="h4"
                 gutterBottom
                 className="marginBottom"
                 component="h2"
@@ -176,7 +176,7 @@ export default function Confirm(props: Props) {
               >
                 {formattedPriceWithCurrencySymbol(props.fee)}
               </Typography>
-              <Typography variant="h4" component="span">
+              <Typography variant="subtitle1" component="span" color="inherit">
                 <ReactMarkdownOrHtml
                   source={props.description}
                   openLinksOnNewTab
