@@ -5,11 +5,11 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: github:theopensystemslab/planx-core#main
-    version: github.com/theopensystemslab/planx-core/3d56c2139bb753ca0a1013ad277a96642c2cb713
+    specifier: github:theopensystemslab/planx-core#3d56c21
+    version: github.com/theopensystemslab/planx-core/3d56c21
   '@opensystemslab/planx-document-templates':
-    specifier: github:theopensystemslab/planx-document-templates#main
-    version: github.com/theopensystemslab/planx-document-templates/28e07055714e87be3be72d1fffa0bc9759296723
+    specifier: github:theopensystemslab/planx-document-templates#28e0705
+    version: github.com/theopensystemslab/planx-document-templates/28e0705
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -7548,8 +7548,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/3d56c2139bb753ca0a1013ad277a96642c2cb713:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3d56c2139bb753ca0a1013ad277a96642c2cb713}
+  github.com/theopensystemslab/planx-core/3d56c21:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3d56c21}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^18}
@@ -7580,29 +7580,6 @@ packages:
 
   github.com/theopensystemslab/planx-document-templates/28e0705:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/28e0705}
-    name: '@opensystemslab/planx-document-templates'
-    version: 1.0.0
-    engines: {node: ^18}
-    prepare: true
-    requiresBuild: true
-    dependencies:
-      '@emotion/react': 11.10.6(react@18.2.0)
-      '@emotion/styled': 11.10.6(@emotion/react@11.10.6)(react@18.2.0)
-      '@lit-labs/ssr': 2.3.0
-      '@mui/material': 5.11.9(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(react-dom@18.2.0)(react@18.2.0)
-      '@rollup/plugin-commonjs': 23.0.7
-      docx: 7.8.2
-      lodash.groupby: 4.6.0
-      lodash.startcase: 4.4.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - '@types/react'
-      - rollup
-    dev: false
-
-  github.com/theopensystemslab/planx-document-templates/28e07055714e87be3be72d1fffa0bc9759296723:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/28e07055714e87be3be72d1fffa0bc9759296723}
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
     engines: {node: ^18}
