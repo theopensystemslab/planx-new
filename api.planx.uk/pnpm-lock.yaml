@@ -5,8 +5,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: github:theopensystemslab/planx-core#7679dd7
-    version: github.com/theopensystemslab/planx-core/7679dd7
+    specifier: github:theopensystemslab/planx-core#f822dd3
+    version: github.com/theopensystemslab/planx-core/f822dd3
   '@opensystemslab/planx-document-templates':
     specifier: github:theopensystemslab/planx-document-templates#b2797ff
     version: github.com/theopensystemslab/planx-document-templates/b2797ff
@@ -7590,15 +7590,15 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/7679dd7:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7679dd7}
+  github.com/theopensystemslab/planx-core/f822dd3:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f822dd3}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^18}
     prepare: true
     requiresBuild: true
     dependencies:
-      '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/b2797ff
+      '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/8d86330
       fast-xml-parser: 4.2.5
       graphql: 16.7.1
       graphql-request: 5.2.0(graphql@16.7.1)
@@ -7617,7 +7617,26 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - encoding
-      - rollup
+    dev: false
+
+  github.com/theopensystemslab/planx-document-templates/8d86330:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/8d86330}
+    name: '@opensystemslab/planx-document-templates'
+    version: 1.1.0
+    prepare: true
+    requiresBuild: true
+    dependencies:
+      '@emotion/react': 11.11.1(react@18.2.0)
+      '@emotion/styled': 11.11.0(@emotion/react@11.11.1)(react@18.2.0)
+      '@lit-labs/ssr': 2.3.0
+      '@mui/material': 5.11.9(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(react-dom@18.2.0)(react@18.2.0)
+      docx: 7.8.2
+      lodash.groupby: 4.6.0
+      lodash.startcase: 4.4.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   github.com/theopensystemslab/planx-document-templates/b2797ff:
