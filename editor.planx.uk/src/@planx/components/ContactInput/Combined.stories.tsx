@@ -7,14 +7,14 @@ import Editor from "./Editor";
 import Public from "./Public";
 
 export default {
-  title: "PlanX Components/AddressInput",
+  title: "PlanX Components/ContactInput",
   component: Public,
 } as Meta;
 
 export const EmptyForm: StoryObj = {
   args: {
-    title: "Enter your address",
-    description: "It might be where you live",
+    title: "Enter your contact details",
+    description: "We won't share it with anyone else",
   },
 };
 
@@ -30,17 +30,17 @@ export const FilledForm: StoryObj = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const line1Input = canvas.getByLabelText("Address line 1", {
+    const firstNameInput = canvas.getByLabelText("First name", {
       selector: "input",
     });
-    await userEvent.type(line1Input, "123 Main Street", {
+    await userEvent.type(firstNameInput, "Jess", {
       delay: 100,
     });
 
-    const townInput = canvas.getByLabelText("Town", {
+    const emailInput = canvas.getByLabelText("Email address", {
       selector: "input",
     });
-    await userEvent.type(townInput, "London", {
+    await userEvent.type(emailInput, "Invalid email format", {
       delay: 100,
     });
 
