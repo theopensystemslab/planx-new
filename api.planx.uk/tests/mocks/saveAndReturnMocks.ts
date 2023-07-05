@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from "uuid";
-import type { Flow } from "../../types";
+import type { LowCalSession, Flow } from "../../types";
 
 export const mockTeam = {
   id: 1,
@@ -13,8 +13,22 @@ export const mockTeam = {
   },
 };
 
-export const mockLowcalSession = {
-  id: 123,
+export const mockFlow: Flow = {
+  id: "dcfd4f07-76da-4b67-9822-2aca92b27551",
+  slug: "slug",
+  team_id: mockTeam.id,
+  data: {
+    _root: {
+      edges: ["one"],
+    },
+    one: {
+      data: {},
+    },
+  },
+};
+
+export const mockLowcalSession: LowCalSession = {
+  id: "123",
   email: "mock@email.com",
   has_user_saved: false,
   data: {
@@ -43,27 +57,17 @@ export const mockLowcalSession = {
       },
     },
     breadcrumbs: {},
+    id: "123",
   },
   flow: {
     slug: "apply-for-a-lawful-development-certificate",
     team: mockTeam,
   },
+  flow_id: mockFlow.id,
   updated_at: "2022-01-04T01:02:03.865452+00:00",
   created_at: "2022-01-04T01:02:03.865452+00:00",
-};
-
-export const mockFlow: Flow = {
-  id: "dcfd4f07-76da-4b67-9822-2aca92b27551",
-  slug: "slug",
-  team_id: mockTeam.id,
-  data: {
-    _root: {
-      edges: ["one"],
-    },
-    one: {
-      data: {},
-    },
-  },
+  submitted_at: null,
+  deleted_at: null,
 };
 
 export const mockFindSession = (breadcrumbs = {}) => ({
@@ -151,11 +155,11 @@ export const mockSoftDeleteLowcalSession = {
   name: "SoftDeleteLowcalSession",
   data: {
     update_lowcal_sessions_by_pk: {
-      id: 123,
+      id: "123",
     },
   },
   variables: {
-    sessionId: 123,
+    sessionId: "123",
   },
 };
 
@@ -163,11 +167,11 @@ export const mockSetupEmailNotifications = {
   name: "SetupEmailNotifications",
   data: {
     update_lowcal_sessions_by_pk: {
-      id: 123,
+      id: "123",
       has_user_saved: true,
     },
   },
   variables: {
-    sessionId: 123,
+    sessionId: "123",
   },
 };
