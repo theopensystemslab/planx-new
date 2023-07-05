@@ -23,3 +23,11 @@ services:
         condition: service_healthy
     entrypoint: sh
     command: -c "echo ready for testing"
+
+  api:
+    environment:
+      UNIFORM_SUBMISSION_URL: http://mock-server:8080
+      UNIFORM_TOKEN_URL: http://mock-server:8080
+      UNIFORM_CLIENT_E2E: e2e:123
+      GOV_UK_PAY_TOKEN_E2E: ${GOV_UK_PAY_TOKEN_E2E}
+      BOPS_SUBMISSION_URL_E2E: http://mock-server:8080
