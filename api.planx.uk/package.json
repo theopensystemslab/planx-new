@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.8",
-    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#f822dd3",
-    "@opensystemslab/planx-document-templates": "github:theopensystemslab/planx-document-templates#b2797ff",
+    "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#25e2261",
+    "@opensystemslab/planx-document-templates": "github:theopensystemslab/planx-document-templates#1f41de6",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "aws-sdk": "^2.1358.0",

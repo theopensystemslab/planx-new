@@ -5,8 +5,8 @@ dependencies:
     specifier: ^9.1.2
     version: 9.1.2
   '@opensystemslab/planx-core':
-    specifier: github:theopensystemslab/planx-core#f822dd3
-    version: github.com/theopensystemslab/planx-core/f822dd3
+    specifier: github:theopensystemslab/planx-core#25e2261
+    version: github.com/theopensystemslab/planx-core/25e2261
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -1913,15 +1913,15 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/f822dd3:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f822dd3}
+  github.com/theopensystemslab/planx-core/25e2261:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/25e2261}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^18}
     prepare: true
     requiresBuild: true
     dependencies:
-      '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/8d86330
+      '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/1f41de6
       fast-xml-parser: 4.2.5
       graphql: 16.7.1
       graphql-request: 5.2.0(graphql@16.7.1)
@@ -1942,8 +1942,8 @@ packages:
       - encoding
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/8d86330:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/8d86330}
+  github.com/theopensystemslab/planx-document-templates/1f41de6:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/1f41de6}
     name: '@opensystemslab/planx-document-templates'
     version: 1.1.0
     prepare: true
