@@ -61,21 +61,21 @@ export async function sendToUniform(
 ) {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
-  const uniformClient = getUniformClient(req.params.localAuthority);
-
-  if (!uniformClient) {
-    return next({
-      status: 400,
-      message: "Idox/Uniform connector is not enabled for this local authority",
-    });
-  }
-
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const payload: SendToUniformPayload = req.body.payload;
   if (!payload?.sessionId) {
     return next({
       status: 400,
       message: "Missing application data to send to Uniform",
+    });
+  }
+
+  const uniformClient = getUniformClient(req.params.localAuthority);
+
+  if (!uniformClient) {
+    return next({
+      status: 400,
+      message: "Idox/Uniform connector is not enabled for this local authority",
     });
   }
 
