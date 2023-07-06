@@ -1,5 +1,4 @@
-import { Meta, StoryFn } from "@storybook/react";
-import React from "react";
+import { Meta } from "@storybook/react";
 import InputField from "ui/InputField";
 
 const metadata: Meta = {
@@ -7,15 +6,15 @@ const metadata: Meta = {
   component: InputField,
 };
 
-export const Basic: StoryFn<{}> = () => (
-  <InputField
-    name="text"
-    multiline={true}
-    placeholder="Portal name"
-    rows={2}
-    disabled={false}
-    required={false}
-  />
-);
+export const Basic = {
+  args: {
+    name: "Text",
+    multiline: true,
+    placeholder: "Portal name",
+    rows: 2,
+    disabled: false,
+    required: false,
+  },
+};
 
 export default metadata;

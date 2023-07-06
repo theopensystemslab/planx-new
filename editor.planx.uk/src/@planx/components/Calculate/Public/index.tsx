@@ -1,7 +1,7 @@
 import { makeData } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import type { Calculate } from "../model";
 import { evaluate } from "../model";
@@ -24,5 +24,5 @@ export default function Component(props: Props) {
     });
   }, []);
 
-  return <p>Calculating…</p>;
+  return null;
 }

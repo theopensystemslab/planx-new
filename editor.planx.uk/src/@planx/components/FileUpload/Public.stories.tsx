@@ -6,6 +6,7 @@ import Public from "./Public";
 const metadata: Meta = {
   title: "PlanX Components/FileUpload",
 };
+
 export const Upload = () => {
   return (
     <Public
