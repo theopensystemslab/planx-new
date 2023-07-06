@@ -48,21 +48,21 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
       </Banner>
       <Container maxWidth="contentWrap">
         <FormWrapper>
-          <Typography variant="h2">
+          <Typography variant="h2" mt={2}>
             You will be contacted
           </Typography>
           <List>
             <li>if your nominee fails to make payment by {expiryDate}</li>
             <li>
-              if there is anything missing from the information you have provided
-              so far
+              if there is anything missing from the information you have
+              provided so far
             </li>
             <li>if any additional information is required</li>
             <li>to arrange a site visit, if required</li>
             <li>to inform you whether a certificate has been granted or not</li>
           </List>
-          <Divider />
-          <Typography variant="h2">
+          <Divider sx={{ mt: 4 }} />
+          <Typography variant="h2" mt={4}>
             Contact us
           </Typography>
           <List>
@@ -88,12 +88,12 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
             <Typography variant="body2">
               We aim to respond within 2 working days.
             </Typography>
-            <Divider />
-            <Box>
-              <Link href="../preview" variant="body2">
-                Start a new application
-              </Link>
-            </Box>
+          </Box>
+          <Divider sx={{ mt: 4 }} />
+          <Box>
+            <Link href="../preview" variant="body2">
+              Start a new application
+            </Link>
           </Box>
         </FormWrapper>
       </Container>
