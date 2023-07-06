@@ -2,9 +2,12 @@ import supertest from "supertest";
 import app from "../../server";
 import { authHeader } from "../../tests/mockJWT";
 
+jest.mock("../../send/helpers", () => ({
+  deleteFile: jest.fn,
+}));
 jest.mock("../../send/exportZip", () => ({
   buildSubmissionExportZip: jest.fn().mockResolvedValue({
-    zipName: "test.zip",
+    zipName: "tests/mocks/test.zip",
   }),
 }));
 
@@ -25,7 +28,7 @@ describe("zip data admin endpoint", () => {
       );
   });
 
-  it("downloads a CSV file if a query parameter is passed", async () => {
+  it("downloads a zip file", async () => {
     await supertest(app)
       .get(endpoint`123`)
       .set(authHeader())
