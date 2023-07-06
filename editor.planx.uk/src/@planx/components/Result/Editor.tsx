@@ -124,18 +124,19 @@ const ResultComponent: React.FC<Result> = (props) => {
               the flag title will be used.
             </Typography>
             <Box mt={2}>
-              {Object.entries(allFlagsForSet).map(([key, flag]) => {
+              {allFlagsForSet.map((flag) => {
                 return (
                   <FlagEditor
-                    key={key}
+                    key={flag.value}
                     flag={flag}
                     existingOverrides={
-                      formik.values.overrides && formik.values.overrides[key]
+                      formik.values.overrides &&
+                      formik.values.overrides[flag.value]
                     }
                     onChange={(newValues: FlagDisplayText) => {
                       formik.setFieldValue("overrides", {
                         ...formik.values.overrides,
-                        ...{ [key]: newValues },
+                        ...{ [flag.value]: newValues },
                       });
                     }}
                   />
