@@ -10,8 +10,6 @@ concurrency: production_environment
 
 env:
   DEPLOYMENT_ENVIRONMENT: production
-  PNPM_VERSION: 7.8.0
-  NODE_VERSION: 18.16.1 # 18.16.1 = LTS
 
 jobs:
   build_react:
@@ -21,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
       # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
       - name: NPM cache
         uses: actions/cache@v3
@@ -47,7 +45,7 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - run: npm install -g pnpm@${{ env.PNPM_VERSION }}
+      - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
       - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
       - run: pnpm build
@@ -77,14 +75,14 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
-      - run: npm install -g pnpm@${{ env.PNPM_VERSION }}
+      - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
         working-directory: infrastructure/application
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
