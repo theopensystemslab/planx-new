@@ -1,4 +1,5 @@
 import tinycolor from "@ctrl/tinycolor";
+import { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
@@ -14,7 +15,7 @@ import { v4 as uuidV4 } from "uuid";
 import type { StateCreator } from "zustand";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
-import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
+import type { Flag, Node, Session } from "./../../../../types";
 import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";

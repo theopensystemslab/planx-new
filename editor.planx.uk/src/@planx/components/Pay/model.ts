@@ -80,8 +80,6 @@ const getReturnURL = (sessionId: string): string => {
 
 export const GOV_UK_PAY_URL = `${process.env.REACT_APP_API_URL}/pay`;
 
-export const GOV_PAY_PASSPORT_KEY = "application.fee.reference.govPay" as const;
-
 export const validationSchema = object({
   title: string().trim().required(),
   bannerTitle: string().trim().required(),

@@ -1,3 +1,7 @@
+import {
+  GOV_PAY_PASSPORT_KEY,
+  GovUKPayment,
+} from "@opensystemslab/planx-core/types";
 import AddressInput from "@planx/components/AddressInput/Public";
 import Calculate from "@planx/components/Calculate/Public";
 import Checklist from "@planx/components/Checklist/Public";
@@ -12,7 +16,6 @@ import FindProperty from "@planx/components/FindProperty/Public";
 import NextSteps from "@planx/components/NextSteps/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
-import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import Pay from "@planx/components/Pay/Public";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
@@ -30,7 +33,6 @@ import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import type { GovUKPayment } from "types";
 
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";

@@ -1,23 +1,20 @@
+import {
+  GOV_PAY_PASSPORT_KEY,
+  GovUKPayment,
+  PaymentStatus,
+} from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import { useErrorHandler } from "react-error-boundary";
-import type { GovUKPayment, Session } from "types";
-import { PaymentStatus } from "types";
+import type { Session } from "types";
 
 import { makeData } from "../../shared/utils";
-import {
-  createPayload,
-  GOV_PAY_PASSPORT_KEY,
-  GOV_UK_PAY_URL,
-  Pay,
-  toDecimal,
-} from "../model";
+import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;

@@ -222,6 +222,15 @@
           table:
             schema: public
             name: payment_requests
+    - name: payment_status
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: payment_status
+          insertion_order: null
+          column_mapping:
+            id: session_id
   insert_permissions:
     - role: public
       permission:
@@ -512,6 +521,16 @@
 - table:
     schema: public
     name: payment_status
+  object_relationships:
+    - name: lowcal_session
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: lowcal_sessions
+          insertion_order: null
+          column_mapping:
+            session_id: id
 - table:
     schema: public
     name: payment_status_enum

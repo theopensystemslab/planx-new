@@ -64,6 +64,7 @@ export async function logPaymentStatus({
   flowId: string | undefined;
   teamSlug: string;
   govUkResponse: {
+    amount: number;
     payment_id: string;
     state: {
       status: string;
@@ -85,6 +86,7 @@ export async function logPaymentStatus({
         teamSlug,
         paymentId: govUkResponse.payment_id,
         status: govUkResponse.state?.status || "unknown",
+        amount: govUkResponse.amount,
       });
     } catch (e) {
       reportError({
@@ -119,14 +121,16 @@ async function insertPaymentStatus({
   paymentId,
   teamSlug,
   status,
+  amount,
 }: {
   flowId: string;
   sessionId: string;
   paymentId: string;
   teamSlug: string;
   status: string;
+  amount: number;
 }): Promise<void> {
-  const response = await adminGraphQLClient.request(
+  const _response = await adminGraphQLClient.request(
     gql`
       mutation InsertPaymentStatus(
         $flowId: uuid!
@@ -134,6 +138,7 @@ async function insertPaymentStatus({
         $paymentId: String!
         $teamSlug: String!
         $status: payment_status_enum_enum
+        $amount: Int!
       ) {
         insert_payment_status(
           objects: {
@@ -142,6 +147,7 @@ async function insertPaymentStatus({
             payment_id: $paymentId
             team_slug: $teamSlug
             status: $status
+            amount: $amount
           }
         ) {
           affected_rows
@@ -154,6 +160,7 @@ async function insertPaymentStatus({
       teamSlug,
       paymentId,
       status,
+      amount,
     }
   );
 }

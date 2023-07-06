@@ -1,10 +1,11 @@
+import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
 import { axe, setup } from "testUtils";
-import { ApplicationPath, PaymentStatus } from "types";
+import { ApplicationPath } from "types";
 
 import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";

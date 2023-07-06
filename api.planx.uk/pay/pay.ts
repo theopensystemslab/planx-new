@@ -4,10 +4,10 @@ import { responseInterceptor } from "http-proxy-middleware";
 import SlackNotify from "slack-notify";
 import { logPaymentStatus } from "../send/helpers";
 import { usePayProxy } from "./proxy";
-import type { GovUKPayment } from "../types";
 import { addGovPayPaymentIdToPaymentRequest } from "../inviteToPay";
 import { $admin } from "../client";
 import { ServerError } from "../errors";
+import { GovUKPayment } from "@opensystemslab/planx-core/types";
 
 assert(process.env.SLACK_WEBHOOK_URL);
 

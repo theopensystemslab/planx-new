@@ -2,7 +2,11 @@ import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
+import type {
+  KeyPath,
+  PaymentRequest,
+  PaymentStatus,
+} from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
@@ -13,7 +17,7 @@ import React, { useEffect } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { isPreviewOnlyDomain } from "routes/utils";
 import useSWRMutation from "swr/mutation";
-import { ApplicationPath, PaymentStatus } from "types";
+import { ApplicationPath } from "types";
 import ErrorWrapper from "ui/ErrorWrapper";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
