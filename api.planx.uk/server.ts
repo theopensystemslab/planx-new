@@ -72,6 +72,7 @@ import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 import { getBOPSPayload } from "./admin/session/bops";
 import { getCSVData, getRedactedCSVData } from "./admin/session/csv";
 import { getHTMLExport, getRedactedHTMLExport } from "./admin/session/html";
+import { generateZip } from "./admin/session/zip";
 import { createPaymentSendEvents } from "./inviteToPay/createPaymentSendEvents";
 
 const router = express.Router();
@@ -419,6 +420,7 @@ app.get("/admin/session/:sessionId/csv", getCSVData);
 app.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
 app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
+app.get("/admin/session/:sessionId/zip", generateZip); // "?includeXML=true" to include generate and include xml in the zip
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production

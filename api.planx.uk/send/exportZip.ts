@@ -169,8 +169,7 @@ export class ExportZip {
   }
 
   async addFile({ name, buffer }: { name: string; buffer: Buffer }) {
-    const filePath = path.join(this.tmpDir, name);
-    this.zip.addFile(filePath, buffer);
+    this.zip.addFile(name, buffer);
   }
 
   async addStream({ name, stream }: { name: string; stream: Stream }) {

@@ -4,14 +4,6 @@ import airbrake from "../airbrake";
 import { adminGraphQLClient } from "../hasura";
 
 /**
- * Helper method to locally download S3 files, add them to the zip, then clean them up
- *
- * @param {string} url - our file URL, eg api.planx.uk/file/private/path/key
- * @param {string} path - file name for download
- * @param {AdmZip} folder - AdmZip archive
- */
-
-/**
  * Helper method to clean up files temporarily stored locally
  *
  * @param {string} path - file name
