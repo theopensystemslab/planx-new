@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "hasura-cli": "^2.8.4"
+    "hasura-cli": "^2.28.0"
   },
   "scripts": {
     "start": "hasura console --envfile ./../.env"
