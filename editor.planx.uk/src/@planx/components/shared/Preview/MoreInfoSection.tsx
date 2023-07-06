@@ -23,7 +23,7 @@ const MoreInfoSection: React.FC<IMoreInfoSection> = ({ title, children }) => {
   return (
     <Root className="MoreInfoSection-root" pb={3}>
       {title && (
-        <Typography mb={4} variant="h3" component="h2">
+        <Typography mb={4} variant="h2">
           {title}
         </Typography>
       )}

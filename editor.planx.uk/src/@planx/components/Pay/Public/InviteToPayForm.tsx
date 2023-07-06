@@ -154,9 +154,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   ) : (
     <Card>
       <StyledForm onSubmit={formik.handleSubmit}>
-        <Typography variant="h3" component="h2">
-          {nomineeTitle}
-        </Typography>
+        <Typography variant="h2">{nomineeTitle}</Typography>
         {nomineeDescription && (
           <Typography variant="body2">
             <ReactMarkdownOrHtml
@@ -209,7 +207,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-        <Typography variant="h3" component="h2" pt={2}>
+        <Typography variant="h2" pt={2}>
           {yourDetailsTitle}
         </Typography>
         {yourDetailsDescription && (

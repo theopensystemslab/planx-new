@@ -49,7 +49,7 @@ export function ExpandableListItem(props: {
         disableRipple
         onClick={handleToggle}
       >
-        <Typography variant="h5" component="h2" id={props.headingId}>
+        <Typography variant="h4" component="h2" id={props.headingId}>
           {props.title}
         </Typography>
         <Caret

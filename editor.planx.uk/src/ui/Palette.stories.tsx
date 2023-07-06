@@ -51,7 +51,9 @@ const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
 
   return (
     <>
-      <Typography variant="h5">{props.option}</Typography>
+      <Typography variant="h4" component="h5">
+        {props.option}
+      </Typography>
       <Grid container spacing={1}>
         {colors.map((color, i) => {
           return (

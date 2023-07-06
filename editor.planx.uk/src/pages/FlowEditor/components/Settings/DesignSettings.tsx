@@ -30,7 +30,9 @@ const TextInput: React.FC<{
     <Box mb={2} width="100%">
       <Box my={2} display="flex" alignItems="center">
         <Switch {...switchProps} color="primary" />
-        <Typography variant="h5">{title}</Typography>
+        <Typography variant="h4" component="h5">
+          {title}
+        </Typography>
       </Box>
       <Box mb={2}>
         {description && <Typography variant="body2">{description}</Typography>}
@@ -62,7 +64,7 @@ const DesignSettings: React.FC = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box pb={3} borderBottom={1}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h2" component="h3" gutterBottom>
           <strong>Design</strong>
         </Typography>
         <Typography variant="body1">
@@ -83,7 +85,9 @@ const DesignSettings: React.FC = () => {
         <InputGroup>
           <InputRow>
             <InputRowLabel>
-              <Typography variant="h5">Background</Typography>
+              <Typography variant="h4" component="h5">
+                Background
+              </Typography>
             </InputRowLabel>
             <InputRowItem width="70%">
               <ColorPicker
@@ -95,7 +99,9 @@ const DesignSettings: React.FC = () => {
           </InputRow>
           <InputRow>
             <InputRowLabel>
-              <Typography variant="h5">Logo</Typography>
+              <Typography variant="h4" component="h5">
+                Logo
+              </Typography>
             </InputRowLabel>
             <InputRowItem width={50}>
               <PublicFileUploadButton />

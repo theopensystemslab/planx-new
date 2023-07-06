@@ -362,7 +362,7 @@ const ServiceTitle: React.FC = () => {
 
   return (
     <ServiceTitleRoot data-testid="service-title">
-      <Typography component="span" variant="h5">
+      <Typography component="span" variant="h4">
         {flowName}
       </Typography>
     </ServiceTitleRoot>

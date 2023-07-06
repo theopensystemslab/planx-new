@@ -255,7 +255,7 @@ export function PlanningConstraintsContent(
       )}
       {positiveConstraints.length > 0 && (
         <>
-          <Typography variant="h4" component="h2" gutterBottom>
+          <Typography variant="h3" component="h2" gutterBottom>
             These are the planning constraints we think apply to this property
           </Typography>
           <ConstraintsList data={positiveConstraints} metadata={metadata} />
@@ -275,7 +275,7 @@ export function PlanningConstraintsContent(
       )}
       {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
         <>
-          <Typography variant="h4" component="h2">
+          <Typography variant="h3" component="h2">
             It looks like there are no constraints on this property
           </Typography>
           <Typography variant="body2">
@@ -319,7 +319,7 @@ interface ConstraintsFetchErrorProps {
 
 const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
   <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
-    <Typography variant="h5" component="h2" gutterBottom>
+    <Typography variant="h4" component="h2" gutterBottom>
       No information available
     </Typography>
     {props.error &&
@@ -353,7 +353,7 @@ const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (
       role="status"
       data-testid="error-summary-invalid-graph"
     >
-      <Typography variant="h5" component="h2" gutterBottom>
+      <Typography variant="h4" component="h2" gutterBottom>
         Invalid graph
       </Typography>
       <Typography variant="body2">

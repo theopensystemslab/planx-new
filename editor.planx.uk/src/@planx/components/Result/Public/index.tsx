@@ -131,7 +131,7 @@ const Result: React.FC<Props> = ({
         isValid
       >
         <Box mt={4} mb={3}>
-          <Typography variant="h3" component="h2" gutterBottom>
+          <Typography variant="h2" gutterBottom>
             {reasonsTitle}
           </Typography>
         </Box>
@@ -164,7 +164,7 @@ const Result: React.FC<Props> = ({
             <Box ml={1}>
               <Box display="flex" alignItems="center">
                 <DisclaimerHeading
-                  variant="h6"
+                  variant="h5"
                   component="h3"
                   color="text.primary"
                 >

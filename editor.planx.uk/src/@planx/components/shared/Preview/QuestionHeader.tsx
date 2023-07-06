@@ -62,7 +62,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           {title && (
             <Box mr={1} pt={0.5}>
               <Typography
-                variant="h3"
+                variant="h2"
                 role="heading"
                 aria-level={1}
                 component="h1"

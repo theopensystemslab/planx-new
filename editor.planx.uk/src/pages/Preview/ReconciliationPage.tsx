@@ -87,7 +87,7 @@ const ReconciliationPage: React.FC<Props> = ({
             </Typography>
           </Box>
         )}
-        <Typography variant="h3" component="h2">
+        <Typography variant="h2">
           Review your {hasSections ? "progress" : "answers"} so far
         </Typography>
         {hasSections ? (

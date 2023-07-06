@@ -32,7 +32,9 @@ const TextInput: React.FC<{
     <Box mb={2} width="100%">
       <Box my={2} display="flex" alignItems="center">
         <Switch {...switchProps} color="primary" />
-        <Typography variant="h5">{title}</Typography>
+        <Typography variant="h4" component="h5">
+          {title}
+        </Typography>
       </Box>
       <Box mb={2}>
         {description && <Typography variant="body2">{description}</Typography>}
@@ -97,7 +99,7 @@ const ServiceSettings: React.FC = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box py={3} borderBottom={1}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h2" component="h3" gutterBottom>
           <strong>Elements</strong>
         </Typography>
         <Typography variant="body1">
@@ -126,7 +128,7 @@ const ServiceSettings: React.FC = () => {
         />
       </Box>
       <Box pt={2}>
-        <Typography variant="h4">
+        <Typography variant="h3" component="h4">
           <strong>Footer Links</strong>
         </Typography>
         <InputGroup>
