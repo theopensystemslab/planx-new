@@ -2,10 +2,6 @@
   "devDependencies": {
     "hasura-cli": "^2.8.4"
   },
-  "engines": {
-    "node": "^18",
-    "pnpm": "^7.8.0"
-  },
   "scripts": {
     "start": "hasura console --envfile ./../.env"
   }

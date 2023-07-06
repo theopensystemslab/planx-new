@@ -14,10 +14,6 @@
       "./jest.setup.js"
     ]
   },
-  "engines": {
-    "node": "^18",
-    "pnpm": "^7.8.0"
-  },
   "pnpm": {
     "overrides": {
       "minimist@<1.2.6": ">=1.2.6",
