@@ -250,7 +250,7 @@ jobs:
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
-      - uses: pulumi/actions@v3
+      - uses: pulumi/actions@v4
         with:
           command: preview
           stack-name: staging
