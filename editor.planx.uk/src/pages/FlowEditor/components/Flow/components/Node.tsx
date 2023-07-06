@@ -64,6 +64,8 @@ const Node: React.FC<any> = (props) => {
       return <Filter {...allProps} text="(Flags Filter)" />;
     case TYPES.FindProperty:
       return <Question {...allProps} text="Find property" />;
+    case TYPES.NextSteps:
+      return <Question {...allProps} text="Next steps" />;
     case TYPES.Notice:
       return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
     case TYPES.NumberInput:

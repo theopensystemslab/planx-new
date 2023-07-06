@@ -12,6 +12,7 @@ import FileUploadAndLabel from "@planx/components/FileUploadAndLabel/Editor";
 import Filter from "@planx/components/Filter/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import InternalPortal from "@planx/components/InternalPortal/Editor";
+import NextSteps from "@planx/components/NextSteps/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Pay from "@planx/components/Pay/Editor";
@@ -50,6 +51,7 @@ const components: {
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
   "file-upload-and-label": FileUploadAndLabel,
+  "next-steps": NextSteps,
   notice: Notice,
   "number-input": NumberInput,
   pay: Pay,

@@ -64,6 +64,7 @@ const presentationalComponents: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.Notice]: undefined,
+  [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
