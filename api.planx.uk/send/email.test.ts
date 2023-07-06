@@ -3,15 +3,16 @@ import { queryMock } from "../tests/graphqlQueryMock";
 import app from "../server";
 import * as helpers from "./helpers";
 
-const mockGenerateCSVData = jest
-  .fn()
-  .mockResolvedValue([
+const mockGenerateCSVData = jest.fn().mockResolvedValue({
+  responses: [
     {
       question: "Is this a test?",
       responses: [{ value: "Yes" }],
       metadata: {},
     },
-  ]);
+  ],
+  redactedResponses: [],
+});
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({
@@ -19,7 +20,9 @@ jest.mock("@opensystemslab/planx-core", () => {
     })),
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       getDocumentTemplateNamesForSession: jest.fn(),
-      generateCSVData: () => mockGenerateCSVData(),
+      export: {
+        csvData: () => mockGenerateCSVData(),
+      },
     })),
   };
 });

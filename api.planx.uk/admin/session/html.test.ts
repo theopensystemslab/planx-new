@@ -1,24 +1,33 @@
 import supertest from "supertest";
 import app from "../../server";
 import { authHeader } from "../../tests/mockJWT";
-import { expectedPayload } from "../../tests/mocks/bopsMocks";
 
 const endpoint = (strings: TemplateStringsArray) =>
-  `/admin/session/${strings[0]}/bops`;
+  `/admin/session/${strings[0]}/html`;
 
-const mockGenerateBOPSPayload = jest.fn().mockResolvedValue(expectedPayload);
-
+const mockGenerateHTMLData = jest.fn().mockResolvedValue({
+  responses: [
+    {
+      question: "Is this a test?",
+      responses: [{ value: "Yes" }],
+      metadata: {},
+    },
+  ],
+  redactedResponses: [],
+});
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       export: {
-        bopsPayload: () => mockGenerateBOPSPayload(),
+        csvData: () => mockGenerateHTMLData(),
       },
     })),
   };
 });
 
-describe("BOPS payload admin endpoint", () => {
+describe("HTML data admin endpoint", () => {
+  afterEach(() => jest.clearAllMocks());
+
   it("requires a user to be logged in", async () => {
     await supertest(app)
       .get(endpoint`123`)
@@ -30,12 +39,14 @@ describe("BOPS payload admin endpoint", () => {
       );
   });
 
-  it("returns a JSON payload", async () => {
+  it("returns a HTML-formatted payload", async () => {
     await supertest(app)
       .get(endpoint`123`)
       .set(authHeader())
       .expect(200)
-      .expect("content-type", "application/json; charset=utf-8")
-      .then((res) => expect(res.body).toEqual(expectedPayload));
+      .expect("content-type", "text/html; charset=utf-8")
+      .then((res) =>
+        expect(res.text).toContain("<dt>Is this a test?</dt><dd>Yes</dd>")
+      );
   });
 });
