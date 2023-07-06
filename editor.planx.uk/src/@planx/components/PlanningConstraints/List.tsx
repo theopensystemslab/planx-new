@@ -163,7 +163,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
         <Collapse in={showConstraintData}>
           <Box py={1.5} px={2}>
             <>
-              <Typography variant="h4" component="h4" gutterBottom>
+              <Typography variant="h3" component="h4" gutterBottom>
                 {`This property ${props?.content}`}
               </Typography>
               {Boolean(props.data?.length) && (

@@ -91,10 +91,10 @@ export default function ConfirmationComponent(props: Props) {
 
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
-            <Typography variant="h3" component="h2" mb={2}>
+            <Typography variant="h2" mb={2}>
               What happens next?
             </Typography>
-            <NumberedList items={props.nextSteps} heading="h3" />
+            <NumberedList items={props.nextSteps} heading="h2" />
           </Box>
         )}
 
@@ -110,7 +110,9 @@ export default function ConfirmationComponent(props: Props) {
         {props.contactInfo && (
           <>
             <Box py={1} color="primary.main">
-              <Typography variant="h3">Contact us</Typography>
+              <Typography variant="h2" component="h3">
+                Contact us
+              </Typography>
               <ReactMarkdownOrHtml source={props.contactInfo} />
             </Box>
           </>

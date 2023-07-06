@@ -97,7 +97,7 @@ const ResultComponent: React.FC<Result> = (props) => {
       <ModalSection>
         <ModalSectionContent title="Result" Icon={ICONS[TYPES.Result]}>
           <InputRow>
-            <Typography variant="h6">
+            <Typography variant="h5" component="h6">
               <label htmlFor="result-flagSet">Flag set</label>
             </Typography>
             <select
@@ -116,7 +116,9 @@ const ResultComponent: React.FC<Result> = (props) => {
           </InputRow>
 
           <Box mt={2}>
-            <Typography variant="h6">Flag Text Overrides (optional)</Typography>
+            <Typography variant="h5" component="h6">
+              Flag Text Overrides (optional)
+            </Typography>
             <Typography variant="body2">
               The overrides you set here will change what is displayed to the
               user upon arriving at this result. If you provide no overrides,

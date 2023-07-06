@@ -14,7 +14,7 @@ const DataManagerSettings = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box pb={3}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h2" component="h3" gutterBottom>
           <strong>Data Manager</strong>
         </Typography>
         <Typography variant="body1">

@@ -52,7 +52,7 @@ function Component(props: PublicProps<PropertyInformation>) {
         role="status"
         data-testid="error-summary-invalid-graph"
       >
-        <Typography variant="h5" component="h2" gutterBottom>
+        <Typography variant="h4" component="h2" gutterBottom>
           Invalid graph
         </Typography>
         <Typography variant="body2">

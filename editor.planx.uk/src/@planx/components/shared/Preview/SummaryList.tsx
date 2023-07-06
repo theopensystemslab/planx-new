@@ -160,7 +160,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Typography
                     component={props.sectionComponent || "h2"}
-                    variant="h5"
+                    variant="h4"
                   >
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>

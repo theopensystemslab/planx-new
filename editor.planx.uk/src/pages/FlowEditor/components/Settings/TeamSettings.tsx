@@ -50,7 +50,9 @@ const TeamMember = ({ name, email, userRole }: any) => {
           <StyledAvatar>{name[0]}</StyledAvatar>
         </Grid>
         <StyledGrid item>
-          <Typography variant="h5">{name}</Typography>
+          <Typography variant="h4" component="h5">
+            {name}
+          </Typography>
           <Box fontSize="h5.fontSize">{email}</Box>
         </StyledGrid>
         <Grid item>
@@ -85,7 +87,7 @@ const Team: React.FC = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box pb={3} borderBottom={1}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h2" component="h3" gutterBottom>
           <strong>Team</strong>
         </Typography>
         <Typography variant="body1">
@@ -141,7 +143,7 @@ const Team: React.FC = () => {
         </Grid>
       </Box>
       <Box py={3}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h2" component="h3" gutterBottom>
           <strong>Sharing</strong>
         </Typography>
         <Typography variant="body1" gutterBottom>

@@ -111,17 +111,21 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         letterSpacing: SPACING_TIGHT,
         fontWeight: FONT_WEIGHT_BOLD,
       },
-      h3: {
+      h2: {
         fontSize: "2.25rem",
         letterSpacing: SPACING_TIGHT,
         fontWeight: FONT_WEIGHT_BOLD,
       },
-      h4: {
+      h3: {
         fontSize: "1.5rem",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
-      h5: {
+      h4: {
         fontSize: "1.188rem",
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+      },
+      h5: {
+        fontSize: "1rem",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       h6: {

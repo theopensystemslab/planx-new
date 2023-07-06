@@ -128,7 +128,7 @@ function ListItem(props: Item & { index: number; heading?: HeadingLevel }) {
       >
         <Box>
           <Typography
-            variant="h4"
+            variant="h3"
             component={props.heading || "h5"}
             id={`group-${props.index}-heading`}
             align="left"

@@ -163,7 +163,7 @@ function Component(props: Props) {
                   padding: "1.5em 0 1em",
                 }}
               >
-                <Typography variant="h4" component="h2">
+                <Typography variant="h3" component="h2">
                   {`${capitalize(fileListCategory)} files`}
                 </Typography>
               </ListSubheader>,
@@ -181,7 +181,7 @@ function Component(props: Props) {
         </List>
       </DropzoneContainer>
       {Boolean(slots.length) && (
-        <Typography variant="h4" component="h3" mb={2}>
+        <Typography variant="h3" mb={2}>
           Your uploaded files
         </Typography>
       )}

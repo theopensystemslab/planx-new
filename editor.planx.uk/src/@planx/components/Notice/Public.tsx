@@ -87,9 +87,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
           <Content>
             <TitleWrap>
               <ErrorOutline sx={{ width: 34, height: 34 }} />
-              <Title component="h3" variant="h4">
-                {props.title}
-              </Title>
+              <Title variant="h3">{props.title}</Title>
             </TitleWrap>
             <Box mt={2}>
               <ReactMarkdownOrHtml

@@ -49,7 +49,7 @@ function Component() {
         <Typography variant="h1">Global Settings</Typography>
         <Box mb={2}>
           <Box py={3} borderBottom={1}>
-            <Typography variant="h3" gutterBottom>
+            <Typography variant="h2" component="h3" gutterBottom>
               <strong>Footer Elements</strong>
             </Typography>
             <Typography variant="body1">

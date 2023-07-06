@@ -38,14 +38,14 @@ const Teams: React.FC<Props> = ({ teams }) => {
     <Root>
       <Dashboard>
         <Box pl={2} pb={2}>
-          <Typography variant="h3" component="h1" gutterBottom>
+          <Typography variant="h2" component="h1" gutterBottom>
             Select a team
           </Typography>
         </Box>
         {teams.map(({ name, slug }) => (
           <StyledLink href={`/${slug}`} key={slug} prefetch={false}>
             <Box mb={2.5} px={2.5} py={3} mx={2} component={Card}>
-              <Typography variant="h5" component="h2">
+              <Typography variant="h4" component="h2">
                 {name}
               </Typography>
             </Box>

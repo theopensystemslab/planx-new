@@ -43,7 +43,7 @@ export default function Component(props: Props) {
     <Card isValid handleSubmit={props.handleSubmit}>
       <QuestionHeader title={flowName} />
       <Box>
-        <Typography variant="h4" component="h2" pb="0.15em">
+        <Typography variant="h3" component="h2" pb="0.15em">
           Application incomplete.
         </Typography>
         <Typography variant="subtitle2" component="h3">

@@ -37,7 +37,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
         </Typography>
       </Banner>
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <Typography variant="h3" component="h2" pb={2}>
+        <Typography variant="h2" pb={2}>
           You will be contacted
         </Typography>
         <List>
@@ -51,7 +51,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
           <li>to inform you whether a certificate has been granted or not</li>
         </List>
         <Divider sx={{ pt: 2 }} />
-        <Typography variant="h3" component="h2" pt={4} pb={2}>
+        <Typography variant="h2" pt={4} pb={2}>
           Contact us
         </Typography>
         <List>
