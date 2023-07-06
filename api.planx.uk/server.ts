@@ -420,7 +420,7 @@ app.get("/admin/session/:sessionId/csv", getCSVData);
 app.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
 app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
-app.get("/admin/session/:sessionId/zip", generateZip); // "?includeXML=true" to include generate and include xml in the zip
+app.get("/admin/session/:sessionId/zip", generateZip); // "?includeXML=true" to generate and include xml in the zip
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production

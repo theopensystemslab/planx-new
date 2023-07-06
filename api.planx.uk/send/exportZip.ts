@@ -5,7 +5,6 @@ import { stringify } from "csv-stringify";
 import fs from "fs";
 import str from "string-to-stream";
 import AdmZip from "adm-zip";
-import { deleteFile, resolveStream } from "./helpers";
 import { getFileFromS3 } from "../s3/getFile";
 import {
   hasRequiredDataForTemplate,
@@ -42,7 +41,7 @@ export async function buildSubmissionExportZip({
     try {
       const xml = await $admin.generateOneAppXML(sessionId);
       const xmlStream = str(xml.trim());
-      zip.addStream({
+      await zip.addStream({
         name: "proposal.xml", // must be named "proposal.xml" to be processed by Uniform
         stream: xmlStream,
       });
@@ -81,7 +80,6 @@ export async function buildSubmissionExportZip({
       stream: csvStream,
     });
   } catch (error) {
-    console.log(error);
     throw Error(`Failed to generate CSV. Error - ${error}`);
   }
 
@@ -90,27 +88,26 @@ export async function buildSubmissionExportZip({
     sessionId
   );
   for (const templateName of templateNames || []) {
-    let isTemplateSupported = false;
     try {
-      isTemplateSupported = hasRequiredDataForTemplate({
+      const isTemplateSupported = hasRequiredDataForTemplate({
         passport,
         templateName,
       });
+      if (isTemplateSupported) {
+        const templateStream = generateDocxTemplateStream({
+          passport,
+          templateName,
+        });
+        await zip.addStream({
+          name: `${templateName}.doc`,
+          stream: templateStream,
+        });
+      }
     } catch (error) {
       console.log(
         `Template "${templateName}" could not be generated so has been skipped. Error - ${error}`
       );
       continue;
-    }
-    if (isTemplateSupported) {
-      const templateStream = generateDocxTemplateStream({
-        passport,
-        templateName,
-      });
-      zip.addStream({
-        name: `${templateName}.doc`,
-        stream: templateStream,
-      });
     }
   }
 
@@ -149,7 +146,7 @@ export async function buildSubmissionExportZip({
     });
   }
 
-  // write the zip (and clean up tmp dir)
+  // write the zip
   zip.write();
 
   return zip;
@@ -158,26 +155,33 @@ export async function buildSubmissionExportZip({
 // ExportZip is responsible for creating a zip including managing temporary files and directories
 export class ExportZip {
   zip: AdmZip;
-  zipName: string;
+  filename: string;
   private tmpDir: string;
 
   constructor(sessionId: string) {
     this.zip = new AdmZip();
     // make a tmp directory to avoid file name collisions if simultaneous applications
     this.tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), sessionId));
-    this.zipName = `ripa-test-${sessionId}.zip`;
+    this.filename = path.join(__dirname, `ripa-test-${sessionId}.zip`);
   }
 
-  async addFile({ name, buffer }: { name: string; buffer: Buffer }) {
+  addFile({ name, buffer }: { name: string; buffer: Buffer }) {
     this.zip.addFile(name, buffer);
   }
 
-  async addStream({ name, stream }: { name: string; stream: Stream }) {
+  async addStream({
+    name,
+    stream,
+  }: {
+    name: string;
+    stream: Stream;
+  }): Promise<void> {
     const filePath = path.join(this.tmpDir, name);
     const writeStream = fs.createWriteStream(filePath);
-    await resolveStream(stream.pipe(writeStream));
-    this.zip.addLocalFile(filePath);
-    deleteFile(filePath);
+    return resolveStream(stream.pipe(writeStream)).then(() => {
+      this.zip.addLocalFile(filePath);
+      fs.unlinkSync(filePath);
+    });
   }
 
   async addRemoteFile({ name, url }: { name: string; url: string }) {
@@ -191,7 +195,7 @@ export class ExportZip {
     const filePath = path.join(this.tmpDir, name);
     fs.writeFileSync(filePath, body as Buffer);
     this.zip.addLocalFile(filePath);
-    deleteFile(filePath);
+    fs.unlinkSync(filePath);
   }
 
   toBuffer(): Buffer {
@@ -199,8 +203,21 @@ export class ExportZip {
   }
 
   write() {
-    this.zip.writeZip(this.zipName);
-    // cleanup tmp directory
+    this.zip.writeZip(this.filename);
+    // clean-up tmp dir
     fs.rmSync(this.tmpDir, { recursive: true });
   }
+
+  remove() {
+    fs.unlinkSync(this.filename);
+  }
+}
+
+async function resolveStream(stream: {
+  on: (event: string, callback: (value: unknown) => void) => void;
+}) {
+  return await new Promise((resolve, reject) => {
+    stream.on("error", reject);
+    stream.on("finish", resolve);
+  });
 }

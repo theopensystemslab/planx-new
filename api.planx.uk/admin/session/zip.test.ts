@@ -2,12 +2,10 @@ import supertest from "supertest";
 import app from "../../server";
 import { authHeader } from "../../tests/mockJWT";
 
-jest.mock("../../send/helpers", () => ({
-  deleteFile: jest.fn,
-}));
 jest.mock("../../send/exportZip", () => ({
   buildSubmissionExportZip: jest.fn().mockResolvedValue({
-    zipName: "tests/mocks/test.zip",
+    filename: "tests/mocks/test.zip",
+    remove: jest.fn,
   }),
 }));
 

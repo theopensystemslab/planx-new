@@ -123,12 +123,12 @@ export async function downloadApplicationFiles(
     // Send it to the client
     const zipData = zip.toBuffer();
     res.set("Content-Type", "application/octet-stream");
-    res.set("Content-Disposition", `attachment; filename=${zip.zipName}`);
+    res.set("Content-Disposition", `attachment; filename=${zip.filename}`);
     res.set("Content-Length", zipData.length.toString());
     res.status(200).send(zipData);
 
     // Clean up the local zip file
-    deleteFile(zip.zipName);
+    zip.remove()
 
     // TODO Record files_downloaded_at timestamp in lowcal_sessions ??
   } catch (error) {

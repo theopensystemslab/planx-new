@@ -16,15 +16,6 @@ export function deleteFile(path: string) {
   }
 }
 
-export async function resolveStream(stream: {
-  on: (event: string, callback: (value: unknown) => void) => void;
-}) {
-  return await new Promise((resolve, reject) => {
-    stream.on("error", reject);
-    stream.on("finish", resolve);
-  });
-}
-
 export async function logPaymentStatus({
   sessionId,
   flowId,

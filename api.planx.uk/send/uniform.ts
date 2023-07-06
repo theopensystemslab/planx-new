@@ -114,10 +114,11 @@ export async function sendToUniform(
     const attachmentAdded = await attachArchive(
       token,
       idoxSubmissionId,
-      zip.zipName
+      zip.filename
     );
 
-    deleteFile(zip.zipName);
+    // clean-up zip file
+    zip.remove();
 
     // 4/4 - Get submission details and create audit record
     const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
@@ -222,9 +223,12 @@ async function createSubmission(
   organisationId: string,
   sessionId = "TEST"
 ): Promise<string> {
-  const createSubmissionEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission`;
+  const createSubmissionEndpoint = `${process.env
+    .UNIFORM_SUBMISSION_URL!}/secure/submission`;
 
-  const isStaging = ["mock-server", "staging"].some(hostname => createSubmissionEndpoint.includes(hostname));
+  const isStaging = ["mock-server", "staging"].some((hostname) =>
+    createSubmissionEndpoint.includes(hostname)
+  );
 
   const createSubmissionConfig: AxiosRequestConfig = {
     url: createSubmissionEndpoint,
@@ -274,7 +278,8 @@ async function attachArchive(
     return false;
   }
 
-  const attachArchiveEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
+  const attachArchiveEndpoint = `${process.env
+    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
@@ -305,7 +310,8 @@ async function retrieveSubmission(
   token: string,
   submissionId: string
 ): Promise<UniformSubmissionResponse> {
-  const getSubmissionEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
+  const getSubmissionEndpoint = `${process.env
+    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
 
   const getSubmissionConfig: AxiosRequestConfig = {
     url: getSubmissionEndpoint,
