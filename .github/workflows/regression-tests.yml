@@ -170,7 +170,7 @@ jobs:
       - api_tests
       - test_react
       - end_to_end_tests
-    if: ${{ failure() }}
+    if: ${{ github.ref == 'refs/heads/main' && failure() }}
     steps:
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
