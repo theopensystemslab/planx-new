@@ -28,6 +28,9 @@ describe("Basic state and setup", () => {
 
     // Required file is listed
     expect(screen.getByText("testKey")).toBeVisible();
+
+    // Drop zone is available
+    expect(screen.getByTestId("upload-input")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
@@ -52,6 +55,62 @@ describe("Basic state and setup", () => {
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={mockFileTypesUniqueKeys}
+        howMeasured="This is sample help text for the whole component"
+      />
+    );
+
+    const helpIcons = screen.getAllByTestId("more-info-icon");
+    expect(helpIcons).toHaveLength(2);
+  });
+});
+
+describe("Info-only mode with hidden drop zone", () => {
+  test("renders correctly", async () => {
+    setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+        hideDropZone={true}
+      />
+    );
+
+    expect(screen.getAllByRole("heading")[0]).toHaveTextContent("Test title");
+
+    // Required file is listed
+    expect(screen.getByText("testKey")).toBeVisible();
+
+    // Drop zone is not available
+    expect(screen.queryByTestId("upload-input")).not.toBeInTheDocument();
+  });
+
+  it("should not have any accessibility violations", async () => {
+    const { container } = setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+        hideDropZone={true}
+      />
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  test("shows help icons for header and applicable file", async () => {
+    setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={mockFileTypesUniqueKeys}
+        hideDropZone={true}
         howMeasured="This is sample help text for the whole component"
       />
     );
