@@ -65,7 +65,7 @@ const ImageNode: React.FC<NodeViewWrapperProps> = ({
   };
 
   return (
-    <StyledNodeViewWrapper selected={selected} data-drag-handle>
+    <StyledNodeViewWrapper selected={selected}>
       <StyledImg src={src} alt={alt} />
       <AltTextIndicator>
         <IconButton size="small" sx={{ flex: "0 0 auto" }}>
