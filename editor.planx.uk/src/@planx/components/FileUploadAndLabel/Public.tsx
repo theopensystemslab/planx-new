@@ -98,7 +98,7 @@ function Component(props: Props) {
   const [isUserReturningToNode, setIsUserReturningToNode] =
     useState<boolean>(false);
 
-  const handleSubmit = () => {
+  const validateAndSubmit = () => {
     Promise.all([
       slotsSchema.validate(slots),
       fileListSchema.validate(fileList, { context: { slots } }),
@@ -130,7 +130,7 @@ function Component(props: Props) {
 
   return (
     <Card
-      handleSubmit={props.hideDropZone ? props.handleSubmit : handleSubmit}
+      handleSubmit={props.hideDropZone ? props.handleSubmit : validateAndSubmit}
       isValid={
         props.hideDropZone ||
         slots.every((slot) => slot.url && slot.status === "success")
