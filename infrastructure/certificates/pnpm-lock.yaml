@@ -23,8 +23,8 @@ dependencies:
     specifier: ^0.30.0
     version: 0.30.0(@pulumi/aws@4.0.0)(@pulumi/pulumi@3.0.0)
   '@pulumi/cloudflare':
-    specifier: ^3.0.0
-    version: 3.0.0
+    specifier: ^5.5.0
+    version: 5.5.0
   '@pulumi/pulumi':
     specifier: ^3.0.0
     version: 3.0.0
@@ -130,8 +130,8 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/cloudflare@3.0.0:
-    resolution: {integrity: sha512-yqsV5ylGhVhaqa9vda0fFvJ63mwgJ3sGFmMxhrOaYlIjCBsqpjyYVLdnAigSy4EFJBEpjaCD0OmUOJJNpCkf9A==}
+  /@pulumi/cloudflare@5.5.0:
+    resolution: {integrity: sha512-dNeYifvWYfUpeytXVEx9bTSlmWQGQF84Rjm6XcQPIbd7LrifJMsx6LP5hWD5Q3RAt2ZVg5mT/ap/X3IGdjL7lw==}
     requiresBuild: true
     dependencies:
       '@pulumi/pulumi': 3.0.0
