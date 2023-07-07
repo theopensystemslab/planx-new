@@ -8,13 +8,18 @@
     "@cucumber/cucumber": "^9.1.2",
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#main",
     "axios": "^1.4.0",
-    "dotenv": "^16.1.1",
+    "dotenv": "^16.3.1",
     "dotenv-expand": "^10.0.0",
     "nock": "^13.3.1"
   },
   "devDependencies": {
-    "@types/node": "18",
+    "@types/node": "18.16.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.6"
+  },
+  "pnpm": {
+    "overrides": {
+      "semver@<7.5.2": ">=7.5.2"
+    }
   }
 }
