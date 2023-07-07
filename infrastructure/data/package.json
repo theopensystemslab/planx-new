@@ -3,7 +3,7 @@
     "@types/node": "^14.14.41"
   },
   "dependencies": {
-    "@pulumi/aws": "^4.0.0",
+    "@pulumi/aws": "^4.38.1",
     "@pulumi/awsx": "^0.30.0",
     "@pulumi/pulumi": "^3.74.0"
   },
