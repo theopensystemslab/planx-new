@@ -198,9 +198,7 @@ describe("Modal trigger", () => {
     );
 
     // Close modal
-    const closeModalButton = await within(fileTaggingModal).findByText("Done");
-    expect(closeModalButton).toBeVisible();
-    user.click(closeModalButton);
+    await user.keyboard("{Esc}");
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
     // Uploaded files displayed as cards
@@ -256,12 +254,20 @@ describe("Adding tags and syncing state", () => {
     const selects = await within(document.body).findAllByTestId("select");
     expect(selects).toHaveLength(1);
 
+    const submitModalButton = await within(fileTaggingModal).findByText("Done");
+    expect(submitModalButton).toBeVisible();
+
+    // Attempt to close without tagging files
+    user.click(submitModalButton);
+    const errorText = await within(fileTaggingModal).findByText(
+      "Please tag all files"
+    );
+    expect(errorText).toBeVisible();
+
     // Apply multiple tags to this file
     fireEvent.change(selects[0], { target: { value: "Roof plan" } });
 
-    // Close modal
-    const submitModalButton = await within(fileTaggingModal).findByText("Done");
-    expect(submitModalButton).toBeVisible();
+    // Close modal successfully
     user.click(submitModalButton);
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
@@ -322,9 +328,7 @@ describe("Adding tags and syncing state", () => {
     fireEvent.change(selects[0], { target: { value: "Utility bill" } });
 
     // Close modal
-    const submitModalButton = await within(fileTaggingModal).findByText("Done");
-    expect(submitModalButton).toBeVisible();
-    user.click(submitModalButton);
+    await user.keyboard("{Esc}");
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
     // Uploaded file displayed as card with chip tags
