@@ -130,19 +130,26 @@ function Component(props: Props) {
 
   return (
     <Card
-      handleSubmit={handleSubmit}
-      isValid={slots.every((slot) => slot.url && slot.status === "success")}
+      handleSubmit={props.hideDropZone ? props.handleSubmit : handleSubmit}
+      isValid={
+        props.hideDropZone ||
+        slots.every((slot) => slot.url && slot.status === "success")
+      }
     >
       <QuestionHeader {...props} />
       <DropzoneContainer>
-        <FileStatus status={fileUploadStatus} />
-        <ErrorWrapper error={validationError} id={props.id}>
-          <Dropzone
-            slots={slots}
-            setSlots={setSlots}
-            setFileUploadStatus={setFileUploadStatus}
-          />
-        </ErrorWrapper>
+        {!props.hideDropZone && (
+          <>
+            <FileStatus status={fileUploadStatus} />
+            <ErrorWrapper error={validationError} id={props.id}>
+              <Dropzone
+                slots={slots}
+                setSlots={setSlots}
+                setFileUploadStatus={setFileUploadStatus}
+              />
+            </ErrorWrapper>
+          </>
+        )}
         <List
           disablePadding
           sx={{

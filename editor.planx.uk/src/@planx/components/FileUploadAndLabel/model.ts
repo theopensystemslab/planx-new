@@ -65,6 +65,7 @@ export interface FileUploadAndLabel extends MoreInformation {
   description?: string;
   fn?: string;
   fileTypes: FileType[];
+  hideDropZone?: boolean;
 }
 
 export const parseContent = (
@@ -74,6 +75,7 @@ export const parseContent = (
   description: data?.description || "",
   fn: data?.fn || "",
   fileTypes: data?.fileTypes || [newFileType()],
+  hideDropZone: data?.hideDropZone || false,
   ...parseMoreInformation(data),
 });
 

@@ -23,6 +23,7 @@ import ListManager, {
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import { ModalSubtitle } from "ui/ModalSubtitle";
+import OptionButton from "ui/OptionButton";
 import PublicFileUploadButton from "ui/PublicFileUploadButton";
 import RichTextInput from "ui/RichTextInput";
 import SelectInput from "ui/SelectInput";
@@ -90,6 +91,14 @@ function FileUploadAndLabelComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
+          <OptionButton
+            selected={formik.values.hideDropZone}
+            onClick={() => {
+              formik.setFieldValue("hideDropZone", !formik.values.hideDropZone);
+            }}
+          >
+            Hide the drop zone and show files list for information only
+          </OptionButton>
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>

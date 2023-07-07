@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
-import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -118,8 +117,16 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     const isPresentationalComponent = Boolean(Component);
     const doesNodeExist = Boolean(props.flow[nodeId]);
     const isAutoAnswered = userData.auto;
+    const isInfoOnlyMode =
+      node.type === TYPES.FileUploadAndLabel &&
+      props.flow[nodeId].data?.hideDropZone;
 
-    return doesNodeExist && !isAutoAnswered && isPresentationalComponent;
+    return (
+      doesNodeExist &&
+      !isAutoAnswered &&
+      isPresentationalComponent &&
+      !isInfoOnlyMode
+    );
   };
 
   const removeNonPresentationalNodes = (

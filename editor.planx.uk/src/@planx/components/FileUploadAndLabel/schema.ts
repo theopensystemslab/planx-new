@@ -1,4 +1,12 @@
-import { array, mixed, object, SchemaOf, string, TestContext } from "yup";
+import {
+  array,
+  boolean,
+  mixed,
+  object,
+  SchemaOf,
+  string,
+  TestContext,
+} from "yup";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
@@ -53,6 +61,7 @@ export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> = object({
   description: string(),
   fn: string(),
   fileTypes: array().of(fileTypeSchema).required().min(1),
+  hideDropZone: boolean(),
 }).concat(moreInformationSchema);
 
 export const slotsSchema = array()
