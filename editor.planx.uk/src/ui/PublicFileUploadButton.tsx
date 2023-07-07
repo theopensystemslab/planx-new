@@ -10,11 +10,18 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 
 export interface Props {
   onChange?: (image: string) => void;
+  variant?: "tooltip";
+}
+
+interface RootProps extends ButtonBaseProps {
+  isDragActive?: boolean;
+  variant?: "tooltip";
 }
 
 const Root = styled(ButtonBase, {
-  shouldForwardProp: (prop) => prop !== "isDragActive",
-})<ButtonBaseProps & { isDragActive?: boolean }>(({ theme, isDragActive }) => ({
+  shouldForwardProp: (prop) =>
+    !["isDragActive", "variant"].includes(prop.toString()),
+})<RootProps>(({ theme, isDragActive, variant }) => ({
   borderRadius: 0,
   height: 50,
   width: 50,
@@ -23,10 +30,15 @@ const Root = styled(ButtonBase, {
   ...(isDragActive && {
     border: `2px dashed ${theme.palette.primary.dark}`,
   }),
+  ...(variant === "tooltip" && {
+    color: "#757575",
+    height: "fitContent",
+    width: "fitContent",
+  }),
 }));
 
 export default function PublicFileUploadButton(props: Props): FCReturn {
-  const { onChange } = props;
+  const { onChange, variant } = props;
 
   const [status, setStatus] = useState<
     { type: "none" } | { type: "loading" } | { type: "error"; msg: string }
@@ -95,7 +107,12 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
   }
 
   return (
-    <Root isDragActive={isDragActive} key="status-none" {...getRootProps()}>
+    <Root
+      isDragActive={isDragActive}
+      key="status-none"
+      variant={variant}
+      {...getRootProps()}
+    >
       <input data-testid="upload-file-input" {...getInputProps()} />
       <Image />
     </Root>

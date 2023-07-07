@@ -492,6 +492,12 @@ const RichTextInput: FC<Props> = (props) => {
               >
                 <FormatListNumbered />
               </IconButton>
+              <PublicFileUploadButton
+                variant="tooltip"
+                onChange={(src) =>
+                  editor?.chain().focus().setImage({ src }).run()
+                }
+              />
             </>
           )}
           {addingLink ? (
@@ -562,11 +568,6 @@ const RichTextInput: FC<Props> = (props) => {
               <LinkIcon />
             </IconButton>
           )}
-          <PublicFileUploadButton
-            onChange={(url) =>
-              editor?.chain().focus().setImage({ src: url }).run()
-            }
-          />
         </BubbleMenu>
       )}
       <EditorContent editor={editor} />
