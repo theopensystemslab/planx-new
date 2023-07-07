@@ -136,13 +136,11 @@ function Component(props: Props) {
       <QuestionHeader {...props} />
       <DropzoneContainer>
         <FileStatus status={fileUploadStatus} />
-        <ErrorWrapper error={validationError} id={props.id}>
-          <Dropzone
-            slots={slots}
-            setSlots={setSlots}
-            setFileUploadStatus={setFileUploadStatus}
-          />
-        </ErrorWrapper>
+        <Dropzone
+          slots={slots}
+          setSlots={setSlots}
+          setFileUploadStatus={setFileUploadStatus}
+        />
         <List
           disablePadding
           sx={{
@@ -180,36 +178,46 @@ function Component(props: Props) {
             ])}
         </List>
       </DropzoneContainer>
-      {Boolean(slots.length) && (
-        <Typography variant="h3" mb={2}>
-          Your uploaded files
-        </Typography>
-      )}
-      {showModal && (
-        <FileTaggingModal
-          uploadedFiles={slots}
-          fileList={fileList}
-          setFileList={setFileList}
-          setShowModal={setShowModal}
-        />
-      )}
-      {slots.map((slot) => {
-        return (
-          <UploadedFileCard
-            {...slot}
-            key={slot.id}
-            tags={getTagsForSlot(slot.id, fileList)}
-            onChange={() => setShowModal(true)}
-            removeFile={() => {
-              setSlots(
-                slots.filter((currentSlot) => currentSlot.file !== slot.file)
-              );
-              setFileUploadStatus(`${slot.file.path} was deleted`);
-              removeSlots(getTagsForSlot(slot.id, fileList), slot, fileList);
-            }}
-          />
-        );
-      })}
+      <ErrorWrapper error={validationError} id={props.id}>
+        <Box>
+          {Boolean(slots.length) && (
+            <Typography variant="h3" mb={2}>
+              Your uploaded files
+            </Typography>
+          )}
+          {showModal && (
+            <FileTaggingModal
+              uploadedFiles={slots}
+              fileList={fileList}
+              setFileList={setFileList}
+              setShowModal={setShowModal}
+            />
+          )}
+          {slots.map((slot) => {
+            return (
+              <UploadedFileCard
+                {...slot}
+                key={slot.id}
+                tags={getTagsForSlot(slot.id, fileList)}
+                onChange={() => setShowModal(true)}
+                removeFile={() => {
+                  setSlots(
+                    slots.filter(
+                      (currentSlot) => currentSlot.file !== slot.file
+                    )
+                  );
+                  setFileUploadStatus(`${slot.file.path} was deleted`);
+                  removeSlots(
+                    getTagsForSlot(slot.id, fileList),
+                    slot,
+                    fileList
+                  );
+                }}
+              />
+            );
+          })}
+        </Box>
+      </ErrorWrapper>
     </Card>
   );
 }
