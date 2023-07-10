@@ -1,7 +1,7 @@
-import { generateHTMLOverviewStream } from "@opensystemslab/planx-document-templates";
+import { generateApplicationHTMLStream } from "@opensystemslab/planx-core";
 import { $admin } from "../../client";
 import type { NextFunction, Request, Response } from "express";
-import type { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
+import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 
 export async function getHTMLExport(
   req: Request,
@@ -11,7 +11,7 @@ export async function getHTMLExport(
   try {
     const { responses } = await $admin.export.csvData(req.params.sessionId);
     res.header("Content-type", "text/html");
-    generateHTMLOverviewStream(responses as PlanXExportData[]).pipe(res);
+    generateApplicationHTMLStream(responses as PlanXExportData[]).pipe(res);
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
@@ -29,7 +29,7 @@ export async function getRedactedHTMLExport(
       req.params.sessionId
     );
     res.header("Content-type", "text/html");
-    generateHTMLOverviewStream(redactedResponses as PlanXExportData[]).pipe(
+    generateApplicationHTMLStream(redactedResponses as PlanXExportData[]).pipe(
       res
     );
   } catch (error) {

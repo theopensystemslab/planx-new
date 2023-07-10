@@ -39,7 +39,7 @@ const useSendEmailAuth = (
   res: Response,
   next: NextFunction
 ): void => {
-  const handleInvalidTemplate = (template?: never) => {
+  const handleInvalidTemplate = (_template?: never) => {
     throw new ServerError({
       message: "Invalid template",
       status: 400,

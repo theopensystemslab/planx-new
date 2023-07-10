@@ -15,13 +15,13 @@ const mockGenerateHTMLData = jest.fn().mockResolvedValue({
   ],
   redactedResponses: [],
 });
-jest.mock("@opensystemslab/planx-core", () => {
+jest.mock("../../client", () => {
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+    $admin: {
       export: {
         csvData: () => mockGenerateHTMLData(),
       },
-    })),
+    },
   };
 });
 
