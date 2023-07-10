@@ -12,7 +12,7 @@ test("result data", () => {
         color: "#000000",
         text: "No result",
         value: undefined,
-        officerDescription: "",
+        description: "",
       },
       responses: [],
     },
