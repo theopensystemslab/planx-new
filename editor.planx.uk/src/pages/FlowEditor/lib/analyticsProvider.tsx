@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client";
+import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
 import { client } from "lib/graphql";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { DEFAULT_FLAG_CATEGORY } from "../data/flags";
 import { Store, useStore } from "./store";
 
 export type AnalyticsType = "init" | "resume";

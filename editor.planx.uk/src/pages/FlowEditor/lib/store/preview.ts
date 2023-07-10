@@ -1,5 +1,14 @@
 import tinycolor from "@ctrl/tinycolor";
-import { GovUKPayment } from "@opensystemslab/planx-core/types";
+import type {
+  Flag,
+  FlagSet,
+  GovUKPayment,
+  Node,
+} from "@opensystemslab/planx-core/types";
+import {
+  DEFAULT_FLAG_CATEGORY,
+  flatFlags,
+} from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
@@ -14,8 +23,7 @@ import uniq from "lodash/uniq";
 import { v4 as uuidV4 } from "uuid";
 import type { StateCreator } from "zustand";
 
-import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
-import type { Flag, Node, Session } from "./../../../../types";
+import type { Session } from "./../../../../types";
 import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";
@@ -93,7 +101,7 @@ export const previewStore: StateCreator<
     const possibleFlags = flatFlags.filter(
       (f) => f.category === DEFAULT_FLAG_CATEGORY
     );
-    const flagKeys = possibleFlags.map((f) => f.value);
+    const flagKeys: string[] = possibleFlags.map((f) => f.value);
 
     const breadcrumbIds = Object.keys(breadcrumbs);
 
@@ -712,7 +720,9 @@ export const getResultData = (
       category: string
     ) => {
       // might DRY this up with preceding collectedFlags function
-      const possibleFlags = flatFlags.filter((f) => f.category === category);
+      const possibleFlags: Flag[] = flatFlags.filter(
+        (f) => f.category === category
+      );
       const keys = possibleFlags.map((f) => f.value);
       const collectedFlags = Object.values(breadcrumbs).flatMap(
         ({ answers = [] }) => answers.map((id) => flow[id]?.data?.flag)
@@ -728,10 +738,10 @@ export const getResultData = (
         // value: "PP-NO_RESULT",
         value: undefined,
         text: "No result",
-        category,
+        category: category as FlagSet,
         bgColor: "#EEEEEE",
         color: tinycolor("black").toHexString(),
-        officerDescription: "",
+        description: "",
       };
 
       const responses = Object.entries(breadcrumbs)

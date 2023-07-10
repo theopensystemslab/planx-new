@@ -1,4 +1,5 @@
 import {
+  DEFAULT_FLAG_CATEGORY,
   GOV_PAY_PASSPORT_KEY,
   GovUKPayment,
 } from "@opensystemslab/planx-core/types";
@@ -30,7 +31,6 @@ import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
-import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 

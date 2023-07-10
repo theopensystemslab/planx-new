@@ -51,6 +51,8 @@ import tippy, { type Instance } from "tippy.js";
 import { create } from "zustand";
 
 import Input from "./Input";
+import PublicFileUploadButton from "./PublicFileUploadButton";
+import CustomImage from "./RichTextImage";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -79,6 +81,7 @@ const commonExtensions = [
   BulletList,
   OrderedList,
   ListItem,
+  CustomImage,
 ];
 
 // Tiptap editor extensions used to convert between HTML and Prosemirror document state (used internally by tiptap)
@@ -489,6 +492,12 @@ const RichTextInput: FC<Props> = (props) => {
               >
                 <FormatListNumbered />
               </IconButton>
+              <PublicFileUploadButton
+                variant="tooltip"
+                onChange={(src) =>
+                  editor?.chain().focus().setImage({ src }).run()
+                }
+              />
             </>
           )}
           {addingLink ? (

@@ -257,9 +257,7 @@ describe("Modal trigger", () => {
     );
 
     // Close modal
-    const closeModalButton = await within(fileTaggingModal).findByText("Done");
-    expect(closeModalButton).toBeVisible();
-    user.click(closeModalButton);
+    await user.keyboard("{Esc}");
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
     // Uploaded files displayed as cards
@@ -315,12 +313,13 @@ describe("Adding tags and syncing state", () => {
     const selects = await within(document.body).findAllByTestId("select");
     expect(selects).toHaveLength(1);
 
+    const submitModalButton = await within(fileTaggingModal).findByText("Done");
+    expect(submitModalButton).toBeVisible();
+
     // Apply multiple tags to this file
     fireEvent.change(selects[0], { target: { value: "Roof plan" } });
 
-    // Close modal
-    const submitModalButton = await within(fileTaggingModal).findByText("Done");
-    expect(submitModalButton).toBeVisible();
+    // Close modal successfully
     user.click(submitModalButton);
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
@@ -381,9 +380,7 @@ describe("Adding tags and syncing state", () => {
     fireEvent.change(selects[0], { target: { value: "Utility bill" } });
 
     // Close modal
-    const submitModalButton = await within(fileTaggingModal).findByText("Done");
-    expect(submitModalButton).toBeVisible();
-    user.click(submitModalButton);
+    await user.keyboard("{Esc}");
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
     // Uploaded file displayed as card with chip tags
@@ -406,5 +403,147 @@ describe("Adding tags and syncing state", () => {
       "Please upload and tag all required files"
     );
     expect(error).toBeVisible();
+  });
+});
+
+describe("Error handling", () => {
+  test("An error is thrown if a user does not upload any files", async () => {
+    const handleSubmit = jest.fn();
+
+    const { user } = setup(
+      <FileUploadAndLabelComponent
+        handleSubmit={handleSubmit}
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+      />
+    );
+
+    mockedAxios.post.mockResolvedValueOnce({
+      data: {
+        file_type: "image/png",
+        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.png",
+      },
+    });
+
+    const file = new File(["test"], "test.png", { type: "image/png" });
+    const input = screen.getByTestId("upload-input");
+
+    // User cannot submit without uploading a file
+    await user.click(screen.getByTestId("continue-button"));
+    expect(handleSubmit).not.toHaveBeenCalled();
+
+    // Error warns user of this
+    const dropzoneError = await screen.findByText("Upload at least one file");
+    expect(dropzoneError).toBeVisible();
+
+    await user.upload(input, file);
+    const fileTaggingModal = await within(document.body).findByTestId(
+      "file-tagging-dialog"
+    );
+    expect(fileTaggingModal).toBeVisible();
+    await user.keyboard("{Esc}");
+
+    // Error message is cleared
+    expect(dropzoneError).toBeEmptyDOMElement();
+
+    const deleteButton = screen.getByRole("button", { name: /Delete/ });
+    await user.click(deleteButton);
+
+    // Error message does not immediately re-appear
+    expect(dropzoneError).toBeEmptyDOMElement();
+
+    // Error appears again after user attempt to submit without files
+    await user.click(screen.getByTestId("continue-button"));
+    expect(handleSubmit).not.toHaveBeenCalled();
+    expect(dropzoneError).toBeVisible();
+  });
+
+  test("An error is thrown in the modal if a user does not tag all files", async () => {
+    const { user } = setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+      />
+    );
+
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        file_type: "image/png",
+        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
+      },
+    });
+
+    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
+    const input = screen.getByTestId("upload-input");
+    await user.upload(input, file);
+
+    const fileTaggingModal = await within(document.body).findByTestId(
+      "file-tagging-dialog"
+    );
+    expect(fileTaggingModal).toBeVisible();
+    const submitModalButton = await within(fileTaggingModal).findByText("Done");
+
+    // Attempt to close without tagging files
+    await user.click(submitModalButton);
+    expect(true).toBeTruthy();
+    const modalError = await within(fileTaggingModal).findByText(
+      "Please tag all files"
+    );
+    expect(modalError).toBeVisible();
+  });
+
+  test("An error is thrown in the main component if a user does not tag all files", async () => {
+    const handleSubmit = jest.fn();
+
+    const { user } = setup(
+      <FileUploadAndLabelComponent
+        handleSubmit={handleSubmit}
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+      />
+    );
+
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        file_type: "image/png",
+        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
+      },
+    });
+
+    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
+    const input = screen.getByTestId("upload-input");
+    await user.upload(input, file);
+
+    // Exit modal without tagging
+    await user.keyboard("{Esc}");
+
+    // User cannot submit without uploading a file
+    await user.click(screen.getByTestId("continue-button"));
+    expect(handleSubmit).not.toHaveBeenCalled();
+    const fileListError = await screen.findByText("Please tag all files");
+    expect(fileListError).toBeVisible();
+
+    // Re-open modal and tag file
+    await user.click(screen.getByRole("button", { name: /Change/ }));
+    const select = within(document.body).getByTestId("select");
+    fireEvent.change(select, { target: { value: "Utility bill" } });
+    await user.click(screen.getByRole("button", { name: /Done/ }));
+
+    // Error message is cleared, user can submit
+    expect(fileListError).toBeEmptyDOMElement();
+    await user.click(screen.getByTestId("continue-button"));
+    expect(handleSubmit).not.toHaveBeenCalled();
   });
 });

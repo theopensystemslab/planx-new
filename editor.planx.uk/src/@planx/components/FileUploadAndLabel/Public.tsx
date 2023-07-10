@@ -12,7 +12,7 @@ import {
   useAnalyticsTracking,
 } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
 import ErrorWrapper from "ui/ErrorWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
@@ -86,6 +86,8 @@ function Component(props: Props) {
     if (previousSlotCount === undefined) return;
     // Only stop modal opening on initial return to node
     if (isUserReturningToNode) return setIsUserReturningToNode(false);
+    if (slots.length && dropzoneError) setDropzoneError(undefined);
+    if (!slots.length && fileListError) setFileListError(undefined);
     if (slots.length > previousSlotCount) setShowModal(true);
   }, [slots.length]);
 
@@ -93,7 +95,8 @@ function Component(props: Props) {
     undefined
   );
 
-  const [validationError, setValidationError] = useState<string | undefined>();
+  const [dropzoneError, setDropzoneError] = useState<string | undefined>();
+  const [fileListError, setFileListError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isUserReturningToNode, setIsUserReturningToNode] =
     useState<boolean>(false);
@@ -107,26 +110,17 @@ function Component(props: Props) {
         const payload = generatePayload(fileList);
         props.handleSubmit?.(payload);
       })
-      .catch((err) => {
-        setValidationError(err.message);
-      });
+      .catch((err) =>
+        err?.type === "min"
+          ? setDropzoneError(err?.message)
+          : setFileListError(err?.message)
+      );
   };
 
-  /**
-   * Declare a ref to hold a mutable copy the up-to-date validation error.
-   * The intention is to prevent frequent unnecessary update loops that clears the
-   * validation error state if it is already empty.
-   */
-  const validationErrorRef = useRef(validationError);
-  useEffect(() => {
-    validationErrorRef.current = validationError;
-  }, [validationError]);
-
-  useEffect(() => {
-    if (validationErrorRef.current) {
-      setValidationError(undefined);
-    }
-  }, [slots]);
+  const onUploadedFileCardChange = () => {
+    setFileListError(undefined);
+    setShowModal(true);
+  };
 
   return (
     <Card
@@ -141,7 +135,7 @@ function Component(props: Props) {
         {!props.hideDropZone && (
           <>
             <FileStatus status={fileUploadStatus} />
-            <ErrorWrapper error={validationError} id={props.id}>
+            <ErrorWrapper error={dropzoneError} id={`${props.id}-dropzone`}>
               <Dropzone
                 slots={slots}
                 setSlots={setSlots}
@@ -187,36 +181,46 @@ function Component(props: Props) {
             ])}
         </List>
       </DropzoneContainer>
-      {Boolean(slots.length) && (
-        <Typography variant="h3" mb={2}>
-          Your uploaded files
-        </Typography>
-      )}
-      {showModal && (
-        <FileTaggingModal
-          uploadedFiles={slots}
-          fileList={fileList}
-          setFileList={setFileList}
-          setShowModal={setShowModal}
-        />
-      )}
-      {slots.map((slot) => {
-        return (
-          <UploadedFileCard
-            {...slot}
-            key={slot.id}
-            tags={getTagsForSlot(slot.id, fileList)}
-            onChange={() => setShowModal(true)}
-            removeFile={() => {
-              setSlots(
-                slots.filter((currentSlot) => currentSlot.file !== slot.file)
-              );
-              setFileUploadStatus(`${slot.file.path} was deleted`);
-              removeSlots(getTagsForSlot(slot.id, fileList), slot, fileList);
-            }}
-          />
-        );
-      })}
+      <ErrorWrapper error={fileListError} id={`${props.id}-fileList`}>
+        <Box>
+          {Boolean(slots.length) && (
+            <Typography variant="h3" mb={2}>
+              Your uploaded files
+            </Typography>
+          )}
+          {showModal && (
+            <FileTaggingModal
+              uploadedFiles={slots}
+              fileList={fileList}
+              setFileList={setFileList}
+              setShowModal={setShowModal}
+            />
+          )}
+          {slots.map((slot) => {
+            return (
+              <UploadedFileCard
+                {...slot}
+                key={slot.id}
+                tags={getTagsForSlot(slot.id, fileList)}
+                onChange={onUploadedFileCardChange}
+                removeFile={() => {
+                  setSlots(
+                    slots.filter(
+                      (currentSlot) => currentSlot.file !== slot.file
+                    )
+                  );
+                  setFileUploadStatus(`${slot.file.path} was deleted`);
+                  removeSlots(
+                    getTagsForSlot(slot.id, fileList),
+                    slot,
+                    fileList
+                  );
+                }}
+              />
+            );
+          })}
+        </Box>
+      </ErrorWrapper>
     </Card>
   );
 }
