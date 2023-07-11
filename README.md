@@ -23,28 +23,28 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 1. Download and install the following dependencies if you don't have them already:
 - [Docker](https://docs.docker.com/get-docker/)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@7.8.0`
+- [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@8.6.6`
 - [Node](https://nodejs.org/en/download) `pnpm env use --global 18.16.1`
 
 1. Clone this repository.
 
-1. You should have an IAM user role and your AWS CLI can be configured to use it by running `aws configure sso` with the start URL `https://opensystemslab.awsapps.com/start` and the SSO region `eu-west-2`. This should prompt you to authorize your AWS CLI to access the staging AWS account using your SSO credentials.
+2. You should have an IAM user role and your AWS CLI can be configured to use it by running `aws configure sso` with the start URL `https://opensystemslab.awsapps.com/start` and the SSO region `eu-west-2`. This should prompt you to authorize your AWS CLI to access the staging AWS account using your SSO credentials.
 
-1. Pull down environment secrets for running the application in staging mode by running `./scripts/pull-secrets.sh`. (NOTE: Even when running locally, API requests are routed to relevant staging servers and emails are actually processed and sent to provided addresses).
+3. Pull down environment secrets for running the application in staging mode by running `./scripts/pull-secrets.sh`. (NOTE: Even when running locally, API requests are routed to relevant staging servers and emails are actually processed and sent to provided addresses).
 
-1. Run `pnpm start` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes).
+4. Run `pnpm start` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes).
 
-1. Run `pnpm add-data` from the project root to seed application data from production.
+5. Run `pnpm add-data` from the project root to seed application data from production.
 
-1. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
+6. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
 
-1. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
+7. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
 
-1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
+8. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
 
-1. Start the editor dev server, with `pnpm start`
+9. Start the editor dev server, with `pnpm start`
 
-1. Open `http://localhost:3000` and login with your Google email address
+10. Open `http://localhost:3000` and login with your Google email address
 
 ### Docker
 

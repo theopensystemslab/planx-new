@@ -14,7 +14,7 @@ Our API handles functionality like:
 
 ## Running locally
 
-Install [pnpm](https://pnpm.io) if you don't already have it `npm install -g pnpm@7.8.0`
+Install [pnpm](https://pnpm.io) if you don't already have it `npm install -g pnpm@8.6.6`
 
 Install the project's dependencies `pnpm install`
 
