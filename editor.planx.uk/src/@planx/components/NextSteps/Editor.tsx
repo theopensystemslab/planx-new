@@ -1,3 +1,6 @@
+import Box from "@mui/material/Box";
+import type { NextSteps, Step } from "@planx/components/NextSteps/model";
+import { parseNextSteps } from "@planx/components/NextSteps/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -6,51 +9,113 @@ import {
   MoreInformation,
 } from "@planx/components/ui";
 import { useFormik } from "formik";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
+import ListManager, {
+  EditorProps as ListManagerEditorProps,
+} from "ui/ListManager";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
-import { NextSteps, parseContent } from "./model";
-
 type Props = EditorProps<TYPES.NextSteps, NextSteps>;
 
-export default NextSteps;
+const newStep = (): Step => ({
+  title: "",
+  description: "",
+  url: "",
+});
 
-function NextSteps(props: Props) {
+const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
+  return (
+    <Box sx={{ flex: 1 }}>
+      <InputRow>
+        <Input
+          required
+          name="title"
+          value={props.value.title}
+          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+            props.onChange({
+              ...props.value,
+              title: ev.target.value,
+            });
+          }}
+          placeholder="Title"
+        />
+      </InputRow>
+      <InputRow>
+        <Input
+          name="description"
+          value={props.value.description}
+          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+            props.onChange({
+              ...props.value,
+              description: ev.target.value,
+            });
+          }}
+          placeholder="Description"
+        />
+      </InputRow>
+      <InputRow>
+        <Input
+          required
+          name="url"
+          value={props.value.url}
+          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+            props.onChange({
+              ...props.value,
+              url: ev.target.value,
+            });
+          }}
+          placeholder="url"
+        />
+      </InputRow>
+    </Box>
+  );
+};
+
+const NextStepsComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
-    initialValues: parseContent(props.node?.data),
+    initialValues: parseNextSteps(props.node?.data),
     onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.NextSteps,
-        data: newValues,
-      });
+      if (props.handleSubmit) {
+        props.handleSubmit({ type: TYPES.NextSteps, data: newValues });
+      }
     },
+    validate: () => {},
   });
-
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Next steps" Icon={ICONS[TYPES.NextSteps]}>
-          <InputRow>
-            <Input
-              format="large"
-              name="title"
-              placeholder={formik.values.title}
-              value={formik.values.title}
-              onChange={formik.handleChange}
-            />
-          </InputRow>
-          <InputRow>
-            <RichTextInput
-              name="description"
-              placeholder="Description"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+        <ModalSectionContent title="Next Steps" Icon={ICONS[TYPES.NextSteps]}>
+          <Box mb="1rem">
+            <InputRow>
+              <Input
+                name="title"
+                value={formik.values.title}
+                onChange={formik.handleChange}
+                placeholder="Main Title"
+                format="large"
+              />
+            </InputRow>
+            <InputRow>
+              <RichTextInput
+                name="description"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                placeholder="Main Description"
+              />
+            </InputRow>
+          </Box>
+          <ListManager
+            values={formik.values.steps}
+            onChange={(steps: Array<Step>) => {
+              formik.setFieldValue("steps", steps);
+            }}
+            Editor={TaskEditor}
+            newValue={newStep}
+          />
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation
@@ -62,9 +127,11 @@ function NextSteps(props: Props) {
       />
       <InternalNotes
         name="notes"
-        value={formik.values.notes}
         onChange={formik.handleChange}
+        value={formik.values.notes}
       />
     </form>
   );
-}
+};
+
+export default NextStepsComponent;

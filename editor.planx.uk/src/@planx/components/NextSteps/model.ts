@@ -3,15 +3,21 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 export interface NextSteps extends MoreInformation {
   title: string;
   description: string;
-  fn: string;
+  steps: Array<Step>;
 }
 
-export const parseContent = (
-  data: Record<string, any> | undefined,
+export interface Step {
+  title: string;
+  description: string;
+  url: string;
+}
+
+export const parseNextSteps = (
+  data: Record<string, any> | undefined
 ): NextSteps => ({
+  steps: /* remove once migrated */ data?.taskList?.steps || data?.steps || [],
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
-  fn: data?.fn || "",
   ...parseMoreInformation(data),
 });
 
