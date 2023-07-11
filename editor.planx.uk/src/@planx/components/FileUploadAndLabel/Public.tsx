@@ -106,7 +106,7 @@ function Component(props: Props) {
   const [isUserReturningToNode, setIsUserReturningToNode] =
     useState<boolean>(false);
 
-  const handleSubmit = () => {
+  const validateAndSubmit = () => {
     Promise.all([
       slotsSchema.validate(slots),
       fileListSchema.validate(fileList, { context: { slots } }),
@@ -129,20 +129,27 @@ function Component(props: Props) {
 
   return (
     <Card
-      handleSubmit={handleSubmit}
-      isValid={slots.every((slot) => slot.url && slot.status === "success")}
+      handleSubmit={props.hideDropZone ? props.handleSubmit : validateAndSubmit}
+      isValid={
+        props.hideDropZone ||
+        slots.every((slot) => slot.url && slot.status === "success")
+      }
     >
-      <QuestionHeader {...props} />
       <FullWidthContainer>
+        <QuestionHeader {...props} />
         <DropzoneContainer>
-          <FileStatus status={fileUploadStatus} />
-          <ErrorWrapper error={dropzoneError} id={`${props.id}-dropzone`}>
-            <Dropzone
-              slots={slots}
-              setSlots={setSlots}
-              setFileUploadStatus={setFileUploadStatus}
-            />
-          </ErrorWrapper>
+          {!props.hideDropZone && (
+            <>
+              <FileStatus status={fileUploadStatus} />
+              <ErrorWrapper error={dropzoneError} id={`${props.id}-dropzone`}>
+                <Dropzone
+                  slots={slots}
+                  setSlots={setSlots}
+                  setFileUploadStatus={setFileUploadStatus}
+                />
+              </ErrorWrapper>
+            </>
+          )}
           <List
             disablePadding
             sx={{
@@ -151,7 +158,9 @@ function Component(props: Props) {
             }}
           >
             {(Object.keys(fileList) as Array<keyof typeof fileList>)
-              .filter((fileListCategory) => fileList[fileListCategory].length > 0)
+              .filter(
+                (fileListCategory) => fileList[fileListCategory].length > 0
+              )
               .flatMap((fileListCategory) => [
                 <ListSubheader
                   key={`subheader-${fileListCategory}-files`}
