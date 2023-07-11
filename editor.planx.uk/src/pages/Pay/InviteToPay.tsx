@@ -16,9 +16,7 @@ const List = styled("ul")(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
 }));
 
-const FormWrapper = styled(Box)(({ theme }) => ({
-  width: theme.breakpoints.values.formWrap,
-  maxWidth: "100%",
+const FormInner = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2, 0, 4),
   "& > *": {
     ...contentFlowSpacing(theme),
@@ -47,7 +45,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
         </Typography>
       </Banner>
       <Container maxWidth="contentWrap">
-        <FormWrapper>
+        <FormInner maxWidth="formWrap">
           <Typography variant="h2" mt={2}>
             You will be contacted
           </Typography>
@@ -95,7 +93,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
               Start a new application
             </Link>
           </Box>
-        </FormWrapper>
+        </FormInner>
       </Container>
     </>
   );

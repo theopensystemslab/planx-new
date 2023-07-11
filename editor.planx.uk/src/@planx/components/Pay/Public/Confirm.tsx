@@ -10,6 +10,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ApplicationPath } from "types";
 import Banner from "ui/Banner";
+import FormWrapper from "ui/FormWrapper";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
@@ -53,11 +54,6 @@ const ErrorSummary = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(1),
   padding: theme.spacing(3),
   border: `5px solid ${theme.palette.error.main}`,
-}));
-
-const FormWrapper = styled(Box)(({ theme }) => ({
-  width: theme.breakpoints.values.formWrap,
-  maxWidth: "100%",
 }));
 
 const PayBody: React.FC<PayBodyProps> = (props) => {

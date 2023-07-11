@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import ChecklistItem from "ui/ChecklistItem";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
+import FormWrapper from "ui/FormWrapper";
 import { array, object } from "yup";
 
 import { Option } from "../shared";
@@ -48,11 +49,6 @@ function getFlatOptions({
 
 const FullWidthContainer = styled(Box)(({ theme }) => ({
   ...fullWidthContent(theme),
-}));
-
-const FormWrapper = styled(Box)(({ theme }) => ({
-  width: theme.breakpoints.values.formWrap,
-  maxWidth: "100%",
 }));
 
 const ChecklistComponent: React.FC<Props> = ({

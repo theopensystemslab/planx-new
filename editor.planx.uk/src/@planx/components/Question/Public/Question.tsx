@@ -19,6 +19,7 @@ import { useFormik } from "formik";
 import { Store } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
+import FormWrapper from "ui/FormWrapper";
 
 export interface IQuestion {
   id?: string;
@@ -45,11 +46,6 @@ export enum QuestionLayout {
   Images,
   Descriptions,
 }
-
-const FormWrapper = styled(Box)(({ theme }) => ({
-  width: theme.breakpoints.values.formWrap,
-  maxWidth: "100%",
-}));
 
 const Question: React.FC<IQuestion> = (props) => {
   const theme = useTheme();
