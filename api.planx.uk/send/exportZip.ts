@@ -8,14 +8,14 @@ import AdmZip from "adm-zip";
 import { getFileFromS3 } from "../s3/getFile";
 import {
   hasRequiredDataForTemplate,
-  generateHTMLMapStream,
-  generateHTMLOverviewStream,
+  generateMapHTMLStream,
+  generateApplicationHTMLStream,
   generateDocxTemplateStream,
-} from "@opensystemslab/planx-document-templates";
+} from "@opensystemslab/planx-core";
 import { Passport } from "@opensystemslab/planx-core";
-import { Passport as IPassport } from "../types";
+import type { Passport as IPassport } from "../types";
 import type { Stream } from "node:stream";
-import type { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
+import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 
 export async function buildSubmissionExportZip({
   sessionId,
@@ -112,7 +112,7 @@ export async function buildSubmissionExportZip({
   }
 
   // generate and add an HTML overview document for the submission to zip
-  const overviewStream = generateHTMLOverviewStream(
+  const overviewStream = generateApplicationHTMLStream(
     responses as PlanXExportData[]
   );
   await zip.addStream({
@@ -121,7 +121,7 @@ export async function buildSubmissionExportZip({
   });
 
   // generate and add an HTML overview document for the submission to zip
-  const redactedOverviewStream = generateHTMLOverviewStream(
+  const redactedOverviewStream = generateApplicationHTMLStream(
     redactedResponses as PlanXExportData[]
   );
   await zip.addStream({
@@ -139,7 +139,7 @@ export async function buildSubmissionExportZip({
     });
 
     // generate and add an HTML boundary document for the submission to zip
-    const boundaryStream = generateHTMLMapStream(geojson);
+    const boundaryStream = generateMapHTMLStream(geojson);
     await zip.addStream({
       name: "LocationPlan.htm",
       stream: boundaryStream,
@@ -174,7 +174,7 @@ export class ExportZip {
     stream,
   }: {
     name: string;
-    stream: Stream;
+    stream: { pipe: Stream["pipe"] };
   }): Promise<void> {
     const filePath = path.join(this.tmpDir, name);
     const writeStream = fs.createWriteStream(filePath);

@@ -20,13 +20,6 @@ jest.mock("adm-zip", () => {
     writeZip: jest.fn(),
   }));
 });
-jest.mock("@opensystemslab/planx-core", () => {
-  return {
-    Passport: jest.fn().mockImplementation(() => ({
-      getFiles: jest.fn().mockImplementation(() => []),
-    })),
-  };
-});
 const mockPipe = {
   pipe: jest.fn().mockImplementation(() => ({
     on: (event: string, cb: () => void) => {
@@ -45,12 +38,15 @@ jest.mock("string-to-stream", () => {
 
 const mockGetSessionById = jest.fn().mockResolvedValue(mockLowcalSession);
 const mockHasRequiredDataForTemplate = jest.fn(() => true);
-jest.mock("@opensystemslab/planx-document-templates", () => {
+jest.mock("@opensystemslab/planx-core", () => {
   return {
+    Passport: jest.fn().mockImplementation(() => ({
+      getFiles: jest.fn().mockImplementation(() => []),
+    })),
     hasRequiredDataForTemplate: jest.fn(() => mockHasRequiredDataForTemplate()),
     generateDocxTemplateStream: jest.fn().mockImplementation(() => mockPipe),
-    generateHTMLOverviewStream: jest.fn().mockImplementation(() => mockPipe),
-    generateHTMLMapStream: jest.fn().mockImplementation(() => mockPipe),
+    generateApplicationHTMLStream: jest.fn().mockImplementation(() => mockPipe),
+    generateMapHTMLStream: jest.fn().mockImplementation(() => mockPipe),
   };
 });
 const mockGenerateOneAppXML = jest
