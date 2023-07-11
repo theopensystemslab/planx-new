@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: github:theopensystemslab/planx-core#9b7968b
-    version: github.com/theopensystemslab/planx-core/9b7968b
+    specifier: github:theopensystemslab/planx-core#main
+    version: github.com/theopensystemslab/planx-core/a27a80bdae0a9ca6145165f0510cd6731d2b5f78
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -2033,8 +2033,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/9b7968b:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/9b7968b}
+  github.com/theopensystemslab/planx-core/a27a80bdae0a9ca6145165f0510cd6731d2b5f78:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a27a80bdae0a9ca6145165f0510cd6731d2b5f78}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     requiresBuild: true
