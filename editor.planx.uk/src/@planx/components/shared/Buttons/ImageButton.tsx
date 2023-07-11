@@ -1,8 +1,7 @@
 import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
-import { Theme, useTheme } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { makeStyles } from "@mui/styles";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/Checkbox";
 
@@ -17,45 +16,20 @@ export interface Props extends ButtonBaseProps {
   selected: boolean;
 }
 
-const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
-  return {
-    img: {
-      width: `calc(100% - ${theme.spacing(2)})`,
-      height: `calc(100% - ${theme.spacing(2)})`,
-      position: "absolute",
-      top: theme.spacing(1),
-      left: theme.spacing(1),
-      objectFit: "contain",
-      backgroundColor: theme.palette.background.default,
-    },
-    title: {
-      marginLeft: theme.spacing(1.5),
-    },
-    label: {
-      cursor: "pointer",
-    },
-    textLabelWrapper: {
-      width: "100%",
-      border: "2px solid",
-      borderColor: (props) => props.borderColor,
-      pointerEvents: "none",
-      borderTop: "none",
-      display: "flex",
-      flexGrow: 1,
-      alignItems: "center",
-      padding: theme.spacing(1.5),
-      "& > p": {
-        color: theme.palette.text.secondary,
-      },
-    },
-  };
-});
+const TextLabelRoot = styled(Box)(({ theme }) => ({
+  width: "100%",
+  pointerEvents: "none",
+  borderTop: "none",
+  display: "flex",
+  flexGrow: 1,
+  alignItems: "center",
+  padding: theme.spacing(1.5),
+  "& > p": {
+    color: theme.palette.text.secondary,
+  },
+}));
 
-interface TextLabelProps extends Props {
-  borderColor: string;
-}
-
-const TextLabel = (props: TextLabelProps): FCReturn => {
+const TextLabel = (props: Props): FCReturn => {
   const { selected, title, id, onClick } = props;
   const [multiline, setMultiline] = useState(false);
 
@@ -73,34 +47,67 @@ const TextLabel = (props: TextLabelProps): FCReturn => {
     }
   });
 
-  const classes = useStyles(props);
-
   return (
-    <Box
+    <TextLabelRoot
       {...({ ref: textContentEl } as any)}
       alignItems={multiline ? "flex-start" : "center"}
-      px={1}
-      py={1}
-      className={classes.textLabelWrapper}
+      border={(theme) => borderStyle(theme, selected)}
     >
       <Checkbox id={id} checked={selected} onChange={onClick} />
-      <Typography variant="body1" className={classes.title}>
+      <Typography variant="body1" ml={1.5}>
         {title}
       </Typography>
-    </Box>
+    </TextLabelRoot>
   );
 };
 
 interface ImageLabelProps {
-  borderColor: string;
+  selected: boolean;
   img?: string;
   alt?: string;
 }
 
+const borderStyle = (theme: Theme, selected: boolean) =>
+  `2px solid ${
+    selected ? theme.palette.primary.main : theme.palette.secondary.main
+  }`;
+
+const imageStyle = (theme: Theme): React.CSSProperties => ({
+  width: `calc(100% - ${theme.spacing(2)})`,
+  height: `calc(100% - ${theme.spacing(2)})`,
+  position: "absolute",
+  top: theme.spacing(1),
+  left: theme.spacing(1),
+  objectFit: "contain",
+  backgroundColor: theme.palette.background.default,
+});
+
+const ImageLabelRoot = styled(Box)(({ theme }) => ({
+  width: "100%",
+  paddingTop: "100%",
+  position: "relative",
+  height: 0,
+  overflow: "hidden",
+  zIndex: 2,
+  borderBottom: "none",
+  backgroundColor: theme.palette.background.default,
+}));
+
+const ImageError = styled(Box)(({ theme }) => ({
+  ...imageStyle(theme),
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: theme.palette.secondary.dark,
+}));
+
+const Image = styled("img")(({ theme }) => ({
+  ...imageStyle(theme),
+}));
+
 const ImageLabel = (props: ImageLabelProps): FCReturn => {
-  const { borderColor, img, alt } = props;
+  const { selected, img, alt } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
-  const classes = useStyles(props);
   const onError = () => {
     if (!imgError) {
       setImgError(true);
@@ -108,52 +115,33 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
   };
 
   return (
-    <Box
-      width="100%"
-      paddingTop="100%"
-      position="relative"
-      height={0}
-      overflow="hidden"
-      border={`2px solid ${borderColor}`}
-      zIndex={2}
-      borderBottom="none"
-      bgcolor="background.default"
-    >
+    <ImageLabelRoot border={(theme) => borderStyle(theme, selected)}>
       {imgError ? (
-        <Box
-          className={classes.img}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          color="secondary.dark"
-        >
+        <ImageError>
           <ImageIcon />
-        </Box>
+        </ImageError>
       ) : (
-        <img
-          className={classes.img}
+        <Image
           src={img}
           onError={onError}
           // Use a null alt to indicate that this image can be ignored by screen readers
           alt={alt || ""}
         />
       )}
-    </Box>
+    </ImageLabelRoot>
   );
 };
 
 function ImageResponse(props: Props): FCReturn {
-  const classes = useStyles(props);
   const { selected, img, checkbox, description, title, id } = props;
-  const theme = useTheme();
-  const borderColor = selected
-    ? theme?.palette?.primary?.main
-    : theme?.palette?.secondary?.main;
-
   const altText = description ? `${title} - ${description}` : title;
 
   return (
-    <label htmlFor={checkbox ? id : undefined} className={classes.label}>
+    <Box
+      component="label"
+      htmlFor={checkbox ? id : undefined}
+      sx={{ cursor: "pointer" }}
+    >
       <Box
         display="flex"
         flexDirection="column"
@@ -161,10 +149,10 @@ function ImageResponse(props: Props): FCReturn {
         height="100%"
         data-testid="image-button"
       >
-        <ImageLabel borderColor={borderColor} img={img} alt={altText} />
-        <TextLabel borderColor={borderColor} {...props}></TextLabel>
+        <ImageLabel selected={selected} img={img} alt={altText} />
+        <TextLabel {...props} />
       </Box>
-    </label>
+    </Box>
   );
 }
 
