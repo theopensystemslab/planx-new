@@ -2,8 +2,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
-import { makeStyles } from "@mui/styles";
-import classnames from "classnames";
+import { styled } from "@mui/material/styles";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -13,33 +12,30 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ApplicationPath } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
-import type { Theme } from "../../theme";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { handleSubmit } from "./Node";
 
-const useClasses = makeStyles((theme: Theme) => ({
-  backButton: {
-    marginBottom: theme.spacing(1),
-    visibility: "visible",
-    pointerEvents: "auto",
-    display: "flex",
-    cursor: "pointer",
-    userSelect: "none",
-    alignSelf: "start",
-    fontSize: "inherit",
-    background: "transparent",
-    border: "none",
-    columnGap: theme.spacing(1),
-    padding: theme.spacing(1, 1, 1, 0),
-    textDecoration: "underline",
-    "&:hover": {
-      textDecorationThickness: "3px",
-    },
+const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
+  marginBottom: theme.spacing(1),
+  visibility: "visible",
+  pointerEvents: "auto",
+  display: "flex",
+  cursor: "pointer",
+  userSelect: "none",
+  alignSelf: "start",
+  fontSize: "inherit",
+  background: "transparent",
+  border: "none",
+  columnGap: theme.spacing(1),
+  padding: theme.spacing(1, 1, 1, 0),
+  textDecoration: "underline",
+  "&:hover": {
+    textDecorationThickness: "3px",
   },
-  hidden: {
+  ...(hidden && {
     visibility: "hidden",
     pointerEvents: "none",
-  },
+  }),
 }));
 
 interface QuestionsProps {
@@ -72,7 +68,6 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, node } = useAnalyticsTracking();
-  const classes = useClasses();
   const [gotFlow, setGotFlow] = useState(false);
   const isSingleSession =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
@@ -166,15 +161,10 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   return (
     <Box width="100%" role="main" pt={1}>
       <Container maxWidth={false}>
-        <ButtonBase
-          className={classnames(classes.backButton, {
-            [classes.hidden]: !showBackButton,
-          })}
-          onClick={() => goBack()}
-        >
-          <ArrowBackIcon fontSize="small"></ArrowBackIcon>
+        <BackButton hidden={!showBackButton} onClick={() => goBack()}>
+          <ArrowBackIcon fontSize="small" />
           Back
-        </ButtonBase>
+        </BackButton>
       </Container>
 
       {node && (
