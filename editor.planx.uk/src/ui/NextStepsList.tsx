@@ -1,6 +1,7 @@
+import EastIcon from "@mui/icons-material/East";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
+import { darken, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
@@ -12,35 +13,82 @@ const List = styled("ol")(({ theme }) => ({
 
 const Step = styled("li")(({ theme }) => ({
   position: "relative",
+  display: "flex",
+  borderBottom: `1px solid ${theme.palette.secondary.main}`,
 }));
 
-type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+const Inner = styled(Link)(({ theme }) => ({
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: theme.spacing(2, 0),
+  textDecoration: "none",
+  borderBottom: `1px solid theme.palette.text.secondary`,
+  // Manually set hover and focus behaviours as we are doing something outside of the usual button style
+  "&:hover > span": {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  "&:hover h2": {
+    textDecorationThickness: "3px",
+  },
+  "&:focus > span": {
+    backgroundColor: theme.palette.text.primary,
+  },
+  "&:focus h2": {
+    textDecoration: "none",
+  },
+}));
+
+const Description = styled(Typography)(() => ({}));
+
+const ArrowButton = styled("span")(({ theme }) => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.common.white,
+  width: "50px",
+  height: "50px",
+  flexShrink: "0",
+}));
+
 interface Item {
   title: string;
   description: string;
   url: string;
 }
 
-function ListItem(props: Item & { index: number; heading?: HeadingLevel }) {
+function ListItem(props: Item) {
   return (
     <Step>
-      <Link href={props.url}>
-        <Box>
-          <Typography variant="h3" component={props.heading || "h5"}>
+      <Inner href={props.url}>
+        <Box pr={2}>
+          <Typography
+            variant="h3"
+            component="h2"
+            mb={0.75}
+            sx={{ textDecoration: "underline", textDecorationThickness: "1px" }}
+          >
             {props.title}
           </Typography>
+          <Description variant="body2" color="text.secondary">
+            {props.description}
+          </Description>
         </Box>
-        <Typography variant="body2">{props.description}</Typography>
-      </Link>
+        <ArrowButton>
+          <EastIcon />
+        </ArrowButton>
+      </Inner>
     </Step>
   );
 }
 
-function NextStepsList(props: { items: Item[]; heading?: HeadingLevel }) {
+function NextStepsList(props: { items: Item[] }) {
   return (
     <List>
       {props.items?.map((item, i) => (
-        <ListItem {...item} key={i} index={i} heading={props.heading} />
+        <ListItem {...item} key={i} />
       ))}
     </List>
   );
