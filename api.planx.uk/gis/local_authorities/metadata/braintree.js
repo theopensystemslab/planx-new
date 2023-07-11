@@ -78,7 +78,7 @@ const planningConstraints = {
     }),
     category: "Ecology",
   },
-  "monument": {
+  monument: {
     key: "monument",
     source: braintreeDomain,
     id: "PlanX/PlanX",
@@ -154,9 +154,19 @@ const planningConstraints = {
       text: "is subject to local permitted development restrictions (known as Article 4 directions)",
       description: data.INFORMATIO,
     }),
-    records: { // planx value to "PARISH" lookup
+    records: {
+      // planx value to "PARISH" lookup
       "article4.braintree.silverEnd": ["Silver End"],
-      "article4.braintree.stisted": ["Stisted", "Braintree", "Gosfield", "Middleton", "Shalford", "Greenstead Green", "Coggeshall", "Ashen"],
+      "article4.braintree.stisted": [
+        "Stisted",
+        "Braintree",
+        "Gosfield",
+        "Middleton",
+        "Shalford",
+        "Greenstead Green",
+        "Coggeshall",
+        "Ashen",
+      ],
     },
     category: "General policy",
   },
@@ -189,7 +199,4 @@ const planningConstraints = {
   hazard: { value: false },
 };
 
-export {
-  planningConstraints,
-  A4_KEY
-};
+export { planningConstraints, A4_KEY };

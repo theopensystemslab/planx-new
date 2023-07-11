@@ -7,7 +7,7 @@
     "status": 200,
     "response": {
       "type": "FeatureCollection",
-      "crs": {"type": "name", "properties": {"name": "EPSG:4326"}},
+      "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },
       "features": [
         {
           "type": "Feature",

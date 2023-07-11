@@ -11,7 +11,7 @@ export function graphQLVoyagerHandler(args: {
       return next({ status: 401, message: "User ID missing from JWT" });
     res.header(
       "Content-Security-Policy",
-      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"
+      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
     );
     res.header("Content-Security-Policy", "worker-src blob:");
     return voyagerMiddleware({
@@ -28,7 +28,7 @@ export function introspectionHandler(args: {
     if (args.validateUser && !req.user?.sub)
       return next({ status: 401, message: "User ID missing from JWT" });
     const introspection = await args.graphQLClient.request(
-      getIntrospectionQuery()
+      getIntrospectionQuery(),
     );
     return res.json({ data: introspection });
   };

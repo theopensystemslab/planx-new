@@ -87,14 +87,14 @@ describe("buildSubmissionExportZip", () => {
   test("the csv is added to the zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/application.csv$/)
+      expect.stringMatching(/application.csv$/),
     );
   });
 
   test("the document viewer is added to zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/Overview.htm$/)
+      expect.stringMatching(/Overview.htm$/),
     );
   });
 
@@ -119,14 +119,14 @@ describe("buildSubmissionExportZip", () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddFile).toHaveBeenCalledWith(
       expect.stringMatching(/LocationPlanGeoJSON.geojson$/),
-      expectedBuffer
+      expectedBuffer,
     );
   });
 
   test("the location plan is added to zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/LocationPlan.htm$/)
+      expect.stringMatching(/LocationPlan.htm$/),
     );
   });
 
@@ -151,20 +151,20 @@ describe("buildSubmissionExportZip", () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
 
     expect(mockAddLocalFile).not.toHaveBeenCalledWith(
-      expect.stringMatching(/LocationPlan.htm$/)
+      expect.stringMatching(/LocationPlan.htm$/),
     );
     expect(mockAddLocalFile).not.toHaveBeenCalledWith(
-      expect.stringMatching(/LocationPlanGeoJSON.geojson$/)
+      expect.stringMatching(/LocationPlanGeoJSON.geojson$/),
     );
   });
 
   test("a document template is added when the template is supported", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/X\.doc$/)
+      expect.stringMatching(/X\.doc$/),
     );
     expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/Y\.doc$/)
+      expect.stringMatching(/Y\.doc$/),
     );
   });
 
@@ -174,10 +174,10 @@ describe("buildSubmissionExportZip", () => {
       .mockReturnValueOnce(true);
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddLocalFile).not.toHaveBeenCalledWith(
-      expect.stringMatching(/X\.doc$/)
+      expect.stringMatching(/X\.doc$/),
     );
     expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/Y\.doc$/)
+      expect.stringMatching(/Y\.doc$/),
     );
   });
 
@@ -188,19 +188,19 @@ describe("buildSubmissionExportZip", () => {
         includeOneAppXML: true,
       });
       expect(mockAddLocalFile).toHaveBeenCalledWith(
-        expect.stringMatching(/proposal\.xml$/)
+        expect.stringMatching(/proposal\.xml$/),
       );
     });
 
     it("throws an error when XML generation fails", async () => {
       mockGenerateOneAppXML.mockRejectedValueOnce(
-        new Error("intentional test error")
+        new Error("intentional test error"),
       );
       await expect(
         buildSubmissionExportZip({
           sessionId: "1234",
           includeOneAppXML: true,
-        })
+        }),
       ).rejects.toThrow(/Failed to generate OneApp XML/);
     });
   });

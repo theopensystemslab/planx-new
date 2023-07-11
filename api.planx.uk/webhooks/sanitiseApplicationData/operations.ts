@@ -4,7 +4,7 @@ import { subMonths } from "date-fns";
 import { Operation, OperationResult } from "./types";
 import { adminGraphQLClient } from "../../hasura";
 import { runSQL } from "../../hasura/schema";
-import { getFilesForSession } from '../../session/files';
+import { getFilesForSession } from "../../session/files";
 import { deleteFilesByURL } from "../../s3/deleteFile";
 
 const RETENTION_PERIOD_MONTHS = 6;
@@ -35,7 +35,7 @@ export const getOperations = (): Operation[] => [
 ];
 
 export const operationHandler = async (
-  operation: Operation
+  operation: Operation,
 ): Promise<OperationResult> => {
   let operationResult: OperationResult = {
     operationName: operation.name,
@@ -66,20 +66,25 @@ export const operationHandler = async (
 export const getExpiredSessionIds = async (): Promise<string[]> => {
   const query = gql`
     query GetExpiredSessionIds($retentionPeriod: timestamptz) {
-      lowcal_sessions(where: {
-        submitted_at: {_lt: $retentionPeriod}
-        sanitised_at: { _is_null: true }
-      }) {
+      lowcal_sessions(
+        where: {
+          submitted_at: { _lt: $retentionPeriod }
+          sanitised_at: { _is_null: true }
+        }
+      ) {
         id
       }
     }
-  `
-  const { lowcal_sessions: sessions }: { lowcal_sessions: Record<"id", string>[] } = await adminGraphQLClient.request(query, {
-    retentionPeriod: getRetentionPeriod(),
-  });
-  const sessionIds = sessions.map(session => session.id);
-  return sessionIds
-}
+  `;
+  const {
+    lowcal_sessions: sessions,
+  }: { lowcal_sessions: Record<"id", string>[] } =
+    await adminGraphQLClient.request(query, {
+      retentionPeriod: getRetentionPeriod(),
+    });
+  const sessionIds = sessions.map((session) => session.id);
+  return sessionIds;
+};
 
 /**
  * Delete files on S3 which are associated with an application
@@ -90,12 +95,12 @@ export const deleteApplicationFiles: Operation = async () => {
 
   const sessionIds = await getExpiredSessionIds();
   for (const sessionId of sessionIds) {
-    const files = await getFilesForSession(sessionId)
+    const files = await getFilesForSession(sessionId);
     if (files.length) {
-      const deleted = await deleteFilesByURL(files)
+      const deleted = await deleteFilesByURL(files);
       deletedFiles.push(...deleted);
     }
-  };
+  }
 
   return deletedFiles;
 };
@@ -191,7 +196,7 @@ export const sanitiseEmailApplications: Operation = async () => {
       }
     }
   `;
-  const { 
+  const {
     update_email_applications: { returning: result },
   } = await adminGraphQLClient.request(mutation, {
     retentionPeriod: getRetentionPeriod(),
@@ -257,8 +262,9 @@ export const deleteHasuraEventLogs: Operation = async () => {
   return ids;
 };
 
-export const deleteHasuraScheduledEventsForSubmittedSessions: Operation = async () => {
-  const response = await runSQL(`
+export const deleteHasuraScheduledEventsForSubmittedSessions: Operation =
+  async () => {
+    const response = await runSQL(`
     DELETE FROM hdb_catalog.hdb_scheduled_events hse
     WHERE EXISTS (
         SELECT id
@@ -269,6 +275,6 @@ export const deleteHasuraScheduledEventsForSubmittedSessions: Operation = async 
     )
     RETURNING hse.id;
   `);
-  const [_column_name, ...ids] = response.result.flat();
-  return ids;
-};
+    const [_column_name, ...ids] = response.result.flat();
+    return ids;
+  };

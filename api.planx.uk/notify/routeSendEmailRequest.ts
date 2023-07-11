@@ -10,7 +10,7 @@ import { ServerError } from "../errors";
 export async function routeSendEmailRequest(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { email, sessionId, paymentRequestId, lockedAt } = req.body.payload;
@@ -100,7 +100,7 @@ export async function routeSendEmailRequest(
         message: `Failed to send "${req.params.template}" email. ${
           (error as Error).message
         }`,
-      })
+      }),
     );
   }
 }

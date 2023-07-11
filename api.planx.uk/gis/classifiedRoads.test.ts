@@ -10,7 +10,7 @@ it("returns an error if required query param is missing", async () => {
     .expect(401)
     .then((res) => {
       expect(res.body).toEqual({
-        error: "Missing required query param `?usrn=`"
+        error: "Missing required query param `?usrn=`",
       });
     });
 });
@@ -25,7 +25,7 @@ describe.skip("fetching classified roads data from OS Features API for any local
     {
       address: "409 Amersham Rd, Hazlemere, High Wycombe HP15 7JG",
       usrn: "45500010",
-    }
+    },
   ];
 
   loadOrRecordNockRequests("fetching-classified-roads", locations);
@@ -38,12 +38,14 @@ describe.skip("fetching classified roads data from OS Features API for any local
         .then((res) => {
           // The outer key is the passport variable assigned to this dataset
           expect(res.body[PASSPORT_FN]).toBeDefined();
-          
+
           // Either positive or negative constraints have at least "value" & "text" properties
           expect(res.body[PASSPORT_FN].value).toBeDefined();
           expect(res.body[PASSPORT_FN].text).toBeDefined();
 
-          expect(res.body[PASSPORT_FN].text).toEqual("is on a Classified Road (Amersham Road - A Road)");
+          expect(res.body[PASSPORT_FN].text).toEqual(
+            "is on a Classified Road (Amersham Road - A Road)",
+          );
         });
     });
   });

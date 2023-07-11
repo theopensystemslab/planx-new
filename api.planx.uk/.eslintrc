@@ -22,11 +22,12 @@
       "error",
       {
         "assertFunctionNames": [
-          "expect", 
+          "expect",
           // Allow Supertest expect() calls
-          "get.expect", 
-          "post.expect", 
-          "supertest.**.expect"]
+          "get.expect",
+          "post.expect",
+          "supertest.**.expect"
+        ]
       }
     ]
   },

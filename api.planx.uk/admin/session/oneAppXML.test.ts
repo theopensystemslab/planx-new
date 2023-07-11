@@ -3,7 +3,8 @@ import app from "../../server";
 import { queryMock } from "../../tests/graphqlQueryMock";
 import { authHeader } from "../../tests/mockJWT";
 
-const endpoint = (strings: TemplateStringsArray) => `/admin/session/${strings[0]}/xml`;
+const endpoint = (strings: TemplateStringsArray) =>
+  `/admin/session/${strings[0]}/xml`;
 
 describe("OneApp XML endpoint", () => {
   beforeEach(() => {
@@ -13,9 +14,7 @@ describe("OneApp XML endpoint", () => {
         submission_reference: "abc123",
       },
       data: {
-        uniform_applications: [
-          { xml: "<dummy:xml></dummy:xml>"}
-        ]
+        uniform_applications: [{ xml: "<dummy:xml></dummy:xml>" }],
       },
     });
 
@@ -25,7 +24,7 @@ describe("OneApp XML endpoint", () => {
         submission_reference: "xyz789",
       },
       data: {
-        uniform_applications: []
+        uniform_applications: [],
       },
     });
   });
@@ -36,9 +35,11 @@ describe("OneApp XML endpoint", () => {
     await supertest(app)
       .get(endpoint`abc123`)
       .expect(401)
-      .then(res => expect(res.body).toEqual({
-        error: "No authorization token was found",
-      }));
+      .then((res) =>
+        expect(res.body).toEqual({
+          error: "No authorization token was found",
+        }),
+      );
   });
 
   it("returns an error if sessionID is invalid", async () => {
@@ -46,7 +47,7 @@ describe("OneApp XML endpoint", () => {
       .get(endpoint`xyz789`)
       .set(authHeader())
       .expect(500)
-      .then(res => expect(res.body.error).toMatch(/Invalid sessionID/));
+      .then((res) => expect(res.body.error).toMatch(/Invalid sessionID/));
   });
 
   it("returns XML", async () => {
@@ -55,8 +56,8 @@ describe("OneApp XML endpoint", () => {
       .set(authHeader())
       .expect(200)
       .expect("content-type", "text/xml; charset=utf-8")
-      .then(res => {
-        expect(res.text).toBe("<dummy:xml></dummy:xml>")
-      })
+      .then((res) => {
+        expect(res.text).toBe("<dummy:xml></dummy:xml>");
+      });
   });
 });

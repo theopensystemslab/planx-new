@@ -194,7 +194,7 @@ describe("invite to pay validation on diff", () => {
   it("does not update if invite to pay is enabled, but there is not a Send component", async () => {
     const { Send, ...invalidatedFlow } = flowWithInviteToPay;
     invalidatedFlow["_root"].edges?.splice(
-      invalidatedFlow["_root"].edges?.indexOf("Send")
+      invalidatedFlow["_root"].edges?.indexOf("Send"),
     );
 
     queryMock.mockQuery({
@@ -214,7 +214,7 @@ describe("invite to pay validation on diff", () => {
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
         expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have a Send"
+          "When using Invite to Pay, your flow must have a Send",
         );
       });
   });
@@ -247,7 +247,7 @@ describe("invite to pay validation on diff", () => {
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
         expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations"
+          "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
         );
       });
   });
@@ -255,7 +255,7 @@ describe("invite to pay validation on diff", () => {
   it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
     const { FindProperty, ...invalidatedFlow } = flowWithInviteToPay;
     invalidatedFlow["_root"].edges?.splice(
-      invalidatedFlow["_root"].edges?.indexOf("FindProperty")
+      invalidatedFlow["_root"].edges?.indexOf("FindProperty"),
     );
 
     queryMock.mockQuery({
@@ -275,7 +275,7 @@ describe("invite to pay validation on diff", () => {
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
         expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have a FindProperty"
+          "When using Invite to Pay, your flow must have a FindProperty",
         );
       });
   });
@@ -306,7 +306,7 @@ describe("invite to pay validation on diff", () => {
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
         expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have exactly ONE Pay"
+          "When using Invite to Pay, your flow must have exactly ONE Pay",
         );
       });
   });
@@ -319,7 +319,7 @@ describe("invite to pay validation on diff", () => {
       ...invalidatedFlow
     } = flowWithInviteToPay;
     invalidatedFlow["_root"].edges?.splice(
-      invalidatedFlow["_root"].edges?.indexOf("Checklist")
+      invalidatedFlow["_root"].edges?.indexOf("Checklist"),
     );
 
     queryMock.mockQuery({
@@ -339,7 +339,7 @@ describe("invite to pay validation on diff", () => {
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
         expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`"
+          "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`",
         );
       });
   });

@@ -6,7 +6,7 @@ const scotGovDomain = "https://maps.gov.scot/server";
 const inspireHESDomain = "https://inspire.hes.scot/arcgis";
 
 const planningConstraints = {
-  "article4": { value: false },
+  article4: { value: false },
   "designated.conservationArea": {
     key: "designated.conservationArea",
     source: inspireHESDomain,
@@ -42,7 +42,7 @@ const planningConstraints = {
     neg: "is not in a National Park",
     pos: (data) => ({
       text: "is in Loch Lomond and The Trossachs National Park",
-      description: data.npname, 
+      description: data.npname,
     }),
     category: "Heritage and conservation",
   },

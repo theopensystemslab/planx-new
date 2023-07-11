@@ -15,7 +15,7 @@ const getFlowData = async (id: string): Promise<Flow> => {
         }
       }
     `,
-    { id }
+    { id },
   );
 
   return data.flows_by_pk;
@@ -27,7 +27,7 @@ const insertFlow = async (
   slug: string,
   flowData: Flow["data"],
   creatorId?: number,
-  copiedFrom?: Flow["id"]
+  copiedFrom?: Flow["id"],
 ) => {
   const data = await adminClient.request(
     gql`
@@ -58,7 +58,7 @@ const insertFlow = async (
       data: flowData,
       creator_id: creatorId,
       copied_from: copiedFrom,
-    }
+    },
   );
 
   if (data) await createAssociatedOperation(data?.insert_flows_one?.id);
@@ -79,7 +79,7 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
     `,
     {
       flow_id: flowId,
-    }
+    },
   );
 
   return data?.insert_operations_one;
@@ -87,7 +87,7 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (
-  id: string
+  id: string,
 ): Promise<Flow["data"]> => {
   const data = await adminClient.request(
     gql`
@@ -99,7 +99,7 @@ const getMostRecentPublishedFlow = async (
         }
       }
     `,
-    { id }
+    { id },
   );
 
   return data.flows_by_pk.published_flows?.[0]?.data;
@@ -125,7 +125,7 @@ const getPublishedFlowByDate = async (id: string, created_at: string) => {
     {
       id,
       created_at,
-    }
+    },
   );
 
   return data.flows_by_pk.published_flows?.[0]?.data;
@@ -165,7 +165,7 @@ const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
 const getChildren = (
   node: Node,
   originalFlow: Flow["data"],
-  newFlow: Flow["data"]
+  newFlow: Flow["data"],
 ): Flow["data"] => {
   if (node.edges) {
     node.edges.forEach((edgeId) => {
@@ -184,7 +184,7 @@ const getChildren = (
  */
 const makeUniqueFlow = (
   flowData: Flow["data"],
-  replaceValue: string
+  replaceValue: string,
 ): Flow["data"] => {
   const charactersToReplace = replaceValue.length;
 
@@ -192,7 +192,7 @@ const makeUniqueFlow = (
     // if this node has edges, rename them (includes _root.edges)
     if (flowData[node]["edges"]) {
       const newEdges = flowData[node]["edges"]?.map(
-        (edge) => edge.slice(0, -charactersToReplace) + replaceValue
+        (edge) => edge.slice(0, -charactersToReplace) + replaceValue,
       );
       delete flowData[node]["edges"];
       flowData[node]["edges"] = newEdges;
@@ -211,7 +211,7 @@ const makeUniqueFlow = (
 
 const isLiveEnv = () =>
   ["production", "staging", "pizza", "sandbox"].includes(
-    process.env.NODE_ENV || ""
+    process.env.NODE_ENV || "",
   );
 
 /**

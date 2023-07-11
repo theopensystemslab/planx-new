@@ -55,7 +55,7 @@ interface SendToUniformPayload {
 export async function sendToUniform(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
@@ -92,7 +92,7 @@ export async function sendToUniform(
   try {
     // Request 1/4 - Authenticate
     const { token, organisation, organisationId } = await authenticate(
-      uniformClient
+      uniformClient,
     );
 
     // 2/4 - Create a submission
@@ -100,7 +100,7 @@ export async function sendToUniform(
       token,
       organisation,
       organisationId,
-      payload.sessionId
+      payload.sessionId,
     );
 
     // 3/4 - Create & attach the zip
@@ -112,7 +112,7 @@ export async function sendToUniform(
     const attachmentAdded = await attachArchive(
       token,
       idoxSubmissionId,
-      zip.filename
+      zip.filename,
     );
 
     // clean-up zip file
@@ -148,7 +148,7 @@ export async function sendToUniform(
  * Query the Uniform audit table to see if we already have an application for this session
  */
 async function checkUniformAuditTable(
-  sessionId: string
+  sessionId: string,
 ): Promise<UniformSubmissionResponse | undefined> {
   const application: Record<"uniform_applications", UniformApplication[]> =
     await adminClient.request(
@@ -164,7 +164,7 @@ async function checkUniformAuditTable(
       `,
       {
         submission_reference: sessionId,
-      }
+      },
     );
 
   return application?.uniform_applications[0]?.response;
@@ -179,7 +179,7 @@ async function authenticate({
   clientSecret,
 }: UniformClient): Promise<UniformAuthResponse> {
   const authString = Buffer.from(`${clientId}:${clientSecret}`).toString(
-    "base64"
+    "base64",
   );
 
   const authConfig: AxiosRequestConfig = {
@@ -219,13 +219,13 @@ async function createSubmission(
   token: string,
   organisation: string,
   organisationId: string,
-  sessionId = "TEST"
+  sessionId = "TEST",
 ): Promise<string> {
   const createSubmissionEndpoint = `${process.env
     .UNIFORM_SUBMISSION_URL!}/secure/submission`;
 
   const isStaging = ["mock-server", "staging"].some((hostname) =>
-    createSubmissionEndpoint.includes(hostname)
+    createSubmissionEndpoint.includes(hostname),
   );
 
   const createSubmissionConfig: AxiosRequestConfig = {
@@ -267,11 +267,11 @@ async function createSubmission(
 async function attachArchive(
   token: string,
   submissionId: string,
-  zipPath: string
+  zipPath: string,
 ): Promise<boolean> {
   if (!fs.existsSync(zipPath)) {
     console.log(
-      `Zip does not exist, cannot attach to idox_submission_id ${submissionId}`
+      `Zip does not exist, cannot attach to idox_submission_id ${submissionId}`,
     );
     return false;
   }
@@ -306,7 +306,7 @@ async function attachArchive(
  */
 async function retrieveSubmission(
   token: string,
-  submissionId: string
+  submissionId: string,
 ): Promise<UniformSubmissionResponse> {
   const getSubmissionEndpoint = `${process.env
     .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
@@ -394,7 +394,7 @@ const createUniformApplicationAuditRecord = async ({
       response: submissionDetails,
       payload,
       xml,
-    }
+    },
   );
 
   return application.insert_uniform_applications_one;
