@@ -5,7 +5,7 @@ FROM node:18.16.1-alpine as base
 RUN apk add --no-cache git # required for fetching git dependencies
 
 WORKDIR /api
-RUN npm install -g pnpm@7.8.0
+RUN npm install -g pnpm@8.6.6
 
 # update package cache using lockfile
 # see https://pnpm.io/cli/fetch

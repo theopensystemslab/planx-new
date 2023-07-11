@@ -10,6 +10,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ApplicationPath } from "types";
 import Banner from "ui/Banner";
+import FormWrapper from "ui/FormWrapper";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
@@ -147,7 +148,7 @@ export default function Confirm(props: Props) {
   return (
     <Box textAlign="left" width="100%">
       <>
-        <Container maxWidth="md">
+        <Container maxWidth="contentWrap">
           <Typography variant="h2" component="h1" align="left" pb={3}>
             {page === "Pay" ? props.title : props.secondaryPageTitle}
           </Typography>
@@ -159,7 +160,7 @@ export default function Confirm(props: Props) {
               text: theme.palette.text.primary,
             }}
           >
-            <Container maxWidth="md">
+            <FormWrapper>
               <Typography
                 variant="h3"
                 gutterBottom
@@ -183,7 +184,7 @@ export default function Confirm(props: Props) {
                   openLinksOnNewTab
                 />
               </Typography>
-            </Container>
+            </FormWrapper>
           </Banner>
         )}
         {page === "Pay" ? (

@@ -6,26 +6,30 @@ import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
 import Public from "./Public";
 
-export default {
+const meta = {
   title: "PlanX Components/AddressInput",
   component: Public,
-} as Meta;
+} satisfies Meta<typeof Public>;
 
-export const EmptyForm: StoryObj = {
+type Story = StoryObj<typeof meta>;
+
+export default meta;
+
+export const EmptyForm = {
   args: {
     title: "Enter your address",
     description: "It might be where you live",
   },
-};
+} satisfies Story;
 
-export const EmptyFormWithHelpText: StoryObj = {
+export const EmptyFormWithHelpText = {
   args: {
     ...EmptyForm.args,
     howMeasured: "This is an example definition.",
   },
-};
+} satisfies Story;
 
-export const FilledForm: StoryObj = {
+export const FilledForm = {
   ...EmptyForm,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -48,7 +52,7 @@ export const FilledForm: StoryObj = {
     const submitButton = canvas.getByRole("button");
     await userEvent.click(submitButton);
   },
-};
+} satisfies Story;
 
 export const WithEditor = () => {
   return <Wrapper Editor={Editor} Public={Public} />;

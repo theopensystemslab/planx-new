@@ -155,9 +155,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       values: {
         xs: 0,
         sm: 500,
-        md: 768, // Used with Container as general max-width
+        md: 768,
         lg: 1280,
         xl: 1920,
+        formWrap: 690, // Max width for form content
+        contentWrap: 1020, // Max width for page
       },
     },
     transitions: {
@@ -166,6 +168,18 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       },
     },
     components: {
+      MuiContainer: {
+        styleOverrides: {
+          root: {
+            "@media (min-width: 500px)": {
+              padding: "0 20px",
+            },
+            "@media (min-width: 768px)": {
+              padding: "0 30px",
+            },
+          },
+        },
+      },
       MuiCssBaseline: {
         styleOverrides: {
           strong: {
@@ -177,6 +191,9 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           body: {
             backgroundColor: BG_COLOR_DEFAULT,
             lineHeight: LINE_HEIGHT_BASE,
+          },
+          hr: {
+            marginLeft: 0,
           },
         },
       },

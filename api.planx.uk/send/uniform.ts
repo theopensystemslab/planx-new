@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-import type { Writable as WritableStream } from "node:stream";
 import { NextFunction, Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import FormData from "form-data";
@@ -8,7 +7,6 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 import { $admin } from "../client";
-import { deleteFile } from "./helpers";
 import { buildSubmissionExportZip } from "./exportZip";
 
 interface UniformClient {

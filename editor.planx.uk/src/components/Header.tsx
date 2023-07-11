@@ -4,6 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
+import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
@@ -57,25 +58,14 @@ const StyledLink = styled(ReactNaviLink)(() => ({
   textDecoration: "none",
 })) as typeof Link;
 
-export const getHeaderPadding = (theme: Theme): React.CSSProperties => ({
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  [theme.breakpoints.up("md")]: {
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-  },
-  [theme.breakpoints.up("lg")]: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-  },
-});
-
 const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
   height: HEADER_HEIGHT,
+}));
+
+const InnerContainer = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  ...getHeaderPadding(theme),
 }));
 
 const LeftBox = styled(Box)(() => ({
@@ -98,7 +88,7 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginRight: theme.spacing(2),
+  marginRight: theme.spacing(1),
 }));
 
 const StyledPopover = styled(Popover)(() => ({
@@ -160,24 +150,17 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
   flexShrink: 1,
   lineHeight: LINE_HEIGHT_BASE,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
   paddingBottom: theme.spacing(1.5),
   [theme.breakpoints.up("md")]: {
     paddingBottom: 0,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
 }));
 
 const StyledNavBar = styled("nav")(({ theme }) => ({
-  height: HEADER_HEIGHT,
   backgroundColor: theme.palette.primary.dark,
   fontSize: 16,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  ...getHeaderPadding(theme),
 }));
 
 const SectionName = styled(Typography)(() => ({
@@ -280,8 +263,18 @@ const NavBar: React.FC = () => {
     <>
       {isVisible && (
         <StyledNavBar data-testid="navigation-bar">
-          <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
-          <SectionName>{capitalize(title)}</SectionName>
+          <Container
+            maxWidth={false}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              minHeight: HEADER_HEIGHT,
+            }}
+          >
+            <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
+            <SectionName>{capitalize(title)}</SectionName>
+          </Container>
         </StyledNavBar>
       )}
     </>
@@ -328,28 +321,36 @@ const PublicToolbar: React.FC<{
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
       <StyledToolbar disableGutters>
-        <LeftBox>
-          {teamTheme?.logo ? (
-            <TeamLogo />
-          ) : (
-            <Breadcrumbs handleClick={navigate} />
-          )}
-        </LeftBox>
-        {showCentredServiceTitle && <ServiceTitle />}
-        <RightBox>
-          {showResetButton && (
-            <IconButton
-              color="secondary"
-              onClick={handleRestart}
-              aria-label="Restart Application"
-              size="large"
-            >
-              <Reset color="secondary" />
-            </IconButton>
-          )}
-        </RightBox>
+        <Container maxWidth={false}>
+          <InnerContainer>
+            <LeftBox>
+              {teamTheme?.logo ? (
+                <TeamLogo />
+              ) : (
+                <Breadcrumbs handleClick={navigate} />
+              )}
+            </LeftBox>
+            {showCentredServiceTitle && <ServiceTitle />}
+            <RightBox>
+              {showResetButton && (
+                <IconButton
+                  color="secondary"
+                  onClick={handleRestart}
+                  aria-label="Restart Application"
+                  size="large"
+                >
+                  <Reset color="secondary" />
+                </IconButton>
+              )}
+            </RightBox>
+          </InnerContainer>
+        </Container>
       </StyledToolbar>
-      {!showCentredServiceTitle && <ServiceTitle />}
+      {!showCentredServiceTitle && (
+        <Container maxWidth={false}>
+          <ServiceTitle />
+        </Container>
+      )}
       <NavBar />
       <AnalyticsDisabledBanner />
       <TestEnvironmentBanner />
@@ -393,38 +394,42 @@ const EditorToolbar: React.FC<{
 
   return (
     <>
-      <StyledToolbar>
-        <LeftBox>
-          <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
-        </LeftBox>
-        <RightBox>
-          {route.data.username && (
-            <ProfileSection>
-              {route.data.flow && (
-                <IconButton
-                  color="inherit"
-                  onClick={togglePreview}
-                  aria-label="Toggle Preview"
-                  size="large"
-                >
-                  <MenuOpenIcon />
-                </IconButton>
+      <StyledToolbar disableGutters>
+        <Container maxWidth={false}>
+          <InnerContainer>
+            <LeftBox>
+              <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
+            </LeftBox>
+            <RightBox>
+              {route.data.username && (
+                <ProfileSection disableGutters>
+                  {route.data.flow && (
+                    <IconButton
+                      color="inherit"
+                      onClick={togglePreview}
+                      aria-label="Toggle Preview"
+                      size="large"
+                    >
+                      <MenuOpenIcon />
+                    </IconButton>
+                  )}
+                  <Box mr={1}>
+                    <Avatar>{route.data.username[0]}</Avatar>
+                  </Box>
+                  <IconButton
+                    edge="end"
+                    color="inherit"
+                    aria-label="Toggle Menu"
+                    onClick={handleMenuToggle}
+                    size="large"
+                  >
+                    <KeyboardArrowDown />
+                  </IconButton>
+                </ProfileSection>
               )}
-              <Box mr={1}>
-                <Avatar>{route.data.username[0]}</Avatar>
-              </Box>
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="Toggle Menu"
-                onClick={handleMenuToggle}
-                size="large"
-              >
-                <KeyboardArrowDown />
-              </IconButton>
-            </ProfileSection>
-          )}
-        </RightBox>
+            </RightBox>
+          </InnerContainer>
+        </Container>
       </StyledToolbar>
       <StyledPopover
         open={open}

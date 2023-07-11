@@ -60,7 +60,7 @@ export default function ConfirmationComponent(props: Props) {
       >
         {props.description && (
           <Box mt={4}>
-            <Typography>{props.description}</Typography>
+            <Typography maxWidth="formWrap">{props.description}</Typography>
           </Box>
         )}
       </Banner>

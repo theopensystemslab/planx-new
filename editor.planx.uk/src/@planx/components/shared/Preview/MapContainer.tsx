@@ -7,20 +7,19 @@ interface MapContainerProps {
   size?: "large";
 }
 
+export const fullWidthContent = (theme: Theme): React.CSSProperties => ({
+  width: "100%",
+  maxWidth: "none",
+});
+
 /**
  * Generate a style which increases the map size as the window grows
  * and maintains a consistent right margin
  */
 const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
-  const mainContainerWidth = `${theme.breakpoints.values.md}px`;
-  const mainContainerMargin = `((100vw - ${mainContainerWidth}) / 2)`;
-  const mapMarginRight = "150px";
-
   const style = {
-    [theme.breakpoints.up("md")]: {
-      height: "70vh",
-      width: `calc(${mainContainerMargin} + ${mainContainerWidth} - ${mapMarginRight})`,
-    },
+    ...fullWidthContent(theme),
+    height: "70vh",
   };
 
   return style;
@@ -30,6 +29,7 @@ export const MapContainer = styled(Box)<MapContainerProps>(
   ({ theme, environment, size }) => ({
     padding: theme.spacing(1, 0, 6, 0),
     width: "100%",
+    maxWidth: "none",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
     ...(size === "large" &&
