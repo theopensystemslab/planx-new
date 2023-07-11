@@ -14,7 +14,7 @@
     "start": "node server.js"
   },
   "devDependencies": {
-    "node-dev": "^7.4.3"
+    "node-dev": "^8.0.0"
   },
   "pnpm": {
     "overrides": {
