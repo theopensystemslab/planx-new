@@ -406,6 +406,7 @@ const _update = (
     Object.entries(newData).reduce((existingData, [k, v]) => {
       v = sanitize(v);
 
+      // eslint-disable-next-line no-prototype-builtins
       const isRemoved = !isSomething(v) && existingData.hasOwnProperty(k);
       const isUpdatedArray =
         Array.isArray(v) && !isEqual(v, (existingData as any)[k]);
@@ -416,6 +417,7 @@ const _update = (
 
       if (isRemoved) delete (existingData as any)[k];
       if (isUpdated) (existingData as any)[k] = v;
+
       return existingData;
     }, node.data);
   } else {

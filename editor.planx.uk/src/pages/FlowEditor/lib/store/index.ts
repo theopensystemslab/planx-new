@@ -15,6 +15,7 @@ import { sharedStore } from "./shared";
 import type { TeamStore } from "./team";
 import { teamStore } from "./team";
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace Store {
   export type Store = Record<string | number | symbol, unknown>;
   export type nodeId = string;

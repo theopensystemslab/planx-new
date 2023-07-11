@@ -15,7 +15,7 @@ export const createDoc = async (
   doc: Doc,
   initialData = { nodes: {}, edges: [] }
 ) => {
-  return new Promise(async (res, rej) => {
+  return new Promise((res, rej) => {
     doc.create(initialData, (err) => {
       if (err) rej(err);
       res({});

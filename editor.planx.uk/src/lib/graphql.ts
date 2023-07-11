@@ -19,6 +19,7 @@ const customFetch = async (
   init?: RequestInit
 ): Promise<Response> => {
   const fetchResult = await fetch(input, init);
+  // eslint-disable-next-line no-prototype-builtins
   const isGraphQLError = fetchResult.body?.hasOwnProperty("errors");
   const isSuccess =
     isGraphQLError || (fetchResult.status >= 200 && fetchResult.status <= 299);
