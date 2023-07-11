@@ -158,13 +158,13 @@ export default function MakePayment({
           text: "black",
         }}
       >
-        <Typography pt={2} variant="body2">
+        <Typography pt={2} variant="body2" maxWidth="formWrap">
           Thanks for making your payment. We'll send you a confirmation email.
         </Typography>
       </Banner>
     ) : (
-      <Container maxWidth="md">
-        <Typography maxWidth="md" variant="h1" pt={5} gutterBottom>
+      <Container maxWidth="contentWrap">
+        <Typography maxWidth="formWrap" variant="h1" pt={5} gutterBottom>
           Pay for your application
         </Typography>
       </Container>
@@ -220,7 +220,7 @@ export default function MakePayment({
     }
 
     return (
-      <Container maxWidth="md" sx={{ pb: 0 }}>
+      <Container maxWidth="contentWrap" sx={{ pb: 0 }}>
         <DescriptionList data={data} />
       </Container>
     );

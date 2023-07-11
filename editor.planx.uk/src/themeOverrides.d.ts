@@ -5,3 +5,16 @@ declare module "@mui/material/Chip" {
     uploadedFileTag: true;
   }
 }
+
+// Add our custom breakpoints
+declare module "@mui/material/styles" {
+  interface BreakpointOverrides {
+    xs: true;
+    sm: true;
+    md: true;
+    lg: true;
+    xl: true;
+    formWrap: true;
+    contentWrap: true;
+  }
+}

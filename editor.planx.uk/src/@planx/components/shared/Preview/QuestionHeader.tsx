@@ -56,7 +56,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   };
 
   return (
-    <Box mb={1}>
+    <Box mb={1} maxWidth="formWrap">
       <Grid container justifyContent="space-between" wrap="nowrap">
         <Grid item>
           {title && (

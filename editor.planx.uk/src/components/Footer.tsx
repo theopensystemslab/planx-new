@@ -1,6 +1,7 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -15,12 +16,9 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 const Root = styled("footer")(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: theme.palette.common.black,
-  padding: theme.spacing(2, 2),
+  padding: theme.spacing(2, 0),
   [theme.breakpoints.up("md")]: {
-    padding: theme.spacing(3, 3),
-  },
-  [theme.breakpoints.up("lg")]: {
-    padding: theme.spacing(3, 4),
+    padding: theme.spacing(3, 0),
   },
 }));
 
@@ -131,28 +129,30 @@ export default function Footer(props: Props) {
 
   return (
     <Root>
-      <ButtonGroup py={0.5}>
-        {items
-          ?.filter((item) => item.title)
-          .map((item) => (
-            <FooterItem {...item} key={item.title} />
-          ))}
-        {feedbackFishId && (
-          <>
-            {feedbackPrivacyNoteVisible && (
-              <FeedbackPrivacyNote onClose={handleFeedbackPrivacyNoteClose} />
-            )}
-            <FeedbackFish projectId={feedbackFishId} metadata={metadata}>
-              <Link color="inherit" component="button">
-                <Typography variant="body2" textAlign="left">
-                  Feedback
-                </Typography>
-              </Link>
-            </FeedbackFish>
-          </>
-        )}
-      </ButtonGroup>
-      <Box py={2}>{children}</Box>
+      <Container maxWidth={false}>
+        <ButtonGroup py={0.5}>
+          {items
+            ?.filter((item) => item.title)
+            .map((item) => (
+              <FooterItem {...item} key={item.title} />
+            ))}
+          {feedbackFishId && (
+            <>
+              {feedbackPrivacyNoteVisible && (
+                <FeedbackPrivacyNote onClose={handleFeedbackPrivacyNoteClose} />
+              )}
+              <FeedbackFish projectId={feedbackFishId} metadata={metadata}>
+                <Link color="inherit" component="button">
+                  <Typography variant="body2" textAlign="left">
+                    Feedback
+                  </Typography>
+                </Link>
+              </FeedbackFish>
+            </>
+          )}
+        </ButtonGroup>
+        <Box py={2}>{children}</Box>
+      </Container>
     </Root>
   );
 }

@@ -5,7 +5,13 @@ import Banner from "ui/Banner";
 const ResultSummary = ({ heading, description, color }: any) => (
   <Banner heading={heading} color={color}>
     {description && (
-      <Typography variant="body1" align="left" gutterBottom mt={2}>
+      <Typography
+        variant="body1"
+        align="left"
+        gutterBottom
+        mt={2}
+        maxWidth="formWrap"
+      >
         {description}
       </Typography>
     )}

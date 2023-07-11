@@ -5,6 +5,7 @@ import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { fullWidthContent } from "@planx/components/shared/Preview/MapContainer";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
 import {
@@ -44,6 +45,10 @@ import {
 import { fileListSchema, slotsSchema } from "./schema";
 
 type Props = PublicProps<FileUploadAndLabel>;
+
+const FullWidthContainer = styled(Box)(({ theme }) => ({
+  ...fullWidthContent(theme),
+}));
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   display: "grid",
@@ -128,92 +133,94 @@ function Component(props: Props) {
       isValid={slots.every((slot) => slot.url && slot.status === "success")}
     >
       <QuestionHeader {...props} />
-      <DropzoneContainer>
-        <FileStatus status={fileUploadStatus} />
-        <ErrorWrapper error={dropzoneError} id={`${props.id}-dropzone`}>
-          <Dropzone
-            slots={slots}
-            setSlots={setSlots}
-            setFileUploadStatus={setFileUploadStatus}
-          />
-        </ErrorWrapper>
-        <List
-          disablePadding
-          sx={{
-            width: "100%",
-            marginTop: { md: "-1em" },
-          }}
-        >
-          {(Object.keys(fileList) as Array<keyof typeof fileList>)
-            .filter((fileListCategory) => fileList[fileListCategory].length > 0)
-            .flatMap((fileListCategory) => [
-              <ListSubheader
-                key={`subheader-${fileListCategory}-files`}
-                disableGutters
-                disableSticky
-                sx={{
-                  background: "transparent",
-                  color: "unset",
-                  padding: "1.5em 0 1em",
-                }}
-              >
-                <Typography variant="h3" component="h2">
-                  {`${capitalize(fileListCategory)} files`}
-                </Typography>
-              </ListSubheader>,
-              fileList[fileListCategory].map((fileType) => (
-                <ListItem key={fileType.name} disablePadding>
-                  <InteractiveFileListItem
-                    name={fileType.name}
-                    fn={fileType.fn}
-                    completed={Boolean(fileType.slots?.length)}
-                    moreInformation={fileType.moreInformation}
-                  />
-                </ListItem>
-              )),
-            ])}
-        </List>
-      </DropzoneContainer>
-      <ErrorWrapper error={fileListError} id={`${props.id}-fileList`}>
-        <Box>
-          {Boolean(slots.length) && (
-            <Typography variant="h3" mb={2}>
-              Your uploaded files
-            </Typography>
-          )}
-          {showModal && (
-            <FileTaggingModal
-              uploadedFiles={slots}
-              fileList={fileList}
-              setFileList={setFileList}
-              setShowModal={setShowModal}
+      <FullWidthContainer>
+        <DropzoneContainer>
+          <FileStatus status={fileUploadStatus} />
+          <ErrorWrapper error={dropzoneError} id={`${props.id}-dropzone`}>
+            <Dropzone
+              slots={slots}
+              setSlots={setSlots}
+              setFileUploadStatus={setFileUploadStatus}
             />
-          )}
-          {slots.map((slot) => {
-            return (
-              <UploadedFileCard
-                {...slot}
-                key={slot.id}
-                tags={getTagsForSlot(slot.id, fileList)}
-                onChange={onUploadedFileCardChange}
-                removeFile={() => {
-                  setSlots(
-                    slots.filter(
-                      (currentSlot) => currentSlot.file !== slot.file
-                    )
-                  );
-                  setFileUploadStatus(`${slot.file.path} was deleted`);
-                  removeSlots(
-                    getTagsForSlot(slot.id, fileList),
-                    slot,
-                    fileList
-                  );
-                }}
+          </ErrorWrapper>
+          <List
+            disablePadding
+            sx={{
+              width: "100%",
+              marginTop: { md: "-1em" },
+            }}
+          >
+            {(Object.keys(fileList) as Array<keyof typeof fileList>)
+              .filter((fileListCategory) => fileList[fileListCategory].length > 0)
+              .flatMap((fileListCategory) => [
+                <ListSubheader
+                  key={`subheader-${fileListCategory}-files`}
+                  disableGutters
+                  disableSticky
+                  sx={{
+                    background: "transparent",
+                    color: "unset",
+                    padding: "1.5em 0 1em",
+                  }}
+                >
+                  <Typography variant="h3" component="h2">
+                    {`${capitalize(fileListCategory)} files`}
+                  </Typography>
+                </ListSubheader>,
+                fileList[fileListCategory].map((fileType) => (
+                  <ListItem key={fileType.name} disablePadding>
+                    <InteractiveFileListItem
+                      name={fileType.name}
+                      fn={fileType.fn}
+                      completed={Boolean(fileType.slots?.length)}
+                      moreInformation={fileType.moreInformation}
+                    />
+                  </ListItem>
+                )),
+              ])}
+          </List>
+        </DropzoneContainer>
+        <ErrorWrapper error={fileListError} id={`${props.id}-fileList`}>
+          <Box>
+            {Boolean(slots.length) && (
+              <Typography variant="h3" mb={2}>
+                Your uploaded files
+              </Typography>
+            )}
+            {showModal && (
+              <FileTaggingModal
+                uploadedFiles={slots}
+                fileList={fileList}
+                setFileList={setFileList}
+                setShowModal={setShowModal}
               />
-            );
-          })}
-        </Box>
-      </ErrorWrapper>
+            )}
+            {slots.map((slot) => {
+              return (
+                <UploadedFileCard
+                  {...slot}
+                  key={slot.id}
+                  tags={getTagsForSlot(slot.id, fileList)}
+                  onChange={onUploadedFileCardChange}
+                  removeFile={() => {
+                    setSlots(
+                      slots.filter(
+                        (currentSlot) => currentSlot.file !== slot.file
+                      )
+                    );
+                    setFileUploadStatus(`${slot.file.path} was deleted`);
+                    removeSlots(
+                      getTagsForSlot(slot.id, fileList),
+                      slot,
+                      fileList
+                    );
+                  }}
+                />
+              );
+            })}
+          </Box>
+        </ErrorWrapper>
+      </FullWidthContainer>
     </Card>
   );
 }
