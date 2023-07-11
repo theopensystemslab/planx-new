@@ -405,3 +405,178 @@ describe("error handling", () => {
     ).toThrow("id not found");
   });
 });
+
+describe("complex example with node data", () => {
+  describe("node with array", () => {
+    test("updating a non-array field", () => {
+      const dataFromFormik = {
+        title: "Upload and label",
+        description: "",
+        fn: "",
+        fileTypes: [
+          {
+            name: "11",
+            fn: "22",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+          },
+        ],
+        hideDropZone: true,
+      };
+
+      const [graph, ops] = update(
+        "a",
+        dataFromFormik
+      )({
+        a: {
+          type: 145,
+          data: {
+            title: "Upload and label",
+            fileTypes: [
+              {
+                name: "11",
+                fn: "22",
+                rule: {
+                  condition: "AlwaysRequired",
+                },
+              },
+            ],
+            hideDropZone: false,
+          },
+        },
+      });
+
+      expect(graph).toEqual({
+        a: {
+          type: 145,
+          data: {
+            title: "Upload and label",
+            fileTypes: [
+              {
+                name: "11",
+                fn: "22",
+                rule: {
+                  condition: "AlwaysRequired",
+                },
+              },
+            ],
+            hideDropZone: true,
+          },
+        },
+      });
+
+      expect(ops).toEqual([
+        {
+          od: false,
+          oi: true,
+          p: ["a", "data", "hideDropZone"],
+        },
+      ]);
+    });
+
+    test("updating an array field", () => {
+      const dataFromFormik = {
+        title: "Upload and label",
+        description: "",
+        fn: "",
+        fileTypes: [
+          {
+            name: "11",
+            fn: "22",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+          },
+          {
+            name: "33",
+            fn: "44",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+          },
+        ],
+        hideDropZone: true,
+      };
+
+      const [graph, ops] = update(
+        "a",
+        dataFromFormik
+      )({
+        a: {
+          type: 145,
+          data: {
+            title: "Upload and label",
+            fileTypes: [
+              {
+                name: "11",
+                fn: "22",
+                rule: {
+                  condition: "AlwaysRequired",
+                },
+              },
+            ],
+            hideDropZone: true,
+          },
+        },
+      });
+
+      expect(graph).toEqual({
+        a: {
+          type: 145,
+          data: {
+            title: "Upload and label",
+            fileTypes: [
+              {
+                name: "11",
+                fn: "22",
+                rule: {
+                  condition: "AlwaysRequired",
+                },
+              },
+              {
+                name: "33",
+                fn: "44",
+                rule: {
+                  condition: "AlwaysRequired",
+                },
+              },
+            ],
+            hideDropZone: true,
+          },
+        },
+      });
+
+      expect(ops).toEqual([
+        {
+          od: [
+            {
+              name: "11",
+              fn: "22",
+              rule: {
+                condition: "AlwaysRequired",
+              },
+            },
+          ],
+          oi: [
+            {
+              name: "11",
+              fn: "22",
+              rule: {
+                condition: "AlwaysRequired",
+              },
+            },
+            {
+              name: "33",
+              fn: "44",
+              rule: {
+                condition: "AlwaysRequired",
+              },
+            },
+          ],
+          p: ["a", "data", "fileTypes"],
+        },
+      ]);
+    });
+  });
+});
