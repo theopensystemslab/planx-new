@@ -5,12 +5,11 @@ import React from "react";
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
 import Public from "./Public";
-import AddressInputComponent from "./Public";
 
 const meta = {
   title: "PlanX Components/AddressInput",
   component: Public,
-} satisfies Meta<typeof AddressInputComponent>;
+} satisfies Meta<typeof Public>;
 
 type Story = StoryObj<typeof meta>;
 
