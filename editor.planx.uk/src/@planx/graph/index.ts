@@ -1,5 +1,6 @@
 import { TYPES } from "@planx/components/types";
 import { enablePatches, produceWithPatches } from "immer";
+import { isEqual } from "lodash";
 import difference from "lodash/difference";
 import trim from "lodash/trim";
 import zip from "lodash/zip";
@@ -404,11 +405,17 @@ const _update = (
   if (node.data) {
     Object.entries(newData).reduce((existingData, [k, v]) => {
       v = sanitize(v);
-      if (!isSomething(v)) {
-        if (existingData.hasOwnProperty(k)) delete (existingData as any)[k];
-      } else if (v !== (existingData as any)[k]) {
-        (existingData as any)[k] = v;
-      }
+
+      const isRemoved = !isSomething(v) && existingData.hasOwnProperty(k);
+      const isUpdatedArray =
+        Array.isArray(v) && !isEqual(v, (existingData as any)[k]);
+      const isUpdatedPrimitive =
+        typeof v !== "object" && v !== (existingData as any)[k];
+      const isUpdated =
+        isSomething(v) && (isUpdatedPrimitive || isUpdatedArray);
+
+      if (isRemoved) delete (existingData as any)[k];
+      if (isUpdated) (existingData as any)[k] = v;
       return existingData;
     }, node.data);
   } else {
