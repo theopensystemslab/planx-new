@@ -1,11 +1,11 @@
 import EastIcon from "@mui/icons-material/East";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { darken, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-const List = styled("ol")(({ theme }) => ({
+const List = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: theme.spacing(3, 0, 0, 0),
   padding: 0,
