@@ -1,14 +1,18 @@
 {
   "parser": "@typescript-eslint/parser",
   "plugins": [
+    "@typescript-eslint",
     "simple-import-sort",
     "jsx-a11y",
     "testing-library",
     "jest"
   ],
   "extends": [
+    "eslint:recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:testing-library/react",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
     "plugin:jest/recommended"
   ],
   "rules": {
@@ -47,7 +51,16 @@
         ],
         "patterns": ["@mui/*/*/*"]
       }
-    ]
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "settings": {
     "jest": { "version": 27 }
