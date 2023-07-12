@@ -7,7 +7,7 @@ export interface PropertyInformation extends MoreInformation {
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): PropertyInformation => ({
   title: data?.title || "About the property",
   description:

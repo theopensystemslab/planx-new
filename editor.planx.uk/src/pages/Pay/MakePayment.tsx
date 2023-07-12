@@ -3,8 +3,8 @@ import Container from "@mui/material/Container";
 import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import {
-  type PaymentRequest,
   GovUKPayment,
+  type PaymentRequest,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
 import axios from "axios";
@@ -176,7 +176,7 @@ export default function MakePayment({
     useEffect(() => {
       const fetchProjectType = async () => {
         const projectType = await _public.formatRawProjectTypes(
-          rawProjectTypes
+          rawProjectTypes,
         );
         setProjectType(projectType);
       };
@@ -265,12 +265,12 @@ async function fetchPayment({
 
 // initiate a new payment with GovPay (via proxy)
 async function startNewPayment(
-  paymentRequestId: string
+  paymentRequestId: string,
 ): Promise<GovUKPayment> {
   const paymentURL = `${
     process.env.REACT_APP_API_URL
   }/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
-    window.location.href
+    window.location.href,
   )}`;
   const response = await axios.post<GovUKPayment>(paymentURL);
   return response.data;
@@ -282,7 +282,7 @@ function redirectToGovPay(payment?: GovUKPayment) {
     window.location.replace(payment._links.next_url.href);
   } else {
     logger.notify(
-      "GovPay redirect failed. The payment didn't exist or did not include a 'next_url' link."
+      "GovPay redirect failed. The payment didn't exist or did not include a 'next_url' link.",
     );
   }
 }

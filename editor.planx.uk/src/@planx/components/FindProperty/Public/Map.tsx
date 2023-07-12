@@ -50,10 +50,10 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           x: props.initialProposedAddress.x,
           y: props.initialProposedAddress.y,
         }
-      : undefined
+      : undefined,
   );
   const [siteDescription, setSiteDescription] = useState<string | null>(
-    props.initialProposedAddress?.title ?? null
+    props.initialProposedAddress?.title ?? null,
   );
   const [showSiteDescriptionError, setShowSiteDescriptionError] =
     useState<boolean>(false);
@@ -100,7 +100,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   };
 
   const handleSiteDescriptionInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const input = e.target.value;
     setSiteDescription(input);

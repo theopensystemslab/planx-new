@@ -47,7 +47,7 @@ export const toDecimal = (pence: number) => pence / 100;
 
 export const formattedPriceWithCurrencySymbol = (
   amount: number,
-  currency = "GBP"
+  currency = "GBP",
 ) =>
   new Intl.NumberFormat("en-GB", {
     style: "currency",
@@ -56,7 +56,7 @@ export const formattedPriceWithCurrencySymbol = (
 
 export const createPayload = (
   fee: number,
-  reference: string
+  reference: string,
 ): GovUKCreatePaymentPayload => ({
   amount: toPence(fee),
   reference,

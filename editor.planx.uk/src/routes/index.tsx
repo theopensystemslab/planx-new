@@ -22,12 +22,12 @@ const editorRoutes = mount({
       ? redirect(
           req.params.redirectTo
             ? decodeURIComponent(req.params.redirectTo)
-            : "/"
+            : "/",
         )
       : route({
           title: makeTitle("Login"),
           view: <Login />,
-        })
+        }),
   ),
 
   "/logout": map((): any => {
@@ -41,7 +41,7 @@ const editorRoutes = mount({
       document.cookie = cookieString;
       // remove jwt cookie for planx domains (staging and production)
       document.cookie = cookieString.concat(
-        ` domain=.${window.location.host};`
+        ` domain=.${window.location.host};`,
       );
       // redirect to editor landing page with no jwt cookie set
       window.location.href = "/";
@@ -53,7 +53,7 @@ const editorRoutes = mount({
       ? lazy(() => import("./authenticated"))
       : redirect(`/login/?redirectTo=${encodeURIComponent(req.originalUrl)}`, {
           exact: false,
-        })
+        }),
   ),
 });
 

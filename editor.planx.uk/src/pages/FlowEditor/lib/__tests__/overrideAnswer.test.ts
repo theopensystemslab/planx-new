@@ -13,7 +13,7 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
   const initialPassport = getState().computePassport();
   expect(initialPassport.data).toHaveProperty(
     ["property.type"],
-    ["residential.dwelling.house.semiDetached"]
+    ["residential.dwelling.house.semiDetached"],
   );
 
   // override answer
@@ -51,7 +51,7 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
   const afterAnswerPassport = getState().computePassport();
   expect(afterAnswerPassport.data).toHaveProperty(
     ["property.type"],
-    ["residential.dwelling.flat"]
+    ["residential.dwelling.flat"],
   );
 });
 

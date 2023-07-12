@@ -1,14 +1,16 @@
 import Box from "@mui/material/Box";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import classNames from "classnames";
 import React from "react";
+
+import type { Theme } from "../theme";
 
 interface Props {
   width?: number | string;
   children: JSX.Element[] | JSX.Element;
 }
 
-export const useClasses = makeStyles((theme) => ({
+export const useClasses = makeStyles((_theme: Theme) => ({
   inputRowItem: {
     "& > *": {
       width: "100%",

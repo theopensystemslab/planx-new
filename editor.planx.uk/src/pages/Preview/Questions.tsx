@@ -2,7 +2,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
@@ -13,10 +13,11 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ApplicationPath } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
+import type { Theme } from "../../theme";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { handleSubmit } from "./Node";
 
-const useClasses = makeStyles((theme) => ({
+const useClasses = makeStyles((theme: Theme) => ({
   backButton: {
     marginBottom: theme.spacing(1),
     visibility: "visible",
@@ -159,7 +160,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   const showBackButton = useMemo(
     () => (node?.id ? canGoBack(node) : false),
-    [node?.id]
+    [node?.id],
   );
 
   return (

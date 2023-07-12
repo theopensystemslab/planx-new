@@ -37,7 +37,7 @@ export const SLUGS: {
 
 export const fromSlug = (slug: string): TYPES | undefined => {
   const entry = Object.entries(SLUGS).find(
-    ([_typeString, currentSlug]) => currentSlug === slug
+    ([_typeString, currentSlug]) => currentSlug === slug,
   );
   return entry && Number(entry[0]);
 };

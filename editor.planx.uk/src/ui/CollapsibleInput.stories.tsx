@@ -1,5 +1,5 @@
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
-import { Meta, StoryFn,StoryObj } from "@storybook/react";
+import { Meta, StoryFn, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 
 import CollapsibleInput, { Props } from "./CollapsibleInput";

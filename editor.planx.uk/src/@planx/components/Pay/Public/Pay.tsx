@@ -127,13 +127,13 @@ function Component(props: Props) {
   const normalizePaymentResponse = (responseData: any): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    let payment: GovUKPayment = { ...responseData };
+    const payment: GovUKPayment = { ...responseData };
     payment.amount = toDecimal(payment.amount);
     return payment;
   };
 
   const resolvePaymentResponse = async (
-    responseData: any
+    responseData: any,
   ): Promise<GovUKPayment> => {
     const payment = normalizePaymentResponse(responseData);
     setGovUkPayment(payment);
@@ -158,7 +158,7 @@ function Component(props: Props) {
           flowId,
           teamSlug,
           paymentId: govUkPayment?.payment_id,
-        })
+        }),
       );
 
       // Update local state with the refetched payment state
@@ -223,7 +223,7 @@ function Component(props: Props) {
     await axios
       .post(
         getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
-        createPayload(fee, sessionId)
+        createPayload(fee, sessionId),
       )
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);

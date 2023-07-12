@@ -26,7 +26,7 @@ export const ROOT_NODE_KEY = "_root";
 
 const uniqueId = customAlphabet(en)(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-  10
+  10,
 );
 
 const numberOfEdgesTo = (id: string, graph: Graph): number =>
@@ -65,11 +65,11 @@ const sanitize = (x: any) => {
 
 const convertPatchesToOps = (
   patches: ImmerJSONPatch[],
-  inversePatches: ImmerJSONPatch[]
+  inversePatches: ImmerJSONPatch[],
 ): Array<OT.Op> =>
   (zip(patches, inversePatches) as [ImmerJSONPatch, ImmerJSONPatch][]).map(
     ([fwd, bak]) => {
-      let op: any = {
+      const op: any = {
         p: fwd.path,
       };
 
@@ -99,12 +99,12 @@ const convertPatchesToOps = (
         }
       }
       return op;
-    }
+    },
   );
 
 const wrap = (
   graph: Graph,
-  fn: (draft: Graph) => void
+  fn: (draft: Graph) => void,
 ): [Graph, Array<OT.Op>] => {
   const [result, patches, inversePatches] = produceWithPatches(graph, fn);
   return [result, convertPatchesToOps(patches, inversePatches)];
@@ -114,7 +114,7 @@ const isCyclicUtil = (
   src: string,
   visited: Record<string, boolean>,
   recStack: Record<string, boolean>,
-  graph: Graph
+  graph: Graph,
 ): boolean => {
   if (recStack[src]) return true;
   else if (visited[src]) return false;
@@ -123,7 +123,7 @@ const isCyclicUtil = (
   recStack[src] = true;
 
   const { edges = [] } = graph[src];
-  for (let tgt of edges) {
+  for (const tgt of edges) {
     if (isCyclicUtil(tgt, visited, recStack, graph)) return true;
   }
   recStack[src] = false;
@@ -139,7 +139,7 @@ const isCyclic = (graph: Graph): boolean => {
     recStack[key] = false;
   });
 
-  for (let key of Object.keys(visited)) {
+  for (const key of Object.keys(visited)) {
     if (isCyclicUtil(key, visited, recStack, graph)) return true;
   }
   return false;
@@ -155,7 +155,7 @@ const _add = (
     children = [],
     parent,
     before = undefined,
-  }: { children?: Child[]; parent: string; before?: string }
+  }: { children?: Child[]; parent: string; before?: string },
 ) => {
   if (draft[id]) throw new Error("id exists");
   else if (!draft[parent]) throw new Error("parent not found");
@@ -168,7 +168,7 @@ const _add = (
 
   if (isSectionNodeType(id, draft) && parent !== ROOT_NODE_KEY) {
     alert(
-      "cannot add sections on branches or in portals, must be on center of main graph. close this window & try again"
+      "cannot add sections on branches or in portals, must be on center of main graph. close this window & try again",
     );
     throw new Error("cannot add sections on branches or in portals");
   }
@@ -202,7 +202,7 @@ export const add =
       children?: Child[];
       parent?: string;
       before?: string;
-    } = {}
+    } = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
@@ -216,7 +216,7 @@ export const clone =
     {
       toParent = ROOT_NODE_KEY,
       toBefore = undefined,
-    }: { toParent?: string; toBefore?: string } = {}
+    }: { toParent?: string; toBefore?: string } = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
@@ -254,7 +254,7 @@ export const move =
     {
       toParent = undefined,
       toBefore = undefined,
-    }: { toParent?: string; toBefore?: string } = {}
+    }: { toParent?: string; toBefore?: string } = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
@@ -272,7 +272,7 @@ export const move =
 
       if (isSectionNodeType(id, graph) && toParent !== ROOT_NODE_KEY)
         throw new Error(
-          "cannot move sections onto branches, must be on center of graph"
+          "cannot move sections onto branches, must be on center of graph",
         );
 
       let idx = parentNode.edges.indexOf(id);
@@ -344,7 +344,7 @@ const _update = (
   }: {
     children?: Child[];
     removeKeyIfMissing?: boolean;
-  } = {}
+  } = {},
 ) => {
   const node = draft[id];
 
@@ -363,13 +363,13 @@ const _update = (
           _add(
             draft,
             (children as any).find((c: Child) => c.id === cId),
-            { parent: id }
-          )
+            { parent: id },
+          ),
         );
 
         const removedChildrenIds = difference(
           node.edges,
-          newChildIds
+          newChildIds,
         ) as string[];
         removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
 
@@ -406,6 +406,7 @@ const _update = (
     Object.entries(newData).reduce((existingData, [k, v]) => {
       v = sanitize(v);
 
+      // eslint-disable-next-line no-prototype-builtins
       const isRemoved = !isSomething(v) && existingData.hasOwnProperty(k);
       const isUpdatedArray =
         Array.isArray(v) && !isEqual(v, (existingData as any)[k]);
@@ -416,6 +417,7 @@ const _update = (
 
       if (isRemoved) delete (existingData as any)[k];
       if (isUpdated) (existingData as any)[k] = v;
+
       return existingData;
     }, node.data);
   } else {
@@ -434,7 +436,7 @@ export const update =
     }: {
       children?: Child[];
       removeKeyIfMissing?: boolean;
-    } = {}
+    } = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
@@ -452,7 +454,7 @@ export const makeUnique =
         id: string,
         parent: string,
         { idFn }: { idFn: Function },
-        firstCall: boolean
+        firstCall: boolean,
       ) => {
         const { edges = [], ...nodeData } = draft[id];
         if (!firstCall && isClone(id, draft)) {
@@ -499,6 +501,6 @@ export const sortIdsDepthFirst =
     memoizedNodesIdsByGraph.set(graph, allNodeIdsSorted);
 
     return Array.from(nodeIds).sort(
-      (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b)
+      (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b),
     );
   };

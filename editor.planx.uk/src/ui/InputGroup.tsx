@@ -2,12 +2,14 @@ import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import classNames from "classnames";
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-const useClasses = makeStyles((theme) => ({
+import type { defaultTheme } from "../theme";
+
+const useClasses = makeStyles((theme: typeof defaultTheme) => ({
   inputGroup: {
     border: 0,
     margin: 0,
@@ -165,7 +167,7 @@ export default function InputGroup({
           classes.content,
           deletable && classes.deletable,
           draggable && classes.draggable,
-          deleteHover && classes.deletePending
+          deleteHover && classes.deletePending,
         )}
       >
         {draggable && (

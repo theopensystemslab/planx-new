@@ -3,7 +3,7 @@ import { remove } from "..";
 test("with clones", () => {
   const [graph, ops] = remove(
     "a",
-    "_root"
+    "_root",
   )({
     _root: {
       edges: ["a", "clone"],
@@ -29,7 +29,7 @@ test("with clones", () => {
 test("with id", () => {
   const [graph, ops] = remove(
     "a",
-    "_root"
+    "_root",
   )({
     _root: {
       edges: ["a"],
@@ -64,7 +64,7 @@ describe("error handling", () => {
     expect(() => {
       remove(
         "a",
-        "fpp"
+        "fpp",
       )({
         _root: {
           edges: ["a"],

@@ -39,7 +39,7 @@ const Item = styled(Box)(({ theme }) => ({
 }));
 
 export default function ListManager<T, EditorExtraProps>(
-  props: Props<T, EditorExtraProps>
+  props: Props<T, EditorExtraProps>,
 ) {
   const { Editor } = props;
   // Initialize a random ID when the component mounts
@@ -103,8 +103,8 @@ export default function ListManager<T, EditorExtraProps>(
           arrayMoveImmutable(
             props.values,
             dropResult.source.index,
-            dropResult.destination.index
-          )
+            dropResult.destination.index,
+          ),
         );
       }}
     >

@@ -22,7 +22,7 @@ export const axe = configureAxe({
  * https://testing-library.com/docs/user-event/intro#writing-tests-with-userevent
  */
 export const setup = (
-  jsx: JSX.Element
+  jsx: JSX.Element,
 ): Record<"user", UserEvent> & RenderResult => ({
   user: userEvent.setup(),
   ...render(<ThemeProvider theme={defaultTheme}>{jsx}</ThemeProvider>),
@@ -35,5 +35,5 @@ export const setup = (
  * Docs: https://testing-library.com/docs/example-react-transition-group/
  */
 export const mockFade = jest.mock("@mui/material/Fade", () =>
-  jest.fn(({ children }: FadeProps) => <div>{children}</div>)
+  jest.fn(({ children }: FadeProps) => <div>{children}</div>),
 );

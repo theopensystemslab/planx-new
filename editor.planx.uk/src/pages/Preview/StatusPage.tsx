@@ -38,7 +38,7 @@ const StatusPage: React.FC<Props> = ({
       state.computePassport(),
       state.sessionId,
       state.flowName,
-    ]
+    ],
   );
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform

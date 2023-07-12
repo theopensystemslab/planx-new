@@ -18,7 +18,7 @@ export enum DialogPurpose {
 
 const getTitleAndContent = (
   purpose: DialogPurpose,
-  settings?: TeamSettings
+  settings?: TeamSettings,
 ): Record<string, string | JSX.Element> => {
   switch (purpose) {
     case DialogPurpose.MissingAddress:
@@ -36,10 +36,8 @@ const getTitleAndContent = (
               <p>
                 Please feel free to{" "}
                 <Link
-                  href={`mailto:${
-                    settings?.supportEmail
-                  }?subject=${encodeURIComponent(
-                    "Planning Application - Suggestion for Project Type"
+                  href={`mailto:${settings?.supportEmail}?subject=${encodeURIComponent(
+                    "Planning Application - Suggestion for Project Type",
                   )}`}
                 >
                   contact us via email

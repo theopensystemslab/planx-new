@@ -27,7 +27,7 @@ const ExternalPortal: React.FC<any> = React.memo(
           }
         }
       `,
-      { variables: { id: props.data.flowId } }
+      { variables: { id: props.data.flowId } },
     );
 
     const parent = getParentId(props.parent);
@@ -88,11 +88,11 @@ const ExternalPortal: React.FC<any> = React.memo(
       </>
     );
   },
-  (a, b) => a.flowId === b.flowId
+  (a, b) => a.flowId === b.flowId,
 );
 
 const InternalPortal: React.FC<any> = (props) => {
-  let href = props.data.href || `${rootFlowPath(true)},${props.id}`;
+  const href = props.data.href || `${rootFlowPath(true)},${props.id}`;
 
   const parent = getParentId(props.parent);
 

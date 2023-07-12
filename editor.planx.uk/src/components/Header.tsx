@@ -244,11 +244,11 @@ const NavBar: React.FC = () => {
       state.hasSections,
       state.saveToEmail,
       state.path,
-    ]
+    ],
   );
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession &&
-    !Boolean(saveToEmail) &&
+    !saveToEmail &&
     !hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
   const { node } = useAnalyticsTracking();
@@ -294,13 +294,13 @@ const PublicToolbar: React.FC<{
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
   const showCentredServiceTitle = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.up("md")
+    theme.breakpoints.up("md"),
   );
 
   const handleRestart = async () => {
     if (
       confirm(
-        "Are you sure you want to restart? This will delete your previous answers"
+        "Are you sure you want to restart? This will delete your previous answers",
       )
     ) {
       if (path === ApplicationPath.SingleSession) {

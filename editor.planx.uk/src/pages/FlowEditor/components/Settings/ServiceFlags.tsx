@@ -49,7 +49,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
       "flagSets",
       formik.values.flagSets.filter((flag, i) => {
         return i !== index;
-      })
+      }),
     );
   };
   const addFlagToFlagSet = (flagIndex: number) => {
@@ -84,7 +84,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
       `flagSets[${flagSetIndex}].flags`,
       formik.values.flagSets[flagSetIndex].flags.filter((flagSet, i) => {
         return i !== flagIndex;
-      })
+      }),
     );
   };
   return (
@@ -155,7 +155,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
                               onChange={(color) =>
                                 formik.setFieldValue(
                                   `flagSets[${i}].flags[${j}].color`,
-                                  color
+                                  color,
                                 )
                               }
                             />

@@ -44,7 +44,7 @@ const standaloneView = async (req: NaviRequest) => {
 
 const fetchDataForStandaloneView = async (
   flowSlug: string,
-  teamSlug: string
+  teamSlug: string,
 ): Promise<StandaloneViewData> => {
   try {
     const result = await client.query({

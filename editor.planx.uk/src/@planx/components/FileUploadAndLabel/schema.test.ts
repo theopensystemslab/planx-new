@@ -42,7 +42,7 @@ describe("fileTypeSchema", () => {
       fileTypeSchema.validate({
         fn: "Test fn",
         rule: mockRules.AlwaysRequired,
-      })
+      }),
     ).rejects.toThrow(/name is a required field/);
   });
 
@@ -51,7 +51,7 @@ describe("fileTypeSchema", () => {
       fileTypeSchema.validate({
         name: "Test key",
         rule: mockRules.AlwaysRequired,
-      })
+      }),
     ).rejects.toThrow(/fn is a required field/);
   });
 
@@ -60,7 +60,7 @@ describe("fileTypeSchema", () => {
       fileTypeSchema.validate({
         name: "Test key",
         fn: "Test fn",
-      })
+      }),
     ).rejects.toThrow(/rule.condition is a required field/);
   });
 
@@ -81,7 +81,7 @@ describe("fileUploadAndLabelSchema", () => {
       fileUploadAndLabelSchema.validate({
         fn: "Test Fn",
         fileTypes: [mockFileTypes.AlwaysRecommended],
-      })
+      }),
     ).rejects.toThrow(/title is a required field/);
   });
 
@@ -90,7 +90,7 @@ describe("fileUploadAndLabelSchema", () => {
       fileUploadAndLabelSchema.validate({
         fn: "Test Fn",
         fileTypes: [],
-      })
+      }),
     ).rejects.toThrow(/fileTypes field must have at least 1 items/);
   });
 
@@ -112,7 +112,7 @@ describe("fileUploadAndLabelSchema", () => {
             },
           },
         ],
-      })
+      }),
     ).rejects.toThrow();
   });
 
@@ -130,7 +130,7 @@ describe("fileUploadAndLabelSchema", () => {
     };
 
     const result = await fileUploadAndLabelSchema.isValid(
-      mockFileUploadAndLabel
+      mockFileUploadAndLabel,
     );
 
     expect(result).toBe(true);
@@ -150,7 +150,7 @@ describe("fileUploadAndLabelSchema", () => {
     };
 
     const result = await fileUploadAndLabelSchema.isValid(
-      mockFileUploadAndLabel
+      mockFileUploadAndLabel,
     );
 
     expect(result).toBe(true);
@@ -200,7 +200,7 @@ describe("fileListSchema", () => {
       optional: [],
     };
     await expect(() => fileListSchema.validate(mockFileList)).rejects.toThrow(
-      /Missing context for fileListSchema/
+      /Missing context for fileListSchema/,
     );
   });
 
@@ -214,7 +214,7 @@ describe("fileListSchema", () => {
     };
 
     await expect(() =>
-      fileListSchema.validate(mockFileList, { context: { slots: mockSlots } })
+      fileListSchema.validate(mockFileList, { context: { slots: mockSlots } }),
     ).rejects.toThrow(/Please tag all files/);
   });
 
@@ -231,7 +231,7 @@ describe("fileListSchema", () => {
     };
 
     await expect(() =>
-      fileListSchema.validate(mockFileList, { context: { slots: mockSlots } })
+      fileListSchema.validate(mockFileList, { context: { slots: mockSlots } }),
     ).rejects.toThrow(/Please tag all files/);
   });
 

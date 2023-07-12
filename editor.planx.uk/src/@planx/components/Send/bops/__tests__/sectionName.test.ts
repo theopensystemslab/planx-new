@@ -97,7 +97,10 @@ describe("Flow with sections", () => {
   beforeAll(() => {
     initialState = getState();
     act(() =>
-      setState({ flow: flowWithThreeSections, breadcrumbs: sectionBreadcrumbs })
+      setState({
+        flow: flowWithThreeSections,
+        breadcrumbs: sectionBreadcrumbs,
+      }),
     );
     act(() => getState().initNavigationStore());
   });

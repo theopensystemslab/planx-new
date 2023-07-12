@@ -16,11 +16,11 @@ export const rootFlowPath = (includePortals = false) => {
   return includePortals ? path : path.split(",")[0];
 };
 
-export const isSaveReturnFlow = (flowData: Record<string, any>): Boolean =>
+export const isSaveReturnFlow = (flowData: Record<string, any>): boolean =>
   Boolean(
     Object.values(flowData).find(
-      (node: Record<string, any>) => node.type === NodeTypes.Send
-    )
+      (node: Record<string, any>) => node.type === NodeTypes.Send,
+    ),
   );
 
 export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
@@ -60,7 +60,7 @@ const PREVIEW_ONLY_DOMAINS = [
   // "localhost",
 ];
 export const isPreviewOnlyDomain = PREVIEW_ONLY_DOMAINS.some((domain) =>
-  window.location.hostname.endsWith(domain)
+  window.location.hostname.endsWith(domain),
 );
 
 const QUERY_GET_TEAM_BY_DOMAIN = gql`

@@ -51,7 +51,7 @@ const getExternalPortals = async () => {
     .filter(
       (flow: Flow) =>
         flow.team &&
-        !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
+        !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`),
     )
     .map(({ id, team, slug }: Flow) => ({
       id,
@@ -77,7 +77,7 @@ const newNode = route(async (req) => {
         ([id, v]: any) =>
           v.type === TYPES.InternalPortal &&
           !window.location.pathname.includes(id) &&
-          v.data?.text
+          v.data?.text,
       )
       .map(([id, { data }]: any) => ({ id, text: data.text }))
       .sort(sortFlows);
@@ -134,7 +134,7 @@ const editNode = validateNodeRoute(
             },
           ],
           0,
-          node.data.categories
+          node.data.categories,
         )[1];
       } else {
         extraProps.options = childNodes;
@@ -158,7 +158,7 @@ const editNode = validateNodeRoute(
         />
       ),
     };
-  })
+  }),
 );
 
 const nodeRoutes = mount({
@@ -175,7 +175,7 @@ const nodeRoutes = mount({
 
 const getFlowSettings = async (
   flow: string,
-  team: string
+  team: string,
 ): Promise<FlowSettings> => {
   const { data } = await client.query({
     query: gql`
@@ -229,7 +229,7 @@ const routes = compose(
     "/nodes": nodeRoutes,
 
     "/settings": lazy(() => import("./settings")),
-  })
+  }),
 );
 
 export default routes;

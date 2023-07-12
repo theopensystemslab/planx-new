@@ -7,7 +7,7 @@ export interface NextSteps extends MoreInformation {
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): NextSteps => ({
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",

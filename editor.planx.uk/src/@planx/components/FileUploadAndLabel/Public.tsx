@@ -75,7 +75,7 @@ function Component(props: Props) {
     if (props.previouslySubmittedData) {
       const recoverredData = getRecoveredData(
         props.previouslySubmittedData,
-        fileList
+        fileList,
       );
       setSlots(recoverredData.slots);
       setFileList(recoverredData.fileList);
@@ -97,7 +97,7 @@ function Component(props: Props) {
   }, [slots.length]);
 
   const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const [dropzoneError, setDropzoneError] = useState<string | undefined>();
@@ -118,7 +118,7 @@ function Component(props: Props) {
       .catch((err) =>
         err?.type === "min"
           ? setDropzoneError(err?.message)
-          : setFileListError(err?.message)
+          : setFileListError(err?.message),
       );
   };
 
@@ -159,7 +159,7 @@ function Component(props: Props) {
           >
             {(Object.keys(fileList) as Array<keyof typeof fileList>)
               .filter(
-                (fileListCategory) => fileList[fileListCategory].length > 0
+                (fileListCategory) => fileList[fileListCategory].length > 0,
               )
               .flatMap((fileListCategory) => [
                 <ListSubheader
@@ -214,14 +214,14 @@ function Component(props: Props) {
                   removeFile={() => {
                     setSlots(
                       slots.filter(
-                        (currentSlot) => currentSlot.file !== slot.file
-                      )
+                        (currentSlot) => currentSlot.file !== slot.file,
+                      ),
                     );
                     setFileUploadStatus(`${slot.file.path} was deleted`);
                     removeSlots(
                       getTagsForSlot(slot.id, fileList),
                       slot,
-                      fileList
+                      fileList,
                     );
                   }}
                 />

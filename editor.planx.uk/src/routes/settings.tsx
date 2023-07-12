@@ -42,12 +42,12 @@ const flowSettingsRoutes = compose(
 
       return {
         title: makeTitle(
-          [req.params.team, req.params.flow, "Settings"].join("/")
+          [req.params.team, req.params.flow, "Settings"].join("/"),
         ),
         view: <Settings tab={req.params.tab} />,
       };
     }),
-  })
+  }),
 );
 
 export default flowSettingsRoutes;

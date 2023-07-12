@@ -165,8 +165,8 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             props.onChange(
               setCondition(
                 Condition[e.target.value as keyof typeof Condition],
-                props.value
-              )
+                props.value,
+              ),
             )
           }
         >
@@ -189,7 +189,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
                   rule: {
                     fn: e.target.value,
                   },
-                })
+                }),
               )
             }
             placeholder="Data field"
@@ -205,7 +205,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
                   rule: {
                     val: e.target.value,
                   },
-                })
+                }),
               )
             }
             placeholder="Value"
@@ -220,7 +220,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           value={props.value.moreInformation?.info}
           onChange={(e) => {
             props.onChange(
-              merge(props.value, { moreInformation: { info: e.target.value } })
+              merge(props.value, { moreInformation: { info: e.target.value } }),
             );
           }}
           placeholder="Why it matters"
@@ -235,7 +235,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             props.onChange(
               merge(props.value, {
                 moreInformation: { policyRef: e.target.value },
-              })
+              }),
             );
           }}
           placeholder="Policy source"
@@ -250,7 +250,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             props.onChange(
               merge(props.value, {
                 moreInformation: { howMeasured: e.target.value },
-              })
+              }),
             );
           }}
           placeholder="How is it defined?"

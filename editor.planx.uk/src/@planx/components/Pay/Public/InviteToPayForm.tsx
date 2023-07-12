@@ -52,7 +52,7 @@ const validationSchema = object({
     .required("Enter the full name of the person paying"),
   payeeEmail: string()
     .email(
-      "Enter an email address in the correct format, like name@example.com"
+      "Enter an email address in the correct format, like name@example.com",
     )
     .required("Enter the email address of the person paying"),
   applicantName: string()
@@ -101,7 +101,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
 
   const postRequest = async (
     url: string,
-    { arg }: { arg: CreatePaymentRequest }
+    { arg }: { arg: CreatePaymentRequest },
   ) => {
     const response = await fetch(url, {
       method: "POST",
@@ -112,7 +112,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     });
     if (!response.ok) {
       throw new Error(
-        `Error generating payment request for session ${sessionId}: ${error}`
+        `Error generating payment request for session ${sessionId}: ${error}`,
       );
     }
     return response.json();
@@ -120,7 +120,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
 
   const { trigger, isMutating, error } = useSWRMutation(
     `${process.env.REACT_APP_API_URL}/invite-to-pay/${sessionId}`,
-    postRequest
+    postRequest,
   );
 
   const onSubmit = async (values: FormValues) => {
@@ -176,7 +176,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             errorMessage={
-              Boolean(formik.touched.payeeName && formik.errors.payeeName)
+              formik.touched.payeeName && formik.errors.payeeName
                 ? formik.errors.payeeName
                 : undefined
             }
@@ -195,7 +195,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             errorMessage={
-              Boolean(formik.touched.payeeEmail && formik.errors.payeeEmail)
+              formik.touched.payeeEmail && formik.errors.payeeEmail
                 ? formik.errors.payeeEmail
                 : undefined
             }
@@ -231,9 +231,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             errorMessage={
-              Boolean(
-                formik.touched.applicantName && formik.errors.applicantName
-              )
+              formik.touched.applicantName && formik.errors.applicantName
                 ? formik.errors.applicantName
                 : undefined
             }

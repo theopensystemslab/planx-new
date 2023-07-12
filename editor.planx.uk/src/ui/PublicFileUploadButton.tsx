@@ -78,7 +78,7 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
           });
         });
     },
-    [onChange, setStatus]
+    [onChange, setStatus],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

@@ -39,9 +39,9 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               },
             ],
             0,
-            props.data.categories
+            props.data.categories,
           )[1],
-    [childNodes]
+    [childNodes],
   );
 
   const [{ isDragging }, drag] = useDrag({

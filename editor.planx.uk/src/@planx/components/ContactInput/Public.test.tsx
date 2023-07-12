@@ -16,7 +16,7 @@ test("submits contact data", async () => {
       handleSubmit={handleSubmit}
       title="Enter your contact details"
       fn={dataField}
-    />
+    />,
   );
 
   await fillInFieldsUsingLabel(user, {
@@ -83,7 +83,7 @@ test("recovers previously submitted text when clicking the back button", async (
           [`${dataField}.email`]: "jane@gov.uk",
         },
       }}
-    />
+    />,
   );
 
   await fillInFieldsUsingLabel(user, {
@@ -145,7 +145,7 @@ test("recovers previously submitted text when clicking the back button when a pa
           [`${dataField}.email`]: "jane@gov.uk",
         },
       }}
-    />
+    />,
   );
 
   await fillInFieldsUsingLabel(user, {
@@ -193,7 +193,7 @@ it("should not have any accessibility violations on initial load", async () => {
 
 it("should not have any accessibility violations while in the error state", async () => {
   const { container, user } = setup(
-    <ContactInput title="Enter your contact details" id="testId" />
+    <ContactInput title="Enter your contact details" id="testId" />,
   );
 
   const requiredContactElements = ["firstName", "lastName", "phone", "email"];
@@ -208,7 +208,7 @@ it("should not have any accessibility violations while in the error state", asyn
 
   for (const el of requiredContactElements) {
     const errorMessage = await screen.findByTestId(
-      `${ERROR_MESSAGE}-testId-${el}`
+      `${ERROR_MESSAGE}-testId-${el}`,
     );
     await waitFor(() => expect(errorMessage).not.toBeEmptyDOMElement());
   }
@@ -226,7 +226,7 @@ test("does not allow the name 'Test Test' to be used", async () => {
       handleSubmit={handleSubmit}
       title="Enter your contact details"
       fn={dataField}
-    />
+    />,
   );
 
   await fillInFieldsUsingLabel(user, {
@@ -241,7 +241,7 @@ test("does not allow the name 'Test Test' to be used", async () => {
   expect(handleSubmit).not.toHaveBeenCalled();
 
   const errorMessage = await screen.findByText(
-    "'Test Test' is not a valid name - please submit test applications via the staging environment"
+    "'Test Test' is not a valid name - please submit test applications via the staging environment",
   );
   expect(errorMessage).toBeVisible();
 });

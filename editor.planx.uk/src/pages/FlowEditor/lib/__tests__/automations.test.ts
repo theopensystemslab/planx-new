@@ -135,7 +135,7 @@ describe("(advanced) if the passport contains", () => {
   ];
   data.forEach(([item, expected]: [string[], string]) => {
     test(`[${item.join(
-      " & "
+      " & ",
     )}] it should go down the [${expected}] path`, () => {
       setState({
         flow: {

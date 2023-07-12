@@ -111,7 +111,7 @@ export function Presentational(props: PresentationalProps) {
         submitFeedback(
           values.feedback,
           "Inaccurate property details",
-          propertyDetails
+          propertyDetails,
         );
       }
       handleSubmit?.(values);

@@ -5,7 +5,7 @@ import {
   darken,
   lighten,
   responsiveFontSizes,
-  Theme,
+  Theme as MUITheme,
   ThemeOptions,
 } from "@mui/material/styles";
 // eslint-disable-next-line no-restricted-imports
@@ -371,8 +371,8 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
 
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
-  primaryColor: string = DEFAULT_PRIMARY_COLOR
-): Theme => {
+  primaryColor: string = DEFAULT_PRIMARY_COLOR,
+): MUITheme => {
   const themeOptions = getThemeOptions(primaryColor);
   const theme = responsiveFontSizes(createTheme(themeOptions));
   return theme;
@@ -380,5 +380,7 @@ const generateTeamTheme = (
 
 // A static MUI theme based on PlanX's default palette
 const defaultTheme = generateTeamTheme(DEFAULT_PRIMARY_COLOR);
+
+export type Theme = typeof defaultTheme;
 
 export { defaultTheme, generateTeamTheme };

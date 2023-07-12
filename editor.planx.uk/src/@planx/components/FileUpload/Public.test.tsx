@@ -29,7 +29,7 @@ test("recovers previously submitted files when clicking the back button", async 
       id={componentId}
       handleSubmit={handleSubmit}
       previouslySubmittedData={uploadedFile}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -53,7 +53,7 @@ test("recovers previously submitted files when clicking the back button even if 
       id={componentId}
       handleSubmit={handleSubmit}
       previouslySubmittedData={uploadedFile}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -88,7 +88,7 @@ it("should not have any accessibility violations", async () => {
       id={componentId}
       handleSubmit={handleSubmit}
       description="description"
-    />
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

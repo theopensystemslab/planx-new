@@ -341,19 +341,37 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
         padding: 5px 5px 0 5px !important;
         flex-direction: column;
 
-        background-position: top center, top center, bottom center;
-        background-size: $lineWidth 5px, $lineWidth, $lineWidth;
+        background-position:
+          top center,
+          top center,
+          bottom center;
+        background-size:
+          $lineWidth 5px,
+          $lineWidth,
+          $lineWidth;
         background-repeat: no-repeat, repeat-x, repeat-x;
 
         &:first-child {
-          background-position: top center, top right, bottom right;
-          background-size: $lineWidth 5px, 50% $lineWidth, 50% $lineWidth;
+          background-position:
+            top center,
+            top right,
+            bottom right;
+          background-size:
+            $lineWidth 5px,
+            50% $lineWidth,
+            50% $lineWidth;
           background-repeat: no-repeat, no-repeat, no-repeat;
         }
 
         &:last-child {
-          background-position: top center, top left, bottom left;
-          background-size: $lineWidth 5px, 50% $lineWidth, 50% $lineWidth;
+          background-position:
+            top center,
+            top left,
+            bottom left;
+          background-size:
+            $lineWidth 5px,
+            50% $lineWidth,
+            50% $lineWidth;
           background-repeat: no-repeat, no-repeat, no-repeat;
         }
       }
@@ -361,20 +379,38 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
         padding: 5px 0 5px 5px !important;
         flex-direction: row;
 
-        background-position: left center, left top, right top;
+        background-position:
+          left center,
+          left top,
+          right top;
         background-repeat: no-repeat, no-repeat, no-repeat;
 
         // BUG: 1px NOT VISIBLE IN CHROME
-        background-size: 5px $lineWidth, $lineWidth 100%, 1px 100%;
+        background-size:
+          5px $lineWidth,
+          $lineWidth 100%,
+          1px 100%;
 
         &:first-child {
-          background-position: left center, left bottom, right bottom;
-          background-size: 5px $lineWidth, $lineWidth 50%, $lineWidth 50%;
+          background-position:
+            left center,
+            left bottom,
+            right bottom;
+          background-size:
+            5px $lineWidth,
+            $lineWidth 50%,
+            $lineWidth 50%;
         }
 
         &:last-child {
-          background-position: left center, left top, right top;
-          background-size: 5px $lineWidth, $lineWidth 50%, $lineWidth 50%;
+          background-position:
+            left center,
+            left top,
+            right top;
+          background-size:
+            5px $lineWidth,
+            $lineWidth 50%,
+            $lineWidth 50%;
         }
       }
     }

@@ -86,7 +86,7 @@ export default function Footer(props: Props) {
       setMetadata(getFeedbackMetadata());
       feedbackFishPostMessageWorkingCorrectly = handleFeedbackPrivacyNoteOpen(
         event,
-        feedbackFishPostMessageWorkingCorrectly
+        feedbackFishPostMessageWorkingCorrectly,
       );
     };
     window.addEventListener("message", handleMessage);
@@ -104,7 +104,7 @@ export default function Footer(props: Props) {
 
   const handleFeedbackPrivacyNoteOpen = (
     event: MessageEvent,
-    feedbackFishPostMessageWorkingCorrectly: boolean
+    feedbackFishPostMessageWorkingCorrectly: boolean,
   ): boolean => {
     try {
       // the feedback fish widget posts a message that's either
@@ -120,7 +120,7 @@ export default function Footer(props: Props) {
           feedbackFishPostMessageWorkingCorrectly = true;
         }
         setFeedbackPrivacyNoteVisible(
-          width > 0 && height > 0 && feedbackFishPostMessageWorkingCorrectly
+          width > 0 && height > 0 && feedbackFishPostMessageWorkingCorrectly,
         );
       }
     } catch (err) {}
@@ -133,9 +133,7 @@ export default function Footer(props: Props) {
         <ButtonGroup py={0.5}>
           {items
             ?.filter((item) => item.title)
-            .map((item) => (
-              <FooterItem {...item} key={item.title} />
-            ))}
+            .map((item) => <FooterItem {...item} key={item.title} />)}
           {feedbackFishId && (
             <>
               {feedbackPrivacyNoteVisible && (

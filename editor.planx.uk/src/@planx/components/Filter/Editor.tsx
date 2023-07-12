@@ -38,7 +38,7 @@ const Filter: React.FC<Props> = (props) => {
 
         props.handleSubmit(
           { type: TYPES.Filter, data: { newValues, fn: "flag" } },
-          children
+          children,
         );
       }
     },

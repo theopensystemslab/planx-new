@@ -1,8 +1,10 @@
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import classNames from "classnames";
 import React from "react";
 
-const useClasses = makeStyles((theme) => ({
+import type { Theme } from "../theme";
+
+const useClasses = makeStyles((theme: Theme) => ({
   inputRow: {
     display: "flex",
     width: "100%",
@@ -54,7 +56,7 @@ export default function InputRow({
       className={classNames(
         classes.inputRow,
         RowIcon && classes.childRow,
-        childRow && classes.childRow
+        childRow && classes.childRow,
       )}
     >
       {RowIcon && <RowIcon className={classes.rowIcon} />}

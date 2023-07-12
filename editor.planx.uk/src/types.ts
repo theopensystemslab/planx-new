@@ -114,8 +114,8 @@ export interface ReconciliationResponse {
 }
 
 // re-export store types
-export interface Passport extends Store.passport {}
-export interface Breadcrumbs extends Store.breadcrumbs {}
+export type Passport = Store.passport;
+export type Breadcrumbs = Store.breadcrumbs;
 
 export enum SectionStatus {
   NeedsUpdated = "NEW INFORMATION NEEDED",

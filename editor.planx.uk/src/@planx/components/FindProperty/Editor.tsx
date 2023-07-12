@@ -70,7 +70,7 @@ function FindPropertyComponent(props: Props) {
               onClick={() => {
                 formik.setFieldValue(
                   "allowNewAddresses",
-                  !formik.values.allowNewAddresses
+                  !formik.values.allowNewAddresses,
                 );
               }}
             >

@@ -15,7 +15,7 @@ export interface Input {
 }
 
 export const parseCalculate = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): Calculate => ({
   ...parseMoreInformation(data),
   output: data?.output || "",
@@ -62,7 +62,7 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
       // flatten the nested AccessorNode into a SymbolNode to avoid iterating its children
       return new math.SymbolNode(
         // serialize dot notation
-        serialize(node.toString())
+        serialize(node.toString()),
       );
     }
     return node;
@@ -70,14 +70,14 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
 
   function serializeKeys(object: any): Object {
     return Object.fromEntries(
-      Object.entries(object).map(([key, value]) => [serialize(key), value])
+      Object.entries(object).map(([key, value]) => [serialize(key), value]),
     );
   }
 
   function applyDefaults(object: any, defaults: any) {
     const keys = new Set([...Object.keys(object), ...Object.keys(defaults)]);
     return Object.fromEntries(
-      [...keys].map((key) => [key, object[key] || defaults[key]])
+      [...keys].map((key) => [key, object[key] || defaults[key]]),
     );
   }
 }

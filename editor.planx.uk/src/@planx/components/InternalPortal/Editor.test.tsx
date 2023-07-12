@@ -13,7 +13,7 @@ describe("adding an internal portal", () => {
       <InternalPortalForm
         flows={[{ id: "ignore", text: "ignore" }]}
         handleSubmit={handleSubmit}
-      />
+      />,
     );
 
     const flowSelect = screen.getByTestId("flowId");
@@ -23,7 +23,7 @@ describe("adding an internal portal", () => {
 
     await user.type(
       screen.getByPlaceholderText("Portal name"),
-      "new internal portal"
+      "new internal portal",
     );
 
     expect(flowSelect).toBeDisabled();
@@ -48,7 +48,7 @@ describe("adding an internal portal", () => {
       <InternalPortalForm
         flows={[{ id: "portal", text: "portal" }]}
         handleSubmit={handleSubmit}
-      />
+      />,
     );
 
     const dropdown = screen.queryByTestId("flowId");
@@ -72,7 +72,7 @@ describe("adding an internal portal", () => {
       <InternalPortalForm
         flows={[{ id: "portal", text: "portal" }]}
         handleSubmit={handleSubmit}
-      />
+      />,
     );
 
     const dropdown = screen.queryByTestId("flowId");
@@ -96,7 +96,7 @@ test("updating an internal portal", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <InternalPortalForm id="test" text="val" handleSubmit={handleSubmit} />
+    <InternalPortalForm id="test" text="val" handleSubmit={handleSubmit} />,
   );
 
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
@@ -146,7 +146,7 @@ describe("validations", () => {
             id={scenario.id}
             flows={scenario.flows}
             handleSubmit={handleSubmit}
-          />
+          />,
         );
 
         await fireEvent.submit(screen.getByTestId("form"));
@@ -165,7 +165,7 @@ it("should not have any accessibility violations", async () => {
     <InternalPortalForm
       flows={[{ id: "portal", text: "portal" }]}
       handleSubmit={handleSubmit}
-    />
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

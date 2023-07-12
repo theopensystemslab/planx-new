@@ -4,18 +4,18 @@ import sharedb from "sharedb/lib/client";
 import type { Socket } from "sharedb/lib/sharedb";
 
 const socket = new ReconnectingWebSocket(
-  process.env.REACT_APP_SHAREDB_URL || ""
+  process.env.REACT_APP_SHAREDB_URL || "",
 );
 
-const connection = new sharedb.Connection((socket as unknown) as Socket);
+const connection = new sharedb.Connection(socket as unknown as Socket);
 
 export const getConnection = (id: string) => connection.get("flows", id);
 
 export const createDoc = async (
   doc: Doc,
-  initialData = { nodes: {}, edges: [] }
+  initialData = { nodes: {}, edges: [] },
 ) => {
-  return new Promise(async (res, rej) => {
+  return new Promise((res, rej) => {
     doc.create(initialData, (err) => {
       if (err) rej(err);
       res({});

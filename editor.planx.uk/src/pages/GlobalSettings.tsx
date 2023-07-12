@@ -29,14 +29,14 @@ function Component() {
       const formatted = footerContent.reduce(
         (
           prev,
-          curr
+          curr,
         ): {
           [key: string]: TextContent;
         } => ({
           ...prev,
           [slugify(curr.heading)]: curr,
         }),
-        {}
+        {},
       );
 
       updateGlobalSettings(formatted);
@@ -66,7 +66,7 @@ function Component() {
                 heading: "",
                 content: "",
                 show: true,
-              } as TextContent)
+              }) as TextContent
             }
             Editor={ContentEditor}
           />

@@ -20,7 +20,7 @@ export const userDataSchema: SchemaOf<Contact> = object({
   phone: string().required("Enter a phone number"),
   email: string()
     .email(
-      "Enter an email address in the correct format, like name@example.com"
+      "Enter an email address in the correct format, like name@example.com",
     )
     .required("Enter an email address"),
 }).test({
@@ -48,7 +48,7 @@ export interface ContactInput extends MoreInformation {
 }
 
 export const parseContactInput = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): ContactInput => ({
   title: data?.title || "",
   description: data?.description,
