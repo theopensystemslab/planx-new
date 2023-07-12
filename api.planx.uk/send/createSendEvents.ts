@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 import { createScheduledEvent } from "../hasura/metadata";
 
 interface CombinedResponse {
@@ -8,8 +8,11 @@ interface CombinedResponse {
 }
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-const createSendEvents = async (req: Request, res: Response, next: NextFunction): 
-  Promise<NextFunction | Response | void> => {
+const createSendEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<NextFunction | Response | void> => {
   try {
     const now = new Date();
     const combinedResponse: CombinedResponse = {};
@@ -27,7 +30,7 @@ const createSendEvents = async (req: Request, res: Response, next: NextFunction)
     if ("bops" in req.body) {
       const bopsEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/bops/${req.body.bops.localAuthority}`,
-        schedule_at: new Date(now.getTime() + (30 * 1000)),
+        schedule_at: new Date(now.getTime() + 30 * 1000),
         payload: req.body.bops.body,
         comment: `bops_submission_${req.params.sessionId}`,
       });
@@ -37,7 +40,7 @@ const createSendEvents = async (req: Request, res: Response, next: NextFunction)
     if ("uniform" in req.body) {
       const uniformEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/uniform/${req.body.uniform.localAuthority}`,
-        schedule_at: new Date(now.getTime() + (60 * 1000)),
+        schedule_at: new Date(now.getTime() + 60 * 1000),
         payload: req.body.uniform.body,
         comment: `uniform_submission_${req.params.sessionId}`,
       });

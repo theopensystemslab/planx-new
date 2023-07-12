@@ -31,7 +31,7 @@ export async function buildSubmissionExportZip({
   const sessionData = await $admin.session.find(sessionId);
   if (!sessionData) {
     throw new Error(
-      `session ${sessionId} not found so could not create Uniform submission zip`
+      `session ${sessionId} not found so could not create Uniform submission zip`,
     );
   }
   const passport = sessionData.data?.passport as IPassport;
@@ -58,7 +58,7 @@ export async function buildSubmissionExportZip({
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
       // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
       const uniqueFilename = decodeURIComponent(
-        fileURL.split("/").slice(-2).join("-")
+        fileURL.split("/").slice(-2).join("-"),
       );
       await zip.addRemoteFile({ url: fileURL, name: uniqueFilename });
     }
@@ -66,7 +66,7 @@ export async function buildSubmissionExportZip({
 
   // generate csv data
   const { responses, redactedResponses } = await $admin.export.csvData(
-    sessionId
+    sessionId,
   );
 
   // write csv to the zip
@@ -85,7 +85,7 @@ export async function buildSubmissionExportZip({
 
   // add template files to zip
   const templateNames = await $admin.getDocumentTemplateNamesForSession(
-    sessionId
+    sessionId,
   );
   for (const templateName of templateNames || []) {
     try {
@@ -105,7 +105,7 @@ export async function buildSubmissionExportZip({
       }
     } catch (error) {
       console.log(
-        `Template "${templateName}" could not be generated so has been skipped. Error - ${error}`
+        `Template "${templateName}" could not be generated so has been skipped. Error - ${error}`,
       );
       continue;
     }
@@ -113,7 +113,7 @@ export async function buildSubmissionExportZip({
 
   // generate and add an HTML overview document for the submission to zip
   const overviewStream = generateApplicationHTMLStream(
-    responses as PlanXExportData[]
+    responses as PlanXExportData[],
   );
   await zip.addStream({
     name: "Overview.htm",
@@ -122,7 +122,7 @@ export async function buildSubmissionExportZip({
 
   // generate and add an HTML overview document for the submission to zip
   const redactedOverviewStream = generateApplicationHTMLStream(
-    redactedResponses as PlanXExportData[]
+    redactedResponses as PlanXExportData[],
   );
   await zip.addStream({
     name: "RedactedOverview.htm",

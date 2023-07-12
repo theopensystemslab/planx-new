@@ -547,15 +547,15 @@
         "type": "check",
         "data": []
       },
-      "listed.grade1": {"value": false},
-      "listed.grade2": {"value": false},
-      "listed.grade2star": {"value": false},
+      "listed.grade1": { "value": false },
+      "listed.grade2": { "value": false },
+      "listed.grade2star": { "value": false },
       "designated.conservationArea": {
         "text": "is in a Conservation Area",
         "description": null,
         "value": true,
         "type": "warning",
-        "data": {"OBJECTID": 38, "DESIGNATED": "19/06/1969"}
+        "data": { "OBJECTID": 38, "DESIGNATED": "19/06/1969" }
       },
       "nature.SSSI": {
         "text": "is not a Site of Special Scientific Interest",
@@ -587,7 +587,7 @@
         "type": "check",
         "data": {}
       },
-      "designated": {"value": true}
+      "designated": { "value": true }
     },
     "rawHeaders": [
       "X-Powered-By",

@@ -22,7 +22,7 @@ async function search(
   serverIndex,
   outFields,
   geometry,
-  geometryType
+  geometryType,
 ) {
   const { id } = planningConstraints[featureName];
 
@@ -56,9 +56,9 @@ async function go(x, y, siteBoundary, extras) {
         gisLayers[layer].serverIndex,
         gisLayers[layer].fields,
         geom,
-        geomType
-      )
-    )
+        geomType,
+      ),
+    ),
   );
 
   const ob = results
@@ -98,7 +98,7 @@ async function go(x, y, siteBoundary, extras) {
       {
         ...preCheckedLayers,
         ...extras,
-      }
+      },
     );
 
   // Set granular A4s, accounting for one variable matching to many possible shapes
@@ -130,7 +130,7 @@ async function go(x, y, siteBoundary, extras) {
   const obWithSingleListed = rollupResultLayers(
     obWithSingleTPO,
     listedLayers,
-    "listed"
+    "listed",
   );
 
   return obWithSingleListed;

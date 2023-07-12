@@ -39,7 +39,7 @@ export const PASSPORT_FN = "road.classified";
 export const classifiedRoadsSearch = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (!req.query.usrn)
     return next({
@@ -73,7 +73,7 @@ export const classifiedRoadsSearch = async (
 
   try {
     const url = `https://api.os.uk/features/v1/wfs?${new URLSearchParams(
-      params
+      params,
     ).toString()}`;
     const features = await fetch(url)
       .then((res) => res.json())
@@ -86,8 +86,8 @@ export const classifiedRoadsSearch = async (
         const classifiedFeatures = data.features.filter(
           (feature: OSFeatures["features"][0]) =>
             !["Unclassified", "Not Classified", "Unknown"].includes(
-              feature.properties["RoadClassification"]
-            )
+              feature.properties["RoadClassification"],
+            ),
         );
         return classifiedFeatures;
       });

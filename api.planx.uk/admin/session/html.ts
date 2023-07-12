@@ -6,7 +6,7 @@ import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 export async function getHTMLExport(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { responses } = await $admin.export.csvData(req.params.sessionId);
@@ -22,15 +22,15 @@ export async function getHTMLExport(
 export async function getRedactedHTMLExport(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { redactedResponses } = await $admin.export.csvData(
-      req.params.sessionId
+      req.params.sessionId,
     );
     res.header("Content-type", "text/html");
     generateApplicationHTMLStream(redactedResponses as PlanXExportData[]).pipe(
-      res
+      res,
     );
   } catch (error) {
     return next({

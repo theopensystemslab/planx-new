@@ -46,7 +46,7 @@ describe("Send Email endpoint", () => {
           .then((response) => {
             expect(response.body).toHaveProperty(
               "error",
-              'Failed to send "save" email. Required value missing'
+              'Failed to send "save" email. Required value missing',
             );
           });
       }
@@ -223,7 +223,7 @@ describe("Send Email endpoint", () => {
         .getCalls()
         .find((mock) => mock.id === "SoftDeleteLowcalSession");
       expect(
-        softDeleteSessionMock?.response.data.update_lowcal_sessions_by_pk.id
+        softDeleteSessionMock?.response.data.update_lowcal_sessions_by_pk.id,
       ).toEqual("123");
     });
   });

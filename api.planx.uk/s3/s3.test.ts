@@ -13,7 +13,7 @@ const mockGetSignedUrl = jest.fn(() => {
   const modifiedKey = "modified%20key";
   return `
     https://test-bucket.s3.eu-west-2.amazonaws.com/${randomFolderName}/${modifiedKey}?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-SignedHeaders=host
-  `
+  `;
 });
 
 const s3Mock = () => {
@@ -28,7 +28,7 @@ const s3Mock = () => {
 jest.mock("aws-sdk/clients/s3", () => {
   return jest.fn().mockImplementation(() => {
     return s3Mock();
-  })
+  });
 });
 
 describe("File upload", () => {
@@ -36,9 +36,9 @@ describe("File upload", () => {
     jest.clearAllMocks();
 
     mockPutObject = jest.fn(() => ({
-      promise: () => Promise.resolve()
-    }))
-  })
+      promise: () => Promise.resolve(),
+    }));
+  });
 
   describe("Private", () => {
     const ENDPOINT = "/private-file-upload";
@@ -49,10 +49,10 @@ describe("File upload", () => {
         .field("filename", "")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(422)
-        .then(res => {
+        .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toBe("missing filename")
-        })
+          expect(res.body.error).toBe("missing filename");
+        });
     });
 
     it("should not upload without file", async () => {
@@ -60,10 +60,10 @@ describe("File upload", () => {
         .post(ENDPOINT)
         .field("filename", "some filename")
         .expect(422)
-        .then(res => {
+        .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toBe("missing file")
-        })
+          expect(res.body.error).toBe("missing file");
+        });
     });
 
     it("should upload file", async () => {
@@ -71,10 +71,12 @@ describe("File upload", () => {
         .post(ENDPOINT)
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
-        .then(res => {
+        .then((res) => {
           expect(res.body).toEqual({
             file_type: "text/plain",
-            fileUrl: expect.stringContaining("/file/private/nanoid/modified%20key")
+            fileUrl: expect.stringContaining(
+              "/file/private/nanoid/modified%20key",
+            ),
           });
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
@@ -83,15 +85,15 @@ describe("File upload", () => {
 
     it("should handle S3 error", async () => {
       mockPutObject = jest.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!"))
-      }))
+        promise: () => Promise.reject(new Error("S3 error!")),
+      }));
 
       await supertest(app)
         .post("/private-file-upload")
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
-        .then(res => {
+        .then((res) => {
           expect(res.body).toEqual({ error: "S3 error!" });
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
@@ -107,10 +109,10 @@ describe("File upload", () => {
         .field("filename", "")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(422)
-        .then(res => {
+        .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toBe("missing filename")
-        })
+          expect(res.body.error).toBe("missing filename");
+        });
     });
 
     it("should not upload without file", async () => {
@@ -118,10 +120,10 @@ describe("File upload", () => {
         .post(ENDPOINT)
         .field("filename", "some filename")
         .expect(422)
-        .then(res => {
+        .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toBe("missing file")
-        })
+          expect(res.body.error).toBe("missing file");
+        });
     });
 
     it("should upload file", async () => {
@@ -129,10 +131,12 @@ describe("File upload", () => {
         .post(ENDPOINT)
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
-        .then(res => {
+        .then((res) => {
           expect(res.body).toEqual({
             file_type: "text/plain",
-            fileUrl: expect.stringContaining("file/public/nanoid/modified%20key")
+            fileUrl: expect.stringContaining(
+              "file/public/nanoid/modified%20key",
+            ),
           });
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
@@ -141,15 +145,15 @@ describe("File upload", () => {
 
     it("should handle S3 error", async () => {
       mockPutObject = jest.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!"))
-      }))
+        promise: () => Promise.reject(new Error("S3 error!")),
+      }));
 
       await supertest(app)
         .post(ENDPOINT)
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
-        .then(res => {
+        .then((res) => {
           expect(res.body).toEqual({ error: "S3 error!" });
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
@@ -166,61 +170,60 @@ describe("File download", () => {
       ContentEncoding: "undefined",
       CacheControl: "undefined",
       Expires: "undefined",
-      LastModified: "Tue May 31 2022 12:21:37 GMT+0000 (Coordinated Universal Time)",
+      LastModified:
+        "Tue May 31 2022 12:21:37 GMT+0000 (Coordinated Universal Time)",
       ETag: "a4c57ed39e8d869d636ccf5fc34a65a1",
     };
-    jest.clearAllMocks()
+    jest.clearAllMocks();
 
     mockGetObject = jest.fn(() => ({
-      promise: () => Promise.resolve(getObjectResponse)
-    }))
-  })
+      promise: () => Promise.resolve(getObjectResponse),
+    }));
+  });
 
   describe("Public", () => {
     it("should not download with incomplete path", async () => {
-      await supertest(app)
-        .get("/file/public/someKey")
-        .expect(404)
+      await supertest(app).get("/file/public/someKey").expect(404);
     });
 
     it("should download", async () => {
       await supertest(app)
         .get("/file/public/somekey/file_name.txt")
         .expect(200)
-        .then(_res => {
+        .then((_res) => {
           expect(mockGetObject).toHaveBeenCalledTimes(1);
-        })
+        });
     });
 
     it("should not download private files", async () => {
-      const filePath = "somekey/file_name.txt"
+      const filePath = "somekey/file_name.txt";
       getObjectResponse = {
         ...getObjectResponse,
         Metadata: {
-          is_private: "true"
-        }
-      }
+          is_private: "true",
+        },
+      };
 
       await supertest(app)
         .get(`/file/public/${filePath}`)
         .expect(400)
-        .then(res => {
+        .then((res) => {
           expect(mockGetObject).toHaveBeenCalledTimes(1);
-          expect(res.body.error).toBe("bad request")
+          expect(res.body.error).toBe("bad request");
         });
     });
 
     it("should handle S3 error", async () => {
       mockGetObject = jest.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!"))
-      }))
+        promise: () => Promise.reject(new Error("S3 error!")),
+      }));
 
       await supertest(app)
         .get("/file/public/someKey/someFile.txt")
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
-        .then(res => {
+        .then((res) => {
           expect(res.body).toEqual({ error: "S3 error!" });
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
@@ -232,36 +235,36 @@ describe("File download", () => {
       await supertest(app)
         .get("/file/private/someKey")
         .set({ "api-key": "test" })
-        .expect(404)
+        .expect(404);
     });
 
     it("should not download if file is private", async () => {
-      const filePath = "somekey/file_name.txt"
+      const filePath = "somekey/file_name.txt";
       getObjectResponse = {
         ...getObjectResponse,
         Metadata: {
-          is_private: "true"
-        }
-      }
+          is_private: "true",
+        },
+      };
 
       await supertest(app)
         .get(`/file/public/${filePath}`)
         .expect(400)
-        .then(res => {
+        .then((res) => {
           expect(mockGetObject).toHaveBeenCalledTimes(1);
-          expect(res.body.error).toBe("bad request")
+          expect(res.body.error).toBe("bad request");
         });
     });
 
     it("should not download if user is unauthorised", async () => {
-      const filePath = "somekey/file_name.txt"
+      const filePath = "somekey/file_name.txt";
 
       getObjectResponse = {
         ...getObjectResponse,
         Metadata: {
-          is_private: "true"
-        }
-      }
+          is_private: "true",
+        },
+      };
 
       await supertest(app)
         .get(`/file/private/${filePath}`)
@@ -270,14 +273,14 @@ describe("File download", () => {
     });
 
     it("should download file", async () => {
-      const filePath = "somekey/file_name.txt"
+      const filePath = "somekey/file_name.txt";
 
       getObjectResponse = {
         ...getObjectResponse,
         Metadata: {
-          is_private: "true"
-        }
-      }
+          is_private: "true",
+        },
+      };
 
       await supertest(app)
         .get(`/file/private/${filePath}`)
@@ -290,8 +293,8 @@ describe("File download", () => {
 
     it("should handle S3 error", async () => {
       mockGetObject = jest.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!"))
-      }))
+        promise: () => Promise.reject(new Error("S3 error!")),
+      }));
 
       await supertest(app)
         .get("/file/private/someKey/someFile.txt")
@@ -299,7 +302,7 @@ describe("File download", () => {
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
-        .then(res => {
+        .then((res) => {
           expect(res.body).toEqual({ error: "S3 error!" });
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
@@ -310,47 +313,47 @@ describe("File download", () => {
 describe("File delete", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  })
+  });
 
   it("deletes files by URL", async () => {
     mockDeleteObjects = jest.fn(() => ({
-      promise: () => Promise.resolve()
-    }))
+      promise: () => Promise.resolve(),
+    }));
     const fileURLs = [
       "https://api.planx.dev/file/private/abc/123",
       "https://api.planx.dev/file/private/def/456",
     ];
     const result = await deleteFilesByURL(fileURLs);
 
-    expect(result).toHaveLength(2)
-    expect(mockDeleteObjects).toHaveBeenCalledTimes(1)
+    expect(result).toHaveLength(2);
+    expect(mockDeleteObjects).toHaveBeenCalledTimes(1);
     expect(mockDeleteObjects).toHaveBeenCalledWith(
-      expect.objectContaining({ 
-        Delete: expect.objectContaining({ 
+      expect.objectContaining({
+        Delete: expect.objectContaining({
           Objects: expect.arrayContaining([
             expect.objectContaining({ Key: "abc/123" }),
             expect.objectContaining({ Key: "def/456" }),
-          ])
-        })
-      })
-    )
+          ]),
+        }),
+      }),
+    );
   });
 
   it("throw an error if S3 fails to delete the file", async () => {
     mockDeleteObjects = jest.fn(() => ({
-      promise: () => { throw Error() }
-    }))
+      promise: () => {
+        throw Error();
+      },
+    }));
     const fileURLs = [
       "https://api.planx.dev/file/private/abc/123",
       "https://api.planx.dev/file/private/def/456",
     ];
 
     await expect(deleteFilesByURL(fileURLs)).rejects.toThrow(
-      expect.objectContaining({ 
-        message: expect.stringMatching(
-          /Failed to delete S3 files/
-        )
-      })
-    )
-  })
+      expect.objectContaining({
+        message: expect.stringMatching(/Failed to delete S3 files/),
+      }),
+    );
+  });
 });

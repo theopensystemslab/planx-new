@@ -15,4 +15,4 @@ export const useProxy = (options: Partial<Options> = {}) => {
     },
     ...options,
   });
-}
+};

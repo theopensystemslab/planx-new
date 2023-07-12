@@ -14,7 +14,7 @@ import { GovUKPayment } from "@opensystemslab/planx-core/types";
 export async function fetchPaymentRequestDetails(
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const query = gql`
     query GetPaymentRequestDetails($paymentRequestId: uuid!) {
@@ -40,7 +40,7 @@ export async function fetchPaymentRequestDetails(
       new ServerError({
         message: "payment request not found",
         status: 404,
-      })
+      }),
     );
   }
   const sessionId = payment_requests_by_pk.session_id;
@@ -62,14 +62,14 @@ export async function fetchPaymentRequestDetails(
 export async function buildPaymentPayload(
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   if (!req.query.returnURL) {
     return next(
       new ServerError({
         message: "missing required returnURL query param",
         status: 400,
-      })
+      }),
     );
   }
   req.body = {
@@ -88,7 +88,7 @@ export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
       await markPaymentRequestAsPaid(paymentRequestId, govUkResponse);
     }
     await postPaymentNotificationToSlack(req, govUkResponse, "(invite to pay)");
-  }
+  },
 );
 
 export const addGovPayPaymentIdToPaymentRequest = async (
@@ -96,11 +96,14 @@ export const addGovPayPaymentIdToPaymentRequest = async (
   govUKPayment: GovUKPayment,
 ): Promise<void> => {
   const query = gql`
-    mutation AddGovPayPaymentIdToPaymentRequest($paymentRequestId: uuid!, $govPayPaymentId: String) {
+    mutation AddGovPayPaymentIdToPaymentRequest(
+      $paymentRequestId: uuid!
+      $govPayPaymentId: String
+    ) {
       update_payment_requests_by_pk(
         pk_columns: { id: $paymentRequestId }
         _set: { govpay_payment_id: $govPayPaymentId }
-       ) {
+      ) {
         id
       }
     }
@@ -115,15 +118,18 @@ export const addGovPayPaymentIdToPaymentRequest = async (
   }
 };
 
-export const markPaymentRequestAsPaid = async (paymentRequestId: string, govUkPayment: GovUKPayment) => {
+export const markPaymentRequestAsPaid = async (
+  paymentRequestId: string,
+  govUkPayment: GovUKPayment,
+) => {
   const query = gql`
-    mutation MarkPaymentRequestAsPaid($paymentRequestId: uuid!, $govUkPayment: jsonb) {
+    mutation MarkPaymentRequestAsPaid(
+      $paymentRequestId: uuid!
+      $govUkPayment: jsonb
+    ) {
       updatePaymentRequestPaidAt: update_payment_requests(
         where: {
-          _and: {
-            id: { _eq: $paymentRequestId }
-            paid_at: { _is_null: true }
-          }
+          _and: { id: { _eq: $paymentRequestId }, paid_at: { _is_null: true } }
         }
         _set: { paid_at: "now()" }
       ) {
@@ -132,26 +138,28 @@ export const markPaymentRequestAsPaid = async (paymentRequestId: string, govUkPa
 
       # This will also overwrite any abandoned payments attempted on the session
       appendGovUKPaymentToSessionData: update_lowcal_sessions(
-        _append: { data: $govUkPayment }, 
-        where: {
-          payment_requests: { id: {_eq: $paymentRequestId} }
-        }) {
+        _append: { data: $govUkPayment }
+        where: { payment_requests: { id: { _eq: $paymentRequestId } } }
+      ) {
         affectedRows: affected_rows
       }
     }
   `;
   try {
-    const { updatePaymentRequestPaidAt, appendGovUKPaymentToSessionData } = await client.request(query, {
-      paymentRequestId,
-      govUkPayment: { govUkPayment },
-    });
+    const { updatePaymentRequestPaidAt, appendGovUKPaymentToSessionData } =
+      await client.request(query, {
+        paymentRequestId,
+        govUkPayment: { govUkPayment },
+      });
     if (!updatePaymentRequestPaidAt?.affectedRows) {
       throw Error(`payment request ${paymentRequestId} not updated`);
     }
     if (!appendGovUKPaymentToSessionData?.affectedRows) {
-      throw Error(`session for payment request ${paymentRequestId} not updated`);
+      throw Error(
+        `session for payment request ${paymentRequestId} not updated`,
+      );
     }
   } catch (error) {
-    throw Error("Error marking payment request as paid: " + error)
-  };
+    throw Error("Error marking payment request as paid: " + error);
+  }
 };
