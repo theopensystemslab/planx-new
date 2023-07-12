@@ -1,11 +1,12 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import * as React from "react";
 
+import type { Theme } from "../theme";
 import Checkbox from "./Checkbox";
 
-export const useClasses = makeStyles((theme) => ({
+export const useClasses = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
     marginTop: theme.spacing(1),

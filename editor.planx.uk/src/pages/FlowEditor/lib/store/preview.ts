@@ -187,7 +187,7 @@ export const previewStore: StateCreator<
     const { flow, hasPaid, previousCard } = get();
     return (
       Boolean(node?.id) &&
-      flow[node?.id!]?.type !== TYPES.Confirmation &&
+      flow[node!.id!]?.type !== TYPES.Confirmation &&
       Boolean(previousCard(node)) &&
       !hasPaid()
     );

@@ -1,10 +1,8 @@
-import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
-import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/styles";
 import { visuallyHidden } from "@mui/utils";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
@@ -20,6 +18,8 @@ import { Store } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import FormWrapper from "ui/FormWrapper";
+
+import type { Theme } from "../../../../theme";
 
 export interface IQuestion {
   id?: string;
@@ -48,7 +48,7 @@ export enum QuestionLayout {
 }
 
 const Question: React.FC<IQuestion> = (props) => {
-  const theme = useTheme();
+  const theme: Theme = useTheme();
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
@@ -68,7 +68,9 @@ const Question: React.FC<IQuestion> = (props) => {
         theme.transitions.duration.standard
       );
     },
-    validate: () => {},
+    validate: () => {
+      // do nothing
+    },
   });
 
   let layout = QuestionLayout.Basic;

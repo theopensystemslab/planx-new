@@ -1,7 +1,9 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import React from "react";
+
+import type { Theme } from "../theme";
 
 interface Props {
   title?: string;
@@ -10,7 +12,7 @@ interface Props {
   Icon?: any;
 }
 
-export const useClasses = makeStyles((theme) => ({
+export const useClasses = makeStyles((theme: Theme) => ({
   sectionContentGrid: {
     position: "relative",
     paddingTop: theme.spacing(2),

@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";

@@ -7,11 +7,7 @@ import "./app.css";
 
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from "@mui/material/styles";
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import jwtDecode from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
@@ -27,10 +23,6 @@ import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import { defaultTheme } from "./theme";
-
-declare module "@mui/styles/defaultTheme" {
-  interface DefaultTheme extends Theme {}
-}
 
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);

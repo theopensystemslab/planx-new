@@ -1,10 +1,12 @@
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import classNames from "classnames";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
-const useClasses = makeStyles((theme) => ({
+import type { Theme } from "../theme";
+
+const useClasses = makeStyles((theme: Theme) => ({
   htmlRoot: {
     "& a": linkStyle(theme.palette.primary.main),
     "& h2": theme.typography.h3,

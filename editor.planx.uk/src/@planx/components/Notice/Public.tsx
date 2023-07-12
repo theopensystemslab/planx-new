@@ -15,6 +15,8 @@ import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
+import type { Theme } from "../../../theme";
+
 export type Props = PublicProps<Notice>;
 
 const Container = styled(Box, {
@@ -66,7 +68,7 @@ const Title = styled(Typography)(({ theme }) => ({
 })) as typeof Typography;
 
 const NoticeComponent: React.FC<Props> = (props) => {
-  const theme = useTheme();
+  const theme: Theme = useTheme();
   const textColor = getContrastTextColor(
     props.color,
     theme.palette.primary.main
