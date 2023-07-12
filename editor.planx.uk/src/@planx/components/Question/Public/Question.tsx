@@ -52,7 +52,7 @@ const Question: React.FC<IQuestion> = (props) => {
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
-    (response) => response.id === previousResponseId
+    (response) => response.id === previousResponseId,
   )?.responseKey;
 
   const formik = useFormik({
@@ -65,7 +65,7 @@ const Question: React.FC<IQuestion> = (props) => {
     onSubmit: (values) => {
       setTimeout(
         () => props.handleSubmit({ answers: [values.selected.id] }),
-        theme.transitions.duration.standard
+        theme.transitions.duration.standard,
       );
     },
     validate: () => {

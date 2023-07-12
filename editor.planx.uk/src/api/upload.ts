@@ -7,7 +7,7 @@ export type UploadFileResponse = string;
 
 async function uploadPublicFile(
   file: any,
-  { onProgress }: { onProgress?: (p: any) => void } = {}
+  { onProgress }: { onProgress?: (p: any) => void } = {},
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "public" });
 
@@ -16,7 +16,7 @@ async function uploadPublicFile(
 
 async function uploadPrivateFile(
   file: any,
-  { onProgress }: { onProgress?: (p: any) => void } = {}
+  { onProgress }: { onProgress?: (p: any) => void } = {},
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "private" });
 
@@ -28,7 +28,7 @@ function handleUpload(
   {
     onProgress,
     path: path,
-  }: { onProgress?: (p: any) => void; path: "public" | "private" }
+  }: { onProgress?: (p: any) => void; path: "public" | "private" },
 ) {
   const formData = new FormData();
 

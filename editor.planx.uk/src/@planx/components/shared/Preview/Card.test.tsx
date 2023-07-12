@@ -52,7 +52,7 @@ describe("Card component", () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <Button>Testing 123</Button>;
     const { user } = setup(
-      <Card handleSubmit={handleSubmit} children={children}></Card>
+      <Card handleSubmit={handleSubmit} children={children}></Card>,
     );
 
     await user.click(screen.getByText(resumeButtonText));
@@ -64,7 +64,7 @@ describe("Card component", () => {
     act(() => setState({ saveToEmail: "test@test.com" }));
     const children = <Button>Testing 123</Button>;
     const { user } = setup(
-      <Card handleSubmit={handleSubmit} children={children}></Card>
+      <Card handleSubmit={handleSubmit} children={children}></Card>,
     );
 
     await user.click(screen.getByText(saveButtonText));
@@ -75,7 +75,7 @@ describe("Card component", () => {
     setState({ path: ApplicationPath.SaveAndReturn });
     const children = <Button>Testing 123</Button>;
     const { container } = setup(
-      <Card handleSubmit={handleSubmit} children={children}></Card>
+      <Card handleSubmit={handleSubmit} children={children}></Card>,
     );
 
     const results = await axe(container);

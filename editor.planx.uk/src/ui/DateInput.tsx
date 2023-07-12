@@ -75,13 +75,13 @@ export default function DateInput(props: Props): FCReturn {
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", month || "", ev.target.value].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
               onBlur={(ev: FocusEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", month || "", ev.target.value].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
             />
@@ -99,13 +99,13 @@ export default function DateInput(props: Props): FCReturn {
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", ev.target.value, day || ""].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
               onBlur={(ev: FocusEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", ev.target.value, day || ""].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
             />
@@ -123,7 +123,7 @@ export default function DateInput(props: Props): FCReturn {
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [ev.target.value, month || "", day || ""].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
             />

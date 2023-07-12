@@ -8,7 +8,7 @@ export interface Section extends MoreInformation {
 }
 
 export const parseSection = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): Section => ({
   title: data?.title || "",
   ...parseMoreInformation(data),
@@ -38,7 +38,7 @@ export function computeSectionStatuses({
   const sectionNodeIds = Object.keys(sectionNodes);
 
   let reachedCurrentSection = false;
-  let sectionStatuses: Record<string, SectionStatus> = {};
+  const sectionStatuses: Record<string, SectionStatus> = {};
   for (const [index, sectionId] of Object.entries(sectionNodeIds)) {
     // check for an altered sections
     if (alteredSectionIds && alteredSectionIds!.includes(sectionId)) {

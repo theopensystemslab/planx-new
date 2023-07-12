@@ -121,7 +121,7 @@ function Component(props: any) {
               onClick={() => {
                 formik.setFieldValue(
                   "allowInviteToPay",
-                  !formik.values.allowInviteToPay
+                  !formik.values.allowInviteToPay,
                 );
               }}
             >

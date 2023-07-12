@@ -9,7 +9,7 @@ import InputRowItem from "ui/InputRowItem";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import type { Address,AddressInput } from "./model";
+import type { Address, AddressInput } from "./model";
 import { userDataSchema } from "./model";
 
 export type Props = PublicProps<AddressInput, Address>;

@@ -16,7 +16,7 @@ it("should not have any accessibility violations", async () => {
       ]}
       moreInfo="more info"
       contactInfo="contact info"
-    />
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

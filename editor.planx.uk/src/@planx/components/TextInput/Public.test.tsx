@@ -10,7 +10,7 @@ test("requires a value before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <TextInput title="hello" handleSubmit={handleSubmit} />
+    <TextInput title="hello" handleSubmit={handleSubmit} />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
@@ -29,7 +29,7 @@ test("requires a valid email before being able to continue", async () => {
       title="hello"
       type={TextInputType.Email}
       handleSubmit={handleSubmit}
-    />
+    />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
@@ -54,7 +54,7 @@ test("recovers previously submitted text when clicking the back button", async (
           [nodeId]: "Previously submitted text",
         },
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -81,7 +81,7 @@ test("recovers previously submitted text when clicking the back button even if a
           "text-input-key": "Previously submitted text",
         },
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -111,7 +111,7 @@ examplePhoneNumbers.forEach((number) => {
         title="phone"
         type={TextInputType.Phone}
         handleSubmit={handleSubmit}
-      />
+      />,
     );
 
     fireEvent.change(screen.getByLabelText("phone"), {
@@ -126,7 +126,7 @@ examplePhoneNumbers.forEach((number) => {
 
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
-    <TextInput title="phone" type={TextInputType.Phone} />
+    <TextInput title="phone" type={TextInputType.Phone} />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
@@ -138,7 +138,7 @@ it("should always an empty error message element in the DOM", () => {
       title="Short Text"
       type={TextInputType.Short}
       id="testId"
-    ></TextInput>
+    ></TextInput>,
   );
   const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
   expect(errorMessage).toBeEmptyDOMElement();
@@ -153,7 +153,7 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
       type={TextInputType.Short}
       handleSubmit={handleSubmit}
       id="testId"
-    ></TextInput>
+    ></TextInput>,
   );
 
   const [errorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");

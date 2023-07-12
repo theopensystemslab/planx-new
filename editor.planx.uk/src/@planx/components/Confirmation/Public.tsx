@@ -38,7 +38,7 @@ export default function ConfirmationComponent(props: Props) {
       state.computePassport(),
       state.sessionId,
       state.flowName,
-    ]
+    ],
   );
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform

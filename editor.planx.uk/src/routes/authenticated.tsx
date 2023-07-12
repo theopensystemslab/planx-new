@@ -56,7 +56,7 @@ const editorRoutes = compose(
     }),
 
     "/:team": lazy(() => import("./team")),
-  })
+  }),
 );
 
 const routes = mount({

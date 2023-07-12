@@ -26,7 +26,7 @@ const PermissionSelect: React.FC<SelectInputProps> = (props) => {
           {flag.text}
         </MenuItem>
       )),
-    ]
+    ],
   );
 
   return (

@@ -34,7 +34,7 @@ export function getCombinedEventsPayload({
   passport: Store.passport;
   sessionId: string;
 }) {
-  let combinedEventsPayload: any = {};
+  const combinedEventsPayload: any = {};
 
   // Format application user data as required by BOPS
   if (destinations.includes(Destination.BOPS)) {

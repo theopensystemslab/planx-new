@@ -107,7 +107,7 @@ function DrawBoundaryComponent(props: Props) {
             onClick={() => {
               formik.setFieldValue(
                 "hideFileUpload",
-                !formik.values.hideFileUpload
+                !formik.values.hideFileUpload,
               );
             }}
           >

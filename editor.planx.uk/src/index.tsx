@@ -39,7 +39,7 @@ const hasJWT = (): boolean | void => {
         Number(
           (jwtDecode(jwt) as any)["https://hasura.io/jwt/claims"][
             "x-hasura-user-id"
-          ]
+          ],
         ) > 0
       ) {
         return true;
@@ -88,7 +88,7 @@ const Layout: React.FC<{
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={defaultTheme}>
         <NotFoundBoundary render={() => <ErrorPage title="Not found" />}>
-          {!!isLoading ? (
+          {isLoading ? (
             <DelayedLoadingIndicator msDelayBeforeVisible={500} />
           ) : (
             children
@@ -116,5 +116,5 @@ root.render(
       </AnalyticsProvider>
     </ApolloProvider>
     <ToastContainer icon={false} theme="colored" />
-  </>
+  </>,
 );

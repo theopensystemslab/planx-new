@@ -9,7 +9,7 @@ import SendComponent from "./Public";
 jest.spyOn(axios, "default").mockImplementation((url: any) => {
   return {
     value: url()?.startsWith(
-      `${process.env.REACT_APP_API_URL}/create-send-events/`
+      `${process.env.REACT_APP_API_URL}/create-send-events/`,
     )
       ? hasuraEventsResponseMock
       : null,
@@ -26,7 +26,7 @@ it.skip("should not have any accessibility violations", async () => {
     <SendComponent
       title="Send"
       destinations={[Destination.BOPS, Destination.Uniform]}
-    />
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

@@ -16,7 +16,7 @@ describe("DateInputComponent - Editor Modal", () => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" />
-      </DndProvider>
+      </DndProvider>,
     );
     expect(screen.getByText("Date Input")).toBeInTheDocument();
   });
@@ -26,7 +26,7 @@ describe("DateInputComponent - Editor Modal", () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
-      </DndProvider>
+      </DndProvider>,
     );
 
     const [minDay, maxDay] = screen.getAllByPlaceholderText("DD");
@@ -56,7 +56,7 @@ describe("DateInputComponent - Editor Modal", () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
-      </DndProvider>
+      </DndProvider>,
     );
 
     const [minDay, maxDay] = screen.getAllByPlaceholderText("DD");
@@ -88,7 +88,7 @@ describe("DateInputComponent - Editor Modal", () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} node={node} />
-      </DndProvider>
+      </DndProvider>,
     );
 
     const [minDay, maxDay] = screen.getAllByPlaceholderText("DD");

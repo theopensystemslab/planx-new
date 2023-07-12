@@ -26,7 +26,7 @@ const useClasses = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props extends InputBaseProps {}
+type Props = InputBaseProps;
 
 export default function InputField(props: Props): FCReturn {
   const classes = useClasses();

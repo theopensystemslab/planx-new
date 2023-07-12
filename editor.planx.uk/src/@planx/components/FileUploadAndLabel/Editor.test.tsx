@@ -11,7 +11,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
-      </DndProvider>
+      </DndProvider>,
     );
     expect(screen.getByText("Upload and label")).toBeInTheDocument();
   });
@@ -20,7 +20,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
-      </DndProvider>
+      </DndProvider>,
     );
     expect(screen.getAllByText("File")).toHaveLength(1);
   });
@@ -29,7 +29,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />
-      </DndProvider>
+      </DndProvider>,
     );
     await user.click(screen.getByText("add new"));
     await user.click(screen.getByText("add new"));

@@ -14,7 +14,7 @@ test("renders correctly", async () => {
         { title: "build house", description: "" },
       ]}
       handleSubmit={handleSubmit}
-    />
+    />,
   );
   await user.click(screen.getByTestId("continue-button"));
 
@@ -28,7 +28,7 @@ it("should not have any accessibility violations", async () => {
         { title: "buy land", description: "" },
         { title: "build house", description: "" },
       ]}
-    />
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

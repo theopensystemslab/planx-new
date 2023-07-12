@@ -38,7 +38,7 @@ export const MapContainer = styled(Box)<MapContainerProps>(
       width: "100%",
       height: "100%",
     },
-  })
+  }),
 );
 
 export const MapFooter = styled(Box)(({ theme }) => ({

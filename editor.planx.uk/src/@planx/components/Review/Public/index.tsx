@@ -16,7 +16,7 @@ function Component(props: PublicProps<Review>) {
       state.computePassport(),
       state.hasPaid(),
       state.changeAnswer,
-    ]
+    ],
   );
   return (
     <Presentational

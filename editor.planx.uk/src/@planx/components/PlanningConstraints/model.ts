@@ -7,7 +7,7 @@ export interface PlanningConstraints extends MoreInformation {
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): PlanningConstraints => ({
   title: data?.title || "Planning constraints",
   description:

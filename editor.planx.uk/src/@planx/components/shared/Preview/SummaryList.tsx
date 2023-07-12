@@ -130,7 +130,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
   };
 
   const removeNonPresentationalNodes = (
-    section: Store.breadcrumbs
+    section: Store.breadcrumbs,
   ): BreadcrumbEntry[] => {
     // Typecast to preserve Store.userData
     const entries = Object.entries(section) as BreadcrumbEntry[];
@@ -180,13 +180,13 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   showChangeButton={props.showChangeButton}
                 />
               </React.Fragment>
-            )
+            ),
         )}
       </>
     );
   } else {
     const filteredBreadcrumbs = removeNonPresentationalNodes(
-      props.breadcrumbs
+      props.breadcrumbs,
     ).map(makeSummaryBreadcrumb);
     return (
       <SummaryList
@@ -234,7 +234,7 @@ function SummaryList(props: SummaryListProps) {
               )}
             </dd>
           </React.Fragment>
-        )
+        ),
       )}
     </Grid>
   );
@@ -360,7 +360,7 @@ function DrawBoundary(props: ComponentProps) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
     throw Error(
-      "Site boundary geojson or location plan file expected, but not found"
+      "Site boundary geojson or location plan file expected, but not found",
     );
   }
 

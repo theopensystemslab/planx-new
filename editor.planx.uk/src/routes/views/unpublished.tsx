@@ -47,7 +47,7 @@ export const unpublishedView = async (req: NaviRequest) => {
 
 const fetchDataForUnpublishedView = async (
   flowSlug: string,
-  teamSlug: string
+  teamSlug: string,
 ): Promise<UnpublishedViewData> => {
   try {
     const result = await client.query({

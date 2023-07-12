@@ -88,7 +88,7 @@ export const sharedStore: StateCreator<
       Object.entries(get().breadcrumbs).flatMap(([id, { answers }]) => [
         id,
         ...(answers || []),
-      ])
+      ]),
     ).has(id);
   },
 

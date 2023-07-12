@@ -53,7 +53,7 @@ export default function Component(props: Props) {
       const result = evaluate(
         formik.values.formula,
         formik.values.samples,
-        formik.values.defaults
+        formik.values.defaults,
       );
       // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
       if (typeof result === "number") {

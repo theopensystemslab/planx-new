@@ -12,7 +12,7 @@ export const getParentId = (parent: any) => {
 export const stripTagsAndLimitLength = (
   htmlStr: string,
   defaultStr: string,
-  maxLength = Infinity
+  maxLength = Infinity,
 ): string => {
   // remove HTML tags and trim whitespace
   let newString = htmlStr?.replace(/(<([^>]+)>)/gi, "").trim();

@@ -171,7 +171,7 @@ test("sends 'no result' to BOPS when there is no collected flag", () => {
 });
 
 // https://i.imgur.com/Mx5UP6t.png
-let flow: Store.flow = {
+const flow: Store.flow = {
   _root: {
     edges: ["jkMtyqBwqB"],
   },

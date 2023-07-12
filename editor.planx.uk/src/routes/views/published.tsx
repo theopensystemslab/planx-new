@@ -56,7 +56,7 @@ export const publishedView = async (req: NaviRequest) => {
 
 const fetchDataForPublishedView = async (
   flowSlug: string,
-  teamSlug: string
+  teamSlug: string,
 ): Promise<PublishedViewData> => {
   try {
     const result = await client.query({

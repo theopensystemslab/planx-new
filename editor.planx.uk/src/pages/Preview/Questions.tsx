@@ -160,7 +160,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   const showBackButton = useMemo(
     () => (node?.id ? canGoBack(node) : false),
-    [node?.id]
+    [node?.id],
   );
 
   return (

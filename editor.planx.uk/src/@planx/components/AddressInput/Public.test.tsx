@@ -11,7 +11,7 @@ test("submits an address", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />
+    <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />,
   );
 
   await fillInFieldsUsingLabel(user, {
@@ -59,7 +59,7 @@ test("recovers previously submitted text when clicking the back button", async (
           },
         },
       }}
-    />
+    />,
   );
 
   await fillInFieldsUsingLabel(user, {
@@ -103,7 +103,7 @@ test("recovers previously submitted text when clicking the back button even if a
           },
         },
       }}
-    />
+    />,
   );
 
   await fillInFieldsUsingLabel(user, {
@@ -154,7 +154,7 @@ it("should not have any accessibility violations whilst in the error state", asy
 
   for (const el of requiredAddressElements) {
     const errorMessage = await screen.findByTestId(
-      `${ERROR_MESSAGE}-testId-${el}`
+      `${ERROR_MESSAGE}-testId-${el}`,
     );
     await waitFor(() => expect(errorMessage).not.toBeEmptyDOMElement());
   }

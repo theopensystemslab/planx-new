@@ -76,7 +76,7 @@ export const navigationStore: StateCreator<
 
     const mostRecentSectionId = findLast(
       breadcrumbIds,
-      (breadcrumbId: string) => sectionIds.includes(breadcrumbId)
+      (breadcrumbId: string) => sectionIds.includes(breadcrumbId),
     );
 
     // No sections in breadcrumbs, first section values already set in store
@@ -99,7 +99,9 @@ export const navigationStore: StateCreator<
     const filteredFlow = Object.fromEntries(
       Object.entries(flow)
         .filter(([_key, value]) => value.type === type)
-        .sort(([idA], [idB]) => rootEdges.indexOf(idA) - rootEdges.indexOf(idB))
+        .sort(
+          ([idA], [idB]) => rootEdges.indexOf(idA) - rootEdges.indexOf(idB),
+        ),
     );
     return filteredFlow;
   },
@@ -122,8 +124,8 @@ export const navigationStore: StateCreator<
             Object.keys(breadcrumbs).indexOf(sectionId),
             isLastSection
               ? undefined
-              : Object.keys(breadcrumbs).indexOf(nextSectionId)
-          )
+              : Object.keys(breadcrumbs).indexOf(nextSectionId),
+          ),
         );
       });
 
@@ -140,7 +142,7 @@ export const navigationStore: StateCreator<
     const { getSortedBreadcrumbsBySection, sectionNodes } = get();
     const sections = getSortedBreadcrumbsBySection();
     const sectionIndex = sections.findIndex((section) =>
-      Object.keys(section).includes(nodeId)
+      Object.keys(section).includes(nodeId),
     );
     const sectionId = Object.keys(sectionNodes)[sectionIndex];
     const section = sectionNodes[sectionId];

@@ -12,12 +12,12 @@ import flowWithPassportComponentsMock from "./mocks/flowWithPassportComponents.j
 
 const { getState, setState } = vanillaStore;
 let breadcrumbsDependentOnPassport = cloneDeep(
-  breadcrumbsDependentOnPassportMock
+  breadcrumbsDependentOnPassportMock,
 ) as Store.breadcrumbs;
 let flowWithPassportComponents = cloneDeep(
-  flowWithPassportComponentsMock
+  flowWithPassportComponentsMock,
 ) as Store.flow;
-let flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
+const flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
 
 const {
   record,
@@ -33,10 +33,10 @@ const {
 beforeEach(() => {
   resetPreview();
   breadcrumbsDependentOnPassport = cloneDeep(
-    breadcrumbsDependentOnPassportMock
+    breadcrumbsDependentOnPassportMock,
   ) as Store.breadcrumbs;
   flowWithPassportComponents = cloneDeep(
-    flowWithPassportComponentsMock
+    flowWithPassportComponentsMock,
   ) as Store.flow;
 });
 

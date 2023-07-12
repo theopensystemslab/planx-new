@@ -60,7 +60,7 @@ const PublicFooter: React.FC = () => {
 
   const footerItems = [...flowSettingsContent, ...globalFooterItems].filter(
     (item): item is { title: string; href: string; bold: boolean } =>
-      Boolean(item)
+      Boolean(item),
   );
   return (
     <Box>

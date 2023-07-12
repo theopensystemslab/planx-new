@@ -17,7 +17,7 @@ export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
   maxFiles,
 }) => {
   const [fileUploadStatus, setFileUploadStatus] = useState<string | undefined>(
-    undefined
+    undefined,
   );
   const hasEmptySlots = !maxFiles || maxFiles > slots.length;
 
@@ -30,7 +30,7 @@ export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
             key={slot.id}
             removeFile={() => {
               setSlots(
-                slots.filter((currentSlot) => currentSlot.file !== slot.file)
+                slots.filter((currentSlot) => currentSlot.file !== slot.file),
               );
               setFileUploadStatus(`${slot.file.path} was deleted`);
             }}

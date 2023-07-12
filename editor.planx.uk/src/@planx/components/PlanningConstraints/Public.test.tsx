@@ -26,7 +26,7 @@ it("renders correctly", async () => {
       description="Things that might affect your project"
       fn="property.constraints.planning"
       handleSubmit={handleSubmit}
-    />
+    />,
   );
 
   expect(screen.getByText("Planning constraints")).toBeInTheDocument();
@@ -44,7 +44,7 @@ it("should not have any accessibility violations", async () => {
       title="Planning constraints"
       description="Things that might affect your project"
       fn="property.constraints.planning"
-    />
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

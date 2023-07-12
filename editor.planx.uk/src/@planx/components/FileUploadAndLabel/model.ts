@@ -69,7 +69,7 @@ export interface FileUploadAndLabel extends MoreInformation {
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): FileUploadAndLabel => ({
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
@@ -163,8 +163,8 @@ const populateFileList = ({
 
 export const isRuleMet = (
   passport: Store.passport,
-  rule: ConditionalRule<Condition.RequiredIf | Condition.RecommendedIf>
-): Boolean => {
+  rule: ConditionalRule<Condition.RequiredIf | Condition.RecommendedIf>,
+): boolean => {
   const passportVal = passport.data?.[rule.fn];
   if (!passportVal) return false;
 
@@ -225,15 +225,15 @@ export const generatePayload = (fileList: FileList): Store.userData => {
 
 const getCachedSlotsFromPreviousData = (
   userFile: UserFile,
-  previouslySubmittedData: Store.userData | undefined
+  previouslySubmittedData: Store.userData | undefined,
 ): FileUploadSlot =>
   previouslySubmittedData?.data?.[userFile.fn]?.map(
-    (file: any) => file.cachedSlot
+    (file: any) => file.cachedSlot,
   );
 
 const getRecoveredSlots = (
   previouslySubmittedData: Store.userData | undefined,
-  fileList: FileList
+  fileList: FileList,
 ) => {
   const allFiles = [
     ...fileList.required,
@@ -243,7 +243,7 @@ const getRecoveredSlots = (
 
   const allSlots = allFiles
     .flatMap((userFile) =>
-      getCachedSlotsFromPreviousData(userFile, previouslySubmittedData)
+      getCachedSlotsFromPreviousData(userFile, previouslySubmittedData),
     )
     .filter(Boolean);
 
@@ -254,7 +254,7 @@ const getRecoveredSlots = (
 
 const getRecoveredFileList = (
   previouslySubmittedData: Store.userData | undefined,
-  fileList: FileList
+  fileList: FileList,
 ) => {
   const recoveredFileList = cloneDeep(fileList);
   const categories = Object.keys(fileList) as Array<keyof typeof fileList>;
@@ -263,9 +263,9 @@ const getRecoveredFileList = (
     recoveredFileList[category].forEach(
       (fileType) =>
         (fileType.slots = fileList[category].flatMap((userFile) =>
-          getCachedSlotsFromPreviousData(userFile, previouslySubmittedData)
-        ))
-    )
+          getCachedSlotsFromPreviousData(userFile, previouslySubmittedData),
+        )),
+    ),
   );
 
   return recoveredFileList;
@@ -273,14 +273,14 @@ const getRecoveredFileList = (
 
 export const getRecoveredData = (
   previouslySubmittedData: Store.userData | undefined,
-  fileList: FileList
+  fileList: FileList,
 ): any => {
   if (!previouslySubmittedData) return undefined;
 
   const recoveredSlots = getRecoveredSlots(previouslySubmittedData, fileList);
   const recoveredFileList = getRecoveredFileList(
     previouslySubmittedData,
-    fileList
+    fileList,
   );
 
   return { slots: recoveredSlots, fileList: recoveredFileList };
@@ -288,7 +288,7 @@ export const getRecoveredData = (
 
 export const getTagsForSlot = (
   slotId: FileUploadSlot["id"],
-  fileList: FileList
+  fileList: FileList,
 ): string[] => {
   const allFiles = [
     ...fileList.required,
@@ -306,7 +306,7 @@ export const getTagsForSlot = (
 export const addOrAppendSlots = (
   tags: string[],
   uploadedFile: FileUploadSlot,
-  fileList: FileList
+  fileList: FileList,
 ): FileList => {
   const updatedFileList: FileList = merge(fileList);
   const categories = Object.keys(updatedFileList) as Array<
@@ -316,7 +316,7 @@ export const addOrAppendSlots = (
   tags.forEach((tag) => {
     categories.forEach((category) => {
       const index = updatedFileList[category].findIndex(
-        (fileType) => fileType.name === tag
+        (fileType) => fileType.name === tag,
       );
       if (index > -1) {
         const updatedFileType = updatedFileList[category][index];
@@ -343,9 +343,9 @@ export const addOrAppendSlots = (
 export const removeSlots = (
   tags: string[],
   uploadedFile: FileUploadSlot,
-  fileList: FileList
+  fileList: FileList,
 ): FileList => {
-  let updatedFileList: FileList = merge(fileList);
+  const updatedFileList: FileList = merge(fileList);
   const categories = Object.keys(updatedFileList) as Array<
     keyof typeof updatedFileList
   >;
@@ -353,13 +353,13 @@ export const removeSlots = (
   tags.forEach((tag) => {
     categories.forEach((category) => {
       const index = updatedFileList[category].findIndex(
-        (fileType) => fileType.name === tag
+        (fileType) => fileType.name === tag,
       );
       if (index > -1) {
         const updatedFileType = updatedFileList[category][index];
         if (updatedFileType.slots) {
           const indexToRemove = updatedFileType.slots?.findIndex(
-            (slot) => slot.id === uploadedFile.id
+            (slot) => slot.id === uploadedFile.id,
           );
           if (indexToRemove > -1) {
             updatedFileList[category][index].slots?.splice(indexToRemove, 1);

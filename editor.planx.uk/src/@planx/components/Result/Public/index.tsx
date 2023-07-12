@@ -63,7 +63,7 @@ const Responses = ({
             ? breadcrumbs[response.question.id].auto
               ? response.selections.some((s) => s.data?.flag)
               : true
-            : false
+            : false,
         )
         .map(({ question, selections }: Response) => (
           <ResultReason
@@ -108,7 +108,7 @@ const Result: React.FC<Props> = ({
 
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [showSubmitButton, setShowSubmitButton] = useState<boolean>(
-    Boolean(handleSubmit)
+    Boolean(handleSubmit),
   );
 
   const theme = useTheme();

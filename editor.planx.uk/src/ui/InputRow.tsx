@@ -56,7 +56,7 @@ export default function InputRow({
       className={classNames(
         classes.inputRow,
         RowIcon && classes.childRow,
-        childRow && classes.childRow
+        childRow && classes.childRow,
       )}
     >
       {RowIcon && <RowIcon className={classes.rowIcon} />}

@@ -72,7 +72,7 @@ export const slotsSchema = array()
     message: "Please wait for upload to complete",
     test: (slots?: Array<FileUploadSlot>) => {
       const isEveryUploadComplete = Boolean(
-        slots?.every((slot) => slot.status === "success")
+        slots?.every((slot) => slot.status === "success"),
       );
       return isEveryUploadComplete;
     },
@@ -89,8 +89,8 @@ export const fileListSchema = object({
     test: (userFile?: UserFile[]) => {
       const isEverySlotFilled = Boolean(
         userFile?.every(
-          (userFile) => userFile?.slots && userFile.slots.length > 0
-        )
+          (userFile) => userFile?.slots && userFile.slots.length > 0,
+        ),
       );
       return isEverySlotFilled;
     },
@@ -103,8 +103,8 @@ export const fileListSchema = object({
     const { slots } = context as FileListSchemaTextContext;
     const isEveryFileTagged = Boolean(
       slots?.every(
-        (slot) => getTagsForSlot(slot.id, fileList as FileList).length
-      )
+        (slot) => getTagsForSlot(slot.id, fileList as FileList).length,
+      ),
     );
     return isEveryFileTagged;
   },

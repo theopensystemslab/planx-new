@@ -16,7 +16,7 @@ export default function Component(props: Props) {
       ...makeData(
         props,
         evaluate(props.formula, passport, props.defaults),
-        props.output
+        props.output,
       ),
       // don't show this component to the user, auto=true required
       // for back button to skip past this component when going back

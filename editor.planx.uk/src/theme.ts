@@ -371,7 +371,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
 
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
-  primaryColor: string = DEFAULT_PRIMARY_COLOR
+  primaryColor: string = DEFAULT_PRIMARY_COLOR,
 ): MUITheme => {
   const themeOptions = getThemeOptions(primaryColor);
   const theme = responsiveFontSizes(createTheme(themeOptions));

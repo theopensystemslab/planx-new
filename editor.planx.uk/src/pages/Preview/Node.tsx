@@ -98,7 +98,7 @@ const Node: React.FC<any> = (props: Props) => {
               : mapAccum(
                   (
                     index: number,
-                    category: { title: string; count: number }
+                    category: { title: string; count: number },
                   ) => [
                     index + category.count,
                     {
@@ -107,7 +107,7 @@ const Node: React.FC<any> = (props: Props) => {
                     },
                   ],
                   0,
-                  allProps.categories
+                  allProps.categories,
                 )[1]
           }
         />

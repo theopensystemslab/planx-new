@@ -37,7 +37,7 @@ describe("Save and Return component", () => {
     expect(screen.getByText("Testing 123")).toBeInTheDocument();
 
     expect(
-      screen.queryByText("Enter your email address")
+      screen.queryByText("Enter your email address"),
     ).not.toBeInTheDocument();
   });
 
@@ -49,7 +49,7 @@ describe("Save and Return component", () => {
     await user.type(screen.getByLabelText("Email address"), "test@test.com");
     await user.type(
       screen.getByLabelText("Confirm email address"),
-      "test@test.com"
+      "test@test.com",
     );
     await user.click(screen.getByTestId("continue-button"));
 
@@ -60,7 +60,7 @@ describe("Save and Return component", () => {
   it("should not have any accessibility violations", async () => {
     const children = <Button>Testing 123</Button>;
     const { container } = setup(
-      <SaveAndReturn children={children}></SaveAndReturn>
+      <SaveAndReturn children={children}></SaveAndReturn>,
     );
 
     const results = await axe(container);
@@ -77,7 +77,7 @@ describe("Save and Return component", () => {
     await user.type(screen.getByLabelText("Email address"), "test@test.com");
     await user.type(
       screen.getByLabelText("Confirm email address"),
-      "test@test.com"
+      "test@test.com",
     );
 
     expect(window.location.href).not.toContain("sessionId");
@@ -98,14 +98,14 @@ describe("ConfirmEmail component", () => {
     const handleSubmit = jest.fn();
 
     const { user } = setup(
-      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
     await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).not.toHaveBeenCalled();
     expect(await screen.findAllByText("Email address required")).toHaveLength(
-      2
+      2,
     );
 
     screen
@@ -117,16 +117,16 @@ describe("ConfirmEmail component", () => {
     const handleSubmit = jest.fn();
 
     const { user } = setup(
-      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
     await user.type(
       screen.getByLabelText("Email address"),
-      "testABC@testABC.com"
+      "testABC@testABC.com",
     );
     await user.type(
       screen.getByLabelText("Confirm email address"),
-      "test123@test123.com"
+      "test123@test123.com",
     );
     await user.click(screen.getByTestId("continue-button"));
 
@@ -139,7 +139,7 @@ describe("ConfirmEmail component", () => {
     const handleSubmit = jest.fn();
 
     const { user } = setup(
-      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
     const emailInput = screen.getByLabelText("Email address");
@@ -158,7 +158,7 @@ describe("ConfirmEmail component", () => {
     const handleSubmit = jest.fn();
 
     const { user } = setup(
-      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
     const emailInput = screen.getByLabelText("Email address");
@@ -172,7 +172,7 @@ describe("ConfirmEmail component", () => {
     expect(handleSubmit).not.toHaveBeenCalled();
 
     expect(await screen.findAllByText("Email address required")).toHaveLength(
-      2
+      2,
     );
   });
 
@@ -180,7 +180,7 @@ describe("ConfirmEmail component", () => {
     const handleSubmit = jest.fn();
 
     const { container } = setup(
-      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
     const results = await axe(container);
@@ -190,12 +190,12 @@ describe("ConfirmEmail component", () => {
   it("should not have any accessibility violations in the error state", async () => {
     const handleSubmit = jest.fn();
     const { container, user } = setup(
-      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
     await user.click(screen.getByTestId("continue-button"));
     expect(await screen.findAllByText("Email address required")).toHaveLength(
-      2
+      2,
     );
 
     const results = await axe(container);
@@ -206,16 +206,16 @@ describe("ConfirmEmail component", () => {
     const handleSubmit = jest.fn();
 
     const { user } = setup(
-      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
     );
 
     await user.type(
       screen.getByLabelText("Email address"),
-      "testABC@testABC.com"
+      "testABC@testABC.com",
     );
     await user.type(
       screen.getByLabelText("Confirm email address"),
-      "testABC@testABC.com"
+      "testABC@testABC.com",
     );
     await user.click(screen.getByTestId("continue-button"));
 

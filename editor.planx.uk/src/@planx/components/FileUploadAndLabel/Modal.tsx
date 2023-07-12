@@ -126,13 +126,13 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     } = event;
     setTags(
       // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
+      typeof value === "string" ? value.split(",") : value,
     );
   };
 
   const updateFileListWithTags = (
     previousTags: string[] | undefined,
-    tags: string[]
+    tags: string[],
   ) => {
     let updatedFileList: FileList = merge(fileList);
     const updatedTags = tags.filter((tag) => !previousTags?.includes(tag));

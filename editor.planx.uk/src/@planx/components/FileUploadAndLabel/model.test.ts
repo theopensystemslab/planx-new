@@ -373,7 +373,7 @@ describe("getRecoveredData function", () => {
 
     const { slots: result } = getRecoveredData(
       previouslySubmittedData,
-      mockFileList
+      mockFileList,
     );
     expect(result).toHaveLength(1);
     expect(result?.[0]).toMatchObject(mockCachedSlot);
@@ -402,7 +402,7 @@ describe("addOrAppendSlots function", () => {
     const result = addOrAppendSlots(
       ["firstFile"],
       mockSlot,
-      mockFileListWithoutSlots
+      mockFileListWithoutSlots,
     );
 
     result.required.map((userFile) => {
@@ -411,10 +411,10 @@ describe("addOrAppendSlots function", () => {
     });
 
     result.recommended.map((userFile) =>
-      expect(userFile).not.toHaveProperty("slots")
+      expect(userFile).not.toHaveProperty("slots"),
     );
     result.optional.map((userFile) =>
-      expect(userFile).not.toHaveProperty("slots")
+      expect(userFile).not.toHaveProperty("slots"),
     );
   });
 
@@ -422,7 +422,7 @@ describe("addOrAppendSlots function", () => {
     const result = addOrAppendSlots(
       ["firstFile", "secondFile", "thirdFile"],
       mockSlot,
-      mockFileListWithoutSlots
+      mockFileListWithoutSlots,
     );
 
     result.required.map((userFile) => {
@@ -500,13 +500,13 @@ describe("resetAllSlots function", () => {
     const result = resetAllSlots(mockFileList);
 
     result.required.map((userFile) =>
-      expect(userFile).not.toHaveProperty("slots")
+      expect(userFile).not.toHaveProperty("slots"),
     );
     result.recommended.map((userFile) =>
-      expect(userFile).not.toHaveProperty("slots")
+      expect(userFile).not.toHaveProperty("slots"),
     );
     result.optional.map((userFile) =>
-      expect(userFile).not.toHaveProperty("slots")
+      expect(userFile).not.toHaveProperty("slots"),
     );
   });
 });

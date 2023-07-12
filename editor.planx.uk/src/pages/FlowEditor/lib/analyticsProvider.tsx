@@ -60,14 +60,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
+          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`,
         );
       }
       if (document.visibilityState === "visible") {
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
+          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`,
         );
       }
     }

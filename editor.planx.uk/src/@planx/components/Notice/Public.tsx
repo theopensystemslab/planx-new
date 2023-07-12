@@ -49,7 +49,7 @@ const Container = styled(Box, {
       border: "2px solid currentColor",
       pointerEvents: "none",
     },
-  })
+  }),
 );
 
 const Content = styled(Box)(() => ({
@@ -71,7 +71,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
   const theme: Theme = useTheme();
   const textColor = getContrastTextColor(
     props.color,
-    theme.palette.primary.main
+    theme.palette.primary.main,
   );
   const handleSubmit = !props.resetButton
     ? () => props.handleSubmit?.()

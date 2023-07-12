@@ -108,7 +108,7 @@ describe("updating", () => {
       const [graph, ops] = update(
         "a",
         { foo: "bar2" },
-        { removeKeyIfMissing: true }
+        { removeKeyIfMissing: true },
       )({
         a: {
           data: {
@@ -136,7 +136,7 @@ describe("updating", () => {
       const [graph, ops] = update(
         "a",
         { foo: "bar2" },
-        { children: [{ id: "d" }], removeKeyIfMissing: true }
+        { children: [{ id: "d" }], removeKeyIfMissing: true },
       )({
         a: {
           data: {
@@ -182,7 +182,7 @@ describe("updating", () => {
               { id: "z" },
             ],
             removeKeyIfMissing: true,
-          }
+          },
         )({
           _root: {
             edges: ["x"],
@@ -239,7 +239,7 @@ describe("updating", () => {
           {
             children: [{ type: 1, data: { text: "foo" } }],
             removeKeyIfMissing: true,
-          }
+          },
         )({
           _root: {
             edges: ["x"],
@@ -294,7 +294,7 @@ describe("updating", () => {
             },
           ],
           removeKeyIfMissing: true,
-        }
+        },
       )({
         _root: {
           edges: ["a"],
@@ -330,7 +330,7 @@ describe("updating", () => {
       const [graph, ops] = update(
         "a",
         {},
-        { children: [{ id: "c" }, { id: "b" }], removeKeyIfMissing: true }
+        { children: [{ id: "c" }, { id: "b" }], removeKeyIfMissing: true },
       )({
         a: {
           edges: ["b", "c"],
@@ -356,7 +356,7 @@ describe("updating", () => {
       const [graph, ops] = update(
         "a",
         { text: "new portal name" },
-        { removeKeyIfMissing: true }
+        { removeKeyIfMissing: true },
       )({
         _root: { edges: ["a"] },
         a: {
@@ -395,13 +395,13 @@ describe("error handling", () => {
     expect(() =>
       update(
         "x",
-        {}
+        {},
       )({
         _root: {
           edges: ["a"],
         },
         a: {},
-      })
+      }),
     ).toThrow("id not found");
   });
 });
@@ -427,7 +427,7 @@ describe("complex example with node data", () => {
 
       const [graph, ops] = update(
         "a",
-        dataFromFormik
+        dataFromFormik,
       )({
         a: {
           type: 145,
@@ -501,7 +501,7 @@ describe("complex example with node data", () => {
 
       const [graph, ops] = update(
         "a",
-        dataFromFormik
+        dataFromFormik,
       )({
         a: {
           type: 145,

@@ -102,7 +102,7 @@ const ChecklistComponent: React.FC<Props> = ({
   const initialExpandedGroups = getInitialExpandedGroups();
 
   const [expandedGroups, setExpandedGroups] = useState<Array<number>>(
-    initialExpandedGroups
+    initialExpandedGroups,
   );
 
   const layout = options
@@ -129,7 +129,7 @@ const ChecklistComponent: React.FC<Props> = ({
       newCheckedIds.sort((a, b) => {
         const originalIds = flatOptions.map((cb) => cb.id);
         return originalIds.indexOf(a) - originalIds.indexOf(b);
-      })
+      }),
     );
   };
 
@@ -176,7 +176,7 @@ const ChecklistComponent: React.FC<Props> = ({
                       checkbox
                     />
                   </Grid>
-                )
+                ),
               )
             ) : groupedOptions ? (
               <FormWrapper>
@@ -190,7 +190,7 @@ const ChecklistComponent: React.FC<Props> = ({
                           expanded={isExpanded}
                           onToggle={() => {
                             setExpandedGroups((previous) =>
-                              toggleInArray(index, previous)
+                              toggleInArray(index, previous),
                             );
                           }}
                           headingId={`group-${index}-heading`}
@@ -212,7 +212,7 @@ const ChecklistComponent: React.FC<Props> = ({
                                 label={option.data.text}
                                 id={option.id}
                                 checked={formik.values.checked.includes(
-                                  option.id
+                                  option.id,
                                 )}
                               />
                             ))}
@@ -236,12 +236,12 @@ const ChecklistComponent: React.FC<Props> = ({
         groupHasOptionSelected(group, previouslySubmittedData?.answers ?? [])
           ? [...acc, index]
           : acc,
-      [] as number[]
+      [] as number[],
     );
 
     function groupHasOptionSelected(group: Group<Option>, answers: string[]) {
       return group.children.some((child) =>
-        answers.some((id) => child.id === id)
+        answers.some((id) => child.id === id),
       );
     }
   }

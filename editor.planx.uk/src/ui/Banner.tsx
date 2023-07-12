@@ -24,7 +24,7 @@ const Root = styled(Box)(({ theme, color, bgcolor }) => ({
   "& a": {
     color: getContrastTextColor(
       (bgcolor as string) || theme.palette.background.paper,
-      theme.palette.primary.main
+      theme.palette.primary.main,
     ),
   },
   ...(!color && {

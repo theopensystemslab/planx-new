@@ -10,7 +10,7 @@ export interface FindProperty extends MoreInformation {
 }
 
 export const parseFindProperty = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): FindProperty => ({
   title: data?.title || "",
   description: data?.description || "",

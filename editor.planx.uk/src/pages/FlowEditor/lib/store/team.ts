@@ -16,7 +16,7 @@ export interface TeamStore {
 
 export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
   set,
-  get
+  get,
 ) => ({
   teamTheme: undefined,
   teamName: "",

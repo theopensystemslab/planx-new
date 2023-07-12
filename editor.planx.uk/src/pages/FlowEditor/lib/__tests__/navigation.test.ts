@@ -23,13 +23,17 @@ test("filterFlowByType() correctly returns a filtered view of the given flow", (
   // Three Sections in test flow
   const sectionResult = filterFlowByType(TYPES.Section);
   expect(Object.keys(sectionResult)).toEqual(
-    expect.arrayContaining(["firstSection", "secondSection", "thirdSection"])
+    expect.arrayContaining(["firstSection", "secondSection", "thirdSection"]),
   );
 
   // Three Statements in test flow
   const statementResult = filterFlowByType(TYPES.Statement);
   expect(Object.keys(statementResult)).toEqual(
-    expect.arrayContaining(["firstQuestion", "secondQuestion", "thirdQuestion"])
+    expect.arrayContaining([
+      "firstQuestion",
+      "secondQuestion",
+      "thirdQuestion",
+    ]),
   );
 
   // No FileUpload in test flow
@@ -69,7 +73,7 @@ test("initNavigationStore() sets expected initial values for flow with sections"
   expect(sectionCount).toBe(3);
   expect(currentSectionTitle).toBe("First section");
   expect(Object.keys(sectionNodes)).toEqual(
-    expect.arrayContaining(["firstSection", "secondSection", "thirdSection"])
+    expect.arrayContaining(["firstSection", "secondSection", "thirdSection"]),
   );
 });
 

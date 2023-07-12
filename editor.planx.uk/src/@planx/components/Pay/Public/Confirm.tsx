@@ -128,7 +128,7 @@ export default function Confirm(props: Props) {
   const [page, setPage] = useState<"Pay" | "InviteToPay">("Pay");
 
   const changePage = () => {
-    if (page === "Pay" && !Boolean(props.paymentStatus)) {
+    if (page === "Pay" && !props.paymentStatus) {
       setPage("InviteToPay");
     } else {
       setPage("Pay");

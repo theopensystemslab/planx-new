@@ -69,7 +69,7 @@ describe("A filter on a branch", () => {
   });
 
   test.skip("Picking up flag routes me correctly through the second filter", () => {
-    let visitedNodes = () => Object.keys(getState().breadcrumbs);
+    const visitedNodes = () => Object.keys(getState().breadcrumbs);
 
     // Traverse forward to pick up an "IMMUNE" flag
     record("pickFlag", { answers: ["setImmunity"] });
@@ -95,7 +95,7 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
   });
 
   test("Filter path nodes are auto-answered correctly when the highest order flag is picked up first", () => {
-    let visitedNodes = () => Object.keys(getState().breadcrumbs);
+    const visitedNodes = () => Object.keys(getState().breadcrumbs);
 
     // go forward manually: select not listed and select an answer with permission needed (higher order) flag
     record("zlKQyPuKsl", { answers: ["qW1jzS1qPy"], auto: false });
@@ -108,7 +108,7 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
     expect(currentCard()?.id).toBe("seN42VIXsV");
     expect(getState().resultData()["Planning permission"]).toHaveProperty(
       "flag.value",
-      "PLANNING_PERMISSION_REQUIRED"
+      "PLANNING_PERMISSION_REQUIRED",
     );
 
     // expect the auto-answered question on the permission needed filter path to be in our breadcrumbs
@@ -124,7 +124,7 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
   });
 
   test.skip("Filter path nodes are auto-answered correctly when a lower order flag is picked up first", () => {
-    let visitedNodes = () => Object.keys(getState().breadcrumbs);
+    const visitedNodes = () => Object.keys(getState().breadcrumbs);
 
     // go forward manually: select not listed and select an answer with permitted dev (lower order) flag
     record("zlKQyPuKsl", { answers: ["qW1jzS1qPy"], auto: false });
@@ -142,7 +142,7 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
     expect(currentCard()?.id).toBe("seN42VIXsV");
     expect(getState().resultData()["Planning permission"]).toHaveProperty(
       "flag.value",
-      "PLANNING_PERMISSION_REQUIRED"
+      "PLANNING_PERMISSION_REQUIRED",
     );
 
     // expect the auto-answered question on the permission needed filter path to be in our breadcrumbs

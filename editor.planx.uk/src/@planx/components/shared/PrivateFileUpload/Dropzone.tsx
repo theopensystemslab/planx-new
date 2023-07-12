@@ -95,8 +95,8 @@ export const Dropzone: React.FC<Props> = ({
               onProgress: (progress) => {
                 setSlots((_files) =>
                   _files.map((_file) =>
-                    _file.file === file ? { ..._file, progress } : _file
-                  )
+                    _file.file === file ? { ..._file, progress } : _file,
+                  ),
                 );
               },
             })
@@ -105,23 +105,23 @@ export const Dropzone: React.FC<Props> = ({
                   _files.map((_file) =>
                     _file.file === file
                       ? { ..._file, url, status: "success" }
-                      : _file
-                  )
+                      : _file,
+                  ),
                 );
                 setFileUploadStatus(() =>
                   acceptedFiles.length > 1
                     ? `Files ${acceptedFiles
                         .map((file) => file.path)
                         .join(", ")} were uploaded`
-                    : `File ${acceptedFiles[0].path} was uploaded`
+                    : `File ${acceptedFiles[0].path} was uploaded`,
                 );
               })
               .catch((error) => {
                 console.error(error);
                 setSlots((_files) =>
                   _files.map((_file) =>
-                    _file.file === file ? { ..._file, status: "error" } : _file
-                  )
+                    _file.file === file ? { ..._file, status: "error" } : _file,
+                  ),
                 );
               });
             return {

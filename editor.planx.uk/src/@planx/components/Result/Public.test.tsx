@@ -20,7 +20,7 @@ test("renders correctly", async () => {
       responses={[]}
       handleSubmit={handleSubmit}
       headingTitle="AMAZING"
-    />
+    />,
   );
 
   expect(screen.getAllByRole("heading")[0]).toHaveTextContent("AMAZING");
@@ -47,7 +47,7 @@ it("should not have any accessibility violations", async () => {
       allowChanges
       headingTitle="title"
       reasonsTitle="reasons"
-    />
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
@@ -66,7 +66,7 @@ describe("showing and hiding change capabilities", () => {
         ]}
         handleSubmit={() => {}}
         headingColor={{ text: "pink", background: "white" }}
-      />
+      />,
     );
 
     expect(screen.queryByText("Change")).toBeFalsy();
@@ -162,11 +162,11 @@ describe("showing and hiding change capabilities", () => {
             {...{ allowChanges, responses }}
             handleSubmit={() => {}}
             headingColor={{ text: "pink", background: "white" }}
-          />
+          />,
         );
 
         expect(Boolean(screen.queryByText("Change"))).toEqual(
-          shouldBeChangeable
+          shouldBeChangeable,
         );
       });
     });

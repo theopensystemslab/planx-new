@@ -71,7 +71,7 @@ const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
             <Input
               bordered
               errorMessage={
-                Boolean(formik.touched.email && formik.errors.email)
+                formik.touched.email && formik.errors.email
                   ? formik.errors.email
                   : undefined
               }

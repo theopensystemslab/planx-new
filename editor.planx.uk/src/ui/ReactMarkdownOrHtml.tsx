@@ -25,9 +25,9 @@ const useClasses = makeStyles((theme: Theme) => ({
 
 // Increment H1 and H2 elements to meet a11y requirements in user submitted rich text
 export const incrementHeaderElements = (source: string): string => {
-  const regex: RegExp = /(<\/?h)[1-2]/gi;
+  const regex = /(<\/?h)[1-2]/gi;
   const incrementer = (match: string, p1: string): string => {
-    const currentLevel: number = Number(match.slice(-1));
+    const currentLevel = Number(match.slice(-1));
     const newLevel: number = currentLevel + 1;
     return p1 + newLevel;
   };

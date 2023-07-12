@@ -69,12 +69,12 @@ describe("render states", () => {
           title="Type your postal code"
           handleSubmit={handleSubmit}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // autocomplete does not exist in the DOM on initial render
     expect(
-      screen.queryByTestId("address-autocomplete-web-component")
+      screen.queryByTestId("address-autocomplete-web-component"),
     ).toBeNull();
 
     // type a valid postcode
@@ -82,7 +82,7 @@ describe("render states", () => {
 
     // expect the autocomplete to be rendered with the correct postcode prop & empty initial address
     const autocomplete = screen.getByTestId(
-      "address-autocomplete-web-component"
+      "address-autocomplete-web-component",
     );
     expect(autocomplete).toBeInTheDocument();
     expect(autocomplete.getAttribute("postcode")).toEqual("SE5 0HU");
@@ -105,17 +105,17 @@ describe("render states", () => {
           newAddressTitle="Plot a new address"
           handleSubmit={handleSubmit}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // starts on address-autocomplete page
     expect(
-      await screen.findByText("Type your postal code")
+      await screen.findByText("Type your postal code"),
     ).toBeInTheDocument();
 
     // click the link to switch pages
     await user.click(
-      await screen.findByText("The site does not have an address")
+      await screen.findByText("The site does not have an address"),
     );
 
     // confirm we've switched pages
@@ -143,22 +143,22 @@ describe("render states", () => {
           allowNewAddresses={false}
           handleSubmit={handleSubmit}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await user.click(
-      await screen.findByText("The site does not have an address")
+      await screen.findByText("The site does not have an address"),
     );
 
     // confirm we can open & close the dialog
     expect(
-      screen.getByTestId("external-planning-site-dialog")
+      screen.getByTestId("external-planning-site-dialog"),
     ).toBeInTheDocument();
     await user.click(await screen.findByText("Return to application"));
 
     // land back on the autocomplete page
     expect(
-      await screen.findByText("Type your postal code")
+      await screen.findByText("Type your postal code"),
     ).toBeInTheDocument();
 
     expect(screen.getByTestId("continue-button")).toBeDisabled();
@@ -180,7 +180,7 @@ describe("render states", () => {
             data: previousData,
           }}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // confirm that we've landed on the autocomplete page because our address source is "os"
@@ -188,12 +188,12 @@ describe("render states", () => {
 
     // switch pages
     await user.click(
-      await screen.findByText("The site does not have an address")
+      await screen.findByText("The site does not have an address"),
     );
 
     // confirm that site description & coordinates are empty
     const siteDescriptionInput = screen.getByLabelText(
-      "Name the site"
+      "Name the site",
     ) as HTMLInputElement;
     expect(siteDescriptionInput).toHaveValue("");
 
@@ -210,7 +210,7 @@ describe("render states", () => {
           title="Type your postal code"
           handleSubmit={handleSubmit}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await user.type(await screen.findByLabelText("Postcode"), "SE5 0HU");
@@ -218,7 +218,7 @@ describe("render states", () => {
 
     await user.type(
       await screen.findByTestId("address-autocomplete-web-component"),
-      "75"
+      "75",
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -236,7 +236,7 @@ describe("picking an OS address", () => {
           title="Type your postal code"
           handleSubmit={handleSubmit}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await user.type(await screen.findByLabelText("Postcode"), "SE5{enter}");
@@ -250,7 +250,7 @@ describe("picking an OS address", () => {
           description="Find your property"
           title="Type your postal code"
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Enter a postcode...
@@ -258,12 +258,12 @@ describe("picking an OS address", () => {
 
     // Expect autocomplete to be rendered with the correct postcode prop
     expect(
-      screen.getByTestId("address-autocomplete-web-component")
+      screen.getByTestId("address-autocomplete-web-component"),
     ).toBeInTheDocument();
     expect(
       screen
         .getByTestId("address-autocomplete-web-component")
-        .getAttribute("postcode")
+        .getAttribute("postcode"),
     ).toEqual("SE5 0HU");
 
     // Now go back and change the postcode
@@ -274,7 +274,7 @@ describe("picking an OS address", () => {
     expect(
       screen
         .getByTestId("address-autocomplete-web-component")
-        .getAttribute("postcode")
+        .getAttribute("postcode"),
     ).toEqual("SE5 0HX");
 
     // User is unable to continue and to submit incomplete data
@@ -297,7 +297,7 @@ describe("picking an OS address", () => {
             data: previousData,
           }}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // confirm that we've immediately landed on the autocomplete page because our address source is "os"
@@ -323,17 +323,17 @@ describe("plotting a new address that does not have a uprn yet", () => {
           newAddressTitle="Plot a new address"
           handleSubmit={handleSubmit}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // starts on address-autocomplete page
     expect(
-      await screen.findByText("Type your postal code")
+      await screen.findByText("Type your postal code"),
     ).toBeInTheDocument();
 
     // click the link to switch pages
     await user.click(
-      await screen.findByText("The site does not have an address")
+      await screen.findByText("The site does not have an address"),
     );
 
     // confirm we've switched pages
@@ -342,7 +342,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
     // keyUp should trigger the error message to display
     await user.type(await screen.findByLabelText("Name the site"), "{enter}");
     expect(
-      screen.getByText(`Enter a site description such as "Land at..."`)
+      screen.getByText(`Enter a site description such as "Land at..."`),
     ).toBeInTheDocument();
 
     // expect continue to be disabled because we have incomplete address details
@@ -366,7 +366,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
             data: previousData,
           }}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // confirm that we've immediately landed on the map page because our address source is "proposed"

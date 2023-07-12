@@ -36,7 +36,7 @@ const fnOrDefaultPassportKey = (props: any) =>
 export const makeData = <T>(
   props: any,
   value: T,
-  overwriteKey?: string
+  overwriteKey?: string,
 ): {} | { data: Record<string, T> } => {
   if (isEmpty(value)) return {};
   else

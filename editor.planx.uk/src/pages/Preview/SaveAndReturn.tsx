@@ -44,7 +44,7 @@ export const ConfirmEmail: React.FC<{
             <Input
               bordered
               errorMessage={
-                Boolean(formik.touched.email && formik.errors.email)
+                formik.touched.email && formik.errors.email
                   ? formik.errors.email
                   : undefined
               }
@@ -62,9 +62,7 @@ export const ConfirmEmail: React.FC<{
             <Input
               bordered
               errorMessage={
-                Boolean(
-                  formik.touched.confirmEmail && formik.errors.confirmEmail
-                )
+                formik.touched.confirmEmail && formik.errors.confirmEmail
                   ? formik.errors.confirmEmail
                   : undefined
               }

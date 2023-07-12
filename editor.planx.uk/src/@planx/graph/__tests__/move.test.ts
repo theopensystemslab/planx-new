@@ -101,7 +101,7 @@ describe("error handling", () => {
           edges: ["a"],
         },
         a: {},
-      })
+      }),
     ).toThrow("id not found");
   });
 
@@ -113,7 +113,7 @@ describe("error handling", () => {
         },
         a: {},
         b: {},
-      })
+      }),
     ).toThrow("parent not found");
   });
 
@@ -124,7 +124,7 @@ describe("error handling", () => {
           edges: ["a"],
         },
         a: {},
-      })
+      }),
     ).toThrow("toParent not found");
   });
 
@@ -136,7 +136,7 @@ describe("error handling", () => {
         },
         a: {},
         b: {},
-      })
+      }),
     ).toThrow("toBefore does not exist in toParent");
   });
 
@@ -148,7 +148,7 @@ describe("error handling", () => {
         },
         a: {},
         b: {},
-      })
+      }),
     ).toThrow("parent does not connect to id");
   });
 
@@ -162,7 +162,7 @@ describe("error handling", () => {
           edges: ["b"],
         },
         b: {},
-      })
+      }),
     ).toThrow("cycle");
   });
 
@@ -176,7 +176,7 @@ describe("error handling", () => {
           edges: ["clone"],
         },
         clone: {},
-      })
+      }),
     ).toThrow("same parent");
   });
 
@@ -188,7 +188,7 @@ describe("error handling", () => {
         },
         a: {},
         sectionNodeId: { type: 360 },
-      })
+      }),
     ).toThrow("cannot move sections onto branches, must be on center of graph");
   });
 });

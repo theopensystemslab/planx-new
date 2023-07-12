@@ -167,7 +167,7 @@ export default function InputGroup({
           classes.content,
           deletable && classes.deletable,
           draggable && classes.draggable,
-          deleteHover && classes.deletePending
+          deleteHover && classes.deletePending,
         )}
       >
         {draggable && (
