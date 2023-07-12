@@ -54,7 +54,7 @@ export function slugify(name: string): string {
 }
 
 export const isLiveEnv = () =>
-  ["production", "staging", "pizza"].includes(process.env.NODE_ENV || "");
+  ["production", "staging", "pizza"].includes(process.env.REACT_APP_ENV || "");
 
 export const removeSessionIdSearchParam = () => {
   const currentURL = new URL(window.location.href);

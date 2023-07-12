@@ -32,6 +32,10 @@ declare module "@mui/styles/defaultTheme" {
   interface DefaultTheme extends Theme {}
 }
 
+if (process.env.REACT_APP_ENV !== "production") {
+  console.log(`ENV: ${process.env.REACT_APP_ENV}`);
+}
+
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 
