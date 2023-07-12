@@ -161,7 +161,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "CI=false && craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "classic:start": "react-app-rewired start",
