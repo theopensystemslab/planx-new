@@ -5,7 +5,7 @@ import { $admin } from "../../client";
 export async function getCSVData(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { responses } = await $admin.export.csvData(req.params.sessionId);
@@ -30,11 +30,11 @@ export async function getCSVData(
 export async function getRedactedCSVData(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { redactedResponses } = await $admin.export.csvData(
-      req.params.sessionId
+      req.params.sessionId,
     );
 
     if (req.query?.download) {

@@ -97,7 +97,7 @@ describe("Send email endpoint for invite to pay templates", () => {
             .then((response) => {
               expect(response.body).toHaveProperty(
                 "error",
-                `Failed to send "${template}" email. Required \`paymentRequestId\` missing`
+                `Failed to send "${template}" email. Required \`paymentRequestId\` missing`,
               );
             });
         });
@@ -142,7 +142,7 @@ describe("Send email endpoint for invite to pay templates", () => {
   describe("'Payment Expiry' templates", () => {
     const templates = ["payment-expiry", "payment-expiry-agent"];
     it.todo(
-      "soft deletes the payment_request when a payment expiry email is sent"
+      "soft deletes the payment_request when a payment expiry email is sent",
     );
   });
 });

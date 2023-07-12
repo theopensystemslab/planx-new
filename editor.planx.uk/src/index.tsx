@@ -24,6 +24,10 @@ import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import { defaultTheme } from "./theme";
 
+if (process.env.REACT_APP_ENV !== "production") {
+  console.log(`ENV: ${process.env.REACT_APP_ENV}`);
+}
+
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 

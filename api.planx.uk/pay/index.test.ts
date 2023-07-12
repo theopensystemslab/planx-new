@@ -8,10 +8,10 @@ jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       session: {
-        findDetails: jest.fn().mockImplementation(() => ({ lockedAt: null }))
-      }
-    })) 
-  }
+        findDetails: jest.fn().mockImplementation(() => ({ lockedAt: null })),
+      },
+    })),
+  };
 });
 
 describe("sending a payment to GOV.UK Pay", () => {
@@ -45,7 +45,9 @@ describe("sending a payment to GOV.UK Pay", () => {
 
   it("proxies request", async () => {
     await supertest(app)
-      .post("/pay/southwark?flowId=7cd1c4b4-4229-424f-8d04-c9fdc958ef4e&sessionId=f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c")
+      .post(
+        "/pay/southwark?flowId=7cd1c4b4-4229-424f-8d04-c9fdc958ef4e&sessionId=f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c",
+      )
       .send({
         amount: 100,
         reference: "12343543",
@@ -139,7 +141,9 @@ describe("fetching status of a GOV.UK payment", () => {
     });
 
     await supertest(app)
-      .get("/pay/southwark/hu20sqlact5260q2nanm0q8u93?flowId=7cd1c4b4-4229-424f-8d04-c9fdc958ef4e&sessionId=f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c")
+      .get(
+        "/pay/southwark/hu20sqlact5260q2nanm0q8u93?flowId=7cd1c4b4-4229-424f-8d04-c9fdc958ef4e&sessionId=f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c",
+      )
       .expect(200)
       .then((res) => {
         expect(res.body).toStrictEqual({
@@ -149,7 +153,7 @@ describe("fetching status of a GOV.UK payment", () => {
             status: "success",
             finished: true,
           },
-          _links: {}
+          _links: {},
         });
       });
   });

@@ -8,7 +8,7 @@ const mockSend = jest.fn();
 jest.mock("slack-notify", () =>
   jest.fn().mockImplementation(() => {
     return { send: mockSend };
-  })
+  }),
 );
 
 const { post } = supertest(app);
@@ -145,7 +145,7 @@ describe("Send Slack notifications endpoint", () => {
           .expect(200)
           .then((response) => {
             expect(response.body.message).toMatch(
-              /skipping Slack notification/
+              /skipping Slack notification/,
             );
           });
       });
@@ -160,7 +160,7 @@ describe("Send Slack notifications endpoint", () => {
           .expect(200)
           .then((response) => {
             expect(SlackNotify).toHaveBeenCalledWith(
-              process.env.SLACK_WEBHOOK_URL
+              process.env.SLACK_WEBHOOK_URL,
             );
             expect(mockSend).toHaveBeenCalledTimes(1);
             expect(response.body.message).toBe("Posted to Slack");

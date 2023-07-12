@@ -123,6 +123,6 @@ async function insertPaymentStatus({
       paymentId,
       status,
       amount,
-    }
+    },
   );
 }

@@ -11,7 +11,7 @@ export async function locationSearch(req, res, next) {
     try {
       const resp = await locationSearchWithoutTimeout(
         req.params.localAuthority,
-        req.query
+        req.query,
       );
       res.send(resp);
     } catch (err) {
@@ -27,7 +27,7 @@ export async function locationSearch(req, res, next) {
       const resp = await locationSearchWithTimeout(
         req.params.localAuthority,
         req.query,
-        timeout
+        timeout,
       );
       res.send(resp);
     } catch (err) {
@@ -49,7 +49,7 @@ export function locationSearchWithoutTimeout(localAuthority, queryParams) {
   return localAuthorities["digitalLand"].locationSearch(
     localAuthority,
     queryParams.geom,
-    queryParams
+    queryParams,
   );
 }
 
@@ -57,7 +57,7 @@ export function locationSearchWithoutTimeout(localAuthority, queryParams) {
 export function locationSearchWithTimeout(
   localAuthority,
   { x, y, siteBoundary, extras = "{}" },
-  time
+  time,
 ) {
   let extraInfo = extras;
   extraInfo = JSON.parse(unescape(extras));
@@ -73,7 +73,7 @@ export function locationSearchWithTimeout(
     parseInt(x, 10),
     parseInt(y, 10),
     JSON.parse(siteBoundary),
-    extraInfo
+    extraInfo,
   );
 
   return Promise.race([promise, timeout]);

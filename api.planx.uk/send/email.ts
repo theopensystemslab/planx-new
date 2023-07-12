@@ -11,7 +11,7 @@ import { buildSubmissionExportZip } from "./exportZip";
 export async function sendToEmail(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
@@ -27,7 +27,7 @@ export async function sendToEmail(
   try {
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
     const { sendToEmail, notifyPersonalisation } = await getTeamEmailSettings(
-      req.params.localAuthority
+      req.params.localAuthority,
     );
     if (!sendToEmail) {
       return next({
@@ -68,7 +68,7 @@ export async function sendToEmail(
       req.params.localAuthority,
       sendToEmail,
       config,
-      response
+      response,
     );
 
     return res.status(200).send({
@@ -85,7 +85,7 @@ export async function sendToEmail(
 export async function downloadApplicationFiles(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const sessionId: string = req.params?.sessionId;
   if (!sessionId || !req.query?.email || !req.query?.localAuthority) {
@@ -98,7 +98,7 @@ export async function downloadApplicationFiles(
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
     const { sendToEmail } = await getTeamEmailSettings(
-      req.query.localAuthority as string
+      req.query.localAuthority as string,
     );
     if (sendToEmail !== req.query.email) {
       return next({
@@ -128,7 +128,7 @@ export async function downloadApplicationFiles(
     res.status(200).send(zipData);
 
     // Clean up the local zip file
-    zip.remove()
+    zip.remove();
 
     // TODO Record files_downloaded_at timestamp in lowcal_sessions ??
   } catch (error) {
@@ -151,7 +151,7 @@ async function getTeamEmailSettings(localAuthority: string) {
     `,
     {
       slug: localAuthority,
-    }
+    },
   );
 
   return response?.teams[0];
@@ -171,7 +171,7 @@ async function getSessionEmailDetailsById(sessionId: string) {
     `,
     {
       id: sessionId,
-    }
+    },
   );
 
   return response?.lowcal_sessions_by_pk;
@@ -188,7 +188,7 @@ async function getSessionData(sessionId: string) {
     `,
     {
       id: sessionId,
-    }
+    },
   );
 
   return response?.lowcal_sessions_by_pk?.data;
@@ -202,7 +202,7 @@ async function insertAuditEntry(
   sendEmailResponse: {
     message: string;
     expiryDate?: string;
-  }
+  },
 ) {
   const response = await adminClient.request(
     gql`
@@ -232,7 +232,7 @@ async function insertAuditEntry(
       recipient: recipient,
       request: notifyRequest,
       response: sendEmailResponse,
-    }
+    },
   );
 
   return response?.insert_email_applications_one?.id;

@@ -29,7 +29,7 @@ describe("logger", () => {
       location: { host: "blah.planx.uk" },
     }));
     process.env = Object.assign({
-      NODE_ENV: "production",
+      REACT_APP_ENV: "production",
       REACT_APP_AIRBRAKE_PROJECT_ID: "1",
       REACT_APP_AIRBRAKE_PROJECT_KEY: "a",
     });

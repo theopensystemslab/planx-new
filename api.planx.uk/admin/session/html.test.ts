@@ -35,7 +35,7 @@ describe("HTML data admin endpoint", () => {
       .then((res) =>
         expect(res.body).toEqual({
           error: "No authorization token was found",
-        })
+        }),
       );
   });
 
@@ -46,7 +46,7 @@ describe("HTML data admin endpoint", () => {
       .expect(200)
       .expect("content-type", "text/html; charset=utf-8")
       .then((res) =>
-        expect(res.text).toContain("<dt>Is this a test?</dt><dd>Yes</dd>")
+        expect(res.text).toContain("<dt>Is this a test?</dt><dd>Yes</dd>"),
       );
   });
 });

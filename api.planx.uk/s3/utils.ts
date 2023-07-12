@@ -25,10 +25,7 @@ function useMinio() {
   }
 }
 
-export function buildFilePath(
-  fileKey: string,
-  fileName: string
-): string {
+export function buildFilePath(fileKey: string, fileName: string): string {
   return `${fileKey}/${fileName}`;
 }
 
@@ -36,7 +33,7 @@ export function buildFilePath(
  * Return an S3 key in the fileKey/fileName format, based on a file's API URL
  */
 export function getS3KeyFromURL(fileURL: string): string {
-  const [folder, file] = new URL(fileURL).pathname.split("/").slice(-2)
+  const [folder, file] = new URL(fileURL).pathname.split("/").slice(-2);
   const key = [folder, file].map(decodeURIComponent).join("/");
   return key;
 }

@@ -20,7 +20,12 @@ describe("bad requests", () => {
   test(`app.get("/pay/:localAuthority/:paymentId")`, async () => {
     nock("https://publicapi.payments.service.gov.uk")
       .get("/v1/payments/1")
-      .reply(400, { payment_id: 123, amount: 0, state: "paid", payment_provider: "sandbox" });
+      .reply(400, {
+        payment_id: 123,
+        amount: 0,
+        state: "paid",
+        payment_provider: "sandbox",
+      });
 
     await get("/pay/wrong/1").expect(400);
   });
@@ -36,7 +41,7 @@ describe("bad requests", () => {
         expect(response.body).toEqual({
           error: "No authorization token was found",
         });
-      })
+      });
   });
 
   test(`app.get("/gis")`, async () => {

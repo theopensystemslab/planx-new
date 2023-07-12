@@ -9,7 +9,7 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 const validateAndDiffFlow = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
   if (!req.user?.sub)
     return next({ status: 401, message: "User ID missing from JWT" });
@@ -69,7 +69,7 @@ const validateAndDiffFlow = async (
 const publishFlow = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
   if (!req.user?.sub)
     return next({ status: 401, message: "User ID missing from JWT" });
@@ -109,7 +109,7 @@ const publishFlow = async (
           flow_id: req.params.flowId,
           publisher_id: parseInt(req.user.sub, 10),
           summary: req.query?.summary || null,
-        }
+        },
       );
 
       const publishedFlow =
@@ -182,7 +182,7 @@ const allSectionsOnRoot = (flow: Record<string, any>): boolean => {
   const sectionTypeNodeIds = getSectionNodeIds(flow);
   const intersectingNodeIds = intersection(
     flow["_root"].edges,
-    sectionTypeNodeIds
+    sectionTypeNodeIds,
   );
   return intersectingNodeIds.length === sectionTypeNodeIds.length;
 };
@@ -256,10 +256,10 @@ const inviteToPayEnabled = (flow: Record<string, any>): boolean => {
 const hasComponentType = (
   flow: Record<string, any>,
   type: ComponentType,
-  fn?: string
+  fn?: string,
 ): boolean => {
   const nodeIds = Object.entries(flow).filter(
-    ([_nodeId, nodeData]) => nodeData?.type === type
+    ([_nodeId, nodeData]) => nodeData?.type === type,
   );
   if (fn) {
     nodeIds
@@ -274,10 +274,10 @@ const hasComponentType = (
 const numberOfComponentType = (
   flow: Record<string, any>,
   type: ComponentType,
-  fn?: string
+  fn?: string,
 ): number => {
   const nodeIds = Object.entries(flow).filter(
-    ([_nodeId, nodeData]) => nodeData?.type === type
+    ([_nodeId, nodeData]) => nodeData?.type === type,
   );
   if (fn) {
     nodeIds

@@ -35,7 +35,7 @@ describe("CSV data admin endpoint", () => {
       .then((res) =>
         expect(res.body).toEqual({
           error: "No authorization token was found",
-        })
+        }),
       );
   });
 
@@ -52,7 +52,7 @@ describe("CSV data admin endpoint", () => {
             responses: [{ value: "Yes" }],
             metadata: {},
           },
-        ])
+        ]),
       );
   });
 

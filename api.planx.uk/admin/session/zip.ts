@@ -4,7 +4,7 @@ import { buildSubmissionExportZip } from "../../send/exportZip";
 export async function generateZip(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const zip = await buildSubmissionExportZip({

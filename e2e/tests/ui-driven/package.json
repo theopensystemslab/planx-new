@@ -4,7 +4,7 @@
     "test": "playwright test --grep-invert @regression",
     "test:regression": "playwright test",
     "test:debug": "DEBUG_LOG=true pnpm test",
-    "ui": "NODE_ENV=test serve ../../../editor.planx.uk/build --single --listen 3000",
+    "ui": "serve ../../../editor.planx.uk/build --single --listen 3000",
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {

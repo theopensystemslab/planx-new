@@ -7,7 +7,7 @@ import { $admin } from "../client";
 export async function inviteToPay(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const sessionId = req.params.sessionId;
   const {
@@ -33,7 +33,7 @@ export async function inviteToPay(
         new ServerError({
           message: `JSON body must contain ${requiredFieldName}`,
           status: 400,
-        })
+        }),
       );
     }
   }
@@ -45,19 +45,19 @@ export async function inviteToPay(
       new ServerError({
         message: "session not found",
         status: 404,
-      })
+      }),
     );
   }
   if (locked === false) {
     const cause = new Error(
-      "this session could not be locked, perhaps because it is already locked"
+      "this session could not be locked, perhaps because it is already locked",
     );
     return next(
       new ServerError({
         message: `could not initiate a payment request: ${cause.message}`,
         status: 400,
         cause,
-      })
+      }),
     );
   }
 
@@ -81,7 +81,7 @@ export async function inviteToPay(
             : "could not initiate a payment request due to an unknown error",
         status: 500,
         cause: e,
-      })
+      }),
     );
   }
 

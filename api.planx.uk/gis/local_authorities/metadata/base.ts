@@ -5,7 +5,7 @@ type PlanningConstraintConfig = {
   "digital-land-datasets"?: string[];
   "digital-land-entities"?: number[];
   category: string;
-}
+};
 type PlanningConstraintsBaseSchema = Record<string, PlanningConstraintConfig>;
 
 // planx schema variables and their attributes (in the future, maybe these are managed in Editor?)
@@ -19,7 +19,8 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     "digital-land-datasets": ["article-4-direction-area"],
     category: "General policy",
   },
-  "article4.caz": { // will be renamed to `article4.localAuthority.caz` when applicable
+  "article4.caz": {
+    // will be renamed to `article4.localAuthority.caz` when applicable
     active: true,
     neg: "is not in the Central Activities Zone",
     pos: "is in the Central Activities Zone",
@@ -33,14 +34,14 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     "digital-land-datasets": ["listed-building", "listed-building-outline"], // HE publishes points, LPAs publish polygons
     category: "Heritage and conservation",
   },
-  "locallyListed": {
+  locallyListed: {
     active: true,
     neg: "is not, or is not within, a Locally Listed Building",
     pos: "is, or is within, a Locally Listed Building",
     "digital-land-datasets": ["locally-listed-building"],
     category: "Heritage and conservation",
   },
-  "registeredPark": {
+  registeredPark: {
     active: true,
     neg: "is not in a Historic Park or Garden",
     pos: "is in a Historic Park or Garden",
@@ -80,7 +81,10 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     active: true,
     neg: "is not an UNESCO World Heritage Site",
     pos: "is, or is within, an UNESCO World Heritage Site",
-    "digital-land-datasets": ["world-heritage-site", "world-heritage-site-buffer-zone"],
+    "digital-land-datasets": [
+      "world-heritage-site",
+      "world-heritage-site-buffer-zone",
+    ],
     category: "Heritage and conservation",
   },
   "designated.SPA": {
@@ -90,7 +94,7 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     "digital-land-datasets": ["special-protection-area"],
     category: "Heritage and conservation",
   },
-  "monument": {
+  monument: {
     active: true,
     neg: "is not the site of a Scheduled Monument",
     pos: "is the site of a Scheduled Monument",
@@ -101,7 +105,11 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     active: true,
     neg: "is not in a Tree Preservation Order (TPO) Zone",
     pos: "is in a Tree Preservation Order (TPO) Zone",
-    "digital-land-datasets": ["tree", "tree-preservation-order", "tree-preservation-zone"], // "tree" is points, "-zone" is polygons
+    "digital-land-datasets": [
+      "tree",
+      "tree-preservation-order",
+      "tree-preservation-zone",
+    ], // "tree" is points, "-zone" is polygons
     category: "Trees",
   },
   "nature.SSSI": {
@@ -163,6 +171,4 @@ const baseSchema: PlanningConstraintsBaseSchema = {
   },
 };
 
-export {
-  baseSchema
-};
+export { baseSchema };

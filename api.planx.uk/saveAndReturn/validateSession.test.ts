@@ -39,7 +39,7 @@ describe("Validate Session endpoint", () => {
         .then((response) => {
           expect(response.body).toHaveProperty(
             "error",
-            "Required value missing"
+            "Required value missing",
           );
         });
     }
@@ -61,7 +61,7 @@ describe("Validate Session endpoint", () => {
       .then((response) => {
         expect(response.body).toHaveProperty(
           "error",
-          "Unable to find your session"
+          "Unable to find your session",
         );
       });
   });
@@ -238,8 +238,8 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            removedBreadcrumbIds
-          )
+            removedBreadcrumbIds,
+          ),
         ).toBe(false);
       });
   });
@@ -375,8 +375,8 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            removedBreadcrumbIds
-          )
+            removedBreadcrumbIds,
+          ),
         ).toBe(false);
       });
   });
@@ -484,8 +484,8 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            []
-          )
+            [],
+          ),
         ).toBe(false);
       });
   });
@@ -575,8 +575,8 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            removedBreadcrumbIds
-          )
+            removedBreadcrumbIds,
+          ),
         ).toBe(false);
       });
   });

@@ -45,16 +45,16 @@ describe("isLiveEnv() function", () => {
   });
 
   it("returns true for live environments", () => {
-    ["pizza", "staging", "production"].forEach(env => {
+    ["pizza", "staging", "production"].forEach((env) => {
       process.env.NODE_ENV = env;
       expect(isLiveEnv()).toBe(true);
     });
-  })
+  });
 
   it("returns false for other environments", () => {
-    ["", undefined, "test", "development"].forEach(env => {
+    ["", undefined, "test", "development"].forEach((env) => {
       process.env.NODE_ENV = env;
       expect(isLiveEnv()).toBe(false);
     });
-  })
+  });
 });

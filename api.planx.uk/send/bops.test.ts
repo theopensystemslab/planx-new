@@ -13,12 +13,10 @@ jest.mock("@opensystemslab/planx-core", () => {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       export: {
         bopsPayload: () =>
-          jest
-            .fn()
-            .mockResolvedValue({
-              exportData: expectedPayload,
-              redactedExportData: expectedPayload,
-            }),
+          jest.fn().mockResolvedValue({
+            exportData: expectedPayload,
+            redactedExportData: expectedPayload,
+          }),
       },
     })),
   };

@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 const sendSlackNotification = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<Response | void> => {
   const isProduction = process.env.APP_ENVIRONMENT === "production";
   const supportedTypes = [

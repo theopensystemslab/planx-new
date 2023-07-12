@@ -285,7 +285,7 @@ describe("getA4Subvariables helper function", () => {
     const result = getA4Subvariables(features, articleFours, A4_KEY);
     // Assert
     Object.keys(articleFours).forEach((key) =>
-      expect(result).toHaveProperty([key])
+      expect(result).toHaveProperty([key]),
     );
   });
 

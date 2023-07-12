@@ -1,5 +1,6 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { capitalize } from "lodash";
+import { removeSessionIdSearchParam } from "utils";
 import type { StateCreator } from "zustand";
 
 import type { Store } from ".";
@@ -74,7 +75,10 @@ export const sharedStore: StateCreator<
       _nodesPendingEdit: [],
       restore: false,
       changedNode: undefined,
+      saveToEmail: "",
     });
+
+    removeSessionIdSearchParam();
   },
 
   setFlow({ id, flow, flowSlug }) {

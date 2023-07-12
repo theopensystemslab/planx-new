@@ -12,7 +12,7 @@ assert(process.env.AWS_SECRET_KEY);
 export const privateUploadController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (!req.body.filename)
     return next({ status: 422, message: "missing filename" });
@@ -30,7 +30,7 @@ export const privateUploadController = async (
 export const publicUploadController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (!req.body.filename)
     return next({ status: 422, message: "missing filename" });
@@ -48,7 +48,7 @@ export const publicUploadController = async (
 export const publicDownloadController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const filePath = buildFilePath(req.params.fileKey, req.params.fileName);
 
@@ -67,7 +67,7 @@ export const publicDownloadController = async (
 export const privateDownloadController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const filePath = buildFilePath(req.params.fileKey, req.params.fileName);
 

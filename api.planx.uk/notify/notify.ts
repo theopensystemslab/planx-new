@@ -58,7 +58,7 @@ export type Template = keyof typeof emailTemplates;
 const sendEmail = async (
   template: Template,
   emailAddress: string,
-  config: NotifyConfig
+  config: NotifyConfig,
 ) => {
   const templateId = emailTemplates[template];
   if (!templateId) throw new Error("Template ID is required");
@@ -79,7 +79,7 @@ const sendEmail = async (
       ? JSON.stringify(error?.response?.data?.errors?.[0])
       : error?.message;
     throw Error(
-      `Error: Failed to send email using Notify client. ${notifyError}`
+      `Error: Failed to send email using Notify client. ${notifyError}`,
     );
   }
 };

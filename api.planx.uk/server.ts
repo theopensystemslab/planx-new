@@ -26,12 +26,13 @@ import { locationSearch } from "./gis/index";
 import { validateAndDiffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
 import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
-import {
-  resumeApplication,
-  validateSession,
-} from "./saveAndReturn";
+import { resumeApplication, validateSession } from "./saveAndReturn";
 import { routeSendEmailRequest } from "./notify";
-import { makePaymentViaProxy, fetchPaymentViaProxy, makeInviteToPayPaymentViaProxy } from "./pay";
+import {
+  makePaymentViaProxy,
+  fetchPaymentViaProxy,
+  makeInviteToPayPaymentViaProxy,
+} from "./pay";
 import {
   inviteToPay,
   fetchPaymentRequestDetails,
@@ -45,7 +46,10 @@ import {
   createReminderEvent,
   createExpiryEvent,
 } from "./webhooks/lowcalSessionEvents";
-import { adminGraphQLClient as adminClient, publicGraphQLClient as publicClient } from "./hasura";
+import {
+  adminGraphQLClient as adminClient,
+  publicGraphQLClient as publicClient,
+} from "./hasura";
 import { graphQLVoyagerHandler, introspectionHandler } from "./hasura/voyager";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
@@ -67,7 +71,11 @@ import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 import { isLiveEnv } from "./helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
-import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
+import {
+  createPaymentExpiryEvents,
+  createPaymentInvitationEvents,
+  createPaymentReminderEvents,
+} from "./webhooks/paymentRequestEvents";
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 import { getBOPSPayload } from "./admin/session/bops";
 import { getCSVData, getRedactedCSVData } from "./admin/session/csv";
@@ -129,7 +137,7 @@ const handleSuccess = (req: Request, res: Response) => {
       const cookie: CookieOptions = {
         domain,
         maxAge: new Date(
-          new Date().setFullYear(new Date().getFullYear() + 1)
+          new Date().setFullYear(new Date().getFullYear() + 1),
         ).getTime(),
         httpOnly: false,
       };
@@ -170,7 +178,7 @@ router.get("/google", (req, res, next) => {
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/login/failed" }),
-  handleSuccess
+  handleSuccess,
 );
 
 const buildJWT = async (profile: Profile, done: VerifyCallback) => {
@@ -178,12 +186,13 @@ const buildJWT = async (profile: Profile, done: VerifyCallback) => {
 
   const { users } = await adminClient.request(
     gql`
-    query ($email: String!) {
-      users(where: {email: {_eq: $email}}, limit: 1) {
-        id
+      query ($email: String!) {
+        users(where: { email: { _eq: $email } }, limit: 1) {
+          id
+        }
       }
-    }`,
-    { email }
+    `,
+    { email },
   );
 
   if (users.length === 1) {
@@ -227,8 +236,8 @@ passport.use(
     },
     async function (_accessToken, _refreshToken, profile, done) {
       await buildJWT(profile, done);
-    }
-  )
+    },
+  ),
 );
 
 passport.serializeUser(function (user, cb) {
@@ -247,7 +256,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   );
   next();
 });
@@ -256,7 +265,7 @@ app.use(
   cors({
     credentials: true,
     methods: "*",
-  })
+  }),
 );
 
 app.use(json({ limit: "100mb" }));
@@ -283,7 +292,7 @@ if (process.env.NODE_ENV !== "test") {
   app.use(
     pinoLogger({
       serializers: noir(["req.headers.authorization"], "**REDACTED**"),
-    })
+    }),
   );
 }
 
@@ -332,7 +341,7 @@ app.post(
 app.get(
   "/payment-request/:paymentRequest/payment/:paymentId",
   fetchPaymentRequestDetails,
-  fetchPaymentRequestViaProxy
+  fetchPaymentRequestViaProxy,
 );
 
 // needed for storing original URL to redirect to in login flow
@@ -341,7 +350,7 @@ app.use(
     maxAge: 24 * 60 * 60 * 100,
     name: "session",
     secret: process.env.SESSION_SECRET,
-  })
+  }),
 );
 
 app.use(passport.initialize());
@@ -354,13 +363,13 @@ app.use("/gis", router);
 
 app.get("/hasura", async function (_req, res, next) {
   try {
-    const data = await adminClient.request(
-      gql`query GetTeams {
+    const data = await adminClient.request(gql`
+      query GetTeams {
         teams {
           id
         }
-      }`
-    );
+      }
+    `);
     res.json(data);
   } catch (err) {
     next(err);
@@ -373,19 +382,21 @@ app.get("/me", useJWT, async function (req, res, next) {
     next({ status: 401, message: "User ID missing from JWT" });
 
   try {
-    const user = await adminClient.request(gql`
-      query ($id: Int!) {
-        users_by_pk(id: $id) {
-          id
-          first_name
-          last_name
-          email
-          is_admin
-          created_at
-          updated_at
+    const user = await adminClient.request(
+      gql`
+        query ($id: Int!) {
+          users_by_pk(id: $id) {
+            id
+            first_name
+            last_name
+            email
+            is_admin
+            created_at
+            updated_at
+          }
         }
-      }`,
-      { id: req.user?.sub }
+      `,
+      { id: req.user?.sub },
     );
 
     if (!user.users_by_pk)
@@ -412,7 +423,7 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.use("/admin", useJWT)
+app.use("/admin", useJWT);
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
 app.get("/admin/session/:sessionId/bops", getBOPSPayload);
@@ -433,11 +444,11 @@ app.all(
   introspectionHandler({
     graphQLClient: publicClient,
     validateUser: false,
-  })
+  }),
 );
 app.get(
   "/introspect/graph",
-  graphQLVoyagerHandler({ graphQLURL: "/introspect", validateUser: false })
+  graphQLVoyagerHandler({ graphQLURL: "/introspect", validateUser: false }),
 );
 app.all(
   "/introspect-all",
@@ -445,12 +456,12 @@ app.all(
   introspectionHandler({
     graphQLClient: adminClient,
     validateUser: true,
-  })
+  }),
 );
 app.get(
   "/introspect-all/graph",
   useJWT,
-  graphQLVoyagerHandler({ graphQLURL: "/introspect-all", validateUser: true })
+  graphQLVoyagerHandler({ graphQLURL: "/introspect-all", validateUser: true }),
 );
 
 app.post("/flows/:flowId/copy", useJWT, copyFlow);
@@ -469,16 +480,18 @@ app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
-    const schema = await adminClient.request(gql`
-      query ($flow_id: String!) {
-        get_flow_schema(args: {published_flow_id: $flow_id}) {
-          node
-          type
-          text
-          planx_variable
+    const schema = await adminClient.request(
+      gql`
+        query ($flow_id: String!) {
+          get_flow_schema(args: { published_flow_id: $flow_id }) {
+            node
+            type
+            text
+            planx_variable
+          }
         }
-      }`,
-      { flow_id: req.params.flowId }
+      `,
+      { flow_id: req.params.flowId },
     );
 
     if (schema.get_flow_schema.length < 1) {
@@ -522,13 +535,13 @@ app.post("/download-application", async (req, res, next) => {
 app.post(
   "/private-file-upload",
   multer().single("file"),
-  privateUploadController
+  privateUploadController,
 );
 
 app.post(
   "/public-file-upload",
   multer().single("file"),
-  publicUploadController
+  publicUploadController,
 );
 
 app.get("/file/public/:fileKey/:fileName", publicDownloadController);
@@ -536,47 +549,52 @@ app.get("/file/public/:fileKey/:fileName", publicDownloadController);
 app.get(
   "/file/private/:fileKey/:fileName",
   useFilePermission,
-  privateDownloadController
+  privateDownloadController,
 );
 
 const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   try {
-    const result = await adminClient.request(gql`
-      mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
-        update_analytics_logs_by_pk(
-          pk_columns: {id: $id},
-          _set: {user_exit: $user_exit}
-        ) {
-          id
-          user_exit
-          analytics_id
+    const result = await adminClient.request(
+      gql`
+        mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
+          update_analytics_logs_by_pk(
+            pk_columns: { id: $id }
+            _set: { user_exit: $user_exit }
+          ) {
+            id
+            user_exit
+            analytics_id
+          }
         }
-      }
-    `,
+      `,
       {
         id,
         user_exit: isUserExit,
-      }
+      },
     );
 
     const analytics_id = result.update_analytics_logs_by_pk.analytics_id;
-    await adminClient.request(gql`
-      mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
-        update_analytics_by_pk(pk_columns: {id: $id}, _set: {ended_at: $ended_at}) {
-          id
+    await adminClient.request(
+      gql`
+        mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
+          update_analytics_by_pk(
+            pk_columns: { id: $id }
+            _set: { ended_at: $ended_at }
+          ) {
+            id
+          }
         }
-      }
-    `,
+      `,
       {
         id: analytics_id,
         ended_at: isUserExit ? new Date().toISOString() : null,
-      }
+      },
     );
   } catch (e) {
     // We need to catch this exception here otherwise the exception would become an unhandle rejection which brings down the whole node.js process
     console.error(
       "There's been an error while recording metrics for analytics but because this thread is non-blocking we didn't reject the request",
-      (e as Error).stack
+      (e as Error).stack,
     );
   }
 
@@ -600,7 +618,7 @@ app.post(
   "/send-email/:template",
   sendEmailLimiter,
   useSendEmailAuth,
-  routeSendEmailRequest
+  routeSendEmailRequest,
 );
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
@@ -610,10 +628,22 @@ app.post("/invite-to-pay/:sessionId", inviteToPay);
 app.use("/webhooks/hasura", useHasuraAuth);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
-app.post("/webhooks/hasura/create-payment-invitation-events", createPaymentInvitationEvents);
-app.post("/webhooks/hasura/create-payment-reminder-events", createPaymentReminderEvents);
-app.post("/webhooks/hasura/create-payment-expiry-events", createPaymentExpiryEvents);
-app.post("/webhooks/hasura/create-payment-send-events", createPaymentSendEvents);
+app.post(
+  "/webhooks/hasura/create-payment-invitation-events",
+  createPaymentInvitationEvents,
+);
+app.post(
+  "/webhooks/hasura/create-payment-reminder-events",
+  createPaymentReminderEvents,
+);
+app.post(
+  "/webhooks/hasura/create-payment-expiry-events",
+  createPaymentExpiryEvents,
+);
+app.post(
+  "/webhooks/hasura/create-payment-send-events",
+  createPaymentSendEvents,
+);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 app.post("/webhooks/hasura/sanitise-application-data", sanitiseApplicationData);
 
@@ -629,7 +659,10 @@ app.get("/error", async (res, req, next) => {
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
-    if (airbrake && (errorObject instanceof Error || errorObject instanceof ServerError)) {
+    if (
+      airbrake &&
+      (errorObject instanceof Error || errorObject instanceof ServerError)
+    ) {
       airbrake.notify(errorObject);
       return {
         ...errorObject,
@@ -652,7 +685,7 @@ app.use(errorHandler);
 
 const server = new Server(app);
 
-server.keepAliveTimeout = (30000); // 30s
+server.keepAliveTimeout = 30000; // 30s
 server.headersTimeout = 35000; // 35s
 server.setTimeout(60 * 1000); // 60s
 

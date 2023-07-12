@@ -22,7 +22,7 @@ describe("zip data admin endpoint", () => {
       .then((res) =>
         expect(res.body).toEqual({
           error: "No authorization token was found",
-        })
+        }),
       );
   });
 
