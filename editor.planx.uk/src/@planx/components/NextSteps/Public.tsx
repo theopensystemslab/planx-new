@@ -1,5 +1,3 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import NextStepsList from "ui/NextStepsList";
