@@ -61,6 +61,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
         <Input
           required
           name="url"
+          type="url"
           value={props.value.url}
           onChange={(ev: ChangeEvent<HTMLInputElement>) => {
             props.onChange({
