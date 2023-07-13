@@ -574,6 +574,61 @@
     name: reconciliation_requests
 - table:
     schema: public
+    name: sessions
+  insert_permissions:
+    - role: public
+      permission:
+        check:
+          email:
+            _eq: x-hasura-lowcal-email
+        columns:
+          - data
+          - email
+          - flow_id
+          - id
+  select_permissions:
+    - role: public
+      permission:
+        columns:
+          - created_at
+          - data
+          - has_user_saved
+          - id
+          - updated_at
+        filter:
+          _and:
+            - id:
+                _eq: x-hasura-lowcal-session-id
+            - email:
+                _eq: x-hasura-lowcal-email
+            - email:
+                _neq: ""
+            - submitted_at:
+                _is_null: true
+            - deleted_at:
+                _is_null: true
+        check: null
+  update_permissions:
+    - role: public
+      permission:
+        columns:
+          - data
+          - deleted_at
+        filter:
+          _and:
+            - id:
+                _eq: x-hasura-session-id
+            - email:
+                _eq: x-hasura-lowcal-email
+            - submitted_at:
+                _is_null: true
+            - deleted_at:
+                _is_null: true
+            - locked_at:
+                _is_null: true
+        check: null
+- table:
+    schema: public
     name: team_members
   object_relationships:
     - name: creator
