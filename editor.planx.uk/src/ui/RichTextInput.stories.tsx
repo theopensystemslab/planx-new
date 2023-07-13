@@ -7,13 +7,15 @@ import React, { useState } from "react";
 
 import RichTextInput, { fromHtml, injectVariables } from "./RichTextInput";
 
-const metadata: Meta = {
+const meta = {
   title: "Design System/Atoms/Form Elements/RichTextInput",
   component: RichTextInput,
   parameters: {
     controls: { hideNoControlsWarning: true },
   },
-};
+} satisfies Meta<typeof RichTextInput>;
+
+export default meta;
 
 export const Basic = () => {
   const [value, setValue] = useState<string>(
@@ -75,5 +77,3 @@ export const Basic = () => {
     </Grid>
   );
 };
-
-export default metadata;

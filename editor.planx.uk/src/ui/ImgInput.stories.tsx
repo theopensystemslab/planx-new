@@ -1,33 +1,17 @@
-import Box from "@mui/material/Box";
-import { Meta } from "@storybook/react";
-import React, { useState } from "react";
+import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
 import ImgInput from "./ImgInput";
 
-const metadata: Meta = {
-  title: "Design System/Atoms/Form Elements/Image Upload",
+const meta = {
+  title: "Design System/Atoms/Form Elements/ImageInput",
   component: ImgInput,
-};
+} satisfies Meta<typeof ImgInput>;
 
-export const Basic = () => {
-  const [imageUrl, setImageUrl] = useState<string | undefined>();
+type Story = StoryObj<typeof meta>;
 
-  return (
-    <>
-      <ImgInput onChange={setImageUrl} />
-      {imageUrl && (
-        <Box
-          width="20rem"
-          m={1}
-          border="1px solid black"
-          display="flex"
-          justifyContent="center"
-        >
-          <img src={imageUrl} style={{ width: "100%" }} alt="example" />
-        </Box>
-      )}
-    </>
-  );
-};
+export default meta;
 
-export default metadata;
+export const Basic = {
+  render: () => <ImgInput />,
+} satisfies Story;
