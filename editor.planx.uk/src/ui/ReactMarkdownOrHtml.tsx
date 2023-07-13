@@ -45,8 +45,7 @@ export default function ReactMarkdownOrHtml(props: {
   if (typeof props.source !== "string") {
     return null;
   }
-  const containsHTMLTags = new RegExp(/<([A-Za-z]*)\b[^>]*>/);
-  if (containsHTMLTags) {
+  if (props.source.includes("</") || props.source.includes("<img")) {
     const replaceTarget = props.openLinksOnNewTab
       ? props.source.replaceAll(`target="_self"`, `target="_blank" external`)
       : props.source;
