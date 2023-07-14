@@ -34,32 +34,11 @@ export function getCombinedEventsPayload({
   passport: Store.passport;
   sessionId: string;
 }) {
-  let combinedEventsPayload: any = {};
+  const combinedEventsPayload: any = {};
 
   // Format application user data as required by BOPS
   if (destinations.includes(Destination.BOPS)) {
     combinedEventsPayload[Destination.BOPS] = {
-      localAuthority: teamSlug,
-      body: { sessionId },
-    };
-  }
-
-  // Format application user data as required by Idox/Uniform
-  if (destinations.includes(Destination.Uniform)) {
-    // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
-    if (teamSlug === "buckinghamshire") {
-      teamSlug = passport.data?.["property.localAuthorityDistrict"]
-        ?.filter((name: string) => name !== "Buckinghamshire")[0]
-        ?.toLowerCase()
-        ?.replace(/\W+/g, "-");
-
-      // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
-      if (teamSlug === "south-bucks") {
-        teamSlug = "chiltern";
-      }
-    }
-
-    combinedEventsPayload[Destination.Uniform] = {
       localAuthority: teamSlug,
       body: { sessionId },
     };
@@ -71,6 +50,29 @@ export function getCombinedEventsPayload({
       body: { sessionId },
     };
   }
+
+  // Format application user data as required by Idox/Uniform
+  if (destinations.includes(Destination.Uniform)) {
+    let uniformTeamSlug = teamSlug;
+    // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
+    if (uniformTeamSlug === "buckinghamshire") {
+      uniformTeamSlug = passport.data?.["property.localAuthorityDistrict"]
+        ?.filter((name: string) => name !== "Buckinghamshire")[0]
+        ?.toLowerCase()
+        ?.replace(/\W+/g, "-");
+
+      // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
+      if (uniformTeamSlug === "south-bucks") {
+        uniformTeamSlug = "chiltern";
+      }
+    }
+
+    combinedEventsPayload[Destination.Uniform] = {
+      localAuthority: uniformTeamSlug,
+      body: { sessionId },
+    };
+  }
+
   return combinedEventsPayload;
 }
 

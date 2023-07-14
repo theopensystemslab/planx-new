@@ -8,12 +8,12 @@ test("modifyDeep helper", () => {
    */
   expect(
     modifyDeep((val) =>
-      typeof val === "number" ? (val % 2 === 0 ? val + 1 : val) : null
+      typeof val === "number" ? (val % 2 === 0 ? val + 1 : val) : null,
     )({
       a: { c: { val: 2 } },
       b: { val: 3 },
       d: [1, 2, 3, 4],
-    })
+    }),
   ).toEqual({
     a: { c: { val: 3 } },
     b: { val: 3 },

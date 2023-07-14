@@ -21,7 +21,7 @@ describe("locationSearchWithTimeout", () => {
     const promise = locationSearchWithTimeout(
       localAuthority,
       { x: 50, y: 50, siteBoundary: "[]" },
-      timeout
+      timeout,
     );
     await expect(promise).resolves.toStrictEqual(expect.any(Object));
   });
@@ -30,12 +30,12 @@ describe("locationSearchWithTimeout", () => {
     const timeout = 500;
     const localAuthority = "braintree";
     const promise = locationSearchWithTimeout(
-        localAuthority,
-        { x: 50, y: 50, siteBoundary: "[]" },
-        timeout
-      );
-      jest.runAllTimers();
-      await expect(promise).rejects.toEqual("location search timeout");
+      localAuthority,
+      { x: 50, y: 50, siteBoundary: "[]" },
+      timeout,
+    );
+    jest.runAllTimers();
+    await expect(promise).rejects.toEqual("location search timeout");
   });
 });
 
@@ -57,7 +57,7 @@ describe.skip("fetching GIS data from local authorities directly", () => {
         .get(
           `/gis/${location.council}?x=${location.x}&y=${
             location.y
-          }&siteBoundary=${JSON.stringify(location.siteBoundary)}`
+          }&siteBoundary=${JSON.stringify(location.siteBoundary)}`,
         )
         .expect(200)
         .then((res) => {
@@ -100,7 +100,7 @@ describe.skip("fetching GIS data from Digital Land for supported local authoriti
           expect(res.body["constraints"]["article4"]).toBeDefined();
           expect(res.body["constraints"]["listed"]).toBeDefined();
           expect(
-            res.body["constraints"]["designated.conservationArea"]
+            res.body["constraints"]["designated.conservationArea"],
           ).toBeDefined();
         });
     }, 20_000); // 20s request timeout

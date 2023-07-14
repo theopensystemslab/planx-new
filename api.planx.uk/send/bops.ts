@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { NextFunction, Request, Response } from "express";
@@ -20,7 +20,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       new ServerError({
         status: 400,
         message: `Missing application payload data to send to BOPS`,
-      })
+      }),
     );
   }
 
@@ -45,11 +45,11 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       new ServerError({
         status: 400,
         message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
-      })
+      }),
     );
   }
   const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
-  const bopsFullPayload = await $admin.generateBOPSPayload(payload?.sessionId);
+  const { exportData } = await $admin.export.bopsPayload(payload?.sessionId);
 
   try {
     const bopsResponse = await axios({
@@ -60,7 +60,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
       },
-      data: bopsFullPayload,
+      data: exportData,
     })
       .then(async (res: AxiosResponse<{ id: string }>) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
@@ -96,11 +96,11 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
           {
             bops_id: res.data.id,
             destination_url: target,
-            request: bopsFullPayload,
+            request: exportData,
             response: res.data,
             response_headers: res.headers,
             session_id: payload?.sessionId,
-          }
+          },
         );
 
         return {
@@ -116,8 +116,8 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
             `Sending to BOPS failed:\n${JSON.stringify(
               error.response.data,
               null,
-              2
-            )}`
+              2,
+            )}`,
           );
         } else {
           // re-throw other errors
@@ -131,7 +131,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
         status: 500,
         message: "Sending to BOPS failed",
         cause: err,
-      })
+      }),
     );
   }
 };
@@ -140,7 +140,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
  * Query the BOPS audit table to see if we already have an application for this session
  */
 async function checkBOPSAuditTable(
-  sessionId: string
+  sessionId: string,
 ): Promise<Record<string, string>> {
   const application = await adminClient.request(
     gql`
@@ -155,7 +155,7 @@ async function checkBOPSAuditTable(
     `,
     {
       session_id: sessionId,
-    }
+    },
   );
 
   return application?.bops_applications[0]?.response;

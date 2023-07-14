@@ -33,7 +33,7 @@ test("recovers previously submitted files when clicking the back button", async 
       previouslySubmittedData={{
         data: previouslySubmittedData,
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -76,7 +76,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
       previouslySubmittedData={{
         data: previouslySubmittedData,
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -95,7 +95,7 @@ it("should not have any accessibility violations", async () => {
       descriptionForUploading="description1"
       title="Draw a boundary"
       titleForUploading="Upload a file"
-    />
+    />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
@@ -113,7 +113,7 @@ test("shows the file upload option by default and requires user data to continue
       title="Draw a boundary"
       titleForUploading="Upload a file"
       handleSubmit={handleSubmit}
-    />
+    />,
   );
 
   // Draw a boundary screen
@@ -139,7 +139,7 @@ test("hides the upload option and allows user to continue without drawing if edi
       titleForUploading="Upload a file"
       handleSubmit={handleSubmit}
       hideFileUpload={true}
-    />
+    />,
   );
 
   expect(screen.queryByTestId("upload-file-button")).not.toBeInTheDocument();

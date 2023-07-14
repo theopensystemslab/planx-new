@@ -146,6 +146,6 @@ describe("BOPS files[*].applicant_description", () => {
           expect(file.applicant_description).toStrictEqual(expected);
         });
       });
-    }
+    },
   );
 });

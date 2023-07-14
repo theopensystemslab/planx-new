@@ -1,3 +1,4 @@
+import { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
@@ -66,17 +67,6 @@ export interface TextContent {
   show: boolean;
 }
 
-export interface Flag {
-  category: string;
-  value?: string;
-  text: string;
-  bgColor: string;
-  color: string;
-  // XXX: will be removed when flags are more dynamic. For the immediate future
-  //      it's convenient to store a definition for BOPS users with the data.
-  officerDescription?: string;
-}
-
 export interface Node {
   id: string;
   data: {
@@ -85,49 +75,6 @@ export interface Node {
     info?: string;
     policyRef?: string;
   };
-}
-
-// https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response
-export interface GovUKPayment {
-  amount: number;
-  reference: string;
-  state: {
-    status: PaymentStatus;
-    finished: boolean;
-  };
-  payment_id: string;
-  created_date: string;
-  _links: {
-    self: {
-      href: string;
-      method: string;
-    };
-    next_url?: {
-      href: string;
-      method: string;
-    };
-    next_url_post: {
-      type: string;
-      params: {
-        chargeTokenId: string;
-      };
-      href: string;
-      method: string;
-    };
-  };
-}
-
-// https://docs.payments.service.gov.uk/api_reference/#status-and-finished
-export enum PaymentStatus {
-  created = "created",
-  started = "started",
-  submitted = "submitted",
-  capturable = "capturable",
-  success = "success",
-  failed = "failed",
-  cancelled = "cancelled",
-  error = "error",
-  unknown = "unknown", // used when response status is not valid
 }
 
 /**
@@ -167,8 +114,8 @@ export interface ReconciliationResponse {
 }
 
 // re-export store types
-export interface Passport extends Store.passport {}
-export interface Breadcrumbs extends Store.breadcrumbs {}
+export type Passport = Store.passport;
+export type Breadcrumbs = Store.breadcrumbs;
 
 export enum SectionStatus {
   NeedsUpdated = "NEW INFORMATION NEEDED",

@@ -104,7 +104,7 @@ export default function ConstraintsList({
                 </ConstraintListItem>
               ))}
             </React.Fragment>
-          )
+          ),
         )}
       </List>
     </Box>
@@ -163,7 +163,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
         <Collapse in={showConstraintData}>
           <Box py={1.5} px={2}>
             <>
-              <Typography variant="h4" component="h4" gutterBottom>
+              <Typography variant="h3" component="h4" gutterBottom>
                 {`This property ${props?.content}`}
               </Typography>
               {Boolean(props.data?.length) && (
@@ -198,7 +198,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                               )}
                             </Typography>
                           </ListItem>
-                        )
+                        ),
                     )}
                 </List>
               )}
@@ -207,7 +207,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               <ReactMarkdownOrHtml
                 source={props.metadata?.text?.replaceAll(
                   "(/",
-                  "(https://www.planning.data.gov.uk/"
+                  "(https://www.planning.data.gov.uk/",
                 )}
                 openLinksOnNewTab
               />

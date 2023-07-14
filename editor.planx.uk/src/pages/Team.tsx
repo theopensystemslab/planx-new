@@ -285,7 +285,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 if (newTeam) {
                   if (slugify(newTeam) === teamSlug) {
                     alert(
-                      `This flow already belongs to ${teamSlug}, skipping move`
+                      `This flow already belongs to ${teamSlug}, skipping move`,
                     );
                   } else {
                     handleMove(slugify(newTeam));
@@ -325,7 +325,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
     <Root>
       <Dashboard>
         <Box pl={2} pb={2}>
-          <Typography variant="h3" component="h1" gutterBottom>
+          <Typography variant="h2" component="h1" gutterBottom>
             My services
           </Typography>
         </Box>

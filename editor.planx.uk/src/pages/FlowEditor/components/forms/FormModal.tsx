@@ -46,6 +46,7 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Question">
         <option value={TYPES.Statement}>Question</option>
         <option value={TYPES.Checklist}>Checklist</option>
+        <option value={TYPES.NextSteps}>Next steps</option>
       </optgroup>
       <optgroup label="Inputs">
         <option value={TYPES.TextInput}>Text Input</option>
@@ -141,7 +142,7 @@ const FormModal: React.FC<{
             id={id}
             handleSubmit={(
               data: any,
-              children: Array<any> | undefined = undefined
+              children: Array<any> | undefined = undefined,
             ) => {
               if (typeof data === "string") {
                 connect(parent, data, { before });
@@ -149,13 +150,13 @@ const FormModal: React.FC<{
                 const parsedData = parseFormValues(Object.entries(data));
                 const parsedChildren =
                   children?.map((o: any) =>
-                    parseFormValues(Object.entries(o))
+                    parseFormValues(Object.entries(o)),
                   ) || undefined;
 
                 if (handleDelete) {
                   updateNode(
                     { id, ...parsedData },
-                    { children: parsedChildren }
+                    { children: parsedChildren },
                   );
                 } else {
                   addNode(parsedData, {

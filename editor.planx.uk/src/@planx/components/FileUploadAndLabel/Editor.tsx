@@ -23,6 +23,7 @@ import ListManager, {
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import { ModalSubtitle } from "ui/ModalSubtitle";
+import OptionButton from "ui/OptionButton";
 import PublicFileUploadButton from "ui/PublicFileUploadButton";
 import RichTextInput from "ui/RichTextInput";
 import SelectInput from "ui/SelectInput";
@@ -90,6 +91,14 @@ function FileUploadAndLabelComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
+          <OptionButton
+            selected={formik.values.hideDropZone}
+            onClick={() => {
+              formik.setFieldValue("hideDropZone", !formik.values.hideDropZone);
+            }}
+          >
+            Hide the drop zone and show files list for information only
+          </OptionButton>
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
@@ -156,8 +165,8 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             props.onChange(
               setCondition(
                 Condition[e.target.value as keyof typeof Condition],
-                props.value
-              )
+                props.value,
+              ),
             )
           }
         >
@@ -180,7 +189,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
                   rule: {
                     fn: e.target.value,
                   },
-                })
+                }),
               )
             }
             placeholder="Data field"
@@ -196,7 +205,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
                   rule: {
                     val: e.target.value,
                   },
-                })
+                }),
               )
             }
             placeholder="Value"
@@ -211,7 +220,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           value={props.value.moreInformation?.info}
           onChange={(e) => {
             props.onChange(
-              merge(props.value, { moreInformation: { info: e.target.value } })
+              merge(props.value, { moreInformation: { info: e.target.value } }),
             );
           }}
           placeholder="Why it matters"
@@ -226,7 +235,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             props.onChange(
               merge(props.value, {
                 moreInformation: { policyRef: e.target.value },
-              })
+              }),
             );
           }}
           placeholder="Policy source"
@@ -241,7 +250,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             props.onChange(
               merge(props.value, {
                 moreInformation: { howMeasured: e.target.value },
-              })
+              }),
             );
           }}
           placeholder="How is it defined?"

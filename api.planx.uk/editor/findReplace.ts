@@ -16,7 +16,7 @@ interface MatchResult {
 const getMatches = (
   flowData: Flow["data"],
   searchTerm: string,
-  replaceValue: string | undefined = undefined
+  replaceValue: string | undefined = undefined,
 ): MatchResult => {
   const matches: MatchResult["matches"] = {};
 
@@ -52,7 +52,7 @@ const getMatches = (
 const findAndReplaceInFlow = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
   try {
     if (!req.user?.sub)
@@ -104,7 +104,7 @@ const findAndReplaceInFlow = async (
         {
           data: flowData,
           id: req.params.flowId,
-        }
+        },
       );
 
       const updatedFlow =

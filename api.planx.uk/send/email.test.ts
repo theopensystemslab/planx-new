@@ -3,15 +3,16 @@ import { queryMock } from "../tests/graphqlQueryMock";
 import app from "../server";
 import * as helpers from "./helpers";
 
-const mockGenerateCSVData = jest
-  .fn()
-  .mockResolvedValue([
+const mockGenerateCSVData = jest.fn().mockResolvedValue({
+  responses: [
     {
       question: "Is this a test?",
       responses: [{ value: "Yes" }],
       metadata: {},
     },
-  ]);
+  ],
+  redactedResponses: [],
+});
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({
@@ -19,8 +20,22 @@ jest.mock("@opensystemslab/planx-core", () => {
     })),
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       getDocumentTemplateNamesForSession: jest.fn(),
-      generateCSVData: () => mockGenerateCSVData(),
+      export: {
+        csvData: () => mockGenerateCSVData(),
+      },
     })),
+  };
+});
+
+const mockBuildSubmissionExportZip = jest.fn().mockImplementation(() => ({
+  write: () => "zip",
+  toBuffer: () => Buffer.from("test"),
+}));
+
+jest.mock("./exportZip", () => {
+  return {
+    buildSubmissionExportZip: (input: string) =>
+      Promise.resolve(mockBuildSubmissionExportZip(input)),
   };
 });
 
@@ -189,7 +204,7 @@ describe(`downloading application data received by email`, () => {
   it("errors if email query param does not match the stored database value for this team", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=wrong@southwark.gov.uk&localAuthority=southwark"
+        "/download-application-files/123?email=wrong@southwark.gov.uk&localAuthority=southwark",
       )
       .expect(403)
       .then((res) => {
@@ -201,15 +216,15 @@ describe(`downloading application data received by email`, () => {
   });
 
   it("calls addTemplateFilesToZip()", async () => {
-    const spy = jest.spyOn(helpers, "addTemplateFilesToZip");
-
     await supertest(app)
       .get(
-        "/download-application-files/123?email=planners@southwark.gov.uk&localAuthority=southwark"
+        "/download-application-files/123?email=planners@southwark.gov.uk&localAuthority=southwark",
       )
       .expect(200)
       .then(() => {
-        expect(spy).toHaveBeenCalled();
+        expect(mockBuildSubmissionExportZip).toHaveBeenCalledWith({
+          sessionId: "123",
+        });
       });
   });
 });

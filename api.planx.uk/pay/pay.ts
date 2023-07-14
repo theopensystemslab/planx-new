@@ -4,10 +4,10 @@ import { responseInterceptor } from "http-proxy-middleware";
 import SlackNotify from "slack-notify";
 import { logPaymentStatus } from "../send/helpers";
 import { usePayProxy } from "./proxy";
-import type { GovUKPayment } from "../types";
 import { addGovPayPaymentIdToPaymentRequest } from "../inviteToPay";
 import { $admin } from "../client";
 import { ServerError } from "../errors";
+import { GovUKPayment } from "@opensystemslab/planx-core/types";
 
 assert(process.env.SLACK_WEBHOOK_URL);
 
@@ -16,7 +16,7 @@ assert(process.env.SLACK_WEBHOOK_URL);
 export async function makePaymentViaProxy(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
@@ -27,7 +27,7 @@ export async function makePaymentViaProxy(
       new ServerError({
         message: "GOV.UK Pay is not enabled for this local authority",
         status: 400,
-      })
+      }),
     );
   }
 
@@ -35,12 +35,12 @@ export async function makePaymentViaProxy(
   const sessionId = req.query?.sessionId as string | undefined;
   const teamSlug = req.params.localAuthority;
 
-  if (!flowId || !sessionId || !teamSlug ) {
+  if (!flowId || !sessionId || !teamSlug) {
     return next(
       new ServerError({
         message: "Missing required query param",
         status: 400,
-      })
+      }),
     );
   }
 
@@ -51,9 +51,9 @@ export async function makePaymentViaProxy(
       new ServerError({
         message: `Cannot initialise a new payment for locked session ${sessionId}`,
         status: 400,
-      })
-    )
-  };
+      }),
+    );
+  }
 
   // drop req.params.localAuthority from the path when redirecting
   // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
@@ -72,17 +72,17 @@ export async function makePaymentViaProxy(
             govUkResponse,
           });
           return responseBuffer;
-        }
+        },
       ),
     },
-    req
+    req,
   )(req, res, next);
 }
 
 export async function makeInviteToPayPaymentViaProxy(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
@@ -119,7 +119,7 @@ export async function makeInviteToPayPaymentViaProxy(
         try {
           await addGovPayPaymentIdToPaymentRequest(
             paymentRequestId,
-            govUkResponse
+            govUkResponse,
           );
         } catch (error) {
           throw Error(error as string);
@@ -128,7 +128,7 @@ export async function makeInviteToPayPaymentViaProxy(
         return responseBuffer;
       }),
     },
-    req
+    req,
   )(req, res, next);
 }
 
@@ -136,11 +136,11 @@ export async function makeInviteToPayPaymentViaProxy(
 // fetches the status of the payment
 export const fetchPaymentViaProxy = fetchPaymentViaProxyWithCallback(
   async (req: Request, govUkPayment: GovUKPayment) =>
-    postPaymentNotificationToSlack(req, govUkPayment)
+    postPaymentNotificationToSlack(req, govUkPayment),
 );
 
 export function fetchPaymentViaProxyWithCallback(
-  callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>
+  callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>,
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const flowId = req.query?.flowId as string | undefined;
@@ -179,7 +179,7 @@ export function fetchPaymentViaProxyWithCallback(
           });
         }),
       },
-      req
+      req,
     )(req, res, next);
   };
 }
@@ -187,7 +187,7 @@ export function fetchPaymentViaProxyWithCallback(
 export async function postPaymentNotificationToSlack(
   req: Request,
   govUkResponse: GovUKPayment,
-  label = ""
+  label = "",
 ) {
   // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
   if (govUkResponse?.payment_provider !== "sandbox") {

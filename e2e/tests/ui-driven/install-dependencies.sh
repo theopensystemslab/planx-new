@@ -5,7 +5,7 @@ cd $(dirname "$0")
 
 source ../../../.env
 
-(NODE_ENV=test cd ../../../editor.planx.uk && pnpm install && pnpm build)
+(cd ../../../editor.planx.uk && pnpm install && REACT_APP_ENV=test pnpm build)
 
 if [ -z "${CI}" ]; then
   echo "Please make sure you have Chrome installed on this machine."

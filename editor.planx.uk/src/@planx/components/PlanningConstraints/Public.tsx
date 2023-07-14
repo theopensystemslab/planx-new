@@ -32,11 +32,11 @@ export default Component;
 
 function Component(props: Props) {
   const siteBoundary = useStore(
-    (state) => state.computePassport().data?.["property.boundary.site"]
+    (state) => state.computePassport().data?.["property.boundary.site"],
   );
   const { x, y, longitude, latitude, usrn } =
     (useStore(
-      (state) => state.computePassport().data?._address
+      (state) => state.computePassport().data?._address,
     ) as SiteAddress) || {};
   const showGraphError = !x || !y || !longitude || !latitude;
 
@@ -51,7 +51,7 @@ function Component(props: Props) {
   const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
 
   // Get the WKT representation of the site boundary drawing or address point to pass to Digital Land, when applicable
-  const wktPoint: string = `POINT(${longitude} ${latitude})`;
+  const wktPoint = `POINT(${longitude} ${latitude})`;
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
@@ -82,22 +82,22 @@ function Component(props: Props) {
   };
 
   // Fetch planning constraints data for a given local authority
-  const root: string = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
+  const root = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
       digitalLandOrganisations.includes(teamSlug)
         ? digitalLandParams
-        : customGisParams
+        : customGisParams,
     ).toString();
 
   const fetcher: Fetcher<GISResponse | GISResponse["constraints"]> = (
-    url: string
+    url: string,
   ) => fetch(url).then((r) => r.json());
   const { data, mutate, isValidating } = useSWR(
     () => (x && y && latitude && longitude ? teamGisEndpoint : null),
     fetcher,
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: false },
   );
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
@@ -112,7 +112,7 @@ function Component(props: Props) {
         ? classifiedRoadsEndpoint
         : null,
     fetcher,
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: false },
   );
 
   // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
@@ -207,7 +207,7 @@ type PlanningConstraintsContentProps = {
 };
 
 export function PlanningConstraintsContent(
-  props: PlanningConstraintsContentProps
+  props: PlanningConstraintsContentProps,
 ) {
   const {
     title,
@@ -227,7 +227,7 @@ export function PlanningConstraintsContent(
         submitFeedback(
           values.feedback,
           "Inaccurate planning constraints",
-          constraints
+          constraints,
         );
       }
       handleSubmit?.(values);
@@ -237,11 +237,11 @@ export function PlanningConstraintsContent(
   const showError = error || !Object.values(constraints)?.length;
 
   const positiveConstraints = Object.values(constraints).filter(
-    (v: Constraint, _i) => v.text && v.value
+    (v: Constraint, _i) => v.text && v.value,
   );
 
   const negativeConstraints = Object.values(constraints).filter(
-    (v: Constraint, _i) => v.text && !v.value
+    (v: Constraint, _i) => v.text && !v.value,
   );
 
   return (
@@ -255,7 +255,7 @@ export function PlanningConstraintsContent(
       )}
       {positiveConstraints.length > 0 && (
         <>
-          <Typography variant="h4" component="h2" gutterBottom>
+          <Typography variant="h3" component="h2" gutterBottom>
             These are the planning constraints we think apply to this property
           </Typography>
           <ConstraintsList data={positiveConstraints} metadata={metadata} />
@@ -275,7 +275,7 @@ export function PlanningConstraintsContent(
       )}
       {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
         <>
-          <Typography variant="h4" component="h2">
+          <Typography variant="h3" component="h2">
             It looks like there are no constraints on this property
           </Typography>
           <Typography variant="body2">
@@ -319,7 +319,7 @@ interface ConstraintsFetchErrorProps {
 
 const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
   <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
-    <Typography variant="h5" component="h2" gutterBottom>
+    <Typography variant="h4" component="h2" gutterBottom>
       No information available
     </Typography>
     {props.error &&
@@ -353,7 +353,7 @@ const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (
       role="status"
       data-testid="error-summary-invalid-graph"
     >
-      <Typography variant="h5" component="h2" gutterBottom>
+      <Typography variant="h4" component="h2" gutterBottom>
         Invalid graph
       </Typography>
       <Typography variant="body2">

@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client";
+import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
 import { client } from "lib/graphql";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { DEFAULT_FLAG_CATEGORY } from "../data/flags";
 import { Store, useStore } from "./store";
 
 export type AnalyticsType = "init" | "resume";
@@ -60,14 +60,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
+          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`,
         );
       }
       if (document.visibilityState === "visible") {
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
+          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`,
         );
       }
     }

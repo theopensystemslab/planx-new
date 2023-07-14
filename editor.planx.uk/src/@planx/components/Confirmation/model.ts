@@ -14,7 +14,7 @@ export interface Confirmation {
 }
 
 export const parseNextSteps = (
-  data: { [key: string]: any } | undefined
+  data: { [key: string]: any } | undefined,
 ): { nextSteps: Step[] } => ({
   nextSteps: data?.nextSteps || [],
 });

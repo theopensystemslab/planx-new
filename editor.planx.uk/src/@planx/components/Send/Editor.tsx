@@ -42,7 +42,7 @@ const SendComponent: React.FC<Props> = (props) => {
     }),
   });
 
-  let options: { value: Destination; label: string }[] = [
+  const options: { value: Destination; label: string }[] = [
     {
       value: Destination.BOPS,
       label: "BOPS",
@@ -71,7 +71,7 @@ const SendComponent: React.FC<Props> = (props) => {
       newCheckedValues.sort((a, b) => {
         const originalValues = options.map((cb) => cb.value);
         return originalValues.indexOf(a) - originalValues.indexOf(b);
-      })
+      }),
     );
   };
 
@@ -98,7 +98,7 @@ const SendComponent: React.FC<Props> = (props) => {
                       label={option.label}
                       onChange={changeCheckbox(option.value)}
                       checked={formik.values.destinations.includes(
-                        option.value
+                        option.value,
                       )}
                     />
                   </Grid>

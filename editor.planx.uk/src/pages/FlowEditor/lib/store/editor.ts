@@ -73,7 +73,7 @@ export interface EditorStore extends Store.Store {
     id: Store.nodeId,
     parent?: Store.nodeId,
     toBefore?: Store.nodeId,
-    toParent?: Store.nodeId
+    toParent?: Store.nodeId,
   ) => void;
   pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
   publishFlow: (flowId: string, summary?: string) => Promise<any>;
@@ -89,11 +89,11 @@ export const editorStore: StateCreator<
 > = (set, get) => ({
   addNode: (
     { id = undefined, type, data },
-    { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {}
+    { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {},
   ) => {
     const [, ops] = add(
       { id, type, data },
-      { children, parent, before }
+      { children, parent, before },
     )(get().flow);
     send(ops);
   },
@@ -101,7 +101,7 @@ export const editorStore: StateCreator<
   connect: (src, tgt, { before = undefined } = {}) => {
     try {
       const [, ops] = clone(tgt, { toParent: src, toBefore: before })(
-        get().flow
+        get().flow,
       );
       send(ops);
     } catch (err: any) {
@@ -135,7 +135,7 @@ export const editorStore: StateCreator<
     const cloneStateFromRemoteOps = debounce(cloneStateFromShareDb, 500);
 
     doc.on("op", (_op: any, isLocalOp?: boolean) =>
-      isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps()
+      isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps(),
     );
   },
 
@@ -147,7 +147,7 @@ export const editorStore: StateCreator<
     //     but when accessed from the editor we generate a string using the same method as in src/@planx/graph/index.ts
     const randomReplacementCharacters = customAlphabet(en)(
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-      5 // a full nodeId is 10 characters long
+      5, // a full nodeId is 10 characters long
     );
 
     return axios.post(
@@ -160,7 +160,7 @@ export const editorStore: StateCreator<
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
   },
 
@@ -247,7 +247,7 @@ export const editorStore: StateCreator<
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
   },
 
@@ -343,13 +343,13 @@ export const editorStore: StateCreator<
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       )
       .then((res) => alert(res?.data?.message))
       .catch((error) =>
         alert(
-          "Failed to move this flow. Make sure you're entering a valid team name and try again"
-        )
+          "Failed to move this flow. Make sure you're entering a valid team name and try again",
+        ),
       );
   },
 
@@ -357,7 +357,7 @@ export const editorStore: StateCreator<
     id: string,
     parent = undefined,
     toBefore = undefined,
-    toParent = undefined
+    toParent = undefined,
   ) {
     try {
       const [, ops] = move(id, parent as unknown as string, {
@@ -394,14 +394,14 @@ export const editorStore: StateCreator<
     return axios.post(
       urlWithParams(
         `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
-        { summary }
+        { summary },
       ),
       null,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
   },
 

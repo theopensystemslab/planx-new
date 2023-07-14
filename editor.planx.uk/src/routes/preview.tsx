@@ -9,7 +9,7 @@ import { publishedView } from "./views/published";
 const routes = compose(
   withData(async (req) => {
     const externalDomainTeam = await getTeamFromDomain(
-      window.location.hostname
+      window.location.hostname,
     );
 
     return {
@@ -33,7 +33,7 @@ const routes = compose(
         data: { isContentPage: true },
       });
     }),
-  })
+  }),
 );
 
 export default routes;

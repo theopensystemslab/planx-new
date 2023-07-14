@@ -19,7 +19,7 @@ async function search(
   serverIndex,
   outFields,
   geometry,
-  geometryType
+  geometryType,
 ) {
   const { id } = planningConstraints[featureName];
 
@@ -29,11 +29,11 @@ async function search(
     geometryType,
   });
 
-  // XX Fetching layers from the scotGovDomain map server throws 
+  // XX Fetching layers from the scotGovDomain map server throws
   //   `FetchError: Unable to verify first certificate / Unable to verify leaf signature`
   //   unless this agent is set; will raise issue with TPX team and aim to remove post demo sprint
   const agent = new https.Agent({
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
   });
   return fetch(url, { agent })
     .then((response) => response.text())
@@ -58,9 +58,9 @@ async function go(x, y, siteBoundary, extras) {
         gisLayers[layer].serverIndex,
         gisLayers[layer].fields,
         geom,
-        geomType
-      )
-    )
+        geomType,
+      ),
+    ),
   );
 
   const ob = results
@@ -99,12 +99,15 @@ async function go(x, y, siteBoundary, extras) {
       },
       {
         ...extras,
-      }
+      },
     );
 
   // Scotland hosts multiple national park layers
   // Roll these up to preserve their granularity when true
-  const nationalParkLayers = ["designated.nationalPark.cairngorms", "designated.nationalPark.lochLomondTrossachs"];
+  const nationalParkLayers = [
+    "designated.nationalPark.cairngorms",
+    "designated.nationalPark.lochLomondTrossachs",
+  ];
   const obWithOneNationalPark = rollupResultLayers(
     ob,
     nationalParkLayers,

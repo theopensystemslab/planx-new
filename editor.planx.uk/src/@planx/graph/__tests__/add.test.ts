@@ -29,7 +29,7 @@ test("without id", () => {
 test("with children", () => {
   const [graph, ops] = add(
     { id: "a" },
-    { children: [{ id: "a-a" }, { id: "a-b" }] }
+    { children: [{ id: "a-a" }, { id: "a-b" }] },
   )();
 
   expect(graph).toEqual({
@@ -74,7 +74,7 @@ test("with grandchildren and great-grandchildren", () => {
         },
         { id: "a-b" },
       ],
-    }
+    },
   )();
 
   expect(graph).toEqual({
@@ -169,7 +169,7 @@ test("existing graph", () => {
 test("before item", () => {
   const [graph, ops] = add(
     { id: "c" },
-    { before: "b" }
+    { before: "b" },
   )({
     _root: { edges: ["a", "b"] },
     a: {},
@@ -193,7 +193,7 @@ test("before item", () => {
 test("with parent, before item", () => {
   const [graph, ops] = add(
     { id: "c" },
-    { before: "b", parent: "a" }
+    { before: "b", parent: "a" },
   )({
     _root: { edges: ["a"] },
     a: {
@@ -221,7 +221,7 @@ test("with parent, before item", () => {
 test("can add sections on the root of the graph", () => {
   const [graph, ops] = add(
     { id: "sectionNodeId", type: 360 },
-    { before: "b", parent: "_root" }
+    { before: "b", parent: "_root" },
   )({
     _root: { edges: ["a", "b"] },
     a: {},
@@ -243,7 +243,7 @@ test("can add sections on the root of the graph", () => {
 describe("error handling", () => {
   test("invalid parent", () => {
     expect(() => add({ id: "c" }, { parent: "x" })()).toThrow(
-      "parent not found"
+      "parent not found",
     );
   });
 
@@ -251,7 +251,7 @@ describe("error handling", () => {
     expect(() => add({ id: "_root" })()).toThrow("id exists");
 
     expect(() => add({ id: "a" })({ _root: { edges: ["a"] }, a: {} })).toThrow(
-      "id exists"
+      "id exists",
     );
   });
 
@@ -259,12 +259,12 @@ describe("error handling", () => {
     expect(() =>
       add(
         { id: "c" },
-        { before: "x" }
+        { before: "x" },
       )({
         _root: { edges: ["a", "b"] },
         a: {},
         b: {},
-      })
+      }),
     ).toThrow("before not found");
   });
 
@@ -272,12 +272,12 @@ describe("error handling", () => {
     expect(() =>
       add(
         { type: 360, data: { title: "Section 1" } },
-        { parent: "b" }
+        { parent: "b" },
       )({
         _root: { edges: ["a", "b"] },
         a: {},
         b: {},
-      })
+      }),
     ).toThrow("cannot add sections on branches or in portals");
   });
 });

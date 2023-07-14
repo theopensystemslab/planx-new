@@ -93,12 +93,12 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
     expect(sendEmail).toHaveBeenCalledWith(
       "confirmation-agent",
       agentEmail,
-      expectedConfig
+      expectedConfig,
     );
     expect(sendEmail).toHaveBeenCalledWith(
       "confirmation-payee",
       payeeEmail,
-      expectedConfig
+      expectedConfig,
     );
   });
 });

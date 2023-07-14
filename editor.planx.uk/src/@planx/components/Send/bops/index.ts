@@ -4,15 +4,18 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
+import {
+  flatFlags,
+  GOV_PAY_PASSPORT_KEY,
+  GovUKPayment,
+} from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import { isEmpty } from "lodash";
-import { flatFlags } from "pages/FlowEditor/data/flags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
-import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { GOV_PAY_PASSPORT_KEY, toPence } from "../../Pay/model";
+import { toPence } from "../../Pay/model";
 import { removeNilValues } from "../../shared/utils";
 import { TYPES } from "../../types";
 import { findGeoJSON } from "../helpers";
@@ -56,6 +59,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.FindProperty:
     case TYPES.Flow:
     case TYPES.InternalPortal:
+    case TYPES.NextSteps:
     case TYPES.Notice:
     case TYPES.Pay:
     case TYPES.PlanningConstraints:
@@ -89,7 +93,7 @@ function isTypeForBopsPayload(type?: TYPES) {
 const addPortalName = (
   id: string,
   flow: Store.flow,
-  metadata: QuestionMetaData
+  metadata: QuestionMetaData,
 ): QuestionMetaData => {
   if (id === "_root") {
     metadata.portal_name = "_root";
@@ -110,7 +114,7 @@ const addPortalName = (
 
 const addSectionName = (
   id: string,
-  metadata: QuestionMetaData
+  metadata: QuestionMetaData,
 ): QuestionMetaData => {
   const { hasSections, getSectionForNode } = useStore.getState();
   if (hasSections) {
@@ -122,7 +126,7 @@ const addSectionName = (
 
 export const makePayload = (
   flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs
+  breadcrumbs: Store.breadcrumbs,
 ) => {
   const feedback: BOPSFullPayload["feedback"] = {};
 
@@ -155,7 +159,7 @@ export const makePayload = (
 
       // exclude answers that have been extracted into the root object
       const validKey = !Object.values(bopsDictionary).includes(
-        flow[id]?.data?.fn
+        flow[id]?.data?.fn,
       );
       if (!isTypeForBopsPayload(flow[id]?.type) || !validKey) return;
 
@@ -164,7 +168,7 @@ export const makePayload = (
           case TYPES.AddressInput:
             try {
               const addressObject = Object.values(bc.data!).find(
-                (x) => x.postcode
+                (x) => x.postcode,
               );
               return [Object.values(addressObject).join(", ")];
             } catch (err) {
@@ -174,7 +178,7 @@ export const makePayload = (
             try {
               // skip returning internal _contact data object, just return main key values
               const contactObject = Object.values(bc.data!).filter(
-                (x) => typeof x === "string"
+                (x) => typeof x === "string",
               );
               return [Object.values(contactObject).join(" ")];
             } catch (err) {
@@ -310,7 +314,7 @@ export function getBOPSParams({
             tags: extractTagsFromPassportKey(key),
             applicant_description: extractFileDescriptionForPassportKey(
               passport.data,
-              key
+              key,
             ),
           });
         } catch (err) {}
@@ -351,7 +355,7 @@ export function getBOPSParams({
     Object.entries(bopsDictionary).reduce((acc, [bopsField, planxField]) => {
       acc[bopsField as keyof BOPSFullPayload] = passport.data?.[planxField];
       return acc;
-    }, {} as Partial<BOPSFullPayload>)
+    }, {} as Partial<BOPSFullPayload>),
   );
 
   // 6a. questions+answers array
@@ -381,7 +385,7 @@ export function getBOPSParams({
     data.result = removeNilValues({
       flag: [flag.category, flag.text].join(" / "),
       heading: flag.text,
-      description: flag.officerDescription,
+      description: flag.description,
       override: passport?.data?.["application.resultOverride.reason"],
     });
   } catch (err) {
@@ -411,7 +415,7 @@ export function getBOPSParams({
   if (startedDate) works.start_date = startedDate;
 
   const completionDate = parseDate(
-    passport?.data?.["proposal.completion.date"]
+    passport?.data?.["proposal.completion.date"],
   );
   if (completionDate) works.finish_date = completionDate;
 
@@ -452,7 +456,7 @@ export const getWorkStatus = (passport: Store.passport) => {
 
 const extractFileDescriptionForPassportKey = (
   passport: Store.passport["data"],
-  passportKey: string
+  passportKey: string,
 ): string | undefined => {
   try {
     // XXX: check for .description or .reason as there might be either atm

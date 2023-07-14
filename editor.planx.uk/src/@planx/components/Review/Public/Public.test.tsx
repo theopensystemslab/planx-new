@@ -45,7 +45,7 @@ describe("Simple flow", () => {
         changeAnswer={() => {}}
         handleSubmit={handleSubmit}
         showChangeButton={true}
-      />
+      />,
     );
 
     expect(screen.getByRole("heading")).toHaveTextContent("Review");
@@ -68,7 +68,7 @@ describe("Simple flow", () => {
         changeAnswer={() => {}}
         handleSubmit={handleSubmit}
         showChangeButton={true}
-      />
+      />,
     );
 
     expect(screen.getByText("This is a text")).toBeTruthy();
@@ -87,7 +87,7 @@ describe("Simple flow", () => {
         passport={mockedPassport}
         changeAnswer={() => {}}
         showChangeButton={true}
-      />
+      />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -111,7 +111,7 @@ describe("File uploads", () => {
         passport={fileUploadPassport}
         changeAnswer={() => {}}
         showChangeButton={true}
-      />
+      />,
     );
 
     const element = getByTestId("file-upload-name");
@@ -129,7 +129,7 @@ describe("File uploads", () => {
         passport={uploadedPlansPassport}
         changeAnswer={() => {}}
         showChangeButton={true}
-      />
+      />,
     );
 
     const element = getByTestId("uploaded-plan-name");
@@ -164,12 +164,12 @@ describe("Flow with sections", () => {
         changeAnswer={jest.fn()}
         handleSubmit={handleSubmit}
         showChangeButton={true}
-      />
+      />,
     );
 
     // there is an overall Review title
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Review with sections"
+      "Review with sections",
     );
 
     // there are section titles
@@ -191,7 +191,7 @@ describe("Flow with sections", () => {
         changeAnswer={jest.fn()}
         handleSubmit={jest.fn()}
         showChangeButton={true}
-      />
+      />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -222,12 +222,12 @@ describe("Flow with empty sections", () => {
         changeAnswer={jest.fn()}
         handleSubmit={jest.fn()}
         showChangeButton={true}
-      />
+      />,
     );
 
     // Overall header displays
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Review with empty sections"
+      "Review with empty sections",
     );
 
     // Section with presentational components is displayed
@@ -235,12 +235,12 @@ describe("Flow with empty sections", () => {
 
     // Section without components is not displayed
     expect(
-      screen.queryByText("This is an empty section")
+      screen.queryByText("This is an empty section"),
     ).not.toBeInTheDocument();
 
     // Section without presentational components is not displayed
     expect(
-      screen.queryByText("This is a section without presentational components")
+      screen.queryByText("This is a section without presentational components"),
     ).not.toBeInTheDocument();
   });
 
@@ -255,7 +255,7 @@ describe("Flow with empty sections", () => {
         changeAnswer={jest.fn()}
         handleSubmit={jest.fn()}
         showChangeButton={true}
-      />
+      />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();

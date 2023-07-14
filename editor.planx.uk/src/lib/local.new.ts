@@ -6,7 +6,7 @@ import {
 } from "./lowcalStorage";
 
 export const getLocalFlow = async (
-  sessionId: string
+  sessionId: string,
 ): Promise<Session | undefined> => {
   const entry = `session:${sessionId}`;
   try {
@@ -21,7 +21,7 @@ export const getLocalFlow = async (
 export const setLocalFlow = async (sessionId: string, session: Session) => {
   await lowcalStorage.setItem(
     `session:${sessionId}`,
-    stringifyWithRootKeysSortedAlphabetically(session) || ""
+    stringifyWithRootKeysSortedAlphabetically(session) || "",
   );
 };
 

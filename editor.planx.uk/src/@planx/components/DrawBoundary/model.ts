@@ -15,7 +15,7 @@ export interface DrawBoundary extends MoreInformation {
 }
 
 export const parseDrawBoundary = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): DrawBoundary => ({
   ...parseMoreInformation(data),
   title: data?.title || DEFAULT_TITLE,

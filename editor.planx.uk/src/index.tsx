@@ -7,11 +7,7 @@ import "./app.css";
 
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from "@mui/material/styles";
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import jwtDecode from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
@@ -28,8 +24,8 @@ import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import { defaultTheme } from "./theme";
 
-declare module "@mui/styles/defaultTheme" {
-  interface DefaultTheme extends Theme {}
+if (process.env.REACT_APP_ENV !== "production") {
+  console.log(`ENV: ${process.env.REACT_APP_ENV}`);
 }
 
 const container = document.getElementById("root") as HTMLElement;
@@ -47,7 +43,7 @@ const hasJWT = (): boolean | void => {
         Number(
           (jwtDecode(jwt) as any)["https://hasura.io/jwt/claims"][
             "x-hasura-user-id"
-          ]
+          ],
         ) > 0
       ) {
         return true;
@@ -96,7 +92,7 @@ const Layout: React.FC<{
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={defaultTheme}>
         <NotFoundBoundary render={() => <ErrorPage title="Not found" />}>
-          {!!isLoading ? (
+          {isLoading ? (
             <DelayedLoadingIndicator msDelayBeforeVisible={500} />
           ) : (
             children
@@ -124,5 +120,5 @@ root.render(
       </AnalyticsProvider>
     </ApolloProvider>
     <ToastContainer icon={false} theme="colored" />
-  </>
+  </>,
 );

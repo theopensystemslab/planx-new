@@ -38,8 +38,8 @@ import {
 } from "@tiptap/react";
 import { map } from "ramda";
 import React, {
-  type FC,
   ChangeEvent,
+  type FC,
   forwardRef,
   useCallback,
   useEffect,
@@ -51,6 +51,8 @@ import tippy, { type Instance } from "tippy.js";
 import { create } from "zustand";
 
 import Input from "./Input";
+import PublicFileUploadButton from "./PublicFileUploadButton";
+import CustomImage from "./RichTextImage";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -79,6 +81,7 @@ const commonExtensions = [
   BulletList,
   OrderedList,
   ListItem,
+  CustomImage,
 ];
 
 // Tiptap editor extensions used to convert between HTML and Prosemirror document state (used internally by tiptap)
@@ -96,7 +99,7 @@ interface VariablesState {
   addVariable: (newVariable: string) => void;
 }
 
-export const emptyContent: string = "<p></p>";
+export const emptyContent = "<p></p>";
 
 // Specify whether a selection is unsuitable for ensuring accessible links
 const linkSelectionError = (selectionHtml: string): string | null => {
@@ -129,13 +132,13 @@ export const toHtml = (doc: JSONContent) => {
 export const fromHtml = (htmlString: string) => {
   return generateJSON(
     htmlString === "" ? emptyContent : htmlString,
-    conversionExtensions
+    conversionExtensions,
   );
 };
 
 export const injectVariables = (
   htmlString: string,
-  vars: Record<string, string>
+  vars: Record<string, string>,
 ) => {
   const doc = fromHtml(htmlString);
   return toHtml(
@@ -148,7 +151,7 @@ export const injectVariables = (
             attrs: undefined,
           }
         : null;
-    })(doc)
+    })(doc),
   );
 };
 
@@ -191,8 +194,8 @@ const trimUrlValue = (url: string) => {
 };
 
 const getContentHierarchyError = (doc: JSONContent): string | null => {
-  let h1Index: number = -1;
-  let h2Index: number = -1;
+  let h1Index = -1;
+  let h2Index = -1;
 
   let error: string | null = null;
 
@@ -327,7 +330,7 @@ const RichTextInput: FC<Props> = (props) => {
       } as unknown as ChangeEvent<HTMLInputElement>;
       props.onChange(changeEvent);
     },
-    [props.onChange]
+    [props.onChange],
   );
 
   const handleSelectionUpdate = useCallback(() => {
@@ -421,7 +424,7 @@ const RichTextInput: FC<Props> = (props) => {
                     prev && {
                       ...prev,
                       draft: trimUrlValue(ev.target.value),
-                    }
+                    },
                 );
               }}
             />
@@ -489,6 +492,12 @@ const RichTextInput: FC<Props> = (props) => {
               >
                 <FormatListNumbered />
               </IconButton>
+              <PublicFileUploadButton
+                variant="tooltip"
+                onChange={(src) =>
+                  editor?.chain().focus().setImage({ src }).run()
+                }
+              />
             </>
           )}
           {addingLink ? (
@@ -577,7 +586,7 @@ const suggestion = {
     return useVariablesStore
       .getState()
       .variables.filter((item) =>
-        item.toLowerCase().includes(query.toLowerCase())
+        item.toLowerCase().includes(query.toLowerCase()),
       )
       .slice(0, 5);
   },
@@ -664,7 +673,7 @@ const MentionList = forwardRef((props: MentionListProps, ref) => {
 
   const upHandler = () => {
     setSelectedIndex(
-      (selectedIndex + props.items.length - 1) % props.items.length
+      (selectedIndex + props.items.length - 1) % props.items.length,
     );
   };
 

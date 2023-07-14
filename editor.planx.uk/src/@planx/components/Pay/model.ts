@@ -47,7 +47,7 @@ export const toDecimal = (pence: number) => pence / 100;
 
 export const formattedPriceWithCurrencySymbol = (
   amount: number,
-  currency = "GBP"
+  currency = "GBP",
 ) =>
   new Intl.NumberFormat("en-GB", {
     style: "currency",
@@ -56,7 +56,7 @@ export const formattedPriceWithCurrencySymbol = (
 
 export const createPayload = (
   fee: number,
-  reference: string
+  reference: string,
 ): GovUKCreatePaymentPayload => ({
   amount: toPence(fee),
   reference,
@@ -79,8 +79,6 @@ const getReturnURL = (sessionId: string): string => {
 };
 
 export const GOV_UK_PAY_URL = `${process.env.REACT_APP_API_URL}/pay`;
-
-export const GOV_PAY_PASSPORT_KEY = "application.fee.reference.govPay" as const;
 
 export const validationSchema = object({
   title: string().trim().required(),

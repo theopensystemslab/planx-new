@@ -1,8 +1,10 @@
 import InputBase, { InputBaseProps } from "@mui/material/InputBase";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import React from "react";
 
-const useClasses = makeStyles((theme) => ({
+import type { Theme } from "../theme";
+
+const useClasses = makeStyles((theme: Theme) => ({
   inputRoot: {
     backgroundColor: theme.palette.grey[100],
     transition: "background-color 0.2s ease-out",
@@ -24,7 +26,7 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-interface Props extends InputBaseProps {}
+type Props = InputBaseProps;
 
 export default function InputField(props: Props): FCReturn {
   const classes = useClasses();

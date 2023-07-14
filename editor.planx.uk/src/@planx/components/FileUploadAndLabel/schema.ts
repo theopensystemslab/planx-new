@@ -1,4 +1,12 @@
-import { array, mixed, object, SchemaOf, string, TestContext } from "yup";
+import {
+  array,
+  boolean,
+  mixed,
+  object,
+  SchemaOf,
+  string,
+  TestContext,
+} from "yup";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
@@ -53,6 +61,7 @@ export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> = object({
   description: string(),
   fn: string(),
   fileTypes: array().of(fileTypeSchema).required().min(1),
+  hideDropZone: boolean(),
 }).concat(moreInformationSchema);
 
 export const slotsSchema = array()
@@ -63,7 +72,7 @@ export const slotsSchema = array()
     message: "Please wait for upload to complete",
     test: (slots?: Array<FileUploadSlot>) => {
       const isEveryUploadComplete = Boolean(
-        slots?.every((slot) => slot.status === "success")
+        slots?.every((slot) => slot.status === "success"),
       );
       return isEveryUploadComplete;
     },
@@ -80,8 +89,8 @@ export const fileListSchema = object({
     test: (userFile?: UserFile[]) => {
       const isEverySlotFilled = Boolean(
         userFile?.every(
-          (userFile) => userFile?.slots && userFile.slots.length > 0
-        )
+          (userFile) => userFile?.slots && userFile.slots.length > 0,
+        ),
       );
       return isEverySlotFilled;
     },
@@ -94,8 +103,8 @@ export const fileListSchema = object({
     const { slots } = context as FileListSchemaTextContext;
     const isEveryFileTagged = Boolean(
       slots?.every(
-        (slot) => getTagsForSlot(slot.id, fileList as FileList).length
-      )
+        (slot) => getTagsForSlot(slot.id, fileList as FileList).length,
+      ),
     );
     return isEveryFileTagged;
   },

@@ -5,7 +5,7 @@ import {
   darken,
   lighten,
   responsiveFontSizes,
-  Theme,
+  Theme as MUITheme,
   ThemeOptions,
 } from "@mui/material/styles";
 // eslint-disable-next-line no-restricted-imports
@@ -14,7 +14,7 @@ import createPalette, {
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
 
-const GOVUK_YELLOW = "#FFDD00";
+export const GOVUK_YELLOW = "#FFDD00";
 
 export const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const TEXT_COLOR_PRIMARY = "#0B0C0C";
@@ -111,17 +111,21 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         letterSpacing: SPACING_TIGHT,
         fontWeight: FONT_WEIGHT_BOLD,
       },
-      h3: {
+      h2: {
         fontSize: "2.25rem",
         letterSpacing: SPACING_TIGHT,
         fontWeight: FONT_WEIGHT_BOLD,
       },
-      h4: {
+      h3: {
         fontSize: "1.5rem",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
-      h5: {
+      h4: {
         fontSize: "1.188rem",
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+      },
+      h5: {
+        fontSize: "1rem",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       h6: {
@@ -151,9 +155,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       values: {
         xs: 0,
         sm: 500,
-        md: 768, // Used with Container as general max-width
+        md: 768,
         lg: 1280,
         xl: 1920,
+        formWrap: 690, // Max width for form content
+        contentWrap: 1020, // Max width for page
       },
     },
     transitions: {
@@ -162,6 +168,18 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       },
     },
     components: {
+      MuiContainer: {
+        styleOverrides: {
+          root: {
+            "@media (min-width: 500px)": {
+              padding: "0 20px",
+            },
+            "@media (min-width: 768px)": {
+              padding: "0 30px",
+            },
+          },
+        },
+      },
       MuiCssBaseline: {
         styleOverrides: {
           strong: {
@@ -173,6 +191,9 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           body: {
             backgroundColor: BG_COLOR_DEFAULT,
             lineHeight: LINE_HEIGHT_BASE,
+          },
+          hr: {
+            marginLeft: 0,
           },
         },
       },
@@ -350,8 +371,8 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
 
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
-  primaryColor: string = DEFAULT_PRIMARY_COLOR
-): Theme => {
+  primaryColor: string = DEFAULT_PRIMARY_COLOR,
+): MUITheme => {
   const themeOptions = getThemeOptions(primaryColor);
   const theme = responsiveFontSizes(createTheme(themeOptions));
   return theme;
@@ -359,5 +380,7 @@ const generateTeamTheme = (
 
 // A static MUI theme based on PlanX's default palette
 const defaultTheme = generateTeamTheme(DEFAULT_PRIMARY_COLOR);
+
+export type Theme = typeof defaultTheme;
 
 export { defaultTheme, generateTeamTheme };

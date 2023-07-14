@@ -22,7 +22,7 @@ const routes = compose(
         data: { isContentPage: true },
       });
     }),
-  })
+  }),
 );
 
 export default routes;

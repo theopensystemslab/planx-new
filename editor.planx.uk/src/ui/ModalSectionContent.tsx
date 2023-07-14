@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props {
   title?: string;
@@ -10,28 +11,33 @@ interface Props {
   Icon?: any;
 }
 
-export const useClasses = makeStyles((theme) => ({
-  sectionContentGrid: {
-    position: "relative",
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-  author: {
-    fontWeight: 400,
-    color: theme.palette.text.secondary,
-  },
-  sectionContent: {
-    flexGrow: 1,
-    paddingRight: theme.spacing(6),
-  },
-  title: {
-    opacity: 0.75,
-    fontWeight: 600,
-  },
-  leftGutter: {
-    flex: `0 0 ${theme.spacing(6)}`,
-    textAlign: "center",
-  },
+const SectionContentGrid = styled(Grid)(({ theme }) => ({
+  position: "relative",
+  paddingTop: theme.spacing(2),
+  paddingBottom: theme.spacing(2),
+  wrap: "no-wrap",
+}));
+
+const LeftGutter = styled(Grid)(({ theme }) => ({
+  flex: `0 0 ${theme.spacing(6)}`,
+  textAlign: "center",
+}));
+
+const SectionContent = styled(Grid)(({ theme }) => ({
+  flexGrow: 1,
+  paddingRight: theme.spacing(6),
+}));
+
+const Title = styled(Box)(({ theme }) => ({
+  opacity: 0.75,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  fontSize: 18,
+  paddingBottom: theme.spacing(2),
+}));
+
+const Author = styled("span")(({ theme }) => ({
+  fontWeight: 400,
+  color: theme.palette.text.secondary,
 }));
 
 export default function ModalSectionContent({
@@ -40,21 +46,18 @@ export default function ModalSectionContent({
   author,
   Icon,
 }: Props): FCReturn {
-  const classes = useClasses();
   return (
-    <Grid container wrap="nowrap" className={classes.sectionContentGrid}>
-      <Grid item className={classes.leftGutter}>
-        {Icon && <Icon />}
-      </Grid>
-      <Grid item className={classes.sectionContent}>
+    <SectionContentGrid container>
+      <LeftGutter item>{Icon && <Icon />}</LeftGutter>
+      <SectionContent item>
         {title && (
-          <Box className={classes.title} fontSize={18} pb={2}>
+          <Title>
             {title}
-            {author && <span className={classes.author}>by {author}</span>}
-          </Box>
+            {author && <Author>by {author}</Author>}
+          </Title>
         )}
         {children}
-      </Grid>
-    </Grid>
+      </SectionContent>
+    </SectionContentGrid>
   );
 }

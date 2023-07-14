@@ -7,6 +7,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
+import { removeSessionIdSearchParam } from "utils";
 
 import { makeCsvData } from "../../@planx/components/Send/uniform";
 import FileDownload from "../../ui/FileDownload";
@@ -37,7 +38,7 @@ const StatusPage: React.FC<Props> = ({
       state.computePassport(),
       state.sessionId,
       state.flowName,
-    ]
+    ],
   );
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
@@ -50,14 +51,6 @@ const StatusPage: React.FC<Props> = ({
   });
 
   const theme = useTheme();
-
-  // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
-  const startNewApplication = () => {
-    const currentURL = new URL(window.location.href);
-    currentURL.searchParams.delete("sessionId");
-    window.history.pushState({}, document.title, currentURL);
-    window.location.reload();
-  };
 
   return (
     <>
@@ -97,7 +90,7 @@ const StatusPage: React.FC<Props> = ({
             <Typography variant="body2">or</Typography>
             <Link
               component="button"
-              onClick={startNewApplication}
+              onClick={removeSessionIdSearchParam}
               sx={{ mt: 2.5 }}
             >
               <Typography variant="body2">Start new application</Typography>

@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
-import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -64,6 +63,7 @@ const presentationalComponents: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.Notice]: undefined,
+  [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
@@ -117,12 +117,20 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     const isPresentationalComponent = Boolean(Component);
     const doesNodeExist = Boolean(props.flow[nodeId]);
     const isAutoAnswered = userData.auto;
+    const isInfoOnlyMode =
+      node.type === TYPES.FileUploadAndLabel &&
+      props.flow[nodeId].data?.hideDropZone;
 
-    return doesNodeExist && !isAutoAnswered && isPresentationalComponent;
+    return (
+      doesNodeExist &&
+      !isAutoAnswered &&
+      isPresentationalComponent &&
+      !isInfoOnlyMode
+    );
   };
 
   const removeNonPresentationalNodes = (
-    section: Store.breadcrumbs
+    section: Store.breadcrumbs,
   ): BreadcrumbEntry[] => {
     // Typecast to preserve Store.userData
     const entries = Object.entries(section) as BreadcrumbEntry[];
@@ -159,7 +167,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Typography
                     component={props.sectionComponent || "h2"}
-                    variant="h5"
+                    variant="h4"
                   >
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>
@@ -172,13 +180,13 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   showChangeButton={props.showChangeButton}
                 />
               </React.Fragment>
-            )
+            ),
         )}
       </>
     );
   } else {
     const filteredBreadcrumbs = removeNonPresentationalNodes(
-      props.breadcrumbs
+      props.breadcrumbs,
     ).map(makeSummaryBreadcrumb);
     return (
       <SummaryList
@@ -226,7 +234,7 @@ function SummaryList(props: SummaryListProps) {
               )}
             </dd>
           </React.Fragment>
-        )
+        ),
       )}
     </Grid>
   );
@@ -352,7 +360,7 @@ function DrawBoundary(props: ComponentProps) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
     throw Error(
-      "Site boundary geojson or location plan file expected, but not found"
+      "Site boundary geojson or location plan file expected, but not found",
     );
   }
 

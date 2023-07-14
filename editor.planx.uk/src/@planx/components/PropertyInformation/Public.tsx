@@ -52,7 +52,7 @@ function Component(props: PublicProps<PropertyInformation>) {
         role="status"
         data-testid="error-summary-invalid-graph"
       >
-        <Typography variant="h5" component="h2" gutterBottom>
+        <Typography variant="h4" component="h2" gutterBottom>
           Invalid graph
         </Typography>
         <Typography variant="body2">
@@ -80,9 +80,10 @@ export interface PresentationalProps {
 
 const MapContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1, 0),
+  maxWidth: "none",
   "& my-map": {
     width: "100%",
-    height: "50vh",
+    height: "60vh",
   },
 }));
 
@@ -110,7 +111,7 @@ export function Presentational(props: PresentationalProps) {
         submitFeedback(
           values.feedback,
           "Inaccurate property details",
-          propertyDetails
+          propertyDetails,
         );
       }
       handleSubmit?.(values);

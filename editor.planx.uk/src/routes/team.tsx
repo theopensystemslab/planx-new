@@ -107,7 +107,7 @@ const routes = compose(
 
       return import("./flow");
     }),
-  })
+  }),
 );
 
 export default routes;

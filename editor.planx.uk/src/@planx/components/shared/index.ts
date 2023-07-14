@@ -9,7 +9,7 @@ export interface MoreInformation {
 }
 
 export const parseMoreInformation = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): MoreInformation => ({
   notes: data?.notes,
   definitionImg: data?.definitionImg,

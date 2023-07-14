@@ -56,7 +56,7 @@ const ReconciliationPage: React.FC<Props> = ({
 
   const sortedBreadcrumbs = sortBreadcrumbs(
     reconciliationResponse.reconciledSessionData.breadcrumbs,
-    flow
+    flow,
   );
 
   const theme = useTheme();
@@ -87,7 +87,7 @@ const ReconciliationPage: React.FC<Props> = ({
             </Typography>
           </Box>
         )}
-        <Typography variant="h3" component="h2">
+        <Typography variant="h2">
           Review your {hasSections ? "progress" : "answers"} so far
         </Typography>
         {hasSections ? (

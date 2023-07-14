@@ -17,6 +17,7 @@ import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
+import ErrorWrapper from "ui/ErrorWrapper";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -27,6 +28,7 @@ import {
   removeSlots,
   resetAllSlots,
 } from "./model";
+import { fileListSchema, slotsSchema } from "./schema";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -35,11 +37,29 @@ interface FileTaggingModalProps {
   setShowModal: (value: React.SetStateAction<boolean>) => void;
 }
 
-export const FileTaggingModal = (props: FileTaggingModalProps) => {
+export const FileTaggingModal = ({
+  uploadedFiles,
+  fileList,
+  setFileList,
+  setShowModal,
+}: FileTaggingModalProps) => {
+  const [error, setError] = useState<string | undefined>();
+
+  const closeModal = () => setShowModal(false);
+
+  const handleSubmit = () => {
+    Promise.all([
+      slotsSchema.validate(uploadedFiles),
+      fileListSchema.validate(fileList, { context: { slots: uploadedFiles } }),
+    ])
+      .then(closeModal)
+      .catch((err) => setError(err.message));
+  };
+
   return (
     <Dialog
       open
-      onClose={() => props.setShowModal(false)}
+      onClose={closeModal}
       data-testid="file-tagging-dialog"
       maxWidth="xl"
       PaperProps={{
@@ -53,13 +73,13 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
       }}
     >
       <DialogContent>
-        {props.uploadedFiles.map((slot) => (
+        {uploadedFiles.map((slot) => (
           <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
             <UploadedFileCard {...slot} key={slot.id} />
             <SelectMultiple
               uploadedFile={slot}
-              fileList={props.fileList}
-              setFileList={props.setFileList}
+              fileList={fileList}
+              setFileList={setFileList}
             />
           </Box>
         ))}
@@ -71,13 +91,17 @@ export const FileTaggingModal = (props: FileTaggingModalProps) => {
           padding: 2,
         }}
       >
-        <Button
-          variant="contained"
-          onClick={() => props.setShowModal(false)}
-          sx={{ paddingLeft: 2 }}
-        >
-          Done
-        </Button>
+        <ErrorWrapper error={error}>
+          <Box>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{ paddingLeft: 2 }}
+            >
+              Done
+            </Button>
+          </Box>
+        </ErrorWrapper>
       </DialogActions>
     </Dialog>
   );
@@ -102,13 +126,13 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     } = event;
     setTags(
       // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
+      typeof value === "string" ? value.split(",") : value,
     );
   };
 
   const updateFileListWithTags = (
     previousTags: string[] | undefined,
-    tags: string[]
+    tags: string[],
   ) => {
     let updatedFileList: FileList = merge(fileList);
     const updatedTags = tags.filter((tag) => !previousTags?.includes(tag));

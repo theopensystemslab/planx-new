@@ -13,7 +13,11 @@ test("submits a date", async () => {
   const componentId = uniqueId();
 
   const { user } = setup(
-    <DateInput id={componentId} title="Pizza Day" handleSubmit={handleSubmit} />
+    <DateInput
+      id={componentId}
+      title="Pizza Day"
+      handleSubmit={handleSubmit}
+    />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("Pizza Day");
@@ -47,7 +51,7 @@ test("recovers previously submitted date when clicking the back button", async (
           [componentId]: "2010-05-22",
         },
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -75,7 +79,7 @@ test("recovers previously submitted date when clicking the back button even if a
           [dataField]: "2010-05-22",
         },
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -97,7 +101,7 @@ test("allows user to type into input field and click continue", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <DateInput title="Enter a date" handleSubmit={handleSubmit} />
+    <DateInput title="Enter a date" handleSubmit={handleSubmit} />,
   );
 
   const day = screen.getByPlaceholderText("DD");
@@ -172,24 +176,24 @@ test("validation", async () => {
   expect(await dateSchema().isValid("2021-23-03")).toBe(false);
   expect(
     await dateRangeSchema({ min: "1990-01-01", max: "1999-12-31" }).isValid(
-      "1995-06-15"
-    )
+      "1995-06-15",
+    ),
   ).toBe(true);
   expect(
     await dateRangeSchema({ min: "1990-01-01", max: "1999-12-31" }).isValid(
-      "2021-06-15"
-    )
+      "2021-06-15",
+    ),
   ).toBe(false);
   expect(
     await dateRangeSchema({ min: "1990-01-01", max: "1999-12-31" }).isValid(
-      "1980-06-15"
-    )
+      "1980-06-15",
+    ),
   ).toBe(false);
 });
 
 it("should not have any accessibility violations upon initial load", async () => {
   const { container } = setup(
-    <DateInput id="123" title="Test title" description="description" />
+    <DateInput id="123" title="Test title" description="description" />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
@@ -197,7 +201,7 @@ it("should not have any accessibility violations upon initial load", async () =>
 
 it("should not have any accessibility violations whilst in the error state", async () => {
   const { container, user } = setup(
-    <DateInput id="testId" title="Test title" description="description" />
+    <DateInput id="testId" title="Test title" description="description" />,
   );
 
   const dateElements = ["day", "month", "year"];
@@ -205,7 +209,7 @@ it("should not have any accessibility violations whilst in the error state", asy
   // There is an ErrorWrapper per input, which should not display on load
   dateElements.forEach((el) => {
     const inputErrorWrapper = screen.getByTestId(
-      `${ERROR_MESSAGE}-testId-${el}`
+      `${ERROR_MESSAGE}-testId-${el}`,
     );
     expect(inputErrorWrapper).toBeEmptyDOMElement();
   });
@@ -219,7 +223,7 @@ it("should not have any accessibility violations whilst in the error state", asy
   // Individual input errors do not display, and are not in an error state
   dateElements.forEach((el) => {
     const inputErrorWrapper = screen.getByTestId(
-      `${ERROR_MESSAGE}-testId-${el}`
+      `${ERROR_MESSAGE}-testId-${el}`,
     );
     expect(inputErrorWrapper).toBeEmptyDOMElement();
     expect(inputErrorWrapper).not.toHaveAttribute("role", "status");

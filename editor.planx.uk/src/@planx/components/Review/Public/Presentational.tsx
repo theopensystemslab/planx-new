@@ -23,7 +23,7 @@ function Component(props: Props) {
   // ensure questions & answers display in expected order
   const sortedBreadcrumbs: Store.breadcrumbs = sortBreadcrumbs(
     props.breadcrumbs,
-    props.flow
+    props.flow,
   );
 
   return (

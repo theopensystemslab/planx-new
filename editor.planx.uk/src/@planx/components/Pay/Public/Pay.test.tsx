@@ -1,10 +1,11 @@
+import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
 import { axe, setup } from "testUtils";
-import { ApplicationPath, PaymentStatus } from "types";
+import { ApplicationPath } from "types";
 
 import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
@@ -15,7 +16,7 @@ let initialState: FullStore;
 
 jest
   .spyOn(ReactNavi, "useCurrentRoute")
-  .mockImplementation(() => ({ data: { mountpath: "mountpath" } } as any));
+  .mockImplementation(() => ({ data: { mountpath: "mountpath" } }) as any);
 
 const resumeButtonText = "Resume an application you have already started";
 const saveButtonText = "Save and return to this application later";
@@ -58,13 +59,13 @@ describe("Confirm component without inviteToPay", () => {
     setup(<Confirm {...defaultProps} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pay for your application"
+      "Pay for your application",
     );
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "The fee is"
+      "The fee is",
     );
     expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
-      "How to pay"
+      "How to pay",
     );
   });
 
@@ -77,10 +78,10 @@ describe("Confirm component without inviteToPay", () => {
     setup(<Confirm {...{ ...defaultProps, hideFeeBanner: true }} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pay for your application"
+      "Pay for your application",
     );
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "How to pay"
+      "How to pay",
     );
 
     expect(screen.queryByText("The fee is")).not.toBeInTheDocument();
@@ -95,19 +96,19 @@ describe("Confirm component without inviteToPay", () => {
         {...defaultProps}
         error={errorMessage}
         onConfirm={handleSubmit}
-      />
+      />,
     );
 
     expect(screen.getByTestId("error-summary")).toBeInTheDocument();
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Pay for your application"
+      "Pay for your application",
     );
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "The fee is"
+      "The fee is",
     );
     expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
-      errorMessage
+      errorMessage,
     );
 
     expect(screen.getByText("Continue")).toBeInTheDocument();
@@ -126,7 +127,7 @@ describe("Confirm component without inviteToPay", () => {
       setState({
         path: ApplicationPath.SaveAndReturn,
         saveToEmail: "test@opensystemsla.b.io",
-      })
+      }),
     );
     setup(<Confirm {...defaultProps} />);
 
@@ -184,8 +185,8 @@ describe("Confirm component with inviteToPay", () => {
     await user.type(await screen.findByLabelText("Email"), "jess@{enter}");
     expect(
       await screen.findByText(
-        "Enter an email address in the correct format, like name@example.com"
-      )
+        "Enter an email address in the correct format, like name@example.com",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -198,10 +199,10 @@ describe("Confirm component with inviteToPay", () => {
 
     await user.type(
       await screen.findByLabelText("Email"),
-      "test@opensystemslab.io{enter}"
+      "test@opensystemslab.io{enter}",
     );
     expect(
-      await screen.findByText("Enter the full name of the person paying")
+      await screen.findByText("Enter the full name of the person paying"),
     ).toBeInTheDocument();
   });
 
@@ -214,14 +215,14 @@ describe("Confirm component with inviteToPay", () => {
 
     await user.type(
       await screen.findByLabelText("Email"),
-      "test@opensystemslab.io"
+      "test@opensystemslab.io",
     );
     await user.type(
       await screen.findByLabelText("Full name"),
-      "Mr Nominee{enter}"
+      "Mr Nominee{enter}",
     );
     expect(
-      await screen.findByText("Enter your name or organisation name")
+      await screen.findByText("Enter your name or organisation name"),
     ).toBeInTheDocument();
   });
 
@@ -231,7 +232,7 @@ describe("Confirm component with inviteToPay", () => {
         {...inviteProps}
         buttonTitle={"Retry payment"}
         paymentStatus={PaymentStatus.created}
-      />
+      />,
     );
 
     expect(screen.getByText("How to pay")).toBeInTheDocument();
@@ -253,7 +254,7 @@ describe("Confirm component with inviteToPay", () => {
 
   it("hides the fee banner on both pages when 'hideFeeBanner' prop is provided", async () => {
     const { user } = setup(
-      <Confirm {...{ ...inviteProps, hideFeeBanner: true }} />
+      <Confirm {...{ ...inviteProps, hideFeeBanner: true }} />,
     );
 
     // Land on "Pay" page by default
@@ -271,7 +272,7 @@ describe("Confirm component with inviteToPay", () => {
       setState({
         path: ApplicationPath.SaveAndReturn,
         saveToEmail: "test@opensystemsla.b.io",
-      })
+      }),
     );
     setup(<Confirm {...inviteProps} />);
 

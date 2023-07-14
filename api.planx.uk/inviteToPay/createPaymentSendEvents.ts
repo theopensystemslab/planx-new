@@ -1,7 +1,7 @@
-import { ComponentType } from '@opensystemslab/planx-core/types';
-import { NextFunction, Request, Response } from 'express';
-import { gql } from 'graphql-request';
-import { $admin } from '../client';
+import { ComponentType } from "@opensystemslab/planx-core/types";
+import { NextFunction, Request, Response } from "express";
+import { gql } from "graphql-request";
+import { $admin } from "../client";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { createScheduledEvent } from "../hasura/metadata";
 import { getMostRecentPublishedFlow } from "../helpers";
@@ -23,7 +23,7 @@ interface CombinedResponse {
 const createPaymentSendEvents = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<NextFunction | Response | void> => {
   try {
     const { payload } = req.body;
@@ -55,7 +55,7 @@ const createPaymentSendEvents = async (
 
     // Find this sessions Send component, determine which "destinations" we need to queue up events for
     const sendNode: [string, Node] | undefined = Object.entries(
-      publishedFlowData
+      publishedFlowData,
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
     const destinations: Destination[] = sendNode?.[1]?.data?.destinations;
 
@@ -127,7 +127,7 @@ const getTeamSlugByFlowId = async (id: Flow["id"]): Promise<Team["slug"]> => {
         }
       }
     `,
-    { id }
+    { id },
   );
 
   return data.flows_by_pk.team.slug;

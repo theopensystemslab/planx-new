@@ -35,7 +35,7 @@ export type ReconciledSession = {
 export async function validateSession(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { email, sessionId } = req.body.payload;
@@ -142,13 +142,13 @@ async function reconcileSessionData({
   // create ordered breadcrumbs to be able to look up section IDs later
   const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
     currentFlow as FlowGraph,
-    sessionData.breadcrumbs
+    sessionData.breadcrumbs,
   );
 
   const findParentNode = (nodeId: string): string | undefined => {
     const [parentId, _] =
-      Object.entries(currentFlow).find(([_, node]) =>
-        node.edges?.includes(nodeId)
+      Object.entries(currentFlow).find(
+        ([_, node]) => node.edges?.includes(nodeId),
       ) || [];
     return parentId;
   };
@@ -157,7 +157,7 @@ async function reconcileSessionData({
     const foundParentId = findParentNode(nodeId);
     const matchingCrumbs: NormalizedCrumb[] = orderedBreadcrumbs.filter(
       (crumb) =>
-        crumb.id === nodeId || (foundParentId && crumb.id === foundParentId)
+        crumb.id === nodeId || (foundParentId && crumb.id === foundParentId),
     );
 
     for (const crumb of matchingCrumbs) {
@@ -220,7 +220,7 @@ async function diffLatestPublishedFlow({
         }
       }
     `,
-    { flowId, since }
+    { flowId, since },
   );
   return response.diff_latest_published_flow.data;
 }
@@ -252,7 +252,7 @@ async function findSession({
           }
         }
       `,
-      { sessionId, email }
+      { sessionId, email },
     );
   return response.lowcal_sessions.length
     ? response.lowcal_sessions[0]
@@ -261,7 +261,7 @@ async function findSession({
 
 async function createAuditEntry(
   sessionId: string,
-  data: ValidationResponse
+  data: ValidationResponse,
 ): Promise<void> {
   await adminClient.request(
     gql`
@@ -285,6 +285,6 @@ async function createAuditEntry(
       session_id: sessionId,
       response: data,
       message: data.message,
-    }
+    },
   );
 }

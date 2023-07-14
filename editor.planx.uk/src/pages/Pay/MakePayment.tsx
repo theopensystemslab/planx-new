@@ -2,7 +2,11 @@ import Check from "@mui/icons-material/Check";
 import Container from "@mui/material/Container";
 import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import type { PaymentRequest } from "@opensystemslab/planx-core/types";
+import {
+  GovUKPayment,
+  type PaymentRequest,
+  PaymentStatus,
+} from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { _public } from "client";
 import { format } from "date-fns";
@@ -20,7 +24,6 @@ import {
 import Confirm from "../../@planx/components/Pay/Public/Confirm";
 import { logger } from "../../airbrake";
 import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator";
-import { GovUKPayment, PaymentStatus } from "../../types";
 
 const States = {
   Init: {
@@ -155,13 +158,13 @@ export default function MakePayment({
           text: "black",
         }}
       >
-        <Typography pt={2} variant="body2">
+        <Typography pt={2} variant="body2" maxWidth="formWrap">
           Thanks for making your payment. We'll send you a confirmation email.
         </Typography>
       </Banner>
     ) : (
-      <Container maxWidth="md">
-        <Typography maxWidth="md" variant="h1" pt={5} gutterBottom>
+      <Container maxWidth="contentWrap">
+        <Typography maxWidth="formWrap" variant="h1" pt={5} gutterBottom>
           Pay for your application
         </Typography>
       </Container>
@@ -173,7 +176,7 @@ export default function MakePayment({
     useEffect(() => {
       const fetchProjectType = async () => {
         const projectType = await _public.formatRawProjectTypes(
-          rawProjectTypes
+          rawProjectTypes,
         );
         setProjectType(projectType);
       };
@@ -217,7 +220,7 @@ export default function MakePayment({
     }
 
     return (
-      <Container maxWidth="md" sx={{ pb: 0 }}>
+      <Container maxWidth="contentWrap" sx={{ pb: 0 }}>
         <DescriptionList data={data} />
       </Container>
     );
@@ -262,12 +265,12 @@ async function fetchPayment({
 
 // initiate a new payment with GovPay (via proxy)
 async function startNewPayment(
-  paymentRequestId: string
+  paymentRequestId: string,
 ): Promise<GovUKPayment> {
   const paymentURL = `${
     process.env.REACT_APP_API_URL
   }/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
-    window.location.href
+    window.location.href,
   )}`;
   const response = await axios.post<GovUKPayment>(paymentURL);
   return response.data;
@@ -279,7 +282,7 @@ function redirectToGovPay(payment?: GovUKPayment) {
     window.location.replace(payment._links.next_url.href);
   } else {
     logger.notify(
-      "GovPay redirect failed. The payment didn't exist or did not include a 'next_url' link."
+      "GovPay redirect failed. The payment didn't exist or did not include a 'next_url' link.",
     );
   }
 }

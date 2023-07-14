@@ -1,10 +1,12 @@
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import classNames from "classnames";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
-const useClasses = makeStyles((theme) => ({
+import type { Theme } from "../theme";
+
+const useClasses = makeStyles((theme: Theme) => ({
   htmlRoot: {
     "& a": linkStyle(theme.palette.primary.main),
     "& h2": theme.typography.h3,
@@ -15,14 +17,17 @@ const useClasses = makeStyles((theme) => ({
     "& p:last-of-type": {
       marginBottom: 0,
     },
+    "& img": {
+      maxWidth: "100%",
+    },
   },
 }));
 
 // Increment H1 and H2 elements to meet a11y requirements in user submitted rich text
 export const incrementHeaderElements = (source: string): string => {
-  const regex: RegExp = /(<\/?h)[1-2]/gi;
+  const regex = /(<\/?h)[1-2]/gi;
   const incrementer = (match: string, p1: string): string => {
-    const currentLevel: number = Number(match.slice(-1));
+    const currentLevel = Number(match.slice(-1));
     const newLevel: number = currentLevel + 1;
     return p1 + newLevel;
   };
@@ -40,7 +45,7 @@ export default function ReactMarkdownOrHtml(props: {
   if (typeof props.source !== "string") {
     return null;
   }
-  if (props.source.includes("</")) {
+  if (props.source.includes("</" || "<img")) {
     const replaceTarget = props.openLinksOnNewTab
       ? props.source.replaceAll(`target="_self"`, `target="_blank" external`)
       : props.source;

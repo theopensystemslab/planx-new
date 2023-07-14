@@ -6,12 +6,16 @@ import { expectedPayload } from "../../tests/mocks/bopsMocks";
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/bops`;
 
-const mockGenerateBOPSPayload = jest.fn().mockResolvedValue(expectedPayload);
+const mockGenerateBOPSPayload = jest.fn().mockResolvedValue({
+  exportData: expectedPayload,
+});
 
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
-      generateBOPSPayload: () => mockGenerateBOPSPayload(),
+      export: {
+        bopsPayload: () => mockGenerateBOPSPayload(),
+      },
     })),
   };
 });
@@ -24,7 +28,7 @@ describe("BOPS payload admin endpoint", () => {
       .then((res) =>
         expect(res.body).toEqual({
           error: "No authorization token was found",
-        })
+        }),
       );
   });
 

@@ -1,23 +1,20 @@
+import {
+  GOV_PAY_PASSPORT_KEY,
+  GovUKPayment,
+  PaymentStatus,
+} from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import { useErrorHandler } from "react-error-boundary";
-import type { GovUKPayment, Session } from "types";
-import { PaymentStatus } from "types";
+import type { Session } from "types";
 
 import { makeData } from "../../shared/utils";
-import {
-  createPayload,
-  GOV_PAY_PASSPORT_KEY,
-  GOV_UK_PAY_URL,
-  Pay,
-  toDecimal,
-} from "../model";
+import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
@@ -130,13 +127,13 @@ function Component(props: Props) {
   const normalizePaymentResponse = (responseData: any): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    let payment: GovUKPayment = { ...responseData };
+    const payment: GovUKPayment = { ...responseData };
     payment.amount = toDecimal(payment.amount);
     return payment;
   };
 
   const resolvePaymentResponse = async (
-    responseData: any
+    responseData: any,
   ): Promise<GovUKPayment> => {
     const payment = normalizePaymentResponse(responseData);
     setGovUkPayment(payment);
@@ -161,7 +158,7 @@ function Component(props: Props) {
           flowId,
           teamSlug,
           paymentId: govUkPayment?.payment_id,
-        })
+        }),
       );
 
       // Update local state with the refetched payment state
@@ -226,7 +223,7 @@ function Component(props: Props) {
     await axios
       .post(
         getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
-        createPayload(fee, sessionId)
+        createPayload(fee, sessionId),
       )
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);

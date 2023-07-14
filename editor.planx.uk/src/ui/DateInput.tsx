@@ -1,8 +1,9 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
+import { makeStyles } from "@mui/styles";
 import React, { ChangeEvent, FocusEvent } from "react";
 
+import type { Theme } from "../theme";
 import ErrorWrapper from "./ErrorWrapper";
 import Input from "./Input";
 
@@ -18,7 +19,7 @@ export interface Props {
 const INPUT_DATE_WIDTH = "65px";
 const INPUT_YEAR_WIDTH = "80px";
 
-const useClasses = makeStyles((theme) => ({
+const useClasses = makeStyles((theme: Theme) => ({
   root: {},
   editor: {
     display: "flex",
@@ -74,13 +75,13 @@ export default function DateInput(props: Props): FCReturn {
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", month || "", ev.target.value].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
               onBlur={(ev: FocusEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", month || "", ev.target.value].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
             />
@@ -98,13 +99,13 @@ export default function DateInput(props: Props): FCReturn {
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", ev.target.value, day || ""].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
               onBlur={(ev: FocusEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", ev.target.value, day || ""].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
             />
@@ -122,7 +123,7 @@ export default function DateInput(props: Props): FCReturn {
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [ev.target.value, month || "", day || ""].join("-"),
-                  ev.type
+                  ev.type,
                 );
               }}
             />

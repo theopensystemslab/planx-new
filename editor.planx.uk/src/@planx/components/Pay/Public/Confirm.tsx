@@ -3,12 +3,14 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { lighten, styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import { ApplicationPath, PaymentStatus } from "types";
+import { ApplicationPath } from "types";
 import Banner from "ui/Banner";
+import FormWrapper from "ui/FormWrapper";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
@@ -64,7 +66,7 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
         <Card>
           <PayText>
             <Typography
-              variant="h3"
+              variant="h2"
               component={props.hideFeeBanner ? "h2" : "h3"}
             >
               {props.instructionsTitle || "How to pay"}
@@ -107,7 +109,7 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
       ) : (
         <Card handleSubmit={props.onConfirm} isValid>
           <ErrorSummary role="status" data-testid="error-summary">
-            <Typography variant="h5" component="h3" gutterBottom>
+            <Typography variant="h4" component="h3" gutterBottom>
               {props.error}
             </Typography>
             <Typography variant="body2">
@@ -126,7 +128,7 @@ export default function Confirm(props: Props) {
   const [page, setPage] = useState<"Pay" | "InviteToPay">("Pay");
 
   const changePage = () => {
-    if (page === "Pay" && !Boolean(props.paymentStatus)) {
+    if (page === "Pay" && !props.paymentStatus) {
       setPage("InviteToPay");
     } else {
       setPage("Pay");
@@ -146,8 +148,8 @@ export default function Confirm(props: Props) {
   return (
     <Box textAlign="left" width="100%">
       <>
-        <Container maxWidth="md">
-          <Typography variant="h3" component="h1" align="left" pb={3}>
+        <Container maxWidth="contentWrap">
+          <Typography variant="h2" component="h1" align="left" pb={3}>
             {page === "Pay" ? props.title : props.secondaryPageTitle}
           </Typography>
         </Container>
@@ -158,9 +160,9 @@ export default function Confirm(props: Props) {
               text: theme.palette.text.primary,
             }}
           >
-            <Container maxWidth="md">
+            <FormWrapper>
               <Typography
-                variant="h4"
+                variant="h3"
                 gutterBottom
                 className="marginBottom"
                 component="h2"
@@ -182,7 +184,7 @@ export default function Confirm(props: Props) {
                   openLinksOnNewTab
                 />
               </Typography>
-            </Container>
+            </FormWrapper>
           </Banner>
         )}
         {page === "Pay" ? (

@@ -60,7 +60,7 @@ describe("Question component", () => {
           text="Best food"
           responses={responses[type]}
           handleSubmit={handleSubmit}
-        />
+        />,
       );
 
       const continueButton = screen.getByTestId("continue-button");
@@ -76,7 +76,7 @@ describe("Question component", () => {
       await user.click(continueButton);
 
       await waitFor(() =>
-        expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] })
+        expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] }),
       );
     });
 
@@ -91,7 +91,7 @@ describe("Question component", () => {
             auto: false,
           }}
           handleSubmit={handleSubmit}
-        />
+        />,
       );
 
       expect(screen.getByRole("heading")).toHaveTextContent("Best food");
@@ -117,7 +117,7 @@ describe("Question component", () => {
           text="Best food"
           responses={responses[type]}
           handleSubmit={handleSubmit}
-        />
+        />,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();

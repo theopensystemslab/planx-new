@@ -112,7 +112,7 @@ const memoize = <T extends Function>(fn: T) => {
 };
 
 export const stringifyWithRootKeysSortedAlphabetically = (
-  ob: Record<string, unknown> = {}
+  ob: Record<string, unknown> = {},
 ): string | undefined =>
   JSON.stringify(
     Object.keys(ob)
@@ -122,8 +122,8 @@ export const stringifyWithRootKeysSortedAlphabetically = (
           ...acc,
           [curr]: ob[curr],
         }),
-        {} as typeof ob
-      )
+        {} as typeof ob,
+      ),
   );
 
 /**

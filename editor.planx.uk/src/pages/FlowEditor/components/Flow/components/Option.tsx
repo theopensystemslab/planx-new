@@ -1,8 +1,8 @@
+import { flatFlags } from "@opensystemslab/planx-core/types";
 import classNames from "classnames";
 import React from "react";
 import { Link } from "react-navi";
 
-import { flatFlags } from "../../../data/flags";
 import { useStore } from "../../../lib/store";
 import Hanger from "./Hanger";
 import Node from "./Node";
@@ -16,7 +16,7 @@ const Option: React.FC<any> = (props) => {
   let color = "#000";
   try {
     const flag = flatFlags.find(({ value }) =>
-      [props.data?.flag, props.data?.val].filter(Boolean).includes(value)
+      [props.data?.flag, props.data?.val].filter(Boolean).includes(value),
     );
     background = flag?.bgColor || background;
     color = flag?.color || color;

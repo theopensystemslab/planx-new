@@ -38,14 +38,14 @@ const slotsSchema = array()
       return Boolean(
         slots &&
           slots.length > 0 &&
-          !slots.some((slot) => slot.status === "uploading")
+          !slots.some((slot) => slot.status === "uploading"),
       );
     },
   });
 
 const FileUpload: React.FC<Props> = (props) => {
   const recoveredSlots = getPreviouslySubmittedData(props)?.map(
-    (slot: FileUploadSlot) => slot.cachedSlot
+    (slot: FileUploadSlot) => slot.cachedSlot,
   );
   const [slots, setSlots] = useState<FileUploadSlot[]>(recoveredSlots ?? []);
   const [validationError, setValidationError] = useState<string>();
@@ -68,8 +68,8 @@ const FileUpload: React.FC<Props> = (props) => {
                   size: slot.file.size,
                 },
               },
-            }))
-          )
+            })),
+          ),
         );
       })
       .catch((err) => {

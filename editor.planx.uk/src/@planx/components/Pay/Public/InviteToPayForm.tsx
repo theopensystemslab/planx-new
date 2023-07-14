@@ -2,7 +2,11 @@ import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import type { KeyPath, PaymentRequest } from "@opensystemslab/planx-core/types";
+import type {
+  KeyPath,
+  PaymentRequest,
+  PaymentStatus,
+} from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
@@ -13,7 +17,7 @@ import React, { useEffect } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { isPreviewOnlyDomain } from "routes/utils";
 import useSWRMutation from "swr/mutation";
-import { ApplicationPath, PaymentStatus } from "types";
+import { ApplicationPath } from "types";
 import ErrorWrapper from "ui/ErrorWrapper";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -48,7 +52,7 @@ const validationSchema = object({
     .required("Enter the full name of the person paying"),
   payeeEmail: string()
     .email(
-      "Enter an email address in the correct format, like name@example.com"
+      "Enter an email address in the correct format, like name@example.com",
     )
     .required("Enter the email address of the person paying"),
   applicantName: string()
@@ -97,7 +101,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
 
   const postRequest = async (
     url: string,
-    { arg }: { arg: CreatePaymentRequest }
+    { arg }: { arg: CreatePaymentRequest },
   ) => {
     const response = await fetch(url, {
       method: "POST",
@@ -108,7 +112,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     });
     if (!response.ok) {
       throw new Error(
-        `Error generating payment request for session ${sessionId}: ${error}`
+        `Error generating payment request for session ${sessionId}: ${error}`,
       );
     }
     return response.json();
@@ -116,7 +120,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
 
   const { trigger, isMutating, error } = useSWRMutation(
     `${process.env.REACT_APP_API_URL}/invite-to-pay/${sessionId}`,
-    postRequest
+    postRequest,
   );
 
   const onSubmit = async (values: FormValues) => {
@@ -154,9 +158,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   ) : (
     <Card>
       <StyledForm onSubmit={formik.handleSubmit}>
-        <Typography variant="h3" component="h2">
-          {nomineeTitle}
-        </Typography>
+        <Typography variant="h2">{nomineeTitle}</Typography>
         {nomineeDescription && (
           <Typography variant="body2">
             <ReactMarkdownOrHtml
@@ -174,7 +176,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             errorMessage={
-              Boolean(formik.touched.payeeName && formik.errors.payeeName)
+              formik.touched.payeeName && formik.errors.payeeName
                 ? formik.errors.payeeName
                 : undefined
             }
@@ -193,7 +195,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             errorMessage={
-              Boolean(formik.touched.payeeEmail && formik.errors.payeeEmail)
+              formik.touched.payeeEmail && formik.errors.payeeEmail
                 ? formik.errors.payeeEmail
                 : undefined
             }
@@ -209,7 +211,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-        <Typography variant="h3" component="h2" pt={2}>
+        <Typography variant="h2" pt={2}>
           {yourDetailsTitle}
         </Typography>
         {yourDetailsDescription && (
@@ -229,9 +231,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
             errorMessage={
-              Boolean(
-                formik.touched.applicantName && formik.errors.applicantName
-              )
+              formik.touched.applicantName && formik.errors.applicantName
                 ? formik.errors.applicantName
                 : undefined
             }

@@ -23,7 +23,7 @@ export const isDateValid = (date: string) => {
 
 export const paddedDate = (
   date: string,
-  eventType: string
+  eventType: string,
 ): string | undefined => {
   const [year, month, day] = date.split("-");
 
@@ -71,7 +71,7 @@ export const dateSchema = () => {
     (date: string | undefined) => {
       // test runs regardless of required status, so don't fail it if it's undefined
       return Boolean(!date || isDateValid(date));
-    }
+    },
   );
 };
 
@@ -101,7 +101,7 @@ export const dateRangeSchema: (params: {
     });
 
 export const parseDateInput = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): DateInput => ({
   title: data?.title || "",
   description: data?.description,

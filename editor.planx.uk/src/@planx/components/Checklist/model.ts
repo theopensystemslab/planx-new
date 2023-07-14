@@ -20,7 +20,7 @@ interface ChecklistExpandableProps {
 }
 
 export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps
+  checklist: ChecklistExpandableProps,
 ): ChecklistExpandableProps => {
   if (checklist.options) {
     return {

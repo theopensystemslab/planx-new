@@ -28,7 +28,6 @@ const PreviewContainer = styled(Box)(({ theme }) => ({
   overflow: "auto",
   flex: 1,
   background: "#fff",
-  padding: theme.spacing(3),
 }));
 
 const Header = styled("header")(() => ({
@@ -43,7 +42,7 @@ const DebugConsole = () => {
       state.breadcrumbs,
       state.id,
       state.cachedBreadcrumbs,
-    ]
+    ],
   );
   return (
     <Console>
@@ -109,7 +108,7 @@ const PreviewBrowser: React.FC<{
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
-    "This flow is not published yet"
+    "This flow is not published yet",
   );
   const [validationMessage, setValidationMessage] = useState<string>();
   const [alteredNodes, setAlteredNodes] = useState<object[]>();
@@ -185,21 +184,21 @@ const PreviewBrowser: React.FC<{
                   setAlteredNodes(
                     alteredFlow?.data.alteredNodes
                       ? alteredFlow.data.alteredNodes
-                      : []
+                      : [],
                   );
                   setLastPublishedTitle(
                     alteredFlow?.data.alteredNodes
                       ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
-                      : alteredFlow?.data.message
+                      : alteredFlow?.data.message,
                   );
                   setValidationMessage(alteredFlow?.data.description);
                   setDialogOpen(true);
                 } catch (error) {
                   setLastPublishedTitle(
-                    "Error checking for changes to publish"
+                    "Error checking for changes to publish",
                   );
                   alert(
-                    `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`
+                    `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
                   );
                   console.log(error);
                 }
@@ -258,7 +257,7 @@ const PreviewBrowser: React.FC<{
                         publishedFlow?.data.alteredNodes
                           ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
                           : `${publishedFlow?.data?.message}` ||
-                              "No new changes to publish"
+                              "No new changes to publish",
                       );
                     } catch (error) {
                       setLastPublishedTitle("Error trying to publish");

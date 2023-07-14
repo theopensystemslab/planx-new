@@ -17,7 +17,4 @@ function authHeader(userId) {
   return { Authorization: `Bearer ${getJWT(userId || 0)}` };
 }
 
-export {
-  authHeader,
-  getJWT,
-};
+export { authHeader, getJWT };

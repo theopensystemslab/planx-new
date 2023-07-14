@@ -224,7 +224,7 @@ export const Question: React.FC<Props> = (props) => {
                   val: "",
                   flag: "",
                 },
-              } as Option)
+              }) as Option
             }
             Editor={OptionEditor}
             editorExtraProps={{ showValueField: !!formik.values.fn }}

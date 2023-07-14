@@ -1,3 +1,8 @@
+import {
+  DEFAULT_FLAG_CATEGORY,
+  GOV_PAY_PASSPORT_KEY,
+  GovUKPayment,
+} from "@opensystemslab/planx-core/types";
 import AddressInput from "@planx/components/AddressInput/Public";
 import Calculate from "@planx/components/Calculate/Public";
 import Checklist from "@planx/components/Checklist/Public";
@@ -9,9 +14,9 @@ import DrawBoundary from "@planx/components/DrawBoundary/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FileUploadAndLabel from "@planx/components/FileUploadAndLabel/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
+import NextSteps from "@planx/components/NextSteps/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
-import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import Pay from "@planx/components/Pay/Public";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
@@ -26,10 +31,8 @@ import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
-import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import type { GovUKPayment } from "types";
 
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
@@ -95,7 +98,7 @@ const Node: React.FC<any> = (props: Props) => {
               : mapAccum(
                   (
                     index: number,
-                    category: { title: string; count: number }
+                    category: { title: string; count: number },
                   ) => [
                     index + category.count,
                     {
@@ -104,7 +107,7 @@ const Node: React.FC<any> = (props: Props) => {
                     },
                   ],
                   0,
-                  allProps.categories
+                  allProps.categories,
                 )[1]
           }
         />
@@ -162,6 +165,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.FindProperty:
       return <FindProperty {...allProps} />;
+
+    case TYPES.NextSteps:
+      return <NextSteps {...allProps} />;
 
     case TYPES.Notice:
       return <Notice {...allProps} />;

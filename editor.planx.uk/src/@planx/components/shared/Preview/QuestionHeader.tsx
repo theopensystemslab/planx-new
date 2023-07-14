@@ -56,13 +56,13 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   };
 
   return (
-    <Box mb={1}>
+    <Box mb={1} maxWidth="formWrap">
       <Grid container justifyContent="space-between" wrap="nowrap">
         <Grid item>
           {title && (
             <Box mr={1} pt={0.5}>
               <Typography
-                variant="h3"
+                variant="h2"
                 role="heading"
                 aria-level={1}
                 component="h1"

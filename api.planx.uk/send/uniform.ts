@@ -1,30 +1,13 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { NextFunction, Request, Response } from "express";
-import os from "os";
 import { Buffer } from "node:buffer";
-import path from "path";
 import FormData from "form-data";
 import fs from "fs";
-import AdmZip from "adm-zip";
-import str from "string-to-stream";
-import { stringify } from "csv-stringify";
-import {
-  generateHTMLMapStream,
-  generateHTMLOverviewStream,
-} from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
-import { Passport as IPassport } from "../types";
-import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
-import {
-  addTemplateFilesToZip,
-  deleteFile,
-  downloadFile,
-  resolveStream,
-} from "./helpers";
 import { $admin } from "../client";
-import { Passport } from "@opensystemslab/planx-core";
+import { buildSubmissionExportZip } from "./exportZip";
 
 interface UniformClient {
   clientId: string;
@@ -69,21 +52,12 @@ interface SendToUniformPayload {
  *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
  *   finally, insert a record into uniform_applications for future auditing
  */
-const sendToUniform = async (
+export async function sendToUniform(
   req: Request,
   res: Response,
-  next: NextFunction
-) => {
+  next: NextFunction,
+) {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
-
-  const uniformClient = getUniformClient(req.params.localAuthority);
-
-  if (!uniformClient) {
-    return next({
-      status: 400,
-      message: "Idox/Uniform connector is not enabled for this local authority",
-    });
-  }
 
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const payload: SendToUniformPayload = req.body.payload;
@@ -91,6 +65,15 @@ const sendToUniform = async (
     return next({
       status: 400,
       message: "Missing application data to send to Uniform",
+    });
+  }
+
+  const uniformClient = getUniformClient(req.params.localAuthority);
+
+  if (!uniformClient) {
+    return next({
+      status: 400,
+      message: "Idox/Uniform connector is not enabled for this local authority",
     });
   }
 
@@ -109,7 +92,7 @@ const sendToUniform = async (
   try {
     // Request 1/4 - Authenticate
     const { token, organisation, organisationId } = await authenticate(
-      uniformClient
+      uniformClient,
     );
 
     // 2/4 - Create a submission
@@ -117,18 +100,23 @@ const sendToUniform = async (
       token,
       organisation,
       organisationId,
-      payload.sessionId
+      payload.sessionId,
     );
 
     // 3/4 - Create & attach the zip
-    const zipPath = await createUniformSubmissionZip(payload.sessionId);
+    const zip = await buildSubmissionExportZip({
+      sessionId: payload.sessionId,
+      includeOneAppXML: true,
+    });
 
     const attachmentAdded = await attachArchive(
       token,
       idoxSubmissionId,
-      zipPath
+      zip.filename,
     );
-    if (attachmentAdded) deleteFile(zipPath);
+
+    // clean-up zip file
+    zip.remove();
 
     // 4/4 - Get submission details and create audit record
     const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
@@ -154,13 +142,13 @@ const sendToUniform = async (
       message: `Failed to send to Uniform. ${error}`,
     });
   }
-};
+}
 
 /**
  * Query the Uniform audit table to see if we already have an application for this session
  */
 async function checkUniformAuditTable(
-  sessionId: string
+  sessionId: string,
 ): Promise<UniformSubmissionResponse | undefined> {
   const application: Record<"uniform_applications", UniformApplication[]> =
     await adminClient.request(
@@ -176,94 +164,10 @@ async function checkUniformAuditTable(
       `,
       {
         submission_reference: sessionId,
-      }
+      },
     );
 
   return application?.uniform_applications[0]?.response;
-}
-
-export async function createUniformSubmissionZip(sessionId: string) {
-  const sessionData = await $admin.getSessionById(sessionId);
-  if (!sessionData) {
-    throw new Error(
-      `session ${sessionId} not found so could not create Uniform submission zip`
-    );
-  }
-  const passport = sessionData.data?.passport as IPassport;
-  const zip = new AdmZip();
-
-  // make a tmp directory to avoid file name collisions if simultaneous applications
-  let tmpDir = "";
-  fs.mkdtemp(path.join(os.tmpdir(), sessionId), (err, folder) => {
-    if (err) throw err;
-    tmpDir = folder;
-  });
-
-  // download any user-uploaded files from S3 to the tmp directory, add them to the zip
-  const files = new Passport(passport).getFiles();
-  if (files.length) {
-    for (const file of files) {
-      // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-      // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-      // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = decodeURIComponent(
-        file.split("/").slice(-2).join("-")
-      );
-      const filePath = path.join(tmpDir, uniqueFilename);
-      await downloadFile(file, filePath, zip);
-    }
-  }
-
-  // build a CSV, write it to the tmp directory, add it to the zip
-  const csvPath = path.join(tmpDir, "application.csv");
-  const csvFile = fs.createWriteStream(csvPath);
-  const csv = await $admin.generateCSVData(sessionId);
-  const csvStream = stringify(csv, {
-    columns: ["question", "responses", "metadata"],
-    header: true,
-  }).pipe(csvFile);
-  await resolveStream(csvStream);
-  zip.addLocalFile(csvPath);
-  deleteFile(csvPath);
-
-  await addOneAppXMLToZip({ zip, tmpDir, sessionId });
-  await addTemplateFilesToZip({ zip, tmpDir, passport, sessionId });
-
-  // generate and add an HTML overview document for the submission to zip
-  const overviewPath = path.join(tmpDir, "Overview.htm");
-  const overviewFile = fs.createWriteStream(overviewPath);
-  const overviewStream = generateHTMLOverviewStream(
-    csv as PlanXExportData[]
-  ).pipe(overviewFile);
-  await resolveStream(overviewStream);
-  zip.addLocalFile(overviewPath);
-  deleteFile(overviewPath);
-
-  // add an optional GeoJSON file to zip
-  const geojson = passport?.data?.["property.boundary.site"];
-  if (geojson) {
-    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile("LocationPlanGeoJSON.geojson", geoBuff);
-
-    // generate and add an HTML boundary document for the submission to zip
-    const boundaryPath = path.join(tmpDir, "LocationPlan.htm");
-    const boundaryFile = fs.createWriteStream(boundaryPath);
-    const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
-    await resolveStream(boundaryStream);
-    zip.addLocalFile(boundaryPath);
-    deleteFile(boundaryPath);
-  }
-
-  // create the zip file
-  const zipName = `ripa-test-${sessionId}.zip`;
-  zip.writeZip(zipName);
-
-  // cleanup tmp directory
-  fs.rm(tmpDir, { recursive: true }, (err) => {
-    if (err) throw err;
-  });
-
-  return zipName;
 }
 
 /**
@@ -275,7 +179,7 @@ async function authenticate({
   clientSecret,
 }: UniformClient): Promise<UniformAuthResponse> {
   const authString = Buffer.from(`${clientId}:${clientSecret}`).toString(
-    "base64"
+    "base64",
   );
 
   const authConfig: AxiosRequestConfig = {
@@ -315,11 +219,14 @@ async function createSubmission(
   token: string,
   organisation: string,
   organisationId: string,
-  sessionId = "TEST"
+  sessionId = "TEST",
 ): Promise<string> {
-  const createSubmissionEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission`;
+  const createSubmissionEndpoint = `${process.env
+    .UNIFORM_SUBMISSION_URL!}/secure/submission`;
 
-  const isStaging = ["mock-server", "staging"].some(hostname => createSubmissionEndpoint.includes(hostname));
+  const isStaging = ["mock-server", "staging"].some((hostname) =>
+    createSubmissionEndpoint.includes(hostname),
+  );
 
   const createSubmissionConfig: AxiosRequestConfig = {
     url: createSubmissionEndpoint,
@@ -360,16 +267,17 @@ async function createSubmission(
 async function attachArchive(
   token: string,
   submissionId: string,
-  zipPath: string
+  zipPath: string,
 ): Promise<boolean> {
   if (!fs.existsSync(zipPath)) {
     console.log(
-      `Zip does not exist, cannot attach to idox_submission_id ${submissionId}`
+      `Zip does not exist, cannot attach to idox_submission_id ${submissionId}`,
     );
     return false;
   }
 
-  const attachArchiveEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
+  const attachArchiveEndpoint = `${process.env
+    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
@@ -398,9 +306,10 @@ async function attachArchive(
  */
 async function retrieveSubmission(
   token: string,
-  submissionId: string
+  submissionId: string,
 ): Promise<UniformSubmissionResponse> {
-  const getSubmissionEndpoint = `${process.env.UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
+  const getSubmissionEndpoint = `${process.env
+    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
 
   const getSubmissionConfig: AxiosRequestConfig = {
     url: getSubmissionEndpoint,
@@ -485,32 +394,8 @@ const createUniformApplicationAuditRecord = async ({
       response: submissionDetails,
       payload,
       xml,
-    }
+    },
   );
 
   return application.insert_uniform_applications_one;
 };
-
-const addOneAppXMLToZip = async ({
-  zip,
-  tmpDir,
-  sessionId,
-}: {
-  zip: AdmZip;
-  tmpDir: string;
-  sessionId: string;
-}) => {
-  try {
-    const xmlPath = path.join(tmpDir, "proposal.xml"); // must be named "proposal.xml" to be processed by Uniform
-    const xmlFile = fs.createWriteStream(xmlPath);
-    const xml = await $admin.generateOneAppXML(sessionId);
-    const xmlStream = str(xml.trim()).pipe(xmlFile);
-    await resolveStream(xmlStream);
-    zip.addLocalFile(xmlPath);
-    deleteFile(xmlPath);
-  } catch (error) {
-    throw Error(`Failed to generate OneApp XML. Error - ${error}`);
-  }
-};
-
-export { sendToUniform };

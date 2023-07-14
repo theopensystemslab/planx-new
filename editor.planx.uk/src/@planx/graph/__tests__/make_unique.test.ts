@@ -1,7 +1,7 @@
 import { makeUnique } from "..";
 
 let count = 0;
-let deterministicId = () => `TEST_ID_${count++}`;
+const deterministicId = () => `TEST_ID_${count++}`;
 
 describe("making unique", () => {
   beforeEach(() => {

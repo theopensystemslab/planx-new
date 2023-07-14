@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
+import { Flag, FlagSet, flatFlags } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import flags, { FlagSet } from "pages/FlowEditor/data/flags";
+import groupBy from "lodash/groupBy";
 import React, { useState } from "react";
-import { Flag } from "types";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
@@ -13,6 +13,8 @@ import ModalSectionContent from "ui/ModalSectionContent";
 import { TYPES } from "../types";
 import { ICONS } from "../ui";
 import type { Result } from "./model";
+
+const flags = groupBy(flatFlags, (f) => f.category);
 
 interface FormData {
   flagSet: FlagSet;
@@ -89,15 +91,14 @@ const ResultComponent: React.FC<Result> = (props) => {
     validate: () => {},
   });
 
-  const allFlagsForSet: { [flagId: string]: Flag } =
-    flags[formik.values.flagSet];
+  const allFlagsForSet = flags[formik.values.flagSet];
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Result" Icon={ICONS[TYPES.Result]}>
           <InputRow>
-            <Typography variant="h6">
+            <Typography variant="h5" component="h6">
               <label htmlFor="result-flagSet">Flag set</label>
             </Typography>
             <select
@@ -116,25 +117,28 @@ const ResultComponent: React.FC<Result> = (props) => {
           </InputRow>
 
           <Box mt={2}>
-            <Typography variant="h6">Flag Text Overrides (optional)</Typography>
+            <Typography variant="h5" component="h6">
+              Flag Text Overrides (optional)
+            </Typography>
             <Typography variant="body2">
               The overrides you set here will change what is displayed to the
               user upon arriving at this result. If you provide no overrides,
               the flag title will be used.
             </Typography>
             <Box mt={2}>
-              {Object.entries(allFlagsForSet).map(([key, flag]) => {
+              {allFlagsForSet.map((flag) => {
                 return (
                   <FlagEditor
-                    key={key}
+                    key={flag.value}
                     flag={flag}
                     existingOverrides={
-                      formik.values.overrides && formik.values.overrides[key]
+                      formik.values.overrides &&
+                      formik.values.overrides[flag.value]
                     }
                     onChange={(newValues: FlagDisplayText) => {
                       formik.setFieldValue("overrides", {
                         ...formik.values.overrides,
-                        ...{ [key]: newValues },
+                        ...{ [flag.value]: newValues },
                       });
                     }}
                   />

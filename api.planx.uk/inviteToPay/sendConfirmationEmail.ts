@@ -38,7 +38,7 @@ type PayeeAndAgentEmailData = {
 };
 
 async function getDataForPayeeAndAgentEmails(
-  sessionId: string
+  sessionId: string,
 ): Promise<PayeeAndAgentEmailData> {
   const query = gql`
     query GetDataForPayeeAndAgentEmails($sessionId: uuid!) {

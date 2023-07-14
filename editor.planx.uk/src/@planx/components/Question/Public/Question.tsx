@@ -8,6 +8,7 @@ import { visuallyHidden } from "@mui/utils";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
+import { fullWidthContent } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
@@ -16,6 +17,9 @@ import { useFormik } from "formik";
 import { Store } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
+import FormWrapper from "ui/FormWrapper";
+
+import type { Theme } from "../../../../theme";
 
 export interface IQuestion {
   id?: string;
@@ -44,11 +48,11 @@ export enum QuestionLayout {
 }
 
 const Question: React.FC<IQuestion> = (props) => {
-  const theme = useTheme();
+  const theme: Theme = useTheme();
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
-    (response) => response.id === previousResponseId
+    (response) => response.id === previousResponseId,
   )?.responseKey;
 
   const formik = useFormik({
@@ -61,10 +65,12 @@ const Question: React.FC<IQuestion> = (props) => {
     onSubmit: (values) => {
       setTimeout(
         () => props.handleSubmit({ answers: [values.selected.id] }),
-        theme.transitions.duration.standard
+        theme.transitions.duration.standard,
       );
     },
-    validate: () => {},
+    validate: () => {
+      // do nothing
+    },
   });
 
   let layout = QuestionLayout.Basic;
@@ -90,7 +96,9 @@ const Question: React.FC<IQuestion> = (props) => {
         definitionImg={props.definitionImg}
         img={props.img}
       />
-      <FormControl sx={{ ...contentFlowSpacing(theme), width: "100%" }}>
+      <FormControl
+        sx={{ ...contentFlowSpacing(theme), ...fullWidthContent(theme) }}
+      >
         <FormHelperText style={visuallyHidden}>
           {props.description ? DESCRIPTION_TEXT : ""}
         </FormHelperText>
@@ -122,13 +130,15 @@ const Question: React.FC<IQuestion> = (props) => {
               switch (layout) {
                 case QuestionLayout.Basic:
                   return (
-                    <Grid item xs={12} ml={1} key={response.id}>
-                      <BasicRadio
-                        {...buttonProps}
-                        {...response}
-                        data-testid="basic-radio"
-                      />
-                    </Grid>
+                    <FormWrapper>
+                      <Grid item xs={12} ml={1} key={response.id}>
+                        <BasicRadio
+                          {...buttonProps}
+                          {...response}
+                          data-testid="basic-radio"
+                        />
+                      </Grid>
+                    </FormWrapper>
                   );
                 case QuestionLayout.Descriptions:
                   return (
@@ -136,6 +146,7 @@ const Question: React.FC<IQuestion> = (props) => {
                       item
                       xs={12}
                       sm={6}
+                      contentWrap={4}
                       key={response.id}
                       data-testid="description-radio"
                     >
@@ -144,7 +155,7 @@ const Question: React.FC<IQuestion> = (props) => {
                   );
                 case QuestionLayout.Images:
                   return (
-                    <Grid item xs={12} sm={6} key={response.id}>
+                    <Grid item xs={12} sm={6} contentWrap={4} key={response.id}>
                       <ImageRadio {...buttonProps} {...response} />
                     </Grid>
                   );

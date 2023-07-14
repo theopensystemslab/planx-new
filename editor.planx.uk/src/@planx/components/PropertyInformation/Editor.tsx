@@ -60,7 +60,7 @@ function PropertyInformationComponent(props: Props) {
             onClick={() => {
               formik.setFieldValue(
                 "showPropertyTypeOverride",
-                !formik.values.showPropertyTypeOverride
+                !formik.values.showPropertyTypeOverride,
               );
             }}
           >

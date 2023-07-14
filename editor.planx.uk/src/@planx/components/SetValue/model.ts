@@ -6,7 +6,7 @@ export interface SetValue extends MoreInformation {
 }
 
 export const parseSetValue = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): SetValue => ({
   fn: data?.fn || "",
   val: data?.val || "",

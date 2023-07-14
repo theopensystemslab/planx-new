@@ -45,14 +45,14 @@ const AutocompleteWrapper = styled(Box)(({ theme }) => ({
 
 export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   const [postcode, setPostcode] = useState<string | null>(
-    props.initialPostcode ?? null
+    props.initialPostcode ?? null,
   );
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>(
     (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
-      null
+      null,
   );
   const [selectedOption, setSelectedOption] = useState<Option | undefined>(
-    props.initialSelectedAddress ?? undefined
+    props.initialSelectedAddress ?? undefined,
   );
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
@@ -100,8 +100,8 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           title: selectedAddress.ADDRESS.slice(
             0,
             selectedAddress.ADDRESS.lastIndexOf(
-              `, ${selectedAddress.ADMINISTRATIVE_AREA}`
-            )
+              `, ${selectedAddress.ADMINISTRATIVE_AREA}`,
+            ),
           ), // display value shown on PropertyInformation, should match <address-autocomplete /> options formatting
           source: "os",
         });
@@ -114,7 +114,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
     return function cleanup() {
       autocomplete?.removeEventListener(
         "addressSelection",
-        addressSelectionHandler
+        addressSelectionHandler,
       );
     };
   }, [sanitizedPostcode, selectedOption]);
@@ -126,7 +126,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
   //      so this code attempts to validate postcodes without blocking any characters.
   const handlePostcodeInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (selectedOption) {
       // Reset the selected address on change of postcode to ensures no visual mismatch between address and postcode

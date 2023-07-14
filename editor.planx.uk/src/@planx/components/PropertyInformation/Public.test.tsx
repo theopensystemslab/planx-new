@@ -42,7 +42,7 @@ test("renders a warning for editors if address data is not in state", async () =
         title="About the property"
         description="This is the information we currently have about the property"
       />
-    </MockedProvider>
+    </MockedProvider>,
   );
 
   expect(screen.getByTestId("error-summary-invalid-graph")).toBeInTheDocument();
@@ -58,7 +58,7 @@ test("renders correctly when property override is enabled", async () => {
         showPropertyTypeOverride={true}
         handleSubmit={handleSubmit}
       />
-    </MockedProvider>
+    </MockedProvider>,
   );
 
   expect(screen.getByText("About the property")).toBeInTheDocument();
@@ -81,7 +81,7 @@ test("renders correctly when property override is toggled off", async () => {
         showPropertyTypeOverride={false}
         handleSubmit={handleSubmit}
       />
-    </MockedProvider>
+    </MockedProvider>,
   );
 
   expect(screen.getByText("About the property")).toBeInTheDocument();
@@ -102,7 +102,7 @@ test("retains previously submitted feedback when going back", async () => {
         showPropertyTypeOverride={false}
         previousFeedback="My property type is wrong"
       />
-    </MockedProvider>
+    </MockedProvider>,
   );
 
   expect(screen.getByText("Report an inaccuracy")).toBeInTheDocument();

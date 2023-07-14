@@ -21,7 +21,7 @@ export default function FileDownload(props: Props): FCReturn {
     const csv = "data:text/csv;charset=utf-8," + content;
     const data = encodeURI(csv);
 
-    let link = document.createElement("a");
+    const link = document.createElement("a");
     link.setAttribute("href", data);
     link.setAttribute("download", `${filename}.csv`);
     link.click();

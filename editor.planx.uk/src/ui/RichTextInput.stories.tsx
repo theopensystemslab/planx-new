@@ -17,7 +17,7 @@ const metadata: Meta = {
 
 export const Basic = () => {
   const [value, setValue] = useState<string>(
-    "<p>Hello, <a href='https://opensystemslab.org'>OSL</a></p>"
+    "<p>Hello, <a href='https://opensystemslab.org'>OSL</a></p>",
   );
 
   return (
@@ -27,7 +27,7 @@ export const Basic = () => {
           variant="outlined"
           onClick={() => {
             setValue(
-              `<p>Hello, and <span data-type="mention" class="pass" data-id="Apples">@Apples</span> <a target="_blank" rel="noopener noreferrer nofollow" href="https://opensystemslab.org">OSL</a></p>`
+              `<p>Hello, and <span data-type="mention" class="pass" data-id="Apples">@Apples</span> <a target="_blank" rel="noopener noreferrer nofollow" href="https://opensystemslab.org">OSL</a></p>`,
             );
           }}
         >
