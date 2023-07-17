@@ -195,7 +195,7 @@ function Component(props: Props) {
   );
 }
 
-type PlanningConstraintsContentProps = {
+export type PlanningConstraintsContentProps = {
   title: string;
   description: string;
   fn: string;

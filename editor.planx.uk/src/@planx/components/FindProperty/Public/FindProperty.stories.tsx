@@ -8,6 +8,7 @@ import FindProperty from "./";
 import findAddressReturnMock from "./mocks/findAddressReturnMock";
 import localAuthorityMock from "./mocks/localAuthorityMock";
 
+/** FindProperty relies on a custom web component that cannot be shown by React Storybook. Find additional docs here: https://oslmap.netlify.app/ */
 export default {
   title: "PlanX Components/FindProperty",
   component: FindProperty,
@@ -20,7 +21,7 @@ export default {
       },
     },
   },
-} as Meta;
+} satisfies Meta<typeof FindProperty>;
 
 export const EmptyForm: StoryObj = {
   render: () => (
