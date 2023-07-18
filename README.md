@@ -1,6 +1,10 @@
 # Plan✕
 
-Plan✕ is a platform for creating and publishing digital planning services. Learn more about how it's currently being used here: https://opendigitalplanning.org/
+Plan✕ is a platform for creating and publishing digital planning services. 
+
+Learn more about how it's currently being used here: https://opendigitalplanning.org/
+
+Explore our component library and design system here: https://storybook.planx.uk/ 
 
 ## Status pages
 
@@ -76,12 +80,9 @@ Pull requests will automatically deploy to a new pizza. To skip pizza deployment
 
 We aim to keep a linear commit history between `main` and `production` branches in Github. We "Squash & merge" pull request commits into `main`.
 
-(EDIT: Automatic deployments are on pause and planned to resume after the holidays) Automatic production deployments happen every Tuesday, Wednesday, Thursday, and Friday at 9am, at which time `main` is pushed to `production` (which triggers a deployment).
-
 You can manually trigger a production deployments by going to [the Deploy to Production](https://github.com/theopensystemslab/planx-new/actions/workflows/cron-deploy-to-production.yml) action and clicking `Run workflow`.
 
 Once a deployment is completed, a Slack notification will be sent to the #planx-deployments channel, and the `production` branch should read "This branch is up to date with main."
-
 
 ### Troubleshooting
 
@@ -108,5 +109,4 @@ Our whole stack was last assessed by [Jumpsec](https://www.jumpsec.com/) on 27th
 There are a few dependent packages that are closely related to this project:
 
  - https://github.com/theopensystemslab/planx-core
- - https://github.com/theopensystemslab/planx-document-templates
  - https://github.com/theopensystemslab/map
