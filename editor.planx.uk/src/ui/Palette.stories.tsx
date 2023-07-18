@@ -17,18 +17,20 @@ const metadata: Meta = {
 const ColorSwatch: React.FC<{ color: string; title: string }> = (props) => (
   <Grid item>
     <Box
-      height={100}
-      width={100}
-      bgcolor={props.color}
-      border="1px solid black"
       display="flex"
-      alignItems="center"
-      justifyContent="center"
-      padding={1}
-      margin={0}
+      flexDirection="column"
       flexShrink={1}
+      alignItems="flex-start"
+      marginX={0}
+      marginY={1}
     >
       <Typography variant="caption">{props.title}</Typography>
+      <Box
+        height={100}
+        width={150}
+        bgcolor={props.color}
+        border="1px solid #eee"
+      ></Box>
     </Box>
   </Grid>
 );
@@ -54,7 +56,7 @@ const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
       <Typography variant="h4" component="h5">
         {props.option}
       </Typography>
-      <Grid container spacing={1}>
+      <Grid container>
         {colors.map((color, i) => {
           return (
             !color.match(/opacity/i) && (

@@ -1,11 +1,20 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { StoryFn } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import Logo from "ui/images/OGLLogo.svg";
 
-import Footer, { Props } from "./Footer";
+import Footer from "./Footer";
+
+const meta = {
+  title: "Design System/Molecules/Footer",
+  component: Footer,
+} satisfies Meta<typeof Footer>;
+
+type Story = StoryObj<typeof meta>;
+
+export default meta;
 
 export const Basic = {
   args: {
@@ -35,9 +44,4 @@ export const Basic = {
       </Box>
     ),
   },
-};
-
-export default {
-  title: "Design System/Molecules/Footer",
-  component: Footer,
-};
+} satisfies Story;
