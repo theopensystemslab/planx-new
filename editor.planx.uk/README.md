@@ -27,4 +27,10 @@ you can opt-out of type checking by setting the environment variable
 
 We use [Storybook](https://storybook.js.org/) for our UI component library.
 
-Start the development server `pnpm storybook`
+Start the development server by running `pnpm storybook`
+
+Deployment notes:
+
+ - Each open pull request will have its own Storybook available at `storybook.{PR#}.planx.pizza`
+ - Netlify handles production Storybook deploys on every commit to `#main` and updates link https://storybook.planx.uk/ 
+  - Notifications for failed Netlify deploys are posted in #planx-notifications-internal on Slack
