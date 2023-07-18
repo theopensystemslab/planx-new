@@ -42,7 +42,7 @@ interface LockedSessionResponse {
   message: string;
 }
 
-const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
+export const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
   setEmail,
 }) => {
   const emailSchema = object({
@@ -89,7 +89,7 @@ const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
   );
 };
 
-const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
+export const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
   return (
     <StatusPage
       bannerHeading="Email not sent"
@@ -107,7 +107,7 @@ const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
   );
 };
 
-const EmailSuccess: React.FC = () => {
+export const EmailSuccess: React.FC = () => {
   return (
     <StatusPage
       bannerHeading="Check your email"
@@ -122,7 +122,7 @@ const EmailSuccess: React.FC = () => {
   );
 };
 
-const ValidationSuccess: React.FC<{
+export const ValidationSuccess: React.FC<{
   reconciliationResponse: ReconciliationResponse;
   continueApplication: () => void;
 }> = ({ reconciliationResponse, continueApplication }) => {
@@ -136,7 +136,7 @@ const ValidationSuccess: React.FC<{
   );
 };
 
-const InvalidSession: React.FC<{
+export const InvalidSession: React.FC<{
   retry: () => void;
 }> = ({ retry }) => (
   <StatusPage
@@ -158,9 +158,9 @@ const InvalidSession: React.FC<{
   </StatusPage>
 );
 
-const LockedSession: React.FC<{ paymentRequest?: MinPaymentRequest }> = ({
-  paymentRequest,
-}) => (
+export const LockedSession: React.FC<{
+  paymentRequest?: MinPaymentRequest;
+}> = ({ paymentRequest }) => (
   <StatusPage
     bannerHeading="Sorry, you can't make changes to this application"
     additionalOption="startNewApplication"

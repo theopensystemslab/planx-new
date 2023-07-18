@@ -14,10 +14,10 @@ enum Status {
   Error,
 }
 
-const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
-  saveToEmail,
-  expiryDate,
-}) => (
+export const SaveSuccess: React.FC<{
+  saveToEmail?: string;
+  expiryDate?: string;
+}> = ({ saveToEmail, expiryDate }) => (
   <StatusPage
     bannerHeading="Application saved"
     showDownloadLink
@@ -38,7 +38,7 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
   </StatusPage>
 );
 
-const SaveError: React.FC = () => {
+export const SaveError: React.FC = () => {
   return (
     <StatusPage bannerHeading="Email not sent" showDownloadLink>
       <Typography variant="body2">
