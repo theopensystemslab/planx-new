@@ -5,27 +5,10 @@ import React from "react";
 import Editor from "./Editor";
 import Public from "./Public";
 
-const metadata: Meta = {
+/** DrawBoundary relies on a custom web component that cannot be shown by React Storybook. Find additional docs here: https://oslmap.netlify.app/ */
+export default {
   title: "PlanX Components/DrawBoundary",
-  argTypes: {
-    handleSubmit: { action: true },
-  },
-};
-
-export default metadata;
+  component: Public,
+} satisfies Meta<typeof Public>;
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
-
-export const MapOnly = () => {
-  return (
-    <>
-      {/* @ts-ignore */}
-      <my-map
-        drawMode
-        zoom={19}
-        maxZoom={20}
-        osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-      />
-    </>
-  );
-};
