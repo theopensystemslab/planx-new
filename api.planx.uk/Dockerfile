@@ -1,6 +1,6 @@
 ## BASE ##
 # 18.16.1 = LTS
-FROM node:18.16.1-alpine as base
+FROM --platform=linux/amd64 node:18.16.1-alpine as base
 
 RUN apk add --no-cache git # required for fetching git dependencies
 
@@ -19,7 +19,7 @@ RUN pnpm install --recursive --prefer-offline
 RUN pnpm build
 RUN pnpm prune --production
 
-FROM node:18.16.1-alpine as production
+FROM --platform=linux/amd64 node:18.16.1-alpine as production
 WORKDIR /api
 
 ## PRODUCTION ##
