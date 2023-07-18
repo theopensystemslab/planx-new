@@ -12,6 +12,7 @@ export async function getHTMLExport(
     const { responses } = await $admin.export.csvData(req.params.sessionId);
     res.header("Content-type", "text/html");
     generateApplicationHTMLStream(responses as PlanXExportData[]).pipe(res);
+    next();
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
@@ -32,6 +33,7 @@ export async function getRedactedHTMLExport(
     generateApplicationHTMLStream(redactedResponses as PlanXExportData[]).pipe(
       res,
     );
+    next();
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
