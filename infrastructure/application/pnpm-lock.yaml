@@ -14,11 +14,11 @@ dependencies:
     specifier: ^1.2.8
     version: 1.2.8
   '@pulumi/aws':
-    specifier: ^5.6.0
+    specifier: ^5.42.0
     version: 5.42.0
   '@pulumi/awsx':
     specifier: ^0.40.0
-    version: 0.40.0(@pulumi/aws@5.42.0)(@pulumi/pulumi@3.74.0)
+    version: 0.40.0(@pulumi/aws@5.42.0)(@pulumi/pulumi@3.75.0)
   '@pulumi/cloudflare':
     specifier: ^4.7.0
     version: 4.7.0
@@ -29,8 +29,8 @@ dependencies:
     specifier: ^3.4.0
     version: 3.4.0
   '@pulumi/pulumi':
-    specifier: ^3.74.0
-    version: 3.74.0
+    specifier: ^3.75.0
+    version: 3.75.0
   '@pulumi/random':
     specifier: ^4.8.2
     version: 4.8.2
@@ -299,7 +299,7 @@ packages:
     resolution: {integrity: sha512-1h7Q5DjwoWVGxhBMcNragx/Q1US1KT7g29Tk3RghTg/9N7rGUbzTQKEXSrGgRSjGA/aKTbU+gt5A9ZmhONLiLg==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.74.0
+      '@pulumi/pulumi': 3.75.0
       aws-sdk: 2.889.0
       builtin-modules: 3.0.0
       mime: 2.5.2
@@ -309,7 +309,7 @@ packages:
       - supports-color
     dev: false
 
-  /@pulumi/awsx@0.40.0(@pulumi/aws@5.42.0)(@pulumi/pulumi@3.74.0):
+  /@pulumi/awsx@0.40.0(@pulumi/aws@5.42.0)(@pulumi/pulumi@3.75.0):
     resolution: {integrity: sha512-4xMmVOHT/PZQsqPAPWe1cYguUCdk0ZUJ1JN7wfYUoGy1I3LR7gxPD14IK5I79o20PmZI65BRlAwNuntByVy6xw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
@@ -317,7 +317,7 @@ packages:
     dependencies:
       '@pulumi/aws': 5.42.0
       '@pulumi/docker': 3.2.0
-      '@pulumi/pulumi': 3.74.0
+      '@pulumi/pulumi': 3.75.0
       '@types/aws-lambda': 8.10.75
       mime: 2.5.2
     transitivePeerDependencies:
@@ -328,7 +328,7 @@ packages:
     resolution: {integrity: sha512-QrSxPbGgDSkQBNVZysBzJqeDgimBnVQoDoX8ynQy29WC1i7knBpA150XFErthxZb3II4fLVyDKv2/EizI4CbeA==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.74.0
+      '@pulumi/pulumi': 3.75.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -337,7 +337,7 @@ packages:
     resolution: {integrity: sha512-Mm8xz1vMhuxOOtyCU/V2Py7QW+M6zMxPBBtTjKzvWBYxLe8cygh12+EjCDFK6E9X+x3mV+ZrEkon+JY93kQWhw==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.74.0
+      '@pulumi/pulumi': 3.75.0
       semver: 5.7.1
     transitivePeerDependencies:
       - supports-color
@@ -347,19 +347,20 @@ packages:
     resolution: {integrity: sha512-tFAuSGfeGY7bBzU1NthKRYt2aBlcJ4sqGJi7jsmmwKTQdHqCg9zlw2NTf8WLx/eCMVBd7ioKxiQnlr4hg3/ynw==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.74.0
+      '@pulumi/pulumi': 3.75.0
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@pulumi/pulumi@3.74.0:
-    resolution: {integrity: sha512-VKHCH84aiD6FTosr/SmRnp/te1JvpunpPToIG69IlTDMAiDFeRFu/mXUenc1uicWyxG/pKav72f+eKGNdyZqjg==}
+  /@pulumi/pulumi@3.75.0:
+    resolution: {integrity: sha512-gtraq2JsCWIpMyohWluXGvxPzOnbqqPCVMtE96SPiKaevaBXdfx4PI/Yli29d3KK/thigvb3RrJ9e7X6q6DGew==}
     engines: {node: '>=8.13.0 || >=10.10.0'}
     dependencies:
       '@grpc/grpc-js': 1.8.17
       '@logdna/tail-file': 2.0.6
       '@opentelemetry/api': 1.4.1
       '@opentelemetry/exporter-zipkin': 1.15.0(@opentelemetry/api@1.4.1)
+      '@opentelemetry/instrumentation': 0.32.0(@opentelemetry/api@1.4.1)
       '@opentelemetry/instrumentation-grpc': 0.32.0(@opentelemetry/api@1.4.1)
       '@opentelemetry/resources': 1.15.0(@opentelemetry/api@1.4.1)
       '@opentelemetry/sdk-trace-base': 1.15.0(@opentelemetry/api@1.4.1)
@@ -392,7 +393,7 @@ packages:
     resolution: {integrity: sha512-XDQ2OV+VW5Bpn9nxVqsEiKD3DAEeMd8ngZPLpioJWCiHzsBMSrYfP97MkdGDaBsDvS6/NL1Bvk0VQXXooFl3Yw==}
     requiresBuild: true
     dependencies:
-      '@pulumi/pulumi': 3.74.0
+      '@pulumi/pulumi': 3.75.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -518,7 +519,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: false
 
   /cross-spawn@7.0.3:
@@ -544,6 +545,7 @@ packages:
 
   /debuglog@1.0.1:
     resolution: {integrity: sha512-syBZ+rnAK3EgMsH2aYEOLUW7mZSY9Gb+0wUMCFsZvcmiz+HigA0LOcq/HoQqVuGG+EKykunc7QG2bzrponfaSw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: false
 
   /define-properties@1.1.3:
@@ -764,12 +766,6 @@ packages:
       has: 1.0.3
     dev: false
 
-  /is-core-module@2.2.0:
-    resolution: {integrity: sha512-XRAfAdyyY5F5cOXn7hYQDqh2Xmii+DEfIcQGxK/uNwMHhIkPWO0g8msXcbzLe+MpGoR951MlqM/2iIlU4vKDdQ==}
-    dependencies:
-      has: 1.0.3
-    dev: false
-
   /is-date-object@1.0.2:
     resolution: {integrity: sha512-USlDT524woQ08aoZFzh3/Z6ch9Y/EWXEHQ/AaRN0SkKq4t2Jw2R2339tSXmwuVoY7LLlBCbOIlx2myP/L5zk0g==}
     engines: {node: '>= 0.4'}
@@ -920,7 +916,7 @@ packages:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.20.0
+      resolve: 1.22.2
       semver: 5.7.1
       validate-npm-package-license: 3.0.4
     dev: false
@@ -1016,10 +1012,6 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /path-parse@1.0.6:
-    resolution: {integrity: sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==}
-    dev: false
-
   /path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
     dev: false
@@ -1088,6 +1080,7 @@ packages:
 
   /readdir-scoped-modules@1.1.0:
     resolution: {integrity: sha512-asaikDeqAQg7JifRsZn1NJZXo9E+VwlyCfbkZhwyISinqk5zNS6266HS5kah6P0SaQKGF6SkNnZVHUzHFYxYDw==}
+    deprecated: This functionality has been moved to @npmcli/fs
     dependencies:
       debuglog: 1.0.1
       dezalgo: 1.0.3
@@ -1114,13 +1107,6 @@ packages:
       resolve: 1.22.2
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /resolve@1.20.0:
-    resolution: {integrity: sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==}
-    dependencies:
-      is-core-module: 2.2.0
-      path-parse: 1.0.6
     dev: false
 
   /resolve@1.22.2:
@@ -1313,7 +1299,7 @@ packages:
     dev: false
 
   /util-promisify@2.1.0:
-    resolution: {integrity: sha1-PCI2R2xNMsX/PEcAKt18E7moKlM=}
+    resolution: {integrity: sha512-K+5eQPYs14b3+E+hmE2J6gCZ4JmMl9DbYS6BeP2CHq6WMuNxErxf5B/n0fz85L8zUuoO6rIzNNmIQDu/j+1OcA==}
     dependencies:
       object.getownpropertydescriptors: 2.1.2
     dev: false
@@ -1359,7 +1345,7 @@ packages:
     dev: false
 
   /wrappy@1.0.2:
-    resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=}
+    resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: false
 
   /xml2js@0.4.19:
