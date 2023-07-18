@@ -13,9 +13,9 @@ export interface Step {
 }
 
 export const parseNextSteps = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): NextSteps => ({
-  steps: /* remove once migrated */ data?.taskList?.steps || data?.steps || [],
+  steps: data?.steps || [],
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
   ...parseMoreInformation(data),

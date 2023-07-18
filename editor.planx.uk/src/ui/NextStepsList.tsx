@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import type { Step } from "@planx/components/NextSteps/model";
 import React from "react";
 
 const List = styled("ul")(({ theme }) => ({
@@ -53,13 +54,7 @@ const ArrowButton = styled("span")(({ theme }) => ({
   flexShrink: "0",
 }));
 
-interface Item {
-  title: string;
-  description: string;
-  url: string;
-}
-
-function ListItem(props: Item) {
+function ListItem(props: Step) {
   return (
     <Step>
       <Inner href={props.url}>
@@ -84,13 +79,9 @@ function ListItem(props: Item) {
   );
 }
 
-function NextStepsList(props: { items: Item[] }) {
+function NextStepsList(props: { items: Step[] }) {
   return (
-    <List>
-      {props.items?.map((item, i) => (
-        <ListItem {...item} key={i} />
-      ))}
-    </List>
+    <List>{props.items?.map((item, i) => <ListItem {...item} key={i} />)}</List>
   );
 }
 
