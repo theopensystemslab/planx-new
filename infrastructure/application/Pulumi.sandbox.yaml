@@ -2,7 +2,6 @@ config:
   application:airbrake-project-id: "329753"
   application:airbrake-project-key:
     secure: AAABAO8NgmVNdkwajWpiKwi+dxGicFACbAQzK66FREUCp+OUbSRyNAb9dSQHq/n9fZb8xWBdvYBCQ9eBr2jqPQ==
-  application:aws-profile: planx-sandbox-pulumi
   application:bops-api-root-domain: bops-staging.services
   application:bops-api-token:
     secure: AAABAHLQf7CFOK073geL2TbTYycQCzPYUy3Xi66UniwIrTlOAqve2YBikJXzMJ2xS9v4dGUZMUmwUba0OpTz8KAMXJ8=
@@ -33,6 +32,5 @@ config:
   application:uniform-submission-url: https://staging.identity.idoxgroup.com/agw/submission-api
   application:uniform-token-url:
     secure: AAABAOJAT0wX/byM7wyaXGB+H4m0NnEmaJP8NiM2u+7orIYvIM5yQfDb1GEAgoyMWRSn+7KFDYnCIvf5BNTyIHt1Usbr3R0rClm+zFbEZCuPV8ef2I8=
-  aws:profile: planx-sandbox-pulumi
   cloudflare:apiToken:
     secure: AAABAPDjpKRV8PLulg+5kQfu5roxHWLgDH/zGT2+J+SKprEZJaJyLxr+98Q6oNcoX9h+/9elmdK9S4dFeBpZ/zQeMmPTdd+h

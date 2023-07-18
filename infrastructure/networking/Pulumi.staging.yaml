@@ -1,2 +1,0 @@
-config:
-  aws:profile: planx-staging-pulumi

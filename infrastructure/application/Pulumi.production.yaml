@@ -1,6 +1,4 @@
 config:
-  aws:profile: planx-production-pulumi
-  application:aws-profile: planx-production-pulumi
   application:airbrake-project-id:
     secure: AAABAE+ZtQZO26XlmfAS7tG1DkwQ+G5OP82Roe4EOuk/tG1bMsI=
   application:airbrake-project-key:
