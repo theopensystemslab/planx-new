@@ -127,6 +127,17 @@ function Component(props: Props) {
     setShowModal(true);
   };
 
+  const isCategoryVisible = (category: keyof typeof fileList) => {
+    switch (category) {
+      // Display optional list if they are the only available file types
+      case "optional":
+        return !fileList["recommended"].length && !fileList["required"].length;
+      case "required":
+      case "recommended":
+        return fileList[category].length > 0;
+    }
+  };
+
   return (
     <Card
       handleSubmit={props.hideDropZone ? props.handleSubmit : validateAndSubmit}
@@ -158,9 +169,7 @@ function Component(props: Props) {
             }}
           >
             {(Object.keys(fileList) as Array<keyof typeof fileList>)
-              .filter(
-                (fileListCategory) => fileList[fileListCategory].length > 0,
-              )
+              .filter(isCategoryVisible)
               .flatMap((fileListCategory) => [
                 <ListSubheader
                   key={`subheader-${fileListCategory}-files`}

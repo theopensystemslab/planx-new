@@ -62,6 +62,38 @@ describe("Basic state and setup", () => {
     const helpIcons = screen.getAllByTestId("more-info-icon");
     expect(helpIcons).toHaveLength(2);
   });
+
+  it("does not show optional files if there are other types", () => {
+    setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+        hideDropZone={true}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("heading", { name: /Optional files/ }),
+    ).toBeNull();
+  });
+
+  it("shows optional files if there are no other types", () => {
+    setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[mockFileTypes.NotRequired]}
+        hideDropZone={true}
+      />,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: /Optional files/ }),
+    ).toBeVisible();
+  });
 });
 
 describe("Info-only mode with hidden drop zone", () => {
@@ -290,7 +322,7 @@ describe("Adding tags and syncing state", () => {
 
     // No file requirements have been satisfied yet
     let incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(3);
+    expect(incompleteIcons).toHaveLength(2);
 
     // Upload one file
     mockedAxios.post.mockResolvedValueOnce({
@@ -333,7 +365,7 @@ describe("Adding tags and syncing state", () => {
     const completeIcons = screen.getAllByTestId("complete-icon");
     expect(completeIcons).toHaveLength(1);
     incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(2);
+    expect(incompleteIcons).toHaveLength(1);
 
     // "Continue" onto to the next node
     expect(screen.getByText("Continue")).toBeEnabled();
@@ -353,7 +385,7 @@ describe("Adding tags and syncing state", () => {
 
     // No file requirements have been satisfied yet
     let incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(3);
+    expect(incompleteIcons).toHaveLength(2);
 
     // Upload one file
     mockedAxios.post.mockResolvedValueOnce({
@@ -377,7 +409,7 @@ describe("Adding tags and syncing state", () => {
     expect(selects).toHaveLength(1);
 
     // Apply multiple tags to this file
-    fireEvent.change(selects[0], { target: { value: "Utility bill" } });
+    fireEvent.change(selects[0], { target: { value: "Heritage statement" } });
 
     // Close modal
     await user.keyboard("{Esc}");
@@ -387,13 +419,13 @@ describe("Adding tags and syncing state", () => {
     expect(screen.getByText("test1.png")).toBeVisible();
     const chips = screen.getAllByTestId("uploaded-file-chip");
     expect(chips).toHaveLength(1);
-    expect(chips[0]).toHaveTextContent("Utility bill");
+    expect(chips[0]).toHaveTextContent("Heritage statement");
 
     // Requirements list reflects successfully tagged uploads
     const completeIcons = screen.getAllByTestId("complete-icon");
     expect(completeIcons).toHaveLength(1);
     incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(2);
+    expect(incompleteIcons).toHaveLength(1);
 
     // Show error when attempting to "Continue" onto to the next node
     expect(screen.getByText("Continue")).toBeEnabled();
