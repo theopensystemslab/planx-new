@@ -27,7 +27,7 @@ const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
 
 export const MapContainer = styled(Box)<MapContainerProps>(
   ({ theme, environment, size }) => ({
-    padding: theme.spacing(1, 0, 6, 0),
+    padding: theme.spacing(1, 0, 1, 0),
     width: "100%",
     maxWidth: "none",
     height: "50vh",
@@ -42,7 +42,7 @@ export const MapContainer = styled(Box)<MapContainerProps>(
 );
 
 export const MapFooter = styled(Box)(({ theme }) => ({
+  ...fullWidthContent(theme),
   display: "flex",
   justifyContent: "space-between",
-  paddingTop: theme.spacing(3),
 }));

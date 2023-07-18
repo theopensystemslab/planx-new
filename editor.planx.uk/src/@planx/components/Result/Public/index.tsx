@@ -142,18 +142,20 @@ const Result: React.FC<Props> = ({
           <Responses responses={visibleResponses} allowChanges={allowChanges} />
 
           {hiddenResponses.length > 0 && (
-            <SimpleExpand
-              id="hidden-responses"
-              buttonText={{
-                open: "Show all responses",
-                closed: "Hide other responses",
-              }}
-            >
-              <Responses
-                responses={hiddenResponses}
-                allowChanges={allowChanges}
-              />
-            </SimpleExpand>
+            <Box py={2}>
+              <SimpleExpand
+                id="hidden-responses"
+                buttonText={{
+                  open: "Show all responses",
+                  closed: "Hide other responses",
+                }}
+              >
+                <Responses
+                  responses={hiddenResponses}
+                  allowChanges={allowChanges}
+                />
+              </SimpleExpand>
+            </Box>
           )}
         </Box>
         {disclaimer?.show && (

@@ -198,7 +198,8 @@ const ChecklistComponent: React.FC<Props> = ({
                           title={group.title}
                         >
                           <Box
-                            py={2}
+                            pt={0.5}
+                            pb={2}
                             aria-labelledby={`group-${index}-heading`}
                             id={`group-${index}-content`}
                             data-testid={`group-${index}${

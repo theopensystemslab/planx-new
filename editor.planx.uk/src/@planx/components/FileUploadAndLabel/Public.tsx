@@ -52,6 +52,7 @@ const FullWidthContainer = styled(Box)(({ theme }) => ({
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   display: "grid",
+  marginTop: theme.spacing(2.5),
   marginBottom: theme.spacing(4),
   gap: theme.spacing(3),
   [theme.breakpoints.up("md")]: {
