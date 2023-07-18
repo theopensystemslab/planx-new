@@ -1,4 +1,6 @@
 config:
+  aws:profile: planx-sandbox-pulumi
+  application:aws-profile: planx-sandbox-pulumi
   application:airbrake-project-id: "329753"
   application:airbrake-project-key:
     secure: AAABAO8NgmVNdkwajWpiKwi+dxGicFACbAQzK66FREUCp+OUbSRyNAb9dSQHq/n9fZb8xWBdvYBCQ9eBr2jqPQ==

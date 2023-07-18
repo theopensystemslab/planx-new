@@ -1,5 +1,5 @@
 config:
-  aws:region: eu-west-2
+  aws:profile: planx-sandbox-pulumi
   certificates:cloudflare-zone-id: 9cdfc35484748e96b0ed2b1d303a694f
   certificates:domain: planx.in
   cloudflare:apiToken:

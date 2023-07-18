@@ -1,4 +1,6 @@
 config:
+  aws:profile: planx-staging-pulumi
+  application:aws-profile: planx-staging-pulumi
   application:airbrake-project-id:
     secure: AAABABxcp8r3CZAw1kXuXkwPZ8cKRDQyOg4+gVvqzKuCFWb8BEU=
   application:airbrake-project-key:

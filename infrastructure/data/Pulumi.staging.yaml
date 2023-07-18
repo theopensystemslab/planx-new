@@ -1,4 +1,4 @@
 config:
-  aws:region: eu-west-2
+  aws:profile: planx-staging-pulumi
   data:db-password:
     secure: AAABAITyXpt2+HqrVK8nO9AT0SLFZBx8XBHprCgUkaDMZjuV1y+EQkrh53de4WsLb6wtWTKvb56VNDUYtWUfuw==
