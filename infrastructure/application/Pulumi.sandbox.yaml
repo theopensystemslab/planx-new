@@ -18,7 +18,7 @@ config:
   application:hasura-planx-api-key:
     secure: AAABAKVQcDltAw2qwW7xlZJ22Squvgir7cRker6goWiV194dWlaGtmwOPjC0HZXexoYfm8O4pFSSRCLQZhan/Ta1/vY=
   application:jwt-secret:
-    secure: AAABAOIyX8iQxrly6pxlhc5k05qHmz2HvQS6Pi0HEGDGyT3F4hnat6SUc9AF4Q0hszW+/+qn7tZ3Vnavq6/jBAAITVSQ+EDvXFMaMg==
+    secure: AAABABgBYrYNZFwFjWAGHvomv+TkhJXiiK4gIEMkBtRMh64zyXOWBAil2GDEdVmhqhHhD+eqtuyI/SlwJtldFhO3hVJOls+O
   application:metabase-encryption-secret-key:
     secure: AAABADD9S3yimUNDyeHEz7tUW80VrQ3KCmeshMK+HvBg4j8uvwWvrQ48uGVjW+i0RZMmeAGdsqMtyBi4KQfBizNT0lJBrWS4SMf6VA==
   application:metabasePgPassword:

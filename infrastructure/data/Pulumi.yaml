@@ -1,3 +1,5 @@
 name: data
 runtime: nodejs
 description: Data layer
+config:
+  aws:region: eu-west-2

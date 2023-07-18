@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "postinstall": "(cd application && pnpm i) && (cd certificates && pnpm i) && (cd data && pnpm i) && (cd networking && pnpm i)"
+  }
+}

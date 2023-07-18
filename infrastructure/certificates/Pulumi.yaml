@@ -1,3 +1,5 @@
 name: certificates
 runtime: nodejs
 description: SSL certificates layer
+config:
+  aws:region: eu-west-2
