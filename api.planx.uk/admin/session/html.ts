@@ -14,8 +14,10 @@ export async function getHTMLExport(
     const stream = generateApplicationHTMLStream(
       responses as PlanXExportData[],
     ).pipe(res);
-    stream.on("finish", res.end);
-    next();
+    await new Promise((resolve, reject) => {
+      stream.on("finish", resolve);
+      stream.on("error", reject);
+    }).then(() => res.end);
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
@@ -36,8 +38,10 @@ export async function getRedactedHTMLExport(
     const stream = generateApplicationHTMLStream(
       redactedResponses as PlanXExportData[],
     ).pipe(res);
-    stream.on("finish", res.end);
-    next();
+    await new Promise((resolve, reject) => {
+      stream.on("finish", resolve);
+      stream.on("error", reject);
+    }).then(() => res.end);
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
