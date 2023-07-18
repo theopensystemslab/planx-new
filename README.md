@@ -28,7 +28,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Clone this repository.
 
-2. You should have an IAM user role and your AWS CLI can be configured to use it by running `aws configure sso` with the start URL `https://opensystemslab.awsapps.com/start` and the SSO region `eu-west-2`. This should prompt you to authorize your AWS CLI to access the staging AWS account using your SSO credentials.
+2. Setup your AWS CLI client with SSO - [detailed guide here](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/how-to-setup-aws-sso-credentials.md)
 
 3. Pull down environment secrets for running the application in staging mode by running `./scripts/pull-secrets.sh`. (NOTE: Even when running locally, API requests are routed to relevant staging servers and emails are actually processed and sent to provided addresses).
 
