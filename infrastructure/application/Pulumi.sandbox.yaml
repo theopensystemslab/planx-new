@@ -1,9 +1,8 @@
 config:
-  aws:profile: planx-sandbox-pulumi
-  application:aws-profile: planx-sandbox-pulumi
   application:airbrake-project-id: "329753"
   application:airbrake-project-key:
     secure: AAABAO8NgmVNdkwajWpiKwi+dxGicFACbAQzK66FREUCp+OUbSRyNAb9dSQHq/n9fZb8xWBdvYBCQ9eBr2jqPQ==
+  application:aws-profile: planx-sandbox-pulumi
   application:bops-api-root-domain: bops-staging.services
   application:bops-api-token:
     secure: AAABAHLQf7CFOK073geL2TbTYycQCzPYUy3Xi66UniwIrTlOAqve2YBikJXzMJ2xS9v4dGUZMUmwUba0OpTz8KAMXJ8=
@@ -20,7 +19,7 @@ config:
   application:hasura-planx-api-key:
     secure: AAABAKVQcDltAw2qwW7xlZJ22Squvgir7cRker6goWiV194dWlaGtmwOPjC0HZXexoYfm8O4pFSSRCLQZhan/Ta1/vY=
   application:jwt-secret:
-    secure: AAABAOIyX8iQxrly6pxlhc5k05qHmz2HvQS6Pi0HEGDGyT3F4hnat6SUc9AF4Q0hszW+/+qn7tZ3Vnavq6/jBAAITVSQ+EDvXFMaMg==
+    secure: AAABABgBYrYNZFwFjWAGHvomv+TkhJXiiK4gIEMkBtRMh64zyXOWBAil2GDEdVmhqhHhD+eqtuyI/SlwJtldFhO3hVJOls+O
   application:metabase-encryption-secret-key:
     secure: AAABADD9S3yimUNDyeHEz7tUW80VrQ3KCmeshMK+HvBg4j8uvwWvrQ48uGVjW+i0RZMmeAGdsqMtyBi4KQfBizNT0lJBrWS4SMf6VA==
   application:metabasePgPassword:
@@ -34,5 +33,6 @@ config:
   application:uniform-submission-url: https://staging.identity.idoxgroup.com/agw/submission-api
   application:uniform-token-url:
     secure: AAABAOJAT0wX/byM7wyaXGB+H4m0NnEmaJP8NiM2u+7orIYvIM5yQfDb1GEAgoyMWRSn+7KFDYnCIvf5BNTyIHt1Usbr3R0rClm+zFbEZCuPV8ef2I8=
+  aws:profile: planx-sandbox-pulumi
   cloudflare:apiToken:
     secure: AAABAPDjpKRV8PLulg+5kQfu5roxHWLgDH/zGT2+J+SKprEZJaJyLxr+98Q6oNcoX9h+/9elmdK9S4dFeBpZ/zQeMmPTdd+h
