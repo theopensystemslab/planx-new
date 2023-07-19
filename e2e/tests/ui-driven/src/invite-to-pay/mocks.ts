@@ -8,7 +8,7 @@ import inviteToPayFlow from "../flows/invite-to-pay-flow";
 import { TEST_EMAIL } from "../helpers";
 
 export const mockPaymentRequest: Partial<PaymentRequest> = {
-  payeeEmail: "testNominee@opensystemslab.com",
+  payeeEmail: TEST_EMAIL,
   payeeName: "Mr Nominee",
   sessionPreviewData: {
     _address: {
