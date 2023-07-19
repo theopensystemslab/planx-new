@@ -4,6 +4,7 @@ import {
   answerFindProperty,
   answerContactInput,
   addSessionToContext,
+  TEST_EMAIL,
 } from "../helpers";
 import type { Page } from "@playwright/test";
 import { gql, GraphQLClient } from "graphql-request";
@@ -35,7 +36,7 @@ export async function navigateToPayComponent(page: Page, context: Context) {
   await answerContactInput(page, {
     firstName: "agentFirst",
     lastName: "agentLast",
-    email: "testAgent@opensystemslab.com",
+    email: TEST_EMAIL,
     phoneNumber: "(0123) 456789",
   });
   await page.getByText("Continue").click();
@@ -43,7 +44,7 @@ export async function navigateToPayComponent(page: Page, context: Context) {
 
 export async function answerInviteToPayForm(page: Page) {
   await page.getByLabel("Full name").fill("Mr Nominee");
-  await page.getByLabel("Email").fill("testNominee@opensystemslab.com");
+  await page.getByLabel("Email").fill(TEST_EMAIL);
   await page.getByLabel("Your name").fill("Mr Agent (Agency Ltd)");
 }
 
