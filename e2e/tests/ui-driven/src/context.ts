@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { log } from "./helpers";
+import { TEST_EMAIL, log } from "./helpers";
 import { sign } from "jsonwebtoken";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient, gql } from "graphql-request";
@@ -33,9 +33,7 @@ export const contextDefaults = {
   user: {
     firstName: "Test",
     lastName: "Test",
-    // Gov.uk Notify requests testing service use smoke test email addresses
-    // see https://docs.notifications.service.gov.uk/rest-api.html#smoke-testing
-    email: "simulate-delivered@notifications.service.gov.uk",
+    email: TEST_EMAIL,
   },
   team: {
     name: "E2E Test Team",
@@ -43,7 +41,7 @@ export const contextDefaults = {
     logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
     primaryColor: "#444444",
     homepage: "planx.uk",
-    submissionEmail: "simulate-delivered@notifications.service.gov.uk",
+    submissionEmail: TEST_EMAIL,
   },
 };
 

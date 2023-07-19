@@ -5,6 +5,7 @@ import {
   SessionData,
 } from "@opensystemslab/planx-core/types";
 import inviteToPayFlow from "../flows/invite-to-pay-flow";
+import { TEST_EMAIL } from "../helpers";
 
 export const mockPaymentRequest: Partial<PaymentRequest> = {
   payeeEmail: "testNominee@opensystemslab.com",
@@ -138,6 +139,6 @@ export const modifiedInviteToPayFlow: FlowGraph = {
 export const mockPaymentRequestDetails = {
   applicantName: "Mr Nominee",
   payeeName: "Mrs Agent",
-  payeeEmail: "testAgent@opensystemslab.io",
+  payeeEmail: TEST_EMAIL,
   sessionPreviewKeys: [["_address", "title"], ["proposal.projectType"]],
 };

@@ -11,6 +11,7 @@ import {
   mockPassport,
 } from "./mocks";
 import { $admin } from "../client";
+import { TEST_EMAIL } from "../../../ui-driven/src/helpers";
 
 export async function setUpMocks() {
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
@@ -30,7 +31,7 @@ export async function createTeam() {
     slug: "E2E",
     logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
     primaryColor: "#444444",
-    submissionEmail: "simulate-delivered@notifications.service.gov.uk",
+    submissionEmail: TEST_EMAIL,
     homepage: "planx.uk",
   });
 }
@@ -39,7 +40,7 @@ export async function createUser() {
   return $admin.user.create({
     firstName: "Test",
     lastName: "Test",
-    email: "simulate-delivered@notifications.service.gov.uk",
+    email: TEST_EMAIL,
   });
 }
 
@@ -87,7 +88,7 @@ export async function buildPaymentRequestForSession(
     sessionId,
     applicantName: "Agent",
     payeeName: "Nominee",
-    payeeEmail: "simulate-delivered-2@notifications.service.gov.uk",
+    payeeEmail: TEST_EMAIL,
     sessionPreviewKeys: [["_address", "title"], ["proposal.projectType"]],
   });
 }

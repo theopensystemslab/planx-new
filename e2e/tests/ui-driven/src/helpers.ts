@@ -14,6 +14,10 @@ export const cards = {
   invalid_card_number: "4000000000000002",
 };
 
+// Gov.uk Notify requests testing service use smoke test email addresses
+// see https://docs.notifications.service.gov.uk/rest-api.html#smoke-testing
+export const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk" as const;
+
 // utility functions
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -282,7 +286,7 @@ export async function fillGovUkCardDetails({
   await page.getByLabel("Postcode").fill("HP111BB");
   await page
     .getByLabel("Email")
-    .fill("simulate-delivered@notifications.service.gov.uk");
+    .fill(TEST_EMAIL);
   await page.locator("button#submit-card-details").click();
 }
 
