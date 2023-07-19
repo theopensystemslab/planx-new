@@ -57,7 +57,7 @@ const ArrowButton = styled("span")(({ theme }) => ({
 function ListItem(props: Step) {
   return (
     <Step>
-      <Inner href={props.url}>
+      <Inner href={props.url} target="_blank" rel="noopener">
         <Box pr={2}>
           <Typography
             variant="h3"
