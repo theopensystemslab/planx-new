@@ -16,7 +16,8 @@ export const cards = {
 
 // Gov.uk Notify requests testing service use smoke test email addresses
 // see https://docs.notifications.service.gov.uk/rest-api.html#smoke-testing
-export const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk" as const;
+export const TEST_EMAIL =
+  "simulate-delivered@notifications.service.gov.uk" as const;
 
 // utility functions
 
@@ -284,9 +285,7 @@ export async function fillGovUkCardDetails({
 
   await page.getByLabel("Town or city").fill("Test");
   await page.getByLabel("Postcode").fill("HP111BB");
-  await page
-    .getByLabel("Email")
-    .fill(TEST_EMAIL);
+  await page.getByLabel("Email").fill(TEST_EMAIL);
   await page.locator("button#submit-card-details").click();
 }
 
