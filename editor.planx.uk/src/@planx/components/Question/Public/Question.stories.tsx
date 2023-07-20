@@ -1,59 +1,113 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import Question, { IQuestion } from "./Question";
+import Question from "./Question";
 
-const metadata: Meta = {
+const meta = {
   title: "PlanX Components/Question",
   component: Question,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },
   },
-};
+} satisfies Meta<typeof Question>;
 
-const basicArgs: IQuestion = {
-  text: "What is your favorite fruit?",
-  description:
-    "A fruit is the sweet and fleshy product of a tree or other plant that contains seed and can be eaten as food.",
-  info: "Some info here",
-  policyRef: "Policy ref here",
-  howMeasured: "How is it measured",
-  handleSubmit: () => {},
-  responses: [
-    { id: "a", responseKey: "a", title: "Apple" },
-    { id: "b", responseKey: "b", title: "Banana" },
-    { id: "c", responseKey: "c", title: "Canteloupe" },
-  ],
-};
+export default meta;
 
-export const Basic: StoryObj<IQuestion> = {
-  args: basicArgs,
-};
+type Story = StoryObj<typeof meta>;
 
-export const WithDescriptions: StoryObj<IQuestion> = {
+export const Basic = {
   args: {
-    ...basicArgs,
+    text: "What type of property is it?",
+    description: "",
+    howMeasured:
+      "**Flat** includes maisonettes (a flat with more than one storey that is within a shared building)",
+    handleSubmit: () => {},
     responses: [
-      { id: "a", responseKey: "a", title: "Apple", description: "la la la" },
-      { id: "b", responseKey: "b", title: "Banana" },
-      { id: "c", responseKey: "c", title: "Canteloupe" },
+      { id: "House", responseKey: "House", title: "House" },
+      {
+        id: "Flat",
+        responseKey: "Flat",
+        title: "Flat (or building containing flats)",
+      },
+      {
+        id: "HMO",
+        responseKey: "HMO",
+        title: "A house in multiple occupation (HMO)",
+      },
+      { id: "Other", responseKey: "Other", title: "Something else" },
     ],
   },
-};
+} satisfies Story;
 
-export const WithImages: StoryObj<IQuestion> = {
+export const WithDescriptions = {
   args: {
-    ...basicArgs,
+    text: "What type of house is it?",
+    description: "",
+    handleSubmit: () => {},
     responses: [
       {
-        id: "a",
-        responseKey: "a",
-        title: "Apple",
-        img: "https://i2.wp.com/ceklog.kindel.com/wp-content/uploads/2013/02/firefox_2018-07-10_07-50-11.png",
+        id: "Detached",
+        responseKey: "Detached",
+        title: "Detached",
+        description: "A detached house is not joined to another property.",
       },
-      { id: "b", responseKey: "b", title: "Banana" },
-      { id: "c", responseKey: "c", title: "Canteloupe" },
+      {
+        id: "Semi-detached",
+        responseKey: "Semi-detached",
+        title: "Semi-detached",
+        description:
+          "A semi-detached house is joined to 1 other property which, in turn, is not attached to any other properties. So together, the 2 properties form a pair.",
+      },
+      {
+        id: "Terrace",
+        responseKey: "Terrace",
+        title: "Terrace",
+        description:
+          "A terrace is a building that forms part of a row of 3 or more adjoining properties.",
+      },
+      {
+        id: "End terrace",
+        responseKey: "End terrace",
+        title: "End terrace",
+        description:
+          "An end terrace is the building at the end of the row of a terrace.",
+      },
     ],
   },
-};
+} satisfies Story;
 
-export default metadata;
+export const WithImages = {
+  args: {
+    text: "What type of house is it?",
+    description: "",
+    handleSubmit: () => {},
+    responses: [
+      {
+        id: "Detached",
+        responseKey: "Detached",
+        title: "Detached",
+        img: "https://api.editor.planx.uk/file/public/pk8f4g4h/housetypes_detached.png",
+      },
+      {
+        id: "Semi-detached",
+        responseKey: "Semi-detached",
+        title: "Semi-detached",
+        img: "https://api.editor.planx.uk/file/public/2jpkk6ei/housetypes_semiDetached.png",
+      },
+      {
+        id: "Terrace",
+        responseKey: "Terrace",
+        title: "Terrace",
+        img: "https://api.editor.planx.uk/file/public/btyxwr2j/housetypes_midterrace.png",
+      },
+      {
+        id: "End terrace",
+        responseKey: "End terrace",
+        title: "End terrace",
+        img: "https://api.editor.planx.uk/file/public/u0lwhiv2/housetypes_endterrace.png",
+      },
+    ],
+  },
+} satisfies Story;
+
+// This throws a type error because Editor expects props, should see if we can simplify Editor file for Question
+// export const WithEditor = () => <Wrapper Editor={Editor} Public={Question} />;
