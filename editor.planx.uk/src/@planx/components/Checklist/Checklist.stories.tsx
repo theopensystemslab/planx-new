@@ -1,93 +1,116 @@
-import type { StoryFn } from "@storybook/react";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/react";
 
-import type { Props } from "./Public";
 import Checklist from "./Public";
 
-export default {
+const meta = {
   title: "PlanX Components/Checklist",
   component: Checklist,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },
-    allRequired: {
-      control: "boolean",
-      description:
-        "Toggles whether or not all checks must be selected before proceeding",
-    },
   },
-};
+} satisfies Meta<typeof Checklist>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
 
 export const Basic = {
   args: {
-    text: "Which fruits are you interested in?",
-    description:
-      "A fruit is the sweet and fleshy product of a tree or other plant that contains seed and can be eaten as food.",
-    info: "Some info here",
-    policyRef: "Policy ref here",
-    howMeasured: "How it is measured",
+    text: "List the changes involved in the project",
+    description: "Select only as many as you need to describe the project.",
+    howMeasured:
+      "The term 'changes' includes both physical works and changes in the use of the property, if appropriate.",
     options: [
-      { id: "a", data: { val: "a", text: "Apples" } },
-      { id: "b", data: { val: "b", text: "Bananas" } },
-      { id: "c", data: { val: "c", text: "Canteloupes" } },
+      { id: "a", data: { val: "a", text: "Repair windows or doors" } },
+      { id: "b", data: { val: "b", text: "Changes to trees or hedges" } },
+      { id: "c", data: { val: "c", text: "Install a swimming pool" } },
     ],
+    allRequired: false,
   },
-};
+} satisfies Story;
 
 export const Grouped = {
   args: {
-    text: "Which plant-based food items are you interested in?",
-    description:
-      "A fruit is the sweet and fleshy product of a tree or other plant that contains seed and can be eaten as food.",
-    info: "Some info here",
-    policyRef: "Policy ref here",
-    howMeasured: "How it is measured",
+    text: "List the changes involved in the project",
+    description: "Select only as many as you need to describe the project.",
+    howMeasured:
+      "The term 'changes' includes both physical works and changes in the use of the property, if appropriate.",
     groupedOptions: [
       {
-        title: "Fruits",
+        title: "Windows, doors and shopfronts",
         children: [
-          { id: "a", data: { val: "a", text: "Apples" } },
-          { id: "b", data: { val: "b", text: "Bananas" } },
-          { id: "c", data: { val: "c", text: "Canteloupes" } },
+          { id: "a", data: { val: "a", text: "Repair windows or doors" } },
+          { id: "b", data: { val: "b", text: "Add or alter shutters" } },
         ],
       },
       {
-        title: "Vegetables",
+        title: "Garden and outdoors",
         children: [
-          { id: "1", data: { val: "a", text: "Amaranth" } },
-          { id: "2", data: { val: "b", text: "Beans" } },
-          { id: "3", data: { val: "c", text: "Carrots" } },
+          { id: "c", data: { val: "c", text: "Changes to trees or hedges" } },
+          { id: "d", data: { val: "d", text: "Install a swimming pool" } },
+          {
+            id: "e",
+            data: {
+              val: "e",
+              text: "Changes to a public road, pavement or path (including drop kerb)",
+            },
+          },
         ],
       },
     ],
   },
-};
+} satisfies Story;
 
 export const WithImages = {
   args: {
-    text: "Which fruits are you interested in?",
-    description:
-      "A fruit is the sweet and fleshy product of a tree or other plant that contains seed and can be eaten as food.",
-    info: "Some info here",
-    policyRef: "Policy ref here",
-    howMeasured: "How it is measured",
+    text: "What do you want to do to the roof?",
+    description: "Select all that apply",
     options: [
       {
         id: "a",
         data: {
           val: "a",
-          text: "Apples",
-          img: "https://www.applesfromny.com/wp-content/uploads/2020/05/Jonagold_NYAS-Apples2.png",
+          text: "Add dormers",
+          img: "https://planx-temp.s3.eu-west-2.amazonaws.com/production/0pyd8i7c/4.4_roof-extensions_SemiD_Roof_extensiontype_reardormer.svg",
         },
       },
       {
         id: "b",
         data: {
           val: "b",
-          text: "Bananas",
-          img: "https://images.everydayhealth.com/images/diet-nutrition/how-many-calories-are-in-a-banana-1440x810.jpg",
+          text: "Convert a hip roof to a gable",
+          img: "https://planx-temp.s3.eu-west-2.amazonaws.com/production/2mlyvlia/4.4_roof-extensions_SemiD_Roof_extensiontype_hiptogable.svg",
         },
       },
-      { id: "c", data: { val: "c", text: "Canteloupes" } },
+      {
+        id: "c",
+        data: {
+          val: "c",
+          text: "Add a storey",
+          img: "https://planx-temp.s3.eu-west-2.amazonaws.com/production/5oqr1hne/4.4_roof-extensions_SemiD_Roof_extensiontype_addstorey.svg",
+        },
+      },
     ],
   },
 };
+
+export const AllRequired = {
+  args: {
+    text: "I confirm that:",
+    description: "",
+    options: [
+      {
+        id: "agree",
+        data: {
+          text: "The information contained in this application is truthful, accurate and complete, to the best of my knowledge",
+        },
+      },
+    ],
+    allRequired: true,
+  },
+} satisfies Story;
+
+// Similar to Question stories here, Checklist's editor atyipcally expects props so the Wrapper throws a type error - come back to!
+// export const WithEditor = () => {
+//   return <Wrapper Editor={<Editor handleSubmit={() => {}} />} Public={Checklist} />;
+// };
