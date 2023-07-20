@@ -45,8 +45,10 @@ jest.mock("@opensystemslab/planx-core", () => {
     })),
     hasRequiredDataForTemplate: jest.fn(() => mockHasRequiredDataForTemplate()),
     generateDocxTemplateStream: jest.fn().mockImplementation(() => mockPipe),
-    generateApplicationHTMLStream: jest.fn().mockImplementation(() => mockPipe),
-    generateMapHTMLStream: jest.fn().mockImplementation(() => mockPipe),
+    generateApplicationHTML: jest
+      .fn()
+      .mockImplementation(() => "<p>application</p>"),
+    generateMapHTML: jest.fn().mockImplementation(() => "<p>map</p>"),
   };
 });
 const mockGenerateOneAppXML = jest
@@ -93,9 +95,7 @@ describe("buildSubmissionExportZip", () => {
 
   test("the document viewer is added to zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
-    expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/Overview.htm$/),
-    );
+    expect(mockAddFile).toHaveBeenCalledWith("Overview.htm", expect.anything());
   });
 
   test("boundary GeoJSON is added to zip", async () => {
@@ -118,15 +118,16 @@ describe("buildSubmissionExportZip", () => {
     const expectedBuffer = Buffer.from(JSON.stringify(geojson, null, 2));
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddFile).toHaveBeenCalledWith(
-      expect.stringMatching(/LocationPlanGeoJSON.geojson$/),
+      "LocationPlanGeoJSON.geojson",
       expectedBuffer,
     );
   });
 
   test("the location plan is added to zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
-    expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/LocationPlan.htm$/),
+    expect(mockAddFile).toHaveBeenCalledWith(
+      "LocationPlan.htm",
+      expect.anything(),
     );
   });
 
@@ -150,11 +151,13 @@ describe("buildSubmissionExportZip", () => {
 
     await buildSubmissionExportZip({ sessionId: "1234" });
 
-    expect(mockAddLocalFile).not.toHaveBeenCalledWith(
-      expect.stringMatching(/LocationPlan.htm$/),
+    expect(mockAddFile).not.toHaveBeenCalledWith(
+      "LocationPlan.htm",
+      expect.anything(),
     );
-    expect(mockAddLocalFile).not.toHaveBeenCalledWith(
-      expect.stringMatching(/LocationPlanGeoJSON.geojson$/),
+    expect(mockAddFile).not.toHaveBeenCalledWith(
+      "LocationPlanGeoJSON.geojson",
+      expect.anything(),
     );
   });
 
