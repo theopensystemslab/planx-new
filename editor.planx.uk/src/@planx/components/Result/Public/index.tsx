@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -39,32 +40,6 @@ interface Response {
 
 const DisclaimerContent = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(1),
-  marginBottom: theme.spacing(1),
-}));
-
-const Disclaimer = styled(Box)(({ theme }) => ({
-  position: "relative",
-  width: "100%",
-  display: "flex",
-  alignItems: "flex-start",
-  justifyContent: "space-between",
-  padding: theme.spacing(2),
-  backgroundColor: "#EFEFEF",
-  color: theme.palette.text.primary,
-  "&:before": {
-    content: "' '",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    opacity: 0.3,
-    border: "2px solid currentColor",
-    pointerEvents: "none",
-  },
-  "& p": {
-    marginBottom: 0,
-  },
 }));
 
 const TitleWrap = styled(Box)(() => ({
@@ -182,7 +157,7 @@ const Result: React.FC<Props> = ({
           )}
         </Box>
         {disclaimer?.show && (
-          <Disclaimer>
+          <WarningContainer>
             <Box sx={{ flex: 1 }}>
               <TitleWrap>
                 <ErrorOutline sx={{ width: 34, height: 34 }} />
@@ -194,15 +169,13 @@ const Result: React.FC<Props> = ({
                 </DisclaimerContent>
               </Box>
             </Box>
-          </Disclaimer>
+          </WarningContainer>
         )}
-        <Box mt="2">
-          <FeedbackInput
-            text="Is this information inaccurate? **Tell us why.**"
-            handleChange={formik.handleChange}
-            value={formik.values.feedback}
-          />
-        </Box>
+        <FeedbackInput
+          text="Is this information inaccurate? **Tell us why.**"
+          handleChange={formik.handleChange}
+          value={formik.values.feedback}
+        />
       </Card>
     </Box>
   );
