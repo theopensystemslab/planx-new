@@ -1,5 +1,8 @@
+import Wrapper from "@planx/components/fixtures/Wrapper";
 import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
+import Editor from "../Editor";
 import Question from "./Question";
 
 const meta = {
@@ -109,5 +112,5 @@ export const WithImages = {
   },
 } satisfies Story;
 
-// This throws a type error because Editor expects props, should see if we can simplify Editor file for Question
-// export const WithEditor = () => <Wrapper Editor={Editor} Public={Question} />;
+// Question's Editor is a bit of an atypical implementation requiring props, which throws a type error here and fails to render - need to revisit!
+// export const WithEditor = () => <Wrapper Editor={<Editor node={{ data: { text: "What do you want to ask?" } }} handleSubmit={() => {}}/>} Public={Question} />;

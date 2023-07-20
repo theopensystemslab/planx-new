@@ -24,4 +24,11 @@ export const Basic = {
   },
 } satisfies Story;
 
+export const WithImage = {
+  args: {
+    content: `<h1>What should planning drawings look like?</h1><img src="https://user-data-8038f15.s3.eu-west-2.amazonaws.com/kbqmvxh3/Floor%20plans%20proposed.svg" alt="Planning drawing"><p><strong>Do</strong></p><ul><li><p>Draw to scale, for example 1:100</p></li><li><p>Indicate which direction is north</p></li><li><p>Include a unique reference number</p></li></ul><p><strong>Do not</strong></p><ul><li><p>Take photographs of paper drawings</p></li><li><p>Add poor quality scans</p></li></ul>`,
+    color: "#FFF",
+  },
+} satisfies Story;
+
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
