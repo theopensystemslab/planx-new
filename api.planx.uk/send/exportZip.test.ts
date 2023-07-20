@@ -41,7 +41,7 @@ const mockHasRequiredDataForTemplate = jest.fn(() => true);
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({
-      getFiles: jest.fn().mockImplementation(() => []),
+      files: jest.fn().mockImplementation(() => []),
     })),
     hasRequiredDataForTemplate: jest.fn(() => mockHasRequiredDataForTemplate()),
     generateDocxTemplateStream: jest.fn().mockImplementation(() => mockPipe),

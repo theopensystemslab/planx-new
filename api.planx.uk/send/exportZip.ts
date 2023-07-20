@@ -51,7 +51,7 @@ export async function buildSubmissionExportZip({
   }
 
   // add remote files on S3 to the zip
-  const files = new Passport(passport).getFiles();
+  const files = new Passport(passport).files();
   if (files.length) {
     for (const fileURL of files) {
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid

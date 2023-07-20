@@ -22,7 +22,7 @@ fi
 echo
 
 package="github:theopensystemslab\/planx-core\#${ref}\","
-expression="s/github:theopensystemslab\/planx-core.\+$/${package}/"
+expression="s;github:theopensystemslab/planx-core.\+$;${package};"
 
 for dir in ${directories[@]}; do
   sed -i ${expression} ${dir}/package.json
