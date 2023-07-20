@@ -39,12 +39,14 @@ describe("HTML data admin endpoint", () => {
       );
   });
 
-  it("returns a HTML-formatted payload", async () => {
-    const response = await supertest(app)
+  it("returns a HTML-formatted payload", () => {
+    return supertest(app)
       .get(endpoint`123`)
-      .set(authHeader());
-    expect(response.status).toEqual(200);
-    expect(response.header["content-type"]).toEqual("text/html; charset=utf-8");
-    expect(response.text).toContain("<dt>Is this a test?</dt><dd>Yes</dd>");
+      .set(authHeader())
+      .expect(200)
+      .expect("content-type", "text/html; charset=utf-8")
+      .then((res) =>
+        expect(res.text).toContain("<dt>Is this a test?</dt><dd>Yes</dd>"),
+      );
   });
 });
