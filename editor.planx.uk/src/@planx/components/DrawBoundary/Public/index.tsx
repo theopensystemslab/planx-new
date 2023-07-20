@@ -14,6 +14,7 @@ import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
 
@@ -120,7 +121,13 @@ export default function Component(props: Props) {
           <MapFooter>
             <Typography variant="body1">
               The site outline you have drawn is{" "}
-              <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
+              <Typography
+                component="span"
+                noWrap
+                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+              >
+                {area?.toLocaleString("en-GB") ?? 0} m²
+              </Typography>
             </Typography>
             {!props.hideFileUpload && (
               <Link
