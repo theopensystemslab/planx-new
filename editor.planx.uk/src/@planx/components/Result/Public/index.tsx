@@ -1,7 +1,5 @@
-import Warning from "@mui/icons-material/WarningOutlined";
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import Link from "@mui/material/Link";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
@@ -12,6 +10,7 @@ import { submitFeedback } from "lib/feedback";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import type { Node, TextContent } from "types";
 
 import ResultReason from "./ResultReason";
@@ -43,8 +42,40 @@ const DisclaimerContent = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
 
-const DisclaimerHeading = styled(Typography)(({ theme }) => ({
-  marginRight: theme.spacing(1),
+const Disclaimer = styled(Box)(({ theme }) => ({
+  position: "relative",
+  width: "100%",
+  display: "flex",
+  alignItems: "flex-start",
+  justifyContent: "space-between",
+  padding: theme.spacing(2),
+  backgroundColor: "#EFEFEF",
+  color: theme.palette.text.primary,
+  "&:before": {
+    content: "' '",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    opacity: 0.3,
+    border: "2px solid currentColor",
+    pointerEvents: "none",
+  },
+  "& p": {
+    marginBottom: 0,
+  },
+}));
+
+const TitleWrap = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "center",
+}));
+
+const Title = styled(Typography)(({ theme }) => ({
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  margin: 0,
+  paddingLeft: theme.spacing(1),
 })) as typeof Typography;
 
 const Responses = ({
@@ -106,12 +137,9 @@ const Result: React.FC<Props> = ({
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
 
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [showSubmitButton, setShowSubmitButton] = useState<boolean>(
     Boolean(handleSubmit),
   );
-
-  const theme = useTheme();
 
   useEffect(() => {
     if (handleSubmit) return;
@@ -154,46 +182,27 @@ const Result: React.FC<Props> = ({
           )}
         </Box>
         {disclaimer?.show && (
-          <Box
-            bgcolor="background.paper"
-            p={1.25}
-            display="flex"
-            color={theme.palette.grey[600]}
-          >
-            <Warning titleAccess="Warning" color="primary" />
-            <Box ml={1}>
-              <Box display="flex" alignItems="center">
-                <DisclaimerHeading
-                  variant="h5"
-                  component="h3"
-                  color="text.primary"
-                >
-                  {disclaimer.heading}
-                </DisclaimerHeading>
-                <Link
-                  component="button"
-                  onClick={() =>
-                    setShowDisclaimer((showDisclaimer) => !showDisclaimer)
-                  }
-                >
-                  <Typography variant="body2">
-                    Read {showDisclaimer ? "less" : "more"}
-                  </Typography>
-                </Link>
-              </Box>
-              <Collapse in={showDisclaimer}>
+          <Disclaimer>
+            <Box sx={{ flex: 1 }}>
+              <TitleWrap>
+                <ErrorOutline sx={{ width: 34, height: 34 }} />
+                <Title variant="h3"> {disclaimer.heading}</Title>
+              </TitleWrap>
+              <Box mt={2}>
                 <DisclaimerContent variant="body2" color="text.primary">
                   {disclaimer.content}
                 </DisclaimerContent>
-              </Collapse>
+              </Box>
             </Box>
-          </Box>
+          </Disclaimer>
         )}
-        <FeedbackInput
-          text="Is this information inaccurate? **Tell us why.**"
-          handleChange={formik.handleChange}
-          value={formik.values.feedback}
-        />
+        <Box mt="2">
+          <FeedbackInput
+            text="Is this information inaccurate? **Tell us why.**"
+            handleChange={formik.handleChange}
+            value={formik.values.feedback}
+          />
+        </Box>
       </Card>
     </Box>
   );
