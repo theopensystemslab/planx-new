@@ -21,7 +21,7 @@ if [ -z ${ref} ]; then
 fi
 echo
 
-package="github:theopensystemslab\/planx-core\#${ref}\","
+package="github:theopensystemslab/planx-core\#${ref}\","
 expression="s;github:theopensystemslab/planx-core.\+$;${package};"
 
 for dir in ${directories[@]}; do
