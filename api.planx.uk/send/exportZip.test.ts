@@ -45,7 +45,9 @@ jest.mock("@opensystemslab/planx-core", () => {
     })),
     hasRequiredDataForTemplate: jest.fn(() => mockHasRequiredDataForTemplate()),
     generateDocxTemplateStream: jest.fn().mockImplementation(() => mockPipe),
-    generateApplicationHTML: jest.fn().mockImplementation(() => "<p>application</p>"),
+    generateApplicationHTML: jest
+      .fn()
+      .mockImplementation(() => "<p>application</p>"),
     generateMapHTML: jest.fn().mockImplementation(() => "<p>map</p>"),
   };
 });
@@ -93,10 +95,7 @@ describe("buildSubmissionExportZip", () => {
 
   test("the document viewer is added to zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
-    expect(mockAddFile).toHaveBeenCalledWith(
-      "Overview.htm",
-      expect.anything()
-    );
+    expect(mockAddFile).toHaveBeenCalledWith("Overview.htm", expect.anything());
   });
 
   test("boundary GeoJSON is added to zip", async () => {
@@ -128,7 +127,7 @@ describe("buildSubmissionExportZip", () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddFile).toHaveBeenCalledWith(
       "LocationPlan.htm",
-      expect.anything()
+      expect.anything(),
     );
   });
 
@@ -154,11 +153,11 @@ describe("buildSubmissionExportZip", () => {
 
     expect(mockAddFile).not.toHaveBeenCalledWith(
       "LocationPlan.htm",
-      expect.anything()
+      expect.anything(),
     );
     expect(mockAddFile).not.toHaveBeenCalledWith(
       "LocationPlanGeoJSON.geojson",
-      expect.anything()
+      expect.anything(),
     );
   });
 
