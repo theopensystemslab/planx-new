@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
-import SavePage, { SaveError,SaveSuccess } from "./SavePage";
+import SavePage, { SaveError, SaveSuccess } from "./SavePage";
 
 const meta = {
   title: "Design System/Pages/Save",

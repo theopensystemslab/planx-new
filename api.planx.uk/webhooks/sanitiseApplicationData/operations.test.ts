@@ -33,7 +33,7 @@ const mockGetFiles = jest.fn();
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({
-      getFiles: mockGetFiles,
+      files: mockGetFiles,
     })),
   };
 });

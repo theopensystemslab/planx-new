@@ -129,7 +129,7 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: api.planx.uk
       - name: Run API Tests
-        run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm check && pnpm test
         working-directory: api.planx.uk
 
   test_react:

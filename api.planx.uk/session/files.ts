@@ -9,7 +9,7 @@ export const getFilesForSession = async (
   const passportData = await getPassportDataForSession(sessionId);
   if (!passportData) return [];
 
-  const files = new Passport(passportData).getFiles();
+  const files = new Passport(passportData).files();
   return files;
 };
 

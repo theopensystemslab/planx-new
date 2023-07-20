@@ -16,7 +16,7 @@ const mockGenerateCSVData = jest.fn().mockResolvedValue({
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({
-      getFiles: jest.fn().mockImplementation(() => []),
+      files: jest.fn().mockImplementation(() => []),
     })),
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       getDocumentTemplateNamesForSession: jest.fn(),
