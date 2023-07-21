@@ -30,18 +30,15 @@ describe("sessions", () => {
       mutation UpdateSessionDataByPK(
         $sessionId: uuid!,
         $breadcrumbs: jsonb!,
-        $passport: jsonb!,
       ) {
         update_sessions_by_pk(
           pk_columns: {id: $sessionId},
           _set: {
             breadcrumbs: $breadcrumbs,
-            passport: $passport,
           },
         ) {
           id
           breadcrumbs
-          passport
           created_at
           updated_at
         }
@@ -59,18 +56,18 @@ describe("sessions", () => {
     beforeAll(async () => {
       const res1 = await gqlAdmin(
         `mutation InsertTeam(
-        $name: String!,
-        $slug: String!,
-      ) {
-        insert_teams_one(
-          object: {
-            name: $name
-            slug: $slug
-          }
+          $name: String!,
+          $slug: String!,
         ) {
-          id
-        }
-      }`,
+          insert_teams_one(
+            object: {
+              name: $name
+              slug: $slug
+            }
+          ) {
+            id
+          }
+        }`,
         {
           name: "team1",
           slug: "team1",
@@ -109,21 +106,18 @@ describe("sessions", () => {
       mutation InsertSession(
         $sessionId: uuid!,
         $breadcrumbs: jsonb!,
-        $passport: jsonb!,
         $email: String!,
       ) {
         insert_sessions_one(
           object: {
             id: $sessionId
             breadcrumbs: $breadcrumbs
-            passport: $passport
             email: $email
             flow_id: "${flowId}"
           }
         ) {
           id
           breadcrumbs
-          passport
         }
       }
     `;
@@ -135,35 +129,30 @@ describe("sessions", () => {
               {
                 email: "alice@opensystemslab.io"
                 breadcrumbs: [{ a: 1 }]
-                passport: { a: 1 }
                 flow_id: "${flowId}"
                 id: "${alice1}"
               }
               {
                 email: "bob@opensystemslab.io"
                 breadcrumbs: [{ b: 1 }]
-                passport: { b: 1 }
                 flow_id: "${flowId}"
                 id: "${bob1}"
               }
               {
                 email: "bob@opensystemslab.io"
                 breadcrumbs: [{ b: 2 }]
-                passport: { b: 2 }
                 flow_id: "${flowId}"
                 id: "${bob2}"
               }
               {
                 email: "mallory@opensystemslab.io"
                 breadcrumbs: [{ m: 1 }]
-                passport: { m: 1 }
                 flow_id: "${flowId}"
                 id: "${mallory1}"
               }
               {
                 email: "robert@opensystemslab.io"
                 breadcrumbs: [{ r: 1 }]
-                passport: { r: 1 }
                 locked_at: "2022-03-28T17:30:15+01:00"
                 flow_id: "${flowId}"
                 id: "${robert1}"
@@ -222,14 +211,12 @@ describe("sessions", () => {
           email: "",
           sessionId: anon1,
           breadcrumbs: [{ x: 1 }],
-          passport: { x: 1 },
         };
         const res = await gqlPublic(insertSession, payload, headers);
         ids.push(res.data.insert_sessions_one.id);
         expect(res).not.toHaveProperty("errors");
         expect(res.data.insert_sessions_one).not.toBeNull();
         expect(res.data.insert_sessions_one.id).toEqual(anon1);
-        expect(res.data.insert_sessions_one.passport).toHaveProperty("x", 1);
         expect(res.data.insert_sessions_one.breadcrumbs).toEqual([{ x: 1 }]);
       });
 
@@ -242,7 +229,6 @@ describe("sessions", () => {
           email: "alice@opensystemslab.io", // not the same as in header
           sessionId: alice2,
           breadcrumbs: [{ x: 1 }],
-          passport: { x: 1 },
         };
         const res = await gqlPublic(insertSession, payload, headers);
         expect(res).toHaveProperty("errors");
@@ -256,7 +242,7 @@ describe("sessions", () => {
       test("cannot update without 'x-hasura-session-id' header", async () => {
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           { "x-hasura-email": "alice@opensystemslab.io" }
         );
         expect(res).toHaveProperty("errors");
@@ -268,7 +254,7 @@ describe("sessions", () => {
       test("cannot update without 'x-hasura-email' header", async () => {
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           { "x-hasura-session-id": uuidV4() }
         );
         expect(res).toHaveProperty("errors");
@@ -280,7 +266,7 @@ describe("sessions", () => {
       test("'x-hasura-session-id' header must have value", async () => {
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           {
             "x-hasura-session-id": null,
             "x-hasura-email": "alice@opensystemslab.io",
@@ -299,7 +285,7 @@ describe("sessions", () => {
         };
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
@@ -312,7 +298,7 @@ describe("sessions", () => {
         };
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
@@ -325,7 +311,7 @@ describe("sessions", () => {
         };
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
@@ -338,7 +324,7 @@ describe("sessions", () => {
         };
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
@@ -351,7 +337,7 @@ describe("sessions", () => {
         };
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res.data.update_sessions_by_pk).toBeNull();
@@ -365,7 +351,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           `
           mutation UpdateMultipleSessionsWithoutWhereClause {
-            update_sessions(where: {}, _set: { breadcrumbs: "[{ x: 1 }]", passport: "{ x: 1 }" }) {
+            update_sessions(where: {}, _set: { breadcrumbs: "[{ x: 1 }]" }) {
               returning {
                 id
               }
@@ -386,7 +372,7 @@ describe("sessions", () => {
         const res = await gqlPublic(
           `
           mutation UpdateMultipleSessionsWithoutWhereClause {
-            update_sessions(where: {}, _set: { breadcrumbs: "[{ x: 1 }]", passport: "{ x: 1 }" }) {
+            update_sessions(where: {}, _set: { breadcrumbs: "[{ x: 1 }]" }) {
               returning {
                 id
               }
@@ -409,33 +395,30 @@ describe("sessions", () => {
         // initial insert (upsert)
         const res1 = await gqlPublic(
           updateByPK,
-          { sessionId: anon1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: anon1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res1.data.update_sessions_by_pk).not.toBeNull();
         expect(res1.data.update_sessions_by_pk.id).toEqual(anon1);
-        expect(res1.data.update_sessions_by_pk.passport).toHaveProperty("x", 1);
         expect(res1.data.update_sessions_by_pk.breadcrumbs).toEqual([{ x: 1 }]);
 
         // update 1
         const res2 = await gqlPublic(
           updateByPK,
-          { sessionId: anon1, breadcrumbs: [{ y: 2 }], passport: { y: 2 } },
+          { sessionId: anon1, breadcrumbs: [{ y: 2 }] },
           headers
         );
         expect(res2.data.update_sessions_by_pk).not.toBeNull();
         expect(res2.data.update_sessions_by_pk.id).toEqual(anon1);
-        expect(res2.data.update_sessions_by_pk.passport).toHaveProperty("y", 2);
         expect(res2.data.update_sessions_by_pk.breadcrumbs).toEqual([{ y: 2 }]);
 
         // update 2
         const res3 = await gqlPublic(
           updateByPK,
-          { sessionId: anon1, breadcrumbs: [], passport: {} },
+          { sessionId: anon1, breadcrumbs: [] },
           headers
         );
         expect(res3.data.update_sessions_by_pk).not.toBeNull();
-        expect(res3.data.update_sessions_by_pk.passport).toEqual({});
         expect(res3.data.update_sessions_by_pk.breadcrumbs).toEqual([]);
       });
     });
@@ -448,12 +431,11 @@ describe("sessions", () => {
         };
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res.data.update_sessions_by_pk).not.toBeNull();
         expect(res.data.update_sessions_by_pk.id).toEqual(alice1);
-        expect(res.data.update_sessions_by_pk.passport).toHaveProperty("x", 1);
         expect(res.data.update_sessions_by_pk.breadcrumbs).toEqual([{ x: 1 }]);
       });
 
@@ -464,7 +446,7 @@ describe("sessions", () => {
         };
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: alice1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: alice1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res).not.toHaveProperty("errors");
@@ -478,7 +460,7 @@ describe("sessions", () => {
         };
         const res = await gqlPublic(
           updateByPK,
-          { sessionId: robert1, breadcrumbs: [{ x: 1 }], passport: { x: 1 } },
+          { sessionId: robert1, breadcrumbs: [{ x: 1 }] },
           headers
         );
         expect(res).not.toHaveProperty("errors");
@@ -567,7 +549,6 @@ describe("sessions", () => {
           query SelectAllSessions {
             sessions {
               created_at
-              passport
               breadcrumbs
               has_user_saved
               id
@@ -592,7 +573,6 @@ describe("sessions", () => {
           query SelectAllSessions {
             sessions {
               created_at
-              passport
               breadcrumbs
               has_user_saved
               id
