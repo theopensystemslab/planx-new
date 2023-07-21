@@ -28,7 +28,6 @@ import {
   removeSlots,
   resetAllSlots,
 } from "./model";
-import { fileListSchema, slotsSchema } from "./schema";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -46,15 +45,6 @@ export const FileTaggingModal = ({
   const [error, setError] = useState<string | undefined>();
 
   const closeModal = () => setShowModal(false);
-
-  const handleSubmit = () => {
-    Promise.all([
-      slotsSchema.validate(uploadedFiles),
-      fileListSchema.validate(fileList, { context: { slots: uploadedFiles } }),
-    ])
-      .then(closeModal)
-      .catch((err) => setError(err.message));
-  };
 
   return (
     <Dialog
@@ -95,7 +85,7 @@ export const FileTaggingModal = ({
           <Box>
             <Button
               variant="contained"
-              onClick={handleSubmit}
+              onClick={closeModal}
               sx={{ paddingLeft: 2 }}
             >
               Done
