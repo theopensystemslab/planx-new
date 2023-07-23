@@ -5,12 +5,13 @@ import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
 import Public from "./Public";
 
-const metadata: Meta = {
+const meta = {
   title: "PlanX Components/Send",
-};
+  component: Public,
+} satisfies Meta<typeof Public>;
 
-export const Combined = () => {
+export default meta;
+
+export const WithEditor = () => {
   return <Wrapper Editor={Editor} Public={Public} />;
 };
-
-export default metadata;
