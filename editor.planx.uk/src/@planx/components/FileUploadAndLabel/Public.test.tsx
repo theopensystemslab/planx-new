@@ -72,7 +72,6 @@ describe("Basic state and setup", () => {
           mockFileTypes.AlwaysRecommended,
           mockFileTypes.NotRequired,
         ]}
-        hideDropZone={true}
       />,
     );
 
@@ -86,7 +85,6 @@ describe("Basic state and setup", () => {
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[mockFileTypes.NotRequired]}
-        hideDropZone={true}
       />,
     );
 
@@ -149,6 +147,24 @@ describe("Info-only mode with hidden drop zone", () => {
 
     const helpIcons = screen.getAllByTestId("more-info-icon");
     expect(helpIcons).toHaveLength(2);
+  });
+
+  it("shows optional files by default", () => {
+    setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+        hideDropZone={true}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("heading", { name: /Optional files/ }),
+    ).toBeVisible();
   });
 });
 

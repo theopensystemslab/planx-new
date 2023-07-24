@@ -260,12 +260,14 @@ const getRecoveredFileList = (
   const categories = Object.keys(fileList) as Array<keyof typeof fileList>;
 
   categories.forEach((category) =>
-    recoveredFileList[category].forEach(
-      (fileType) =>
-        (fileType.slots = fileList[category].flatMap((userFile) =>
-          getCachedSlotsFromPreviousData(userFile, previouslySubmittedData),
-        )),
-    ),
+    recoveredFileList[category]
+      .filter((fileType) => fileType.slots)
+      .forEach(
+        (fileType) =>
+          (fileType.slots = fileList[category].flatMap((userFile) =>
+            getCachedSlotsFromPreviousData(userFile, previouslySubmittedData),
+          )),
+      ),
   );
 
   return recoveredFileList;

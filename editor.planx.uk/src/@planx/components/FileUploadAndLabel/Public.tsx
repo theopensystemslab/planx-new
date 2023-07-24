@@ -108,7 +108,7 @@ function Component(props: Props) {
 
   const validateAndSubmit = () => {
     Promise.all([
-      slotsSchema.validate(slots),
+      slotsSchema.validate(slots, { context: { fileList } }),
       fileListSchema.validate(fileList, { context: { slots } }),
     ])
       .then(() => {
@@ -116,7 +116,7 @@ function Component(props: Props) {
         props.handleSubmit?.(payload);
       })
       .catch((err) =>
-        err?.type === "min"
+        err?.type === "minFileUploaded"
           ? setDropzoneError(err?.message)
           : setFileListError(err?.message),
       );
@@ -128,6 +128,9 @@ function Component(props: Props) {
   };
 
   const isCategoryVisible = (category: keyof typeof fileList) => {
+    // Display all categories when in information-only mode
+    if (props.hideDropZone) return true;
+
     switch (category) {
       // Display optional list if they are the only available file types
       case "optional":

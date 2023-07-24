@@ -1,5 +1,5 @@
 import { FileUploadSlot } from "../FileUpload/Public";
-import { mockFileTypes, mockRules } from "./mocks";
+import { mockFileList, mockFileTypes, mockRules } from "./mocks";
 import { Condition, FileType, Operator } from "./model";
 import {
   fileListSchema,
@@ -164,7 +164,9 @@ describe("slotSchema", () => {
       { status: "success" },
     ] as FileUploadSlot[];
 
-    const result = await slotsSchema.isValid(mockSlots);
+    const result = await slotsSchema.isValid(mockSlots, {
+      context: { fileList: mockFileList },
+    });
 
     expect(result).toBe(false);
   });
@@ -175,7 +177,9 @@ describe("slotSchema", () => {
       { status: "success" },
     ] as FileUploadSlot[];
 
-    const result = await slotsSchema.isValid(mockSlots);
+    const result = await slotsSchema.isValid(mockSlots, {
+      context: { fileList: mockFileList },
+    });
 
     expect(result).toBe(false);
   });
@@ -186,7 +190,9 @@ describe("slotSchema", () => {
       { status: "success" },
     ] as FileUploadSlot[];
 
-    const result = await slotsSchema.isValid(mockSlots);
+    const result = await slotsSchema.isValid(mockSlots, {
+      context: { fileList: mockFileList },
+    });
 
     expect(result).toBe(true);
   });
