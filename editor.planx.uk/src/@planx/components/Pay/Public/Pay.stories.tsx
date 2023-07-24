@@ -5,6 +5,12 @@ import Confirm from "./Confirm";
 const meta = {
   title: "PlanX Components/Pay",
   component: Confirm,
+  parameters: {
+    reactNavi: {
+      useCurrentRoute: () => {},
+      useNavigation: () => {},
+    },
+  },
 } satisfies Meta<typeof Confirm>;
 
 type Story = StoryObj<typeof meta>;
@@ -26,7 +32,6 @@ export const Basic = {
   },
 } satisfies Story;
 
-// Needs react-navi mock
 export const WithInviteToPay = {
   args: {
     title: "Pay for your application",
