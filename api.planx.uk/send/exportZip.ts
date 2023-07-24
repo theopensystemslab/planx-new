@@ -8,8 +8,8 @@ import AdmZip from "adm-zip";
 import { getFileFromS3 } from "../s3/getFile";
 import {
   hasRequiredDataForTemplate,
-  generateMapHTMLStream,
-  generateApplicationHTMLStream,
+  generateMapHTML,
+  generateApplicationHTML,
   generateDocxTemplateStream,
 } from "@opensystemslab/planx-core";
 import { Passport } from "@opensystemslab/planx-core";
@@ -112,21 +112,19 @@ export async function buildSubmissionExportZip({
   }
 
   // generate and add an HTML overview document for the submission to zip
-  const overviewStream = generateApplicationHTMLStream(
-    responses as PlanXExportData[],
-  );
-  await zip.addStream({
+  const overviewHTML = generateApplicationHTML(responses as PlanXExportData[]);
+  await zip.addFile({
     name: "Overview.htm",
-    stream: overviewStream,
+    buffer: Buffer.from(overviewHTML),
   });
 
   // generate and add an HTML overview document for the submission to zip
-  const redactedOverviewStream = generateApplicationHTMLStream(
+  const redactedOverviewHTML = generateApplicationHTML(
     redactedResponses as PlanXExportData[],
   );
-  await zip.addStream({
+  await zip.addFile({
     name: "RedactedOverview.htm",
-    stream: redactedOverviewStream,
+    buffer: Buffer.from(redactedOverviewHTML),
   });
 
   // add an optional GeoJSON file to zip
@@ -139,10 +137,10 @@ export async function buildSubmissionExportZip({
     });
 
     // generate and add an HTML boundary document for the submission to zip
-    const boundaryStream = generateMapHTMLStream(geojson);
-    await zip.addStream({
+    const boundaryHTML = generateMapHTML(geojson);
+    await zip.addFile({
       name: "LocationPlan.htm",
-      stream: boundaryStream,
+      buffer: Buffer.from(boundaryHTML),
     });
   }
 

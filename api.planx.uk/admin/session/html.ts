@@ -1,4 +1,4 @@
-import { generateApplicationHTMLStream } from "@opensystemslab/planx-core";
+import { generateApplicationHTML } from "@opensystemslab/planx-core";
 import { $admin } from "../../client";
 import type { NextFunction, Request, Response } from "express";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
@@ -11,13 +11,8 @@ export async function getHTMLExport(
   try {
     const { responses } = await $admin.export.csvData(req.params.sessionId);
     res.header("Content-type", "text/html");
-    const stream = generateApplicationHTMLStream(
-      responses as PlanXExportData[],
-    ).pipe(res);
-    await new Promise((resolve, reject) => {
-      stream.on("finish", resolve);
-      stream.on("error", reject);
-    }).then(() => res.end);
+    const html = generateApplicationHTML(responses as PlanXExportData[]);
+    res.send(html);
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
@@ -35,13 +30,10 @@ export async function getRedactedHTMLExport(
       req.params.sessionId,
     );
     res.header("Content-type", "text/html");
-    const stream = generateApplicationHTMLStream(
+    const html = generateApplicationHTML(
       redactedResponses as PlanXExportData[],
-    ).pipe(res);
-    await new Promise((resolve, reject) => {
-      stream.on("finish", resolve);
-      stream.on("error", reject);
-    }).then(() => res.end);
+    );
+    res.send(html);
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,

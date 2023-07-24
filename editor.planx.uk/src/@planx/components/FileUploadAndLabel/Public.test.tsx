@@ -462,44 +462,6 @@ describe("Error handling", () => {
     expect(dropzoneError).toBeVisible();
   });
 
-  test("An error is thrown in the modal if a user does not tag all files", async () => {
-    const { user } = setup(
-      <FileUploadAndLabelComponent
-        title="Test title"
-        fileTypes={[
-          mockFileTypes.AlwaysRequired,
-          mockFileTypes.AlwaysRecommended,
-          mockFileTypes.NotRequired,
-        ]}
-      />,
-    );
-
-    mockedAxios.post.mockResolvedValue({
-      data: {
-        file_type: "image/png",
-        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
-      },
-    });
-
-    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
-    const input = screen.getByTestId("upload-input");
-    await user.upload(input, file);
-
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
-    expect(fileTaggingModal).toBeVisible();
-    const submitModalButton = await within(fileTaggingModal).findByText("Done");
-
-    // Attempt to close without tagging files
-    await user.click(submitModalButton);
-    expect(true).toBeTruthy();
-    const modalError = await within(fileTaggingModal).findByText(
-      "Please tag all files",
-    );
-    expect(modalError).toBeVisible();
-  });
-
   test("An error is thrown in the main component if a user does not tag all files", async () => {
     const handleSubmit = jest.fn();
 

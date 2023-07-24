@@ -28,8 +28,8 @@ jest.mock("../../client", () => {
 describe("HTML data admin endpoint", () => {
   afterEach(() => jest.clearAllMocks());
 
-  it("requires a user to be logged in", async () => {
-    await supertest(app)
+  it("requires a user to be logged in", () => {
+    return supertest(app)
       .get(endpoint`123`)
       .expect(401)
       .then((res) =>
@@ -39,8 +39,8 @@ describe("HTML data admin endpoint", () => {
       );
   });
 
-  it("returns a HTML-formatted payload", async () => {
-    await supertest(app)
+  it("returns a HTML-formatted payload", () => {
+    return supertest(app)
       .get(endpoint`123`)
       .set(authHeader())
       .expect(200)

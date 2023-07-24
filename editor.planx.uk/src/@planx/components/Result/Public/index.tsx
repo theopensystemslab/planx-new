@@ -1,17 +1,17 @@
-import Warning from "@mui/icons-material/WarningOutlined";
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import Link from "@mui/material/Link";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import type { Node, TextContent } from "types";
 
 import ResultReason from "./ResultReason";
@@ -40,11 +40,17 @@ interface Response {
 
 const DisclaimerContent = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(1),
-  marginBottom: theme.spacing(1),
 }));
 
-const DisclaimerHeading = styled(Typography)(({ theme }) => ({
-  marginRight: theme.spacing(1),
+const TitleWrap = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "center",
+}));
+
+const Title = styled(Typography)(({ theme }) => ({
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  margin: 0,
+  paddingLeft: theme.spacing(1),
 })) as typeof Typography;
 
 const Responses = ({
@@ -106,12 +112,9 @@ const Result: React.FC<Props> = ({
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
 
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [showSubmitButton, setShowSubmitButton] = useState<boolean>(
     Boolean(handleSubmit),
   );
-
-  const theme = useTheme();
 
   useEffect(() => {
     if (handleSubmit) return;
@@ -154,40 +157,19 @@ const Result: React.FC<Props> = ({
           )}
         </Box>
         {disclaimer?.show && (
-          <Box
-            bgcolor="background.paper"
-            p={1.25}
-            display="flex"
-            color={theme.palette.grey[600]}
-          >
-            <Warning titleAccess="Warning" color="primary" />
-            <Box ml={1}>
-              <Box display="flex" alignItems="center">
-                <DisclaimerHeading
-                  variant="h5"
-                  component="h3"
-                  color="text.primary"
-                >
-                  {disclaimer.heading}
-                </DisclaimerHeading>
-                <Link
-                  component="button"
-                  onClick={() =>
-                    setShowDisclaimer((showDisclaimer) => !showDisclaimer)
-                  }
-                >
-                  <Typography variant="body2">
-                    Read {showDisclaimer ? "less" : "more"}
-                  </Typography>
-                </Link>
-              </Box>
-              <Collapse in={showDisclaimer}>
+          <WarningContainer>
+            <Box sx={{ flex: 1 }}>
+              <TitleWrap>
+                <ErrorOutline sx={{ width: 34, height: 34 }} />
+                <Title variant="h3"> {disclaimer.heading}</Title>
+              </TitleWrap>
+              <Box mt={2}>
                 <DisclaimerContent variant="body2" color="text.primary">
                   {disclaimer.content}
                 </DisclaimerContent>
-              </Collapse>
+              </Box>
             </Box>
-          </Box>
+          </WarningContainer>
         )}
         <FeedbackInput
           text="Is this information inaccurate? **Tell us why.**"

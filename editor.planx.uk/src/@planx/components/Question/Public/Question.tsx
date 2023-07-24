@@ -130,12 +130,13 @@ const Question: React.FC<IQuestion> = (props) => {
               switch (layout) {
                 case QuestionLayout.Basic:
                   return (
-                    <FormWrapper>
-                      <Grid item xs={12} ml={1} key={response.id}>
+                    <FormWrapper key={`wrapper-${response.id}`}>
+                      <Grid item xs={12} ml={1} key={`grid-${response.id}`}>
                         <BasicRadio
                           {...buttonProps}
                           {...response}
                           data-testid="basic-radio"
+                          key={`basic-radio-${response.id}`}
                         />
                       </Grid>
                     </FormWrapper>
