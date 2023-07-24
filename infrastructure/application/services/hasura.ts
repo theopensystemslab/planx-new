@@ -37,17 +37,17 @@ export const createHasuraService = async ({
     },
   });
   // // Forward HTTP to HTTPS
-  // const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
-  //   protocol: "HTTP",
-  //   defaultAction: {
-  //     type: "redirect",
-  //     redirect: {
-  //       protocol: "HTTPS",
-  //       port: "443",
-  //       statusCode: "HTTP_301",
-  //     },
-  //   },
-  // });
+  const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
+    protocol: "HTTP",
+    defaultAction: {
+      type: "redirect",
+      redirect: {
+        protocol: "HTTPS",
+        port: "443",
+        statusCode: "HTTP_301",
+      },
+    },
+  });
   
   const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
     protocol: "HTTPS",
@@ -129,6 +129,6 @@ export const createHasuraService = async ({
     zoneId: config.require("cloudflare-zone-id"),
     value: hasuraListenerHttps.endpoint.hostname,
     ttl: 1,
-    proxied: true,
+    proxied: false,
   });
 }
