@@ -1,111 +1,37 @@
-// LAMBETH PALACE, LAMBETH PALACE ROAD, LONDON, SE1 7JU
-// https://api.editor.planx.uk/gis/lambeth?geom=POLYGON+%28%28-0.12035205960274287+51.49552394900371%2C+-0.11989206075668916+51.49547802732587%2C+-0.11990681290627106+51.49542626101544%2C+-0.12004360556603047+51.49543962006891%2C+-0.12009456753731339+51.495229214521686%2C+-0.12031048536301209+51.495250923075446%2C+-0.12030780315399718+51.49526094240446%2C+-0.12034535408020566+51.4952634472364%2C+-0.12033462524414609+51.495306864301%2C+-0.12029975652695252+51.49530268958503%2C+-0.12025684118271426+51.495466338164164%2C+-0.12027963995934084+51.49546884298479%2C+-0.12035205960274287+51.49552394900371%29%29&analytics=false
+// 2, WALLER ROAD, BEACONSFIELD, BUCKINGHAMSHIRE, HP9 2HE
+// https://api.editor.planx.uk/gis/buckinghamshire?geom=POLYGON+%28%28-0.6332024931907679+51.60929241266979%2C+-0.6331099569797541+51.60907004020859%2C+-0.6330429017543818+51.60907920164237%2C+-0.633004009723666+51.60909086164631%2C+-0.6329812109470395+51.60910418736145%2C+-0.63296511769295+51.609116680215834%2C+-0.6329503655433681+51.60913000592336%2C+-0.6329154968261745+51.60917164873425%2C+-0.6328940391540554+51.609262429929544%2C+-0.6332024931907679+51.60929241266979%29%29&analytics=false&sessionId=f47f03be-8308-4b5c-b90d-71f6fdf392ce
 export default {
   sourceRequest:
-    "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POLYGON+%28%28-0.12035205960274287+51.49552394900371%2C+-0.11989206075668916+51.49547802732587%2C+-0.11990681290627106+51.49542626101544%2C+-0.12004360556603047+51.49543962006891%2C+-0.12009456753731339+51.495229214521686%2C+-0.12031048536301209+51.495250923075446%2C+-0.12030780315399718+51.49526094240446%2C+-0.12034535408020566+51.4952634472364%2C+-0.12033462524414609+51.495306864301%2C+-0.12029975652695252+51.49530268958503%2C+-0.12025684118271426+51.495466338164164%2C+-0.12027963995934084+51.49546884298479%2C+-0.12035205960274287+51.49552394900371%29%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=locally-listed-building&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
+    "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POLYGON+%28%28-0.6332024931907679+51.60929241266979%2C+-0.6331099569797541+51.60907004020859%2C+-0.6330429017543818+51.60907920164237%2C+-0.633004009723666+51.60909086164631%2C+-0.6329812109470395+51.60910418736145%2C+-0.63296511769295+51.609116680215834%2C+-0.6329503655433681+51.60913000592336%2C+-0.6329154968261745+51.60917164873425%2C+-0.6328940391540554+51.609262429929544%2C+-0.6332024931907679+51.60929241266979%29%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=locally-listed-building&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
   constraints: {
-    registeredPark: {
-      fn: "registeredPark",
-      value: true,
-      text: "is in a Historic Park or Garden",
-      data: [
-        {
-          "entry-date": "2023-04-05",
-          "start-date": "1987-10-01",
-          "end-date": "",
-          entity: 11100711,
-          name: "LAMBETH PALACE",
-          dataset: "park-and-garden",
-          typology: "geography",
-          reference: "1000818",
-          prefix: "park-and-garden",
-          "organisation-entity": "16",
-          "documentation-url":
-            "https://historicengland.org.uk/listing/the-list/list-entry/1000818",
-          "park-and-garden-grade": "II",
-        },
-      ],
-      category: "Heritage and conservation",
+    article4: {
+      fn: "article4",
+      value: false,
+      text: "is not subject to local permitted development restrictions (known as Article 4 directions)",
+      category: "General policy",
     },
     listed: {
       fn: "listed",
-      value: true,
-      text: "is, or is within, a Listed Building",
-      data: [
-        {
-          "entry-date": "2021-11-23",
-          "start-date": "",
-          "end-date": "",
-          entity: 42103392,
-          name: "Lambeth Palace, Lambeth Palace Road",
-          dataset: "listed-building-outline",
-          typology: "geography",
-          reference: "2/585",
-          prefix: "listed-building-outline",
-          "organisation-entity": "192",
-          "listed-building-grade": "I",
-        },
-      ],
+      value: false,
+      text: "is not, or is not within, a Listed Building",
       category: "Heritage and conservation",
-    },
-    "designated.conservationArea": {
-      fn: "designated.conservationArea",
-      value: true,
-      text: "is in a Conservation Area",
-      data: [
-        {
-          "entry-date": "2022-04-12",
-          "start-date": "1968-06-20",
-          "end-date": "",
-          entity: 44006852,
-          name: "Lambeth Palace",
-          dataset: "conservation-area",
-          typology: "geography",
-          reference: "5349",
-          prefix: "conservation-area",
-          "organisation-entity": "16",
-        },
-        {
-          "entry-date": "2020-09-04",
-          "start-date": "",
-          "end-date": "",
-          entity: 44008829,
-          name: "Lambeth Palace",
-          dataset: "conservation-area",
-          typology: "geography",
-          reference: "COA00000232",
-          prefix: "conservation-area",
-          "organisation-entity": "192",
-        },
-      ],
-      category: "Heritage and conservation",
-    },
-    article4: {
-      fn: "article4",
-      value: true,
-      text: "is subject to local permitted development restrictions (known as Article 4 directions)",
-      data: [
-        {
-          "entry-date": "2021-10-29",
-          "start-date": "2018-06-04",
-          "end-date": "",
-          entity: 2200001,
-          name: "",
-          dataset: "central-activities-zone",
-          typology: "geography",
-          reference: "CAZ00000001",
-          prefix: "central-activities-zone",
-          "organisation-entity": "192",
-          notes:
-            "Central London Area - part of the Borough that lies within the historic central core of London and is dominated by activities of London-wide, national and international significance. UDP policies aim",
-        },
-      ],
-      category: "General policy",
     },
     locallyListed: {
       fn: "locallyListed",
       value: false,
       text: "is not, or is not within, a Locally Listed Building",
+      category: "Heritage and conservation",
+    },
+    registeredPark: {
+      fn: "registeredPark",
+      value: false,
+      text: "is not in a Historic Park or Garden",
+      category: "Heritage and conservation",
+    },
+    "designated.conservationArea": {
+      fn: "designated.conservationArea",
+      value: false,
+      text: "is not in a Conservation Area",
       category: "Heritage and conservation",
     },
     "designated.AONB": {
@@ -166,26 +92,10 @@ export default {
       text: "is not in an Ancient Semi-Natural Woodland (ASNW)",
       category: "Ecology",
     },
-    "article4.lambeth.caz": {
+    "article4.buckinghamshire.caz": {
       fn: "article4.caz",
-      value: true,
-      text: "is in the Central Activities Zone",
-      data: [
-        {
-          "entry-date": "2021-10-29",
-          "start-date": "2018-06-04",
-          "end-date": "",
-          entity: 2200001,
-          name: "",
-          dataset: "central-activities-zone",
-          typology: "geography",
-          reference: "CAZ00000001",
-          prefix: "central-activities-zone",
-          "organisation-entity": "192",
-          notes:
-            "Central London Area - part of the Borough that lies within the historic central core of London and is dominated by activities of London-wide, national and international significance. UDP policies aim",
-        },
-      ],
+      value: false,
+      text: "is not in the Central Activities Zone",
       category: "General policy",
     },
   },
