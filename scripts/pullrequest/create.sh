@@ -29,5 +29,5 @@ set +o allexport
 docker compose \
   -f docker-compose.yml \
   -f docker-compose.pizza.yml \
-  --profile seed \
+  -f docker-compose.seed.yml \
   up --build  --wait
