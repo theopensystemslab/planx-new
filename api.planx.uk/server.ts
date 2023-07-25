@@ -83,6 +83,7 @@ import { getHTMLExport, getRedactedHTMLExport } from "./admin/session/html";
 import { generateZip } from "./admin/session/zip";
 import { createPaymentSendEvents } from "./inviteToPay/createPaymentSendEvents";
 import { getSessionSummary } from "./admin/session/summary";
+import { getTableOfContents } from "./admin";
 
 const router = express.Router();
 
@@ -425,7 +426,7 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.use("/admin", useJWT);
+app.use("/admin", useJWT, getTableOfContents);
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
 app.get("/admin/session/:sessionId/bops", getBOPSPayload);
