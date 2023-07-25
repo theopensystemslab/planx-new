@@ -13,4 +13,5 @@ set +o allexport
 docker compose \
   -f docker-compose.yml \
   -f docker-compose.pizza.yml \
+  -f docker-compose.seed.yml \
   up --build --renew-anon-volumes --force-recreate --remove-orphans --wait
