@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!doctype html>
 <head>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter" />
   <style>
     body {
       font-family: "Inter", sans-serif;
@@ -37,10 +37,14 @@
 </head>
 <div>
   <h1>PlanX <code>/admin</code> endpoints</h1>
-  <p>Admin endpoints are available to developers and editors for viewing, downloading, and troubleshooting data about
-    Planx services and sessions.</p>
-  <p>These endpoints are only accessible to users who are signed into the Editor, have a white-listed email address, and
-    are connecting via a WARP client.</p>
+  <p>
+    Admin endpoints are available to developers and editors for viewing,
+    downloading, and troubleshooting data about Planx services and sessions.
+  </p>
+  <p>
+    These endpoints are only accessible to users who are signed into the Editor,
+    have a white-listed email address, and are connecting via a WARP client.
+  </p>
   <table>
     <thead>
       <tr>
@@ -58,17 +62,24 @@
       <tr>
         <td><code>/session/:sessionId/summary</code></td>
         <td></td>
-        <td>Returns a passport, breadcrumbs, and other key details for a given session</td>
+        <td>
+          Returns a passport, breadcrumbs, and other key details for a given
+          session
+        </td>
       </tr>
       <tr>
         <td><code>/session/:sessionId/xml</code></td>
         <td></td>
-        <td>Generates a OneApp XML, relies on <code>uniform_applications</code></td>
+        <td>
+          Generates a OneApp XML, relies on <code>uniform_applications</code>
+        </td>
       </tr>
       <tr>
         <td><code>/session/:sessionId/bops</code></td>
         <td></td>
-        <td>Generates a BOPS payload, relies on <code>bops_applications</code></td>
+        <td>
+          Generates a BOPS payload, relies on <code>bops_applications</code>
+        </td>
       </tr>
       <tr>
         <td><code>/session/:sessionId/csv</code></td>
@@ -78,7 +89,10 @@
       <tr>
         <td><code>/session/:sessionId/csv-redacted</code></td>
         <td><code>?download=true</code></td>
-        <td>Generates or downloads an application CSV file with personal details redacted</td>
+        <td>
+          Generates or downloads an application CSV file with personal details
+          redacted
+        </td>
       </tr>
       <tr>
         <td><code>/session/:sessionId/html</code></td>
@@ -88,12 +102,17 @@
       <tr>
         <td><code>/session/:sessionId/html-redacted</code></td>
         <td></td>
-        <td>Generates an application overview HTML with personal details redacted</td>
+        <td>
+          Generates an application overview HTML with personal details redacted
+        </td>
       </tr>
       <tr>
         <td><code>/session/:sessionId/zip</code></td>
         <td><code>?includeXML=true</code></td>
-        <td>Generates a zip file for Send to Email, or Uniform when XML is included</td>
+        <td>
+          Generates a zip file for Send to Email, or Uniform when XML is
+          included
+        </td>
       </tr>
     </tbody>
   </table>
