@@ -43,7 +43,7 @@ export default function Component(props: Props) {
     <Card isValid handleSubmit={props.handleSubmit}>
       <QuestionHeader title={flowName} />
       <Box>
-        <Typography variant="h3" component="h2" pb="0.15em">
+        <Typography variant="h3" component="h2" pb="0.25em">
           Application incomplete.
         </Typography>
         <Typography variant="subtitle2" component="h3">
@@ -168,8 +168,8 @@ const Grid = styled("dl")(({ theme }) => ({
   paddingBottom: theme.spacing(2),
   "& > *": {
     borderBottom: `1px solid ${theme.palette.secondary.main}`,
-    paddingBottom: theme.spacing(1.5),
-    paddingTop: theme.spacing(1.5),
+    paddingBottom: theme.spacing(1.25),
+    paddingTop: theme.spacing(1.25),
     verticalAlign: "top",
     margin: 0,
   },

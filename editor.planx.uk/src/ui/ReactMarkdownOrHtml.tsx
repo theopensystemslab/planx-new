@@ -9,8 +9,12 @@ import type { Theme } from "../theme";
 const useClasses = makeStyles((theme: Theme) => ({
   htmlRoot: {
     "& a": linkStyle(theme.palette.primary.main),
+    "& h1": theme.typography.h2,
     "& h2": theme.typography.h3,
-    "& h3": theme.typography.h5,
+    "& h3": theme.typography.h4,
+    "& h1, & h2, & h3": {
+      marginTop: 0,
+    },
     "& strong": {
       fontWeight: FONT_WEIGHT_SEMI_BOLD,
     },

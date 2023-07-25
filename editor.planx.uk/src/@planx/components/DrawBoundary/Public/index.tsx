@@ -14,6 +14,8 @@ import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import FullWidthWrapper from "ui/FullWidthWrapper";
 
 import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
 
@@ -87,39 +89,47 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <MapContainer environment={environment} size="large">
-            <p style={visuallyHidden}>
-              An interactive map centred on your address, with a red pointer to
-              draw your site outline. Click to place points and connect the
-              lines to make your site. Once you've closed the site shape, click
-              and drag the lines to modify it.
-            </p>
-            {!props.hideFileUpload && (
+          <FullWidthWrapper>
+            <MapContainer environment={environment} size="large">
               <p style={visuallyHidden}>
-                If you cannot draw, you can upload a location plan file using
-                the link below.
+                An interactive map centred on your address, with a red pointer
+                to draw your site outline. Click to place points and connect the
+                lines to make your site. Once you've closed the site shape,
+                click and drag the lines to modify it.
               </p>
-            )}
-            {/* @ts-ignore */}
-            <my-map
-              id="draw-boundary-map"
-              drawMode
-              drawPointer="crosshair"
-              drawGeojsonData={JSON.stringify(boundary)}
-              zoom={20}
-              maxZoom={23}
-              latitude={Number(passport?.data?._address?.latitude)}
-              longitude={Number(passport?.data?._address?.longitude)}
-              showMarker
-              markerLatitude={Number(passport?.data?._address?.latitude)}
-              markerLongitude={Number(passport?.data?._address?.longitude)}
-              resetControlImage="trash"
-              osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-            />
+              {!props.hideFileUpload && (
+                <p style={visuallyHidden}>
+                  If you cannot draw, you can upload a location plan file using
+                  the link below.
+                </p>
+              )}
+              {/* @ts-ignore */}
+              <my-map
+                id="draw-boundary-map"
+                drawMode
+                drawPointer="crosshair"
+                drawGeojsonData={JSON.stringify(boundary)}
+                zoom={20}
+                maxZoom={23}
+                latitude={Number(passport?.data?._address?.latitude)}
+                longitude={Number(passport?.data?._address?.longitude)}
+                showMarker
+                markerLatitude={Number(passport?.data?._address?.latitude)}
+                markerLongitude={Number(passport?.data?._address?.longitude)}
+                resetControlImage="trash"
+                osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+              />
+            </MapContainer>
             <MapFooter>
-              <Typography variant="body2">
+              <Typography variant="body1">
                 The site outline you have drawn is{" "}
-                <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
+                <Typography
+                  component="span"
+                  noWrap
+                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                >
+                  {area?.toLocaleString("en-GB") ?? 0} m²
+                </Typography>
               </Typography>
               {!props.hideFileUpload && (
                 <Link
@@ -128,13 +138,13 @@ export default function Component(props: Props) {
                   disabled={Boolean(boundary)}
                   data-testid="upload-file-button"
                 >
-                  <Typography variant="body2">
+                  <Typography variant="body1">
                     Upload a location plan instead
                   </Typography>
                 </Link>
               )}
             </MapFooter>
-          </MapContainer>
+          </FullWidthWrapper>
         </>
       );
     } else if (page === "upload") {

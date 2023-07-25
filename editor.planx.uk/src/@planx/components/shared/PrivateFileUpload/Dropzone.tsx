@@ -145,14 +145,16 @@ export const Dropzone: React.FC<Props> = ({
       </Box>
       <Box sx={{ textAlign: "left" }}>
         <Box>
-          {isDragActive ? (
-            "Drop the files here"
-          ) : (
-            <>
-              Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
-              <FauxLink component="span">choose a file</FauxLink> to upload
-            </>
-          )}
+          <Typography variant="body1">
+            {isDragActive ? (
+              "Drop the files here"
+            ) : (
+              <>
+                Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
+                <FauxLink component="span">choose a file</FauxLink> to upload
+              </>
+            )}
+          </Typography>
         </Box>
         <Typography color="text.secondary" variant="body2">
           pdf, jpg, png

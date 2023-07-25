@@ -159,7 +159,7 @@ const ResultReason: React.FC<IResultReason> = ({
               width="100%"
             >
               <Typography
-                variant="body2"
+                variant="body1"
                 color="textPrimary"
                 id={`questionText-${id}`}
               >
@@ -188,7 +188,7 @@ const ResultReason: React.FC<IResultReason> = ({
           </ChangeLink>
         </Box>
         {hasMoreInfo && (
-          <AccordionDetails sx={{ p: 0 }}>
+          <AccordionDetails sx={{ py: 1, px: 0 }}>
             <MoreInfo>
               {question.data.info && (
                 <ReactMarkdownOrHtml

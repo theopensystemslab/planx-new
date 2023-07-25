@@ -5,7 +5,6 @@ import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { fullWidthContent } from "@planx/components/shared/Preview/MapContainer";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
 import {
@@ -16,6 +15,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
 import ErrorWrapper from "ui/ErrorWrapper";
+import FullWidthWrapper from "ui/FullWidthWrapper";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { emptyContent } from "ui/RichTextInput";
@@ -46,12 +46,9 @@ import { fileListSchema, slotsSchema } from "./schema";
 
 type Props = PublicProps<FileUploadAndLabel>;
 
-const FullWidthContainer = styled(Box)(({ theme }) => ({
-  ...fullWidthContent(theme),
-}));
-
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   display: "grid",
+  marginTop: theme.spacing(2.5),
   marginBottom: theme.spacing(4),
   gap: theme.spacing(3),
   [theme.breakpoints.up("md")]: {
@@ -135,7 +132,7 @@ function Component(props: Props) {
         slots.every((slot) => slot.url && slot.status === "success")
       }
     >
-      <FullWidthContainer>
+      <FullWidthWrapper>
         <QuestionHeader {...props} />
         <DropzoneContainer>
           {!props.hideDropZone && (
@@ -229,7 +226,7 @@ function Component(props: Props) {
             })}
           </Box>
         </ErrorWrapper>
-      </FullWidthContainer>
+      </FullWidthWrapper>
     </Card>
   );
 }

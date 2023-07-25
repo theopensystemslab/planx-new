@@ -175,7 +175,7 @@ function Component(props: Props) {
                   setAddress(undefined);
                 }}
               >
-                <Typography variant="body2">
+                <Typography variant="body1">
                   The site does not have an address
                 </Typography>
               </Link>

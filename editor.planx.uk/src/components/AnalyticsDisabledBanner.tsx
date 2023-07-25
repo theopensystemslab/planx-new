@@ -54,7 +54,9 @@ const AnalyticsDisabledBanner: React.FC = () => {
                 </Link>
               </Typography>
             </Box>
-            <Button onClick={() => setShowAnalyticsWarning(false)}>Hide</Button>
+            <Button size="small" onClick={() => setShowAnalyticsWarning(false)}>
+              Hide
+            </Button>
           </Container>
         </AnalyticsWarning>
       )}

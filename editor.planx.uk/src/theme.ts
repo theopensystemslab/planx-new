@@ -229,7 +229,8 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             borderRadius: 0,
             textTransform: "none",
             boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
-            padding: "0.5em 1.1em",
+            padding: "0.7em 1.25em",
+            lineHeight: LINE_HEIGHT_BASE,
           },
           text: {
             color: "rgba(0,0,0,0.4)",
@@ -237,12 +238,16 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               color: "rgba(0,0,0,1)",
             },
           },
+          sizeSmall: {
+            fontSize: "0.875em",
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
           sizeMedium: {
             fontSize: "1rem",
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
           },
           sizeLarge: {
-            fontSize: "1.188rem",
+            fontSize: "1.05em",
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
             width: "100%",
             "@media (min-width: 768px)": {
@@ -273,6 +278,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       MuiPaper: {
         defaultProps: {
           elevation: 0,
+        },
+        styleOverrides: {
+          root: {
+            borderRadius: 0,
+          },
         },
       },
       MuiLink: {
@@ -374,7 +384,7 @@ const generateTeamTheme = (
   primaryColor: string = DEFAULT_PRIMARY_COLOR,
 ): MUITheme => {
   const themeOptions = getThemeOptions(primaryColor);
-  const theme = responsiveFontSizes(createTheme(themeOptions));
+  const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
   return theme;
 };
 

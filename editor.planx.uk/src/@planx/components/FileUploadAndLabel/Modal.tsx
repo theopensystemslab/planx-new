@@ -56,6 +56,7 @@ export const FileTaggingModal = ({
           borderRadius: 0,
           borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
           background: "#FFF",
+          margin: (theme) => theme.spacing(2),
         },
       }}
     >
