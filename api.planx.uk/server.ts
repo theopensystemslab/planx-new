@@ -426,7 +426,8 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.use("/admin", useJWT, getTableOfContents);
+app.use("/admin", useJWT);
+app.get("/admin", getTableOfContents);
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
 app.get("/admin/session/:sessionId/bops", getBOPSPayload);
