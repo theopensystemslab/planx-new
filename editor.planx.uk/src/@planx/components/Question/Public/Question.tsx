@@ -7,7 +7,6 @@ import { useTheme } from "@mui/styles";
 import { visuallyHidden } from "@mui/utils";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
-import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
@@ -97,9 +96,7 @@ const Question: React.FC<IQuestion> = (props) => {
         img={props.img}
       />
       <FullWidthWrapper>
-        <FormControl
-          sx={{ ...contentFlowSpacing(theme), width: "100%" }}
-        >
+        <FormControl sx={{ width: "100%" }}>
           <FormHelperText style={visuallyHidden}>
             {props.description ? DESCRIPTION_TEXT : ""}
           </FormHelperText>
@@ -157,7 +154,13 @@ const Question: React.FC<IQuestion> = (props) => {
                     );
                   case QuestionLayout.Images:
                     return (
-                      <Grid item xs={12} sm={6} contentWrap={4} key={response.id}>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        contentWrap={4}
+                        key={response.id}
+                      >
                         <ImageRadio {...buttonProps} {...response} />
                       </Grid>
                     );

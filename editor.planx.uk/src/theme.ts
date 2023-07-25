@@ -279,6 +279,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         defaultProps: {
           elevation: 0,
         },
+        styleOverrides: {
+          root: {
+            borderRadius: 0,
+          },
+        },
       },
       MuiLink: {
         styleOverrides: {

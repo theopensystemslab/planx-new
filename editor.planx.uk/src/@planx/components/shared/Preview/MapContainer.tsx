@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import { styled, Theme } from "@mui/material/styles";
+import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 
 interface MapContainerProps {
@@ -35,7 +36,8 @@ export const MapContainer = styled(Box)<MapContainerProps>(
   }),
 );
 
-export const MapFooter = styled(Box)(() => ({
+export const MapFooter = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
+  ...contentFlowSpacing(theme),
 }));
