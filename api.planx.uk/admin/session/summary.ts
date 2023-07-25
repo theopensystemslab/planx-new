@@ -1,4 +1,8 @@
-import { GovUKPayment, PaymentRequest, Session } from "@opensystemslab/planx-core/types";
+import {
+  GovUKPayment,
+  PaymentRequest,
+  Session,
+} from "@opensystemslab/planx-core/types";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
@@ -16,15 +20,16 @@ export async function getSessionSummary(
       res.send(data);
     } else {
       res.send({
-        message: `Cannot find data for this session; double-check your sessionId is correct`
-      })
+        message: `Cannot find data for this session; double-check your sessionId is correct`,
+      });
     }
   } catch (error) {
     return next({
-      message: "Failed to fetch session summary data: " + (error as Error).message,
+      message:
+        "Failed to fetch session summary data: " + (error as Error).message,
     });
   }
-};
+}
 
 interface SessionSummary {
   flow: {
@@ -32,7 +37,7 @@ interface SessionSummary {
     slug: Flow["slug"];
     team: {
       slug: Team["slug"];
-    }
+    };
     created_at: LowCalSession["created_at"];
     updated_at: LowCalSession["updated_at"];
     locked_at: LowCalSession["lockedAt"];
@@ -41,12 +46,20 @@ interface SessionSummary {
     email: LowCalSession["email"];
     passport: Passport["data"];
     breadcrumbs: Breadcrumb;
-    payments?: Pick<GovUKPayment, "created_date" | "payment_id" | "amount" | "state">[];
-    invitations_to_pay?: Pick<PaymentRequest, "createdAt" | "govPayPaymentId" | "paymentAmount" | "paidAt">[];
-  }
+    payments?: Pick<
+      GovUKPayment,
+      "created_date" | "payment_id" | "amount" | "state"
+    >[];
+    invitations_to_pay?: Pick<
+      PaymentRequest,
+      "createdAt" | "govPayPaymentId" | "paymentAmount" | "paidAt"
+    >[];
+  };
 }
 
-const getSessionSummaryById = async (sessionId: Session["id"]): Promise<SessionSummary> => {
+const getSessionSummaryById = async (
+  sessionId: Session["id"],
+): Promise<SessionSummary> => {
   const data = await adminClient.request(
     gql`
       query GetSessionStatus($sessionId: uuid!) {
@@ -66,23 +79,23 @@ const getSessionSummaryById = async (sessionId: Session["id"]): Promise<SessionS
           email
           passport: data(path: "passport.data")
           breadcrumbs: data(path: "breadcrumbs")
-          payments: payment_status(order_by: {created_at: desc}) {
-          	created_at
+          payments: payment_status(order_by: { created_at: desc }) {
+            created_at
             payment_id
             amount
             status
           }
-          invitations_to_pay: payment_requests(order_by: {created_at: desc}) {
+          invitations_to_pay: payment_requests(order_by: { created_at: desc }) {
             created_at
             govpay_payment_id
-      			payment_amount
+            payment_amount
             paid_at
           }
         }
       }
     `,
     {
-      sessionId
+      sessionId,
     },
   );
 
