@@ -8,7 +8,6 @@ import { visuallyHidden } from "@mui/utils";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import { fullWidthContent } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
@@ -18,6 +17,7 @@ import { Store } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import FormWrapper from "ui/FormWrapper";
+import FullWidthWrapper from "ui/FullWidthWrapper";
 
 import type { Theme } from "../../../../theme";
 
@@ -96,75 +96,77 @@ const Question: React.FC<IQuestion> = (props) => {
         definitionImg={props.definitionImg}
         img={props.img}
       />
-      <FormControl
-        sx={{ ...contentFlowSpacing(theme), ...fullWidthContent(theme) }}
-      >
-        <FormHelperText style={visuallyHidden}>
-          {props.description ? DESCRIPTION_TEXT : ""}
-        </FormHelperText>
-        <FormLabel
-          style={visuallyHidden}
-          id={`radio-buttons-group-label-${props.id}`}
+      <FullWidthWrapper>
+        <FormControl
+          sx={{ ...contentFlowSpacing(theme), width: "100%" }}
         >
-          {props.text}
-        </FormLabel>
-        <RadioGroup
-          aria-labelledby={`radio-buttons-group-label-${props.id}`}
-          name={`radio-buttons-group-${props.id}`}
-          value={formik.values.selected.id}
-        >
-          <Grid
-            container
-            spacing={layout === QuestionLayout.Basic ? 0 : 2}
-            alignItems="stretch"
+          <FormHelperText style={visuallyHidden}>
+            {props.description ? DESCRIPTION_TEXT : ""}
+          </FormHelperText>
+          <FormLabel
+            style={visuallyHidden}
+            id={`radio-buttons-group-label-${props.id}`}
           >
-            {props.responses?.map((response) => {
-              const onChange = () => {
-                formik.setFieldValue("selected.id", response.id);
-                formik.setFieldValue("selected.a", response.responseKey);
-              };
-              const buttonProps = {
-                onChange,
-              };
+            {props.text}
+          </FormLabel>
+          <RadioGroup
+            aria-labelledby={`radio-buttons-group-label-${props.id}`}
+            name={`radio-buttons-group-${props.id}`}
+            value={formik.values.selected.id}
+          >
+            <Grid
+              container
+              spacing={layout === QuestionLayout.Basic ? 0 : 2}
+              alignItems="stretch"
+            >
+              {props.responses?.map((response) => {
+                const onChange = () => {
+                  formik.setFieldValue("selected.id", response.id);
+                  formik.setFieldValue("selected.a", response.responseKey);
+                };
+                const buttonProps = {
+                  onChange,
+                };
 
-              switch (layout) {
-                case QuestionLayout.Basic:
-                  return (
-                    <FormWrapper key={`wrapper-${response.id}`}>
-                      <Grid item xs={12} ml={1} key={`grid-${response.id}`}>
-                        <BasicRadio
-                          {...buttonProps}
-                          {...response}
-                          data-testid="basic-radio"
-                          key={`basic-radio-${response.id}`}
-                        />
+                switch (layout) {
+                  case QuestionLayout.Basic:
+                    return (
+                      <FormWrapper key={`wrapper-${response.id}`}>
+                        <Grid item xs={12} ml={1} key={`grid-${response.id}`}>
+                          <BasicRadio
+                            {...buttonProps}
+                            {...response}
+                            data-testid="basic-radio"
+                            key={`basic-radio-${response.id}`}
+                          />
+                        </Grid>
+                      </FormWrapper>
+                    );
+                  case QuestionLayout.Descriptions:
+                    return (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        contentWrap={4}
+                        key={response.id}
+                        data-testid="description-radio"
+                      >
+                        <DescriptionRadio {...buttonProps} {...response} />
                       </Grid>
-                    </FormWrapper>
-                  );
-                case QuestionLayout.Descriptions:
-                  return (
-                    <Grid
-                      item
-                      xs={12}
-                      sm={6}
-                      contentWrap={4}
-                      key={response.id}
-                      data-testid="description-radio"
-                    >
-                      <DescriptionRadio {...buttonProps} {...response} />
-                    </Grid>
-                  );
-                case QuestionLayout.Images:
-                  return (
-                    <Grid item xs={12} sm={6} contentWrap={4} key={response.id}>
-                      <ImageRadio {...buttonProps} {...response} />
-                    </Grid>
-                  );
-              }
-            })}
-          </Grid>
-        </RadioGroup>
-      </FormControl>
+                    );
+                  case QuestionLayout.Images:
+                    return (
+                      <Grid item xs={12} sm={6} contentWrap={4} key={response.id}>
+                        <ImageRadio {...buttonProps} {...response} />
+                      </Grid>
+                    );
+                }
+              })}
+            </Grid>
+          </RadioGroup>
+        </FormControl>
+      </FullWidthWrapper>
     </Card>
   );
 };

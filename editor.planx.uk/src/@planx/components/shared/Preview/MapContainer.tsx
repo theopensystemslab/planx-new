@@ -7,18 +7,12 @@ interface MapContainerProps {
   size?: "large";
 }
 
-export const fullWidthContent = (theme: Theme): React.CSSProperties => ({
-  width: "100%",
-  maxWidth: "none",
-});
-
 /**
  * Generate a style which increases the map size as the window grows
  * and maintains a consistent right margin
  */
 const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
   const style = {
-    ...fullWidthContent(theme),
     height: "70vh",
   };
 
@@ -41,8 +35,7 @@ export const MapContainer = styled(Box)<MapContainerProps>(
   }),
 );
 
-export const MapFooter = styled(Box)(({ theme }) => ({
-  ...fullWidthContent(theme),
+export const MapFooter = styled(Box)(() => ({
   display: "flex",
   justifyContent: "space-between",
 }));

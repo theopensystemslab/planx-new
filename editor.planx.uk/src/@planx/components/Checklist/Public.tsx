@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import type { Checklist, Group } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
-import { fullWidthContent } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
 import React, { useState } from "react";
@@ -12,6 +11,7 @@ import ChecklistItem from "ui/ChecklistItem";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
 import FormWrapper from "ui/FormWrapper";
+import FullWidthWrapper from "ui/FullWidthWrapper";
 import { array, object } from "yup";
 
 import { Option } from "../shared";
@@ -46,10 +46,6 @@ function getFlatOptions({
   }
   return [];
 }
-
-const FullWidthContainer = styled(Box)(({ theme }) => ({
-  ...fullWidthContent(theme),
-}));
 
 const ChecklistComponent: React.FC<Props> = ({
   allRequired,
@@ -143,7 +139,7 @@ const ChecklistComponent: React.FC<Props> = ({
         howMeasured={howMeasured}
         img={img}
       />
-      <FullWidthContainer>
+      <FullWidthWrapper>
         <ErrorWrapper error={formik.errors.checked} id={id}>
           <Grid container spacing={layout === ChecklistLayout.Images ? 2 : 0}>
             {options ? (
@@ -227,7 +223,7 @@ const ChecklistComponent: React.FC<Props> = ({
             ) : null}
           </Grid>
         </ErrorWrapper>
-      </FullWidthContainer>
+      </FullWidthWrapper>
     </Card>
   );
 
