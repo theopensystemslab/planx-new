@@ -62,7 +62,7 @@ const getSessionSummaryById = async (
 ): Promise<SessionSummary> => {
   const data = await adminClient.request(
     gql`
-      query GetSessionStatus($sessionId: uuid!) {
+      query GetSessionSummary($sessionId: uuid!) {
         lowcal_sessions_by_pk(id: $sessionId) {
           flow {
             id
