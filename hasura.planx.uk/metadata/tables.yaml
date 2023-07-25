@@ -582,7 +582,7 @@
           email:
             _eq: x-hasura-email
         columns:
-          - data
+          - breadcrumbs
           - email
           - flow_id
           - id
@@ -591,7 +591,7 @@
       permission:
         columns:
           - created_at
-          - data
+          - breadcrumbs
           - has_user_saved
           - id
           - updated_at
@@ -607,12 +607,11 @@
                 _is_null: true
             - deleted_at:
                 _is_null: true
-        check: null
   update_permissions:
     - role: public
       permission:
         columns:
-          - data
+          - breadcrumbs
           - deleted_at
         filter:
           _and:
