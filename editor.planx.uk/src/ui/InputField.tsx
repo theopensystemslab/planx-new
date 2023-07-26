@@ -1,26 +1,32 @@
 import InputBase, { InputBaseProps } from "@mui/material/InputBase";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/material/styles";
 import React from "react";
 
-import type { Theme } from "../theme";
+const PREFIX = "InputField";
 
-const useClasses = makeStyles((theme: Theme) => ({
-  inputRoot: {
+const classes = {
+  root: `${PREFIX}-root`,
+  input: `${PREFIX}-input`,
+  multiline: `${PREFIX}-multiline`,
+};
+
+const Root = styled(InputBase)(({ theme }) => ({
+  [`&.${classes.root}`]: {
     backgroundColor: theme.palette.grey[100],
     transition: "background-color 0.2s ease-out",
     display: "block",
     width: "100%",
     padding: 0,
-    "& + $inputRoot": {
+    [`& + .${classes.root}`]: {
       marginTop: theme.spacing(1),
     },
   },
-  input: {
+  [`& .${classes.input}`]: {
     padding: theme.spacing(1),
   },
-  inputMultiline: {
+  [`&.${classes.multiline}`]: {
     padding: theme.spacing(1),
-    "&$inputRoot": {
+    [`&.${classes.root}`]: {
       padding: 0,
     },
   },
@@ -29,15 +35,5 @@ const useClasses = makeStyles((theme: Theme) => ({
 type Props = InputBaseProps;
 
 export default function InputField(props: Props): FCReturn {
-  const classes = useClasses();
-  return (
-    <InputBase
-      classes={{
-        root: classes.inputRoot,
-        input: classes.input,
-        multiline: classes.inputMultiline,
-      }}
-      {...props}
-    />
-  );
+  return <Root classes={classes} {...props} />;
 }
