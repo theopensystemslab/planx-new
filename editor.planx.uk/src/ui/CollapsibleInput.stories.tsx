@@ -19,6 +19,7 @@ export const Basic = {
     name: "Feedback",
     value: "feedback",
     children: <p>This is a child element.</p>,
+    ariaLabel: "Feedback",
   },
   render: (_args: Props) => {
     const [text, setText] = useState("");

@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Link from "@mui/material/Link";
 import React, { useState } from "react";
@@ -9,6 +8,7 @@ export interface Props {
   handleChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
   name: string;
+  ariaLabel: string;
 }
 
 const CollapsibleInput: React.FC<Props> = (props: Props) => {
@@ -16,23 +16,19 @@ const CollapsibleInput: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Link
-        component="button"
-        onClick={() => setExpanded((x) => !x)}
-        sx={{ marginBottom: 2 }}
-      >
+      <Link component="button" onClick={() => setExpanded((x) => !x)}>
         {props.children}
       </Link>
       <Collapse in={expanded}>
-        <Box py={0.5}>
-          <Input
-            multiline
-            bordered
-            value={props.value}
-            name={props.name}
-            onChange={props.handleChange}
-          />
-        </Box>
+        <Input
+          multiline
+          bordered
+          value={props.value}
+          name={props.name}
+          onChange={props.handleChange}
+          id={props.name}
+          inputProps={{ "aria-label": props.ariaLabel }}
+        />
       </Collapse>
     </>
   );
