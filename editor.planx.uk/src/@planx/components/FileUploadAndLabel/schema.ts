@@ -78,7 +78,6 @@ export const slotsSchema = array()
       if (!slots) throw new Error("Missing slots for slotsSchema");
 
       const { fileList } = context as SlotsSchemaTestContext;
-      console.log({ fileList });
       const allFilesOptional =
         !fileList.recommended.length && !fileList.required.length;
       const isMinFileUploadCountSatisfied =
