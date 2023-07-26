@@ -1,43 +1,30 @@
 import Box from "@mui/material/Box";
-import { makeStyles } from "@mui/styles";
-import classNames from "classnames";
+import { styled } from "@mui/material/styles";
 import React from "react";
-
-import type { Theme } from "../theme";
 
 interface Props {
   width?: number | string;
   children: JSX.Element[] | JSX.Element;
 }
 
-export const useClasses = makeStyles((_theme: Theme) => ({
-  inputRowItem: {
-    "& > *": {
-      width: "100%",
-    },
+const Root = styled(Box)(({ width }: { width?: number | string }) => ({
+  "& > *": {
+    width: "100%",
   },
-  fixWidth: {
-    "&$inputRowItem": {
+  ...(width && {
+    maxWidth: width,
+    flexBasis: width,
+    "& .inputRowItem": {
       flexGrow: 0,
       flexShrink: 0,
     },
-  },
+  }),
 }));
 
-export default function InputRowItem({
-  width,
-  children,
-  ...props
-}: Props): FCReturn {
-  const classes = useClasses();
+export default function InputRowItem({ children, ...props }: Props): FCReturn {
   return (
-    <Box
-      className={classNames(classes.inputRowItem, width && classes.fixWidth)}
-      maxWidth={width ? width : "none"}
-      flexBasis={width ? width : "auto"}
-      {...props}
-    >
+    <Root className="inputRowItem" {...props}>
       {children}
-    </Box>
+    </Root>
   );
 }
