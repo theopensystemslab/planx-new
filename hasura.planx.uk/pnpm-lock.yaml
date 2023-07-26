@@ -1,9 +1,13 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 devDependencies:
   hasura-cli:
-    specifier: ^2.28.0
-    version: 2.28.0
+    specifier: ^2.28.2
+    version: 2.28.2
 
 packages:
 
@@ -61,8 +65,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /hasura-cli@2.28.0:
-    resolution: {integrity: sha512-7QfoacQ30GKJ1Ar6AIRAE5Pv3JdC7P48WO754AFgwb0wr9/00BezsEt0IU7ENOrCQnV7VgXDS2DvGB/tYrSTDw==}
+  /hasura-cli@2.28.2:
+    resolution: {integrity: sha512-N+TAGTXl2R6RRrrO1k9kTFiF1of1uRR4iSRnFQH7Yy/W3tKk7HIC/Fo8oyq7WRpE1uAl8hxwfQJvxJWDi5eQ2Q==}
     engines: {node: '>=8'}
     hasBin: true
     requiresBuild: true
