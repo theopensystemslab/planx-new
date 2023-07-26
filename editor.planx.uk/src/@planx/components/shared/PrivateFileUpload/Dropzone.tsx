@@ -1,7 +1,6 @@
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Box from "@mui/material/Box";
 import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
@@ -139,23 +138,25 @@ export const Dropzone: React.FC<Props> = ({
 
   return (
     <Root isDragActive={isDragActive} {...getRootProps({ role: "button" })}>
-      <input data-testid="upload-input" {...getInputProps()} />
+      <input
+        data-testid="upload-input"
+        {...getInputProps()}
+        aria-labelledby="dropzone-label"
+      />
       <Box pl={2} pr={3} color="text.secondary">
         <CloudUpload />
       </Box>
-      <Box sx={{ textAlign: "left" }}>
-        <Box>
-          <Typography variant="body1">
-            {isDragActive ? (
-              "Drop the files here"
-            ) : (
-              <>
-                Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
-                <FauxLink component="span">choose a file</FauxLink> to upload
-              </>
-            )}
-          </Typography>
-        </Box>
+      <Box sx={{ textAlign: "left" }} id="dropzone-label">
+        <Typography variant="body1">
+          {isDragActive ? (
+            "Drop the files here"
+          ) : (
+            <>
+              Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
+              <FauxLink component="span">choose a file</FauxLink> to upload
+            </>
+          )}
+        </Typography>
         <Typography color="text.secondary" variant="body2">
           pdf, jpg, png
         </Typography>
