@@ -1,30 +1,25 @@
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { makeStyles } from "@mui/styles";
 import * as React from "react";
 
-import type { Theme } from "../theme";
 import Checkbox from "./Checkbox";
 
-export const useClasses = makeStyles((theme: Theme) => ({
-  root: {
-    width: "100%",
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    display: "flex",
-    alignItems: "center",
-    cursor: "pointer",
-  },
-  label: {
-    display: "flex",
-    flexGrow: 2,
-    "& > label": {
-      cursor: "pointer",
-      flexGrow: 2,
-      padding: theme.spacing(0.75, 1.5),
-    },
-  },
+const Root = styled(Box)(({ theme }) => ({
+  width: "100%",
+  marginTop: theme.spacing(1),
+  marginBottom: theme.spacing(1),
+  display: "flex",
+  alignItems: "center",
+  cursor: "pointer",
 }));
+
+const Label = styled(Typography)(({ theme }) => ({
+  display: "flex",
+  flexGrow: 2,
+  cursor: "pointer",
+  padding: theme.spacing(0.75, 1.5),
+})) as typeof Typography;
 
 interface Props {
   id?: string;
@@ -39,14 +34,12 @@ export default function ChecklistItem({
   checked,
   id,
 }: Props): FCReturn {
-  const classes = useClasses();
-
   return (
-    <Box className={classes.root}>
+    <Root>
       <Checkbox checked={checked} id={id} onChange={onChange} />
-      <Typography variant="body1" className={classes.label}>
-        <label htmlFor={id}>{label}</label>
-      </Typography>
-    </Box>
+      <Label variant="body1" className="label" component={"label"} htmlFor={id}>
+        {label}
+      </Label>
+    </Root>
   );
 }
