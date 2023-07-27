@@ -15,7 +15,6 @@ const BasicRadio: React.FC<Props> = ({ id, onChange, title }) => (
     onChange={onChange}
     control={<Radio />}
     label={title}
-    sx={{ pb: 1 }}
   />
 );
 
