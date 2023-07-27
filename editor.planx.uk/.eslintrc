@@ -17,7 +17,7 @@
     "plugin:jest/recommended"
   ],
   "rules": {
-    "react-hooks/rules-of-hooks": "warn",
+    "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "simple-import-sort/imports": "warn",
     "simple-import-sort/exports": "warn",
