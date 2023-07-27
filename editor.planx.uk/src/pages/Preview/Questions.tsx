@@ -9,7 +9,7 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { ApplicationPath } from "types";
+import { ApplicationPath, Session } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
@@ -69,59 +69,62 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, node } = useAnalyticsTracking();
   const [gotFlow, setGotFlow] = useState(false);
-  const isSingleSession =
+  const isUsingLocalStorage =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
 
-  if (isSingleSession) {
-    // Use local storage for simple, non-Save&Return flows
-    useEffect(() => {
-      setPreviewEnvironment(previewEnvironment);
-      if (isStandalone) {
-        const state = getLocalFlow(id);
-        if (state) {
-          resumeSession(state);
-        }
+  // Initial setup
+  useEffect(() => {
+    setPreviewEnvironment(previewEnvironment);
+    if (!isStandalone) return;
+
+    if (isUsingLocalStorage) {
+      const state = getLocalFlow(id);
+      if (state) resumeSession(state);
+      createAnalytics(state ? "resume" : "init");
+      setGotFlow(true);
+    } else {
+      NEW.getLocalFlow(sessionId).then((state) => {
+        // session data is resumed by ./ResumePage.tsx
         createAnalytics(state ? "resume" : "init");
         setGotFlow(true);
-      }
-    }, []);
+      });
+    }
+  }, [
+    createAnalytics,
+    id,
+    isStandalone,
+    isUsingLocalStorage,
+    previewEnvironment,
+    resumeSession,
+    sessionId,
+    setPreviewEnvironment,
+  ]);
 
-    useEffect(() => {
-      if (gotFlow && isStandalone && id) {
-        setLocalFlow(id, {
-          breadcrumbs,
-          id,
-          passport,
-          sessionId,
-          govUkPayment,
-        });
-      }
-    }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
-  } else {
-    // Use lowcalStorage for Save & Return flows
-    useEffect(() => {
-      setPreviewEnvironment(previewEnvironment);
-      if (isStandalone) {
-        NEW.getLocalFlow(sessionId).then((state) => {
-          // session data is resumed by ./ResumePage.tsx
-          createAnalytics(state ? "resume" : "init");
-          setGotFlow(true);
-        });
-      }
-    }, []);
+  // Update session when a question is answered
+  useEffect(() => {
+    if (!gotFlow || !isStandalone || !id) return;
 
-    useEffect(() => {
-      if (gotFlow && isStandalone && sessionId) {
-        NEW.setLocalFlow(sessionId, {
-          breadcrumbs,
-          id,
-          passport,
-          sessionId,
-          govUkPayment,
-        });
-      }
-    }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
-  }
+    const session: Session = {
+      breadcrumbs,
+      id,
+      passport,
+      sessionId,
+      govUkPayment,
+    };
+
+    isUsingLocalStorage
+      ? setLocalFlow(id, session)
+      : NEW.setLocalFlow(sessionId, session);
+  }, [
+    gotFlow,
+    breadcrumbs,
+    passport,
+    sessionId,
+    id,
+    govUkPayment,
+    isUsingLocalStorage,
+    isStandalone,
+  ]);
 
   // scroll to top on any update to breadcrumbs
   useEffect(() => {
