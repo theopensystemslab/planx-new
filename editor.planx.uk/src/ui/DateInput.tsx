@@ -16,7 +16,7 @@ export interface Props {
 }
 
 const INPUT_DATE_WIDTH = "65px";
-const INPUT_YEAR_WIDTH = "80px";
+const INPUT_YEAR_WIDTH = "84px";
 
 const Root = styled(Box)(({ theme }) => ({
   display: "flex",
