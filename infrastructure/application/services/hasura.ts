@@ -36,24 +36,7 @@ export const createHasuraService = async ({
       path: "/healthz",
     },
   });  
-  // Forward HTTP to HTTPS
-  const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
-    protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
-  });
-
-  const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
-    protocol: "HTTPS",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-    certificateArn: certificates.requireOutput("certificateArn"),
-  });
+  const hasuraListenerHttp = targetHasura.createListener("hasura-http", { protocol: "HTTP" });
 
   // hasuraService is composed of two tightly coupled containers
   // hasuraProxy is publicly exposed (behind the load balancer) and reverse proxies requests to hasura
@@ -70,7 +53,7 @@ export const createHasuraService = async ({
         hasuraProxy: {
           image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
           memory: 1024 /*MB*/,
-          portMappings: [hasuraListenerHttps],
+          portMappings: [hasuraListenerHttp],
           environment: [
             { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
             { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
@@ -127,8 +110,8 @@ export const createHasuraService = async ({
       : "hasura",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: hasuraListenerHttps.endpoint.hostname,
+    value: hasuraListenerHttp.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 }
