@@ -1,4 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
+import Container from "@mui/material/Container";
 import Drawer, { DrawerProps } from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
@@ -36,20 +37,26 @@ const Root = styled(Drawer, {
     backgroundColor: theme.palette.background.default,
     border: 0,
     boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
-    padding: theme.spacing(1),
   },
 }));
 
-const DrawerContent = styled("div")(() => ({
-  padding: "0.5rem 1.75rem 1rem",
+const DrawerContent = styled("div")(({ theme }) => ({
+  padding: theme.spacing(2.5, 4, 6, 0),
   fontSize: "1rem",
   lineHeight: "1.5",
+  [theme.breakpoints.up("sm")]: {
+    padding: theme.spacing(6, 4, 6, 1),
+  },
 }));
 
-const CloseButton = styled("div")(() => ({
+const CloseButton = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
+  position: "fixed",
+  top: theme.spacing(1),
+  right: theme.spacing(1),
+  color: theme.palette.text.primary,
 }));
 
 interface IMoreInfo {
@@ -78,13 +85,14 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
         title="Close panel"
         aria-label="Close panel"
         size="large"
+        color="inherit"
       >
         <CloseIcon />
       </IconButton>
     </CloseButton>
-    <div role="main">
+    <Container maxWidth={false} role="main">
       <DrawerContent>{children}</DrawerContent>
-    </div>
+    </Container>
   </Root>
 );
 

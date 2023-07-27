@@ -118,7 +118,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       },
       h3: {
         fontSize: "1.5rem",
-        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+        fontWeight: FONT_WEIGHT_BOLD,
       },
       h4: {
         fontSize: "1.188rem",
