@@ -2,7 +2,7 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-if [ -z "${CI}" ]
+if [ "${CI}" ]
 then
     echo "Fetching secrets for CI"
     aws s3 cp s3://pizza-secrets/root.env ./../.env
