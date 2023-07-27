@@ -6,7 +6,7 @@ import type {
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
 import { adminGraphQLClient as adminClient } from "../hasura";
-import { omitGeometry } from "./helpers";
+import { addDesignatedVariable, omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
 
 export interface LocalAuthorityMetadata {
@@ -100,7 +100,7 @@ async function go(
 
   // --- INTERSECTIONS ---
   // check for & add any 'positive' constraints to the formattedResult
-  const formattedResult: Record<string, Constraint> = {};
+  let formattedResult: Record<string, Constraint> = {};
   if (res && res.count > 0 && res.entities) {
     res.entities.forEach((entity: { dataset: any }) => {
       // get the planx variable that corresponds to this entity's 'dataset', should never be null because our initial request is filtered on 'dataset'
@@ -142,6 +142,9 @@ async function go(
   });
 
   // --- DESIGNATED LAND ---
+  // add top-level 'designated' variable based on granular query results
+  formattedResult = addDesignatedVariable(formattedResult);
+
   // set granular `designated.nationalPark.broads` based on entity id (eventually extract to helper method if other cases like this)
   const broads = "designated.nationalPark.broads";
   if (
