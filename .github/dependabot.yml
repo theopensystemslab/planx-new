@@ -4,11 +4,11 @@ updates:
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     labels:
       - "root"
       - "docker"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
@@ -16,10 +16,10 @@ updates:
   - package-ecosystem: "npm"
     directory: "/editor.planx.uk"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     labels:
       - "editor"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
@@ -27,43 +27,43 @@ updates:
   - package-ecosystem: "npm"
     directory: "/hasura.planx.uk"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     labels:
       - "hasura"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "docker"
     directory: "/hasura.planx.uk"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     labels:
       - "hasura"
       - "docker"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "docker"
     directory: "/hasura.planx.uk/proxy"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     labels:
       - "hasura"
       - "caddy"
       - "docker"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "npm"
     directory: "/hasura.planx.uk/tests"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     labels:
       - "hasura tests"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "[skip pizza] "
     reviewers:
@@ -73,21 +73,21 @@ updates:
   - package-ecosystem: "npm"
     directory: "/sharedb.planx.uk"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     labels:
       - "sharedb"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "docker"
     directory: "/sharedb.planx.uk"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     labels:
       - "sharedb"
       - "docker"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
@@ -95,21 +95,21 @@ updates:
   - package-ecosystem: "npm"
     directory: "/api.planx.uk"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     labels:
       - "api"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "docker"
     directory: "/api.planx.uk"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     labels:
       - "api"
       - "docker"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
 
@@ -117,10 +117,10 @@ updates:
   - package-ecosystem: "npm"
     directory: "/e2e"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     labels:
       - "e2e"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "[skip pizza] "
     reviewers:
@@ -179,9 +179,9 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     labels:
       - "github actions"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
