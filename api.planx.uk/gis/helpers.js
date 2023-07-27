@@ -16,11 +16,11 @@ const setEsriGeometry = (geometryType, x, y, radius, siteBoundary) => {
   return geometryType === "esriGeometryEnvelope"
     ? bufferPoint(x, y, radius)
     : JSON.stringify({
-      rings: siteBoundary,
-      spatialReference: {
-        wkid: 4326,
-      },
-    });
+        rings: siteBoundary,
+        spatialReference: {
+          wkid: 4326,
+        },
+      });
 };
 
 // Build up the URL used to query an ESRI feature
