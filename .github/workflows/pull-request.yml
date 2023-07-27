@@ -326,7 +326,7 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            ./scripts/pull-secrets.sh
+            CI=true ./scripts/pull-secrets.sh
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
@@ -356,7 +356,7 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            ./scripts/pull-secrets.sh
+            CI=true ./scripts/pull-secrets.sh
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
