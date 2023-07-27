@@ -419,6 +419,9 @@ devDependencies:
   eslint-plugin-jsx-a11y:
     specifier: ^6.7.1
     version: 6.7.1(eslint@8.44.0)
+  eslint-plugin-react-hooks:
+    specifier: ^4.6.0
+    version: 4.6.0(eslint@8.44.0)
   eslint-plugin-simple-import-sort:
     specifier: ^10.0.0
     version: 10.0.0(eslint@8.44.0)
