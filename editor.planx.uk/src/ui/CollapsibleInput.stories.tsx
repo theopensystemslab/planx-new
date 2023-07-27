@@ -21,6 +21,8 @@ export const Basic = {
     children: <p>This is a child element.</p>,
   },
   render: (_args: Props) => {
+    /* eslint-disable react-hooks/rules-of-hooks */
+    // See https://github.com/storybookjs/storybook/issues/21115
     const [text, setText] = useState("");
     return (
       <FeedbackInput
