@@ -72,9 +72,13 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const isUsingLocalStorage =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
 
+  useEffect(
+    () => setPreviewEnvironment(previewEnvironment),
+    [previewEnvironment, setPreviewEnvironment],
+  );
+
   // Initial setup
   useEffect(() => {
-    setPreviewEnvironment(previewEnvironment);
     if (!isStandalone) return;
 
     if (isUsingLocalStorage) {
@@ -94,10 +98,8 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     id,
     isStandalone,
     isUsingLocalStorage,
-    previewEnvironment,
     resumeSession,
     sessionId,
-    setPreviewEnvironment,
   ]);
 
   // Update session when a question is answered
