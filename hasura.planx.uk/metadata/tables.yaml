@@ -602,6 +602,8 @@
           - has_user_saved
           - id
           - updated_at
+        computed_fields:
+          - payment_id
         filter:
           _and:
             - id:
