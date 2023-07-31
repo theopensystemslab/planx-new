@@ -575,6 +575,13 @@
 - table:
     schema: public
     name: sessions
+  computed_fields:
+    - name: payment_id
+      definition:
+        function:
+          schema: public
+          name: sessions_payment
+      comment: A computed field to find the latest successful payment associated with a session
   insert_permissions:
     - role: public
       permission:
@@ -595,6 +602,8 @@
           - has_user_saved
           - id
           - updated_at
+        computed_fields:
+          - payment_id
         filter:
           _and:
             - id:

@@ -553,6 +553,7 @@ describe("sessions", () => {
               has_user_saved
               id
               updated_at
+              payment_id
             }
           }
         `,
@@ -560,7 +561,14 @@ describe("sessions", () => {
           headers
         );
         expect(res.data.sessions).toHaveLength(1);
-        expect(res.data.sessions[0].id).toEqual(alice1);
+        const session = res.data.sessions[0]
+        expect(session.id).toEqual(alice1);
+        expect(session).toHaveProperty(["created_at"]);
+        expect(session).toHaveProperty(["breadcrumbs"]);
+        expect(session).toHaveProperty(["has_user_saved"]);
+        expect(session).toHaveProperty(["id"]);
+        expect(session).toHaveProperty(["updated_at"]);
+        expect(session).toHaveProperty(["payment_id"]);
       });
 
       test("Anonymous users cannot select their own session", async () => {
