@@ -93,8 +93,10 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
         setGotFlow(true);
       });
     }
+    // Updating useContext (createAnalytics) within useEffect leads to recursive calls
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    createAnalytics,
+    // createAnalytics
     id,
     isStandalone,
     isUsingLocalStorage,
