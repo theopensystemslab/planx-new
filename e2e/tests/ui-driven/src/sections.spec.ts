@@ -555,6 +555,6 @@ async function modifyFlow({
       flowId: context.flow!.id,
       userId: context.user!.id,
       data: flowData,
-    }
+    },
   );
 }

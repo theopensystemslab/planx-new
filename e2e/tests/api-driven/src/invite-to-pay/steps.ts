@@ -78,10 +78,10 @@ Given(
       throw new Error("session not found");
     }
     const paymentRequest = await buildPaymentRequestForSession(
-      context.sessionId
+      context.sessionId,
     );
     context.paymentRequestId = paymentRequest.id;
-  }
+  },
 );
 
 When("the payment request's `paid_at` date is set", async () => {
@@ -89,7 +89,7 @@ When("the payment request's `paid_at` date is set", async () => {
     throw new Error("payment request not found");
   }
   const operationSucceeded = await markPaymentRequestAsPaid(
-    context.paymentRequestId
+    context.paymentRequestId,
   );
   if (!operationSucceeded) {
     throw new Error("payment request was not marked as paid");
@@ -107,7 +107,7 @@ Then(
       delay: 15000,
     });
     assert(response);
-  }
+  },
 );
 
 Then("the session's `submitted_at` date should be set", async () => {
