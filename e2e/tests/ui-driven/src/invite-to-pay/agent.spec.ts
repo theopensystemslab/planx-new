@@ -53,7 +53,7 @@ test.describe("Agent journey @regression", async () => {
     await expect(toggleInviteToPayButton).toBeVisible();
     await toggleInviteToPayButton.click();
     const inviteToPayFormHeader = await page.getByText(
-      "Invite someone else to pay for this application"
+      "Invite someone else to pay for this application",
     );
     await expect(inviteToPayFormHeader).toBeVisible();
 
@@ -62,7 +62,7 @@ test.describe("Agent journey @regression", async () => {
     await page.waitForLoadState("networkidle");
 
     const errorMessage = await page.getByText(
-      "Error generating payment request, please try again"
+      "Error generating payment request, please try again",
     );
     await expect(errorMessage).toBeHidden();
 
@@ -110,7 +110,7 @@ test.describe("Agent journey @regression", async () => {
     await expect(
       await secondPage.getByRole("heading", {
         name: "Resume your application",
-      })
+      }),
     ).toBeVisible();
     await secondPage.getByLabel("Email address").fill(context.user.email);
     await secondPage.getByTestId("continue-button").click();
@@ -118,7 +118,7 @@ test.describe("Agent journey @regression", async () => {
     await expect(
       await secondPage.getByRole("heading", {
         name: "Sorry, you can't make changes to this application",
-      })
+      }),
     ).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).toBeHidden();
   });
@@ -138,14 +138,16 @@ test.describe("Agent journey @regression", async () => {
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
-      await secondPage.getByRole("heading", { name: "Resume your application" })
+      await secondPage.getByRole("heading", {
+        name: "Resume your application",
+      }),
     ).toBeVisible();
     await secondPage.getByLabel("Email address").fill(context.user.email);
     await secondPage.getByTestId("continue-button").click();
 
     // Reconciliation ignored
     const reconciliationText = await secondPage.getByText(
-      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue."
+      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
     );
     await expect(reconciliationText).toBeHidden();
 
@@ -153,7 +155,7 @@ test.describe("Agent journey @regression", async () => {
     await expect(
       await secondPage.getByRole("heading", {
         name: "Sorry, you can't make changes to this application",
-      })
+      }),
     ).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).toBeHidden();
   });
@@ -172,7 +174,7 @@ test.describe("Agent journey @regression", async () => {
     await answerInviteToPayForm(tab1);
     await tab1.getByRole("button", { name: "Send invitation to pay" }).click();
     await tab1.waitForResponse(
-      (resp) => resp.url().includes("/v1/graphql") && resp.status() === 200
+      (resp) => resp.url().includes("/v1/graphql") && resp.status() === 200,
     );
     const paymentRequest = await getPaymentRequestBySessionId({
       sessionId,
@@ -185,7 +187,7 @@ test.describe("Agent journey @regression", async () => {
 
     // ...and fail to do so
     const errorMessage = tab2.getByText(
-      "Cannot initialise a new payment for locked session"
+      "Cannot initialise a new payment for locked session",
     );
     await expect(errorMessage).toBeVisible();
   });
@@ -210,7 +212,7 @@ test.describe("Agent journey @regression", async () => {
 
     // ...and fail to do so
     const errorMessage = tab2.getByText(
-      "Error generating payment request, please try again"
+      "Error generating payment request, please try again",
     );
     await expect(errorMessage).toBeVisible();
   });

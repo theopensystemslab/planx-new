@@ -62,7 +62,7 @@ test.describe("Navigation", () => {
 
     await page.locator("button").filter({ hasText: "Create question" }).click();
     await expect(
-      page.locator("a").filter({ hasText: questionText })
+      page.locator("a").filter({ hasText: questionText }),
     ).toBeVisible();
 
     // Add a notice to the "Yes" path
@@ -98,13 +98,13 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`
+      `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`,
     );
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
     await clickContinue({ page });
     await expect(
-      page.locator("h3", { hasText: "Yes! this is a test" })
+      page.locator("h3", { hasText: "Yes! this is a test" }),
     ).toBeVisible();
 
     await page
@@ -115,7 +115,7 @@ test.describe("Navigation", () => {
     await answerQuestion({ page, title: "Is this a test?", answer: "No" });
     await clickContinue({ page });
     await expect(
-      page.locator("h3", { hasText: "Sorry, this is a test" })
+      page.locator("h3", { hasText: "Sorry, this is a test" }),
     ).toBeVisible();
   });
 });
