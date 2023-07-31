@@ -3,6 +3,7 @@ import merge from "lodash/merge";
 import sortBy from "lodash/sortBy";
 import uniqBy from "lodash/uniqBy";
 import { Store } from "pages/FlowEditor/lib/store";
+import { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation, parseMoreInformation } from "../shared";
@@ -96,6 +97,15 @@ export interface UserFile extends FileType {
   slots?: FileUploadSlot[];
 }
 
+export interface FormattedUserFile {
+  rule: Rule;
+  url: string | undefined;
+  filename: string | undefined;
+  cachedSlot: Omit<FileUploadSlot, "file"> & {
+    file: Pick<FileWithPath, "path" | "type" | "size">;
+  };
+}
+
 export interface FileList {
   required: UserFile[];
   recommended: UserFile[];
@@ -182,7 +192,7 @@ interface UserFileWithSlots extends UserFile {
   slots: NonNullable<UserFile["slots"]>;
 }
 
-const formatUserFile = (userFile: UserFileWithSlots) =>
+const formatUserFiles = (userFile: UserFileWithSlots): FormattedUserFile[] =>
   userFile.slots.map((slot) => ({
     rule: userFile.rule,
     url: slot.url,
@@ -217,7 +227,7 @@ export const generatePayload = (fileList: FileList): Store.userData => {
   ].filter(hasSlots);
 
   uploadedFiles.forEach((userFile) => {
-    newPassportData[userFile.fn] = formatUserFile(userFile);
+    newPassportData[userFile.fn] = formatUserFiles(userFile);
   });
 
   return { data: newPassportData };
@@ -226,9 +236,9 @@ export const generatePayload = (fileList: FileList): Store.userData => {
 const getCachedSlotsFromPreviousData = (
   userFile: UserFile,
   previouslySubmittedData: Store.userData | undefined,
-): FileUploadSlot =>
+): FileUploadSlot[] =>
   previouslySubmittedData?.data?.[userFile.fn]?.map(
-    (file: any) => file.cachedSlot,
+    (file: FormattedUserFile) => file.cachedSlot,
   );
 
 const getRecoveredSlots = (
@@ -260,12 +270,13 @@ const getRecoveredFileList = (
   const categories = Object.keys(fileList) as Array<keyof typeof fileList>;
 
   categories.forEach((category) =>
-    recoveredFileList[category].forEach(
-      (fileType) =>
-        (fileType.slots = fileList[category].flatMap((userFile) =>
-          getCachedSlotsFromPreviousData(userFile, previouslySubmittedData),
-        )),
-    ),
+    recoveredFileList[category].forEach((fileType) => {
+      const cachedSlots = getCachedSlotsFromPreviousData(
+        fileType,
+        previouslySubmittedData,
+      );
+      if (cachedSlots) fileType.slots = cachedSlots;
+    }),
   );
 
   return recoveredFileList;
@@ -274,9 +285,7 @@ const getRecoveredFileList = (
 export const getRecoveredData = (
   previouslySubmittedData: Store.userData | undefined,
   fileList: FileList,
-): any => {
-  if (!previouslySubmittedData) return undefined;
-
+) => {
   const recoveredSlots = getRecoveredSlots(previouslySubmittedData, fileList);
   const recoveredFileList = getRecoveredFileList(
     previouslySubmittedData,

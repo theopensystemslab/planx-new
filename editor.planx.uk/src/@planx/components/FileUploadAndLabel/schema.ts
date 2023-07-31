@@ -64,9 +64,28 @@ export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> = object({
   hideDropZone: boolean(),
 }).concat(moreInformationSchema);
 
+interface SlotsSchemaTestContext extends TestContext {
+  fileList: FileList;
+}
+
 export const slotsSchema = array()
-  .min(1, "Upload at least one file")
   .required()
+  .test({
+    name: "minFileUploaded",
+    message: "Upload at least one file",
+    test: (slots, { options: { context } }) => {
+      if (!context) throw new Error("Missing context for slotsSchema");
+      if (!slots) throw new Error("Missing slots for slotsSchema");
+
+      const { fileList } = context as SlotsSchemaTestContext;
+      const allFilesOptional =
+        !fileList.recommended.length && !fileList.required.length;
+      const isMinFileUploadCountSatisfied =
+        allFilesOptional || slots.length > 0;
+
+      return isMinFileUploadCountSatisfied;
+    },
+  })
   .test({
     name: "nonUploading",
     message: "Please wait for upload to complete",
@@ -78,7 +97,7 @@ export const slotsSchema = array()
     },
   });
 
-interface FileListSchemaTextContext extends TestContext {
+interface FileListSchemaTestContext extends TestContext {
   slots: FileUploadSlot[];
 }
 
@@ -100,7 +119,7 @@ export const fileListSchema = object({
   message: "Please tag all files",
   test: (fileList, { options: { context } }) => {
     if (!context) throw new Error("Missing context for fileListSchema");
-    const { slots } = context as FileListSchemaTextContext;
+    const { slots } = context as FileListSchemaTestContext;
     const isEveryFileTagged = Boolean(
       slots?.every(
         (slot) => getTagsForSlot(slot.id, fileList as FileList).length,
