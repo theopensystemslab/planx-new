@@ -15,7 +15,6 @@ import { styled } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { deepmerge } from "@mui/utils";
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { clearLocalFlow } from "lib/local";
@@ -58,7 +57,7 @@ const StyledLink = styled(ReactNaviLink)(() => ({
   textDecoration: "none",
 })) as typeof Link;
 
-const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
+const StyledToolbar = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT,
 }));
 

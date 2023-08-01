@@ -1,9 +1,8 @@
-import { StoryFn } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
-import Confirmation, { Props } from "./Public";
+import Confirmation from "./Public";
 
 export default {
   title: "PlanX Components/Confirmation",

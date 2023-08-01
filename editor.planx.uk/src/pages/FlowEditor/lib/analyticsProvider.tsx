@@ -197,7 +197,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       case TYPES.Result:
         const flagSet = node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
         const data = resultData(flagSet, node?.data?.overrides);
-        const { displayText, flag, responses } = data[flagSet];
+        const { displayText, flag } = data[flagSet];
         return {
           flagSet,
           displayText,

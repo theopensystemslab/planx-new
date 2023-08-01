@@ -42,7 +42,7 @@ export interface EditorProps<Type, Data> {
   node?: any;
 }
 
-export type PublicProps<Data, UserData = {}> = Data & {
+export type PublicProps<Data> = Data & {
   id?: string;
   handleSubmit?: handleSubmit;
   resetButton?: boolean;

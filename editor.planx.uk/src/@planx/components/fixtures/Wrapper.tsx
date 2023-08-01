@@ -4,16 +4,16 @@ import React, { useState } from "react";
 
 export default Wrapper;
 
-interface Props<Type, Data, UserData> {
+interface Props<Type, Data> {
   Editor: React.FC<EditorProps<Type, Data>>;
-  Public: React.FC<PublicProps<Data, UserData>>;
+  Public: React.FC<PublicProps<Data>>;
 }
 
-function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
+function Wrapper<Type, Data>(props: Props<Type, Data>) {
   const [data, setData] = useState<Data | null>(null);
-  const [_userData, setUserData] = useState<UserData | null>(null);
+  // const [userData, setUserData] = useState<UserData | null>(null);
 
-  const publicProps: PublicProps<Data, UserData> | null = data && {
+  const publicProps: PublicProps<Data> | null = data && {
     ...data,
     autoFocus: true,
     // handleSubmit: (newUserData?: UserData) => {

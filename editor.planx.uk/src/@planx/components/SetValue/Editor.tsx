@@ -24,8 +24,6 @@ function SetValueComponent(props: Props) {
     },
   });
 
-  const val: string | undefined = formik.values.fn;
-
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>

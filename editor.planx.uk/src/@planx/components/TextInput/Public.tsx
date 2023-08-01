@@ -10,10 +10,10 @@ import { object } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import type { TextInput, UserData } from "./model";
+import type { TextInput } from "./model";
 import { userDataSchema } from "./model";
 
-export type Props = PublicProps<TextInput, UserData>;
+export type Props = PublicProps<TextInput>;
 
 // TODO: fix this data field bug for all components
 const TextInputComponent: React.FC<Props> = (props) => {

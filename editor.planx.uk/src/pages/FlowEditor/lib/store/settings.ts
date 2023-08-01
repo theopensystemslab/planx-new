@@ -68,7 +68,7 @@ export const settingsStore: StateCreator<
   },
 
   updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
-    const response = await client.mutate({
+    await client.mutate({
       mutation: gql`
         mutation UpdateGlobalSettings($new_settings: jsonb) {
           insert_global_settings(
