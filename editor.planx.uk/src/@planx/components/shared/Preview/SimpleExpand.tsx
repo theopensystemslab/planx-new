@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import Button, { ButtonProps } from "@mui/material/Button";
+import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
 import React, { PropsWithChildren } from "react";

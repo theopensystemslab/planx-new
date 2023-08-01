@@ -13,7 +13,7 @@ import InputRowLabel from "ui/InputRowLabel";
 import OptionButton from "ui/OptionButton";
 import PublicFileUploadButton from "ui/PublicFileUploadButton";
 
-const TextInput: React.FC<{
+export const TextInput: React.FC<{
   title: string;
   description?: string;
   switchProps?: SwitchProps;
@@ -57,8 +57,6 @@ const DesignSettings: React.FC = () => {
       phaseBannerColor: "#000",
       bgColor: "#000",
     },
-    onSubmit: (values) => {},
-    validate: () => {},
   });
 
   return (

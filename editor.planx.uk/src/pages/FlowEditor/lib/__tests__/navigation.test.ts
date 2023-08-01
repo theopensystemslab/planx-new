@@ -1,13 +1,11 @@
 import { TYPES } from "@planx/components/types";
-import { SectionStatus } from "types";
 
 import { FullStore, vanillaStore } from "../store";
 import flowWithoutSections from "./mocks/flowWithClones.json";
 import flowWithThreeSections from "./mocks/flowWithThreeSections.json";
 
 const { getState, setState } = vanillaStore;
-const { filterFlowByType, initNavigationStore, record, sectionStatuses } =
-  getState();
+const { filterFlowByType, initNavigationStore, record } = getState();
 
 let initialState: FullStore;
 

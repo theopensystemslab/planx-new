@@ -44,6 +44,10 @@ export const bopsDictionary = {
   description: "proposal.description",
 };
 
+function exhaustiveCheck(type: never): never {
+  throw new Error(`Unhandled type: ${type}`);
+}
+
 function isTypeForBopsPayload(type?: TYPES) {
   if (!type) return false;
 
@@ -83,8 +87,7 @@ function isTypeForBopsPayload(type?: TYPES) {
       return true;
 
     default:
-      const exhaustiveCheck: never = type;
-      throw new Error(`Unhandled type: ${type}`);
+      return exhaustiveCheck(type);
   }
 }
 

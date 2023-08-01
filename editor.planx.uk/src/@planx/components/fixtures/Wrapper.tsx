@@ -11,7 +11,7 @@ interface Props<Type, Data, UserData> {
 
 function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   const [data, setData] = useState<Data | null>(null);
-  const [_userData, setUserData] = useState<UserData | null>(null);
+  // const [userData, setUserData] = useState<UserData | null>(null);
 
   const publicProps: PublicProps<Data, UserData> | null = data && {
     ...data,
