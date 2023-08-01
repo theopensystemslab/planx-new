@@ -12,10 +12,10 @@ import { object, string } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import type { NumberInput, UserData } from "./model";
+import type { NumberInput } from "./model";
 import { parseNumber } from "./model";
 
-export type Props = PublicProps<NumberInput, UserData>;
+export type Props = PublicProps<NumberInput>;
 
 export default function NumberInputComponent(props: Props): FCReturn {
   const formik = useFormik({
