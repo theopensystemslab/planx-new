@@ -22,6 +22,8 @@ import type { PlanXExportData } from "@opensystemslab/planx-core/types";
  *        type: boolean
  *        required: false
  *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
+ *    security:
+ *      - bearerAuth: []
  */
 export async function getHTMLExport(
   req: Request,
@@ -54,6 +56,8 @@ export async function getHTMLExport(
  *        type: string
  *        required: true
  *        description: Session id
+ *   security:
+ *      - bearerAuth: []
  */
 export async function getRedactedHTMLExport(
   req: Request,

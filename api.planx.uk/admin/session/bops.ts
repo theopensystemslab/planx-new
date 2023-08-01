@@ -15,6 +15,8 @@ import { $admin } from "../../client";
  *        type: string
  *        required: true
  *        description: Session id
+ *    security:
+ *      - bearerAuth: []
  */
 export const getBOPSPayload = async (
   req: Request,

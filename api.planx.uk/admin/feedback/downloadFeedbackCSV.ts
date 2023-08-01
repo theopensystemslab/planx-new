@@ -67,6 +67,8 @@ type ParsedFeedback = Feedback & {
  *        type: string
  *        required: true
  *        description: Session id
+ *    security:
+ *      - bearerAuth: []
  */
 export const downloadFeedbackCSV = async (
   req: Request,

@@ -23,6 +23,8 @@ import { Breadcrumb, Flow, LowCalSession, Passport, Team } from "../../types";
  *        type: string
  *        required: true
  *        description: Session id
+ *    security:
+ *      - bearerAuth: []
  */
 export async function getSessionSummary(
   req: Request,

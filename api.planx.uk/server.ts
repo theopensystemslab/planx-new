@@ -270,6 +270,15 @@ const options = {
     },
     schemes: ["http", "https"],
     servers: [{ url: process.env.API_URL_EXT }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        }
+      }
+    },
   },
   apis: ["./**/*.ts", "./**/*.js"],
 };
