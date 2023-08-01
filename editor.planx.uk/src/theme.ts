@@ -326,7 +326,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             width: "44px",
             height: "44px",
             padding: 0,
-            margin: "0.25em 0.75em 0.25em 0",
+            margin: "0 0.75em 0 0",
             color: TEXT_COLOR_PRIMARY,
             "& .MuiSvgIcon-root": {
               // Hide default MUI SVG, we'll use pseudo elements as Gov.uk

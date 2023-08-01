@@ -60,12 +60,14 @@ const TextLabelRoot = styled(Box)(() => ({
 }));
 
 const TextLabelContainer = styled(Box)(({ theme }) => ({
-  paddingBottom: theme.spacing(1),
   display: "flex",
   alignItems: "center",
   color: theme.palette.text.primary,
   "& > p": {
     color: theme.palette.text.secondary,
+  },
+  "& + p:not(:empty)": {
+    paddingTop: theme.spacing(1),
   },
 }));
 
