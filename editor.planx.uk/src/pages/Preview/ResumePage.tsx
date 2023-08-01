@@ -278,7 +278,7 @@ const ResumePage: React.FC = () => {
             : setPageStatus(Status.Validated);
         }
       });
-    } catch (error: unknown | AxiosError) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 403) {
           const lockedSessionResponse = error.response

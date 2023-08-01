@@ -57,6 +57,8 @@ const DesignSettings: React.FC = () => {
       phaseBannerColor: "#000",
       bgColor: "#000",
     },
+    onSubmit: () => {},
+    validate: () => {},
   });
 
   return (
