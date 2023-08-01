@@ -56,7 +56,7 @@ export async function getHTMLExport(
  *        type: string
  *        required: true
  *        description: Session id
- *   security:
+ *    security:
  *      - bearerAuth: []
  */
 export async function getRedactedHTMLExport(
