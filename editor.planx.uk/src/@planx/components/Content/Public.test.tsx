@@ -16,7 +16,7 @@ test("const { user } = setups correctly", async () => {
   expect(content()).toHaveTextContent("hello");
   expect(content()).toHaveStyle({
     background: "#fff",
-    color: "#000",
+    color: "#0B0C0C",
   });
 
   await user.click(screen.getByTestId("continue-button"));
