@@ -352,7 +352,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Checklist" Icon={ICONS[type]}>
-          <InputGroup deletable={false}>
+          <InputGroup>
             <InputRow>
               <Input
                 format="large"

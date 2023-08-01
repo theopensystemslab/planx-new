@@ -1,10 +1,10 @@
 # Plan✕
 
-Plan✕ is a platform for creating and publishing digital planning services. 
+Plan✕ is a platform for creating and publishing digital planning services.
 
 Learn more about how it's currently being used here: https://opendigitalplanning.org/
 
-Explore our component library and design system here: https://storybook.planx.uk/ 
+Explore our component library and design system here: https://storybook.planx.uk/
 
 ## Status pages
 
@@ -36,24 +36,25 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 3. Pull down environment secrets for running the application in staging mode by running `./scripts/pull-secrets.sh`. (NOTE: Even when running locally, API requests are routed to relevant staging servers and emails are actually processed and sent to provided addresses).
 
-4. Run `pnpm start` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes).
+4. Run `pnpm run up` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes) and to pull seed application data from production.
 
-5. Run `pnpm add-data` from the project root to seed application data from production.
+5. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
 
-6. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
+6. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
 
-7. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
+7. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
 
-8. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
+8. Start the editor dev server, with `pnpm start`
 
-9. Start the editor dev server, with `pnpm start`
-
-10. Open `http://localhost:3000` and login with your Google email address
+9. Open `http://localhost:3000` and login with your Google email address
 
 ### Docker
 
 The root of the project has several scripts set up to help you manage your docker containers:
 
+- `pnpm run up` alias for `pnpm recreate && pnpm add-data`
+- `pnpm run down` alias for `pnpm destroy`
+- `pnpm run restart` alias for `pnpm stop && pnpm start`
 - `pnpm start` will (re)create docker containers without rebuilding them
 - `pnpm stop` will stop your docker containers without destroying them
 - `pnpm recreate` will build and (re)start your docker containers from scratch.

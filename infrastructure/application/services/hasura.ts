@@ -35,7 +35,7 @@ export const createHasuraService = async ({
     healthCheck: {
       path: "/healthz",
     },
-  });
+  });  
   // Forward HTTP to HTTPS
   const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
     protocol: "HTTP",
@@ -48,7 +48,7 @@ export const createHasuraService = async ({
       },
     },
   });
-  
+
   const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
     protocol: "HTTPS",
     sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",

@@ -62,6 +62,36 @@ describe("Basic state and setup", () => {
     const helpIcons = screen.getAllByTestId("more-info-icon");
     expect(helpIcons).toHaveLength(2);
   });
+
+  it("does not show optional files if there are other types", () => {
+    setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("heading", { name: /Optional files/ }),
+    ).toBeNull();
+  });
+
+  it("shows optional files if there are no other types", () => {
+    setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[mockFileTypes.NotRequired]}
+      />,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: /Optional files/ }),
+    ).toBeVisible();
+  });
 });
 
 describe("Info-only mode with hidden drop zone", () => {
@@ -117,6 +147,24 @@ describe("Info-only mode with hidden drop zone", () => {
 
     const helpIcons = screen.getAllByTestId("more-info-icon");
     expect(helpIcons).toHaveLength(2);
+  });
+
+  it("shows optional files by default", () => {
+    setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+        hideDropZone={true}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("heading", { name: /Optional files/ }),
+    ).toBeVisible();
   });
 });
 
@@ -290,7 +338,7 @@ describe("Adding tags and syncing state", () => {
 
     // No file requirements have been satisfied yet
     let incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(3);
+    expect(incompleteIcons).toHaveLength(2);
 
     // Upload one file
     mockedAxios.post.mockResolvedValueOnce({
@@ -333,7 +381,7 @@ describe("Adding tags and syncing state", () => {
     const completeIcons = screen.getAllByTestId("complete-icon");
     expect(completeIcons).toHaveLength(1);
     incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(2);
+    expect(incompleteIcons).toHaveLength(1);
 
     // "Continue" onto to the next node
     expect(screen.getByText("Continue")).toBeEnabled();
@@ -353,7 +401,7 @@ describe("Adding tags and syncing state", () => {
 
     // No file requirements have been satisfied yet
     let incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(3);
+    expect(incompleteIcons).toHaveLength(2);
 
     // Upload one file
     mockedAxios.post.mockResolvedValueOnce({
@@ -377,7 +425,7 @@ describe("Adding tags and syncing state", () => {
     expect(selects).toHaveLength(1);
 
     // Apply multiple tags to this file
-    fireEvent.change(selects[0], { target: { value: "Utility bill" } });
+    fireEvent.change(selects[0], { target: { value: "Heritage statement" } });
 
     // Close modal
     await user.keyboard("{Esc}");
@@ -387,13 +435,13 @@ describe("Adding tags and syncing state", () => {
     expect(screen.getByText("test1.png")).toBeVisible();
     const chips = screen.getAllByTestId("uploaded-file-chip");
     expect(chips).toHaveLength(1);
-    expect(chips[0]).toHaveTextContent("Utility bill");
+    expect(chips[0]).toHaveTextContent("Heritage statement");
 
     // Requirements list reflects successfully tagged uploads
     const completeIcons = screen.getAllByTestId("complete-icon");
     expect(completeIcons).toHaveLength(1);
     incompleteIcons = screen.getAllByTestId("incomplete-icon");
-    expect(incompleteIcons).toHaveLength(2);
+    expect(incompleteIcons).toHaveLength(1);
 
     // Show error when attempting to "Continue" onto to the next node
     expect(screen.getByText("Continue")).toBeEnabled();
@@ -460,44 +508,6 @@ describe("Error handling", () => {
     await user.click(screen.getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
     expect(dropzoneError).toBeVisible();
-  });
-
-  test("An error is thrown in the modal if a user does not tag all files", async () => {
-    const { user } = setup(
-      <FileUploadAndLabelComponent
-        title="Test title"
-        fileTypes={[
-          mockFileTypes.AlwaysRequired,
-          mockFileTypes.AlwaysRecommended,
-          mockFileTypes.NotRequired,
-        ]}
-      />,
-    );
-
-    mockedAxios.post.mockResolvedValue({
-      data: {
-        file_type: "image/png",
-        fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
-      },
-    });
-
-    const file = new File(["test"], "test.jpg", { type: "image/jpg" });
-    const input = screen.getByTestId("upload-input");
-    await user.upload(input, file);
-
-    const fileTaggingModal = await within(document.body).findByTestId(
-      "file-tagging-dialog",
-    );
-    expect(fileTaggingModal).toBeVisible();
-    const submitModalButton = await within(fileTaggingModal).findByText("Done");
-
-    // Attempt to close without tagging files
-    await user.click(submitModalButton);
-    expect(true).toBeTruthy();
-    const modalError = await within(fileTaggingModal).findByText(
-      "Please tag all files",
-    );
-    expect(modalError).toBeVisible();
   });
 
   test("An error is thrown in the main component if a user does not tag all files", async () => {

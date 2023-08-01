@@ -76,7 +76,7 @@ jobs:
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v3
@@ -117,7 +117,7 @@ jobs:
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v3
@@ -153,7 +153,7 @@ jobs:
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v3
@@ -181,7 +181,7 @@ jobs:
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v2.4.0
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
           version: ${{ vars.PNPM_VERSION }}
@@ -234,7 +234,7 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - uses: pnpm/action-setup@v2.2.4
+      - uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v3
@@ -326,7 +326,7 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            ./scripts/pull-secrets.sh
+            CI=true ./scripts/pull-secrets.sh
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
@@ -356,7 +356,7 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            ./scripts/pull-secrets.sh
+            CI=true ./scripts/pull-secrets.sh
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
@@ -434,7 +434,7 @@ jobs:
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
         run: ./scripts/pull-secrets.sh
       - name: Setup PNPM
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node

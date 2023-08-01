@@ -13,7 +13,7 @@ export const gqlAdmin = async (query, variables = {}) => {
         "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET,
       },
       data: { query, variables },
-    }
+    },
   );
   const { data: json } = response;
 
@@ -112,7 +112,7 @@ export const deleteUsers = async (userIds: number[] = []) => {
 
 export const deleteFlowsByTeamIdsAndSlugs = async (
   teamIds: number[] = [],
-  flowSlugs: string[] = []
+  flowSlugs: string[] = [],
 ) => {
   return gqlAdmin(`
     mutation {

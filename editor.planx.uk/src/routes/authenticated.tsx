@@ -10,7 +10,7 @@ import Teams from "../pages/Teams";
 import { makeTitle } from "./utils";
 
 const editorRoutes = compose(
-  withData((req) => ({
+  withData(() => ({
     // just putting anything here for now
     username: "A",
   })),

@@ -1,10 +1,6 @@
 import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
-import {
-  DateInput,
-  paddedDate,
-  UserData,
-} from "@planx/components/DateInput/model";
+import { DateInput, paddedDate } from "@planx/components/DateInput/model";
 import { dateRangeSchema } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -18,7 +14,7 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
-export type Props = PublicProps<DateInput, UserData>;
+export type Props = PublicProps<DateInput>;
 
 const DateInputPublic: React.FC<Props> = (props) => {
   const formik = useFormik({

@@ -81,7 +81,7 @@ export async function buildSessionForFlow(flowId: string): Promise<string> {
 }
 
 export async function buildPaymentRequestForSession(
-  sessionId: string
+  sessionId: string,
 ): Promise<PaymentRequest> {
   await $admin.session.lock(sessionId);
   return $admin.paymentRequest.create({
@@ -94,14 +94,14 @@ export async function buildPaymentRequestForSession(
 }
 
 export async function markPaymentRequestAsPaid(
-  paymentRequestId: string
+  paymentRequestId: string,
 ): Promise<boolean> {
   return await $admin.paymentRequest._markAsPaid(paymentRequestId);
 }
 
 export async function getSendResponse(
   destination: string,
-  sessionId: string
+  sessionId: string,
 ): Promise<unknown> {
   switch (destination.toLowerCase()) {
     case "bops":
@@ -141,7 +141,7 @@ export async function waitForResponse({
 }
 
 export async function getSessionSubmittedAt(
-  sessionId: string
+  sessionId: string,
 ): Promise<string | undefined> {
   const detailedSession = await $admin.session.findDetails(sessionId);
   return detailedSession?.submittedAt;

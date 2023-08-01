@@ -95,18 +95,6 @@ services:
       timeout: 3s
       retries: 3
 
-  seed-database:
-    image: postgis/postgis:12-3.0-alpine
-    volumes:
-      - "./scripts/seed-database:/app"
-    profiles: ["seed"]
-    working_dir: "/app"
-    entrypoint: "./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
-    command: "no_reset include_published_flows"
-    restart: "no"
-    depends_on:
-      hasura-proxy:
-        condition: service_healthy
   api:
     restart: unless-stopped
     build:
@@ -167,6 +155,8 @@ services:
       UNIFORM_CLIENT_CHILTERN: ${UNIFORM_CLIENT_CHILTERN}
       UNIFORM_CLIENT_WYCOMBE: ${UNIFORM_CLIENT_WYCOMBE}
       BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE: ${BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE}
+      # Camden
+      BOPS_SUBMISSION_URL_CAMDEN: ${BOPS_SUBMISSION_URL_CAMDEN}
 
   sharedb:
     restart: unless-stopped

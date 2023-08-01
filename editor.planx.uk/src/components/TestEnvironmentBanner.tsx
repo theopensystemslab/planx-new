@@ -39,7 +39,9 @@ const TestEnvironmentBanner: React.FC = () => {
                 Do not use it to make permanent content changes.
               </Typography>
             </Box>
-            <Button onClick={() => setShowWarning(false)}>Hide</Button>
+            <Button size="small" onClick={() => setShowWarning(false)}>
+              Hide
+            </Button>
           </Container>
         </TestEnvironmentWarning>
       )}

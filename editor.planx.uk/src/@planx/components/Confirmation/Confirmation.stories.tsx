@@ -1,9 +1,9 @@
-import { Meta, StoryFn, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
-import Confirmation, { Props } from "./Public";
+import Confirmation from "./Public";
 
 const meta = {
   title: "PlanX Components/Confirmation",

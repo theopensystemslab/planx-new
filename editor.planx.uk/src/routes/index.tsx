@@ -1,5 +1,4 @@
-import { hasFeatureFlag } from "lib/featureFlags";
-import { lazy, map, mount, NotFoundError, redirect, route } from "navi";
+import { lazy, map, mount, redirect, route } from "navi";
 import * as React from "react";
 
 import { client } from "../lib/graphql";

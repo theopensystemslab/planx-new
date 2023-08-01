@@ -1,27 +1,28 @@
-import { makeStyles } from "@mui/styles";
-import classNames from "classnames";
+import Box from "@mui/material/Box";
+import { styled, Theme } from "@mui/material/styles";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
-import type { Theme } from "../theme";
-
-const useClasses = makeStyles((theme: Theme) => ({
-  htmlRoot: {
-    "& a": linkStyle(theme.palette.primary.main),
-    "& h2": theme.typography.h3,
-    "& h3": theme.typography.h5,
-    "& strong": {
-      fontWeight: FONT_WEIGHT_SEMI_BOLD,
-    },
-    "& p:last-of-type": {
-      marginBottom: 0,
-    },
-    "& img": {
-      maxWidth: "100%",
-    },
+const styles = (theme: Theme) => ({
+  "& a": linkStyle(theme.palette.primary.main),
+  "& h1": theme.typography.h2,
+  "& h2": theme.typography.h3,
+  "& h3": theme.typography.h3,
+  "& strong": {
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
-}));
+  "& p:last-of-type": {
+    marginBottom: 0,
+  },
+  "& img": {
+    maxWidth: "100%",
+  },
+});
+
+const HTMLRoot = styled(Box)(({ theme }) => styles(theme));
+
+const MarkdownRoot = styled(ReactMarkdown)(({ theme }) => styles(theme));
 
 // Increment H1 and H2 elements to meet a11y requirements in user submitted rich text
 export const incrementHeaderElements = (source: string): string => {
@@ -41,7 +42,6 @@ export default function ReactMarkdownOrHtml(props: {
   id?: string;
   manuallyIncrementHeaders?: boolean;
 }): FCReturn {
-  const classes = useClasses();
   if (typeof props.source !== "string") {
     return null;
   }
@@ -54,9 +54,8 @@ export default function ReactMarkdownOrHtml(props: {
       : incrementHeaderElements(replaceTarget);
 
     return (
-      <div
+      <HTMLRoot
         color={props.textColor}
-        className={classNames(classes.htmlRoot)}
         dangerouslySetInnerHTML={{ __html: incrementHeaders }}
         id={props.id}
       />
@@ -64,9 +63,7 @@ export default function ReactMarkdownOrHtml(props: {
   }
   return (
     <div id={props.id} color={props.textColor}>
-      <ReactMarkdown className={classNames(classes.htmlRoot)}>
-        {props.source}
-      </ReactMarkdown>
+      <MarkdownRoot>{props.source}</MarkdownRoot>
     </div>
   );
 }

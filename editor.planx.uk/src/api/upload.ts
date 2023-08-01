@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useStore } from "pages/FlowEditor/lib/store";
 
 export { uploadPrivateFile, uploadPublicFile };
 
@@ -34,8 +33,6 @@ function handleUpload(
 
   formData.append("file", file);
   formData.append("filename", file.name);
-
-  const passport = useStore.getState().computePassport();
 
   // Private uploads for test applications should be handled by the staging environment
   const paths = {

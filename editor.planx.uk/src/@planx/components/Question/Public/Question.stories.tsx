@@ -1,8 +1,5 @@
-import Wrapper from "@planx/components/fixtures/Wrapper";
 import { Meta, StoryObj } from "@storybook/react";
-import React from "react";
 
-import Editor from "../Editor";
 import Question from "./Question";
 
 const meta = {

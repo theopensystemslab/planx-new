@@ -82,6 +82,7 @@ import { getCSVData, getRedactedCSVData } from "./admin/session/csv";
 import { getHTMLExport, getRedactedHTMLExport } from "./admin/session/html";
 import { generateZip } from "./admin/session/zip";
 import { createPaymentSendEvents } from "./inviteToPay/createPaymentSendEvents";
+import { getSessionSummary } from "./admin/session/summary";
 
 const router = express.Router();
 
@@ -311,6 +312,7 @@ assert(process.env.BOPS_API_TOKEN);
 assert(process.env.BOPS_SUBMISSION_URL_LAMBETH);
 assert(process.env.BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE);
 assert(process.env.BOPS_SUBMISSION_URL_SOUTHWARK);
+assert(process.env.BOPS_SUBMISSION_URL_CAMDEN);
 app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
 
 assert(process.env.UNIFORM_TOKEN_URL);
@@ -427,11 +429,12 @@ app.use("/admin", useJWT);
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
 app.get("/admin/session/:sessionId/bops", getBOPSPayload);
-app.get("/admin/session/:sessionId/csv", getCSVData);
+app.get("/admin/session/:sessionId/csv", getCSVData); // "?download=true" to download a file
 app.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
 app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
 app.get("/admin/session/:sessionId/zip", generateZip); // "?includeXML=true" to generate and include xml in the zip
+app.get("/admin/session/:sessionId/summary", getSessionSummary);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production

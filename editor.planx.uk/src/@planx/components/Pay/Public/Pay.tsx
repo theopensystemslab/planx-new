@@ -163,7 +163,7 @@ function Component(props: Props) {
 
       // Update local state with the refetched payment state
       if (govUkPayment) {
-        const payment = await resolvePaymentResponse({
+        await resolvePaymentResponse({
           ...govUkPayment,
           state,
         });

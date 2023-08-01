@@ -475,9 +475,11 @@ function FileUploadAndLabel(props: ComponentProps) {
       <dt>{props.node.data.title ?? "Upload and label"}</dt>
       <dd>
         <ul>
-          {uniqueFilenames.map((filename, index) => (
-            <li key={index}>{filename}</li>
-          ))}
+          {uniqueFilenames.length
+            ? uniqueFilenames.map((filename, index) => (
+                <li key={index}>{filename}</li>
+              ))
+            : "No files uploaded"}
         </ul>
       </dd>
     </>

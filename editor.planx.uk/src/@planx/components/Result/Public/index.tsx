@@ -1,6 +1,6 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
@@ -142,18 +142,20 @@ const Result: React.FC<Props> = ({
           <Responses responses={visibleResponses} allowChanges={allowChanges} />
 
           {hiddenResponses.length > 0 && (
-            <SimpleExpand
-              id="hidden-responses"
-              buttonText={{
-                open: "Show all responses",
-                closed: "Hide other responses",
-              }}
-            >
-              <Responses
-                responses={hiddenResponses}
-                allowChanges={allowChanges}
-              />
-            </SimpleExpand>
+            <Box py={2}>
+              <SimpleExpand
+                id="hidden-responses"
+                buttonText={{
+                  open: "Show all responses",
+                  closed: "Hide other responses",
+                }}
+              >
+                <Responses
+                  responses={hiddenResponses}
+                  allowChanges={allowChanges}
+                />
+              </SimpleExpand>
+            </Box>
           )}
         </Box>
         {disclaimer?.show && (

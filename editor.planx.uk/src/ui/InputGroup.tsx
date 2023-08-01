@@ -1,80 +1,10 @@
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import { makeStyles } from "@mui/styles";
-import classNames from "classnames";
-import React, { useRef } from "react";
+import { styled } from "@mui/material/styles";
+import React, { PropsWithChildren, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
-
-import type { defaultTheme } from "../theme";
-
-const useClasses = makeStyles((theme: typeof defaultTheme) => ({
-  inputGroup: {
-    border: 0,
-    margin: 0,
-    padding: 0,
-    "& + $inputGroup": {
-      marginTop: theme.spacing(2),
-    },
-    "& $inputGroup + $inputGroup": {
-      marginTop: 0,
-    },
-  },
-  content: {
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-
-    "& > *": {
-      transition: "opacity 0.2s ease-out",
-    },
-  },
-  label: {
-    fontSize: 15,
-    padding: theme.spacing(1.5, 0),
-  },
-  deletable: {
-    paddingRight: 52,
-    position: "relative",
-  },
-  draggable: {
-    position: "relative",
-  },
-  deleteBtn: {
-    position: "absolute",
-    right: 0,
-    borderRadius: 0,
-    width: 50,
-    height: 50,
-    top: 0,
-    color: theme.palette.text.secondary,
-    opacity: 0.75,
-  },
-  drag: {
-    position: "absolute",
-    right: "calc(100% + 2px)",
-    top: 0,
-    width: theme.spacing(4),
-    height: theme.spacing(6.25),
-    textAlign: "center",
-    padding: theme.spacing(1.5, 0.5),
-    color: theme.palette.text.secondary,
-    opacity: 0.5,
-    cursor: "move",
-    transition: "opacity 0.2s ease",
-    "&:hover, &:focus": {
-      opacity: 1,
-      backgroundColor: "rgba(0,0,0,0.1)",
-    },
-  },
-  deletePending: {
-    "&$deletable > *:not($deleteBtn)": {
-      opacity: 0.65,
-    },
-  },
-}));
 
 interface Props {
   children: JSX.Element[] | JSX.Element;
@@ -88,6 +18,86 @@ interface Props {
   handleMove?: (dragIndex: number, hoverIndex: number) => void;
 }
 
+const Root = styled("fieldset")(({ theme }) => ({
+  border: 0,
+  margin: 0,
+  padding: 0,
+  "& + .inputGroup": {
+    marginTop: theme.spacing(2),
+  },
+  "& .inputGroup + .inputGroup": {
+    marginTop: 0,
+  },
+}));
+
+const Label = styled("legend")(({ theme }) => ({
+  fontSize: 15,
+  padding: theme.spacing(1.5, 0),
+}));
+
+const Drag = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  right: "calc(100% + 2px)",
+  top: 0,
+  width: theme.spacing(4),
+  height: theme.spacing(6.25),
+  textAlign: "center",
+  padding: theme.spacing(1.5, 0.5),
+  color: theme.palette.text.secondary,
+  opacity: 0.5,
+  cursor: "move",
+  transition: "opacity 0.2s ease",
+  "&:hover, &:focus": {
+    opacity: 1,
+    backgroundColor: "rgba(0,0,0,0.1)",
+  },
+}));
+
+const DeleteButton = styled(IconButton)(({ theme }) => ({
+  position: "absolute",
+  right: 0,
+  borderRadius: 0,
+  width: 50,
+  height: 50,
+  top: 0,
+  color: theme.palette.text.secondary,
+  opacity: 0.75,
+}));
+
+interface BaseContentProps {
+  deletable?: boolean;
+  draggable?: boolean;
+  deleteHover?: boolean;
+}
+
+type ContentProps = PropsWithChildren<BoxProps & BaseContentProps>;
+
+const Content = styled(Box, {
+  shouldForwardProp: (prop) =>
+    !["deletable", "draggable", "deleteHover"].includes(prop.toString()),
+})<ContentProps>(({ deletable, draggable, deleteHover }) => ({
+  position: "relative",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+  "& > *": {
+    transition: "opacity 0.2s ease-out",
+  },
+  ...(deletable && {
+    paddingRight: 52,
+    position: "relative",
+  }),
+  ...(draggable && {
+    position: "relative",
+  }),
+  ...(deleteHover &&
+    deletable && {
+      "& > *:not(.deleteButton)": {
+        opacity: 0.65,
+      },
+    }),
+}));
+
 export default function InputGroup({
   children,
   label,
@@ -98,7 +108,6 @@ export default function InputGroup({
   index = 0,
   handleMove,
 }: Props): FCReturn {
-  const classes = useClasses();
   const [deleteHover, setDeleteHover] = React.useState(false);
 
   const ref = useRef<HTMLFieldSetElement>(null);
@@ -160,37 +169,34 @@ export default function InputGroup({
   if (draggable) drag(drop(ref));
 
   return (
-    <fieldset className={classNames(classes.inputGroup)} ref={ref}>
-      {label && <legend className={classes.label}>{label}</legend>}
-      <div
-        className={classNames(
-          classes.content,
-          deletable && classes.deletable,
-          draggable && classes.draggable,
-          deleteHover && classes.deletePending,
-        )}
+    <Root ref={ref} className="inputGroup">
+      {label && <Label>{label}</Label>}
+      <Content
+        deletable={deletable}
+        draggable={draggable}
+        deleteHover={deleteHover}
       >
         {draggable && (
-          <Box className={classes.drag}>
+          <Drag>
             <DragHandle titleAccess="Drag" />
-          </Box>
+          </Drag>
         )}
         {children}
         {deletable && (
-          <IconButton
+          <DeleteButton
             onMouseEnter={() => setDeleteHover(true)}
             onMouseLeave={() => setDeleteHover(false)}
             onBlur={() => setDeleteHover(false)}
             onFocus={() => setDeleteHover(true)}
-            className={classes.deleteBtn}
             onClick={deleteInputGroup}
             aria-label="Delete"
             size="large"
+            className="deleteButton"
           >
             <Delete />
-          </IconButton>
+          </DeleteButton>
         )}
-      </div>
-    </fieldset>
+      </Content>
+    </Root>
   );
 }

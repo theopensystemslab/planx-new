@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
-const AnalyticsWarning = styled(Box)(({ theme }) => ({
+const AnalyticsWarning = styled(Box)(() => ({
   display: "flex",
   backgroundColor: "#FFFB00",
   color: "#070707",
@@ -54,7 +54,9 @@ const AnalyticsDisabledBanner: React.FC = () => {
                 </Link>
               </Typography>
             </Box>
-            <Button onClick={() => setShowAnalyticsWarning(false)}>Hide</Button>
+            <Button size="small" onClick={() => setShowAnalyticsWarning(false)}>
+              Hide
+            </Button>
           </Container>
         </AnalyticsWarning>
       )}

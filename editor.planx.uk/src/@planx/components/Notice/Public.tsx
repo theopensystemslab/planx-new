@@ -71,7 +71,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
   const theme: Theme = useTheme();
   const textColor = getContrastTextColor(
     props.color,
-    theme.palette.primary.main,
+    theme.palette.text.primary,
   );
   const handleSubmit = !props.resetButton
     ? () => props.handleSubmit?.()

@@ -13,11 +13,11 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
+import { visuallyHidden } from "@mui/utils";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
-import ErrorWrapper from "ui/ErrorWrapper";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -28,7 +28,6 @@ import {
   removeSlots,
   resetAllSlots,
 } from "./model";
-import { fileListSchema, slotsSchema } from "./schema";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -43,18 +42,7 @@ export const FileTaggingModal = ({
   setFileList,
   setShowModal,
 }: FileTaggingModalProps) => {
-  const [error, setError] = useState<string | undefined>();
-
   const closeModal = () => setShowModal(false);
-
-  const handleSubmit = () => {
-    Promise.all([
-      slotsSchema.validate(uploadedFiles),
-      fileListSchema.validate(fileList, { context: { slots: uploadedFiles } }),
-    ])
-      .then(closeModal)
-      .catch((err) => setError(err.message));
-  };
 
   return (
     <Dialog
@@ -62,6 +50,7 @@ export const FileTaggingModal = ({
       onClose={closeModal}
       data-testid="file-tagging-dialog"
       maxWidth="xl"
+      aria-labelledby="dialog-heading"
       PaperProps={{
         sx: {
           width: "100%",
@@ -69,10 +58,14 @@ export const FileTaggingModal = ({
           borderRadius: 0,
           borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
           background: "#FFF",
+          margin: (theme) => theme.spacing(2),
         },
       }}
     >
       <DialogContent>
+        <h2 style={visuallyHidden} id="dialog-heading">
+          What do these files show?
+        </h2>
         {uploadedFiles.map((slot) => (
           <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
             <UploadedFileCard {...slot} key={slot.id} />
@@ -91,17 +84,15 @@ export const FileTaggingModal = ({
           padding: 2,
         }}
       >
-        <ErrorWrapper error={error}>
-          <Box>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              sx={{ paddingLeft: 2 }}
-            >
-              Done
-            </Button>
-          </Box>
-        </ErrorWrapper>
+        <Box>
+          <Button
+            variant="contained"
+            onClick={closeModal}
+            sx={{ paddingLeft: 2 }}
+          >
+            Done
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );
@@ -182,7 +173,6 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         native={false}
         key={`select-${uploadedFile.id}`}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
-        labelId={`select-multiple-file-tags-label-${uploadedFile.id}`}
         variant="standard"
         multiple
         value={tags}
@@ -192,6 +182,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         inputProps={{
           name: uploadedFile.id,
           "data-testid": "select",
+          "aria-labelledby": `select-multiple-file-tags-label-${uploadedFile.id}`,
         }}
         sx={{
           border: (theme) => `1px solid ${theme.palette.secondary.main}`,
@@ -255,10 +246,14 @@ const SelectMultiple = (props: SelectMultipleProps) => {
                       key={`checkbox-${fileType.name}-${uploadedFile.id}`}
                       checked={tags.indexOf(fileType.name) > -1}
                       data-testid="select-checkbox"
+                      inputProps={{
+                        "aria-label": `${fileType.name}`,
+                      }}
                     />
                     <ListItemText
                       key={`listitemtext-${fileType.name}-${uploadedFile.id}`}
                       primary={fileType.name}
+                      id={fileType.name}
                     />
                   </MenuItem>,
                 ];

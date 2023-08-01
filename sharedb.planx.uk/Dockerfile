@@ -1,5 +1,5 @@
 # 18.16.1 = LTS
-FROM --platform=linux/amd64 node:18.16.1-alpine as base
+FROM node:18.16.1-alpine as base
 
 WORKDIR /sharedb
 RUN npm install -g pnpm@8.6.6

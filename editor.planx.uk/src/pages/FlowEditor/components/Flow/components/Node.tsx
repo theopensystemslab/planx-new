@@ -152,7 +152,7 @@ function exhaustiveCheck(type: never): never {
 export default function SafeNode(props: any) {
   return (
     <ErrorBoundary
-      FallbackComponent={({ error }) => (
+      FallbackComponent={() => (
         <Question hasFailed type="Error" id={props.id} text="Corrupted" />
       )}
     >
