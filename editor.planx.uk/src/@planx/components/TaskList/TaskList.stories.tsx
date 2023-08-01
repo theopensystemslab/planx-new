@@ -30,6 +30,6 @@ export const Basic = {
       },
     ],
   },
-};
+} satisfies Story;
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;

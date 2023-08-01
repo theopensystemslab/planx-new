@@ -14,7 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 export default meta;
 
-// Needs internal state
+// TODO needs internal state
 export const Basic = {
   args: {
     title: "The property",

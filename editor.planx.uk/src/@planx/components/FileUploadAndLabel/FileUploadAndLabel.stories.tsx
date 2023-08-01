@@ -3,7 +3,7 @@ import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
-import { Condition, Operator } from "./model";
+import { Condition } from "./model";
 import Public from "./Public";
 
 const meta = {
