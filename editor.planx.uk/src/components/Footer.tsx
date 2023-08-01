@@ -129,7 +129,7 @@ export default function Footer(props: Props) {
 
   return (
     <Root>
-      <Container maxWidth={false}>
+      <Container maxWidth="contentWrap">
         <ButtonGroup py={0.5}>
           {items
             ?.filter((item) => item.title)
