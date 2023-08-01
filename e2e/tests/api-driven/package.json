@@ -5,7 +5,7 @@
     "test:regression": "cucumber-js"
   },
   "dependencies": {
-    "@cucumber/cucumber": "^9.1.2",
+    "@cucumber/cucumber": "^9.3.0",
     "@opensystemslab/planx-core": "github:theopensystemslab/planx-core#e797878",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
