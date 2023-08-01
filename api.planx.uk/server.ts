@@ -255,6 +255,7 @@ const app = express();
 
 // Swagger documentation config
 const options = {
+  failOnErrors: true,
   definition: {
     openapi: "3.1.0",
     info: {
@@ -270,10 +271,10 @@ const options = {
     schemes: ["http", "https"],
     servers: [{ url: process.env.API_URL_EXT }],
   },
-  apis: ["./**/*.ts"],
+  apis: ["./**/*.ts", "./**/*.js"],
 };
 const swaggerSpec = swaggerJSDoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.set("trust proxy", 1);
 
@@ -441,43 +442,8 @@ app.get("/gis", (_req, res, next) => {
   });
 });
 
-/**
- * @swagger
- * /gis/{localAuthority}:
- *  get:
- *    summary: Fetches planning constraints
- *    description: Fetches and formats planning constraints from planning.data.gov.uk that overlap with a geometry
- *    tags:
- *      - gis
- *    parameters:
- *      - in: path
- *        name: localAuthority
- *        type: string
- *        required: true
- *        description: Name of the local authority or Planx "team", required until Planning Data is available for any council
- *      - in: query
- *        name: geom
- *        type: string
- *        required: true
- *        description: Well-Known Text (WKT) formatted polygon or point
- */
 app.get("/gis/:localAuthority", locationSearch);
 
-/**
- * @swagger
- * /roads:
- *  get:
- *    summary: Fetches road classifications
- *    description: Fetches and formats road classifications from Ordnance Survey MasterMap Highways via OS Features API for a USRN
- *    tags:
- *      - gis
- *    parameters:
- *      - in: query
- *        name: usrn
- *        type: string
- *        required: true
- *        description: Unique Street Reference Number (USRN)
- */
 app.get("/roads", classifiedRoadsSearch);
 
 /**
@@ -492,178 +458,14 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/admin", useJWT);
-
-/**
- * @swagger
- * /admin/feedback:
- *  get:
- *    summary: Downloads the FeedbackFish CSV
- *    description: Downloads the FeedbackFish CSV
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- */
 app.get("/admin/feedback", downloadFeedbackCSV);
-
-/**
- * @swagger
- * /admin/session/{sessionId}/xml:
- *  get:
- *    summary: Generates a OneApp XML
- *    description: Generates a OneApp XML, relies on a submission record in `uniform_applications`
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- */
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
-
-/**
- * @swagger
- * /admin/session/{sessionId}/bops:
- *  get:
- *    summary: Generates a BOPS payload
- *    description: Generates a BOPS payload, relies on a submission record in `bops_applications`
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- */
 app.get("/admin/session/:sessionId/bops", getBOPSPayload);
-
-/**
- * @swagger
- * /admin/session/{sessionId}/csv:
- *  get:
- *    summary: Generates or downloads an application CSV file
- *    description: Generates or downloads an application CSV file
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- *      - in: query
- *        name: download
- *        type: boolean
- *        required: false
- *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
- */
 app.get("/admin/session/:sessionId/csv", getCSVData);
-
-/**
- * @swagger
- * /admin/session/{sessionId}/csv-redacted:
- *  get:
- *    summary: Generates or downloads an application CSV file with personal details redacted
- *    description: Generates or downloads an application CSV file with personal details redacted
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- *      - in: query
- *        name: download
- *        type: boolean
- *        required: false
- *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
- */
 app.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
-
-/**
- * @swagger
- * /admin/session/{sessionId}/html:
- *  get:
- *    summary: Generates an application overview HTML
- *    description: Generates an application overview HTML
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- *      - in: query
- *        name: download
- *        type: boolean
- *        required: false
- *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
- */
 app.get("/admin/session/:sessionId/html", getHTMLExport);
-
-/**
- * @swagger
- * /admin/session/{sessionId}/html-redacted:
- *  get:
- *    summary: Generates an application overview HTML with personal details redacted
- *    description: Generates an application overview HTML with personal details redacted
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- */
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
-
-/**
- * @swagger
- * /admin/session/{sessionId}/zip:
- *  get:
- *    summary: Generates and downloads a zip file for Send to Email, or Uniform when XML is included
- *    description: Generates and downloads a zip file for Send to Email, or Uniform when XML is included
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- *      - in: query
- *        name: includeXML
- *        type: boolean
- *        required: false
- *        description: If the OneApp XML file should be included in the zip
- */
 app.get("/admin/session/:sessionId/zip", generateZip);
-
-/**
- * @swagger
- * /admin/session/{sessionId}/summary:
- *  get:
- *    summary: Returns a passport, breadcrumbs, and other key details about a session
- *    description: Returns a passport, breadcrumbs, and other key details about a session
- *    tags:
- *      - admin
- *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- */
 app.get("/admin/session/:sessionId/summary", getSessionSummary);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it

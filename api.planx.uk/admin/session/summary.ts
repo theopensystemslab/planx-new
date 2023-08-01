@@ -9,6 +9,21 @@ import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../../hasura";
 import { Breadcrumb, Flow, LowCalSession, Passport, Team } from "../../types";
 
+/**
+ * @swagger
+ * /admin/session/{sessionId}/summary:
+ *  get:
+ *    summary: Returns a passport, breadcrumbs, and other key details about a session
+ *    description: Returns a passport, breadcrumbs, and other key details about a session
+ *    tags:
+ *      - admin
+ *    parameters:
+ *      - in: path
+ *        name: sessionId
+ *        type: string
+ *        required: true
+ *        description: Session id
+ */
 export async function getSessionSummary(
   req: Request,
   res: Response,

@@ -1,6 +1,26 @@
 import { NextFunction, Request, Response } from "express";
 import { buildSubmissionExportZip } from "../../send/exportZip";
 
+/**
+ * @swagger
+ * /admin/session/{sessionId}/zip:
+ *  get:
+ *    summary: Generates and downloads a zip file for Send to Email, or Uniform when XML is included
+ *    description: Generates and downloads a zip file for Send to Email, or Uniform when XML is included
+ *    tags:
+ *      - admin
+ *    parameters:
+ *      - in: path
+ *        name: sessionId
+ *        type: string
+ *        required: true
+ *        description: Session id
+ *      - in: query
+ *        name: includeXML
+ *        type: boolean
+ *        required: false
+ *        description: If the OneApp XML file should be included in the zip
+ */
 export async function generateZip(
   req: Request,
   res: Response,

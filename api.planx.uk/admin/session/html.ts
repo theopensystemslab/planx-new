@@ -3,6 +3,26 @@ import { $admin } from "../../client";
 import type { NextFunction, Request, Response } from "express";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 
+/**
+ * @swagger
+ * /admin/session/{sessionId}/html:
+ *  get:
+ *    summary: Generates an application overview HTML
+ *    description: Generates an application overview HTML
+ *    tags:
+ *      - admin
+ *    parameters:
+ *      - in: path
+ *        name: sessionId
+ *        type: string
+ *        required: true
+ *        description: Session id
+ *      - in: query
+ *        name: download
+ *        type: boolean
+ *        required: false
+ *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
+ */
 export async function getHTMLExport(
   req: Request,
   res: Response,
@@ -20,6 +40,21 @@ export async function getHTMLExport(
   }
 }
 
+/**
+ * @swagger
+ * /admin/session/{sessionId}/html-redacted:
+ *  get:
+ *    summary: Generates an application overview HTML with personal details redacted
+ *    description: Generates an application overview HTML with personal details redacted
+ *    tags:
+ *      - admin
+ *    parameters:
+ *      - in: path
+ *        name: sessionId
+ *        type: string
+ *        required: true
+ *        description: Session id
+ */
 export async function getRedactedHTMLExport(
   req: Request,
   res: Response,

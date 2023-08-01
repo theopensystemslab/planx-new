@@ -36,6 +36,21 @@ interface RoadConstraint extends Constraint {
 // Passport key comes from Digital Planning Schemas googlesheet
 export const PASSPORT_FN = "road.classified";
 
+/**
+ * @swagger
+ * /roads:
+ *  get:
+ *    summary: Fetches road classifications
+ *    description: Fetches and formats road classifications from Ordnance Survey MasterMap Highways via OS Features API for a USRN
+ *    tags:
+ *      - gis
+ *    parameters:
+ *      - in: query
+ *        name: usrn
+ *        type: string
+ *        required: true
+ *        description: Unique Street Reference Number (USRN)
+ */
 export const classifiedRoadsSearch = async (
   req: Request,
   res: Response,

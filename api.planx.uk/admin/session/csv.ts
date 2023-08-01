@@ -2,6 +2,26 @@ import { stringify } from "csv-stringify";
 import { NextFunction, Request, Response } from "express";
 import { $admin } from "../../client";
 
+/**
+ * @swagger
+ * /admin/session/{sessionId}/csv:
+ *  get:
+ *    summary: Generates or downloads an application CSV file
+ *    description: Generates or downloads an application CSV file
+ *    tags:
+ *      - admin
+ *    parameters:
+ *      - in: path
+ *        name: sessionId
+ *        type: string
+ *        required: true
+ *        description: Session id
+ *      - in: query
+ *        name: download
+ *        type: boolean
+ *        required: false
+ *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
+ */
 export async function getCSVData(
   req: Request,
   res: Response,
@@ -27,6 +47,26 @@ export async function getCSVData(
   }
 }
 
+/**
+ * @swagger
+ * /admin/session/{sessionId}/csv-redacted:
+ *  get:
+ *    summary: Generates or downloads an application CSV file with personal details redacted
+ *    description: Generates or downloads an application CSV file with personal details redacted
+ *    tags:
+ *      - admin
+ *    parameters:
+ *      - in: path
+ *        name: sessionId
+ *        type: string
+ *        required: true
+ *        description: Session id
+ *      - in: query
+ *        name: download
+ *        type: boolean
+ *        required: false
+ *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
+ */
 export async function getRedactedCSVData(
   req: Request,
   res: Response,
