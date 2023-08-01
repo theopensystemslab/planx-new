@@ -268,7 +268,7 @@ const options = {
       },
     },
     schemes: ["http", "https"],
-    servers: [{ url: "http://localhost:7002/" }],
+    servers: [{ url: process.env.API_URL_EXT }],
   },
   apis: ["./**/*.ts"],
 };
