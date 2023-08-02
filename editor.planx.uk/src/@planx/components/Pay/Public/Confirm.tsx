@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { lighten, styled, useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
@@ -156,7 +156,7 @@ export default function Confirm(props: Props) {
         {page === "Pay" && !props.hideFeeBanner && (
           <Banner
             color={{
-              background: lighten(theme.palette.info.main, 0.9),
+              background: theme.palette.info.light,
               text: theme.palette.text.primary,
             }}
           >
