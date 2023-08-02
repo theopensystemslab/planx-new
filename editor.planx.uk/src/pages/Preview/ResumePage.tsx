@@ -149,6 +149,7 @@ export const InvalidSession: React.FC<{
       Reasons
     </Typography>
     <Typography variant="body1">
+      <br />
       This may be because your application has expired or there was a mistake in
       your email address.
       <br />
