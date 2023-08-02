@@ -1,16 +1,23 @@
 import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
-import Public, { Props } from "./Public";
+import Wrapper from "../fixtures/Wrapper";
+import Editor from "./Editor";
+import Public from "./Public";
 
-const metadata: Meta = {
+const meta = {
   title: "PlanX Components/Result",
   component: Public,
   argTypes: {
     handleSubmit: { control: { disable: true }, action: true },
   },
-};
+} satisfies Meta<typeof Public>;
 
-export const Basic: StoryObj<Props> = {
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Basic = {
   args: {
     headingColor: {
       background: "#ADFF00",
@@ -19,6 +26,7 @@ export const Basic: StoryObj<Props> = {
     headingTitle: "Heading",
     description: "Description",
     reasonsTitle: "Reasons",
+    allowChanges: true,
     responses: [
       {
         question: {
@@ -113,13 +121,14 @@ export const Basic: StoryObj<Props> = {
       },
     ],
   },
-};
+} satisfies Story;
 
-export const WithDisclaimer: StoryObj<Props> = {
+export const WithDisclaimer = {
   args: {
     headingTitle: "Heading",
     headingColor: { background: "palegoldenrod", text: "black" },
     reasonsTitle: "Reasons",
+    allowChanges: true,
     disclaimer: {
       heading: "For guidance only",
       content: "Proceed at your own risk!",
@@ -145,6 +154,8 @@ export const WithDisclaimer: StoryObj<Props> = {
       },
     ],
   },
-};
+} satisfies Story;
 
-export default metadata;
+export const WithEditor = () => {
+  return <Wrapper Editor={Editor} Public={Public} />;
+};

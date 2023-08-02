@@ -3,18 +3,21 @@ import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
-import type { Props as PublicProps } from "./Public";
 import Public from "./Public";
 
-const metadata: Meta = {
+const meta = {
   title: "PlanX Components/TaskList",
   component: Public,
   argTypes: {
     handleSubmit: { control: { disable: true }, action: true },
   },
-};
+} satisfies Meta<typeof Public>;
 
-export const Frontend: StoryObj<PublicProps> = {
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Basic = {
   args: {
     title: "Your Next Steps",
     description: "To reverse climate change",
@@ -27,8 +30,6 @@ export const Frontend: StoryObj<PublicProps> = {
       },
     ],
   },
-};
+} satisfies Story;
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
-
-export default metadata;
