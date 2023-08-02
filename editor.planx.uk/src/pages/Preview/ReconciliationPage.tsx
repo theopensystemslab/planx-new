@@ -1,7 +1,7 @@
 import Warning from "@mui/icons-material/WarningOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { lighten, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
@@ -67,7 +67,7 @@ const ReconciliationPage: React.FC<Props> = ({
         <Banner
           heading={bannerHeading}
           color={{
-            background: lighten(theme.palette.info.main, 0.9),
+            background: theme.palette.info.light,
             text: theme.palette.text.primary,
           }}
         />
