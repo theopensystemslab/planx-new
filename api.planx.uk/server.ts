@@ -286,6 +286,32 @@ const options = {
           required: true,
           description: "Session ID",
         },
+        localAuthority: {
+          in: "path",
+          name: "localAuthority",
+          type: "string",
+          required: true,
+          description:
+            "Name of the Local Authority, usually the same as Planx `team`",
+        },
+      },
+      schemas: {
+        SessionPayload: {
+          type: "object",
+          properties: {
+            payload: {
+              type: "object",
+              properties: {
+                sessionId: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          example: {
+            payload: { sessionId: "123" },
+          },
+        },
       },
     },
   },

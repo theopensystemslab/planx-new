@@ -8,6 +8,26 @@ import { EmailSubmissionNotifyConfig } from "../types";
 import { deleteFile } from "./helpers";
 import { buildSubmissionExportZip } from "./exportZip";
 
+/**
+ * @swagger
+ * /email-submission/{localAuthority}:
+ *  post:
+ *    summary: Sends an application by email using GOV.UK Notify
+ *    description: Send an application by email using GOV.UK Notify. The email body includes a link to download the application files.
+ *    tags:
+ *      - submissions
+ *    parameters:
+ *      - $ref: '#/components/parameters/localAuthority'
+ *    security:
+ *      - bearerAuth: []
+ *    requestBody:
+ *      description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/SessionPayload'
+ */
 export async function sendToEmail(
   req: Request,
   res: Response,

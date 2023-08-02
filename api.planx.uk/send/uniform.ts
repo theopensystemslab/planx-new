@@ -46,17 +46,37 @@ interface SendToUniformPayload {
 }
 
 /**
- * Submits application data to Uniform
- *
- *   first, create a zip folder containing an XML (Idox's schema), CSV (our format), and any user-uploaded files
- *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
- *   finally, insert a record into uniform_applications for future auditing
+ * @swagger
+ * /uniform/{localAuthority}:
+ *  post:
+ *    summary: Submits an application to Uniform
+ *    description: Submits an application to Uniform
+ *    tags:
+ *      - submissions
+ *    parameters:
+ *      - $ref: '#/components/parameters/localAuthority'
+ *    security:
+ *      - bearerAuth: []
+ *    requestBody:
+ *      description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/SessionPayload'
  */
 export async function sendToUniform(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
+  /**
+   * Submits application data to Uniform
+   *
+   *   first, create a zip folder containing an XML (Idox's schema), CSV (our format), and any user-uploaded files
+   *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
+   *   finally, insert a record into uniform_applications for future auditing
+   */
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key

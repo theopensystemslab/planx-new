@@ -13,11 +13,8 @@ const localAuthorities = {
  *    tags:
  *      - gis
  *    parameters:
- *      - in: path
- *        name: localAuthority
- *        type: string
- *        required: true
- *        description: Name of the local authority or Planx "team", required until Planning Data is available for any council
+ *      - $ref: '#/components/parameters/localAuthority'
+ *        description: Name of the Local Authority, usually the same as Planx `team`. Required until Planning Data is available for any council
  *      - in: query
  *        name: geom
  *        type: string
