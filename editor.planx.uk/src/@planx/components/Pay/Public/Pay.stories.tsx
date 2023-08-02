@@ -7,8 +7,14 @@ const meta = {
   component: Confirm,
   parameters: {
     reactNavi: {
-      useCurrentRoute: () => {},
-      useNavigation: () => {},
+      useCurrentRoute: () => ({
+        data: {
+          mountpath: "test mountpath",
+        },
+      }),
+      useNavigation: () => ({
+        navigate: () => console.log("called navigate()"),
+      }),
     },
   },
 } satisfies Meta<typeof Confirm>;
@@ -46,5 +52,7 @@ export const WithInviteToPay = {
     showInviteToPay: true,
     nomineeTitle: "Details of your nominee",
     nomineeDescription: "Invite someone else to pay via GOV.UK Pay",
+    yourDetailsTitle: "Your details",
+    yourDetailsLabel: "Your name or organisation name",
   },
 } satisfies Story;
