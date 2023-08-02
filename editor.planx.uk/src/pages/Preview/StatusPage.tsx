@@ -4,6 +4,7 @@ import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
+import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
@@ -58,8 +59,8 @@ const StatusPage: React.FC<Props> = ({
         <Banner
           heading={bannerHeading}
           color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
+            background: theme.palette.info.light,
+            text: theme.palette.text.primary,
           }}
         >
           {bannerText && (
@@ -87,13 +88,15 @@ const StatusPage: React.FC<Props> = ({
         )}
         {additionalOption === "startNewApplication" && (
           <>
-            <Typography variant="body2">or</Typography>
+            <Typography sx={contentFlowSpacing} variant="body1">
+              or
+            </Typography>
             <Link
               component="button"
               onClick={removeSessionIdSearchParam}
-              sx={{ mt: 2.5 }}
+              sx={contentFlowSpacing}
             >
-              <Typography variant="body2">Start new application</Typography>
+              <Typography variant="body1">Start new application</Typography>
             </Link>
           </>
         )}

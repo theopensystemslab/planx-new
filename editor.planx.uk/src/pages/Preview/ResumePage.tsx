@@ -96,7 +96,7 @@ export const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
       buttonText="Retry"
       onButtonClick={retry}
     >
-      <Typography variant="body2">
+      <Typography variant="body1">
         We are having trouble sending emails at the moment.
         <br />
         <br />
@@ -114,7 +114,7 @@ export const EmailSuccess: React.FC = () => {
       buttonText="Close Tab"
       onButtonClick={() => window.close()}
     >
-      <Typography variant="body2">
+      <Typography variant="body1">
         If you have any draft applications we have sent you an email that
         contains a link. Use this link to access your applications.
       </Typography>
@@ -145,10 +145,10 @@ export const InvalidSession: React.FC<{
     onButtonClick={retry}
     additionalOption="startNewApplication"
   >
-    <Typography variant="body2">
-      <b>Reasons</b>
-      <br />
-      <br />
+    <Typography variant="h3" component="h2">
+      Reasons
+    </Typography>
+    <Typography variant="body1">
       This may be because your application has expired or there was a mistake in
       your email address.
       <br />
@@ -165,7 +165,7 @@ export const LockedSession: React.FC<{
     bannerHeading="Sorry, you can't make changes to this application"
     additionalOption="startNewApplication"
   >
-    <Typography variant="body2">
+    <Typography variant="body1">
       This is because you've invited {paymentRequest?.payeeName} (
       <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
         {paymentRequest?.payeeEmail}

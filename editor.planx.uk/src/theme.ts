@@ -55,6 +55,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   info: {
     main: "#2196F3",
+    light: "#EBF4FD",
   },
 };
 
