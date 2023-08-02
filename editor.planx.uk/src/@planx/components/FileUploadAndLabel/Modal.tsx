@@ -13,6 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
+import { visuallyHidden } from "@mui/utils";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
@@ -49,6 +50,7 @@ export const FileTaggingModal = ({
       onClose={closeModal}
       data-testid="file-tagging-dialog"
       maxWidth="xl"
+      aria-labelledby="dialog-heading"
       PaperProps={{
         sx: {
           width: "100%",
@@ -61,6 +63,9 @@ export const FileTaggingModal = ({
       }}
     >
       <DialogContent>
+        <h2 style={visuallyHidden} id="dialog-heading">
+          What do these files show?
+        </h2>
         {uploadedFiles.map((slot) => (
           <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
             <UploadedFileCard {...slot} key={slot.id} />
@@ -168,7 +173,6 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         native={false}
         key={`select-${uploadedFile.id}`}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
-        labelId={`select-multiple-file-tags-label-${uploadedFile.id}`}
         variant="standard"
         multiple
         value={tags}
@@ -178,6 +182,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         inputProps={{
           name: uploadedFile.id,
           "data-testid": "select",
+          "aria-labelledby": `select-multiple-file-tags-label-${uploadedFile.id}`,
         }}
         sx={{
           border: (theme) => `1px solid ${theme.palette.secondary.main}`,
@@ -241,10 +246,14 @@ const SelectMultiple = (props: SelectMultipleProps) => {
                       key={`checkbox-${fileType.name}-${uploadedFile.id}`}
                       checked={tags.indexOf(fileType.name) > -1}
                       data-testid="select-checkbox"
+                      inputProps={{
+                        "aria-label": `${fileType.name}`,
+                      }}
                     />
                     <ListItemText
                       key={`listitemtext-${fileType.name}-${uploadedFile.id}`}
                       primary={fileType.name}
+                      id={fileType.name}
                     />
                   </MenuItem>,
                 ];

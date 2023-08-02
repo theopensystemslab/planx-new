@@ -7,6 +7,7 @@ import {
   setEsriGeometry,
   squashResultLayers,
   rollupResultLayers,
+  addDesignatedVariable,
 } from "../helpers.js";
 import { planningConstraints, A4_KEY } from "./metadata/braintree.js";
 
@@ -133,7 +134,10 @@ async function go(x, y, siteBoundary, extras) {
     "listed",
   );
 
-  return obWithSingleListed;
+  // Add summary "designated" key to response
+  const obWithDesignated = addDesignatedVariable(obWithSingleListed);
+
+  return obWithDesignated;
 }
 
 async function locationSearch(x, y, siteBoundary, extras) {

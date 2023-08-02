@@ -16,7 +16,10 @@ const Content = styled(Box, {
   padding: theme.spacing(2),
   backgroundColor: color,
   color:
-    mostReadable(color || "#fff", ["#fff", "#000"])?.toHexString() || "#000",
+    mostReadable(color || "#fff", [
+      "#fff",
+      theme.palette.text.primary,
+    ])?.toHexString() || theme.palette.text.primary,
   "& a": {
     color: getContrastTextColor(color || "#fff", theme.palette.primary.main),
   },

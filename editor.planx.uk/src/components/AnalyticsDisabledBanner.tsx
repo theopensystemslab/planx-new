@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
-const AnalyticsWarning = styled(Box)(({ theme }) => ({
+const AnalyticsWarning = styled(Box)(() => ({
   display: "flex",
   backgroundColor: "#FFFB00",
   color: "#070707",

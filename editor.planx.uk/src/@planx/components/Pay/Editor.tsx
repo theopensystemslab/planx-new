@@ -4,7 +4,6 @@ import { parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";

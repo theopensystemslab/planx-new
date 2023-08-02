@@ -27,7 +27,7 @@ export const parseCalculate = (
 export function getVariables(input: string): Set<string> {
   const vars = new Set();
   const ast = math.parse(input);
-  const code = ast
+  const _code = ast
     .transform((node: any) => {
       if (
         // variables that have nested fields

@@ -67,7 +67,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "success",
         paymentId: paymentId,
         adminGQLClient,
-      })
+      }),
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -91,7 +91,7 @@ test.describe("Gov Pay integration @regression", async () => {
 
     const { paymentId: failedPaymentRef } = await waitForPaymentResponse(
       page,
-      context
+      context,
     );
     expect(failedPaymentRef).toBeTruthy();
 
@@ -101,7 +101,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "failed",
         paymentId: failedPaymentRef,
         adminGQLClient,
-      })
+      }),
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -126,7 +126,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "success",
         paymentId: paymentId,
         adminGQLClient,
-      })
+      }),
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -149,7 +149,7 @@ test.describe("Gov Pay integration @regression", async () => {
     await page.locator("#return-url").click();
     const { paymentId: failedPaymentRef } = await waitForPaymentResponse(
       page,
-      context
+      context,
     );
     expect(failedPaymentRef).toBeTruthy();
 
@@ -159,7 +159,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "failed", // note: GovPay returns "failed" rather than "cancelled"
         paymentId: failedPaymentRef,
         adminGQLClient,
-      })
+      }),
     ).toBe(true);
 
     await page.getByText("Retry payment").click();
@@ -177,7 +177,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "success",
         paymentId: paymentId,
         adminGQLClient,
-      })
+      }),
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -210,7 +210,7 @@ test.describe("Gov Pay integration @regression", async () => {
       sessionId,
     });
     expect(initialSession?.data?.govUkPayment?.state?.status).toEqual(
-      "created"
+      "created",
     );
     // ensure a audit log entry was created
     expect(
@@ -218,7 +218,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "created",
         paymentId: initialSession!.data!.govUkPayment!.payment_id,
         adminGQLClient,
-      })
+      }),
     ).toBe(true);
 
     // retry the payment
@@ -235,7 +235,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "success",
         paymentId,
         adminGQLClient,
-      })
+      }),
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -278,7 +278,7 @@ test.describe("Gov Pay integration @regression", async () => {
     await page.locator("#confirm").click();
     const { paymentId: actualPaymentId } = await waitForPaymentResponse(
       page,
-      context
+      context,
     );
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -306,7 +306,7 @@ test.describe("Gov Pay integration @regression", async () => {
     await page.locator("#confirm").click();
     const { paymentId: actualPaymentId } = await waitForPaymentResponse(
       page,
-      context
+      context,
     );
     await expect(page.getByText("Application sent")).toBeVisible();
     await expect(page.getByText(actualPaymentId)).toBeVisible();
@@ -314,7 +314,7 @@ test.describe("Gov Pay integration @regression", async () => {
     // try going back to the payment page
     await page.goBack();
     await expect(
-      page.locator("h1").getByText("Your payment session has expired")
+      page.locator("h1").getByText("Your payment session has expired"),
     ).toBeVisible();
   });
 });
@@ -353,7 +353,7 @@ async function hasPaymentStatus({
             }
           }
         `,
-        { paymentId, status }
+        { paymentId, status },
       );
     if (
       response.payment_status.length === 1 &&
@@ -385,7 +385,7 @@ async function findSession({
           }
         }
       `,
-      { sessionId }
+      { sessionId },
     );
   return response.lowcal_sessions[0];
 }

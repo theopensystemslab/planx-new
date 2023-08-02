@@ -1,4 +1,3 @@
-import { Span } from "@airbrake/browser/dist/metrics";
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";

@@ -46,7 +46,7 @@ export const contextDefaults = {
 };
 
 export async function setUpTestContext(
-  initialContext: Context
+  initialContext: Context,
 ): Promise<Context> {
   const core = getCoreDomainClient();
   const context: Context = { ...initialContext };
@@ -111,7 +111,7 @@ export function generateAuthenticationToken(userId) {
         "x-hasura-user-id": `${userId}`,
       },
     },
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET,
   );
 }
 
@@ -121,7 +121,7 @@ export function getCoreDomainClient(): CoreDomainClient {
 
   const API = process.env.HASURA_GRAPHQL_URL!.replace(
     "${HASURA_PROXY_PORT}",
-    process.env.HASURA_PROXY_PORT!
+    process.env.HASURA_PROXY_PORT!,
   );
   const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
   return new CoreDomainClient({
@@ -136,7 +136,7 @@ export function getGraphQLClient(): GraphQLClient {
 
 export async function findSessionId(
   adminGQLClient: GraphQLClient,
-  context
+  context,
 ): Promise<string | undefined> {
   // get the flow id which may have a session
   const flowResponse: { flows: { id: string }[] } =
@@ -146,7 +146,7 @@ export async function findSessionId(
           id
         }
       }`,
-      { slug: context.flow?.slug }
+      { slug: context.flow?.slug },
     );
   if (!flowResponse.flows.length || !flowResponse.flows[0].id) {
     return;
@@ -166,7 +166,7 @@ export async function findSessionId(
           }
         }
       `,
-      { flowId, email: context.user?.email }
+      { flowId, email: context.user?.email },
     );
   if (response.lowcal_sessions.length && response.lowcal_sessions[0].id) {
     return response.lowcal_sessions[0].id;
@@ -182,7 +182,7 @@ async function deleteSession(adminGQLClient: GraphQLClient, context) {
             id
           }
         }`,
-        { sessionId }
+        { sessionId },
       );
     }
   }
@@ -195,14 +195,14 @@ async function deleteSession(adminGQLClient: GraphQLClient, context) {
           id
         }
       }`,
-      { sessionId }
+      { sessionId },
     );
   }
 }
 
 async function deletePublishedFlow(
   adminGQLClient: GraphQLClient,
-  context: Context
+  context: Context,
 ) {
   if (context.flow?.publishedId) {
     log(`deleting published flow ${context.flow?.publishedId}`);
@@ -212,7 +212,7 @@ async function deletePublishedFlow(
           id
         }
       }`,
-      { publishedFlowId: context.flow?.publishedId }
+      { publishedFlowId: context.flow?.publishedId },
     );
   }
 }
@@ -226,7 +226,7 @@ async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
           id
         }
       }`,
-      { flowId: context.flow?.id }
+      { flowId: context.flow?.id },
     );
   } else if (context.flow?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
@@ -236,11 +236,11 @@ async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
             id
           }
         }`,
-      { slug: context.flow?.slug }
+      { slug: context.flow?.slug },
     );
     if (response.flows.length && response.flows[0].id) {
       log(
-        `deleting flow ${context.flow?.slug} flowId: ${response.flows[0].id}`
+        `deleting flow ${context.flow?.slug} flowId: ${response.flows[0].id}`,
       );
       await adminGQLClient.request(
         `mutation DeleteTestFlow( $flowId: uuid!) {
@@ -248,7 +248,7 @@ async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
             id
           }
         }`,
-        { flowId: response.flows[0].id }
+        { flowId: response.flows[0].id },
       );
     }
   }
@@ -263,7 +263,7 @@ async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
           id
         }
       }`,
-      { userId: context.user?.id }
+      { userId: context.user?.id },
     );
   } else if (context.user?.email) {
     // try deleting via email (when cleaning up from a previously failed test)
@@ -273,11 +273,11 @@ async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
           id
         }
       }`,
-      { email: context.user?.email }
+      { email: context.user?.email },
     );
     if (response.users.length && response.users[0].id) {
       log(
-        `deleting user ${context.user?.email} userId: ${response.users[0].id}`
+        `deleting user ${context.user?.email} userId: ${response.users[0].id}`,
       );
       await adminGQLClient.request(
         `mutation DeleteTestUser($userId: Int!) {
@@ -285,7 +285,7 @@ async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
             id
           }
         }`,
-        { userId: response.users[0].id }
+        { userId: response.users[0].id },
       );
     }
   }
@@ -300,7 +300,7 @@ async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
           id
         }
       }`,
-      { teamId: context.team?.id }
+      { teamId: context.team?.id },
     );
   } else if (context.team?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
@@ -310,11 +310,11 @@ async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
                id
              }
            }`,
-      { slug: context.team?.slug }
+      { slug: context.team?.slug },
     );
     if (response.teams.length && response.teams[0].id) {
       log(
-        `deleting team ${context.team?.slug} teamId: ${response.teams[0].id}`
+        `deleting team ${context.team?.slug} teamId: ${response.teams[0].id}`,
       );
       await adminGQLClient.request(
         `mutation DeleteTestTeam( $teamId: Int!) {
@@ -322,7 +322,7 @@ async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
           id
         }
       }`,
-        { teamId: response.teams[0].id }
+        { teamId: response.teams[0].id },
       );
     }
   }

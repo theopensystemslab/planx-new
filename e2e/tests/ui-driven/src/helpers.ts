@@ -298,7 +298,7 @@ export async function answerFindProperty(page: Page) {
 
 async function setupOSMockResponse(page: Page) {
   const ordnanceSurveryPlacesEndpoint = new RegExp(
-    /proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/
+    /proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/,
   );
   await page.route(ordnanceSurveryPlacesEndpoint, async (route) => {
     await route.fulfill({
@@ -315,7 +315,12 @@ export async function answerContactInput(
     lastName,
     phoneNumber,
     email,
-  }: { firstName: string; lastName: string; phoneNumber: string; email: string }
+  }: {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+  },
 ) {
   await page.getByLabel("First name").fill(firstName);
   await page.getByLabel("Last name").fill(lastName);
@@ -328,9 +333,9 @@ export async function setFeatureFlag(page: Page, featureFlag: string) {
     (featureFlag: string) =>
       window.localStorage.setItem(
         "FEATURE_FLAGS",
-        JSON.stringify([featureFlag])
+        JSON.stringify([featureFlag]),
       ),
-    featureFlag
+    featureFlag,
   );
 }
 
@@ -350,7 +355,7 @@ export async function addSessionToContext(page: Page, context: Context) {
 
 export async function waitForPaymentResponse(
   page: Page,
-  context: Context
+  context: Context,
 ): Promise<{ paymentId: string; state?: { status: string } }> {
   const { payment_id: paymentId, state } = await page
     .waitForResponse((response) => {
@@ -390,6 +395,6 @@ export async function modifyFlow({
       flowId: context.flow!.id,
       userId: context.user!.id,
       data: modifiedFlow,
-    }
+    },
   );
 }

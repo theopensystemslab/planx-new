@@ -1,14 +1,18 @@
-import { StoryFn } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
-import Confirmation, { Props } from "./Public";
+import Confirmation from "./Public";
 
-export default {
+const meta = {
   title: "PlanX Components/Confirmation",
   component: Confirmation,
-};
+} satisfies Meta<typeof Confirmation>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
 
 export const Basic = {
   args: {
@@ -45,7 +49,7 @@ export const Basic = {
       What did you think of this service? Please give us your feedback using the link in the footer below.
     `,
   },
-};
+} satisfies Story;
 
 export const WithEditor = () => (
   <Wrapper Editor={Editor} Public={Confirmation} />

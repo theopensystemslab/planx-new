@@ -24,7 +24,7 @@ const Console = styled(Box)(() => ({
   maxHeight: "50%",
 }));
 
-const PreviewContainer = styled(Box)(({ theme }) => ({
+const PreviewContainer = styled(Box)(() => ({
   overflow: "auto",
   flex: 1,
   background: "#fff",
@@ -118,7 +118,7 @@ const PreviewBrowser: React.FC<{
   const formatLastPublish = (date: string, user: string) =>
     `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
 
-  const lastPublishedRequest = useAsync(async () => {
+  const _lastPublishedRequest = useAsync(async () => {
     const date = await lastPublished(flowId);
     const user = await lastPublisher(flowId);
 

@@ -21,7 +21,7 @@ const Root = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(10),
 }));
 
-const CloseIconButton = styled(IconButton)(({ theme }) => ({
+const CloseIconButton = styled(IconButton)(() => ({
   position: "absolute",
   right: 20,
   top: 20,

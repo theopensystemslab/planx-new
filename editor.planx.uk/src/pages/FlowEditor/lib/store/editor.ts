@@ -346,7 +346,7 @@ export const editorStore: StateCreator<
         },
       )
       .then((res) => alert(res?.data?.message))
-      .catch((error) =>
+      .catch(() =>
         alert(
           "Failed to move this flow. Make sure you're entering a valid team name and try again",
         ),

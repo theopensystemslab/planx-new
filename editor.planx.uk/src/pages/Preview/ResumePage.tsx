@@ -4,12 +4,12 @@ import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import { useCurrentRoute } from "react-navi";
 import { Link as ReactNaviLink } from "react-navi";
 import type { ReconciliationResponse, Session } from "types";
 import { ApplicationPath, SendEmailPayload } from "types";
@@ -278,7 +278,7 @@ const ResumePage: React.FC = () => {
             : setPageStatus(Status.Validated);
         }
       });
-    } catch (error: unknown | AxiosError) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 403) {
           const lockedSessionResponse = error.response
