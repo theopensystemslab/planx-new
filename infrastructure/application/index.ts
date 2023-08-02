@@ -131,25 +131,8 @@ export = async () => {
       unhealthyThreshold: 10,
     },
   });
-  // Forward HTTP to HTTPS
-  const metabaseListenerHttp = targetMetabase.createListener("metabase-http", {
-    protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
-  });
-  const metabaseListenerHttps = targetMetabase.createListener(
-    "metabase-https",
-    {
-      protocol: "HTTPS",
-      sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-      certificateArn: certificates.requireOutput("certificateArn"),
-    }
+  const metabaseListenerHttp = targetMetabase.createListener(
+    "metabase-http", { protocol: "HTTP" }
   );
   const metabaseService = new awsx.ecs.FargateService("metabase", {
     cluster,
@@ -162,7 +145,7 @@ export = async () => {
       container: {
         // if changing, also check docker-compose.yml
         image: "metabase/metabase:v0.45.3",
-        portMappings: [metabaseListenerHttps],
+        portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
         memory: 4096 /*MB*/,
         environment: [
@@ -198,9 +181,9 @@ export = async () => {
       : "metabase",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: metabaseListenerHttps.endpoint.hostname,
+    value: metabaseListenerHttp.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 
   // ----------------------- Hasura
@@ -271,22 +254,8 @@ export = async () => {
       path: "/",
     },
   });
-  // Forward HTTP to HTTPS
   const apiListenerHttp = targetApi.createListener("api-http", {
     protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
-  });
-  const apiListenerHttps = targetApi.createListener("api-https", {
-    protocol: "HTTPS",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-    certificateArn: certificates.requireOutput("certificateArn"),
   });
   const apiService = new awsx.ecs.FargateService("api", {
     cluster,
@@ -302,7 +271,7 @@ export = async () => {
           target: "production",
         }),
         memory: 2048 /*MB*/,
-        portMappings: [apiListenerHttps],
+        portMappings: [apiListenerHttp],
         environment: [
           { name: "NODE_ENV", value: env },
           { name: "APP_ENVIRONMENT", value: env },
@@ -408,9 +377,9 @@ export = async () => {
       : "api",
     type: "CNAME",
     zoneId: config.requireSecret("cloudflare-zone-id"),
-    value: apiListenerHttps.endpoint.hostname,
+    value: apiListenerHttp.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 
   // ----------------------- ShareDB
@@ -433,23 +402,7 @@ export = async () => {
       type: "lb_cookie",
     },
   });
-  // Forward HTTP to HTTPS
-  const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", {
-    protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
-  });
-  const sharedbListenerHttps = targetSharedb.createListener("sharedb-https", {
-    protocol: "HTTPS",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-    certificateArn: certificates.requireOutput("certificateArn"),
-  });
+  const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", { protocol: "HTTP" });
   const sharedbService = new awsx.ecs.FargateService("sharedb", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -461,7 +414,7 @@ export = async () => {
       container: {
         image: repo.buildAndPushImage("../../sharedb.planx.uk"),
         memory: 512 /*MB*/,
-        portMappings: [sharedbListenerHttps],
+        portMappings: [sharedbListenerHttp],
         environment: [
           { name: "PORT", value: String(SHAREDB_PORT) },
           {
@@ -484,9 +437,9 @@ export = async () => {
       : "sharedb",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: sharedbListenerHttps.endpoint.hostname,
+    value: sharedbListenerHttp.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 
   // ------------------- Frontend
