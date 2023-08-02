@@ -5,7 +5,7 @@ import { $admin } from "../../client";
  * @swagger
  * /admin/session/{sessionId}/bops:
  *  get:
- *    summary: Generates a BOPS payload
+ *    summary: Generates a Back Office Planning System (BOPS) payload
  *    description: Generates a BOPS payload, relies on a submission record in `bops_applications`
  *    tags:
  *      - admin

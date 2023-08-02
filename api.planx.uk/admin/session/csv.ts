@@ -16,7 +16,7 @@ import { $admin } from "../../client";
  *        name: download
  *        type: boolean
  *        required: false
- *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
+ *        description: If a CSV file should be downloaded, or its raw data returned
  *    security:
  *      - bearerAuth: []
  */
@@ -59,7 +59,7 @@ export async function getCSVData(
  *        name: download
  *        type: boolean
  *        required: false
- *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
+ *        description: If a CSV file should be downloaded, or its raw data returned
  *    security:
  *      - bearerAuth: []
  */

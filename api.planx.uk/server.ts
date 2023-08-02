@@ -469,7 +469,19 @@ app.get("/roads", classifiedRoadsSearch);
  * /:
  *  get:
  *    summary: Health check
- *    description: Confirms the API is healty
+ *    description: Confirms the API is healthy
+ *    responses:
+ *      '200':
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                hello:
+ *                  type: string
+ *              example:
+ *                hello: world
  */
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
