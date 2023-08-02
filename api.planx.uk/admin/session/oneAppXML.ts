@@ -11,11 +11,7 @@ import { adminGraphQLClient as client } from "../../hasura";
  *    tags:
  *      - admin
  *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
+ *      - $ref: '#/components/parameters/sessionId'
  *    security:
  *      - bearerAuth: []
  */

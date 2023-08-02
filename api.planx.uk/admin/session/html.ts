@@ -12,16 +12,7 @@ import type { PlanXExportData } from "@opensystemslab/planx-core/types";
  *    tags:
  *      - admin
  *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
- *      - in: query
- *        name: download
- *        type: boolean
- *        required: false
- *        description: If a CSV file should be downloaded, or its raw data displayed in the browser
+ *      - $ref: '#/components/parameters/sessionId'
  *    security:
  *      - bearerAuth: []
  */
@@ -51,11 +42,7 @@ export async function getHTMLExport(
  *    tags:
  *      - admin
  *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
+ *      - $ref: '#/components/parameters/sessionId'
  *    security:
  *      - bearerAuth: []
  */

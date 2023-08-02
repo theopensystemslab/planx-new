@@ -11,11 +11,7 @@ import { $admin } from "../../client";
  *    tags:
  *      - admin
  *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
+ *      - $ref: '#/components/parameters/sessionId'
  *      - in: query
  *        name: download
  *        type: boolean
@@ -58,11 +54,7 @@ export async function getCSVData(
  *    tags:
  *      - admin
  *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
+ *      - $ref: '#/components/parameters/sessionId'
  *      - in: query
  *        name: download
  *        type: boolean

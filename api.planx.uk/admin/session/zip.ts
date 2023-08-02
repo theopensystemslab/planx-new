@@ -10,11 +10,7 @@ import { buildSubmissionExportZip } from "../../send/exportZip";
  *    tags:
  *      - admin
  *    parameters:
- *      - in: path
- *        name: sessionId
- *        type: string
- *        required: true
- *        description: Session id
+ *      - $ref: '#/components/parameters/sessionId'
  *      - in: query
  *        name: includeXML
  *        type: boolean

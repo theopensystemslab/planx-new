@@ -273,11 +273,20 @@ const options = {
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        }
-      }
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+      parameters: {
+        sessionId: {
+          in: "path",
+          name: "sessionId",
+          type: "string",
+          required: true,
+          description: "Session ID",
+        },
+      },
     },
   },
   apis: ["./**/*.ts", "./**/*.js"],
