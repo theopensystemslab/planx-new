@@ -18,55 +18,86 @@ export type Props = PublicProps<Section>;
 
 export default function Component(props: Props) {
   const [
-    flow,
-    flowName,
-    currentSectionIndex,
-    sectionCount,
-    sectionNodes,
-    currentCard,
-    changeAnswer,
     breadcrumbs,
     cachedBreadcrumbs,
+    changeAnswer,
+    currentCard,
+    currentSectionIndex,
+    flow,
+    flowName,
+    sectionCount,
+    sectionNodes,
   ] = useStore((state) => [
-    state.flow,
-    state.flowName,
-    state.currentSectionIndex,
-    state.sectionCount,
-    state.sectionNodes,
-    state.currentCard(),
-    state.changeAnswer,
     state.breadcrumbs,
     state.cachedBreadcrumbs,
+    state.changeAnswer,
+    state.currentCard(),
+    state.currentSectionIndex,
+    state.flow,
+    state.flowName,
+    state.sectionCount,
+    state.sectionNodes,
   ]);
 
   return (
-    <Card isValid handleSubmit={props.handleSubmit}>
-      <QuestionHeader title={flowName} />
-      <Box>
-        <Typography variant="h3" component="h2" pb="0.25em">
-          Application incomplete.
-        </Typography>
-        <Typography variant="subtitle2" component="h3">
-          {`You have completed ${
-            Object.keys(sectionNodes)[0] === currentCard?.id
-              ? 0
-              : currentSectionIndex
-          } of ${sectionCount} sections`}
-        </Typography>
-      </Box>
-      <SectionsOverviewList
-        flow={flow}
-        showChange={true}
-        changeAnswer={changeAnswer}
-        nextQuestion={() => props.handleSubmit && props.handleSubmit()}
-        sectionNodes={sectionNodes}
-        currentCard={currentCard}
-        breadcrumbs={breadcrumbs}
-        cachedBreadcrumbs={cachedBreadcrumbs}
-      />
-    </Card>
+    <Root
+      {...props}
+      breadcrumbs={breadcrumbs}
+      cachedBreadcrumbs={cachedBreadcrumbs}
+      changeAnswer={changeAnswer}
+      currentCard={currentCard}
+      currentSectionIndex={currentSectionIndex}
+      flow={flow}
+      flowName={flowName}
+      sectionCount={sectionCount}
+      sectionNodes={sectionNodes}
+    />
   );
 }
+
+interface RootProps
+  extends Omit<SectionsOverviewListProps, "showChange" | "nextQuestion">,
+    Props {
+  currentSectionIndex: number;
+  flowName: string;
+  sectionNodes: Record<string, SectionNode>;
+  currentCard: Store.node | null;
+  sectionCount: number;
+}
+
+// Stateless component to simplify testing of the "Section" component
+export const Root = ({
+  currentSectionIndex,
+  flowName,
+  handleSubmit,
+  sectionNodes,
+  currentCard,
+  sectionCount,
+  ...props
+}: RootProps) => (
+  <Card isValid handleSubmit={handleSubmit}>
+    <QuestionHeader title={flowName} />
+    <Box>
+      <Typography variant="h3" component="h2" pb="0.25em">
+        Application incomplete.
+      </Typography>
+      <Typography variant="subtitle2" component="h3">
+        {`You have completed ${
+          Object.keys(sectionNodes)[0] === currentCard?.id
+            ? 0
+            : currentSectionIndex
+        } of ${sectionCount} sections`}
+      </Typography>
+    </Box>
+    <SectionsOverviewList
+      {...props}
+      currentCard={currentCard}
+      sectionNodes={sectionNodes}
+      showChange={true}
+      nextQuestion={() => handleSubmit && handleSubmit()}
+    />
+  </Card>
+);
 
 type SectionsOverviewListProps = {
   flow: Store.flow;

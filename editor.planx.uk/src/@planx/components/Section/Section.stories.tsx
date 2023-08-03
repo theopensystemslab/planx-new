@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from "@storybook/react";
-import React from "react";
+import { ComponentProps } from "react";
+import { SectionNode } from "types";
 
-import Wrapper from "../fixtures/Wrapper";
-import Editor from "./Editor";
-import Public from "./Public";
+import { TYPES } from "../types";
+import { Root as Public } from "./Public";
 
 const meta = {
   title: "PlanX Components/Section",
@@ -14,13 +14,73 @@ type Story = StoryObj<typeof meta>;
 
 export default meta;
 
-// TODO needs internal state
+const sectionNodes: { [key: string]: SectionNode } = {
+  firstSection: {
+    data: {
+      title: "First section",
+    },
+    type: TYPES.Section,
+  },
+  secondSection: {
+    data: {
+      title: "Second section",
+    },
+    type: TYPES.Section,
+  },
+  thirdSection: {
+    data: {
+      title: "Third section",
+    },
+    type: TYPES.Section,
+  },
+};
+
+const defaultProps: ComponentProps<typeof Public> = {
+  currentSectionIndex: 0,
+  flowName: "Find out if you need planning permission",
+  sectionNodes,
+  currentCard: {
+    id: "abc123",
+  },
+  flow: {
+    _root: {
+      edges: ["firstSection", "secondSection", "thirdSection"],
+    },
+    ...sectionNodes,
+  },
+  changeAnswer: () => console.log("changeAnswer called"),
+  breadcrumbs: {},
+  title: "The property",
+  sectionCount: 3,
+};
+
 export const Basic = {
+  args: defaultProps,
+} satisfies Story;
+
+export const FirstSectionCompleted = {
   args: {
-    title: "The property",
+    ...defaultProps,
+    currentSectionIndex: 1,
+    breadcrumbs: {
+      firstSection: {
+        auto: false,
+      },
+    },
   },
 } satisfies Story;
 
-export const WithEditor = () => {
-  return <Wrapper Editor={Editor} Public={Public} />;
-};
+export const SecondSectionCompleted = {
+  args: {
+    ...defaultProps,
+    currentSectionIndex: 2,
+    breadcrumbs: {
+      firstSection: {
+        auto: false,
+      },
+      secondSection: {
+        auto: false,
+      },
+    },
+  },
+} satisfies Story;
