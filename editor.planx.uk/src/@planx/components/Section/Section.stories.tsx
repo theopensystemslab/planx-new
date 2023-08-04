@@ -40,7 +40,7 @@ const defaultProps: ComponentProps<typeof Public> = {
   flowName: "Find out if you need planning permission",
   sectionNodes,
   currentCard: {
-    id: "abc123",
+    id: "firstQuestion",
   },
   flow: {
     _root: {
@@ -63,24 +63,19 @@ export const FirstSectionCompleted = {
     ...defaultProps,
     currentSectionIndex: 1,
     breadcrumbs: {
-      firstSection: {
-        auto: false,
-      },
+      firstSection: { auto: false },
     },
   },
 } satisfies Story;
 
-export const SecondSectionCompleted = {
+export const WithNewInformationNeeded = {
   args: {
     ...defaultProps,
-    currentSectionIndex: 2,
+    isReconciliation: true,
     breadcrumbs: {
-      firstSection: {
-        auto: false,
-      },
-      secondSection: {
-        auto: false,
-      },
+      firstSection: { auto: false },
+      secondSection: { auto: false },
     },
+    alteredSectionIds: ["firstSection"],
   },
 } satisfies Story;
