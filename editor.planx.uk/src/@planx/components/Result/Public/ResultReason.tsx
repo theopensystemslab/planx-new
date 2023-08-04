@@ -1,7 +1,7 @@
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -18,6 +18,7 @@ interface IResultReason {
   question: Node;
   response: string;
   showChangeButton?: boolean;
+  flagColor?: string;
 }
 
 const PREFIX = "Result";
@@ -79,14 +80,16 @@ const SummaryWrap = styled(Box)(({ theme }) => ({
   margin: "0",
 }));
 
-const AccordionFlag = styled(Box)(({ theme }) => ({
+const AccordionFlag = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "flagColor",
+})<BoxProps & { flagColor?: string }>(({ theme, flagColor }) => ({
   content: "''",
   position: "absolute",
   top: "0",
   left: "0",
   width: "10px",
   height: "100%",
-  backgroundColor: theme.palette.background.paper, // TODO match to flag color
+  backgroundColor: flagColor || theme.palette.background.paper,
   zIndex: "1",
 }));
 
@@ -123,6 +126,7 @@ const ResultReason: React.FC<IResultReason> = ({
   question,
   response,
   showChangeButton = false,
+  flagColor,
 }) => {
   const changeAnswer = useStore((state) => state.changeAnswer);
   const [expanded, setExpanded] = React.useState(false);
@@ -206,7 +210,7 @@ const ResultReason: React.FC<IResultReason> = ({
           </AccordionDetails>
         )}
       </StyledAccordion>
-      <AccordionFlag />
+      <AccordionFlag flagColor={flagColor} />
     </Root>
   );
 };

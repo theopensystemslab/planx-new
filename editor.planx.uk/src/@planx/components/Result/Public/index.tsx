@@ -56,9 +56,11 @@ const Title = styled(Typography)(({ theme }) => ({
 const Responses = ({
   responses,
   allowChanges,
+  flagColor,
 }: {
   responses: Response[];
   allowChanges: boolean;
+  flagColor?: string;
 }) => {
   const breadcrumbs = useStore((state) => state.breadcrumbs);
   return (
@@ -77,7 +79,8 @@ const Responses = ({
             id={question.id}
             question={question}
             showChangeButton={allowChanges && !breadcrumbs[question.id].auto}
-            response={selections.map((s: any) => s.data.text).join(",")}
+            response={selections.map((s) => s.data.text).join(",")}
+            flagColor={flagColor}
           />
         ))}
     </>
@@ -139,8 +142,11 @@ const Result: React.FC<Props> = ({
           </Typography>
         </Box>
         <Box mb={3}>
-          <Responses responses={visibleResponses} allowChanges={allowChanges} />
-
+          <Responses
+            responses={visibleResponses}
+            allowChanges={allowChanges}
+            flagColor={headingColor.background}
+          />
           {hiddenResponses.length > 0 && (
             <Box py={2}>
               <SimpleExpand
