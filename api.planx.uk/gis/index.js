@@ -4,9 +4,26 @@ const localAuthorities = {
   digitalLand: require("./digitalLand"),
 };
 
+/**
+ * @swagger
+ * /gis/{localAuthority}:
+ *  get:
+ *    summary: Fetches planning constraints
+ *    description: Fetches and formats planning constraints from planning.data.gov.uk that overlap with a geometry
+ *    tags:
+ *      - gis
+ *    parameters:
+ *      - $ref: '#/components/parameters/localAuthority'
+ *        description: Name of the Local Authority, usually the same as Planx `team`. Required until Planning Data is available for any council
+ *      - in: query
+ *        name: geom
+ *        type: string
+ *        required: true
+ *        description: Well-Known Text (WKT) formatted polygon or point
+ */
 export async function locationSearch(req, res, next) {
-  // check if this local authority has data available via Digital Land
-  //   XXX 'geom' param signals this for now, teams are configured in PlanningConstraints component in editor
+  // 'geom' param signals this localAuthority has data available via DigitalLand, "ready" teams are configured in PlanningConstraints component in editor
+  //   swagger doc intentionally doesn't cover legacy custom GIS hookups for Braintree and Scotland demo
   if (req.query.geom) {
     try {
       const resp = await locationSearchWithoutTimeout(

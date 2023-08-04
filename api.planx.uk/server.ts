@@ -20,6 +20,8 @@ import {
 } from "passport-google-oauth20";
 import helmet from "helmet";
 import multer from "multer";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 import { ServerError } from "./errors";
 import { locationSearch } from "./gis/index";
@@ -251,6 +253,73 @@ passport.deserializeUser(function (obj: Express.User, cb) {
 
 const app = express();
 
+// Swagger documentation config
+const options = {
+  failOnErrors: true,
+  definition: {
+    openapi: "3.1.0",
+    info: {
+      title: "Plan✕ API",
+      version: "0.1.0",
+      description:
+        "Plan✕ is a platform for creating and publishing digital planning services. Our REST API is built on Express and documented with Swagger.",
+      license: {
+        name: "MPL-2.0",
+        url: "https://github.com/theopensystemslab/planx-new/blob/main/LICENSE.md",
+      },
+    },
+    schemes: ["http", "https"],
+    servers: [{ url: process.env.API_URL_EXT }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+      parameters: {
+        sessionId: {
+          in: "path",
+          name: "sessionId",
+          type: "string",
+          required: true,
+          description: "Session ID",
+        },
+        localAuthority: {
+          in: "path",
+          name: "localAuthority",
+          type: "string",
+          required: true,
+          description:
+            "Name of the Local Authority, usually the same as Planx `team`",
+        },
+      },
+      schemas: {
+        SessionPayload: {
+          type: "object",
+          properties: {
+            payload: {
+              type: "object",
+              properties: {
+                sessionId: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          example: {
+            payload: { sessionId: "123" },
+          },
+        },
+      },
+    },
+  },
+  apis: ["./**/*.ts", "./**/*.js"],
+};
+const swaggerSpec = swaggerJSDoc(options);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.set("trust proxy", 1);
 
 app.use((req, res, next) => {
@@ -421,6 +490,25 @@ app.get("/gis/:localAuthority", locationSearch);
 
 app.get("/roads", classifiedRoadsSearch);
 
+/**
+ * @swagger
+ * /:
+ *  get:
+ *    summary: Health check
+ *    description: Confirms the API is healthy
+ *    responses:
+ *      '200':
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                hello:
+ *                  type: string
+ *              example:
+ *                hello: world
+ */
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
@@ -429,11 +517,11 @@ app.use("/admin", useJWT);
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
 app.get("/admin/session/:sessionId/bops", getBOPSPayload);
-app.get("/admin/session/:sessionId/csv", getCSVData); // "?download=true" to download a file
+app.get("/admin/session/:sessionId/csv", getCSVData);
 app.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
 app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
-app.get("/admin/session/:sessionId/zip", generateZip); // "?includeXML=true" to generate and include xml in the zip
+app.get("/admin/session/:sessionId/zip", generateZip);
 app.get("/admin/session/:sessionId/summary", getSessionSummary);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it

@@ -53,6 +53,17 @@ type ParsedFeedback = Feedback & {
   [key in MetadataKey]?: string | Record<string, string>;
 };
 
+/**
+ * @swagger
+ * /admin/feedback:
+ *  get:
+ *    summary: Downloads the FeedbackFish CSV
+ *    description: Downloads the FeedbackFish CSV
+ *    tags:
+ *      - admin
+ *    security:
+ *      - bearerAuth: []
+ */
 export const downloadFeedbackCSV = async (
   req: Request,
   res: Response,

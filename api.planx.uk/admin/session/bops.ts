@@ -1,6 +1,19 @@
 import { Request, Response, NextFunction } from "express";
 import { $admin } from "../../client";
 
+/**
+ * @swagger
+ * /admin/session/{sessionId}/bops:
+ *  get:
+ *    summary: Generates a Back Office Planning System (BOPS) payload
+ *    description: Generates a BOPS payload, relies on a submission record in `bops_applications`
+ *    tags:
+ *      - admin
+ *    parameters:
+ *      - $ref: '#/components/parameters/sessionId'
+ *    security:
+ *      - bearerAuth: []
+ */
 export const getBOPSPayload = async (
   req: Request,
   res: Response,

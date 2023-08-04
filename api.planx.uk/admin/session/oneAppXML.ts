@@ -2,6 +2,19 @@ import { gql } from "graphql-request";
 import { Request, Response, NextFunction } from "express";
 import { adminGraphQLClient as client } from "../../hasura";
 
+/**
+ * @swagger
+ * /admin/session/{sessionId}/xml:
+ *  get:
+ *    summary: Generates a OneApp XML
+ *    description: Generates a OneApp XML, relies on a submission record in `uniform_applications`
+ *    tags:
+ *      - admin
+ *    parameters:
+ *      - $ref: '#/components/parameters/sessionId'
+ *    security:
+ *      - bearerAuth: []
+ */
 export const getOneAppXML = async (
   req: Request,
   res: Response,
