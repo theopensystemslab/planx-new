@@ -7,6 +7,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
 
 import { CreateService } from './../types';
+import { addRedirectToCloudFlareListenerRule } from "../utils/addListenerRule";
 
 export const createHasuraService = async ({
   vpc,
@@ -37,6 +38,12 @@ export const createHasuraService = async ({
     },
   });  
   const hasuraListenerHttp = targetHasura.createListener("hasura-http", { protocol: "HTTP" });
+
+  addRedirectToCloudFlareListenerRule({
+    serviceName: "hasura",
+    listener: hasuraListenerHttp,
+    domain: DOMAIN,
+  });
 
   // hasuraService is composed of two tightly coupled containers
   // hasuraProxy is publicly exposed (behind the load balancer) and reverse proxies requests to hasura
