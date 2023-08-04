@@ -12,6 +12,7 @@ import * as url from "url";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
 import { createHasuraService } from "./services/hasura";
+import { addRedirectToCloudFlareListenerRule } from "./utils/addListenerRule";
 
 const config = new pulumi.Config();
 
@@ -134,6 +135,13 @@ export = async () => {
   const metabaseListenerHttp = targetMetabase.createListener(
     "metabase-http", { protocol: "HTTP" }
   );
+
+  addRedirectToCloudFlareListenerRule({
+    serviceName: "metabase",
+    listener: metabaseListenerHttp,
+    domain: DOMAIN,
+  });
+  
   const metabaseService = new awsx.ecs.FargateService("metabase", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -257,6 +265,13 @@ export = async () => {
   const apiListenerHttp = targetApi.createListener("api-http", {
     protocol: "HTTP",
   });
+
+  addRedirectToCloudFlareListenerRule({
+    serviceName: "api",
+    listener: apiListenerHttp,
+    domain: DOMAIN,
+  });
+
   const apiService = new awsx.ecs.FargateService("api", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -403,6 +418,13 @@ export = async () => {
     },
   });
   const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", { protocol: "HTTP" });
+
+  addRedirectToCloudFlareListenerRule({
+    serviceName: "sharedb",
+    listener: sharedbListenerHttp,
+    domain: DOMAIN,
+  });
+
   const sharedbService = new awsx.ecs.FargateService("sharedb", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
