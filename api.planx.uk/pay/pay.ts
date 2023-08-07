@@ -25,7 +25,7 @@ export async function makePaymentViaProxy(
   if (!isSupported) {
     return next(
       new ServerError({
-        message: "GOV.UK Pay is not enabled for this local authority",
+        message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
         status: 400,
       }),
     );
@@ -91,7 +91,7 @@ export async function makeInviteToPayPaymentViaProxy(
   if (!isSupported) {
     return next({
       status: 400,
-      message: `GOV.UK Pay is not enabled for this local authority`,
+      message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
     });
   }
 
