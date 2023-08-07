@@ -22,6 +22,8 @@ export const Basic = {
     ariaLabel: "Feedback",
   },
   render: (_args: Props) => {
+    /* eslint-disable react-hooks/rules-of-hooks */
+    // See https://github.com/storybookjs/storybook/issues/21115
     const [text, setText] = useState("");
     return (
       <FeedbackInput

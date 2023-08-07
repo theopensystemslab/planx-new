@@ -190,8 +190,7 @@ export const LockedSession: React.FC<{
  * Currently only used for redirects back from GovUK Pay
  * XXX: Won't work locally as referrer is stripped from the browser when navigating from HTTPS to HTTP (localhost)
  */
-const getInitialEmailValue = () => {
-  const emailQueryParam = useCurrentRoute().url.query.email;
+const getInitialEmailValue = (emailQueryParam?: string) => {
   const isRedirectFromGovPay = [
     "https://www.payments.service.gov.uk/",
     "https://card.payments.service.gov.uk/",
@@ -209,8 +208,12 @@ const getInitialEmailValue = () => {
  * 3. Redirect back from GovPay - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
+  const route = useCurrentRoute();
+
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
-  const [email, setEmail] = useState<string>(getInitialEmailValue());
+  const [email, setEmail] = useState<string>(
+    getInitialEmailValue(route.url.query.email),
+  );
   const [paymentRequest, setPaymentRequest] = useState<MinPaymentRequest>();
   const sessionId = useCurrentRoute().url.query.sessionId;
   const [reconciliationResponse, setReconciliationResponse] =
