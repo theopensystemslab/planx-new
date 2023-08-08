@@ -8,7 +8,6 @@ import {
   mockDeleteReconciliationRequestsMutation,
   mockSanitiseUniformApplicationsMutation,
   mockGetExpiredSessionIdsQuery,
-  mockGetPassportDataForSessionQuery,
   mockDeletePaymentRequests,
 } from "./mocks/queries";
 import {
@@ -29,12 +28,14 @@ import {
 jest.mock("../../hasura/schema");
 const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
 
-const mockGetFiles = jest.fn();
-jest.mock("@opensystemslab/planx-core", () => {
+const mockFindSession = jest.fn();
+jest.mock("../../client", () => {
   return {
-    Passport: jest.fn().mockImplementation(() => ({
-      files: mockGetFiles,
-    })),
+    $admin: {
+      session: {
+        find: jest.fn().mockImplementation(() => mockFindSession()),
+      },
+    },
   };
 });
 
@@ -153,9 +154,22 @@ describe("Data sanitation operations", () => {
   describe("deleteApplicationFiles", () => {
     it("returns a QueryResult on success", async () => {
       queryMock.mockQuery(mockGetExpiredSessionIdsQuery);
-      queryMock.mockQuery(mockGetPassportDataForSessionQuery);
-      const filesPerMockSessionCount = 7;
-      mockGetFiles.mockResolvedValue(new Array(filesPerMockSessionCount));
+      const mockSession = {
+        data: {
+          passport: {
+            data: {
+              "file.key": [
+                { url: "https://file.one" },
+                { url: "https://file.two" },
+                { url: "https://file.three" },
+              ],
+            },
+          },
+        },
+      };
+      mockFindSession.mockResolvedValue(mockSession);
+      const filesPerMockSessionCount =
+        mockSession.data.passport.data["file.key"].length;
       const deletedFiles = await deleteApplicationFiles();
       const fileCount = mockIds.length * filesPerMockSessionCount;
       expect(deletedFiles).toHaveLength(fileCount);
