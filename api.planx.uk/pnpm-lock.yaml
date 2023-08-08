@@ -10,7 +10,7 @@ dependencies:
     version: 2.1.8
   '@opensystemslab/planx-core':
     specifier: github:theopensystemslab/planx-core#e797878
-    version: github.com/theopensystemslab/planx-core/e797878
+    version: git/github.com+theopensystemslab/planx-core/e797878
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -99,8 +99,8 @@ dependencies:
     specifier: ^7.0.0
     version: 7.0.0
   passport:
-    specifier: ^0.5.3
-    version: 0.5.3
+    specifier: ^0.6.0
+    version: 0.6.0
   passport-google-oauth20:
     specifier: ^2.0.0
     version: 2.0.0
@@ -6066,12 +6066,13 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: false
 
-  /passport@0.5.3:
-    resolution: {integrity: sha512-gGc+70h4gGdBWNsR3FuV3byLDY6KBTJAIExGFXTpQaYfbbcHCBlRRKx7RBQSpqEqc5Hh2qVzRs7ssvSfOpkUEA==}
+  /passport@0.6.0:
+    resolution: {integrity: sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==}
     engines: {node: '>= 0.4.0'}
     dependencies:
       passport-strategy: 1.0.0
       pause: 0.0.1
+      utils-merge: 1.0.1
     dev: false
 
   /path-exists@4.0.0:
@@ -7577,8 +7578,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/e797878:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e797878}
+  git/github.com+theopensystemslab/planx-core/e797878:
+    resolution: {commit: e797878, repo: git@github.com:theopensystemslab/planx-core.git, type: git}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     requiresBuild: true
