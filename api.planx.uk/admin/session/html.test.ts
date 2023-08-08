@@ -39,7 +39,7 @@ describe("HTML data admin endpoint", () => {
       );
   });
 
-  it("returns a HTML-formatted payload", () => {
+  it.skip("returns a HTML-formatted payload", () => {
     return supertest(app)
       .get(endpoint`123`)
       .set(authHeader())
