@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from "axios";
+import Axios, { AxiosResponse, isAxiosError } from "axios";
 
 /**
  * Body posted to Hasura Metadata API to create a scheduled event
@@ -43,9 +43,10 @@ const postToMetadataAPI = async (
       },
     );
   } catch (error) {
-    throw Error(
-      (error as Error).message || "Failed to POST to Hasura Metadata API",
-    );
+    const errorMessage = isAxiosError(error)
+      ? error.toJSON()
+      : (error as Error).message;
+    throw Error(`Failed to POST to Hasura Metadata API: ${errorMessage}`);
   }
 };
 
