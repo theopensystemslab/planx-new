@@ -48,11 +48,7 @@ import {
   createReminderEvent,
   createExpiryEvent,
 } from "./webhooks/lowcalSessionEvents";
-import {
-  adminGraphQLClient as adminClient,
-  publicGraphQLClient as publicClient,
-} from "./hasura";
-import { graphQLVoyagerHandler, introspectionHandler } from "./hasura/voyager";
+import { adminGraphQLClient as adminClient } from "./hasura";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
   privateDownloadController,
@@ -529,31 +525,6 @@ app.get("/admin/session/:sessionId/summary", getSessionSummary);
 app.get("/throw-error", () => {
   throw new Error("custom error");
 });
-
-app.all(
-  "/introspect",
-  introspectionHandler({
-    graphQLClient: publicClient,
-    validateUser: false,
-  }),
-);
-app.get(
-  "/introspect/graph",
-  graphQLVoyagerHandler({ graphQLURL: "/introspect", validateUser: false }),
-);
-app.all(
-  "/introspect-all",
-  useJWT,
-  introspectionHandler({
-    graphQLClient: adminClient,
-    validateUser: true,
-  }),
-);
-app.get(
-  "/introspect-all/graph",
-  useJWT,
-  graphQLVoyagerHandler({ graphQLURL: "/introspect-all", validateUser: true }),
-);
 
 app.post("/flows/:flowId/copy", useJWT, copyFlow);
 
