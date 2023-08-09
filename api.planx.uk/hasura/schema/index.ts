@@ -29,7 +29,7 @@ const postToSchemaAPI = async (
     );
   } catch (error) {
     const errorMessage = isAxiosError(error)
-      ? error.toJSON()
+      ? JSON.stringify(error.toJSON())
       : (error as Error).message;
     throw Error(`Failed to POST to Hasura Schema API: ${errorMessage}`);
   }
