@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from "axios";
+import Axios, { AxiosResponse, isAxiosError } from "axios";
 
 export interface RunSQLArgs {
   source: "default";
@@ -28,9 +28,10 @@ const postToSchemaAPI = async (
       },
     );
   } catch (error) {
-    throw Error(
-      (error as Error).message || "Failed to POST to Hasura Schema API",
-    );
+    const errorMessage = isAxiosError(error)
+      ? error.toJSON()
+      : (error as Error).message;
+    throw Error(`Failed to POST to Hasura Schema API: ${errorMessage}`);
   }
 };
 
