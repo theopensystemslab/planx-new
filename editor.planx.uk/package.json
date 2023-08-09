@@ -104,7 +104,7 @@
     "@storybook/addon-actions": "^7.1.1",
     "@storybook/addon-essentials": "^7.1.1",
     "@storybook/addon-links": "^7.1.1",
-    "@storybook/addons": "^7.1.1",
+    "@storybook/addons": "^7.2.1",
     "@storybook/node-logger": "^7.1.1",
     "@storybook/preset-create-react-app": "^7.1.1",
     "@storybook/react": "^7.1.1",
