@@ -266,7 +266,7 @@ const options = {
           type: "apiKey",
           in: "cookie",
           name: "jwt",
-        }
+        },
       },
       parameters: {
         sessionId: {
@@ -302,13 +302,13 @@ const options = {
               error: {
                 type: "string",
                 enum: ["No authorization token was found"],
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
       security: {
-        cookieAuth: []
+        cookieAuth: [],
       },
       schemas: {
         SessionPayload: {
@@ -479,26 +479,26 @@ app.get("/hasura", async function (_req, res, next) {
  *            schema:
  *              type: object
  *              properties:
- *                id: 
+ *                id:
  *                  type: integer
  *                  format: int32
  *                  example: 123
- *                first_name: 
+ *                first_name:
  *                  type: string
  *                  example: Albert
- *                last_name: 
+ *                last_name:
  *                  type: string
  *                  example: Einstein
- *                email: 
+ *                email:
  *                  type: string
  *                  example: albert@princeton.edu
- *                is_admin: 
+ *                is_admin:
  *                  type: boolean
  *                  example: true
- *                created_at: 
- *                  type: string  
+ *                created_at:
+ *                  type: string
  *                  example: 2020-08-11T11:28:38.237493+00:00
- *                updated_at: 
+ *                updated_at:
  *                  type: string
  *                  example: 2023-08-11T11:28:38.237493+00:00
  */
