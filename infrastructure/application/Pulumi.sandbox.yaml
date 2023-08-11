@@ -15,6 +15,8 @@ config:
     secure: AAABAN6by1UpKop5de/dlYA003xrp1LMzLG60J2asKxioUMoUS0SsP7N+1KT53aKnux45aUZ6J+ryYpGge4+FkDhEZEC85Sw0+q/bMzKy1VER9BFIU6Qzxr/shdSVwzOW1ZZQNc/Q1cZjfY4umGbEiBipz1f
   application:hasura-admin-secret:
     secure: AAABAGxe3VrlLZWcmzAkh1Ng2amkOcn1cd4f7tDt7+bq2o1V3pJZfcRJZ1UiUjRfsbxIJbF/CoInGehJIWHfHQ==
+  application:hasura-admin-token:
+    secure: AAABAA5h/GxK9VwRUtVDv3K91yumfG5kAkCWf9xEm3zharGxnDOeaPXWbGbJsu9smJnSb8VbcKE=
   application:hasura-planx-api-key:
     secure: AAABAKVQcDltAw2qwW7xlZJ22Squvgir7cRker6goWiV194dWlaGtmwOPjC0HZXexoYfm8O4pFSSRCLQZhan/Ta1/vY=
   application:jwt-secret:
