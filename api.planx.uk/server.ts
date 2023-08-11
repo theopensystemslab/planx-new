@@ -541,7 +541,55 @@ app.post("/flows/:flowId/move/:teamSlug", useJWT, moveFlow);
 
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
-// use with query params `find` (required) and `replace` (optional)
+/**
+ * @swagger
+ * /flows/{flowId}/search:
+ *  post:
+ *    summary: Find and replace
+ *    description: Find and replace a data variable in a flow
+ *    tags:
+ *      - flows
+ *    parameters:
+ *      - in: path
+ *        name: flowId
+ *        type: string
+ *        required: true
+ *      - in: query
+ *        name: find
+ *        type: string
+ *        required: true
+ *      - in: query
+ *        name: replace
+ *        type: string
+ *        required: false
+ *    responses:
+ *      '200':
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  required: true
+ *                matches:
+ *                  type: object
+ *                  required: true
+ *                  additionalProperties: true
+ *                updatedFlow:
+ *                  type: object
+ *                  required: false
+ *                  additionalProperties: true
+ *                  properties:
+ *                    _root:
+ *                      type: object
+ *                      properties:
+ *                        edges:
+ *                          type: array
+ *                          items:
+ *                            type: string
+ */
 app.post("/flows/:flowId/search", useJWT, findAndReplaceInFlow);
 
 app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
