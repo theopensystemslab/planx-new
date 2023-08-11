@@ -290,6 +290,13 @@ const options = {
           description:
             "Name of the Local Authority, usually the same as Planx `team`",
         },
+        hasuraAuth: {
+          name: "authorization",
+          in: "header",
+          descriptioN: "An authorisation header provided by Hasura",
+          required: true,
+          type: "string",
+        },
       },
       schemas: {
         SessionPayload: {
