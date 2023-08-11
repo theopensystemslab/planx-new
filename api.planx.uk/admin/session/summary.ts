@@ -19,8 +19,6 @@ import { Breadcrumb, Flow, LowCalSession, Passport, Team } from "../../types";
  *      - admin
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
- *    security:
- *      - bearerAuth: []
  */
 export async function getSessionSummary(
   req: Request,

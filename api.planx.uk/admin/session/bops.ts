@@ -11,8 +11,6 @@ import { $admin } from "../../client";
  *      - admin
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
- *    security:
- *      - bearerAuth: []
  */
 export const getBOPSPayload = async (
   req: Request,
