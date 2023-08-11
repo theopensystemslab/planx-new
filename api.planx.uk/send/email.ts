@@ -5,7 +5,6 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { sendEmail } from "../notify";
 import { EmailSubmissionNotifyConfig } from "../types";
-import { deleteFile } from "./helpers";
 import { buildSubmissionExportZip } from "./exportZip";
 
 /**
@@ -18,8 +17,7 @@ import { buildSubmissionExportZip } from "./exportZip";
  *      - submissions
  *    parameters:
  *      - $ref: '#/components/parameters/localAuthority'
- *    security:
- *      - bearerAuth: []
+ *      - $ref: '#/components/parameters/hasuraAuth'
  *    requestBody:
  *      description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
  *      required: true

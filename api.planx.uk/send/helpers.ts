@@ -1,20 +1,6 @@
-import fs from "fs";
 import { gql } from "graphql-request";
 import airbrake from "../airbrake";
 import { adminGraphQLClient } from "../hasura";
-
-/**
- * Helper method to clean up files temporarily stored locally
- *
- * @param {string} path - file name
- */
-export function deleteFile(path: string) {
-  if (fs.existsSync(path)) {
-    fs.unlinkSync(path);
-  } else {
-    log(`Didn't find ${path}, nothing to delete`);
-  }
-}
 
 export async function logPaymentStatus({
   sessionId,
