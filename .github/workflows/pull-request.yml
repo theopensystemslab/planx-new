@@ -127,13 +127,13 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: api.planx.uk
-      - name: Run API Tests
         run: | 
           git config --global url."https://github.com/".insteadOf git@github.com:
           git config --global url."https://".insteadOf git://
-          pnpm install --frozen-lockfile && pnpm check && pnpm test
+          pnpm install --frozen-lockfile
+        working-directory: api.planx.uk
+      - name: Run API Tests
+        run: pnpm install --frozen-lockfile && pnpm check && pnpm test
         working-directory: api.planx.uk
 
   test_react:
