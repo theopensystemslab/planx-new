@@ -49,7 +49,7 @@ dependencies:
     specifier: ^0.7.4
     version: 0.7.4
   '@opensystemslab/planx-core':
-    specifier: github:theopensystemslab/planx-core#1960181
+    specifier: https://github.com/theopensystemslab/planx-core#1960181
     version: github.com/theopensystemslab/planx-core/1960181(@types/react@18.2.0)
   '@tiptap/core':
     specifier: ^2.0.3
@@ -7836,7 +7836,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       '@typescript-eslint/types': 5.61.0
-      eslint-visitor-keys: 3.4.1
+      eslint-visitor-keys: 3.4.2
 
   /@usulpro/color-picker@1.1.4(react@18.2.0):
     resolution: {integrity: sha512-+yTVjNAV+mvbEm0mtVGl7pishZS6gGiCMr9EXfRgvikrqbDdXJlW98I4IOPNdMBGciiz7eYkOyh7qAU3OP7b9A==}
@@ -11059,7 +11059,6 @@ packages:
   /eslint-visitor-keys@3.4.2:
     resolution: {integrity: sha512-8drBzUEyZ2llkpCA67iYrgEssKDUu68V8ChqqOfFupIaG/LCVPUT+CoGJpT77zJprs4T/W7p07LP7zAIMuweVw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dev: false
 
   /eslint-webpack-plugin@3.2.0(eslint@8.44.0)(webpack@5.88.1):
     resolution: {integrity: sha512-avrKcGncpPbPSUHX6B3stNGzkKFto3eL+DKM4+VyMrVnhPc3vRczVlCq3uhuFOdRvDHTVXuzwk1ZKUrqDQHQ9w==}
