@@ -666,6 +666,13 @@
           table:
             schema: public
             name: team_members
+  computed_fields:
+    - name: boundary_bbox
+      definition:
+        function:
+          schema: public
+          name: boundary_bbox
+      comment: Bounding box of the team's full boundary
   select_permissions:
     - role: public
       permission:
