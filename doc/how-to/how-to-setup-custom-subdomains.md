@@ -91,3 +91,5 @@ This guide will walk through the process of setting a custom domain for a new te
   - Add subdomain to `team.domain` column via Hasura
   
 11.  **PlanX** - Add custom domain to UptimeRobot (create monitor & also select SSL reminders)
+
+12. **PlanX** - Add certificate expiry date to [PlanX CMS on Notion](https://www.notion.so/opensystemslab/Plan-Customers-dee2cdfb40c04b5fa88edc5a86989211)

@@ -9,7 +9,7 @@ The steps taken below are a subset of the steps required to setup a custom subdo
 
 ## Process ⚙️
 
-1. **PlanX** - Provide IT team with Certificate Signing Request (CSR)
+1. **PlanX** - Provide IT team with Certificate Signing Request (CSR), or request private `.key` and `.cert` directly
 
 2. **IT Team** - Provide PlanX with certificates
 
@@ -23,3 +23,5 @@ The steps taken below are a subset of the steps required to setup a custom subdo
     - `ssl-{team}-key`
     - `ssl-{team}-cert`
     - `ssl-{team}-chain`
+
+6. **PlanX** - Add certificate expiry date to [PlanX CMS on Notion](https://www.notion.so/opensystemslab/Plan-Customers-dee2cdfb40c04b5fa88edc5a86989211)
