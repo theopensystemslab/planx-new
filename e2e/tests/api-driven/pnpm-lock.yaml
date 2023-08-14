@@ -9,7 +9,7 @@ dependencies:
     specifier: ^9.3.0
     version: 9.3.0
   '@opensystemslab/planx-core':
-    specifier: https://github.com/theopensystemslab/planx-core#1960181
+    specifier: git+https://github.com/theopensystemslab/planx-core#1960181
     version: github.com/theopensystemslab/planx-core/1960181
   axios:
     specifier: ^1.4.0
