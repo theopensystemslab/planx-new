@@ -42,11 +42,14 @@ export default function Component(props: Props) {
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
   const [area, setArea] = useState<number | undefined>(previousArea);
-  const environment = useStore((state) => state.previewEnvironment);
   const addressPoint = passport?.data?._address?.longitude && passport?.data?._address?.latitude && point([
     Number(passport?.data?._address?.longitude),
     Number(passport?.data?._address?.latitude),
   ]);
+  const [environment, boundaryBBox] = useStore((state) => ([
+    state.previewEnvironment,
+    state.boundaryBBox,
+  ]));
 
   useEffect(() => {
     if (isMounted.current) setSlots([]);
@@ -132,6 +135,7 @@ export default function Component(props: Props) {
                 markerLongitude={Number(passport?.data?._address?.longitude)}
                 resetControlImage="trash"
                 osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+                clipGeojsonData={JSON.stringify(boundaryBBox)}
               />
             </MapContainer>
             <MapFooter>

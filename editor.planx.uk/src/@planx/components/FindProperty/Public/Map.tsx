@@ -58,7 +58,10 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   const [showSiteDescriptionError, setShowSiteDescriptionError] =
     useState<boolean>(false);
 
-  const environment = useStore((state) => state.previewEnvironment);
+  const [environment, boundaryBBox] = useStore((state) => [
+    state.previewEnvironment,
+    state.boundaryBBox,
+  ]);
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
@@ -128,6 +131,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           showScale
           showNorthArrow
           osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+          clipGeojsonData={JSON.stringify(boundaryBBox)}
         />
         <MapFooter>
           <Typography variant="body2">
