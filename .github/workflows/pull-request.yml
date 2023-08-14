@@ -15,6 +15,7 @@ env:
 
 permissions:
   pull-requests: write
+  packages: read
 
 jobs:
   changes:
