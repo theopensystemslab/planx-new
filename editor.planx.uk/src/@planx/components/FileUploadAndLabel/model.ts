@@ -75,7 +75,7 @@ export const parseContent = (
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
   fn: data?.fn || "",
-  fileTypes: data?.fileTypes || [newFileType()],
+  fileTypes: cloneDeep(data?.fileTypes) || [newFileType()],
   hideDropZone: data?.hideDropZone || false,
   ...parseMoreInformation(data),
 });
