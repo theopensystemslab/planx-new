@@ -392,6 +392,4 @@ const generateTeamTheme = (
 // A static MUI theme based on PlanX's default palette
 const defaultTheme = generateTeamTheme(DEFAULT_PRIMARY_COLOR);
 
-export type Theme = typeof defaultTheme;
-
 export { defaultTheme, generateTeamTheme };

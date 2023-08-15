@@ -2,9 +2,8 @@ import { mostReadable } from "@ctrl/tinycolor";
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/styles";
 import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
@@ -14,8 +13,6 @@ import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
-
-import type { Theme } from "../../../theme";
 
 export type Props = PublicProps<Notice>;
 
@@ -68,7 +65,7 @@ const Title = styled(Typography)(({ theme }) => ({
 })) as typeof Typography;
 
 const NoticeComponent: React.FC<Props> = (props) => {
-  const theme: Theme = useTheme();
+  const theme = useTheme();
   const textColor = getContrastTextColor(
     props.color,
     theme.palette.text.primary,

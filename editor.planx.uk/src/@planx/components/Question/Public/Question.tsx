@@ -3,7 +3,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
-import { useTheme } from "@mui/styles";
+import { useTheme } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
@@ -17,8 +17,6 @@ import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import FormWrapper from "ui/FormWrapper";
 import FullWidthWrapper from "ui/FullWidthWrapper";
-
-import type { Theme } from "../../../../theme";
 
 export interface IQuestion {
   id?: string;
@@ -47,7 +45,7 @@ export enum QuestionLayout {
 }
 
 const Question: React.FC<IQuestion> = (props) => {
-  const theme: Theme = useTheme();
+  const theme = useTheme();
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
