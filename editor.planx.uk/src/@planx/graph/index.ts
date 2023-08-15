@@ -408,12 +408,7 @@ const _update = (
 
       // eslint-disable-next-line no-prototype-builtins
       const isRemoved = !isSomething(v) && existingData.hasOwnProperty(k);
-      const isUpdatedArray =
-        Array.isArray(v) && !isEqual(v, (existingData as any)[k]);
-      const isUpdatedPrimitive =
-        typeof v !== "object" && v !== (existingData as any)[k];
-      const isUpdated =
-        isSomething(v) && (isUpdatedPrimitive || isUpdatedArray);
+      const isUpdated = isSomething(v) && !isEqual(v, (existingData as any)[k]);
 
       if (isRemoved) delete (existingData as any)[k];
       if (isUpdated) (existingData as any)[k] = v;

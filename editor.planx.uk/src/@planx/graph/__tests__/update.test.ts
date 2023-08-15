@@ -475,7 +475,7 @@ describe("complex example with node data", () => {
       ]);
     });
 
-    test("updating an array field", () => {
+    test("adding an item to an array field", () => {
       const dataFromFormik = {
         title: "Upload and label",
         description: "",
@@ -572,6 +572,69 @@ describe("complex example with node data", () => {
               rule: {
                 condition: "AlwaysRequired",
               },
+            },
+          ],
+          p: ["a", "data", "fileTypes"],
+        },
+      ]);
+    });
+
+    test("updating an item within an array field", () => {
+      const dataFromFormik = {
+        title: "Upload and label",
+        description: "",
+        fn: "",
+        fileTypes: [
+          {
+            name: "newValue",
+          },
+        ],
+        hideDropZone: true,
+      };
+
+      const [graph, ops] = update(
+        "a",
+        dataFromFormik,
+      )({
+        a: {
+          type: 145,
+          data: {
+            title: "Upload and label",
+            fileTypes: [
+              {
+                name: "oldValue",
+              },
+            ],
+            hideDropZone: true,
+          },
+        },
+      });
+
+      expect(graph).toEqual({
+        a: {
+          type: 145,
+          data: {
+            title: "Upload and label",
+            fileTypes: [
+              {
+                name: "newValue",
+              },
+            ],
+            hideDropZone: true,
+          },
+        },
+      });
+
+      expect(ops).toEqual([
+        {
+          od: [
+            {
+              name: "oldValue",
+            },
+          ],
+          oi: [
+            {
+              name: "newValue",
             },
           ],
           p: ["a", "data", "fileTypes"],
