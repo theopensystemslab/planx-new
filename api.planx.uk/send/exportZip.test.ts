@@ -1,6 +1,7 @@
 import { mockLowcalSession } from "../tests/mocks/saveAndReturnMocks";
 import { buildSubmissionExportZip } from "./exportZip";
 import type { LowCalSession } from "../types";
+import { queryMock } from "../tests/graphqlQueryMock";
 
 jest.mock("fs", () => ({
   mkdtempSync: () => "tmpdir",
@@ -84,6 +85,21 @@ jest.mock("../client", () => {
 describe("buildSubmissionExportZip", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    queryMock.mockQuery({
+      name: "GetTeamForSession",
+      matchOnVariables: false,
+      data: {
+        session: {
+          flow: {
+            team: {
+              id: "123",
+              slug: "test-team",
+              boundaryBBox: {},
+            },
+          },
+        },
+      },
+    });
   });
 
   test("the csv is added to the zip", async () => {
