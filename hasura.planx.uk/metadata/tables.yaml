@@ -677,15 +677,18 @@
     - role: public
       permission:
         columns:
+          - boundary
           - created_at
+          - domain
           - id
           - name
           - notify_personalisation
-          - domain
           - settings
           - slug
           - theme
           - updated_at
+        computed_fields:
+          - boundary_bbox
         filter: {}
 - table:
     schema: public
