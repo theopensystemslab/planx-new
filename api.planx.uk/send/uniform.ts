@@ -87,12 +87,13 @@ export async function sendToUniform(
     });
   }
 
-  const uniformClient = getUniformClient(req.params.localAuthority);
+  const localAuthority = req.params.localAuthority;
+  const uniformClient = getUniformClient(localAuthority);
 
   if (!uniformClient) {
     return next({
       status: 400,
-      message: "Idox/Uniform connector is not enabled for this local authority",
+      message: `Idox/Uniform connector is not enabled for this local authority (${localAuthority})`,
     });
   }
 
@@ -144,7 +145,7 @@ export async function sendToUniform(
       idoxSubmissionId,
       submissionDetails,
       payload,
-      localAuthority: req.params.localAuthority,
+      localAuthority,
     });
 
     // Mark session as submitted so that reminder and expiry emails are not triggered

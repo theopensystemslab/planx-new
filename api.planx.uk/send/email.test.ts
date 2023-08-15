@@ -163,7 +163,8 @@ describe(`sending an application by email to a planning office`, () => {
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
-          error: "Send to email is not enabled for this local authority.",
+          error:
+            "Send to email is not enabled for this local authority (other-council)",
         });
       });
   });

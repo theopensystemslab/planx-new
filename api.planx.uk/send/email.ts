@@ -43,14 +43,15 @@ export async function sendToEmail(
   }
 
   try {
+    const localAuthority = req.params.localAuthority;
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
     const { sendToEmail, notifyPersonalisation } = await getTeamEmailSettings(
-      req.params.localAuthority,
+      localAuthority,
     );
     if (!sendToEmail) {
       return next({
         status: 400,
-        message: "Send to email is not enabled for this local authority.",
+        message: `Send to email is not enabled for this local authority (${localAuthority})`,
       });
     }
 
@@ -64,7 +65,7 @@ export async function sendToEmail(
         serviceName: flowName || "PlanX",
         sessionId: payload.sessionId,
         applicantEmail: email,
-        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${req.params.localAuthority}`,
+        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${localAuthority}`,
         ...notifyPersonalisation,
       },
     };
@@ -83,7 +84,7 @@ export async function sendToEmail(
     // Create audit table entry, which triggers a Slack notification on `insert` if production
     insertAuditEntry(
       payload.sessionId,
-      req.params.localAuthority,
+      localAuthority,
       sendToEmail,
       config,
       response,
