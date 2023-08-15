@@ -93,16 +93,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
         setGotFlow(true);
       });
     }
-    // Updating useContext (createAnalytics) within useEffect leads to recursive calls
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    // createAnalytics
-    id,
-    isStandalone,
-    isUsingLocalStorage,
-    resumeSession,
-    sessionId,
-  ]);
+  }, []);
 
   // Update session when a question is answered
   useEffect(() => {
@@ -119,16 +110,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     isUsingLocalStorage
       ? setLocalFlow(id, session)
       : NEW.setLocalFlow(sessionId, session);
-  }, [
-    gotFlow,
-    breadcrumbs,
-    passport,
-    sessionId,
-    id,
-    govUkPayment,
-    isUsingLocalStorage,
-    isStandalone,
-  ]);
+  }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
 
   // scroll to top on any update to breadcrumbs
   useEffect(() => {
