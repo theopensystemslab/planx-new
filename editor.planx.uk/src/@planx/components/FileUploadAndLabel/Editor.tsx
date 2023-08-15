@@ -14,6 +14,7 @@ import {
 import { useFormik } from "formik";
 import { lowerCase, merge, upperFirst } from "lodash";
 import React from "react";
+import ImgInput from "ui/ImgInput";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
@@ -24,7 +25,6 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import { ModalSubtitle } from "ui/ModalSubtitle";
 import OptionButton from "ui/OptionButton";
-import PublicFileUploadButton from "ui/PublicFileUploadButton";
 import RichTextInput from "ui/RichTextInput";
 import SelectInput from "ui/SelectInput";
 
@@ -256,7 +256,16 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           placeholder="How is it defined?"
         />
         <InputRowItem width={50}>
-          <PublicFileUploadButton />
+          <ImgInput
+            img={props.value.moreInformation?.definitionImg}
+            onChange={(newUrl) => {
+              props.onChange(
+                merge(props.value, {
+                  moreInformation: { definitionImg: newUrl ?? "" },
+                }),
+              );
+            }}
+          />
         </InputRowItem>
       </InputRow>
       <Divider sx={{ mb: 2, mt: 4 }} />
