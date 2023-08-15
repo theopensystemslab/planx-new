@@ -2,7 +2,9 @@
 # 18.16.1 = LTS
 FROM node:18.16.1-alpine as base
 
-RUN apk add --no-cache git # required for fetching git dependencies
+# Setup Git - required for fetching git dependencies (planx-core)
+RUN apk add --no-cache git 
+COPY .gitconfig ~/.gitconfig
 
 WORKDIR /api
 RUN npm install -g pnpm@8.6.6
