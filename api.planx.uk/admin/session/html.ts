@@ -2,6 +2,7 @@ import { generateApplicationHTML } from "@opensystemslab/planx-core";
 import { $admin } from "../../client";
 import type { NextFunction, Request, Response } from "express";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
+import { getTeamForSession } from "../../team/utils";
 
 /**
  * @swagger
@@ -23,8 +24,13 @@ export async function getHTMLExport(
 ) {
   try {
     const { responses } = await $admin.export.csvData(req.params.sessionId);
+    const { boundaryBBox } = await getTeamForSession(req.params.sessionId);
+    const html = generateApplicationHTML({
+      planXExportData: responses as PlanXExportData[],
+      teamBBox: boundaryBBox,
+    });
+
     res.header("Content-type", "text/html");
-    const html = generateApplicationHTML(responses as PlanXExportData[]);
     res.send(html);
   } catch (error) {
     return next({
@@ -55,10 +61,12 @@ export async function getRedactedHTMLExport(
     const { redactedResponses } = await $admin.export.csvData(
       req.params.sessionId,
     );
+    const { boundaryBBox } = await getTeamForSession(req.params.sessionId);
     res.header("Content-type", "text/html");
-    const html = generateApplicationHTML(
-      redactedResponses as PlanXExportData[],
-    );
+    const html = generateApplicationHTML({
+      planXExportData: redactedResponses as PlanXExportData[],
+      teamBBox: boundaryBBox,
+    });
     res.send(html);
   } catch (error) {
     return next({
