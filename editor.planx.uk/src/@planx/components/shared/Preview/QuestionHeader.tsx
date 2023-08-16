@@ -56,71 +56,75 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   };
 
   return (
-    <Box mb={1} maxWidth="formWrap">
-      <Grid container justifyContent="space-between" wrap="nowrap">
-        <Grid item>
-          {title && (
-            <Box mr={1} pt={0.5}>
-              <Typography
-                variant="h2"
-                role="heading"
-                aria-level={1}
-                component="h1"
-              >
-                {title}
-              </Typography>
-            </Box>
-          )}
-          {description && (
-            <Description>
-              <Typography variant="subtitle1" component="div">
-                <ReactMarkdownOrHtml
-                  source={description}
-                  id={DESCRIPTION_TEXT}
-                  openLinksOnNewTab
-                />
-              </Typography>
-            </Description>
-          )}
-        </Grid>
-        {!!(info || policyRef || howMeasured) && (
+    <>
+      <Box mb={1} maxWidth="formWrap">
+        <Grid container justifyContent="space-between" wrap="nowrap">
           <Grid item>
-            <StyledIconButton
-              title={`More information`}
-              aria-label={`See more information about "${title}"`}
-              onClick={handleHelpClick}
-              aria-haspopup="dialog"
-              size="large"
-              // Maintain alignment with tabled icons
-              sx={{ mr: "-7px" }}
-            >
-              <MoreInfoIcon />
-            </StyledIconButton>
+            {title && (
+              <Box mr={1} pt={0.5}>
+                <Typography
+                  variant="h2"
+                  role="heading"
+                  aria-level={1}
+                  component="h1"
+                >
+                  {title}
+                </Typography>
+              </Box>
+            )}
+            {description && (
+              <Description>
+                <Typography variant="subtitle1" component="div">
+                  <ReactMarkdownOrHtml
+                    source={description}
+                    id={DESCRIPTION_TEXT}
+                    openLinksOnNewTab
+                  />
+                </Typography>
+              </Description>
+            )}
           </Grid>
-        )}
-      </Grid>
-      <MoreInfo open={open} handleClose={() => setOpen(false)}>
-        {info && info !== emptyContent ? (
-          <MoreInfoSection title="Why does it matter?">
-            <ReactMarkdownOrHtml source={info} openLinksOnNewTab />
-          </MoreInfoSection>
-        ) : undefined}
-        {policyRef && policyRef !== emptyContent ? (
-          <MoreInfoSection title="Source">
-            <ReactMarkdownOrHtml source={policyRef} openLinksOnNewTab />
-          </MoreInfoSection>
-        ) : undefined}
-        {howMeasured && howMeasured !== emptyContent ? (
-          <MoreInfoSection title="How is it defined?">
-            <>
-              {definitionImg && <Image src={definitionImg} alt="definition" />}
-              <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab />
-            </>
-          </MoreInfoSection>
-        ) : undefined}
-      </MoreInfo>
-      {img && <Image src={img} alt="question" />}
-    </Box>
+        </Grid>
+        <MoreInfo open={open} handleClose={() => setOpen(false)}>
+          {info && info !== emptyContent ? (
+            <MoreInfoSection title="Why does it matter?">
+              <ReactMarkdownOrHtml source={info} openLinksOnNewTab />
+            </MoreInfoSection>
+          ) : undefined}
+          {policyRef && policyRef !== emptyContent ? (
+            <MoreInfoSection title="Source">
+              <ReactMarkdownOrHtml source={policyRef} openLinksOnNewTab />
+            </MoreInfoSection>
+          ) : undefined}
+          {howMeasured && howMeasured !== emptyContent ? (
+            <MoreInfoSection title="How is it defined?">
+              <>
+                {definitionImg && (
+                  <Image src={definitionImg} alt="definition" />
+                )}
+                <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab />
+              </>
+            </MoreInfoSection>
+          ) : undefined}
+        </MoreInfo>
+        {img && <Image src={img} alt="question" />}
+      </Box>
+      {!!(info || policyRef || howMeasured) && (
+        <Box>
+          <StyledIconButton
+            title={`More information`}
+            aria-label={`See more information about "${title}"`}
+            onClick={handleHelpClick}
+            aria-haspopup="dialog"
+            size="large"
+            // Maintain alignment with tabled icons
+            sx={{ mr: "-7px" }}
+          >
+            <MoreInfoIcon />
+          </StyledIconButton>
+        </Box>
+      )}
+    </>
   );
 };
 export default QuestionHeader;
