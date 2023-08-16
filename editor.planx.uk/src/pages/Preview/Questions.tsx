@@ -15,6 +15,15 @@ import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { handleSubmit } from "./Node";
 
+const BackBar = styled(Container)(({ theme }) => ({
+  position: "sticky",
+  top: 0,
+  left: 0,
+  width: "100%",
+  background: theme.palette.background.default,
+  zIndex: "1000",
+})) as typeof Container;
+
 const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
   marginBottom: theme.spacing(1),
   visibility: "visible",
@@ -149,12 +158,12 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   return (
     <Box width="100%" role="main" pt={1}>
-      <Container maxWidth="contentWrap">
+      <BackBar maxWidth="contentWrap">
         <BackButton hidden={!showBackButton} onClick={() => goBack()}>
           <ArrowBackIcon fontSize="small" />
           Back
         </BackButton>
-      </Container>
+      </BackBar>
 
       {node && (
         <ErrorBoundary FallbackComponent={ErrorFallback}>

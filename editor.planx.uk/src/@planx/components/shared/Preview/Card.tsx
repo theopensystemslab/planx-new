@@ -64,6 +64,7 @@ const Card: React.FC<Props> = ({
           {...props}
         >
           {children}
+          <Box>Help</Box>
 
           {handleSubmit && (
             <Button
