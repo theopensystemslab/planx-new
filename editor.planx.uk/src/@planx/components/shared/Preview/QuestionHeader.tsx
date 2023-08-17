@@ -1,17 +1,17 @@
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React from "react";
-import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { emptyContent } from "ui/RichTextInput";
 
 import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
+
+const HelpButtonWidth = "66px";
 
 interface IQuestionHeader {
   title?: string;
@@ -28,10 +28,36 @@ const Description = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledIconButton = styled(IconButton)(() => ({
+const TitleWrapper = styled(Box)(({ theme }) => ({
+  width: theme.breakpoints.values.formWrap,
+  maxWidth: `calc(100% - ${HelpButtonWidth})`,
+}));
+
+export const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  border: "2px solid currentColor",
+  borderBottomWidth: "4px",
+  borderRadius: "2px 2px 0 0",
+  height: "38px",
+  background: theme.palette.background.default,
   "&:hover": {
-    backgroundColor: "transparent",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    borderColor: theme.palette.primary.main,
   },
+}));
+
+const HelpButton = styled(Box)(() => ({
+  width: HelpButtonWidth,
+  position: "sticky",
+  top: "2px",
+  zIndex: "1000",
+  margin: "10px 0 0 auto",
+  height: "auto",
+  justifySelf: "flex-end",
+  flexShrink: 0,
+  display: "flex",
+  justifyContent: "flex-end",
 }));
 
 export const Image = styled("img")(() => ({
@@ -57,34 +83,30 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 
   return (
     <>
-      <Box mb={1} maxWidth="formWrap">
-        <Grid container justifyContent="space-between" wrap="nowrap">
-          <Grid item>
-            {title && (
-              <Box mr={1} pt={0.5}>
-                <Typography
-                  variant="h2"
-                  role="heading"
-                  aria-level={1}
-                  component="h1"
-                >
-                  {title}
-                </Typography>
-              </Box>
-            )}
-            {description && (
-              <Description>
-                <Typography variant="subtitle1" component="div">
-                  <ReactMarkdownOrHtml
-                    source={description}
-                    id={DESCRIPTION_TEXT}
-                    openLinksOnNewTab
-                  />
-                </Typography>
-              </Description>
-            )}
-          </Grid>
-        </Grid>
+      <TitleWrapper mb={1}>
+        {title && (
+          <Box mr={1} pt={0.5}>
+            <Typography
+              variant="h2"
+              role="heading"
+              aria-level={1}
+              component="h1"
+            >
+              {title}
+            </Typography>
+          </Box>
+        )}
+        {description && (
+          <Description>
+            <Typography variant="subtitle1" component="div">
+              <ReactMarkdownOrHtml
+                source={description}
+                id={DESCRIPTION_TEXT}
+                openLinksOnNewTab
+              />
+            </Typography>
+          </Description>
+        )}
         <MoreInfo open={open} handleClose={() => setOpen(false)}>
           {info && info !== emptyContent ? (
             <MoreInfoSection title="Why does it matter?">
@@ -108,21 +130,20 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           ) : undefined}
         </MoreInfo>
         {img && <Image src={img} alt="question" />}
-      </Box>
+      </TitleWrapper>
       {!!(info || policyRef || howMeasured) && (
-        <Box>
+        <HelpButton>
           <StyledIconButton
             title={`More information`}
             aria-label={`See more information about "${title}"`}
             onClick={handleHelpClick}
             aria-haspopup="dialog"
-            size="large"
-            // Maintain alignment with tabled icons
-            sx={{ mr: "-7px" }}
           >
-            <MoreInfoIcon />
+            <Typography variant="body2">
+              <strong>Help</strong>
+            </Typography>
           </StyledIconButton>
-        </Box>
+        </HelpButton>
       )}
     </>
   );

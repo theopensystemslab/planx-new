@@ -80,6 +80,7 @@ export interface PresentationalProps {
 
 const MapContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1, 0),
+  width: "100%",
   maxWidth: "none",
   "& my-map": {
     width: "100%",

@@ -24,11 +24,15 @@ export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
 
 const InnerContainer = styled(Box)(({ theme }) => ({
   maxWidth: "100%",
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
   "& > * + *": {
     ...contentFlowSpacing(theme),
   },
   "& > *": {
-    maxWidth: theme.breakpoints.values.formWrap,
+    width: theme.breakpoints.values.formWrap,
+    maxWidth: "100%",
   },
 }));
 
@@ -64,23 +68,23 @@ const Card: React.FC<Props> = ({
           {...props}
         >
           {children}
-          <Box>Help</Box>
 
-          {handleSubmit && (
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              type="submit"
-              disabled={!isValid}
-              onClick={async () => await handleSubmit()}
-              data-testid="continue-button"
-              sx={{ ...contentFlowSpacing(theme) }}
-            >
-              Continue
-            </Button>
-          )}
-          {showSaveResumeButton && <SaveResumeButton />}
+          <Box>
+            {handleSubmit && (
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                type="submit"
+                disabled={!isValid}
+                onClick={async () => await handleSubmit()}
+                data-testid="continue-button"
+              >
+                Continue
+              </Button>
+            )}
+            {showSaveResumeButton && <SaveResumeButton />}
+          </Box>
         </InnerContainer>
       </Container>
     </Fade>
