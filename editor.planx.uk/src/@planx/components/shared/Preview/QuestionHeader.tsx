@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -33,31 +33,41 @@ const TitleWrapper = styled(Box)(({ theme }) => ({
   maxWidth: `calc(100% - ${HelpButtonWidth})`,
 }));
 
-export const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.primary.main,
-  border: "2px solid currentColor",
-  borderBottomWidth: "4px",
-  borderRadius: "2px 2px 0 0",
-  height: "38px",
-  background: theme.palette.background.default,
-  "&:hover": {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    borderColor: theme.palette.primary.main,
-  },
-}));
-
-const HelpButton = styled(Box)(() => ({
+const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   width: HelpButtonWidth,
-  position: "sticky",
-  top: "2px",
+  maxWidth: "none",
+  position: "absolute",
+  height: "100%",
+  top: 0,
+  right: 0,
   zIndex: "1000",
-  margin: "10px 0 0 auto",
-  height: "auto",
-  justifySelf: "flex-end",
   flexShrink: 0,
   display: "flex",
   justifyContent: "flex-end",
+  // Vertically align help button with title
+  marginTop: "3px",
+  [theme.breakpoints.up("lg")]: {
+    marginTop: "10px",
+  },
+}));
+
+export const HelpButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  border: "2px solid currentColor",
+  borderBottomWidth: "3px",
+  background: theme.palette.background.default,
+  position: "sticky",
+  top: "2px",
+  right: 0,
+  boxShadow: "none",
+  minWidth: "none",
+  padding: "0.35em 0.5em",
+  alignSelf: "flex-start",
+  "&:hover": {
+    backgroundColor: theme.palette.primary.dark,
+    color: "white",
+    borderColor: theme.palette.primary.dark,
+  },
 }));
 
 export const Image = styled("img")(() => ({
@@ -83,9 +93,9 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 
   return (
     <>
-      <TitleWrapper mb={1}>
+      <Box mb={1}>
         {title && (
-          <Box mr={1} pt={0.5}>
+          <TitleWrapper mr={1} pt={0.5}>
             <Typography
               variant="h2"
               role="heading"
@@ -94,7 +104,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             >
               {title}
             </Typography>
-          </Box>
+          </TitleWrapper>
         )}
         {description && (
           <Description>
@@ -130,20 +140,19 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           ) : undefined}
         </MoreInfo>
         {img && <Image src={img} alt="question" />}
-      </TitleWrapper>
+      </Box>
       {!!(info || policyRef || howMeasured) && (
-        <HelpButton>
-          <StyledIconButton
+        <HelpButtonWrapper>
+          <HelpButton
             title={`More information`}
             aria-label={`See more information about "${title}"`}
             onClick={handleHelpClick}
             aria-haspopup="dialog"
+            data-testid="more-info-button"
           >
-            <Typography variant="body2">
-              <strong>Help</strong>
-            </Typography>
-          </StyledIconButton>
-        </HelpButton>
+            Help
+          </HelpButton>
+        </HelpButtonWrapper>
       )}
     </>
   );
