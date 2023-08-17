@@ -94,7 +94,12 @@ function Component(props: Props) {
   const fetcher: Fetcher<GISResponse | GISResponse["constraints"]> = (
     url: string,
   ) => fetch(url).then((r) => r.json());
-  const { data, mutate, isValidating } = useSWR(
+  const {
+    data,
+    mutate,
+    error: dataError,
+    isValidating,
+  } = useSWR(
     () => (x && y && latitude && longitude ? teamGisEndpoint : null),
     fetcher,
     { revalidateOnFocus: false },
@@ -104,9 +109,13 @@ function Component(props: Props) {
   //   skip if the applicant plotted a new non-UPRN address on the map
   const classifiedRoadsEndpoint: string =
     `${process.env.REACT_APP_API_URL}/roads?` +
-    new URLSearchParams(usrn ? { usrn: usrn } : undefined)?.toString();
+    new URLSearchParams(usrn ? { usrn } : undefined)?.toString();
 
-  const { data: roads, isValidating: isValidatingRoads } = useSWR(
+  const {
+    data: roads,
+    error: roadsError,
+    isValidating: isValidatingRoads,
+  } = useSWR(
     () =>
       usrn && digitalLandOrganisations.includes(teamSlug)
         ? classifiedRoadsEndpoint
@@ -143,12 +152,12 @@ function Component(props: Props) {
               EnhancedGISResponse | GISResponse["constraints"]
             > = [];
             if (digitalLandOrganisations.includes(teamSlug)) {
-              if (data)
+              if (data && !dataError)
                 _constraints.push({
                   ...data,
                   planxRequest: teamGisEndpoint,
                 } as EnhancedGISResponse);
-              if (roads)
+              if (roads && !roadsError)
                 _constraints.push({
                   ...roads,
                   planxRequest: classifiedRoadsEndpoint,
