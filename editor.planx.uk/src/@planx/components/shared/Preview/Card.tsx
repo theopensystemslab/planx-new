@@ -24,15 +24,13 @@ export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
 
 const InnerContainer = styled(Box)(({ theme }) => ({
   maxWidth: "100%",
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
+  position: "relative",
   "& > * + *": {
     ...contentFlowSpacing(theme),
   },
   "& > *": {
-    width: theme.breakpoints.values.formWrap,
-    maxWidth: "100%",
+    maxWidth: theme.breakpoints.values.formWrap,
+    width: "100%",
   },
 }));
 
@@ -63,13 +61,13 @@ const Card: React.FC<Props> = ({
       <Container maxWidth="contentWrap">
         <InnerContainer
           bgcolor="background.default"
-          py={{ xs: 2, md: 4 }}
-          mb={4}
+          mt={{ xs: 4, md: 6 }}
+          mb={{ xs: 4, md: 8 }}
           {...props}
         >
           {children}
 
-          <Box>
+          <Box pt={2}>
             {handleSubmit && (
               <Button
                 variant="contained"

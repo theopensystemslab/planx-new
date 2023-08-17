@@ -16,7 +16,6 @@ import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
 import ErrorWrapper from "ui/ErrorWrapper";
 import FullWidthWrapper from "ui/FullWidthWrapper";
-import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { emptyContent } from "ui/RichTextInput";
 
@@ -26,8 +25,8 @@ import Card from "../shared/Preview/Card";
 import MoreInfo from "../shared/Preview/MoreInfo";
 import MoreInfoSection from "../shared/Preview/MoreInfoSection";
 import QuestionHeader, {
+  HelpButton,
   Image,
-  StyledIconButton,
 } from "../shared/Preview/QuestionHeader";
 import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
@@ -286,15 +285,17 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         <Typography variant="body1">{props.name}</Typography>
       </Box>
       {!!(info || policyRef || howMeasured) && (
-        <StyledIconButton
+        <HelpButton
           title={`More information`}
           aria-label={`See more information about "${props.name}"`}
           onClick={() => handleHelpClick({ [props.fn]: props.name })}
           aria-haspopup="dialog"
-          size="small"
+          sx={{
+            marginLeft: (theme) => theme.spacing(0.5),
+          }}
         >
-          <MoreInfoIcon />
-        </StyledIconButton>
+          Help
+        </HelpButton>
       )}
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
         {info && info !== emptyContent ? (
