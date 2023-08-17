@@ -232,6 +232,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
             padding: "0.7em 1.25em",
             lineHeight: LINE_HEIGHT_BASE,
+            minWidth: "3em",
           },
           text: {
             color: "rgba(0,0,0,0.4)",
