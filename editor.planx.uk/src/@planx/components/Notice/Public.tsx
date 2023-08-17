@@ -21,7 +21,8 @@ const Container = styled(Box, {
 })<BoxProps & { customColor?: string }>(
   ({ theme, customColor = "#F9F8F8" }) => ({
     position: "relative",
-    width: "100%",
+    width: theme.breakpoints.values.formWrap,
+    maxWidth: "100%",
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "space-between",
