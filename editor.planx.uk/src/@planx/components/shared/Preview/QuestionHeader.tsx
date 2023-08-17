@@ -31,6 +31,9 @@ const Description = styled(Box)(({ theme }) => ({
 const TitleWrapper = styled(Box)(({ theme }) => ({
   width: theme.breakpoints.values.formWrap,
   maxWidth: `calc(100% - ${HelpButtonWidth})`,
+  [theme.breakpoints.up("contentWrap")]: {
+    maxWidth: "100%",
+  },
 }));
 
 const HelpButtonWrapper = styled(Box)(({ theme }) => ({
@@ -45,7 +48,7 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "flex-end",
   // Vertically align help button with title
-  marginTop: "3px",
+  marginTop: 0,
   [theme.breakpoints.up("lg")]: {
     marginTop: "10px",
   },
