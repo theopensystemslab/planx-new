@@ -11,13 +11,22 @@
     "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
     "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
     "check": "tsc && pnpm lint",
-    "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install"
+    "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install",
+    "prepare": "cd .. && husky install e2e/.husky"
+  },
+  "lint-staged": {
+    "./tests/**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier -w ./tests"
+    ]
   },
   "devDependencies": {
     "@types/node": "18.16.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.47.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.0",
     "prettier": "^3.0.1",
     "typescript": "^5.1.6"
   }
