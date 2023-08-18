@@ -637,19 +637,6 @@
         check: null
 - table:
     schema: public
-    name: team_members
-  object_relationships:
-    - name: creator
-      using:
-        foreign_key_constraint_on: creator_id
-    - name: team
-      using:
-        foreign_key_constraint_on: team_id
-    - name: user
-      using:
-        foreign_key_constraint_on: user_id
-- table:
-    schema: public
     name: teams
   array_relationships:
     - name: flows
@@ -659,13 +646,6 @@
           table:
             schema: public
             name: flows
-    - name: members
-      using:
-        foreign_key_constraint_on:
-          column: team_id
-          table:
-            schema: public
-            name: team_members
   select_permissions:
     - role: public
       permission:
@@ -715,13 +695,6 @@
           table:
             schema: public
             name: flows
-    - name: created_team_members
-      using:
-        foreign_key_constraint_on:
-          column: creator_id
-          table:
-            schema: public
-            name: team_members
     - name: operations
       using:
         foreign_key_constraint_on:
@@ -729,10 +702,3 @@
           table:
             schema: public
             name: operations
-    - name: team_members
-      using:
-        foreign_key_constraint_on:
-          column: user_id
-          table:
-            schema: public
-            name: team_members
