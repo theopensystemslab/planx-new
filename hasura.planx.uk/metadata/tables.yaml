@@ -752,13 +752,13 @@
           table:
             schema: public
             name: flows
-    - name: members
+    - name: users
       using:
         foreign_key_constraint_on:
           column: team_id
           table:
             schema: public
-            name: team_members
+            name: user_teams
   computed_fields:
     - name: boundary_bbox
       definition:
