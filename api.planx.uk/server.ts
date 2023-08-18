@@ -195,22 +195,16 @@ const buildJWT = async (profile: Profile, done: VerifyCallback) => {
   );
 
   if (users.length === 1) {
-    const { id, is_admin = true } = users[0];
+    const { id } = users[0];
 
     const hasura = {
-      "x-hasura-allowed-roles": ["editor"],
-      "x-hasura-default-role": "editor",
+      "x-hasura-allowed-roles": ["admin"],
+      "x-hasura-default-role": "admin",
       "x-hasura-user-id": id.toString(),
     };
 
-    if (is_admin) {
-      hasura["x-hasura-allowed-roles"] = ["admin"];
-      hasura["x-hasura-default-role"] = "admin";
-    }
-
     const data = {
       sub: id.toString(),
-      // admin: is_admin,
       "https://hasura.io/jwt/claims": hasura,
     };
 
@@ -464,7 +458,6 @@ app.get("/me", useJWT, async function (req, res, next) {
             first_name
             last_name
             email
-            is_admin
             created_at
             updated_at
           }
