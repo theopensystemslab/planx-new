@@ -11,6 +11,10 @@ router.get("/auth/login/failed", Controller.failedLogin);
 router.get("/auth/google", Middleware.useGoogleAuth);
 
 //After authorization, Google will redirect the user back to this route
-router.get("/auth/google/callback", Middleware.useGoogleCallbackAuth, Controller.handleSuccess);
+router.get(
+  "/auth/google/callback",
+  Middleware.useGoogleCallbackAuth,
+  Controller.handleSuccess,
+);
 
 export default router;
