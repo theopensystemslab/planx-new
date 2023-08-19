@@ -65,9 +65,8 @@ export async function buildSubmissionExportZip({
   }
 
   // generate csv data
-  const { responses, redactedResponses } = await $admin.export.csvData(
-    sessionId,
-  );
+  const { responses, redactedResponses } =
+    await $admin.export.csvData(sessionId);
 
   // write csv to the zip
   try {
@@ -84,9 +83,8 @@ export async function buildSubmissionExportZip({
   }
 
   // add template files to zip
-  const templateNames = await $admin.getDocumentTemplateNamesForSession(
-    sessionId,
-  );
+  const templateNames =
+    await $admin.getDocumentTemplateNamesForSession(sessionId);
   for (const templateName of templateNames || []) {
     try {
       const isTemplateSupported = hasRequiredDataForTemplate({

@@ -55,7 +55,10 @@
     "prepare": "cd .. && husky install api.planx.uk/.husky"
   },
   "lint-staged": {
-    "**/*.{js,ts}": ["eslint --fix", "prettier -w"]
+    "**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier -w"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",

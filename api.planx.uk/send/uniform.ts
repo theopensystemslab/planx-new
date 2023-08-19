@@ -111,9 +111,8 @@ export async function sendToUniform(
 
   try {
     // Request 1/4 - Authenticate
-    const { token, organisation, organisationId } = await authenticate(
-      uniformClient,
-    );
+    const { token, organisation, organisationId } =
+      await authenticate(uniformClient);
 
     // 2/4 - Create a submission
     const idoxSubmissionId = await createSubmission(
