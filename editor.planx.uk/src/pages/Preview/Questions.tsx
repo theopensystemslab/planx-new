@@ -22,7 +22,7 @@ const BackBar = styled(Box)(({ theme }) => ({
   width: "100%",
   background: theme.palette.background.paper,
   zIndex: "1000",
-  borderBottom: `1px solid ${theme.palette.grey[300]}`,
+  borderBottom: `1px solid ${theme.palette.border.light}`,
 }));
 
 const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
