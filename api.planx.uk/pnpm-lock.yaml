@@ -10,7 +10,7 @@ dependencies:
     version: 2.1.8
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#1960181
-    version: github.com/theopensystemslab/planx-core/1960181
+    version: git/github.com+theopensystemslab/planx-core/1960181
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -93,8 +93,8 @@ dependencies:
     specifier: ^1.4.5-lts.1
     version: 1.4.5-lts.1
   nanoid:
-    specifier: ^3.3.6
-    version: 3.3.6
+    specifier: ^4.0.2
+    version: 4.0.2
   notifications-node-client:
     specifier: ^7.0.0
     version: 7.0.0
@@ -5704,12 +5704,6 @@ packages:
       xtend: 4.0.2
     dev: false
 
-  /nanoid@3.3.6:
-    resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-    dev: false
-
   /nanoid@4.0.2:
     resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
     engines: {node: ^14 || ^16 || >=18}
@@ -7629,8 +7623,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/1960181:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/1960181}
+  git/github.com+theopensystemslab/planx-core/1960181:
+    resolution: {commit: '1960181', repo: git@github.com:theopensystemslab/planx-core.git, type: git}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     requiresBuild: true
