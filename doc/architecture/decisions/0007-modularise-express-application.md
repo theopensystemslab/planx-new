@@ -45,6 +45,7 @@ api.planx.uk/
    - Contains the core business logic and operations
    - Responsible for communicating with database via GraphQL client
    - More easily testable outside the context of the request / response cycle
+   - Our `planx-core` library can also be considered, and used as, the service layer
   
 **Rationale:**
 I believe that this structure will improve code readability and maintainability by dividing responsibilities into distinct files. It promotes the separation of concerns and a clearer code "flow". 
