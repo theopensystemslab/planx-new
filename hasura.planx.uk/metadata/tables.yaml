@@ -646,13 +646,13 @@
           table:
             schema: public
             name: flows
-    - name: users
+    - name: members
       using:
         foreign_key_constraint_on:
           column: team_id
           table:
             schema: public
-            name: user_teams
+            name: team_members
   select_permissions:
     - role: public
       permission:
