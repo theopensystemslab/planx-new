@@ -15,15 +15,13 @@ INSERT INTO users (
   id,
   first_name,
   last_name,
-  email,
-  is_admin
+  email
 )
 SELECT
   id,
   first_name,
   last_name,
-  email,
-  is_admin
+  email
 FROM sync_users
 ON CONFLICT (id) DO NOTHING;
 
