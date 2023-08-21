@@ -22,7 +22,7 @@
     "form-data": "^4.0.0",
     "graphql": "^16.8.0",
     "graphql-request": "^4.3.0",
-    "helmet": "^5.1.1",
+    "helmet": "^7.0.0",
     "http-proxy-middleware": "^2.0.6",
     "husky": "^8.0.3",
     "isomorphic-fetch": "^3.0.0",
