@@ -22,11 +22,26 @@ describe("uniform_applications", () => {
       i = await introspectAs("admin");
     });
 
-    test("has full access to query and mutate uniform appliations", () => {
+    test("has full access to query and mutate uniform applications", () => {
       expect(i.queries).toContain("uniform_applications");
       expect(i.mutations).toContain("insert_uniform_applications");
       expect(i.mutations).toContain("update_uniform_applications_by_pk");
       expect(i.mutations).toContain("delete_uniform_applications");
+    });
+  });
+
+  describe("platformManager", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformManager");
+    });
+
+    test("cannot query uniform_applications", () => {
+      expect(i.queries).not.toContain("uniform_applications");
+    });
+
+    test("cannot create, update, or delete uniform_applications", () => {
+      expect(i).toHaveNoMutationsFor("uniform_applications");
     });
   });
 });

@@ -29,4 +29,19 @@ describe("bops_applications", () => {
       expect(i.mutations).toContain("delete_bops_applications");
     });
   });
+
+  describe("platformManager", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformManager");
+    });
+
+    test("cannot query bops_appliations", () => {
+      expect(i.queries).not.toContain("bops_appliations");
+    });
+
+    test("cannot create, update, or delete bops_appliations", () => {
+      expect(i).toHaveNoMutationsFor("bops_appliations");
+    });
+  });
 });

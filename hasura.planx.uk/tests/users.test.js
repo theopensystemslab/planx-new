@@ -29,4 +29,19 @@ describe("users", () => {
       expect(i.mutations).toContain("delete_users");
     });
   });
+
+  describe("platformManager", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformManager");
+    });
+
+    test("cannot query users", () => {
+      expect(i.queries).not.toContain("users");
+    });
+
+    test("cannot create, update, or delete users", () => {
+      expect(i).toHaveNoMutationsFor("users");
+    });
+  });
 });
