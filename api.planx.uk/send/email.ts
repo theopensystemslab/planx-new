@@ -45,9 +45,8 @@ export async function sendToEmail(
   try {
     const localAuthority = req.params.localAuthority;
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
-    const { sendToEmail, notifyPersonalisation } = await getTeamEmailSettings(
-      localAuthority,
-    );
+    const { sendToEmail, notifyPersonalisation } =
+      await getTeamEmailSettings(localAuthority);
     if (!sendToEmail) {
       return next({
         status: 400,
