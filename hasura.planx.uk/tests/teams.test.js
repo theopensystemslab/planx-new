@@ -7,12 +7,14 @@ describe("teams", () => {
       i = await introspectAs("public");
     });
 
-    test("can query teams", () => {
+    test("can query teams, but not their associated team members", () => {
       expect(i.queries).toContain("teams");
+      expect(i.queries).not.toContain("team_members");
     });
 
-    test("cannot create, update, or delete teams", () => {
+    test("cannot create, update, or delete teams or team_members", () => {
       expect(i).toHaveNoMutationsFor("teams");
+      expect(i).toHaveNoMutationsFor("team_members");
     });
   });
 
@@ -24,6 +26,7 @@ describe("teams", () => {
 
     test("can query teams and team members", () => {
       expect(i.queries).toContain("teams");
+      expect(i.queries).toContain("team_members");
     });
   });
 
