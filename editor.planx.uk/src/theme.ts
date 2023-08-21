@@ -57,6 +57,11 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     main: "#2196F3",
     light: "#EBF4FD",
   },
+  border: {
+    main: "#B1B4B6",
+    input: TEXT_COLOR_PRIMARY,
+    light: "#E0E0E0",
+  },
 };
 
 // GOVUK Focus style
