@@ -26,4 +26,26 @@ describe("teams", () => {
       expect(i.queries).toContain("teams");
     });
   });
+
+  describe("platformManager", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformManager");
+    });
+
+    test("can query teams and team members", () => {
+      expect(i.queries).toContain("teams");
+    });
+
+    test("has full access to query and mutate teams", async () => {
+      expect(i.queries).toContain("teams");
+
+      expect(i.mutations).toContain("insert_teams");
+      expect(i.mutations).toContain("update_teams_by_pk");
+    });
+
+    test("cannot delete teams", async () => {
+      expect(i.mutations).not.toContain("delete_teams");
+    });
+  });
 });

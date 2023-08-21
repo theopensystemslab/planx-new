@@ -428,4 +428,19 @@ describe("lowcal_sessions", () => {
       });
     });
   });
+
+  describe("platformManager", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformManager");
+    });
+
+    test("cannot query lowcal_sessions", () => {
+      expect(i.queries).not.toContain("lowcal_sessions");
+    });
+
+    test("cannot create, update, or delete lowcal_sessions", () => {
+      expect(i).toHaveNoMutationsFor("lowcal_sessions");
+    });
+  });
 });

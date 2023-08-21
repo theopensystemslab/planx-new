@@ -97,6 +97,21 @@ describe("payment_requests", () => {
       expect(i.mutations).toContain("delete_payment_requests");
     });
   });
+
+  describe("platformManager", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformManager");
+    });
+
+    test("cannot query payment_requests", () => {
+      expect(i.queries).not.toContain("payment_requests");
+    });
+
+    test("cannot create, update, or delete payment_requests", () => {
+      expect(i).toHaveNoMutationsFor("payment_requests");
+    });
+  });
 });
 
 const insertSessions = async (sessionIds) => {
