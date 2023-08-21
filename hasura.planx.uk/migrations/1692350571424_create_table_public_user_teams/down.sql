@@ -1,1 +1,1 @@
-DROP TABLE "public"."user_teams";
+DROP TABLE "public"."team_members";
