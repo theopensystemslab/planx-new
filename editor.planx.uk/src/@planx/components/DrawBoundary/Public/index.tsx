@@ -11,7 +11,8 @@ import {
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
 import type { PublicProps } from "@planx/components/ui";
-import type { Geometry } from "@turf/helpers";
+import buffer from "@turf/buffer";
+import { type GeometryObject,point } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -20,6 +21,8 @@ import FullWidthWrapper from "ui/FullWidthWrapper";
 import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
 
 export type Props = PublicProps<DrawBoundary>;
+
+export type Boundary = GeometryObject | undefined;
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
@@ -36,6 +39,10 @@ export default function Component(props: Props) {
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
   const [area, setArea] = useState<number | undefined>(previousArea);
   const environment = useStore((state) => state.previewEnvironment);
+  const addressPoint = point([
+    Number(passport?.data?._address?.longitude),
+    Number(passport?.data?._address?.latitude),
+  ]);
 
   useEffect(() => {
     if (isMounted.current) setSlots([]);
@@ -109,6 +116,9 @@ export default function Component(props: Props) {
                 drawMode
                 drawPointer="crosshair"
                 drawGeojsonData={JSON.stringify(boundary)}
+                clipGeojsonData={JSON.stringify(
+                  buffer(addressPoint, 75, { units: "meters" }),
+                )}
                 zoom={20}
                 maxZoom={23}
                 latitude={Number(passport?.data?._address?.latitude)}
@@ -181,6 +191,10 @@ export default function Component(props: Props) {
       return {
         [props.dataFieldBoundary]:
           boundary && props.dataFieldBoundary ? boundary : undefined,
+        [`${props.dataFieldBoundary}.buffered`]:
+          boundary && props.dataFieldBoundary
+            ? buffer(boundary, 50, { units: "meters" })
+            : undefined,
         [props.dataFieldArea]:
           boundary && props.dataFieldBoundary ? area : undefined,
         [`${props.dataFieldArea}.hectares`]:
@@ -194,5 +208,3 @@ export default function Component(props: Props) {
     props.handleSubmit?.({ data });
   }
 }
-
-export type Boundary = undefined | Geometry;
