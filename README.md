@@ -22,7 +22,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 - `sharedb.planx.uk` is our implementation of [ShareDB](https://github.com/share/sharedb), a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
 - `infrastructure` is [Pulumi](https://www.pulumi.com/) infrastructure-as-code for configuring and managing our AWS environments
 
-## Running Locally
+## Running locally
 
 1. Download and install the following dependencies if you don't have them already:
 - [Docker](https://docs.docker.com/get-docker/)
