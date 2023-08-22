@@ -291,6 +291,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
           aria-label={`See more information about "${props.name}"`}
           onClick={() => handleHelpClick({ [props.fn]: props.name })}
           aria-haspopup="dialog"
+          variant="outlined"
           sx={{
             marginLeft: (theme) => theme.spacing(0.5),
           }}

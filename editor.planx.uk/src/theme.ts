@@ -261,6 +261,13 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               width: "auto",
             },
           },
+          outlined: {
+            borderWidth: "2px 2px 3px",
+            borderColor: "currentcolor",
+            "&:hover": {
+              borderWidth: "2px 2px 3px",
+            },
+          },
         },
       },
       MuiIconButton: {
