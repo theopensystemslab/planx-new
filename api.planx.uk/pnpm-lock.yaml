@@ -10,7 +10,7 @@ dependencies:
     version: 2.1.8
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#e9621fe
-    version: github.com/theopensystemslab/planx-core/e9621fe
+    version: git/github.com+theopensystemslab/planx-core/e9621fe
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -75,8 +75,8 @@ dependencies:
     specifier: ^3.0.0
     version: 3.0.0
   jsondiffpatch:
-    specifier: ^0.4.1
-    version: 0.4.1
+    specifier: ^0.5.0
+    version: 0.5.0
   jsonwebtoken:
     specifier: ^9.0.0
     version: 9.0.1
@@ -2843,6 +2843,14 @@ packages:
       escape-string-regexp: 1.0.5
       supports-color: 5.5.0
 
+  /chalk@3.0.0:
+    resolution: {integrity: sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==}
+    engines: {node: '>=8'}
+    dependencies:
+      ansi-styles: 4.3.0
+      supports-color: 7.2.0
+    dev: false
+
   /chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
@@ -5290,15 +5298,14 @@ packages:
     hasBin: true
     dev: true
 
-  /jsondiffpatch@0.4.1:
-    resolution: {integrity: sha512-t0etAxTUk1w5MYdNOkZBZ8rvYYN5iL+2dHCCx/DpkFm/bW28M6y5nUS83D4XdZiHy35Fpaw6LBb+F88fHZnVCw==}
+  /jsondiffpatch@0.5.0:
+    resolution: {integrity: sha512-Quz3MvAwHxVYNXsOByL7xI5EB2WYOeFswqaHIA3qOK3isRWTxiplBEocmmru6XmxDB2L7jDNYtYA4FyimoAFEw==}
     engines: {node: '>=8.17.0'}
     hasBin: true
     dependencies:
-      chalk: 2.4.2
+      chalk: 3.0.0
       diff-match-patch: 1.0.5
     dev: false
-    bundledDependencies: []
 
   /jsonwebtoken@9.0.1:
     resolution: {integrity: sha512-K8wx7eJ5TPvEjuiVSkv167EVboBDv9PZdDoF7BgeQnBLVvZWW9clr2PsQHVJDTKaEIH5JBIwHujGcHp7GgI2eg==}
@@ -7639,8 +7646,8 @@ packages:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/e9621fe:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e9621fe}
+  git/github.com+theopensystemslab/planx-core/e9621fe:
+    resolution: {commit: e9621fe, repo: git@github.com:theopensystemslab/planx-core.git, type: git}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
