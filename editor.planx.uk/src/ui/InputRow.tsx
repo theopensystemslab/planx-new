@@ -1,5 +1,4 @@
-import { BoxProps } from "@material-ui/core";
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import React from "react";
 
