@@ -16,23 +16,29 @@ updates:
   - package-ecosystem: "npm"
     directory: "/editor.planx.uk"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "editor"
     open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
 
   # Hasura
   - package-ecosystem: "npm"
     directory: "/hasura.planx.uk"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "hasura"
     open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
 
   - package-ecosystem: "docker"
     directory: "/hasura.planx.uk"
@@ -60,7 +66,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/hasura.planx.uk/tests"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "hasura tests"
     open-pull-requests-limit: 5
@@ -68,17 +74,23 @@ updates:
       prefix: "[skip pizza] "
     reviewers:
       - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
   
   # ShareDB
   - package-ecosystem: "npm"
     directory: "/sharedb.planx.uk"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "sharedb"
     open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
 
   - package-ecosystem: "docker"
     directory: "/sharedb.planx.uk"
@@ -95,12 +107,15 @@ updates:
   - package-ecosystem: "npm"
     directory: "/api.planx.uk"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "api"
     open-pull-requests-limit: 5
     reviewers:
       - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
 
   - package-ecosystem: "docker"
     directory: "/api.planx.uk"
@@ -117,7 +132,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/e2e"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     labels:
       - "e2e"
     open-pull-requests-limit: 5
@@ -125,6 +140,9 @@ updates:
       prefix: "[skip pizza] "
     reviewers:
       - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
   
   # Infrastructure
   # - package-ecosystem: "npm"
