@@ -52,11 +52,6 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   fontSize: 20,
 }));
 
-const StyledLink = styled(ReactNaviLink)(() => ({
-  color: "#fff",
-  textDecoration: "none",
-})) as typeof Link;
-
 const StyledToolbar = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT,
 }));
@@ -209,25 +204,33 @@ const Breadcrumbs: React.FC<{
       {route.data.team && (
         <>
           {" / "}
-          <StyledLink
+          <Link
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+            }}
             component={ReactNaviLink}
             href={`/${route.data.team}`}
             prefetch={false}
           >
             {route.data.team}
-          </StyledLink>
+          </Link>
         </>
       )}
       {route.data.flow && (
         <>
           {" / "}
-          <StyledLink
+          <Link
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+            }}
             component={ReactNaviLink}
             href={rootFlowPath(false)}
             prefetch={false}
           >
             {route.data.flow}
-          </StyledLink>
+          </Link>
         </>
       )}
     </BreadcrumbsRoot>
