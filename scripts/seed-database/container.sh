@@ -37,7 +37,7 @@ if [[ ${RESET} == "reset_flows" ]]; then
 fi
 
 if [[ ${INCLUDE_PUBLISHED_FLOWS} == "include_published_flows" ]]; then
-  psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
+  psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
   echo published_flows downloaded
 fi
 
