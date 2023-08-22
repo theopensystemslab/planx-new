@@ -30,10 +30,10 @@ describe("blpu_codes", () => {
     });
   });
 
-  describe("platformManager", () => {
+  describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("platformManager");
+      i = await introspectAs("platformAdmin");
     });
 
     test("cannot query blpu_codes", () => {

@@ -9,7 +9,7 @@ COMMENT ON TABLE "public"."user_role_enum" IS E'Enum of possible user roles in P
 INSERT INTO
   "public"."user_role_enum"("value")
 VALUES
-  (E'platformManager');
+  (E'platformAdmin');
 
 CREATE TABLE "public"."user_roles" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),

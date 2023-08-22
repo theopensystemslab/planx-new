@@ -22,7 +22,7 @@ describe("bops_applications", () => {
       i = await introspectAs("admin");
     });
 
-    test("has full access to query and mutate bops appliations", () => {
+    test("has full access to query and mutate bops applications", () => {
       expect(i.queries).toContain("bops_applications");
       expect(i.mutations).toContain("insert_bops_applications");
       expect(i.mutations).toContain("update_bops_applications_by_pk");
@@ -30,18 +30,18 @@ describe("bops_applications", () => {
     });
   });
 
-  describe("platformManager", () => {
+  describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("platformManager");
+      i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query bops_appliations", () => {
-      expect(i.queries).not.toContain("bops_appliations");
+    test("cannot query bops_applications", () => {
+      expect(i.queries).not.toContain("bops_applications");
     });
 
-    test("cannot create, update, or delete bops_appliations", () => {
-      expect(i).toHaveNoMutationsFor("bops_appliations");
+    test("cannot create, update, or delete bops_applications", () => {
+      expect(i).toHaveNoMutationsFor("bops_applications");
     });
   });
 });

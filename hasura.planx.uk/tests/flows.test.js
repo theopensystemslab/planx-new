@@ -38,10 +38,10 @@ describe("flows and operations", () => {
     });
   });
 
-  describe("platformManager", () => {
+  describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("platformManager");
+      i = await introspectAs("platformAdmin");
     });
 
     test("can query flows and their associated operations", () => {

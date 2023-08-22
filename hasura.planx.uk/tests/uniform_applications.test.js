@@ -30,10 +30,10 @@ describe("uniform_applications", () => {
     });
   });
 
-  describe("platformManager", () => {
+  describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("platformManager");
+      i = await introspectAs("platformAdmin");
     });
 
     test("cannot query uniform_applications", () => {

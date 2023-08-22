@@ -177,7 +177,7 @@
           name: compile_flow_portals
       comment: Flow data with portals merged in
   select_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns:
           - created_at
@@ -208,7 +208,7 @@
           - data_merged
         filter: {}
   update_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns:
           - data
@@ -220,14 +220,14 @@
     schema: public
     name: global_settings
   insert_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         check: {}
         columns:
           - id
           - footer_content
   select_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns:
           - footer_content
@@ -239,7 +239,7 @@
           - footer_content
         filter: {}
   update_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns:
           - footer_content
@@ -429,7 +429,7 @@
       using:
         foreign_key_constraint_on: flow_id
   insert_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         check: {}
         columns:
@@ -441,12 +441,12 @@
           - updated_at
           - flow_id
   select_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns: []
         filter: {}
   update_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns: []
         filter: {}
@@ -627,7 +627,7 @@
       using:
         foreign_key_constraint_on: publisher_id
   insert_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         check: {}
         columns:
@@ -638,7 +638,7 @@
           - flow_id
           - data
   select_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns:
           - created_at
@@ -753,7 +753,7 @@
             schema: public
             name: team_members
   insert_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         check: {}
         columns:
@@ -768,7 +768,7 @@
           - updated_at
           - submission_email
   select_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns:
           - created_at
@@ -795,7 +795,7 @@
           - updated_at
         filter: {}
   update_permissions:
-    - role: platformManager
+    - role: platformAdmin
       permission:
         columns:
           - domain
