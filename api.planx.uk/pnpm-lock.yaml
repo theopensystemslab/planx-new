@@ -10,7 +10,7 @@ dependencies:
     version: 2.1.8
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#e9621fe
-    version: github.com/theopensystemslab/planx-core/e9621fe
+    version: git/github.com+theopensystemslab/planx-core/e9621fe
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -18,8 +18,8 @@ dependencies:
     specifier: ^0.5.10
     version: 0.5.10
   aws-sdk:
-    specifier: ^2.1358.0
-    version: 2.1414.0
+    specifier: ^2.1441.0
+    version: 2.1441.0
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -2463,8 +2463,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: false
 
-  /aws-sdk@2.1414.0:
-    resolution: {integrity: sha512-WhqTWiTZRUxWITvUG5VMPYGdCLNAm4zOTDIiotbErR9x+uDExk2CAGbXE8HH11+tD8PhZVXyukymSiG+7rJMMg==}
+  /aws-sdk@2.1441.0:
+    resolution: {integrity: sha512-qMmFt7jyBoe9HsS0o9YoY/zGfURM/rD8DYR1VFzsJKKb8UMnjZrUfDX+fb+rQKK1WLp0+k9dBVFhU09EcSJTKQ==}
     engines: {node: '>= 10.0.0'}
     dependencies:
       buffer: 4.9.2
@@ -7639,8 +7639,8 @@ packages:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/e9621fe:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e9621fe}
+  git/github.com+theopensystemslab/planx-core/e9621fe:
+    resolution: {commit: e9621fe, repo: git@github.com:theopensystemslab/planx-core.git, type: git}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
