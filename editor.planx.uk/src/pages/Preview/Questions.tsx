@@ -157,7 +157,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   return (
     <Box width="100%" role="main">
       <BackBar>
-        <Container maxWidth="contentWrap">
+        <Container maxWidth={false}>
           <BackButton hidden={!showBackButton} onClick={() => goBack()}>
             <ArrowBackIcon fontSize="small" />
             Back

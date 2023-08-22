@@ -263,7 +263,7 @@ const NavBar: React.FC = () => {
       {isVisible && (
         <StyledNavBar data-testid="navigation-bar">
           <Container
-            maxWidth="contentWrap"
+            maxWidth={false}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -320,7 +320,7 @@ const PublicToolbar: React.FC<{
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
       <StyledToolbar disableGutters>
-        <Container maxWidth="contentWrap">
+        <Container maxWidth={false}>
           <InnerContainer>
             <LeftBox>
               {teamTheme?.logo ? (
@@ -346,7 +346,7 @@ const PublicToolbar: React.FC<{
         </Container>
       </StyledToolbar>
       {!showCentredServiceTitle && (
-        <Container maxWidth="contentWrap">
+        <Container maxWidth={false}>
           <ServiceTitle />
         </Container>
       )}
