@@ -105,7 +105,7 @@
     "@storybook/addon-links": "^7.3.2",
     "@storybook/addons": "^7.3.2",
     "@storybook/node-logger": "^7.1.1",
-    "@storybook/preset-create-react-app": "^7.1.1",
+    "@storybook/preset-create-react-app": "^7.3.2",
     "@storybook/react": "^7.1.1",
     "@storybook/react-webpack5": "^7.1.1",
     "@storybook/testing-library": "^0.2.0",
