@@ -11,7 +11,7 @@ import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
-const HelpButtonWidth = "66px";
+const HelpButtonWidth = "80px";
 const HelpButtonHeight = "44px";
 
 interface IQuestionHeader {
@@ -31,27 +31,28 @@ const Description = styled(Box)(({ theme }) => ({
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
   width: theme.breakpoints.values.formWrap,
-  maxWidth: `calc(100% - ${HelpButtonWidth})`,
-  [theme.breakpoints.up("contentWrap")]: {
-    maxWidth: "100%",
-  },
+  maxWidth: "100%",
 }));
 
 const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   width: HelpButtonWidth,
-  maxWidth: "none",
   position: "absolute",
+  maxWidth: "none",
   height: "100%",
-  top: 0,
-  right: 0,
   zIndex: "1000",
   flexShrink: 0,
   display: "flex",
   justifyContent: "flex-end",
-  // Vertically align help button with title
-  marginTop: 0,
+  top: theme.spacing(1.5),
+  right: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    right: theme.spacing(3),
+  },
+  [theme.breakpoints.up("contentWrap")]: {
+    top: theme.spacing(8),
+  },
   [theme.breakpoints.up("lg")]: {
-    marginTop: "10px",
+    top: theme.spacing(9),
   },
 }));
 
@@ -60,14 +61,18 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   border: "2px solid currentColor",
   borderBottomWidth: "3px",
   background: theme.palette.background.default,
+  top: theme.spacing(0.5),
   position: "sticky",
-  top: "2px",
   right: 0,
   boxShadow: "none",
-  minWidth: "none",
+  minWidth: "60px",
   minHeight: HelpButtonHeight,
   padding: "0.35em 0.5em",
   alignSelf: "flex-start",
+  [theme.breakpoints.up("lg")]: {
+    top: theme.spacing(1),
+    minWidth: "70px",
+  },
   "&:hover": {
     backgroundColor: theme.palette.primary.dark,
     color: "white",
