@@ -13,7 +13,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.7",
     "@mui/styles": "^5.13.7",
-    "@mui/utils": "^5.13.7",
+    "@mui/utils": "^5.14.5",
     "@opensystemslab/map": "^0.7.4",
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#e9621fe",
     "@tiptap/core": "^2.0.3",
