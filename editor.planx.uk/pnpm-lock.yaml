@@ -67,8 +67,8 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
   '@tiptap/extension-hard-break':
-    specifier: ^2.0.3
-    version: 2.0.3(@tiptap/core@2.0.3)
+    specifier: ^2.1.6
+    version: 2.1.6(@tiptap/core@2.0.3)
   '@tiptap/extension-heading':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
@@ -7150,8 +7150,8 @@ packages:
       tippy.js: 6.3.7
     dev: false
 
-  /@tiptap/extension-hard-break@2.0.3(@tiptap/core@2.0.3):
-    resolution: {integrity: sha512-RCln6ARn16jvKTjhkcAD5KzYXYS0xRMc0/LrHeV8TKdCd4Yd0YYHe0PU4F9gAgAfPQn7Dgt4uTVJLN11ICl8sQ==}
+  /@tiptap/extension-hard-break@2.1.6(@tiptap/core@2.0.3):
+    resolution: {integrity: sha512-znFYceEFbrgxhHZF+/wNQlAn3MWG9/VRqQAFxPGne0csewibKZRwZbeSYZQ16x1vSAlAQsKhIaAst/na/2H8LA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:
