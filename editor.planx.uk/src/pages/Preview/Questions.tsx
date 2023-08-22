@@ -37,6 +37,7 @@ const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
   border: "none",
   columnGap: theme.spacing(1),
   padding: theme.spacing(1, 1, 1, 0),
+  minHeight: "48px",
   textDecoration: "underline",
   "&:hover": {
     textDecorationThickness: "3px",
