@@ -16,6 +16,8 @@ import { buildSubmissionExportZip } from "../../send/exportZip";
  *        type: boolean
  *        required: false
  *        description: If the OneApp XML file should be included in the zip
+ *    security:
+ *      - userJWT: []
  */
 export async function generateZip(
   req: Request,

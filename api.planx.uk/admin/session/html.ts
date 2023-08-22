@@ -13,6 +13,8 @@ import type { PlanXExportData } from "@opensystemslab/planx-core/types";
  *      - admin
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
+ *    security:
+ *      - userJWT: []
  */
 export async function getHTMLExport(
   req: Request,
@@ -41,6 +43,8 @@ export async function getHTMLExport(
  *      - admin
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
+ *    security:
+ *      - userJWT: []
  */
 export async function getRedactedHTMLExport(
   req: Request,

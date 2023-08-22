@@ -262,10 +262,17 @@ const options = {
     servers: [{ url: process.env.API_URL_EXT }],
     components: {
       securitySchemes: {
-        cookieAuth: {
+        userJWT: {
           type: "apiKey",
           in: "cookie",
           name: "jwt",
+          description: "A JWT generated when the user logs in",
+        },
+        hasuraAuth: {
+          type: "apiKey",
+          in: "header",
+          name: "authorization",
+          description: "An authorisation header provided by Hasura",
         },
       },
       parameters: {
@@ -284,31 +291,24 @@ const options = {
           description:
             "Name of the Local Authority, usually the same as Planx `team`",
         },
-        hasuraAuth: {
-          name: "authorization",
-          in: "header",
-          descriptioN: "An authorisation header provided by Hasura",
-          required: true,
-          type: "string",
-        },
       },
       responses: {
         Unauthorised: {
           description: "Unauthorised error",
-          content: "application/ json",
-          schema: {
-            type: "object",
-            properties: {
-              error: {
-                type: "string",
-                enum: ["No authorization token was found"],
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  error: {
+                    type: "string",
+                    enum: ["No authorization token was found"],
+                  },
+                },
               },
             },
           },
         },
-      },
-      security: {
-        cookieAuth: [],
       },
       schemas: {
         SessionPayload: {
@@ -469,9 +469,11 @@ app.get("/hasura", async function (_req, res, next) {
  *    summary: Get information about currently logged in user
  *    tags:
  *      - misc
+ *    security:
+ *      - userJWT: []
  *    responses:
  *      '401':
- *        - $ref: '#/components/responses/Unauthorised'
+ *        $ref: '#/components/responses/Unauthorised'
  *      '200':
  *        description: OK
  *        content:
@@ -492,9 +494,6 @@ app.get("/hasura", async function (_req, res, next) {
  *                email:
  *                  type: string
  *                  example: albert@princeton.edu
- *                is_admin:
- *                  type: boolean
- *                  example: true
  *                created_at:
  *                  type: string
  *                  example: 2020-08-11T11:28:38.237493+00:00

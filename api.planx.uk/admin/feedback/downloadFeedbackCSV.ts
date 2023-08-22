@@ -61,6 +61,8 @@ type ParsedFeedback = Feedback & {
  *    description: Downloads the FeedbackFish CSV
  *    tags:
  *      - admin
+ *    security:
+ *      - userJWT: []
  */
 export const downloadFeedbackCSV = async (
   req: Request,

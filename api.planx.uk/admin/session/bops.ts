@@ -11,6 +11,8 @@ import { $admin } from "../../client";
  *      - admin
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
+ *    security:
+ *      - userJWT: []
  */
 export const getBOPSPayload = async (
   req: Request,
