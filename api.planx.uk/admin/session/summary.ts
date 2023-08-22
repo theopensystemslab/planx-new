@@ -20,7 +20,7 @@ import { Breadcrumb, Flow, LowCalSession, Passport, Team } from "../../types";
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - bearerAuth: []
+ *      - userJWT: []
  */
 export async function getSessionSummary(
   req: Request,

@@ -262,10 +262,17 @@ const options = {
     servers: [{ url: process.env.API_URL_EXT }],
     components: {
       securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
+        userJWT: {
+          type: "apiKey",
+          in: "cookie",
+          name: "jwt",
+          description: "A JWT generated when the user logs in",
+        },
+        hasuraAuth: {
+          type: "apiKey",
+          in: "header",
+          name: "authorization",
+          description: "An authorisation header provided by Hasura",
         },
       },
       parameters: {
@@ -284,12 +291,23 @@ const options = {
           description:
             "Name of the Local Authority, usually the same as Planx `team`",
         },
-        hasuraAuth: {
-          name: "authorization",
-          in: "header",
-          descriptioN: "An authorisation header provided by Hasura",
-          required: true,
-          type: "string",
+      },
+      responses: {
+        Unauthorised: {
+          description: "Unauthorised error",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  error: {
+                    type: "string",
+                    enum: ["No authorization token was found"],
+                  },
+                },
+              },
+            },
+          },
         },
       },
       schemas: {
@@ -444,6 +462,45 @@ app.get("/hasura", async function (_req, res, next) {
   }
 });
 
+/**
+ * @swagger
+ * /me:
+ *  get:
+ *    summary: Get information about currently logged in user
+ *    tags:
+ *      - misc
+ *    security:
+ *      - userJWT: []
+ *    responses:
+ *      '401':
+ *        $ref: '#/components/responses/Unauthorised'
+ *      '200':
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                  format: int32
+ *                  example: 123
+ *                first_name:
+ *                  type: string
+ *                  example: Albert
+ *                last_name:
+ *                  type: string
+ *                  example: Einstein
+ *                email:
+ *                  type: string
+ *                  example: albert@princeton.edu
+ *                created_at:
+ *                  type: string
+ *                  example: 2020-08-11T11:28:38.237493+00:00
+ *                updated_at:
+ *                  type: string
+ *                  example: 2023-08-11T11:28:38.237493+00:00
+ */
 app.get("/me", useJWT, async function (req, res, next) {
   // useJWT will return 401 if the JWT is missing or malformed
   if (!req.user?.sub)
@@ -492,6 +549,8 @@ app.get("/roads", classifiedRoadsSearch);
  *  get:
  *    summary: Health check
  *    description: Confirms the API is healthy
+ *    tags:
+ *      - misc
  *    responses:
  *      '200':
  *        description: OK

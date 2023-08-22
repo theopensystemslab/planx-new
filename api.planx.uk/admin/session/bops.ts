@@ -12,7 +12,7 @@ import { $admin } from "../../client";
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - bearerAuth: []
+ *      - userJWT: []
  */
 export const getBOPSPayload = async (
   req: Request,

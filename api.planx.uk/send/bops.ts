@@ -22,7 +22,8 @@ interface SendToBOPSRequest {
  *      - submissions
  *    parameters:
  *      - $ref: '#/components/parameters/localAuthority'
- *      - $ref: '#/components/parameters/hasuraAuth'
+ *    security:
+ *      - hasuraAuth: []
  *    requestBody:
  *      description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
  *      required: true

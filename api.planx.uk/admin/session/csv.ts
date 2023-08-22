@@ -18,7 +18,7 @@ import { $admin } from "../../client";
  *        required: false
  *        description: If a CSV file should be downloaded, or its raw data returned
  *    security:
- *      - bearerAuth: []
+ *      - userJWT: []
  */
 export async function getCSVData(
   req: Request,
@@ -61,7 +61,7 @@ export async function getCSVData(
  *        required: false
  *        description: If a CSV file should be downloaded, or its raw data returned
  *    security:
- *      - bearerAuth: []
+ *      - userJWT: []
  */
 export async function getRedactedCSVData(
   req: Request,

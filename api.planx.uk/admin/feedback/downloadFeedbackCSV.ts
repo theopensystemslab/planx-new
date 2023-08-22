@@ -62,7 +62,7 @@ type ParsedFeedback = Feedback & {
  *    tags:
  *      - admin
  *    security:
- *      - bearerAuth: []
+ *      - userJWT: []
  */
 export const downloadFeedbackCSV = async (
   req: Request,
