@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#1960181
-    version: github.com/theopensystemslab/planx-core/1960181
+    specifier: git+https://github.com/theopensystemslab/planx-core#e9621fe
+    version: github.com/theopensystemslab/planx-core/e9621fe
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -2033,10 +2033,11 @@ packages:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/1960181:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/1960181}
+  github.com/theopensystemslab/planx-core/e9621fe:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e9621fe}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
+    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.1(react@18.2.0)
