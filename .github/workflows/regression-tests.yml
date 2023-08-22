@@ -28,6 +28,8 @@ jobs:
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}

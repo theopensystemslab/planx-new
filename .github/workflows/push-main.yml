@@ -46,6 +46,8 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
       - run: pnpm build
