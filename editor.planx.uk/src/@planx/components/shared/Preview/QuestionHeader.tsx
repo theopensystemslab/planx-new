@@ -12,6 +12,7 @@ import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
 const HelpButtonWidth = "66px";
+const HelpButtonHeight = "44px";
 
 interface IQuestionHeader {
   title?: string;
@@ -64,6 +65,7 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   right: 0,
   boxShadow: "none",
   minWidth: "none",
+  minHeight: HelpButtonHeight,
   padding: "0.35em 0.5em",
   alignSelf: "flex-start",
   "&:hover": {
