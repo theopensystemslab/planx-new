@@ -15,14 +15,11 @@ import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { handleSubmit } from "./Node";
 
-const BackBar = styled(Box)(({ theme }) => ({
-  position: "sticky",
+const BackBar = styled(Box)(() => ({
   top: 0,
   left: 0,
   width: "100%",
-  background: theme.palette.background.paper,
   zIndex: "1000",
-  borderBottom: `1px solid ${theme.palette.border.light}`,
 }));
 
 const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
