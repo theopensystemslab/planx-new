@@ -1,0 +1,18 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+paths: {}
+components:
+  schemas:
+    SessionPayload:
+      type: object
+      properties:
+        payload:
+          type: object
+          properties:
+            sessionId:
+              type: string
+      example:
+        payload:
+          sessionId: "123"
