@@ -56,10 +56,6 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
 }));
 
 export const HelpButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.main,
-  border: "2px solid currentColor",
-  borderBottomWidth: "3px",
-  background: theme.palette.background.default,
   position: "sticky",
   top: "2px",
   right: 0,
@@ -73,7 +69,7 @@ export const HelpButton = styled(Button)(({ theme }) => ({
     color: "white",
     borderColor: theme.palette.primary.dark,
   },
-}));
+})) as typeof Button;
 
 export const Image = styled("img")(() => ({
   maxWidth: "100%",
@@ -154,6 +150,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             onClick={handleHelpClick}
             aria-haspopup="dialog"
             data-testid="more-info-button"
+            variant="outlined"
           >
             Help
           </HelpButton>
