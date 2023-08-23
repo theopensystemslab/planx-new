@@ -11,7 +11,6 @@ import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
-const HelpButtonWidth = "80px";
 const HelpButtonHeight = "44px";
 
 interface IQuestionHeader {
@@ -35,7 +34,6 @@ const TitleWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const HelpButtonWrapper = styled(Box)(({ theme }) => ({
-  width: HelpButtonWidth,
   position: "absolute",
   maxWidth: "none",
   height: "100%",
@@ -43,42 +41,39 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   flexShrink: 0,
   display: "flex",
   justifyContent: "flex-end",
+  width: "60px",
   top: theme.spacing(1.5),
   right: theme.spacing(2),
   [theme.breakpoints.up("md")]: {
     right: theme.spacing(3),
+    width: "70px",
   },
   [theme.breakpoints.up("contentWrap")]: {
     top: theme.spacing(8),
   },
   [theme.breakpoints.up("lg")]: {
     top: theme.spacing(9),
+    width: "80px",
   },
 }));
 
 export const HelpButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.main,
-  border: "2px solid currentColor",
-  borderBottomWidth: "3px",
-  background: theme.palette.background.default,
   top: theme.spacing(0.5),
   position: "sticky",
   right: 0,
   boxShadow: "none",
-  minWidth: "60px",
   minHeight: HelpButtonHeight,
   padding: "0.35em 0.5em",
   alignSelf: "flex-start",
   [theme.breakpoints.up("lg")]: {
     top: theme.spacing(1),
-    minWidth: "70px",
   },
   "&:hover": {
     backgroundColor: theme.palette.primary.dark,
     color: "white",
     borderColor: theme.palette.primary.dark,
   },
-}));
+})) as typeof Button;
 
 export const Image = styled("img")(() => ({
   maxWidth: "100%",
@@ -159,6 +154,8 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             onClick={handleHelpClick}
             aria-haspopup="dialog"
             data-testid="more-info-button"
+            variant="outlined"
+            sx={{ width: "100%" }}
           >
             Help
           </HelpButton>
