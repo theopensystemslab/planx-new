@@ -7,28 +7,17 @@ export default {
     "road.classified": {
       name: "Classified road",
       plural: "Classified roads",
+      text: "This will effect your project if you are looking to add a dropped kerb. It may also impact some agricultural or forestry projects within 25 metres of a classified road."
     },
   },
   constraints: {
     "road.classified": {
       fn: "road.classified",
       value: true,
-      text: "is on a Classified Road (Lambeth Palace Road - A Road)",
+      text: "is on a Classified Road",
       data: [
         {
-          type: "Feature",
-          geometry: {
-            type: "MultiLineString",
-            coordinates: [
-              [
-                [51.49981331, -0.11683771],
-                [51.49986254, -0.11686428],
-                [51.4999603, -0.11684774],
-                [51.50002833, -0.11683623],
-                [51.50005332, -0.11683201],
-              ],
-            ],
-          },
+          name: "Lambeth Palace Road - A Road",
           properties: {
             GmlID: "Highways_RoadLink.102656",
             OBJECTID: 102656,
