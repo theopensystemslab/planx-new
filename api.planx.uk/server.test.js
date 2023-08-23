@@ -34,7 +34,7 @@ describe("authentication", () => {
       .get("/auth/login/failed")
       .expect(401)
       .then((res) => {
-        expect(res.body).toEqual({ error: "user failed to authenticate." });
+        expect(res.body).toEqual({ error: "User failed to authenticate" });
       });
   });
 });
