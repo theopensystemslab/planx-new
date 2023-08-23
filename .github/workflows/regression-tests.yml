@@ -77,6 +77,8 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: api.planx.uk
@@ -111,6 +113,8 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
@@ -142,6 +146,8 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
         working-directory: e2e
