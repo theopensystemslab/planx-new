@@ -28,6 +28,9 @@ export const LINE_HEIGHT_BASE = "1.33";
 const SPACING_TIGHT = "-0.02em";
 
 const DEFAULT_PALETTE: Partial<PaletteOptions> = {
+  common: {
+    white: "#FFFFFF",
+  },
   primary: {
     main: DEFAULT_PRIMARY_COLOR,
     contrastText: BG_COLOR_DEFAULT,
@@ -264,6 +267,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           outlined: {
             borderWidth: "2px 2px 3px",
             borderColor: "currentcolor",
+            boxShadow: "none",
             "&:hover": {
               borderWidth: "2px 2px 3px",
             },
