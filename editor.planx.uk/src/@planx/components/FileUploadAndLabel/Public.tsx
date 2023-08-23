@@ -1,5 +1,6 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
@@ -24,10 +25,7 @@ import { MoreInformation } from "../shared";
 import Card from "../shared/Preview/Card";
 import MoreInfo from "../shared/Preview/MoreInfo";
 import MoreInfoSection from "../shared/Preview/MoreInfoSection";
-import QuestionHeader, {
-  HelpButton,
-  Image,
-} from "../shared/Preview/QuestionHeader";
+import QuestionHeader, { Image } from "../shared/Preview/QuestionHeader";
 import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -55,6 +53,17 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
     gridAutoColumns: "1fr",
   },
 }));
+
+export const InfoButton = styled(Button)(({ theme }) => ({
+  minWidth: 0,
+  marginLeft: theme.spacing(1.5),
+  boxShadow: "none",
+  color: theme.palette.primary.main,
+  padding: "0.33em 0.5em",
+  minHeight: "44px",
+  textDecoration: "underline",
+  textUnderlineOffset: "0.15em",
+})) as typeof Button;
 
 function Component(props: Props) {
   const [fileList, setFileList] = useState<FileList>({
@@ -285,18 +294,15 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         <Typography variant="body1">{props.name}</Typography>
       </Box>
       {!!(info || policyRef || howMeasured) && (
-        <HelpButton
+        <InfoButton
           title={`More information`}
           aria-label={`See more information about "${props.name}"`}
           onClick={() => handleHelpClick({ [props.fn]: props.name })}
           aria-haspopup="dialog"
-          variant="outlined"
-          sx={{
-            marginLeft: (theme) => theme.spacing(0.5),
-          }}
+          size="small"
         >
-          Help
-        </HelpButton>
+          <span>Help</span>
+        </InfoButton>
       )}
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
         {info && info !== emptyContent ? (

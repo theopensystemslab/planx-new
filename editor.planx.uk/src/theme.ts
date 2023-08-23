@@ -240,9 +240,9 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             minWidth: "3em",
           },
           text: {
-            color: "rgba(0,0,0,0.4)",
+            color: TEXT_COLOR_SECONDARY,
             "&:hover": {
-              color: "rgba(0,0,0,1)",
+              color: TEXT_COLOR_PRIMARY,
             },
           },
           sizeSmall: {

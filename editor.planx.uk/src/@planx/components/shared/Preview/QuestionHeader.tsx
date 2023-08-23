@@ -61,7 +61,6 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   top: theme.spacing(0.5),
   position: "sticky",
   right: 0,
-  boxShadow: "none",
   minHeight: HelpButtonHeight,
   padding: "0.35em 0.5em",
   alignSelf: "flex-start",
