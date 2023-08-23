@@ -58,10 +58,10 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
 }));
 
 export const HelpButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.common.white,
   top: theme.spacing(0.5),
   position: "sticky",
   right: 0,
-  boxShadow: "none",
   minHeight: HelpButtonHeight,
   padding: "0.35em 0.5em",
   alignSelf: "flex-start",
@@ -70,7 +70,7 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   },
   "&:hover": {
     backgroundColor: theme.palette.primary.dark,
-    color: "white",
+    color: theme.palette.common.white,
     borderColor: theme.palette.primary.dark,
   },
 })) as typeof Button;
