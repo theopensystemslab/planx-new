@@ -1,7 +1,6 @@
 import supertest from "supertest";
 import app from "../../server";
 import { authHeader } from "../../tests/mockJWT";
-import { queryMock } from "../../tests/graphqlQueryMock";
 
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/html`;
@@ -27,24 +26,6 @@ jest.mock("../../client", () => {
 });
 
 describe("HTML data admin endpoint", () => {
-  beforeEach(() =>
-    queryMock.mockQuery({
-      name: "GetTeamForSession",
-      matchOnVariables: false,
-      data: {
-        lowcal_sessions_by_pk: {
-          flow: {
-            team: {
-              id: "123",
-              slug: "test-team",
-              boundary_bbox: {},
-            },
-          },
-        },
-      },
-    }),
-  );
-
   afterEach(() => jest.clearAllMocks());
 
   it("requires a user to be logged in", () => {

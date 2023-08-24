@@ -16,7 +16,6 @@ import { Passport } from "@opensystemslab/planx-core";
 import type { Passport as IPassport } from "../types";
 import type { Stream } from "node:stream";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
-import { getTeamForSession } from "../team/utils";
 
 export async function buildSubmissionExportZip({
   sessionId,
@@ -110,12 +109,11 @@ export async function buildSubmissionExportZip({
     }
   }
 
-  const { boundaryBBox } = await getTeamForSession(sessionId);
-
+  const boundingBox = passport.data["property.boundary.site.buffered"];
   // generate and add an HTML overview document for the submission to zip
   const overviewHTML = generateApplicationHTML({
     planXExportData: responses as PlanXExportData[],
-    teamBBox: boundaryBBox,
+    boundingBox,
   });
   await zip.addFile({
     name: "Overview.htm",
@@ -125,7 +123,7 @@ export async function buildSubmissionExportZip({
   // generate and add an HTML overview document for the submission to zip
   const redactedOverviewHTML = generateApplicationHTML({
     planXExportData: redactedResponses as PlanXExportData[],
-    teamBBox: boundaryBBox,
+    boundingBox,
   });
   await zip.addFile({
     name: "RedactedOverview.htm",
@@ -144,7 +142,7 @@ export async function buildSubmissionExportZip({
     // generate and add an HTML boundary document for the submission to zip
     const boundaryHTML = generateMapHTML({
       geojson,
-      teamBBox: boundaryBBox,
+      boundingBox,
     });
     await zip.addFile({
       name: "LocationPlan.htm",
