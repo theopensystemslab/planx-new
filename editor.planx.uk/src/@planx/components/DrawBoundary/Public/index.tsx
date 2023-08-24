@@ -24,6 +24,10 @@ export type Props = PublicProps<DrawBoundary>;
 
 export type Boundary = GeometryObject | undefined;
 
+// Buffer applied to the address point to clip this map extent
+//   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
+const BUFFER_IN_METERS = 75;
+
 export default function Component(props: Props) {
   const isMounted = useRef(false);
   const previousBoundary =
@@ -39,7 +43,7 @@ export default function Component(props: Props) {
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
   const [area, setArea] = useState<number | undefined>(previousArea);
   const environment = useStore((state) => state.previewEnvironment);
-  const addressPoint = point([
+  const addressPoint = passport?.data?._address?.longitude && passport?.data?._address?.latitude && point([
     Number(passport?.data?._address?.longitude),
     Number(passport?.data?._address?.latitude),
   ]);
@@ -116,8 +120,8 @@ export default function Component(props: Props) {
                 drawMode
                 drawPointer="crosshair"
                 drawGeojsonData={JSON.stringify(boundary)}
-                clipGeojsonData={JSON.stringify(
-                  buffer(addressPoint, 75, { units: "meters" }),
+                clipGeojsonData={addressPoint && JSON.stringify(
+                  buffer(addressPoint, BUFFER_IN_METERS, { units: "meters" }),
                 )}
                 zoom={20}
                 maxZoom={23}
@@ -193,7 +197,7 @@ export default function Component(props: Props) {
           boundary && props.dataFieldBoundary ? boundary : undefined,
         [`${props.dataFieldBoundary}.buffered`]:
           boundary && props.dataFieldBoundary
-            ? buffer(boundary, 50, { units: "meters" })
+            ? buffer(boundary, BUFFER_IN_METERS, { units: "meters" })
             : undefined,
         [props.dataFieldArea]:
           boundary && props.dataFieldBoundary ? area : undefined,
