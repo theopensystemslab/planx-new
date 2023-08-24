@@ -46,10 +46,7 @@ export default function Component(props: Props) {
     Number(passport?.data?._address?.longitude),
     Number(passport?.data?._address?.latitude),
   ]);
-  const [environment, boundaryBBox] = useStore((state) => ([
-    state.previewEnvironment,
-    state.boundaryBBox,
-  ]));
+  const environment = useStore((state) => state.previewEnvironment);
 
   useEffect(() => {
     if (isMounted.current) setSlots([]);
@@ -135,7 +132,6 @@ export default function Component(props: Props) {
                 markerLongitude={Number(passport?.data?._address?.longitude)}
                 resetControlImage="trash"
                 osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-                clipGeojsonData={JSON.stringify(boundaryBBox)}
               />
             </MapContainer>
             <MapFooter>

@@ -117,7 +117,6 @@ export function Presentational(props: PresentationalProps) {
       handleSubmit?.(values);
     },
   });
-  const boundaryBBox = useStore((state) => state.boundaryBBox);
 
   const propertyDetails: PropertyDetail[] = [
     {
@@ -163,7 +162,6 @@ export function Presentational(props: PresentationalProps) {
           showMarker
           markerLatitude={address?.latitude}
           markerLongitude={address?.longitude}
-          clipGeojsonData={JSON.stringify(boundaryBBox)}
           // markerColor={team?.settings?.design?.color} // defaults to black
         />
       </MapContainer>
