@@ -13,7 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
-import { visuallyHidden } from "@mui/utils";
+import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
@@ -63,9 +63,19 @@ export const FileTaggingModal = ({
       }}
     >
       <DialogContent>
-        <h2 style={visuallyHidden} id="dialog-heading">
-          What do these files show?
-        </h2>
+        <Box sx={{ mt: 1, mb: 4 }}>
+          <Typography
+            variant="h3"
+            component="h2"
+            id="dialog-heading"
+            sx={{ mb: "0.15em" }}
+          >
+            What do these files show?
+          </Typography>
+          <Typography variant="subtitle2">
+            Select all document types that apply
+          </Typography>
+        </Box>
         {uploadedFiles.map((slot) => (
           <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
             <UploadedFileCard {...slot} key={slot.id} />
@@ -194,6 +204,12 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           },
           "& > div:focus": {
             background: (theme) => theme.palette.action.focus,
+          },
+          "& > svg": {
+            color: (theme) => theme.palette.primary.main,
+            width: "1.25em",
+            height: "1.25em",
+            top: "unset",
           },
         }}
         renderValue={(selected) => (
