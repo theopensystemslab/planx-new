@@ -73,7 +73,7 @@ function buildJWTForRole(role, userId = 1) {
 
 /**
  * Helper method for introspecting as a specific user
- * @param {string} role ("public", "admin" or "platformManager")
+ * @param {string} role ("public", "admin" or "platformAdmin")
  * @param {number} userId
  * @example
  * const { types, queries, mutations } = await introspectAs("public")
@@ -82,7 +82,7 @@ const introspectAs = async (role, userId = undefined) => {
   const gql = {
     admin: gqlAdmin,
     public: gqlPublic,
-    platformManager: gqlWithRole("platformManager", userId),
+    platformAdmin: gqlWithRole("platformAdmin", userId),
   }[role]
   const INTROSPECTION_QUERY = `
     query IntrospectionQuery {

@@ -22,7 +22,7 @@ describe("email_applications", () => {
       i = await introspectAs("admin");
     });
 
-    test("has full access to query and mutate email appliations", () => {
+    test("has full access to query and mutate email applications", () => {
       expect(i.queries).toContain("email_applications");
       expect(i.mutations).toContain("insert_email_applications");
       expect(i.mutations).toContain("insert_email_applications_one");
@@ -31,10 +31,10 @@ describe("email_applications", () => {
     });
   });
 
-  describe("platformManager", () => {
+  describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("platformManager");
+      i = await introspectAs("platformAdmin");
     });
 
     test("cannot query email_applications", () => {

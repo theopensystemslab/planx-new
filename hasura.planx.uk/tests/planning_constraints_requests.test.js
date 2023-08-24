@@ -30,10 +30,10 @@ describe("planning_constraints_requests", () => {
     });
   });
 
-  describe("platformManager", () => {
+  describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("platformManager");
+      i = await introspectAs("platformAdmin");
     });
 
     test("cannot query planning_constraints_requests", () => {

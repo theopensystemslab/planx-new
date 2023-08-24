@@ -40,10 +40,10 @@ describe("analytics and analytics_logs", () => {
     });
   });
 
-  describe("platformManager", () => {
+  describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("platformManager");
+      i = await introspectAs("platformAdmin");
     });
 
     test("cannot query analytics_logs", () => {
