@@ -653,10 +653,18 @@
           table:
             schema: public
             name: team_members
+  computed_fields:
+    - name: boundary_bbox
+      definition:
+        function:
+          schema: public
+          name: boundary_bbox
+      comment: Bounding box of the team's full boundary
   select_permissions:
     - role: public
       permission:
         columns:
+          - boundary
           - created_at
           - domain
           - id
@@ -666,6 +674,8 @@
           - slug
           - theme
           - updated_at
+        computed_fields:
+          - boundary_bbox
         filter: {}
 - table:
     schema: public
