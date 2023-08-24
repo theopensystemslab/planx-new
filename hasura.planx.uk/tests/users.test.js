@@ -36,8 +36,8 @@ describe("users", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query users", () => {
-      expect(i.queries).not.toContain("users");
+    test("can query users", () => {
+      expect(i.queries).toContain("users");
     });
 
     test("cannot create, update, or delete users", () => {

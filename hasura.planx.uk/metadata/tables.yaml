@@ -443,7 +443,14 @@
   select_permissions:
     - role: platformAdmin
       permission:
-        columns: []
+        columns:
+          - id
+          - flow_id
+          - version
+          - actor_id
+          - data
+          - created_at
+          - updated_at
         filter: {}
   update_permissions:
     - role: platformAdmin
@@ -870,3 +877,15 @@
           table:
             schema: public
             name: team_members
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+          - first_name
+          - last_name
+          - email
+          - created_at
+          - updated_at
+          - is_platform_admin
+        filter: {}
