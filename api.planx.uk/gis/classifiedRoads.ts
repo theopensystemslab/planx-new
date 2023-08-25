@@ -113,6 +113,7 @@ export const classifiedRoadsSearch = async (
         [PASSPORT_FN]: {
           name: "Classified road",
           plural: "Classified roads",
+          text: "This will effect your project if you are looking to add a dropped kerb. It may also impact some agricultural or forestry projects within 25 metres of a classified road.",
         },
       },
     };
@@ -124,8 +125,11 @@ export const classifiedRoadsSearch = async (
           [PASSPORT_FN]: {
             fn: PASSPORT_FN,
             value: true,
-            text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
-            data: features,
+            text: `is on a Classified Road`,
+            data: features.map((feature: any) => ({
+              name: `${feature.properties["RoadName1"]} - ${feature.properties["RoadClassification"]}`,
+              properties: feature.properties,
+            })),
             category: "General policy",
           } as RoadConstraint,
         },
