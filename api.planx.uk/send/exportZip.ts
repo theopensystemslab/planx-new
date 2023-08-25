@@ -109,17 +109,22 @@ export async function buildSubmissionExportZip({
     }
   }
 
+  const boundingBox = passport.data["property.boundary.site.buffered"];
   // generate and add an HTML overview document for the submission to zip
-  const overviewHTML = generateApplicationHTML(responses as PlanXExportData[]);
+  const overviewHTML = generateApplicationHTML({
+    planXExportData: responses as PlanXExportData[],
+    boundingBox,
+  });
   await zip.addFile({
     name: "Overview.htm",
     buffer: Buffer.from(overviewHTML),
   });
 
   // generate and add an HTML overview document for the submission to zip
-  const redactedOverviewHTML = generateApplicationHTML(
-    redactedResponses as PlanXExportData[],
-  );
+  const redactedOverviewHTML = generateApplicationHTML({
+    planXExportData: redactedResponses as PlanXExportData[],
+    boundingBox,
+  });
   await zip.addFile({
     name: "RedactedOverview.htm",
     buffer: Buffer.from(redactedOverviewHTML),
@@ -135,7 +140,10 @@ export async function buildSubmissionExportZip({
     });
 
     // generate and add an HTML boundary document for the submission to zip
-    const boundaryHTML = generateMapHTML(geojson);
+    const boundaryHTML = generateMapHTML({
+      geojson,
+      boundingBox,
+    });
     await zip.addFile({
       name: "LocationPlan.htm",
       buffer: Buffer.from(boundaryHTML),

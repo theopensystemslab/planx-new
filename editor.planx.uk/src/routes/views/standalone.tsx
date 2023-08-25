@@ -64,6 +64,7 @@ const fetchDataForStandaloneView = async (
               settings
               slug
               notifyPersonalisation: notify_personalisation
+              boundaryBBox: boundary_bbox
             }
             settings
           }

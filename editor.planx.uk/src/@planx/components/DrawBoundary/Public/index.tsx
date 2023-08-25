@@ -42,11 +42,11 @@ export default function Component(props: Props) {
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
   const [area, setArea] = useState<number | undefined>(previousArea);
-  const environment = useStore((state) => state.previewEnvironment);
   const addressPoint = passport?.data?._address?.longitude && passport?.data?._address?.latitude && point([
     Number(passport?.data?._address?.longitude),
     Number(passport?.data?._address?.latitude),
   ]);
+  const environment = useStore((state) => state.previewEnvironment);
 
   useEffect(() => {
     if (isMounted.current) setSlots([]);

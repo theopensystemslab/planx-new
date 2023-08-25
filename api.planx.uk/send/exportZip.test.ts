@@ -85,7 +85,6 @@ describe("buildSubmissionExportZip", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
   test("the csv is added to the zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddLocalFile).toHaveBeenCalledWith(

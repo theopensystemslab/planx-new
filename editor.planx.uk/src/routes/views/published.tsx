@@ -76,6 +76,7 @@ const fetchDataForPublishedView = async (
               settings
               slug
               notifyPersonalisation: notify_personalisation
+              boundaryBBox: boundary_bbox
             }
             settings
             publishedFlows: published_flows(

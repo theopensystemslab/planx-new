@@ -1,3 +1,4 @@
+import { GeoJSONObject } from "@turf/helpers";
 import { NotifyPersonalisation, TeamSettings } from "types";
 import { TeamTheme } from "types";
 import { Team } from "types";
@@ -9,6 +10,7 @@ export interface TeamStore {
   teamSettings?: TeamSettings;
   teamSlug: string;
   notifyPersonalisation?: NotifyPersonalisation;
+  boundaryBBox?: GeoJSONObject;
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
@@ -23,6 +25,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
   teamSettings: undefined,
   teamSlug: "",
   notifyPersonalisation: undefined,
+  boundaryBBox: undefined,
 
   setTeam: (team) =>
     set({
@@ -31,6 +34,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
       teamSettings: team.settings,
       teamSlug: team.slug,
       notifyPersonalisation: team.notifyPersonalisation,
+      boundaryBBox: team.boundaryBBox,
     }),
 
   getTeam: () => ({
@@ -39,5 +43,6 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
     settings: get().teamSettings,
     theme: get().teamTheme,
     notifyPersonalisation: get().notifyPersonalisation,
+    boundaryBBox: get().boundaryBBox,
   }),
 });

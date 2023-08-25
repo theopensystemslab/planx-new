@@ -1,7 +1,9 @@
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
 import { $admin } from "../../client";
-import type { NextFunction, Request, Response } from "express";
+import type { RequestHandler } from "express";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
+
+type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;
 
 /**
  * @swagger
@@ -16,22 +18,28 @@ import type { PlanXExportData } from "@opensystemslab/planx-core/types";
  *    security:
  *      - userJWT: []
  */
-export async function getHTMLExport(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
   try {
+    const session = await $admin.session.find(req.params.sessionId);
+    if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
+
     const { responses } = await $admin.export.csvData(req.params.sessionId);
+    const boundingBox =
+      session.data.passport.data["property.boundary.site.buffered"];
+
+    const html = generateApplicationHTML({
+      planXExportData: responses as PlanXExportData[],
+      boundingBox,
+    });
+
     res.header("Content-type", "text/html");
-    const html = generateApplicationHTML(responses as PlanXExportData[]);
     res.send(html);
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
     });
   }
-}
+};
 
 /**
  * @swagger
@@ -46,23 +54,31 @@ export async function getHTMLExport(
  *    security:
  *      - userJWT: []
  */
-export async function getRedactedHTMLExport(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export const getRedactedHTMLExport: HTMLExportHandler = async (
+  req,
+  res,
+  next,
+) => {
   try {
+    const session = await $admin.session.find(req.params.sessionId);
+    if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
+
     const { redactedResponses } = await $admin.export.csvData(
       req.params.sessionId,
     );
+    const boundingBox =
+      session.data.passport.data["property.boundary.site.buffered"];
+
+    const html = generateApplicationHTML({
+      planXExportData: redactedResponses as PlanXExportData[],
+      boundingBox,
+    });
+
     res.header("Content-type", "text/html");
-    const html = generateApplicationHTML(
-      redactedResponses as PlanXExportData[],
-    );
     res.send(html);
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
     });
   }
-}
+};

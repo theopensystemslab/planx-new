@@ -1,4 +1,5 @@
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
+import { GeoJSONObject } from "@turf/helpers";
 import { useFormik } from "formik";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
@@ -21,6 +22,7 @@ export interface Team {
   settings?: TeamSettings;
   theme?: TeamTheme;
   notifyPersonalisation?: NotifyPersonalisation;
+  boundaryBBox?: GeoJSONObject;
 }
 
 export interface TeamTheme {

@@ -43,6 +43,7 @@ export interface Team {
   slug: string;
   name: string;
   domain?: string;
+  boundaryBBox?: object;
   notifyPersonalisation: {
     helpEmail: string;
     helpPhone: string;
