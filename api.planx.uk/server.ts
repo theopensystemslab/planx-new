@@ -514,13 +514,13 @@ const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   return;
 };
 
-app.post("/analytics/log-user-exit", async (req, res, next) => {
+app.post("/analytics/log-user-exit", async (req, res) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
   if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
   res.send();
 });
 
-app.post("/analytics/log-user-resume", async (req, res, next) => {
+app.post("/analytics/log-user-resume", async (req, res) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
   if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();

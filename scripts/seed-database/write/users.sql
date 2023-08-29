@@ -4,7 +4,6 @@ CREATE TEMPORARY TABLE sync_users (
   first_name text,
   last_name text,
   email text,
-  is_admin boolean,
   created_at timestamptz,
   updated_at timestamptz
 );
