@@ -51,8 +51,9 @@
     "test": "TZ=Europe/London jest --silent",
     "test:coverage": "TZ=Europe/London jest; open ./coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London jest --coverage=false --watch",
-    "build": "rimraf ./dist && npx tsc",
-    "prepare": "cd .. && husky install api.planx.uk/.husky"
+    "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files",
+    "prepare": "cd .. && husky install api.planx.uk/.husky",
+    "copy-swagger-files": "copyfiles '**/docs.yaml' dist && copyfiles 'docs/*.yaml' dist"
   },
   "lint-staged": {
     "**/*.{js,ts}": [
@@ -85,6 +86,7 @@
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
+    "copyfiles": "^2.4.1",
     "dotenv": "^16.3.1",
     "esbuild": "^0.19.2",
     "esbuild-jest": "^0.5.0",
