@@ -2,6 +2,9 @@
 set -eo pipefail
 cd $(dirname ${0})
 
+# Temp: Force failure to test GitHub action
+exit 1
+
 # db connection strings
 LOCAL_PG=${1}
 REMOTE_PG=${2}
