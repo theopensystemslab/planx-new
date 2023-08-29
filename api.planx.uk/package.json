@@ -54,7 +54,7 @@
     "test:watch": "TZ=Europe/London jest --coverage=false --watch",
     "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files",
     "prepare": "cd .. && husky install api.planx.uk/.husky",
-    "copy-swagger-files": "copyfiles '**/docs.yaml' dist && copyfiles 'docs/*.yaml' dist"
+    "copy-swagger-files": "copyfiles '**/docs.yaml' dist"
   },
   "lint-staged": {
     "**/*.{js,ts}": [
