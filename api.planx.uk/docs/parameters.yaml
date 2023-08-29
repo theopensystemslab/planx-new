@@ -20,6 +20,6 @@ components:
     hasuraAuth:
       name: authorization
       in: header
-      descriptioN: An authorisation header provided by Hasura
+      description: An authorisation header provided by Hasura
       required: true
       type: string
