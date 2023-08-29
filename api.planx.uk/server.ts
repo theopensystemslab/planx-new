@@ -5,19 +5,11 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import { stringify } from "csv-stringify";
-import express, { CookieOptions, ErrorRequestHandler, Response } from "express";
-import { expressjwt, Request } from "express-jwt";
+import express, { ErrorRequestHandler } from "express";
 import noir from "pino-noir";
 import pinoLogger from "express-pino-logger";
-import { URL } from "url";
 import { Server } from "http";
 import passport from "passport";
-import { sign } from "jsonwebtoken";
-import {
-  Strategy as GoogleStrategy,
-  Profile,
-  VerifyCallback,
-} from "passport-google-oauth20";
 import helmet from "helmet";
 import multer from "multer";
 import swaggerJSDoc from "swagger-jsdoc";
@@ -41,7 +33,12 @@ import {
   buildPaymentPayload,
   fetchPaymentRequestViaProxy,
 } from "./inviteToPay";
-import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
+import {
+  useFilePermission,
+  useHasuraAuth,
+  useSendEmailAuth,
+  useJWT,
+} from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";
 import {
@@ -66,7 +63,6 @@ import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
-import { isLiveEnv } from "./helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
 import {
@@ -81,165 +77,10 @@ import { getHTMLExport, getRedactedHTMLExport } from "./admin/session/html";
 import { generateZip } from "./admin/session/zip";
 import { createPaymentSendEvents } from "./inviteToPay/createPaymentSendEvents";
 import { getSessionSummary } from "./admin/session/summary";
+import { googleStrategy } from "./modules/auth/strategy/google";
+import authRoutes from "./modules/auth/routes";
 
 const router = express.Router();
-
-// when login failed, send failed msg
-router.get("/login/failed", (_req, _res, next) => {
-  next({
-    status: 401,
-    message: "user failed to authenticate.",
-  });
-});
-
-// When logout, redirect to client
-router.get("/logout", (req, res) => {
-  req.logout(() => {
-    // do nothing
-  });
-  res.redirect(process.env.EDITOR_URL_EXT!);
-});
-
-// GET /google
-
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in Google authentication will involve
-//   redirecting the user to google.com.  After authorization, Google
-//   will redirect the user back to this application at /auth/google/callback
-
-const handleSuccess = (req: Request, res: Response) => {
-  if (req.user) {
-    const { returnTo = process.env.EDITOR_URL_EXT } = req.session!;
-
-    const domain = (() => {
-      if (isLiveEnv()) {
-        if (returnTo?.includes("editor.planx.")) {
-          // user is logging in to staging from editor.planx.dev
-          // or production from editor.planx.uk
-          return `.${new URL(returnTo).host}`;
-        } else {
-          // user is logging in from either a netlify preview build,
-          // or from localhost, to staging (or production... temporarily)
-          return undefined;
-        }
-      } else {
-        // user is logging in from localhost, to development
-        return "localhost";
-      }
-    })();
-
-    if (domain) {
-      // As domain is set, we know that we're either redirecting back to
-      // editor.planx.dev/login, editor.planx.uk, or localhost:PORT
-      // (if this code is running in development). With the respective
-      // domain set in the cookie.
-      const cookie: CookieOptions = {
-        domain,
-        maxAge: new Date(
-          new Date().setFullYear(new Date().getFullYear() + 1),
-        ).getTime(),
-        httpOnly: false,
-      };
-
-      if (isLiveEnv()) {
-        cookie.secure = true;
-        cookie.sameSite = "none";
-      }
-
-      res.cookie("jwt", req.user.jwt, cookie);
-
-      res.redirect(returnTo);
-    } else {
-      // Redirect back to localhost:PORT/login (if this API is in staging or
-      // production), or a netlify preview build url. As the login page is on a
-      // different domain to whatever this API is running on, we can't set a
-      // cookie. To solve this issue we inject the JWT into the return url as
-      // a parameter that can be extracted by the frontend code instead.
-      const url = new URL(returnTo);
-      url.searchParams.set("jwt", req.user.jwt);
-      res.redirect(url.href);
-    }
-  } else {
-    res.json({
-      message: "no user",
-      success: true,
-    });
-  }
-};
-
-router.get("/google", (req, res, next) => {
-  req.session!.returnTo = req.get("Referrer");
-  return passport.authenticate("google", {
-    scope: ["profile", "email"],
-  })(req, res, next);
-});
-
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/login/failed" }),
-  handleSuccess,
-);
-
-const buildJWT = async (profile: Profile, done: VerifyCallback) => {
-  const { email } = profile._json;
-
-  const { users } = await adminClient.request(
-    gql`
-      query ($email: String!) {
-        users(where: { email: { _eq: $email } }, limit: 1) {
-          id
-        }
-      }
-    `,
-    { email },
-  );
-
-  if (users.length === 1) {
-    const { id } = users[0];
-
-    const hasura = {
-      "x-hasura-allowed-roles": ["admin"],
-      "x-hasura-default-role": "admin",
-      "x-hasura-user-id": id.toString(),
-    };
-
-    const data = {
-      sub: id.toString(),
-      "https://hasura.io/jwt/claims": hasura,
-    };
-
-    done(null, {
-      jwt: sign(data, process.env.JWT_SECRET!),
-    });
-  } else {
-    done({
-      status: 404,
-      message: `User (${email}) not found. Do you need to log in to a different Google Account?`,
-    } as any);
-  }
-};
-
-passport.use(
-  "google",
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
-    },
-    async function (_accessToken, _refreshToken, profile, done) {
-      await buildJWT(profile, done);
-    },
-  ),
-);
-
-passport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function (obj: Express.User, cb) {
-  cb(null, obj);
-});
 
 const app = express();
 
@@ -358,21 +199,6 @@ app.use(json({ limit: "100mb" }));
 // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
 app.use(cookieParser());
 
-// XXX: Currently not checking for JWT and including req.user in every
-//      express endpoint because authentication also uses req.user. More info:
-//      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
-// TODO: requestProperty can now be set. This might resolve the above issue.
-const useJWT = expressjwt({
-  secret: process.env.JWT_SECRET!,
-  algorithms: ["HS256"],
-  credentialsRequired: true,
-  requestProperty: "user",
-  getToken: (req) =>
-    req.cookies?.jwt ??
-    req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
-    req.query?.token,
-});
-
 if (process.env.NODE_ENV !== "test") {
   app.use(
     pinoLogger({
@@ -439,11 +265,20 @@ app.use(
   }),
 );
 
+passport.use("google", googleStrategy);
+
+passport.serializeUser(function (user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function (obj: Express.User, cb) {
+  cb(null, obj);
+});
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: true }));
 
-app.use("/auth", router);
+app.use(authRoutes);
 
 app.use("/gis", router);
 

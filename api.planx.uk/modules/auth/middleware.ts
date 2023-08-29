@@ -1,8 +1,12 @@
-import { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
 import assert from "assert";
-import { ServerError } from "../errors";
-import { Template } from "../notify";
+import { ServerError } from "../../errors";
+import { Template } from "../../notify";
+import { expressjwt } from "express-jwt";
+
+import passport from "passport";
+
+import { RequestHandler } from "http-proxy-middleware";
 
 /**
  * Validate that a provided string (e.g. API key) matches the expected value
@@ -18,11 +22,7 @@ const isEqual = (provided = "", expected: string): boolean => {
 /**
  * Validate that a request is using the Hasura API key
  */
-const useHasuraAuth = (
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-): void => {
+export const useHasuraAuth: RequestHandler = (req, _res, next): void => {
   const isAuthenticated = isEqual(
     req.headers.authorization,
     process.env.HASURA_PLANX_API_KEY!,
@@ -34,11 +34,7 @@ const useHasuraAuth = (
 /**
  * Ensure that the correct permissions are used for the /send-email endpoint
  */
-const useSendEmailAuth = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): void => {
+export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
   const handleInvalidTemplate = (_template?: never) => {
     throw new ServerError({
       message: "Invalid template",
@@ -77,11 +73,7 @@ const useSendEmailAuth = (
  * Validate that a request for a private file has the correct authentication
  */
 assert(process.env.FILE_API_KEY, "Missing environment variable 'FILE_API_KEY'");
-const useFilePermission = (
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-): void => {
+export const useFilePermission: RequestHandler = (req, _res, next): void => {
   const isAuthenticated = isEqual(
     req.headers["api-key"] as string,
     process.env.FILE_API_KEY!,
@@ -90,4 +82,30 @@ const useFilePermission = (
   return next();
 };
 
-export { useHasuraAuth, useSendEmailAuth, useFilePermission };
+// XXX: Currently not checking for JWT and including req.user in every
+//      express endpoint because authentication also uses req.user. More info:
+//      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
+// TODO: requestProperty can now be set. This might resolve the above issue.
+export const useJWT = expressjwt({
+  secret: process.env.JWT_SECRET!,
+  algorithms: ["HS256"],
+  credentialsRequired: true,
+  requestProperty: "user",
+  getToken: (req) =>
+    req.cookies?.jwt ??
+    req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
+    req.query?.token,
+});
+
+export const useGoogleAuth: RequestHandler = (req, res, next) => {
+  req.session!.returnTo = req.get("Referrer");
+  return passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })(req, res, next);
+};
+
+export const useGoogleCallbackAuth: RequestHandler = (req, res, next) => {
+  return passport.authenticate("google", {
+    failureRedirect: "/auth/login/failed",
+  })(req, res, next);
+};
