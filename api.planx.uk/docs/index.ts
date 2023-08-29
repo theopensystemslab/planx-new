@@ -73,6 +73,38 @@ const responses = {
       },
     },
   },
+  SuccessMessage: {
+    description: "Success message",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            message: {
+              type: "string",
+              example: "Success!",
+            },
+          },
+        },
+      },
+    },
+  },
+  ErrorMessage: {
+    description: "Error message",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            message: {
+              type: "string",
+              example: "Error!",
+            },
+          },
+        },
+      },
+    },
+  },
 };
 
 // Swagger documentation config
