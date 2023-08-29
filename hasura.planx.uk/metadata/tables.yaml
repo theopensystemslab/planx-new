@@ -177,6 +177,21 @@
           name: compile_flow_portals
       comment: Flow data with portals merged in
   select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - created_at
+          - creator_id
+          - data
+          - id
+          - settings
+          - slug
+          - team_id
+          - updated_at
+          - version
+        computed_fields:
+          - data_merged
+        filter: {}
     - role: public
       permission:
         columns:
@@ -192,15 +207,45 @@
         computed_fields:
           - data_merged
         filter: {}
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - data
+          - settings
+          - slug
+        filter: {}
+        check: null
 - table:
     schema: public
     name: global_settings
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - id
+          - footer_content
   select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - footer_content
+          - id
+        filter: {}
     - role: public
       permission:
         columns:
           - footer_content
         filter: {}
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - footer_content
+          - id
+        filter: {}
+        check: {}
 - table:
     schema: public
     name: lowcal_sessions
@@ -383,6 +428,36 @@
     - name: flow
       using:
         foreign_key_constraint_on: flow_id
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+          - flow_id
+          - version
+          - actor_id
+          - data
+          - created_at
+          - updated_at
+        filter: {}
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns: []
+        filter: {}
+        check: null
 - table:
     schema: public
     name: payment_requests
@@ -558,7 +633,28 @@
     - name: user
       using:
         foreign_key_constraint_on: publisher_id
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - id
+          - publisher_id
+          - summary
+          - created_at
+          - flow_id
+          - data
   select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - created_at
+          - data
+          - flow_id
+          - id
+          - publisher_id
+          - summary
+        filter: {}
     - role: public
       permission:
         columns:
@@ -637,6 +733,16 @@
         check: null
 - table:
     schema: public
+    name: team_members
+  object_relationships:
+    - name: team
+      using:
+        foreign_key_constraint_on: team_id
+    - name: user
+      using:
+        foreign_key_constraint_on: user_id
+- table:
+    schema: public
     name: teams
   array_relationships:
     - name: flows
@@ -660,7 +766,35 @@
           schema: public
           name: boundary_bbox
       comment: Bounding box of the team's full boundary
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - id
+          - notify_personalisation
+          - settings
+          - theme
+          - domain
+          - name
+          - slug
+          - created_at
+          - updated_at
+          - submission_email
   select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - created_at
+          - domain
+          - id
+          - name
+          - notify_personalisation
+          - settings
+          - slug
+          - theme
+          - updated_at
+        filter: {}
     - role: public
       permission:
         columns:
@@ -677,6 +811,19 @@
         computed_fields:
           - boundary_bbox
         filter: {}
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - domain
+          - name
+          - notify_personalisation
+          - settings
+          - slug
+          - submission_email
+          - theme
+        filter: {}
+        check: null
 - table:
     schema: public
     name: uniform_applications
@@ -703,14 +850,8 @@
         template_engine: Kriti
 - table:
     schema: public
-    name: team_members
-  object_relationships:
-    - name: team
-      using:
-        foreign_key_constraint_on: team_id
-    - name: user
-      using:
-        foreign_key_constraint_on: user_id
+    name: user_roles
+  is_enum: true
 - table:
     schema: public
     name: users
@@ -736,3 +877,15 @@
           table:
             schema: public
             name: team_members
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+          - first_name
+          - last_name
+          - email
+          - created_at
+          - updated_at
+          - is_platform_admin
+        filter: {}

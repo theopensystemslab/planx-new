@@ -595,4 +595,20 @@ describe("sessions", () => {
       });
     });
   });
+
+  describe("platformAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformAdmin");
+    });
+
+    test("cannot query sessions", () => {
+      expect(i.queries).not.toContain("sessions");
+    });
+
+    test("cannot create, update, or delete sessions", () => {
+      expect(i).toHaveNoMutationsFor("sessions");
+    });
+  });
+  
 });

@@ -39,4 +39,19 @@ describe("analytics and analytics_logs", () => {
       expect(i.mutations).toContain("delete_analytics_logs");
     });
   });
+
+  describe("platformAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformAdmin");
+    });
+
+    test("cannot query analytics_logs", () => {
+      expect(i.queries).not.toContain("analytics_logs");
+    });
+
+    test("cannot create, update, or delete analytics_logs", () => {
+      expect(i).toHaveNoMutationsFor("analytics_logs");
+    });
+  });
 });
