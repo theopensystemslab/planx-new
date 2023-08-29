@@ -9,13 +9,13 @@ COMMENT ON TABLE "public"."user_roles" IS E'Enum of possible user roles in PlanX
 INSERT INTO
   "public"."user_roles"("value")
 VALUES
-  (E'admin'),
-  (E'viewer');
+  (E'teamAdmin'),
+  (E'teamViewer');
 
 alter table
   "public"."team_members"
 add
-  column "role" text not null default 'viewer';
+  column "role" text not null default 'teamViewer';
 
 alter table
   "public"."team_members"
