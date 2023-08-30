@@ -6,7 +6,7 @@ import { isLiveEnv } from "../../helpers";
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
     status: 401,
-    message: "user failed to authenticate.",
+    message: "User failed to authenticate",
   });
 
 export const logout: RequestHandler = (req, res) => {

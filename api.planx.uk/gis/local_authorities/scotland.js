@@ -1,5 +1,4 @@
 import "isomorphic-fetch";
-import https from "https";
 import {
   getQueryableConstraints,
   makeEsriUrl,
