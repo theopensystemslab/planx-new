@@ -16,7 +16,7 @@ echo downloading data from production
 mkdir -p /tmp
 
 # Create sync.sql file for all our comnands which will be executed in a single transaction
-touch /tmp/sync.sql
+touch '/tmp/sync.sql'
 
 tables=(flows users teams flow_document_templates)
 
@@ -29,7 +29,7 @@ for table in "${tables[@]}"; do
 
   if [[ ${RESET} == "reset_all" ]]; then
     reset_cmd="TRUNCATE TABLE ${table} CASCADE;"
-    cat $reset_cmd > tmp/sync.sql
+    cat $reset_cmd > '/tmp/sync.sql'
   fi
 done
 
@@ -37,14 +37,14 @@ psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, da
 echo published_flows downloaded
 
 if [[ ${RESET} == "reset_flows" ]]; then
-  cat write/truncate_flows.sql > tmp/sync.sql
+  cat '/write/truncate_flows.sql' > '/tmp/sync.sql'
 fi
 
 # Add main operations
-cat write/main.sql > tmp/sync.sql
+cat '/write/main.sql' > '/tmp/sync.sql'
 
 echo "Beginning write transaction..."
-psql --quiet ${LOCAL_PG} -f tmp/sync.sql --single-transaction -v ON_ERROR_STOP=on
+psql --quiet ${LOCAL_PG} -f '/tmp/sync.sql' --single-transaction -v ON_ERROR_STOP=on
 
 # clean-up tmp dir
 rm -rf /tmp
