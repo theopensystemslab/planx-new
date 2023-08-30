@@ -23,16 +23,18 @@ for table in "${tables[@]}"; do
   read_cmd="\\copy (SELECT * FROM ${table}) TO ${target} WITH (FORMAT csv, DELIMITER ';');"
   psql --quiet ${REMOTE_PG} --command="${read_cmd}"
   echo ${table} downloaded
+
   if [[ ${RESET} == "reset_all" ]]; then
     reset_cmd="TRUNCATE TABLE ${table} CASCADE;"
-    psql ${LOCAL_PG} --command="${reset_cmd}"
+
+    # Start building single sync.sql file which will be executed in a single transaction
+    cat $reset_cmd > sync.sql
   fi
 done
 
 psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
 echo published_flows downloaded
 
-# Start building single sync.sql file which will be executed in a single transaction
 if [[ ${RESET} == "reset_flows" ]]; then
   cat write/truncate_flows.sql > sync.sql
 fi
