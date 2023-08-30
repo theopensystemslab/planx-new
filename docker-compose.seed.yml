@@ -7,7 +7,7 @@ services:
       - "./scripts/seed-database:/app"
     working_dir: "/app"
     entrypoint: "./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
-    command: "no_reset include_published_flows"
+    command: "no_reset"
     restart: "no"
     depends_on:
       hasura-proxy:

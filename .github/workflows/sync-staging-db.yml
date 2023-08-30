@@ -36,7 +36,7 @@ jobs:
       - name: Run sync script
         run: | 
           {
-            docker run --rm -v "$(pwd)/scripts/seed-database:/app" --workdir="/app" postgis/postgis:12-3.0-alpine "./container.sh" "${STAGING_PG_URL}" "${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}" "reset_flows" "include_published_flows"
+            docker run --rm -v "$(pwd)/scripts/seed-database:/app" --workdir="/app" postgis/postgis:12-3.0-alpine "./container.sh" "${STAGING_PG_URL}" "${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}" "reset_flows"
           } || {
             echo "Database sync failed!"
             exit 1
