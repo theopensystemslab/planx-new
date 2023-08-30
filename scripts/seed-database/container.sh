@@ -15,6 +15,9 @@ echo downloading data from production
 # set-up tmp dir for remote data
 mkdir -p /tmp
 
+# Create sync.sql file for all our comnands which will be executed in a single transaction
+touch /tmp/sync.sql
+
 tables=(flows users teams flow_document_templates)
 
 # run copy commands on remote  db
@@ -26,8 +29,6 @@ for table in "${tables[@]}"; do
 
   if [[ ${RESET} == "reset_all" ]]; then
     reset_cmd="TRUNCATE TABLE ${table} CASCADE;"
-
-    # Start building single sync.sql file which will be executed in a single transaction
     cat $reset_cmd > tmp/sync.sql
   fi
 done
