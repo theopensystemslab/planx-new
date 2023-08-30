@@ -1,12 +1,11 @@
 import "isomorphic-fetch";
-import https from "https";
 import {
   getQueryableConstraints,
   makeEsriUrl,
   setEsriGeometryType,
   setEsriGeometry,
-  addDesignatedVariable,
   rollupResultLayers,
+  addDesignatedVariable,
 } from "../helpers.js";
 import { planningConstraints } from "./metadata/scotland";
 
@@ -20,7 +19,7 @@ async function search(
   serverIndex,
   outFields,
   geometry,
-  geometryType
+  geometryType,
 ) {
   const { id } = planningConstraints[featureName];
 
@@ -30,13 +29,7 @@ async function search(
     geometryType,
   });
 
-  // XX Fetching layers from the scotGovDomain map server throws 
-  //   `FetchError: Unable to verify first certificate / Unable to verify leaf signature`
-  //   unless this agent is set; will raise issue with TPX team and aim to remove post demo sprint
-  const agent = new https.Agent({
-    rejectUnauthorized: false
-  });
-  return fetch(url, { agent })
+  return fetch(url)
     .then((response) => response.text())
     .then((data) => [featureName, data])
     .catch((error) => {
@@ -59,51 +52,54 @@ async function go(x, y, siteBoundary, extras) {
         gisLayers[layer].serverIndex,
         gisLayers[layer].fields,
         geom,
-        geomType
-      )
-    )
+        geomType,
+      ),
+    ),
   );
 
-  const ob = results
-    .filter(([_key, result]) => !(result instanceof Error))
-    .reduce(
-      (acc, [key, result]) => {
-        const data = JSON.parse(result);
-        const k = `${planningConstraints[key].key}`;
+  const ob = results.filter(Boolean).reduce(
+    (acc, [key, result]) => {
+      const data = JSON.parse(result);
+      const k = `${planningConstraints[key].key}`;
 
-        try {
-          if (data.features.length > 0) {
-            const { attributes: properties } = data.features[0];
+      try {
+        if (data.features.length > 0) {
+          const { attributes: properties } = data.features[0];
+          acc[k] = {
+            ...planningConstraints[key].pos(properties),
+            value: true,
+            type: "warning",
+            data: properties,
+            category: planningConstraints[key].category,
+          };
+        } else {
+          if (!acc[k]) {
             acc[k] = {
-              ...planningConstraints[key].pos(properties),
-              value: true,
-              type: "warning",
-              data: properties,
+              text: planningConstraints[key].neg,
+              value: false,
+              type: "check",
+              data: {},
+              category: planningConstraints[key].category,
             };
-          } else {
-            if (!acc[k]) {
-              acc[k] = {
-                text: planningConstraints[key].neg,
-                value: false,
-                type: "check",
-                data: {},
-              };
-            }
           }
-        } catch (e) {
-          console.log(e);
         }
-
-        return acc;
-      },
-      {
-        ...extras,
+      } catch (e) {
+        console.log(e);
       }
-    );
+
+      return acc;
+    },
+    {
+      ...extras,
+    },
+  );
 
   // Scotland hosts multiple national park layers
   // Roll these up to preserve their granularity when true
-  const nationalParkLayers = ["designated.nationalPark.cairngorms", "designated.nationalPark.lochLomondTrossachs"];
+  const nationalParkLayers = [
+    // "designated.nationalPark.cairngorms",
+    // "designated.nationalPark.lochLomondTrossachs",
+  ];
   const obWithOneNationalPark = rollupResultLayers(
     ob,
     nationalParkLayers,

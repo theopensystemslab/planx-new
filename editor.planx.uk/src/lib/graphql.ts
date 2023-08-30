@@ -16,9 +16,10 @@ const toastId = "error_toast";
 // function used to verify response status
 const customFetch = async (
   input: RequestInfo,
-  init?: RequestInit
+  init?: RequestInit,
 ): Promise<Response> => {
   const fetchResult = await fetch(input, init);
+  // eslint-disable-next-line no-prototype-builtins
   const isGraphQLError = fetchResult.body?.hasOwnProperty("errors");
   const isSuccess =
     isGraphQLError || (fetchResult.status >= 200 && fetchResult.status <= 299);
@@ -40,8 +41,8 @@ const errorLink = onError(({ graphQLErrors }) => {
     // GraphQL errors are not retried
     graphQLErrors.map(({ message, locations, path }) =>
       console.error(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      )
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      ),
     );
   } else {
     toast.error("Network error, attempting to reconnect…", {

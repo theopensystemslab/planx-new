@@ -8,10 +8,11 @@ import DateInput from "@planx/components/DateInput/Editor";
 import DrawBoundary from "@planx/components/DrawBoundary/Editor";
 import ExternalPortal from "@planx/components/ExternalPortal/Editor";
 import FileUpload from "@planx/components/FileUpload/Editor";
+import FileUploadAndLabel from "@planx/components/FileUploadAndLabel/Editor";
 import Filter from "@planx/components/Filter/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import InternalPortal from "@planx/components/InternalPortal/Editor";
-import MultipleFileUpload from "@planx/components/MultipleFileUpload/Editor";
+import NextSteps from "@planx/components/NextSteps/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Pay from "@planx/components/Pay/Editor";
@@ -33,7 +34,7 @@ import { SLUGS } from "../../data/types";
 const EmptyComponent: React.FC<any> = () => null;
 
 const components: {
-  [key in typeof SLUGS[TYPES]]: React.FC<any>;
+  [key in (typeof SLUGS)[TYPES]]: React.FC<any>;
 } = {
   "address-input": AddressInput,
   calculate: Calculate,
@@ -49,7 +50,8 @@ const components: {
   "find-property-merged": FindProperty,
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
-  "multiple-file-upload": MultipleFileUpload,
+  "file-upload-and-label": FileUploadAndLabel,
+  "next-steps": NextSteps,
   notice: Notice,
   "number-input": NumberInput,
   pay: Pay,

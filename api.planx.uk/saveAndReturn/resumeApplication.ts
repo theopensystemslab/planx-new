@@ -2,14 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
-import {
-  convertSlugToName,
-  getResumeLink,
-  calculateExpiryDate,
-} from "./utils";
+import { convertSlugToName, getResumeLink, calculateExpiryDate } from "./utils";
 import { sendEmail } from "../notify";
 import type { SiteAddress } from "@opensystemslab/planx-core/types";
-import { _admin } from '../client';
+import { $admin } from "../client";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -17,7 +13,7 @@ import { _admin } from '../client';
 const resumeApplication = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { teamSlug, email } = req.body.payload;
@@ -53,7 +49,7 @@ const resumeApplication = async (
  */
 const validateRequest = async (
   teamSlug: string,
-  email: string
+  email: string,
 ): Promise<{
   team: Team;
   sessions: LowCalSession[];
@@ -118,14 +114,16 @@ const getPersonalisation = async (sessions: LowCalSession[], team: Team) => {
  */
 const buildContentFromSessions = async (
   sessions: LowCalSession[],
-  team: Team
+  team: Team,
 ): Promise<string> => {
   const contentBuilder = async (session: LowCalSession) => {
     const service = convertSlugToName(session.flow.slug);
     const address: SiteAddress | undefined =
       session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
-    const projectType = await _admin.formatRawProjectTypes(session.data?.passport?.data?.["proposal.projectType"])
+    const projectType = await $admin.formatRawProjectTypes(
+      session.data?.passport?.data?.["proposal.projectType"],
+    );
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 

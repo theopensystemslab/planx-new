@@ -1,5 +1,4 @@
 import { screen, waitFor } from "@testing-library/react";
-import { toggleFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { axe, setup } from "testUtils";
 
@@ -48,58 +47,80 @@ const responses: { [key in QuestionLayout]: IQuestion["responses"] } = {
   ],
 };
 describe("Question component", () => {
-  ["Radio", "Button"].forEach((type) => {
-    beforeAll(() => {
-      if (type === "Radio") toggleFeatureFlag("ALT_THEME");
+  [
+    QuestionLayout.Basic,
+    QuestionLayout.Images,
+    QuestionLayout.Descriptions,
+  ].forEach((type) => {
+    it(`renders the ${QuestionLayout[type]} layout correctly`, async () => {
+      const handleSubmit = jest.fn();
+
+      const { user } = setup(
+        <Question
+          text="Best food"
+          responses={responses[type]}
+          handleSubmit={handleSubmit}
+        />,
+      );
+
+      const continueButton = screen.getByTestId("continue-button");
+
+      expect(screen.getByRole("heading")).toHaveTextContent("Best food");
+
+      expect(continueButton).toBeDisabled();
+
+      await user.click(screen.getByText("Pizza"));
+
+      expect(continueButton).not.toBeDisabled();
+
+      await user.click(continueButton);
+
+      await waitFor(() =>
+        expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] }),
+      );
     });
 
-    describe(`${type} type`, () => {
-      [
-        QuestionLayout.Basic,
-        QuestionLayout.Images,
-        QuestionLayout.Descriptions,
-      ].forEach((type) => {
-        it(`renders the ${QuestionLayout[type]} layout correctly`, async () => {
-          const handleSubmit = jest.fn();
+    it(`should display previously selected answer on back or change in the ${QuestionLayout[type]} layout`, async () => {
+      const handleSubmit = jest.fn();
+      const { user } = setup(
+        <Question
+          text="Best food"
+          responses={responses[type]}
+          previouslySubmittedData={{
+            answers: ["celery_id"],
+            auto: false,
+          }}
+          handleSubmit={handleSubmit}
+        />,
+      );
 
-          const { user } = setup(
-            <Question
-              text="Best food"
-              responses={responses[type]}
-              handleSubmit={handleSubmit}
-            />
-          );
+      expect(screen.getByRole("heading")).toHaveTextContent("Best food");
 
-          const continueButton = screen.getByTestId("continue-button");
+      const celeryRadio = screen.getByRole("radio", { name: /Celery/ });
+      const pizzaRadio = screen.getByRole("radio", { name: /Pizza/ });
 
-          expect(screen.getByRole("heading")).toHaveTextContent("Best food");
+      // State is preserved...
+      expect(celeryRadio).toBeChecked();
 
-          expect(continueButton).toBeDisabled();
+      // ...and can be updated
+      await user.click(pizzaRadio);
+      expect(pizzaRadio).toBeChecked();
 
-          await user.click(screen.getByText("Pizza"));
+      const continueButton = screen.getByTestId("continue-button");
+      expect(continueButton).toBeEnabled();
+    });
 
-          expect(continueButton).not.toBeDisabled();
-
-          await user.click(continueButton);
-
-          await waitFor(() =>
-            expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] })
-          );
-        });
-
-        it(`should not have any accessibility violations in the ${QuestionLayout[type]} layout`, async () => {
-          const handleSubmit = jest.fn();
-          const { container } = setup(
-            <Question
-              text="Best food"
-              responses={responses[type]}
-              handleSubmit={handleSubmit}
-            />
-          );
-          const results = await axe(container);
-          expect(results).toHaveNoViolations();
-        });
-      });
+    it(`should not have any accessibility violations in the ${QuestionLayout[type]} layout`, async () => {
+      const handleSubmit = jest.fn();
+      const { container } = setup(
+        <Question
+          text="Best food"
+          responses={responses[type]}
+          handleSubmit={handleSubmit}
+        />,
+      );
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
     });
   });
 });

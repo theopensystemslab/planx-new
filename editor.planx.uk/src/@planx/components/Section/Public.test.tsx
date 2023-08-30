@@ -19,7 +19,7 @@ describe("Section component", () => {
     const handleSubmit = jest.fn();
 
     const { container } = setup(
-      <Section title="Section one" handleSubmit={handleSubmit} />
+      <Section title="Section one" handleSubmit={handleSubmit} />,
     );
 
     const results = await axe(container);
@@ -78,8 +78,10 @@ describe("SectionsOverviewList component", () => {
   it("renders correctly", () => {
     setup(<SectionsOverviewList {...defaultProps} />);
 
-    const changeLink = screen.getByText("Change Section one");
-    expect(screen.getByText("Section one")).toContainElement(changeLink);
+    const changeLink = screen.getByText("Section one");
+    expect(
+      screen.getByRole("button", { name: "Change Section one" }),
+    ).toContainElement(changeLink);
     expect(screen.getByText(SectionStatus.Completed)).toBeInTheDocument();
 
     expect(screen.getByText("Section two")).toBeInTheDocument();

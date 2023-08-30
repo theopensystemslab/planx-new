@@ -2,22 +2,24 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import React, { useState } from "react";
 
 import RichTextInput, { fromHtml, injectVariables } from "./RichTextInput";
 
-const metadata: Meta = {
+const meta = {
   title: "Design System/Atoms/Form Elements/RichTextInput",
   component: RichTextInput,
   parameters: {
     controls: { hideNoControlsWarning: true },
   },
-};
+} satisfies Meta<typeof RichTextInput>;
+
+export default meta;
 
 export const Basic = () => {
   const [value, setValue] = useState<string>(
-    "<p>Hello, <a href='https://opensystemslab.org'>OSL</a></p>"
+    "<p>Hello, <a href='https://opensystemslab.org'>OSL</a></p>",
   );
 
   return (
@@ -27,7 +29,7 @@ export const Basic = () => {
           variant="outlined"
           onClick={() => {
             setValue(
-              `<p>Hello, and <span data-type="mention" class="pass" data-id="Apples">@Apples</span> <a target="_blank" rel="noopener noreferrer nofollow" href="https://opensystemslab.org">OSL</a></p>`
+              `<p>Hello, and <span data-type="mention" class="pass" data-id="Apples">@Apples</span> <a target="_blank" rel="noopener noreferrer nofollow" href="https://opensystemslab.org">OSL</a></p>`,
             );
           }}
         >
@@ -75,5 +77,3 @@ export const Basic = () => {
     </Grid>
   );
 };
-
-export default metadata;

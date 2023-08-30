@@ -3,7 +3,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 export const submitFeedback = (
   text: string,
   reason: string,
-  componentMetadata?: { [key: string]: any }
+  componentMetadata?: { [key: string]: any },
 ) => {
   const standardMetadata = getFeedbackMetadata();
   fetch("https://api.feedback.fish/feedback", {

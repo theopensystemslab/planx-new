@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import type { PaymentRequest, KeyPath } from "@opensystemslab/planx-core/types";
 
 import { ServerError } from "../errors";
-import { _admin } from "../client";
+import { $admin } from "../client";
 
 export async function inviteToPay(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const sessionId = req.params.sessionId;
   const {
@@ -33,37 +33,37 @@ export async function inviteToPay(
         new ServerError({
           message: `JSON body must contain ${requiredFieldName}`,
           status: 400,
-        })
+        }),
       );
     }
   }
 
   // lock session before creating a payment request
-  const locked = await _admin.lockSession(sessionId);
+  const locked = await $admin.lockSession(sessionId);
   if (locked === null) {
     return next(
       new ServerError({
         message: "session not found",
         status: 404,
-      })
+      }),
     );
   }
   if (locked === false) {
     const cause = new Error(
-      "this session could not be locked, perhaps because it is already locked"
+      "this session could not be locked, perhaps because it is already locked",
     );
     return next(
       new ServerError({
         message: `could not initiate a payment request: ${cause.message}`,
         status: 400,
         cause,
-      })
+      }),
     );
   }
 
   let paymentRequest: PaymentRequest | undefined;
   try {
-    paymentRequest = await _admin.createPaymentRequest({
+    paymentRequest = await $admin.createPaymentRequest({
       sessionId,
       applicantName,
       payeeName,
@@ -72,7 +72,7 @@ export async function inviteToPay(
     });
   } catch (e: unknown) {
     // revert the session lock on failure
-    await _admin.unlockSession(sessionId);
+    await $admin.unlockSession(sessionId);
     return next(
       new ServerError({
         message:
@@ -81,7 +81,7 @@ export async function inviteToPay(
             : "could not initiate a payment request due to an unknown error",
         status: 500,
         cause: e,
-      })
+      }),
     );
   }
 

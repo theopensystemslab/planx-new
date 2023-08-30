@@ -1,7 +1,11 @@
+import "themeOverrides.d.ts";
+
 import {
   createTheme,
+  darken,
+  lighten,
   responsiveFontSizes,
-  Theme,
+  Theme as MUITheme,
   ThemeOptions,
 } from "@mui/material/styles";
 // eslint-disable-next-line no-restricted-imports
@@ -9,11 +13,10 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
-import { hasFeatureFlag } from "lib/featureFlags";
 
-const GOVUK_YELLOW = "#FFDD00";
+export const GOVUK_YELLOW = "#FFDD00";
 
-const DEFAULT_PRIMARY_COLOR = "#000661";
+export const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const TEXT_COLOR_PRIMARY = "#0B0C0C";
 const TEXT_COLOR_SECONDARY = "#505A5F";
 const BG_COLOR_DEFAULT = "#FFFFFF";
@@ -49,6 +52,10 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   success: {
     main: "#4CAF50",
+  },
+  info: {
+    main: "#2196F3",
+    light: "#EBF4FD",
   },
 };
 
@@ -105,17 +112,21 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         letterSpacing: SPACING_TIGHT,
         fontWeight: FONT_WEIGHT_BOLD,
       },
-      h3: {
+      h2: {
         fontSize: "2.25rem",
         letterSpacing: SPACING_TIGHT,
         fontWeight: FONT_WEIGHT_BOLD,
       },
-      h4: {
+      h3: {
         fontSize: "1.5rem",
+        fontWeight: FONT_WEIGHT_BOLD,
+      },
+      h4: {
+        fontSize: "1.188rem",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       h5: {
-        fontSize: "1.188rem",
+        fontSize: "1rem",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       h6: {
@@ -123,17 +134,18 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
       subtitle1: {
-        fontSize: "1.5rem",
+        fontSize: "1.375rem",
         lineHeight: LINE_HEIGHT_BASE,
         color: TEXT_COLOR_SECONDARY,
       },
       subtitle2: {
-        fontSize: "1.375rem",
+        fontSize: "1.188rem",
         lineHeight: LINE_HEIGHT_BASE,
         color: TEXT_COLOR_SECONDARY,
       },
       body1: {
         fontSize: "1.188rem",
+        lineHeight: LINE_HEIGHT_BASE,
       },
       body2: {
         fontSize: "1rem",
@@ -144,9 +156,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       values: {
         xs: 0,
         sm: 500,
-        md: 768, // Used with Container as general max-width
+        md: 768,
         lg: 1280,
         xl: 1920,
+        formWrap: 690, // Max width for form content
+        contentWrap: 1020, // Max width for page
       },
     },
     transitions: {
@@ -155,6 +169,18 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       },
     },
     components: {
+      MuiContainer: {
+        styleOverrides: {
+          root: {
+            "@media (min-width: 500px)": {
+              padding: "0 20px",
+            },
+            "@media (min-width: 768px)": {
+              padding: "0 30px",
+            },
+          },
+        },
+      },
       MuiCssBaseline: {
         styleOverrides: {
           strong: {
@@ -165,8 +191,10 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
           body: {
             backgroundColor: BG_COLOR_DEFAULT,
-            fontSize: "1rem",
             lineHeight: LINE_HEIGHT_BASE,
+          },
+          hr: {
+            marginLeft: 0,
           },
         },
       },
@@ -202,7 +230,8 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             borderRadius: 0,
             textTransform: "none",
             boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
-            padding: "0.5em 1.1em",
+            padding: "0.7em 1.25em",
+            lineHeight: LINE_HEIGHT_BASE,
           },
           text: {
             color: "rgba(0,0,0,0.4)",
@@ -210,12 +239,16 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               color: "rgba(0,0,0,1)",
             },
           },
+          sizeSmall: {
+            fontSize: "0.875em",
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
           sizeMedium: {
             fontSize: "1rem",
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
           },
           sizeLarge: {
-            fontSize: "1.188rem",
+            fontSize: "1.05em",
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
             width: "100%",
             "@media (min-width: 768px)": {
@@ -247,6 +280,11 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         defaultProps: {
           elevation: 0,
         },
+        styleOverrides: {
+          root: {
+            borderRadius: 0,
+          },
+        },
       },
       MuiLink: {
         styleOverrides: {
@@ -260,39 +298,94 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
         },
       },
-    },
-  };
-
-  return themeOptions;
-};
-
-const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
-  const themeOptions = getThemeOptions(primaryColor);
-  const altThemeOptions: ThemeOptions = {
-    components: {
+      MuiListItem: {
+        styleOverrides: {
+          root: {
+            lineHeight: LINE_HEIGHT_BASE,
+          },
+        },
+      },
+      MuiChip: {
+        variants: [
+          {
+            props: { variant: "uploadedFileTag", size: "small" },
+            style: {
+              backgroundColor: lighten(palette.success.main, 0.8),
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              color: darken(palette.info.main, 0.8),
+            },
+          },
+        ],
+      },
       MuiRadio: {
         defaultProps: {
+          disableRipple: true,
           disableFocusRipple: true,
           sx: {
+            position: "relative",
+            flexShrink: 0,
+            width: "44px",
+            height: "44px",
+            padding: 0,
+            margin: "0 0.75em 0 0",
+            color: TEXT_COLOR_PRIMARY,
             "& .MuiSvgIcon-root": {
-              fontSize: 32,
+              // Hide default MUI SVG, we'll use pseudo elements as Gov.uk
+              visibility: "hidden",
+            },
+            "&::before": {
+              // Styles for radio icon border
+              content: "''",
+              position: "absolute",
+              top: "2px",
+              left: "2px",
+              width: "40px",
+              height: "40px",
+              color: TEXT_COLOR_PRIMARY,
+              border: "2px solid currentcolor",
+              borderRadius: "50%",
+              background: "rgba(0,0,0,0)",
+            },
+            "&::after": {
+              // Styles for radio icon dot
+              content: "''",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: 0,
+              height: 0,
+              transform: "translate(-50%, -50%)",
+              color: TEXT_COLOR_PRIMARY,
+              border: "10px solid currentcolor",
+              borderRadius: "50%",
+              background: "currentcolor",
+              // Hide by default, show if checked
+              opacity: 0,
+            },
+            "&.Mui-checked::after": {
+              opacity: 1,
+            },
+            "&.Mui-focusVisible::before": {
+              borderWidth: "4px",
+              outline: "3px solid rgba(0,0,0,0)",
+              outlineOffset: "1px",
+              boxShadow: `0 0 0 4px ${GOVUK_YELLOW}`,
             },
           },
         },
       },
     },
   };
-  return deepmerge(themeOptions, altThemeOptions);
+
+  return themeOptions;
 };
 
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
-  primaryColor: string = DEFAULT_PRIMARY_COLOR
-): Theme => {
-  const themeOptions = hasFeatureFlag("ALT_THEME")
-    ? getAltThemeOptions(primaryColor)
-    : getThemeOptions(primaryColor);
-  const theme = responsiveFontSizes(createTheme(themeOptions));
+  primaryColor: string = DEFAULT_PRIMARY_COLOR,
+): MUITheme => {
+  const themeOptions = getThemeOptions(primaryColor);
+  const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
   return theme;
 };
 

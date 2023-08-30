@@ -21,6 +21,7 @@ describe("lowcal_sessions", () => {
   });
 
   describe("public role queries and mutations", () => {
+    let ids;
     const flowId = uuidV4();
     const [
       alice1,
@@ -151,6 +152,7 @@ describe("lowcal_sessions", () => {
           data: { x: 1 }
         }
         const res = await gqlPublic(insertSession, payload, headers);
+        ids.push(res.data.insert_lowcal_sessions_one.id); // add the email to ids for teardown
         expect(res).not.toHaveProperty("errors");
         expect(res.data.insert_lowcal_sessions_one).not.toBeNull();
         expect(res.data.insert_lowcal_sessions_one.id).toEqual(anon1);
@@ -424,6 +426,21 @@ describe("lowcal_sessions", () => {
         `, null, headers);
         expect(res.data.lowcal_sessions).toHaveLength(0);
       });
+    });
+  });
+
+  describe("platformAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformAdmin");
+    });
+
+    test("cannot query lowcal_sessions", () => {
+      expect(i.queries).not.toContain("lowcal_sessions");
+    });
+
+    test("cannot create, update, or delete lowcal_sessions", () => {
+      expect(i).toHaveNoMutationsFor("lowcal_sessions");
     });
   });
 });

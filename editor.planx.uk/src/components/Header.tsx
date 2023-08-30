@@ -4,6 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
+import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
@@ -32,12 +33,13 @@ import {
   FONT_WEIGHT_SEMI_BOLD,
   LINE_HEIGHT_BASE,
 } from "theme";
-import { ApplicationPath, Team } from "types";
+import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
+import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
 export const HEADER_HEIGHT = 74;
 
@@ -50,26 +52,14 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   fontSize: 20,
 }));
 
-const StyledLink = styled(ReactNaviLink)(() => ({
-  color: "#fff",
-  textDecoration: "none",
-})) as typeof Link;
+const StyledToolbar = styled(MuiToolbar)(() => ({
+  height: HEADER_HEIGHT,
+}));
 
-const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
-  minHeight: HEADER_HEIGHT,
+const InnerContainer = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  [theme.breakpoints.up("md")]: {
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-  },
-  [theme.breakpoints.up("lg")]: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-  },
 }));
 
 const LeftBox = styled(Box)(() => ({
@@ -92,7 +82,7 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginRight: theme.spacing(2),
+  marginRight: theme.spacing(1),
 }));
 
 const StyledPopover = styled(Popover)(() => ({
@@ -154,19 +144,16 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
   flexShrink: 1,
   lineHeight: LINE_HEIGHT_BASE,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
   paddingBottom: theme.spacing(1.5),
   [theme.breakpoints.up("md")]: {
     paddingBottom: 0,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
 }));
 
 const StyledNavBar = styled("nav")(({ theme }) => ({
-  height: HEADER_HEIGHT,
   backgroundColor: theme.palette.primary.dark,
-  padding: theme.spacing(1.5),
-  paddingLeft: theme.spacing(4),
   fontSize: 16,
 }));
 
@@ -217,25 +204,33 @@ const Breadcrumbs: React.FC<{
       {route.data.team && (
         <>
           {" / "}
-          <StyledLink
+          <Link
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+            }}
             component={ReactNaviLink}
             href={`/${route.data.team}`}
             prefetch={false}
           >
             {route.data.team}
-          </StyledLink>
+          </Link>
         </>
       )}
       {route.data.flow && (
         <>
           {" / "}
-          <StyledLink
+          <Link
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+            }}
             component={ReactNaviLink}
             href={rootFlowPath(false)}
             prefetch={false}
           >
             {route.data.flow}
-          </StyledLink>
+          </Link>
         </>
       )}
     </BreadcrumbsRoot>
@@ -251,11 +246,11 @@ const NavBar: React.FC = () => {
       state.hasSections,
       state.saveToEmail,
       state.path,
-    ]
+    ],
   );
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession &&
-    !Boolean(saveToEmail) &&
+    !saveToEmail &&
     !hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
   const { node } = useAnalyticsTracking();
@@ -270,8 +265,18 @@ const NavBar: React.FC = () => {
     <>
       {isVisible && (
         <StyledNavBar data-testid="navigation-bar">
-          <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
-          <SectionName>{capitalize(title)}</SectionName>
+          <Container
+            maxWidth={false}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              minHeight: HEADER_HEIGHT,
+            }}
+          >
+            <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
+            <SectionName>{capitalize(title)}</SectionName>
+          </Container>
         </StyledNavBar>
       )}
     </>
@@ -291,13 +296,13 @@ const PublicToolbar: React.FC<{
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
   const showCentredServiceTitle = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.up("md")
+    theme.breakpoints.up("md"),
   );
 
   const handleRestart = async () => {
     if (
       confirm(
-        "Are you sure you want to restart? This will delete your previous answers"
+        "Are you sure you want to restart? This will delete your previous answers",
       )
     ) {
       if (path === ApplicationPath.SingleSession) {
@@ -317,31 +322,40 @@ const PublicToolbar: React.FC<{
   return (
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
-      <StyledToolbar>
-        <LeftBox>
-          {teamTheme?.logo ? (
-            <TeamLogo />
-          ) : (
-            <Breadcrumbs handleClick={navigate} />
-          )}
-        </LeftBox>
-        {showCentredServiceTitle && <ServiceTitle />}
-        <RightBox>
-          {showResetButton && (
-            <IconButton
-              color="secondary"
-              onClick={handleRestart}
-              aria-label="Restart Application"
-              size="large"
-            >
-              <Reset color="secondary" />
-            </IconButton>
-          )}
-        </RightBox>
+      <StyledToolbar disableGutters>
+        <Container maxWidth={false}>
+          <InnerContainer>
+            <LeftBox>
+              {teamTheme?.logo ? (
+                <TeamLogo />
+              ) : (
+                <Breadcrumbs handleClick={navigate} />
+              )}
+            </LeftBox>
+            {showCentredServiceTitle && <ServiceTitle />}
+            <RightBox>
+              {showResetButton && (
+                <IconButton
+                  color="secondary"
+                  onClick={handleRestart}
+                  aria-label="Restart Application"
+                  size="large"
+                >
+                  <Reset color="secondary" />
+                </IconButton>
+              )}
+            </RightBox>
+          </InnerContainer>
+        </Container>
       </StyledToolbar>
-      {!showCentredServiceTitle && <ServiceTitle />}
+      {!showCentredServiceTitle && (
+        <Container maxWidth={false}>
+          <ServiceTitle />
+        </Container>
+      )}
       <NavBar />
       <AnalyticsDisabledBanner />
+      <TestEnvironmentBanner />
     </>
   );
 };
@@ -351,7 +365,7 @@ const ServiceTitle: React.FC = () => {
 
   return (
     <ServiceTitleRoot data-testid="service-title">
-      <Typography component="span" variant="h5">
+      <Typography component="span" variant="h4">
         {flowName}
       </Typography>
     </ServiceTitleRoot>
@@ -382,38 +396,42 @@ const EditorToolbar: React.FC<{
 
   return (
     <>
-      <StyledToolbar>
-        <LeftBox>
-          <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
-        </LeftBox>
-        <RightBox>
-          {route.data.username && (
-            <ProfileSection>
-              {route.data.flow && (
-                <IconButton
-                  color="inherit"
-                  onClick={togglePreview}
-                  aria-label="Toggle Preview"
-                  size="large"
-                >
-                  <MenuOpenIcon />
-                </IconButton>
+      <StyledToolbar disableGutters>
+        <Container maxWidth={false}>
+          <InnerContainer>
+            <LeftBox>
+              <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
+            </LeftBox>
+            <RightBox>
+              {route.data.username && (
+                <ProfileSection disableGutters>
+                  {route.data.flow && (
+                    <IconButton
+                      color="inherit"
+                      onClick={togglePreview}
+                      aria-label="Toggle Preview"
+                      size="large"
+                    >
+                      <MenuOpenIcon />
+                    </IconButton>
+                  )}
+                  <Box mr={1}>
+                    <Avatar>{route.data.username[0]}</Avatar>
+                  </Box>
+                  <IconButton
+                    edge="end"
+                    color="inherit"
+                    aria-label="Toggle Menu"
+                    onClick={handleMenuToggle}
+                    size="large"
+                  >
+                    <KeyboardArrowDown />
+                  </IconButton>
+                </ProfileSection>
               )}
-              <Box mr={1}>
-                <Avatar>{route.data.username[0]}</Avatar>
-              </Box>
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="Toggle Menu"
-                onClick={handleMenuToggle}
-                size="large"
-              >
-                <KeyboardArrowDown />
-              </IconButton>
-            </ProfileSection>
-          )}
-        </RightBox>
+            </RightBox>
+          </InnerContainer>
+        </Container>
       </StyledToolbar>
       <StyledPopover
         open={open}
@@ -465,7 +483,7 @@ interface ToolbarProps {
 
 const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0];
+  const path = route.url.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
     state.flowSlug,
     state.previewEnvironment,
@@ -480,6 +498,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     case flowSlug: // Custom domains
     case "preview":
     case "unpublished":
+    case "pay":
       return <PublicToolbar />;
     default:
       return <PublicToolbar showResetButton={false} />;

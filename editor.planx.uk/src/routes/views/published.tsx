@@ -56,7 +56,7 @@ export const publishedView = async (req: NaviRequest) => {
 
 const fetchDataForPublishedView = async (
   flowSlug: string,
-  teamSlug: string
+  teamSlug: string,
 ): Promise<PublishedViewData> => {
   try {
     const result = await client.query({
@@ -76,6 +76,7 @@ const fetchDataForPublishedView = async (
               settings
               slug
               notifyPersonalisation: notify_personalisation
+              boundaryBBox: boundary_bbox
             }
             settings
             publishedFlows: published_flows(

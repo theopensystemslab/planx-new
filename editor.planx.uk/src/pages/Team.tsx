@@ -15,8 +15,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
@@ -26,72 +26,56 @@ import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "#2C2C2C",
+const Root = styled(Box)(() => ({
+  backgroundColor: "#2C2C2C",
+  color: "#fff",
+  width: "100%",
+  flex: 1,
+  justifyContent: "flex-start",
+  alignItems: "center",
+}));
+
+const Dashboard = styled(Box)(({ theme }) => ({
+  backgroundColor: "#2C2C2C",
+  color: "#fff",
+  width: "100%",
+  maxWidth: 600,
+  margin: "auto",
+  padding: theme.spacing(8, 0, 4, 0),
+}));
+
+const DashboardList = styled("ul")(({ theme }) => ({
+  padding: theme.spacing(0, 0, 3),
+  borderBottom: "1px solid #fff",
+  margin: 0,
+}));
+
+const DashboardListItem = styled("li")(({ theme }) => ({
+  listStyle: "none",
+  position: "relative",
+  padding: theme.spacing(2.5, 2),
+}));
+
+const DashboardLink = styled(Link)(({ theme }) => ({
+  display: "block",
+  fontSize: theme.typography.h4.fontSize,
+  textDecoration: "none",
+  color: "currentColor",
+  fontWeight: 600,
+  marginBottom: theme.spacing(1.5),
+  marginTop: 0,
+}));
+
+const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
+  position: "absolute",
+  top: theme.spacing(2),
+  right: theme.spacing(1),
+}));
+
+const LinkSubText = styled(Box)(() => ({
+  color: "#aaa",
+  "& a": {
     color: "#fff",
-    width: "100%",
-    flex: 1,
-    justifyContent: "flex-start",
-    // paddingTop: "calc(12vh + 75px)",
-    alignItems: "center",
-  },
-  back: {
-    textDecoration: "none",
-    color: "inherit",
-    display: "inline-flex",
-    alignItems: "center",
-    padding: theme.spacing(1, 2, 1, 1),
-    "&:hover": {
-      backgroundColor: "rgba(0,0,0,0.1)",
-    },
-  },
-  dashboard: {
-    backgroundColor: "#2C2C2C",
-    color: "#fff",
-    width: "100%",
-    maxWidth: 600,
-    margin: "auto",
-    padding: theme.spacing(8, 0, 4, 0),
-  },
-  dashboardList: {
-    padding: theme.spacing(0, 0, 3),
-    borderBottom: "1px solid #fff",
-    margin: 0,
-    "& li": {
-      listStyle: "none",
-    },
-  },
-  dashboardListItem: {
-    position: "relative",
-    padding: theme.spacing(2.5, 2),
-  },
-  dashboardLink: {
-    display: "block",
-    fontSize: theme.typography.h4.fontSize,
-    textDecoration: "none",
-    color: "currentColor",
-    fontWeight: 600,
-    marginBottom: theme.spacing(1.5),
-    marginTop: 0,
-  },
-  dashboardLinkWrap: {
-    // Add padding to allow text wrap before menu icon
-    paddingRight: theme.spacing(4),
-  },
-  menu: {
-    position: "absolute",
-    top: theme.spacing(2),
-    right: theme.spacing(1),
-  },
-  linkSubText: {
-    color: "#aaa",
-    "& a": {
-      color: "#fff",
-    },
-    "& + $linkSubText": {
-      marginTop: theme.spacing(1),
-    },
   },
 }));
 
@@ -142,20 +126,14 @@ const Confirm = ({
   </Dialog>
 );
 
-const useAddButtonStyles = makeStyles((theme) => ({
-  addButton: {
-    width: "100%",
-    padding: theme.spacing(4),
-    fontSize: 20,
-    backgroundColor: "rgba(255,255,255,0.25)",
-    display: "block",
-    textAlign: "left",
-    marginTop: theme.spacing(2),
-  },
-  icon: {
-    marginRight: theme.spacing(3),
-    verticalAlign: "middle",
-  },
+const AddButtonRoot = styled(ButtonBase)(({ theme }) => ({
+  width: "100%",
+  padding: theme.spacing(4),
+  fontSize: 20,
+  backgroundColor: "rgba(255,255,255,0.25)",
+  display: "block",
+  textAlign: "left",
+  marginTop: theme.spacing(2),
 }));
 
 function AddButton({
@@ -165,11 +143,10 @@ function AddButton({
   children: string;
   onClick: () => void;
 }): FCReturn {
-  const classes = useAddButtonStyles();
   return (
-    <ButtonBase className={classes.addButton} onClick={onClick}>
-      <Add className={classes.icon} /> {children}
-    </ButtonBase>
+    <AddButtonRoot onClick={onClick}>
+      <Add sx={{ mr: 3, verticalAlign: "middle" }} /> {children}
+    </AddButtonRoot>
   );
 }
 
@@ -209,7 +186,6 @@ const FlowItem: React.FC<FlowItemProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const classes = useStyles();
   const [deleting, setDeleting] = useState(false);
   const handleDelete = () => {
     useStore
@@ -251,21 +227,16 @@ const FlowItem: React.FC<FlowItemProps> = ({
           submitLabel="Delete Service"
         />
       )}
-      <li key={flow.slug} className={classes.dashboardListItem}>
-        <Box className={classes.dashboardLinkWrap}>
-          <Link
-            href={`./${flow.slug}`}
-            className={classes.dashboardLink}
-            prefetch={false}
-          >
+      <DashboardListItem>
+        <Box pr={4}>
+          <DashboardLink href={`./${flow.slug}`} prefetch={false}>
             {flow.slug}
-          </Link>
-          <Box className={classes.linkSubText}>
+          </DashboardLink>
+          <LinkSubText>
             {flowInfoHelper(flow.updated_at, flow.operations)}
-          </Box>
+          </LinkSubText>
         </Box>
-        <SimpleMenu
-          className={classes.menu}
+        <StyledSimpleMenu
           items={[
             {
               onClick: async () => {
@@ -314,7 +285,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 if (newTeam) {
                   if (slugify(newTeam) === teamSlug) {
                     alert(
-                      `This flow already belongs to ${teamSlug}, skipping move`
+                      `This flow already belongs to ${teamSlug}, skipping move`,
                     );
                   } else {
                     handleMove(slugify(newTeam));
@@ -331,13 +302,12 @@ const FlowItem: React.FC<FlowItemProps> = ({
             },
           ]}
         />
-      </li>
+      </DashboardListItem>
     </>
   );
 };
 
 const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
-  const classes = useStyles();
   const [flows, setFlows] = useState<any[] | null>(null);
   const navigation = useNavigation();
   const fetchFlows = useCallback(() => {
@@ -352,15 +322,15 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
     fetchFlows();
   }, [fetchFlows]);
   return (
-    <Box className={classes.root}>
-      <Box className={classes.dashboard}>
+    <Root>
+      <Dashboard>
         <Box pl={2} pb={2}>
-          <Typography variant="h3" component="h1" gutterBottom>
+          <Typography variant="h2" component="h1" gutterBottom>
             My services
           </Typography>
         </Box>
         {flows && (
-          <ul className={classes.dashboardList}>
+          <DashboardList>
             {flows.map((flow: any) => (
               <FlowItem
                 flow={flow}
@@ -388,11 +358,11 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
             >
               Add a new service
             </AddButton>
-          </ul>
+          </DashboardList>
         )}
         <FooterLinks />
-      </Box>
-    </Box>
+      </Dashboard>
+    </Root>
   );
 };
 

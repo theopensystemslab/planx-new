@@ -1,3 +1,5 @@
 name: application
 runtime: nodejs
 description: Application layer
+config:
+  aws:region: eu-west-2

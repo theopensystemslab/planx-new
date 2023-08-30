@@ -1,11 +1,13 @@
 ## BASE ##
-# 16.13.1 = LTS (outdated: LTS is now node 18)
-FROM node:16.13.1-alpine as base
+# 18.16.1 = LTS
+FROM node:18.16.1-alpine as base
 
-RUN apk add --no-cache git # required for fetching git dependencies
+# Setup Git - required for fetching git dependencies (planx-core)
+RUN apk add --no-cache git 
+COPY .gitconfig /root/.gitconfig
 
 WORKDIR /api
-RUN npm install -g pnpm@7.8.0
+RUN npm install -g pnpm@8.6.6
 
 # update package cache using lockfile
 # see https://pnpm.io/cli/fetch
@@ -19,7 +21,7 @@ RUN pnpm install --recursive --prefer-offline
 RUN pnpm build
 RUN pnpm prune --production
 
-FROM node:16.13.1-alpine as production
+FROM node:18.16.1-alpine as production
 WORKDIR /api
 
 ## PRODUCTION ##
@@ -32,6 +34,5 @@ CMD ["npm", "start"]
 ## DEVELOPMENT ##
 FROM base as development
 ENV NODE_ENV development
-# reinstall pruned development dependencies
-RUN pnpm install --development
+RUN pnpm install
 CMD ["pnpm", "dev"]

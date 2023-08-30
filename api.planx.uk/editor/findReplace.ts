@@ -16,7 +16,7 @@ interface MatchResult {
 const getMatches = (
   flowData: Flow["data"],
   searchTerm: string,
-  replaceValue: string | undefined = undefined
+  replaceValue: string | undefined = undefined,
 ): MatchResult => {
   const matches: MatchResult["matches"] = {};
 
@@ -49,10 +49,59 @@ const getMatches = (
   };
 };
 
+/**
+ * @swagger
+ * /flows/{flowId}/search:
+ *  post:
+ *    summary: Find and replace
+ *    description: Find and replace a data variable in a flow
+ *    tags:
+ *      - flows
+ *    parameters:
+ *      - in: path
+ *        name: flowId
+ *        type: string
+ *        required: true
+ *      - in: query
+ *        name: find
+ *        type: string
+ *        required: true
+ *      - in: query
+ *        name: replace
+ *        type: string
+ *        required: false
+ *    responses:
+ *      '200':
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  required: true
+ *                matches:
+ *                  type: object
+ *                  required: true
+ *                  additionalProperties: true
+ *                updatedFlow:
+ *                  type: object
+ *                  required: false
+ *                  additionalProperties: true
+ *                  properties:
+ *                    _root:
+ *                      type: object
+ *                      properties:
+ *                        edges:
+ *                          type: array
+ *                          items:
+ *                            type: string
+ */
 const findAndReplaceInFlow = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
   try {
     if (!req.user?.sub)
@@ -104,7 +153,7 @@ const findAndReplaceInFlow = async (
         {
           data: flowData,
           id: req.params.flowId,
-        }
+        },
       );
 
       const updatedFlow =

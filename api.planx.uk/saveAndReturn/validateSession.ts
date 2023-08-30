@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+import omit from "lodash.omit";
 import { NextFunction, Request, Response } from "express";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { getMostRecentPublishedFlow } from "../helpers";
@@ -9,18 +10,23 @@ import type {
   OrderedBreadcrumbs,
   FlowGraph,
 } from "@opensystemslab/planx-core/types";
-import type { LowCalSession, PublishedFlow, Node } from "../types";
+import type {
+  LowCalSession,
+  LowCalSessionData,
+  PublishedFlow,
+  Node,
+} from "../types";
 
 export interface ValidationResponse {
   message: string;
   changesFound: boolean | null;
   alteredSectionIds?: Array<string>;
-  reconciledSessionData: LowCalSession["data"];
+  reconciledSessionData: Omit<LowCalSessionData, "passport">;
 }
 
 export type ReconciledSession = {
   alteredSectionIds: Array<string>;
-  reconciledSessionData: LowCalSession["data"];
+  reconciledSessionData: Omit<LowCalSessionData, "passport">;
 };
 
 // TODO - Ensure reconciliation handles:
@@ -29,7 +35,7 @@ export type ReconciledSession = {
 export async function validateSession(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { email, sessionId } = req.body.payload;
@@ -57,16 +63,12 @@ export async function validateSession(
         status: 403,
         message: "Session locked",
         paymentRequest: {
-          ...fetchedSession.paymentRequests?.[0]
-        }
+          ...fetchedSession.paymentRequests?.[0],
+        },
       });
     }
 
-    const sessionData = {
-      ...fetchedSession.data!,
-      // remove passport data (reconstructed in the editor by `computePassport`)
-      passport: { data: {} },
-    };
+    const sessionData = omit(fetchedSession.data!, "passport");
     const sessionUpdatedAt = fetchedSession.updated_at!;
     const flowId = fetchedSession.flow_id!;
 
@@ -129,7 +131,7 @@ async function reconcileSessionData({
   sessionData: originalData,
   alteredNodes,
 }: {
-  sessionData: LowCalSession["data"];
+  sessionData: Omit<LowCalSessionData, "passport">;
   alteredNodes: Array<Node>;
 }): Promise<ReconciledSession> {
   const sessionData = { ...originalData }; // copy original data for modification
@@ -140,13 +142,13 @@ async function reconcileSessionData({
   // create ordered breadcrumbs to be able to look up section IDs later
   const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
     currentFlow as FlowGraph,
-    sessionData.breadcrumbs
+    sessionData.breadcrumbs,
   );
 
   const findParentNode = (nodeId: string): string | undefined => {
     const [parentId, _] =
-      Object.entries(currentFlow).find(([_, node]) =>
-        node.edges?.includes(nodeId)
+      Object.entries(currentFlow).find(
+        ([_, node]) => node.edges?.includes(nodeId),
       ) || [];
     return parentId;
   };
@@ -155,7 +157,7 @@ async function reconcileSessionData({
     const foundParentId = findParentNode(nodeId);
     const matchingCrumbs: NormalizedCrumb[] = orderedBreadcrumbs.filter(
       (crumb) =>
-        crumb.id === nodeId || (foundParentId && crumb.id === foundParentId)
+        crumb.id === nodeId || (foundParentId && crumb.id === foundParentId),
     );
 
     for (const crumb of matchingCrumbs) {
@@ -218,7 +220,7 @@ async function diffLatestPublishedFlow({
         }
       }
     `,
-    { flowId, since }
+    { flowId, since },
   );
   return response.diff_latest_published_flow.data;
 }
@@ -250,7 +252,7 @@ async function findSession({
           }
         }
       `,
-      { sessionId, email }
+      { sessionId, email },
     );
   return response.lowcal_sessions.length
     ? response.lowcal_sessions[0]
@@ -259,7 +261,7 @@ async function findSession({
 
 async function createAuditEntry(
   sessionId: string,
-  data: ValidationResponse
+  data: ValidationResponse,
 ): Promise<void> {
   await adminClient.request(
     gql`
@@ -283,6 +285,6 @@ async function createAuditEntry(
       session_id: sessionId,
       response: data,
       message: data.message,
-    }
+    },
   );
 }

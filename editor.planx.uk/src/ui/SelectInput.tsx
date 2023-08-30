@@ -1,6 +1,6 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import Select, { SelectProps } from "@mui/material/Select";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 
 import Input from "./Input";
@@ -11,17 +11,22 @@ export interface Props extends SelectProps {
   onChange?: SelectProps["onChange"];
 }
 
-const useClasses = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    padding: theme.spacing(0, 1.5),
-    height: 50,
-    backgroundColor: "#fff",
-    "& $selectRoot": {
-      paddingRight: theme.spacing(6),
-    },
-  },
-  selectRoot: {
+const PREFIX = "SelectInput";
+
+const classes = {
+  rootSelect: `${PREFIX}-rootSelect`,
+  icon: `${PREFIX}-icon`,
+  menuPaper: `${PREFIX}-menuPaper`,
+  inputSelect: `${PREFIX}-inputSelect`,
+};
+
+const Root = styled(Select)(({ theme }) => ({
+  width: "100%",
+  padding: theme.spacing(0, 1.5),
+  height: 50,
+  backgroundColor: "#fff",
+  [`&.${classes.rootSelect}`]: {
+    paddingRight: theme.spacing(6),
     boxSizing: "border-box",
     backgroundColor: "#fff",
     color: theme.palette.text.primary,
@@ -29,18 +34,11 @@ const useClasses = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  icon: {
-    right: theme.spacing(0.5),
+  [`&.${classes.icon}`]: {
+    right: theme.spacing(1),
     color: "rgba(0,0,0,0.25)",
   },
-  select: {
-    backgroundColor: "transparent",
-    fontSize: "1rem",
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-  },
-  menuPaper: {
+  [`&.${classes.menuPaper}`]: {
     border: `2px solid ${theme.palette.primary.light}`,
     borderTop: 0,
     marginTop: -2,
@@ -61,6 +59,13 @@ const useClasses = makeStyles((theme) => ({
       height: "auto",
     },
   },
+  [`&.${classes.inputSelect}`]: {
+    backgroundColor: "transparent",
+    fontSize: "1rem",
+    "&:focus": {
+      backgroundColor: "transparent",
+    },
+  },
 }));
 
 export default function SelectInput({
@@ -70,14 +75,12 @@ export default function SelectInput({
   onChange,
   ...props
 }: Props): FCReturn {
-  const classes = useClasses();
   return (
-    <Select
+    <Root
       variant="standard"
       value={value}
-      className={classes.root}
       classes={{
-        select: classes.selectRoot,
+        select: classes.rootSelect,
         icon: classes.icon,
       }}
       onChange={onChange}
@@ -86,7 +89,7 @@ export default function SelectInput({
       inputProps={{
         name,
         classes: {
-          select: classes.select,
+          select: classes.inputSelect,
         },
       }}
       MenuProps={{
@@ -101,6 +104,6 @@ export default function SelectInput({
       {...props}
     >
       {children}
-    </Select>
+    </Root>
   );
 }

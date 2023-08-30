@@ -18,9 +18,9 @@ import { parseContent, PropertyInformation } from "./model";
 
 type Props = EditorProps<TYPES.PropertyInformation, PropertyInformation>;
 
-export default PropertyInformation;
+export default PropertyInformationComponent;
 
-function PropertyInformation(props: Props) {
+function PropertyInformationComponent(props: Props) {
   const formik = useFormik({
     initialValues: parseContent(props.node?.data),
     onSubmit: (newValues) => {
@@ -60,7 +60,7 @@ function PropertyInformation(props: Props) {
             onClick={() => {
               formik.setFieldValue(
                 "showPropertyTypeOverride",
-                !formik.values.showPropertyTypeOverride
+                !formik.values.showPropertyTypeOverride,
               );
             }}
           >

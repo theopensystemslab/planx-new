@@ -1,20 +1,19 @@
-import { Meta } from "@storybook/react/types-6-0";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/react";
 
-import type { Props } from "./Checkbox";
 import Checkbox from "./Checkbox";
 
-const metadata: Meta = {
+const meta = {
   title: "Design System/Atoms/Form Elements/Checkbox",
   component: Checkbox,
-  argTypes: {
-    color: { control: "color" },
+} satisfies Meta<typeof Checkbox>;
+
+type Story = StoryObj<typeof meta>;
+
+export default meta;
+
+export const Basic = {
+  args: {
+    id: "storybook-test-0",
+    checked: false,
   },
-};
-
-export const Basic = (args: Props) => <Checkbox {...args} />;
-Basic.args = {
-  checked: false,
-};
-
-export default metadata;
+} satisfies Story;

@@ -1,25 +1,38 @@
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 
 import CollapsibleInput, { Props } from "./CollapsibleInput";
 
-const metadata: Meta = {
-  title: "Design System/Molecules/CollapsibleInput",
+const meta = {
+  title: "Design System/Atoms/Form Elements/CollapsibleInput",
   component: CollapsibleInput,
-};
+} satisfies Meta<typeof CollapsibleInput>;
 
-export const Basic: Story<Props> = (_args: Props) => {
-  const [text, setText] = useState("");
-  return (
-    <FeedbackInput
-      text="Is this result inaccurate? **tell us why**"
-      handleChange={(ev) => {
-        setText(ev.target.value);
-      }}
-      value={text}
-    />
-  );
-};
+export default meta;
 
-export default metadata;
+type Story = StoryObj<typeof meta>;
+
+// TODO clarify use of args.children versus render here
+export const Basic = {
+  args: {
+    name: "Feedback",
+    value: "feedback",
+    children: <p>This is a child element.</p>,
+    ariaLabel: "Feedback",
+  },
+  render: (_args: Props) => {
+    /* eslint-disable react-hooks/rules-of-hooks */
+    // See https://github.com/storybookjs/storybook/issues/21115
+    const [text, setText] = useState("");
+    return (
+      <FeedbackInput
+        text="Is this result inaccurate? **Tell us why**"
+        handleChange={(ev) => {
+          setText(ev.target.value);
+        }}
+        value={text}
+      />
+    );
+  },
+} satisfies Story;

@@ -12,6 +12,7 @@ import * as url from "url";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
 import { createHasuraService } from "./services/hasura";
+import { addRedirectToCloudFlareListenerRule } from "./utils/addListenerRule";
 
 const config = new pulumi.Config();
 
@@ -131,26 +132,16 @@ export = async () => {
       unhealthyThreshold: 10,
     },
   });
-  // Forward HTTP to HTTPS
-  const metabaseListenerHttp = targetMetabase.createListener("metabase-http", {
-    protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
-  });
-  const metabaseListenerHttps = targetMetabase.createListener(
-    "metabase-https",
-    {
-      protocol: "HTTPS",
-      sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-      certificateArn: certificates.requireOutput("certificateArn"),
-    }
+  const metabaseListenerHttp = targetMetabase.createListener(
+    "metabase-http", { protocol: "HTTP" }
   );
+
+  addRedirectToCloudFlareListenerRule({
+    serviceName: "metabase",
+    listener: metabaseListenerHttp,
+    domain: DOMAIN,
+  });
+  
   const metabaseService = new awsx.ecs.FargateService("metabase", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -162,7 +153,7 @@ export = async () => {
       container: {
         // if changing, also check docker-compose.yml
         image: "metabase/metabase:v0.45.3",
-        portMappings: [metabaseListenerHttps],
+        portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
         memory: 4096 /*MB*/,
         environment: [
@@ -198,9 +189,9 @@ export = async () => {
       : "metabase",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: metabaseListenerHttps.endpoint.hostname,
+    value: metabaseListenerHttp.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 
   // ----------------------- Hasura
@@ -260,6 +251,7 @@ export = async () => {
     external: true,
     vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
+    idleTimeout: 120,
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const API_PORT = 80;
@@ -270,23 +262,16 @@ export = async () => {
       path: "/",
     },
   });
-  // Forward HTTP to HTTPS
   const apiListenerHttp = targetApi.createListener("api-http", {
     protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
   });
-  const apiListenerHttps = targetApi.createListener("api-https", {
-    protocol: "HTTPS",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-    certificateArn: certificates.requireOutput("certificateArn"),
+
+  addRedirectToCloudFlareListenerRule({
+    serviceName: "api",
+    listener: apiListenerHttp,
+    domain: DOMAIN,
   });
+
   const apiService = new awsx.ecs.FargateService("api", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -300,10 +285,11 @@ export = async () => {
           context: "../../api.planx.uk",
           target: "production",
         }),
-        memory: 1024 /*MB*/,
-        portMappings: [apiListenerHttps],
+        memory: 2048 /*MB*/,
+        portMappings: [apiListenerHttp],
         environment: [
           { name: "NODE_ENV", value: env },
+          { name: "APP_ENVIRONMENT", value: env },
           { name: "EDITOR_URL_EXT", value: `https://${DOMAIN}` },
           { name: "AWS_S3_REGION", value: apiBucket.region },
           { name: "AWS_ACCESS_KEY", value: apiUserAccessKey.id },
@@ -328,8 +314,20 @@ export = async () => {
           { name: "SESSION_SECRET", value: config.requireSecret("session-secret") },
           { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
           {
-            name: "BOPS_API_ROOT_DOMAIN",
-            value: config.requireSecret("bops-api-root-domain"),
+            name: "BOPS_SUBMISSION_URL_LAMBETH",
+            value: pulumi.interpolate`https://lambeth.${config.requireSecret("bops-api-root-domain")}`,
+          },
+          {
+            name: "BOPS_SUBMISSION_URL_SOUTHWARK",
+            value: pulumi.interpolate`https://southwark.${config.requireSecret("bops-api-root-domain")}`,
+          },
+          {
+            name: "BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE",
+            value: pulumi.interpolate`https://buckinghamshire.${config.requireSecret("bops-api-root-domain")}`,
+          },
+          {
+            name: "BOPS_SUBMISSION_URL_CAMDEN",
+            value: pulumi.interpolate`https://camden.${config.requireSecret("bops-api-root-domain")}`,
           },
           { name: "BOPS_API_TOKEN", value: config.requireSecret("bops-api-token") },
           { name: "JWT_SECRET", value: config.requireSecret("jwt-secret") },
@@ -394,9 +392,9 @@ export = async () => {
       : "api",
     type: "CNAME",
     zoneId: config.requireSecret("cloudflare-zone-id"),
-    value: apiListenerHttps.endpoint.hostname,
+    value: apiListenerHttp.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 
   // ----------------------- ShareDB
@@ -419,23 +417,14 @@ export = async () => {
       type: "lb_cookie",
     },
   });
-  // Forward HTTP to HTTPS
-  const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", {
-    protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
+  const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", { protocol: "HTTP" });
+
+  addRedirectToCloudFlareListenerRule({
+    serviceName: "sharedb",
+    listener: sharedbListenerHttp,
+    domain: DOMAIN,
   });
-  const sharedbListenerHttps = targetSharedb.createListener("sharedb-https", {
-    protocol: "HTTPS",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-    certificateArn: certificates.requireOutput("certificateArn"),
-  });
+
   const sharedbService = new awsx.ecs.FargateService("sharedb", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -447,7 +436,7 @@ export = async () => {
       container: {
         image: repo.buildAndPushImage("../../sharedb.planx.uk"),
         memory: 512 /*MB*/,
-        portMappings: [sharedbListenerHttps],
+        portMappings: [sharedbListenerHttp],
         environment: [
           { name: "PORT", value: String(SHAREDB_PORT) },
           {
@@ -470,9 +459,9 @@ export = async () => {
       : "sharedb",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: sharedbListenerHttps.endpoint.hostname,
+    value: sharedbListenerHttp.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 
   // ------------------- Frontend

@@ -1,4 +1,4 @@
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
 import { parseTaskList } from "@planx/components/TaskList/model";
 import { TYPES } from "@planx/components/types";
@@ -21,27 +21,14 @@ import RichTextInput from "ui/RichTextInput";
 
 export type Props = EditorProps<TYPES.TaskList, TaskList>;
 
-const useTaskEditorStyles = makeStyles((_theme) => ({
-  container: {
-    flex: "1",
-  },
-}));
-
-const useTaskListStyles = makeStyles((_theme) => ({
-  container: {
-    marginBottom: "1rem",
-  },
-}));
-
 const newTask = (): Task => ({
   title: "",
   description: "",
 });
 
 const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
-  const classes = useTaskEditorStyles();
   return (
-    <div className={classes.container}>
+    <Box sx={{ flex: 1 }}>
       <InputRow>
         <Input
           required
@@ -70,12 +57,11 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
           placeholder="Description"
         />
       </InputRow>
-    </div>
+    </Box>
   );
 };
 
 const TaskListComponent: React.FC<Props> = (props) => {
-  const classes = useTaskListStyles();
   const formik = useFormik({
     initialValues: parseTaskList(props.node?.data),
     onSubmit: (newValues) => {
@@ -89,7 +75,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Task List" Icon={ICONS[TYPES.TaskList]}>
-          <div className={classes.container}>
+          <Box mb="1rem">
             <InputRow>
               <Input
                 name="title"
@@ -107,7 +93,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
                 placeholder="Main Description"
               />
             </InputRow>
-          </div>
+          </Box>
           <ListManager
             values={formik.values.tasks}
             onChange={(tasks: Array<Task>) => {

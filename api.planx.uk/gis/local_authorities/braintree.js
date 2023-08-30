@@ -5,9 +5,9 @@ import {
   makeEsriUrl,
   setEsriGeometryType,
   setEsriGeometry,
-  addDesignatedVariable,
   squashResultLayers,
   rollupResultLayers,
+  addDesignatedVariable,
 } from "../helpers.js";
 import { planningConstraints, A4_KEY } from "./metadata/braintree.js";
 
@@ -23,7 +23,7 @@ async function search(
   serverIndex,
   outFields,
   geometry,
-  geometryType
+  geometryType,
 ) {
   const { id } = planningConstraints[featureName];
 
@@ -57,9 +57,9 @@ async function go(x, y, siteBoundary, extras) {
         gisLayers[layer].serverIndex,
         gisLayers[layer].fields,
         geom,
-        geomType
-      )
-    )
+        geomType,
+      ),
+    ),
   );
 
   const ob = results
@@ -77,6 +77,7 @@ async function go(x, y, siteBoundary, extras) {
               value: true,
               type: "warning",
               data: properties,
+              category: planningConstraints[key].category,
             };
           } else {
             if (!acc[k]) {
@@ -85,6 +86,7 @@ async function go(x, y, siteBoundary, extras) {
                 value: false,
                 type: "check",
                 data: {},
+                category: planningConstraints[key].category,
               };
             }
           }
@@ -97,7 +99,7 @@ async function go(x, y, siteBoundary, extras) {
       {
         ...preCheckedLayers,
         ...extras,
-      }
+      },
     );
 
   // Set granular A4s, accounting for one variable matching to many possible shapes
@@ -129,7 +131,7 @@ async function go(x, y, siteBoundary, extras) {
   const obWithSingleListed = rollupResultLayers(
     obWithSingleTPO,
     listedLayers,
-    "listed"
+    "listed",
   );
 
   // Add summary "designated" key to response

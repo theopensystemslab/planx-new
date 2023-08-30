@@ -15,7 +15,7 @@ test("adding an external portal", async () => {
         { id: "b", text: "flow b" },
       ]}
       handleSubmit={handleSubmit}
-    />
+    />,
   );
 
   expect(screen.getByTestId("flowId")).toHaveValue("");
@@ -31,7 +31,7 @@ test("adding an external portal", async () => {
       data: {
         flowId: "b",
       },
-    })
+    }),
   );
 });
 
@@ -47,7 +47,7 @@ test("changing an external portal", async () => {
         { id: "b", text: "flow b" },
       ]}
       handleSubmit={handleSubmit}
-    />
+    />,
   );
 
   expect(screen.getByTestId("flowId")).toHaveValue("b");
@@ -63,10 +63,10 @@ test("changing an external portal", async () => {
       data: {
         flowId: "a",
       },
-    })
+    }),
   );
 });
 
 test.todo(
-  "don't add external portal if same external portal already in parent"
+  "don't add external portal if same external portal already in parent",
 );

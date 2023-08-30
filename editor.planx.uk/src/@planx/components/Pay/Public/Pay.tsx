@@ -1,22 +1,20 @@
+import {
+  GOV_PAY_PASSPORT_KEY,
+  GovUKPayment,
+  PaymentStatus,
+} from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
-import type { GovUKPayment, Passport, Session } from "types";
-import { PaymentStatus } from "types";
+import { useErrorHandler } from "react-error-boundary";
+import type { Session } from "types";
 
 import { makeData } from "../../shared/utils";
-import {
-  createPayload,
-  GOV_PAY_PASSPORT_KEY,
-  GOV_UK_PAY_URL,
-  Pay,
-  toDecimal,
-} from "../model";
+import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
@@ -100,6 +98,8 @@ function Component(props: Props) {
     displayText: "Loading...",
   });
 
+  const handleError = useErrorHandler();
+
   useEffect(() => {
     if (isNaN(fee) || fee <= 0) {
       // skip the pay component because there's no fee to charge
@@ -127,13 +127,13 @@ function Component(props: Props) {
   const normalizePaymentResponse = (responseData: any): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    let payment: GovUKPayment = { ...responseData };
+    const payment: GovUKPayment = { ...responseData };
     payment.amount = toDecimal(payment.amount);
     return payment;
   };
 
   const resolvePaymentResponse = async (
-    responseData: any
+    responseData: any,
   ): Promise<GovUKPayment> => {
     const payment = normalizePaymentResponse(responseData);
     setGovUkPayment(payment);
@@ -158,12 +158,12 @@ function Component(props: Props) {
           flowId,
           teamSlug,
           paymentId: govUkPayment?.payment_id,
-        })
+        }),
       );
 
       // Update local state with the refetched payment state
       if (govUkPayment) {
-        const payment = await resolvePaymentResponse({
+        await resolvePaymentResponse({
           ...govUkPayment,
           state,
         });
@@ -223,7 +223,7 @@ function Component(props: Props) {
     await axios
       .post(
         getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
-        createPayload(fee, sessionId)
+        createPayload(fee, sessionId),
       )
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);
@@ -235,8 +235,10 @@ function Component(props: Props) {
           // Show a custom message if this team isn't set up to use Pay yet
           dispatch(Action.StartNewPaymentError);
         } else {
+          const apiErrorMessage: string | undefined =
+            error.response?.data?.error;
           // Throw all other errors so they're caught by our ErrorBoundary
-          throw error;
+          handleError(apiErrorMessage ? { message: apiErrorMessage } : error);
         }
       });
   };
@@ -270,9 +272,7 @@ function Component(props: Props) {
               : undefined
           }
           showInviteToPay={
-            props.allowInviteToPay &&
-            state.status !== "unsupported_team" &&
-            hasFeatureFlag("INVITE_TO_PAY")
+            props.allowInviteToPay && state.status !== "unsupported_team"
           }
           paymentStatus={govUkPayment?.state?.status}
         />

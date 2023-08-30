@@ -1,8 +1,8 @@
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Box from "@mui/material/Box";
 import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
 import { uploadPrivateFile } from "api/upload";
@@ -21,6 +21,12 @@ interface RootProps extends ButtonBaseProps {
   isDragActive: boolean;
 }
 
+const FauxLink = styled(Box)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: "underline",
+  whiteSpace: "nowrap",
+}));
+
 const Root = styled(ButtonBase, {
   shouldForwardProp: (prop) => prop !== "isDragActive",
 })<RootProps>(({ theme, isDragActive }) => ({
@@ -31,20 +37,22 @@ const Root = styled(ButtonBase, {
     : theme.palette.background.paper,
   display: "flex",
   alignItems: "center",
-  padding: theme.spacing(1.5),
+  justifyContent: "flex-start",
+  padding: theme.spacing(1.5, 3.5, 1.5, 1.5),
   position: "relative",
   width: "100%",
   fontSize: "medium",
+  border: `2px dashed ${theme.palette.text.primary}`,
   zIndex: 10,
   "&::before": {
     content: "''",
     position: "absolute",
-    left: -theme.spacing(0.75),
-    top: -theme.spacing(0.75),
-    width: `calc(100% + ${theme.spacing(1.5)})`,
-    height: `calc(100% + ${theme.spacing(1.5)})`,
+    left: "-2%",
+    top: "-2%",
+    width: "104%",
+    height: "104%",
+    border: `2px dashed ${theme.palette.text.primary}`,
     display: "block",
-    border: `2px dashed ${theme.palette.secondary.light}`,
     opacity: isDragActive ? 1 : 0,
     transform: isDragActive ? "scale(1)" : "scale(0.8)",
     zIndex: -1,
@@ -86,8 +94,8 @@ export const Dropzone: React.FC<Props> = ({
               onProgress: (progress) => {
                 setSlots((_files) =>
                   _files.map((_file) =>
-                    _file.file === file ? { ..._file, progress } : _file
-                  )
+                    _file.file === file ? { ..._file, progress } : _file,
+                  ),
                 );
               },
             })
@@ -96,23 +104,23 @@ export const Dropzone: React.FC<Props> = ({
                   _files.map((_file) =>
                     _file.file === file
                       ? { ..._file, url, status: "success" }
-                      : _file
-                  )
+                      : _file,
+                  ),
                 );
                 setFileUploadStatus(() =>
                   acceptedFiles.length > 1
                     ? `Files ${acceptedFiles
                         .map((file) => file.path)
                         .join(", ")} were uploaded`
-                    : `File ${acceptedFiles[0].path} was uploaded`
+                    : `File ${acceptedFiles[0].path} was uploaded`,
                 );
               })
               .catch((error) => {
                 console.error(error);
                 setSlots((_files) =>
                   _files.map((_file) =>
-                    _file.file === file ? { ..._file, status: "error" } : _file
-                  )
+                    _file.file === file ? { ..._file, status: "error" } : _file,
+                  ),
                 );
               });
             return {
@@ -130,25 +138,31 @@ export const Dropzone: React.FC<Props> = ({
 
   return (
     <Root isDragActive={isDragActive} {...getRootProps({ role: "button" })}>
-      <input data-testid="upload-boundary-input" {...getInputProps()} />
-      <Box pl={3} pr={4} color="text.secondary">
+      <input
+        data-testid="upload-input"
+        {...getInputProps()}
+        aria-labelledby="dropzone-label"
+      />
+      <Box pl={2} pr={3} color="text.secondary">
         <CloudUpload />
       </Box>
-      <Box flexGrow={1}>
-        <Box>
+      <Box sx={{ textAlign: "left" }} id="dropzone-label">
+        <Typography variant="body1">
           {isDragActive ? (
             "Drop the files here"
           ) : (
             <>
-              Drag {maxFiles === 1 ? "file" : "files"} here or{" "}
-              <Link>choose a file</Link>
+              Drop {maxFiles === 1 ? "file" : "files"} here or{" "}
+              <FauxLink component="span">choose a file</FauxLink> to upload
             </>
           )}
-        </Box>
-        <Box color="text.secondary">pdf, jpg or png</Box>
-      </Box>
-      <Box color="text.secondary" alignSelf="flex-end">
-        max size 30MB
+        </Typography>
+        <Typography color="text.secondary" variant="body2">
+          pdf, jpg, png
+        </Typography>
+        <Typography color="text.secondary" variant="body2" fontSize={14} pt={1}>
+          Max size per file 30MB
+        </Typography>
       </Box>
     </Root>
   );

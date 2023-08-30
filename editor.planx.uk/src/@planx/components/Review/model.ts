@@ -5,7 +5,7 @@ export interface Review {
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): Review => ({
   title: data?.title || "Check your answers before sending your application",
   description: data?.description || "",

@@ -1,38 +1,45 @@
 import FileIcon from "@mui/icons-material/AttachFile";
-import DeleteIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/DeleteOutline";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props extends FileUploadSlot {
-  index?: number;
-  removeFile: () => void;
+  removeFile?: () => void;
+  onChange?: () => void;
+  tags?: string[];
 }
 
 const Root = styled(Box)(({ theme }) => ({
+  border: `1px solid ${theme.palette.secondary.main}`,
+  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(2),
+}));
+
+const FileCard = styled(Box)(({ theme }) => ({
   position: "relative",
-  height: theme.spacing(14),
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.background.paper}`,
+  height: "auto",
   display: "flex",
   alignItems: "center",
-  padding: theme.spacing(1.5),
-  marginBottom: theme.spacing(2),
+  padding: theme.spacing(0.5, 1.5),
   "& > *": {
     zIndex: 1,
   },
 }));
 
 const FilePreview = styled(Box)(({ theme }) => ({
-  height: theme.spacing(14),
-  width: theme.spacing(14),
-  marginLeft: -theme.spacing(1.5),
+  height: theme.spacing(10),
+  width: theme.spacing(10),
+  marginLeft: theme.spacing(-1),
   marginRight: theme.spacing(1.5),
-  opacity: 0.5,
+  opacity: 0.75,
   position: "relative",
   overflow: "hidden",
   "& img": {
@@ -52,12 +59,6 @@ const FilePreview = styled(Box)(({ theme }) => ({
   },
 }));
 
-const DeleteIconButton = styled(IconButton)(({ theme }) => ({
-  position: "absolute",
-  top: theme.spacing(1),
-  right: theme.spacing(1),
-}));
-
 const ProgressBar = styled(Box)(({ theme }) => ({
   position: "absolute",
   height: "100%",
@@ -67,51 +68,88 @@ const ProgressBar = styled(Box)(({ theme }) => ({
   zIndex: 0,
 }));
 
-const FileSize = styled(Box)(({ theme }) => ({
+const FileSize = styled(Typography)(({ theme }) => ({
   whiteSpace: "nowrap",
   color: theme.palette.text.secondary,
   alignSelf: "flex-end",
+}));
+
+const TagRoot = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  borderTop: `1px solid ${theme.palette.secondary.main}`,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: theme.spacing(1),
 }));
 
 export const UploadedFileCard: React.FC<Props> = ({
   file,
   progress,
   url,
-  index,
   removeFile,
+  onChange,
+  tags,
 }) => (
   <Root>
-    <DeleteIconButton
-      size="small"
-      aria-label={`Delete ${file.path}`}
-      title={`Delete ${file.path}`}
-      onClick={removeFile}
-    >
-      <DeleteIcon />
-    </DeleteIconButton>
-    <ProgressBar
-      width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
-      role="progressbar"
-      aria-valuenow={progress * 100 || 0}
-    />
-    <FilePreview>
-      {file instanceof File && file?.type?.includes("image") ? (
-        <ImagePreview file={file} url={url} />
-      ) : (
-        <FileIcon />
-      )}
-    </FilePreview>
-    <Box flexGrow={1}>
+    <FileCard>
+      <ProgressBar
+        width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
+        role="progressbar"
+        aria-valuenow={progress * 100 || 0}
+      />
+      <FilePreview>
+        {file instanceof File && file?.type?.includes("image") ? (
+          <ImagePreview file={file} url={url} />
+        ) : (
+          <FileIcon />
+        )}
+      </FilePreview>
       <Box
-        fontSize="body2.fontSize"
-        fontWeight={FONT_WEIGHT_SEMI_BOLD}
-        color="text.secondary"
+        sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}
       >
-        File {index !== undefined && index + 1}
+        <Box mr={2}>
+          <Typography variant="body1" pb="0.25em">
+            {file.path}
+          </Typography>
+          <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
+        </Box>
+        {removeFile && (
+          <IconButton
+            size="small"
+            aria-label={`Delete ${file.path}`}
+            title={`Delete ${file.path}`}
+            onClick={removeFile}
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
       </Box>
-      {file.path}
-    </Box>
-    <FileSize>{formatBytes(file.size)}</FileSize>
+    </FileCard>
+    {tags && (
+      <TagRoot>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+          {tags.map((tag) => (
+            <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
+              <Chip
+                label={tag}
+                variant="uploadedFileTag"
+                size="small"
+                data-testid="uploaded-file-chip"
+              />
+            </ListItem>
+          ))}
+        </Box>
+        <Link
+          onClick={() => onChange && onChange()}
+          sx={{ fontFamily: "inherit", fontSize: "inherit" }}
+          component="button"
+          variant="body2"
+        >
+          Change
+        </Link>
+      </TagRoot>
+    )}
   </Root>
 );
 

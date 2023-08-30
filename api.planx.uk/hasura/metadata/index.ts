@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from "axios";
+import Axios, { AxiosResponse, isAxiosError } from "axios";
 
 /**
  * Body posted to Hasura Metadata API to create a scheduled event
@@ -6,40 +6,48 @@ import Axios, { AxiosResponse } from "axios";
  */
 interface ScheduledEvent {
   type: string;
-  args: ScheduledEventArgs
+  args: ScheduledEventArgs;
 }
 
 interface ScheduledEventArgs {
   headers: Record<string, string>[];
   retry_conf: {
     num_retries: number;
-  }
+  };
   webhook: string;
   schedule_at: Date;
   payload: Record<string, any>;
   comment: string;
 }
 
-type RequiredScheduledEventArgs = Pick<ScheduledEventArgs, "webhook" | "schedule_at" | "comment" | "payload">
+type RequiredScheduledEventArgs = Pick<
+  ScheduledEventArgs,
+  "webhook" | "schedule_at" | "comment" | "payload"
+>;
 
 /**
  * POST a request to the Hasura Metadata API
  * https://hasura.io/docs/latest/graphql/core/api-reference/metadata-api/index/
  */
-const postToMetadataAPI = async (body: ScheduledEvent): Promise<AxiosResponse<any>> => {
+const postToMetadataAPI = async (
+  body: ScheduledEvent,
+): Promise<AxiosResponse<any>> => {
   try {
     return await Axios.post(
       process.env.HASURA_METADATA_URL!,
       JSON.stringify(body),
       {
         headers: {
-          "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET!
+          "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET!,
         },
-      }
+      },
     );
   } catch (error) {
-    throw Error((error as Error).message || "Failed to POST to Hasura Metadata API");
-  };
+    const errorMessage = isAxiosError(error)
+      ? JSON.stringify(error.toJSON())
+      : (error as Error).message;
+    throw Error(`Failed to POST to Hasura Metadata API: ${errorMessage}`);
+  }
 };
 
 /**
@@ -52,10 +60,12 @@ const createScheduledEvent = async (args: RequiredScheduledEventArgs) => {
       type: "create_scheduled_event",
       args: {
         ...args,
-        headers: [{
-          name: "authorization",
-          value_from_env: "HASURA_PLANX_API_KEY"
-        }],
+        headers: [
+          {
+            name: "authorization",
+            value_from_env: "HASURA_PLANX_API_KEY",
+          },
+        ],
         retry_conf: {
           num_retries: 1,
         },
@@ -64,10 +74,7 @@ const createScheduledEvent = async (args: RequiredScheduledEventArgs) => {
     return response.data;
   } catch (error) {
     throw Error((error as Error)?.message);
-  };
+  }
 };
 
-export {
-  createScheduledEvent,
-  RequiredScheduledEventArgs,
-};
+export { createScheduledEvent, RequiredScheduledEventArgs };

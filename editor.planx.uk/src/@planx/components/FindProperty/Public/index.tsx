@@ -49,7 +49,7 @@ function Component(props: Props) {
   const [page, setPage] = useState<"os-address" | "new-address">(startPage);
 
   const [address, setAddress] = useState<SiteAddress | undefined>(
-    previouslySubmittedData?._address
+    previouslySubmittedData?._address,
   );
   const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
     string[] | undefined
@@ -60,7 +60,7 @@ function Component(props: Props) {
   const teamSettings = useStore((state) => state.teamSettings);
 
   // Use the address point to fetch the Local Authority District(s) & region via Digital Land
-  let options = new URLSearchParams({
+  const options = new URLSearchParams({
     entries: "all", // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
     geometry: `POINT(${address?.longitude} ${address?.latitude})`,
     geometry_relation: "intersects",
@@ -81,7 +81,7 @@ function Component(props: Props) {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
       errorRetryCount: 1,
-    }
+    },
   );
 
   // if allowNewAddresses is on, fetch the boundary geojson for this team to position the map view or default to London
@@ -96,7 +96,7 @@ function Component(props: Props) {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
       errorRetryCount: 1,
-    }
+    },
   );
 
   useEffect(() => {
@@ -137,6 +137,7 @@ function Component(props: Props) {
             boundary={boundary}
             id={props.id}
             description={props.newAddressDescription || ""}
+            descriptionLabel={props.newAddressDescriptionLabel || ""}
           />
         </>
       );
@@ -174,7 +175,7 @@ function Component(props: Props) {
                   setAddress(undefined);
                 }}
               >
-                <Typography variant="body2">
+                <Typography variant="body1">
                   The site does not have an address
                 </Typography>
               </Link>

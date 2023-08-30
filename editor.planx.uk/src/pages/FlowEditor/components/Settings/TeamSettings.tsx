@@ -7,8 +7,8 @@ import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
@@ -18,30 +18,26 @@ import InputRowItem from "ui/InputRowItem";
 import OptionButton from "ui/OptionButton";
 import SelectInput from "ui/SelectInput";
 
-interface ITeam {}
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  width: theme.spacing(8),
+  height: theme.spacing(8),
+}));
 
-export const teamStyles = makeStyles((theme) => ({
-  root: {
-    color: "currentColor",
-  },
-  avatar: {
-    width: theme.spacing(8),
-    height: theme.spacing(8),
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  inputLabel: {
-    position: "absolute",
-    color: theme.palette.text.primary,
+const StyledGrid = styled(Grid)(() => ({
+  flexGrow: 1,
+}));
+
+const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
+  position: "absolute",
+  color: theme.palette.text.primary,
+  [theme.breakpoints.up("xs")]: {
     fontSize: 12,
-    top: -18,
   },
+  top: -18,
 }));
 
 const TeamMember = ({ name, email, userRole }: any) => {
   const [role, setRole] = React.useState(userRole);
-  const classes = teamStyles();
   return (
     <Box mb={1.5}>
       <Grid
@@ -51,12 +47,14 @@ const TeamMember = ({ name, email, userRole }: any) => {
         alignItems="center"
       >
         <Grid item>
-          <Avatar className={classes.avatar}>{name[0]}</Avatar>
+          <StyledAvatar>{name[0]}</StyledAvatar>
         </Grid>
-        <Grid item className={classes.grow}>
-          <Typography variant="h5">{name}</Typography>
+        <StyledGrid item>
+          <Typography variant="h4" component="h5">
+            {name}
+          </Typography>
           <Box fontSize="h5.fontSize">{email}</Box>
-        </Grid>
+        </StyledGrid>
         <Grid item>
           <SelectInput
             value={role}
@@ -78,8 +76,7 @@ const TeamMember = ({ name, email, userRole }: any) => {
   );
 };
 
-const Team: React.FC<ITeam> = () => {
-  const classes = teamStyles();
+const Team: React.FC = () => {
   const formik = useFormik({
     initialValues: {},
     onSubmit: (values) => {
@@ -90,7 +87,7 @@ const Team: React.FC<ITeam> = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box pb={3} borderBottom={1}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h2" component="h3" gutterBottom>
           <strong>Team</strong>
         </Typography>
         <Typography variant="body1">
@@ -123,16 +120,16 @@ const Team: React.FC<ITeam> = () => {
           wrap="nowrap"
         >
           <Grid item>
-            <Avatar className={classes.avatar}>
+            <StyledAvatar>
               <Add />
-            </Avatar>
+            </StyledAvatar>
           </Grid>
-          <Grid item className={classes.grow}>
+          <StyledGrid item>
             <Box position="relative">
-              <InputLabel className={classes.inputLabel}>Invite new</InputLabel>
+              <StyledInputLabel>Invite new</StyledInputLabel>
               <Input placeholder="enter new email address" fullWidth />
             </Box>
-          </Grid>
+          </StyledGrid>
           <Grid item>
             <SelectInput value="admin">
               <MenuItem value="admin">Admin</MenuItem>
@@ -146,7 +143,7 @@ const Team: React.FC<ITeam> = () => {
         </Grid>
       </Box>
       <Box py={3}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h2" component="h3" gutterBottom>
           <strong>Sharing</strong>
         </Typography>
         <Typography variant="body1" gutterBottom>

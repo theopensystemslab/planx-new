@@ -1,6 +1,10 @@
 # Plan✕
 
-Plan✕ is a platform for creating and publishing digital planning services. Learn more about how it's currently being used here: https://opendigitalplanning.org/
+Plan✕ is a platform for creating and publishing digital planning services.
+
+Learn more about how it's currently being used here: https://opendigitalplanning.org/
+
+Explore our component library and design system here: https://storybook.planx.uk/
 
 ## Status pages
 
@@ -18,40 +22,48 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 - `sharedb.planx.uk` is our implementation of [ShareDB](https://github.com/share/sharedb), a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
 - `infrastructure` is [Pulumi](https://www.pulumi.com/) infrastructure-as-code for configuring and managing our AWS environments
 
-
-## Running Locally
+## Running locally
 
 1. Download and install the following dependencies if you don't have them already:
 - [Docker](https://docs.docker.com/get-docker/)
-- [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@7.8.0`
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@8.6.6`
+- [Node](https://nodejs.org/en/download) `pnpm env use --global 18.16.1`
 
-1. Clone this repository. You'll need to get some additional environment variable files that aren't published here. Find instructions for copying these in 1password under the AWS Staging IAM user role entry
+1. Clone this repository.
 
-1. Run `pnpm docker:seed` from the project root to get everything (postgres, sharedb, api and hasura server processes) up and running with seed data from production, and `pnpm docker:down` to stop all services. `pnpm docker:destroy` will remove volumes (i.e. database data) and can be a useful hard reset when necessary.
+2. Setup your AWS CLI client with SSO - [detailed guide here](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/how-to-setup-aws-sso-credentials.md)
 
-1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`.
+3. Pull down environment secrets for running the application in staging mode by running `./scripts/pull-secrets.sh`. (NOTE: Even when running locally, API requests are routed to relevant staging servers and emails are actually processed and sent to provided addresses).
 
-1. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) & check that your Google email address is in the `users` table, if not then add it
+4. Run `pnpm run up` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes) and to pull seed application data from production.
 
-1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
+5. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
 
-1. Start the editor dev server! `pnpm start` & open `http://localhost:3000` & login with your GMail/Google email address
+6. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) and check that your Google email address is in the `users` table, if not then add it. This will eventually allow you to authenticate into the application as an admin.
 
+7. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
 
-### Troubleshooting
+8. Start the editor dev server, with `pnpm start`
 
-If you run into trouble, you may want to try the following:
+9. Open `http://localhost:3000` and login with your Google email address
 
-* Ensure you have a local `.env` file with up-to-date keys etc (see relevant `.env.example` files for reference and 1Password for an initial `.env` file).
+### Docker
 
+The root of the project has several scripts set up to help you manage your docker containers:
 
-### Analytics
-
-Running `docker compose up` won't spin up [Metabase](https://www.metabase.com/).
-To spin it up, run:
-
-  `docker compose --profile analytics up`
-
+- `pnpm run up` alias for `pnpm recreate && pnpm add-data`
+- `pnpm run down` alias for `pnpm destroy`
+- `pnpm run restart` alias for `pnpm stop && pnpm start`
+- `pnpm start` will (re)create docker containers without rebuilding them
+- `pnpm stop` will stop your docker containers without destroying them
+- `pnpm recreate` will build and (re)start your docker containers from scratch.
+- `pnpm destroy` will remove volumes (i.e. database data) and can be a useful hard reset when necessary.
+- `pnpm add-data` will sync production records with modified data in your database
+- `pnpm clean-data` will sync production records and reset any modified data
+- `pnpm tests` will recreate your docker containers and include test services
+- `pnpm analytics` will recreate your docker containers and include [Metabase](https://www.metabase.com/)
+- `pnpm logs` will print docker log entries (this can be filtered by appending `-- [service name]`, for example `pnpm logs -- api`)
 
 ### Documentation
 
@@ -69,12 +81,9 @@ Pull requests will automatically deploy to a new pizza. To skip pizza deployment
 
 We aim to keep a linear commit history between `main` and `production` branches in Github. We "Squash & merge" pull request commits into `main`.
 
-(EDIT: Automatic deployments are on pause and planned to resume after the holidays) Automatic production deployments happen every Tuesday, Wednesday, Thursday, and Friday at 9am, at which time `main` is pushed to `production` (which triggers a deployment).
-
 You can manually trigger a production deployments by going to [the Deploy to Production](https://github.com/theopensystemslab/planx-new/actions/workflows/cron-deploy-to-production.yml) action and clicking `Run workflow`.
 
 Once a deployment is completed, a Slack notification will be sent to the #planx-deployments channel, and the `production` branch should read "This branch is up to date with main."
-
 
 ### Troubleshooting
 
@@ -94,3 +103,11 @@ Our public-facing live services were last audited by the [Digital Accessibility 
 ### Security
 
 Our whole stack was last assessed by [Jumpsec](https://www.jumpsec.com/) on 27th July 2022. Their penetration test concluded that our infrastructure and application environments are securely configured to follow best practices. We have since additionally resolved a handful of low- and informational-risk issues uncovered during the assessment to maintain a high standard of security.
+
+
+## Related packages
+
+There are a few dependent packages that are closely related to this project:
+
+ - https://github.com/theopensystemslab/planx-core
+ - https://github.com/theopensystemslab/map

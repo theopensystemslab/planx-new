@@ -1,10 +1,6 @@
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
-import {
-  DateInput,
-  paddedDate,
-  UserData,
-} from "@planx/components/DateInput/model";
+import { DateInput, paddedDate } from "@planx/components/DateInput/model";
 import { dateRangeSchema } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -18,14 +14,7 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
-export type Props = PublicProps<DateInput, UserData>;
-
-const useClasses = makeStyles(() => ({
-  fieldset: {
-    border: 0,
-    padding: 0,
-  },
-}));
+export type Props = PublicProps<DateInput>;
 
 const DateInputPublic: React.FC<Props> = (props) => {
   const formik = useFormik({
@@ -42,12 +31,11 @@ const DateInputPublic: React.FC<Props> = (props) => {
     }),
   });
 
-  const classes = useClasses();
-
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <fieldset
-        className={classes.fieldset}
+      <Box
+        component="fieldset"
+        sx={{ p: 0, border: 0 }}
         role="group"
         aria-describedby={[
           props.description ? DESCRIPTION_TEXT : "",
@@ -76,7 +64,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
             id={props.id}
           />
         </InputRow>
-      </fieldset>
+      </Box>
     </Card>
   );
 };

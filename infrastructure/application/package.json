@@ -5,27 +5,22 @@
   },
   "dependencies": {
     "@nodelib/fs.walk": "^1.2.8",
-    "@pulumi/aws": "^5.6.0",
+    "@pulumi/aws": "^5.42.0",
     "@pulumi/awsx": "^0.40.0",
     "@pulumi/cloudflare": "^4.7.0",
     "@pulumi/docker": "^3.2.0",
     "@pulumi/postgresql": "^3.4.0",
-    "@pulumi/pulumi": "^3.33.2",
+    "@pulumi/pulumi": "^3.75.0",
     "@pulumi/random": "^4.8.2",
     "@types/mime": "^2.0.3",
     "mime": "^3.0.0",
     "tldjs": "^2.3.1"
   },
-  "engines": {
-    "node": "^16",
-    "pnpm": "^7.8.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "path-parse@<1.0.7": ">=1.0.7",
-      "protobufjs@>=6.10.0 <6.10.3": ">=6.10.3",
-      "minimatch@<3.0.5": ">=3.0.5",
-      "xml2js@<0.5.0": ">=0.5.0"
-    }
+  "scripts": {
+    "setup-sandbox-env": "REACT_APP_GOOGLE_OAUTH_OVERRIDE=https://api.editor.planx.dev REACT_APP_API_URL=https://api.planx.in REACT_APP_HASURA_URL=https://hasura.planx.in/v1/graphql REACT_APP_SHAREDB_URL=wss://sharedb.planx.in",
+    "build-editor": "cd ../../editor.planx.uk && pnpm build",
+    "sandbox:up": "pnpm setup-sandbox-env pnpm build-editor && DOCKER_DEFAULT_PLATFORM=linux/amd64 pulumi up --stack sandbox",
+    "sandbox:down": "pulumi down --stack sandbox",
+    "sandbox:refresh": "pnpm setup-sandbox-env pnpm build-editor && DOCKER_DEFAULT_PLATFORM=linux/amd64 pulumi up --refresh --stack sandbox"
   }
 }

@@ -28,16 +28,16 @@ interface PickOSAddressProps {
 
 const AutocompleteWrapper = styled(Box)(({ theme }) => ({
   // Autocomplete style overrides
-  "--autocomplete__label__font-size": "18px",
-  "--autocomplete__input__padding": "6px 40px 7px 12px",
-  "--autocomplete__input__font-size": "1rem",
+  "--autocomplete__label__font-size": "1.1278rem;",
+  "--autocomplete__input__padding": "5px 35px 5px 15px",
+  "--autocomplete__input__font-size": "1em",
   "--autocomplete__input__height": "50px",
   "--autocomplete__dropdown-arrow-down__top": "16px",
   "--autocomplete__dropdown-arrow-down__z-index": "2",
   "--autocomplete__option__font-size": "1rem",
-  "--autocomplete__option__padding": "6px 12px 7px 12px",
+  "--autocomplete__option__padding": "7px 15px",
   "--autocomplete__menu__max-height": "336px",
-  "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.grey[800]}`,
+  "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.secondary.main}`,
   "--autocomplete__option__hover-border-color": theme.palette.primary.main,
   "--autocomplete__option__hover-background-color": theme.palette.primary.main,
   "--autocomplete__font-family": theme.typography.fontFamily,
@@ -45,14 +45,14 @@ const AutocompleteWrapper = styled(Box)(({ theme }) => ({
 
 export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   const [postcode, setPostcode] = useState<string | null>(
-    props.initialPostcode ?? null
+    props.initialPostcode ?? null,
   );
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>(
     (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
-      null
+      null,
   );
   const [selectedOption, setSelectedOption] = useState<Option | undefined>(
-    props.initialSelectedAddress ?? undefined
+    props.initialSelectedAddress ?? undefined,
   );
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
@@ -100,8 +100,8 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           title: selectedAddress.ADDRESS.slice(
             0,
             selectedAddress.ADDRESS.lastIndexOf(
-              `, ${selectedAddress.ADMINISTRATIVE_AREA}`
-            )
+              `, ${selectedAddress.ADMINISTRATIVE_AREA}`,
+            ),
           ), // display value shown on PropertyInformation, should match <address-autocomplete /> options formatting
           source: "os",
         });
@@ -114,7 +114,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
     return function cleanup() {
       autocomplete?.removeEventListener(
         "addressSelection",
-        addressSelectionHandler
+        addressSelectionHandler,
       );
     };
   }, [sanitizedPostcode, selectedOption]);
@@ -126,7 +126,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
   //      so this code attempts to validate postcodes without blocking any characters.
   const handlePostcodeInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (selectedOption) {
       // Reset the selected address on change of postcode to ensures no visual mismatch between address and postcode

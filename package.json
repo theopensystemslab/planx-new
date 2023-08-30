@@ -1,13 +1,16 @@
 {
   "scripts": {
-    "docker:logs": "docker compose logs --tail 10 -f",
-    "docker:up": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up --quiet-pull --renew-anon-volumes -d",
-    "docker:down": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile seed down",
-    "docker:recreate": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --build --force-recreate --remove-orphans",
-    "docker:destroy": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down --remove-orphans -v",
-    "docker:add-seeds": "docker compose --profile seed run seed-database",
-    "docker:clean-data": "docker compose --profile seed run seed-database reset_all",
-    "docker:seed": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile seed up --quiet-pull --renew-anon-volumes -d",
-    "docker:tests": "./scripts/start-containers-for-tests.sh"
+    "up": "pnpm recreate && pnpm add-data",
+    "down": "pnpm destroy",
+    "restart": "pnpm stop && pnpm start",
+    "start": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull",
+    "stop": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services down",
+    "recreate": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull --build --renew-anon-volumes --force-recreate",
+    "destroy": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services down --remove-orphans -v",
+    "add-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.seed.yml run seed-database",
+    "clean-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.seed.yml run seed-database reset_all",
+    "tests": "./scripts/start-containers-for-tests.sh",
+    "analytics": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile analytics  up -d --quiet-pull",
+    "logs": "docker compose logs --tail 30 -f"
   }
 }

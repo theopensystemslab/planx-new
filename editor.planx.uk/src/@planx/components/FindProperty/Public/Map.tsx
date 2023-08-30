@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 
-import type { SiteAddress } from "../model";
+import { DEFAULT_NEW_ADDRESS_LABEL, SiteAddress } from "../model";
 
 interface PlotNewAddressProps {
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
@@ -26,6 +26,7 @@ interface PlotNewAddressProps {
   boundary?: GeoJSONObject | undefined;
   id?: string;
   description?: string;
+  descriptionLabel?: string;
 }
 
 type Coordinates = {
@@ -49,15 +50,18 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           x: props.initialProposedAddress.x,
           y: props.initialProposedAddress.y,
         }
-      : undefined
+      : undefined,
   );
   const [siteDescription, setSiteDescription] = useState<string | null>(
-    props.initialProposedAddress?.title ?? null
+    props.initialProposedAddress?.title ?? null,
   );
   const [showSiteDescriptionError, setShowSiteDescriptionError] =
     useState<boolean>(false);
 
-  const environment = useStore((state) => state.previewEnvironment);
+  const [environment, boundaryBBox] = useStore((state) => [
+    state.previewEnvironment,
+    state.boundaryBBox,
+  ]);
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
@@ -99,7 +103,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   };
 
   const handleSiteDescriptionInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const input = e.target.value;
     setSiteDescription(input);
@@ -127,6 +131,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           showScale
           showNorthArrow
           osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+          clipGeojsonData={JSON.stringify(boundaryBBox)}
         />
         <MapFooter>
           <Typography variant="body2">
@@ -154,7 +159,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
       </MapContainer>
       <DescriptionInput data-testid="new-address-input">
         <InputLabel
-          label="Describe this site"
+          label={props.descriptionLabel || DEFAULT_NEW_ADDRESS_LABEL}
           htmlFor={`${props.id}-siteDescription`}
         >
           <Input

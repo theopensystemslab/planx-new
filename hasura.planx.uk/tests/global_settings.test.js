@@ -30,4 +30,22 @@ describe("global_settings", () => {
       expect(i.mutations).toContain("delete_global_settings");
     });
   });
+
+  describe("platformAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformAdmin");
+    });
+
+    test("has full access to query and mutate global_settings", async () => {
+      expect(i.queries).toContain("global_settings");
+
+      expect(i.mutations).toContain("insert_global_settings");
+      expect(i.mutations).toContain("update_global_settings_by_pk");
+    });
+
+    test("cannot delete global_settings", async () => {
+      expect(i.mutations).not.toContain("delete_global_settings");
+    });
+  });
 });

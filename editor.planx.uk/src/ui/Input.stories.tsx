@@ -1,30 +1,35 @@
-import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/react";
 
-import Input, { Props } from "./Input";
+import Input from "./Input";
 
-const metadata: Meta = {
+const meta = {
   title: "Design System/Atoms/Form Elements/Input",
   component: Input,
-};
+} satisfies Meta<typeof Input>;
 
-const Template: Story<Props> = (args) => <Input {...args} />;
+type Story = StoryObj<typeof meta>;
 
-export const Basic = Template.bind({});
-Basic.args = {
-  bordered: false,
-};
+export default meta;
 
-export const WithError = Template.bind({});
-WithError.args = {
-  bordered: true,
-  errorMessage: "WRONG YOU'RE SIMPLY WRONG",
-};
+export const Basic = {
+  args: {
+    bordered: true,
+    multiline: false,
+    rows: 1,
+  },
+} satisfies Story;
 
-export const Multiline = Template.bind({});
-Multiline.args = {
-  bordered: true,
-  multiline: true,
-};
+export const Multiline = {
+  args: {
+    bordered: true,
+    multiline: true,
+    rows: 3,
+  },
+} satisfies Story;
 
-export default metadata;
+export const WithError = {
+  args: {
+    bordered: true,
+    errorMessage: "Enter a value",
+  },
+} satisfies Story;

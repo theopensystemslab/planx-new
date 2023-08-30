@@ -1,3 +1,4 @@
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
@@ -41,7 +42,7 @@ export interface EditorProps<Type, Data> {
   node?: any;
 }
 
-export type PublicProps<Data, UserData = {}> = Data & {
+export type PublicProps<Data> = Data & {
   id?: string;
   handleSubmit?: handleSubmit;
   resetButton?: boolean;
@@ -66,12 +67,13 @@ export const ICONS: {
   [TYPES.DrawBoundary]: SquareFoot,
   [TYPES.ExternalPortal]: CopyAll,
   [TYPES.FileUpload]: CloudUpload,
-  [TYPES.MultipleFileUpload]: CloudUpload,
+  [TYPES.FileUploadAndLabel]: CloudUpload,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
+  [TYPES.NextSteps]: ArrowForwardIcon,
   [TYPES.NumberInput]: Pin,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,

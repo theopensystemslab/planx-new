@@ -10,21 +10,19 @@ concurrency: staging_environment
 
 env:
   DEPLOYMENT_ENVIRONMENT: staging
-  PNPM_VERSION: 7.8.0
-  NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
   build_react:
     name: Build React
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
       # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
       - name: NPM cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-npm
         with:
@@ -36,7 +34,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: PNPM cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-pnpm
         with:
@@ -47,7 +45,9 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - run: npm install -g pnpm@${{ env.PNPM_VERSION }}
+      - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
       - run: pnpm build
@@ -61,7 +61,7 @@ jobs:
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_ENV: staging
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: build
           path: ./editor.planx.uk/build
@@ -72,26 +72,26 @@ jobs:
     needs: build_react
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - run: npm install -g pnpm@${{ env.PNPM_VERSION }}
+      - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
         working-directory: infrastructure/application
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
       - name: Download Build Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: build
           path: ./editor.planx.uk/build
-      - uses: pulumi/actions@v3
+      - uses: pulumi/actions@v4
         with:
           command: up
           stack-name: staging
@@ -105,7 +105,7 @@ jobs:
     needs: preview
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
       - name: Notify Airbrake of deploy
         id: airbrake-deploy

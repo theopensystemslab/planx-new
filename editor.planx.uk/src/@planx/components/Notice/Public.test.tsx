@@ -13,7 +13,7 @@ test("renders correctly", async () => {
       description="world"
       color="red"
       handleSubmit={handleSubmit}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -23,7 +23,7 @@ test("renders correctly", async () => {
 
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
-    <Notice title="hello" description="world" color="red" />
+    <Notice title="hello" description="world" color="red" />,
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();

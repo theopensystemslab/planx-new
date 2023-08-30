@@ -1,4 +1,5 @@
 import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
+import { GovUKPayment } from "@opensystemslab/planx-core/types";
 
 export interface Node {
   id?: string;
@@ -42,6 +43,7 @@ export interface Team {
   slug: string;
   name: string;
   domain?: string;
+  boundaryBBox?: object;
   notifyPersonalisation: {
     helpEmail: string;
     helpPhone: string;
@@ -54,13 +56,15 @@ export interface Passport {
   data: Record<string, any>;
 }
 
+export interface LowCalSessionData {
+  passport: Passport;
+  breadcrumbs: Breadcrumb;
+  govUkPayment?: GovUKPayment;
+  id: string;
+}
+
 export interface LowCalSession {
-  data: {
-    passport: Passport;
-    breadcrumbs: Breadcrumb;
-    govUkPayment?: GovUKPayment;
-    id: string;
-  };
+  data: LowCalSessionData;
   id: string;
   email: string;
   flow_id: string;
@@ -71,9 +75,10 @@ export interface LowCalSession {
   has_user_saved: boolean;
   flow: {
     slug: string;
+    team?: Team;
   };
   lockedAt?: string;
-  paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[]
+  paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[];
 }
 
 type MinimumNotifyPersonalisation = {
@@ -142,44 +147,3 @@ export type NotifyConfig =
   | EmailSubmissionNotifyConfig
   | InviteToPayNotifyConfig
   | AgentAndPayeeSubmissionNotifyConfig;
-
-// https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response
-export interface GovUKPayment {
-  amount: number;
-  reference?: string;
-  state: {
-    // https://docs.payments.service.gov.uk/api_reference/#payment-status-meanings
-    status:
-      | "created"
-      | "started"
-      | "submitted"
-      | "capturable"
-      | "success"
-      | "failed"
-      | "cancelled"
-      | "error";
-    finished: boolean;
-    message?: string;
-  };
-  payment_id: string;
-  payment_provider: string;
-  created_date?: string;
-  _links?: {
-    self: {
-      href: string;
-      method: string;
-    };
-    next_url?: {
-      href: string;
-      method: string;
-    };
-    next_url_post: {
-      type: string;
-      params: {
-        chargeTokenId: string;
-      };
-      href: string;
-      method: string;
-    };
-  };
-}

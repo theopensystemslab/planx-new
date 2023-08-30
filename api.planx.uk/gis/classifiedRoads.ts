@@ -1,12 +1,13 @@
+import { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
 import { NextFunction, Request, Response } from "express";
 import fetch from "isomorphic-fetch";
 
 type OSFeatures = {
   type: "FeatureCollection";
-  crs: { 
+  crs: {
     type: "name";
     properties: {
-      name: "EPSG:4326"
+      name: "EPSG:4326";
     };
   };
   features: {
@@ -28,25 +29,38 @@ type OSHighwayFeature = {
   FormsPartOf: string;
 };
 
-type PlanningConstraintResponse = Record<string, PlanningConstraintBody>;
-
-type PlanningConstraintBody = {
-  value: boolean;
-  text: string;
+interface RoadConstraint extends Constraint {
   data?: OSFeatures["features"];
-  category?: string;
-};
+}
 
 // Passport key comes from Digital Planning Schemas googlesheet
 export const PASSPORT_FN = "road.classified";
 
+/**
+ * @swagger
+ * /roads:
+ *  get:
+ *    summary: Fetches road classifications
+ *    description: Fetches and formats road classifications from Ordnance Survey MasterMap Highways via OS Features API for a USRN
+ *    tags:
+ *      - gis
+ *    parameters:
+ *      - in: query
+ *        name: usrn
+ *        type: string
+ *        required: true
+ *        description: Unique Street Reference Number (USRN)
+ */
 export const classifiedRoadsSearch = async (
-  req: Request, 
-  res: Response, 
-  next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   if (!req.query.usrn)
-    return next({ status: 401, message: "Missing required query param `?usrn=`" });
+    return next({
+      status: 401,
+      message: "Missing required query param `?usrn=`",
+    });
 
   // Create an OGC XML filter parameter value which will select the road features (lines) that match an USRN
   //   ref https://labs.os.uk/public/os-data-hub-examples/os-features-api/wfs-example-topo-toid-search#maplibre-gl-js
@@ -73,38 +87,69 @@ export const classifiedRoadsSearch = async (
   };
 
   try {
-    const url = `https://api.os.uk/features/v1/wfs?${new URLSearchParams(params).toString()}`;
-    const features: OSFeatures["features"] = await fetch(url)
-      .then((res: Response) => res.json())
-      .then((data: OSFeatures) => {
+    const url = `https://api.os.uk/features/v1/wfs?${new URLSearchParams(
+      params,
+    ).toString()}`;
+    const features = await fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
         if (!data.features?.length) return;
-        
+
         // Filter out any intersecting roads that are not classified
-        //   find all possible values on page 43 https://www.ordnancesurvey.co.uk/documents/os-mastermap-highways-network-roads-technical-specification.pdf 
+        //   find all possible values on page 43 https://www.ordnancesurvey.co.uk/documents/os-mastermap-highways-network-roads-technical-specification.pdf
         //   XX in future consider doing this directly in XML using <ogc:PropertyIsNotEqualTo>
-        const classifiedFeatures = data.features.filter((feature: OSFeatures["features"][0]) => !["Unclassified", "Not Classified", "Unknown"].includes(feature.properties["RoadClassification"]));
+        const classifiedFeatures = data.features.filter(
+          (feature: OSFeatures["features"][0]) =>
+            !["Unclassified", "Not Classified", "Unknown"].includes(
+              feature.properties["RoadClassification"],
+            ),
+        );
         return classifiedFeatures;
       });
 
+    const baseResponse = {
+      sourceRequest: url.split("key=")[0],
+      metadata: {
+        [PASSPORT_FN]: {
+          name: "Classified road",
+          plural: "Classified roads",
+          text: "This will effect your project if you are looking to add a dropped kerb. It may also impact some agricultural or forestry projects within 25 metres of a classified road.",
+        },
+      },
+    };
+
     if (features?.length) {
       return res.json({
-        [PASSPORT_FN]: {
-          value: true,
-          text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
-          data: features,
-          category: "General policy",
-        }
-      } as PlanningConstraintResponse)
+        ...baseResponse,
+        constraints: {
+          [PASSPORT_FN]: {
+            fn: PASSPORT_FN,
+            value: true,
+            text: `is on a Classified Road`,
+            data: features.map((feature: any) => ({
+              name: `${feature.properties["RoadName1"]} - ${feature.properties["RoadClassification"]}`,
+              properties: feature.properties,
+            })),
+            category: "General policy",
+          } as RoadConstraint,
+        },
+      } as GISResponse);
     } else {
       return res.json({
-        [PASSPORT_FN]: {
-          value: false,
-          text: "is not on a Classified Road",
-          category: "General policy",
-        }
-      } as PlanningConstraintResponse)
+        ...baseResponse,
+        constraints: {
+          [PASSPORT_FN]: {
+            fn: PASSPORT_FN,
+            value: false,
+            text: "is not on a Classified Road",
+            category: "General policy",
+          } as RoadConstraint,
+        },
+      } as GISResponse);
     }
   } catch (error: any) {
-    return next({ message: "Failed to fetch classified roads: " + error?.message });
+    return next({
+      message: "Failed to fetch classified roads: " + error?.message,
+    });
   }
 };

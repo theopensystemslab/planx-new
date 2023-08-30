@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "cucumber-js --tags 'not @regression'",
+    "test:regression": "cucumber-js"
+  },
+  "dependencies": {
+    "@cucumber/cucumber": "^9.3.0",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#0454fb4",
+    "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "dotenv-expand": "^10.0.0",
+    "nock": "^13.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "18.16.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}

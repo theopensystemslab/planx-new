@@ -55,7 +55,7 @@ describe("error handling", () => {
           edges: ["a"],
         },
         a: {},
-      })
+      }),
     ).toThrow("id not found");
   });
 
@@ -66,7 +66,7 @@ describe("error handling", () => {
           edges: ["a"],
         },
         a: {},
-      })
+      }),
     ).toThrow("toParent not found");
   });
 
@@ -78,7 +78,7 @@ describe("error handling", () => {
         },
         a: {},
         b: {},
-      })
+      }),
     ).toThrow("toBefore does not exist in toParent");
   });
 
@@ -92,7 +92,7 @@ describe("error handling", () => {
           edges: ["b"],
         },
         b: {},
-      })
+      }),
     ).toThrow("cycle");
   });
 
@@ -103,7 +103,7 @@ describe("error handling", () => {
           edges: ["a"],
         },
         a: {},
-      })
+      }),
     ).toThrow("same parent");
   });
 
@@ -115,7 +115,19 @@ describe("error handling", () => {
         },
         a: {},
         sectionNodeId: { type: 360 },
-      })
+      }),
     ).toThrow("cannot clone sections");
+  });
+
+  test("cannot clone external portals", () => {
+    expect(() =>
+      clone("externalPortalNodeId", { toParent: "a" })({
+        _root: {
+          edges: ["a", "externalPortalNodeId"],
+        },
+        a: {},
+        externalPortalNodeId: { type: 310 },
+      }),
+    ).toThrow("cannot clone external portals");
   });
 });

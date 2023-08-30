@@ -1,0 +1,7 @@
+# Required by GitHub actions in ~/.gitconfig where git submodules are used (e.g. planx-core)
+
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+
+[url "https://"]
+	insteadOf = git://

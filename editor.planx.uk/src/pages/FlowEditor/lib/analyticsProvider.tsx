@@ -1,19 +1,21 @@
 import { gql } from "@apollo/client";
+import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
 import { client } from "lib/graphql";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { DEFAULT_FLAG_CATEGORY } from "../data/flags";
 import { Store, useStore } from "./store";
 
 export type AnalyticsType = "init" | "resume";
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
+export type HelpClickMetadata = Record<string, string>;
+
 let lastAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
-  trackHelpClick: () => Promise<void>;
+  trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
@@ -58,14 +60,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
+          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`,
         );
       }
       if (document.visibilityState === "visible") {
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
+          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`,
         );
       }
     }
@@ -147,14 +149,15 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     lastAnalyticsLogId = id;
   }
 
-  async function trackHelpClick() {
+  async function trackHelpClick(metadata?: HelpClickMetadata) {
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await client.mutate({
         mutation: gql`
-          mutation UpdateHasClickedHelp($id: bigint!) {
+          mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb = {}) {
             update_analytics_logs_by_pk(
               pk_columns: { id: $id }
               _set: { has_clicked_help: true }
+              _append: { metadata: $metadata }
             ) {
               id
             }
@@ -162,6 +165,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         `,
         variables: {
           id: lastAnalyticsLogId,
+          metadata,
         },
       });
     }
@@ -193,7 +197,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       case TYPES.Result:
         const flagSet = node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
         const data = resultData(flagSet, node?.data?.overrides);
-        const { displayText, flag, responses } = data[flagSet];
+        const { displayText, flag } = data[flagSet];
         return {
           flagSet,
           displayText,

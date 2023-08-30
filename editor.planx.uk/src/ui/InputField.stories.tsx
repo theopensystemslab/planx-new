@@ -1,21 +1,22 @@
-import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
+import { Meta, StoryObj } from "@storybook/react";
 import InputField from "ui/InputField";
 
-const metadata: Meta = {
+const meta = {
   title: "Design System/Atoms/Form Elements/InputField",
   component: InputField,
-};
+} satisfies Meta<typeof InputField>;
 
-export const Basic: Story<{}> = () => (
-  <InputField
-    name="text"
-    multiline={true}
-    placeholder="Portal name"
-    rows={2}
-    disabled={false}
-    required={false}
-  />
-);
+type Story = StoryObj<typeof InputField>;
 
-export default metadata;
+export default meta;
+
+export const Basic = {
+  args: {
+    name: "name",
+    placeholder: "Enter your name",
+    multiline: false,
+    rows: 1,
+    disabled: false,
+    required: false,
+  },
+} satisfies Story;

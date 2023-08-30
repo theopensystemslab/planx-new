@@ -1,11 +1,10 @@
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -19,32 +18,103 @@ interface IResultReason {
   question: Node;
   response: string;
   showChangeButton?: boolean;
+  flagColor?: string;
 }
 
-const useClasses = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-    alignItems: "baseline",
-  },
-  accordion: {
-    cursor: "pointer",
-    width: "100%",
-    marginBottom: theme.spacing(0.5),
-    backgroundColor: theme.palette.background.paper,
-    "&:hover": {
-      background: theme.palette.grey,
-    },
-  },
-  moreInfo: {
-    paddingLeft: theme.spacing(2),
-    color: theme.palette.text.primary,
-  },
-  changeLink: {
-    marginLeft: theme.spacing(2),
-    marginBottom: theme.spacing(0.5),
+const PREFIX = "Result";
+
+const classes = {
+  removeTopBorder: `${PREFIX}-removeTopBorder`,
+};
+
+const Root = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  margin: "0",
+  marginRight: theme.spacing(8),
+  position: "relative",
+}));
+
+const ChangeLink = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  right: theme.spacing(-8),
+  top: 0,
+  height: "100%",
+  minWidth: theme.spacing(8),
+  display: "flex",
+  justifyContent: "flex-end",
+  alignItems: "center",
+  flexShrink: "0",
+  "& button": {
+    padding: "1em 0.25em",
     fontSize: "inherit",
   },
-  removeTopBorder: {
+}));
+
+const MoreInfo = styled(Box)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  paddingLeft: theme.spacing(3),
+  paddingBottom: theme.spacing(1),
+}));
+
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+  padding: "0",
+  margin: "0",
+  minHeight: "0",
+  "&.Mui-expanded": {
+    minHeight: "0",
+  },
+  "& > div": {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    transition: "none",
+  },
+  "& svg": {
+    color: theme.palette.primary.main,
+  },
+}));
+
+const SummaryWrap = styled(Box)(({ theme }) => ({
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(2),
+  margin: "0",
+}));
+
+const AccordionFlag = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "flagColor",
+})<BoxProps & { flagColor?: string }>(({ theme, flagColor }) => ({
+  content: "''",
+  position: "absolute",
+  top: "0",
+  left: "0",
+  width: "10px",
+  height: "100%",
+  backgroundColor: flagColor || theme.palette.background.paper,
+  zIndex: "1",
+}));
+
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+  width: "100%",
+  backgroundColor: "transparent",
+  position: "relative",
+  margin: "0",
+  "&:hover": {
+    background: theme.palette.grey,
+  },
+  "&::after": {
+    content: "''",
+    position: "absolute",
+    bottom: "0",
+    left: "0",
+    width: "100%",
+    height: "1px",
+    backgroundColor: theme.palette.secondary.main,
+    zIndex: "2",
+  },
+  "&.Mui-expanded": {
+    margin: "0",
+  },
+  [`&.${classes.removeTopBorder}`]: {
     "&:before": {
       display: "none",
     },
@@ -56,11 +126,10 @@ const ResultReason: React.FC<IResultReason> = ({
   question,
   response,
   showChangeButton = false,
+  flagColor,
 }) => {
   const changeAnswer = useStore((state) => state.changeAnswer);
   const [expanded, setExpanded] = React.useState(false);
-
-  const classes = useClasses();
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
   const toggleAdditionalInfo = () => setExpanded(!expanded);
@@ -72,54 +141,59 @@ const ResultReason: React.FC<IResultReason> = ({
   }`;
 
   return (
-    <Box className={classes.root}>
-      <Accordion
-        className={classes.accordion}
+    <Root>
+      <StyledAccordion
         classes={{ root: classes.removeTopBorder }}
         onChange={() => hasMoreInfo && toggleAdditionalInfo()}
         expanded={expanded}
         elevation={0}
         square
       >
-        <AccordionSummary
-          expandIcon={hasMoreInfo ? <Caret /> : null}
-          aria-label={ariaLabel}
-          aria-controls={`group-${id}-content`}
-          id={`group-${id}-header`}
-        >
-          <Box
-            display="flex"
-            alignItems="flex-start"
-            flexDirection="column"
-            width="100%"
-            px={1.5}
+        <Box sx={{ position: "relative" }}>
+          <StyledAccordionSummary
+            expandIcon={hasMoreInfo ? <Caret /> : null}
+            aria-label={ariaLabel}
+            aria-controls={`group-${id}-content`}
+            id={`group-${id}-header`}
           >
-            <Box
+            <SummaryWrap
               display="flex"
               justifyContent="space-between"
               alignItems="center"
               width="100%"
             >
-              <Box
-                flexGrow={1}
-                display="flex"
-                alignItems="center"
-                color="text.primary"
+              <Typography
+                variant="body1"
+                color="textPrimary"
+                id={`questionText-${id}`}
               >
-                <Typography
-                  variant="body2"
-                  color="textPrimary"
-                  id={`questionText-${id}`}
+                {question.data.text} <br />
+                <strong>{response}</strong>
+              </Typography>
+            </SummaryWrap>
+          </StyledAccordionSummary>
+          <ChangeLink>
+            <Box>
+              {showChangeButton && (
+                <Link
+                  component="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    changeAnswer(id);
+                  }}
                 >
-                  {question.data.text} <strong>{response}</strong>
-                </Typography>
-              </Box>
+                  Change
+                  <span style={visuallyHidden}>
+                    your response to {question.data.text || "this question"}
+                  </span>
+                </Link>
+              )}
             </Box>
-          </Box>
-        </AccordionSummary>
+          </ChangeLink>
+        </Box>
         {hasMoreInfo && (
-          <AccordionDetails>
-            <Box className={classes.moreInfo}>
+          <AccordionDetails sx={{ py: 1, px: 0 }}>
+            <MoreInfo>
               {question.data.info && (
                 <ReactMarkdownOrHtml
                   source={question.data.info}
@@ -132,28 +206,12 @@ const ResultReason: React.FC<IResultReason> = ({
                   openLinksOnNewTab
                 />
               )}
-            </Box>
+            </MoreInfo>
           </AccordionDetails>
         )}
-      </Accordion>
-      <Box>
-        {showChangeButton && (
-          <Link
-            className={classes.changeLink}
-            component="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              changeAnswer(id);
-            }}
-          >
-            Change
-            <span style={visuallyHidden}>
-              your response to {question.data.text || "this question"}
-            </span>
-          </Link>
-        )}
-      </Box>
-    </Box>
+      </StyledAccordion>
+      <AccordionFlag flagColor={flagColor} />
+    </Root>
   );
 };
 

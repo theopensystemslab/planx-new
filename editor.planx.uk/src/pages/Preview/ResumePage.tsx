@@ -4,12 +4,12 @@ import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import { useCurrentRoute } from "react-navi";
 import { Link as ReactNaviLink } from "react-navi";
 import type { ReconciliationResponse, Session } from "types";
 import { ApplicationPath, SendEmailPayload } from "types";
@@ -42,7 +42,7 @@ interface LockedSessionResponse {
   message: string;
 }
 
-const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
+export const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
   setEmail,
 }) => {
   const emailSchema = object({
@@ -71,7 +71,7 @@ const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
             <Input
               bordered
               errorMessage={
-                Boolean(formik.touched.email && formik.errors.email)
+                formik.touched.email && formik.errors.email
                   ? formik.errors.email
                   : undefined
               }
@@ -89,14 +89,14 @@ const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
   );
 };
 
-const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
+export const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
   return (
     <StatusPage
       bannerHeading="Email not sent"
       buttonText="Retry"
       onButtonClick={retry}
     >
-      <Typography variant="body2">
+      <Typography variant="body1">
         We are having trouble sending emails at the moment.
         <br />
         <br />
@@ -107,14 +107,14 @@ const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
   );
 };
 
-const EmailSuccess: React.FC = () => {
+export const EmailSuccess: React.FC = () => {
   return (
     <StatusPage
       bannerHeading="Check your email"
       buttonText="Close Tab"
       onButtonClick={() => window.close()}
     >
-      <Typography variant="body2">
+      <Typography variant="body1">
         If you have any draft applications we have sent you an email that
         contains a link. Use this link to access your applications.
       </Typography>
@@ -122,7 +122,7 @@ const EmailSuccess: React.FC = () => {
   );
 };
 
-const ValidationSuccess: React.FC<{
+export const ValidationSuccess: React.FC<{
   reconciliationResponse: ReconciliationResponse;
   continueApplication: () => void;
 }> = ({ reconciliationResponse, continueApplication }) => {
@@ -136,7 +136,7 @@ const ValidationSuccess: React.FC<{
   );
 };
 
-const InvalidSession: React.FC<{
+export const InvalidSession: React.FC<{
   retry: () => void;
 }> = ({ retry }) => (
   <StatusPage
@@ -145,9 +145,10 @@ const InvalidSession: React.FC<{
     onButtonClick={retry}
     additionalOption="startNewApplication"
   >
-    <Typography variant="body2">
-      <b>Reasons</b>
-      <br />
+    <Typography variant="h3" component="h2">
+      Reasons
+    </Typography>
+    <Typography variant="body1">
       <br />
       This may be because your application has expired or there was a mistake in
       your email address.
@@ -158,31 +159,27 @@ const InvalidSession: React.FC<{
   </StatusPage>
 );
 
-const LockedSession: React.FC<{ paymentRequest?: MinPaymentRequest }> = ({
-  paymentRequest,
-}) => (
+export const LockedSession: React.FC<{
+  paymentRequest?: MinPaymentRequest;
+}> = ({ paymentRequest }) => (
   <StatusPage
-    bannerHeading="Your application is locked"
+    bannerHeading="Sorry, you can't make changes to this application"
     additionalOption="startNewApplication"
   >
-    <Typography variant="body2">
-      This is because you have requested that <b>{paymentRequest?.payeeName}</b>{" "}
-      (
+    <Typography variant="body1">
+      This is because you've invited {paymentRequest?.payeeName} (
       <Link href={`mailto:${paymentRequest?.payeeEmail}`}>
         {paymentRequest?.payeeEmail}
       </Link>
-      ) pay for the application.
+      ) to pay for this application and changes might affect the fee.
       <br />
       <br />
-      At this point you can make no further changes to the application.
-      <br />
-      <br />
-      To pay for this application yourself go to{" "}
+      You can{" "}
       <Link
         component={ReactNaviLink}
         href={`../pay?paymentRequestId=${paymentRequest?.id}`}
       >
-        the payment page
+        pay for this application yourself on the payment page
       </Link>
     </Typography>
   </StatusPage>
@@ -193,8 +190,7 @@ const LockedSession: React.FC<{ paymentRequest?: MinPaymentRequest }> = ({
  * Currently only used for redirects back from GovUK Pay
  * XXX: Won't work locally as referrer is stripped from the browser when navigating from HTTPS to HTTP (localhost)
  */
-const getInitialEmailValue = () => {
-  const emailQueryParam = useCurrentRoute().url.query.email;
+const getInitialEmailValue = (emailQueryParam?: string) => {
   const isRedirectFromGovPay = [
     "https://www.payments.service.gov.uk/",
     "https://card.payments.service.gov.uk/",
@@ -212,8 +208,12 @@ const getInitialEmailValue = () => {
  * 3. Redirect back from GovPay - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
+  const route = useCurrentRoute();
+
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
-  const [email, setEmail] = useState<string>(getInitialEmailValue());
+  const [email, setEmail] = useState<string>(
+    getInitialEmailValue(route.url.query.email),
+  );
   const [paymentRequest, setPaymentRequest] = useState<MinPaymentRequest>();
   const sessionId = useCurrentRoute().url.query.sessionId;
   const [reconciliationResponse, setReconciliationResponse] =
@@ -282,7 +282,7 @@ const ResumePage: React.FC = () => {
             : setPageStatus(Status.Validated);
         }
       });
-    } catch (error: unknown | AxiosError) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 403) {
           const lockedSessionResponse = error.response

@@ -1,8 +1,7 @@
-import MuiButtonBase from "@mui/material/ButtonBase";
-import { darken } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
-import classNames from "classnames";
+import MuiButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
+import { darken, styled } from "@mui/material/styles";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export enum TagType {
   Alert = "alert",
@@ -11,61 +10,62 @@ export enum TagType {
   Success = "success",
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    fontSize: theme.typography.body2.fontSize,
-    fontWeight: 600,
-    width: "100%",
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(0.5),
-    paddingLeft: theme.spacing(1.5),
-    paddingRight: theme.spacing(1.5),
-  },
-  [TagType.Alert]: {
+const BG_ALERT = "#FAFF00";
+const BG_ACTIVE = "#E5F1EB";
+const BG_NOTICE = "#F3F2F1";
+
+const Root = styled(MuiButtonBase, {
+  shouldForwardProp: (prop) => prop !== "tagType",
+})<ButtonBaseProps & Props>(({ theme, tagType }) => ({
+  fontSize: theme.typography.body2.fontSize,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  width: "100%",
+  paddingTop: theme.spacing(0.75),
+  paddingBottom: theme.spacing(0.75),
+  paddingLeft: theme.spacing(1.25),
+  paddingRight: theme.spacing(1.25),
+  ...(tagType === TagType.Alert && {
     color: theme.palette.text.primary,
-    backgroundColor: "#FAFF00",
+    backgroundColor: BG_ALERT,
     "&:hover": {
-      backgroundColor: darken("#FAFF00", 0.05),
+      backgroundColor: darken(BG_ALERT, 0.05),
     },
-  },
-  [TagType.Active]: {
-    backgroundColor: "#E8F1EC",
+  }),
+  ...(tagType === TagType.Active && {
+    backgroundColor: BG_ACTIVE,
     color: theme.palette.success.dark,
     "&:hover": {
-      backgroundColor: darken("#E8F1EC", 0.05),
+      backgroundColor: darken(BG_ACTIVE, 0.05),
     },
-  },
-  [TagType.Notice]: {
-    backgroundColor: theme.palette.background.paper,
+  }),
+  ...(tagType === TagType.Notice && {
+    backgroundColor: BG_NOTICE,
     color: theme.palette.text.secondary,
-  },
-  [TagType.Success]: {
+  }),
+  ...(tagType === TagType.Success && {
     backgroundColor: theme.palette.success.dark,
     color: "#FFFFFF",
-  },
+  }),
 }));
 
 export interface Props {
   id?: string;
-  className?: string;
-  type: TagType;
-  onClick: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  tagType: TagType;
+  onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   children?: React.ReactNode;
 }
 
 export default function Tag(props: Props): FCReturn {
-  const { id, className, type, onClick, children } = props;
-  const classes = useStyles();
+  const { id, tagType, onClick, children } = props;
 
   return (
-    <MuiButtonBase
-      href=""
-      disabled={type == TagType.Notice || type == TagType.Success}
-      className={classNames(classes.root, classes[type], className)}
+    <Root
+      disabled={tagType == TagType.Notice || tagType == TagType.Success}
       onClick={onClick}
       id={id}
+      tagType={tagType}
     >
       {children}
-    </MuiButtonBase>
+    </Root>
   );
 }

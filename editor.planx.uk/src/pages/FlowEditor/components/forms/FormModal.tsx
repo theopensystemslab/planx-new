@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import { parseFormValues } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import ErrorFallback from "components/ErrorFallback";
@@ -18,22 +18,18 @@ import { rootFlowPath } from "routes/utils";
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
 
-const useStyles = makeStyles((theme) => ({
-  dialog: {
-    // Target all modal sections (the direct child is the backdrop, hence the double child selector)
-    "& > * > *": {
-      backgroundColor: theme.palette.grey[100],
-    },
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+  // Target all modal sections (the direct child is the backdrop, hence the double child selector)
+  "& > * > *": {
+    backgroundColor: theme.palette.grey[100],
   },
-  closeButton: {
-    float: "right",
-    margin: 0,
-    padding: 0,
-    color: theme.palette.grey[600],
-  },
-  actions: {
-    padding: 0,
-  },
+}));
+
+const CloseButton = styled(IconButton)(({ theme }) => ({
+  float: "right",
+  margin: 0,
+  padding: 0,
+  color: theme.palette.grey[600],
 }));
 
 const NodeTypeSelect: React.FC<{
@@ -50,11 +46,12 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Question">
         <option value={TYPES.Statement}>Question</option>
         <option value={TYPES.Checklist}>Checklist</option>
+        <option value={TYPES.NextSteps}>Next steps</option>
       </optgroup>
       <optgroup label="Inputs">
         <option value={TYPES.TextInput}>Text Input</option>
         <option value={TYPES.FileUpload}>File Upload</option>
-        <option value={TYPES.MultipleFileUpload}>Multiple File Upload</option>
+        <option value={TYPES.FileUploadAndLabel}>Upload and label</option>
         <option value={TYPES.NumberInput}>Number Input</option>
         <option value={TYPES.DateInput}>Date Input</option>
         <option value={TYPES.AddressInput}>Address Input</option>
@@ -103,7 +100,6 @@ const FormModal: React.FC<{
   extraProps?: any;
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
-  const classes = useStyles();
   const [addNode, updateNode, node, makeUnique, connect] = useStore((store) => [
     store.addNode,
     store.updateNode,
@@ -114,13 +110,12 @@ const FormModal: React.FC<{
   const handleClose = () => navigate(rootFlowPath(true));
 
   return (
-    <Dialog
+    <StyledDialog
       open
       fullWidth
       maxWidth="md"
       disableScrollLock
       onClose={handleClose}
-      className={classes.dialog}
     >
       <DialogTitle>
         {!handleDelete && (
@@ -134,14 +129,9 @@ const FormModal: React.FC<{
           />
         )}
 
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={handleClose}
-          size="large"
-        >
+        <CloseButton aria-label="close" onClick={handleClose} size="large">
           <Close />
-        </IconButton>
+        </CloseButton>
       </DialogTitle>
       <DialogContent dividers>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -152,7 +142,7 @@ const FormModal: React.FC<{
             id={id}
             handleSubmit={(
               data: any,
-              children: Array<any> | undefined = undefined
+              children: Array<any> | undefined = undefined,
             ) => {
               if (typeof data === "string") {
                 connect(parent, data, { before });
@@ -160,13 +150,13 @@ const FormModal: React.FC<{
                 const parsedData = parseFormValues(Object.entries(data));
                 const parsedChildren =
                   children?.map((o: any) =>
-                    parseFormValues(Object.entries(o))
+                    parseFormValues(Object.entries(o)),
                   ) || undefined;
 
                 if (handleDelete) {
                   updateNode(
                     { id, ...parsedData },
-                    { children: parsedChildren }
+                    { children: parsedChildren },
                   );
                 } else {
                   addNode(parsedData, {
@@ -182,7 +172,7 @@ const FormModal: React.FC<{
           />
         </ErrorBoundary>
       </DialogContent>
-      <DialogActions className={classes.actions}>
+      <DialogActions sx={{ p: 0 }}>
         <Grid container justifyContent="flex-end">
           {handleDelete && (
             <Grid item xs={6} sm={4} md={3}>
@@ -226,7 +216,7 @@ const FormModal: React.FC<{
           </Grid>
         </Grid>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 };
 

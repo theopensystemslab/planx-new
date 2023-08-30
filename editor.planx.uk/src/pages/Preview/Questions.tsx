@@ -1,44 +1,41 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
-import makeStyles from "@mui/styles/makeStyles";
-import classnames from "classnames";
+import Container from "@mui/material/Container";
+import { styled } from "@mui/material/styles";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { ApplicationPath } from "types";
+import { ApplicationPath, Session } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { handleSubmit } from "./Node";
 
-const useClasses = makeStyles((theme) => ({
-  backButton: {
-    marginLeft: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-    visibility: "visible",
-    pointerEvents: "auto",
-    display: "flex",
-    cursor: "pointer",
-    userSelect: "none",
-    alignSelf: "start",
-    fontSize: "inherit",
-    background: "transparent",
-    border: "none",
-    columnGap: theme.spacing(1),
-    padding: theme.spacing(1, 1, 1, 0),
-    textDecoration: "underline",
-    "&:hover": {
-      textDecorationThickness: "3px",
-    },
+const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
+  marginBottom: theme.spacing(1),
+  visibility: "visible",
+  pointerEvents: "auto",
+  display: "flex",
+  cursor: "pointer",
+  userSelect: "none",
+  alignSelf: "start",
+  fontSize: "inherit",
+  background: "transparent",
+  border: "none",
+  columnGap: theme.spacing(1),
+  padding: theme.spacing(1, 1, 1, 0),
+  textDecoration: "underline",
+  "&:hover": {
+    textDecorationThickness: "3px",
   },
-  hidden: {
+  ...(hidden && {
     visibility: "hidden",
     pointerEvents: "none",
-  },
+  }),
 }));
 
 interface QuestionsProps {
@@ -71,61 +68,49 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, node } = useAnalyticsTracking();
-  const classes = useClasses();
   const [gotFlow, setGotFlow] = useState(false);
-  const isSingleSession =
+  const isUsingLocalStorage =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
 
-  if (isSingleSession) {
-    // Use local storage for simple, non-Save&Return flows
-    useEffect(() => {
-      setPreviewEnvironment(previewEnvironment);
-      if (isStandalone) {
-        const state = getLocalFlow(id);
-        if (state) {
-          resumeSession(state);
-        }
+  useEffect(
+    () => setPreviewEnvironment(previewEnvironment),
+    [previewEnvironment, setPreviewEnvironment],
+  );
+
+  // Initial setup
+  useEffect(() => {
+    if (!isStandalone) return;
+
+    if (isUsingLocalStorage) {
+      const state = getLocalFlow(id);
+      if (state) resumeSession(state);
+      createAnalytics(state ? "resume" : "init");
+      setGotFlow(true);
+    } else {
+      NEW.getLocalFlow(sessionId).then((state) => {
+        // session data is resumed by ./ResumePage.tsx
         createAnalytics(state ? "resume" : "init");
         setGotFlow(true);
-      }
-    }, []);
+      });
+    }
+  }, []);
 
-    useEffect(() => {
-      if (gotFlow && isStandalone && id) {
-        setLocalFlow(id, {
-          breadcrumbs,
-          id,
-          passport,
-          sessionId,
-          govUkPayment,
-        });
-      }
-    }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
-  } else {
-    // Use lowcalStorage for Save & Return flows
-    useEffect(() => {
-      setPreviewEnvironment(previewEnvironment);
-      if (isStandalone) {
-        NEW.getLocalFlow(sessionId).then((state) => {
-          // session data is resumed by ./ResumePage.tsx
-          createAnalytics(state ? "resume" : "init");
-          setGotFlow(true);
-        });
-      }
-    }, []);
+  // Update session when a question is answered
+  useEffect(() => {
+    if (!gotFlow || !isStandalone || !id) return;
 
-    useEffect(() => {
-      if (gotFlow && isStandalone && sessionId) {
-        NEW.setLocalFlow(sessionId, {
-          breadcrumbs,
-          id,
-          passport,
-          sessionId,
-          govUkPayment,
-        });
-      }
-    }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
-  }
+    const session: Session = {
+      breadcrumbs,
+      id,
+      passport,
+      sessionId,
+      govUkPayment,
+    };
+
+    isUsingLocalStorage
+      ? setLocalFlow(id, session)
+      : NEW.setLocalFlow(sessionId, session);
+  }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
 
   // scroll to top on any update to breadcrumbs
   useEffect(() => {
@@ -159,20 +144,17 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   const showBackButton = useMemo(
     () => (node?.id ? canGoBack(node) : false),
-    [node?.id]
+    [node?.id],
   );
 
   return (
     <Box width="100%" role="main" pt={1}>
-      <ButtonBase
-        className={classnames(classes.backButton, {
-          [classes.hidden]: !showBackButton,
-        })}
-        onClick={() => goBack()}
-      >
-        <ArrowBackIcon fontSize="small"></ArrowBackIcon>
-        Back
-      </ButtonBase>
+      <Container maxWidth={false}>
+        <BackButton hidden={!showBackButton} onClick={() => goBack()}>
+          <ArrowBackIcon fontSize="small" />
+          Back
+        </BackButton>
+      </Container>
 
       {node && (
         <ErrorBoundary FallbackComponent={ErrorFallback}>

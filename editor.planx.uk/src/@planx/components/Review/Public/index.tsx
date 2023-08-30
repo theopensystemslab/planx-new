@@ -1,5 +1,4 @@
 import { PublicProps } from "@planx/components/ui";
-import type { Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -16,7 +15,7 @@ function Component(props: PublicProps<Review>) {
       state.computePassport(),
       state.hasPaid(),
       state.changeAnswer,
-    ]
+    ],
   );
   return (
     <Presentational

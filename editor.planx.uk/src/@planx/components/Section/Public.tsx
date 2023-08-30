@@ -18,55 +18,86 @@ export type Props = PublicProps<Section>;
 
 export default function Component(props: Props) {
   const [
-    flow,
-    flowName,
-    currentSectionIndex,
-    sectionCount,
-    sectionNodes,
-    currentCard,
-    changeAnswer,
     breadcrumbs,
     cachedBreadcrumbs,
+    changeAnswer,
+    currentCard,
+    currentSectionIndex,
+    flow,
+    flowName,
+    sectionCount,
+    sectionNodes,
   ] = useStore((state) => [
-    state.flow,
-    state.flowName,
-    state.currentSectionIndex,
-    state.sectionCount,
-    state.sectionNodes,
-    state.currentCard(),
-    state.changeAnswer,
     state.breadcrumbs,
     state.cachedBreadcrumbs,
+    state.changeAnswer,
+    state.currentCard(),
+    state.currentSectionIndex,
+    state.flow,
+    state.flowName,
+    state.sectionCount,
+    state.sectionNodes,
   ]);
 
   return (
-    <Card isValid handleSubmit={props.handleSubmit}>
-      <QuestionHeader title={flowName} />
-      <Box sx={{ lineHeight: ".5em" }}>
-        <Typography variant="body1" component="h2" sx={{ fontWeight: "bold" }}>
-          Application incomplete.
-        </Typography>
-        <Typography variant="body2">
-          {`You have completed ${
-            Object.keys(sectionNodes)[0] === currentCard?.id
-              ? 0
-              : currentSectionIndex
-          } of ${sectionCount} sections`}
-        </Typography>
-      </Box>
-      <SectionsOverviewList
-        flow={flow}
-        showChange={true}
-        changeAnswer={changeAnswer}
-        nextQuestion={() => props.handleSubmit && props.handleSubmit()}
-        sectionNodes={sectionNodes}
-        currentCard={currentCard}
-        breadcrumbs={breadcrumbs}
-        cachedBreadcrumbs={cachedBreadcrumbs}
-      />
-    </Card>
+    <Root
+      {...props}
+      breadcrumbs={breadcrumbs}
+      cachedBreadcrumbs={cachedBreadcrumbs}
+      changeAnswer={changeAnswer}
+      currentCard={currentCard}
+      currentSectionIndex={currentSectionIndex}
+      flow={flow}
+      flowName={flowName}
+      sectionCount={sectionCount}
+      sectionNodes={sectionNodes}
+    />
   );
 }
+
+interface RootProps
+  extends Omit<SectionsOverviewListProps, "showChange" | "nextQuestion">,
+    Props {
+  currentSectionIndex: number;
+  flowName: string;
+  sectionNodes: Record<string, SectionNode>;
+  currentCard: Store.node | null;
+  sectionCount: number;
+}
+
+// Stateless component to simplify testing of the "Section" component
+export const Root = ({
+  currentSectionIndex,
+  flowName,
+  handleSubmit,
+  sectionNodes,
+  currentCard,
+  sectionCount,
+  ...props
+}: RootProps) => (
+  <Card isValid handleSubmit={handleSubmit}>
+    <QuestionHeader title={flowName} />
+    <Box>
+      <Typography variant="h3" component="h2" pb="0.25em">
+        Application incomplete.
+      </Typography>
+      <Typography variant="subtitle2" component="h3">
+        {`You have completed ${
+          Object.keys(sectionNodes)[0] === currentCard?.id
+            ? 0
+            : currentSectionIndex
+        } of ${sectionCount} sections`}
+      </Typography>
+    </Box>
+    <SectionsOverviewList
+      {...props}
+      currentCard={currentCard}
+      sectionNodes={sectionNodes}
+      showChange={true}
+      nextQuestion={() => handleSubmit && handleSubmit()}
+    />
+  </Card>
+);
 
 type SectionsOverviewListProps = {
   flow: Store.flow;
@@ -119,15 +150,15 @@ export function SectionsOverviewList({
       [SectionStatus.NotStarted]: TagType.Notice,
       [SectionStatus.Completed]: TagType.Success,
     };
-    const type = tagTypes[section];
+    const tagType = tagTypes[section];
 
     const onClick =
-      type == TagType.Alert || type == TagType.Active
+      tagType == TagType.Alert || tagType == TagType.Active
         ? () => nextQuestion()
         : () => {}; // no-op
 
     return (
-      <Tag type={type} onClick={onClick}>
+      <Tag tagType={tagType} onClick={onClick}>
         {section}
       </Tag>
     );
@@ -143,15 +174,14 @@ export function SectionsOverviewList({
               <Link
                 onClick={() => changeFirstAnswerInSection(sectionId)}
                 component="button"
-                sx={{ fontFamily: "inherit", fontSize: "inherit" }}
               >
-                {sectionNode.data.title}
-                <span style={visuallyHidden}>
-                  {`Change ${sectionNode.data.title}`}
-                </span>
+                <Typography variant="body1" align="left">
+                  <span style={visuallyHidden}>{`Change `}</span>
+                  {sectionNode.data.title}
+                </Typography>
               </Link>
             ) : (
-              sectionNode.data.title
+              <Typography variant="body1">{sectionNode.data.title}</Typography>
             )}
           </dt>
           <dd> {getTag(sectionStatuses[sectionId])} </dd>
@@ -163,14 +193,14 @@ export function SectionsOverviewList({
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 200px",
+  gridTemplateColumns: "1fr 220px",
   gridRowGap: "5px",
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
+  paddingTop: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
   "& > *": {
-    borderBottom: "1px solid grey",
-    paddingBottom: theme.spacing(2),
-    paddingTop: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.secondary.main}`,
+    paddingBottom: theme.spacing(1.25),
+    paddingTop: theme.spacing(1.25),
     verticalAlign: "top",
     margin: 0,
   },
@@ -181,11 +211,16 @@ const Grid = styled("dl")(({ theme }) => ({
   },
   "& dt": {
     // left column
-    fontWeight: 500,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   "& dd:nth-of-type(1n)": {
     // right column
-    textAlign: "center",
+    textAlign: "right",
+    "& > button": {
+      width: "auto",
+    },
   },
 }));
 

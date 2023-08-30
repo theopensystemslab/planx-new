@@ -28,7 +28,7 @@ export interface AddressInput extends MoreInformation {
 }
 
 export const parseAddressInput = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): AddressInput => ({
   title: data?.title || "",
   description: data?.description,

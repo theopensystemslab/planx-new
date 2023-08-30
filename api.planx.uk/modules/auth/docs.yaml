@@ -1,0 +1,46 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: auth
+    description: Authentication related requests
+paths:
+  /logout:
+    get:
+      summary: Logout from the PlanX service
+      tags: ["auth"]
+      responses:
+        "302":
+          description: Redirect to PlanX Editor
+  /auth/login/failed:
+    get:
+      summary: Failed login
+      tags: ["auth"]
+      responses:
+        "401":
+          description: Invalid login details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum: ["User failed to authenticate"]
+  /auth/google:
+    get:
+      summary: Authenticate via Google SSO
+      description: The first step in Google authentication will involve redirecting the user to google.com
+      tags: ["auth"]
+      responses:
+        "200":
+          description: OK
+  /auth/google/callback:
+    get:
+      summary: Generate a JWT for an authenticated user
+      description: After authentication, Google will redirect the user back to this route which generates a JWT for the user
+      tags: ["auth"]
+      responses:
+        "200":
+          description: OK

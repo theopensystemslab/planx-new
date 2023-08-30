@@ -1,9 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = [
-  "DISABLE_SAVE_AND_RETURN",
-  "ALT_THEME",
-  "INVITE_TO_PAY",
-] as const;
+const AVAILABLE_FEATURE_FLAGS = ["DISABLE_SAVE_AND_RETURN"] as const;
 
 type featureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
@@ -29,7 +25,7 @@ const activeFeatureFlags = (() => {
  */
 export const toggleFeatureFlag = (
   featureFlag: featureFlag,
-  autoReload = true
+  autoReload = true,
 ) => {
   const supportedFlag = AVAILABLE_FEATURE_FLAGS.includes(featureFlag);
 
@@ -39,13 +35,13 @@ export const toggleFeatureFlag = (
     activeFeatureFlags.add(featureFlag);
   } else {
     throw new Error(
-      `${featureFlag} is not a supported feature flag, try again. Available flags are: ${AVAILABLE_FEATURE_FLAGS}`
+      `${featureFlag} is not a supported feature flag, try again. Available flags are: ${AVAILABLE_FEATURE_FLAGS}`,
     );
   }
 
   localStorage.setItem(
     "FEATURE_FLAGS",
-    JSON.stringify(Array.from(activeFeatureFlags))
+    JSON.stringify(Array.from(activeFeatureFlags)),
   );
 
   if (autoReload) window.location.reload();
@@ -75,6 +71,6 @@ if (process.env.REACT_APP_ENV !== "test") {
         ]
           .sort()
           .join(", ")}`
-      : `🎏 no active feature flags`
+      : `🎏 no active feature flags`,
   );
 }

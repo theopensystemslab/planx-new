@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "playwright test --grep-invert @regression",
+    "test:regression": "playwright test",
+    "test:debug": "DEBUG_LOG=true pnpm test",
+    "ui": "serve ../../../editor.planx.uk/build --single --listen 3000",
+    "postinstall": "./install-dependencies.sh"
+  },
+  "dependencies": {
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#0454fb4",
+    "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.44.0",
+    "graphql": "^16.7.1",
+    "graphql-request": "^6.1.0",
+    "isomorphic-fetch": "^3.0.0",
+    "jsonwebtoken": "^9.0.1",
+    "serve": "^14.2.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.35.1",
+    "@types/node": "18.16.1",
+    "eslint-plugin-playwright": "^0.12.0"
+  }
+}

@@ -1,32 +1,44 @@
 import ErrorIcon from "@mui/icons-material/Error";
 import Image from "@mui/icons-material/Image";
-import ButtonBase from "@mui/material/ButtonBase";
+import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import CircularProgress from "@mui/material/CircularProgress";
+import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
-import makeStyles from "@mui/styles/makeStyles";
 import { uploadPublicFile } from "api/upload";
 import React, { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 
 export interface Props {
   onChange?: (image: string) => void;
+  variant?: "tooltip";
 }
 
-const useClasses = makeStyles((theme) => ({
-  inputIconButton: {
-    borderRadius: 0,
-    height: 50,
-    width: 50,
-    backgroundColor: "#fff",
-    color: theme.palette.primary.main,
-  },
-  dragging: {
+interface RootProps extends ButtonBaseProps {
+  isDragActive?: boolean;
+  variant?: "tooltip";
+}
+
+const Root = styled(ButtonBase, {
+  shouldForwardProp: (prop) =>
+    !["isDragActive", "variant"].includes(prop.toString()),
+})<RootProps>(({ theme, isDragActive, variant }) => ({
+  borderRadius: 0,
+  height: 50,
+  width: 50,
+  backgroundColor: "#fff",
+  color: theme.palette.primary.main,
+  ...(isDragActive && {
     border: `2px dashed ${theme.palette.primary.dark}`,
-  },
+  }),
+  ...(variant === "tooltip" && {
+    color: "#757575",
+    height: "fitContent",
+    width: "fitContent",
+  }),
 }));
 
 export default function PublicFileUploadButton(props: Props): FCReturn {
-  const { onChange } = props;
+  const { onChange, variant } = props;
 
   const [status, setStatus] = useState<
     { type: "none" } | { type: "loading" } | { type: "error"; msg: string }
@@ -66,7 +78,7 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
           });
         });
     },
-    [onChange, setStatus]
+    [onChange, setStatus],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -75,47 +87,34 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
       "image/*": [".jpg", ".jpeg", ".png", ".svg"],
     },
   });
-  const classes = useClasses();
 
   if (status.type === "loading") {
     return (
-      <ButtonBase
-        key="status-loading"
-        classes={{
-          root: classes.inputIconButton,
-        }}
-      >
+      <Root key="status-loading">
         <CircularProgress size={24} />
-      </ButtonBase>
+      </Root>
     );
   }
 
   if (status.type === "error") {
     return (
       <Tooltip open title={status.msg}>
-        <ButtonBase
-          classes={{
-            root: classes.inputIconButton,
-          }}
-        >
+        <Root>
           <ErrorIcon titleAccess="Error" />
-        </ButtonBase>
+        </Root>
       </Tooltip>
     );
   }
 
   return (
-    <ButtonBase
+    <Root
+      isDragActive={isDragActive}
       key="status-none"
-      classes={{
-        root: `${classes.inputIconButton} ${
-          isDragActive ? classes.dragging : ""
-        }`,
-      }}
+      variant={variant}
       {...getRootProps()}
     >
       <input data-testid="upload-file-input" {...getInputProps()} />
       <Image />
-    </ButtonBase>
+    </Root>
   );
 }

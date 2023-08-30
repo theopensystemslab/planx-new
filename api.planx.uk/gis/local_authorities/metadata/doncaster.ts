@@ -20,6 +20,4 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   },
 };
 
-export {
-  planningConstraints,
-};
+export { planningConstraints };

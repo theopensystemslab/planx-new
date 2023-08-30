@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
@@ -21,30 +20,29 @@ interface Props {
   onButtonClick?: () => void;
 }
 
-const useStyles = makeStyles((theme) => ({
-  warningIcon: {
-    padding: theme.spacing(2.5),
-  },
-  warningMessage: {
-    paddingLeft: theme.spacing(1),
-  },
-}));
-
 const ReconciliationPage: React.FC<Props> = ({
   bannerHeading,
   reconciliationResponse,
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, hasSections, sectionNodes, currentCard, changeAnswer, record] =
-    useStore((state) => [
-      state.flow,
-      state.hasSections,
-      state.sectionNodes,
-      state.currentCard(),
-      state.changeAnswer,
-      state.record,
-    ]);
+  const [
+    flow,
+    hasSections,
+    sectionNodes,
+    currentCard,
+    changeAnswer,
+    record,
+    passport,
+  ] = useStore((state) => [
+    state.flow,
+    state.hasSections,
+    state.sectionNodes,
+    state.currentCard(),
+    state.changeAnswer,
+    state.record,
+    state.computePassport(),
+  ]);
 
   const nextQuestion = () => {
     if (onButtonClick) {
@@ -58,11 +56,10 @@ const ReconciliationPage: React.FC<Props> = ({
 
   const sortedBreadcrumbs = sortBreadcrumbs(
     reconciliationResponse.reconciledSessionData.breadcrumbs,
-    flow
+    flow,
   );
 
   const theme = useTheme();
-  const classes = useStyles();
 
   return (
     <>
@@ -70,8 +67,8 @@ const ReconciliationPage: React.FC<Props> = ({
         <Banner
           heading={bannerHeading}
           color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
+            background: theme.palette.info.light,
+            text: theme.palette.text.primary,
           }}
         />
       </Box>
@@ -83,14 +80,14 @@ const ReconciliationPage: React.FC<Props> = ({
               titleAccess="Warning"
               color="primary"
               fontSize="large"
-              className={classes.warningIcon}
+              sx={{ p: 2.5 }}
             />
-            <Typography variant="body2" className={classes.warningMessage}>
+            <Typography variant="body2" sx={{ pl: 1 }}>
               {reconciliationResponse.message}
             </Typography>
           </Box>
         )}
-        <Typography variant="h3" component="h2">
+        <Typography variant="h2">
           Review your {hasSections ? "progress" : "answers"} so far
         </Typography>
         {hasSections ? (
@@ -109,7 +106,7 @@ const ReconciliationPage: React.FC<Props> = ({
           <SummaryListsBySections
             breadcrumbs={sortedBreadcrumbs}
             flow={flow}
-            passport={reconciliationResponse.reconciledSessionData.passport}
+            passport={passport}
             changeAnswer={changeAnswer}
             showChangeButton={false}
             sectionComponent="h3"

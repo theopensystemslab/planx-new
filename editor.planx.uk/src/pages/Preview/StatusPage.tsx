@@ -3,11 +3,12 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
+import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
+import { removeSessionIdSearchParam } from "utils";
 
 import { makeCsvData } from "../../@planx/components/Send/uniform";
 import FileDownload from "../../ui/FileDownload";
@@ -21,12 +22,6 @@ interface Props {
   additionalOption?: "startNewApplication";
   children?: React.ReactNode;
 }
-
-const useStyles = makeStyles((theme) => ({
-  link: {
-    marginTop: theme.spacing(2.5),
-  },
-}));
 
 const StatusPage: React.FC<Props> = ({
   bannerHeading,
@@ -44,7 +39,7 @@ const StatusPage: React.FC<Props> = ({
       state.computePassport(),
       state.sessionId,
       state.flowName,
-    ]
+    ],
   );
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
@@ -57,15 +52,6 @@ const StatusPage: React.FC<Props> = ({
   });
 
   const theme = useTheme();
-  const classes = useStyles();
-
-  // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
-  const startNewApplication = () => {
-    const currentURL = new URL(window.location.href);
-    currentURL.searchParams.delete("sessionId");
-    window.history.pushState({}, document.title, currentURL);
-    window.location.reload();
-  };
 
   return (
     <>
@@ -73,8 +59,8 @@ const StatusPage: React.FC<Props> = ({
         <Banner
           heading={bannerHeading}
           color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
+            background: theme.palette.info.light,
+            text: theme.palette.text.primary,
           }}
         >
           {bannerText && (
@@ -95,19 +81,22 @@ const StatusPage: React.FC<Props> = ({
             color="primary"
             size="large"
             onClick={onButtonClick}
+            sx={{ mt: 4 }}
           >
             {buttonText}
           </Button>
         )}
         {additionalOption === "startNewApplication" && (
           <>
-            <Typography variant="body2">or</Typography>
+            <Typography sx={contentFlowSpacing} variant="body1">
+              or
+            </Typography>
             <Link
               component="button"
-              onClick={startNewApplication}
-              className={classes.link}
+              onClick={removeSessionIdSearchParam}
+              sx={contentFlowSpacing}
             >
-              <Typography variant="body2">Start new application</Typography>
+              <Typography variant="body1">Start new application</Typography>
             </Link>
           </>
         )}

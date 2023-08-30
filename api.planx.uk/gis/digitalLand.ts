@@ -1,4 +1,8 @@
-import type { Constraint, GISResponse, Metadata } from "@opensystemslab/planx-core/types";
+import type {
+  Constraint,
+  GISResponse,
+  Metadata,
+} from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
 import { adminGraphQLClient as adminClient } from "../hasura";
@@ -8,9 +12,9 @@ import { baseSchema } from "./local_authorities/metadata/base";
 export interface LocalAuthorityMetadata {
   planningConstraints: {
     article4: {
-      records: Record<string, string>
-    }
-  }
+      records: Record<string, string>;
+    };
+  };
 }
 
 const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
@@ -33,7 +37,11 @@ const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
  * @param extras (dict) - optional query params like "analytics" & "sessionId" used to decide if we should audit the raw response
  *
  */
-async function go(localAuthority: string, geom: string, extras: Record<string, string>): Promise<GISResponse> {
+async function go(
+  localAuthority: string,
+  geom: string,
+  extras: Record<string, string>,
+): Promise<GISResponse> {
   // generate list of digital land datasets we should query based on 'active' planx schema variables
   const activeDatasets: string[] = [];
   Object.keys(baseSchema).forEach((key) => {
@@ -56,34 +64,37 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
 
   // fetch records from digital land, will return '{ count: 0, entities: [], links: {..} }' if no intersections
   const url = `https://www.planning.data.gov.uk/entity.json?${new URLSearchParams(
-    options
+    options,
   )}${datasets}`;
   const res = await fetch(url)
-    .then((response: { json: () => any; }) => response.json())
+    .then((response: { json: () => any }) => response.json())
     .catch((error: any) => console.log(error));
 
   // if analytics are "on", store an audit record of the raw response
   if (extras?.analytics !== "false") {
-    const _auditRecord = await adminClient.request(gql`
-      mutation CreatePlanningConstraintsRequest(
-        $destination_url: String = "",
-        $response: jsonb = {},
-        $session_id: String = "",
-      ) {
-        insert_planning_constraints_requests_one(object: {
-          destination_url: $destination_url,
-          response: $response
-          session_id: $session_id,
-        }) {
-          id
+    const _auditRecord = await adminClient.request(
+      gql`
+        mutation CreatePlanningConstraintsRequest(
+          $destination_url: String = ""
+          $response: jsonb = {}
+          $session_id: String = ""
+        ) {
+          insert_planning_constraints_requests_one(
+            object: {
+              destination_url: $destination_url
+              response: $response
+              session_id: $session_id
+            }
+          ) {
+            id
+          }
         }
-      }
-    `,
+      `,
       {
         destination_url: url,
         response: res,
         session_id: extras?.sessionId,
-      }
+      },
     );
   }
 
@@ -91,10 +102,11 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
   // check for & add any 'positive' constraints to the formattedResult
   let formattedResult: Record<string, Constraint> = {};
   if (res && res.count > 0 && res.entities) {
-    res.entities.forEach((entity: { dataset: any; }) => {
+    res.entities.forEach((entity: { dataset: any }) => {
       // get the planx variable that corresponds to this entity's 'dataset', should never be null because our initial request is filtered on 'dataset'
-      const key = Object.keys(baseSchema).find((key) =>
-        baseSchema[key]["digital-land-datasets"]?.includes(entity.dataset)
+      const key = Object.keys(baseSchema).find(
+        (key) =>
+          baseSchema[key]["digital-land-datasets"]?.includes(entity.dataset),
       );
       // because there can be many digital land datasets per planx variable, check if this key is already in our result
       if (key && Object.keys(formattedResult).includes(key)) {
@@ -108,7 +120,7 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
             data: [omitGeometry(entity)],
             category: baseSchema[key].category,
           };
-        } 
+        }
       }
     });
   }
@@ -118,14 +130,14 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
   // TODO followup with digital land about how to return 'nots' via API (currently assumes any "active" metadata was successfully queried)
   const nots = Object.keys(baseSchema).filter(
     (key) =>
-      baseSchema[key]["active"] && !Object.keys(formattedResult).includes(key)
+      baseSchema[key]["active"] && !Object.keys(formattedResult).includes(key),
   );
   nots.forEach((not) => {
-    formattedResult[not] = { 
+    formattedResult[not] = {
       fn: not,
-      value: false, 
-      text: baseSchema[not].neg, 
-      category: baseSchema[not].category, 
+      value: false,
+      text: baseSchema[not].neg,
+      category: baseSchema[not].category,
     };
   });
 
@@ -140,8 +152,14 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
     formattedResult["designated.nationalPark"].value
   ) {
     formattedResult["designated.nationalPark"]?.data?.forEach((entity: any) => {
-      if (baseSchema[broads]["digital-land-entities"]?.includes(entity.entity)) {
-        formattedResult[broads] = { fn: broads, value: true, text: baseSchema[broads].pos };
+      if (
+        baseSchema[broads]["digital-land-entities"]?.includes(entity.entity)
+      ) {
+        formattedResult[broads] = {
+          fn: broads,
+          value: true,
+          text: baseSchema[broads].pos,
+        };
       }
     });
   } else {
@@ -204,23 +222,42 @@ async function go(localAuthority: string, geom: string, extras: Record<string, s
   // --- METADATA ---
   // additionally fetch metadata from Digital Land's "dataset" endpoint for extra context
   const metadata: Record<string, Metadata> = {};
-  const urls = activeDatasets.map((dataset) => `https://www.planning.data.gov.uk/dataset/${dataset}.json`);
-  await Promise.all(urls.map(url => 
-    fetch(url)
-      .then((response: { json: () => any; }) => response.json())
-      .catch((error: any) => console.log(error))
-  )).then((responses) => {
-    responses.forEach((response) => {
-      // get the planx variable that corresponds to this 'dataset', should never be null because we only requested known datasets
-      const key = Object.keys(baseSchema).find((key) => baseSchema[key]["digital-land-datasets"]?.includes(response.dataset));
-      if (key) metadata[key] = response;
-    });
-  }).catch(error => console.log(error));
+  const urls = activeDatasets.map(
+    (dataset) => `https://www.planning.data.gov.uk/dataset/${dataset}.json`,
+  );
+  await Promise.all(
+    urls.map((url) =>
+      fetch(url)
+        .then((response: { json: () => any }) => response.json())
+        .catch((error: any) => console.log(error)),
+    ),
+  )
+    .then((responses) => {
+      responses.forEach((response: any) => {
+        // get the planx variable that corresponds to this 'dataset', should never be null because we only requested known datasets
+        const key = Object.keys(baseSchema).find(
+          (key) =>
+            baseSchema[key]["digital-land-datasets"]?.includes(
+              response.dataset,
+            ),
+        );
+        if (key) metadata[key] = response;
+      });
+    })
+    .catch((error) => console.log(error));
 
-  return { url: url, constraints: formattedResult, metadata: metadata };
+  return {
+    sourceRequest: url,
+    constraints: formattedResult,
+    metadata: metadata,
+  };
 }
 
-async function locationSearch(localAuthority: string, geom: string, extras: Record<string, string>) {
+async function locationSearch(
+  localAuthority: string,
+  geom: string,
+  extras: Record<string, string>,
+) {
   return go(localAuthority, geom, extras);
 }
 

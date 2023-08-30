@@ -2,7 +2,11 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+
   "rules": {
     "@typescript-eslint/no-unused-vars": [
       "warn",
@@ -13,5 +17,5 @@
     ],
     "@typescript-eslint/no-non-null-assertion": "off"
   },
-  "ignorePatterns": "dist/**"
+  "ignorePatterns": [ "dist/**", "pnpm-lock.yaml" ]
 }

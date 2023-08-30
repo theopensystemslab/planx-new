@@ -1,4 +1,14 @@
 import tinycolor from "@ctrl/tinycolor";
+import type {
+  Flag,
+  FlagSet,
+  GovUKPayment,
+  Node,
+} from "@opensystemslab/planx-core/types";
+import {
+  DEFAULT_FLAG_CATEGORY,
+  flatFlags,
+} from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
@@ -13,8 +23,7 @@ import uniq from "lodash/uniq";
 import { v4 as uuidV4 } from "uuid";
 import type { StateCreator } from "zustand";
 
-import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
-import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
+import type { Session } from "./../../../../types";
 import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";
@@ -26,20 +35,22 @@ let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
 export interface PreviewStore extends Store.Store {
   collectedFlags: (
     upToNodeId: Store.nodeId,
-    visited?: Array<string>
+    visited?: Array<string>,
   ) => Array<string>;
   currentCard: () => Store.node | null;
   hasPaid: () => boolean;
   previousCard: (
     node: Store.node | null,
-    upcomingCardIds?: Store.nodeId[]
+    upcomingCardIds?: Store.nodeId[],
   ) => Store.nodeId | undefined;
   canGoBack: (node: Store.node | null) => boolean;
   computePassport: () => Readonly<Store.passport>;
   record: (id: Store.nodeId, userData?: Store.userData) => void;
   resultData: (
     flagSet?: string,
-    overrides?: { [flagId: string]: { heading?: string; description?: string } }
+    overrides?: {
+      [flagId: string]: { heading?: string; description?: string };
+    },
   ) => {
     [category: string]: {
       flag: Flag;
@@ -90,9 +101,9 @@ export const previewStore: StateCreator<
     const { breadcrumbs, flow } = get();
 
     const possibleFlags = flatFlags.filter(
-      (f) => f.category === DEFAULT_FLAG_CATEGORY
+      (f) => f.category === DEFAULT_FLAG_CATEGORY,
     );
-    const flagKeys = possibleFlags.map((f) => f.value);
+    const flagKeys: string[] = possibleFlags.map((f) => f.value);
 
     const breadcrumbIds = Object.keys(breadcrumbs);
 
@@ -138,7 +149,7 @@ export const previewStore: StateCreator<
     const { breadcrumbs, flow } = get();
 
     return Object.entries(breadcrumbs).some(
-      ([id, userData]) => flow[id]?.type === TYPES.Pay && !userData.auto
+      ([id, userData]) => flow[id]?.type === TYPES.Pay && !userData.auto,
     );
   },
 
@@ -178,7 +189,7 @@ export const previewStore: StateCreator<
     const { flow, hasPaid, previousCard } = get();
     return (
       Boolean(node?.id) &&
-      flow[node?.id!]?.type !== TYPES.Confirmation &&
+      flow[node!.id!]?.type !== TYPES.Confirmation &&
       Boolean(previousCard(node)) &&
       !hasPaid()
     );
@@ -199,7 +210,7 @@ export const previewStore: StateCreator<
             .map((id: string) => flow[id]?.data?.val)
             .filter(
               (val) =>
-                val !== undefined && val !== null && String(val).trim() !== ""
+                val !== undefined && val !== null && String(val).trim() !== "",
             );
 
           if (passportValue.length > 0) {
@@ -214,7 +225,7 @@ export const previewStore: StateCreator<
                   }
                   return acc;
                 },
-                []
+                [],
               );
 
             passportData[key] = uniq(combined);
@@ -226,7 +237,7 @@ export const previewStore: StateCreator<
             _acc![id] = value;
             return _acc;
           },
-          {} as Store.passport["data"]
+          {} as Store.passport["data"],
         );
 
         return {
@@ -240,7 +251,7 @@ export const previewStore: StateCreator<
       },
       {
         data: {},
-      } as Store.passport
+      } as Store.passport,
     );
 
     return passport;
@@ -313,11 +324,11 @@ export const previewStore: StateCreator<
       const sortedBreadcrumbs = sortBreadcrumbs(
         nextBreadcrumbs,
         flow,
-        nodesPendingEdit
+        nodesPendingEdit,
       );
 
       const shouldRemovedChangedNode = Object.keys(nextBreadcrumbs).some(
-        (key) => flow[key]?.type === TYPES.Review
+        (key) => flow[key]?.type === TYPES.Review,
       );
       set({
         breadcrumbs: sortedBreadcrumbs,
@@ -332,7 +343,7 @@ export const previewStore: StateCreator<
       const idx = breadcrumbIds.indexOf(id);
       const remainingBreadcrumbs = pick(
         breadcrumbs,
-        breadcrumbIds.slice(0, idx)
+        breadcrumbIds.slice(0, idx),
       );
       const removedBreadcrumbs = pick(breadcrumbs, breadcrumbIds.slice(idx));
 
@@ -367,8 +378,8 @@ export const previewStore: StateCreator<
     const knownNotVals = knownNots(
       flow,
       breadcrumbs,
-      // _nots is created by FindProperty/Public atm
-      computePassport().data?._nots
+      // _nots is created by PlanningConstraints/Public
+      computePassport().data?._nots,
     );
 
     const ids: Set<Store.nodeId> = new Set();
@@ -425,7 +436,7 @@ export const previewStore: StateCreator<
                   .sort(
                     (a: any, b: any) =>
                       String(b.data?.val).split(",").length -
-                      String(a.data?.val).split(",").length
+                      String(a.data?.val).split(",").length,
                   )
                   .filter((response) => response.data?.val)
               : [];
@@ -435,7 +446,7 @@ export const previewStore: StateCreator<
                 passportValues = [passportValues];
 
               passportValues = (passportValues || []).filter((pv: any) =>
-                sortedResponses.some((r) => pv.startsWith(r.data.val))
+                sortedResponses.some((r) => pv.startsWith(r.data.val)),
               );
 
               if (passportValues.length > 0) {
@@ -443,7 +454,7 @@ export const previewStore: StateCreator<
                   (r) => {
                     const responseValues = String(r.data.val).split(",").sort();
                     return String(responseValues) === String(passportValues);
-                  }
+                  },
                 );
 
                 if (responsesThatCanBeAutoAnswered.length === 0) {
@@ -454,7 +465,7 @@ export const previewStore: StateCreator<
 
                     for (const responseValue of responseValues) {
                       return passportValues.some((passportValue: any) =>
-                        String(passportValue).startsWith(responseValue)
+                        String(passportValue).startsWith(responseValue),
                       );
                     }
                   });
@@ -464,7 +475,7 @@ export const previewStore: StateCreator<
 
             if (responsesThatCanBeAutoAnswered.length === 0) {
               const _responses = (responses || []).filter(
-                (r) => !knownNotVals[fn]?.includes(r.data?.val)
+                (r) => !knownNotVals[fn]?.includes(r.data?.val),
               );
 
               if (_responses.length === 1 && isNil(_responses[0].data?.val)) {
@@ -474,7 +485,7 @@ export const previewStore: StateCreator<
                 passport.data?.[fn].length > 0
               ) {
                 responsesThatCanBeAutoAnswered = (responses || []).filter(
-                  (r) => !r.data?.val
+                  (r) => !r.data?.val,
                 );
               }
             }
@@ -498,7 +509,7 @@ export const previewStore: StateCreator<
               }
 
               return responsesThatCanBeAutoAnswered.forEach((r) =>
-                nodeIdsConnectedFrom(r.id)
+                nodeIdsConnectedFrom(r.id),
               );
             }
           } else if (
@@ -519,7 +530,7 @@ export const previewStore: StateCreator<
               { edges: [] } as {
                 responseWithNoValueId?: Store.nodeId;
                 edges: Array<Store.nodeId>;
-              }
+              },
             );
 
             if (data.responseWithNoValueId && data.edges.length === 0) {
@@ -549,7 +560,7 @@ export const previewStore: StateCreator<
         // .filter(Boolean)
         .reverse()
         // ending with _root
-        .concat("_root")
+        .concat("_root"),
       // run nodeIdsConnectedFrom(answerId)
     ).forEach(nodeIdsConnectedFrom);
 
@@ -585,9 +596,9 @@ export const previewStore: StateCreator<
 
     // The first nodeId that set the passport value (fn) being changed (eg FindProperty)
     const originalNodeId: Node["id"] | undefined = Object.entries(
-      sortedBreadcrumbs
+      sortedBreadcrumbs,
     ).find(
-      ([_nodeId, breadcrumb]) => breadcrumb.data && fn in breadcrumb.data
+      ([_nodeId, breadcrumb]) => breadcrumb.data && fn in breadcrumb.data,
     )?.[0];
 
     if (originalNodeId) {
@@ -604,10 +615,10 @@ export const previewStore: StateCreator<
     // The first nodeId that is configured by an editor to manually set the passport value being changed (eg Question "What type of property is it?").
     //   This node has likely been auto-answered by the originalNodeId and we leave its' breadcrumbs.data intact so that the original answer is highlighted later
     const overrideNodeId: Node["id"] | undefined = Object.entries(
-      sortedBreadcrumbs
+      sortedBreadcrumbs,
     ).find(
       ([nodeId, _breadcrumb]) =>
-        flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn
+        flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn,
     )?.[0];
 
     if (overrideNodeId) {
@@ -622,7 +633,7 @@ export const previewStore: StateCreator<
 const knownNots = (
   flow: Store.flow,
   breadcrumbs: Store.breadcrumbs,
-  nots = {}
+  nots = {},
 ) =>
   Object.entries(breadcrumbs).reduce(
     (acc, [id, { answers = [] }]) => {
@@ -630,7 +641,7 @@ const knownNots = (
 
       const _knownNotVals = difference(
         flow[id].edges,
-        answers as Array<Store.nodeId>
+        answers as Array<Store.nodeId>,
       );
 
       if (flow[id].data?.fn) {
@@ -638,7 +649,7 @@ const knownNots = (
           flatten([
             ...(acc[flow[id].data?.fn] || []),
             _knownNotVals.flatMap((n) => flow[n].data?.val),
-          ])
+          ]),
         ).filter(Boolean) as Array<string>;
       }
 
@@ -646,7 +657,7 @@ const knownNots = (
     },
     {
       ...nots,
-    } as Record<string, Array<string>>
+    } as Record<string, Array<string>>,
   );
 
 interface RemoveOrphansFromBreadcrumbsProps {
@@ -667,13 +678,13 @@ export const removeOrphansFromBreadcrumbs = ({
   // this will prevent a user from "Continuing", therefore log error don't throw it
   if (!flow[id]) {
     logger.notify(
-      `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`
+      `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`,
     );
   }
 
   const idsToRemove =
     flow[id]?.edges?.filter(
-      (edge) => !(userData?.answers ?? []).includes(edge)
+      (edge) => !(userData?.answers ?? []).includes(edge),
     ) ?? [];
 
   return idsToRemove.reduce(
@@ -687,7 +698,7 @@ export const removeOrphansFromBreadcrumbs = ({
         breadcrumbs: acc,
       });
     },
-    { ...breadcrumbs } as Store.cachedBreadcrumbs | Store.breadcrumbs
+    { ...breadcrumbs } as Store.cachedBreadcrumbs | Store.breadcrumbs,
   );
 };
 
@@ -695,7 +706,7 @@ export const getResultData = (
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
   flagSet: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
-  overrides?: Parameters<PreviewStore["resultData"]>[1]
+  overrides?: Parameters<PreviewStore["resultData"]>[1],
 ) => {
   const categories = [flagSet];
 
@@ -708,13 +719,15 @@ export const getResultData = (
           displayText: { heading: string; description: string };
         };
       },
-      category: string
+      category: string,
     ) => {
       // might DRY this up with preceding collectedFlags function
-      const possibleFlags = flatFlags.filter((f) => f.category === category);
+      const possibleFlags: Flag[] = flatFlags.filter(
+        (f) => f.category === category,
+      );
       const keys = possibleFlags.map((f) => f.value);
       const collectedFlags = Object.values(breadcrumbs).flatMap(
-        ({ answers = [] }) => answers.map((id) => flow[id]?.data?.flag)
+        ({ answers = [] }) => answers.map((id) => flow[id]?.data?.flag),
       );
 
       const filteredCollectedFlags = collectedFlags
@@ -722,15 +735,15 @@ export const getResultData = (
         .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
 
       const flag: Flag = possibleFlags.find(
-        (f) => f.value === filteredCollectedFlags[0]
+        (f) => f.value === filteredCollectedFlags[0],
       ) || {
         // value: "PP-NO_RESULT",
         value: undefined,
         text: "No result",
-        category,
+        category: category as FlagSet,
         bgColor: "#EEEEEE",
         color: tinycolor("black").toHexString(),
-        officerDescription: "",
+        description: "",
       };
 
       const responses = Object.entries(breadcrumbs)
@@ -744,7 +757,7 @@ export const getResultData = (
 
           const selections = answers.map((id) => ({ id, ...flow[id] }));
           const hidden = !selections.some(
-            (r) => r.data?.flag && r.data.flag === flag?.value
+            (r) => r.data?.flag && r.data.flag === flag?.value,
           );
 
           return {
@@ -772,20 +785,20 @@ export const getResultData = (
 
       return acc;
     },
-    {} as ReturnType<PreviewStore["resultData"]>
+    {} as ReturnType<PreviewStore["resultData"]>,
   );
 };
 
 export const sortBreadcrumbs = (
   nextBreadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
-  editingNodes?: string[]
+  editingNodes?: string[],
 ) => {
   return editingNodes?.length
     ? nextBreadcrumbs
     : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
         (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
-        {} as Store.breadcrumbs
+        {} as Store.breadcrumbs,
       );
 };
 
@@ -828,7 +841,7 @@ function handleNodesWithPassport({
   if (
     nodesPendingEdit.every(
       (pendingId) =>
-        Object.keys(breadcrumbs).includes(pendingId) || pendingId === id
+        Object.keys(breadcrumbs).includes(pendingId) || pendingId === id,
     )
   ) {
     nodesPendingEdit = [];
@@ -842,7 +855,7 @@ function handleNodesWithPassport({
 // XXX: This logic assumes only one "FindProperty" component per flow.
 export const removeNodesDependentOnPassport = (
   flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs
+  breadcrumbs: Store.breadcrumbs,
 ): {
   breadcrumbsWithoutPassportData: Store.breadcrumbs;
   removedNodeIds: string[];

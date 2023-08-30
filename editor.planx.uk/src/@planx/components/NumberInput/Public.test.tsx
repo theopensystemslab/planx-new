@@ -9,7 +9,7 @@ test("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
@@ -24,7 +24,7 @@ test("allows 0 to be input as a valid number", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
@@ -39,7 +39,7 @@ test("requires a value before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -61,7 +61,7 @@ test("recovers previously submitted number when clicking the back button", async
           [componentId]: 43,
         },
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -85,7 +85,7 @@ test("recovers previously submitted number when clicking the back button even if
           [dataField]: 43,
         },
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));

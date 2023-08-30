@@ -169,7 +169,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       onClick={() => {
                         formik.setFieldValue(
                           `groupedOptions`,
-                          remove(groupIndex, 1, formik.values.groupedOptions)
+                          remove(groupIndex, 1, formik.values.groupedOptions),
                         );
                       }}
                       size="large"
@@ -184,7 +184,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                     onChange={(newOptions) => {
                       formik.setFieldValue(
                         `groupedOptions[${groupIndex}].children`,
-                        newOptions
+                        newOptions,
                       );
                     }}
                     newValue={() =>
@@ -195,7 +195,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                           val: "",
                           flag: "",
                         },
-                      } as Option)
+                      }) as Option
                     }
                     newValueLabel="add new option"
                     Editor={OptionEditor}
@@ -204,7 +204,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       showValueField: !!formik.values.fn,
                       onMoveToGroup: (
                         movedItemIndex: number,
-                        moveToGroupIndex: number
+                        moveToGroupIndex: number,
                       ) => {
                         const item = groupedOption.children[movedItemIndex];
                         formik.setFieldValue(
@@ -215,27 +215,27 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                               (option: Group<Option>) => ({
                                 ...option,
                                 children: [...option.children, item],
-                              })
+                              }),
                             ),
                             adjust(groupIndex, (option: Group<Option>) => ({
                               ...option,
                               children: remove(
                                 movedItemIndex,
                                 1,
-                                option.children
+                                option.children,
                               ),
-                            }))
-                          )(formik.values.groupedOptions)
+                            })),
+                          )(formik.values.groupedOptions),
                         );
                       },
                       groups: formik.values.groupedOptions.map(
-                        (opt: Group<Option>) => opt.title
+                        (opt: Group<Option>) => opt.title,
                       ),
                     }}
                   />
                 </Box>
               </Box>
-            )
+            ),
           )}
           <Box mt={1}>
             <Button
@@ -269,7 +269,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 val: "",
                 flag: "",
               },
-            } as Option)
+            }) as Option
           }
           Editor={OptionEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
@@ -329,7 +329,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                   id: o.id || undefined,
                   type: TYPES.Response,
                 }))
-            : []
+            : [],
         );
       } else {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
@@ -352,7 +352,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Checklist" Icon={ICONS[type]}>
-          <InputGroup deletable={false}>
+          <InputGroup>
             <InputRow>
               <Input
                 format="large"

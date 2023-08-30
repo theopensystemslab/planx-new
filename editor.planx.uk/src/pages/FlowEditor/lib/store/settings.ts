@@ -34,7 +34,7 @@ export const settingsStore: StateCreator<
   updateFlowSettings: async (newSettings) => {
     const { teamSlug, flowSlug } = get();
 
-    let response = await client.mutate({
+    const response = await client.mutate({
       mutation: gql`
         mutation UpdateFlowSettings(
           $team_slug: String
@@ -68,7 +68,7 @@ export const settingsStore: StateCreator<
   },
 
   updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
-    let response = await client.mutate({
+    await client.mutate({
       mutation: gql`
         mutation UpdateGlobalSettings($new_settings: jsonb) {
           insert_global_settings(

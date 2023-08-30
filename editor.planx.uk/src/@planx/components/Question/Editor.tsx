@@ -169,7 +169,7 @@ export const Question: React.FC<Props> = (props) => {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Question" Icon={ICONS[type]}>
-          <InputGroup deletable={false}>
+          <InputGroup>
             <InputRow>
               <Input
                 format="large"
@@ -224,7 +224,7 @@ export const Question: React.FC<Props> = (props) => {
                   val: "",
                   flag: "",
                 },
-              } as Option)
+              }) as Option
             }
             Editor={OptionEditor}
             editorExtraProps={{ showValueField: !!formik.values.fn }}

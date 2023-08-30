@@ -19,7 +19,7 @@ const Grid = styled("dl")(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(4),
   "& > *": {
-    borderBottom: "1px solid grey",
+    borderBottom: `1px solid ${theme.palette.secondary.main}`,
     paddingBottom: theme.spacing(2),
     paddingTop: theme.spacing(2),
     verticalAlign: "top",
@@ -50,19 +50,20 @@ const presentationalComponents: {
   [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
+  [TYPES.Confirmation]: undefined,
   [TYPES.ContactInput]: ContactInput,
   [TYPES.Content]: undefined,
-  [TYPES.Confirmation]: undefined,
   [TYPES.DateInput]: DateInput,
   [TYPES.DrawBoundary]: DrawBoundary,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
-  [TYPES.MultipleFileUpload]: undefined,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: FindProperty,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
+  [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.Notice]: undefined,
+  [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
@@ -116,12 +117,20 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     const isPresentationalComponent = Boolean(Component);
     const doesNodeExist = Boolean(props.flow[nodeId]);
     const isAutoAnswered = userData.auto;
+    const isInfoOnlyMode =
+      node.type === TYPES.FileUploadAndLabel &&
+      props.flow[nodeId].data?.hideDropZone;
 
-    return doesNodeExist && !isAutoAnswered && isPresentationalComponent;
+    return (
+      doesNodeExist &&
+      !isAutoAnswered &&
+      isPresentationalComponent &&
+      !isInfoOnlyMode
+    );
   };
 
   const removeNonPresentationalNodes = (
-    section: Store.breadcrumbs
+    section: Store.breadcrumbs,
   ): BreadcrumbEntry[] => {
     // Typecast to preserve Store.userData
     const entries = Object.entries(section) as BreadcrumbEntry[];
@@ -158,7 +167,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Typography
                     component={props.sectionComponent || "h2"}
-                    variant="h5"
+                    variant="h4"
                   >
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>
@@ -171,13 +180,13 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   showChangeButton={props.showChangeButton}
                 />
               </React.Fragment>
-            )
+            ),
         )}
       </>
     );
   } else {
     const filteredBreadcrumbs = removeNonPresentationalNodes(
-      props.breadcrumbs
+      props.breadcrumbs,
     ).map(makeSummaryBreadcrumb);
     return (
       <SummaryList
@@ -225,7 +234,7 @@ function SummaryList(props: SummaryListProps) {
               )}
             </dd>
           </React.Fragment>
-        )
+        ),
       )}
     </Grid>
   );
@@ -351,7 +360,7 @@ function DrawBoundary(props: ComponentProps) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
     throw Error(
-      "Site boundary geojson or location plan file expected, but not found"
+      "Site boundary geojson or location plan file expected, but not found",
     );
   }
 
@@ -449,6 +458,29 @@ function ContactInput(props: ComponentProps) {
         {phone}
         <br />
         {email}
+      </dd>
+    </>
+  );
+}
+
+function FileUploadAndLabel(props: ComponentProps) {
+  const userFiles = Object.entries(props?.userData?.data || {});
+  const allFilenames: string[] = userFiles
+    .map(([_key, value]) => value.map((file: any) => file.filename))
+    .flat();
+  const uniqueFilenames = [...new Set(allFilenames)];
+
+  return (
+    <>
+      <dt>{props.node.data.title ?? "Upload and label"}</dt>
+      <dd>
+        <ul>
+          {uniqueFilenames.length
+            ? uniqueFilenames.map((filename, index) => (
+                <li key={index}>{filename}</li>
+              ))
+            : "No files uploaded"}
+        </ul>
       </dd>
     </>
   );

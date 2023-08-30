@@ -4,7 +4,7 @@ import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import { Template, getClientForTemplate, sendEmail } from "../notify";
-import { _admin as $admin } from "../client";
+import { $admin } from "../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
@@ -24,7 +24,7 @@ const getResumeLink = (
     id: string;
   },
   team: Team,
-  flowSlug: string
+  flowSlug: string,
 ) => {
   const serviceLink = getServiceLink(team, flowSlug);
   return `${serviceLink}?sessionId=${session.id}`;
@@ -65,7 +65,7 @@ const sendSingleApplicationEmail = async ({
     const { flowSlug, team, session } = await validateSingleSessionRequest(
       email,
       sessionId,
-      template
+      template,
     );
     const config = {
       personalisation: getPersonalisation(session, flowSlug, team),
@@ -87,7 +87,7 @@ const sendSingleApplicationEmail = async ({
 const validateSingleSessionRequest = async (
   email: string,
   sessionId: string,
-  template: Template
+  template: Template,
 ) => {
   try {
     const query = gql`
@@ -139,7 +139,7 @@ interface SessionDetails {
  * Parse session details into an object which will be read by email template
  */
 const getSessionDetails = async (
-  session: LowCalSession
+  session: LowCalSession,
 ): Promise<SessionDetails> => {
   const passportProtectTypes =
     session.data.passport?.data?.["proposal.projectType"];
@@ -165,7 +165,7 @@ const getSessionDetails = async (
 const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
-  team: Team
+  team: Team,
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),
@@ -253,7 +253,7 @@ const setupEmailEventTriggers = async (sessionId: string) => {
     return hasUserSaved;
   } catch (error) {
     throw new Error(
-      `Error setting up email notifications for session ${sessionId}`
+      `Error setting up email notifications for session ${sessionId}`,
     );
   }
 };

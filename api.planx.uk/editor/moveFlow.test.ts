@@ -11,9 +11,11 @@ beforeEach(() => {
       slug: "new-team",
     },
     data: {
-      teams: [{
-        id: "1",
-      }],
+      teams: [
+        {
+          id: "1",
+        },
+      ],
     },
   });
 
@@ -37,7 +39,7 @@ it("returns an error if authorization headers are not set", async () => {
     .expect(401)
     .then((res) => {
       expect(res.body).toEqual({
-        error: "No authorization token was found"
+        error: "No authorization token was found",
       });
     });
 });
@@ -49,7 +51,7 @@ it("moves a flow to a new team", async () => {
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({
-        message: "Successfully moved flow to new-team"
+        message: "Successfully moved flow to new-team",
       });
     });
 });

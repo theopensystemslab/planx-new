@@ -65,7 +65,7 @@ export interface TextInput extends MoreInformation {
 }
 
 export const parseTextInput = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): TextInput => ({
   title: data?.title || "",
   description: data?.description,

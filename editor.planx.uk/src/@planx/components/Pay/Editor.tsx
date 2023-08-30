@@ -4,7 +4,6 @@ import { parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
@@ -114,90 +113,88 @@ function Component(props: any) {
             />
           </InputRow>
         </ModalSectionContent>
-        {hasFeatureFlag("INVITE_TO_PAY") ? (
-          <ModalSectionContent>
-            <InputRow>
-              <OptionButton
-                selected={formik.values.allowInviteToPay}
-                onClick={() => {
-                  formik.setFieldValue(
-                    "allowInviteToPay",
-                    !formik.values.allowInviteToPay
-                  );
-                }}
-              >
-                Allow applicants to invite someone else to pay
-              </OptionButton>
-            </InputRow>
-            {formik.values.allowInviteToPay ? (
-              <>
-                <Box>
-                  <InputRow>
-                    <Input
-                      required
-                      format="large"
-                      name="secondaryPageTitle"
-                      placeholder="Card title"
-                      value={formik.values.secondaryPageTitle}
-                      onChange={formik.handleChange}
-                    />
-                  </InputRow>
-                </Box>
-                <Box pt={4}>
-                  <InputRow>
-                    <Input
-                      required
-                      format="large"
-                      name="nomineeTitle"
-                      placeholder="Title"
-                      value={formik.values.nomineeTitle}
-                      onChange={formik.handleChange}
-                    />
-                  </InputRow>
-                  <InputRow>
-                    <RichTextInput
-                      name="nomineeDescription"
-                      placeholder="Description"
-                      value={formik.values.nomineeDescription}
-                      onChange={formik.handleChange}
-                    />
-                  </InputRow>
-                </Box>
-                <Box pt={4}>
-                  <InputRow>
-                    <Input
-                      required
-                      format="large"
-                      name="yourDetailsTitle"
-                      placeholder="Title"
-                      value={formik.values.yourDetailsTitle}
-                      onChange={formik.handleChange}
-                    />
-                  </InputRow>
-                  <InputRow>
-                    <RichTextInput
-                      name="yourDetailsDescription"
-                      placeholder="Description"
-                      value={formik.values.yourDetailsDescription}
-                      onChange={formik.handleChange}
-                    />
-                  </InputRow>
-                  <InputRow>
-                    <Input
-                      required
-                      name="yourDetailsLabel"
-                      placeholder="Label"
-                      value={formik.values.yourDetailsLabel}
-                      onChange={formik.handleChange}
-                    />
-                  </InputRow>
-                </Box>
-              </>
-            ) : (
-              <></>
-            )}
-          </ModalSectionContent>
-        ) : null}
+        <ModalSectionContent>
+          <InputRow>
+            <OptionButton
+              selected={formik.values.allowInviteToPay}
+              onClick={() => {
+                formik.setFieldValue(
+                  "allowInviteToPay",
+                  !formik.values.allowInviteToPay,
+                );
+              }}
+            >
+              Allow applicants to invite someone else to pay
+            </OptionButton>
+          </InputRow>
+          {formik.values.allowInviteToPay ? (
+            <>
+              <Box>
+                <InputRow>
+                  <Input
+                    required
+                    format="large"
+                    name="secondaryPageTitle"
+                    placeholder="Card title"
+                    value={formik.values.secondaryPageTitle}
+                    onChange={formik.handleChange}
+                  />
+                </InputRow>
+              </Box>
+              <Box pt={4}>
+                <InputRow>
+                  <Input
+                    required
+                    format="large"
+                    name="nomineeTitle"
+                    placeholder="Title"
+                    value={formik.values.nomineeTitle}
+                    onChange={formik.handleChange}
+                  />
+                </InputRow>
+                <InputRow>
+                  <RichTextInput
+                    name="nomineeDescription"
+                    placeholder="Description"
+                    value={formik.values.nomineeDescription}
+                    onChange={formik.handleChange}
+                  />
+                </InputRow>
+              </Box>
+              <Box pt={4}>
+                <InputRow>
+                  <Input
+                    required
+                    format="large"
+                    name="yourDetailsTitle"
+                    placeholder="Title"
+                    value={formik.values.yourDetailsTitle}
+                    onChange={formik.handleChange}
+                  />
+                </InputRow>
+                <InputRow>
+                  <RichTextInput
+                    name="yourDetailsDescription"
+                    placeholder="Description"
+                    value={formik.values.yourDetailsDescription}
+                    onChange={formik.handleChange}
+                  />
+                </InputRow>
+                <InputRow>
+                  <Input
+                    required
+                    name="yourDetailsLabel"
+                    placeholder="Label"
+                    value={formik.values.yourDetailsLabel}
+                    onChange={formik.handleChange}
+                  />
+                </InputRow>
+              </Box>
+            </>
+          ) : (
+            <></>
+          )}
+        </ModalSectionContent>
       </ModalSection>
       <MoreInformation
         changeField={formik.handleChange}

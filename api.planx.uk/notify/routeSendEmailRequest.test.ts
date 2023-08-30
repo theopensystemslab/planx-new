@@ -16,9 +16,11 @@ const SAVE_ENDPOINT = "/send-email/save";
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
-      formatRawProjectTypes: jest.fn().mockResolvedValue(["New office premises"]),
-    }))
-  }
+      formatRawProjectTypes: jest
+        .fn()
+        .mockResolvedValue(["New office premises"]),
+    })),
+  };
 });
 
 describe("Send Email endpoint", () => {
@@ -32,7 +34,7 @@ describe("Send Email endpoint", () => {
   describe("'Save' template", () => {
     it("throws an error if required data is missing", async () => {
       const missingEmail = {
-        payload: { sessionId: 123 },
+        payload: { sessionId: "123" },
       };
       const missingSessionId = { payload: { email: "test" } };
 
@@ -44,7 +46,7 @@ describe("Send Email endpoint", () => {
           .then((response) => {
             expect(response.body).toHaveProperty(
               "error",
-              'Failed to send "save" email. Required value missing'
+              'Failed to send "save" email. Required value missing',
             );
           });
       }
@@ -53,7 +55,7 @@ describe("Send Email endpoint", () => {
     it("sends a Notify email on successful save", async () => {
       const data = {
         payload: {
-          sessionId: 123,
+          sessionId: "123",
           email: TEST_EMAIL,
         },
       };
@@ -70,7 +72,7 @@ describe("Send Email endpoint", () => {
     it("throws an error for an invalid email address", async () => {
       const data = {
         payload: {
-          sessionId: 123,
+          sessionId: "123",
           email: "Not an email address",
         },
       };
@@ -99,17 +101,17 @@ describe("Send Email endpoint", () => {
         name: "SoftDeleteLowcalSession",
         data: {
           update_lowcal_sessions_by_pk: {
-            id: 123,
+            id: "123",
           },
         },
         variables: {
-          sessionId: 123,
+          sessionId: "123",
         },
       });
 
       const data = {
         payload: {
-          sessionId: 123,
+          sessionId: "123",
           email: TEST_EMAIL,
         },
       };
@@ -128,7 +130,7 @@ describe("Send Email endpoint", () => {
     it("throws an error if the template is missing", async () => {
       const data = {
         payload: {
-          sessionId: 123,
+          sessionId: "123",
           email: TEST_EMAIL,
         },
       };
@@ -138,7 +140,7 @@ describe("Send Email endpoint", () => {
     it("throws an error if a template is invalid", async () => {
       const data = {
         payload: {
-          sessionId: 123,
+          sessionId: "123",
           email: TEST_EMAIL,
         },
       };
@@ -161,7 +163,7 @@ describe("Send Email endpoint", () => {
         it("returns 401 UNAUTHORIZED if no auth header is provided", async () => {
           const data = {
             payload: {
-              sessionId: 123,
+              sessionId: "123",
               email: TEST_EMAIL,
             },
           };
@@ -174,7 +176,7 @@ describe("Send Email endpoint", () => {
         it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
           const data = {
             payload: {
-              sessionId: 123,
+              sessionId: "123",
               email: TEST_EMAIL,
             },
           };
@@ -188,7 +190,7 @@ describe("Send Email endpoint", () => {
         it("returns 200 OK if the correct headers are used", async () => {
           const data = {
             payload: {
-              sessionId: 123,
+              sessionId: "123",
               email: TEST_EMAIL,
             },
           };
@@ -206,7 +208,7 @@ describe("Send Email endpoint", () => {
     it("soft deletes the session when an expiry email is sent", async () => {
       const data = {
         payload: {
-          sessionId: 123,
+          sessionId: "123",
           email: TEST_EMAIL,
         },
       };
@@ -221,8 +223,8 @@ describe("Send Email endpoint", () => {
         .getCalls()
         .find((mock) => mock.id === "SoftDeleteLowcalSession");
       expect(
-        softDeleteSessionMock?.response.data.update_lowcal_sessions_by_pk.id
-      ).toEqual(123);
+        softDeleteSessionMock?.response.data.update_lowcal_sessions_by_pk.id,
+      ).toEqual("123");
     });
   });
 });
@@ -233,7 +235,7 @@ describe("Setting up send email events", () => {
       .length;
   const data = {
     payload: {
-      sessionId: 123,
+      sessionId: "123",
       email: TEST_EMAIL,
     },
   };

@@ -4,7 +4,6 @@ CREATE TEMPORARY TABLE sync_users (
   first_name text,
   last_name text,
   email text,
-  is_admin boolean,
   created_at timestamptz,
   updated_at timestamptz
 );
@@ -15,14 +14,14 @@ INSERT INTO users (
   id,
   first_name,
   last_name,
-  email,
-  is_admin
+  email
 )
 SELECT
   id,
   first_name,
   last_name,
-  email,
-  is_admin
+  email
 FROM sync_users
 ON CONFLICT (id) DO NOTHING;
+
+SELECT setval('users_id_seq', max(id)) FROM users;

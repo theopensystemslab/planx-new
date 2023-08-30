@@ -1,60 +1,41 @@
-import { queryMock } from "../tests/graphqlQueryMock";
-import { getFilesForSession } from "./files"
-import { multipleFilesMultipleQuestions } from "./mocks/passports"
+import { getFilesForSession } from "./files";
 
-const mockGetFiles = jest.fn();
+const mockFindSession = jest.fn();
 
-jest.mock("@opensystemslab/planx-core", () => {
+jest.mock("../client", () => {
   return {
-    Passport: jest.fn().mockImplementation(() => ({
-      getFiles: mockGetFiles,
-    })),
-  }
+    $admin: {
+      session: {
+        find: jest.fn().mockImplementation(() => mockFindSession()),
+      },
+    },
+  };
 });
 
 describe("getFilesForSession()", () => {
   it("handles sessions without files", async () => {
-    queryMock.mockQuery({
-      name: "GetPassportDataForSession",
-      matchOnVariables: false,
-      data: {
-        lowcal_sessions_by_pk: {
-          data: null,
-        },
-      },
+    mockFindSession.mockResolvedValue({
+      data: { passport: {} },
     });
-    mockGetFiles.mockResolvedValue(new Array(0));
-    expect(await getFilesForSession("sessionId")).toEqual([])
+    expect(await getFilesForSession("sessionId")).toEqual([]);
   });
 
   it("handles sessions with files", async () => {
-    queryMock.mockQuery({
-      name: "GetPassportDataForSession",
-      matchOnVariables: false,
+    mockFindSession.mockResolvedValue({
       data: {
-        lowcal_sessions_by_pk: {
-          data: multipleFilesMultipleQuestions,
+        passport: {
+          data: {
+            "file.key": [
+              {
+                url: "https://my.test.file",
+              },
+            ],
+          },
         },
       },
     });
-    mockGetFiles.mockResolvedValue(new Array(7));
-    expect(await getFilesForSession("sessionId")).toHaveLength(7);
-  });
-
-  it("handles errors when querying", async () => {
-    queryMock.mockQuery({
-      name: "GetPassportDataForSession",
-      graphqlErrors: [{
-        error: "Something went wrong"
-      }],
-      matchOnVariables: false,
-      data: {
-        lowcal_sessions_by_pk: {
-          data: multipleFilesMultipleQuestions,
-        },
-      },
-    });
-
-    await expect(getFilesForSession("sessionId")).rejects.toThrow();
+    expect(await getFilesForSession("sessionId")).toEqual([
+      "https://my.test.file",
+    ]);
   });
 });

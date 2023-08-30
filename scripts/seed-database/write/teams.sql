@@ -9,7 +9,8 @@ CREATE TEMPORARY TABLE sync_teams (
   settings jsonb,
   notify_personalisation jsonb,
   domain text,
-  submission_email text
+  submission_email text,
+  boundary jsonb
 );
 
 \copy sync_teams FROM '/tmp/teams.csv' WITH (FORMAT csv, DELIMITER ';');
@@ -20,7 +21,8 @@ INSERT INTO teams (
   slug,
   theme,
   settings,
-  notify_personalisation
+  notify_personalisation,
+  boundary
 )
 SELECT
   id,
@@ -28,6 +30,9 @@ SELECT
   slug,
   theme,
   settings,
-  notify_personalisation
+  notify_personalisation,
+  boundary
 FROM sync_teams
 ON CONFLICT (id) DO NOTHING;
+
+SELECT setval('teams_id_seq', max(id)) FROM teams;

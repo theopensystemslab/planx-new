@@ -10,13 +10,13 @@ test("const { user } = setups correctly", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <Content content="hello" color="#fff" handleSubmit={handleSubmit} />
+    <Content content="hello" color="#fff" handleSubmit={handleSubmit} />,
   );
 
   expect(content()).toHaveTextContent("hello");
   expect(content()).toHaveStyle({
     background: "#fff",
-    color: "#000",
+    color: "#0B0C0C",
   });
 
   await user.click(screen.getByTestId("continue-button"));

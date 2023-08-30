@@ -14,7 +14,7 @@ function setupContainers(){
   DOCKER_BUILDKIT=1 docker compose \
     -f docker-compose.yml \
     -f docker-compose.e2e.yml \
-		--profile mock-services \
+    --profile mock-services \
     up --build --wait test-ready
 
   echo "All containers ready."

@@ -1,3 +1,5 @@
 name: networking
 runtime: nodejs
 description: Networking layer
+config:
+  aws:region: eu-west-2

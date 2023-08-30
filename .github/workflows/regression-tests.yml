@@ -1,0 +1,193 @@
+name: Regression Tests
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs every morning at 06:00 (https://crontab.guru/#0_6_*_*_*)
+    - cron: '0 6 * * *'
+
+env:
+  EDITOR_DIRECTORY: editor.planx.uk
+
+jobs:
+  integration_tests:
+    name: Run Integration tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: ./scripts/pull-secrets.sh
+      - name: Check if .env files exist
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          fail: true
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
+      - uses: pnpm/action-setup@v2.4.0
+        with:
+          version: ${{ vars.PNPM_VERSION }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - name: Start test containers
+        run: ./scripts/start-containers-for-tests.sh
+      - name: Postgres Tests
+        run: ./hasura.planx.uk/run-postgres-tests.sh
+      - run: pnpm i -g hasura-cli
+      - name: Hasura Tests
+        run: pnpm install --frozen-lockfile && pnpm test
+        working-directory: hasura.planx.uk/tests
+
+  api_tests:
+    name: Run API Tests
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: ./scripts/pull-secrets.sh
+      - name: Check if .env files exist
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          fail: true
+      - uses: pnpm/action-setup@v2.4.0
+        with:
+          version: ${{ vars.PNPM_VERSION }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: api.planx.uk
+      - name: Run API Tests
+        run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
+        working-directory: api.planx.uk
+
+  test_react:
+    name: Run React Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: ./scripts/pull-secrets.sh
+      - name: Check if .env files exist
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          fail: true
+      - uses: pnpm/action-setup@v2.4.0
+        with:
+          version: ${{ vars.PNPM_VERSION }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
+      - run: pnpm install --frozen-lockfile
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm build
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm test
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
+
+  end_to_end_tests:
+    name: E2E tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: ./scripts/pull-secrets.sh
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.4.0
+        with:
+          version: ${{ vars.PNPM_VERSION }}
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
+      - name: PNPM Install
+        run: pnpm install --frozen-lockfile
+        working-directory: e2e
+      - name: Code checks
+        run:  pnpm check
+        working-directory: e2e
+      - name: Install Playwright Dependencies
+        run: pnpm playwright install --with-deps
+        working-directory: e2e/tests/ui-driven
+      - name: Start test containers
+        run: ./scripts/start-containers-for-tests.sh
+      - name: End-to-end Tests
+        run:  pnpm test:regression
+        working-directory: e2e
+      - name: Archive Playwright Test Results
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: e2e/tests/ui-driven/test-results/
+          retention-days: 3
+
+  notify:
+    name: Notify On Failure
+    runs-on: ubuntu-22.04
+    needs:
+      - integration_tests
+      - api_tests
+      - test_react
+      - end_to_end_tests
+    if: ${{ github.ref == 'refs/heads/main' && failure() }}
+    steps:
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: planx-notifications-internal
+          SLACK_USERNAME: Regression Tests
+          SLACK_MESSAGE: The regression test suite failed
+          SLACK_ICON_EMOJI: ":warning:"
+          SLACK_COLOR: "#FF5733"
+          SLACK_TITLE: Regression Test Failure
+          MSG_MINIMAL: "actions url,commit"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}

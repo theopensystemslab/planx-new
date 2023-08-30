@@ -1,0 +1,205 @@
+version: 2
+updates:
+  # Root
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "root"
+      - "docker"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+
+  # Editor
+  - package-ecosystem: "npm"
+    directory: "/editor.planx.uk"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "editor"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  # Hasura
+  - package-ecosystem: "npm"
+    directory: "/hasura.planx.uk"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "hasura"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  - package-ecosystem: "docker"
+    directory: "/hasura.planx.uk"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "hasura"
+      - "docker"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "docker"
+    directory: "/hasura.planx.uk/proxy"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "hasura"
+      - "caddy"
+      - "docker"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+
+  - package-ecosystem: "npm"
+    directory: "/hasura.planx.uk/tests"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "hasura tests"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "[skip pizza] "
+    reviewers:
+      - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+  
+  # ShareDB
+  - package-ecosystem: "npm"
+    directory: "/sharedb.planx.uk"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "sharedb"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  - package-ecosystem: "docker"
+    directory: "/sharedb.planx.uk"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "sharedb"
+      - "docker"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+
+  # API
+  - package-ecosystem: "npm"
+    directory: "/api.planx.uk"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "api"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  - package-ecosystem: "docker"
+    directory: "/api.planx.uk"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "api"
+      - "docker"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+
+  # E2E tests
+  - package-ecosystem: "npm"
+    directory: "/e2e"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "e2e"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "[skip pizza] "
+    reviewers:
+      - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+  
+  # Infrastructure
+  # - package-ecosystem: "npm"
+  #   directory: "/infrastructure/application"
+  #   schedule:
+  #     interval: "daily"
+  #   labels:
+  #     - "infra/application"
+  #   open-pull-requests-limit: 1
+  #   commit-message:
+  #     prefix: "[skip pizza] "
+  #   reviewers:
+  #     - "theopensystemslab/planx"
+
+  # - package-ecosystem: "npm"
+  #   directory: "/infrastructure/certificates"
+  #   schedule:
+  #     interval: "daily"
+  #   labels:
+  #     - "infra/certificates"
+  #   open-pull-requests-limit: 1
+  #   commit-message:
+  #     prefix: "[skip pizza] "
+  #   reviewers:
+  #     - "theopensystemslab/planx"
+
+  # - package-ecosystem: "npm"
+  #   directory: "/infrastructure/data"
+  #   schedule:
+  #     interval: "daily"
+  #   labels:
+  #     - "infra/data"
+  #   open-pull-requests-limit: 1
+  #   commit-message:
+  #     prefix: "[skip pizza] "
+  #   reviewers:
+  #     - "theopensystemslab/planx"
+
+  # - package-ecosystem: "npm"
+  #   directory: "/infrastructure/networking"
+  #   schedule:
+  #     interval: "daily"
+  #   labels:
+  #     - "infra/networking"
+  #   open-pull-requests-limit: 1
+  #   commit-message:
+  #     prefix: "[skip pizza] "
+  #   reviewers:
+  #     - "theopensystemslab/planx"
+
+  # GitHub actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "github actions"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"

@@ -1,11 +1,13 @@
 "use strict";
 
 import * as awsx from "@pulumi/awsx";
+import * as aws from "@pulumi/aws";
 import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
 
 import { CreateService } from './../types';
+import { addRedirectToCloudFlareListenerRule } from "../utils/addListenerRule";
 
 export const createHasuraService = async ({
   vpc,
@@ -34,24 +36,13 @@ export const createHasuraService = async ({
     healthCheck: {
       path: "/healthz",
     },
-  });
-  // Forward HTTP to HTTPS
-  const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
-    protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
-  });
-  
-  const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
-    protocol: "HTTPS",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-    certificateArn: certificates.requireOutput("certificateArn"),
+  });  
+  const hasuraListenerHttp = targetHasura.createListener("hasura-http", { protocol: "HTTP" });
+
+  addRedirectToCloudFlareListenerRule({
+    serviceName: "hasura",
+    listener: hasuraListenerHttp,
+    domain: DOMAIN,
   });
 
   // hasuraService is composed of two tightly coupled containers
@@ -61,11 +52,15 @@ export const createHasuraService = async ({
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
+      logGroup: new aws.cloudwatch.LogGroup("hasura", {
+        namePrefix: "hasura",
+        retentionInDays: 30,
+      }),
       containers: {
         hasuraProxy: {
           image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
           memory: 1024 /*MB*/,
-          portMappings: [hasuraListenerHttps],
+          portMappings: [hasuraListenerHttp],
           environment: [
             { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
             { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
@@ -122,8 +117,8 @@ export const createHasuraService = async ({
       : "hasura",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: hasuraListenerHttps.endpoint.hostname,
+    value: hasuraListenerHttp.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 }

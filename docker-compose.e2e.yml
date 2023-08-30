@@ -1,10 +1,20 @@
 version: "3.8"
 
 services:
+  # see https://github.com/Thiht/smocker
+  mock-server:
+    image: thiht/smocker
+    restart: always
+    ports:
+      - "${E2E_MOCK_SERVER_PORT}:8080"
+      - "${E2E_MOCK_SERVER_INTERFACE_PORT}:8081"
+
   test-ready:
     image: alpine:3.17
     restart: unless-stopped
     depends_on:
+      mock-server:
+        condition: service_started
       minio:
         condition: service_healthy
       sharedb:
@@ -13,3 +23,11 @@ services:
         condition: service_healthy
     entrypoint: sh
     command: -c "echo ready for testing"
+
+  api:
+    environment:
+      UNIFORM_SUBMISSION_URL: http://mock-server:8080
+      UNIFORM_TOKEN_URL: http://mock-server:8080
+      UNIFORM_CLIENT_E2E: e2e:123
+      GOV_UK_PAY_TOKEN_E2E: ${GOV_UK_PAY_TOKEN_E2E}
+      BOPS_SUBMISSION_URL_E2E: http://mock-server:8080

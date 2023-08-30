@@ -1,29 +1,29 @@
 import MuiButtonBase from "@mui/material/ButtonBase";
-import makeStyles from "@mui/styles/makeStyles";
-import classNames from "classnames";
+import { styled } from "@mui/material/styles";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    transition: theme.transitions.create(["background-color", "box-shadow"]),
-    backgroundColor: theme.palette.background.paper,
-    fontSize: 15,
-    fontFamily: "inherit",
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    width: "100%",
-    textAlign: "left",
-    position: "relative",
-    height: "100%",
-    "&:hover": {
-      backgroundColor: theme.palette.grey[800],
-      color: "white",
-    },
-  },
-  selected: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+interface RootProps {
+  selected: boolean;
+}
+
+const Root = styled(MuiButtonBase)<RootProps>(({ theme, selected }) => ({
+  transition: theme.transitions.create(["background-color", "box-shadow"]),
+  backgroundColor: selected
+    ? theme.palette.primary.main
+    : theme.palette.background.paper,
+  color: selected ? theme.palette.primary.contrastText : "inherit",
+  fontSize: 15,
+  fontFamily: "inherit",
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  width: "100%",
+  textAlign: "left",
+  position: "relative",
+  height: "100%",
+  "&:hover": {
+    backgroundColor: theme.palette.grey[800],
+    color: "white",
   },
 }));
 
@@ -32,25 +32,11 @@ export interface Props {
   children?: React.ReactNode;
   className?: string;
   id?: string;
-  onClick: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export default function ButtonBase(props: Props): FCReturn {
-  const { selected, onClick, children, className, id } = props;
-  const classes = useStyles();
+  const { children, ...rootProps } = props;
 
-  return (
-    <MuiButtonBase
-      href=""
-      className={classNames(
-        classes.root,
-        selected && classes.selected,
-        className
-      )}
-      onClick={onClick}
-      id={id}
-    >
-      {children}
-    </MuiButtonBase>
-  );
+  return <Root {...rootProps}>{children}</Root>;
 }

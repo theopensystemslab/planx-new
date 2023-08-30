@@ -1,9 +1,9 @@
-import SlackNotify from 'slack-notify';
+import SlackNotify from "slack-notify";
 import { Request, Response, NextFunction } from "express";
 
 import { getOperations, operationHandler } from "./operations";
 import { OperationResult } from "./types";
-import { getFormattedEnvironment } from '../../helpers';
+import { getFormattedEnvironment } from "../../helpers";
 
 /**
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis
@@ -12,42 +12,46 @@ import { getFormattedEnvironment } from '../../helpers';
 export const sanitiseApplicationData = async (
   _req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<Response | void> => {
   const operations = getOperations();
   const results: OperationResult[] = [];
   try {
     for (const operation of operations) {
-      const result = await operationHandler(operation)
-      results.push(result)
+      const result = await operationHandler(operation);
+      results.push(result);
     }
   } catch (error) {
     // Unhandled error, flag with Airbrake
     return next({
       error,
-      message: `Failed to sanitise application data. ${(error as Error).message}`,
+      message: `Failed to sanitise application data. ${
+        (error as Error).message
+      }`,
     });
   }
-  
-  const operationFailed = results.find(result => result.status === "failure");
-  if (operationFailed) { 
+
+  const operationFailed = results.find((result) => result.status === "failure");
+  if (operationFailed) {
     await postToSlack(results);
-    res.status(500)
-  };
+    res.status(500);
+  }
 
   return res.json(results);
 };
 
-const postToSlack = async (results: OperationResult[]) => {
+export const postToSlack = async (results: OperationResult[]) => {
   const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-  const text = results.map(result => result.status === "failure" 
-    ? `:x: ${result.operationName} failed. Error: ${result.errorMessage}` 
-    : `:white_check_mark: ${result.operationName} succeeded`)
+  const text = results.map((result) =>
+    result.status === "failure"
+      ? `:x: ${result.operationName} failed. Error: ${result.errorMessage}`
+      : `:white_check_mark: ${result.operationName} succeeded`,
+  );
   const env = getFormattedEnvironment();
 
   await slack.send({
     channel: "#planx-notifications-internal",
     text: text.join("\n"),
-    username: `Data Sanitation Cron Job (${env})`
+    username: `Data Sanitation Cron Job (${env})`,
   });
 };

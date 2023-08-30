@@ -1,4 +1,8 @@
 import { screen } from "@testing-library/react";
+// eslint-disable-next-line no-restricted-imports
+import userEvent, {
+  PointerEventsCheckLevel,
+} from "@testing-library/user-event";
 import React from "react";
 import { axe, setup } from "testUtils";
 
@@ -132,7 +136,7 @@ describe("Checklist Component - Grouped Layout", () => {
         text="home type?"
         handleSubmit={handleSubmit}
         groupedOptions={groupedOptions}
-      />
+      />,
     );
 
     await user.click(screen.getByText("Section 1"));
@@ -156,7 +160,7 @@ describe("Checklist Component - Grouped Layout", () => {
         handleSubmit={handleSubmit}
         previouslySubmittedData={{ answers: ["S1_Option1", "S3_Option1"] }}
         groupedOptions={groupedOptions}
-      />
+      />,
     );
 
     expect(screen.getByTestId("group-0-expanded")).toBeTruthy();
@@ -176,7 +180,7 @@ describe("Checklist Component - Grouped Layout", () => {
         description=""
         text="home type?"
         groupedOptions={groupedOptions}
-      />
+      />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -191,7 +195,7 @@ describe("Checklist Component - Grouped Layout", () => {
         text="home type?"
         handleSubmit={handleSubmit}
         groupedOptions={groupedOptions}
-      />
+      />,
     );
     const [section1Button, section2Button, section3Button, _continueButton] =
       screen.getAllByRole("button");
@@ -243,22 +247,32 @@ describe("Checklist Component - Basic & Images Layout", () => {
     it(`answers are submitted in order they were supplied (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = jest.fn();
 
-      const { user } = setup(
+      setup(
         <Checklist
           allRequired={false}
           description=""
           text="home type?"
           handleSubmit={handleSubmit}
           options={options[type]}
-        />
+        />,
       );
 
       expect(screen.getByRole("heading")).toHaveTextContent("home type?");
 
-      await user.click(screen.getByText("Spaceship"));
-      await user.click(screen.getByText("Flat"));
-      await user.click(screen.getByText("House"));
-      await user.click(screen.getByTestId("continue-button"));
+      // Disabling pointerEventsCheck here allows us to bypass a false negative thrown by react-testing-library
+      // Tests fail to click the text elements when using ChecklistLayout.Images due to the pointerEvents: "none" style applied to textLabelWrapper, but the element can be clicked in all tested browsers
+      await userEvent.click(screen.getByText("Spaceship"), {
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      });
+      await userEvent.click(screen.getByText("Flat"), {
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      });
+      await userEvent.click(screen.getByText("House"), {
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      });
+      await userEvent.click(screen.getByTestId("continue-button"), {
+        pointerEventsCheck: PointerEventsCheckLevel.Never,
+      });
 
       // order matches the order of the options, not order they were clicked
       expect(handleSubmit).toHaveBeenCalledWith({
@@ -276,7 +290,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           handleSubmit={handleSubmit}
           previouslySubmittedData={{ answers: ["flat_id", "house_id"] }}
           options={options[type]}
-        />
+        />,
       );
 
       await user.click(screen.getByTestId("continue-button"));
@@ -292,7 +306,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           description=""
           text="home type?"
           options={options[type]}
-        />
+        />,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -307,7 +321,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           text="home type?"
           handleSubmit={handleSubmit}
           options={options[type]}
-        />
+        />,
       );
 
       await user.tab();

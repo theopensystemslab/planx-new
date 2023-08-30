@@ -13,34 +13,15 @@ import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import { Team } from "types";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
 import FeedbackInput from "../shared/FeedbackInput";
+import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import type { PropertyInformation } from "./model";
 
 export default Component;
-
-const ErrorSummaryContainer = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  padding: theme.spacing(3),
-  border: `5px solid #E91B0C`,
-  "& button": {
-    background: "none",
-    borderStyle: "none",
-    color: "#E91B0C",
-    cursor: "pointer",
-    fontSize: "medium",
-    fontWeight: 700,
-    textDecoration: "underline",
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(0),
-  },
-  "& button:hover": {
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
 
 function Component(props: PublicProps<PropertyInformation>) {
   const [address, propertyType, localAuthorityDistrict, overrideAnswer] =
@@ -71,7 +52,7 @@ function Component(props: PublicProps<PropertyInformation>) {
         role="status"
         data-testid="error-summary-invalid-graph"
       >
-        <Typography variant="h5" component="h2" gutterBottom>
+        <Typography variant="h4" component="h2" gutterBottom>
           Invalid graph
         </Typography>
         <Typography variant="body2">
@@ -99,9 +80,10 @@ export interface PresentationalProps {
 
 const MapContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1, 0),
+  maxWidth: "none",
   "& my-map": {
     width: "100%",
-    height: "50vh",
+    height: "60vh",
   },
 }));
 
@@ -129,7 +111,7 @@ export function Presentational(props: PresentationalProps) {
         submitFeedback(
           values.feedback,
           "Inaccurate property details",
-          propertyDetails
+          propertyDetails,
         );
       }
       handleSubmit?.(values);
@@ -176,6 +158,7 @@ export function Presentational(props: PresentationalProps) {
           longitude={address?.longitude}
           osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
           hideResetControl
+          staticMode
           showMarker
           markerLatitude={address?.latitude}
           markerLongitude={address?.longitude}
@@ -221,9 +204,9 @@ const PropertyDetailsList = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
   "& > *": {
-    borderBottom: `1px solid ${theme.palette.background.paper}`,
-    paddingBottom: theme.spacing(1),
-    paddingTop: theme.spacing(1),
+    borderBottom: `1px solid ${theme.palette.secondary.main}`,
+    paddingBottom: theme.spacing(1.5),
+    paddingTop: theme.spacing(1.5),
     verticalAlign: "top",
     margin: 0,
   },
@@ -234,7 +217,7 @@ const PropertyDetailsList = styled(Box)(({ theme }) => ({
   },
   "& dt": {
     // left column
-    fontWeight: 700,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
   "& dd:nth-of-type(n)": {
     // middle column

@@ -2,11 +2,11 @@
 TEST ONLY currently for TPX Impact
 */
 
-const scotGovDomain = "https://maps.gov.scot/server";
+// const scotGovDomain = "https://maps.gov.scot/server";
 const inspireHESDomain = "https://inspire.hes.scot/arcgis";
 
 const planningConstraints = {
-  "article4": { value: false },
+  article4: { value: false },
   "designated.conservationArea": {
     key: "designated.conservationArea",
     source: inspireHESDomain,
@@ -18,43 +18,47 @@ const planningConstraints = {
       text: "is in a Conservation Area",
       description: data.DES_TITLE,
     }),
+    category: "Heritage and conservation",
   },
-  "designated.nationalPark.cairngorms": {
-    key: "designated.nationalPark.cairngorms",
-    source: scotGovDomain,
-    id: "ScotGov/ProtectedSites",
-    serverIndex: 0,
-    fields: ["objectid", "npcode", "npname"],
-    neg: "is not in a National Park",
-    pos: (data) => ({
-      text: "is in Cairngorms National Park",
-      description: data.npname,
-    }),
-  },
-  "designated.nationalPark.lochLomondTrossachs": {
-    key: "designated.nationalPark.lochLomondTrossachs",
-    source: scotGovDomain,
-    id: "ScotGov/ProtectedSites",
-    serverIndex: 1,
-    fields: ["objectid", "npcode", "npname"],
-    neg: "is not in a National Park",
-    pos: (data) => ({
-      text: "is in Loch Lomond and The Trossachs National Park",
-      description: data.npname, 
-    }),
-  },
-  "designated.nationalScenicArea": {
-    key: "designated.nationalScenicArea",
-    source: scotGovDomain,
-    id: "ScotGov/ProtectedSites",
-    serverIndex: 3,
-    fields: ["objectid", "nsacode", "nsaname"],
-    neg: "is not in a National Scenic Area",
-    pos: (data) => ({
-      text: "is in a National Scenic Area",
-      description: data.nsaname,
-    }),
-  },
+  // "designated.nationalPark.cairngorms": {
+  //   key: "designated.nationalPark.cairngorms",
+  //   source: scotGovDomain,
+  //   id: "ScotGov/ProtectedSites",
+  //   serverIndex: 0,
+  //   fields: ["objectid", "npcode", "npname"],
+  //   neg: "is not in a National Park",
+  //   pos: (data) => ({
+  //     text: "is in Cairngorms National Park",
+  //     description: data.npname,
+  //   }),
+  //   category: "Heritage and conservation",
+  // },
+  // "designated.nationalPark.lochLomondTrossachs": {
+  //   key: "designated.nationalPark.lochLomondTrossachs",
+  //   source: scotGovDomain,
+  //   id: "ScotGov/ProtectedSites",
+  //   serverIndex: 1,
+  //   fields: ["objectid", "npcode", "npname"],
+  //   neg: "is not in a National Park",
+  //   pos: (data) => ({
+  //     text: "is in Loch Lomond and The Trossachs National Park",
+  //     description: data.npname,
+  //   }),
+  //   category: "Heritage and conservation",
+  // },
+  // "designated.nationalScenicArea": {
+  //   key: "designated.nationalScenicArea",
+  //   source: scotGovDomain,
+  //   id: "ScotGov/ProtectedSites",
+  //   serverIndex: 3,
+  //   fields: ["objectid", "nsacode", "nsaname"],
+  //   neg: "is not in a National Scenic Area",
+  //   pos: (data) => ({
+  //     text: "is in a National Scenic Area",
+  //     description: data.nsaname,
+  //   }),
+  //   category: "Heritage and conservation",
+  // },
   "designated.WHS": {
     key: "designated.WHS",
     source: inspireHESDomain,
@@ -66,6 +70,7 @@ const planningConstraints = {
       text: "is, or is within, an UNESCO World Heritage Site",
       description: data.DES_TITLE,
     }),
+    category: "Heritage and conservation",
   },
   listed: {
     key: "listed",
@@ -78,6 +83,7 @@ const planningConstraints = {
       text: `is, or is within, a Listed Building (Category ${data.CATEGORY})`,
       description: data.DES_TITLE,
     }),
+    category: "Heritage and conservation",
   },
   monument: {
     key: "monument",
@@ -90,6 +96,7 @@ const planningConstraints = {
       text: "is the site of a Scheduled Monument",
       description: data.DES_TITLE,
     }),
+    category: "Heritage and conservation",
   },
   tpo: { value: false },
 };

@@ -3,6 +3,7 @@
 API is a Node/Express server and REST endpoints. We're in the process of migrating this directory to Typescript.
 
 Our API handles functionality like:
+
 - Logging into the editor via Google
 - Publishing service content
 - Uploading files to S3
@@ -14,7 +15,7 @@ Our API handles functionality like:
 
 ## Running locally
 
-Install [pnpm](https://pnpm.io) if you don't already have it `npm install -g pnpm@7.8.0`
+Install [pnpm](https://pnpm.io) if you don't already have it `npm install -g pnpm@8.6.6`
 
 Install the project's dependencies `pnpm install`
 
@@ -24,8 +25,8 @@ Run tests `pnpm test`
 
 Development notes:
 
- - if you need to test or pull new changes from @opensystemslab/planx-document-templates or @opensystemslab/planx-core, make sure to update the commit hash in package.json first
- - you can also use `pnpm link {{local relative path to @opensystemslab/planx-document-templates or @opensystemslab/planx-core}}` to manage local development changes these packages without having to reinstall. If you do this, remember to also run `pnpm unlink` to unlink the local directory and then also update the commit hash to point to the most recent version of the package.
+- if you need to test or pull new changes from @opensystemslab/planx-document-templates or @opensystemslab/planx-core, make sure to update the commit hash in package.json first
+- you can also use `pnpm link {{local relative path to @opensystemslab/planx-document-templates or @opensystemslab/planx-core}}` to manage local development changes these packages without having to reinstall. If you do this, remember to also run `pnpm unlink` to unlink the local directory and then also update the commit hash to point to the most recent version of the package.
 
 ## Prior art
 

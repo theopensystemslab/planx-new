@@ -17,7 +17,8 @@ export const SLUGS: {
   [TYPES.FindProperty]: "find-property-merged",
   [TYPES.Flow]: "flow",
   [TYPES.InternalPortal]: "internal-portal",
-  [TYPES.MultipleFileUpload]: "multiple-file-upload",
+  [TYPES.FileUploadAndLabel]: "file-upload-and-label",
+  [TYPES.NextSteps]: "next-steps",
   [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",
   [TYPES.Pay]: "pay",
@@ -36,7 +37,7 @@ export const SLUGS: {
 
 export const fromSlug = (slug: string): TYPES | undefined => {
   const entry = Object.entries(SLUGS).find(
-    ([_typeString, currentSlug]) => currentSlug === slug
+    ([_typeString, currentSlug]) => currentSlug === slug,
   );
   return entry && Number(entry[0]);
 };

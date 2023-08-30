@@ -222,9 +222,9 @@ export {
   getQueryableConstraints,
   getFalseConstraints,
   getManualConstraints,
-  addDesignatedVariable,
   squashResultLayers,
   rollupResultLayers,
   getA4Subvariables,
   omitGeometry,
+  addDesignatedVariable,
 };

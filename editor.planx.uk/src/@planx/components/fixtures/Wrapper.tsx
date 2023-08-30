@@ -4,16 +4,16 @@ import React, { useState } from "react";
 
 export default Wrapper;
 
-interface Props<Type, Data, UserData> {
+interface Props<Type, Data> {
   Editor: React.FC<EditorProps<Type, Data>>;
-  Public: React.FC<PublicProps<Data, UserData>>;
+  Public: React.FC<PublicProps<Data>>;
 }
 
-function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
+function Wrapper<Type, Data>(props: Props<Type, Data>) {
   const [data, setData] = useState<Data | null>(null);
-  const [_userData, setUserData] = useState<UserData | null>(null);
+  // const [userData, setUserData] = useState<UserData | null>(null);
 
-  const publicProps: PublicProps<Data, UserData> | null = data && {
+  const publicProps: PublicProps<Data> | null = data && {
     ...data,
     autoFocus: true,
     // handleSubmit: (newUserData?: UserData) => {
@@ -22,36 +22,37 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   };
 
   return (
-    <>
-      <p>
-        <small>
-          Tip: Click the "Submit" button at the end of this page to update the
-          preview of the Public component.
-        </small>
-      </p>
-      <div style={{ display: "flex" }}>
-        <div style={{ minWidth: 380 }}>
-          <props.Editor
-            handleSubmit={(newNode) => {
-              setData(newNode.data);
-            }}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            form="modal"
-          >
-            Submit
-          </Button>
-        </div>
-        {publicProps && (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          backgroundColor: "#f9f8f8",
+          boxShadow: "10px 5px 5px grey",
+          margin: "1em",
+        }}
+      >
+        <props.Editor
+          handleSubmit={(newNode) => {
+            setData(newNode.data);
+          }}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          form="modal"
+          fullWidth
+        >
+          Update
+        </Button>
+      </div>
+      {publicProps && (
+        <div>
           <ErrorBoundary hasInitData={Boolean(data)}>
             <props.Public {...publicProps} />
           </ErrorBoundary>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 }
 

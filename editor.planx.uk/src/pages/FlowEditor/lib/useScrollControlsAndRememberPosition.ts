@@ -13,7 +13,7 @@ import {
 import { rootFlowPath } from "../../../routes/utils";
 
 const useScrollControlsAndRememberPosition = (
-  scrollContainerRef: React.RefObject<HTMLDivElement>
+  scrollContainerRef: React.RefObject<HTMLDivElement>,
 ) => {
   useEffect(() => {
     let scrollListener: Subscription;
@@ -38,8 +38,8 @@ const useScrollControlsAndRememberPosition = (
         fromEvent(document, "blur"),
         fromEvent(document, "mouseup"),
         fromEvent(document, "mouseenter").pipe(
-          filter((e: any) => e.which === 0)
-        )
+          filter((e: any) => e.which === 0),
+        ),
       );
 
       const wheelDown$ = mouseDown$.pipe(filter((ev: any) => ev.which === 2));
@@ -73,15 +73,15 @@ const useScrollControlsAndRememberPosition = (
                 return acc;
               }, accumulator),
               // stop listening once the wheel button is released
-              takeUntil(mouseUp$)
-            )
-          )
+              takeUntil(mouseUp$),
+            ),
+          ),
         )
         .subscribe(({ initialPos, pos, scrollPos }: any) => {
           // pan the flow
           container.scrollTo(
             scrollPos[0] + initialPos[0] - pos[0],
-            scrollPos[1] + initialPos[1] - pos[1]
+            scrollPos[1] + initialPos[1] - pos[1],
           );
         });
 
@@ -91,10 +91,10 @@ const useScrollControlsAndRememberPosition = (
           throttleTime(250, undefined, { trailing: true }),
           // extract the [x,y] scroll position as a string
           map((evt: any) =>
-            [evt.target.scrollLeft, evt.target.scrollTop].join(",")
+            [evt.target.scrollLeft, evt.target.scrollTop].join(","),
           ),
           // only continue if the [x,y] position has changed (scrolled)
-          distinctUntilChanged()
+          distinctUntilChanged(),
         )
         .subscribe((scrollPosition: string) => {
           sessionStorage.setItem(storageKey, scrollPosition);

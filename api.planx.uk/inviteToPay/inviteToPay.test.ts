@@ -71,7 +71,7 @@ describe("Invite to pay API route", () => {
         .then((response) => {
           expect(response.body).toHaveProperty(
             "error",
-            "JSON body must contain payeeName"
+            "JSON body must contain payeeName",
           );
         });
     });
@@ -85,7 +85,7 @@ describe("Invite to pay API route", () => {
         .then((response) => {
           expect(response.body).toHaveProperty(
             "error",
-            "JSON body must contain payeeEmail"
+            "JSON body must contain payeeEmail",
           );
         });
     });

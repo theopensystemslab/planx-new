@@ -37,7 +37,7 @@ export const levenshteinDistance = (a: string, b: string): number => {
       distanceMatrix[j][i] = Math.min(
         distanceMatrix[j][i - 1] + 1, // deletion
         distanceMatrix[j - 1][i] + 1, // insertion
-        distanceMatrix[j - 1][i - 1] + indicator // substitution
+        distanceMatrix[j - 1][i - 1] + indicator, // substitution
       );
     }
   }
@@ -54,4 +54,11 @@ export function slugify(name: string): string {
 }
 
 export const isLiveEnv = () =>
-  ["production", "staging", "pizza"].includes(process.env.NODE_ENV || "");
+  ["production", "staging", "pizza"].includes(process.env.REACT_APP_ENV || "");
+
+export const removeSessionIdSearchParam = () => {
+  const currentURL = new URL(window.location.href);
+  currentURL.searchParams.delete("sessionId");
+  window.history.pushState({}, document.title, currentURL);
+  window.location.reload();
+};

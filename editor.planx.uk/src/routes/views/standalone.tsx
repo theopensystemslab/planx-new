@@ -44,7 +44,7 @@ const standaloneView = async (req: NaviRequest) => {
 
 const fetchDataForStandaloneView = async (
   flowSlug: string,
-  teamSlug: string
+  teamSlug: string,
 ): Promise<StandaloneViewData> => {
   try {
     const result = await client.query({
@@ -64,6 +64,7 @@ const fetchDataForStandaloneView = async (
               settings
               slug
               notifyPersonalisation: notify_personalisation
+              boundaryBBox: boundary_bbox
             }
             settings
           }

@@ -22,7 +22,7 @@ config:
   application:govuk-notify-api-key:
     secure: AAABACgwjEmlLmE19ofRO8e/JpD8sHDV2lcDmSXbU/Mw8ZRh5gTgll8DZ3BVjpDWfQfIecBAIf2TFgeo9CsBSLjfaRJ7eJyKDSWm7i8LlMC2JN/PN+Ig8oeI0H0oLkqJIziNKKjx+e97zDiXO9LZ1CVzrywR
   application:hasura-admin-secret:
-    secure: AAABAGDAQe8KyGWt1sT/psdS282GOGBjHfI/KThzfcoixsDT0s/jBSnFGjwuTrAUvrDEc06hy5jhfO1rxnsLtQ==
+    secure: AAABABxsYkxVyb/OgzfNQgIqDN2jY1xttPzTplMqlcZFAXOtg3PCeZZFWqRgXeCYvXJcqQpd3Sg=
   application:hasura-planx-api-key:
     secure: AAABANHLs3ItPxkteh0chwMP2bKuHO3ovuRLi4FsIrCqerzXVIaTLFDqNR+4KBTeMPz4cnF5tCTwsrJv9GruZdXU+lg=
   application:jwt-secret:

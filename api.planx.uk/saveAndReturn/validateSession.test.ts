@@ -1,4 +1,5 @@
 import supertest from "supertest";
+import omit from "lodash.omit";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
 import {
@@ -16,10 +17,7 @@ import type { Node, Flow, Breadcrumb } from "../types";
 const validateSessionPath = "/validate-session";
 
 describe("Validate Session endpoint", () => {
-  const reconciledData = {
-    ...mockLowcalSession.data,
-    passport: { data: {} },
-  };
+  const reconciledData = omit(mockLowcalSession.data, "passport");
 
   afterEach(() => {
     queryMock.reset();
@@ -41,7 +39,7 @@ describe("Validate Session endpoint", () => {
         .then((response) => {
           expect(response.body).toHaveProperty(
             "error",
-            "Required value missing"
+            "Required value missing",
           );
         });
     }
@@ -63,7 +61,7 @@ describe("Validate Session endpoint", () => {
       .then((response) => {
         expect(response.body).toHaveProperty(
           "error",
-          "Unable to find your session"
+          "Unable to find your session",
         );
       });
   });
@@ -240,8 +238,8 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            removedBreadcrumbIds
-          )
+            removedBreadcrumbIds,
+          ),
         ).toBe(false);
       });
   });
@@ -377,8 +375,8 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            removedBreadcrumbIds
-          )
+            removedBreadcrumbIds,
+          ),
         ).toBe(false);
       });
   });
@@ -486,8 +484,8 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            []
-          )
+            [],
+          ),
         ).toBe(false);
       });
   });
@@ -577,8 +575,8 @@ describe("Validate Session endpoint", () => {
         expect(
           objectContainsKeys(
             response.body.reconciledSessionData.breadcrumbs,
-            removedBreadcrumbIds
-          )
+            removedBreadcrumbIds,
+          ),
         ).toBe(false);
       });
   });

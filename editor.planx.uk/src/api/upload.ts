@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useStore } from "pages/FlowEditor/lib/store";
 
 export { uploadPrivateFile, uploadPublicFile };
 
@@ -7,7 +6,7 @@ export type UploadFileResponse = string;
 
 async function uploadPublicFile(
   file: any,
-  { onProgress }: { onProgress?: (p: any) => void } = {}
+  { onProgress }: { onProgress?: (p: any) => void } = {},
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "public" });
 
@@ -16,7 +15,7 @@ async function uploadPublicFile(
 
 async function uploadPrivateFile(
   file: any,
-  { onProgress }: { onProgress?: (p: any) => void } = {}
+  { onProgress }: { onProgress?: (p: any) => void } = {},
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "private" });
 
@@ -28,14 +27,12 @@ function handleUpload(
   {
     onProgress,
     path: path,
-  }: { onProgress?: (p: any) => void; path: "public" | "private" }
+  }: { onProgress?: (p: any) => void; path: "public" | "private" },
 ) {
   const formData = new FormData();
 
   formData.append("file", file);
   formData.append("filename", file.name);
-
-  const passport = useStore.getState().computePassport();
 
   // Private uploads for test applications should be handled by the staging environment
   const paths = {

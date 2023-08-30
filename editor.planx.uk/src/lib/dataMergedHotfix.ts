@@ -22,11 +22,11 @@ const getFlowData = async (id: string) => {
 
 export const dataMerged = async (
   id: string,
-  ob: Record<string, any> = {}
+  ob: Record<string, any> = {},
 ): Promise<Record<string, any>> => {
   const { slug, data }: { slug: string; data: Record<string, any> } =
     await getFlowData(id);
-  for (let [nodeId, node] of Object.entries(data)) {
+  for (const [nodeId, node] of Object.entries(data)) {
     if (nodeId === "_root" && Object.keys(ob).length > 0) {
       ob[id] = {
         ...node,

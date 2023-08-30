@@ -2,8 +2,8 @@ import Close from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -11,16 +11,20 @@ import { useNavigation } from "react-navi";
 import { FOOTER_ITEMS } from "types";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
-const useClasses = makeStyles((theme) => ({
-  content: {
-    marginTop: theme.spacing(2),
-    whiteSpace: "pre-line",
-  },
-  close: {
-    position: "absolute",
-    right: 20,
-    top: 20,
-  },
+const Root = styled(Box)(({ theme }) => ({
+  width: "100%",
+  backgroundColor: theme.palette.background.default,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  paddingTop: theme.spacing(2),
+  paddingBottom: theme.spacing(10),
+}));
+
+const CloseIconButton = styled(IconButton)(() => ({
+  position: "absolute",
+  right: 20,
+  top: 20,
 }));
 
 function Layout(props: {
@@ -29,26 +33,11 @@ function Layout(props: {
   onClose: () => void;
   openLinksOnNewTab?: boolean;
 }) {
-  const classes = useClasses();
-
   return (
-    <Box
-      width="100%"
-      bgcolor="background.default"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      pt={2}
-      pb={10}
-    >
-      <IconButton
-        onClick={props.onClose}
-        className={classes.close}
-        size="medium"
-        aria-label="Close"
-      >
+    <Root>
+      <CloseIconButton onClick={props.onClose} size="medium" aria-label="Close">
         <Close />
-      </IconButton>
+      </CloseIconButton>
       <Container maxWidth="md">
         <Typography variant="h1">{props.heading}</Typography>
         <ReactMarkdownOrHtml
@@ -56,7 +45,7 @@ function Layout(props: {
           openLinksOnNewTab={props.openLinksOnNewTab}
         />
       </Container>
-    </Box>
+    </Root>
   );
 }
 

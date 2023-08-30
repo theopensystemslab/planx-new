@@ -12,8 +12,10 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
-  PNPM_VERSION: 7.8.0
-  NODE_VERSION: 16.13.1 # 16.13.1 = LTS
+
+permissions:
+  pull-requests: write
+  packages: read
 
 jobs:
   changes:
@@ -30,7 +32,7 @@ jobs:
       sharedb: ${{ steps.filter.outputs.sharedb }}
       commit: ${{ steps.commit.outputs.commit }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get commit message
@@ -60,9 +62,9 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -71,16 +73,18 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v2.2.2
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
+      - uses: pnpm/action-setup@v2.4.0
         with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
+          version: ${{ vars.PNPM_VERSION }}
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
@@ -101,9 +105,9 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -112,23 +116,25 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v2.2.2
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
+      - uses: pnpm/action-setup@v2.4.0
         with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
+          version: ${{ vars.PNPM_VERSION }}
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: api.planx.uk
       - name: Run API Tests
-        run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm check && pnpm test
         working-directory: api.planx.uk
 
   test_react:
@@ -137,9 +143,9 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.editor == 'true' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -148,18 +154,20 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.4.0
         with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
+          version: ${{ vars.PNPM_VERSION }}
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
@@ -173,23 +181,25 @@ jobs:
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache build assets
         id: cache-react-build-assets
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.4.0
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
+          version: ${{ vars.PNPM_VERSION }}
+      - uses: actions/setup-node@v3
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
@@ -226,19 +236,19 @@ jobs:
     needs: [changes, build_react_app]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.4.0
         with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
+          version: ${{ vars.PNPM_VERSION }}
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
@@ -249,7 +259,7 @@ jobs:
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
-      - uses: pulumi/actions@v3
+      - uses: pulumi/actions@v4
         with:
           command: preview
           stack-name: staging
@@ -264,7 +274,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.hasura == 'true' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: Fieldguide/action-hasura-change-summary@v2
         id: hasura-change
         with:
@@ -314,6 +324,8 @@ jobs:
           password: ${{ steps.create.outputs.default_password }}
           command_timeout: 20m
           script: |
+            apt-get update -y
+
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
@@ -323,7 +335,7 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            ./scripts/pull-secrets.sh
+            CI=true ./scripts/pull-secrets.sh
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
@@ -341,6 +353,8 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           command_timeout: 10m
           script: |
+            apt-get update -y
+
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git add . && git stash
@@ -351,7 +365,7 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            ./scripts/pull-secrets.sh
+            CI=true ./scripts/pull-secrets.sh
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
@@ -360,7 +374,7 @@ jobs:
 
       # CREATE & UPDATE STEPS
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Download React build assets
         id: cache-react-build-assets
         uses: actions/cache@v3
@@ -379,6 +393,7 @@ jobs:
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: vultr
           message: |
             ## Pizza
@@ -397,6 +412,8 @@ jobs:
     needs: [create_or_update_vultr_instance]
     runs-on: ubuntu-22.04
     steps:
+      - name: Wait for Vultr to warm up
+        run: bash -c "sleep 30s"
       - name: API healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
@@ -409,68 +426,6 @@ jobs:
         run: |
           timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
 
-  lighthouse:
-    name: Lighthouse
-    needs: [create_or_update_vultr_instance]
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - name: Audit URLs using Lighthouse
-        uses: treosh/lighthouse-ci-action@v9
-        id: LHCIAction
-        with:
-          urls: | 
-            https://editor.planx.dev/buckinghamshire/find-out-if-you-need-planning-permission/preview
-            https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
-            https://editor.planx.dev/testing/lighthouse-canary-flow/unpublished
-            https://${{ env.FULL_DOMAIN }}/testing/lighthouse-canary-flow/unpublished
-          uploadArtifacts: true # save results as an action artifacts
-          temporaryPublicStorage: true # upload lighthouse report to the temporary storage
-      - name: Interpolate comment text
-        id: text
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const links = JSON.parse('${{steps.LHCIAction.outputs.links}}');
-            const manifests = JSON.parse('${{steps.LHCIAction.outputs.manifest}}');
-
-            const text = getMarkdown(manifests, links);
-            core.setOutput("text", `## Lighthouse\n\n${text}`);
-
-
-            function getMarkdown(manifests, links) {
-              const urls = [
-                `buckinhamshire/FOIYNPP`,
-                `testing/canary`,
-              ];
-
-              const s = manifests.map(manifest => manifest.summary);
-              const attributes = Object.keys(s[0]);
-
-              const rows = attributes.map((attr, i) => {
-
-                const FOIYNPPDiff = (s[0][attr] - s[1][attr]).toFixed(2);
-                const FOIYNPP = `[${s[0][attr]}](${manifests[0].url}) - [${s[1][attr]}](${manifests[1].url}) = [${FOIYNPPDiff}](${links[manifests[1].url]})`;
-
-                const canaryDiff = (s[2][attr] - s[3][attr]).toFixed(2);
-                const canary = `[${s[2][attr]}](${manifests[2].url}) - [${s[3][attr]}](${manifests[3].url}) = [${canaryDiff}](${links[manifests[3].url]})`;
-                return `| ${attr} | ${FOIYNPP} | ${canary}`;
-              }).join('|\n');
-
-              const urlHeader = urls.join(' | ');
-              const middleColumns = urls.map(() => ':---:').join('|');
-
-              return `
-              |  | ${urlHeader} |
-              |------------|${middleColumns}|
-              ${rows}|
-              `;
-            }
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: lighthouse
-          message: ${{steps.text.outputs.text}}
-
   end_to_end_tests:
     name: E2E tests
     runs-on: ubuntu-22.04
@@ -478,9 +433,9 @@ jobs:
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
@@ -488,15 +443,17 @@ jobs:
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
         run: ./scripts/pull-secrets.sh
       - name: Setup PNPM
-        uses: pnpm/action-setup@v2.2.2
+        uses: pnpm/action-setup@v2.4.0
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Setup .gitconfig
+        run: mv .gitconfig ~/.gitconfig
       - name: PNPM Install
         run: pnpm install --frozen-lockfile
         working-directory: e2e
@@ -505,10 +462,10 @@ jobs:
         working-directory: e2e
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps
-        working-directory: e2e
+        working-directory: e2e/tests/ui-driven
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
-      - name: Playwright Tests
+      - name: End-to-end Tests
         run:  pnpm test
         working-directory: e2e
       - name: Archive Playwright Test Results
@@ -516,5 +473,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: playwright-report
-          path: e2e/test-results/
+          path: e2e/tests/ui-driven/test-results/
           retention-days: 3

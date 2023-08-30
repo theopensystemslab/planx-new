@@ -1,4 +1,4 @@
-import { _admin as $admin } from "../client";
+import { $admin } from "../client";
 import { sendEmail } from "../notify";
 import { gql } from "graphql-request";
 import { convertSlugToName } from "../saveAndReturn/utils";
@@ -38,7 +38,7 @@ type PayeeAndAgentEmailData = {
 };
 
 async function getDataForPayeeAndAgentEmails(
-  sessionId: string
+  sessionId: string,
 ): Promise<PayeeAndAgentEmailData> {
   const query = gql`
     query GetDataForPayeeAndAgentEmails($sessionId: uuid!) {

@@ -22,7 +22,7 @@ import standaloneView from "./views/standalone";
 const payRoutes = compose(
   withData(async (req) => {
     const externalDomainTeam = await getTeamFromDomain(
-      window.location.hostname
+      window.location.hostname,
     );
 
     return {
@@ -41,11 +41,15 @@ const payRoutes = compose(
       const paymentRequest = await getPaymentRequest(req);
       if (!paymentRequest) {
         return {
-          title: makeTitle("Payment request not found"),
+          title: makeTitle("Sorry, we can’t find that payment link"),
           view: (
-            <ErrorPage title={"Payment request not found"}>
-              Your payment link may have expired. Please contact the person who
-              requested payment from you.
+            <ErrorPage title={"Sorry, we can’t find that payment link"}>
+              Please check you have the right link. If it still doesn’t work, it
+              may mean the payment link has expired or payment has already been
+              made.
+              <br />
+              <br />
+              Please contact the person who invited you to pay.
             </ErrorPage>
           ),
         };
@@ -69,16 +73,16 @@ const payRoutes = compose(
       };
     }),
     "/pages/:page": redirect(
-      (req) => `../../../preview/pages/${req.params.page}`
+      (req) => `../../../preview/pages/${req.params.page}`,
     ),
     "/invite/pages/:page": redirect(
-      (req) => `../../../../preview/pages/${req.params.page}`
+      (req) => `../../../../preview/pages/${req.params.page}`,
     ),
-  })
+  }),
 );
 
 const getPaymentRequest = async (
-  req: NaviRequest
+  req: NaviRequest,
 ): Promise<PaymentRequest | undefined> => {
   const paymentRequestId = req.params["paymentRequestId"];
   if (paymentRequestId) {

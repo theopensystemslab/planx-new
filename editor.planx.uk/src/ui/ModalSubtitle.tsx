@@ -14,7 +14,7 @@ const Root = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-const StyledTypography = styled(Typography)(({ theme }) => ({
+const StyledTypography = styled(Typography)(() => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
   opacity: 0.75,
 }));

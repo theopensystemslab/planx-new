@@ -53,17 +53,19 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question {...allProps} text={node?.data?.title ?? "File upload"} />
       );
-    case TYPES.MultipleFileUpload:
+    case TYPES.FileUploadAndLabel:
       return (
         <Question
           {...allProps}
-          text={node?.data?.title ?? "Multiple file upload"}
+          text={node?.data?.title ?? "Upload and label"}
         />
       );
     case TYPES.Filter:
       return <Filter {...allProps} text="(Flags Filter)" />;
     case TYPES.FindProperty:
       return <Question {...allProps} text="Find property" />;
+    case TYPES.NextSteps:
+      return <Question {...allProps} text="Next steps" />;
     case TYPES.Notice:
       return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
     case TYPES.NumberInput:
@@ -150,7 +152,7 @@ function exhaustiveCheck(type: never): never {
 export default function SafeNode(props: any) {
   return (
     <ErrorBoundary
-      FallbackComponent={({ error }) => (
+      FallbackComponent={() => (
         <Question hasFailed type="Error" id={props.id} text="Corrupted" />
       )}
     >

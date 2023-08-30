@@ -12,12 +12,12 @@ import flowWithPassportComponentsMock from "./mocks/flowWithPassportComponents.j
 
 const { getState, setState } = vanillaStore;
 let breadcrumbsDependentOnPassport = cloneDeep(
-  breadcrumbsDependentOnPassportMock
+  breadcrumbsDependentOnPassportMock,
 ) as Store.breadcrumbs;
 let flowWithPassportComponents = cloneDeep(
-  flowWithPassportComponentsMock
+  flowWithPassportComponentsMock,
 ) as Store.flow;
-let flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
+const flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
 
 const {
   record,
@@ -33,10 +33,10 @@ const {
 beforeEach(() => {
   resetPreview();
   breadcrumbsDependentOnPassport = cloneDeep(
-    breadcrumbsDependentOnPassportMock
+    breadcrumbsDependentOnPassportMock,
   ) as Store.breadcrumbs;
   flowWithPassportComponents = cloneDeep(
-    flowWithPassportComponentsMock
+    flowWithPassportComponentsMock,
   ) as Store.flow;
 });
 
@@ -576,6 +576,28 @@ describe("changeAnswer", () => {
     // Confirm that our original answer is still preserved in cachedBreadcrumbs, but not included in current breadcrumbs
     expect(getState().breadcrumbs).not.toContain(originalAnswer);
     expect(getState().cachedBreadcrumbs).toStrictEqual(originalAnswer);
+  });
+});
+
+describe("resetPreview", () => {
+  test("should reset preview state correctly for a local storage session", async () => {
+    setState({
+      sessionId: "123",
+    });
+
+    resetPreview();
+    expect(getState().sessionId).toBe("");
+  });
+
+  test("should reset preview state correctly for a save & return session", async () => {
+    setState({
+      sessionId: "123",
+      saveToEmail: "test@council.gov.uk",
+    });
+
+    resetPreview();
+    expect(getState().sessionId).toBe("");
+    expect(getState().saveToEmail).toBe("");
   });
 });
 

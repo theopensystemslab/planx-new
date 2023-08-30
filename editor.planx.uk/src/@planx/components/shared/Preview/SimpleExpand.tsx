@@ -1,32 +1,51 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
-import { Theme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
-import React from "react";
+import { styled } from "@mui/material/styles";
+import React, { PropsWithChildren } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import Caret from "ui/icons/Caret";
 
-const useClasses = makeStyles((theme: Theme) => ({
-  root: {
-    paddingBottom: theme.spacing(0.5),
-  },
+const StyledButton = styled(Button)(() => ({
+  boxShadow: "none",
+  color: "black",
+  fontSize: "1.125rem",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  width: "100%",
 }));
 
-const SimpleExpand = ({ children, buttonText }: any) => {
+interface Props {
+  buttonText: {
+    open: string;
+    closed: string;
+  };
+  id: string;
+}
+
+const SimpleExpand: React.FC<PropsWithChildren<Props>> = ({
+  children,
+  buttonText,
+  id,
+}) => {
   const [show, setShow] = React.useState(false);
-  const classes = useClasses();
   return (
     <>
-      <Box className={classes.root}>
-        <Button
-          size="large"
-          fullWidth
-          color="inherit"
+      <Box mx={1}>
+        <StyledButton
           onClick={() => setShow(!show)}
+          aria-expanded={show}
+          aria-controls={id}
         >
           {show ? buttonText.closed : buttonText.open}
-        </Button>
+          <Caret
+            expanded={show}
+            sx={{ ml: "0.25em", color: "text.secondary" }}
+          />
+        </StyledButton>
       </Box>
-      <Collapse in={show}>{children}</Collapse>
+      <Collapse in={show} id={id}>
+        {children}
+      </Collapse>
     </>
   );
 };

@@ -28,7 +28,7 @@ const EndPoint: React.FC<{ text: string }> = ({ text }) => {
               scrollMode: "if-needed",
               block: "center",
               inline: "nearest",
-            }
+            },
       );
     }
   }, [flowLayout, isStart]);
