@@ -34,6 +34,5 @@ CMD ["npm", "start"]
 ## DEVELOPMENT ##
 FROM base as development
 ENV NODE_ENV development
-# reinstall pruned development dependencies
-RUN pnpm install --development
+RUN pnpm install
 CMD ["pnpm", "dev"]
