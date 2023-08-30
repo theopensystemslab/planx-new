@@ -12,7 +12,7 @@ export const upsertMemberSchema = z.object({
   }),
   body: z.object({
     userId: z.number(),
-    role: z.enum(["admin", "viewer"]),
+    role: z.enum(["teamAdmin", "teamViewer"]),
   }),
 });
 

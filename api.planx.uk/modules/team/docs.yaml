@@ -21,7 +21,7 @@ components:
           example: 123
         role:
           type: string
-          enum: ["viewer", "admin"]
+          enum: ["teamViewer", "teamAdmin"]
 paths:
   /team/{teamId}/add-member:
     put:

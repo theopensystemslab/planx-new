@@ -10,6 +10,7 @@ export interface Context {
     firstName: string;
     lastName: string;
     email: string;
+    isPlatformAdmin: boolean;
   };
   team: {
     id?: number;
@@ -29,11 +30,12 @@ export interface Context {
   sessionIds?: string[];
 }
 
-export const contextDefaults = {
+export const contextDefaults: Context = {
   user: {
     firstName: "Test",
     lastName: "Test",
     email: "simulate-delivered@notifications.service.gov.uk",
+    isPlatformAdmin: true,
   },
   team: {
     name: "E2E Test Team",
