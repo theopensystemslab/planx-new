@@ -28,7 +28,7 @@ for table in "${tables[@]}"; do
     reset_cmd="TRUNCATE TABLE ${table} CASCADE;"
 
     # Start building single sync.sql file which will be executed in a single transaction
-    cat $reset_cmd > sync.sql
+    cat $reset_cmd > tmp/sync.sql
   fi
 done
 
@@ -36,14 +36,14 @@ psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, da
 echo published_flows downloaded
 
 if [[ ${RESET} == "reset_flows" ]]; then
-  cat write/truncate_flows.sql > sync.sql
+  cat write/truncate_flows.sql > tmp/sync.sql
 fi
 
 # Add main operations
-cat write/main.sql > sync.sql
+cat write/main.sql > tmp/sync.sql
 
 echo "Beginning write transaction..."
-psql --quiet ${LOCAL_PG} -f sync.sql --single-transaction -v ON_ERROR_STOP=on
+psql --quiet ${LOCAL_PG} -f tmp/sync.sql --single-transaction -v ON_ERROR_STOP=on
 
 # clean-up tmp dir
 rm -rf /tmp
