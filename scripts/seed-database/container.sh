@@ -32,20 +32,23 @@ for table in "${tables[@]}"; do
   fi
 done
 
+# Start building single sync.sql file which will be executed in a single transaction
 if [[ ${RESET} == "reset_flows" ]]; then
   cat write/truncate_flows.sql > sync.sql
 fi
+
+# Add main operations
+cat write/main.sql > sync.sql
 
 if [[ ${INCLUDE_PUBLISHED_FLOWS} == "include_published_flows" ]]; then
   psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
   echo published_flows downloaded
 
+  # Add published flows
   cat write/published_flows.sql > sync.sql
 fi
 
 echo "Beginning write transaction..."
-
-cat write/main.sql > sync.sql
 psql --quiet ${LOCAL_PG} -f sync.sql --single-transaction -v ON_ERROR_STOP=on
 
 # clean-up tmp dir
