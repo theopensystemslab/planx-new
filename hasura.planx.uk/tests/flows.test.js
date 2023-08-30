@@ -37,7 +37,6 @@ describe("flows and operations", () => {
       expect(i.mutations).toContain("delete_operations");
     });
   });
-
   describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
@@ -47,6 +46,44 @@ describe("flows and operations", () => {
     test("can query flows and their associated operations", () => {
       expect(i.queries).toContain("flows");
       expect(i.queries).toContain("operations");
+    });
+
+    test("can query published flows", () => {
+      expect(i.queries).toContain("published_flows");
+    });
+
+    test("can create published_flows", () => {
+      expect(i.mutations).toContain("insert_published_flows_one");
+      expect(i.mutations).toContain("insert_published_flows");
+    });
+
+    test("cannot update or delete published_flows", () => {
+      expect(i.mutations).not.toContain("delete_published_flows_by_pk");
+      expect(i.mutations).not.toContain("delete_published_flows");
+      expect(i.mutations).not.toContain("update_published_flows_by_pk");
+      expect(i.mutations).not.toContain("update_published_flows");
+    });
+  });
+
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query flows and their associated operations", () => {
+      expect(i.queries).toContain("flows");
+      expect(i.queries).toContain("operations");
+    });
+
+    test("can update flows", () => {
+      expect(i.mutations).toContain("update_flows_by_pk");
+      expect(i.mutations).toContain("update_flows");
+    });
+
+    test("can delete flows", () => {
+      expect(i.mutations).toContain("delete_flows_by_pk");
+      expect(i.mutations).toContain("delete_flows");
     });
 
     test("can query published flows", () => {

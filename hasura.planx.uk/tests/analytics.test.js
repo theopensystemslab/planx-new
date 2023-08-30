@@ -54,4 +54,19 @@ describe("analytics and analytics_logs", () => {
       expect(i).toHaveNoMutationsFor("analytics_logs");
     });
   });
+
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query analytics_logs", () => {
+      expect(i.queries).not.toContain("analytics_logs");
+    });
+
+    test("cannot create, update, or delete analytics_logs", () => {
+      expect(i).toHaveNoMutationsFor("analytics_logs");
+    });
+  });
 });

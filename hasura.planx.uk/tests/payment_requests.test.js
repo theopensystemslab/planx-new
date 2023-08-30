@@ -112,6 +112,21 @@ describe("payment_requests", () => {
       expect(i).toHaveNoMutationsFor("payment_requests");
     });
   });
+
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query payment_requests", () => {
+      expect(i.queries).not.toContain("payment_requests");
+    });
+
+    test("cannot create, update, or delete payment_requests", () => {
+      expect(i).toHaveNoMutationsFor("payment_requests");
+    });
+  });
 });
 
 const insertSessions = async (sessionIds) => {

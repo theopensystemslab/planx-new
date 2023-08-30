@@ -610,5 +610,20 @@ describe("sessions", () => {
       expect(i).toHaveNoMutationsFor("sessions");
     });
   });
+
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query sessions", () => {
+      expect(i.queries).not.toContain("sessions");
+    });
+
+    test("cannot create, update, or delete sessions", () => {
+      expect(i).toHaveNoMutationsFor("sessions");
+    });
+  });
   
 });

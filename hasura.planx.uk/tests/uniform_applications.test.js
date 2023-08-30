@@ -44,4 +44,19 @@ describe("uniform_applications", () => {
       expect(i).toHaveNoMutationsFor("uniform_applications");
     });
   });
+
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query uniform_applications", () => {
+      expect(i.queries).not.toContain("uniform_applications");
+    });
+
+    test("cannot create, update, or delete uniform_applications", () => {
+      expect(i).toHaveNoMutationsFor("uniform_applications");
+    });
+  });
 });

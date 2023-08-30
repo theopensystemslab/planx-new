@@ -237,19 +237,32 @@
           - data
           - settings
           - slug
-        filter: {}
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamAdmin
         check: null
+  delete_permissions:
+    - role: teamAdmin
+      permission:
+        backend_only: false
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamAdmin
 - table:
     schema: public
     name: global_settings
   insert_permissions:
     - role: platformAdmin
-      permission:
-        check: {}
-        columns:
-          - id
-          - footer_content
-    - role: teamAdmin
       permission:
         check: {}
         columns:
@@ -275,13 +288,6 @@
         filter: {}
   update_permissions:
     - role: platformAdmin
-      permission:
-        columns:
-          - footer_content
-          - id
-        filter: {}
-        check: {}
-    - role: teamAdmin
       permission:
         columns:
           - footer_content
@@ -715,7 +721,15 @@
           - data
     - role: teamAdmin
       permission:
-        check: {}
+        check:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamAdmin
         columns:
           - id
           - publisher_id
@@ -860,30 +874,17 @@
       permission:
         check: {}
         columns:
+          - boundary
+          - created_at
+          - domain
           - id
+          - name
           - notify_personalisation
           - settings
-          - theme
-          - domain
-          - name
           - slug
-          - created_at
-          - updated_at
           - submission_email
-    - role: teamAdmin
-      permission:
-        check: {}
-        columns:
-          - id
-          - notify_personalisation
-          - settings
           - theme
-          - domain
-          - name
-          - slug
-          - created_at
           - updated_at
-          - submission_email
   select_permissions:
     - role: platformAdmin
       permission:
@@ -950,7 +951,13 @@
           - slug
           - submission_email
           - theme
-        filter: {}
+        filter:
+          members:
+            _and:
+              - role:
+                  _eq: teamAdmin
+              - user_id:
+                  _eq: x-hasura-user-id
         check: null
 - table:
     schema: public
@@ -1007,17 +1014,6 @@
             name: team_members
   select_permissions:
     - role: platformAdmin
-      permission:
-        columns:
-          - id
-          - first_name
-          - last_name
-          - email
-          - created_at
-          - updated_at
-          - is_platform_admin
-        filter: {}
-    - role: teamAdmin
       permission:
         columns:
           - id
