@@ -1,6 +1,7 @@
 import {
   ApolloClient,
   createHttpLink,
+  DefaultContext,
   from,
   InMemoryCache,
 } from "@apollo/client";
@@ -88,3 +89,12 @@ export const publicClient = new ApolloClient({
   link: from([retryLink, errorLink, publicHttpLink]),
   cache: new InMemoryCache(),
 });
+
+/**
+ * Connect to Hasura using the "public" role
+ */
+export const publicContext: DefaultContext = {
+  headers: {
+    "x-hasura-role": "public"
+  }
+}
