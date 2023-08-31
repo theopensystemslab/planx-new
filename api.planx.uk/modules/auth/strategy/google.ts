@@ -9,6 +9,8 @@ export const googleStrategy = new GoogleStrategy(
   },
   async function (_accessToken, _refreshToken, profile, done) {
     const { email } = profile._json;
+    if (!email) throw Error("Unable to authenticate without email");
+
     const jwt = await buildJWT(email);
 
     if (!jwt) {
