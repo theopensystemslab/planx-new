@@ -75,10 +75,10 @@ describe("flows and operations", () => {
     });
   });
 
-  describe("teamAdmin", () => {
+  describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("teamAdmin");
+      i = await introspectAs("teamEditor");
     });
 
     test("can query flows and their associated operations", () => {

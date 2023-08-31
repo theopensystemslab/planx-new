@@ -49,10 +49,10 @@ describe("global_settings", () => {
     });
   });
 
-  describe("teamAdmin", () => {
+  describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("teamAdmin");
+      i = await introspectAs("teamEditor");
     });
 
     test("can query global_settings view", () => {

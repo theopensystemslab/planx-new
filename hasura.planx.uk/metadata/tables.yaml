@@ -191,7 +191,7 @@
           - id
           - version
           - data
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         check:
           team:
@@ -200,7 +200,7 @@
                 - user_id:
                     _eq: x-hasura-user-id
                 - role:
-                    _eq: teamAdmin
+                    _eq: teamEditor
         columns:
           - creator_id
           - team_id
@@ -243,7 +243,7 @@
         computed_fields:
           - data_merged
         filter: {}
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns:
           - created_at
@@ -267,7 +267,7 @@
           - slug
         filter: {}
         check: null
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns:
           - data
@@ -280,10 +280,10 @@
                 - user_id:
                     _eq: x-hasura-user-id
                 - role:
-                    _eq: teamAdmin
+                    _eq: teamEditor
         check: null
   delete_permissions:
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         backend_only: false
         filter:
@@ -293,7 +293,7 @@
                 - user_id:
                     _eq: x-hasura-user-id
                 - role:
-                    _eq: teamAdmin
+                    _eq: teamEditor
 - table:
     schema: public
     name: global_settings
@@ -316,7 +316,7 @@
         columns:
           - footer_content
         filter: {}
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns:
           - footer_content
@@ -524,7 +524,7 @@
           - created_at
           - updated_at
           - flow_id
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         check: {}
         columns:
@@ -547,7 +547,7 @@
           - created_at
           - updated_at
         filter: {}
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns:
           - id
@@ -564,7 +564,7 @@
         columns: []
         filter: {}
         check: null
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns: []
         filter: {}
@@ -755,7 +755,7 @@
           - created_at
           - flow_id
           - data
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         check:
           flow:
@@ -765,7 +765,7 @@
                   - user_id:
                       _eq: x-hasura-user-id
                   - role:
-                      _eq: teamAdmin
+                      _eq: teamEditor
         columns:
           - id
           - publisher_id
@@ -794,7 +794,7 @@
           - publisher_id
           - summary
         filter: {}
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns:
           - created_at
@@ -951,7 +951,7 @@
         computed_fields:
           - boundary_bbox
         filter: {}
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns:
           - created_at
@@ -977,7 +977,7 @@
           - theme
         filter: {}
         check: null
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns:
           - domain
@@ -991,7 +991,7 @@
           members:
             _and:
               - role:
-                  _eq: teamAdmin
+                  _eq: teamEditor
               - user_id:
                   _eq: x-hasura-user-id
         check: null
@@ -1060,7 +1060,7 @@
           - updated_at
           - is_platform_admin
         filter: {}
-    - role: teamAdmin
+    - role: teamEditor
       permission:
         columns:
           - first_name

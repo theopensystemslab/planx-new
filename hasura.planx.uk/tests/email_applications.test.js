@@ -46,10 +46,10 @@ describe("email_applications", () => {
     });
   });
 
-  describe("teamAdmin", () => {
+  describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("teamAdmin");
+      i = await introspectAs("teamEditor");
     });
 
     test("cannot query email_applications", () => {

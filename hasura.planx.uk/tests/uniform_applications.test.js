@@ -45,10 +45,10 @@ describe("uniform_applications", () => {
     });
   });
 
-  describe("teamAdmin", () => {
+  describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
-      i = await introspectAs("teamAdmin");
+      i = await introspectAs("teamEditor");
     });
 
     test("cannot query uniform_applications", () => {

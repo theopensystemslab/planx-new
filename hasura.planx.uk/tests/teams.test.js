@@ -49,9 +49,9 @@ describe("teams", () => {
     });
   });
 
-  describe("teamAdmin", () => {
+  describe("teamEditor", () => {
     beforeAll(async () => {
-      i = await introspectAs("teamAdmin");
+      i = await introspectAs("teamEditor");
     });
 
     test("can query teams", () => {

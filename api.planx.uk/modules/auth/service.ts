@@ -29,7 +29,7 @@ const getAllowedRolesForUser = (user: User): Role[] => {
   const teamRoles = user.teams.map((teamRole) => teamRole.role);
   const allowedRoles: Role[] = [
     "public", // Allow public access
-    "teamAdmin", // Least privileged role for authenticated users - required for Editor access
+    "teamEditor", // Least privileged role for authenticated users - required for Editor access
     ...teamRoles, // User specific roles
   ];
   if (user.isPlatformAdmin) allowedRoles.push("platformAdmin");
@@ -45,5 +45,5 @@ const getAllowedRolesForUser = (user: User): Role[] => {
  * This is the role of least privilege for the user
  */
 const getDefaultRoleForUser = (user: User): Role => {
-  return user.isPlatformAdmin ? "platformAdmin" : "teamAdmin";
+  return user.isPlatformAdmin ? "platformAdmin" : "teamEditor";
 };

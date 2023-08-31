@@ -44,7 +44,7 @@ describe("blpu_codes", () => {
     });
   });
 
-  describe("teamAdmin", () => {
+  describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
       i = await introspectAs("platformAdmin");
