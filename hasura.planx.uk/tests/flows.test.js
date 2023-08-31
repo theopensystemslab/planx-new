@@ -48,6 +48,16 @@ describe("flows and operations", () => {
       expect(i.queries).toContain("operations");
     });
 
+    test("can update flows", () => {
+      expect(i.mutations).toContain("update_flows_by_pk");
+      expect(i.mutations).toContain("update_flows");
+    });
+
+    test("can create flows", () => {
+      expect(i.mutations).toContain("insert_flows_one");
+      expect(i.mutations).toContain("insert_flows");
+    });
+
     test("can query published flows", () => {
       expect(i.queries).toContain("published_flows");
     });
@@ -79,6 +89,11 @@ describe("flows and operations", () => {
     test("can update flows", () => {
       expect(i.mutations).toContain("update_flows_by_pk");
       expect(i.mutations).toContain("update_flows");
+    });
+
+    test("can create flows", () => {
+      expect(i.mutations).toContain("insert_flows_one");
+      expect(i.mutations).toContain("insert_flows");
     });
 
     test("can delete flows", () => {

@@ -176,6 +176,42 @@
           schema: public
           name: compile_flow_portals
       comment: Flow data with portals merged in
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - creator_id
+          - team_id
+          - settings
+          - slug
+          - created_at
+          - updated_at
+          - copied_from
+          - id
+          - version
+          - data
+    - role: teamAdmin
+      permission:
+        check:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamAdmin
+        columns:
+          - creator_id
+          - team_id
+          - settings
+          - slug
+          - created_at
+          - updated_at
+          - copied_from
+          - id
+          - version
+          - data
   select_permissions:
     - role: platformAdmin
       permission:
@@ -1023,4 +1059,10 @@
           - created_at
           - updated_at
           - is_platform_admin
+        filter: {}
+    - role: teamAdmin
+      permission:
+        columns:
+          - first_name
+          - last_name
         filter: {}
