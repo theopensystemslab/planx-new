@@ -77,6 +77,7 @@ import { createPaymentSendEvents } from "./inviteToPay/createPaymentSendEvents";
 import { getSessionSummary } from "./admin/session/summary";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
+import teamRoutes from "./modules/team/routes";
 import { useSwaggerDocs } from "./docs";
 
 const router = express.Router();
@@ -188,6 +189,7 @@ app.use(passport.session());
 app.use(urlencoded({ extended: true }));
 
 app.use(authRoutes);
+app.use("/team", teamRoutes);
 
 app.use("/gis", router);
 

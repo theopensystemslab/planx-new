@@ -1,0 +1,80 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  name: team
+  description: Team and Team Member related requests
+components:
+  parameters:
+    teamId:
+      in: path
+      name: teamId
+      type: integer
+      required: true
+  schemas:
+    UpsertMember:
+      type: object
+      properties:
+        userId:
+          type: number
+          example: 123
+        role:
+          type: string
+          enum: ["teamViewer", "teamAdmin"]
+paths:
+  /team/{teamId}/add-member:
+    put:
+      summary: Add user to team, and assign them a role
+      tags: ["team"]
+      parameters:
+        - $ref: "#/components/parameters/teamId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertMember"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /team/{teamId}/change-member-role:
+    patch:
+      summary: Change role of an existing team member
+      tags: ["team"]
+      parameters:
+        - $ref: "#/components/parameters/teamId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertMember"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /team/{teamId}/remove-member:
+    delete:
+      summary: Remover user from team
+      tags: ["team"]
+      parameters:
+        - $ref: "#/components/parameters/teamId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+                  example: 123
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
