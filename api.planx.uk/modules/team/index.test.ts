@@ -57,7 +57,7 @@ describe("Adding a user to a team", () => {
       });
   });
 
-  it("validates that role must one an accepted value", async () => {
+  it("validates that role must be an accepted value", async () => {
     await supertest(app)
       .put("/team/123/add-member")
       .set(authHeader())
