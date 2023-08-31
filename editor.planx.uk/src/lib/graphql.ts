@@ -91,7 +91,8 @@ export const publicClient = new ApolloClient({
 });
 
 /**
- * Connect to Hasura using the "public" role
+ * Explicitly connect to Hasura using the "public" role
+ * Allows authenticated users with a different x-hasura-default-role (e.g. teamAdmin, platformAdmin) to access public resources
  */
 export const publicContext: DefaultContext = {
   headers: {
