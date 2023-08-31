@@ -58,9 +58,9 @@ describe("teams", () => {
       expect(i.queries).toContain("teams");
     });
 
-    test("can update teams", () => {
-      expect(i.mutations).toContain("update_teams");
-      expect(i.mutations).toContain("update_teams_by_pk");
+    test("cannot update teams", () => {
+      expect(i.mutations).not.toContain("update_teams");
+      expect(i.mutations).not.toContain("update_teams_by_pk");
     });
 
     test("cannot delete teams", async () => {

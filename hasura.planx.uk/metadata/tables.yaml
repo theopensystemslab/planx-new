@@ -977,24 +977,6 @@
           - theme
         filter: {}
         check: null
-    - role: teamEditor
-      permission:
-        columns:
-          - domain
-          - name
-          - notify_personalisation
-          - settings
-          - slug
-          - submission_email
-          - theme
-        filter:
-          members:
-            _and:
-              - role:
-                  _eq: teamEditor
-              - user_id:
-                  _eq: x-hasura-user-id
-        check: null
 - table:
     schema: public
     name: uniform_applications
