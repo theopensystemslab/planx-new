@@ -37,11 +37,11 @@ psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, da
 echo published_flows downloaded
 
 if [[ ${RESET} == "reset_flows" ]]; then
-  cat '/write/truncate_flows.sql' > '/tmp/sync.sql'
+  cat 'write/truncate_flows.sql' > '/tmp/sync.sql'
 fi
 
 # Add main operations
-cat '/write/main.sql' > '/tmp/sync.sql'
+cat 'write/main.sql' > '/tmp/sync.sql'
 
 echo "Beginning write transaction..."
 psql --quiet ${LOCAL_PG} -f '/tmp/sync.sql' --single-transaction -v ON_ERROR_STOP=on
