@@ -18,7 +18,7 @@ mkdir -p /tmp
 # Create sync.sql file for all our comnands which will be executed in a single transaction
 touch '/tmp/sync.sql'
 
-tables=(flows users teams flow_document_templates)
+tables=(flows users teams flow_document_templates team_members)
 
 # run copy commands on remote  db
 for table in "${tables[@]}"; do
