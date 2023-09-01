@@ -29,7 +29,7 @@ config:
   application:metabase-encryption-secret-key:
     secure: AAABAKQ6L5aOwZWpj9YOsaW8bOOukjt1mZuTgdKjM/3nSmF/0nM/f9c9W9DXygUFj2wtq5/iugo1UTS0+bhEn8Dr9k1Qzr2EmuGpQw==
   application:metabasePgPassword:
-    secure: AAABAD1UzrXQKC0NkLIsUytmi8cYUkNxob8Ys0tKnrdalkMbg0S2S4eBGX2GIYc5IWZdE+GAAXhAH4vsPl5oMQ==
+    secure: AAABAExf0rBVo04aPNIRtwE8DQKc0Ti5kvf6tPM35BXPdoa7Qu3KQrErrBkGQkI52PIpb+go78s=
   application:ordnance-survey-api-key:
     secure: AAABAE+wD6ahxO45tq/JWp6odrHX9jOhdjlMsCqS6kFqBgJ+3T56fOSgpZ26nEftv9IwWZQh/v93tRtTDEb+uw==
   application:session-secret:
