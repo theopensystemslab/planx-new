@@ -19,8 +19,8 @@ export const buildJWT = async (email: string | undefined) => {
   const { id } = users[0];
 
   const hasura = {
-    "x-hasura-allowed-roles": ["platformAdmin"],
-    "x-hasura-default-role": "platformAdmin",
+    "x-hasura-allowed-roles": ["admin"],
+    "x-hasura-default-role": "admin",
     "x-hasura-user-id": id.toString(),
   };
 
