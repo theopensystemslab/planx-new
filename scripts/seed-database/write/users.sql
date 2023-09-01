@@ -5,7 +5,8 @@ CREATE TEMPORARY TABLE sync_users (
   last_name text,
   email text,
   created_at timestamptz,
-  updated_at timestamptz
+  updated_at timestamptz,
+  is_platform_admin boolean
 );
 
 \copy sync_users FROM '/tmp/users.csv'  WITH (FORMAT csv, DELIMITER ';');
@@ -14,13 +15,15 @@ INSERT INTO users (
   id,
   first_name,
   last_name,
-  email
+  email,
+  is_platform_admin
 )
 SELECT
   id,
   first_name,
   last_name,
-  email
+  email,
+  is_platform_admin
 FROM sync_users
 ON CONFLICT (id) DO NOTHING;
 
