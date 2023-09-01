@@ -6,7 +6,7 @@ import pMemoize from "p-memoize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
-import { client } from "../lib/graphql";
+import { publicClient } from "../lib/graphql";
 
 export const makeTitle = (str: string) =>
   [str, "PlanX"].filter(Boolean).join(" | ");
@@ -74,7 +74,7 @@ const QUERY_GET_TEAM_BY_DOMAIN = gql`
 export const getTeamFromDomain = pMemoize(async (domain: string) => {
   const {
     data: { teams },
-  } = await client.query({
+  } = await publicClient.query({
     query: QUERY_GET_TEAM_BY_DOMAIN,
     variables: {
       domain,

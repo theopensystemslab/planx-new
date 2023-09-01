@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { client } from "lib/graphql";
+import { publicClient } from "lib/graphql";
 import { compose, mount, redirect, route, withData } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -16,7 +16,7 @@ const flowSettingsRoutes = compose(
   mount({
     "/": redirect("./team"),
     "/:tab": route(async (req) => {
-      const { data } = await client.query({
+      const { data } = await publicClient.query({
         query: gql`
           query GetFlow($slug: String!, $team_slug: String!) {
             flows(

@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Session } from "types";
 
-import { client } from "./graphql";
+import { publicClient } from "./graphql";
 
 let current: string | null;
 
@@ -11,7 +11,7 @@ class LowcalStorage {
     console.debug({ getItem: key });
     const id = getSessionId(key);
 
-    const { data } = await client.query({
+    const { data } = await publicClient.query({
       query: gql`
         query GetItem($id: uuid!) {
           lowcal_sessions_by_pk(id: $id) {
@@ -37,7 +37,7 @@ class LowcalStorage {
     console.debug({ removeItem: key });
     const id = getSessionId(key);
 
-    await client.mutate({
+    await publicClient.mutate({
       mutation: gql`
         mutation SoftDeleteLowcalSession($id: uuid!) {
           update_lowcal_sessions_by_pk(
@@ -64,7 +64,7 @@ class LowcalStorage {
 
     const id = getSessionId(key);
 
-    await client.mutate({
+    await publicClient.mutate({
       mutation: gql`
         mutation SetItem(
           $data: jsonb!
