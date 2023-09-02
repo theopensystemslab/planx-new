@@ -30,6 +30,7 @@ for table in "${tables[@]}"; do
   if [[ ${RESET} == "reset_all" ]]; then
     reset_cmd="TRUNCATE TABLE ${table} CASCADE;"
     cat $reset_cmd > '/tmp/sync.sql'
+    echo ${table} truncated
   fi
 done
 
@@ -38,6 +39,7 @@ echo published_flows downloaded
 
 if [[ ${RESET} == "reset_flows" ]]; then
   cat 'write/truncate_flows.sql' > '/tmp/sync.sql'
+  echo flows truncated
 fi
 
 # Add main operations
