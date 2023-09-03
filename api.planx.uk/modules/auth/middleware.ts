@@ -111,7 +111,7 @@ export const useGoogleCallbackAuth: RequestHandler = (req, res, next) => {
   })(req, res, next);
 };
 
-type UseRoleAuth = (role: Role) => RequestHandler;
+type UseRoleAuth = (authRoles: Role[]) => RequestHandler;
 
 /**
  * Validate that an incoming request is using the role required for an endpoint
@@ -120,34 +120,46 @@ type UseRoleAuth = (role: Role) => RequestHandler;
  * This does not check if a user can ultimately access a resource, only that they can access this route
  * Hasura will validate this on a row and column basis when the query or mutation is made
  */
-export const useRoleAuth: UseRoleAuth = (role) => async (req, res, next) => {
-  useJWT(req, res, () => {
-    if (!req?.user)
-      return next({
-        status: 400,
-        message: "User details missing from request",
-      });
+export const useRoleAuth: UseRoleAuth =
+  (authRoles) => async (req, res, next) => {
+    useJWT(req, res, () => {
+      if (!req?.user)
+        return next({
+          status: 401,
+          message: "User details missing from request",
+        });
 
-    const userId = req.user.sub;
-    const userRoles =
-      req.user["https://hasura.io/jwt/claims"]["x-hasura-allowed-roles"];
-    const isAuthorised = userRoles.includes(role);
+      const userRoles =
+        req.user["https://hasura.io/jwt/claims"]?.["x-hasura-allowed-roles"];
+      if (!userRoles)
+        return next({
+          status: 401,
+          message: "User roles missing from request",
+        });
 
-    if (!isAuthorised) {
-      console.error(
-        `Authentication error: User ${userId} does have have role "${role}" which is required to access ${req.path}`,
-      );
-      return next({
-        status: 403,
-        message: "Access denied",
-      });
-    }
+      const userId = req.user.sub;
+      // Check if a user has any of the roles required for this route
+      const isAuthorised = userRoles.some((role) => authRoles.includes(role));
 
-    next();
-  });
-};
+      if (!isAuthorised) {
+        console.error(
+          `Authentication error: User ${userId} does have have any of the roles ${authRoles} which are required to access ${req.path}`,
+        );
+        return next({
+          status: 403,
+          message: "Access denied",
+        });
+      }
+
+      next();
+    });
+  };
 
 // Convenience methods
-export const useTeamEditorAuth = useRoleAuth("teamEditor");
-export const useTeamViewerAuth = useRoleAuth("teamViewer");
-export const usePlatformAdminAuth = useRoleAuth("platformAdmin");
+export const useTeamViewerAuth = useRoleAuth([
+  "teamViewer",
+  "teamEditor",
+  "platformAdmin",
+]);
+export const useTeamEditorAuth = useRoleAuth(["teamEditor", "platformAdmin"]);
+export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);
