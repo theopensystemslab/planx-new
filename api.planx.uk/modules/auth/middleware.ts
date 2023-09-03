@@ -8,6 +8,9 @@ import passport from "passport";
 
 import { RequestHandler } from "http-proxy-middleware";
 import { Role } from "@opensystemslab/planx-core/types";
+import { AsyncLocalStorage } from "async_hooks";
+
+export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
 /**
  * Validate that a provided string (e.g. API key) matches the expected value
@@ -153,7 +156,18 @@ export const useRoleAuth: UseRoleAuth =
         });
       }
 
-      next();
+      // Establish a context for the current request/response call stack using AsyncLocalStorage
+      // The validated user will be accessible to all subsequent functions
+      // Store the raw JWT to pass on to plan-core client
+      userContext.run(
+        {
+          user: {
+            ...req.user,
+            jwt: req.cookies.jwt,
+          },
+        },
+        () => next(),
+      );
     });
   };
 
