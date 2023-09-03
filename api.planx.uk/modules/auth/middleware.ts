@@ -143,7 +143,9 @@ export const useRoleAuth: UseRoleAuth =
 
       if (!isAuthorised) {
         console.error(
-          `Authentication error: User ${userId} does have have any of the roles ${authRoles} which are required to access ${req.path}`,
+          `Authentication error: User ${userId} does have have any of the roles [${authRoles.join(
+            ", ",
+          )}] which are required to access ${req.path}`,
         );
         return next({
           status: 403,
