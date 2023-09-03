@@ -66,7 +66,7 @@ const responses = {
           properties: {
             error: {
               type: "string",
-              enum: ["No authorization token was found"],
+              enum: ["Access denied"],
             },
           },
         },

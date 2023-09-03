@@ -11,9 +11,6 @@ const validateAndDiffFlow = async (
   res: Response,
   next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
-  if (!req.user?.sub)
-    return next({ status: 401, message: "User ID missing from JWT" });
-
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
 
@@ -71,9 +68,6 @@ const publishFlow = async (
   res: Response,
   next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
-  if (!req.user?.sub)
-    return next({ status: 401, message: "User ID missing from JWT" });
-
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
     const mostRecent = await getMostRecentPublishedFlow(req.params.flowId);
@@ -107,7 +101,7 @@ const publishFlow = async (
         {
           data: flattenedFlow,
           flow_id: req.params.flowId,
-          publisher_id: parseInt(req.user.sub, 10),
+          publisher_id: parseInt(req.user!.sub!, 10),
           summary: req.query?.summary || null,
         },
       );

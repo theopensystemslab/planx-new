@@ -126,7 +126,7 @@ export const useRoleAuth: UseRoleAuth =
       if (!req?.user)
         return next({
           status: 401,
-          message: "User details missing from request",
+          message: "No authorization token was found",
         });
 
       const userRoles =
@@ -134,7 +134,7 @@ export const useRoleAuth: UseRoleAuth =
       if (!userRoles)
         return next({
           status: 401,
-          message: "User roles missing from request",
+          message: "User roles missing from token",
         });
 
       const userId = req.user.sub;
