@@ -79,6 +79,7 @@ import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import { useSwaggerDocs } from "./docs";
+import { Role } from "@opensystemslab/planx-core/types";
 
 const router = express.Router();
 
@@ -614,6 +615,9 @@ declare global {
     interface User {
       jwt: string;
       sub?: string;
+      "https://hasura.io/jwt/claims": {
+        "x-hasura-allowed-roles": Role[];
+      };
     }
   }
 }
