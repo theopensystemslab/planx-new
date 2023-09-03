@@ -8,7 +8,7 @@ import { Template, getClientForTemplate, sendEmail } from "../notify";
 import { InviteToPayNotifyConfig } from "../types";
 import { Team } from "../types";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
-import { $admin } from "../client";
+import { $public } from "../client";
 
 interface SessionDetails {
   email: string;
@@ -118,7 +118,7 @@ const getInviteToPayNotifyConfig = async (
     ).title,
     fee: getFee(paymentRequest),
     projectType:
-      (await $admin.formatRawProjectTypes(
+      (await $public.formatRawProjectTypes(
         paymentRequest.sessionPreviewData?.["proposal.projectType"] as string[],
       )) || "Project type not submitted",
     serviceName: convertSlugToName(session.flow.slug),

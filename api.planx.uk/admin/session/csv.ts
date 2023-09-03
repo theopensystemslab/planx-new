@@ -1,6 +1,6 @@
 import { stringify } from "csv-stringify";
 import { NextFunction, Request, Response } from "express";
-import { $admin } from "../../client";
+import { getClient } from "../../client";
 
 /**
  * @swagger
@@ -26,7 +26,8 @@ export async function getCSVData(
   next: NextFunction,
 ) {
   try {
-    const { responses } = await $admin.export.csvData(req.params.sessionId);
+    const $client = getClient();
+    const { responses } = await $client.export.csvData(req.params.sessionId);
 
     if (req.query?.download) {
       stringify(responses, {
@@ -69,7 +70,8 @@ export async function getRedactedCSVData(
   next: NextFunction,
 ) {
   try {
-    const { redactedResponses } = await $admin.export.csvData(
+    const $client = getClient();
+    const { redactedResponses } = await $client.export.csvData(
       req.params.sessionId,
     );
 
