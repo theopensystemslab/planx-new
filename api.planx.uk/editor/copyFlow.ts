@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { makeUniqueFlow, getFlowData, insertFlow } from "../helpers";
 import { Flow } from "../types";
+import { userContext } from "../modules/auth/middleware";
 
 const copyFlow = async (
   req: Request,
@@ -25,13 +26,15 @@ const copyFlow = async (
     const shouldInsert = (req.body?.insert as boolean) || false;
     if (shouldInsert) {
       const newSlug = flow.slug + "-copy";
-      const creatorId = parseInt(req.user!.sub!, 10);
+      const creatorId = userContext.getStore()?.user?.sub;
+      if (!creatorId) throw Error("User details missing from request");
+
       // Insert the flow and an associated operation
       await insertFlow(
         flow.team_id,
         newSlug,
         uniqueFlowData,
-        creatorId,
+        parseInt(creatorId),
         req.params.flowId,
       );
     }
