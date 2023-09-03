@@ -4,7 +4,7 @@ import { CoreDomainClient } from "@opensystemslab/planx-core";
  * instead, they encapsulates query and business logic to only expose declarative interfaces
  */
 export const $admin = new CoreDomainClient({
-  hasuraSecret: process.env.HASURA_GRAPHQL_ADMIN_SECRET!,
+  auth: { adminSecret: process.env.HASURA_GRAPHQL_ADMIN_SECRET! },
   targetURL: process.env.HASURA_GRAPHQL_URL!,
 });
 
