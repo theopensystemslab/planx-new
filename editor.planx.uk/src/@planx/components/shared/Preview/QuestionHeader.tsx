@@ -11,8 +11,6 @@ import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
-const HelpButtonHeight = "44px";
-
 interface IQuestionHeader {
   title?: string;
   description?: string;
@@ -40,31 +38,39 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   zIndex: "1000",
   flexShrink: 0,
   display: "flex",
-  justifyContent: "flex-end",
-  width: "60px",
+  justifyContent: "stretch",
+  width: "90px",
   top: theme.spacing(1.5),
-  right: theme.spacing(2),
+  right: 0,
   [theme.breakpoints.up("md")]: {
-    right: theme.spacing(3),
-    width: "70px",
+    width: "110px",
   },
   [theme.breakpoints.up("contentWrap")]: {
     top: theme.spacing(8),
   },
   [theme.breakpoints.up("lg")]: {
     top: theme.spacing(9),
-    width: "80px",
+    width: "140px",
   },
 }));
 
 export const HelpButton = styled(Button)(({ theme }) => ({
-  top: theme.spacing(0.5),
+  top: theme.spacing(0.75),
   position: "sticky",
   right: 0,
-  minHeight: HelpButtonHeight,
-  padding: "0.35em 0.5em",
+  minHeight: "44px",
+  padding: "0.35em 1em 0.35em 0.75em",
   alignSelf: "flex-start",
+  borderRadius: "50px 0 0 50px",
+  minWidth: "100%",
+  boxShadow: "none",
+  backgroundColor: theme.palette.text.primary,
+  fontSize: "1.125em",
+  filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5))",
   [theme.breakpoints.up("lg")]: {
+    minHeight: "48px",
+    padding: "0.35em 1em 0.35em 0.5em",
+    fontSize: "1.375em",
     top: theme.spacing(1),
   },
 })) as typeof Button;
@@ -151,6 +157,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             variant="contained"
             sx={{ width: "100%" }}
           >
+            
             Help
           </HelpButton>
         </HelpButtonWrapper>
