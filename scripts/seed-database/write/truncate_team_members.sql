@@ -1,0 +1,1 @@
+TRUNCATE TABLE team_members CASCADE;
