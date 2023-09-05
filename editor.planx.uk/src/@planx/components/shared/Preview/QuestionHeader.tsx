@@ -11,6 +11,8 @@ import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
+const HelpButtonMinWidth = "75px";
+
 interface IQuestionHeader {
   title?: string;
   description?: string;
@@ -28,7 +30,10 @@ const Description = styled(Box)(({ theme }) => ({
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
   width: theme.breakpoints.values.formWrap,
-  maxWidth: "100%",
+  maxWidth: `calc(100% - ${HelpButtonMinWidth})`,
+  [theme.breakpoints.up("contentWrap")]: {
+    maxWidth: "100%",
+  },
 }));
 
 const HelpButtonWrapper = styled(Box)(({ theme }) => ({
@@ -39,17 +44,17 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   flexShrink: 0,
   display: "flex",
   justifyContent: "stretch",
-  width: "90px",
-  top: theme.spacing(1.5),
+  width: HelpButtonMinWidth,
+  top: theme.spacing(6),
   right: 0,
+  [theme.breakpoints.up("sm")]: {
+    top: theme.spacing(6.5),
+  },
   [theme.breakpoints.up("md")]: {
+    top: theme.spacing(8.5),
     width: "110px",
   },
-  [theme.breakpoints.up("contentWrap")]: {
-    top: theme.spacing(8),
-  },
   [theme.breakpoints.up("lg")]: {
-    top: theme.spacing(9),
     width: "140px",
   },
 }));
