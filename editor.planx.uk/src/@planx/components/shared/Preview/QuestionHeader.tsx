@@ -64,7 +64,7 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   position: "sticky",
   right: 0,
   minHeight: "44px",
-  padding: "0.35em 1em 0.35em 0.75em",
+  padding: "0.35em 1em",
   alignSelf: "flex-start",
   borderRadius: "50px 0 0 50px",
   minWidth: "100%",
@@ -72,9 +72,11 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.text.primary,
   fontSize: "1.125em",
   filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5))",
+  [theme.breakpoints.up("md")]: {
+    padding: "0.35em 1em 0.35em 0.5em",
+  },
   [theme.breakpoints.up("lg")]: {
     minHeight: "48px",
-    padding: "0.35em 1em 0.35em 0.5em",
     fontSize: "1.375em",
     top: theme.spacing(1),
   },
