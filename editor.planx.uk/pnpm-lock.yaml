@@ -47,7 +47,7 @@ dependencies:
     version: 0.7.5
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#f6fcac9
-    version: github.com/theopensystemslab/planx-core/dfaf533(@types/react@18.2.20)
+    version: git/github.com+theopensystemslab/planx-core/f6fcac9(@types/react@18.2.20)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -85,8 +85,8 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
   '@tiptap/extension-mention':
-    specifier: ^2.0.3
-    version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(@tiptap/suggestion@2.0.3)
+    specifier: ^2.1.8
+    version: 2.1.8(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(@tiptap/suggestion@2.0.3)
   '@tiptap/extension-ordered-list':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
@@ -7211,7 +7211,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       '@babel/code-frame': 7.22.5
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.22.11
       '@types/aria-query': 5.0.1
       aria-query: 5.1.3
       chalk: 4.1.2
@@ -7382,8 +7382,8 @@ packages:
       '@tiptap/core': 2.0.3(@tiptap/pm@2.0.3)
     dev: false
 
-  /@tiptap/extension-mention@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(@tiptap/suggestion@2.0.3):
-    resolution: {integrity: sha512-mT+tMJyf15gN3kW7UfZrP+J0jlhlBnR50SHj0PnDWqGnJ70qKSZTxcHfohrxU6On6yaOFsd+5Omn5seGK4XFWA==}
+  /@tiptap/extension-mention@2.1.8(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(@tiptap/suggestion@2.0.3):
+    resolution: {integrity: sha512-HthABZWnbmUdq4FR1Rv1q/xv4akTH4fKk+xEOxf/Ei2JqAkv+qohgDPh5P9Hae5pa473P2e9ttgfc4J9o074Pw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
@@ -9878,7 +9878,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   /concat-stream@1.6.2:
     resolution: {integrity: sha512-27HBghJxjiZtIk3Ycvn/4kbJk/1uZuJFfuPEns6LaEvpvG1f0hTea8lilrouyo9mVc2GWdcEZ8OLoGmSADlrCw==}
@@ -15999,7 +15999,7 @@ packages:
     resolution: {integrity: sha512-Sz2Lkdxz6F2Pgnpi9U5Ng/WdWAUZxmHrNPoVlm3aAemxoy2Qy7LGjQg4uf8qKelDAUW94F4np3iH2YPf2qefcQ==}
     engines: {node: '>=10'}
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.22.11
     dev: true
 
   /polygon-clipping@0.15.3:
@@ -20690,9 +20690,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/dfaf533(@types/react@18.2.20):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dfaf533}
-    id: github.com/theopensystemslab/planx-core/dfaf533
+  git/github.com+theopensystemslab/planx-core/f6fcac9(@types/react@18.2.20):
+    resolution: {commit: f6fcac9, repo: git@github.com:theopensystemslab/planx-core.git, type: git}
+    id: git@github.com+theopensystemslab/planx-core/f6fcac9
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
