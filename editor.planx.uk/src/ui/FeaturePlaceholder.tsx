@@ -10,11 +10,11 @@ interface Props {
 
 const Root = styled(Box)(({ theme }) => ({
   display: "flex",
-  height: 50,
+  height: "auto",
   alignItems: "center",
-  background: "white",
-  padding: theme.spacing(4, 3),
-  border: "3px dashed black",
+  background: theme.palette.background.default,
+  padding: theme.spacing(3),
+  border: "3px dashed currentColor",
   borderRadius: "200px",
   justifyContent: "center",
 }));
