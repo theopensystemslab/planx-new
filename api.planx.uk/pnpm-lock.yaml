@@ -9,7 +9,7 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#dfaf533
+    specifier: git+https://github.com/theopensystemslab/planx-core#f6fcac9
     version: github.com/theopensystemslab/planx-core/dfaf533
   '@types/isomorphic-fetch':
     specifier: ^0.0.36

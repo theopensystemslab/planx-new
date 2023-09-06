@@ -46,7 +46,7 @@ dependencies:
     specifier: ^0.7.5
     version: 0.7.5
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#dfaf533
+    specifier: git+https://github.com/theopensystemslab/planx-core#f6fcac9
     version: github.com/theopensystemslab/planx-core/dfaf533(@types/react@18.2.20)
   '@tiptap/core':
     specifier: ^2.0.3
