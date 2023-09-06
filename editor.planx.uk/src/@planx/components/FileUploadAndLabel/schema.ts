@@ -101,6 +101,22 @@ interface FileListSchemaTestContext extends TestContext {
   slots: FileUploadSlot[];
 }
 
+export const fileLabelSchema = object().test({
+  name: "allFilesTagged",
+  message: "Please tag all files",
+  test: (fileList, { options: { context } }) => {
+    if (!context) throw new Error("Missing context for fileListSchema");
+    const { slots } = context as FileListSchemaTestContext;
+    const isEveryFileTagged = Boolean(
+      slots?.every(
+        (slot) =>
+          getTagsForSlot(slot.id, fileList as unknown as FileList).length,
+      ),
+    );
+    return isEveryFileTagged;
+  },
+});
+
 export const fileListSchema = object({
   required: array().test({
     name: "allRequiredFilesUploaded",
@@ -114,17 +130,4 @@ export const fileListSchema = object({
       return isEverySlotFilled;
     },
   }),
-}).test({
-  name: "allFilesTagged",
-  message: "Please tag all files",
-  test: (fileList, { options: { context } }) => {
-    if (!context) throw new Error("Missing context for fileListSchema");
-    const { slots } = context as FileListSchemaTestContext;
-    const isEveryFileTagged = Boolean(
-      slots?.every(
-        (slot) => getTagsForSlot(slot.id, fileList as FileList).length,
-      ),
-    );
-    return isEveryFileTagged;
-  },
 });

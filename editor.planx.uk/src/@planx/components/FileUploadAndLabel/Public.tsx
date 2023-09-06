@@ -42,7 +42,7 @@ import {
   getTagsForSlot,
   removeSlots,
 } from "./model";
-import { fileListSchema, slotsSchema } from "./schema";
+import { fileLabelSchema, fileListSchema, slotsSchema } from "./schema";
 
 type Props = PublicProps<FileUploadAndLabel>;
 
@@ -106,6 +106,7 @@ function Component(props: Props) {
   const validateAndSubmit = () => {
     Promise.all([
       slotsSchema.validate(slots, { context: { fileList } }),
+      fileLabelSchema.validate(fileList, { context: { slots } }),
       fileListSchema.validate(fileList, { context: { slots } }),
     ])
       .then(() => {

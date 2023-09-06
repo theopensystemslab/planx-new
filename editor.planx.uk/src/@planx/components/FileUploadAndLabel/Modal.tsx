@@ -18,6 +18,7 @@ import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
+import ErrorWrapper from "ui/ErrorWrapper";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -28,6 +29,7 @@ import {
   removeSlots,
   resetAllSlots,
 } from "./model";
+import { fileLabelSchema } from "./schema";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -42,7 +44,16 @@ export const FileTaggingModal = ({
   setFileList,
   setShowModal,
 }: FileTaggingModalProps) => {
+  const [error, setError] = useState<string | undefined>();
+
   const closeModal = () => setShowModal(false);
+
+  const handleValidation = () => {
+    fileLabelSchema
+      .validate(fileList, { context: { slots: uploadedFiles } })
+      .then(closeModal)
+      .catch((err) => setError(err.message));
+  };
 
   return (
     <Dialog
@@ -94,15 +105,17 @@ export const FileTaggingModal = ({
           padding: 2,
         }}
       >
-        <Box>
-          <Button
-            variant="contained"
-            onClick={closeModal}
-            sx={{ paddingLeft: 2 }}
-          >
-            Done
-          </Button>
-        </Box>
+        <ErrorWrapper error={error}>
+          <Box>
+            <Button
+              variant="contained"
+              onClick={handleValidation}
+              sx={{ paddingLeft: 2 }}
+            >
+              Done
+            </Button>
+          </Box>
+        </ErrorWrapper>
       </DialogActions>
     </Dialog>
   );
