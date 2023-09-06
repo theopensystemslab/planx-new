@@ -47,8 +47,7 @@ export const FileTaggingModal = ({
   const [error, setError] = useState<string | undefined>();
 
   const closeModal = (event: any, reason?: string) => {
-    // Only allow the modal to be closed by clicking the action buttons
-    if (reason && ["backdropClick", "escapeKeyDown"].includes(reason)) {
+    if (reason && reason == "backdropClick") {
       return;
     }
     setShowModal(false);

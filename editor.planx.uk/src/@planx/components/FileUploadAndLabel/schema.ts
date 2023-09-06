@@ -103,7 +103,7 @@ interface FileListSchemaTestContext extends TestContext {
 
 export const fileLabelSchema = object().test({
   name: "allFilesTagged",
-  message: "Please tag all files",
+  message: "Please label all files",
   test: (fileList, { options: { context } }) => {
     if (!context) throw new Error("Missing context for fileListSchema");
     const { slots } = context as FileListSchemaTestContext;
@@ -120,7 +120,7 @@ export const fileLabelSchema = object().test({
 export const fileListSchema = object({
   required: array().test({
     name: "allRequiredFilesUploaded",
-    message: "Please upload and tag all required files",
+    message: "Please upload and label all required files",
     test: (userFile?: UserFile[]) => {
       const isEverySlotFilled = Boolean(
         userFile?.every(
