@@ -6,17 +6,17 @@ import { FeaturePlaceholder } from "ui/FeaturePlaceholder";
 const ServiceFlags: React.FC = () => {
   return (
     <>
-      <Box pb={3} borderBottom={1}>
+      <Box>
         <Typography variant="h2" component="h3" gutterBottom>
-          <strong>Service flags</strong>
+          Service flags
         </Typography>
         <Typography variant="body1">
           Manage the flag sets that this service uses. Flags at the top of a set
           override flags below.
         </Typography>
-      </Box>
-      <Box py={4} borderBottom={1}>
-        <FeaturePlaceholder title="Feature in development" />
+        <Box py={5}>
+          <FeaturePlaceholder title="Feature in development" />
+        </Box>
       </Box>
     </>
   );
