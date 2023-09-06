@@ -225,7 +225,7 @@ describe("fileLabelSchema", () => {
 
     await expect(() =>
       fileLabelSchema.validate(mockFileList, { context: { slots: mockSlots } }),
-    ).rejects.toThrow(/Please tag all files/);
+    ).rejects.toThrow(/Please label all files/);
   });
 
   it("allows fileLists where all files are tagged, but requirements are not satisfied yet", async () => {
@@ -258,7 +258,7 @@ describe("fileListSchema", () => {
 
     await expect(() =>
       fileListSchema.validate(mockFileList, { context: { slots: mockSlots } }),
-    ).rejects.toThrow(/Please upload and tag all required files/);
+    ).rejects.toThrow(/Please upload and label all required files/);
   });
 
   it("allows fileLists where all 'required' fileTypes have slots set", async () => {

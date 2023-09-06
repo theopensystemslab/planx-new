@@ -46,7 +46,12 @@ export const FileTaggingModal = ({
 }: FileTaggingModalProps) => {
   const [error, setError] = useState<string | undefined>();
 
-  const closeModal = () => setShowModal(false);
+  const closeModal = (event: any, reason?: string) => {
+    if (reason && reason == "backdropClick") {
+      return;
+    }
+    setShowModal(false);
+  };
 
   const handleValidation = () => {
     fileLabelSchema
@@ -111,6 +116,7 @@ export const FileTaggingModal = ({
               variant="contained"
               onClick={handleValidation}
               sx={{ paddingLeft: 2 }}
+              data-testid="modal-done-button"
             >
               Done
             </Button>

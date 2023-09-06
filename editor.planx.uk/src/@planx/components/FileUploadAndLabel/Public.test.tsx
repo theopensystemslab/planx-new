@@ -448,7 +448,7 @@ describe("Adding tags and syncing state", () => {
     await user.click(screen.getByText("Continue"));
     expect(handleSubmit).toHaveBeenCalledTimes(0);
     const error = await within(document.body).findByText(
-      "Please upload and tag all required files",
+      "Please upload and label all required files",
     );
     expect(error).toBeVisible();
   });
@@ -543,7 +543,7 @@ describe("Error handling", () => {
     await user.click(submitModalButton);
     expect(true).toBeTruthy();
     const modalError = await within(fileTaggingModal).findByText(
-      "Please tag all files",
+      "Please label all files",
     );
     expect(modalError).toBeVisible();
   });
@@ -580,7 +580,7 @@ describe("Error handling", () => {
     // User cannot submit without uploading a file
     await user.click(screen.getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
-    const fileListError = await screen.findByText("Please tag all files");
+    const fileListError = await screen.findByText("Please label all files");
     expect(fileListError).toBeVisible();
 
     // Re-open modal and tag file
