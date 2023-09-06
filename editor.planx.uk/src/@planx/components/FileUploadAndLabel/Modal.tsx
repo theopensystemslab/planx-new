@@ -123,6 +123,7 @@ export const FileTaggingModal = ({
               variant="contained"
               color="secondary"
               sx={{ ml: 1.5 }}
+              onClick={closeModal}
               data-testid="modal-cancel-button"
             >
               Cancel
