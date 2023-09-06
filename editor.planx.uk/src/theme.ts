@@ -37,7 +37,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     paper: "#F9F8F8",
   },
   secondary: {
-    main: "#B1B4B6",
+    main: "#F3F2F1",
   },
   text: {
     primary: TEXT_COLOR_PRIMARY,
@@ -56,6 +56,11 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   info: {
     main: "#2196F3",
     light: "#EBF4FD",
+  },
+  border: {
+    main: "#B1B4B6",
+    input: TEXT_COLOR_PRIMARY,
+    light: "#E0E0E0",
   },
 };
 

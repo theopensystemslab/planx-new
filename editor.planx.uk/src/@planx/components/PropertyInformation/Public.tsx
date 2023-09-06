@@ -204,7 +204,7 @@ const PropertyDetailsList = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
   "& > *": {
-    borderBottom: `1px solid ${theme.palette.secondary.main}`,
+    borderBottom: `1px solid ${theme.palette.border.main}`,
     paddingBottom: theme.spacing(1.5),
     paddingTop: theme.spacing(1.5),
     verticalAlign: "top",
