@@ -13,6 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
@@ -37,6 +38,17 @@ interface FileTaggingModalProps {
   setFileList: (value: React.SetStateAction<FileList>) => void;
   setShowModal: (value: React.SetStateAction<boolean>) => void;
 }
+
+
+const ListHeader = styled('li')(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: theme.spacing(1, 1.5),
+  background: theme.palette.grey[200],
+  // Offset default padding of MuiList
+  margin: "-8px 0 8px",
+}));
 
 export const FileTaggingModal = ({
   uploadedFiles,
@@ -267,6 +279,14 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           },
         }}
       >
+        <ListHeader>
+          <Typography variant="h4">
+            Select all document types that apply
+          </Typography>
+          <Button variant="contained">
+            Done
+          </Button>
+        </ListHeader>
         {(Object.keys(fileList) as Array<keyof typeof fileList>)
           .filter((fileListCategory) => fileList[fileListCategory].length > 0)
           .map((fileListCategory) => {
@@ -274,7 +294,9 @@ const SelectMultiple = (props: SelectMultipleProps) => {
               <ListSubheader
                 key={`subheader-${fileListCategory}-${uploadedFile.id}`}
               >
-                {`${capitalize(fileListCategory)} files`}
+                <Typography py={1} variant="subtitle2">
+                  {`${capitalize(fileListCategory)} files`}
+                </Typography>
               </ListSubheader>,
               ...fileList[fileListCategory].map((fileType) => {
                 return [
