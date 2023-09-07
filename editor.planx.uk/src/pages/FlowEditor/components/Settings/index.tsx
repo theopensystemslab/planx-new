@@ -178,27 +178,7 @@ const NavTabs: React.FC<{ tab?: string }> = (props) => {
         <ServiceSettings />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <ServiceFlags
-          flagSets={[
-            {
-              id: 1,
-              name: "Flag set by others",
-              dataField: "data field by others",
-              flags: [
-                {
-                  title: "Flag 1",
-                  dataValue: "data value",
-                  color: "#FF0000",
-                },
-                {
-                  title: "Flag 2",
-                  dataValue: "data value",
-                  color: "#579028",
-                },
-              ],
-            },
-          ]}
-        />
+        <ServiceFlags />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <DesignSettings />

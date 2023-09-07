@@ -98,9 +98,9 @@ const ServiceSettings: React.FC = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Box py={3} borderBottom={1}>
+      <Box pb={3} borderBottom={1}>
         <Typography variant="h2" component="h3" gutterBottom>
-          <strong>Elements</strong>
+          Elements
         </Typography>
         <Typography variant="body1">
           Manage the features that users will be able to see

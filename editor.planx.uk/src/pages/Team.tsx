@@ -1,8 +1,5 @@
 import { gql } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
-import CallSplitOutlined from "@mui/icons-material/CallSplitOutlined";
-import DeleteOutline from "@mui/icons-material/DeleteOutline";
-import FolderOutlined from "@mui/icons-material/FolderOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
@@ -11,10 +8,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
@@ -149,29 +142,6 @@ function AddButton({
     </AddButtonRoot>
   );
 }
-
-const FooterLinks = () => (
-  <List>
-    <ListItem button disabled>
-      <ListItemIcon>
-        <CallSplitOutlined titleAccess="Flows" />
-      </ListItemIcon>
-      <ListItemText>Flows</ListItemText>
-    </ListItem>
-    <ListItem button disabled>
-      <ListItemIcon>
-        <FolderOutlined titleAccess="Archive" />
-      </ListItemIcon>
-      <ListItemText>Archive</ListItemText>
-    </ListItem>
-    <ListItem button disabled>
-      <ListItemIcon>
-        <DeleteOutline titleAccess="Trash" />
-      </ListItemIcon>
-      <ListItemText>Trash</ListItemText>
-    </ListItem>
-  </List>
-);
 
 interface FlowItemProps {
   flow: any;
@@ -360,7 +330,6 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
             </AddButton>
           </DashboardList>
         )}
-        <FooterLinks />
       </Dashboard>
     </Root>
   );
