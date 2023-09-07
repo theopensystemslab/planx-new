@@ -81,7 +81,7 @@ const StyledFormLabel = styled(FormLabel, {
   border: "2px solid",
   borderColor: isSelected
     ? theme.palette.primary.main
-    : theme.palette.secondary.main,
+    : theme.palette.border.main,
   padding: theme.spacing(1),
   cursor: "pointer",
   display: "block",

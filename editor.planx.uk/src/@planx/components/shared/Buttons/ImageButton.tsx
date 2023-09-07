@@ -69,7 +69,7 @@ interface ImageLabelProps {
 
 const borderStyle = (theme: Theme, selected: boolean) =>
   `2px solid ${
-    selected ? theme.palette.primary.main : theme.palette.secondary.main
+    selected ? theme.palette.primary.main : theme.palette.border.main
   }`;
 
 const imageStyle = (theme: Theme): React.CSSProperties => ({

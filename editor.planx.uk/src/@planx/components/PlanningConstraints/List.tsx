@@ -44,7 +44,7 @@ const StyledConstraint = styled(Box, {
     left: 0,
     width: "100%",
     height: "1px",
-    background: theme.palette.secondary.main,
+    background: theme.palette.border.main,
   },
 }));
 

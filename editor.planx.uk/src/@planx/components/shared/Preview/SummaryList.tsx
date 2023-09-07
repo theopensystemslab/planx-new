@@ -19,7 +19,7 @@ const Grid = styled("dl")(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(4),
   "& > *": {
-    borderBottom: `1px solid ${theme.palette.secondary.main}`,
+    borderBottom: `1px solid ${theme.palette.border.main}`,
     paddingBottom: theme.spacing(2),
     paddingTop: theme.spacing(2),
     verticalAlign: "top",

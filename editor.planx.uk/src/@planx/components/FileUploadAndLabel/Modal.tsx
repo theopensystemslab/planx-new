@@ -115,10 +115,18 @@ export const FileTaggingModal = ({
             <Button
               variant="contained"
               onClick={handleValidation}
-              sx={{ paddingLeft: 2 }}
               data-testid="modal-done-button"
             >
               Done
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ ml: 1.5 }}
+              onClick={closeModal}
+              data-testid="modal-cancel-button"
+            >
+              Cancel
             </Button>
           </Box>
         </ErrorWrapper>
@@ -214,7 +222,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           "aria-labelledby": `select-multiple-file-tags-label-${uploadedFile.id}`,
         }}
         sx={{
-          border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+          border: (theme) => `1px solid ${theme.palette.border.main}`,
           background: (theme) => theme.palette.background.paper,
           "& > div": {
             minHeight: "50px",

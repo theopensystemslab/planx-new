@@ -18,7 +18,7 @@ interface Props extends FileUploadSlot {
 }
 
 const Root = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.secondary.main}`,
+  border: `1px solid ${theme.palette.border.main}`,
   marginBottom: theme.spacing(1),
   marginTop: theme.spacing(2),
 }));
@@ -76,7 +76,7 @@ const FileSize = styled(Typography)(({ theme }) => ({
 
 const TagRoot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  borderTop: `1px solid ${theme.palette.secondary.main}`,
+  borderTop: `1px solid ${theme.palette.border.main}`,
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",

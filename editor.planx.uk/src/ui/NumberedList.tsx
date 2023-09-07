@@ -25,7 +25,7 @@ const Panel = styled("li")(({ theme }) => ({
     position: "absolute",
     width: `calc(100% - ${STEP_SPACER})`,
     height: "1px",
-    background: theme.palette.secondary.main,
+    background: theme.palette.border.main,
     bottom: "0",
     left: STEP_SPACER,
   },

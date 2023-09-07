@@ -269,7 +269,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         justifyContent: "space-between",
         alignItems: "center",
         width: "100%",
-        borderBottom: (theme) => `1px solid ${theme.palette.secondary.main}`,
+        borderBottom: (theme) => `1px solid ${theme.palette.border.main}`,
         minHeight: "50px",
         padding: (theme) => theme.spacing(0.5, 0),
       }}

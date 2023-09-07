@@ -37,7 +37,7 @@ const AutocompleteWrapper = styled(Box)(({ theme }) => ({
   "--autocomplete__option__font-size": "1rem",
   "--autocomplete__option__padding": "7px 15px",
   "--autocomplete__menu__max-height": "336px",
-  "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.secondary.main}`,
+  "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.border.main}`,
   "--autocomplete__option__hover-border-color": theme.palette.primary.main,
   "--autocomplete__option__hover-background-color": theme.palette.primary.main,
   "--autocomplete__font-family": theme.typography.fontFamily,
