@@ -108,7 +108,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     left: "0",
     width: "100%",
     height: "1px",
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.border.main,
     zIndex: "2",
   },
   "&.Mui-expanded": {

@@ -15,7 +15,7 @@ const List = styled("ul")(({ theme }) => ({
 const Step = styled("li")(({ theme }) => ({
   position: "relative",
   display: "flex",
-  borderBottom: `1px solid ${theme.palette.secondary.main}`,
+  borderBottom: `1px solid ${theme.palette.border.main}`,
 }));
 
 const Inner = styled(Link)(({ theme }) => ({

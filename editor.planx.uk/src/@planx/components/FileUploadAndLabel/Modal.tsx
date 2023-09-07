@@ -18,6 +18,7 @@ import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
+import ErrorWrapper from "ui/ErrorWrapper";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -28,6 +29,7 @@ import {
   removeSlots,
   resetAllSlots,
 } from "./model";
+import { fileLabelSchema } from "./schema";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -42,7 +44,21 @@ export const FileTaggingModal = ({
   setFileList,
   setShowModal,
 }: FileTaggingModalProps) => {
-  const closeModal = () => setShowModal(false);
+  const [error, setError] = useState<string | undefined>();
+
+  const closeModal = (event: any, reason?: string) => {
+    if (reason && reason == "backdropClick") {
+      return;
+    }
+    setShowModal(false);
+  };
+
+  const handleValidation = () => {
+    fileLabelSchema
+      .validate(fileList, { context: { slots: uploadedFiles } })
+      .then(closeModal)
+      .catch((err) => setError(err.message));
+  };
 
   return (
     <Dialog
@@ -94,15 +110,26 @@ export const FileTaggingModal = ({
           padding: 2,
         }}
       >
-        <Box>
-          <Button
-            variant="contained"
-            onClick={closeModal}
-            sx={{ paddingLeft: 2 }}
-          >
-            Done
-          </Button>
-        </Box>
+        <ErrorWrapper error={error}>
+          <Box>
+            <Button
+              variant="contained"
+              onClick={handleValidation}
+              data-testid="modal-done-button"
+            >
+              Done
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ ml: 1.5 }}
+              onClick={closeModal}
+              data-testid="modal-cancel-button"
+            >
+              Cancel
+            </Button>
+          </Box>
+        </ErrorWrapper>
       </DialogActions>
     </Dialog>
   );
@@ -195,7 +222,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           "aria-labelledby": `select-multiple-file-tags-label-${uploadedFile.id}`,
         }}
         sx={{
-          border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+          border: (theme) => `1px solid ${theme.palette.border.main}`,
           background: (theme) => theme.palette.background.paper,
           "& > div": {
             minHeight: "50px",

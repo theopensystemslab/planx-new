@@ -1,4 +1,6 @@
 import "@mui/material/Chip";
+// eslint-disable-next-line no-restricted-imports
+import "@mui/material/styles/createPalette";
 
 declare module "@mui/material/Chip" {
   interface ChipPropsVariantOverrides {
@@ -16,5 +18,16 @@ declare module "@mui/material/styles" {
     xl: true;
     formWrap: true;
     contentWrap: true;
+  }
+}
+
+// Append our custom colours to MUI palette
+declare module "@mui/material/styles/createPalette" {
+  interface Palette {
+    border: { main: string; input: string; light: string };
+  }
+
+  interface PaletteOptions {
+    border?: { main: string; input: string; light: string };
   }
 }

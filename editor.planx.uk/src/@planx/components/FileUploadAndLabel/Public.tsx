@@ -42,7 +42,7 @@ import {
   getTagsForSlot,
   removeSlots,
 } from "./model";
-import { fileListSchema, slotsSchema } from "./schema";
+import { fileLabelSchema, fileListSchema, slotsSchema } from "./schema";
 
 type Props = PublicProps<FileUploadAndLabel>;
 
@@ -106,6 +106,7 @@ function Component(props: Props) {
   const validateAndSubmit = () => {
     Promise.all([
       slotsSchema.validate(slots, { context: { fileList } }),
+      fileLabelSchema.validate(fileList, { context: { slots } }),
       fileListSchema.validate(fileList, { context: { slots } }),
     ])
       .then(() => {
@@ -268,7 +269,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         justifyContent: "space-between",
         alignItems: "center",
         width: "100%",
-        borderBottom: (theme) => `1px solid ${theme.palette.secondary.main}`,
+        borderBottom: (theme) => `1px solid ${theme.palette.border.main}`,
         minHeight: "50px",
         padding: (theme) => theme.spacing(0.5, 0),
       }}
