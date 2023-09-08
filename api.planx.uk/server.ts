@@ -261,6 +261,13 @@ app.get("/me", useJWT, async function (req, res, next) {
             first_name
             last_name
             email
+            is_platform_admin
+            teams {
+              team {
+                slug
+              }
+              role
+            }
             created_at
             updated_at
           }
