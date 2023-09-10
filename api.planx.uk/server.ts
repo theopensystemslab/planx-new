@@ -133,6 +133,7 @@ assert(process.env.BOPS_SUBMISSION_URL_LAMBETH);
 assert(process.env.BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE);
 assert(process.env.BOPS_SUBMISSION_URL_SOUTHWARK);
 assert(process.env.BOPS_SUBMISSION_URL_CAMDEN);
+assert(process.env.BOPS_SUBMISSION_URL_GLOUCESTER);
 app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
 
 assert(process.env.UNIFORM_TOKEN_URL);
