@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
-import { client } from "lib/graphql";
+import { publicClient } from "lib/graphql";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { Store, useStore } from "./store";
@@ -114,7 +114,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         ? getContentTitle(node)
         : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
 
-    const result = await client.mutate({
+    const result = await publicClient.mutate({
       mutation: gql`
         mutation InsertNewAnalyticsLog(
           $flow_direction: String
@@ -151,7 +151,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function trackHelpClick(metadata?: HelpClickMetadata) {
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
-      await client.mutate({
+      await publicClient.mutate({
         mutation: gql`
           mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb = {}) {
             update_analytics_logs_by_pk(
@@ -173,7 +173,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function createAnalytics(type: AnalyticsType) {
     if (shouldTrackAnalytics) {
-      const response = await client.mutate({
+      const response = await publicClient.mutate({
         mutation: gql`
           mutation InsertNewAnalytics($type: String, $flow_id: uuid) {
             insert_analytics_one(object: { type: $type, flow_id: $flow_id }) {

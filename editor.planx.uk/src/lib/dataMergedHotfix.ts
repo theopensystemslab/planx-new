@@ -1,10 +1,10 @@
 import { TYPES } from "@planx/components/types";
 import gql from "graphql-tag";
 
-import { client } from "../lib/graphql";
+import { publicClient } from "../lib/graphql";
 
 const getFlowData = async (id: string) => {
-  const { data } = await client.query({
+  const { data } = await publicClient.query({
     query: gql`
       query GetFlowData($id: uuid!) {
         flows_by_pk(id: $id) {
