@@ -1,6 +1,7 @@
 import {
   ApolloClient,
   createHttpLink,
+  DefaultContext,
   from,
   InMemoryCache,
 } from "@apollo/client";
@@ -88,3 +89,13 @@ export const publicClient = new ApolloClient({
   link: from([retryLink, errorLink, publicHttpLink]),
   cache: new InMemoryCache(),
 });
+
+/**
+ * Explicitly connect to Hasura using the "public" role
+ * Allows authenticated users with a different x-hasura-default-role (e.g. teamEditor, platformAdmin) to access public resources
+ */
+export const publicContext: DefaultContext = {
+  headers: {
+    "x-hasura-role": "public"
+  }
+}

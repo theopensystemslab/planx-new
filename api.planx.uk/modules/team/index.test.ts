@@ -57,7 +57,7 @@ describe("Adding a user to a team", () => {
       });
   });
 
-  it("validates that role must one an accepted value", async () => {
+  it("validates that role must be an accepted value", async () => {
     await supertest(app)
       .put("/team/123/add-member")
       .set(authHeader())
@@ -80,7 +80,7 @@ describe("Adding a user to a team", () => {
       .set(authHeader())
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(500)
       .then((res) => {
@@ -98,7 +98,7 @@ describe("Adding a user to a team", () => {
       .set(authHeader())
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(200)
       .then((res) => {
@@ -156,7 +156,7 @@ describe("Removing a user from a team", () => {
       .set(authHeader())
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(200)
       .then((res) => {
@@ -173,7 +173,7 @@ describe("Changing a user's role", () => {
       .patch("/team/123/change-member-role")
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(401);
   });
@@ -183,7 +183,7 @@ describe("Changing a user's role", () => {
       .patch("/team/123/change-member-role")
       .set(authHeader())
       .send({
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(400)
       .then((res) => {
@@ -229,7 +229,7 @@ describe("Changing a user's role", () => {
       .set(authHeader())
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(500)
       .then((res) => {
@@ -247,7 +247,7 @@ describe("Changing a user's role", () => {
       .set(authHeader())
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(200)
       .then((res) => {

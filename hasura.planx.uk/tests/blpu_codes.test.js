@@ -29,8 +29,22 @@ describe("blpu_codes", () => {
       expect(i.mutations).toContain("delete_blpu_codes");
     });
   });
-
   describe("platformAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("platformAdmin");
+    });
+
+    test("cannot query blpu_codes", () => {
+      expect(i.queries).not.toContain("blpu_codes");
+    });
+
+    test("cannot create, update, or delete blpu_codes", () => {
+      expect(i).toHaveNoMutationsFor("blpu_codes");
+    });
+  });
+
+  describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
       i = await introspectAs("platformAdmin");

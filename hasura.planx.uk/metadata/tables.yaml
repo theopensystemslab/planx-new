@@ -176,6 +176,42 @@
           schema: public
           name: compile_flow_portals
       comment: Flow data with portals merged in
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - creator_id
+          - team_id
+          - settings
+          - slug
+          - created_at
+          - updated_at
+          - copied_from
+          - id
+          - version
+          - data
+    - role: teamEditor
+      permission:
+        check:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+        columns:
+          - creator_id
+          - team_id
+          - settings
+          - slug
+          - created_at
+          - updated_at
+          - copied_from
+          - id
+          - version
+          - data
   select_permissions:
     - role: platformAdmin
       permission:
@@ -193,6 +229,21 @@
           - data_merged
         filter: {}
     - role: public
+      permission:
+        columns:
+          - created_at
+          - creator_id
+          - data
+          - id
+          - settings
+          - slug
+          - team_id
+          - updated_at
+          - version
+        computed_fields:
+          - data_merged
+        filter: {}
+    - role: teamEditor
       permission:
         columns:
           - created_at
@@ -216,6 +267,33 @@
           - slug
         filter: {}
         check: null
+    - role: teamEditor
+      permission:
+        columns:
+          - data
+          - settings
+          - slug
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+        check: null
+  delete_permissions:
+    - role: teamEditor
+      permission:
+        backend_only: false
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
 - table:
     schema: public
     name: global_settings
@@ -237,6 +315,12 @@
       permission:
         columns:
           - footer_content
+        filter: {}
+    - role: teamEditor
+      permission:
+        columns:
+          - footer_content
+          - id
         filter: {}
   update_permissions:
     - role: platformAdmin
@@ -440,6 +524,17 @@
           - created_at
           - updated_at
           - flow_id
+    - role: teamEditor
+      permission:
+        check: {}
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
   select_permissions:
     - role: platformAdmin
       permission:
@@ -452,8 +547,24 @@
           - created_at
           - updated_at
         filter: {}
+    - role: teamEditor
+      permission:
+        columns:
+          - id
+          - flow_id
+          - version
+          - actor_id
+          - data
+          - created_at
+          - updated_at
+        filter: {}
   update_permissions:
     - role: platformAdmin
+      permission:
+        columns: []
+        filter: {}
+        check: null
+    - role: teamEditor
       permission:
         columns: []
         filter: {}
@@ -644,6 +755,24 @@
           - created_at
           - flow_id
           - data
+    - role: teamEditor
+      permission:
+        check:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+        columns:
+          - id
+          - publisher_id
+          - summary
+          - created_at
+          - flow_id
+          - data
   select_permissions:
     - role: platformAdmin
       permission:
@@ -656,6 +785,16 @@
           - summary
         filter: {}
     - role: public
+      permission:
+        columns:
+          - created_at
+          - data
+          - flow_id
+          - id
+          - publisher_id
+          - summary
+        filter: {}
+    - role: teamEditor
       permission:
         columns:
           - created_at
@@ -771,16 +910,17 @@
       permission:
         check: {}
         columns:
+          - boundary
+          - created_at
+          - domain
           - id
+          - name
           - notify_personalisation
           - settings
-          - theme
-          - domain
-          - name
           - slug
-          - created_at
-          - updated_at
           - submission_email
+          - theme
+          - updated_at
   select_permissions:
     - role: platformAdmin
       permission:
@@ -810,6 +950,19 @@
           - updated_at
         computed_fields:
           - boundary_bbox
+        filter: {}
+    - role: teamEditor
+      permission:
+        columns:
+          - created_at
+          - domain
+          - id
+          - name
+          - notify_personalisation
+          - settings
+          - slug
+          - theme
+          - updated_at
         filter: {}
   update_permissions:
     - role: platformAdmin
@@ -888,4 +1041,10 @@
           - created_at
           - updated_at
           - is_platform_admin
+        filter: {}
+    - role: teamEditor
+      permission:
+        columns:
+          - first_name
+          - last_name
         filter: {}

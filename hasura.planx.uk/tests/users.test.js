@@ -29,7 +29,6 @@ describe("users", () => {
       expect(i.mutations).toContain("delete_users");
     });
   });
-
   describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
@@ -41,6 +40,21 @@ describe("users", () => {
     });
 
     test("cannot create, update, or delete users", () => {
+      expect(i).toHaveNoMutationsFor("users");
+    });
+  });
+
+  describe("teamEditor", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamEditor");
+    });
+
+    test("can query users", async () => {
+      expect(i.queries).toContain("users");
+    });
+
+    test("cannot create, update, or delete users", async () => {
       expect(i).toHaveNoMutationsFor("users");
     });
   });

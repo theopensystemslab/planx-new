@@ -4,8 +4,8 @@ function getJWT(userId) {
   const data = {
     sub: String(userId),
     "https://hasura.io/jwt/claims": {
-      "x-hasura-allowed-roles": ["admin"],
-      "x-hasura-default-role": "admin",
+      "x-hasura-allowed-roles": ["platformAdmin", "public"],
+      "x-hasura-default-role": "platformAdmin",
       "x-hasura-user-id": String(userId),
     },
   };

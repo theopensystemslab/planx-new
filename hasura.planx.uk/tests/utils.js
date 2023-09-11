@@ -58,7 +58,6 @@ function buildJWTForRole(role, userId = 1) {
   const hasura = {
     "x-hasura-allowed-roles": [role],
     "x-hasura-default-role": role,
-    "x-hasura-role": role,
     "x-hasura-user-id": userId.toString(),
   };
 
@@ -83,6 +82,7 @@ const introspectAs = async (role, userId = undefined) => {
     admin: gqlAdmin,
     public: gqlPublic,
     platformAdmin: gqlWithRole("platformAdmin", userId),
+    teamEditor: gqlWithRole("teamEditor", userId),
   }[role]
   const INTROSPECTION_QUERY = `
     query IntrospectionQuery {
@@ -117,4 +117,5 @@ module.exports = {
   gqlAdmin,
   gqlPublic,
   introspectAs,
+  buildJWTForRole,
 };

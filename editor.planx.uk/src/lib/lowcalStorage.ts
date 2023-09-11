@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { DefaultContext, gql } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Session } from "types";
 
@@ -20,7 +20,7 @@ class LowcalStorage {
         }
       `,
       variables: { id },
-      ...getPublicContext(id),
+      context: getSessionContext(id),
     });
 
     try {
@@ -49,7 +49,7 @@ class LowcalStorage {
         }
       `,
       variables: { id },
-      ...getPublicContext(id),
+      context: getSessionContext(id),
     });
   });
 
@@ -90,7 +90,7 @@ class LowcalStorage {
         email: useStore.getState().saveToEmail || "",
         flowId: useStore.getState().id,
       },
-      ...getPublicContext(id),
+      context: getSessionContext(id),
     });
   });
 }
@@ -130,15 +130,13 @@ export const stringifyWithRootKeysSortedAlphabetically = (
  * Generate context for GraphQL client Save & Return requests
  * Hasura "Public" role users need the sessionId and email for lowcal_sessions access
  */
-const getPublicContext = (sessionId: string) => ({
-  context: {
-    headers: {
-      "x-hasura-lowcal-session-id": sessionId,
-      "x-hasura-lowcal-email":
-        // email may be absent for non save and return journeys
-        useStore.getState().saveToEmail?.toLowerCase() || "",
-    },
-  },
+const getSessionContext = (sessionId: string): DefaultContext => ({
+  headers: {
+    "x-hasura-lowcal-session-id": sessionId,
+    "x-hasura-lowcal-email":
+      // email may be absent for non save and return journeys
+      useStore.getState().saveToEmail?.toLowerCase() || "",
+  }
 });
 
 /**
