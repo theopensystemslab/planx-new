@@ -2,6 +2,7 @@ import { gql } from "graphql-request";
 import { capitalize } from "lodash";
 import { adminGraphQLClient as adminClient } from "./hasura";
 import { Flow, Node } from "./types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
@@ -138,24 +139,39 @@ const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
   // get the primary flow data
   const { slug, data } = await getFlowData(id);
 
-  // recursively get and flatten internal portals (type 300) & external portals (type 310)
+  // recursively get and flatten internal portals & external portals
   for (const [nodeId, node] of Object.entries(data)) {
-    if (nodeId === "_root" && Object.keys(ob).length > 0) {
+    const isExternalPortalRoot =
+      nodeId === "_root" && Object.keys(ob).length > 0;
+    const isExternalPortal = node.type === ComponentType.ExternalPortal;
+    const isMerged = ob[node.data?.flowId];
+
+    // Merge portal root as a new node in the graph
+    if (isExternalPortalRoot) {
       ob[id] = {
         ...node,
-        type: 300,
+        type: ComponentType.InternalPortal,
         data: { text: slug },
       };
-    } else if (node.type === 310 && !ob[node.data?.flowId]) {
-      await dataMerged(node.data?.flowId, ob);
+    }
+
+    // Merge as internal portal, with reference to flowId
+    else if (isExternalPortal) {
       ob[nodeId] = {
-        type: 300,
+        type: ComponentType.InternalPortal,
         edges: [node.data?.flowId],
       };
-    } else {
-      ob[nodeId] = node;
+
+      // Recursively merge flow
+      if (!isMerged) {
+        await dataMerged(node.data?.flowId, ob);
+      }
     }
+
+    // Merge all other nodes
+    else ob[nodeId] = node;
   }
+
   return ob;
 };
 
