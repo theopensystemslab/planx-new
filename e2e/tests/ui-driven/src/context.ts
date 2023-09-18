@@ -127,7 +127,7 @@ export function getCoreDomainClient(): CoreDomainClient {
   );
   const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
   return new CoreDomainClient({
-    hasuraSecret: SECRET,
+    auth: { adminSecret: SECRET },
     targetURL: API,
   });
 }

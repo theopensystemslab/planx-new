@@ -1,16 +1,7 @@
 import { strict as assert } from "node:assert";
-import {
-  Given,
-  When,
-  Then,
-  BeforeAll,
-  After,
-  AfterAll,
-} from "@cucumber/cucumber";
+import { Given, When, Then, Before, After, AfterAll, AfterStep, setDefaultTimeout } from "@cucumber/cucumber";
 import {
   setUpMocks,
-  createTeam,
-  createUser,
   buildITPFlow,
   buildSessionForFlow,
   buildPaymentRequestForSession,
@@ -18,8 +9,8 @@ import {
   getSendResponse,
   getSessionSubmittedAt,
   waitForResponse,
-  tearDownTestContext,
 } from "./helpers";
+import { createTeam, createUser, tearDownTestContext } from "../helpers";
 
 const context: {
   teamId?: number;
@@ -30,7 +21,7 @@ const context: {
   paymentRequestId?: string;
 } = {};
 
-BeforeAll(async () => {
+Before("@invite-to-pay", async () => {
   await setUpMocks();
   context.teamId = await createTeam();
   if (!context.teamId) {
@@ -42,23 +33,12 @@ BeforeAll(async () => {
   }
 });
 
-// tear down each example but not user and team
-After(async () => {
-  await tearDownTestContext({
-    flowId: context.flowId,
-    publishedFlowId: context.publishedFlowId,
-    sessionId: context.sessionId,
-    paymentRequestId: context.paymentRequestId,
-  });
-});
-
-// tear down everything
-AfterAll(async () => {
+After("@invite-to-pay", async () => {
   await tearDownTestContext(context);
 });
 
 Given(
-  "a session with a payment request for an invite to pay flow where {string} is a send destination",
+  "a session with a payment request for an invite to pay flow where {string} is a send destination", { timeout: 60 * 1000 }, 
   async (destination) => {
     const { flowId, publishedFlowId } = await buildITPFlow({
       destination,
