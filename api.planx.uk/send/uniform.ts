@@ -159,7 +159,7 @@ export async function sendToUniform(
   } catch (error) {
     return next({
       error,
-      message: `Failed to send to Uniform. ${error}`,
+      message: `Failed to send to Uniform (${localAuthority}): ${error}`,
     });
   }
 }

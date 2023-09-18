@@ -134,7 +134,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       .catch((error) => {
         if (error.response) {
           throw new Error(
-            `Sending to BOPS failed:\n${JSON.stringify(
+            `Sending to BOPS failed (${localAuthority}):\n${JSON.stringify(
               error.response.data,
               null,
               2,
@@ -142,7 +142,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
           );
         } else {
           // re-throw other errors
-          throw new Error(`Sending to BOPS failed:\n${error}`);
+          throw new Error(`Sending to BOPS failed (${localAuthority}):\n${error}`);
         }
       });
     res.send(bopsResponse);
@@ -150,7 +150,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     next(
       new ServerError({
         status: 500,
-        message: "Sending to BOPS failed",
+        message: `Sending to BOPS failed (${localAuthority})`,
         cause: err,
       }),
     );
