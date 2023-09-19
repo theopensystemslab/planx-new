@@ -13,7 +13,7 @@ paths:
       tags:
         - misc
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -32,7 +32,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -68,5 +68,5 @@ paths:
                           type: string
                           enum: ["teamEditor", "teamViewer"]
                           example: "teamEditor"
-        '401':
-          $ref: '#/components/responses/Unauthorised'
+        "401":
+          $ref: "#/components/responses/Unauthorised"

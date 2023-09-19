@@ -14,13 +14,13 @@ const mockGetByEmail = jest.fn().mockResolvedValue({
   teams: [
     {
       teamId: 1,
-      role: "teamEditor"
+      role: "teamEditor",
     },
     {
       teamId: 24,
-      role: "teamEditor"
-    }
-  ]
+      role: "teamEditor",
+    },
+  ],
 });
 
 jest.mock("@opensystemslab/planx-core", () => {
@@ -28,9 +28,9 @@ jest.mock("@opensystemslab/planx-core", () => {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       user: {
         getByEmail: () => mockGetByEmail(),
-      }
-    }))
-  }
+      },
+    })),
+  };
 });
 
 describe("/me endpoint", () => {
@@ -39,8 +39,8 @@ describe("/me endpoint", () => {
       user: {
         sub: "123",
         email: "test@opensystemslab.io",
-        jwt: getJWT({ role: "teamEditor" })
-      }
+        jwt: getJWT({ role: "teamEditor" }),
+      },
     });
   });
 
@@ -60,8 +60,8 @@ describe("/me endpoint", () => {
       user: {
         sub: "123",
         email: undefined,
-        jwt: getJWT({ role: "teamEditor" })
-      }
+        jwt: getJWT({ role: "teamEditor" }),
+      },
     });
 
     await supertest(app)
@@ -76,7 +76,7 @@ describe("/me endpoint", () => {
   });
 
   it("returns an error for an invalid email address", async () => {
-    mockGetByEmail.mockResolvedValueOnce(null)
+    mockGetByEmail.mockResolvedValueOnce(null);
 
     await supertest(app)
       .get("/me")
@@ -88,7 +88,6 @@ describe("/me endpoint", () => {
         });
       });
   });
-
 
   it("returns user details for a logged in user", async () => {
     await supertest(app)
@@ -107,6 +106,6 @@ describe("healthcheck endpoint", () => {
     await supertest(app)
       .get("/")
       .expect(200)
-      .then(res => expect(res.body).toHaveProperty("hello", "world"))
+      .then((res) => expect(res.body).toHaveProperty("hello", "world"));
   });
 });
