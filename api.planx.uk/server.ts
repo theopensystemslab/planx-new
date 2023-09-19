@@ -79,6 +79,7 @@ import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import { useSwaggerDocs } from "./docs";
+import { getDigitalPlanningDataPayload } from "./admin/session/digitalPlanningData";
 
 const router = express.Router();
 
@@ -325,6 +326,10 @@ app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
 app.get("/admin/session/:sessionId/zip", generateZip);
 app.get("/admin/session/:sessionId/summary", getSessionSummary);
+app.get(
+  "/admin/session/:sessionId/digital-planning-data",
+  getDigitalPlanningDataPayload,
+);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
