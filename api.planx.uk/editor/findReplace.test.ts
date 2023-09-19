@@ -29,10 +29,23 @@ beforeEach(() => {
   });
 });
 
+const auth = authHeader({ role: "platformAdmin" });
+
+it("requires a user to be logged in", async () => {
+  await supertest(app).post("/flows/1/search").expect(401);
+});
+
+it("requires a user to have the 'platformAdmin' role", async () => {
+  await supertest(app)
+    .post("/flows/1/search")
+    .set(authHeader({ role: "teamEditor" }))
+    .expect(403);
+});
+
 it("throws an error if missing query parameter `find`", async () => {
   await supertest(app)
     .post("/flows/1/search")
-    .set(authHeader())
+    .set(auth)
     .expect(401)
     .then((res) => {
       expect(res.body).toEqual({
@@ -44,7 +57,7 @@ it("throws an error if missing query parameter `find`", async () => {
 it("finds matches", async () => {
   await supertest(app)
     .post("/flows/1/search?find=designated.monument")
-    .set(authHeader())
+    .set(auth)
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({
@@ -68,7 +81,7 @@ it("finds matches", async () => {
 it("does not replace if no matches are found", async () => {
   await supertest(app)
     .post("/flows/1/search?find=bananas&replace=monument")
-    .set(authHeader())
+    .set(auth)
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({
@@ -80,7 +93,7 @@ it("does not replace if no matches are found", async () => {
 it("updates flow data and returns matches if there are matches", async () => {
   await supertest(app)
     .post("/flows/1/search?find=designated.monument&replace=monument")
-    .set(authHeader())
+    .set(auth)
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({

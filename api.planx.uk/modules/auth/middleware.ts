@@ -7,6 +7,7 @@ import { expressjwt } from "express-jwt";
 import passport from "passport";
 
 import { RequestHandler } from "http-proxy-middleware";
+import { Role } from "@opensystemslab/planx-core/types";
 
 /**
  * Validate that a provided string (e.g. API key) matches the expected value
@@ -109,3 +110,58 @@ export const useGoogleCallbackAuth: RequestHandler = (req, res, next) => {
     failureRedirect: "/auth/login/failed",
   })(req, res, next);
 };
+
+type UseRoleAuth = (authRoles: Role[]) => RequestHandler;
+
+/**
+ * Validate that an incoming request is using the role required for an endpoint
+ * Wrapped by the useJWT middleware to ensure token is valid, available, and decoded
+ *
+ * This does not check if a user can ultimately access a resource, only that they can access this route
+ * Hasura will validate this on a row and column basis when the query or mutation is made
+ */
+export const useRoleAuth: UseRoleAuth =
+  (authRoles) => async (req, res, next) => {
+    useJWT(req, res, () => {
+      if (!req?.user)
+        return next({
+          status: 401,
+          message: "No authorization token was found",
+        });
+
+      const userRoles =
+        req.user["https://hasura.io/jwt/claims"]?.["x-hasura-allowed-roles"];
+      if (!userRoles)
+        return next({
+          status: 401,
+          message: "User roles missing from token",
+        });
+
+      const userId = req.user.sub;
+      // Check if a user has any of the roles required for this route
+      const isAuthorised = userRoles.some((role) => authRoles.includes(role));
+
+      if (!isAuthorised) {
+        console.error(
+          `Authentication error: User ${userId} does have have any of the roles [${authRoles.join(
+            ", ",
+          )}] which are required to access ${req.path}`,
+        );
+        return next({
+          status: 403,
+          message: "Access denied",
+        });
+      }
+
+      next();
+    });
+  };
+
+// Convenience methods
+export const useTeamViewerAuth = useRoleAuth([
+  "teamViewer",
+  "teamEditor",
+  "platformAdmin",
+]);
+export const useTeamEditorAuth = useRoleAuth(["teamEditor", "platformAdmin"]);
+export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);

@@ -39,10 +39,17 @@ describe("HTML data admin endpoint", () => {
       );
   });
 
+  it("requires a user to have the 'platformAdmin' role", () => {
+    return supertest(app)
+      .get(endpoint`123`)
+      .set(authHeader({ role: "teamViewer" }))
+      .expect(403);
+  });
+
   it.skip("returns a HTML-formatted payload", () => {
     return supertest(app)
       .get(endpoint`123`)
-      .set(authHeader())
+      .set(authHeader({ role: "platformAdmin" }))
       .expect(200)
       .expect("content-type", "text/html; charset=utf-8")
       .then((res) =>

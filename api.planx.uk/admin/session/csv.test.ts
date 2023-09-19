@@ -27,6 +27,7 @@ jest.mock("@opensystemslab/planx-core", () => {
 
 describe("CSV data admin endpoint", () => {
   afterEach(() => jest.clearAllMocks());
+  const auth = authHeader({ role: "platformAdmin" });
 
   it("requires a user to be logged in", async () => {
     await supertest(app)
@@ -39,10 +40,17 @@ describe("CSV data admin endpoint", () => {
       );
   });
 
+  it("requires a user to have the 'platformAdmin' role", async () => {
+    await supertest(app)
+      .get(endpoint`123`)
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(403);
+  });
+
   it("returns a CSV-formatted payload", async () => {
     await supertest(app)
       .get(endpoint`123`)
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .expect("content-type", "application/json; charset=utf-8")
       .then((res) =>
@@ -59,7 +67,7 @@ describe("CSV data admin endpoint", () => {
   it("downloads a CSV file if a query parameter is passed", async () => {
     await supertest(app)
       .get(endpoint`123` + `?download=true`)
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .expect("content-type", "text/csv; charset=utf-8");
   });
