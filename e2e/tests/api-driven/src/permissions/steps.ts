@@ -15,7 +15,6 @@ export class CustomWorld extends World {
   teamId2!: number;
   team1Flow!: string;
   team2Flow!: string;
-
   error?: Error = undefined;
   activeUser!: TestUser;
 }
