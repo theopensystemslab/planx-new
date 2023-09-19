@@ -1,7 +1,7 @@
 import { $admin, getClient } from "../client";
 import { CustomWorld } from "./steps";
 import { queries } from "./queries";
-import { createFlow, createTeam, createUser } from "../helpers";
+import { createFlow, createTeam, createUser } from "../globalHelpers";
 
 interface PerformGQLQueryArgs {
   world: CustomWorld;
@@ -17,13 +17,13 @@ export const addUserToTeam = async (userId: number, teamId: number) => {
   });
 };
 
-export const cleanupPermissionsTest = async () => {
+export const cleanup = async () => {
   await $admin.flow._destroyAll();
   await $admin.team._destroyAll();
   await $admin.user._destroyAll();
 }
 
-export const setupPermissionsTest = async () => {
+export const setup = async () => {
   const teamId1 = await createTeam({ name: "E2E Team 1", slug: "e2e-team1" });
   const teamId2 = await createTeam({ name: "E2E Team 2", slug: "e2e-team2" });
   const user1 = {

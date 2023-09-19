@@ -40,42 +40,6 @@ export function safely<T extends () => ReturnType<T>>(callback: T) {
   return result;
 }
 
-export async function tearDownTestContext({
-  teamId,
-  userId,
-  flowId,
-  publishedFlowId,
-  sessionId,
-  paymentRequestId,
-}: {
-  teamId?: number;
-  userId?: number;
-  flowId?: string;
-  publishedFlowId?: number;
-  sessionId?: string;
-  paymentRequestId?: string;
-}) {
-  if (paymentRequestId) {
-    await $admin.paymentRequest._destroy(paymentRequestId);
-  }
-  if (sessionId) {
-    await $admin.application._destroyAll(sessionId);
-    await $admin.session._destroy(sessionId);
-  }
-  if (publishedFlowId) {
-    await $admin.flow._destroyPublished(publishedFlowId);
-  }
-  if (flowId) {
-    await $admin.flow._destroy(flowId);
-  }
-  if (userId) {
-    await $admin.user._destroy(userId);
-  }
-  if (teamId) {
-    await $admin.team._destroy(teamId);
-  }
-}
-
 export async function getUser(email: string) {
   return await $admin.user.getByEmail(email);
 }

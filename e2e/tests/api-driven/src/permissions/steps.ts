@@ -2,12 +2,12 @@ import { After, Before, Given, Then, When, World } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import {
   getUser,
-} from "../helpers";
+} from "../globalHelpers";
 import {
   addUserToTeam,
-  cleanupPermissionsTest,
+  cleanup,
   performGQLQuery,
-  setupPermissionsTest,
+  setup,
 } from "./helpers";
 
 interface TestUser {
@@ -28,7 +28,7 @@ export class CustomWorld extends World {
 }
 
 Before<CustomWorld>("@team-admin-permissions", async function () {
-  const { user1, user2, teamId1, teamId2, team1Flow, team2Flow } = await setupPermissionsTest();
+  const { user1, user2, teamId1, teamId2, team1Flow, team2Flow } = await setup();
   this.user1 = user1
   this.user2 = user2
   this.teamId1 = teamId1
@@ -38,7 +38,7 @@ Before<CustomWorld>("@team-admin-permissions", async function () {
 });
 
 After("@team-admin-permissions", async function () {
-  await cleanupPermissionsTest();
+  await cleanup();
 });
 
 Given("a teamAdmin is a member of a team", async function (this: CustomWorld) {

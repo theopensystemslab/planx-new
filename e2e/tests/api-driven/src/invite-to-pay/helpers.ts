@@ -1,3 +1,4 @@
+import { CustomWorld } from "./steps";
 import axios from "axios";
 import { readFileSync } from "node:fs";
 import type {
@@ -12,6 +13,7 @@ import {
 } from "./mocks";
 import { $admin } from "../client";
 import { TEST_EMAIL } from "../../../ui-driven/src/helpers";
+import { createTeam, createUser } from "../globalHelpers";
 
 export async function setUpMocks() {
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
@@ -126,4 +128,43 @@ export async function getSessionSubmittedAt(
 ): Promise<string | undefined> {
   const detailedSession = await $admin.session.findDetails(sessionId);
   return detailedSession?.submittedAt;
+}
+
+export async function cleanup({
+  teamId,
+  userId,
+  flowId,
+  publishedFlowId,
+  sessionId,
+  paymentRequestId,
+}: CustomWorld) {
+  if (paymentRequestId) {
+    await $admin.paymentRequest._destroy(paymentRequestId);
+  }
+  if (sessionId) {
+    await $admin.application._destroyAll(sessionId);
+    await $admin.session._destroy(sessionId);
+  }
+  if (publishedFlowId) {
+    await $admin.flow._destroyPublished(publishedFlowId);
+  }
+  if (flowId) {
+    await $admin.flow._destroy(flowId);
+  }
+  if (userId) {
+    await $admin.user._destroy(userId);
+  }
+  if (teamId) {
+    await $admin.team._destroy(teamId);
+  }
+}
+
+export const setup = async () => {
+  await setUpMocks();
+  const world = {
+    teamId: await createTeam(),
+    userId: await createUser(),
+  };
+
+  return world;
 }

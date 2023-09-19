@@ -1,7 +1,6 @@
 import { strict as assert } from "node:assert";
-import { Given, When, Then, Before, After, AfterAll, AfterStep, setDefaultTimeout } from "@cucumber/cucumber";
+import { Given, When, Then, Before, After, World } from "@cucumber/cucumber";
 import {
-  setUpMocks,
   buildITPFlow,
   buildSessionForFlow,
   buildPaymentRequestForSession,
@@ -9,67 +8,62 @@ import {
   getSendResponse,
   getSessionSubmittedAt,
   waitForResponse,
+  cleanup,
+  setup,
 } from "./helpers";
-import { createTeam, createUser, tearDownTestContext } from "../helpers";
 
-const context: {
-  teamId?: number;
-  userId?: number;
+export class CustomWorld extends World {
+  teamId!: number;
+  userId!: number;
   flowId?: string;
   publishedFlowId?: number;
   sessionId?: string;
   paymentRequestId?: string;
-} = {};
+}
 
-Before("@invite-to-pay", async () => {
-  await setUpMocks();
-  context.teamId = await createTeam();
-  if (!context.teamId) {
-    throw new Error("team not found");
-  }
-  context.userId = await createUser();
-  if (!context.userId) {
-    throw new Error("user not found");
-  }
+Before<CustomWorld>("@invite-to-pay", async function() {
+  const { teamId, userId } = await setup();
+  this.teamId = teamId;
+  this.userId = userId;
 });
 
-After("@invite-to-pay", async () => {
-  await tearDownTestContext(context);
+After("@invite-to-pay", async function(this: CustomWorld) {
+  await cleanup(this);
 });
 
 Given(
   "a session with a payment request for an invite to pay flow where {string} is a send destination", { timeout: 60 * 1000 }, 
-  async (destination) => {
+  async function (this: CustomWorld, destination: string) {
     const { flowId, publishedFlowId } = await buildITPFlow({
       destination,
-      teamId: context.teamId!,
-      userId: context.userId!,
+      teamId: this.teamId,
+      userId: this.userId,
     });
-    context.flowId = flowId;
-    if (!context.flowId) {
+    this.flowId = flowId;
+    if (!this.flowId) {
       throw new Error("flow not found");
     }
-    context.publishedFlowId = publishedFlowId;
-    if (!context.publishedFlowId) {
+    this.publishedFlowId = publishedFlowId;
+    if (!this.publishedFlowId) {
       throw new Error("publishedFlowId not found");
     }
-    context.sessionId = await buildSessionForFlow(context.flowId);
-    if (!context.sessionId) {
+    this.sessionId = await buildSessionForFlow(this.flowId);
+    if (!this.sessionId) {
       throw new Error("session not found");
     }
     const paymentRequest = await buildPaymentRequestForSession(
-      context.sessionId,
+      this.sessionId,
     );
-    context.paymentRequestId = paymentRequest.id;
+    this.paymentRequestId = paymentRequest.id;
   },
 );
 
-When("the payment request's `paid_at` date is set", async () => {
-  if (!context.paymentRequestId) {
+When("the payment request's `paid_at` date is set", async function (this: CustomWorld) {
+  if (!this.paymentRequestId) {
     throw new Error("payment request not found");
   }
   const operationSucceeded = await markPaymentRequestAsPaid(
-    context.paymentRequestId,
+    this.paymentRequestId,
   );
   if (!operationSucceeded) {
     throw new Error("payment request was not marked as paid");
@@ -79,10 +73,10 @@ When("the payment request's `paid_at` date is set", async () => {
 Then(
   "there should be an audit entry for a successful {string} submission",
   { timeout: 6 * 15000 + 1000 },
-  async (destination) => {
+  async function (this: CustomWorld, destination: string) {
     const response = await waitForResponse({
       name: `Application submission for ${destination}`,
-      request: getSendResponse.bind(null, destination, context.sessionId!),
+      request: getSendResponse.bind(null, destination, this.sessionId!),
       retries: 5,
       delay: 15000,
     });
@@ -90,7 +84,7 @@ Then(
   },
 );
 
-Then("the session's `submitted_at` date should be set", async () => {
-  const submittedAt = await getSessionSubmittedAt(context.sessionId!);
+Then("the session's `submitted_at` date should be set", async function (this: CustomWorld) {
+  const submittedAt = await getSessionSubmittedAt(this.sessionId!);
   assert(submittedAt);
 });
