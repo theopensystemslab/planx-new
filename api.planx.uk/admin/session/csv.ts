@@ -18,7 +18,7 @@ import { getClient } from "../../client";
  *        required: false
  *        description: If a CSV file should be downloaded, or its raw data returned
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export async function getCSVData(
   req: Request,
@@ -62,7 +62,7 @@ export async function getCSVData(
  *        required: false
  *        description: If a CSV file should be downloaded, or its raw data returned
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export async function getRedactedCSVData(
   req: Request,

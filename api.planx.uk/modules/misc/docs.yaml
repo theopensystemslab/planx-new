@@ -30,7 +30,7 @@ paths:
       tags:
         - misc
       security:
-        - userJWT: []
+        - bearerAuth: []
       responses:
         '200':
           description: OK

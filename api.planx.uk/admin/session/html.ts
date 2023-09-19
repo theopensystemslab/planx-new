@@ -16,7 +16,7 @@ type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
   try {
@@ -53,7 +53,7 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export const getRedactedHTMLExport: HTMLExportHandler = async (
   req,

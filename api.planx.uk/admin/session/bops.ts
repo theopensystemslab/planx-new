@@ -12,7 +12,7 @@ import { getClient } from "../../client";
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export const getBOPSPayload = async (
   req: Request,
