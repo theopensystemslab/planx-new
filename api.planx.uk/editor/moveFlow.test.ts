@@ -44,10 +44,17 @@ it("returns an error if authorization headers are not set", async () => {
     });
 });
 
+it("returns an error if the user does not have the 'teamEditor' role", async () => {
+  await supertest(app)
+    .post("/flows/1/move/new-team")
+    .set(authHeader({ role: "teamViewer" }))
+    .expect(403);
+});
+
 it("moves a flow to a new team", async () => {
   await supertest(app)
     .post("/flows/1/move/new-team")
-    .set(authHeader())
+    .set(authHeader({ role: "teamEditor" }))
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({

@@ -42,11 +42,24 @@ beforeEach(() => {
   });
 });
 
+const auth = authHeader({ role: "platformAdmin" });
+
+it("requires a user to be logged in", async () => {
+  await supertest(app).post("/flows/1/publish").expect(401);
+});
+
+it("requires a user to have the 'teamEditor' role", async () => {
+  await supertest(app)
+    .post("/flows/1/publish")
+    .set(authHeader({ role: "teamViewer" }))
+    .expect(403);
+});
+
 describe("publish", () => {
   it("does not update if there are no new changes", async () => {
     await supertest(app)
       .post("/flows/1/publish")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -94,7 +107,7 @@ describe("publish", () => {
 
     await supertest(app)
       .post("/flows/1/publish")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -142,7 +155,7 @@ describe("sections validation on diff", () => {
 
     await supertest(app)
       .post("/flows/1/diff")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -177,7 +190,7 @@ describe("sections validation on diff", () => {
 
     await supertest(app)
       .post("/flows/1/diff")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -209,7 +222,7 @@ describe("invite to pay validation on diff", () => {
 
     await supertest(app)
       .post("/flows/1/diff")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
@@ -242,7 +255,7 @@ describe("invite to pay validation on diff", () => {
 
     await supertest(app)
       .post("/flows/1/diff")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
@@ -270,7 +283,7 @@ describe("invite to pay validation on diff", () => {
 
     await supertest(app)
       .post("/flows/1/diff")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
@@ -301,7 +314,7 @@ describe("invite to pay validation on diff", () => {
 
     await supertest(app)
       .post("/flows/1/diff")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");
@@ -334,7 +347,7 @@ describe("invite to pay validation on diff", () => {
 
     await supertest(app)
       .post("/flows/1/diff")
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Cannot publish an invalid flow");

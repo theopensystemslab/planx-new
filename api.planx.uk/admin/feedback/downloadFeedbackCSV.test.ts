@@ -48,6 +48,7 @@ const mockFeedback: Feedback = {
 
 describe("Download feedback CSV endpoint", () => {
   afterEach(() => jest.clearAllMocks());
+  const auth = authHeader({ role: "platformAdmin" });
 
   it("requires a user to be logged in", async () => {
     await supertest(app)
@@ -60,10 +61,17 @@ describe("Download feedback CSV endpoint", () => {
       );
   });
 
+  it("requires a user to have the platform admin role", async () => {
+    await supertest(app)
+      .get(ENDPOINT)
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(403);
+  });
+
   it("requires the 'cookie' query parameter", async () => {
     await supertest(app)
       .get(ENDPOINT)
-      .set(authHeader())
+      .set(auth)
       .expect(401)
       .then((res) => expect(res.body).toEqual({ error: "Missing cookie" }));
   });
@@ -72,7 +80,7 @@ describe("Download feedback CSV endpoint", () => {
     mockAxios.post.mockRejectedValue(new Error("FeedbackFish query failed!"));
     await supertest(app)
       .get(ENDPOINT)
-      .set(authHeader())
+      .set(auth)
       .query({ cookie: "test cookie" })
       .expect(500)
       .then((res) =>
@@ -87,7 +95,7 @@ describe("Download feedback CSV endpoint", () => {
     const cookie = "test cookie";
     await supertest(app)
       .get(ENDPOINT)
-      .set(authHeader())
+      .set(auth)
       .query({ cookie })
       .expect(200)
       .then(() => {
@@ -106,7 +114,7 @@ describe("Download feedback CSV endpoint", () => {
     const cookie = "test cookie";
     await supertest(app)
       .get(ENDPOINT)
-      .set(authHeader())
+      .set(auth)
       .query({ cookie })
       .expect(200)
       .expect("content-type", "text/csv; charset=utf-8");

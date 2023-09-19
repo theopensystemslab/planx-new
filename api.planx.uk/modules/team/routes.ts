@@ -5,7 +5,7 @@ import { validate } from "../../shared/middleware/validate";
 
 const router = Router();
 
-router.use(AuthMiddleware.useJWT);
+router.use(AuthMiddleware.usePlatformAdminAuth);
 router.put(
   "/:teamId/add-member",
   validate(Controller.upsertMemberSchema),

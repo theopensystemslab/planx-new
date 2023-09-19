@@ -9,10 +9,6 @@ const moveFlow = async (
   next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
   try {
-    if (!req.user?.sub) {
-      return next({ status: 401, message: "User ID missing from JWT" });
-    }
-
     if (!req.params?.flowId || !req.params?.teamSlug) {
       return next({
         status: 400,

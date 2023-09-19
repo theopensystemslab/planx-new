@@ -126,7 +126,7 @@ const PreviewBrowser: React.FC<{
   });
 
   return (
-    <Box id="fake-browser">
+    <Box id="embedded-browser">
       <Header>
         <Box width="100%" display="flex">
           <input
