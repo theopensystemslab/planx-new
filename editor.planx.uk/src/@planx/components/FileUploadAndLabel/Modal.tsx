@@ -39,8 +39,7 @@ interface FileTaggingModalProps {
   setShowModal: (value: React.SetStateAction<boolean>) => void;
 }
 
-
-const ListHeader = styled('li')(({ theme }) => ({
+const ListHeader = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -159,6 +158,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
   const [tags, setTags] = useState<string[]>(initialTags);
   const previousTags = usePrevious(tags);
+  const [open, setOpen] = React.useState(false);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
     const {
@@ -168,6 +168,12 @@ const SelectMultiple = (props: SelectMultipleProps) => {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value,
     );
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   const updateFileListWithTags = (
@@ -226,6 +232,9 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         multiple
         value={tags}
         onChange={handleChange}
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
         IconComponent={ArrowIcon}
         input={<Input key={`select-input-${uploadedFile.id}`} />}
         inputProps={{
@@ -279,14 +288,16 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           },
         }}
       >
-        <ListHeader>
-          <Typography variant="h4">
-            Select all document types that apply
-          </Typography>
-          <Button variant="contained">
-            Done
-          </Button>
-        </ListHeader>
+        <ListSubheader disableGutters>
+          <ListHeader>
+            <Typography variant="h4">
+              Select all document types that apply
+            </Typography>
+            <Button variant="contained" onClick={handleClose}>
+              Done
+            </Button>
+          </ListHeader>
+        </ListSubheader>
         {(Object.keys(fileList) as Array<keyof typeof fileList>)
           .filter((fileListCategory) => fileList[fileListCategory].length > 0)
           .map((fileListCategory) => {
