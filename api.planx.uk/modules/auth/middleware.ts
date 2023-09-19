@@ -171,7 +171,7 @@ export const useRoleAuth: UseRoleAuth =
     });
   };
 
-// Convenience methods
+// Convenience methods for role-based access
 export const useTeamViewerAuth = useRoleAuth([
   "teamViewer",
   "teamEditor",
@@ -179,3 +179,15 @@ export const useTeamViewerAuth = useRoleAuth([
 ]);
 export const useTeamEditorAuth = useRoleAuth(["teamEditor", "platformAdmin"]);
 export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);
+
+/**
+ * Allow any logged in user to access route, without checking roles
+ */
+export const useLoginAuth: RequestHandler = (req, res, next) => useJWT(req, res, () => (
+  req?.user?.sub
+    ? next()
+    : next({
+      status: 401,
+      message: "No authorization token was found",
+    })
+));
