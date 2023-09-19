@@ -6,6 +6,24 @@ tags:
   - name: misc
     description: Miscellaneous
 paths:
+  /:
+    get:
+      summary: Health check
+      description: Confirms the API is healthy
+      tags:
+        - misc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hello:
+                    type: string
+                example:
+                  hello: world
   /me:
     get:
       summary: Get information about currently logged in user

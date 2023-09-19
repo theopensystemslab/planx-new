@@ -224,31 +224,6 @@ app.get("/gis/:localAuthority", locationSearch);
 
 app.get("/roads", classifiedRoadsSearch);
 
-/**
- * @swagger
- * /:
- *  get:
- *    summary: Health check
- *    description: Confirms the API is healthy
- *    tags:
- *      - misc
- *    responses:
- *      '200':
- *        description: OK
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                hello:
- *                  type: string
- *              example:
- *                hello: world
- */
-app.get("/", (_req, res) => {
-  res.json({ hello: "world" });
-});
-
 app.use("/admin", usePlatformAdminAuth);
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);

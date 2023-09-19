@@ -18,3 +18,5 @@ export const getLoggedInUserDetails: RequestHandler = async (_req, res, next) =>
     next(error)
   }
 };
+
+export const healthCheck: RequestHandler = (_req, res) => res.json({ hello: "world" });
