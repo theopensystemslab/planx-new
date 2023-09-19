@@ -60,10 +60,19 @@ paths:
                     items:
                       type: object
                       properties:
-                        teamId:
-                          type: integer
-                          format: int32
-                          example: 123
+                        team:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 123
+                            slug:
+                              type: string
+                              example: opensystemslab
+                            name:
+                              type: string
+                              example: Open Systems Lab
                         role:
                           type: string
                           enum: ["teamEditor", "teamViewer"]
