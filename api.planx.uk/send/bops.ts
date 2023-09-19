@@ -142,7 +142,9 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
           );
         } else {
           // re-throw other errors
-          throw new Error(`Sending to BOPS failed (${localAuthority}):\n${error}`);
+          throw new Error(
+            `Sending to BOPS failed (${localAuthority}):\n${error}`,
+          );
         }
       });
     res.send(bopsResponse);
