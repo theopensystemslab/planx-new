@@ -1,6 +1,5 @@
 import assert from "node:assert";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { TEST_EMAIL } from "../../ui-driven/src/helpers";
 import { buildJWT } from "./jwt";
 
 // check env variables are defined
@@ -18,10 +17,10 @@ export const $admin = new CoreDomainClient({
 });
 
 /**
- * Get client authorised to the permissions level of the test user
+ * Get client authorised to the permissions level of the provided user
  */
-export const getClient = async () => {
-  const jwt = await buildJWT(TEST_EMAIL);
+export const getClient = async (email: string) => {
+  const jwt = await buildJWT(email);
   if (!jwt) throw Error("Unable to generate JWT for test user");
 
   const client = new CoreDomainClient({
