@@ -51,4 +51,19 @@ describe("payment_status", () => {
       expect(i).toHaveNoMutationsFor("payment_status");
     });
   });
+
+  describe("teamEditor", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamEditor");
+    });
+
+    test("cannot query payment_status", () => {
+      expect(i.queries).not.toContain("payment_status");
+    });
+
+    test("cannot create, update, or delete payment_status", () => {
+      expect(i).toHaveNoMutationsFor("payment_status");
+    });
+  });
 });

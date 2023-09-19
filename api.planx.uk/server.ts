@@ -35,7 +35,8 @@ import {
   useFilePermission,
   useHasuraAuth,
   useSendEmailAuth,
-  useJWT,
+  usePlatformAdminAuth,
+  useTeamEditorAuth,
 } from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";
@@ -79,6 +80,7 @@ import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import { useSwaggerDocs } from "./docs";
+import { Role } from "@opensystemslab/planx-core/types";
 
 const router = express.Router();
 
@@ -133,6 +135,7 @@ assert(process.env.BOPS_SUBMISSION_URL_LAMBETH);
 assert(process.env.BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE);
 assert(process.env.BOPS_SUBMISSION_URL_SOUTHWARK);
 assert(process.env.BOPS_SUBMISSION_URL_CAMDEN);
+assert(process.env.BOPS_SUBMISSION_URL_GLOUCESTER);
 app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
 
 assert(process.env.UNIFORM_TOKEN_URL);
@@ -247,11 +250,7 @@ app.get("/hasura", async function (_req, res, next) {
  *                  type: string
  *                  example: 2023-08-11T11:28:38.237493+00:00
  */
-app.get("/me", useJWT, async function (req, res, next) {
-  // useJWT will return 401 if the JWT is missing or malformed
-  if (!req.user?.sub)
-    next({ status: 401, message: "User ID missing from JWT" });
-
+app.get("/me", usePlatformAdminAuth, async function (req, res, next) {
   try {
     const user = await adminClient.request(
       gql`
@@ -285,7 +284,7 @@ app.get("/me", useJWT, async function (req, res, next) {
   }
 });
 
-app.get("/gis", (_req, res, next) => {
+app.get("/gis", (_req, _res, next) => {
   next({
     status: 400,
     message: "Please specify a local authority",
@@ -321,7 +320,7 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.use("/admin", useJWT);
+app.use("/admin", usePlatformAdminAuth);
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
 app.get("/admin/session/:sessionId/bops", getBOPSPayload);
@@ -338,13 +337,13 @@ app.get("/throw-error", () => {
   throw new Error("custom error");
 });
 
-app.post("/flows/:flowId/copy", useJWT, copyFlow);
+app.post("/flows/:flowId/copy", useTeamEditorAuth, copyFlow);
 
-app.post("/flows/:flowId/diff", useJWT, validateAndDiffFlow);
+app.post("/flows/:flowId/diff", useTeamEditorAuth, validateAndDiffFlow);
 
-app.post("/flows/:flowId/move/:teamSlug", useJWT, moveFlow);
+app.post("/flows/:flowId/move/:teamSlug", useTeamEditorAuth, moveFlow);
 
-app.post("/flows/:flowId/publish", useJWT, publishFlow);
+app.post("/flows/:flowId/publish", useTeamEditorAuth, publishFlow);
 
 /**
  * @swagger
@@ -395,9 +394,13 @@ app.post("/flows/:flowId/publish", useJWT, publishFlow);
  *                          items:
  *                            type: string
  */
-app.post("/flows/:flowId/search", useJWT, findAndReplaceInFlow);
+app.post("/flows/:flowId/search", usePlatformAdminAuth, findAndReplaceInFlow);
 
-app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
+app.get(
+  "/flows/:flowId/copy-portal/:portalNodeId",
+  usePlatformAdminAuth,
+  copyPortalAsFlow,
+);
 
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
@@ -620,6 +623,9 @@ declare global {
     interface User {
       jwt: string;
       sub?: string;
+      "https://hasura.io/jwt/claims"?: {
+        "x-hasura-allowed-roles": Role[];
+      };
     }
   }
 }

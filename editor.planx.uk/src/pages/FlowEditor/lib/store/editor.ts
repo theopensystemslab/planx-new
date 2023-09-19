@@ -192,7 +192,7 @@ export const editorStore: StateCreator<
 
     response = await client.mutate({
       mutation: gql`
-        mutation MyMutation($flow_id: uuid, $data: jsonb) {
+        mutation InsertOperation($flow_id: uuid, $data: jsonb) {
           insert_operations_one(
             object: { flow_id: $flow_id, data: $data, version: 1 }
           ) {
@@ -221,7 +221,7 @@ export const editorStore: StateCreator<
   deleteFlow: async (teamId, flowSlug) => {
     const response = await client.mutate({
       mutation: gql`
-        mutation MyMutation($team_id: Int, $flow_slug: String) {
+        mutation DeleteFlow($team_id: Int, $flow_slug: String) {
           delete_flows(
             where: { team_id: { _eq: $team_id }, slug: { _eq: $flow_slug } }
           ) {
@@ -287,7 +287,7 @@ export const editorStore: StateCreator<
   lastPublished: async (flowId: string) => {
     const { data } = await client.query({
       query: gql`
-        query GetFlow($id: uuid) {
+        query GetLastPublishedFlow($id: uuid) {
           flows(limit: 1, where: { id: { _eq: $id } }) {
             published_flows(order_by: { created_at: desc }, limit: 1) {
               created_at
@@ -306,7 +306,7 @@ export const editorStore: StateCreator<
   lastPublisher: async (flowId: string) => {
     const { data } = await client.query({
       query: gql`
-        query GetFlow($id: uuid) {
+        query GetLastPublisher($id: uuid) {
           flows(limit: 1, where: { id: { _eq: $id } }) {
             published_flows(order_by: { created_at: desc }, limit: 1) {
               user {

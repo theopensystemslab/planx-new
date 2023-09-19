@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { client } from "lib/graphql";
+import { publicClient } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
@@ -47,7 +47,7 @@ const fetchDataForStandaloneView = async (
   teamSlug: string,
 ): Promise<StandaloneViewData> => {
   try {
-    const result = await client.query({
+    const result = await publicClient.query({
       query: gql`
         query GetStandaloneData($flowSlug: String!, $teamSlug: String!) {
           flows(

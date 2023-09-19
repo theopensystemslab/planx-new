@@ -20,7 +20,7 @@ import Header from "../../components/Header";
 import { FOOTER_ITEMS } from "../../types";
 
 const MainContainer = styled(Box)(({ theme }) => ({
-  borderTop: `1px solid ${theme.palette.grey[300]}`,
+  borderTop: `1px solid ${theme.palette.border.light}`,
   display: "flex",
   flex: "1 0 auto",
   flexDirection: "column",

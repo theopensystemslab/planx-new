@@ -44,4 +44,19 @@ describe("planning_constraints_requests", () => {
       expect(i).toHaveNoMutationsFor("planning_constraints_requests");
     });
   });
+
+  describe("teamEditor", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamEditor");
+    });
+
+    test("cannot query planning_constraints_requests", () => {
+      expect(i.queries).not.toContain("planning_constraints_requests");
+    });
+
+    test("cannot create, update, or delete planning_constraints_requests", () => {
+      expect(i).toHaveNoMutationsFor("planning_constraints_requests");
+    });
+  });
 });

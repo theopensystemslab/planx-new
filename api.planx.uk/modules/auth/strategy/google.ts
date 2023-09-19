@@ -9,12 +9,14 @@ export const googleStrategy = new GoogleStrategy(
   },
   async function (_accessToken, _refreshToken, profile, done) {
     const { email } = profile._json;
+    if (!email) throw Error("Unable to authenticate without email");
+
     const jwt = await buildJWT(email);
 
     if (!jwt) {
       return done({
         status: 404,
-        message: `User (${email}) not found.Do you need to log in to a different Google Account?`,
+        message: `User (${email}) not found. Do you need to log in to a different Google Account?`,
       } as any);
     }
 

@@ -1,8 +1,8 @@
-import { gql } from "@apollo/client";
+import { DefaultContext, gql } from "@apollo/client";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Session } from "types";
 
-import { client } from "./graphql";
+import { publicClient } from "./graphql";
 
 let current: string | null;
 
@@ -11,7 +11,7 @@ class LowcalStorage {
     console.debug({ getItem: key });
     const id = getSessionId(key);
 
-    const { data } = await client.query({
+    const { data } = await publicClient.query({
       query: gql`
         query GetItem($id: uuid!) {
           lowcal_sessions_by_pk(id: $id) {
@@ -20,7 +20,7 @@ class LowcalStorage {
         }
       `,
       variables: { id },
-      ...getPublicContext(id),
+      context: getSessionContext(id),
     });
 
     try {
@@ -37,7 +37,7 @@ class LowcalStorage {
     console.debug({ removeItem: key });
     const id = getSessionId(key);
 
-    await client.mutate({
+    await publicClient.mutate({
       mutation: gql`
         mutation SoftDeleteLowcalSession($id: uuid!) {
           update_lowcal_sessions_by_pk(
@@ -49,7 +49,7 @@ class LowcalStorage {
         }
       `,
       variables: { id },
-      ...getPublicContext(id),
+      context: getSessionContext(id),
     });
   });
 
@@ -64,7 +64,7 @@ class LowcalStorage {
 
     const id = getSessionId(key);
 
-    await client.mutate({
+    await publicClient.mutate({
       mutation: gql`
         mutation SetItem(
           $data: jsonb!
@@ -90,7 +90,7 @@ class LowcalStorage {
         email: useStore.getState().saveToEmail || "",
         flowId: useStore.getState().id,
       },
-      ...getPublicContext(id),
+      context: getSessionContext(id),
     });
   });
 }
@@ -130,14 +130,12 @@ export const stringifyWithRootKeysSortedAlphabetically = (
  * Generate context for GraphQL client Save & Return requests
  * Hasura "Public" role users need the sessionId and email for lowcal_sessions access
  */
-const getPublicContext = (sessionId: string) => ({
-  context: {
-    headers: {
-      "x-hasura-lowcal-session-id": sessionId,
-      "x-hasura-lowcal-email":
-        // email may be absent for non save and return journeys
-        useStore.getState().saveToEmail?.toLowerCase() || "",
-    },
+const getSessionContext = (sessionId: string): DefaultContext => ({
+  headers: {
+    "x-hasura-lowcal-session-id": sessionId,
+    "x-hasura-lowcal-email":
+      // email may be absent for non save and return journeys
+      useStore.getState().saveToEmail?.toLowerCase() || "",
   },
 });
 

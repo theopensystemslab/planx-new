@@ -50,7 +50,7 @@ describe("Basic state and setup", () => {
     expect(results).toHaveNoViolations();
   });
 
-  test("shows help icons for header and applicable file", async () => {
+  test("shows help buttons for header and applicable file", async () => {
     setup(
       <FileUploadAndLabelComponent
         title="Test title"
@@ -59,8 +59,8 @@ describe("Basic state and setup", () => {
       />,
     );
 
-    const helpIcons = screen.getAllByTestId("more-info-icon");
-    expect(helpIcons).toHaveLength(2);
+    const helpButtons = screen.getAllByTestId("more-info-button");
+    expect(helpButtons).toHaveLength(1);
   });
 
   it("does not show optional files if there are other types", () => {
@@ -135,7 +135,7 @@ describe("Info-only mode with hidden drop zone", () => {
     expect(results).toHaveNoViolations();
   });
 
-  test("shows help icons for header and applicable file", async () => {
+  test("shows help buttons for header and applicable file", async () => {
     setup(
       <FileUploadAndLabelComponent
         title="Test title"
@@ -145,8 +145,8 @@ describe("Info-only mode with hidden drop zone", () => {
       />,
     );
 
-    const helpIcons = screen.getAllByTestId("more-info-icon");
-    expect(helpIcons).toHaveLength(2);
+    const helpButtons = screen.getAllByTestId("more-info-button");
+    expect(helpButtons).toHaveLength(1);
   });
 
   it("shows optional files by default", () => {

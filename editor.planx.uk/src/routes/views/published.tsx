@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { dataMerged } from "lib/dataMergedHotfix";
-import { client } from "lib/graphql";
+import { publicClient } from "lib/graphql";
 import { NaviRequest } from "navi";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -59,7 +59,7 @@ const fetchDataForPublishedView = async (
   teamSlug: string,
 ): Promise<PublishedViewData> => {
   try {
-    const result = await client.query({
+    const result = await publicClient.query({
       query: gql`
         query GetPreviewData($flowSlug: String!, $teamSlug: String!) {
           flows(

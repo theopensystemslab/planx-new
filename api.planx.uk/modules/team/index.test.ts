@@ -18,6 +18,8 @@ jest.mock("@opensystemslab/planx-core", () => {
   };
 });
 
+const auth = authHeader({ role: "platformAdmin" });
+
 describe("Adding a user to a team", () => {
   it("requires authentication", async () => {
     await supertest(app)
@@ -29,10 +31,21 @@ describe("Adding a user to a team", () => {
       .expect(401);
   });
 
+  it("requires the 'platformAdmin' role", async () => {
+    await supertest(app)
+      .put("/team/123/add-member")
+      .set(authHeader({ role: "teamEditor" }))
+      .send({
+        userId: 123,
+        role: "teamViewer",
+      })
+      .expect(403);
+  });
+
   it("validates that userId is required", async () => {
     await supertest(app)
       .put("/team/123/add-member")
-      .set(authHeader())
+      .set(auth)
       .send({
         role: "teamViewer",
       })
@@ -46,7 +59,7 @@ describe("Adding a user to a team", () => {
   it("validates that role is required", async () => {
     await supertest(app)
       .put("/team/123/add-member")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
       })
@@ -57,10 +70,10 @@ describe("Adding a user to a team", () => {
       });
   });
 
-  it("validates that role must one an accepted value", async () => {
+  it("validates that role must be an accepted value", async () => {
     await supertest(app)
       .put("/team/123/add-member")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
         role: "pirate",
@@ -77,10 +90,10 @@ describe("Adding a user to a team", () => {
 
     await supertest(app)
       .put("/team/123/add-member")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(500)
       .then((res) => {
@@ -95,10 +108,10 @@ describe("Adding a user to a team", () => {
 
     await supertest(app)
       .put("/team/123/add-member")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(200)
       .then((res) => {
@@ -122,7 +135,7 @@ describe("Removing a user from a team", () => {
   it("validates that userId is required", async () => {
     await supertest(app)
       .delete("/team/123/remove-member")
-      .set(authHeader())
+      .set(auth)
       .send({})
       .expect(400)
       .then((res) => {
@@ -136,7 +149,7 @@ describe("Removing a user from a team", () => {
 
     await supertest(app)
       .delete("/team/123/remove-member")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
       })
@@ -153,10 +166,10 @@ describe("Removing a user from a team", () => {
 
     await supertest(app)
       .delete("/team/123/remove-member")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(200)
       .then((res) => {
@@ -173,7 +186,7 @@ describe("Changing a user's role", () => {
       .patch("/team/123/change-member-role")
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(401);
   });
@@ -181,9 +194,9 @@ describe("Changing a user's role", () => {
   it("validates that userId is required", async () => {
     await supertest(app)
       .patch("/team/123/change-member-role")
-      .set(authHeader())
+      .set(auth)
       .send({
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(400)
       .then((res) => {
@@ -195,7 +208,7 @@ describe("Changing a user's role", () => {
   it("validates that role is required", async () => {
     await supertest(app)
       .patch("/team/123/change-member-role")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
       })
@@ -209,7 +222,7 @@ describe("Changing a user's role", () => {
   it("validates that role is an accepted value", async () => {
     await supertest(app)
       .patch("/team/123/change-member-role")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
         role: "professor",
@@ -226,10 +239,10 @@ describe("Changing a user's role", () => {
 
     await supertest(app)
       .patch("/team/123/change-member-role")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(500)
       .then((res) => {
@@ -244,10 +257,10 @@ describe("Changing a user's role", () => {
 
     await supertest(app)
       .patch("/team/123/change-member-role")
-      .set(authHeader())
+      .set(auth)
       .send({
         userId: 123,
-        role: "teamAdmin",
+        role: "teamEditor",
       })
       .expect(200)
       .then((res) => {

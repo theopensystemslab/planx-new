@@ -59,7 +59,6 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
       </InputRow>
       <InputRow>
         <Input
-          required
           name="url"
           type="url"
           value={props.value.url}

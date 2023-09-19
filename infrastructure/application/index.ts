@@ -329,6 +329,10 @@ export = async () => {
             name: "BOPS_SUBMISSION_URL_CAMDEN",
             value: pulumi.interpolate`https://camden.${config.requireSecret("bops-api-root-domain")}`,
           },
+          {
+            name: "BOPS_SUBMISSION_URL_GLOUCESTER",
+            value: pulumi.interpolate`https://gloucester.${config.requireSecret("bops-api-root-domain")}`,
+          },
           { name: "BOPS_API_TOKEN", value: config.requireSecret("bops-api-token") },
           { name: "JWT_SECRET", value: config.requireSecret("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },

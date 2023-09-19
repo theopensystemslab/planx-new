@@ -104,9 +104,6 @@ const findAndReplaceInFlow = async (
   next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
   try {
-    if (!req.user?.sub)
-      return next({ status: 401, message: "User ID missing from JWT" });
-
     const flow = await getFlowData(req.params.flowId);
     if (!flow) return next({ status: 401, message: "Unknown flowId" });
 

@@ -48,4 +48,27 @@ describe("teams", () => {
       expect(i.mutations).not.toContain("delete_teams");
     });
   });
+
+  describe("teamEditor", () => {
+    beforeAll(async () => {
+      i = await introspectAs("teamEditor");
+    });
+
+    test("can query teams", () => {
+      expect(i.queries).toContain("teams");
+    });
+
+    test("cannot update teams", () => {
+      expect(i.mutations).not.toContain("update_teams");
+      expect(i.mutations).not.toContain("update_teams_by_pk");
+    });
+
+    test("cannot delete teams", async () => {
+      expect(i.mutations).not.toContain("delete_teams");
+    });
+
+    test("cannot insert teams", async () => {
+      expect(i.mutations).not.toContain("insert_teams");
+    });
+  });
 });

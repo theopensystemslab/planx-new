@@ -11,10 +11,6 @@ const copyPortalAsFlow = async (
   next: NextFunction,
 ) => {
   try {
-    if (!req.user?.sub) {
-      return next({ status: 401, message: "User ID missing from JWT" });
-    }
-
     // fetch the parent flow data
     const flow = await getFlowData(req.params.flowId);
     if (!flow) {

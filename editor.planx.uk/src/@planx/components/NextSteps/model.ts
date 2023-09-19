@@ -9,7 +9,7 @@ export interface NextSteps extends MoreInformation {
 export interface Step {
   title: string;
   description: string;
-  url: string;
+  url?: string;
 }
 
 export const parseNextSteps = (

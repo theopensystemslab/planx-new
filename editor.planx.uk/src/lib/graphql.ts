@@ -1,10 +1,10 @@
 import {
   ApolloClient,
   createHttpLink,
+  DefaultContext,
   from,
   InMemoryCache,
 } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 import { toast } from "react-toastify";
@@ -31,9 +31,18 @@ const customFetch = async (
   return fetchResult;
 };
 
-const httpLink = createHttpLink({
+const authHttpLink = createHttpLink({
   uri: process.env.REACT_APP_HASURA_URL,
   fetch: customFetch,
+  headers: {
+    authorization: `Bearer ${getCookie("jwt")}`,
+  },
+});
+
+const publicHttpLink = createHttpLink({
+  uri: process.env.REACT_APP_HASURA_URL,
+  fetch: customFetch,
+  headers: { "x-hasura-role": "public" },
 });
 
 const errorLink = onError(({ graphQLErrors }) => {
@@ -54,25 +63,6 @@ const errorLink = onError(({ graphQLErrors }) => {
   }
 });
 
-const authLink = setContext((_, { headers }) => {
-  // get the authentication token from cookies if it exists
-  const token = getCookie("jwt");
-  // return the headers to the context so httpLink can read them
-
-  if (token) {
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : null,
-      },
-    };
-  } else {
-    return {
-      headers,
-    };
-  }
-});
-
 const retryLink = new RetryLink({
   delay: {
     initial: 500,
@@ -83,7 +73,29 @@ const retryLink = new RetryLink({
   },
 });
 
+/**
+ * Client used to make all requests by authorised users
+ */
 export const client = new ApolloClient({
-  link: from([retryLink, errorLink, authLink, httpLink]),
+  link: from([retryLink, errorLink, authHttpLink]),
   cache: new InMemoryCache(),
 });
+
+/**
+ * Client used to make requests in all public interface
+ * e.g. /preview, /unpublished, /pay
+ */
+export const publicClient = new ApolloClient({
+  link: from([retryLink, errorLink, publicHttpLink]),
+  cache: new InMemoryCache(),
+});
+
+/**
+ * Explicitly connect to Hasura using the "public" role
+ * Allows authenticated users with a different x-hasura-default-role (e.g. teamEditor, platformAdmin) to access public resources
+ */
+export const publicContext: DefaultContext = {
+  headers: {
+    "x-hasura-role": "public",
+  },
+};

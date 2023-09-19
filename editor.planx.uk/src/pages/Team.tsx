@@ -214,7 +214,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 if (newSlug && slugify(newSlug) !== flow.slug) {
                   await client.mutate({
                     mutation: gql`
-                      mutation MyMutation(
+                      mutation UpdateFlowSlug(
                         $teamId: Int
                         $slug: String
                         $newSlug: String

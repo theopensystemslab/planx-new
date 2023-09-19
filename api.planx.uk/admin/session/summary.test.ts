@@ -32,10 +32,17 @@ describe("Session summary admin endpoint", () => {
       );
   });
 
+  it("requires a user to have the 'platformAdmin' role", async () => {
+    await supertest(app)
+      .get(endpoint`abc123`)
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(403);
+  });
+
   it("returns JSON", async () => {
     await supertest(app)
       .get(endpoint`abc123`)
-      .set(authHeader())
+      .set(authHeader({ role: "platformAdmin" }))
       .expect(200)
       .then((res) => {
         expect(res.text).toBe("{}");

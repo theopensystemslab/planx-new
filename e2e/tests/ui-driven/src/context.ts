@@ -108,8 +108,8 @@ export function generateAuthenticationToken(userId) {
     {
       sub: `${userId}`,
       "https://hasura.io/jwt/claims": {
-        "x-hasura-allowed-roles": ["admin"],
-        "x-hasura-default-role": "admin",
+        "x-hasura-allowed-roles": ["platformAdmin", "public"],
+        "x-hasura-default-role": "platformAdmin",
         "x-hasura-user-id": `${userId}`,
       },
     },

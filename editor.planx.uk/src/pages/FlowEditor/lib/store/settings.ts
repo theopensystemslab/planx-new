@@ -28,8 +28,12 @@ export const settingsStore: StateCreator<
 
   globalSettings: undefined,
 
-  setGlobalSettings: (globalSettings) =>
-    set({ globalSettings: camelcaseKeys(globalSettings) }),
+  setGlobalSettings: (globalSettings) => {
+    const fixedKeys = camelcaseKeys(
+      globalSettings as Record<string, unknown>,
+    ) as GlobalSettings;
+    set({ globalSettings: fixedKeys });
+  },
 
   updateFlowSettings: async (newSettings) => {
     const { teamSlug, flowSlug } = get();

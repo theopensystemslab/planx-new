@@ -21,7 +21,8 @@ const Container = styled(Box, {
 })<BoxProps & { customColor?: string }>(
   ({ theme, customColor = "#F9F8F8" }) => ({
     position: "relative",
-    width: "100%",
+    width: theme.breakpoints.values.formWrap,
+    maxWidth: "100%",
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "space-between",
@@ -82,7 +83,10 @@ const NoticeComponent: React.FC<Props> = (props) => {
           policyRef={props.policyRef}
           howMeasured={props.howMeasured}
         />
-        <Container customColor={props.color}>
+        <Container
+          customColor={props.color}
+          mt={{ xs: 9, sm: 10, md: 12, contentWrap: 6 }}
+        >
           <Content>
             <TitleWrap>
               <ErrorOutline sx={{ width: 34, height: 34 }} />

@@ -30,6 +30,7 @@ describe("OneApp XML endpoint", () => {
   });
 
   afterEach(() => jest.clearAllMocks());
+  const auth = authHeader({ role: "platformAdmin" });
 
   it("requires a user to be logged in", async () => {
     await supertest(app)
@@ -42,10 +43,17 @@ describe("OneApp XML endpoint", () => {
       );
   });
 
+  it("requires a user to have the 'platformAdmin' role", async () => {
+    await supertest(app)
+      .get(endpoint`abc123`)
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(403);
+  });
+
   it("returns an error if sessionID is invalid", async () => {
     await supertest(app)
       .get(endpoint`xyz789`)
-      .set(authHeader())
+      .set(auth)
       .expect(500)
       .then((res) => expect(res.body.error).toMatch(/Invalid sessionID/));
   });
@@ -53,7 +61,7 @@ describe("OneApp XML endpoint", () => {
   it("returns XML", async () => {
     await supertest(app)
       .get(endpoint`abc123`)
-      .set(authHeader())
+      .set(auth)
       .expect(200)
       .expect("content-type", "text/xml; charset=utf-8")
       .then((res) => {

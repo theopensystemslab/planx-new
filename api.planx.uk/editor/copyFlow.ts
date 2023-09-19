@@ -8,10 +8,6 @@ const copyFlow = async (
   next: NextFunction,
 ): Promise<Response | NextFunction | void> => {
   try {
-    if (!req.user?.sub) {
-      return next({ status: 401, message: "User ID missing from JWT" });
-    }
-
     if (!req.params?.flowId || !req.body?.replaceValue) {
       return next({
         status: 400,
@@ -29,7 +25,7 @@ const copyFlow = async (
     const shouldInsert = (req.body?.insert as boolean) || false;
     if (shouldInsert) {
       const newSlug = flow.slug + "-copy";
-      const creatorId = parseInt(req.user.sub, 10);
+      const creatorId = parseInt(req.user!.sub!, 10);
       // Insert the flow and an associated operation
       await insertFlow(
         flow.team_id,

@@ -37,6 +37,8 @@ beforeEach(() => {
   });
 });
 
+const auth = authHeader({ role: "teamEditor" });
+
 it("returns an error if authorization headers are not set", async () => {
   const validBody = {
     insert: false,
@@ -54,6 +56,19 @@ it("returns an error if authorization headers are not set", async () => {
     });
 });
 
+it("returns an error if the user does not have the correct role", async () => {
+  const validBody = {
+    insert: false,
+    replaceValue: "T3ST",
+  };
+
+  await supertest(app)
+    .post("/flows/1/copy")
+    .send(validBody)
+    .set(authHeader({ role: "teamViewer" }))
+    .expect(403);
+});
+
 it("returns an error if required replacement characters are not provided in the request body", async () => {
   const invalidBody = {
     insert: false,
@@ -62,7 +77,7 @@ it("returns an error if required replacement characters are not provided in the 
   await supertest(app)
     .post("/flows/1/copy")
     .send(invalidBody)
-    .set(authHeader())
+    .set(auth)
     .expect(400)
     .then((res) => {
       expect(res.body).toEqual({
@@ -80,7 +95,7 @@ it("returns copied unique flow data without inserting a new record", async () =>
   await supertest(app)
     .post("/flows/1/copy")
     .send(body)
-    .set(authHeader())
+    .set(auth)
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual(mockCopyFlowResponse);
@@ -96,7 +111,7 @@ it("inserts copied unique flow data", async () => {
   await supertest(app)
     .post("/flows/1/copy")
     .send(body)
-    .set(authHeader())
+    .set(auth)
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual(mockCopyFlowResponseInserted);

@@ -237,11 +237,12 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
             padding: "0.7em 1.25em",
             lineHeight: LINE_HEIGHT_BASE,
+            minWidth: "3em",
           },
           text: {
-            color: "rgba(0,0,0,0.4)",
+            color: TEXT_COLOR_SECONDARY,
             "&:hover": {
-              color: "rgba(0,0,0,1)",
+              color: TEXT_COLOR_PRIMARY,
             },
           },
           sizeSmall: {
@@ -258,6 +259,13 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             width: "100%",
             "@media (min-width: 768px)": {
               width: "auto",
+            },
+          },
+          outlined: {
+            borderWidth: "2px 2px 3px",
+            borderColor: "currentcolor",
+            "&:hover": {
+              borderWidth: "2px 2px 3px",
             },
           },
         },

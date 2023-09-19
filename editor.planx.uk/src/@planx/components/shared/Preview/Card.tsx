@@ -29,6 +29,7 @@ const InnerContainer = styled(Box)(({ theme }) => ({
   },
   "& > *": {
     maxWidth: theme.breakpoints.values.formWrap,
+    width: "100%",
   },
 }));
 
@@ -59,27 +60,28 @@ const Card: React.FC<Props> = ({
       <Container maxWidth="contentWrap">
         <InnerContainer
           bgcolor="background.default"
-          py={{ xs: 2, md: 4 }}
-          mb={4}
+          mt={{ xs: 4, md: 6 }}
+          mb={{ xs: 4, md: 8 }}
           {...props}
         >
           {children}
 
-          {handleSubmit && (
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              type="submit"
-              disabled={!isValid}
-              onClick={async () => await handleSubmit()}
-              data-testid="continue-button"
-              sx={{ ...contentFlowSpacing(theme) }}
-            >
-              Continue
-            </Button>
-          )}
-          {showSaveResumeButton && <SaveResumeButton />}
+          <Box pt={2}>
+            {handleSubmit && (
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                type="submit"
+                disabled={!isValid}
+                onClick={async () => await handleSubmit()}
+                data-testid="continue-button"
+              >
+                Continue
+              </Button>
+            )}
+            {showSaveResumeButton && <SaveResumeButton />}
+          </Box>
         </InnerContainer>
       </Container>
     </Fade>

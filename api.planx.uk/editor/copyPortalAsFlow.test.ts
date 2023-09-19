@@ -17,10 +17,21 @@ beforeEach(() => {
   });
 });
 
+it("requires a user to be logged in", async () => {
+  await supertest(app).get("/flows/1/copy-portal/eyOm0NyDSl").expect(401);
+});
+
+it("requires a user to have the 'platformAdmin' role", async () => {
+  await supertest(app)
+    .get("/flows/1/copy-portal/eyOm0NyDSl")
+    .set(authHeader({ role: "teamEditor" }))
+    .expect(403);
+});
+
 it("throws an error if the portalNodeId parameter is not a portal (type = 300)", async () => {
   await supertest(app)
     .get("/flows/1/copy-portal/eyOm0NyDSl")
-    .set(authHeader())
+    .set(authHeader({ role: "platformAdmin" }))
     .expect(404)
     .then((res) => {
       expect(res.body).toEqual({
@@ -32,7 +43,7 @@ it("throws an error if the portalNodeId parameter is not a portal (type = 300)",
 it("returns transformed, unique flow data for a valid internal portal", async () => {
   await supertest(app)
     .get("/flows/1/copy-portal/MgCe3pSTrt")
-    .set(authHeader())
+    .set(authHeader({ role: "platformAdmin" }))
     .expect(200)
     .then((res) => {
       // the portalNodeId param should have been overwritten as _root
