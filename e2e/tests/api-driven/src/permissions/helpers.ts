@@ -21,7 +21,7 @@ export const cleanup = async () => {
   await $admin.flow._destroyAll();
   await $admin.team._destroyAll();
   await $admin.user._destroyAll();
-}
+};
 
 export const setup = async () => {
   const teamId1 = await createTeam({ name: "E2E Team 1", slug: "e2e-team1" });
@@ -29,13 +29,13 @@ export const setup = async () => {
   const user1 = {
     id: await createUser({ email: "e2e-user-1@opensystemslab.io" }),
     email: "e2e-user-1@opensystemslab.io",
-  }
+  };
   const user2 = {
     id: await createUser({ email: "e2e-user-2@opensystemslab.io" }),
     email: "e2e-user-2@opensystemslab.io",
-  }
-  const team1Flow = await createFlow({ teamId: teamId1, slug: "team-1-flow" })
-  const team2Flow = await createFlow({ teamId: teamId2, slug: "team-2-flow" })
+  };
+  const team1Flow = await createFlow({ teamId: teamId1, slug: "team-1-flow" });
+  const team2Flow = await createFlow({ teamId: teamId2, slug: "team-2-flow" });
 
   const world = {
     teamId1,
@@ -47,7 +47,7 @@ export const setup = async () => {
   };
 
   return world;
-}
+};
 
 export const performGQLQuery = async ({
   world,

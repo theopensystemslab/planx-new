@@ -167,4 +167,4 @@ export const setup = async () => {
   };
 
   return world;
-}
+};

@@ -21,18 +21,19 @@ export class CustomWorld extends World {
   paymentRequestId?: string;
 }
 
-Before<CustomWorld>("@invite-to-pay", async function() {
+Before<CustomWorld>("@invite-to-pay", async function () {
   const { teamId, userId } = await setup();
   this.teamId = teamId;
   this.userId = userId;
 });
 
-After("@invite-to-pay", async function(this: CustomWorld) {
+After("@invite-to-pay", async function (this: CustomWorld) {
   await cleanup(this);
 });
 
 Given(
-  "a session with a payment request for an invite to pay flow where {string} is a send destination", { timeout: 60 * 1000 }, 
+  "a session with a payment request for an invite to pay flow where {string} is a send destination",
+  { timeout: 60 * 1000 },
   async function (this: CustomWorld, destination: string) {
     const { flowId, publishedFlowId } = await buildITPFlow({
       destination,
@@ -51,24 +52,25 @@ Given(
     if (!this.sessionId) {
       throw new Error("session not found");
     }
-    const paymentRequest = await buildPaymentRequestForSession(
-      this.sessionId,
-    );
+    const paymentRequest = await buildPaymentRequestForSession(this.sessionId);
     this.paymentRequestId = paymentRequest.id;
   },
 );
 
-When("the payment request's `paid_at` date is set", async function (this: CustomWorld) {
-  if (!this.paymentRequestId) {
-    throw new Error("payment request not found");
-  }
-  const operationSucceeded = await markPaymentRequestAsPaid(
-    this.paymentRequestId,
-  );
-  if (!operationSucceeded) {
-    throw new Error("payment request was not marked as paid");
-  }
-});
+When(
+  "the payment request's `paid_at` date is set",
+  async function (this: CustomWorld) {
+    if (!this.paymentRequestId) {
+      throw new Error("payment request not found");
+    }
+    const operationSucceeded = await markPaymentRequestAsPaid(
+      this.paymentRequestId,
+    );
+    if (!operationSucceeded) {
+      throw new Error("payment request was not marked as paid");
+    }
+  },
+);
 
 Then(
   "there should be an audit entry for a successful {string} submission",
@@ -84,7 +86,10 @@ Then(
   },
 );
 
-Then("the session's `submitted_at` date should be set", async function (this: CustomWorld) {
-  const submittedAt = await getSessionSubmittedAt(this.sessionId!);
-  assert(submittedAt);
-});
+Then(
+  "the session's `submitted_at` date should be set",
+  async function (this: CustomWorld) {
+    const submittedAt = await getSessionSubmittedAt(this.sessionId!);
+    assert(submittedAt);
+  },
+);
