@@ -57,6 +57,10 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     width: "140px",
   },
+  "#embedded-browser &": {
+    width: "80px",
+    top: theme.spacing(13),
+  },
 }));
 
 export const HelpButton = styled(Button)(({ theme }) => ({
@@ -79,6 +83,9 @@ export const HelpButton = styled(Button)(({ theme }) => ({
     minHeight: "48px",
     fontSize: "1.375em",
     top: theme.spacing(1),
+  },
+  "#embedded-browser &": {
+    fontSize: "1em",
   },
 })) as typeof Button;
 
@@ -164,7 +171,6 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             variant="contained"
             sx={{ width: "100%" }}
           >
-            
             Help
           </HelpButton>
         </HelpButtonWrapper>
