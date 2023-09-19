@@ -75,7 +75,7 @@ export async function sendToEmail(
     if (response?.message !== "Success") {
       return next({
         status: 500,
-        message: `Failed to send "Submit" email: ${response?.message}`,
+        message: `Failed to send "Submit" email (${localAuthority}): ${response?.message}`,
       });
     }
     // Mark session as submitted so that reminder and expiry emails are not triggered
