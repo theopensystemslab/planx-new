@@ -7,7 +7,7 @@ export const logger = getErrorLogger();
  * Checking a partial host can be unsafe, e.g.
  * window.location.host.endsWith("gov.uk")
  */
-const getEnvForAllowedHosts = (host: string) => {
+function getEnvForAllowedHosts(host: string) {
   switch (host) {
     case "planningservices.newcastle.gov.uk":
     case "planningservices.medway.gov.uk":
