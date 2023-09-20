@@ -46,8 +46,8 @@ dependencies:
     specifier: ^0.7.5
     version: 0.7.5
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#5090b78
-    version: github.com/theopensystemslab/planx-core/5090b78(@types/react@18.2.20)
+    specifier: git+https://github.com/theopensystemslab/planx-core#7e31b2e
+    version: github.com/theopensystemslab/planx-core/7e31b2e(@types/react@18.2.20)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -3199,7 +3199,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
-    dev: false
 
   /@babel/runtime@7.22.6:
     resolution: {integrity: sha512-wDb5pWm4WDdF6LFUde3Jl8WzPA+3ZbxYqkC6xAXuD3irdEHN1k0NfTRrJD8ZD378SJ61miMLCqIOXYhd8x+AJQ==}
@@ -4979,7 +4978,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.22.15
       '@material-ui/styles': 4.11.5(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@material-ui/system': 4.12.2(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@material-ui/types': 5.1.0(@types/react@18.2.20)
@@ -5008,7 +5007,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.22.15
       '@emotion/hash': 0.8.0
       '@material-ui/types': 5.1.0(@types/react@18.2.20)
       '@material-ui/utils': 4.11.3(react-dom@18.2.0)(react@18.2.0)
@@ -5040,7 +5039,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.22.15
       '@material-ui/utils': 4.11.3(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.20
       csstype: 2.6.21
@@ -5067,7 +5066,7 @@ packages:
       react: ^16.8.0 || ^17.0.0
       react-dom: ^16.8.0 || ^17.0.0
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.22.15
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -20775,9 +20774,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/5090b78(@types/react@18.2.20):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5090b78}
-    id: github.com/theopensystemslab/planx-core/5090b78
+  github.com/theopensystemslab/planx-core/7e31b2e(@types/react@18.2.20):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7e31b2e}
+    id: github.com/theopensystemslab/planx-core/7e31b2e
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -20809,6 +20808,7 @@ packages:
       prettier: 3.0.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      striptags: 3.2.0
       type-fest: 4.3.1
       uuid: 9.0.1
       zod: 3.22.2
