@@ -52,11 +52,25 @@
     schema: public
     name: blpu_codes
   select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - code
+          - description
+          - value
+        filter: {}
     - role: public
       permission:
         columns:
           - description
           - code
+          - value
+        filter: {}
+    - role: teamEditor
+      permission:
+        columns:
+          - code
+          - description
           - value
         filter: {}
 - table:
