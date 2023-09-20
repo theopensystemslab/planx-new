@@ -183,12 +183,22 @@ export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);
 /**
  * Allow any logged in user to access route, without checking roles
  */
-export const useLoginAuth: RequestHandler = (req, res, next) =>
-  useJWT(req, res, () =>
-    req?.user?.sub
-      ? next()
-      : next({
-          status: 401,
-          message: "No authorization token was found",
-        }),
-  );
+export const useLoginAuth: RequestHandler = (req, res, next) => 
+  useJWT(req, res, () => {
+    if (req?.user?.sub) {
+      userContext.run(
+        {
+          user: {
+            ...req.user,
+            jwt: req.cookies.jwt,
+          },
+        },
+        () => next(),
+      );
+    } else {
+      return next({
+        status: 401,
+        message: "No authorization token was found",
+      })
+    }
+  })
