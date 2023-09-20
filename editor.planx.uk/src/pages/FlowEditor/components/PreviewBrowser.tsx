@@ -177,6 +177,7 @@ const PreviewBrowser: React.FC<{
               sx={{ width: "100% " }}
               variant="contained"
               color="primary"
+              disabled={useStore.getState().getUser().isViewOnly}
               onClick={async () => {
                 try {
                   setLastPublishedTitle("Checking for changes...");

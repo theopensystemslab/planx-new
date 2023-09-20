@@ -183,6 +183,7 @@ const FormModal: React.FC<{
                   handleDelete();
                   navigate(rootFlowPath(true));
                 }}
+                disabled={useStore.getState().getUser().isViewOnly}
               >
                 delete
               </Button>
@@ -197,6 +198,7 @@ const FormModal: React.FC<{
                   makeUnique(id, parent);
                   navigate(rootFlowPath(true));
                 }}
+                disabled={useStore.getState().getUser().isViewOnly}
               >
                 make unique
               </Button>
@@ -210,6 +212,7 @@ const FormModal: React.FC<{
               variant="contained"
               color="primary"
               form="modal"
+              disabled={useStore.getState().getUser().isViewOnly}
             >
               {handleDelete ? `Update ${type}` : `Create ${type}`}
             </Button>
