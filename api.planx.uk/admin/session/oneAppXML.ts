@@ -13,7 +13,7 @@ import { adminGraphQLClient as client } from "../../hasura";
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export const getOneAppXML = async (
   req: Request,

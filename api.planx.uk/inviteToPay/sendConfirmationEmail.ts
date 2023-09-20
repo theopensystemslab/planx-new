@@ -1,4 +1,4 @@
-import { $admin } from "../client";
+import { $public, $admin } from "../client";
 import { sendEmail } from "../notify";
 import { gql } from "graphql-request";
 import { convertSlugToName } from "../saveAndReturn/utils";
@@ -8,7 +8,7 @@ export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
   const { personalisation, applicantEmail, payeeEmail, projectTypes } =
     await getDataForPayeeAndAgentEmails(sessionId);
   const projectType = projectTypes.length
-    ? await $admin.formatRawProjectTypes(projectTypes)
+    ? await $public.formatRawProjectTypes(projectTypes)
     : "Project type not submitted";
   const config: AgentAndPayeeSubmissionNotifyConfig = {
     personalisation: {

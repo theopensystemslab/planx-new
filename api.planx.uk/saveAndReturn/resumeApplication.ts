@@ -5,7 +5,7 @@ import { LowCalSession, Team } from "../types";
 import { convertSlugToName, getResumeLink, calculateExpiryDate } from "./utils";
 import { sendEmail } from "../notify";
 import type { SiteAddress } from "@opensystemslab/planx-core/types";
-import { $admin } from "../client";
+import { $public } from "../client";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -121,7 +121,7 @@ const buildContentFromSessions = async (
     const address: SiteAddress | undefined =
       session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
-    const projectType = await $admin.formatRawProjectTypes(
+    const projectType = await $public.formatRawProjectTypes(
       session.data?.passport?.data?.["proposal.projectType"],
     );
     const resumeLink = getResumeLink(session, team, session.flow.slug);
