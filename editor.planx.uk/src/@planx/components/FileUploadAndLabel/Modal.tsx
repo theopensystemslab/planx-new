@@ -91,16 +91,8 @@ export const FileTaggingModal = ({
     >
       <DialogContent>
         <Box sx={{ mt: 1, mb: 4 }}>
-          <Typography
-            variant="h3"
-            component="h2"
-            id="dialog-heading"
-            sx={{ mb: "0.15em" }}
-          >
+          <Typography variant="h3" component="h2" id="dialog-heading">
             What do these files show?
-          </Typography>
-          <Typography variant="subtitle2">
-            Select all document types that apply
           </Typography>
         </Box>
         {uploadedFiles.map((slot) => (
