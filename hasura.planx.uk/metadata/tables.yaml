@@ -1088,6 +1088,13 @@
     - role: teamEditor
       permission:
         columns:
+          - created_at
+          - email
           - first_name
+          - id
+          - is_platform_admin
           - last_name
-        filter: {}
+          - updated_at
+        filter:
+          id:
+            _eq: x-hasura-user-id
