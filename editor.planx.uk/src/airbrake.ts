@@ -3,6 +3,29 @@ import { isLiveEnv } from "utils";
 
 export const logger = getErrorLogger();
 
+/**
+ * Checking a partial host can be unsafe, e.g.
+ * window.location.host.endsWith("gov.uk")
+ */
+const getEnvForAllowedHosts = (host: string) => {
+  switch (host) {
+    case "planningservices.newcastle.gov.uk":
+    case "planningservices.medway.gov.uk":
+    case "planningservices.doncaster.gov.uk":
+    case "planningservices.lambeth.gov.uk":
+    case "planningservices.southwark.gov.uk":
+    case "planningservices.buckinghamshire.gov.uk":
+    case "editor.planx.uk":
+      return "production"
+
+    case "editor.planx.dev":
+      return "staging"
+
+    default:
+      "pullrequest";
+  }
+}
+
 function log(...args: any[]) {
   return process.env.SUPPRESS_LOGS
     ? () => {
@@ -37,27 +60,4 @@ function getErrorLogger(): ErrorLogger {
 
 interface ErrorLogger {
   notify: (args: unknown) => void;
-}
-
-/**
- * Checking a partial host can be unsafe, e.g.
- * window.location.host.endsWith("gov.uk")
- */
-const getEnvForAllowedHosts = (host: string) => {
-  switch (host) {
-    case "planningservices.newcastle.gov.uk":
-    case "planningservices.medway.gov.uk":
-    case "planningservices.doncaster.gov.uk":
-    case "planningservices.lambeth.gov.uk":
-    case "planningservices.southwark.gov.uk":
-    case "planningservices.buckinghamshire.gov.uk":
-    case "editor.planx.uk":
-      return "production"  
-
-    case "editor.planx.dev":
-      return "staging"  
-
-    default:
-      "pullrequest";
-  }
 }
