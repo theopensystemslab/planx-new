@@ -26,7 +26,7 @@ describe("logger", () => {
 
   test("Notifier is configured in a production-like environment", () => {
     windowSpy.mockImplementation(() => ({
-      location: { host: "blah.planx.uk" },
+      location: { host: "editor.planx.uk" },
     }));
     process.env = Object.assign({
       REACT_APP_ENV: "production",

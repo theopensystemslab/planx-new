@@ -50,6 +50,8 @@ describe("users", () => {
       i = await introspectAs("teamEditor");
     });
 
+    // Row-level permissions tested in e2e/tests/api-driven
+    // teamEditors can only query their own record
     test("can query users", async () => {
       expect(i.queries).toContain("users");
     });
