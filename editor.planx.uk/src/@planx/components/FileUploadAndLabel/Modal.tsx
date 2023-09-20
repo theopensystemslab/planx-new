@@ -304,6 +304,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
             return [
               <ListSubheader
                 key={`subheader-${fileListCategory}-${uploadedFile.id}`}
+                disableSticky
               >
                 <Typography py={1} variant="subtitle2">
                   {`${capitalize(fileListCategory)} files`}
