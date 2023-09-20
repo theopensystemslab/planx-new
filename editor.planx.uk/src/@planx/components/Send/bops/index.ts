@@ -28,6 +28,7 @@ import {
   ResponseMetaData,
   USER_ROLES,
 } from "../model";
+import striptags from "striptags";
 
 export const bopsDictionary = {
   // applicant or agent details provided via TextInput(s) or ContactInput component
@@ -231,7 +232,7 @@ export const makePayload = (
       if (flow[id]?.data?.policyRef) {
         metadata.policy_refs = [
           // remove html tags
-          { text: flow[id].data.policyRef.replace(/<[^>]*>/g, "").trim() },
+          { text: striptags(flow[id].data.policyRef) },
         ];
       }
       metadata = addPortalName(id, flow, metadata);
