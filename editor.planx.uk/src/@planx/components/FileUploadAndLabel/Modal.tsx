@@ -282,7 +282,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
       >
         <ListSubheader disableGutters>
           <ListHeader>
-            <Typography variant="h4">
+            <Typography variant="h4" component="h3">
               Select all document types that apply
             </Typography>
             <Button variant="contained" onClick={handleClose}>
@@ -298,7 +298,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
                 key={`subheader-${fileListCategory}-${uploadedFile.id}`}
                 disableSticky
               >
-                <Typography py={1} variant="subtitle2">
+                <Typography py={1} variant="subtitle2" component="h4">
                   {`${capitalize(fileListCategory)} files`}
                 </Typography>
               </ListSubheader>,
