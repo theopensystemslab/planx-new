@@ -880,6 +880,49 @@
     - name: user
       using:
         foreign_key_constraint_on: user_id
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - team_id
+          - user_id
+          - role
+          - id
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - team_id
+          - user_id
+          - role
+          - id
+        filter: {}
+    - role: teamEditor
+      permission:
+        columns:
+          - team_id
+          - user_id
+          - role
+          - id
+        filter:
+          user_id:
+            _eq: x-hasura-user-id
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - team_id
+          - user_id
+          - role
+          - id
+        filter: {}
+        check: {}
+  delete_permissions:
+    - role: platformAdmin
+      permission:
+        backend_only: false
+        filter: {}
 - table:
     schema: public
     name: teams
@@ -1045,6 +1088,13 @@
     - role: teamEditor
       permission:
         columns:
+          - created_at
+          - email
           - first_name
+          - id
+          - is_platform_admin
           - last_name
-        filter: {}
+          - updated_at
+        filter:
+          id:
+            _eq: x-hasura-user-id
