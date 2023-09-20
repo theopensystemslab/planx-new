@@ -11,14 +11,26 @@ import { makeTitle } from "./utils";
 
 const editorRoutes = compose(
   withData(() => ({
-    // just putting anything here for now
-    username: "A",
+    username: useStore.getState().getUser().name,
   })),
 
   withView(() => <AuthenticatedLayout />),
 
   mount({
     "/": route(async () => {
+      // @TODO - decide how to dynamically populate here - SWR request to /me or gql query ?
+      useStore.getState().setUser({
+        name: "Jess",
+        email: "jessica@opensystemslab.io",
+        isPlatformAdmin: false,
+        roles: [
+          {
+            teamSlug: "lambeth",
+            role: "teamViewer",
+          },
+        ],
+      });
+
       const { data } = await client.query({
         query: gql`
           query {

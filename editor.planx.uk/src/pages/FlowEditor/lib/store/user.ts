@@ -6,6 +6,7 @@ export interface UserStore {
   email: string;
   isPlatformAdmin: boolean;
   roles: { teamSlug: Team["slug"]; role: "teamEditor" | "teamViewer" }[] | [];
+  isViewOnly?: boolean;
 
   setUser: (user: User) => void;
   getUser: () => User;
@@ -31,7 +32,12 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
   getUser: () => ({
     name: get().name,
     email: get().email,
-    isPlatformAdmin: get().isPlatformAdmin,
     roles: get().roles,
+    isPlatformAdmin: get().isPlatformAdmin,
+    isViewOnly:
+      !get().isPlatformAdmin &&
+      !get()
+        .roles.map((r) => r.role)
+        .includes("teamEditor"),
   }),
 });
