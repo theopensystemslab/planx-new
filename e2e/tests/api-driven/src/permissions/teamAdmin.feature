@@ -7,11 +7,13 @@ Feature: Testing Permissions for teamAdmin Role
     Then they have access
 
     Examples:
-      | TABLE   | ACTION          |
-      | flows   | insert          |
-      | flows   | update          |
-      | flows   | delete          |
-      | users   | select          |
+      | TABLE           | ACTION          |
+      | flows           | insert          |
+      | flows           | update          |
+      | flows           | delete          |
+      | users           | select          |
+      # | opertations   | select          | 
+      | published_flows | insert          |
 
   @regression @team-admin-permissions
   Scenario Outline: teamAdmin permissions in a different team
@@ -20,8 +22,9 @@ Feature: Testing Permissions for teamAdmin Role
     Then they do not have access
 
     Examples:
-      | TABLE   | ACTION          |
-      | flows   | insert          |
-      | flows   | update          |
-      | flows   | delete          |
-      | users   | select          |
+      | TABLE           | ACTION          |
+      | flows           | insert          |
+      | flows           | update          |
+      | flows           | delete          |
+      | users           | select          |
+      | published_flows | insert          |
