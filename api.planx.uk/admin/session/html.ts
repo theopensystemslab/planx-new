@@ -1,5 +1,5 @@
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
-import { $admin } from "../../client";
+import { getClient } from "../../client";
 import type { RequestHandler } from "express";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 
@@ -16,14 +16,15 @@ type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
   try {
-    const session = await $admin.session.find(req.params.sessionId);
+    const $client = getClient();
+    const session = await $client.session.find(req.params.sessionId);
     if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
 
-    const { responses } = await $admin.export.csvData(req.params.sessionId);
+    const { responses } = await $client.export.csvData(req.params.sessionId);
     const boundingBox =
       session.data.passport.data["property.boundary.site.buffered"];
 
@@ -52,7 +53,7 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export const getRedactedHTMLExport: HTMLExportHandler = async (
   req,
@@ -60,10 +61,11 @@ export const getRedactedHTMLExport: HTMLExportHandler = async (
   next,
 ) => {
   try {
-    const session = await $admin.session.find(req.params.sessionId);
+    const $client = getClient();
+    const session = await $client.session.find(req.params.sessionId);
     if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
 
-    const { redactedResponses } = await $admin.export.csvData(
+    const { redactedResponses } = await $client.export.csvData(
       req.params.sessionId,
     );
     const boundingBox =

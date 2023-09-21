@@ -8,6 +8,7 @@ export const buildJWT = async (email: string): Promise<string | undefined> => {
 
   const data = {
     sub: user.id.toString(),
+    email,
     "https://hasura.io/jwt/claims": generateHasuraClaimsForUser(user),
   };
 
