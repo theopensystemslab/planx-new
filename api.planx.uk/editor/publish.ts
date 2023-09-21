@@ -5,6 +5,7 @@ import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 import { gql } from "graphql-request";
 import intersection from "lodash/intersection";
 import { ComponentType } from "@opensystemslab/planx-core/types";
+import { userContext } from "../modules/auth/middleware";
 
 const validateAndDiffFlow = async (
   req: Request,
@@ -73,6 +74,9 @@ const publishFlow = async (
     const mostRecent = await getMostRecentPublishedFlow(req.params.flowId);
     const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
+    const userId = userContext.getStore()?.user?.sub;
+    if (!userId) throw Error("User details missing from request");
+
     if (delta) {
       const response = await adminClient.request(
         gql`
@@ -101,7 +105,7 @@ const publishFlow = async (
         {
           data: flattenedFlow,
           flow_id: req.params.flowId,
-          publisher_id: parseInt(req.user!.sub!, 10),
+          publisher_id: parseInt(userId),
           summary: req.query?.summary || null,
         },
       );

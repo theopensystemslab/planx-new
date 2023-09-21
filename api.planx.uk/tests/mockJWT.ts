@@ -4,6 +4,7 @@ import { sign } from "jsonwebtoken";
 function getJWT({ role }: { role: Role }) {
   const data = {
     sub: "123",
+    email: "test@opensystemslab.io",
     "https://hasura.io/jwt/claims": {
       "x-hasura-allowed-roles": [role],
       "x-hasura-default-role": role,

@@ -13,6 +13,7 @@ import { logger } from "airbrake";
 import { isEmpty } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
+import striptags from "striptags";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { toPence } from "../../Pay/model";
@@ -231,7 +232,7 @@ export const makePayload = (
       if (flow[id]?.data?.policyRef) {
         metadata.policy_refs = [
           // remove html tags
-          { text: flow[id].data.policyRef.replace(/<[^>]*>/g, "").trim() },
+          { text: striptags(flow[id].data.policyRef) },
         ];
       }
       metadata = addPortalName(id, flow, metadata);

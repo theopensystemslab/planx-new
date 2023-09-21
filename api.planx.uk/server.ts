@@ -79,6 +79,7 @@ import { getSessionSummary } from "./admin/session/summary";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
+import miscRoutes from "./modules/misc/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 
@@ -192,6 +193,7 @@ app.use(passport.session());
 app.use(urlencoded({ extended: true }));
 
 app.use(authRoutes);
+app.use(miscRoutes);
 app.use("/team", teamRoutes);
 
 app.use("/gis", router);
@@ -211,79 +213,6 @@ app.get("/hasura", async function (_req, res, next) {
   }
 });
 
-/**
- * @swagger
- * /me:
- *  get:
- *    summary: Get information about currently logged in user
- *    tags:
- *      - misc
- *    security:
- *      - userJWT: []
- *    responses:
- *      '401':
- *        $ref: '#/components/responses/Unauthorised'
- *      '200':
- *        description: OK
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                id:
- *                  type: integer
- *                  format: int32
- *                  example: 123
- *                first_name:
- *                  type: string
- *                  example: Albert
- *                last_name:
- *                  type: string
- *                  example: Einstein
- *                email:
- *                  type: string
- *                  example: albert@princeton.edu
- *                created_at:
- *                  type: string
- *                  example: 2020-08-11T11:28:38.237493+00:00
- *                updated_at:
- *                  type: string
- *                  example: 2023-08-11T11:28:38.237493+00:00
- */
-app.get("/me", usePlatformAdminAuth, async function (req, res, next) {
-  try {
-    const user = await adminClient.request(
-      gql`
-        query ($id: Int!) {
-          users_by_pk(id: $id) {
-            id
-            first_name
-            last_name
-            email
-            is_platform_admin
-            teams {
-              team {
-                slug
-              }
-              role
-            }
-            created_at
-            updated_at
-          }
-        }
-      `,
-      { id: req.user?.sub },
-    );
-
-    if (!user.users_by_pk)
-      next({ status: 404, message: `User (${req.user?.sub}) not found` });
-
-    res.json(user.users_by_pk);
-  } catch (err) {
-    next(err);
-  }
-});
-
 app.get("/gis", (_req, _res, next) => {
   next({
     status: 400,
@@ -294,31 +223,6 @@ app.get("/gis", (_req, _res, next) => {
 app.get("/gis/:localAuthority", locationSearch);
 
 app.get("/roads", classifiedRoadsSearch);
-
-/**
- * @swagger
- * /:
- *  get:
- *    summary: Health check
- *    description: Confirms the API is healthy
- *    tags:
- *      - misc
- *    responses:
- *      '200':
- *        description: OK
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                hello:
- *                  type: string
- *              example:
- *                hello: world
- */
-app.get("/", (_req, res) => {
-  res.json({ hello: "world" });
-});
 
 app.use("/admin", usePlatformAdminAuth);
 app.get("/admin/feedback", downloadFeedbackCSV);
@@ -623,6 +527,7 @@ declare global {
     interface User {
       jwt: string;
       sub?: string;
+      email?: string;
       "https://hasura.io/jwt/claims"?: {
         "x-hasura-allowed-roles": Role[];
       };

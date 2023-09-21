@@ -1,0 +1,81 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: misc
+    description: Miscellaneous
+paths:
+  /:
+    get:
+      summary: Health check
+      description: Confirms the API is healthy
+      tags:
+        - misc
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hello:
+                    type: string
+                example:
+                  hello: world
+  /me:
+    get:
+      summary: Get information about currently logged in user
+      tags:
+        - misc
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int32
+                    example: 123
+                  firstName:
+                    type: string
+                    example: Albert
+                  lastName:
+                    type: string
+                    example: Einstein
+                  email:
+                    type: string
+                    example: albert@princeton.edu
+                  isPlatformAdmin:
+                    type: boolean
+                    example: true
+                  teams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        team:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                              example: 123
+                            slug:
+                              type: string
+                              example: opensystemslab
+                            name:
+                              type: string
+                              example: Open Systems Lab
+                        role:
+                          type: string
+                          enum: ["teamEditor", "teamViewer"]
+                          example: "teamEditor"
+        "401":
+          $ref: "#/components/responses/Unauthorised"

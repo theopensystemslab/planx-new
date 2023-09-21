@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { $admin } from "../../client";
+import { getClient } from "../../client";
 import { ValidatedRequestHandler } from "../../shared/middleware/validate";
 
 interface TeamMemberResponse {
@@ -39,7 +39,8 @@ export const addMember: UpsertMember = async (req, res) => {
   const { teamId } = req.params;
   const { userId, role } = req.body;
 
-  const isSuccess = await $admin.team.addMember({ teamId, userId, role });
+  const $client = getClient();
+  const isSuccess = await $client.team.addMember({ teamId, userId, role });
 
   if (!isSuccess)
     return res.status(500).json({ message: "Failed to add member to team" });
@@ -51,7 +52,8 @@ export const changeMemberRole: UpsertMember = async (req, res) => {
   const { teamId } = req.params;
   const { userId, role } = req.body;
 
-  const isSuccess = await $admin.team.changeMemberRole({
+  const $client = getClient();
+  const isSuccess = await $client.team.changeMemberRole({
     teamId,
     userId,
     role,
@@ -67,7 +69,8 @@ export const removeMember: RemoveMember = async (req, res) => {
   const { teamId } = req.params;
   const { userId } = req.body;
 
-  const isSuccess = await $admin.team.removeMember({ teamId, userId });
+  const $client = getClient();
+  const isSuccess = await $client.team.removeMember({ teamId, userId });
 
   if (!isSuccess)
     return res

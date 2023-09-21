@@ -4,7 +4,7 @@ import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import { Template, getClientForTemplate, sendEmail } from "../notify";
-import { $admin } from "../client";
+import { $public } from "../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
@@ -145,7 +145,7 @@ const getSessionDetails = async (
     session.data.passport?.data?.["proposal.projectType"];
   const projectTypes =
     passportProtectTypes &&
-    (await $admin.formatRawProjectTypes(passportProtectTypes));
+    (await $public.formatRawProjectTypes(passportProtectTypes));
   const address: SiteAddress | undefined =
     session.data?.passport?.data?._address;
   const addressLine = address?.single_line_address || address?.title;
