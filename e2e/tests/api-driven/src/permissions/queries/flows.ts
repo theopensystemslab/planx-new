@@ -1,12 +1,12 @@
 import { gql } from "graphql-tag";
 
 export const INSERT_FLOW_QUERY = gql`
-  mutation InsertFlowE2E($teamId1: Int) {
+  mutation InsertFlowE2E($team1Id: Int) {
     insert_flows(
       objects: {
         data: "{hello: 'world'}"
         slug: "e2e-test-flow"
-        team_id: $teamId1
+        team_id: $team1Id
       }
     ) {
       returning {

@@ -4,7 +4,7 @@ import { CustomWorld } from "./steps";
 import { queries } from "./queries";
 import { createFlow, createTeam, createUser } from "../globalHelpers";
 
-export type Action = "insert" | "update" | "delete";
+export type Action = "insert" | "update" | "delete" | "select";
 export type Table = keyof typeof queries;
 
 interface PerformGQLQueryArgs {
@@ -28,25 +28,20 @@ export const cleanup = async () => {
 };
 
 export const setup = async () => {
+  const user1Id = await createUser({ email: "e2e-user-1@opensystemslab.io" });
   const teamId1 = await createTeam({ name: "E2E Team 1", slug: "e2e-team1" });
-  const teamId2 = await createTeam({ name: "E2E Team 2", slug: "e2e-team2" });
-  const user1 = {
-    id: await createUser({ email: "e2e-user-1@opensystemslab.io" }),
-    email: "e2e-user-1@opensystemslab.io",
-  };
-  const user2 = {
-    id: await createUser({ email: "e2e-user-2@opensystemslab.io" }),
-    email: "e2e-user-2@opensystemslab.io",
-  };
   const team1FlowId = await createFlow({ teamId: teamId1, slug: "team-1-flow" });
+  
+  const user2Id = await createUser({ email: "e2e-user-2@opensystemslab.io" });
+  const teamId2 = await createTeam({ name: "E2E Team 2", slug: "e2e-team2" });
   const team2FlowId = await createFlow({ teamId: teamId2, slug: "team-2-flow" });
 
   const world = {
+    user1Id,
     teamId1,
-    teamId2,
-    user1,
-    user2,
     team1FlowId,
+    user2Id,
+    teamId2,
     team2FlowId,
   };
 
@@ -60,7 +55,7 @@ export const performGQLQuery = async ({
 }: PerformGQLQueryArgs) => {
   const query = queries[table][action];
   const variables = buildVariables(query, world)
-  const client = (await getClient(world.activeUser.email)).client;
+  const client = (await getClient(world.activeUserEmail)).client;
   const result = await client.request(query, variables);
   return result;
 };

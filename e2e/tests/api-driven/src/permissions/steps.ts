@@ -3,31 +3,40 @@ import { strict as assert } from "node:assert";
 import { getUser } from "../globalHelpers";
 import { Action, Table, addUserToTeam, cleanup, performGQLQuery, setup } from "./helpers";
 
-interface TestUser {
-  id: number;
-  email: string;
-}
-
 export class CustomWorld extends World {
-  user1!: TestUser;
-  user2!: TestUser;
-  teamId1!: number;
-  teamId2!: number;
+  user1Id!: number;
+  user1Email!: string;
+  team1Id!: number;
   team1FlowId!: string;
-  team2FlowId!: string;
 
+  team2Id!: number;
+  user2Id!: number;
+  user2Email!: string;
+  team2FlowId!: string;
+  
   error?: Error = undefined;
-  activeUser!: TestUser;
+
+  activeUserId!: number;
+  activeUserEmail!: string;
 }
 
 Before<CustomWorld>("@team-admin-permissions", async function () {
-  const { user1, user2, teamId1, teamId2, team1FlowId, team2FlowId } =
-    await setup();
-  this.user1 = user1;
-  this.user2 = user2;
-  this.teamId1 = teamId1;
-  this.teamId2 = teamId2;
+  const { 
+    user1Id, 
+    teamId1, 
+    team1FlowId, 
+    user2Id, 
+    teamId2, 
+    team2FlowId 
+  } = await setup();
+  this.user1Id = user1Id;
+  this.user1Email = "e2e-user-1@opensystemslab.io";
+  this.team1Id = teamId1;
   this.team1FlowId = team1FlowId;
+  
+  this.user2Id = user2Id;
+  this.user2Email = "e2e-user-2@opensystemslab.io";
+  this.team2Id = teamId2;
   this.team2FlowId = team2FlowId;
 });
 
@@ -36,29 +45,31 @@ After("@team-admin-permissions", async function () {
 });
 
 Given("a teamAdmin is a member of a team", async function (this: CustomWorld) {
-  await addUserToTeam(this.user1.id, this.teamId1);
-  const user = await getUser(this.user1.email);
+  await addUserToTeam(this.user1Id, this.team1Id);
+  const user = await getUser(this.user1Email);
 
   assert.ok(user, "User is not defined");
   assert.strictEqual(user.teams.length, 1);
   assert.strictEqual(user.teams[0].role, "teamEditor");
-  assert.strictEqual(user.teams[0].team.id, this.teamId1);
+  assert.strictEqual(user.teams[0].team.id, this.team1Id);
 
-  this.activeUser = this.user1;
+  this.activeUserId = this.user1Id;
+  this.activeUserEmail = this.user1Email;
 });
 
 Given(
   "a teamAdmin is not in the requested team",
   async function (this: CustomWorld) {
-    await addUserToTeam(this.user2.id, this.teamId2);
-    const user = await getUser(this.user2.email);
+    await addUserToTeam(this.user2Id, this.team2Id);
+    const user = await getUser(this.user2Email);
 
     assert.ok(user, "User is not defined");
     assert.strictEqual(user.teams.length, 1);
     assert.strictEqual(user.teams[0].role, "teamEditor");
-    assert.strictEqual(user.teams[0].team.id, this.teamId2);
+    assert.strictEqual(user.teams[0].team.id, this.team2Id);
 
-    this.activeUser = this.user2;
+    this.activeUserId = this.user1Id;
+    this.activeUserEmail = this.user1Email;
   },
 );
 
