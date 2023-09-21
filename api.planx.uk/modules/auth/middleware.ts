@@ -8,6 +8,9 @@ import passport from "passport";
 
 import { RequestHandler } from "http-proxy-middleware";
 import { Role } from "@opensystemslab/planx-core/types";
+import { AsyncLocalStorage } from "async_hooks";
+
+export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
 /**
  * Validate that a provided string (e.g. API key) matches the expected value
@@ -153,11 +156,22 @@ export const useRoleAuth: UseRoleAuth =
         });
       }
 
-      next();
+      // Establish a context for the current request/response call stack using AsyncLocalStorage
+      // The validated user will be accessible to all subsequent functions
+      // Store the raw JWT to pass on to plan-core client
+      userContext.run(
+        {
+          user: {
+            ...req.user,
+            jwt: req.cookies.jwt,
+          },
+        },
+        () => next(),
+      );
     });
   };
 
-// Convenience methods
+// Convenience methods for role-based access
 export const useTeamViewerAuth = useRoleAuth([
   "teamViewer",
   "teamEditor",
@@ -165,3 +179,26 @@ export const useTeamViewerAuth = useRoleAuth([
 ]);
 export const useTeamEditorAuth = useRoleAuth(["teamEditor", "platformAdmin"]);
 export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);
+
+/**
+ * Allow any logged in user to access route, without checking roles
+ */
+export const useLoginAuth: RequestHandler = (req, res, next) =>
+  useJWT(req, res, () => {
+    if (req?.user?.sub) {
+      userContext.run(
+        {
+          user: {
+            ...req.user,
+            jwt: req.cookies.jwt,
+          },
+        },
+        () => next(),
+      );
+    } else {
+      return next({
+        status: 401,
+        message: "No authorization token was found",
+      });
+    }
+  });

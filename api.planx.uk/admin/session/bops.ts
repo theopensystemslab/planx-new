@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { $admin } from "../../client";
+import { getClient } from "../../client";
 
 /**
  * @swagger
@@ -12,7 +12,7 @@ import { $admin } from "../../client";
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *    security:
- *      - userJWT: []
+ *      - bearerAuth: []
  */
 export const getBOPSPayload = async (
   req: Request,
@@ -20,7 +20,8 @@ export const getBOPSPayload = async (
   next: NextFunction,
 ) => {
   try {
-    const { exportData } = await $admin.export.bopsPayload(
+    const $client = getClient();
+    const { exportData } = await $client.export.bopsPayload(
       req.params.sessionId,
     );
     res.set("content-type", "application/json");
