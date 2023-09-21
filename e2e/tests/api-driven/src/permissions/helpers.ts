@@ -1,12 +1,16 @@
+import { DocumentNode, Kind } from 'graphql/language';
 import { $admin, getClient } from "../client";
 import { CustomWorld } from "./steps";
 import { queries } from "./queries";
 import { createFlow, createTeam, createUser } from "../globalHelpers";
 
+export type Action = "insert" | "update" | "delete";
+export type Table = keyof typeof queries;
+
 interface PerformGQLQueryArgs {
   world: CustomWorld;
-  action: string;
-  table: string;
+  action: Action
+  table: Table;
 }
 
 export const addUserToTeam = async (userId: number, teamId: number) => {
@@ -34,16 +38,16 @@ export const setup = async () => {
     id: await createUser({ email: "e2e-user-2@opensystemslab.io" }),
     email: "e2e-user-2@opensystemslab.io",
   };
-  const team1Flow = await createFlow({ teamId: teamId1, slug: "team-1-flow" });
-  const team2Flow = await createFlow({ teamId: teamId2, slug: "team-2-flow" });
+  const team1FlowId = await createFlow({ teamId: teamId1, slug: "team-1-flow" });
+  const team2FlowId = await createFlow({ teamId: teamId2, slug: "team-2-flow" });
 
   const world = {
     teamId1,
     teamId2,
     user1,
     user2,
-    team1Flow,
-    team2Flow,
+    team1FlowId,
+    team2FlowId,
   };
 
   return world;
@@ -55,7 +59,31 @@ export const performGQLQuery = async ({
   table,
 }: PerformGQLQueryArgs) => {
   const query = queries[table][action];
+  const variables = buildVariables(query, world)
   const client = (await getClient(world.activeUser.email)).client;
-  const result = await client.request(query, { teamId1: world.teamId1 });
+  const result = await client.request(query, variables);
   return result;
 };
+
+/**
+ * Parse GQL query to extract variables required for query
+ * Match with values from our test world to construct variables for query
+ */
+const buildVariables = (query: DocumentNode, world: CustomWorld) => {
+  const variables = {}
+  const definitionNode = query.definitions[0];
+
+  if (definitionNode.kind !== Kind.OPERATION_DEFINITION) return variables;
+  if (!definitionNode.variableDefinitions) return variables;
+
+  Object.keys(world).forEach((key) => {
+    const isVariableUsedInQuery = definitionNode.variableDefinitions!.find(
+      (varDef) => varDef.variable.name.value === key
+    );
+    if (isVariableUsedInQuery) {
+      variables[key] = world[key];
+    }
+  })
+
+  return variables;
+}

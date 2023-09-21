@@ -9,6 +9,8 @@ Feature: Testing Permissions for teamAdmin Role
     Examples:
       | TABLE   | ACTION          |
       | flows   | insert          |
+      | flows   | update          |
+      | flows   | delete          |
 
   @regression @team-admin-permissions
   Scenario Outline: teamAdmin permissions in a different team
@@ -19,3 +21,5 @@ Feature: Testing Permissions for teamAdmin Role
     Examples:
       | TABLE   | ACTION          |
       | flows   | insert          |
+      | flows   | update          |
+      | flows   | delete          |

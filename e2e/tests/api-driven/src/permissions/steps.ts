@@ -1,7 +1,7 @@
 import { After, Before, Given, Then, When, World } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { getUser } from "../globalHelpers";
-import { addUserToTeam, cleanup, performGQLQuery, setup } from "./helpers";
+import { Action, Table, addUserToTeam, cleanup, performGQLQuery, setup } from "./helpers";
 
 interface TestUser {
   id: number;
@@ -13,21 +13,22 @@ export class CustomWorld extends World {
   user2!: TestUser;
   teamId1!: number;
   teamId2!: number;
-  team1Flow!: string;
-  team2Flow!: string;
+  team1FlowId!: string;
+  team2FlowId!: string;
+
   error?: Error = undefined;
   activeUser!: TestUser;
 }
 
 Before<CustomWorld>("@team-admin-permissions", async function () {
-  const { user1, user2, teamId1, teamId2, team1Flow, team2Flow } =
+  const { user1, user2, teamId1, teamId2, team1FlowId, team2FlowId } =
     await setup();
   this.user1 = user1;
   this.user2 = user2;
   this.teamId1 = teamId1;
   this.teamId2 = teamId2;
-  this.team1Flow = team1Flow;
-  this.team2Flow = team2Flow;
+  this.team1FlowId = team1FlowId;
+  this.team2FlowId = team2FlowId;
 });
 
 After("@team-admin-permissions", async function () {
@@ -63,7 +64,7 @@ Given(
 
 When(
   "they perform {string} on {string}",
-  async function (this: CustomWorld, action: string, table: string) {
+  async function (this: CustomWorld, action: Action, table: Table) {
     try {
       await performGQLQuery({
         world: this,
