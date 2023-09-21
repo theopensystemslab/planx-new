@@ -11,6 +11,7 @@ Feature: Testing Permissions for teamAdmin Role
       | flows   | insert          |
       | flows   | update          |
       | flows   | delete          |
+      | users   | select          |
 
   @regression @team-admin-permissions
   Scenario Outline: teamAdmin permissions in a different team
@@ -23,3 +24,4 @@ Feature: Testing Permissions for teamAdmin Role
       | flows   | insert          |
       | flows   | update          |
       | flows   | delete          |
+      | users   | select          |
