@@ -35,8 +35,8 @@ describe("blpu_codes", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query blpu_codes", () => {
-      expect(i.queries).not.toContain("blpu_codes");
+    test("can query blpu_codes", () => {
+      expect(i.queries).toContain("blpu_codes");
     });
 
     test("cannot create, update, or delete blpu_codes", () => {
@@ -50,8 +50,8 @@ describe("blpu_codes", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query blpu_codes", () => {
-      expect(i.queries).not.toContain("blpu_codes");
+    test("can query blpu_codes", () => {
+      expect(i.queries).toContain("blpu_codes");
     });
 
     test("cannot create, update, or delete blpu_codes", () => {
