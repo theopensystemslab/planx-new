@@ -526,7 +526,15 @@
           - flow_id
     - role: teamEditor
       permission:
-        check: {}
+        check:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
         columns:
           - id
           - actor_id
@@ -561,14 +569,36 @@
   update_permissions:
     - role: platformAdmin
       permission:
-        columns: []
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
         filter: {}
-        check: null
+        check: {}
     - role: teamEditor
       permission:
-        columns: []
-        filter: {}
-        check: null
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
+        filter:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+        check: {}
 - table:
     schema: public
     name: payment_requests
