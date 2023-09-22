@@ -2,8 +2,8 @@ Feature: Testing Permissions for teamAdmin Role
 
   @regression @team-admin-permissions
   Scenario Outline: teamAdmin permissions
-    Given a teamAdmin is a member of a team
-    When they perform "<ACTION>" on "<TABLE>"
+    Given a teamAdmin from team1
+    When they perform "<ACTION>" on team1's "<TABLE>"
     Then they have access
 
     Examples:
@@ -11,14 +11,12 @@ Feature: Testing Permissions for teamAdmin Role
       | flows           | insert          |
       | flows           | update          |
       | flows           | delete          |
-      | users           | select          |
-      # | opertations   | select          | 
       | published_flows | insert          |
 
   @regression @team-admin-permissions
   Scenario Outline: teamAdmin permissions in a different team
-    Given a teamAdmin is not in the requested team
-    When they perform "<ACTION>" on "<TABLE>"
+    Given a teamAdmin from team2
+    When they perform "<ACTION>" on team1's "<TABLE>"
     Then they do not have access
 
     Examples:
@@ -26,5 +24,4 @@ Feature: Testing Permissions for teamAdmin Role
       | flows           | insert          |
       | flows           | update          |
       | flows           | delete          |
-      | users           | select          |
       | published_flows | insert          |

@@ -44,7 +44,7 @@ After("@team-admin-permissions", async function () {
   await cleanup();
 });
 
-Given("a teamAdmin is a member of a team", async function (this: CustomWorld) {
+Given("a teamAdmin from team1", async function (this: CustomWorld) {
   await addUserToTeam(this.user1Id, this.team1Id);
   const user = await getUser(this.user1Email);
 
@@ -58,7 +58,7 @@ Given("a teamAdmin is a member of a team", async function (this: CustomWorld) {
 });
 
 Given(
-  "a teamAdmin is not in the requested team",
+  "a teamAdmin from team2",
   async function (this: CustomWorld) {
     await addUserToTeam(this.user2Id, this.team2Id);
     const user = await getUser(this.user2Email);
@@ -74,7 +74,7 @@ Given(
 );
 
 When(
-  "they perform {string} on {string}",
+  "they perform {string} on team1's {string}",
   async function (this: CustomWorld, action: Action, table: Table) {
     try {
       await performGQLQuery({
