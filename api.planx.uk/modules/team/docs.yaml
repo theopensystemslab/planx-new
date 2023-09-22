@@ -26,6 +26,10 @@ paths:
   /team/{teamId}/add-member:
     put:
       summary: Add user to team, and assign them a role
+      description: 
+        "Requires authentication via the WARP platform
+        \n\n
+        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
       tags: ["team"]
       parameters:
         - $ref: "#/components/parameters/teamId"
@@ -43,6 +47,10 @@ paths:
   /team/{teamId}/change-member-role:
     patch:
       summary: Change role of an existing team member
+      description: 
+        "Requires authentication via the WARP platform
+        \n\n
+        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
       tags: ["team"]
       parameters:
         - $ref: "#/components/parameters/teamId"
@@ -60,6 +68,10 @@ paths:
   /team/{teamId}/remove-member:
     delete:
       summary: Remover user from team
+      description: 
+        "Requires authentication via the WARP platform
+        \n\n
+        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
       tags: ["team"]
       parameters:
         - $ref: "#/components/parameters/teamId"
