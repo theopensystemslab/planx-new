@@ -1,5 +1,6 @@
 import { DELETE_FLOW_QUERY, INSERT_FLOW_QUERY, UPDATE_FLOW_QUERY } from "./flows";
 import { INSERT_PUBLISHED_FLOW_QUERY } from "./publishedFlows";
+import { SELECT_TEAM_MEMBERS_QUERY } from "./teamMembers";
 import { SELECT_USERS_QUERY } from "./users";
 
 export const queries = {
@@ -13,5 +14,8 @@ export const queries = {
   },
   published_flows: {
     insert: INSERT_PUBLISHED_FLOW_QUERY,
-  }
+  },
+  team_members: {
+    select: SELECT_TEAM_MEMBERS_QUERY,
+  },
 } as const;

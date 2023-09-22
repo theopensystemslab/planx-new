@@ -93,6 +93,48 @@ When(
   },
 );
 
+When(
+  "they perform {string} on themselves in {string}",
+  async function (this: CustomWorld, action: Action, table: Table) {
+    try {
+      this.result = await performGQLQuery({
+        world: this,
+        action,
+        table,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        this.error = error;
+        return;
+      }
+      throw error;
+    }
+  },
+);
+
+When(
+  "they perform {string} on a different user in {string}",
+  async function (this: CustomWorld, action: Action, table: Table) {
+    try {
+      this.result = await performGQLQuery({
+        world: {
+          ...this,
+          // Point query to a different user
+          user1Id: this.user2Id
+        },
+        action,
+        table,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        this.error = error;
+        return;
+      }
+      throw error;
+    }
+  },
+);
+
 Then("they have access", function (this: CustomWorld) {
   if (!this.result) {
     assert.fail("Permission should have been granted - check test setup");
@@ -102,9 +144,13 @@ Then("they have access", function (this: CustomWorld) {
 });
 
 Then("they do not have access", function (this: CustomWorld) {
-  if (this.result) {
-    assert.fail("Permission should not have been granted - check test setup");
+  const isResultEmpty = Array.isArray(this.result) && !this.result.length;
+
+  if (isResultEmpty) {
+    assert.ok(`Permission query did not return results`)
   } else if (this.error) {
     assert.ok(`Permission query failed with error: ${this.error.message}`)
+  } else if (this.result) {
+    assert.fail("Permission should not have been granted - check test setup");
   }
 });
