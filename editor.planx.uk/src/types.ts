@@ -58,7 +58,6 @@ export interface User {
   name: string;
   email: string;
   isPlatformAdmin: boolean;
-  isViewOnly?: boolean;
   roles:
     | []
     | {

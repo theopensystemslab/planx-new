@@ -71,9 +71,16 @@ const ExternalPortal: React.FC<any> = React.memo(
       editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
     }
 
+    // useStore.getState().getTeam().slug undefined here, use window instead
+    const teamSlug = window.location.pathname.split("/")[1];
+
     return (
       <>
-        <Hanger hidden={isDragging} before={props.id} parent={parent} />
+        <Hanger
+          hidden={isDragging || !useStore.getState().canUserEditTeam(teamSlug)}
+          before={props.id}
+          parent={parent}
+        />
         <li
           className={classNames("card", "portal", { isDragging })}
           onContextMenu={handleContext}
@@ -121,9 +128,16 @@ const InternalPortal: React.FC<any> = (props) => {
     copyNode(props.id);
   };
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+
   return (
     <>
-      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <Hanger
+        hidden={isDragging || !useStore.getState().canUserEditTeam(teamSlug)}
+        before={props.id}
+        parent={parent}
+      />
       <li className={classNames("card", "portal", { isDragging })}>
         <Link
           href={href}

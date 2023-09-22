@@ -49,9 +49,16 @@ const Filter: React.FC<Props> = React.memo((props) => {
 
   const Icon = ICONS[props.type];
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+
   return (
     <>
-      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <Hanger
+        hidden={isDragging || !useStore.getState().canUserEditTeam(teamSlug)}
+        before={props.id}
+        parent={parent}
+      />
       <li
         className={classNames("card", "decision", {
           isDragging,

@@ -53,9 +53,16 @@ const Question: React.FC<Props> = React.memo((props) => {
   // If there is an error, the icon has a semantic meaning and needs a title
   const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+
   return (
     <>
-      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <Hanger
+        hidden={isDragging || !useStore.getState().canUserEditTeam(teamSlug)}
+        before={props.id}
+        parent={parent}
+      />
       <li
         className={classNames("card", "decision", {
           isDragging,

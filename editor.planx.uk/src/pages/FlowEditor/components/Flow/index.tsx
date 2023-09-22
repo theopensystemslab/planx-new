@@ -24,6 +24,9 @@ const Flow = ({ breadcrumbs = [] }: any) => {
     href: `${window.location.pathname.split(id)[0]}${id}`,
   }));
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+
   return (
     <>
       <ol id="flow" data-layout={flowLayout} className="decisions">
@@ -37,7 +40,7 @@ const Flow = ({ breadcrumbs = [] }: any) => {
           <Node key={node.id} {...node} />
         ))}
 
-        <Hanger />
+        <Hanger hidden={!useStore.getState().canUserEditTeam(teamSlug)} />
         <EndPoint text="end" />
       </ol>
     </>

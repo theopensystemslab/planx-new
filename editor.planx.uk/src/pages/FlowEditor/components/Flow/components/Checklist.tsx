@@ -67,11 +67,18 @@ const Checklist: React.FC<Props> = React.memo((props) => {
     copyNode(props.id);
   };
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+
   const Icon = ICONS[props.type];
 
   return (
     <>
-      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <Hanger
+        hidden={isDragging || !useStore.getState().canUserEditTeam(teamSlug)}
+        before={props.id}
+        parent={parent}
+      />
       <li
         className={classNames("card", "decision", {
           isDragging,

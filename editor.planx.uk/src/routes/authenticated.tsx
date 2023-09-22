@@ -25,8 +25,16 @@ const editorRoutes = compose(
         isPlatformAdmin: false,
         roles: [
           {
-            teamSlug: "lambeth",
-            role: "teamViewer",
+            teamSlug: "barnet",
+            role: "teamEditor",
+          },
+          {
+            teamSlug: "opensystemslab",
+            role: "teamEditor",
+          },
+          {
+            teamSlug: "testing",
+            role: "teamEditor",
           },
         ],
       });

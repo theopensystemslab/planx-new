@@ -92,8 +92,6 @@ export const editorStore: StateCreator<
     { id = undefined, type, data },
     { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {},
   ) => {
-    if (get().getUser().isViewOnly) return;
-
     const [, ops] = add(
       { id, type, data },
       { children, parent, before },
@@ -168,8 +166,6 @@ export const editorStore: StateCreator<
   },
 
   copyNode(id) {
-    if (get().getUser().isViewOnly) return;
-
     localStorage.setItem("clipboard", id);
   },
 
@@ -333,8 +329,6 @@ export const editorStore: StateCreator<
   },
 
   makeUnique: (id, parent) => {
-    if (get().getUser().isViewOnly) return;
-
     const [, ops] = makeUnique(id, parent)(get().flow);
     send(ops);
   },
@@ -366,8 +360,6 @@ export const editorStore: StateCreator<
     toBefore = undefined,
     toParent = undefined,
   ) {
-    if (get().getUser().isViewOnly) return;
-
     try {
       const [, ops] = move(id, parent as unknown as string, {
         toParent,
@@ -381,8 +373,6 @@ export const editorStore: StateCreator<
   },
 
   pasteNode(toParent, toBefore) {
-    if (get().getUser().isViewOnly) return;
-
     try {
       const id = localStorage.getItem("clipboard");
       if (id) {
@@ -417,15 +407,11 @@ export const editorStore: StateCreator<
   },
 
   removeNode: (id, parent) => {
-    if (get().getUser().isViewOnly) return;
-
     const [, ops] = remove(id, parent)(get().flow);
     send(ops);
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {
-    if (get().getUser().isViewOnly) return;
-
     const [, ops] = update(id, data, {
       children,
       removeKeyIfMissing: true,

@@ -6,10 +6,10 @@ export interface UserStore {
   email: string;
   isPlatformAdmin: boolean;
   roles: { teamSlug: Team["slug"]; role: "teamEditor" | "teamViewer" }[] | [];
-  isViewOnly?: boolean;
 
   setUser: (user: User) => void;
   getUser: () => User;
+  canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
 }
 
 export const userStore: StateCreator<UserStore, [], [], UserStore> = (
@@ -34,10 +34,15 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
     email: get().email,
     roles: get().roles,
     isPlatformAdmin: get().isPlatformAdmin,
-    isViewOnly:
-      !get().isPlatformAdmin &&
-      !get()
-        .roles.map((r) => r.role)
-        .includes("teamEditor"),
   }),
+
+  canUserEditTeam: (teamSlug) => {
+    return (
+      get().roles.filter(
+        (r) =>
+          (r.role === "teamEditor" && r.teamSlug === teamSlug) ||
+          get().isPlatformAdmin,
+      ).length > 0
+    );
+  },
 });
