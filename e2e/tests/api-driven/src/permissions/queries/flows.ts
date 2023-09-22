@@ -18,7 +18,10 @@ export const INSERT_FLOW_QUERY = gql`
 
 export const UPDATE_FLOW_QUERY = gql`
   mutation UpdateFlowE2E($team1FlowId: uuid!) {
-    result: update_flows_by_pk(pk_columns: {id: $team1FlowId}, _set: {data: "{hello: 'world2'}"}) {
+    result: update_flows_by_pk(
+      pk_columns: { id: $team1FlowId }
+      _set: { data: "{hello: 'world2'}" }
+    ) {
       id
     }
   }

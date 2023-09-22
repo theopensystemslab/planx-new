@@ -1,4 +1,4 @@
-import { DocumentNode, Kind } from 'graphql/language';
+import { DocumentNode, Kind } from "graphql/language";
 import { $admin, getClient } from "../client";
 import { CustomWorld } from "./steps";
 import { queries } from "./queries";
@@ -9,7 +9,7 @@ export type Table = keyof typeof queries;
 
 interface PerformGQLQueryArgs {
   world: CustomWorld;
-  action: Action
+  action: Action;
   table: Table;
 }
 
@@ -30,11 +30,17 @@ export const cleanup = async () => {
 export const setup = async () => {
   const user1Id = await createUser({ email: "e2e-user-1@opensystemslab.io" });
   const teamId1 = await createTeam({ name: "E2E Team 1", slug: "e2e-team1" });
-  const team1FlowId = await createFlow({ teamId: teamId1, slug: "team-1-flow" });
-  
+  const team1FlowId = await createFlow({
+    teamId: teamId1,
+    slug: "team-1-flow",
+  });
+
   const user2Id = await createUser({ email: "e2e-user-2@opensystemslab.io" });
   const teamId2 = await createTeam({ name: "E2E Team 2", slug: "e2e-team2" });
-  const team2FlowId = await createFlow({ teamId: teamId2, slug: "team-2-flow" });
+  const team2FlowId = await createFlow({
+    teamId: teamId2,
+    slug: "team-2-flow",
+  });
 
   const world = {
     user1Id,
@@ -54,9 +60,12 @@ export const performGQLQuery = async ({
   table,
 }: PerformGQLQueryArgs) => {
   const query = queries[table][action];
-  const variables = buildVariables(query, world)
+  const variables = buildVariables(query, world);
   const client = (await getClient(world.activeUserEmail)).client;
-  const { result } = await client.request<Record<"result", any>>(query, variables);
+  const { result } = await client.request<Record<"result", any>>(
+    query,
+    variables,
+  );
   return result;
 };
 
@@ -65,7 +74,7 @@ export const performGQLQuery = async ({
  * Match with values from our test world to construct variables for query
  */
 const buildVariables = (query: DocumentNode, world: CustomWorld) => {
-  const variables = {}
+  const variables = {};
   const definitionNode = query.definitions[0];
 
   if (definitionNode.kind !== Kind.OPERATION_DEFINITION) return variables;
@@ -73,12 +82,12 @@ const buildVariables = (query: DocumentNode, world: CustomWorld) => {
 
   Object.keys(world).forEach((key) => {
     const isVariableUsedInQuery = definitionNode.variableDefinitions!.find(
-      (varDef) => varDef.variable.name.value === key
+      (varDef) => varDef.variable.name.value === key,
     );
     if (isVariableUsedInQuery) {
       variables[key] = world[key];
     }
-  })
+  });
 
   return variables;
-}
+};

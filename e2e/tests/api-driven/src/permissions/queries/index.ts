@@ -1,4 +1,8 @@
-import { DELETE_FLOW_QUERY, INSERT_FLOW_QUERY, UPDATE_FLOW_QUERY } from "./flows";
+import {
+  DELETE_FLOW_QUERY,
+  INSERT_FLOW_QUERY,
+  UPDATE_FLOW_QUERY,
+} from "./flows";
 import { INSERT_OPERATION_QUERY, UPDATE_OPERATION_QUERY } from "./operations";
 import { INSERT_PUBLISHED_FLOW_QUERY } from "./publishedFlows";
 import { SELECT_TEAM_MEMBERS_QUERY } from "./teamMembers";
@@ -22,5 +26,5 @@ export const queries = {
   operations: {
     insert: INSERT_OPERATION_QUERY,
     update: UPDATE_OPERATION_QUERY,
-  }
+  },
 } as const;

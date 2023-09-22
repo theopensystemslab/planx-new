@@ -6,4 +6,4 @@ export const SELECT_USERS_QUERY = gql`
       id
     }
   }
-`
+`;
