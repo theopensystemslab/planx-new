@@ -1,4 +1,7 @@
+import { User } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
+import jwtDecode from "jwt-decode";
+import { getCookie } from "lib/cookie";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -11,33 +14,44 @@ import { makeTitle } from "./utils";
 
 const editorRoutes = compose(
   withData(() => ({
-    username: useStore.getState().getUser().name,
+    username: useStore.getState().getUser().firstName,
   })),
 
   withView(() => <AuthenticatedLayout />),
 
   mount({
     "/": route(async () => {
-      // @TODO - decide how to dynamically populate here - SWR request to /me or gql query ?
-      useStore.getState().setUser({
-        name: "Jess",
-        email: "jessica@opensystemslab.io",
-        isPlatformAdmin: false,
-        roles: [
-          {
-            teamSlug: "barnet",
-            role: "teamEditor",
-          },
-          {
-            teamSlug: "opensystemslab",
-            role: "teamEditor",
-          },
-          {
-            teamSlug: "testing",
-            role: "teamEditor",
-          },
-        ],
+      const jwt = getCookie("jwt");
+      const email = jwt && (jwtDecode(jwt) as any)["email"];
+      const users = await client.query({
+        query: gql`
+          query GetUserByEmail($email: String!) {
+            users: users(where: { email: { _eq: $email } }) {
+              id
+              firstName: first_name
+              lastName: last_name
+              email
+              isPlatformAdmin: is_platform_admin
+              teams {
+                role
+                team {
+                  name
+                  slug
+                  id
+                }
+              }
+            }
+          }
+        `,
+        variables: { email },
       });
+
+      if (users) {
+        const user: User = users.data.users[0];
+        useStore.getState().setUser(user);
+      } else {
+        throw new Error(`Failed to get user ${email}`);
+      }
 
       const { data } = await client.query({
         query: gql`

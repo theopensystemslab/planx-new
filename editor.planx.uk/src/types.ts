@@ -54,18 +54,6 @@ export interface GlobalSettings {
   footerContent?: { [key: string]: TextContent };
 }
 
-export interface User {
-  name: string;
-  email: string;
-  isPlatformAdmin: boolean;
-  roles:
-    | []
-    | {
-        teamSlug: Team["slug"];
-        role: "teamEditor" | "teamViewer";
-      }[];
-}
-
 export const FOOTER_ITEMS = ["privacy", "help"];
 
 const FLOW_SETTINGS = [...FOOTER_ITEMS, "legalDisclaimer"] as const;

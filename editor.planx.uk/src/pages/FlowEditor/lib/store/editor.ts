@@ -23,7 +23,6 @@ import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
-import { UserStore } from "./user";
 
 let doc: any;
 
@@ -41,7 +40,7 @@ export interface EditorUIStore {
 }
 
 export const editorUIStore: StateCreator<
-  SharedStore & EditorUIStore & UserStore,
+  SharedStore & EditorUIStore,
   [],
   [],
   EditorUIStore
@@ -83,7 +82,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore & UserStore,
+  SharedStore & EditorStore,
   [],
   [],
   EditorStore

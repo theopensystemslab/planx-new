@@ -1,11 +1,14 @@
-import { Team, User } from "types";
+import { User, UserTeams } from "@opensystemslab/planx-core/types";
+import { Team } from "types";
 import type { StateCreator } from "zustand";
 
 export interface UserStore {
-  name: string;
+  id: number;
+  firstName: string;
+  lastName: string;
   email: string;
   isPlatformAdmin: boolean;
-  roles: { teamSlug: Team["slug"]; role: "teamEditor" | "teamViewer" }[] | [];
+  teams: UserTeams[];
 
   setUser: (user: User) => void;
   getUser: () => User;
@@ -16,31 +19,37 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
   set,
   get,
 ) => ({
-  name: "",
+  id: 0,
+  firstName: "",
+  lastName: "",
   email: "",
   isPlatformAdmin: false,
-  roles: [],
+  teams: [],
 
-  setUser: (user) =>
+  setUser: (user: User) =>
     set({
-      name: user.name,
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       isPlatformAdmin: user.isPlatformAdmin,
-      roles: user.roles,
+      teams: user.teams,
     }),
 
   getUser: () => ({
-    name: get().name,
+    id: get().id,
+    firstName: get().firstName,
+    lastName: get().lastName,
     email: get().email,
-    roles: get().roles,
     isPlatformAdmin: get().isPlatformAdmin,
+    teams: get().teams,
   }),
 
   canUserEditTeam: (teamSlug) => {
     return (
-      get().roles.filter(
-        (r) =>
-          (r.role === "teamEditor" && r.teamSlug === teamSlug) ||
+      get().teams.filter(
+        (team) =>
+          (team.role === "teamEditor" && team.team.slug === teamSlug) ||
           get().isPlatformAdmin,
       ).length > 0
     );
