@@ -56,7 +56,7 @@ export const performGQLQuery = async ({
   const query = queries[table][action];
   const variables = buildVariables(query, world)
   const client = (await getClient(world.activeUserEmail)).client;
-  const result = await client.request(query, variables);
+  const { result } = await client.request<Record<"result", any>>(query, variables);
   return result;
 };
 

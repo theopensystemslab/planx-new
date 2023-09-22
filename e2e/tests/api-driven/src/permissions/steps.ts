@@ -14,10 +14,11 @@ export class CustomWorld extends World {
   user2Email!: string;
   team2FlowId!: string;
   
-  error?: Error = undefined;
-
   activeUserId!: number;
   activeUserEmail!: string;
+  
+  error?: Error = undefined;
+  result: unknown = null;
 }
 
 Before<CustomWorld>("@team-admin-permissions", async function () {
@@ -77,7 +78,7 @@ When(
   "they perform {string} on team1's {string}",
   async function (this: CustomWorld, action: Action, table: Table) {
     try {
-      await performGQLQuery({
+      this.result = await performGQLQuery({
         world: this,
         action,
         table,
@@ -93,13 +94,17 @@ When(
 );
 
 Then("they have access", function (this: CustomWorld) {
-  if (this.error) {
+  if (!this.result) {
+    assert.fail("Permission should have been granted - check test setup");
+  } else if (this.error) {
     assert.fail(`Permission query failed with error: ${this.error.message}`);
   }
 });
 
 Then("they do not have access", function (this: CustomWorld) {
-  if (this.error) {
-    assert.ok(`Permission query failed with error: ${this.error.message}`);
+  if (this.result) {
+    assert.fail("Permission should not have been granted - check test setup");
+  } else if (this.error) {
+    assert.ok(`Permission query failed with error: ${this.error.message}`)
   }
 });
