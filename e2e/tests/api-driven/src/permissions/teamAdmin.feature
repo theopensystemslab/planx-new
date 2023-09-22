@@ -10,6 +10,8 @@ Feature: Testing Permissions for teamAdmin Role
       | TABLE           | ACTION          |
       | flows           | insert          |
       | flows           | update          |
+      | operations      | insert          |
+      | operations      | update          |
       | flows           | delete          |
       | published_flows | insert          |
 
@@ -23,6 +25,8 @@ Feature: Testing Permissions for teamAdmin Role
       | TABLE           | ACTION          |
       | flows           | insert          |
       | flows           | update          |
+      | operations      | insert          |
+      | operations      | update          |
       | flows           | delete          |
       | published_flows | insert          |
 

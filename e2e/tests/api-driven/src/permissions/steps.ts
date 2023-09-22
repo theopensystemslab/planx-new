@@ -18,7 +18,7 @@ export class CustomWorld extends World {
   activeUserEmail!: string;
   
   error?: Error = undefined;
-  result: unknown = null;
+  result: any[] | Record<"returning", any[]> | null = null;
 }
 
 Before<CustomWorld>("@team-admin-permissions", async function () {
@@ -144,9 +144,10 @@ Then("they have access", function (this: CustomWorld) {
 });
 
 Then("they do not have access", function (this: CustomWorld) {
-  const isResultEmpty = Array.isArray(this.result) && !this.result.length;
+  const isResultEmpty = (Array.isArray(this.result) && !this.result.length);
+  const isResultSetEmpty = this.result && !Array.isArray(this.result) && !this.result.returning.length;
 
-  if (isResultEmpty) {
+  if (isResultEmpty || isResultSetEmpty) {
     assert.ok(`Permission query did not return results`)
   } else if (this.error) {
     assert.ok(`Permission query failed with error: ${this.error.message}`)
