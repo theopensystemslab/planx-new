@@ -1,0 +1,44 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  name: user
+  description: User management
+components:
+  schemas:
+    CreateUserSchema:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Bilbo
+        lastName:
+          type: string
+          example: Baggins
+        email:
+          type: email
+          example: bilbo@bagend.sh
+        isPlatformAdmin:
+          type: bool
+          example: false
+paths:
+  /user:
+    put:
+      summary: Create a new user, and optionally assign them to teams
+      description: "Requires authentication via a Cloudflare WARP client
+        \n\n
+        Please login at [https://api.editor.planx.uk/user](https://api.editor.planx.uk/user)"
+      tags: ["user"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserSchema"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+
