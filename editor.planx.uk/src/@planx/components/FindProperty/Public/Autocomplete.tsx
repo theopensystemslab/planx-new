@@ -5,6 +5,7 @@ import {
   DESCRIPTION_TEXT,
   ERROR_MESSAGE,
 } from "@planx/components/shared/constants";
+import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
@@ -57,7 +58,9 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
-  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
+  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
+    client: publicClient,
+  });
 
   useEffect(() => {
     // Handles mapping the raw Ordnance Survey record to planx's address model

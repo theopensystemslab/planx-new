@@ -9,6 +9,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
+import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
@@ -31,7 +32,9 @@ function Component(props: PublicProps<PropertyInformation>) {
       state.computePassport().data?.["property.localAuthorityDistrict"],
       state.overrideAnswer,
     ]);
-  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
+  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
+    client: publicClient,
+  });
 
   return address ? (
     <Presentational
