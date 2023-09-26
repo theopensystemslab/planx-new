@@ -96,6 +96,6 @@ export const publicClient = new ApolloClient({
  */
 export const publicContext: DefaultContext = {
   headers: {
-    "x-hasura-role": "public"
-  }
-}
+    "x-hasura-role": "public",
+  },
+};

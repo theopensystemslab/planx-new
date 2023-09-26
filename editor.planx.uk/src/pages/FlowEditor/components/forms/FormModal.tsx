@@ -109,6 +109,9 @@ const FormModal: React.FC<{
   ]);
   const handleClose = () => navigate(rootFlowPath(true));
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+
   return (
     <StyledDialog
       open
@@ -183,6 +186,7 @@ const FormModal: React.FC<{
                   handleDelete();
                   navigate(rootFlowPath(true));
                 }}
+                disabled={!useStore.getState().canUserEditTeam(teamSlug)}
               >
                 delete
               </Button>
@@ -197,6 +201,7 @@ const FormModal: React.FC<{
                   makeUnique(id, parent);
                   navigate(rootFlowPath(true));
                 }}
+                disabled={!useStore.getState().canUserEditTeam(teamSlug)}
               >
                 make unique
               </Button>
@@ -210,6 +215,7 @@ const FormModal: React.FC<{
               variant="contained"
               color="primary"
               form="modal"
+              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
             >
               {handleDelete ? `Update ${type}` : `Create ${type}`}
             </Button>

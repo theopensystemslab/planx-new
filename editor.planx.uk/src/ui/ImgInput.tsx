@@ -8,6 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import React, { useMemo, useState } from "react";
 
 import PublicFileUploadButton from "./PublicFileUploadButton";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 const ImageUploadContainer = styled(Box)(() => ({
   height: 50,
@@ -38,6 +39,9 @@ export default function ImgInput({
     return `menu-${Math.floor(Math.random() * 1000000)}`;
   }, []);
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+
   return img ? (
     <ImageUploadContainer>
       <StyledIconButton
@@ -67,6 +71,7 @@ export default function ImgInput({
           onClick={() => {
             onChange && onChange(undefined);
           }}
+          disabled={!useStore.getState().canUserEditTeam(teamSlug)}
         >
           Remove
         </MenuItem>
@@ -81,6 +86,7 @@ export default function ImgInput({
             setAnchorEl(null);
             onChange && onChange(newUrl);
           }}
+          disabled={!useStore.getState().canUserEditTeam(teamSlug)}
         />
       </ImageUploadContainer>
     </Tooltip>

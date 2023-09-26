@@ -365,7 +365,6 @@ export const editorStore: StateCreator<
         toBefore,
       })(get().flow);
       send(ops);
-      get().resetPreview();
     } catch (err: any) {
       alert(err.message);
     }

@@ -136,7 +136,7 @@ const getSessionContext = (sessionId: string): DefaultContext => ({
     "x-hasura-lowcal-email":
       // email may be absent for non save and return journeys
       useStore.getState().saveToEmail?.toLowerCase() || "",
-  }
+  },
 });
 
 /**

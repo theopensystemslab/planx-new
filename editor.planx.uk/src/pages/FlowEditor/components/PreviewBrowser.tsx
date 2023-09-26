@@ -125,6 +125,9 @@ const PreviewBrowser: React.FC<{
     setLastPublishedTitle(formatLastPublish(date, user));
   });
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+
   return (
     <Box id="embedded-browser">
       <Header>
@@ -177,6 +180,7 @@ const PreviewBrowser: React.FC<{
               sx={{ width: "100% " }}
               variant="contained"
               color="primary"
+              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
               onClick={async () => {
                 try {
                   setLastPublishedTitle("Checking for changes...");

@@ -14,7 +14,7 @@ interface NextStepsListProps {
 }
 
 interface ListItemProps extends StyledListItem {
-  handleSubmit?: handleSubmit
+  handleSubmit?: handleSubmit;
 }
 
 const Root = styled("ul")(({ theme }) => ({
@@ -42,7 +42,7 @@ const innerStyle = (theme: Theme) => ({
   },
   "&:focus > .arrowButton": {
     backgroundColor: theme.palette.text.primary,
-  }
+  },
 });
 
 const InnerLink = styled(Link)(({ theme }) => ({
@@ -91,7 +91,10 @@ const Step = ({ title, description, url }: ListItemProps) => (
         variant="h3"
         component="h2"
         mb={0.75}
-        sx={{ textDecoration: url && "underline", textDecorationThickness: "1px" }}
+        sx={{
+          textDecoration: url && "underline",
+          textDecorationThickness: "1px",
+        }}
       >
         {title}
       </Typography>
@@ -103,17 +106,21 @@ const Step = ({ title, description, url }: ListItemProps) => (
       <EastIcon />
     </ArrowButton>
   </>
-)
+);
 
 function NextStepsList(props: NextStepsListProps) {
   return (
-    <Root>{props.steps?.map((step, i) =>
-      <StyledListItem key={i}>
-        { step.url
-        ? <LinkStep {...step} />
-        : <ContinueStep {...step} handleSubmit={props.handleSubmit}/> }
-      </StyledListItem>
-    )}</Root>
+    <Root>
+      {props.steps?.map((step, i) => (
+        <StyledListItem key={i}>
+          {step.url ? (
+            <LinkStep {...step} />
+          ) : (
+            <ContinueStep {...step} handleSubmit={props.handleSubmit} />
+          )}
+        </StyledListItem>
+      ))}
+    </Root>
   );
 }
 

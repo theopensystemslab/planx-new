@@ -13,6 +13,7 @@ import { logger } from "airbrake";
 import { isEmpty } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
+import striptags from "striptags";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { toPence } from "../../Pay/model";
@@ -28,7 +29,6 @@ import {
   ResponseMetaData,
   USER_ROLES,
 } from "../model";
-import striptags from "striptags";
 
 export const bopsDictionary = {
   // applicant or agent details provided via TextInput(s) or ContactInput component

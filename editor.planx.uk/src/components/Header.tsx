@@ -1,5 +1,7 @@
+import Edit from "@mui/icons-material/Edit";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -10,8 +12,7 @@ import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
-import { Theme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
+import { styled,Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -50,6 +51,9 @@ const Root = styled(AppBar)(() => ({
 const BreadcrumbsRoot = styled(Box)(() => ({
   cursor: "pointer",
   fontSize: 20,
+  display: "flex",
+  columnGap: 10,
+  alignItems: "center",
 }));
 
 const StyledToolbar = styled(MuiToolbar)(() => ({
@@ -231,6 +235,15 @@ const Breadcrumbs: React.FC<{
           >
             {route.data.flow}
           </Link>
+        </>
+      )}
+      {route.data.flow && (
+        <>
+          {useStore.getState().canUserEditTeam(route.data.team) ? (
+            <Edit />
+          ) : (
+            <Visibility />
+          )}
         </>
       )}
     </BreadcrumbsRoot>
