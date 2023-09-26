@@ -73,11 +73,7 @@ const ExternalPortal: React.FC<any> = React.memo(
 
     return (
       <>
-        <Hanger
-          hidden={isDragging}
-          before={props.id}
-          parent={parent}
-        />
+        <Hanger hidden={isDragging} before={props.id} parent={parent} />
         <li
           className={classNames("card", "portal", { isDragging })}
           onContextMenu={handleContext}
@@ -127,11 +123,7 @@ const InternalPortal: React.FC<any> = (props) => {
 
   return (
     <>
-      <Hanger
-        hidden={isDragging}
-        before={props.id}
-        parent={parent}
-      />
+      <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li className={classNames("card", "portal", { isDragging })}>
         <Link
           href={href}

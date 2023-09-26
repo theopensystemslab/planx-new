@@ -38,9 +38,7 @@ const Option: React.FC<any> = (props) => {
         {childNodes.map((child: any) => (
           <Node key={child.id} parent={props.id} {...child} />
         ))}
-        <Hanger
-          parent={props.id}
-        />
+        <Hanger parent={props.id} />
       </ol>
     </li>
   );
