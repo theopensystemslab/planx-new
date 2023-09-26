@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import React, { PropsWithChildren } from "react";
 
 const Root = styled(Box)(() => ({
-  backgroundColor: "#fff",
+  backgroundColor: "#ffffff",
   color: "#2C2C2C",
   width: "100%",
   flex: 1,
