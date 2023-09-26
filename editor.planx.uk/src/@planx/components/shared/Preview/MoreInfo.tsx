@@ -1,8 +1,14 @@
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Drawer, { DrawerProps } from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import React from "react";
 
 const PREFIX = "MoreInfo";
@@ -40,16 +46,16 @@ const Root = styled(Drawer, {
   },
 }));
 
-const DrawerContent = styled("div")(({ theme }) => ({
-  padding: theme.spacing(2.5, 4, 6, 0),
+const DrawerContent = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2.5, 4, 0, 0),
   fontSize: "1rem",
   lineHeight: "1.5",
   [theme.breakpoints.up("sm")]: {
-    padding: theme.spacing(6, 4, 6, 1),
+    padding: theme.spacing(6, 4, 0, 1),
   },
 }));
 
-const CloseButton = styled("div")(({ theme }) => ({
+const CloseButton = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
@@ -57,6 +63,24 @@ const CloseButton = styled("div")(({ theme }) => ({
   top: theme.spacing(1),
   right: theme.spacing(1),
   color: theme.palette.text.primary,
+}));
+
+const MoreInfoFeedback = styled(Box)(({ theme }) => ({
+  display: "flex",
+  height: "100%",
+  backgroundColor: theme.palette.background.paper,
+  borderTop: `2px solid ${theme.palette.border.main}`,
+  padding: theme.spacing(2.5, 4, 8, 0),
+  [theme.breakpoints.up("sm")]: {
+    padding: theme.spacing(3, 4, 8, 1),
+  },
+}));
+
+const FeedbackButtons = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  padding: theme.spacing(1, 0, 2),
 }));
 
 interface IMoreInfo {
@@ -93,6 +117,31 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
     <Container maxWidth={false} role="main">
       <DrawerContent>{children}</DrawerContent>
     </Container>
+    <MoreInfoFeedback>
+      <Container maxWidth={false}>
+        <Typography variant="h4" component="h3" gutterBottom>
+          Did this help to answer your question?
+        </Typography>
+        <FeedbackButtons>
+          <Button
+            variant="contained"
+            size="small"
+            color="secondary"
+            sx={{ mr: 1 }}
+          >
+            <CheckCircleIcon color="success" sx={{ mr: 0.5 }} />
+            Yes
+          </Button>
+          <Button variant="contained" size="small" color="secondary">
+            <CancelIcon color="error" sx={{ mr: 0.5 }} />
+            No
+          </Button>
+        </FeedbackButtons>
+        <Typography variant="body1">
+          <Link component="button">Give us feedback about this content</Link>
+        </Typography>
+      </Container>
+    </MoreInfoFeedback>
   </Root>
 );
 
