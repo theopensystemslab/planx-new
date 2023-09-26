@@ -1,6 +1,7 @@
 import Edit from "@mui/icons-material/Edit";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import Person from "@mui/icons-material/Person";
 import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
@@ -9,10 +10,12 @@ import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
-import { styled,Theme } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -390,7 +393,10 @@ const EditorToolbar: React.FC<{
   route: Route;
 }> = ({ headerRef, route }) => {
   const [open, setOpen] = useState(false);
-  const togglePreview = useStore((state) => state.togglePreview);
+  const [ togglePreview, user ] = useStore((state) => [
+    state.togglePreview,
+    state.getUser(),
+  ]);
 
   const { navigate } = useNavigation();
 
@@ -460,11 +466,35 @@ const EditorToolbar: React.FC<{
         }}
       >
         <StyledPaper>
-          {/*
-          <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
-          <MenuItem onClick={() => handleClick("/")}>My dashboard</MenuItem>
-           */}
-
+          <MenuItem disabled>
+            <ListItemIcon>
+              <Person fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
+              {user.email}
+            </ListItemText>
+          </MenuItem>
+          {(user.isPlatformAdmin || user.teams.length > 0) && (
+            <MenuItem disabled>
+              <ListItemIcon>
+                <Edit />
+              </ListItemIcon>
+              <ListItemText>
+                {user.isPlatformAdmin ? `All teams` : user.teams.map((team) => team.team.name).join(", ")}
+              </ListItemText>
+            </MenuItem>
+          )}
+          {!user.isPlatformAdmin && (
+            <MenuItem disabled divider>
+              <ListItemIcon>
+                <Visibility />
+              </ListItemIcon>
+              <ListItemText>
+                All teams
+              </ListItemText>
+            </MenuItem>
+          )}
+          
           {/* only show flow settings link if inside a flow route  */}
           {route.data.flow && (
             <MenuItem
