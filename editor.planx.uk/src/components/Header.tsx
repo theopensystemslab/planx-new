@@ -484,14 +484,16 @@ const EditorToolbar: React.FC<{
               </ListItemText>
             </MenuItem>
           )}
-          <MenuItem disabled divider>
-            <ListItemIcon>
-              <Visibility />
-            </ListItemIcon>
-            <ListItemText>
-              All teams
-            </ListItemText>
-          </MenuItem>
+          {!user.isPlatformAdmin && (
+            <MenuItem disabled divider>
+              <ListItemIcon>
+                <Visibility />
+              </ListItemIcon>
+              <ListItemText>
+                All teams
+              </ListItemText>
+            </MenuItem>
+          )}
           
           {/* only show flow settings link if inside a flow route  */}
           {route.data.flow && (
