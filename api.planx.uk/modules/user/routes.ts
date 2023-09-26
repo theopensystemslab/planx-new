@@ -6,6 +6,6 @@ import { createUserSchema, createUser } from "./controller";
 const router = Router();
 
 router.use(usePlatformAdminAuth);
-router.put("/user", validate(createUserSchema), createUser);
+router.put("/", validate(createUserSchema), createUser);
 
 export default router;

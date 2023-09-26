@@ -7,23 +7,23 @@ tags:
   description: Team and Team Member related requests
 components:
   parameters:
-    teamId:
+    teamSlug:
       in: path
-      name: teamId
-      type: integer
+      name: teamSlug
+      type: string
       required: true
   schemas:
     UpsertMember:
       type: object
       properties:
-        userId:
-          type: number
-          example: 123
+        userEmail:
+          type: email
+          example: einstein@princeton.edu
         role:
           type: string
           enum: ["teamViewer", "teamEditor"]
 paths:
-  /team/{teamId}/add-member:
+  /team/{teamSlug}/add-member:
     put:
       summary: Add user to team, and assign them a role
       description: "Requires authentication via a Cloudflare WARP client
@@ -31,7 +31,7 @@ paths:
         Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
       tags: ["team"]
       parameters:
-        - $ref: "#/components/parameters/teamId"
+        - $ref: "#/components/parameters/teamSlug"
       requestBody:
         required: true
         content:
@@ -43,7 +43,7 @@ paths:
           $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
-  /team/{teamId}/change-member-role:
+  /team/{teamSlug}/change-member-role:
     patch:
       summary: Change role of an existing team member
       description: "Requires authentication via a Cloudflare WARP client
@@ -51,7 +51,7 @@ paths:
         Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
       tags: ["team"]
       parameters:
-        - $ref: "#/components/parameters/teamId"
+        - $ref: "#/components/parameters/teamSlug"
       requestBody:
         required: true
         content:
@@ -63,7 +63,7 @@ paths:
           $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
-  /team/{teamId}/remove-member:
+  /team/{teamSlug}/remove-member:
     delete:
       summary: Remover user from team
       description: "Requires authentication via a Cloudflare WARP client
@@ -71,7 +71,7 @@ paths:
         Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
       tags: ["team"]
       parameters:
-        - $ref: "#/components/parameters/teamId"
+        - $ref: "#/components/parameters/teamSlug"
       requestBody:
         required: true
         content:
@@ -79,9 +79,9 @@ paths:
             schema:
               type: object
               properties:
-                userId:
-                  type: integer
-                  example: 123
+                userEmail:
+                  type: email
+                  example: einstein@princeton.edu
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"

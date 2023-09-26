@@ -41,4 +41,3 @@ paths:
           $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
-

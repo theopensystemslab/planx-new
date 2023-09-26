@@ -195,7 +195,7 @@ app.use(urlencoded({ extended: true }));
 
 app.use(authRoutes);
 app.use(miscRoutes);
-app.use(userRoutes);
+app.use("/user", userRoutes);
 app.use("/team", teamRoutes);
 
 app.use("/gis", router);

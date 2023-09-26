@@ -1,6 +1,7 @@
+import * as Service from "./service";
 import { z } from "zod";
-import { getClient } from "../../client";
 import { ValidatedRequestHandler } from "../../shared/middleware/validate";
+import { ServerError } from "../../errors";
 
 interface TeamMemberResponse {
   message: string;
@@ -8,10 +9,10 @@ interface TeamMemberResponse {
 
 export const upsertMemberSchema = z.object({
   params: z.object({
-    teamId: z.string().transform((val) => parseInt(val)),
+    teamSlug: z.string().toLowerCase(),
   }),
   body: z.object({
-    userId: z.number(),
+    userEmail: z.string().email(),
     role: z.enum(["teamEditor", "teamViewer"]),
   }),
 });
@@ -23,10 +24,10 @@ export type UpsertMember = ValidatedRequestHandler<
 
 export const removeMemberSchema = z.object({
   params: z.object({
-    teamId: z.string().transform((val) => parseInt(val)),
+    teamSlug: z.string().toLowerCase(),
   }),
   body: z.object({
-    userId: z.number(),
+    userEmail: z.string().email(),
   }),
 });
 
@@ -35,47 +36,50 @@ export type RemoveMember = ValidatedRequestHandler<
   TeamMemberResponse
 >;
 
-export const addMember: UpsertMember = async (req, res) => {
-  const { teamId } = req.params;
-  const { userId, role } = req.body;
+export const addMember: UpsertMember = async (req, res, next) => {
+  const { teamSlug } = req.params;
+  const { userEmail, role } = req.body;
 
-  const $client = getClient();
-  const isSuccess = await $client.team.addMember({ teamId, userId, role });
-
-  if (!isSuccess)
-    return res.status(500).json({ message: "Failed to add member to team" });
-
-  res.send({ message: "Successfully added user to team" });
+  try {
+    await Service.addMember({ userEmail, teamSlug, role });
+    return res.send({ message: "Successfully added user to team" });
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: "Failed to add member to team",
+        cause: error,
+      }),
+    );
+  }
 };
 
-export const changeMemberRole: UpsertMember = async (req, res) => {
-  const { teamId } = req.params;
-  const { userId, role } = req.body;
+export const changeMemberRole: UpsertMember = async (req, res, next) => {
+  const { teamSlug } = req.params;
+  const { userEmail, role } = req.body;
 
-  const $client = getClient();
-  const isSuccess = await $client.team.changeMemberRole({
-    teamId,
-    userId,
-    role,
-  });
-
-  if (!isSuccess)
-    return res.status(500).json({ message: "Failed to change role" });
-
-  res.send({ message: "Successfully changed role" });
+  try {
+    await Service.changeMemberRole({ userEmail, teamSlug, role });
+    return res.send({ message: "Successfully changed role" });
+  } catch (error) {
+    return next(
+      new ServerError({ message: "Failed to change role", cause: error }),
+    );
+  }
 };
 
-export const removeMember: RemoveMember = async (req, res) => {
-  const { teamId } = req.params;
-  const { userId } = req.body;
+export const removeMember: RemoveMember = async (req, res, next) => {
+  const { teamSlug } = req.params;
+  const { userEmail } = req.body;
 
-  const $client = getClient();
-  const isSuccess = await $client.team.removeMember({ teamId, userId });
-
-  if (!isSuccess)
-    return res
-      .status(500)
-      .json({ message: "Failed to remove member from team" });
-
-  res.send({ message: "Successfully removed user from team" });
+  try {
+    await Service.removeMember({ userEmail, teamSlug });
+    return res.send({ message: "Successfully removed user from team" });
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: "Failed to remove member from team",
+        cause: error,
+      }),
+    );
+  }
 };
