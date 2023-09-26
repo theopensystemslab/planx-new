@@ -16,6 +16,7 @@ import {
 } from "react-beautiful-dnd";
 
 import { removeAt, setAt } from "../utils";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 export interface EditorProps<T> {
   index?: number;
@@ -45,6 +46,10 @@ export default function ListManager<T, EditorExtraProps>(
   // Initialize a random ID when the component mounts
   const randomId = useRef(String(Math.random()));
 
+  // useStore.getState().getTeam().slug undefined here, use window instead
+  const teamSlug = window.location.pathname.split("/")[1];
+  const isViewOnly = !useStore.getState().canUserEditTeam(teamSlug);
+
   return props.disableDragAndDrop ? (
     <>
       <Box>
@@ -54,7 +59,7 @@ export default function ListManager<T, EditorExtraProps>(
               <Box>
                 <IconButton
                   disableRipple
-                  disabled={true}
+                  disabled={true || isViewOnly}
                   aria-label="Drag"
                   size="large"
                 >
@@ -76,6 +81,7 @@ export default function ListManager<T, EditorExtraProps>(
                   }}
                   aria-label="Delete"
                   size="large"
+                  disabled={isViewOnly}
                 >
                   <Delete />
                 </IconButton>
@@ -89,6 +95,7 @@ export default function ListManager<T, EditorExtraProps>(
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
+        disabled={isViewOnly}
       >
         {props.newValueLabel || "add new"}
       </Button>
@@ -125,9 +132,10 @@ export default function ListManager<T, EditorExtraProps>(
                           disableRipple
                           {...(!props.disableDragAndDrop
                             ? provided.dragHandleProps
-                            : { disabled: true })}
+                            : { disabled: true || isViewOnly })}
                           aria-label="Drag"
                           size="large"
+                          disabled={isViewOnly}
                         >
                           <DragHandle />
                         </IconButton>
@@ -147,6 +155,7 @@ export default function ListManager<T, EditorExtraProps>(
                           }}
                           aria-label="Delete"
                           size="large"
+                          disabled={isViewOnly}
                         >
                           <Delete />
                         </IconButton>
@@ -165,6 +174,7 @@ export default function ListManager<T, EditorExtraProps>(
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
+        disabled={isViewOnly}
       >
         {props.newValueLabel || "add new"}
       </Button>
