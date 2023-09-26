@@ -71,13 +71,10 @@ const ExternalPortal: React.FC<any> = React.memo(
       editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
     }
 
-    // useStore.getState().getTeam().slug undefined here, use window instead
-    const teamSlug = window.location.pathname.split("/")[1];
-
     return (
       <>
         <Hanger
-          hidden={isDragging || !useStore.getState().canUserEditTeam(teamSlug)}
+          hidden={isDragging}
           before={props.id}
           parent={parent}
         />
@@ -128,13 +125,10 @@ const InternalPortal: React.FC<any> = (props) => {
     copyNode(props.id);
   };
 
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
-
   return (
     <>
       <Hanger
-        hidden={isDragging || !useStore.getState().canUserEditTeam(teamSlug)}
+        hidden={isDragging}
         before={props.id}
         parent={parent}
       />

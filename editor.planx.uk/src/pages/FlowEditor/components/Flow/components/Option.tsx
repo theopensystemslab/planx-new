@@ -22,9 +22,6 @@ const Option: React.FC<any> = (props) => {
     color = flag?.color || color;
   } catch (e) {}
 
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
-
   return (
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
@@ -43,7 +40,6 @@ const Option: React.FC<any> = (props) => {
         ))}
         <Hanger
           parent={props.id}
-          hidden={!useStore.getState().canUserEditTeam(teamSlug)}
         />
       </ol>
     </li>
