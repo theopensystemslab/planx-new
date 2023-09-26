@@ -91,7 +91,11 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
   });
 
-  test.skip("Preview a created flow", async ({ browser }: { browser: Browser }) => {
+  test.skip("Preview a created flow", async ({
+    browser,
+  }: {
+    browser: Browser;
+  }) => {
     const page = await createAuthenticatedSession({
       browser,
       userId: context.user!.id!,
