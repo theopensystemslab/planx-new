@@ -169,28 +169,30 @@ export function SectionsOverviewList({
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
         <SectionRow key={sectionId}>
-          <SectionTitle>
-            {showChange &&
-            sectionStatuses[sectionId] === SectionStatus.Completed ? (
-              <Link
-                onClick={() => changeFirstAnswerInSection(sectionId)}
-                component="button"
-              >
-                <Typography variant="subtitle1" component="h4" color="primary" align="left">
-                  <span style={visuallyHidden}>{`Change `}</span>
-                  <strong>{sectionNode.data.title}</strong>
-                </Typography>
-              </Link>
-            ) : (
-              <Typography variant="subtitle1" component="h4" color="inherit"><strong>{sectionNode.data.title}</strong></Typography>           
-            )}
-          </SectionTitle>
-          <SectionDescription>
-            <ReactMarkdownOrHtml
-              source={sectionNode.data.description}
-              openLinksOnNewTab
-            />   
-          </SectionDescription>
+          <SectionWrap>
+            <SectionTitle>
+              {showChange &&
+              sectionStatuses[sectionId] === SectionStatus.Completed ? (
+                <Link
+                  onClick={() => changeFirstAnswerInSection(sectionId)}
+                  component="button"
+                >
+                  <Typography variant="subtitle1" component="h4" color="primary" align="left">
+                    <span style={visuallyHidden}>{`Change `}</span>
+                    <strong>{sectionNode.data.title}</strong>
+                  </Typography>
+                </Link>
+              ) : (
+                <Typography variant="subtitle1" component="h4" color="inherit"><strong>{sectionNode.data.title}</strong></Typography>           
+              )}
+            </SectionTitle>
+            <SectionDescription>
+              <ReactMarkdownOrHtml
+                source={sectionNode.data.description}
+                openLinksOnNewTab
+              />   
+            </SectionDescription>
+          </SectionWrap>
           <SectionState> {getTag(sectionStatuses[sectionId])} </SectionState>
         </SectionRow>
       ))}
@@ -216,45 +218,44 @@ const SectionRow = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   width: "100%",
   padding: theme.spacing(2, 0),
-  margin: 0,
   borderBottom: `1px solid ${theme.palette.border.main}`,
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("md")]: {
     flexDirection: "row",
     flexWrap: "wrap",
   },
 }));
 
-const SectionTitle = styled("dt")(({ theme }) => ({
-  order: 1,
-  margin: 0,
-  [theme.breakpoints.up("sm")]: {
-    order: 1,
+const SectionWrap = styled(Box)(({ theme }) => ({
+  [theme.breakpoints.up("md")]: {
     flexShrink: 1,
     flexBasis: `calc(100% - 260px)`,
+  },
+}));
+
+const SectionTitle = styled("dt")(({ theme }) => ({
+  margin: 0,
+  [theme.breakpoints.up("md")]: {
     paddingTop: theme.spacing(0.33),
   },
 }));
 
 const SectionDescription = styled("dd")(({ theme }) => ({
-  order: 2,
   margin: 0,
   paddingBottom: theme.spacing(2),
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("md")]: {
     paddingBottom: 0,
-    order: 3,
     flexBasis: "100%",
   },
 }));
 
 const SectionState = styled("dd")(({ theme }) => ({
-  order: 3,
   margin: 0,
-  [theme.breakpoints.up("sm")]: {
-    order: 2,
+  [theme.breakpoints.up("md")]: {
     display: "flex",
     flexShrink: 0,
     flexBasis: "260px",
     justifyContent: "flex-end",
+    alignItems: "flex-start",
   },
   "& > button": {
     width: "auto",
