@@ -228,7 +228,7 @@ const SectionRow = styled(Box)(({ theme }) => ({
 const SectionWrap = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     flexShrink: 1,
-    flexBasis: `calc(100% - 260px)`,
+    flexBasis: `calc(100% - 230px)`,
   },
 }));
 
@@ -253,7 +253,7 @@ const SectionState = styled("dd")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     display: "flex",
     flexShrink: 0,
-    flexBasis: "260px",
+    flexBasis: "230px",
     justifyContent: "flex-end",
     alignItems: "flex-start",
   },
