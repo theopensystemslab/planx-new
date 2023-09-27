@@ -29,13 +29,13 @@ function SectionComponent(props: Props) {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Section marker title"
+          title="Section marker"
           Icon={ICONS[TYPES.Section]}
         >
           <InputRow>
             <Input
               required
-              format="data"
+              format="large"
               name="title"
               placeholder="Title"
               value={formik.values.title}
