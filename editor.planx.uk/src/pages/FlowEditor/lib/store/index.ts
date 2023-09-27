@@ -14,6 +14,7 @@ import type { SharedStore } from "./shared";
 import { sharedStore } from "./shared";
 import type { TeamStore } from "./team";
 import { teamStore } from "./team";
+import { UserStore, userStore } from "./user";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace Store {
@@ -52,7 +53,7 @@ export type PublicStore = SharedStore &
   SettingsStore &
   TeamStore;
 
-export type FullStore = PublicStore & EditorStore & EditorUIStore;
+export type FullStore = PublicStore & EditorStore & EditorUIStore & UserStore;
 
 interface PlanXStores {
   // Non-React implementation (e.g. for use in tests)
@@ -87,6 +88,7 @@ const createFullStore = (): StoreApi<FullStore> => {
     ...editorUIStore(...args),
     ...settingsStore(...args),
     ...teamStore(...args),
+    ...userStore(...args),
   }));
 };
 

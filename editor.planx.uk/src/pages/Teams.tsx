@@ -1,3 +1,5 @@
+import Edit from "@mui/icons-material/Edit";
+import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
@@ -6,6 +8,7 @@ import React from "react";
 import { Link } from "react-navi";
 
 import type { Team } from "../types";
+import { useStore } from "./FlowEditor/lib/store";
 
 interface Props {
   teams: Array<Team>;
@@ -44,10 +47,22 @@ const Teams: React.FC<Props> = ({ teams }) => {
         </Box>
         {teams.map(({ name, slug }) => (
           <StyledLink href={`/${slug}`} key={slug} prefetch={false}>
-            <Box mb={2.5} px={2.5} py={3} mx={2} component={Card}>
+            <Box
+              mb={2.5}
+              px={2.5}
+              py={3}
+              mx={2}
+              component={Card}
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
               <Typography variant="h4" component="h2">
                 {name}
               </Typography>
+              {useStore.getState().canUserEditTeam(slug) ? (
+                <Edit />
+              ) : (
+                <Visibility />
+              )}
             </Box>
           </StyledLink>
         ))}

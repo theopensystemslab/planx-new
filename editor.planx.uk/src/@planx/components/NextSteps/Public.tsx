@@ -18,7 +18,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <NextStepsList steps={props.steps} handleSubmit={props.handleSubmit}/>
+      <NextStepsList steps={props.steps} handleSubmit={props.handleSubmit} />
     </Card>
   );
 };

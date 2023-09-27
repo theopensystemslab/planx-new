@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
+import Edit from "@mui/icons-material/Edit";
+import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
@@ -206,72 +208,74 @@ const FlowItem: React.FC<FlowItemProps> = ({
             {flowInfoHelper(flow.updated_at, flow.operations)}
           </LinkSubText>
         </Box>
-        <StyledSimpleMenu
-          items={[
-            {
-              onClick: async () => {
-                const newSlug = prompt("New name", flow.slug);
-                if (newSlug && slugify(newSlug) !== flow.slug) {
-                  await client.mutate({
-                    mutation: gql`
-                      mutation UpdateFlowSlug(
-                        $teamId: Int
-                        $slug: String
-                        $newSlug: String
-                      ) {
-                        update_flows(
-                          where: {
-                            team: { id: { _eq: $teamId } }
-                            slug: { _eq: $slug }
-                          }
-                          _set: { slug: $newSlug }
+        {useStore.getState().canUserEditTeam(teamSlug) && (
+          <StyledSimpleMenu
+            items={[
+              {
+                onClick: async () => {
+                  const newSlug = prompt("New name", flow.slug);
+                  if (newSlug && slugify(newSlug) !== flow.slug) {
+                    await client.mutate({
+                      mutation: gql`
+                        mutation UpdateFlowSlug(
+                          $teamId: Int
+                          $slug: String
+                          $newSlug: String
                         ) {
-                          affected_rows
+                          update_flows(
+                            where: {
+                              team: { id: { _eq: $teamId } }
+                              slug: { _eq: $slug }
+                            }
+                            _set: { slug: $newSlug }
+                          ) {
+                            affected_rows
+                          }
                         }
-                      }
-                    `,
-                    variables: {
-                      teamId: teamId,
-                      slug: flow.slug,
-                      newSlug: slugify(newSlug),
-                    },
-                  });
+                      `,
+                      variables: {
+                        teamId: teamId,
+                        slug: flow.slug,
+                        newSlug: slugify(newSlug),
+                      },
+                    });
 
-                  refreshFlows();
-                }
-              },
-              label: "Rename",
-            },
-            {
-              label: "Copy",
-              onClick: () => {
-                handleCopy();
-              },
-            },
-            {
-              label: "Move",
-              onClick: () => {
-                const newTeam = prompt("New team");
-                if (newTeam) {
-                  if (slugify(newTeam) === teamSlug) {
-                    alert(
-                      `This flow already belongs to ${teamSlug}, skipping move`,
-                    );
-                  } else {
-                    handleMove(slugify(newTeam));
+                    refreshFlows();
                   }
-                }
+                },
+                label: "Rename",
               },
-            },
-            {
-              label: "Delete",
-              onClick: () => {
-                setDeleting(true);
+              {
+                label: "Copy",
+                onClick: () => {
+                  handleCopy();
+                },
               },
-              error: true,
-            },
-          ]}
-        />
+              {
+                label: "Move",
+                onClick: () => {
+                  const newTeam = prompt("New team");
+                  if (newTeam) {
+                    if (slugify(newTeam) === teamSlug) {
+                      alert(
+                        `This flow already belongs to ${teamSlug}, skipping move`,
+                      );
+                    } else {
+                      handleMove(slugify(newTeam));
+                    }
+                  }
+                },
+              },
+              {
+                label: "Delete",
+                onClick: () => {
+                  setDeleting(true);
+                },
+                error: true,
+              },
+            ]}
+          />
+        )}
       </DashboardListItem>
     </>
   );
@@ -294,10 +298,23 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
   return (
     <Root>
       <Dashboard>
-        <Box pl={2} pb={2}>
+        <Box
+          pl={2}
+          pb={2}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h2" component="h1" gutterBottom>
             My services
           </Typography>
+          {useStore.getState().canUserEditTeam(slug) ? (
+            <Edit />
+          ) : (
+            <Visibility />
+          )}
         </Box>
         {flows && (
           <DashboardList>
@@ -312,22 +329,24 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
                 }}
               />
             ))}
-            <AddButton
-              onClick={() => {
-                const newFlowName = prompt("Service name");
-                if (newFlowName) {
-                  const newFlowSlug = slugify(newFlowName);
-                  useStore
-                    .getState()
-                    .createFlow(id, newFlowSlug)
-                    .then((newId: string) => {
-                      navigation.navigate(`/${slug}/${newId}`);
-                    });
-                }
-              }}
-            >
-              Add a new service
-            </AddButton>
+            {useStore.getState().canUserEditTeam(slug) && (
+              <AddButton
+                onClick={() => {
+                  const newFlowName = prompt("Service name");
+                  if (newFlowName) {
+                    const newFlowSlug = slugify(newFlowName);
+                    useStore
+                      .getState()
+                      .createFlow(id, newFlowSlug)
+                      .then((newId: string) => {
+                        navigation.navigate(`/${slug}/${newId}`);
+                      });
+                  }
+                }}
+              >
+                Add a new service
+              </AddButton>
+            )}
           </DashboardList>
         )}
       </Dashboard>

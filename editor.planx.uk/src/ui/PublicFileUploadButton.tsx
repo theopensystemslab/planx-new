@@ -11,6 +11,7 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 export interface Props {
   onChange?: (image: string) => void;
   variant?: "tooltip";
+  disabled?: boolean;
 }
 
 interface RootProps extends ButtonBaseProps {
@@ -38,7 +39,7 @@ const Root = styled(ButtonBase, {
 }));
 
 export default function PublicFileUploadButton(props: Props): FCReturn {
-  const { onChange, variant } = props;
+  const { onChange, variant, disabled } = props;
 
   const [status, setStatus] = useState<
     { type: "none" } | { type: "loading" } | { type: "error"; msg: string }
@@ -112,9 +113,10 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
       key="status-none"
       variant={variant}
       {...getRootProps()}
+      disabled={disabled}
     >
       <input data-testid="upload-file-input" {...getInputProps()} />
-      <Image />
+      <Image color={disabled ? "disabled" : "inherit"} />
     </Root>
   );
 }

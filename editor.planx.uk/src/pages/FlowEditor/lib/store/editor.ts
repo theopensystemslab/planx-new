@@ -23,6 +23,7 @@ import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
+import { UserStore } from "./user";
 
 let doc: any;
 
@@ -82,7 +83,7 @@ export interface EditorStore extends Store.Store {
 }
 
 export const editorStore: StateCreator<
-  SharedStore & EditorStore,
+  SharedStore & EditorStore & UserStore,
   [],
   [],
   EditorStore
@@ -333,6 +334,12 @@ export const editorStore: StateCreator<
   },
 
   moveFlow(flowId: string, teamSlug: string) {
+    const valid = get().canUserEditTeam(teamSlug);
+    if (!valid) {
+      alert(`You do not have permission to move this flow into ${teamSlug}, try again`);
+      return Promise.resolve();
+    }
+
     const token = getCookie("jwt");
 
     return axios
@@ -365,7 +372,6 @@ export const editorStore: StateCreator<
         toBefore,
       })(get().flow);
       send(ops);
-      get().resetPreview();
     } catch (err: any) {
       alert(err.message);
     }

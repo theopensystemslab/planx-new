@@ -16,10 +16,10 @@ function getEnvForAllowedHosts(host: string) {
     case "planningservices.southwark.gov.uk":
     case "planningservices.buckinghamshire.gov.uk":
     case "editor.planx.uk":
-      return "production"
+      return "production";
 
     case "editor.planx.dev":
-      return "staging"
+      return "staging";
 
     default:
       "pullrequest";
@@ -54,7 +54,7 @@ function getErrorLogger(): ErrorLogger {
   return new Notifier({
     projectId: Number(process.env.REACT_APP_AIRBRAKE_PROJECT_ID!),
     projectKey: process.env.REACT_APP_AIRBRAKE_PROJECT_KEY!,
-    environment: getEnvForAllowedHosts(window.location.host)
+    environment: getEnvForAllowedHosts(window.location.host),
   });
 }
 
