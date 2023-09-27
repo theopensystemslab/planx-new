@@ -285,7 +285,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
             <Typography variant="h4" component="h3" pr={3}>
               Select all document types that apply
             </Typography>
-            <Button variant="contained" onClick={handleClose}>
+            <Button variant="contained" onClick={handleClose} aria-label="Close list">
               Done
             </Button>
           </ListHeader>
