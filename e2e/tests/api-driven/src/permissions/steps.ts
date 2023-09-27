@@ -42,7 +42,7 @@ Given("a teamAdmin is a member of a team", async function (this: CustomWorld) {
   assert.ok(user, "User is not defined");
   assert.strictEqual(user.teams.length, 1);
   assert.strictEqual(user.teams[0].role, "teamEditor");
-  assert.strictEqual(user.teams[0].teamId, this.teamId1);
+  assert.strictEqual(user.teams[0].team.id, this.teamId1);
 
   this.activeUser = this.user1;
 });
@@ -56,7 +56,7 @@ Given(
     assert.ok(user, "User is not defined");
     assert.strictEqual(user.teams.length, 1);
     assert.strictEqual(user.teams[0].role, "teamEditor");
-    assert.strictEqual(user.teams[0].teamId, this.teamId2);
+    assert.strictEqual(user.teams[0].team.id, this.teamId2);
 
     this.activeUser = this.user2;
   },
