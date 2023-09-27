@@ -6,13 +6,16 @@
   },
   "dependencies": {
     "@cucumber/cucumber": "^9.3.0",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#4e3d09f",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#44e9ebe",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "dotenv-expand": "^10.0.0",
+    "graphql-request": "^6.1.0",
+    "jsonwebtoken": "^9.0.2",
     "nock": "^13.3.1"
   },
   "devDependencies": {
+    "@types/lodash.zipobject": "^4.1.7",
     "@types/node": "18.16.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"

@@ -46,8 +46,8 @@ dependencies:
     specifier: ^0.7.5
     version: 0.7.5
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#7e31b2e
-    version: git/github.com+theopensystemslab/planx-core/7e31b2e(@types/react@18.2.20)
+    specifier: git+https://github.com/theopensystemslab/planx-core#44e9ebe
+    version: github.com/theopensystemslab/planx-core/44e9ebe(@types/react@18.2.20)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -3828,7 +3828,7 @@ packages:
       '@emotion/core': ^10.0.28
       react: '>=16.3.0'
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.22.15
       '@emotion/core': 10.3.1(react@18.2.0)
       '@emotion/is-prop-valid': 0.8.8
       '@emotion/serialize': 0.11.16
@@ -4317,13 +4317,13 @@ packages:
       eslint: 8.44.0
       eslint-visitor-keys: 3.4.3
 
-  /@eslint-community/eslint-utils@4.4.0(eslint@8.49.0):
+  /@eslint-community/eslint-utils@4.4.0(eslint@8.50.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
     dependencies:
-      eslint: 8.49.0
+      eslint: 8.50.0
       eslint-visitor-keys: 3.4.3
     dev: false
 
@@ -4373,8 +4373,8 @@ packages:
     resolution: {integrity: sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  /@eslint/js@8.49.0:
-    resolution: {integrity: sha512-1S8uAY/MTJqVx0SC4epBq+N2yhuwtNwLbJYNZyhL2pO1ZVKn5HFXav5T41Ryzy9K9V7ZId2JB2oy/W4aCd9/2w==}
+  /@eslint/js@8.50.0:
+    resolution: {integrity: sha512-NCC3zz2+nvYd+Ckfh87rA47zfu2QsQpvc6k1yzTk+b9KzRj0wkGa8LSoGOXN6Zv4lRf/EIoZ80biDh9HOI+RNQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: false
 
@@ -5263,8 +5263,8 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.11
-      '@mui/utils': 5.14.7(react@18.2.0)
+      '@babel/runtime': 7.22.15
+      '@mui/utils': 5.14.10(@types/react@18.2.20)(react@18.2.0)
       '@types/react': 18.2.20
       prop-types: 15.8.1
       react: 18.2.0
@@ -5305,7 +5305,7 @@ packages:
       '@emotion/styled':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.22.15
       '@emotion/cache': 11.11.0
       '@emotion/react': 11.11.1(@types/react@18.2.20)(react@18.2.0)
       '@emotion/styled': 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.20)(react@18.2.0)
@@ -7784,8 +7784,8 @@ packages:
     resolution: {integrity: sha512-frsJrz2t/CeGifcu/6uRo4b+SzAwT4NYCVPu1GN8IB9XTzrpPkGuV0tmh9mN+/L0PklAlsC3u5Fxt0ju00LXIw==}
     dev: true
 
-  /@types/geojson@7946.0.10:
-    resolution: {integrity: sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==}
+  /@types/geojson@7946.0.11:
+    resolution: {integrity: sha512-L7A0AINMXQpVwxHJ4jxD6/XjZ4NDufaRlUJHjNIFKYUFBH1SvOW+neaqb0VTRSLW5suSrSu19ObFEFnfNcr+qg==}
     dev: false
 
   /@types/glob@7.2.0:
@@ -9050,7 +9050,7 @@ packages:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
     engines: {node: '>=10', npm: '>=6'}
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.22.15
       cosmiconfig: 7.1.0
       resolve: 1.22.2
 
@@ -10010,6 +10010,19 @@ packages:
       toggle-selection: 1.0.6
     dev: false
 
+  /copyfiles@2.4.1:
+    resolution: {integrity: sha512-fereAvAvxDrQDOXybk3Qu3dPbOoKoysFMWtkY3mv5BsL8//OSZVL5DCLYqgRfY5cWirgRzlC+WSrxp6Bo3eNZg==}
+    hasBin: true
+    dependencies:
+      glob: 7.2.3
+      minimatch: 3.1.2
+      mkdirp: 1.0.4
+      noms: 0.0.0
+      through2: 2.0.5
+      untildify: 4.0.0
+      yargs: 16.2.0
+    dev: false
+
   /core-js-compat@3.31.1:
     resolution: {integrity: sha512-wIDWd2s5/5aJSdpOJHfSibxNODxoGoWOBHt8JSPB41NOE94M7kuTPZCYLOlTtuoXTsBPKobpJ6T+y0SSy5L9SA==}
     dependencies:
@@ -10702,7 +10715,7 @@ packages:
   /dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.22.15
       csstype: 3.1.2
 
   /dom-serializer@0.2.2:
@@ -11661,15 +11674,15 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /eslint@8.49.0:
-    resolution: {integrity: sha512-jw03ENfm6VJI0jA9U+8H5zfl5b+FvuU3YYvZRdZHOlU2ggJkxrlkJH4HcDrZpj6YwD8kuYqvQM8LyesoazrSOQ==}
+  /eslint@8.50.0:
+    resolution: {integrity: sha512-FOnOGSuFuFLv/Sa+FDVRZl4GGVAAFFi8LecRsI5a1tMO5HIE8nCm4ivAlzt4dT3ol/PaaGC0rJEEXQmHJBGoOg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     hasBin: true
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@8.49.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.50.0)
       '@eslint-community/regexpp': 4.6.2
       '@eslint/eslintrc': 2.1.2
-      '@eslint/js': 8.49.0
+      '@eslint/js': 8.50.0
       '@humanwhocodes/config-array': 0.11.11
       '@humanwhocodes/module-importer': 1.0.1
       '@nodelib/fs.walk': 1.2.8
@@ -11983,8 +11996,8 @@ packages:
     resolution: {integrity: sha512-HPtaa38cPgWvaCFmRNhlc6NG7pv6NUHqjPgVAkWGoB9mQMwYB27/K0CvOM5Czy+qpT3e8XJ6Q4aPAnzpNpzNaw==}
     dev: false
 
-  /fast-xml-parser@4.2.7:
-    resolution: {integrity: sha512-J8r6BriSLO1uj2miOk1NW0YVm8AGOOu3Si2HQp/cSmo6EA4m3fcwu2WKjJ4RK9wMLBtg69y1kS8baDiQBR41Ig==}
+  /fast-xml-parser@4.3.1:
+    resolution: {integrity: sha512-viVv3xb8D+SiS1W4cv4tva3bni08kAkx0gQnWrykMM8nXPc1FxqZPU00dCEVjkiCg4HoXd2jC4x29Nzg/l2DAA==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
@@ -13500,6 +13513,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       is-docker: 2.2.1
+
+  /isarray@0.0.1:
+    resolution: {integrity: sha512-D2S+3GLxWH+uhrNEcoh/fnmYeP8E8/zHl644d/jdA0g2uyXvy3sb0qxotE+ne0LtccHknQzWwZEzhak7oJ0COQ==}
+    dev: false
 
   /isarray@1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
@@ -15526,6 +15543,13 @@ packages:
 
   /node-releases@2.0.13:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
+
+  /noms@0.0.0:
+    resolution: {integrity: sha512-lNDU9VJaOPxUmXcLb+HQFeUgQQPtMI24Gt6hgfuMHRJgMRHMF/qZ4HJD3GDru4sSw9IQl2jPjAYnQrdIeLbwow==}
+    dependencies:
+      inherits: 2.0.4
+      readable-stream: 1.0.34
+    dev: false
 
   /nopt@6.0.0:
     resolution: {integrity: sha512-ZwLpbTgdhuZUnZzjd7nb1ZV+4DoiC6/sfiVKok72ym/4Tlf+DFdlHYmT2JPmcNNWV6Pi3SDf1kT+A4r9RTuT9g==}
@@ -17800,6 +17824,15 @@ packages:
       type-fest: 0.6.0
     dev: true
 
+  /readable-stream@1.0.34:
+    resolution: {integrity: sha512-ok1qVCJuRkNmvebYikljxJA/UEsKwLl2nI1OmaqAu4/UE+h0wKCHok4XkL/gvi39OacXvw59RJUOFUkDib2rHg==}
+    dependencies:
+      core-util-is: 1.0.3
+      inherits: 2.0.4
+      isarray: 0.0.1
+      string_decoder: 0.10.31
+    dev: false
+
   /readable-stream@2.3.8:
     resolution: {integrity: sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA==}
     dependencies:
@@ -18978,6 +19011,10 @@ packages:
       define-properties: 1.2.0
       es-abstract: 1.21.2
 
+  /string_decoder@0.10.31:
+    resolution: {integrity: sha512-ev2QzSzWPYmy9GuqfIVildA4OdcGLeFZQrq5ys6RtiuF+RQQiZWr8TZNyAcuVXyQRYfEO+MsoB/1BuQVhOJuoQ==}
+    dev: false
+
   /string_decoder@1.1.1:
     resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
     dependencies:
@@ -19404,7 +19441,6 @@ packages:
     dependencies:
       readable-stream: 2.3.8
       xtend: 4.0.2
-    dev: true
 
   /through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
@@ -19887,7 +19923,6 @@ packages:
   /untildify@4.0.0:
     resolution: {integrity: sha512-KK8xQ1mkzZeg9inewmFVDNkg3l5LUhoq9kN6iWYB/CC9YMG8HA+c1Q8HwDe6dEX7kErrEVNVBO3fWsVq5iDgtw==}
     engines: {node: '>=8'}
-    dev: true
 
   /upath@1.2.0:
     resolution: {integrity: sha512-aZwGpamFO61g3OlfT7OQCHqhGnW43ieH9WZeP7QxN/G/jS4jfqUkZxoryvJgVPEcrl5NL/ggHsSmLMHuH64Lhg==}
@@ -20650,7 +20685,6 @@ packages:
   /xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
-    dev: true
 
   /y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
@@ -20761,9 +20795,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  git/github.com+theopensystemslab/planx-core/7e31b2e(@types/react@18.2.20):
-    resolution: {commit: 7e31b2e, repo: git@github.com:theopensystemslab/planx-core.git, type: git}
-    id: git@github.com+theopensystemslab/planx-core/7e31b2e
+  github.com/theopensystemslab/planx-core/44e9ebe(@types/react@18.2.20):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/44e9ebe}
+    id: github.com/theopensystemslab/planx-core/44e9ebe
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -20772,12 +20806,13 @@ packages:
       '@emotion/react': 11.11.1(@types/react@18.2.20)(react@18.2.0)
       '@emotion/styled': 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.20)(react@18.2.0)
       '@mui/material': 5.14.10(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
-      '@types/geojson': 7946.0.10
+      '@types/geojson': 7946.0.11
       ajv: 8.12.0
       ajv-formats: 2.1.1(ajv@8.12.0)
+      copyfiles: 2.4.1
       docx: 8.2.2
-      eslint: 8.49.0
-      fast-xml-parser: 4.2.7
+      eslint: 8.50.0
+      fast-xml-parser: 4.3.1
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-schema-to-typescript: 13.1.1
