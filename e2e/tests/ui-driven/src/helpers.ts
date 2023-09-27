@@ -252,8 +252,8 @@ export async function expectSections({
     status: string;
   }[];
 }) {
-  const pageSections = await page.locator("dl > dt");
-  const pageStatuses = await page.locator("dl > dd");
+  const pageSections = await page.locator("dl dt");
+  const pageStatuses = await page.locator("dl dd");
   await expect(pageSections).toContainText(sections.map((s) => s.title));
   await expect(pageStatuses).toContainText(sections.map((s) => s.status));
 }
