@@ -28,7 +28,7 @@ paths:
       summary: Add user to team, and assign them a role
       description: "Requires authentication via a Cloudflare WARP client
         \n\n
-        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
+        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team)"
       tags: ["team"]
       parameters:
         - $ref: "#/components/parameters/teamSlug"
@@ -48,7 +48,7 @@ paths:
       summary: Change role of an existing team member
       description: "Requires authentication via a Cloudflare WARP client
         \n\n
-        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
+        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team)"
       tags: ["team"]
       parameters:
         - $ref: "#/components/parameters/teamSlug"
@@ -68,7 +68,7 @@ paths:
       summary: Remover user from team
       description: "Requires authentication via a Cloudflare WARP client
         \n\n
-        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team){:target='_blank'}"
+        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team)"
       tags: ["team"]
       parameters:
         - $ref: "#/components/parameters/teamSlug"

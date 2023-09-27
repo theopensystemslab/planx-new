@@ -25,7 +25,7 @@ components:
 paths:
   /user:
     put:
-      summary: Create a new user, and optionally assign them to teams
+      summary: Create a new user
       description: "Requires authentication via a Cloudflare WARP client
         \n\n
         Please login at [https://api.editor.planx.uk/user](https://api.editor.planx.uk/user)"
