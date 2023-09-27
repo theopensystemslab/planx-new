@@ -480,7 +480,7 @@ const EditorToolbar: React.FC<{
                 <Edit />
               </ListItemIcon>
               <ListItemText>
-                {user.isPlatformAdmin ? `All teams` : user.teams.map((team) => team.team.name).join(", ")}
+                {user.isPlatformAdmin ? `All teams` : user.teams.map((team) => team.team.name).concat(["Templates"]).join(", ")}
               </ListItemText>
             </MenuItem>
           )}

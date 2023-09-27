@@ -47,11 +47,9 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
 
   canUserEditTeam: (teamSlug) => {
     return (
-      get().teams.filter(
-        (team) =>
-          (team.role === "teamEditor" && team.team.slug === teamSlug) ||
-          get().isPlatformAdmin,
-      ).length > 0
+      get().isPlatformAdmin ||
+      teamSlug === "templates" ||
+      get().teams.filter((team) => team.role === "teamEditor" && team.team.slug === teamSlug).length > 0
     );
   },
 });
