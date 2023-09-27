@@ -6,6 +6,7 @@ import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
 
 import { parseSection, Section } from "./model";
 
@@ -38,6 +39,14 @@ function SectionComponent(props: Props) {
               name="title"
               placeholder="Title"
               value={formik.values.title}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <RichTextInput
+              placeholder="Description"
+              name="description"
+              value={formik.values.description}
               onChange={formik.handleChange}
             />
           </InputRow>

@@ -8,6 +8,7 @@ import type { PublicProps } from "@planx/components/ui";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { SectionNode, SectionStatus } from "types";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import Card from "../shared/Preview/Card";
 import QuestionHeader from "../shared/Preview/QuestionHeader";
@@ -167,60 +168,91 @@ export function SectionsOverviewList({
   return (
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
-        <React.Fragment key={sectionId}>
-          <dt>
+        <SectionRow key={sectionId}>
+          <SectionTitle>
             {showChange &&
             sectionStatuses[sectionId] === SectionStatus.Completed ? (
               <Link
                 onClick={() => changeFirstAnswerInSection(sectionId)}
                 component="button"
               >
-                <Typography variant="body1" align="left">
+                <Typography variant="subtitle1" color="primary" align="left">
                   <span style={visuallyHidden}>{`Change `}</span>
-                  {sectionNode.data.title}
+                  <strong>{sectionNode.data.title}</strong>
                 </Typography>
               </Link>
             ) : (
-              <Typography variant="body1">{sectionNode.data.title}</Typography>
+              <Typography variant="subtitle1" color="inherit"><strong>{sectionNode.data.title}</strong></Typography>           
             )}
-          </dt>
-          <dd> {getTag(sectionStatuses[sectionId])} </dd>
-        </React.Fragment>
+          </SectionTitle>
+          <SectionDescription>
+            <ReactMarkdownOrHtml
+              source={sectionNode.data.description}
+              openLinksOnNewTab
+            />   
+          </SectionDescription>
+          <SectionState> {getTag(sectionStatuses[sectionId])} </SectionState>
+        </SectionRow>
       ))}
     </DescriptionList>
   );
 }
 
-const Grid = styled("dl")(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "1fr 220px",
-  gridRowGap: "5px",
-  paddingTop: theme.spacing(3),
-  paddingBottom: theme.spacing(2),
-  "& > *": {
-    borderBottom: `1px solid ${theme.palette.border.main}`,
-    paddingBottom: theme.spacing(1.25),
-    paddingTop: theme.spacing(1.25),
-    verticalAlign: "top",
-    margin: 0,
-  },
-  "& ul": {
-    listStylePosition: "inside",
-    padding: 0,
-    margin: 0,
-  },
-  "& dt": {
-    // left column
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  "& dd:nth-of-type(1n)": {
-    // right column
-    textAlign: "right",
-    "& > button": {
-      width: "auto",
+const Table = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(1, 0),
+  "& ul, & ol": {
+    padding: "0 0 0 1em",
+    "& p": {
+      marginTop: "0.5em",
     },
+    "&:last-of-type": {
+      marginBottom: 0,
+    },
+  },
+}));
+
+const SectionRow = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  padding: theme.spacing(2, 0),
+  borderBottom: `1px solid ${theme.palette.border.main}`,
+  [theme.breakpoints.up("sm")]: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+}));
+
+const SectionTitle = styled(Box)(({ theme }) => ({
+  order: 1,
+  [theme.breakpoints.up("sm")]: {
+    order: 1,
+    flexShrink: 1,
+    flexBasis: `calc(100% - 260px)`,
+    paddingTop: theme.spacing(0.25),
+  },
+}));
+
+const SectionDescription = styled(Box)(({ theme }) => ({
+  order: 2,
+  paddingBottom: theme.spacing(2),
+  [theme.breakpoints.up("sm")]: {
+    paddingBottom: 0,
+    order: 3,
+    flexBasis: "100%",
+  },
+}));
+
+const SectionState = styled(Box)(({ theme }) => ({
+  order: 3,
+  [theme.breakpoints.up("sm")]: {
+    order: 2,
+    flexShrink: 0,
+    flexBasis: "260px",
+    textAlign: "right",
+  },
+  "& > button": {
+    width: "auto",
   },
 }));
 
@@ -229,5 +261,5 @@ interface DescriptionListProps {
 }
 
 const DescriptionList: React.FC<DescriptionListProps> = ({ children }) => {
-  return <Grid>{children}</Grid>;
+  return <Table>{children}</Table>;
 };
