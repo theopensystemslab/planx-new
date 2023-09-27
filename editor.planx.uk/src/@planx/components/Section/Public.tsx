@@ -169,7 +169,6 @@ export function SectionsOverviewList({
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
         <SectionRow key={sectionId}>
-          <SectionWrap>
             <SectionTitle>
               {showChange &&
               sectionStatuses[sectionId] === SectionStatus.Completed ? (
@@ -185,14 +184,11 @@ export function SectionsOverviewList({
               ) : (
                 <Typography variant="subtitle1" component="h4" color="inherit"><strong>{sectionNode.data.title}</strong></Typography>           
               )}
-            </SectionTitle>
-            <SectionDescription>
               <ReactMarkdownOrHtml
                 source={sectionNode.data.description}
                 openLinksOnNewTab
               />   
-            </SectionDescription>
-          </SectionWrap>
+            </SectionTitle>
           <SectionState> {getTag(sectionStatuses[sectionId])} </SectionState>
         </SectionRow>
       ))}
@@ -221,30 +217,16 @@ const SectionRow = styled(Box)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.border.main}`,
   [theme.breakpoints.up("md")]: {
     flexDirection: "row",
-    flexWrap: "wrap",
-  },
-}));
-
-const SectionWrap = styled(Box)(({ theme }) => ({
-  [theme.breakpoints.up("md")]: {
-    flexShrink: 1,
-    flexBasis: `calc(100% - 230px)`,
   },
 }));
 
 const SectionTitle = styled("dt")(({ theme }) => ({
   margin: 0,
-  [theme.breakpoints.up("md")]: {
-    paddingTop: theme.spacing(0.33),
-  },
-}));
-
-const SectionDescription = styled("dd")(({ theme }) => ({
-  margin: 0,
   paddingBottom: theme.spacing(2),
   [theme.breakpoints.up("md")]: {
-    paddingBottom: 0,
-    flexBasis: "100%",
+    padding: theme.spacing(0.33, 1, 0, 0),
+    flexBasis: `calc(100% - 220px)`,
+    flexShrink: 1,
   },
 }));
 
@@ -252,8 +234,9 @@ const SectionState = styled("dd")(({ theme }) => ({
   margin: 0,
   [theme.breakpoints.up("md")]: {
     display: "flex",
+    flexBasis: "220px",
     flexShrink: 0,
-    flexBasis: "230px",
+    flexGrow: 1,
     justifyContent: "flex-end",
     alignItems: "flex-start",
   },
