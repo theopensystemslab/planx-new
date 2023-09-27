@@ -176,13 +176,13 @@ export function SectionsOverviewList({
                 onClick={() => changeFirstAnswerInSection(sectionId)}
                 component="button"
               >
-                <Typography variant="subtitle1" color="primary" align="left">
+                <Typography variant="subtitle1" component="h4" color="primary" align="left">
                   <span style={visuallyHidden}>{`Change `}</span>
                   <strong>{sectionNode.data.title}</strong>
                 </Typography>
               </Link>
             ) : (
-              <Typography variant="subtitle1" color="inherit"><strong>{sectionNode.data.title}</strong></Typography>           
+              <Typography variant="subtitle1" component="h4" color="inherit"><strong>{sectionNode.data.title}</strong></Typography>           
             )}
           </SectionTitle>
           <SectionDescription>
@@ -198,7 +198,7 @@ export function SectionsOverviewList({
   );
 }
 
-const Table = styled(Box)(({ theme }) => ({
+const Table = styled("dl")(({ theme }) => ({
   padding: theme.spacing(1, 0),
   "& ul, & ol": {
     padding: "0 0 0 1em",
@@ -216,6 +216,7 @@ const SectionRow = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   width: "100%",
   padding: theme.spacing(2, 0),
+  margin: 0,
   borderBottom: `1px solid ${theme.palette.border.main}`,
   [theme.breakpoints.up("sm")]: {
     flexDirection: "row",
@@ -223,18 +224,20 @@ const SectionRow = styled(Box)(({ theme }) => ({
   },
 }));
 
-const SectionTitle = styled(Box)(({ theme }) => ({
+const SectionTitle = styled("dt")(({ theme }) => ({
   order: 1,
+  margin: 0,
   [theme.breakpoints.up("sm")]: {
     order: 1,
     flexShrink: 1,
     flexBasis: `calc(100% - 260px)`,
-    paddingTop: theme.spacing(0.25),
+    paddingTop: theme.spacing(0.33),
   },
 }));
 
-const SectionDescription = styled(Box)(({ theme }) => ({
+const SectionDescription = styled("dd")(({ theme }) => ({
   order: 2,
+  margin: 0,
   paddingBottom: theme.spacing(2),
   [theme.breakpoints.up("sm")]: {
     paddingBottom: 0,
@@ -243,13 +246,15 @@ const SectionDescription = styled(Box)(({ theme }) => ({
   },
 }));
 
-const SectionState = styled(Box)(({ theme }) => ({
+const SectionState = styled("dd")(({ theme }) => ({
   order: 3,
+  margin: 0,
   [theme.breakpoints.up("sm")]: {
     order: 2,
+    display: "flex",
     flexShrink: 0,
     flexBasis: "260px",
-    textAlign: "right",
+    justifyContent: "flex-end",
   },
   "& > button": {
     width: "auto",

@@ -33,18 +33,21 @@ describe("SectionsOverviewList component", () => {
       type: 360,
       data: {
         title: "Section one",
+        description: "Description of section one",
       },
     },
     section2: {
       type: 360,
       data: {
         title: "Section two",
+        description: "Description of section two",
       },
     },
     section3: {
       type: 360,
       data: {
         title: "Section three",
+        description: "Description of section three",
       },
     },
   };

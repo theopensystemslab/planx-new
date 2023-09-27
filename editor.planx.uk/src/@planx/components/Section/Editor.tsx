@@ -44,7 +44,7 @@ function SectionComponent(props: Props) {
           </InputRow>
           <InputRow>
             <RichTextInput
-              placeholder="Description"
+              placeholder="Short section description"
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
