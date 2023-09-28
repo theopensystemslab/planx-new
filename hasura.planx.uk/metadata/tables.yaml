@@ -283,6 +283,10 @@
                     _eq: teamEditor
         check: null
   delete_permissions:
+    - role: platformAdmin
+      permission:
+        backend_only: false
+        filter: {}
     - role: teamEditor
       permission:
         backend_only: false
