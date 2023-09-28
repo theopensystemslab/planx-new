@@ -16,7 +16,7 @@ export interface UserStore {
   setUser: (user: User) => void;
   getUser: () => User;
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
-  initUserStore: (jwt: string) => void;
+  initUserStore: (jwt: string) => Promise<void>;
 }
 
 export const userStore: StateCreator<UserStore, [], [], UserStore> = (
@@ -53,11 +53,13 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
     return (
       get().isPlatformAdmin ||
       teamSlug === "templates" ||
-      get().teams.filter((team) => team.role === "teamEditor" && team.team.slug === teamSlug).length > 0
+      get().teams.filter(
+        (team) => team.role === "teamEditor" && team.team.slug === teamSlug,
+      ).length > 0
     );
   },
 
-  async initUserStore (jwt: string) {
+  async initUserStore(jwt: string) {
     const email = (jwtDecode(jwt) as any)["email"];
     const users = await client.query({
       query: gql`
