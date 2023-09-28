@@ -7,17 +7,17 @@ const router = Router();
 
 router.use(AuthMiddleware.usePlatformAdminAuth);
 router.put(
-  "/:teamId/add-member",
+  "/:teamSlug/add-member",
   validate(Controller.upsertMemberSchema),
   Controller.addMember,
 );
 router.patch(
-  "/:teamId/change-member-role",
+  "/:teamSlug/change-member-role",
   validate(Controller.upsertMemberSchema),
   Controller.changeMemberRole,
 );
 router.delete(
-  "/:teamId/remove-member",
+  "/:teamSlug/remove-member",
   validate(Controller.removeMemberSchema),
   Controller.removeMember,
 );

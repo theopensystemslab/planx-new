@@ -981,6 +981,8 @@
           - slug
           - theme
           - updated_at
+        computed_fields:
+          - boundary_bbox
         filter: {}
     - role: public
       permission:
@@ -1010,6 +1012,8 @@
           - slug
           - theme
           - updated_at
+        computed_fields:
+          - boundary_bbox
         filter: {}
   update_permissions:
     - role: platformAdmin
@@ -1077,6 +1081,18 @@
           table:
             schema: public
             name: team_members
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - id
+          - first_name
+          - last_name
+          - created_at
+          - updated_at
+          - is_platform_admin
+          - email
   select_permissions:
     - role: platformAdmin
       permission:

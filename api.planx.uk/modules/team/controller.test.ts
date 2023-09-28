@@ -6,26 +6,20 @@ const mockAddMember = jest.fn();
 const mockRemoveMember = jest.fn();
 const mockChangeMemberRole = jest.fn();
 
-jest.mock("@opensystemslab/planx-core", () => {
-  return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
-      team: {
-        addMember: () => mockAddMember(),
-        removeMember: () => mockRemoveMember(),
-        changeMemberRole: () => mockChangeMemberRole(),
-      },
-    })),
-  };
-});
+jest.mock("./service", () => ({
+  addMember: () => mockAddMember(),
+  changeMemberRole: () => mockChangeMemberRole(),
+  removeMember: () => mockRemoveMember(),
+}));
 
 const auth = authHeader({ role: "platformAdmin" });
 
 describe("Adding a user to a team", () => {
   it("requires authentication", async () => {
     await supertest(app)
-      .put("/team/123/add-member")
+      .put("/team/council/add-member")
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "teamViewer",
       })
       .expect(401);
@@ -33,10 +27,10 @@ describe("Adding a user to a team", () => {
 
   it("requires the 'platformAdmin' role", async () => {
     await supertest(app)
-      .put("/team/123/add-member")
+      .put("/team/council/add-member")
       .set(authHeader({ role: "teamEditor" }))
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "teamViewer",
       })
       .expect(403);
@@ -44,7 +38,7 @@ describe("Adding a user to a team", () => {
 
   it("validates that userId is required", async () => {
     await supertest(app)
-      .put("/team/123/add-member")
+      .put("/team/council/add-member")
       .set(auth)
       .send({
         role: "teamViewer",
@@ -58,10 +52,10 @@ describe("Adding a user to a team", () => {
 
   it("validates that role is required", async () => {
     await supertest(app)
-      .put("/team/123/add-member")
+      .put("/team/council/add-member")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
       })
       .expect(400)
       .then((res) => {
@@ -72,10 +66,10 @@ describe("Adding a user to a team", () => {
 
   it("validates that role must be an accepted value", async () => {
     await supertest(app)
-      .put("/team/123/add-member")
+      .put("/team/council/add-member")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "pirate",
       })
       .expect(400)
@@ -85,32 +79,30 @@ describe("Adding a user to a team", () => {
       });
   });
 
-  it("handles Hasura / DB errors", async () => {
-    mockAddMember.mockResolvedValue(false);
+  it("handles an error thrown in the service", async () => {
+    mockAddMember.mockRejectedValueOnce("Something went wrong in the service");
 
     await supertest(app)
-      .put("/team/123/add-member")
+      .put("/team/council/add-member")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "teamEditor",
       })
       .expect(500)
       .then((res) => {
         expect(mockAddMember).toHaveBeenCalled();
-        expect(res.body).toHaveProperty("message");
-        expect(res.body.message).toMatch(/Failed to add member to team/);
+        expect(res.body).toHaveProperty("error");
+        expect(res.body.error).toMatch(/Failed to add member to team/);
       });
   });
 
   it("can successfully add a team member", async () => {
-    mockAddMember.mockResolvedValue(true);
-
     await supertest(app)
-      .put("/team/123/add-member")
+      .put("/team/council/add-member")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "teamEditor",
       })
       .expect(200)
@@ -121,20 +113,19 @@ describe("Adding a user to a team", () => {
       });
   });
 });
-
 describe("Removing a user from a team", () => {
   it("requires authentication", async () => {
     await supertest(app)
-      .delete("/team/123/remove-member")
+      .delete("/team/council/remove-member")
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
       })
       .expect(401);
   });
 
   it("validates that userId is required", async () => {
     await supertest(app)
-      .delete("/team/123/remove-member")
+      .delete("/team/council/remove-member")
       .set(auth)
       .send({})
       .expect(400)
@@ -144,31 +135,31 @@ describe("Removing a user from a team", () => {
       });
   });
 
-  it("handles Hasura / DB errors", async () => {
-    mockRemoveMember.mockResolvedValue(false);
+  it("handles an error thrown in the service", async () => {
+    mockRemoveMember.mockRejectedValueOnce(
+      "Something went wrong in the service",
+    );
 
     await supertest(app)
-      .delete("/team/123/remove-member")
+      .delete("/team/council/remove-member")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
       })
       .expect(500)
       .then((res) => {
         expect(mockRemoveMember).toHaveBeenCalled();
-        expect(res.body).toHaveProperty("message");
-        expect(res.body.message).toMatch(/Failed to remove member from team/);
+        expect(res.body).toHaveProperty("error");
+        expect(res.body.error).toMatch(/Failed to remove member from team/);
       });
   });
 
   it("can successfully remove a team member", async () => {
-    mockRemoveMember.mockResolvedValue(true);
-
     await supertest(app)
-      .delete("/team/123/remove-member")
+      .delete("/team/council/remove-member")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "teamEditor",
       })
       .expect(200)
@@ -183,9 +174,9 @@ describe("Removing a user from a team", () => {
 describe("Changing a user's role", () => {
   it("requires authentication", async () => {
     await supertest(app)
-      .patch("/team/123/change-member-role")
+      .patch("/team/council/change-member-role")
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "teamEditor",
       })
       .expect(401);
@@ -193,7 +184,7 @@ describe("Changing a user's role", () => {
 
   it("validates that userId is required", async () => {
     await supertest(app)
-      .patch("/team/123/change-member-role")
+      .patch("/team/council/change-member-role")
       .set(auth)
       .send({
         role: "teamEditor",
@@ -207,10 +198,10 @@ describe("Changing a user's role", () => {
 
   it("validates that role is required", async () => {
     await supertest(app)
-      .patch("/team/123/change-member-role")
+      .patch("/team/council/change-member-role")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
       })
       .expect(400)
       .then((res) => {
@@ -221,10 +212,10 @@ describe("Changing a user's role", () => {
 
   it("validates that role is an accepted value", async () => {
     await supertest(app)
-      .patch("/team/123/change-member-role")
+      .patch("/team/council/change-member-role")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "professor",
       })
       .expect(400)
@@ -234,32 +225,32 @@ describe("Changing a user's role", () => {
       });
   });
 
-  it("handles Hasura / DB errors", async () => {
-    mockChangeMemberRole.mockResolvedValue(false);
+  it("handles an error thrown in the service", async () => {
+    mockChangeMemberRole.mockRejectedValueOnce(
+      "Something went wrong in the service",
+    );
 
     await supertest(app)
-      .patch("/team/123/change-member-role")
+      .patch("/team/council/change-member-role")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "teamEditor",
       })
       .expect(500)
       .then((res) => {
         expect(mockChangeMemberRole).toHaveBeenCalled();
-        expect(res.body).toHaveProperty("message");
-        expect(res.body.message).toMatch(/Failed to change role/);
+        expect(res.body).toHaveProperty("error");
+        expect(res.body.error).toMatch(/Failed to change role/);
       });
   });
 
   it("can successfully change a user's role", async () => {
-    mockChangeMemberRole.mockResolvedValue(true);
-
     await supertest(app)
-      .patch("/team/123/change-member-role")
+      .patch("/team/council/change-member-role")
       .set(auth)
       .send({
-        userId: 123,
+        userEmail: "newbie@council.gov",
         role: "teamEditor",
       })
       .expect(200)

@@ -39,8 +39,14 @@ describe("users", () => {
       expect(i.queries).toContain("users");
     });
 
-    test("cannot create, update, or delete users", () => {
-      expect(i).toHaveNoMutationsFor("users");
+    test("can creates users", () => {
+      expect(i.mutations).toContain("insert_users");
+    });
+
+    test("cannot update or delete users", () => {
+      expect(i.mutations).not.toContain("update_users_by_pk");
+      expect(i.mutations).not.toContain("update_users");
+      expect(i.mutations).not.toContain("delete_users");
     });
   });
 
