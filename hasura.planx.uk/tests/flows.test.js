@@ -58,6 +58,11 @@ describe("flows and operations", () => {
       expect(i.mutations).toContain("insert_flows");
     });
 
+    test("can delete flows", () => {
+      expect(i.mutations).toContain("delete_flows_by_pk");
+      expect(i.mutations).toContain("delete_flows");
+    });
+
     test("can query published flows", () => {
       expect(i.queries).toContain("published_flows");
     });
