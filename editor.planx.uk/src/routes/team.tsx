@@ -1,11 +1,11 @@
 import gql from "graphql-tag";
-import { compose, lazy, mount, route, withData, withView } from "navi";
+import { compose, lazy, mount, route, withView } from "navi";
 import React from "react";
 
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import Team from "../pages/Team";
-import { getTeamFromDomain, makeTitle } from "./utils";
+import { makeTitle } from "./utils";
 import { teamView } from "./views/team";
 
 let cached: { flowSlug?: string; teamSlug?: string } = {
@@ -14,12 +14,6 @@ let cached: { flowSlug?: string; teamSlug?: string } = {
 };
 
 const routes = compose(
-  withData(async (req) => ({
-    team:
-    // TODO: drop this and point at store
-      req.params.team || (await getTeamFromDomain(window.location.hostname)),
-  })),
-
   withView(teamView),
 
   mount({

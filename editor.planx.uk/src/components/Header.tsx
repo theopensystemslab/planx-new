@@ -197,6 +197,7 @@ const Breadcrumbs: React.FC<{
   handleClick?: (href: string) => void;
 }> = ({ handleClick }) => {
   const route = useCurrentRoute();
+  const team = useStore((state) => state.getTeam());
 
   return (
     <BreadcrumbsRoot>
@@ -208,7 +209,7 @@ const Breadcrumbs: React.FC<{
         Plan✕
       </ButtonBase>
 
-      {route.data.team && (
+      {team && (
         <>
           {" / "}
           <Link
@@ -217,10 +218,10 @@ const Breadcrumbs: React.FC<{
               textDecoration: "none",
             }}
             component={ReactNaviLink}
-            href={`/${route.data.team}`}
+            href={`/${team.slug}`}
             prefetch={false}
           >
-            {route.data.team}
+            {team.slug}
           </Link>
         </>
       )}
