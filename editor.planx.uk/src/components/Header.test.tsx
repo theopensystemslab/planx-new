@@ -13,6 +13,7 @@ import Header from "./Header";
 const { setState, getState } = vanillaStore;
 
 const mockTeam1: Team = {
+  id: 123,
   name: "Open Systems Lab",
   slug: "opensystemslab",
   theme: {
@@ -21,6 +22,7 @@ const mockTeam1: Team = {
 };
 
 const mockTeam2: Team = {
+  id: 456,
   name: "Closed Systems Lab",
   slug: "closedsystemslab",
 };

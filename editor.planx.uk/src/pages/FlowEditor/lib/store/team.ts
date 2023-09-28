@@ -5,6 +5,7 @@ import { Team } from "types";
 import type { StateCreator } from "zustand";
 
 export interface TeamStore {
+  teamId: number,
   teamTheme?: TeamTheme;
   teamName: string;
   teamSettings?: TeamSettings;
@@ -20,6 +21,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
   set,
   get,
 ) => ({
+  teamId: 0,
   teamTheme: undefined,
   teamName: "",
   teamSettings: undefined,
@@ -29,6 +31,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
 
   setTeam: (team) =>
     set({
+      teamId: team.id,
       teamTheme: team.theme,
       teamName: team.name,
       teamSettings: team.settings,
@@ -38,6 +41,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
     }),
 
   getTeam: () => ({
+    id: get().teamId,
     name: get().teamName,
     slug: get().teamSlug,
     settings: get().teamSettings,

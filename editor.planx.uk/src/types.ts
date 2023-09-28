@@ -17,6 +17,7 @@ export interface Flow {
 }
 
 export interface Team {
+  id: number;
   name: string;
   slug: string;
   settings?: TeamSettings;
