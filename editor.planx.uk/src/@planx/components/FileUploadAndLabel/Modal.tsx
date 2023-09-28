@@ -283,7 +283,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         <ListSubheader disableGutters>
           <ListHeader>
             <Typography variant="h4" component="h3" pr={3}>
-              Select all document types that apply
+              Select all labels that apply
             </Typography>
             <Button variant="contained" onClick={handleClose} aria-label="Close list">
               Done
