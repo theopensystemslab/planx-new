@@ -13,6 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import merge from "lodash/merge";
@@ -37,6 +38,16 @@ interface FileTaggingModalProps {
   setFileList: (value: React.SetStateAction<FileList>) => void;
   setShowModal: (value: React.SetStateAction<boolean>) => void;
 }
+
+const ListHeader = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: theme.spacing(1, 1.5),
+  background: theme.palette.grey[200],
+  // Offset default padding of MuiList
+  margin: "-8px 0 8px",
+}));
 
 export const FileTaggingModal = ({
   uploadedFiles,
@@ -80,16 +91,8 @@ export const FileTaggingModal = ({
     >
       <DialogContent>
         <Box sx={{ mt: 1, mb: 4 }}>
-          <Typography
-            variant="h3"
-            component="h2"
-            id="dialog-heading"
-            sx={{ mb: "0.15em" }}
-          >
+          <Typography variant="h3" component="h2" id="dialog-heading">
             What do these files show?
-          </Typography>
-          <Typography variant="subtitle2">
-            Select all document types that apply
           </Typography>
         </Box>
         {uploadedFiles.map((slot) => (
@@ -147,6 +150,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
   const [tags, setTags] = useState<string[]>(initialTags);
   const previousTags = usePrevious(tags);
+  const [open, setOpen] = React.useState(false);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
     const {
@@ -156,6 +160,12 @@ const SelectMultiple = (props: SelectMultipleProps) => {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value,
     );
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   const updateFileListWithTags = (
@@ -214,6 +224,9 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         multiple
         value={tags}
         onChange={handleChange}
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
         IconComponent={ArrowIcon}
         input={<Input key={`select-input-${uploadedFile.id}`} />}
         inputProps={{
@@ -267,14 +280,27 @@ const SelectMultiple = (props: SelectMultipleProps) => {
           },
         }}
       >
+        <ListSubheader disableGutters>
+          <ListHeader>
+            <Typography variant="h4" component="h3" pr={3}>
+              Select all labels that apply
+            </Typography>
+            <Button variant="contained" onClick={handleClose} aria-label="Close list">
+              Done
+            </Button>
+          </ListHeader>
+        </ListSubheader>
         {(Object.keys(fileList) as Array<keyof typeof fileList>)
           .filter((fileListCategory) => fileList[fileListCategory].length > 0)
           .map((fileListCategory) => {
             return [
               <ListSubheader
                 key={`subheader-${fileListCategory}-${uploadedFile.id}`}
+                disableSticky
               >
-                {`${capitalize(fileListCategory)} files`}
+                <Typography py={1} variant="subtitle2" component="h4">
+                  {`${capitalize(fileListCategory)} files`}
+                </Typography>
               </ListSubheader>,
               ...fileList[fileListCategory].map((fileType) => {
                 return [
