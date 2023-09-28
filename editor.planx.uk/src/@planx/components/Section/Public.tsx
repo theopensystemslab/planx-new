@@ -8,6 +8,7 @@ import type { PublicProps } from "@planx/components/ui";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { SectionNode, SectionStatus } from "types";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import Card from "../shared/Preview/Card";
 import QuestionHeader from "../shared/Preview/QuestionHeader";
@@ -167,60 +168,80 @@ export function SectionsOverviewList({
   return (
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
-        <React.Fragment key={sectionId}>
-          <dt>
-            {showChange &&
-            sectionStatuses[sectionId] === SectionStatus.Completed ? (
-              <Link
-                onClick={() => changeFirstAnswerInSection(sectionId)}
-                component="button"
-              >
-                <Typography variant="body1" align="left">
-                  <span style={visuallyHidden}>{`Change `}</span>
-                  {sectionNode.data.title}
-                </Typography>
-              </Link>
-            ) : (
-              <Typography variant="body1">{sectionNode.data.title}</Typography>
-            )}
-          </dt>
-          <dd> {getTag(sectionStatuses[sectionId])} </dd>
-        </React.Fragment>
+        <SectionRow key={sectionId}>
+            <SectionTitle>
+              {showChange &&
+              sectionStatuses[sectionId] === SectionStatus.Completed ? (
+                <Link
+                  onClick={() => changeFirstAnswerInSection(sectionId)}
+                  component="button"
+                >
+                  <Typography variant="subtitle1" component="h4" color="primary" align="left">
+                    <span style={visuallyHidden}>{`Change `}</span>
+                    <strong>{sectionNode.data.title}</strong>
+                  </Typography>
+                </Link>
+              ) : (
+                <Typography variant="subtitle1" component="h4" color="inherit"><strong>{sectionNode.data.title}</strong></Typography>           
+              )}
+              <ReactMarkdownOrHtml
+                source={sectionNode.data.description}
+                openLinksOnNewTab
+              />   
+            </SectionTitle>
+          <SectionState> {getTag(sectionStatuses[sectionId])} </SectionState>
+        </SectionRow>
       ))}
     </DescriptionList>
   );
 }
 
-const Grid = styled("dl")(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "1fr 220px",
-  gridRowGap: "5px",
-  paddingTop: theme.spacing(3),
-  paddingBottom: theme.spacing(2),
-  "& > *": {
-    borderBottom: `1px solid ${theme.palette.border.main}`,
-    paddingBottom: theme.spacing(1.25),
-    paddingTop: theme.spacing(1.25),
-    verticalAlign: "top",
-    margin: 0,
-  },
-  "& ul": {
-    listStylePosition: "inside",
-    padding: 0,
-    margin: 0,
-  },
-  "& dt": {
-    // left column
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  "& dd:nth-of-type(1n)": {
-    // right column
-    textAlign: "right",
-    "& > button": {
-      width: "auto",
+const Table = styled("dl")(({ theme }) => ({
+  padding: theme.spacing(1, 0),
+  "& ul, & ol": {
+    padding: "0 0 0 1em",
+    "& p": {
+      marginTop: "0.5em",
     },
+    "&:last-of-type": {
+      marginBottom: 0,
+    },
+  },
+}));
+
+const SectionRow = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  padding: theme.spacing(2, 0),
+  borderBottom: `1px solid ${theme.palette.border.main}`,
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
+  },
+}));
+
+const SectionTitle = styled("dt")(({ theme }) => ({
+  margin: 0,
+  paddingBottom: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    padding: theme.spacing(0.33, 1, 0, 0),
+    flexBasis: `calc(100% - 220px)`,
+    flexShrink: 1,
+  },
+}));
+
+const SectionState = styled("dd")(({ theme }) => ({
+  margin: 0,
+  [theme.breakpoints.up("md")]: {
+    display: "flex",
+    flexBasis: "220px",
+    flexShrink: 0,
+    flexGrow: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
+  },
+  "& > button": {
+    width: "auto",
   },
 }));
 
@@ -229,5 +250,5 @@ interface DescriptionListProps {
 }
 
 const DescriptionList: React.FC<DescriptionListProps> = ({ children }) => {
-  return <Grid>{children}</Grid>;
+  return <Table>{children}</Table>;
 };

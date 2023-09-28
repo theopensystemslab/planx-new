@@ -18,18 +18,21 @@ const sectionNodes: { [key: string]: SectionNode } = {
   firstSection: {
     data: {
       title: "First section",
+      description: "Description of first section",
     },
     type: TYPES.Section,
   },
   secondSection: {
     data: {
       title: "Second section",
+      description: "Description of second section",
     },
     type: TYPES.Section,
   },
   thirdSection: {
     data: {
       title: "Third section",
+      description: "Description of third section",
     },
     type: TYPES.Section,
   },
@@ -51,6 +54,7 @@ const defaultProps: ComponentProps<typeof Public> = {
   changeAnswer: () => console.log("changeAnswer called"),
   breadcrumbs: {},
   title: "The property",
+  description: "Short description of the property section",
   sectionCount: 3,
 };
 

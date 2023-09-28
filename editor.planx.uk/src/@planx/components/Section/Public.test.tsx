@@ -8,7 +8,7 @@ import Section, { SectionsOverviewList } from "./Public";
 describe("Section component", () => {
   it("renders correctly", () => {
     const handleSubmit = jest.fn();
-    setup(<Section title="Section one" handleSubmit={handleSubmit} />);
+    setup(<Section title="Section one" description="Description of section one" handleSubmit={handleSubmit} />);
 
     expect(screen.getByText("Application incomplete.")).toBeInTheDocument();
     expect(screen.getByText("Continue")).toBeInTheDocument();
@@ -19,7 +19,7 @@ describe("Section component", () => {
     const handleSubmit = jest.fn();
 
     const { container } = setup(
-      <Section title="Section one" handleSubmit={handleSubmit} />,
+      <Section title="Section one" description="Description of section one" handleSubmit={handleSubmit} />,
     );
 
     const results = await axe(container);
@@ -33,18 +33,21 @@ describe("SectionsOverviewList component", () => {
       type: 360,
       data: {
         title: "Section one",
+        description: "Description of section one",
       },
     },
     section2: {
       type: 360,
       data: {
         title: "Section two",
+        description: "Description of section two",
       },
     },
     section3: {
       type: 360,
       data: {
         title: "Section three",
+        description: "Description of section three",
       },
     },
   };

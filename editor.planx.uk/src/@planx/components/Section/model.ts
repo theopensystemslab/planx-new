@@ -5,12 +5,14 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface Section extends MoreInformation {
   title: string;
+  description?: string;
 }
 
 export const parseSection = (
   data: Record<string, any> | undefined,
 ): Section => ({
   title: data?.title || "",
+  description: data?.description,
   ...parseMoreInformation(data),
 });
 

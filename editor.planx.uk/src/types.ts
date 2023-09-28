@@ -131,5 +131,6 @@ export enum SectionStatus {
 export interface SectionNode extends Store.node {
   data: {
     title: string;
+    description?: string;
   };
 }
