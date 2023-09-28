@@ -1,4 +1,7 @@
 import { User, UserTeams } from "@opensystemslab/planx-core/types";
+import gql from "graphql-tag";
+import jwtDecode from "jwt-decode";
+import { client } from "lib/graphql";
 import { Team } from "types";
 import type { StateCreator } from "zustand";
 
@@ -13,6 +16,7 @@ export interface UserStore {
   setUser: (user: User) => void;
   getUser: () => User;
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
+  initUserStore: (jwt: string) => void;
 }
 
 export const userStore: StateCreator<UserStore, [], [], UserStore> = (
@@ -51,5 +55,36 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
       teamSlug === "templates" ||
       get().teams.filter((team) => team.role === "teamEditor" && team.team.slug === teamSlug).length > 0
     );
+  },
+
+  async initUserStore (jwt: string) {
+    const email = (jwtDecode(jwt) as any)["email"];
+    const users = await client.query({
+      query: gql`
+        query GetUserByEmail($email: String!) {
+          users: users(where: { email: { _eq: $email } }) {
+            id
+            firstName: first_name
+            lastName: last_name
+            email
+            isPlatformAdmin: is_platform_admin
+            teams {
+              role
+              team {
+                name
+                slug
+                id
+              }
+            }
+          }
+        }
+      `,
+      variables: { email },
+    });
+
+    const user: User = users.data.users[0];
+    if (!user) throw new Error(`Failed to get user ${email}`);
+
+    this.setUser(user);
   },
 });

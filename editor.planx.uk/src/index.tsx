@@ -13,6 +13,7 @@ import jwtDecode from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
 import ErrorPage from "pages/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analyticsProvider";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
@@ -46,6 +47,7 @@ const hasJWT = (): boolean | void => {
           ],
         ) > 0
       ) {
+        useStore.getState().initUserStore(jwt);
         return true;
       }
     } catch (e) {}
