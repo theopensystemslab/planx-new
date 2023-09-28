@@ -4,7 +4,8 @@
     "test": "playwright test --grep-invert @regression",
     "test:regression": "playwright test",
     "test:debug": "DEBUG_LOG=true pnpm test",
-    "ui": "serve ../../../editor.planx.uk/build --single --listen 3000"
+    "ui": "serve ../../../editor.planx.uk/build --single --listen 3000",
+    "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#44e9ebe",
