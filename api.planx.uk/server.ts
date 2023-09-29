@@ -529,7 +529,6 @@ declare global {
     interface User {
       jwt: string;
       sub?: string;
-      email?: string;
       "https://hasura.io/jwt/claims"?: {
         "x-hasura-allowed-roles": Role[];
       };

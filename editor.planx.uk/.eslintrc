@@ -11,7 +11,6 @@
   "extends": [
     "eslint:recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:testing-library/react",
     "plugin:@typescript-eslint/recommended",
     "prettier",
     "plugin:jest/recommended"
@@ -73,5 +72,11 @@
   },
   "settings": {
     "jest": { "version": 27 }
-  }
+  },
+  "overrides": [
+		{
+			"files": ["**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)"],
+			"extends": ["plugin:testing-library/react"]
+		}
+	]
 }

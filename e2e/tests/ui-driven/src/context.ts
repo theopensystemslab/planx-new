@@ -107,7 +107,6 @@ export function generateAuthenticationToken(userId: string) {
   return sign(
     {
       sub: `${userId}`,
-      email: "simulate-delivered@notifications.service.gov.uk",
       "https://hasura.io/jwt/claims": {
         "x-hasura-allowed-roles": ["platformAdmin", "public"],
         "x-hasura-default-role": "platformAdmin",

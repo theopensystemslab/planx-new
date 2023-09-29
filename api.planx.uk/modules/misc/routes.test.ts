@@ -5,8 +5,8 @@ import { userContext } from "../auth/middleware";
 
 const getStoreMock = jest.spyOn(userContext, "getStore");
 
-const mockGetByEmail = jest.fn().mockResolvedValue({
-  id: 36,
+const mockGetById = jest.fn().mockResolvedValue({
+  id: 123,
   firstName: "Albert",
   lastName: "Einstein",
   email: "albert@princeton.edu",
@@ -27,7 +27,7 @@ jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       user: {
-        getByEmail: () => mockGetByEmail(),
+        getById: () => mockGetById(),
       },
     })),
   };
@@ -38,7 +38,6 @@ describe("/me endpoint", () => {
     getStoreMock.mockReturnValue({
       user: {
         sub: "123",
-        email: "test@opensystemslab.io",
         jwt: getJWT({ role: "teamEditor" }),
       },
     });
@@ -58,8 +57,7 @@ describe("/me endpoint", () => {
   it("returns an error for invalid user context", async () => {
     getStoreMock.mockReturnValue({
       user: {
-        sub: "123",
-        email: undefined,
+        sub: undefined,
         jwt: getJWT({ role: "teamEditor" }),
       },
     });
@@ -70,13 +68,13 @@ describe("/me endpoint", () => {
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
-          error: "User email missing from request",
+          error: "User ID missing from request",
         });
       });
   });
 
   it("returns an error for an invalid email address", async () => {
-    mockGetByEmail.mockResolvedValueOnce(null);
+    mockGetById.mockResolvedValueOnce(null);
 
     await supertest(app)
       .get("/me")
@@ -84,7 +82,7 @@ describe("/me endpoint", () => {
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
-          error: "Unable to locate user with email test@opensystemslab.io",
+          error: "Unable to locate user with ID 123",
         });
       });
   });
