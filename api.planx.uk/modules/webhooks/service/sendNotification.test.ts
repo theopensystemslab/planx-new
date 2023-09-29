@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import app from "../../../server";
 import SlackNotify from "slack-notify";
-import { BOPSBody, UniformBody } from "../types";
+import { BOPSBody, EmailBody, UniformBody } from "../types";
 
 const ENDPOINT = "/webhooks/hasura/send-slack-notification";
 
@@ -188,6 +188,74 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send(body)
+        .expect(500)
+        .then((response) => {
+          expect(mockSend).toHaveBeenCalledTimes(1);
+          expect(response.body.error).toMatch(/Failed to send/);
+        });
+    });
+  });
+
+  describe("Email notifications", () => {
+    afterEach(() => jest.clearAllMocks());
+
+    const body: EmailBody = {
+      event: {
+        data: {
+          new: {
+            session_id: "abc123",
+            team_slug: "testTeam",
+            request: {
+              personalisation: {
+                serviceName: "testServiceName",
+              },
+            },
+          },
+        },
+      },
+    };
+
+    it("skips the staging environment", async () => {
+      process.env.APP_ENVIRONMENT = "staging";
+      await post(ENDPOINT)
+        .query({ type: "email-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send(body)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.message).toMatch(/skipping Slack notification/);
+        });
+    });
+
+    it("posts to Slack on success", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+      mockSend.mockResolvedValue("Success!");
+
+      await post(ENDPOINT)
+        .query({ type: "email-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send(body)
+        .expect(200)
+        .then((response) => {
+          expect(SlackNotify).toHaveBeenCalledWith(
+            process.env.SLACK_WEBHOOK_URL,
+          );
+          expect(mockSend).toHaveBeenCalledTimes(1);
+          expect(response.body.message).toBe("Posted to Slack");
+          expect(response.body.data).toMatch(/abc123/);
+          expect(response.body.data).toMatch(/testTeam/);
+          expect(response.body.data).toMatch(/testServiceName/);
+        });
+    });
+
+    it("returns error when Slack fails", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+      mockSend.mockRejectedValue("Fail!");
+
+      await post(ENDPOINT)
+        .query({ type: "email-submission" })
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
         .expect(500)

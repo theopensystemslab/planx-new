@@ -51,7 +51,7 @@ export const emailSubmissionSchema = z.object({
     }),
   }),
   query: z.object({
-    type: z.literal("bops-submission"),
+    type: z.literal("email-submission"),
   }),
 });
 
