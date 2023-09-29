@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { compose, lazy, mount, route, withData, withView } from "navi";
+import { compose, lazy, mount, route, withView } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -10,10 +10,6 @@ import { makeTitle } from "./utils";
 import { authenticatedView } from "./views/authenticated";
 
 const editorRoutes = compose(
-  withData(() => ({
-    username: useStore.getState().getUser().firstName,
-  })),
-
   withView(authenticatedView),
 
   mount({

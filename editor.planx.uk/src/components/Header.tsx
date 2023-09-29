@@ -423,7 +423,7 @@ const EditorToolbar: React.FC<{
               <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
             </LeftBox>
             <RightBox>
-              {route.data.username && (
+              {user && (
                 <ProfileSection disableGutters>
                   {route.data.flow && (
                     <IconButton
@@ -436,7 +436,7 @@ const EditorToolbar: React.FC<{
                     </IconButton>
                   )}
                   <Box mr={1}>
-                    <Avatar>{route.data.username[0]}</Avatar>
+                    <Avatar>{user.firstName[0]}</Avatar>
                   </Box>
                   <IconButton
                     edge="end"
@@ -453,6 +453,7 @@ const EditorToolbar: React.FC<{
           </InnerContainer>
         </Container>
       </StyledToolbar>
+      { user && 
       <StyledPopover
         open={open}
         anchorEl={headerRef.current}
@@ -517,6 +518,7 @@ const EditorToolbar: React.FC<{
           <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
         </StyledPaper>
       </StyledPopover>
+      }
     </>
   );
 };

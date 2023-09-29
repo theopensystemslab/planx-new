@@ -40,6 +40,14 @@ describe("Header Component - Editor Route", () => {
         teamSettings: mockTeam1.settings,
         teamTheme: mockTeam1.theme,
         teamSlug: mockTeam1.slug,
+        user: {
+          firstName: "Test",
+          lastName: "User",
+          isPlatformAdmin: false,
+          teams: [],
+          id: 123,
+          email: "test@example.com"
+        }
       }),
     );
 
@@ -51,7 +59,6 @@ describe("Header Component - Editor Route", () => {
             pathname: "/team-name/flow-name",
           },
           data: {
-            username: "Test User",
             flow: "test-flow",
           },
         }) as any,
@@ -93,7 +100,6 @@ for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
               pathname: "/opensystemslab/test-flow" + route,
             },
             data: {
-              username: "Test User",
               flow: "test-flow",
             },
           }) as any,
@@ -145,7 +151,6 @@ describe("Section navigation bar", () => {
             pathname: "/team-name/flow-name/preview",
           },
           data: {
-            username: "Test User",
             flow: "test-flow",
           },
         }) as any,
