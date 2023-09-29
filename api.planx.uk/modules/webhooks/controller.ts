@@ -1,6 +1,6 @@
 import { ServerError } from "../../errors";
-import { sendSlackNotification } from "./service/sendNotification";
-import { SendSlackNotification } from "./types";
+import { sendSlackNotification } from "./sendNotification/service";
+import { SendSlackNotification } from "./sendNotification/types";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   req,

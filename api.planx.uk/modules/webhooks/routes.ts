@@ -13,7 +13,7 @@ import {
 } from "./_old/paymentRequestEvents";
 import { validate } from "../../shared/middleware/validate";
 import { sendSlackNotificationController } from "./controller";
-import { sendSlackNotificationSchema } from "./schema";
+import { sendSlackNotificationSchema } from "./sendNotification/schema";
 
 const router = Router();
 

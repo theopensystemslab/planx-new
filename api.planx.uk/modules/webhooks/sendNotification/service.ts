@@ -5,7 +5,7 @@ import {
   EventData,
   EventType,
   UniformEventData,
-} from "../types";
+} from "./types";
 
 export const sendSlackNotification = async (
   data: EventData,
@@ -21,15 +21,19 @@ export const sendSlackNotification = async (
 
   if (type === "bops-submission") {
     const { bops_id, destination_url } = data as BOPSEventData;
-    message = `:incoming_envelope: New BOPS submission *${bops_id}* [${destination_url}]`;
-  } else if (type === "uniform-submission") {
-    const { submission_reference, response } = data as UniformEventData;
-    message = `:incoming_envelope: New Uniform submission *${submission_reference}* [${response.organisation}]`;
-  } else if (type === "email-submission") {
-    const { request, session_id, team_slug } = data as EmailEventData;
-    message = `:incoming_envelope: New email submission "${request.personalisation.serviceName}" *${session_id}* [${team_slug}]`;
+    message = `New BOPS submission *${bops_id}* [${destination_url}]`;
   }
 
-  await slack.send(message);
+  if (type === "uniform-submission") {
+    const { submission_reference, response } = data as UniformEventData;
+    message = `New Uniform submission *${submission_reference}* [${response.organisation}]`;
+  }
+
+  if (type === "email-submission") {
+    const { request, session_id, team_slug } = data as EmailEventData;
+    message = `New email submission "${request.personalisation.serviceName}" *${session_id}* [${team_slug}]`;
+  }
+
+  await slack.send(":incoming_envelope: " + message);
   return message;
 };

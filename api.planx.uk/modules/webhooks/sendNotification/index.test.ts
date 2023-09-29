@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import app from "../../../server";
 import SlackNotify from "slack-notify";
-import { BOPSBody, EmailBody, UniformBody } from "../types";
+import { BOPSBody, EmailBody, UniformBody } from "./types";
 
 const ENDPOINT = "/webhooks/hasura/send-slack-notification";
 
