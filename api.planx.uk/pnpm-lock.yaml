@@ -9,8 +9,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#44420b9
-    version: github.com/theopensystemslab/planx-core/44420b9
+    specifier: git+https://github.com/theopensystemslab/planx-core#3d395fa
+    version: github.com/theopensystemslab/planx-core/3d395fa
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -1970,7 +1970,7 @@ packages:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 16.18.38
+      '@types/node': 18.18.1
     dev: false
 
   /@types/graceful-fs@4.1.6:
@@ -2057,7 +2057,6 @@ packages:
 
   /@types/node@18.18.1:
     resolution: {integrity: sha512-3G42sxmm0fF2+Vtb9TJQpnjmP+uKlWvFa8KoEGquh4gqRmoUG/N0ufuhikw6HEsdG2G2oIKhog1GCTfz9v5NdQ==}
-    dev: true
 
   /@types/node@20.4.1:
     resolution: {integrity: sha512-JIzsAvJeA/5iY6Y/OxZbv1lUcc8dNSE77lb2gnBH+/PJ3lFR1Ccvgwl5JWnHAkNHcRsT0TbpVOsiMKZ1F/yyJg==}
@@ -5416,7 +5415,7 @@ packages:
     resolution: {integrity: sha512-S5wqyz0DXnNJPd/xfIzZ5Xnp1HrJWBczg8mMfMpN78OJ5eDxXyf+Ygld9wX1DnUWbIbhM1YDY95NjR4CBXkb2g==}
     engines: {node: '>= 10.14.2'}
     dependencies:
-      '@types/node': 16.18.38
+      '@types/node': 18.18.1
       graceful-fs: 4.2.11
     dev: true
 
@@ -5515,7 +5514,7 @@ packages:
     resolution: {integrity: sha512-KWYVV1c4i+jbMpaBC+U++4Va0cp8OisU185o73T1vo99hqi7w8tSJfUXYswwqqrjzwxa6KpRK54WhPvwf5w6PQ==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 16.18.38
+      '@types/node': 18.18.1
       merge-stream: 2.0.0
       supports-color: 7.2.0
     dev: true
@@ -8116,8 +8115,8 @@ packages:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/44420b9:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/44420b9}
+  github.com/theopensystemslab/planx-core/3d395fa:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3d395fa}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
