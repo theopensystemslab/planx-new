@@ -32,12 +32,12 @@ Before<CustomWorld>("@team-admin-permissions", async function () {
   const { user1Id, teamId1, team1FlowId, user2Id, teamId2, team2FlowId } =
     await setup();
   this.user1Id = user1Id;
-  this.user1Email = "e2e-user-1@opensystemslab.io";
+  this.user1Email = "e2e-user-1@example.com";
   this.team1Id = teamId1;
   this.team1FlowId = team1FlowId;
 
   this.user2Id = user2Id;
-  this.user2Email = "e2e-user-2@opensystemslab.io";
+  this.user2Email = "e2e-user-2@example.com";
   this.team2Id = teamId2;
   this.team2FlowId = team2FlowId;
 });

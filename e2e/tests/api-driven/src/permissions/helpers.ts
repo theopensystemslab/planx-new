@@ -28,14 +28,14 @@ export const cleanup = async () => {
 };
 
 export const setup = async () => {
-  const user1Id = await createUser({ email: "e2e-user-1@opensystemslab.io" });
+  const user1Id = await createUser({ email: "e2e-user-1@example.com" });
   const teamId1 = await createTeam({ name: "E2E Team 1", slug: "e2e-team1" });
   const team1FlowId = await createFlow({
     teamId: teamId1,
     slug: "team-1-flow",
   });
 
-  const user2Id = await createUser({ email: "e2e-user-2@opensystemslab.io" });
+  const user2Id = await createUser({ email: "e2e-user-2@example.com" });
   const teamId2 = await createTeam({ name: "E2E Team 2", slug: "e2e-team2" });
   const team2FlowId = await createFlow({
     teamId: teamId2,
