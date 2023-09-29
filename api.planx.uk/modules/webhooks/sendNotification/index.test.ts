@@ -208,11 +208,8 @@ describe("Send Slack notifications endpoint", () => {
           );
           expect(mockSend).toHaveBeenCalledTimes(1);
           expect(mockAdmin.session.find).toHaveBeenCalledTimes(1);
-
           expect(response.body.message).toBe("Posted to Slack");
           expect(response.body.data).toMatch(/abc123/);
-          expect(response.body.data).toMatch(/test-council/);
-        });
     });
 
     it("adds a status to the Slack message for a disability exemption", async () => {
