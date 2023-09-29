@@ -41,8 +41,8 @@ export const settingsStore: StateCreator<
     const response = await client.mutate({
       mutation: gql`
         mutation UpdateFlowSettings(
-          $team_slug: String
-          $flow_slug: String
+          $team_slug: String!
+          $flow_slug: String!
           $settings: jsonb
         ) {
           update_flows(

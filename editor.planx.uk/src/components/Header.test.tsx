@@ -13,6 +13,7 @@ import Header from "./Header";
 const { setState, getState } = vanillaStore;
 
 const mockTeam1: Team = {
+  id: 123,
   name: "Open Systems Lab",
   slug: "opensystemslab",
   theme: {
@@ -21,18 +22,14 @@ const mockTeam1: Team = {
 };
 
 const mockTeam2: Team = {
+  id: 456,
   name: "Closed Systems Lab",
   slug: "closedsystemslab",
 };
 
-jest.spyOn(ReactNavi, "useNavigation").mockImplementation(
-  () =>
-    ({
-      data: {
-        team: mockTeam1,
-      },
-    }) as any,
-);
+jest.spyOn(ReactNavi, "useNavigation").mockReturnValue(({
+  navigate: jest.fn()
+}) as any);
 
 describe("Header Component - Editor Route", () => {
   beforeAll(() => {
@@ -56,7 +53,6 @@ describe("Header Component - Editor Route", () => {
           data: {
             username: "Test User",
             flow: "test-flow",
-            team: mockTeam1.slug,
           },
         }) as any,
     );

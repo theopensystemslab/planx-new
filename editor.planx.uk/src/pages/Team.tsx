@@ -281,17 +281,18 @@ const FlowItem: React.FC<FlowItemProps> = ({
   );
 };
 
-const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
+const Team: React.FC = () => {
+  const { id: teamId, slug } = useStore((state) => state.getTeam());
   const [flows, setFlows] = useState<any[] | null>(null);
   const navigation = useNavigation();
   const fetchFlows = useCallback(() => {
     useStore
       .getState()
-      .getFlows(id)
+      .getFlows(teamId)
       .then((res: { flows: any[] }) => {
         setFlows(res.flows);
       });
-  }, [id, setFlows]);
+  }, [teamId, setFlows]);
   useEffect(() => {
     fetchFlows();
   }, [fetchFlows]);
@@ -322,7 +323,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
               <FlowItem
                 flow={flow}
                 key={flow.slug}
-                teamId={id}
+                teamId={teamId}
                 teamSlug={slug}
                 refreshFlows={() => {
                   fetchFlows();
@@ -337,7 +338,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
                     const newFlowSlug = slugify(newFlowName);
                     useStore
                       .getState()
-                      .createFlow(id, newFlowSlug)
+                      .createFlow(teamId, newFlowSlug)
                       .then((newId: string) => {
                         navigation.navigate(`/${slug}/${newId}`);
                       });
