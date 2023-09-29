@@ -13,7 +13,7 @@ export const teamView = async (req: NaviRequest) => {
     try {
       await initTeamStore(req.params.team);
     } catch (error) {
-      throw new NotFoundError("Team not found");
+      throw new NotFoundError(`Team not found: ${error}`);
     }
   }
   
