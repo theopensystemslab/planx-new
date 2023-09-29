@@ -48,14 +48,23 @@ describe("flows and operations", () => {
       expect(i.queries).toContain("operations");
     });
 
-    test("can update flows", () => {
+    test("can update flows and their associated operations", () => {
       expect(i.mutations).toContain("update_flows_by_pk");
       expect(i.mutations).toContain("update_flows");
+      expect(i.mutations).toContain("update_operations_by_pk");
+      expect(i.mutations).toContain("update_operations");
     });
 
-    test("can create flows", () => {
+    test("can create flows and their associated operations", () => {
       expect(i.mutations).toContain("insert_flows_one");
       expect(i.mutations).toContain("insert_flows");
+      expect(i.mutations).toContain("insert_operations_one");
+      expect(i.mutations).toContain("insert_operations");
+    });
+
+    test("cannot delete operations", () => {
+      expect(i.mutations).not.toContain("delete_operations_by_pk");
+      expect(i.mutations).not.toContain("delete_operations");
     });
 
     test("can delete flows", () => {
@@ -91,19 +100,28 @@ describe("flows and operations", () => {
       expect(i.queries).toContain("operations");
     });
 
-    test("can update flows", () => {
+    test("can update flows and their associated operations", () => {
       expect(i.mutations).toContain("update_flows_by_pk");
       expect(i.mutations).toContain("update_flows");
+      expect(i.mutations).toContain("update_operations_by_pk");
+      expect(i.mutations).toContain("update_operations");
     });
 
-    test("can create flows", () => {
+    test("can create flows and their associated operations", () => {
       expect(i.mutations).toContain("insert_flows_one");
       expect(i.mutations).toContain("insert_flows");
+      expect(i.mutations).toContain("insert_operations_one");
+      expect(i.mutations).toContain("insert_operations");
     });
 
     test("can delete flows", () => {
       expect(i.mutations).toContain("delete_flows_by_pk");
       expect(i.mutations).toContain("delete_flows");
+    });
+
+    test("cannot delete operations", () => {
+      expect(i.mutations).not.toContain("delete_operations_by_pk");
+      expect(i.mutations).not.toContain("delete_operations");
     });
 
     test("can query published flows", () => {

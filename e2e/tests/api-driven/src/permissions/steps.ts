@@ -1,72 +1,85 @@
 import { After, Before, Given, Then, When, World } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { getUser } from "../globalHelpers";
-import { addUserToTeam, cleanup, performGQLQuery, setup } from "./helpers";
-
-interface TestUser {
-  id: number;
-  email: string;
-}
+import {
+  Action,
+  Table,
+  addUserToTeam,
+  cleanup,
+  performGQLQuery,
+  setup,
+} from "./helpers";
 
 export class CustomWorld extends World {
-  user1!: TestUser;
-  user2!: TestUser;
-  teamId1!: number;
-  teamId2!: number;
-  team1Flow!: string;
-  team2Flow!: string;
+  // A teamEditor for team1
+  user1Id!: number;
+  user1Email!: string;
+  team1Id!: number;
+  team1FlowId!: string;
+
+  // A teamEditor for team2
+  team2Id!: number;
+  user2Id!: number;
+  user2Email!: string;
+  team2FlowId!: string;
+
+  // Either user1 or user2, depending on the test suite
+  activeUserId!: number;
+  activeUserEmail!: string;
 
   error?: Error = undefined;
-  activeUser!: TestUser;
+  result: unknown[] | Record<"returning", unknown[]> | null = null;
 }
 
 Before<CustomWorld>("@team-admin-permissions", async function () {
-  const { user1, user2, teamId1, teamId2, team1Flow, team2Flow } =
+  const { user1Id, teamId1, team1FlowId, user2Id, teamId2, team2FlowId } =
     await setup();
-  this.user1 = user1;
-  this.user2 = user2;
-  this.teamId1 = teamId1;
-  this.teamId2 = teamId2;
-  this.team1Flow = team1Flow;
-  this.team2Flow = team2Flow;
+  this.user1Id = user1Id;
+  this.user1Email = "team1-teamEditor-user@example.com";
+  this.team1Id = teamId1;
+  this.team1FlowId = team1FlowId;
+
+  this.user2Id = user2Id;
+  this.user2Email = "team2-teamEditor-user@example.com";
+  this.team2Id = teamId2;
+  this.team2FlowId = team2FlowId;
 });
 
 After("@team-admin-permissions", async function () {
   await cleanup();
 });
 
-Given("a teamAdmin is a member of a team", async function (this: CustomWorld) {
-  await addUserToTeam(this.user1.id, this.teamId1);
-  const user = await getUser(this.user1.email);
+Given("a teamEditor from team1", async function (this: CustomWorld) {
+  await addUserToTeam(this.user1Id, this.team1Id);
+  const user = await getUser(this.user1Email);
 
   assert.ok(user, "User is not defined");
   assert.strictEqual(user.teams.length, 1);
   assert.strictEqual(user.teams[0].role, "teamEditor");
-  assert.strictEqual(user.teams[0].team.id, this.teamId1);
+  assert.strictEqual(user.teams[0].team.id, this.team1Id);
 
-  this.activeUser = this.user1;
+  this.activeUserId = this.user1Id;
+  this.activeUserEmail = this.user1Email;
 });
 
-Given(
-  "a teamAdmin is not in the requested team",
-  async function (this: CustomWorld) {
-    await addUserToTeam(this.user2.id, this.teamId2);
-    const user = await getUser(this.user2.email);
+Given("a teamEditor from team2", async function (this: CustomWorld) {
+  await addUserToTeam(this.user2Id, this.team2Id);
+  const user = await getUser(this.user2Email);
 
-    assert.ok(user, "User is not defined");
-    assert.strictEqual(user.teams.length, 1);
-    assert.strictEqual(user.teams[0].role, "teamEditor");
-    assert.strictEqual(user.teams[0].team.id, this.teamId2);
+  assert.ok(user, "User is not defined");
+  assert.strictEqual(user.teams.length, 1);
+  assert.strictEqual(user.teams[0].role, "teamEditor");
+  assert.strictEqual(user.teams[0].team.id, this.team2Id);
 
-    this.activeUser = this.user2;
-  },
-);
+  this.activeUserId = this.user1Id;
+  this.activeUserEmail = this.user1Email;
+});
 
 When(
-  "they perform {string} on {string}",
-  async function (this: CustomWorld, action: string, table: string) {
+  "they perform {string} on team1's {string}",
+  async function (this: CustomWorld, action: Action, table: Table) {
     try {
-      await performGQLQuery({
+      this.result = await performGQLQuery({
         world: this,
         action,
         table,
@@ -81,14 +94,66 @@ When(
   },
 );
 
+When(
+  "they perform {string} on themselves in {string}",
+  async function (this: CustomWorld, action: Action, table: Table) {
+    try {
+      this.result = await performGQLQuery({
+        world: this,
+        action,
+        table,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        this.error = error;
+        return;
+      }
+      throw error;
+    }
+  },
+);
+
+When(
+  "they perform {string} on a different user in {string}",
+  async function (this: CustomWorld, action: Action, table: Table) {
+    try {
+      this.result = await performGQLQuery({
+        world: {
+          ...this,
+          // Point query to a different user
+          user1Id: this.user2Id,
+        },
+        action,
+        table,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        this.error = error;
+        return;
+      }
+      throw error;
+    }
+  },
+);
+
 Then("they have access", function (this: CustomWorld) {
-  if (this.error) {
+  if (!this.result) {
+    assert.fail("Permission should have been granted - check test setup");
+  } else if (this.error) {
     assert.fail(`Permission query failed with error: ${this.error.message}`);
   }
 });
 
 Then("they do not have access", function (this: CustomWorld) {
-  if (this.error) {
+  const isResultEmpty = Array.isArray(this.result) && !this.result.length;
+  const isResultSetEmpty =
+    this.result && !Array.isArray(this.result) && !this.result.returning.length;
+
+  if (isResultEmpty || isResultSetEmpty) {
+    assert.ok(`Permission query did not return results`);
+  } else if (this.error) {
     assert.ok(`Permission query failed with error: ${this.error.message}`);
+  } else if (this.result) {
+    assert.fail("Permission should not have been granted - check test setup");
   }
 });
