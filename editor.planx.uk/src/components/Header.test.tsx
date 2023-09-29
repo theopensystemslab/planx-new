@@ -46,8 +46,8 @@ describe("Header Component - Editor Route", () => {
           isPlatformAdmin: false,
           teams: [],
           id: 123,
-          email: "test@example.com"
-        }
+          email: "test@example.com",
+        },
       }),
     );
 

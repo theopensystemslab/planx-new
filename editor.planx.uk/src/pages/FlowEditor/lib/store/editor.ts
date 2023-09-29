@@ -336,7 +336,9 @@ export const editorStore: StateCreator<
   moveFlow(flowId: string, teamSlug: string) {
     const valid = get().canUserEditTeam(teamSlug);
     if (!valid) {
-      alert(`You do not have permission to move this flow into ${teamSlug}, try again`);
+      alert(
+        `You do not have permission to move this flow into ${teamSlug}, try again`,
+      );
       return Promise.resolve();
     }
 

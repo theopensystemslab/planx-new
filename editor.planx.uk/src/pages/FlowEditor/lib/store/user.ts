@@ -5,7 +5,7 @@ import { Team } from "types";
 import type { StateCreator } from "zustand";
 
 export interface UserStore {
-  user?: User
+  user?: User;
 
   setUser: (user: User) => void;
   getUser: () => User | undefined;
@@ -17,7 +17,6 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
   set,
   get,
 ) => ({
-
   setUser: (user: User) => set({ user }),
 
   getUser: () => get().user,
@@ -25,11 +24,11 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
   canUserEditTeam(teamSlug) {
     const user = this.getUser();
     if (!user) return false;
-    
+
     return (
       user.isPlatformAdmin ||
       teamSlug === "templates" ||
-        user.teams.filter(
+      user.teams.filter(
         (team) => team.role === "teamEditor" && team.team.slug === teamSlug,
       ).length > 0
     );

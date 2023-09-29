@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { arrayMoveImmutable } from "array-move";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import {
   DragDropContext,
@@ -16,7 +17,6 @@ import {
 } from "react-beautiful-dnd";
 
 import { removeAt, setAt } from "../utils";
-import { useStore } from "pages/FlowEditor/lib/store";
 
 export interface EditorProps<T> {
   index?: number;

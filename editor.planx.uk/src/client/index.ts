@@ -10,5 +10,5 @@ export const _public = new CoreDomainClient({
 
 export const _client = new CoreDomainClient({
   targetURL: process.env.REACT_APP_HASURA_URL!,
-  auth: { jwt: getCookie("jwt") || "" }
-})
+  auth: { jwt: getCookie("jwt") || "" },
+});
