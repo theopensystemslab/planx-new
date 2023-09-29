@@ -11,16 +11,19 @@ import {
 } from "./helpers";
 
 export class CustomWorld extends World {
+  // A teamEditor for team1
   user1Id!: number;
   user1Email!: string;
   team1Id!: number;
   team1FlowId!: string;
 
+  // A teamEditor for team2
   team2Id!: number;
   user2Id!: number;
   user2Email!: string;
   team2FlowId!: string;
 
+  // Either user1 or user2, depending on the test suite
   activeUserId!: number;
   activeUserEmail!: string;
 
@@ -32,12 +35,12 @@ Before<CustomWorld>("@team-admin-permissions", async function () {
   const { user1Id, teamId1, team1FlowId, user2Id, teamId2, team2FlowId } =
     await setup();
   this.user1Id = user1Id;
-  this.user1Email = "e2e-user-1@example.com";
+  this.user1Email = "team1-teamEditor-user@example.com";
   this.team1Id = teamId1;
   this.team1FlowId = team1FlowId;
 
   this.user2Id = user2Id;
-  this.user2Email = "e2e-user-2@example.com";
+  this.user2Email = "team2-teamEditor-user@example.com";
   this.team2Id = teamId2;
   this.team2FlowId = team2FlowId;
 });
@@ -46,7 +49,7 @@ After("@team-admin-permissions", async function () {
   await cleanup();
 });
 
-Given("a teamAdmin from team1", async function (this: CustomWorld) {
+Given("a teamEditor from team1", async function (this: CustomWorld) {
   await addUserToTeam(this.user1Id, this.team1Id);
   const user = await getUser(this.user1Email);
 
@@ -59,7 +62,7 @@ Given("a teamAdmin from team1", async function (this: CustomWorld) {
   this.activeUserEmail = this.user1Email;
 });
 
-Given("a teamAdmin from team2", async function (this: CustomWorld) {
+Given("a teamEditor from team2", async function (this: CustomWorld) {
   await addUserToTeam(this.user2Id, this.team2Id);
   const user = await getUser(this.user2Email);
 
