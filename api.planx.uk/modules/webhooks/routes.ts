@@ -11,7 +11,9 @@ import {
   createPaymentInvitationEvents,
   createPaymentReminderEvents,
 } from "./_old/paymentRequestEvents";
-import { sendSlackNotification } from "./_old/sendNotifications";
+import { validate } from "../../shared/middleware/validate";
+import { sendSlackNotificationController } from "./controller";
+import { sendSlackNotificationSchema } from "./schema";
 
 const router = Router();
 
@@ -28,7 +30,11 @@ router.post(
 );
 router.post("/hasura/create-payment-expiry-events", createPaymentExpiryEvents);
 router.post("/hasura/create-payment-send-events", createPaymentSendEvents);
-router.post("/hasura/send-slack-notification", sendSlackNotification);
+router.post(
+  "/hasura/send-slack-notification",
+  validate(sendSlackNotificationSchema),
+  sendSlackNotificationController,
+);
 router.post("/hasura/sanitise-application-data", sanitiseApplicationData);
 
 export default router;
