@@ -2,10 +2,10 @@ import { gql } from "graphql-request";
 import { subMonths } from "date-fns";
 
 import { Operation, OperationResult } from "./types";
-import { adminGraphQLClient } from "../../hasura";
-import { runSQL } from "../../hasura/schema";
-import { getFilesForSession } from "../../session/files";
-import { deleteFilesByURL } from "../../s3/deleteFile";
+import { adminGraphQLClient } from "../../../../hasura";
+import { runSQL } from "../../../../hasura/schema";
+import { getFilesForSession } from "../../../../session/files";
+import { deleteFilesByURL } from "../../../../s3/deleteFile";
 
 const RETENTION_PERIOD_MONTHS = 6;
 export const getRetentionPeriod = () =>

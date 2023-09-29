@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../../server";
+import app from "../../../../server";
 import * as operations from "./operations";
 
 const mockSend = jest.fn();

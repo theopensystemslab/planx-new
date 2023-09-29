@@ -40,10 +40,6 @@ import {
 } from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";
-import {
-  createReminderEvent,
-  createExpiryEvent,
-} from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient as adminClient } from "./hasura";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
@@ -56,31 +52,24 @@ import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { downloadApplicationFiles, sendToEmail } from "./send/email";
 import { sendToUniform } from "./send/uniform";
-import { sendSlackNotification } from "./webhooks/sendNotifications";
 import { copyFlow } from "./editor/copyFlow";
 import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
-import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
-import {
-  createPaymentExpiryEvents,
-  createPaymentInvitationEvents,
-  createPaymentReminderEvents,
-} from "./webhooks/paymentRequestEvents";
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 import { getBOPSPayload } from "./admin/session/bops";
 import { getCSVData, getRedactedCSVData } from "./admin/session/csv";
 import { getHTMLExport, getRedactedHTMLExport } from "./admin/session/html";
 import { generateZip } from "./admin/session/zip";
-import { createPaymentSendEvents } from "./inviteToPay/createPaymentSendEvents";
 import { getSessionSummary } from "./admin/session/summary";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import miscRoutes from "./modules/misc/routes";
 import userRoutes from "./modules/user/routes";
+import webhookRoutes from "./modules/webhooks/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 
@@ -197,6 +186,7 @@ app.use(authRoutes);
 app.use(miscRoutes);
 app.use("/user", userRoutes);
 app.use("/team", teamRoutes);
+app.use("/webhooks", webhookRoutes);
 
 app.use("/gis", router);
 
@@ -455,28 +445,6 @@ app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
 app.post("/invite-to-pay/:sessionId", inviteToPay);
-
-app.use("/webhooks/hasura", useHasuraAuth);
-app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
-app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
-app.post(
-  "/webhooks/hasura/create-payment-invitation-events",
-  createPaymentInvitationEvents,
-);
-app.post(
-  "/webhooks/hasura/create-payment-reminder-events",
-  createPaymentReminderEvents,
-);
-app.post(
-  "/webhooks/hasura/create-payment-expiry-events",
-  createPaymentExpiryEvents,
-);
-app.post(
-  "/webhooks/hasura/create-payment-send-events",
-  createPaymentSendEvents,
-);
-app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
-app.post("/webhooks/hasura/sanitise-application-data", sanitiseApplicationData);
 
 app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
 

@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { getOperations, operationHandler } from "./operations";
 import { OperationResult } from "./types";
-import { getFormattedEnvironment } from "../../helpers";
+import { getFormattedEnvironment } from "../../../../helpers";
 
 /**
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis

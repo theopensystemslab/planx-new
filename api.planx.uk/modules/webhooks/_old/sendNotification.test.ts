@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../server";
+import app from "../../../server";
 import SlackNotify from "slack-notify";
 
 const ENDPOINT = "/webhooks/hasura/send-slack-notification";

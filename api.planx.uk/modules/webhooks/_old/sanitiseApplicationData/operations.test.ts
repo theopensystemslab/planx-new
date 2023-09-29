@@ -1,5 +1,5 @@
-import { runSQL } from "../../hasura/schema";
-import { queryMock } from "../../tests/graphqlQueryMock";
+import { runSQL } from "../../../../hasura/schema";
+import { queryMock } from "../../../../tests/graphqlQueryMock";
 import {
   mockIds,
   mockSanitiseBOPSApplicationsMutation,
@@ -25,11 +25,11 @@ import {
   deleteHasuraScheduledEventsForSubmittedSessions,
 } from "./operations";
 
-jest.mock("../../hasura/schema");
+jest.mock("../../../../hasura/schema");
 const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
 
 const mockFindSession = jest.fn();
-jest.mock("../../client", () => {
+jest.mock("../../../../client", () => {
   return {
     $admin: {
       session: {
