@@ -25,7 +25,7 @@ export class CustomWorld extends World {
   activeUserEmail!: string;
 
   error?: Error = undefined;
-  result: any[] | Record<"returning", any[]> | null = null;
+  result: unknown[] | Record<"returning", unknown[]> | null = null;
 }
 
 Before<CustomWorld>("@team-admin-permissions", async function () {
