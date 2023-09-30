@@ -259,6 +259,39 @@ describe("Send Slack notifications endpoint", () => {
         });
     });
 
+    it("adds an exemption status if there's no fee for the session", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+      mockAdmin.session.find = jest
+        .fn()
+        .mockResolvedValue(mockSessionWithoutFee);
+
+      await post(ENDPOINT)
+        .query({ type: "uniform-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send(body)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.data).toMatch(/abc123/);
+          expect(response.body.data).toMatch(/test-council/);
+          expect(response.body.data).toMatch(/[Exempt]/);
+        });
+    });
+
+    it("handles missing sessions", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+      mockAdmin.session.find = jest.fn().mockResolvedValueOnce(null);
+
+      await post(ENDPOINT)
+        .query({ type: "uniform-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send(body)
+        .expect(500)
+        .then((response) => {
+          expect(mockAdmin.session.find).toHaveBeenCalledTimes(1);
+          expect(response.body.error).toMatch(/Failed to send/);
+        });
+    });
+
     it("returns error when Slack fails", async () => {
       process.env.APP_ENVIRONMENT = "production";
       mockSend.mockRejectedValue("Fail!");
