@@ -2,11 +2,34 @@ import supertest from "supertest";
 import app from "../../../server";
 import SlackNotify from "slack-notify";
 import { BOPSBody, EmailBody, UniformBody } from "./types";
+import { $admin } from "../../../client";
+import { CoreDomainClient } from "@opensystemslab/planx-core";
 
-const ENDPOINT = "/webhooks/hasura/send-slack-notification";
+const mockSessionWithFee = {
+  data: {
+    passport: {
+      data: {
+        "application.fee.payable": "123",
+      },
+    },
+  },
+};
+
+const mockSessionWithoutFee = {
+  data: {
+    passport: {
+      data: {
+        "application.fee.payable": "0",
+      },
+    },
+  },
+};
+
+jest.mock<CoreDomainClient>("../../../client");
+const mockAdmin = jest.mocked($admin);
 
 const mockSend = jest.fn();
-jest.mock("slack-notify", () =>
+jest.mock<typeof SlackNotify>("slack-notify", () =>
   jest.fn().mockImplementation(() => {
     return { send: mockSend };
   }),
@@ -15,16 +38,18 @@ jest.mock("slack-notify", () =>
 const { post } = supertest(app);
 
 describe("Send Slack notifications endpoint", () => {
+  const ENDPOINT = "/webhooks/hasura/send-slack-notification";
   const ORIGINAL_ENV = process.env;
 
   beforeEach(() => {
-    jest.resetModules();
     process.env = { ...ORIGINAL_ENV };
+    mockAdmin.session.find = jest.fn().mockResolvedValue(mockSessionWithFee);
+    mockSend.mockResolvedValue("Success!");
   });
 
-  afterAll(() => {
-    process.env = ORIGINAL_ENV;
-  });
+  afterEach(jest.clearAllMocks);
+
+  afterAll(() => (process.env = ORIGINAL_ENV));
 
   describe("authentication and validation", () => {
     it("fails without correct authentication", async () => {
@@ -73,12 +98,11 @@ describe("Send Slack notifications endpoint", () => {
   });
 
   describe("BOPS notifications", () => {
-    afterEach(() => jest.clearAllMocks());
-
     const body: BOPSBody = {
       event: {
         data: {
           new: {
+            payload: { sessionId: "xyz123" },
             bops_id: "abc123",
             destination_url: "https://www.bops-production.com",
           },
@@ -100,7 +124,6 @@ describe("Send Slack notifications endpoint", () => {
 
     it("posts to Slack on success", async () => {
       process.env.APP_ENVIRONMENT = "production";
-      mockSend.mockResolvedValue("Success!");
 
       await post(ENDPOINT)
         .query({ type: "bops-submission" })
@@ -135,12 +158,11 @@ describe("Send Slack notifications endpoint", () => {
   });
 
   describe("Uniform notifications", () => {
-    afterEach(() => jest.clearAllMocks());
-
     const body: UniformBody = {
       event: {
         data: {
           new: {
+            payload: { sessionId: "xyz123" },
             submission_reference: "abc123",
             response: {
               organisation: "test-council",
@@ -164,7 +186,6 @@ describe("Send Slack notifications endpoint", () => {
 
     it("posts to Slack on success", async () => {
       process.env.APP_ENVIRONMENT = "production";
-      mockSend.mockResolvedValue("Success!");
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
@@ -176,9 +197,44 @@ describe("Send Slack notifications endpoint", () => {
             process.env.SLACK_WEBHOOK_URL,
           );
           expect(mockSend).toHaveBeenCalledTimes(1);
+          expect(mockAdmin.session.find).toHaveBeenCalledTimes(1);
+
           expect(response.body.message).toBe("Posted to Slack");
           expect(response.body.data).toMatch(/abc123/);
           expect(response.body.data).toMatch(/test-council/);
+        });
+    });
+
+    it("adds an exemption status if there's no fee for the session", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+      mockAdmin.session.find = jest
+        .fn()
+        .mockResolvedValue(mockSessionWithoutFee);
+
+      await post(ENDPOINT)
+        .query({ type: "uniform-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send(body)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.data).toMatch(/abc123/);
+          expect(response.body.data).toMatch(/test-council/);
+          expect(response.body.data).toMatch(/[Exempt]/);
+        });
+    });
+
+    it("handles missing sessions", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+      mockAdmin.session.find = jest.fn().mockResolvedValueOnce(null);
+
+      await post(ENDPOINT)
+        .query({ type: "uniform-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send(body)
+        .expect(500)
+        .then((response) => {
+          expect(mockAdmin.session.find).toHaveBeenCalledTimes(1);
+          expect(response.body.error).toMatch(/Failed to send/);
         });
     });
 
@@ -199,8 +255,6 @@ describe("Send Slack notifications endpoint", () => {
   });
 
   describe("Email notifications", () => {
-    afterEach(() => jest.clearAllMocks());
-
     const body: EmailBody = {
       event: {
         data: {
@@ -231,7 +285,6 @@ describe("Send Slack notifications endpoint", () => {
 
     it("posts to Slack on success", async () => {
       process.env.APP_ENVIRONMENT = "production";
-      mockSend.mockResolvedValue("Success!");
 
       await post(ENDPOINT)
         .query({ type: "email-submission" })
