@@ -124,6 +124,18 @@ components:
               message:
                 type: string
                 required: true
+    ScheduledEvent:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                enum: ["success"]
+              event_id:
+                type: string
+                description: Internal Hasura ID of the generated event
 paths:
   /webhooks/hasura/sendSlackNotification:
     post:
@@ -158,7 +170,7 @@ paths:
               $ref: "#/components/schemas/CreatePaymentEvent"
       responses:
         "200":
-          $ref: "#/components/responses/TODO"
+          $ref: "#/components/responses/ScheduledEvent"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/create-payment-reminder-events:
@@ -173,7 +185,7 @@ paths:
               $ref: "#/components/schemas/CreatePaymentEvent"
       responses:
         "200":
-          $ref: "#/components/responses/TODO"
+          $ref: "#/components/responses/ScheduledEvent"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/create-payment-expiry-events:
@@ -188,6 +200,6 @@ paths:
               $ref: "#/components/schemas/CreatePaymentEvent"
       responses:
         "200":
-          $ref: "#/components/responses/TODO"
+          $ref: "#/components/responses/ScheduledEvent"
         "500":
           $ref: "#/components/responses/ErrorMessage"

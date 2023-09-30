@@ -25,13 +25,18 @@ type RequiredScheduledEventArgs = Pick<
   "webhook" | "schedule_at" | "comment" | "payload"
 >;
 
+export interface ScheduledEventResponse {
+  message: "success";
+  event_id: string;
+}
+
 /**
  * POST a request to the Hasura Metadata API
  * https://hasura.io/docs/latest/graphql/core/api-reference/metadata-api/index/
  */
 const postToMetadataAPI = async (
   body: ScheduledEvent,
-): Promise<AxiosResponse<any>> => {
+): Promise<AxiosResponse<ScheduledEventResponse>> => {
   try {
     return await Axios.post(
       process.env.HASURA_METADATA_URL!,
