@@ -1,4 +1,6 @@
 import { ServerError } from "../../errors";
+import { CreatePaymentInvitationEvents } from "./paymentRequestEvents/schema";
+import { createPaymentInvitationEvents } from "./paymentRequestEvents/service";
 import { sendSlackNotification } from "./sendNotification/service";
 import { SendSlackNotification } from "./sendNotification/types";
 
@@ -29,3 +31,18 @@ export const sendSlackNotificationController: SendSlackNotification = async (
     );
   }
 };
+
+export const createPaymentInvitationEventsController: CreatePaymentInvitationEvents =
+  async (req, res, next) => {
+    try {
+      const response = await createPaymentInvitationEvents(req.body);
+      res.json(response);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: `Failed to create payment invitation events`,
+          cause: error,
+        }),
+      );
+    }
+  };

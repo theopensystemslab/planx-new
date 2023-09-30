@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import app from "../../../server";
 import { createScheduledEvent } from "../../../hasura/metadata";
+import { CreatePaymentInvitation } from "./schema";
 
 const { post } = supertest(app);
 
@@ -33,14 +34,15 @@ describe("Create payment invitation events webhook", () => {
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
         .expect(400)
-        .then((response) =>
-          expect(response.body.error).toEqual("Required value missing"),
-        );
+        .then((response) => {
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
+        });
     }
   });
 
   it("returns a 200 on successful event setup", async () => {
-    const body = {
+    const body: CreatePaymentInvitation = {
       createdAt: new Date(),
       payload: { paymentRequestId: "123" },
     };
