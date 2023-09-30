@@ -1,6 +1,7 @@
 import { ServerError } from "../../errors";
 import { CreatePaymentEventController } from "./paymentRequestEvents/schema";
 import {
+  createPaymentExpiryEvents,
   createPaymentInvitationEvents,
   createPaymentReminderEvents,
 } from "./paymentRequestEvents/service";
@@ -59,6 +60,21 @@ export const createPaymentReminderEventsController: CreatePaymentEventController
       return next(
         new ServerError({
           message: "Failed to create payment reminder events",
+          cause: error,
+        }),
+      );
+    }
+  };
+
+export const createPaymentExpiryEventsController: CreatePaymentEventController =
+  async (req, res, next) => {
+    try {
+      const response = await createPaymentExpiryEvents(req.body);
+      res.json(response);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: "Failed to create payment expiry events",
           cause: error,
         }),
       );

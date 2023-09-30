@@ -8,12 +8,12 @@ import {
 } from "./_old/lowcalSessionEvents";
 import { validate } from "../../shared/middleware/validate";
 import {
+  createPaymentExpiryEventsController,
   createPaymentInvitationEventsController,
   createPaymentReminderEventsController,
   sendSlackNotificationController,
 } from "./controller";
 import { sendSlackNotificationSchema } from "./sendNotification/schema";
-import { createPaymentExpiryEvents } from "./paymentRequestEvents/service";
 import { CreatePaymentEventSchema } from "./paymentRequestEvents/schema";
 
 const router = Router();
@@ -31,7 +31,11 @@ router.post(
   validate(CreatePaymentEventSchema),
   createPaymentReminderEventsController,
 );
-router.post("/hasura/create-payment-expiry-events", createPaymentExpiryEvents);
+router.post(
+  "/hasura/create-payment-expiry-events",
+  validate(CreatePaymentEventSchema),
+  createPaymentExpiryEventsController,
+);
 router.post("/hasura/create-payment-send-events", createPaymentSendEvents);
 router.post(
   "/hasura/send-slack-notification",

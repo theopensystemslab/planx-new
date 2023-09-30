@@ -258,9 +258,10 @@ describe("Create payment expiry events webhook", () => {
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
         .expect(400)
-        .then((response) =>
-          expect(response.body.error).toEqual("Required value missing"),
-        );
+        .then((response) => {
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
+        });
     }
   });
 
@@ -276,7 +277,7 @@ describe("Create payment expiry events webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
-        // it's queued up x2 expirys: one for the payee and one for the agent
+        // it's queued up x2 expiries: one for the payee and one for the agent
         expect(response.body).toHaveLength(2);
         expect(response.body).toStrictEqual(["test", "test"]);
       });
