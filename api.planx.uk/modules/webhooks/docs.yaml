@@ -1,0 +1,135 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: webhooks
+    description: Webhooks for event management
+components:
+  schemas:
+    Payload:
+      type: object
+      properties:
+        sessionId:
+          type: string
+      required:
+        - sessionId
+    BopsSubmissionSchema:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            event:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    new:
+                      type: object
+                      properties:
+                        payload:
+                          $ref: "#/components/schemas/Payload"
+                        bops_id:
+                          type: string
+                        destination_url:
+                          type: string
+      required:
+        - body
+    UniformSubmissionSchema:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            event:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    new:
+                      type: object
+                      properties:
+                        payload:
+                          $ref: "#/components/schemas/Payload"
+                        submission_reference:
+                          type: string
+                        response:
+                          type: object
+                          properties:
+                            organisation:
+                              type: string
+      required:
+        - body
+    EmailSubmissionSchema:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            event:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    new:
+                      type: object
+                      properties:
+                        session_id:
+                          type: string
+                        team_slug:
+                          type: string
+                        request:
+                          type: object
+                          properties:
+                            personalisation:
+                              type: object
+                              properties:
+                                serviceName:
+                                  type: string
+      required:
+        - body
+    SendSlackNotificationSchema:
+      oneOf:
+        - $ref: "#/components/schemas/BopsSubmissionSchema"
+        - $ref: "#/components/schemas/UniformSubmissionSchema"
+        - $ref: "#/components/schemas/EmailSubmissionSchema"
+  responses:
+    SlackNotificationSuccessMessage:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: string
+                required: false
+                description: The generated Slack message
+              message:
+                type: string
+                required: true
+paths:
+  /webhooks/hasura/sendSlackNotification:
+    post:
+      tags: ["webhooks"]
+      summary: Send Slack notification
+      description: Endpoint to trigger a Slack notification following a submission event
+      parameters:
+        - in: query
+          name: type
+          type: string
+          enum: ["bops-submission", "uniform-submission", "email-submission"]
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendSlackNotificationSchema"
+      responses:
+        "200":
+          $ref: "#/components/responses/SlackNotificationSuccessMessage"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
