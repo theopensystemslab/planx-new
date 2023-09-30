@@ -2,9 +2,9 @@ import { z } from "zod";
 import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
 
 // TODO: Make this better
-type Response = [any, any];
+type Response = [any, any] | any[];
 
-export const CreatePaymentInvitationEventsSchema = z.object({
+export const CreatePaymentEventSchema = z.object({
   body: z.object({
     createdAt: z.string().transform((val) => new Date(val)),
     payload: z.object({
@@ -13,11 +13,11 @@ export const CreatePaymentInvitationEventsSchema = z.object({
   }),
 });
 
-export type CreatePaymentInvitation = z.infer<
-  typeof CreatePaymentInvitationEventsSchema
+export type CreatePaymentEvent = z.infer<
+  typeof CreatePaymentEventSchema
 >["body"];
 
-export type CreatePaymentInvitationEvents = ValidatedRequestHandler<
-  typeof CreatePaymentInvitationEventsSchema,
+export type CreatePaymentEventController = ValidatedRequestHandler<
+  typeof CreatePaymentEventSchema,
   Response
 >;

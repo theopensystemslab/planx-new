@@ -9,14 +9,12 @@ import {
 import { validate } from "../../shared/middleware/validate";
 import {
   createPaymentInvitationEventsController,
+  createPaymentReminderEventsController,
   sendSlackNotificationController,
 } from "./controller";
 import { sendSlackNotificationSchema } from "./sendNotification/schema";
-import {
-  createPaymentExpiryEvents,
-  createPaymentReminderEvents,
-} from "./paymentRequestEvents/service";
-import { CreatePaymentInvitationEventsSchema } from "./paymentRequestEvents/schema";
+import { createPaymentExpiryEvents } from "./paymentRequestEvents/service";
+import { CreatePaymentEventSchema } from "./paymentRequestEvents/schema";
 
 const router = Router();
 
@@ -25,12 +23,13 @@ router.post("/hasura/create-reminder-event", createReminderEvent);
 router.post("/hasura/create-expiry-event", createExpiryEvent);
 router.post(
   "/hasura/create-payment-invitation-events",
-  validate(CreatePaymentInvitationEventsSchema),
+  validate(CreatePaymentEventSchema),
   createPaymentInvitationEventsController,
 );
 router.post(
   "/hasura/create-payment-reminder-events",
-  createPaymentReminderEvents,
+  validate(CreatePaymentEventSchema),
+  createPaymentReminderEventsController,
 );
 router.post("/hasura/create-payment-expiry-events", createPaymentExpiryEvents);
 router.post("/hasura/create-payment-send-events", createPaymentSendEvents);
