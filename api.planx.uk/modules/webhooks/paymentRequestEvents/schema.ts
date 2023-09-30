@@ -4,7 +4,7 @@ import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
 // TODO: Make this better
 type Response = [any, any] | any[];
 
-export const CreatePaymentEventSchema = z.object({
+export const createPaymentEventSchema = z.object({
   body: z.object({
     createdAt: z.string().transform((val) => new Date(val)),
     payload: z.object({
@@ -14,10 +14,10 @@ export const CreatePaymentEventSchema = z.object({
 });
 
 export type CreatePaymentEvent = z.infer<
-  typeof CreatePaymentEventSchema
+  typeof createPaymentEventSchema
 >["body"];
 
 export type CreatePaymentEventController = ValidatedRequestHandler<
-  typeof CreatePaymentEventSchema,
+  typeof createPaymentEventSchema,
   Response
 >;
