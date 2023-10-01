@@ -20,8 +20,8 @@ dependencies:
     specifier: ^8.11.3
     version: 8.11.3
   sharedb:
-    specifier: ^3.3.1
-    version: 3.3.1
+    specifier: ^4.0.2
+    version: 4.0.2
   ws:
     specifier: ^8.13.0
     version: 8.13.0
@@ -41,10 +41,8 @@ packages:
     resolution: {integrity: sha512-t0OgO06uolEcMUvV8+yHc9Pc9pazh8wi/Dtyok/sQwvcr8iFV+P86IfAzK7upUDhI4oavhVREMY7iSWtm38LeA==}
     dev: false
 
-  /async@2.6.4:
-    resolution: {integrity: sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA==}
-    dependencies:
-      lodash: 4.17.21
+  /async@3.2.4:
+    resolution: {integrity: sha512-iAB+JbDEGXhyIUavoDl9WP/Jj106Kz9DEn1DPgYw5ruDn0e3Wgi3sKFm55sASdGBNOQB8F59d9qQ7deqrHA8wQ==}
     dev: false
 
   /buffer-equal-constant-time@1.0.1:
@@ -76,8 +74,8 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /fast-deep-equal@2.0.1:
-    resolution: {integrity: sha512-bCK/2Z4zLidyB4ReuIsvALH6w31YfAQDmXMqMx6FyfHqvBxtjC0eRumeSu4Bs3XtXwpyIywtSTrVT99BxY1f9w==}
+  /fast-deep-equal@3.1.3:
+    resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
     dev: false
 
   /filewatcher@3.0.1:
@@ -320,12 +318,12 @@ packages:
     dependencies:
       lru-cache: 6.0.0
 
-  /sharedb@3.3.1:
-    resolution: {integrity: sha512-gPLKUFZX7FsrZ4AonyWtoslYbT9d+82yttH4dvsFTwwh4tNx8L7hXW9oKTWfqx3APhk0VApAN64ObT969cvCTA==}
+  /sharedb@4.0.2:
+    resolution: {integrity: sha512-8S6Z4tQ5l6s4oRzAO1OZZO8Txl34QoN1vYvYgXXxHMTIjTzU2GxpLpD9rBxO5CnA1yUNhghfSuT5m3X2xnBt1A==}
     dependencies:
       arraydiff: 0.1.3
-      async: 2.6.4
-      fast-deep-equal: 2.0.1
+      async: 3.2.4
+      fast-deep-equal: 3.1.3
       hat: 0.0.3
       ot-json0: 1.1.0
     dev: false
