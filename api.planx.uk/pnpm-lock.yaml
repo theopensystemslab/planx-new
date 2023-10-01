@@ -10,7 +10,7 @@ dependencies:
     version: 2.1.8
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#44e9ebe
-    version: github.com/theopensystemslab/planx-core/44e9ebe
+    version: git/github.com+theopensystemslab/planx-core/44e9ebe
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -96,8 +96,8 @@ dependencies:
     specifier: ^1.4.5-lts.1
     version: 1.4.5-lts.1
   nanoid:
-    specifier: ^3.3.6
-    version: 3.3.6
+    specifier: ^5.0.1
+    version: 5.0.1
   notifications-node-client:
     specifier: ^7.0.0
     version: 7.0.0
@@ -6038,15 +6038,15 @@ packages:
       thenify-all: 1.6.0
     dev: false
 
-  /nanoid@3.3.6:
-    resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-    dev: false
-
   /nanoid@4.0.2:
     resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
     engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
+    dev: false
+
+  /nanoid@5.0.1:
+    resolution: {integrity: sha512-vWeVtV5Cw68aML/QaZvqN/3QQXc6fBfIieAlu05m7FZW2Dgb+3f0xc0TTxuJW+7u30t7iSDTV/j3kVI0oJqIfQ==}
+    engines: {node: ^18 || >=20}
     hasBin: true
     dev: false
 
@@ -8073,8 +8073,8 @@ packages:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/44e9ebe:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/44e9ebe}
+  git/github.com+theopensystemslab/planx-core/44e9ebe:
+    resolution: {commit: 44e9ebe, repo: git@github.com:theopensystemslab/planx-core.git, type: git}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
