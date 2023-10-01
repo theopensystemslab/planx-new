@@ -59,7 +59,7 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
     );
   },
 
-  async initUserStore(jwt: string) {
+  initUserStore: async (jwt: string) => {
     const email = (jwtDecode(jwt) as any)["email"];
     const users = await client.query({
       query: gql`
@@ -87,6 +87,6 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
     const user: User = users.data.users[0];
     if (!user) throw new Error(`Failed to get user ${email}`);
 
-    this.setUser(user);
+    get().setUser(user);
   },
 });

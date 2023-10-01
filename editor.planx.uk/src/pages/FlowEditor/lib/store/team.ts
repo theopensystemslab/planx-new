@@ -54,7 +54,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
     boundaryBBox: get().boundaryBBox,
   }),
 
-  async initTeamStore(teamSlugFromURLParams) {
+  initTeamStore: async (teamSlugFromURLParams) => {
     const slug = teamSlugFromURLParams || await getTeamFromDomain(window.location.hostname)
     const { data } = await client.query({
       query: gql`
@@ -86,7 +86,6 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
     const team = data.teams[0];
 
     if (!team) throw new Error("Team not found");
-
-    this.setTeam(team);
+    get().setTeam(team);
   },
 });
