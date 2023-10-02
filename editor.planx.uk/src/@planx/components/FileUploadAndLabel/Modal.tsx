@@ -92,7 +92,7 @@ export const FileTaggingModal = ({
       <DialogContent>
         <Box sx={{ mt: 1, mb: 4 }}>
           <Typography variant="h3" component="h2" id="dialog-heading">
-            What do these files show?
+            Tell us what these files show
           </Typography>
         </Box>
         {uploadedFiles.map((slot) => (
@@ -283,7 +283,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         <ListSubheader disableGutters>
           <ListHeader>
             <Typography variant="h4" component="h3" pr={3}>
-              Select all labels that apply
+              Select all that apply
             </Typography>
             <Button
               variant="contained"
