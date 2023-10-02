@@ -13,6 +13,7 @@ import Header from "./Header";
 const { setState, getState } = vanillaStore;
 
 const mockTeam1: Team = {
+  id: 123,
   name: "Open Systems Lab",
   slug: "opensystemslab",
   theme: {
@@ -21,18 +22,14 @@ const mockTeam1: Team = {
 };
 
 const mockTeam2: Team = {
+  id: 456,
   name: "Closed Systems Lab",
   slug: "closedsystemslab",
 };
 
-jest.spyOn(ReactNavi, "useNavigation").mockImplementation(
-  () =>
-    ({
-      data: {
-        team: mockTeam1,
-      },
-    }) as any,
-);
+jest.spyOn(ReactNavi, "useNavigation").mockReturnValue({
+  navigate: jest.fn(),
+} as any);
 
 describe("Header Component - Editor Route", () => {
   beforeAll(() => {
@@ -43,6 +40,14 @@ describe("Header Component - Editor Route", () => {
         teamSettings: mockTeam1.settings,
         teamTheme: mockTeam1.theme,
         teamSlug: mockTeam1.slug,
+        user: {
+          firstName: "Test",
+          lastName: "User",
+          isPlatformAdmin: false,
+          teams: [],
+          id: 123,
+          email: "test@example.com",
+        },
       }),
     );
 
@@ -54,9 +59,7 @@ describe("Header Component - Editor Route", () => {
             pathname: "/team-name/flow-name",
           },
           data: {
-            username: "Test User",
             flow: "test-flow",
-            team: mockTeam1.slug,
           },
         }) as any,
     );
@@ -97,7 +100,6 @@ for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
               pathname: "/opensystemslab/test-flow" + route,
             },
             data: {
-              username: "Test User",
               flow: "test-flow",
             },
           }) as any,
@@ -149,7 +151,6 @@ describe("Section navigation bar", () => {
             pathname: "/team-name/flow-name/preview",
           },
           data: {
-            username: "Test User",
             flow: "test-flow",
           },
         }) as any,

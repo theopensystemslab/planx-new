@@ -102,7 +102,7 @@ export async function tearDownTestContext(context: Context) {
   }
 }
 
-export function generateAuthenticationToken(userId) {
+export function generateAuthenticationToken(userId: string) {
   assert(process.env.JWT_SECRET);
   return sign(
     {
@@ -127,7 +127,7 @@ export function getCoreDomainClient(): CoreDomainClient {
   );
   const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
   return new CoreDomainClient({
-    hasuraSecret: SECRET,
+    auth: { adminSecret: SECRET },
     targetURL: API,
   });
 }

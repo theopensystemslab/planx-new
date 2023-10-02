@@ -1,6 +1,3 @@
 {
-  "extends": ["../../.eslintrc", "plugin:playwright/playwright-test"],
-  "rules": {
-    "playwright/no-skipped-test": "off"
-  }
+  "extends": ["../../.eslintrc", "plugin:playwright/playwright-test"]
 }

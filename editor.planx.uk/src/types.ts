@@ -17,6 +17,7 @@ export interface Flow {
 }
 
 export interface Team {
+  id: number;
   name: string;
   slug: string;
   settings?: TeamSettings;
@@ -131,5 +132,6 @@ export enum SectionStatus {
 export interface SectionNode extends Store.node {
   data: {
     title: string;
+    description?: string;
   };
 }

@@ -7,18 +7,21 @@ const flowSections: { [key: string]: SectionNode } = {
   firstSection: {
     data: {
       title: "First section",
+      description: "Description of first section",
     },
     type: TYPES.Section,
   },
   secondSection: {
     data: {
       title: "Second section",
+      description: "Description of second section",
     },
     type: TYPES.Section,
   },
   thirdSection: {
     data: {
       title: "Third section",
+      description: "Description of third section",
     },
     type: TYPES.Section,
   },

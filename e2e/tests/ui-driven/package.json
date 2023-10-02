@@ -8,11 +8,11 @@
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#9c50287",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#ebf07ef",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
-    "graphql": "^16.7.1",
+    "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.1",

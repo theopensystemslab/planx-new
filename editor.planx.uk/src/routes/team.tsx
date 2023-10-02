@@ -1,11 +1,12 @@
 import gql from "graphql-tag";
-import { compose, lazy, mount, route, withData } from "navi";
+import { compose, lazy, mount, route, withView } from "navi";
 import React from "react";
 
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import Team from "../pages/Team";
-import { getTeamFromDomain, makeTitle } from "./utils";
+import { makeTitle } from "./utils";
+import { teamView } from "./views/team";
 
 let cached: { flowSlug?: string; teamSlug?: string } = {
   flowSlug: undefined,
@@ -13,56 +14,13 @@ let cached: { flowSlug?: string; teamSlug?: string } = {
 };
 
 const routes = compose(
-  withData(async (req) => ({
-    team:
-      req.params.team || (await getTeamFromDomain(window.location.hostname)),
-  })),
+  withView(teamView),
 
   mount({
-    "/": route(async (req) => {
-      const { data } = await client.query({
-        query: gql`
-          query GetTeams($slug: String!) {
-            teams(
-              order_by: { name: asc }
-              limit: 1
-              where: { slug: { _eq: $slug } }
-            ) {
-              id
-              name
-              slug
-              flows(order_by: { updated_at: desc }) {
-                slug
-                updated_at
-                operations(limit: 1, order_by: { id: desc }) {
-                  actor {
-                    first_name
-                    last_name
-                  }
-                }
-              }
-            }
-          }
-        `,
-        variables: {
-          slug: req.params.team,
-        },
-      });
-
-      const team = data.teams[0];
-
-      if (!team) {
-        return {
-          title: "Team Not Found",
-          view: <p>Team not found</p>,
-        };
-      }
-
-      return {
-        title: makeTitle(team.name),
-        view: <Team {...team} />,
-      };
-    }),
+    "/": route(() => ({
+      title: makeTitle(useStore.getState().teamName),
+      view: <Team />,
+    })),
 
     "/:flow": lazy(async (req) => {
       const [slug] = req.params.flow.split(",");

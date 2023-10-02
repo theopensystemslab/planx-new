@@ -23,8 +23,8 @@ dependencies:
     specifier: ^3.3.1
     version: 3.3.1
   ws:
-    specifier: ^8.13.0
-    version: 8.13.0
+    specifier: ^8.14.2
+    version: 8.14.2
 
 devDependencies:
   node-dev:
@@ -357,8 +357,8 @@ packages:
       isexe: 2.0.0
     dev: true
 
-  /ws@8.13.0:
-    resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
+  /ws@8.14.2:
+    resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1

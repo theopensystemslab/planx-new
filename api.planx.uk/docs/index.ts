@@ -96,7 +96,7 @@ const responses = {
         schema: {
           type: "object",
           properties: {
-            message: {
+            error: {
               type: "string",
               example: "Error!",
             },

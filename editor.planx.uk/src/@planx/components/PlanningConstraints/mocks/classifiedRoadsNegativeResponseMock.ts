@@ -7,7 +7,7 @@ export default {
     "road.classified": {
       name: "Classified road",
       plural: "Classified roads",
-      text: "This will effect your project if you are looking to add a dropped kerb. It may also impact some agricultural or forestry projects within 25 metres of a classified road."
+      text: "This will effect your project if you are looking to add a dropped kerb. It may also impact some agricultural or forestry projects within 25 metres of a classified road.",
     },
   },
   constraints: {

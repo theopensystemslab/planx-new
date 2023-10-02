@@ -1,6 +1,6 @@
 Feature: Invite to Pay Submissions
 
-  @regression
+  @regression @invite-to-pay
   Scenario: Modified `paid_at` on sessions with a valid payment request
     Given a session with a payment request for an invite to pay flow where "<DESTINATION>" is a send destination
     When the payment request's `paid_at` date is set

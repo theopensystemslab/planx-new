@@ -16,7 +16,7 @@ jobs:
     name: Build React
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -72,12 +72,12 @@ jobs:
     needs: build_react
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ vars.NODE_VERSION }}
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
@@ -105,7 +105,7 @@ jobs:
     needs: preview
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
       - name: Notify Airbrake of deploy
         id: airbrake-deploy

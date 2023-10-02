@@ -1,55 +1,48 @@
-import { User, UserTeams } from "@opensystemslab/planx-core/types";
+import { User } from "@opensystemslab/planx-core/types";
+import { _client } from "client";
+import jwtDecode from "jwt-decode";
 import { Team } from "types";
 import type { StateCreator } from "zustand";
 
 export interface UserStore {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  isPlatformAdmin: boolean;
-  teams: UserTeams[];
+  user?: User;
 
   setUser: (user: User) => void;
-  getUser: () => User;
+  getUser: () => User | undefined;
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
+  initUserStore: (jwt: string) => Promise<void>;
 }
 
 export const userStore: StateCreator<UserStore, [], [], UserStore> = (
   set,
   get,
 ) => ({
-  id: 0,
-  firstName: "",
-  lastName: "",
-  email: "",
-  isPlatformAdmin: false,
-  teams: [],
+  setUser: (user: User) => set({ user }),
 
-  setUser: (user: User) =>
-    set({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      isPlatformAdmin: user.isPlatformAdmin,
-      teams: user.teams,
-    }),
+  getUser: () => get().user,
 
-  getUser: () => ({
-    id: get().id,
-    firstName: get().firstName,
-    lastName: get().lastName,
-    email: get().email,
-    isPlatformAdmin: get().isPlatformAdmin,
-    teams: get().teams,
-  }),
+  canUserEditTeam(teamSlug) {
+    const user = this.getUser();
+    if (!user) return false;
 
-  canUserEditTeam: (teamSlug) => {
     return (
-      get().isPlatformAdmin ||
+      user.isPlatformAdmin ||
       teamSlug === "templates" ||
-      get().teams.filter((team) => team.role === "teamEditor" && team.team.slug === teamSlug).length > 0
+      user.teams.filter(
+        (team) => team.role === "teamEditor" && team.team.slug === teamSlug,
+      ).length > 0
     );
+  },
+
+  async initUserStore(jwt: string) {
+    const { getUser, setUser } = get();
+
+    if (getUser()) return;
+
+    const id = (jwtDecode(jwt) as any)["sub"];
+    const user = await _client.user.getById(id);
+    if (!user) throw new Error(`Failed to get user with ID ${id}`);
+
+    setUser(user);
   },
 });

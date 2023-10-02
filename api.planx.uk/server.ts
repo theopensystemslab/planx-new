@@ -80,6 +80,7 @@ import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import miscRoutes from "./modules/misc/routes";
+import userRoutes from "./modules/user/routes";
 import { useSwaggerDocs } from "./docs";
 import { getDigitalPlanningDataPayload } from "./admin/session/digitalPlanningData";
 import { Role } from "@opensystemslab/planx-core/types";
@@ -195,6 +196,7 @@ app.use(urlencoded({ extended: true }));
 
 app.use(authRoutes);
 app.use(miscRoutes);
+app.use("/user", userRoutes);
 app.use("/team", teamRoutes);
 
 app.use("/gis", router);
@@ -532,7 +534,6 @@ declare global {
     interface User {
       jwt: string;
       sub?: string;
-      email?: string;
       "https://hasura.io/jwt/claims"?: {
         "x-hasura-allowed-roles": Role[];
       };

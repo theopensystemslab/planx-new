@@ -12,7 +12,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
 import type { PublicProps } from "@planx/components/ui";
 import buffer from "@turf/buffer";
-import { type GeometryObject,point } from "@turf/helpers";
+import { type GeometryObject, point } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -42,10 +42,13 @@ export default function Component(props: Props) {
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
   const [area, setArea] = useState<number | undefined>(previousArea);
-  const addressPoint = passport?.data?._address?.longitude && passport?.data?._address?.latitude && point([
-    Number(passport?.data?._address?.longitude),
-    Number(passport?.data?._address?.latitude),
-  ]);
+  const addressPoint =
+    passport?.data?._address?.longitude &&
+    passport?.data?._address?.latitude &&
+    point([
+      Number(passport?.data?._address?.longitude),
+      Number(passport?.data?._address?.latitude),
+    ]);
   const environment = useStore((state) => state.previewEnvironment);
 
   useEffect(() => {
@@ -120,9 +123,12 @@ export default function Component(props: Props) {
                 drawMode
                 drawPointer="crosshair"
                 drawGeojsonData={JSON.stringify(boundary)}
-                clipGeojsonData={addressPoint && JSON.stringify(
-                  buffer(addressPoint, BUFFER_IN_METERS, { units: "meters" }),
-                )}
+                clipGeojsonData={
+                  addressPoint &&
+                  JSON.stringify(
+                    buffer(addressPoint, BUFFER_IN_METERS, { units: "meters" }),
+                  )
+                }
                 zoom={20}
                 maxZoom={23}
                 latitude={Number(passport?.data?._address?.latitude)}

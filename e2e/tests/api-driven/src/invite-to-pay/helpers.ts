@@ -1,3 +1,4 @@
+import { CustomWorld } from "./steps";
 import axios from "axios";
 import { readFileSync } from "node:fs";
 import type {
@@ -12,6 +13,7 @@ import {
 } from "./mocks";
 import { $admin } from "../client";
 import { TEST_EMAIL } from "../../../ui-driven/src/helpers";
+import { createTeam, createUser } from "../globalHelpers";
 
 export async function setUpMocks() {
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
@@ -22,25 +24,6 @@ export async function setUpMocks() {
       "Content-Type": "application/x-yaml",
     },
     data: serverMockFile,
-  });
-}
-
-export async function createTeam() {
-  return $admin.team.create({
-    name: "E2E Test Team",
-    slug: "E2E",
-    logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
-    primaryColor: "#444444",
-    submissionEmail: TEST_EMAIL,
-    homepage: "planx.uk",
-  });
-}
-
-export async function createUser() {
-  return $admin.user.create({
-    firstName: "Test",
-    lastName: "Test",
-    email: TEST_EMAIL,
   });
 }
 
@@ -147,21 +130,14 @@ export async function getSessionSubmittedAt(
   return detailedSession?.submittedAt;
 }
 
-export async function tearDownTestContext({
+export async function cleanup({
   teamId,
   userId,
   flowId,
   publishedFlowId,
   sessionId,
   paymentRequestId,
-}: {
-  teamId?: number;
-  userId?: number;
-  flowId?: string;
-  publishedFlowId?: number;
-  sessionId?: string;
-  paymentRequestId?: string;
-}) {
+}: CustomWorld) {
   if (paymentRequestId) {
     await $admin.paymentRequest._destroy(paymentRequestId);
   }
@@ -182,3 +158,13 @@ export async function tearDownTestContext({
     await $admin.team._destroy(teamId);
   }
 }
+
+export const setup = async () => {
+  await setUpMocks();
+  const world = {
+    teamId: await createTeam(),
+    userId: await createUser(),
+  };
+
+  return world;
+};
