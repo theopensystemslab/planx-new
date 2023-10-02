@@ -1,11 +1,11 @@
 import { addDays } from "date-fns";
 import { Request, Response, NextFunction } from "express";
 
-import { createScheduledEvent } from "../hasura/metadata";
+import { createScheduledEvent } from "../../../hasura/metadata";
 import {
   DAYS_UNTIL_EXPIRY,
   REMINDER_DAYS_FROM_EXPIRY,
-} from "../saveAndReturn/utils";
+} from "../../../saveAndReturn/utils";
 
 /**
  * Create "reminder" events for a lowcal_session record
