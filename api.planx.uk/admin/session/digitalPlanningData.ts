@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getClient } from "../../client";
+import { $admin } from "../../client";
 
 /**
  * @swagger
@@ -20,8 +20,8 @@ export const getDigitalPlanningDataPayload = async (
   next: NextFunction,
 ) => {
   try {
-    const $client = getClient();
-    const { exportData } = await $client.export.digitalPlanningDataPayload(
+    // const $client = getClient();
+    const { exportData } = await $admin.export.digitalPlanningDataPayload(
       req.params.sessionId,
     );
     res.set("content-type", "application/json");
