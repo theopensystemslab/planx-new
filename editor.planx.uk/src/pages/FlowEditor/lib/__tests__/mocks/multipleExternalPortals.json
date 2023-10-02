@@ -1,0 +1,81 @@
+{
+  "_root": {
+    "edges": [
+      "firstNode",
+      "finalNode"
+    ]
+  },
+  "externalPortal1": {
+    "type": 300,
+    "edges": [
+      "externalFlowId"
+    ]
+  },
+  "option3": {
+    "data": {
+      "text": "Option 3"
+    },
+    "type": 200
+  },
+  "externalPortal2": {
+    "type": 300,
+    "edges": [
+      "externalFlowId"
+    ]
+  },
+  "firstNode": {
+    "data": {
+      "text": "This is a question"
+    },
+    "type": 100,
+    "edges": [
+      "option1",
+      "option2",
+      "option3"
+    ]
+  },
+  "option2": {
+    "data": {
+      "text": "Option 2"
+    },
+    "type": 200,
+    "edges": [
+      "externalPortal2"
+    ]
+  },
+  "finalNode": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "This is the end",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "withinExternalPortal": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "This is inside the portal",
+      "description": "<p>Hello there 👋</p>",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "option1": {
+    "data": {
+      "text": "Option 1"
+    },
+    "type": 200,
+    "edges": [
+      "externalPortal1"
+    ]
+  },
+  "externalFlowId": {
+    "data": {
+      "text": "daf-external-portal-test"
+    },
+    "type": 300,
+    "edges": [
+      "withinExternalPortal"
+    ]
+  }
+}

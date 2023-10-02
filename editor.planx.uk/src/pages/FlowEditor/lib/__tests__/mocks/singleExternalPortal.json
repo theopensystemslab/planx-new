@@ -1,0 +1,65 @@
+{
+  "_root": {
+    "edges": [
+      "firstNode",
+      "finalNode"
+    ]
+  },
+  "option2": {
+    "data": {
+      "text": "Option 2"
+    },
+    "type": 200
+  },
+  "finalNode": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "End of the line",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "externalPortal": {
+    "type": 300,
+    "edges": [
+      "externalFlowId"
+    ]
+  },
+  "firstNode": {
+    "data": {
+      "text": "This is a question with many options"
+    },
+    "type": 100,
+    "edges": [
+      "option1",
+      "option2"
+    ]
+  },
+  "option1": {
+    "data": {
+      "text": "Option 1"
+    },
+    "type": 200,
+    "edges": [
+      "externalPortal"
+    ]
+  },
+  "withinExternalPortal": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "This is an external portal",
+      "description": "<p>Hello! 👋</p>",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "externalFlowId": {
+    "data": {
+      "text": "test-external-portal"
+    },
+    "type": 300,
+    "edges": [
+      "withinExternalPortal"
+    ]
+  }
+}
