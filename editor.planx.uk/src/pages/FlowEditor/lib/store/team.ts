@@ -1,7 +1,6 @@
 import { GeoJSONObject } from "@turf/helpers";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
-import { getTeamFromDomain } from "routes/utils";
 import { NotifyPersonalisation, TeamSettings } from "types";
 import { TeamTheme } from "types";
 import { Team } from "types";
@@ -18,7 +17,8 @@ export interface TeamStore {
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
-  initTeamStore: (teamSlugFromURLParams?: string) => Promise<void>;
+  initTeamStore: (slug: string) => Promise<void>;
+  clearTeamStore: () => void;
 }
 
 export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
@@ -54,8 +54,7 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
     boundaryBBox: get().boundaryBBox,
   }),
 
-  initTeamStore: async (teamSlugFromURLParams) => {
-    const slug = teamSlugFromURLParams || await getTeamFromDomain(window.location.hostname)
+  initTeamStore: async (slug) => {
     const { data } = await client.query({
       query: gql`
         query GetTeams($slug: String!) {
@@ -88,4 +87,15 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
     if (!team) throw new Error("Team not found");
     get().setTeam(team);
   },
+
+  clearTeamStore: () => 
+    set({
+      teamId: 0,
+      teamTheme: undefined,
+      teamName: "",
+      teamSettings: undefined,
+      teamSlug: "",
+      notifyPersonalisation: undefined,
+      boundaryBBox: undefined,
+    }),
 });
