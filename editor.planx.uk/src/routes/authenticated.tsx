@@ -26,6 +26,8 @@ const editorRoutes = compose(
         `,
       });
 
+      useStore.getState().clearTeamStore();
+  
       return {
         title: makeTitle("Teams"),
         view: <Teams teams={data.teams} />,
