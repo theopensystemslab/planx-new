@@ -32,3 +32,33 @@ export const createUser: CreateUser = async (req, res, next) => {
     );
   }
 };
+
+export const deleteUserSchema = z.object({
+  params: z.object({
+    email: z.string().trim().email().toLowerCase(),
+  }),
+});
+
+export type DeleteUser = ValidatedRequestHandler<
+  typeof deleteUserSchema,
+  UserResponse
+>;
+
+export const deleteUser: DeleteUser = async (req, res, next) => {
+  try {
+    const { email } = req.params;
+    const $client = getClient();
+
+    const user = await $client.user.getByEmail(email);
+    if (!user) throw Error(`No user matching email ${email} found`);
+
+    const isSuccessful = await $client.user.delete(user.id);
+    if (!isSuccessful) throw Error("Request to delete user failed");
+
+    return res.send({ message: "Successfully deleted user" });
+  } catch (error) {
+    return next(
+      new ServerError({ message: "Failed to delete user", cause: error }),
+    );
+  }
+};

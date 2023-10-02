@@ -1148,3 +1148,10 @@
         filter:
           id:
             _eq: x-hasura-user-id
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - email
+        filter: {}
+        check: {}

@@ -41,3 +41,22 @@ paths:
           $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+  /user/{email}:
+    delete:
+      summary: Delete a user
+      description: "Requires authentication via a Cloudflare WARP client
+        \n\n
+        Please login at [https://api.editor.planx.uk/user](https://api.editor.planx.uk/user)"
+      tags: ["user"]
+      parameters:
+        - in: path
+          name: email
+          type: string
+          format: email
+          example: bilbo@bagend.sh
+          description: Email address of the user to be deleted
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
