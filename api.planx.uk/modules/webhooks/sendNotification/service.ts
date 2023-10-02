@@ -17,8 +17,10 @@ export const sendSlackNotification = async (
   let message = getMessageForEventType(data, type);
 
   const sessionId = getSessionIdFromEvent(data, type);
-  const feePayable = await getFeePayableForSession(sessionId);
-  if (!feePayable) message += " [Exempt]";
+  const { disability, resubmission } =
+    await getExemptionStatusesForSession(sessionId);
+  if (disability) message += " [Exempt]";
+  if (resubmission) message += " [Resubmission]";
 
   await slack.send(":incoming_envelope: " + message);
   return message;
@@ -48,12 +50,15 @@ const getSessionIdFromEvent = (data: EventData, type: EventType) =>
     "email-submission": (data as EmailEventData).session_id,
   })[type];
 
-const getFeePayableForSession = async (sessionId: string) => {
+const getExemptionStatusesForSession = async (sessionId: string) => {
   const session = await $admin.session.find(sessionId);
   if (!session) throw Error(`Unable to find session with ID ${sessionId}`);
 
   const passport = new Passport(session.data.passport);
-  const feePayable = passport.number(["application.fee.payable"]);
+  const disability = passport.boolean(["application.fee.exemption.disability"]);
+  const resubmission = passport.boolean([
+    "application.fee.exemption.resubmission",
+  ]);
 
-  return feePayable;
+  return { disability, resubmission };
 };

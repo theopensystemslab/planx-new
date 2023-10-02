@@ -15,11 +15,21 @@ const mockSessionWithFee = {
   },
 };
 
-const mockSessionWithoutFee = {
+const mockSessionWithDisabilityExemption = {
   data: {
     passport: {
       data: {
-        "application.fee.payable": "0",
+        "application.fee.exemption.disability": ["true"],
+      },
+    },
+  },
+};
+
+const mockSessionWithResubmissionExemption = {
+  data: {
+    passport: {
+      data: {
+        "application.fee.exemption.resubmission": ["true"],
       },
     },
   },
@@ -205,11 +215,11 @@ describe("Send Slack notifications endpoint", () => {
         });
     });
 
-    it("adds an exemption status if there's no fee for the session", async () => {
+    it("adds a status to the Slack message for a disability exemption", async () => {
       process.env.APP_ENVIRONMENT = "production";
       mockAdmin.session.find = jest
         .fn()
-        .mockResolvedValue(mockSessionWithoutFee);
+        .mockResolvedValue(mockSessionWithDisabilityExemption);
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
@@ -217,9 +227,23 @@ describe("Send Slack notifications endpoint", () => {
         .send(body)
         .expect(200)
         .then((response) => {
-          expect(response.body.data).toMatch(/abc123/);
-          expect(response.body.data).toMatch(/test-council/);
           expect(response.body.data).toMatch(/[Exempt]/);
+        });
+    });
+
+    it("adds a status to the Slack message for a resubmission exemption", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+      mockAdmin.session.find = jest
+        .fn()
+        .mockResolvedValue(mockSessionWithResubmissionExemption);
+
+      await post(ENDPOINT)
+        .query({ type: "uniform-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .send(body)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.data).toMatch(/[Resubmission]/);
         });
     });
 
