@@ -26,7 +26,7 @@ test.describe("Login", () => {
     await tearDownTestContext(context);
   });
 
-  test.skip("setting a cookie bypasses login", async ({ browser }) => {
+  test("setting a cookie bypasses login", async ({ browser }) => {
     const page = await createAuthenticatedSession({
       browser,
       userId: context.user!.id!,
@@ -41,7 +41,7 @@ test.describe("Login", () => {
     await expect(team).toBeVisible();
   });
 
-  test.skip("shows error toast when there is a network error and removes it when a retry is successful", async ({
+  test("shows error toast when there is a network error and removes it when a retry is successful", async ({
     browser,
   }) => {
     const page = await createAuthenticatedSession({

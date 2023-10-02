@@ -59,7 +59,10 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   };
 
   return (
-    <li className={classnames("hanger", { hidden: hidden || hideHangerFromUser })} ref={drop}>
+    <li
+      className={classnames("hanger", { hidden: hidden || hideHangerFromUser })}
+      ref={drop}
+    >
       <Link
         href={buildHref(before, parent)}
         prefetch={false}

@@ -28,10 +28,7 @@ function SectionComponent(props: Props) {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent
-          title="Section marker"
-          Icon={ICONS[TYPES.Section]}
-        >
+        <ModalSectionContent title="Section marker" Icon={ICONS[TYPES.Section]}>
           <InputRow>
             <Input
               required

@@ -169,26 +169,33 @@ export function SectionsOverviewList({
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
         <SectionRow key={sectionId}>
-            <SectionTitle>
-              {showChange &&
-              sectionStatuses[sectionId] === SectionStatus.Completed ? (
-                <Link
-                  onClick={() => changeFirstAnswerInSection(sectionId)}
-                  component="button"
+          <SectionTitle>
+            {showChange &&
+            sectionStatuses[sectionId] === SectionStatus.Completed ? (
+              <Link
+                onClick={() => changeFirstAnswerInSection(sectionId)}
+                component="button"
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="h4"
+                  color="primary"
+                  align="left"
                 >
-                  <Typography variant="subtitle1" component="h4" color="primary" align="left">
-                    <span style={visuallyHidden}>{`Change `}</span>
-                    <strong>{sectionNode.data.title}</strong>
-                  </Typography>
-                </Link>
-              ) : (
-                <Typography variant="subtitle1" component="h4" color="inherit"><strong>{sectionNode.data.title}</strong></Typography>           
-              )}
-              <ReactMarkdownOrHtml
-                source={sectionNode.data.description}
-                openLinksOnNewTab
-              />   
-            </SectionTitle>
+                  <span style={visuallyHidden}>{`Change `}</span>
+                  <strong>{sectionNode.data.title}</strong>
+                </Typography>
+              </Link>
+            ) : (
+              <Typography variant="subtitle1" component="h4" color="inherit">
+                <strong>{sectionNode.data.title}</strong>
+              </Typography>
+            )}
+            <ReactMarkdownOrHtml
+              source={sectionNode.data.description}
+              openLinksOnNewTab
+            />
+          </SectionTitle>
           <SectionState> {getTag(sectionStatuses[sectionId])} </SectionState>
         </SectionRow>
       ))}

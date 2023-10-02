@@ -11,17 +11,17 @@ export const getLoggedInUserDetails: RequestHandler = async (
   try {
     const $client = getClient();
 
-    const email = userContext.getStore()?.user.email;
-    if (!email)
+    const id = userContext.getStore()?.user.sub;
+    if (!id)
       throw new ServerError({
-        message: "User email missing from request",
+        message: "User ID missing from request",
         status: 400,
       });
 
-    const user = await $client.user.getByEmail(email);
+    const user = await $client.user.getById(parseInt(id));
     if (!user)
       throw new ServerError({
-        message: `Unable to locate user with email ${email}`,
+        message: `Unable to locate user with ID ${id}`,
         status: 400,
       });
 

@@ -40,7 +40,6 @@ describe("TeamService", () => {
     getStoreMock.mockReturnValue({
       user: {
         sub: "123",
-        email: "test@opensystemslab.io",
         jwt: getJWT({ role: "teamEditor" }),
       },
     });

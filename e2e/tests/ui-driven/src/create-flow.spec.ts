@@ -35,7 +35,7 @@ test.describe("Navigation", () => {
     await tearDownTestContext(context);
   });
 
-  test.skip("Create a flow", async ({ browser }) => {
+  test("Create a flow", async ({ browser }) => {
     const page = await getTeamPage({
       browser,
       userId: context.user!.id!,
@@ -91,11 +91,7 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
   });
 
-  test.skip("Preview a created flow", async ({
-    browser,
-  }: {
-    browser: Browser;
-  }) => {
+  test("Preview a created flow", async ({ browser }: { browser: Browser }) => {
     const page = await createAuthenticatedSession({
       browser,
       userId: context.user!.id!,

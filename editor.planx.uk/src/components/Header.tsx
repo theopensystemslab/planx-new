@@ -394,7 +394,7 @@ const EditorToolbar: React.FC<{
   route: Route;
 }> = ({ headerRef, route }) => {
   const [open, setOpen] = useState(false);
-  const [ togglePreview, user ] = useStore((state) => [
+  const [togglePreview, user] = useStore((state) => [
     state.togglePreview,
     state.getUser(),
   ]);
@@ -423,7 +423,7 @@ const EditorToolbar: React.FC<{
               <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
             </LeftBox>
             <RightBox>
-              {route.data.username && (
+              {user && (
                 <ProfileSection disableGutters>
                   {route.data.flow && (
                     <IconButton
@@ -436,7 +436,7 @@ const EditorToolbar: React.FC<{
                     </IconButton>
                   )}
                   <Box mr={1}>
-                    <Avatar>{route.data.username[0]}</Avatar>
+                    <Avatar>{user.firstName[0]}</Avatar>
                   </Box>
                   <IconButton
                     edge="end"
@@ -453,70 +453,73 @@ const EditorToolbar: React.FC<{
           </InnerContainer>
         </Container>
       </StyledToolbar>
-      <StyledPopover
-        open={open}
-        anchorEl={headerRef.current}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <StyledPaper>
-          <MenuItem disabled>
-            <ListItemIcon>
-              <Person fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>
-              {user.email}
-            </ListItemText>
-          </MenuItem>
-          {(user.isPlatformAdmin || user.teams.length > 0) && (
+      {user && (
+        <StyledPopover
+          open={open}
+          anchorEl={headerRef.current}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          <StyledPaper>
             <MenuItem disabled>
               <ListItemIcon>
-                <Edit />
+                <Person fontSize="small" />
               </ListItemIcon>
-              <ListItemText>
-                {user.isPlatformAdmin ? `All teams` : user.teams.map((team) => team.team.name).concat(["Templates"]).join(", ")}
-              </ListItemText>
+              <ListItemText>{user.email}</ListItemText>
             </MenuItem>
-          )}
-          {!user.isPlatformAdmin && (
-            <MenuItem disabled divider>
-              <ListItemIcon>
-                <Visibility />
-              </ListItemIcon>
-              <ListItemText>
-                All teams
-              </ListItemText>
-            </MenuItem>
-          )}
-          
-          {/* only show flow settings link if inside a flow route  */}
-          {route.data.flow && (
-            <MenuItem
-              onClick={() =>
-                handleClick([rootFlowPath(true), "settings"].join("/"))
-              }
-            >
-              Settings
-            </MenuItem>
-          )}
+            {(user.isPlatformAdmin || user.teams.length > 0) && (
+              <MenuItem disabled>
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText>
+                  {user.isPlatformAdmin
+                    ? `All teams`
+                    : user.teams
+                        .map((team) => team.team.name)
+                        .concat(["Templates"])
+                        .join(", ")}
+                </ListItemText>
+              </MenuItem>
+            )}
+            {!user.isPlatformAdmin && (
+              <MenuItem disabled divider>
+                <ListItemIcon>
+                  <Visibility />
+                </ListItemIcon>
+                <ListItemText>All teams</ListItemText>
+              </MenuItem>
+            )}
 
-          {/* Only show global settings link from top-level admin view */}
-          {!route.data.flow && !route.data.team && (
-            <MenuItem onClick={() => navigate("/global-settings")}>
-              Global Settings
-            </MenuItem>
-          )}
+            {/* only show flow settings link if inside a flow route  */}
+            {route.data.flow && (
+              <MenuItem
+                onClick={() =>
+                  handleClick([rootFlowPath(true), "settings"].join("/"))
+                }
+              >
+                Settings
+              </MenuItem>
+            )}
 
-          <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
-        </StyledPaper>
-      </StyledPopover>
+            {/* Only show global settings link from top-level admin view */}
+            {!route.data.flow && !route.data.team && (
+              <MenuItem onClick={() => navigate("/global-settings")}>
+                Global Settings
+              </MenuItem>
+            )}
+
+            <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
+          </StyledPaper>
+        </StyledPopover>
+      )}
     </>
   );
 };

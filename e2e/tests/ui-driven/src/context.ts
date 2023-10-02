@@ -102,7 +102,7 @@ export async function tearDownTestContext(context: Context) {
   }
 }
 
-export function generateAuthenticationToken(userId) {
+export function generateAuthenticationToken(userId: string) {
   assert(process.env.JWT_SECRET);
   return sign(
     {

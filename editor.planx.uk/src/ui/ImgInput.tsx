@@ -5,10 +5,10 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useState } from "react";
 
 import PublicFileUploadButton from "./PublicFileUploadButton";
-import { useStore } from "pages/FlowEditor/lib/store";
 
 const ImageUploadContainer = styled(Box)(() => ({
   height: 50,
