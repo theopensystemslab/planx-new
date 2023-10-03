@@ -1,10 +1,10 @@
 import { addDays } from "date-fns";
 
-import { createScheduledEvent } from "../../../hasura/metadata";
+import { createScheduledEvent } from "../../../../hasura/metadata";
 import {
   DAYS_UNTIL_EXPIRY,
   REMINDER_DAYS_FROM_EXPIRY,
-} from "../../../saveAndReturn/utils";
+} from "../../../../saveAndReturn/utils";
 import { CreateSessionEvent } from "./schema";
 
 /**

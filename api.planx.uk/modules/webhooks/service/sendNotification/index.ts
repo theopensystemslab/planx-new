@@ -7,7 +7,7 @@ import {
   EventType,
   UniformEventData,
 } from "./types";
-import { $admin } from "../../../client";
+import { $admin } from "../../../../client";
 
 export const sendSlackNotification = async (
   data: EventData,

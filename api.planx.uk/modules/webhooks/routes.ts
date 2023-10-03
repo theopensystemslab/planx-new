@@ -11,9 +11,9 @@ import {
   createSessionReminderEventController,
   sendSlackNotificationController,
 } from "./controller";
-import { sendSlackNotificationSchema } from "./sendNotification/schema";
-import { createPaymentEventSchema } from "./paymentRequestEvents/schema";
-import { createSessionEventSchema } from "./lowcalSessionEvents/schema";
+import { sendSlackNotificationSchema } from "./service/sendNotification/schema";
+import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema";
+import { createSessionEventSchema } from "./service/lowcalSessionEvents/schema";
 
 const router = Router();
 

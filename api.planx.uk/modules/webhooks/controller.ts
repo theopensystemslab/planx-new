@@ -1,17 +1,17 @@
 import { ServerError } from "../../errors";
-import { CreateSessionEventController } from "./lowcalSessionEvents/schema";
+import { CreateSessionEventController } from "./service/lowcalSessionEvents/schema";
 import {
   createSessionExpiryEvent,
   createSessionReminderEvent,
-} from "./lowcalSessionEvents/service";
-import { CreatePaymentEventController } from "./paymentRequestEvents/schema";
+} from "./service/lowcalSessionEvents";
+import { SendSlackNotification } from "./service/sendNotification/types";
+import { sendSlackNotification } from "./service/sendNotification";
+import { CreatePaymentEventController } from "./service/paymentRequestEvents/schema";
 import {
   createPaymentExpiryEvents,
   createPaymentInvitationEvents,
   createPaymentReminderEvents,
-} from "./paymentRequestEvents/service";
-import { sendSlackNotification } from "./sendNotification/service";
-import { SendSlackNotification } from "./sendNotification/types";
+} from "./service/paymentRequestEvents";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   req,

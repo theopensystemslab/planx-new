@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
-import { ScheduledEventResponse } from "../../../hasura/metadata";
+import { ValidatedRequestHandler } from "../../../../shared/middleware/validate";
+import { ScheduledEventResponse } from "../../../../hasura/metadata";
 
 export const createPaymentEventSchema = z.object({
   body: z.object({
