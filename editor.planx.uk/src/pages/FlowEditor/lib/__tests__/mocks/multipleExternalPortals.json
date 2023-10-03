@@ -1,15 +1,10 @@
 {
   "_root": {
-    "edges": [
-      "firstNode",
-      "finalNode"
-    ]
+    "edges": ["firstNode", "finalNode"]
   },
   "externalPortal1": {
     "type": 300,
-    "edges": [
-      "externalFlowId"
-    ]
+    "edges": ["externalFlowId"]
   },
   "option3": {
     "data": {
@@ -19,29 +14,21 @@
   },
   "externalPortal2": {
     "type": 300,
-    "edges": [
-      "externalFlowId"
-    ]
+    "edges": ["externalFlowId"]
   },
   "firstNode": {
     "data": {
       "text": "This is a question"
     },
     "type": 100,
-    "edges": [
-      "option1",
-      "option2",
-      "option3"
-    ]
+    "edges": ["option1", "option2", "option3"]
   },
   "option2": {
     "data": {
       "text": "Option 2"
     },
     "type": 200,
-    "edges": [
-      "externalPortal2"
-    ]
+    "edges": ["externalPortal2"]
   },
   "finalNode": {
     "data": {
@@ -65,17 +52,13 @@
       "text": "Option 1"
     },
     "type": 200,
-    "edges": [
-      "externalPortal1"
-    ]
+    "edges": ["externalPortal1"]
   },
   "externalFlowId": {
     "data": {
       "text": "daf-external-portal-test"
     },
     "type": 300,
-    "edges": [
-      "withinExternalPortal"
-    ]
+    "edges": ["withinExternalPortal"]
   }
 }

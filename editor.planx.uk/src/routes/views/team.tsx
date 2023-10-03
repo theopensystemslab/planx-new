@@ -1,7 +1,7 @@
-import { NaviRequest, NotFoundError } from "navi"
+import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { View } from "react-navi"
+import { View } from "react-navi";
 import { getTeamFromDomain } from "routes/utils";
 
 /**
@@ -10,7 +10,8 @@ import { getTeamFromDomain } from "routes/utils";
  */
 export const teamView = async (req: NaviRequest) => {
   const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
-  const routeSlug = req.params.team || await getTeamFromDomain(window.location.hostname)
+  const routeSlug =
+    req.params.team || (await getTeamFromDomain(window.location.hostname));
 
   if (currentSlug !== routeSlug) {
     try {
@@ -19,6 +20,6 @@ export const teamView = async (req: NaviRequest) => {
       throw new NotFoundError(`Team not found: ${error}`);
     }
   }
-  
-  return <View/>
-}
+
+  return <View />;
+};

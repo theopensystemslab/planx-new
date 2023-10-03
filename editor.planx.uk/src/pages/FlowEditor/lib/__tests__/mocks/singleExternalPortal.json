@@ -1,9 +1,6 @@
 {
   "_root": {
-    "edges": [
-      "firstNode",
-      "finalNode"
-    ]
+    "edges": ["firstNode", "finalNode"]
   },
   "option2": {
     "data": {
@@ -21,28 +18,21 @@
   },
   "externalPortal": {
     "type": 300,
-    "edges": [
-      "externalFlowId"
-    ]
+    "edges": ["externalFlowId"]
   },
   "firstNode": {
     "data": {
       "text": "This is a question with many options"
     },
     "type": 100,
-    "edges": [
-      "option1",
-      "option2"
-    ]
+    "edges": ["option1", "option2"]
   },
   "option1": {
     "data": {
       "text": "Option 1"
     },
     "type": 200,
-    "edges": [
-      "externalPortal"
-    ]
+    "edges": ["externalPortal"]
   },
   "withinExternalPortal": {
     "data": {
@@ -58,8 +48,6 @@
       "text": "test-external-portal"
     },
     "type": 300,
-    "edges": [
-      "withinExternalPortal"
-    ]
+    "edges": ["withinExternalPortal"]
   }
 }
