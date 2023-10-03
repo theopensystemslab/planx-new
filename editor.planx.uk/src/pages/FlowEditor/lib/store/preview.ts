@@ -1,4 +1,3 @@
-import tinycolor from "@ctrl/tinycolor";
 import type {
   Flag,
   FlagSet,
@@ -742,7 +741,7 @@ export const getResultData = (
         text: "No result",
         category: category as FlagSet,
         bgColor: "#EEEEEE",
-        color: tinycolor("black").toHexString(),
+        color: "#000",
         description: "",
       };
 
