@@ -110,6 +110,19 @@ components:
           properties:
             paymentRequestId:
               type: string
+    CreateSessionEvent:
+      type: object
+      properties:
+        createdAt:
+          required: true
+          type: string
+          format: date-time
+        payload:
+          required: true
+          type: object
+          properties:
+            sessionId:
+              type: string
   responses:
     SlackNotificationSuccessMessage:
       content:
@@ -205,3 +218,33 @@ paths:
           $ref: "#/components/responses/ScheduledEvent"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+    /webhooks/hasura/create-reminder-event:
+      post:
+        tags: ["webhooks"]
+        summary: Create session reminder event
+        description: Setup events which will trigger session reminder emails to be generated
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateSessionEvent"
+        responses:
+          "200":
+            $ref: "#/components/responses/ScheduledEvent"
+          "500":
+            $ref: "#/components/responses/ErrorMessage"
+    /webhooks/hasura/create-expiry-event:
+      post:
+        tags: ["webhooks"]
+        summary: Create session expiry event
+        description: Setup events which will trigger session expiry email to be generated
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateSessionEvent"
+        responses:
+          "200":
+            $ref: "#/components/responses/ScheduledEvent"
+          "500":
+            $ref: "#/components/responses/ErrorMessage"

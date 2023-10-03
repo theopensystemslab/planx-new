@@ -2,19 +2,18 @@ import { Router } from "express";
 import { useHasuraAuth } from "../auth/middleware";
 import { createPaymentSendEvents } from "../../inviteToPay/createPaymentSendEvents";
 import { sanitiseApplicationData } from "./_old/sanitiseApplicationData";
-import {
-  createExpiryEvent,
-  createReminderEvent,
-} from "./_old/lowcalSessionEvents";
 import { validate } from "../../shared/middleware/validate";
 import {
   createPaymentExpiryEventsController,
   createPaymentInvitationEventsController,
   createPaymentReminderEventsController,
+  createSessionExpiryEventController,
+  createSessionReminderEventController,
   sendSlackNotificationController,
 } from "./controller";
 import { sendSlackNotificationSchema } from "./sendNotification/schema";
 import { createPaymentEventSchema } from "./paymentRequestEvents/schema";
+import { createSessionEventSchema } from "./lowcalSessionEvents/schema";
 
 const router = Router();
 
@@ -39,11 +38,19 @@ router.post(
   validate(sendSlackNotificationSchema),
   sendSlackNotificationController,
 );
+router.post(
+  "/hasura/create-reminder-event",
+  validate(createSessionEventSchema),
+  createSessionReminderEventController,
+);
+router.post(
+  "/hasura/create-expiry-event",
+  validate(createSessionEventSchema),
+  createSessionExpiryEventController,
+);
 
 // TODO: Convert these routes to the new API module structure
 router.post("/hasura/create-payment-send-events", createPaymentSendEvents);
-router.post("/hasura/create-reminder-event", createReminderEvent);
-router.post("/hasura/create-expiry-event", createExpiryEvent);
 router.post("/hasura/sanitise-application-data", sanitiseApplicationData);
 
 export default router;

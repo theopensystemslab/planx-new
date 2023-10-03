@@ -38,9 +38,10 @@ describe("Create reminder event webhook", () => {
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
         .expect(400)
-        .then((response) =>
-          expect(response.body.error).toEqual("Required value missing"),
-        );
+        .then((response) => {
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
+        });
     }
   });
 
@@ -103,7 +104,9 @@ describe("Create reminder event webhook", () => {
       .send(body)
       .expect(500)
       .then((response) => {
-        expect(response.body.error).toMatch(/Failed to create reminder event/);
+        expect(response.body.error).toMatch(
+          /Failed to create session reminder event/,
+        );
       });
   });
 });
@@ -132,9 +135,10 @@ describe("Create expiry event webhook", () => {
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
         .expect(400)
-        .then((response) =>
-          expect(response.body.error).toEqual("Required value missing"),
-        );
+        .then((response) => {
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
+        });
     }
   });
 
@@ -147,7 +151,7 @@ describe("Create expiry event webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toStrictEqual(mockScheduledEventResponse);
+        expect(response.body).toStrictEqual([mockScheduledEventResponse]);
       });
   });
 
@@ -160,7 +164,7 @@ describe("Create expiry event webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toStrictEqual(mockScheduledEventResponse);
+        expect(response.body).toStrictEqual([mockScheduledEventResponse]);
       });
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
     expect(mockArgs.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/expiry");
@@ -177,7 +181,9 @@ describe("Create expiry event webhook", () => {
       .send(body)
       .expect(500)
       .then((response) => {
-        expect(response.body.error).toMatch(/Failed to create expiry event/);
+        expect(response.body.error).toMatch(
+          /Failed to create session expiry event/,
+        );
       });
   });
 });

@@ -1,4 +1,9 @@
 import { ServerError } from "../../errors";
+import { CreateSessionEventController } from "./lowcalSessionEvents/schema";
+import {
+  createSessionExpiryEvent,
+  createSessionReminderEvent,
+} from "./lowcalSessionEvents/service";
 import { CreatePaymentEventController } from "./paymentRequestEvents/schema";
 import {
   createPaymentExpiryEvents,
@@ -75,6 +80,36 @@ export const createPaymentExpiryEventsController: CreatePaymentEventController =
       return next(
         new ServerError({
           message: "Failed to create payment expiry events",
+          cause: error,
+        }),
+      );
+    }
+  };
+
+export const createSessionReminderEventController: CreateSessionEventController =
+  async (req, res, next) => {
+    try {
+      const response = await createSessionReminderEvent(req.body);
+      res.json(response);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: "Failed to create session reminder event",
+          cause: error,
+        }),
+      );
+    }
+  };
+
+export const createSessionExpiryEventController: CreateSessionEventController =
+  async (req, res, next) => {
+    try {
+      const response = await createSessionExpiryEvent(req.body);
+      res.json(response);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: "Failed to create session expiry event",
           cause: error,
         }),
       );
