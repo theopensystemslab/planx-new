@@ -12,6 +12,8 @@ import {
   createPaymentInvitationEvents,
   createPaymentReminderEvents,
 } from "./service/paymentRequestEvents";
+import { SanitiseApplicationData } from "./service/sanitiseApplicationData/types";
+import { sanitiseApplicationData } from "./service/sanitiseApplicationData";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   req,
@@ -110,6 +112,22 @@ export const createSessionExpiryEventController: CreateSessionEventController =
       return next(
         new ServerError({
           message: "Failed to create session expiry event",
+          cause: error,
+        }),
+      );
+    }
+  };
+
+export const sanitiseApplicationDataController: SanitiseApplicationData =
+  async (_req, res, next) => {
+    try {
+      const { operationFailed, results } = await sanitiseApplicationData();
+      if (operationFailed) res.status(500);
+      return res.json(results);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: "Failed to sanitise application data",
           cause: error,
         }),
       );

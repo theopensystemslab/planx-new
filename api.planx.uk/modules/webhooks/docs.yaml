@@ -151,6 +151,22 @@ components:
                 event_id:
                   type: string
                   description: Internal Hasura ID of the generated event
+    OperationResult:
+      type: object
+      properties:
+        operationName:
+          type: string
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        count:
+          type: integer
+          required: false
+        errorMessage:
+          type: string
+          required: false
 paths:
   /webhooks/hasura/sendSlackNotification:
     post:
@@ -248,3 +264,13 @@ paths:
             $ref: "#/components/responses/ScheduledEvent"
           "500":
             $ref: "#/components/responses/ErrorMessage"
+    /webhooks/hasura/sanitise-application-data:
+      post:
+        tags: ["webhooks"]
+        summary: Sanitise application data
+        description: Called by Hasura cron job "sanitise_application_data" on a nightly basis
+        responses:
+          "200":
+            $ref: "#/components/responses/OperationResult"
+          "500":
+            $ref: "#/components/responses/OperationResult"

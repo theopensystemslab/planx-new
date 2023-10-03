@@ -9,35 +9,19 @@ import { getFormattedEnvironment } from "../../../../helpers";
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis
  * See hasura.planx.uk/metadata/cron_triggers.yaml
  */
-export const sanitiseApplicationData = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | void> => {
+export const sanitiseApplicationData = async () => {
   const operations = getOperations();
   const results: OperationResult[] = [];
-  try {
-    for (const operation of operations) {
-      const result = await operationHandler(operation);
-      results.push(result);
-    }
-  } catch (error) {
-    // Unhandled error, flag with Airbrake
-    return next({
-      error,
-      message: `Failed to sanitise application data. ${
-        (error as Error).message
-      }`,
-    });
+
+  for (const operation of operations) {
+    const result = await operationHandler(operation);
+    results.push(result);
   }
 
-  const operationFailed = results.find((result) => result.status === "failure");
-  if (operationFailed) {
-    await postToSlack(results);
-    res.status(500);
-  }
+  const operationFailed = results.some((result) => result.status === "failure");
+  if (operationFailed) await postToSlack(results);
 
-  return res.json(results);
+  return { operationFailed, results };
 };
 
 export const postToSlack = async (results: OperationResult[]) => {

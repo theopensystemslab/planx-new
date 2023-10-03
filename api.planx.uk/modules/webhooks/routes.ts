@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { useHasuraAuth } from "../auth/middleware";
 import { createPaymentSendEvents } from "../../inviteToPay/createPaymentSendEvents";
-import { sanitiseApplicationData } from "./_old/sanitiseApplicationData";
 import { validate } from "../../shared/middleware/validate";
 import {
   createPaymentExpiryEventsController,
@@ -9,6 +8,7 @@ import {
   createPaymentReminderEventsController,
   createSessionExpiryEventController,
   createSessionReminderEventController,
+  sanitiseApplicationDataController,
   sendSlackNotificationController,
 } from "./controller";
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema";
@@ -48,9 +48,12 @@ router.post(
   validate(createSessionEventSchema),
   createSessionExpiryEventController,
 );
+router.post(
+  "/hasura/sanitise-application-data",
+  sanitiseApplicationDataController,
+);
 
-// TODO: Convert these routes to the new API module structure
+// TODO: Convert to the new API module structure
 router.post("/hasura/create-payment-send-events", createPaymentSendEvents);
-router.post("/hasura/sanitise-application-data", sanitiseApplicationData);
 
 export default router;

@@ -30,13 +30,15 @@ describe("Sanitise application data webhook", () => {
 
   it("returns a 500 if an unhandled error is thrown whilst running operations", async () => {
     const mockOperationHandler = jest.spyOn(operations, "operationHandler");
-    mockOperationHandler.mockRejectedValueOnce(new Error("Unhandled error!"));
+    mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
       .expect(500)
       .then((response) =>
-        expect(response.body.error).toMatch(/Unhandled error!/),
+        expect(response.body.error).toMatch(
+          /Failed to sanitise application data/,
+        ),
       );
   });
 
