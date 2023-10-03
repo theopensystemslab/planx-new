@@ -741,7 +741,7 @@ export const getResultData = (
         text: "No result",
         category: category as FlagSet,
         bgColor: "#EEEEEE",
-        color: "#000",
+        color: "#000000",
         description: "",
       };
 
