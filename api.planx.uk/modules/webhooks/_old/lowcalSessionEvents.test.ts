@@ -9,6 +9,11 @@ const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<
   typeof createScheduledEvent
 >;
 
+const mockScheduledEventResponse = {
+  message: "success",
+  event_id: "abc123",
+} as const;
+
 describe("Create reminder event webhook", () => {
   const ENDPOINT = "/webhooks/hasura/create-reminder-event";
 
@@ -41,7 +46,7 @@ describe("Create reminder event webhook", () => {
 
   it("returns a 200 on successful event setup", async () => {
     const body = { createdAt: new Date(), payload: { sessionId: "123" } };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -50,20 +55,26 @@ describe("Create reminder event webhook", () => {
       .then((response) => {
         // it's queued up x2 reminders for 7 days and 1 day from expiry
         expect(response.body).toHaveLength(2);
-        expect(response.body).toStrictEqual(["test", "test"]);
+        expect(response.body).toStrictEqual([
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+        ]);
       });
   });
 
   it("passes the correct arguments along to createScheduledEvent", async () => {
     const body = { createdAt: new Date(), payload: { sessionId: "123" } };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toStrictEqual(["test", "test"]);
+        expect(response.body).toStrictEqual([
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+        ]);
       });
 
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
@@ -129,27 +140,27 @@ describe("Create expiry event webhook", () => {
 
   it("returns a 200 on successful event setup", async () => {
     const body = { createdAt: new Date(), payload: { sessionId: "123" } };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toBe("test");
+        expect(response.body).toStrictEqual(mockScheduledEventResponse);
       });
   });
 
   it("passes the correct arguments along to createScheduledEvent", async () => {
     const body = { createdAt: new Date(), payload: { sessionId: "123" } };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toBe("test");
+        expect(response.body).toStrictEqual(mockScheduledEventResponse);
       });
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
     expect(mockArgs.webhook).toBe("{{HASURA_PLANX_API_URL}}/send-email/expiry");

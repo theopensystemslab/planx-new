@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
-
-// TODO: Make this better
-type Response = [any, any] | any[];
+import { ScheduledEventResponse } from "../../../hasura/metadata";
 
 export const createPaymentEventSchema = z.object({
   body: z.object({
@@ -19,5 +17,5 @@ export type CreatePaymentEvent = z.infer<
 
 export type CreatePaymentEventController = ValidatedRequestHandler<
   typeof createPaymentEventSchema,
-  Response
+  ScheduledEventResponse[]
 >;

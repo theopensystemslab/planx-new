@@ -128,14 +128,16 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              message:
-                type: string
-                enum: ["success"]
-              event_id:
-                type: string
-                description: Internal Hasura ID of the generated event
+            type: array
+            items:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum: ["success"]
+                event_id:
+                  type: string
+                  description: Internal Hasura ID of the generated event
 paths:
   /webhooks/hasura/sendSlackNotification:
     post:
