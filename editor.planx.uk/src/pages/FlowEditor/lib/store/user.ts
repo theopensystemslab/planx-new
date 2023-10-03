@@ -35,8 +35,8 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
   },
 
   async initUserStore(jwt: string) {
-    const  { getUser, setUser } = get();
-    
+    const { getUser, setUser } = get();
+
     if (getUser()) return;
 
     const id = (jwtDecode(jwt) as any)["sub"];

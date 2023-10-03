@@ -25,11 +25,13 @@ const getFlowData = async (id: string) => {
 //        in order to load frontend /preview routes for flows that are not published
 export const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
   // get the primary flow data
-  const { slug, data }: { slug: string; data: Record<string, any> } = await getFlowData(id);
+  const { slug, data }: { slug: string; data: Record<string, any> } =
+    await getFlowData(id);
 
   // recursively get and flatten internal portals & external portals
   for (const [nodeId, node] of Object.entries(data)) {
-    const isExternalPortalRoot = nodeId === "_root" && Object.keys(ob).length > 0;
+    const isExternalPortalRoot =
+      nodeId === "_root" && Object.keys(ob).length > 0;
     const isExternalPortal = node.type === TYPES.ExternalPortal;
     const isMerged = ob[node.data?.flowId];
 
