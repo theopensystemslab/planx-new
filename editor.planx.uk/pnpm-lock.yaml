@@ -5,11 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  semver@<7.5.2: '>=7.5.2'
-  trim@<0.0.3: '>=0.0.3'
-  glob-parent@<5.1.2: '>=5.1.2'
-  trim-newlines@<3.0.1: '>=3.0.1'
-  nth-check@<2.0.1: '>=2.0.1'
+  '@adobe/css-tools@<4.3.1': '>=4.3.1'
+  postcss@<8.4.31: '>=8.4.31'
 
 dependencies:
   '@airbrake/browser':
@@ -625,7 +622,7 @@ packages:
       debug: 4.3.4
       gensync: 1.0.0-beta.2
       json5: 2.2.3
-      semver: 7.5.3
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
 
@@ -709,7 +706,7 @@ packages:
       '@babel/helper-validator-option': 7.22.5
       browserslist: 4.21.9
       lru-cache: 5.1.1
-      semver: 7.5.3
+      semver: 6.3.1
     dev: true
 
   /@babel/helper-compilation-targets@7.22.9(@babel/core@7.22.9):
@@ -723,7 +720,7 @@ packages:
       '@babel/helper-validator-option': 7.22.5
       browserslist: 4.21.9
       lru-cache: 5.1.1
-      semver: 7.5.3
+      semver: 6.3.1
 
   /@babel/helper-create-class-features-plugin@7.22.15(@babel/core@7.22.8):
     resolution: {integrity: sha512-jKkwA59IXcvSaiK2UN45kKwSC9o+KuoXsBDvHvU/7BecYIp8GQ2UwrVvFgJASUT+hBnwJx6MhvMCuMzwZZ7jlg==}
@@ -740,7 +737,7 @@ packages:
       '@babel/helper-replace-supers': 7.22.20(@babel/core@7.22.8)
       '@babel/helper-skip-transparent-expression-wrappers': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
-      semver: 7.5.3
+      semver: 6.3.1
     dev: true
 
   /@babel/helper-create-class-features-plugin@7.22.15(@babel/core@7.22.9):
@@ -758,7 +755,7 @@ packages:
       '@babel/helper-replace-supers': 7.22.20(@babel/core@7.22.9)
       '@babel/helper-skip-transparent-expression-wrappers': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
-      semver: 7.5.3
+      semver: 6.3.1
 
   /@babel/helper-create-class-features-plugin@7.22.6(@babel/core@7.22.8):
     resolution: {integrity: sha512-iwdzgtSiBxF6ni6mzVnZCF3xt5qE6cEA0J7nFt8QOAWZ0zjCFceEgpn3vtb2V7WFR6QzP2jmIFOHMTRo7eNJjQ==}
@@ -3185,7 +3182,7 @@ packages:
       babel-plugin-polyfill-corejs3: 0.8.2(@babel/core@7.22.9)
       babel-plugin-polyfill-regenerator: 0.5.1(@babel/core@7.22.9)
       core-js-compat: 3.31.1
-      semver: 7.5.3
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -10191,7 +10188,7 @@ packages:
     dependencies:
       nice-try: 1.0.5
       path-key: 2.0.1
-      semver: 7.5.3
+      semver: 5.7.2
       shebang-command: 1.2.0
       which: 1.3.1
     dev: true
@@ -10322,7 +10319,7 @@ packages:
       boolbase: 1.0.0
       css-what: 3.4.2
       domutils: 1.7.0
-      nth-check: 2.1.1
+      nth-check: 1.0.2
 
   /css-select@4.3.0:
     resolution: {integrity: sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ==}
@@ -10899,7 +10896,7 @@ packages:
     dependencies:
       commander: 2.20.3
       lru-cache: 4.1.5
-      semver: 7.5.3
+      semver: 5.7.2
       sigmund: 1.0.1
     dev: true
 
@@ -11548,7 +11545,7 @@ packages:
       minimatch: 3.1.2
       object.values: 1.1.6
       resolve: 1.22.2
-      semver: 7.5.3
+      semver: 6.3.1
       tsconfig-paths: 3.14.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
@@ -11598,7 +11595,7 @@ packages:
       minimatch: 3.1.2
       object.entries: 1.1.6
       object.fromentries: 2.0.6
-      semver: 7.5.3
+      semver: 6.3.1
 
   /eslint-plugin-react-hooks@4.6.0(eslint@8.44.0):
     resolution: {integrity: sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==}
@@ -11628,7 +11625,7 @@ packages:
       object.values: 1.1.6
       prop-types: 15.8.1
       resolve: 2.0.0-next.4
-      semver: 7.5.3
+      semver: 6.3.1
       string.prototype.matchall: 4.0.8
 
   /eslint-plugin-simple-import-sort@10.0.0(eslint@8.44.0):
@@ -13623,7 +13620,7 @@ packages:
       '@babel/parser': 7.22.7
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.0
-      semver: 7.5.3
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
 
@@ -14923,14 +14920,14 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       pify: 4.0.1
-      semver: 7.5.3
+      semver: 5.7.2
     dev: true
 
   /make-dir@3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
     dependencies:
-      semver: 7.5.3
+      semver: 6.3.1
 
   /make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
@@ -15637,7 +15634,7 @@ packages:
     dependencies:
       hosted-git-info: 2.8.9
       resolve: 1.22.2
-      semver: 7.5.3
+      semver: 5.7.2
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -15679,6 +15676,11 @@ packages:
     dependencies:
       path-key: 4.0.0
     dev: true
+
+  /nth-check@1.0.2:
+    resolution: {integrity: sha512-WeBOdju8SnzPN5vTUJYxYUxLeXpCaVP5i5e0LF8fg7WORF2Wd7wFX/pk0tYZk7s8T+J7VLy0Da6J1+wCT0AtHg==}
+    dependencies:
+      boolbase: 1.0.0
 
   /nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
@@ -16089,9 +16091,6 @@ packages:
 
   /performance-now@2.1.0:
     resolution: {integrity: sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==}
-
-  /picocolors@0.2.1:
-    resolution: {integrity: sha512-cMlDqaLEqfSaW8Z7N5Jw+lyIW869EzT73/F5lhtY9cLGoVxSXznfgfXMO0Z5K0o0Q2TkTXq+0KFsdnSe3jDViA==}
 
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
@@ -16871,15 +16870,16 @@ packages:
   /postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  /postcss@7.0.39:
-    resolution: {integrity: sha512-yioayjNbHn6z1/Bywyb2Y4s3yvDAeXGOyxqD+LnVOinq6Mdmd++SW2wUNVzavyyHxd6+DxzWGIuosg6P1Rj8uA==}
-    engines: {node: '>=6.0.0'}
-    dependencies:
-      picocolors: 0.2.1
-      source-map: 0.6.1
-
   /postcss@8.4.25:
     resolution: {integrity: sha512-7taJ/8t2av0Z+sQEvNzCkpDynl0tX3uJMCODi6nT3PfASC7dYCWV9aQ+uiCf+KBD4SEFcu+GvJdGdwzQ6OSjCw==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      nanoid: 3.3.6
+      picocolors: 1.0.0
+      source-map-js: 1.0.2
+
+  /postcss@8.4.31:
+    resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.6
@@ -17322,7 +17322,7 @@ packages:
       react-scripts: '>=2.1.3'
     dependencies:
       react-scripts: 5.0.1(@babel/plugin-syntax-flow@7.22.5)(@babel/plugin-transform-react-jsx@7.22.5)(@swc/core@1.3.71)(esbuild@0.14.54)(eslint@8.44.0)(react@18.2.0)(sass@1.63.6)(typescript@4.9.5)
-      semver: 7.5.3
+      semver: 5.7.2
     dev: true
 
   /react-base16-styling@0.6.0:
@@ -18154,7 +18154,7 @@ packages:
       adjust-sourcemap-loader: 4.0.0
       convert-source-map: 1.9.0
       loader-utils: 2.0.4
-      postcss: 7.0.39
+      postcss: 8.4.31
       source-map: 0.6.1
 
   /resolve-url@0.2.1:
@@ -18492,6 +18492,20 @@ packages:
     dependencies:
       node-forge: 1.3.1
 
+  /semver@5.7.2:
+    resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
+    hasBin: true
+    dev: true
+
+  /semver@6.3.1:
+    resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
+    hasBin: true
+
+  /semver@7.0.0:
+    resolution: {integrity: sha512-+GB6zVA9LWh6zovYQLALHwv5rb2PHGlJi3lfiqIHxR0uuwCgefcOJc59v9fv1w8GbStwxuuqqAjI9NMAOOgq1A==}
+    hasBin: true
+    dev: true
+
   /semver@7.5.3:
     resolution: {integrity: sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==}
     engines: {node: '>=10'}
@@ -18664,7 +18678,7 @@ packages:
     resolution: {integrity: sha512-VpsrsJSUcJEseSbMHkrsrAVSdvVS5I96Qo1QAQ4FxQ9wXFcB+pjj7FB7/us9+GcgfW4ziHtYMc1J0PLczb55mg==}
     engines: {node: '>=8.10.0'}
     dependencies:
-      semver: 7.5.3
+      semver: 7.0.0
     dev: true
 
   /sisteransi@1.0.5:
