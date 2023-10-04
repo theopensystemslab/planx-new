@@ -149,7 +149,7 @@
     "jest-axe": "^6.0.1",
     "jest-localstorage-mock": "^2.4.26",
     "lint-staged": "^13.2.3",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.31",
     "prettier": "^3.0.0",
     "react-app-rewired": "^2.2.1",
     "react-refresh": "^0.14.0",
