@@ -123,8 +123,8 @@ dependencies:
     specifier: ^5.0.0
     version: 5.0.0(express@4.18.2)
   zod:
-    specifier: ^3.22.2
-    version: 3.22.2
+    specifier: ^3.22.3
+    version: 3.22.3
 
 devDependencies:
   '@babel/core':
@@ -8099,8 +8099,8 @@ packages:
       commander: 9.5.0
     dev: false
 
-  /zod@3.22.2:
-    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+  /zod@3.22.3:
+    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
     dev: false
 
   github.com/theopensystemslab/planx-core/3d395fa:
@@ -8140,7 +8140,7 @@ packages:
       striptags: 3.2.0
       type-fest: 4.3.1
       uuid: 9.0.1
-      zod: 3.22.2
+      zod: 3.22.3
     transitivePeerDependencies:
       - '@types/react'
       - encoding
