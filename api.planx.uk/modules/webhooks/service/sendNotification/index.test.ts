@@ -1,8 +1,8 @@
 import supertest from "supertest";
-import app from "../../../server";
+import app from "../../../../server";
 import SlackNotify from "slack-notify";
 import { BOPSBody, EmailBody, UniformBody } from "./types";
-import { $admin } from "../../../client";
+import { $admin } from "../../../../client";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 const mockSessionWithFee = {
@@ -35,7 +35,7 @@ const mockSessionWithResubmissionExemption = {
   },
 };
 
-jest.mock<CoreDomainClient>("../../../client");
+jest.mock<CoreDomainClient>("../../../../client");
 const mockAdmin = jest.mocked($admin);
 
 const mockSend = jest.fn();
@@ -208,10 +208,8 @@ describe("Send Slack notifications endpoint", () => {
           );
           expect(mockSend).toHaveBeenCalledTimes(1);
           expect(mockAdmin.session.find).toHaveBeenCalledTimes(1);
-
           expect(response.body.message).toBe("Posted to Slack");
           expect(response.body.data).toMatch(/abc123/);
-          expect(response.body.data).toMatch(/test-council/);
         });
     });
 

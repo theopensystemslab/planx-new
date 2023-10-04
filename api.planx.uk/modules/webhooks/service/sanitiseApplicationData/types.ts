@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { ValidatedRequestHandler } from "../../../../shared/middleware/validate";
+
 export interface OperationResult {
   operationName: string;
   status: "processing" | "success" | "failure";
@@ -8,3 +11,8 @@ export interface OperationResult {
 export type QueryResult = string[];
 
 export type Operation = () => Promise<QueryResult>;
+
+export type SanitiseApplicationData = ValidatedRequestHandler<
+  z.ZodUndefined,
+  OperationResult[]
+>;

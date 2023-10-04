@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { createScheduledEvent } from "../hasura/metadata";
+import {
+  ScheduledEventResponse,
+  createScheduledEvent,
+} from "../hasura/metadata";
 
 interface CombinedResponse {
-  bops?: Record<string, string>;
-  uniform?: Record<string, string>;
-  email?: Record<string, string>;
+  bops?: ScheduledEventResponse;
+  uniform?: ScheduledEventResponse;
+  email?: ScheduledEventResponse;
 }
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations

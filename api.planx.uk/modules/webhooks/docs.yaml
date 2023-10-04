@@ -14,7 +14,7 @@ components:
           type: string
       required:
         - sessionId
-    BopsSubmissionSchema:
+    BopsSubmission:
       type: object
       properties:
         body:
@@ -37,7 +37,7 @@ components:
                           type: string
       required:
         - body
-    UniformSubmissionSchema:
+    UniformSubmission:
       type: object
       properties:
         body:
@@ -63,7 +63,7 @@ components:
                               type: string
       required:
         - body
-    EmailSubmissionSchema:
+    EmailSubmission:
       type: object
       properties:
         body:
@@ -92,11 +92,37 @@ components:
                                   type: string
       required:
         - body
-    SendSlackNotificationSchema:
+    SendSlackNotification:
       oneOf:
-        - $ref: "#/components/schemas/BopsSubmissionSchema"
-        - $ref: "#/components/schemas/UniformSubmissionSchema"
-        - $ref: "#/components/schemas/EmailSubmissionSchema"
+        - $ref: "#/components/schemas/BopsSubmission"
+        - $ref: "#/components/schemas/UniformSubmission"
+        - $ref: "#/components/schemas/EmailSubmission"
+    CreatePaymentEvent:
+      type: object
+      properties:
+        createdAt:
+          required: true
+          type: string
+          format: date-time
+        payload:
+          required: true
+          type: object
+          properties:
+            paymentRequestId:
+              type: string
+    CreateSessionEvent:
+      type: object
+      properties:
+        createdAt:
+          required: true
+          type: string
+          format: date-time
+        payload:
+          required: true
+          type: object
+          properties:
+            sessionId:
+              type: string
   responses:
     SlackNotificationSuccessMessage:
       content:
@@ -111,6 +137,56 @@ components:
               message:
                 type: string
                 required: true
+    ScheduledEvent:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                message:
+                  type: string
+                  enum: ["success"]
+                event_id:
+                  type: string
+                  description: Internal Hasura ID of the generated event
+    OperationResultSuccess:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                operationName:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                    - success
+                count:
+                  type: integer
+    OperationResultFailure:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                operationName:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                    - success
+                    - failure
+                count:
+                  type: integer
+                errorMessage:
+                  type: string
+                  required: false
 paths:
   /webhooks/hasura/sendSlackNotification:
     post:
@@ -127,9 +203,94 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SendSlackNotificationSchema"
+              $ref: "#/components/schemas/SendSlackNotification"
       responses:
         "200":
           $ref: "#/components/responses/SlackNotificationSuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/create-payment-invitation-events:
+    post:
+      tags: ["webhooks"]
+      summary: Create payment invitation events
+      description: Setup events which will trigger payment invitation emails to be generated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaymentEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/create-payment-reminder-events:
+    post:
+      tags: ["webhooks"]
+      summary: Create payment reminder events
+      description: Setup events which will trigger payment reminder emails to be generated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaymentEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/create-payment-expiry-events:
+    post:
+      tags: ["webhooks"]
+      summary: Create payment expiry events
+      description: Setup events which will trigger payment expiry emails to be generated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaymentEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/create-reminder-event:
+    post:
+      tags: ["webhooks"]
+      summary: Create session reminder event
+      description: Setup events which will trigger session reminder emails to be generated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSessionEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/create-expiry-event:
+    post:
+      tags: ["webhooks"]
+      summary: Create session expiry event
+      description: Setup events which will trigger session expiry email to be generated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSessionEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/sanitise-application-data:
+    post:
+      tags: ["webhooks"]
+      summary: Sanitise application data
+      description: Called by Hasura cron job "sanitise_application_data" on a nightly basis
+      responses:
+        "200":
+          $ref: "#/components/responses/OperationResultSuccess"
+        "500":
+          $ref: "#/components/responses/OperationResultFailure"

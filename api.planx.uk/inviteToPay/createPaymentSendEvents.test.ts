@@ -9,6 +9,11 @@ const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<
   typeof createScheduledEvent
 >;
 
+const mockScheduledEventResponse = {
+  message: "success",
+  event_id: "abc123",
+} as const;
+
 describe("Create payment send events webhook", () => {
   const ENDPOINT = "/webhooks/hasura/create-payment-send-events";
 
@@ -83,7 +88,7 @@ describe("Create payment send events webhook", () => {
   });
 
   it("returns a 200 on successful event setup", async () => {
-    mockedCreateScheduledEvent.mockResolvedValue("test-event-id");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await supertest(app)
       .post(ENDPOINT)
@@ -91,13 +96,15 @@ describe("Create payment send events webhook", () => {
       .send({ payload: { sessionId: "123" } })
       .expect(200)
       .then((response) => {
-        expect(response.body).toMatchObject({ email: "test-event-id" });
+        expect(response.body).toMatchObject({
+          email: mockScheduledEventResponse,
+        });
       });
   });
 
   it("passes the correct arguments along to createScheduledEvent", async () => {
     const body = { createdAt: new Date(), payload: { sessionId: "123" } };
-    mockedCreateScheduledEvent.mockResolvedValue("test-event-id");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await supertest(app)
       .post(ENDPOINT)
@@ -105,7 +112,9 @@ describe("Create payment send events webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
-        expect(response.body).toMatchObject({ email: "test-event-id" });
+        expect(response.body).toMatchObject({
+          email: mockScheduledEventResponse,
+        });
       });
 
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];

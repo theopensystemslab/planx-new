@@ -3,7 +3,10 @@ import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { $admin } from "../client";
 import { adminGraphQLClient as adminClient } from "../hasura";
-import { createScheduledEvent } from "../hasura/metadata";
+import {
+  ScheduledEventResponse,
+  createScheduledEvent,
+} from "../hasura/metadata";
 import { getMostRecentPublishedFlow } from "../helpers";
 import { Flow, Node, Team } from "../types";
 
@@ -14,9 +17,9 @@ enum Destination {
 }
 
 interface CombinedResponse {
-  bops?: Record<string, string>;
-  uniform?: Record<string, string>;
-  email?: Record<string, string>;
+  bops?: ScheduledEventResponse;
+  uniform?: ScheduledEventResponse;
+  email?: ScheduledEventResponse;
 }
 
 // Create "One-off Scheduled Events" in Hasura when a payment request is paid

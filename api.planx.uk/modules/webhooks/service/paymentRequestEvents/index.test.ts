@@ -1,13 +1,19 @@
 import supertest from "supertest";
-import app from "../../../server";
-import { createScheduledEvent } from "../../../hasura/metadata";
+import app from "../../../../server";
+import { createScheduledEvent } from "../../../../hasura/metadata";
+import { CreatePaymentEvent } from "./schema";
 
 const { post } = supertest(app);
 
-jest.mock("../../../hasura/metadata");
+jest.mock("../../../../hasura/metadata");
 const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<
   typeof createScheduledEvent
 >;
+
+const mockScheduledEventResponse = {
+  message: "success",
+  event_id: "abc123",
+} as const;
 
 describe("Create payment invitation events webhook", () => {
   const ENDPOINT = "/webhooks/hasura/create-payment-invitation-events";
@@ -33,18 +39,19 @@ describe("Create payment invitation events webhook", () => {
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
         .expect(400)
-        .then((response) =>
-          expect(response.body.error).toEqual("Required value missing"),
-        );
+        .then((response) => {
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
+        });
     }
   });
 
   it("returns a 200 on successful event setup", async () => {
-    const body = {
+    const body: CreatePaymentEvent = {
       createdAt: new Date(),
       payload: { paymentRequestId: "123" },
     };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -53,7 +60,10 @@ describe("Create payment invitation events webhook", () => {
       .then((response) => {
         // it's queued up x2 invitations: one for the payee and one for the agent
         expect(response.body).toHaveLength(2);
-        expect(response.body).toStrictEqual(["test", "test"]);
+        expect(response.body).toStrictEqual([
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+        ]);
       });
   });
 
@@ -62,7 +72,7 @@ describe("Create payment invitation events webhook", () => {
       createdAt: new Date(),
       payload: { paymentRequestId: "123" },
     };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -70,7 +80,10 @@ describe("Create payment invitation events webhook", () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toHaveLength(2);
-        expect(response.body).toStrictEqual(["test", "test"]);
+        expect(response.body).toStrictEqual([
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+        ]);
       });
 
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
@@ -135,9 +148,10 @@ describe("Create payment reminder events webhook", () => {
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
         .expect(400)
-        .then((response) =>
-          expect(response.body.error).toEqual("Required value missing"),
-        );
+        .then((response) => {
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
+        });
     }
   });
 
@@ -146,7 +160,7 @@ describe("Create payment reminder events webhook", () => {
       createdAt: new Date(),
       payload: { paymentRequestId: "123" },
     };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -155,7 +169,12 @@ describe("Create payment reminder events webhook", () => {
       .then((response) => {
         // it's queued up x4 reminders: 2 for the payee and 2 for the agent at 7 days and 1 day from expiry
         expect(response.body).toHaveLength(4);
-        expect(response.body).toStrictEqual(["test", "test", "test", "test"]);
+        expect(response.body).toStrictEqual([
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+        ]);
       });
   });
 
@@ -164,7 +183,7 @@ describe("Create payment reminder events webhook", () => {
       createdAt: new Date(),
       payload: { paymentRequestId: "123" },
     };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -172,7 +191,12 @@ describe("Create payment reminder events webhook", () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toHaveLength(4);
-        expect(response.body).toStrictEqual(["test", "test", "test", "test"]);
+        expect(response.body).toStrictEqual([
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+        ]);
       });
 
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
@@ -255,9 +279,10 @@ describe("Create payment expiry events webhook", () => {
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
         .expect(400)
-        .then((response) =>
-          expect(response.body.error).toEqual("Required value missing"),
-        );
+        .then((response) => {
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
+        });
     }
   });
 
@@ -266,16 +291,19 @@ describe("Create payment expiry events webhook", () => {
       createdAt: new Date(),
       payload: { paymentRequestId: "123" },
     };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
       .send(body)
       .expect(200)
       .then((response) => {
-        // it's queued up x2 expirys: one for the payee and one for the agent
+        // it's queued up x2 expiries: one for the payee and one for the agent
         expect(response.body).toHaveLength(2);
-        expect(response.body).toStrictEqual(["test", "test"]);
+        expect(response.body).toStrictEqual([
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+        ]);
       });
   });
 
@@ -284,7 +312,7 @@ describe("Create payment expiry events webhook", () => {
       createdAt: new Date(),
       payload: { paymentRequestId: "123" },
     };
-    mockedCreateScheduledEvent.mockResolvedValue("test");
+    mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -292,7 +320,10 @@ describe("Create payment expiry events webhook", () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toHaveLength(2);
-        expect(response.body).toStrictEqual(["test", "test"]);
+        expect(response.body).toStrictEqual([
+          mockScheduledEventResponse,
+          mockScheduledEventResponse,
+        ]);
       });
 
     const mockArgs = mockedCreateScheduledEvent.mock.calls[0][0];
