@@ -10,7 +10,7 @@ dependencies:
     version: 9.3.0
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#44e9ebe
-    version: github.com/theopensystemslab/planx-core/44e9ebe
+    version: git@github.com+theopensystemslab/planx-core/44e9ebe
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -92,13 +92,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
-    dev: false
-
-  /@babel/runtime@7.22.6:
-    resolution: {integrity: sha512-wDb5pWm4WDdF6LFUde3Jl8WzPA+3ZbxYqkC6xAXuD3irdEHN1k0NfTRrJD8ZD378SJ61miMLCqIOXYhd8x+AJQ==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      regenerator-runtime: 0.13.11
     dev: false
 
   /@babel/types@7.22.5:
@@ -2210,10 +2203,6 @@ packages:
     resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
     dev: false
 
-  /regenerator-runtime@0.13.11:
-    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-    dev: false
-
   /regenerator-runtime@0.14.0:
     resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
     dev: false
@@ -2702,7 +2691,7 @@ packages:
     resolution: {integrity: sha512-Z2Fe1bn+eLstG8DRR6FTavGD+MeAwyfmouhHsIUgaADz8jvFKbO/fXc2trJKZg+5EBjh4gGm3iU/t3onKlXHIg==}
     engines: {node: '>=10'}
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.22.15
       '@types/lodash': 4.14.196
       lodash: 4.17.21
       lodash-es: 4.17.21
@@ -2711,12 +2700,12 @@ packages:
       toposort: 2.0.2
     dev: false
 
-  /zod@3.22.2:
-    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+  /zod@3.22.3:
+    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/44e9ebe:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/44e9ebe}
+  git@github.com+theopensystemslab/planx-core/44e9ebe:
+    resolution: {commit: 44e9ebe, repo: git@github.com:theopensystemslab/planx-core.git, type: git}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2752,7 +2741,7 @@ packages:
       striptags: 3.2.0
       type-fest: 4.3.1
       uuid: 9.0.1
-      zod: 3.22.2
+      zod: 3.22.3
     transitivePeerDependencies:
       - '@types/react'
       - encoding
