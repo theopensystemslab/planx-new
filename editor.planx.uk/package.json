@@ -5,7 +5,7 @@
   "dependencies": {
     "@airbrake/browser": "^2.1.8",
     "@apollo/client": "^3.7.16",
-    "@ctrl/tinycolor": "^3.6.0",
+    "@ctrl/tinycolor": "^4.0.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@feedback-fish/react": "^1.2.2",

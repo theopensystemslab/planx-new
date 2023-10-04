@@ -27,9 +27,9 @@ const mockTeam2: Team = {
   slug: "closedsystemslab",
 };
 
-jest.spyOn(ReactNavi, "useNavigation").mockReturnValue(({
-  navigate: jest.fn()
-}) as any);
+jest.spyOn(ReactNavi, "useNavigation").mockReturnValue({
+  navigate: jest.fn(),
+} as any);
 
 describe("Header Component - Editor Route", () => {
   beforeAll(() => {
