@@ -5,16 +5,19 @@ import Link from "@mui/material/Link";
 import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Step as StyledListItem } from "@planx/components/NextSteps/model";
+import { TrackNextStepsLinkClick } from "pages/FlowEditor/lib/analyticsProvider";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 interface NextStepsListProps {
   steps: StyledListItem[];
   handleSubmit?: handleSubmit;
+  handleNextStepsLinkClick?: TrackNextStepsLinkClick;
 }
 
 interface ListItemProps extends StyledListItem {
   handleSubmit?: handleSubmit;
+  handleNextStepsLinkClick?: TrackNextStepsLinkClick;
 }
 
 const Root = styled("ul")(({ theme }) => ({
@@ -73,7 +76,16 @@ const ArrowButton = styled("span")(({ theme }) => ({
 }));
 
 const LinkStep = (props: ListItemProps) => (
-  <InnerLink href={props.url} target="_blank" rel="noopener">
+  <InnerLink
+    href={props.url}
+    target="_blank"
+    rel="noopener"
+    onClick={() =>
+      props.handleNextStepsLinkClick &&
+      props?.url &&
+      props.handleNextStepsLinkClick({ url: props.url })
+    }
+  >
     <Step {...props} />
   </InnerLink>
 );
@@ -114,7 +126,10 @@ function NextStepsList(props: NextStepsListProps) {
       {props.steps?.map((step, i) => (
         <StyledListItem key={i}>
           {step.url ? (
-            <LinkStep {...step} />
+            <LinkStep
+              {...step}
+              handleNextStepsLinkClick={props.handleNextStepsLinkClick}
+            />
           ) : (
             <ContinueStep {...step} handleSubmit={props.handleSubmit} />
           )}

@@ -10,16 +10,20 @@ export type AnalyticsType = "init" | "resume";
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 export type HelpClickMetadata = Record<string, string>;
+export type NextStepsLinkMetadata = Record<string, string>;
+export type TrackNextStepsLinkClick = (metadata: NextStepsLinkMetadata) => void;
 
 let lastAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
+  trackNextStepsClick: (metadata?: NextStepsLinkMetadata) => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
+  trackNextStepsClick: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -100,6 +104,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         createAnalytics,
         trackHelpClick,
+        trackNextStepsClick: trackNextStepsLinkClick,
         node,
       }}
     >
@@ -157,6 +162,30 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
             update_analytics_logs_by_pk(
               pk_columns: { id: $id }
               _set: { has_clicked_help: true }
+              _append: { metadata: $metadata }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: lastAnalyticsLogId,
+          metadata,
+        },
+      });
+    }
+  }
+
+  async function trackNextStepsLinkClick(metadata?: NextStepsLinkMetadata) {
+    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+      await publicClient.mutate({
+        mutation: gql`
+          mutation UpdateHasClickNextStepsLink(
+            $id: bigint!
+            $metadata: jsonb = {}
+          ) {
+            update_analytics_logs_by_pk(
+              pk_columns: { id: $id }
               _append: { metadata: $metadata }
             ) {
               id
