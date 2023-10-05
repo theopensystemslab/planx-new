@@ -12,6 +12,7 @@ export interface Pay extends MoreInformation {
   fn?: string;
   instructionsTitle?: string;
   instructionsDescription?: string;
+  hidePay?: boolean;
   allowInviteToPay?: boolean;
   secondaryPageTitle?: string;
   nomineeTitle?: string;
@@ -87,6 +88,7 @@ export const validationSchema = object({
   fn: string().trim().required("Data field is required"),
   instructionsTitle: string().trim().required(),
   instructionsDescription: string().trim().required(),
+  hidePay: boolean(),
   allowInviteToPay: boolean(),
   nomineeTitle: string().trim().when("allowInviteToPay", {
     is: true,

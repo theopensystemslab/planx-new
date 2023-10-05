@@ -89,7 +89,7 @@ describe("Confirm component without inviteToPay", () => {
 
   it("displays an error and continue-with-testing button if Pay is not enabled for this team", async () => {
     const handleSubmit = jest.fn();
-    const errorMessage = "No pay token found for this team!";
+    const errorMessage = "No pay token found for this local authority";
 
     const { user } = setup(
       <Confirm
@@ -291,5 +291,47 @@ describe("Confirm component with inviteToPay", () => {
     const { container } = setup(<Confirm {...inviteProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+});
+
+describe("Confirm component in information-only mode", () => {
+  beforeAll(() => (initialState = getState()));
+  afterEach(() => act(() => setState(initialState)));
+
+  it("renders correctly", () => {
+    setup(<Confirm {...defaultProps} hidePay={true} />);
+
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Pay for your application",
+    );
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
+      "The fee is",
+    );
+    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+      "How to pay",
+    );
+
+    expect(screen.getByRole("button")).toHaveTextContent("Continue");
+    expect(screen.getByRole("button")).not.toHaveTextContent("Pay");
+  });
+
+  it("renders correctly when inviteToPay is also toggled on by an editor", () => {
+    setup(<Confirm {...defaultProps} hidePay={true} showInviteToPay={true} />);
+
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Pay for your application",
+    );
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
+      "The fee is",
+    );
+    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+      "How to pay",
+    );
+
+    expect(screen.getByRole("button")).toHaveTextContent("Continue");
+    expect(screen.getByRole("button")).not.toHaveTextContent("Pay");
+    expect(screen.getByRole("button")).not.toHaveTextContent(
+      "Invite someone else to pay for this application",
+    );
   });
 });

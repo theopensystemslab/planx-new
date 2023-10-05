@@ -31,6 +31,7 @@ function Component(props: any) {
         `<p>You can pay for your application by using GOV.UK Pay.</p>\
          <p>Your application will be sent after you have paid the fee. \
          Wait until you see an application sent message before closing your browser.</p>`,
+      hidePay: props.node?.data?.hidePay || false,
       allowInviteToPay: props.node?.data?.allowInviteToPay ?? true,
       secondaryPageTitle:
         props.node?.data?.secondaryPageTitle ||
@@ -113,20 +114,30 @@ function Component(props: any) {
             />
           </InputRow>
         </ModalSectionContent>
-        <ModalSectionContent>
-          <InputRow>
-            <OptionButton
-              selected={formik.values.allowInviteToPay}
-              onClick={() => {
-                formik.setFieldValue(
-                  "allowInviteToPay",
-                  !formik.values.allowInviteToPay,
-                );
-              }}
-            >
-              Allow applicants to invite someone else to pay
-            </OptionButton>
-          </InputRow>
+        <OptionButton
+          selected={formik.values.hidePay}
+          onClick={() => {
+            formik.setFieldValue("hidePay", !formik.values.hidePay);
+          }}
+          style={{ width: "100%" }}
+        >
+          Hide the pay buttons and show fee for information only
+        </OptionButton>
+      </ModalSection>
+      <ModalSection>
+        <ModalSectionContent title="Invite to Pay" Icon={ICONS[TYPES.Pay]}>
+          <OptionButton
+            selected={formik.values.allowInviteToPay}
+            onClick={() => {
+              formik.setFieldValue(
+                "allowInviteToPay",
+                !formik.values.allowInviteToPay,
+              );
+            }}
+            style={{ width: "100%" }}
+          >
+            Allow applicants to invite someone else to pay
+          </OptionButton>
           {formik.values.allowInviteToPay ? (
             <>
               <Box>
