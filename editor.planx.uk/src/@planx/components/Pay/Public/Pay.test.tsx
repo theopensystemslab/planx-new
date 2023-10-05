@@ -298,8 +298,11 @@ describe("Confirm component in information-only mode", () => {
   beforeAll(() => (initialState = getState()));
   afterEach(() => act(() => setState(initialState)));
 
-  it("renders correctly", () => {
-    setup(<Confirm {...defaultProps} hidePay={true} />);
+  it("renders correctly", async () => {
+    const handleSubmit = jest.fn();
+    const { user } = setup(
+      <Confirm {...defaultProps} hidePay={true} onConfirm={handleSubmit} />,
+    );
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "Pay for your application",
@@ -313,10 +316,21 @@ describe("Confirm component in information-only mode", () => {
 
     expect(screen.getByRole("button")).toHaveTextContent("Continue");
     expect(screen.getByRole("button")).not.toHaveTextContent("Pay");
+
+    await user.click(screen.getByText("Continue"));
+    expect(handleSubmit).toHaveBeenCalled();
   });
 
-  it("renders correctly when inviteToPay is also toggled on by an editor", () => {
-    setup(<Confirm {...defaultProps} hidePay={true} showInviteToPay={true} />);
+  it("renders correctly when inviteToPay is also toggled on by an editor", async () => {
+    const handleSubmit = jest.fn();
+    const { user } = setup(
+      <Confirm
+        {...defaultProps}
+        hidePay={true}
+        showInviteToPay={true}
+        onConfirm={handleSubmit}
+      />,
+    );
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "Pay for your application",
@@ -333,5 +347,8 @@ describe("Confirm component in information-only mode", () => {
     expect(screen.getByRole("button")).not.toHaveTextContent(
       "Invite someone else to pay for this application",
     );
+
+    await user.click(screen.getByText("Continue"));
+    expect(handleSubmit).toHaveBeenCalled();
   });
 });

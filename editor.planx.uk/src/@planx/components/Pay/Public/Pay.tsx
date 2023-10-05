@@ -264,13 +264,13 @@ function Component(props: Props) {
           {...props}
           fee={fee}
           onConfirm={() => {
-            if (state.status === "init") {
+            if (props.hidePay || state.status === "unsupported_team") {
+              // Show "Continue" button to proceed
+              props.handleSubmit({ auto: false });
+            } else if (state.status === "init") {
               startNewPayment();
             } else if (state.status === "retry") {
               resumeExistingPayment();
-            } else if (state.status === "unsupported_team" || props.hidePay) {
-              // Show "Continue" button to proceed
-              props.handleSubmit({ auto: false });
             }
           }}
           buttonTitle={
