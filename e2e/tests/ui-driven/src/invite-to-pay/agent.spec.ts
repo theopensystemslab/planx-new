@@ -52,16 +52,16 @@ test.describe("Agent journey @regression", async () => {
     });
     await expect(toggleInviteToPayButton).toBeVisible();
     await toggleInviteToPayButton.click();
-    const inviteToPayFormHeader = await page.getByText(
+    const inviteToPayFormHeader = page.getByText(
       "Invite someone else to pay for this application",
     );
     await expect(inviteToPayFormHeader).toBeVisible();
 
     await answerInviteToPayForm(page);
-    await page.getByRole("button", { name: "Send invitation to pay" }).click();
-    await page.waitForLoadState("networkidle");
+    page.getByRole("button", { name: "Send invitation to pay" }).click();
+    await page.waitForResponse((res) => res.url().includes("invite-to-pay"));
 
-    const errorMessage = await page.getByText(
+    const errorMessage = page.getByText(
       "Error generating payment request, please try again",
     );
     await expect(errorMessage).toBeHidden();
@@ -73,7 +73,7 @@ test.describe("Agent journey @regression", async () => {
     expect(paymentRequest).toBeDefined();
     expect(paymentRequest).toMatchObject(mockPaymentRequest);
 
-    const successMessage = await page.getByText("Payment invitation sent");
+    const successMessage = page.getByText("Payment invitation sent");
     await expect(successMessage).toBeVisible();
   });
 
@@ -108,7 +108,7 @@ test.describe("Agent journey @regression", async () => {
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
-      await secondPage.getByRole("heading", {
+      secondPage.getByRole("heading", {
         name: "Resume your application",
       }),
     ).toBeVisible();
@@ -116,7 +116,7 @@ test.describe("Agent journey @regression", async () => {
     await secondPage.getByTestId("continue-button").click();
 
     await expect(
-      await secondPage.getByRole("heading", {
+      secondPage.getByRole("heading", {
         name: "Sorry, you can't make changes to this application",
       }),
     ).toBeVisible();
@@ -138,7 +138,7 @@ test.describe("Agent journey @regression", async () => {
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
-      await secondPage.getByRole("heading", {
+      secondPage.getByRole("heading", {
         name: "Resume your application",
       }),
     ).toBeVisible();
@@ -146,14 +146,14 @@ test.describe("Agent journey @regression", async () => {
     await secondPage.getByTestId("continue-button").click();
 
     // Reconciliation ignored
-    const reconciliationText = await secondPage.getByText(
+    const reconciliationText = secondPage.getByText(
       "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
     );
     await expect(reconciliationText).toBeHidden();
 
     // Locked application message displayed
     await expect(
-      await secondPage.getByRole("heading", {
+      secondPage.getByRole("heading", {
         name: "Sorry, you can't make changes to this application",
       }),
     ).toBeVisible();
@@ -180,7 +180,7 @@ test.describe("Agent journey @regression", async () => {
       sessionId,
       adminGQLClient,
     });
-    await expect(paymentRequest).toBeDefined();
+    expect(paymentRequest).toBeDefined();
 
     // Attempt to make payment in tab 2...
     await tab2.getByText("Pay now using GOV.UK Pay").click();
