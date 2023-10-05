@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { flow, updatedQuestionAnswers } from "./flows/sections-flow";
+import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow";
 import {
   contextDefaults,
   setUpTestContext,

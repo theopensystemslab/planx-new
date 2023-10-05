@@ -1,6 +1,6 @@
 import { test, expect, Page, BrowserContext } from "@playwright/test";
 import { addSessionToContext, modifyFlow } from "../helpers";
-import inviteToPayFlow from "../flows/invite-to-pay-flow";
+import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import {
   Context,
   contextDefaults,
