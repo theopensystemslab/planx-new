@@ -18,12 +18,12 @@ let lastAnalyticsLogId: number | undefined = undefined;
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
-  trackNextStepsClick: (metadata?: NextStepsLinkMetadata) => Promise<void>;
+  trackNextStepsLinkClick: (metadata?: NextStepsLinkMetadata) => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
-  trackNextStepsClick: () => Promise.resolve(),
+  trackNextStepsLinkClick: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -104,7 +104,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         createAnalytics,
         trackHelpClick,
-        trackNextStepsClick: trackNextStepsLinkClick,
+        trackNextStepsLinkClick,
         node,
       }}
     >
