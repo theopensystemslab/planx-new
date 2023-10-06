@@ -13,11 +13,18 @@ export const validate =
     next: NextFunction,
   ) => {
     try {
-      schema.parse({
+      const parsedReq = schema.parse({
         params: req.params,
         body: req.body,
         query: req.query,
       });
+
+      // Assign parsed values to the request object
+      // Required for schemas to transform or coerce raw requests
+      req.params = parsedReq.params;
+      req.body = parsedReq.body;
+      req.query = parsedReq.query;
+
       return next();
     } catch (error) {
       console.error(error);

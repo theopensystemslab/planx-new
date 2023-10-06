@@ -4,7 +4,7 @@ import { ScheduledEventResponse } from "../../../../hasura/metadata";
 
 export const createSessionEventSchema = z.object({
   body: z.object({
-    createdAt: z.string().transform((val) => new Date(val)),
+    createdAt: z.string().pipe(z.coerce.date()),
     payload: z.object({
       sessionId: z.string(),
     }),
