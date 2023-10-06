@@ -161,7 +161,8 @@ describe("Confirm component without inviteToPay", () => {
 
   it("displays an error and continue-with-testing button if Pay is not enabled for this team", async () => {
     const handleSubmit = jest.fn();
-    const errorMessage = "No pay token found for this local authority";
+    const errorMessage =
+      "GOV.UK Pay is not enabled for this local authority (testing)";
 
     const { user } = setup(
       <Confirm

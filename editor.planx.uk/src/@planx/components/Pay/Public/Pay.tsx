@@ -43,6 +43,9 @@ enum Action {
   Success,
 }
 
+export const PAY_API_ERROR_UNSUPPORTED_TEAM =
+  "GOV.UK Pay is not enabled for this local authority";
+
 function Component(props: Props) {
   const [
     flowId,
@@ -242,7 +245,11 @@ function Component(props: Props) {
           window.location.replace(payment._links.next_url.href);
       })
       .catch((error) => {
-        if (error.response?.data?.error?.endsWith("local authority")) {
+        if (
+          error.response?.data?.error?.startsWith(
+            PAY_API_ERROR_UNSUPPORTED_TEAM,
+          )
+        ) {
           // Show a custom message if this team isn't set up to use Pay yet
           dispatch(Action.StartNewPaymentError);
         } else {

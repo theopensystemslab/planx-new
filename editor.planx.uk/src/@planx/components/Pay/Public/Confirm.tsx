@@ -15,6 +15,7 @@ import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
+import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
 export interface Props {
   title?: string;
@@ -62,7 +63,7 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
 
   if (props.error) {
-    if (props.error.endsWith("local authority")) {
+    if (props.error.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
       return (
         <Card handleSubmit={props.onConfirm} isValid>
           <ErrorSummary role="status" data-testid="error-summary">
