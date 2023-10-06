@@ -34,6 +34,7 @@ type ComponentState =
   | { status: "undefined_fee" };
 
 enum Action {
+  NoFeeFound,
   NoPaymentFound,
   IncompletePaymentFound,
   IncompletePaymentConfirmed,
@@ -71,12 +72,10 @@ function Component(props: Props) {
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {
     switch (action) {
+      case Action.NoFeeFound:
+        return { status: "undefined_fee" };
       case Action.NoPaymentFound:
-        if (isNaN(fee)) {
-          return { status: "undefined_fee" };
-        } else {
-          return { status: "init" };
-        }
+        return { status: "init" };
       case Action.IncompletePaymentFound:
         return {
           status: "fetching_payment",
@@ -116,8 +115,9 @@ function Component(props: Props) {
 
     // If props.fn is undefined, display & log an error
     if (isNaN(fee)) {
-      dispatch(Action.NoPaymentFound);
+      dispatch(Action.NoFeeFound);
       logger.notify(`Unable to calculate fee for session ${sessionId}`);
+      return;
     }
 
     if (!govUkPayment) {

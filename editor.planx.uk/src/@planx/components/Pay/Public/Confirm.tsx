@@ -194,7 +194,9 @@ export default function Confirm(props: Props) {
                 className="marginBottom"
                 component="span"
               >
-                {formattedPriceWithCurrencySymbol(props.fee)}
+                {isNaN(props.fee)
+                  ? "Unknown"
+                  : formattedPriceWithCurrencySymbol(props.fee)}
               </Typography>
               <Typography variant="subtitle1" component="span" color="inherit">
                 <ReactMarkdownOrHtml
