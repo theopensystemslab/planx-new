@@ -21,6 +21,7 @@ import standaloneView from "./views/standalone";
 
 const payRoutes = compose(
   withData(async (req) => {
+    console.log("inside pay withData");
     try {
       const externalDomainTeam = await getTeamFromDomain(
         window.location.hostname,
@@ -46,6 +47,7 @@ const payRoutes = compose(
 
   mount({
     "/": route(async (req) => {
+      console.log("inside pay mount");
       const paymentRequest = await getPaymentRequest(req);
       if (!paymentRequest) {
         return {

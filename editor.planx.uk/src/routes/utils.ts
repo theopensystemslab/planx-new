@@ -90,6 +90,7 @@ export const getTeamFromDomain = pMemoize(async (domain: string) => {
  * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow/preview
  */
 export const validateTeamRoute = async (req: NaviRequest) => {
+  console.log("inside ValidateTeamRoute");
   const externalTeamName = await getTeamFromDomain(window.location.hostname);
   if (
     req.params.team &&

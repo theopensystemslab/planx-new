@@ -1,4 +1,3 @@
-import { logger } from "airbrake";
 import { lazy, map, mount, redirect, route } from "navi";
 import * as React from "react";
 
@@ -57,28 +56,25 @@ const editorRoutes = mount({
   ),
 });
 
-const mountPayRoutes = () =>
-  map(async () => {
-    try {
-      return lazy(() => import("./pay"));
-    } catch (error) {
-      console.log("ERROR MOUNTING PAY ROUTES");
-      logger.notify(error);
-      throw Error(`error in pay mount: ${error}`);
-    }
-  });
+const tryImport = () => {
+  try {
+    return lazy(() => import("./pay"));
+  } catch (error) {
+    throw Error(`ERROR MOUNTING PAY ROUTES (LAZY): ${error}`);
+  }
+};
 
 export default isPreviewOnlyDomain
   ? mount({
       "/:team/:flow/preview": lazy(() => import("./preview")), // XXX: keeps old URL working, but only for the team listed in the domain.
       "/:flow": lazy(() => import("./preview")),
-      "/:flow/pay": mountPayRoutes(),
+      "/:flow/pay": tryImport(),
       // XXX: We're not sure where to redirect `/` to so for now we'll just return the default 404
       // "/": redirect("somewhere?"),
     })
   : mount({
       "/:team/:flow/preview": lazy(() => import("./preview")), // loads published flow if exists, or current flow
       "/:team/:flow/unpublished": lazy(() => import("./unpublished")), // loads current flow
-      "/:team/:flow/pay": mountPayRoutes(),
+      "/:team/:flow/pay": tryImport(),
       "*": editorRoutes,
     });
