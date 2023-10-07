@@ -14,7 +14,7 @@ let cached: { flowSlug?: string; teamSlug?: string } = {
 };
 
 const routes = compose(
-  withView(teamView),
+  withView(async (req) => await teamView(req)),
 
   mount({
     "/": route(() => ({

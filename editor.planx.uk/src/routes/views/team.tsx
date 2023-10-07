@@ -1,3 +1,4 @@
+import { logger } from "airbrake";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -9,17 +10,22 @@ import { getTeamFromDomain } from "routes/utils";
  * Initialises TeamStore if not already set
  */
 export const teamView = async (req: NaviRequest) => {
-  const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
-  const routeSlug =
-    req.params.team || (await getTeamFromDomain(window.location.hostname));
+  try {
+    const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
+    const routeSlug =
+      req.params.team || (await getTeamFromDomain(window.location.hostname));
 
-  if (currentSlug !== routeSlug) {
-    try {
-      await initTeamStore(routeSlug);
-    } catch (error) {
-      throw new NotFoundError(`Team not found: ${error}`);
+    if (currentSlug !== routeSlug) {
+      try {
+        await initTeamStore(routeSlug);
+      } catch (error) {
+        throw new NotFoundError(`Team not found: ${error}`);
+      }
     }
-  }
 
-  return <View />;
+    return <View />;
+  } catch (error) {
+    console.error("ERROR WITHIN TEAM VIEW: ", error);
+    logger.notify(error);
+  }
 };

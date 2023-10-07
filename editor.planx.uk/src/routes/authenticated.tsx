@@ -10,7 +10,7 @@ import { makeTitle } from "./utils";
 import { authenticatedView } from "./views/authenticated";
 
 const editorRoutes = compose(
-  withView(authenticatedView),
+  withView(async () => await authenticatedView()),
 
   mount({
     "/": route(async () => {
