@@ -1,3 +1,4 @@
+import { logger } from "airbrake";
 import gql from "graphql-tag";
 import { publicClient } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
@@ -19,27 +20,34 @@ interface StandaloneViewData {
  * Fetches all necessary data, and sets up layout for a standalone page
  */
 const standaloneView = async (req: NaviRequest) => {
-  const flowSlug = req.params.flow.split(",")[0];
-  const teamSlug =
-    req.params.team || (await getTeamFromDomain(window.location.hostname));
-  const data = await fetchDataForStandaloneView(flowSlug, teamSlug);
+  try {
+    const flowSlug = req.params.flow.split(",")[0];
+    const teamSlug =
+      req.params.team || (await getTeamFromDomain(window.location.hostname));
+    const data = await fetchDataForStandaloneView(flowSlug, teamSlug);
+    if (!data) return;
 
-  const {
-    flows: [{ team, settings: flowSettings }],
-    globalSettings,
-  } = data;
+    // ERROR HERE
+    const {
+      flows: [{ team, settings: flowSettings }],
+      globalSettings,
+    } = data;
 
-  const state = useStore.getState();
-  state.setFlowNameFromSlug(flowSlug);
-  state.setGlobalSettings(globalSettings[0]);
-  state.setFlowSettings(flowSettings);
-  state.setTeam(team);
+    const state = useStore.getState();
+    state.setFlowNameFromSlug(flowSlug);
+    state.setGlobalSettings(globalSettings[0]);
+    state.setFlowSettings(flowSettings);
+    state.setTeam(team);
 
-  return (
-    <PublicLayout>
-      <View />
-    </PublicLayout>
-  );
+    return (
+      <PublicLayout>
+        <View />
+      </PublicLayout>
+    );
+  } catch (error) {
+    console.log("ERROR IN STANDALONE VIEW: ", error);
+    logger.notify(error);
+  }
 };
 
 const fetchDataForStandaloneView = async (

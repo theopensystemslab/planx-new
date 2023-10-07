@@ -1,3 +1,4 @@
+import { logger } from "airbrake";
 import { lazy, map, mount, redirect, route } from "navi";
 import * as React from "react";
 
@@ -58,7 +59,13 @@ const editorRoutes = mount({
 
 const mountPayRoutes = () =>
   map(async () => {
-    return lazy(() => import("./pay"));
+    try {
+      return lazy(() => import("./pay"));
+    } catch (error) {
+      console.log("ERROR MOUNTING PAY ROUTES");
+      logger.notify(error);
+      throw Error(`error in pay mount: ${error}`);
+    }
   });
 
 export default isPreviewOnlyDomain

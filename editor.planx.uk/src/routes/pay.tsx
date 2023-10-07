@@ -21,19 +21,27 @@ import standaloneView from "./views/standalone";
 
 const payRoutes = compose(
   withData(async (req) => {
-    const externalDomainTeam = await getTeamFromDomain(
-      window.location.hostname,
-    );
+    try {
+      const externalDomainTeam = await getTeamFromDomain(
+        window.location.hostname,
+      );
 
-    return {
-      mountpath: req.mountpath,
-      isPreviewOnlyDomain: Boolean(externalDomainTeam),
-    };
+      return {
+        mountpath: req.mountpath,
+        isPreviewOnlyDomain: Boolean(externalDomainTeam),
+      };
+    } catch (error) {
+      throw Error(`ERROR IN PAY WITHDATA: ${error}`);
+    }
   }),
 
   withView(async (req) => {
-    await validateTeamRoute(req);
-    return await standaloneView(req);
+    try {
+      await validateTeamRoute(req);
+      return await standaloneView(req);
+    } catch (error) {
+      throw Error(`ERROR IN PAY WITHVIEW: ${error}`);
+    }
   }),
 
   mount({
