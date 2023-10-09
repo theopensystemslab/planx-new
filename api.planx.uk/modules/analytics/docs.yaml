@@ -1,0 +1,25 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: analytics
+paths:
+  /analytics/log-user-exit:
+    post:
+      summary: Log user exit
+      description: Capture an analytic event which represents a user exiting a service
+      tags:
+        - analytics
+      responses:
+        "204":
+          description: Successful response - no awaited response from server
+  /analytics/log-user-resume:
+    post:
+      summary: Log user resume
+      description: Capture an analytic event which represents a user resuming a service
+      tags:
+        - analytics
+      responses:
+        "204":
+          description: Successful response - no awaited response from server
