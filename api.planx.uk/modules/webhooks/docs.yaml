@@ -29,8 +29,8 @@ components:
                     new:
                       type: object
                       properties:
-                        payload:
-                          $ref: "#/components/schemas/Payload"
+                        session_id:
+                          type: string
                         bops_id:
                           type: string
                         destination_url:
