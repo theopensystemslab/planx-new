@@ -484,7 +484,6 @@ const EditorToolbar: React.FC<{
                     ? `All teams`
                     : user.teams
                         .map((team) => team.team.name)
-                        .concat(["Templates"])
                         .join(", ")}
                 </ListItemText>
               </MenuItem>
