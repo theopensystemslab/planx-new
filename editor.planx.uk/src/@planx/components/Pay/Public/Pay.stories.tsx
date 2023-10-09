@@ -56,3 +56,17 @@ export const WithInviteToPay = {
     yourDetailsLabel: "Your name or organisation name",
   },
 } satisfies Story;
+
+export const ForInformationOnly = {
+  args: {
+    title: "What you can expect to pay for your application",
+    bannerTitle: "The calculated fee is",
+    description:
+      "Based on your answers so far, this is the fee that we've calculated. The fee will cover the cost of processing your application.",
+    instructionsTitle: "How to pay",
+    instructionsDescription:
+      "Payments will be accepted for your future application via GOV.UK Pay. You will have the option to pay yourself or invite someone else to pay.",
+    fee: 103,
+    hidePay: true,
+  },
+} satisfies Story;

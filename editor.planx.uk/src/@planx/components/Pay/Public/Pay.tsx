@@ -30,9 +30,11 @@ type ComponentState =
   | { status: "fetching_payment"; displayText?: string }
   | { status: "retry" }
   | { status: "success"; displayText?: string }
-  | { status: "unsupported_team" };
+  | { status: "unsupported_team" }
+  | { status: "undefined_fee" };
 
 enum Action {
+  NoFeeFound,
   NoPaymentFound,
   IncompletePaymentFound,
   IncompletePaymentConfirmed,
@@ -41,6 +43,9 @@ enum Action {
   ResumePayment,
   Success,
 }
+
+export const PAY_API_ERROR_UNSUPPORTED_TEAM =
+  "GOV.UK Pay is not enabled for this local authority";
 
 function Component(props: Props) {
   const [
@@ -67,6 +72,8 @@ function Component(props: Props) {
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {
     switch (action) {
+      case Action.NoFeeFound:
+        return { status: "undefined_fee" };
       case Action.NoPaymentFound:
         return { status: "init" };
       case Action.IncompletePaymentFound:
@@ -101,9 +108,16 @@ function Component(props: Props) {
   const handleError = useErrorHandler();
 
   useEffect(() => {
-    if (isNaN(fee) || fee <= 0) {
-      // skip the pay component because there's no fee to charge
+    // Auto-skip component when fee=0
+    if (fee <= 0) {
       return props.handleSubmit({ auto: true });
+    }
+
+    // If props.fn is undefined, display & log an error
+    if (isNaN(fee)) {
+      dispatch(Action.NoFeeFound);
+      logger.notify(`Unable to calculate fee for session ${sessionId}`);
+      return;
     }
 
     if (!govUkPayment) {
@@ -231,7 +245,11 @@ function Component(props: Props) {
           window.location.replace(payment._links.next_url.href);
       })
       .catch((error) => {
-        if (error.response?.data?.error?.endsWith("local authority")) {
+        if (
+          error.response?.data?.error?.startsWith(
+            PAY_API_ERROR_UNSUPPORTED_TEAM,
+          )
+        ) {
           // Show a custom message if this team isn't set up to use Pay yet
           dispatch(Action.StartNewPaymentError);
         } else {
@@ -247,18 +265,19 @@ function Component(props: Props) {
     <>
       {state.status === "init" ||
       state.status === "retry" ||
-      state.status === "unsupported_team" ? (
+      state.status === "unsupported_team" ||
+      state.status === "undefined_fee" ? (
         <Confirm
           {...props}
           fee={fee}
           onConfirm={() => {
-            if (state.status === "init") {
+            if (props.hidePay || state.status === "unsupported_team") {
+              // Show "Continue" button to proceed
+              props.handleSubmit({ auto: false });
+            } else if (state.status === "init") {
               startNewPayment();
             } else if (state.status === "retry") {
               resumeExistingPayment();
-            } else if (state.status === "unsupported_team") {
-              // Allow "Continue" button to skip Pay
-              props.handleSubmit({ auto: true });
             }
           }}
           buttonTitle={
@@ -267,14 +286,19 @@ function Component(props: Props) {
               : "Retry payment"
           }
           error={
-            state.status === "unsupported_team"
-              ? "GOV.UK Pay is not enabled for this local authority"
-              : undefined
+            (state.status === "unsupported_team" &&
+              "GOV.UK Pay is not enabled for this local authority") ||
+            (state.status === "undefined_fee" &&
+              "We are unable to calculate your fee right now") ||
+            undefined
           }
           showInviteToPay={
-            props.allowInviteToPay && state.status !== "unsupported_team"
+            props.allowInviteToPay &&
+            !props.hidePay &&
+            state.status !== "unsupported_team"
           }
           paymentStatus={govUkPayment?.state?.status}
+          hidePay={props.hidePay}
         />
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />

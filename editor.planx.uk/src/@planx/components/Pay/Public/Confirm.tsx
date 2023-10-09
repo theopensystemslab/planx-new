@@ -15,6 +15,7 @@ import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
+import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
 export interface Props {
   title?: string;
@@ -35,6 +36,7 @@ export interface Props {
   onConfirm: () => void;
   error?: string;
   hideFeeBanner?: boolean;
+  hidePay?: boolean;
 }
 
 interface PayBodyProps extends Props {
@@ -60,53 +62,9 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
   const path = useStore((state) => state.path);
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
 
-  return (
-    <>
-      {!props.error ? (
-        <Card>
-          <PayText>
-            <Typography
-              variant="h2"
-              component={props.hideFeeBanner ? "h2" : "h3"}
-            >
-              {props.instructionsTitle || "How to pay"}
-            </Typography>
-            <ReactMarkdownOrHtml
-              source={
-                props.instructionsDescription ||
-                `<p>You can pay for your application by using GOV.UK Pay.</p>\
-                  <p>Your application will be sent after you have paid the fee. \
-                  Wait until you see an application sent message before closing your browser.</p>`
-              }
-              openLinksOnNewTab
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              onClick={props.onConfirm}
-            >
-              {props.buttonTitle || "Pay now using GOV.UK Pay"}
-            </Button>
-            {props.showInviteToPay && (
-              <>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  style={{ borderBottom: `solid 2px lightgrey` }}
-                  size="large"
-                  onClick={props.changePage}
-                  disabled={Boolean(props?.paymentStatus)}
-                  data-testid="invite-page-link"
-                >
-                  {"Invite someone else to pay for this application"}
-                </Button>
-              </>
-            )}
-            {isSaveReturn && <SaveResumeButton />}
-          </PayText>
-        </Card>
-      ) : (
+  if (props.error) {
+    if (props.error.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
+      return (
         <Card handleSubmit={props.onConfirm} isValid>
           <ErrorSummary role="status" data-testid="error-summary">
             <Typography variant="h4" component="h3" gutterBottom>
@@ -118,8 +76,68 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
             </Typography>
           </ErrorSummary>
         </Card>
-      )}
-    </>
+      );
+    } else {
+      return (
+        <Card>
+          <ErrorSummary role="status" data-testid="error-summary">
+            <Typography variant="h4" component="h3" gutterBottom>
+              {props.error}
+            </Typography>
+            <Typography variant="body2">
+              This error has been logged and our team will see it soon. You can
+              safely close this tab and try resuming again soon by returning to
+              this URL.
+            </Typography>
+          </ErrorSummary>
+        </Card>
+      );
+    }
+  }
+
+  return (
+    <Card>
+      <PayText>
+        <Typography variant="h2" component={props.hideFeeBanner ? "h2" : "h3"}>
+          {props.instructionsTitle || "How to pay"}
+        </Typography>
+        <ReactMarkdownOrHtml
+          source={
+            props.instructionsDescription ||
+            `<p>You can pay for your application by using GOV.UK Pay.</p>\
+                  <p>Your application will be sent after you have paid the fee. \
+                  Wait until you see an application sent message before closing your browser.</p>`
+          }
+          openLinksOnNewTab
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={props.onConfirm}
+        >
+          {props.hidePay
+            ? "Continue"
+            : props.buttonTitle || "Pay now using GOV.UK Pay"}
+        </Button>
+        {!props.hidePay && props.showInviteToPay && (
+          <>
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ borderBottom: `solid 2px lightgrey` }}
+              size="large"
+              onClick={props.changePage}
+              disabled={Boolean(props?.paymentStatus)}
+              data-testid="invite-page-link"
+            >
+              {"Invite someone else to pay for this application"}
+            </Button>
+          </>
+        )}
+        {isSaveReturn && <SaveResumeButton />}
+      </PayText>
+    </Card>
   );
 };
 
@@ -176,7 +194,9 @@ export default function Confirm(props: Props) {
                 className="marginBottom"
                 component="span"
               >
-                {formattedPriceWithCurrencySymbol(props.fee)}
+                {isNaN(props.fee)
+                  ? "Unknown"
+                  : formattedPriceWithCurrencySymbol(props.fee)}
               </Typography>
               <Typography variant="subtitle1" component="span" color="inherit">
                 <ReactMarkdownOrHtml
