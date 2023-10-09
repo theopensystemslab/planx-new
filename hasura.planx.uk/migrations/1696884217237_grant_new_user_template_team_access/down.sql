@@ -1,0 +1,2 @@
+DROP FUNCTION IF EXISTS grant_new_user_template_team_access;
+DROP TRIGGER grant_new_user_template_team_access on users;
