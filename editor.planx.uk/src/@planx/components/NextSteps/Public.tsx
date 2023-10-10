@@ -10,8 +10,6 @@ import { NextSteps } from "./model";
 export type Props = PublicProps<NextSteps>;
 
 const NextStepsComponent: React.FC<Props> = (props) => {
-
-
   return (
     <Card>
       <QuestionHeader
