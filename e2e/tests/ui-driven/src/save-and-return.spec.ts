@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import {
   simpleSendFlow,
   modifiedSimpleSendFlow,
-} from "./flows/save-and-return-flows";
+} from "./mocks/flows/save-and-return-flows";
 import {
   contextDefaults,
   setUpTestContext,

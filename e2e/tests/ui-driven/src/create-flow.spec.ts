@@ -91,6 +91,66 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
   });
 
+  test("user data persists on page refresh @regression", async ({
+    browser,
+  }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    let getUserRequestCount = 0;
+    page.on("request", (req) => {
+      const isHasuraRequest = req.url().includes("/graphql");
+      const isGetUserRequest =
+        isHasuraRequest && req.postData()?.toString().includes("GetUserById");
+
+      if (isGetUserRequest) getUserRequestCount++;
+    });
+
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    // Get user data on initial page load
+    expect(getUserRequestCount).toBe(1);
+
+    const team = page.locator("h2", { hasText: context.team.name });
+    team.click();
+    await page.waitForLoadState("networkidle");
+
+    // User data not refetched on navigation to a new page
+    expect(getUserRequestCount).toBe(1);
+
+    // User data is refetched when page reloaded
+    await page.reload();
+    await page.waitForLoadState("networkidle");
+    expect(getUserRequestCount).toBe(2);
+  });
+
+  test("team data persists on page refresh @regression", async ({
+    browser,
+  }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    await page.goto("/");
+    const team = page.locator("h2", { hasText: context.team.name });
+    await team.click();
+
+    const teamSlugInHeader = page.getByRole("link", {
+      name: context.team.slug,
+    });
+    await expect(teamSlugInHeader).toBeVisible();
+
+    await page.reload();
+    await expect(teamSlugInHeader).toBeVisible();
+
+    await page.goBack();
+    await expect(teamSlugInHeader).toBeHidden();
+  });
+
   test("Preview a created flow", async ({ browser }: { browser: Browser }) => {
     const page = await createAuthenticatedSession({
       browser,

@@ -7,7 +7,7 @@ import {
   waitForPaymentResponse,
 } from "./helpers";
 import type { Page } from "@playwright/test";
-import payFlow from "./flows/pay-flow.json";
+import payFlow from "./mocks/flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";
 import type { SessionData } from "@opensystemslab/planx-core/types";
 import type { Context } from "./context";

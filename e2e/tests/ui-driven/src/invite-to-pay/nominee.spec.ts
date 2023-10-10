@@ -1,7 +1,7 @@
 import { test, expect, Page, APIRequestContext } from "@playwright/test";
 import { v4 as uuidV4 } from "uuid";
 import { fillGovUkCardDetails, cards } from "../helpers";
-import inviteToPayFlow from "../flows/invite-to-pay-flow";
+import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import {
   Context,
   contextDefaults,
@@ -47,7 +47,7 @@ test.describe("Nominee journey @regression", async () => {
     await navigateToPaymentRequestPage(paymentRequest, page);
 
     await expect(
-      await page.getByRole("heading", { name: "Pay for your application" }),
+      page.getByRole("heading", { name: "Pay for your application" }),
     ).toBeVisible();
     await expect(
       page.locator("#main-content").getByText("Invite to pay test"),
@@ -58,7 +58,7 @@ test.describe("Nominee journey @regression", async () => {
       "Alteration of internal walls and addition or alteration of a deck";
     await expect(page.getByText(formattedProjectType)).toBeVisible();
 
-    const payButton = await page.getByRole("button", {
+    const payButton = page.getByRole("button", {
       name: "Pay using GOV.UK Pay",
     });
     await expect(payButton).toBeVisible();
@@ -70,9 +70,6 @@ test.describe("Nominee journey @regression", async () => {
     });
     await page.getByRole("button", { name: "Confirm payment" }).click();
     await page.waitForURL("**/invite-to-pay-test/**");
-
-    // Wait for GovPay re-request to update paymentRequest status
-    await page.waitForLoadState("networkidle");
 
     await expect(page.getByText("Payment received")).toBeVisible();
     const updatedPaymentRequest = await getPaymentRequestBySessionId({
