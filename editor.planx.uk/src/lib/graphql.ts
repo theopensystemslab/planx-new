@@ -4,9 +4,12 @@ import {
   DefaultContext,
   from,
   InMemoryCache,
+  Operation,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
+import { logger } from "airbrake";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 
 import { getCookie } from "./cookie";
@@ -45,14 +48,40 @@ const publicHttpLink = createHttpLink({
   headers: { "x-hasura-role": "public" },
 });
 
-const errorLink = onError(({ graphQLErrors }) => {
+const handlePermissionErrors = (message: string, operation: Operation) => {
+  const permissionErrors = [
+    // Constraints error - user does not have access to this resource
+    /permission has failed/gi,
+    // Query or mutation error - user does not have access to this query
+    /not found in type/gi,
+  ];
+
+  const isPermissionError = permissionErrors.some((re) => re.test(message));
+
+  if (isPermissionError) {
+    const user = useStore.getState().getUser();
+    const team = useStore.getState().teamName;
+    logger.notify(
+      `[Permission error]: User ${user?.id} cannot execute ${operation.operationName} for ${team}`,
+    );
+
+    toast.error("Permission error", {
+      toastId: "permission_error",
+      hideProgressBar: true,
+      progress: undefined,
+    });
+  }
+};
+
+const errorLink = onError(({ graphQLErrors, operation }) => {
   if (graphQLErrors) {
     // GraphQL errors are not retried
-    graphQLErrors.map(({ message, locations, path }) =>
+    graphQLErrors.forEach(({ message, locations, path }) => {
       console.error(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-      ),
-    );
+      );
+      handlePermissionErrors(message, operation);
+    });
   } else {
     toast.error("Network error, attempting to reconnect…", {
       toastId,
