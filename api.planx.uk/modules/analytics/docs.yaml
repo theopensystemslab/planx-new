@@ -4,6 +4,10 @@ info:
   version: 0.1.0
 tags:
   - name: analytics
+components:
+  responses:
+    AnalyticsResponse:
+      description: Successful response with no content. Not awaited from server as endpoint is called via the Beacon API
 paths:
   /analytics/log-user-exit:
     post:
@@ -13,7 +17,7 @@ paths:
         - analytics
       responses:
         "204":
-          description: Successful response - no awaited response from server
+          $ref: "#/components/responses/AnalyticsResponse"
   /analytics/log-user-resume:
     post:
       summary: Log user resume
@@ -22,4 +26,4 @@ paths:
         - analytics
       responses:
         "204":
-          description: Successful response - no awaited response from server
+          $ref: "#/components/responses/AnalyticsResponse"
