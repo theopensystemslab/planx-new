@@ -59,4 +59,19 @@ describe("team_members", () => {
       expect(i).toHaveNoMutationsFor("team_members");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("cannot query teams members", () => {
+      expect(i.queries).not.toContain("team_members");
+    });
+
+    test("cannot create, update, or delete team_members", () => {
+      expect(i).toHaveNoMutationsFor("team_members");
+    });
+  });
 });

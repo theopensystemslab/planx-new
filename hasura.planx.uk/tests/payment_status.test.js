@@ -66,4 +66,24 @@ describe("payment_status", () => {
       expect(i).toHaveNoMutationsFor("payment_status");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("cannot query payment_status", () => {
+      expect(i.queries).not.toContain("payment_status");
+    })
+
+    test("can insert payment_status", () => {
+      expect(i.mutations).toContain("insert_payment_status");
+    });
+
+    test("cannot delete or update payment_status", () => {
+      expect(i.mutations).not.toContain("update_payment_status");
+      expect(i.mutations).not.toContain("delete_payment_status");
+    })
+  });
 });

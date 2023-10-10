@@ -60,4 +60,22 @@ describe("email_applications", () => {
       expect(i).toHaveNoMutationsFor("email_applications");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("has full access to query and mutate email applications", () => {
+      expect(i.queries).toContain("email_applications");
+      expect(i.mutations).toContain("insert_email_applications");
+      expect(i.mutations).toContain("insert_email_applications_one");
+      expect(i.mutations).toContain("update_email_applications_by_pk");
+    });
+
+    test("cannot delete email applications", () => {
+      expect(i.mutations).not.toContain("delete_email_applications");
+    });
+  });
 });
