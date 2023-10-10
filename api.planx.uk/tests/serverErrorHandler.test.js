@@ -30,20 +30,6 @@ describe("bad requests", () => {
     await get("/pay/wrong/1").expect(400);
   });
 
-  test(`app.get("/hasura")`, async () => {
-    await get("/hasura").expect(500);
-  });
-
-  test(`app.get("/me")`, async () => {
-    await get("/me")
-      .expect(401)
-      .then((response) => {
-        expect(response.body).toEqual({
-          error: "No authorization token was found",
-        });
-      });
-  });
-
   test(`app.get("/gis")`, async () => {
     await get("/gis").expect(400);
   });
@@ -56,10 +42,6 @@ describe("bad requests", () => {
           error: "wrong is not a supported local authority",
         });
       });
-  });
-
-  test(`app.get("/throw-error")`, async () => {
-    await get("/throw-error").expect(500);
   });
 
   test(`app.post("/flows/:flowId/publish")`, async () => {

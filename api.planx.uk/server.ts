@@ -190,21 +190,6 @@ app.use("/webhooks", webhookRoutes);
 
 app.use("/gis", router);
 
-app.get("/hasura", async function (_req, res, next) {
-  try {
-    const data = await adminClient.request(gql`
-      query GetTeams {
-        teams {
-          id
-        }
-      }
-    `);
-    res.json(data);
-  } catch (err) {
-    next(err);
-  }
-});
-
 app.get("/gis", (_req, _res, next) => {
   next({
     status: 400,
@@ -226,12 +211,6 @@ app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
 app.get("/admin/session/:sessionId/zip", generateZip);
 app.get("/admin/session/:sessionId/summary", getSessionSummary);
-
-// XXX: leaving this in temporarily as a testing endpoint to ensure it
-//      works correctly in staging and production
-app.get("/throw-error", () => {
-  throw new Error("custom error");
-});
 
 app.post("/flows/:flowId/copy", useTeamEditorAuth, copyFlow);
 
@@ -447,14 +426,6 @@ app.post("/validate-session", validateSession);
 app.post("/invite-to-pay/:sessionId", inviteToPay);
 
 app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
-
-app.get("/error", async (res, req, next) => {
-  try {
-    throw Error("This is a test error");
-  } catch (error) {
-    next(error);
-  }
-});
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
