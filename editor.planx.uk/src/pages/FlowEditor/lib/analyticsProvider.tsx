@@ -10,15 +10,14 @@ export type AnalyticsType = "init" | "resume";
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 export type HelpClickMetadata = Record<string, string>;
-export type NextStepsLinkMetadata = Record<string, string>;
-export type TrackNextStepsLinkClick = (metadata: NextStepsLinkMetadata) => void;
+export type SelectedUrlsMetadata = Record<'selectedUrls', string[]>;
 
 let lastAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
-  trackNextStepsLinkClick: (metadata?: NextStepsLinkMetadata) => Promise<void>;
+  trackNextStepsLinkClick: (metadata?: SelectedUrlsMetadata) => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
@@ -176,7 +175,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  async function trackNextStepsLinkClick(metadata?: NextStepsLinkMetadata) {
+  async function trackNextStepsLinkClick(metadata?: SelectedUrlsMetadata) {
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
