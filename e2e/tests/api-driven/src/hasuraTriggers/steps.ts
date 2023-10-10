@@ -22,6 +22,16 @@ Given("the Templates team exists", async function (this) {
   this.templatesTeamId = templatesTeamId;
 });
 
+Given("the Templates team does not exist", async function (this) {
+  const templatesTeam = await $admin.team.getBySlug("templates");
+
+  assert.equal(
+    templatesTeam,
+    undefined,
+    "Templates team exists but should not be defined",
+  );
+});
+
 When<CustomWorld>("a new user is added", async function (this) {
   const userId = await createUser();
   const user = await $admin.user.getById(userId);

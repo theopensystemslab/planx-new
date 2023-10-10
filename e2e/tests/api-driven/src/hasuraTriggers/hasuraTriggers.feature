@@ -9,5 +9,6 @@ Feature: Database triggers
 
   @regression @add-user-trigger
   Scenario: Adding a user to Planx - without Templates team
+    Given the Templates team does not exist
     When a new user is added
     Then they are not granted access to the Templates team
