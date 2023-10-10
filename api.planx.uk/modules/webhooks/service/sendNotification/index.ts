@@ -45,7 +45,7 @@ const getMessageForEventType = (data: EventData, type: EventType) => {
 
 const getSessionIdFromEvent = (data: EventData, type: EventType) =>
   ({
-    "bops-submission": (data as BOPSEventData).payload?.sessionId,
+    "bops-submission": (data as BOPSEventData).session_id,
     "uniform-submission": (data as UniformEventData).payload?.sessionId,
     "email-submission": (data as EmailEventData).session_id,
   })[type];

@@ -112,7 +112,7 @@ describe("Send Slack notifications endpoint", () => {
       event: {
         data: {
           new: {
-            payload: { sessionId: "xyz123" },
+            session_id: "xyz123",
             bops_id: "abc123",
             destination_url: "https://www.bops-production.com",
           },

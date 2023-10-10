@@ -1,15 +1,11 @@
 import { z } from "zod";
 
-const payload = z.object({
-  sessionId: z.string(),
-});
-
 export const bopsSubmissionSchema = z.object({
   body: z.object({
     event: z.object({
       data: z.object({
         new: z.object({
-          payload,
+          session_id: z.string(),
           bops_id: z.string(),
           destination_url: z.string(),
         }),
@@ -26,7 +22,9 @@ export const uniformSubmissionSchema = z.object({
     event: z.object({
       data: z.object({
         new: z.object({
-          payload,
+          payload: z.object({
+            sessionId: z.string(),
+          }),
           submission_reference: z.string(),
           response: z.object({
             organisation: z.string(),
