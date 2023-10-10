@@ -5,8 +5,9 @@ import Link from "@mui/material/Link";
 import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Step as StyledListItem } from "@planx/components/NextSteps/model";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { handleSubmit } from "pages/Preview/Node";
-import React from "react";
+import React, { useState } from "react";
 
 interface NextStepsListProps {
   steps: StyledListItem[];
@@ -15,6 +16,7 @@ interface NextStepsListProps {
 
 interface ListItemProps extends StyledListItem {
   handleSubmit?: handleSubmit;
+  handleSelectingUrl?: (url: string) => void;
 }
 
 const Root = styled("ul")(({ theme }) => ({
@@ -72,11 +74,18 @@ const ArrowButton = styled("span")(({ theme }) => ({
   flexShrink: "0",
 }));
 
-const LinkStep = (props: ListItemProps) => (
-  <InnerLink href={props.url} target="_blank" rel="noopener">
-    <Step {...props} />
-  </InnerLink>
-);
+function LinkStep(props: ListItemProps) {
+  return (
+    <InnerLink
+      href={props.url}
+      target="_blank"
+      rel="noopener"
+      onClick={() => props.handleSelectingUrl && props.url && props.handleSelectingUrl(props.url)}
+    >
+      <Step {...props} />
+    </InnerLink>
+  );
+}
 
 const ContinueStep = (props: ListItemProps) => (
   <InnerButton onClick={() => props.handleSubmit && props.handleSubmit()}>
@@ -109,12 +118,20 @@ const Step = ({ title, description, url }: ListItemProps) => (
 );
 
 function NextStepsList(props: NextStepsListProps) {
+  const [selectedUrls, setSelectedUrls] = useState<string[]>([]);
+  const { trackNextStepsLinkClick } = useAnalyticsTracking()
+
+  const handleSelectingUrl = (newUrl: string) => {
+    setSelectedUrls(prevSelectedUrls => [...prevSelectedUrls, newUrl]);
+    trackNextStepsLinkClick({'selectedUrls': [...selectedUrls, newUrl]})
+  }
+
   return (
     <Root>
       {props.steps?.map((step, i) => (
         <StyledListItem key={i}>
           {step.url ? (
-            <LinkStep {...step} />
+            <LinkStep {...step} handleSelectingUrl={handleSelectingUrl}/>
           ) : (
             <ContinueStep {...step} handleSubmit={props.handleSubmit} />
           )}

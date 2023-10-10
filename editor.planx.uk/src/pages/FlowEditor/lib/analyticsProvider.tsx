@@ -10,16 +10,19 @@ export type AnalyticsType = "init" | "resume";
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 export type HelpClickMetadata = Record<string, string>;
+export type SelectedUrlsMetadata = Record<'selectedUrls', string[]>;
 
 let lastAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
+  trackNextStepsLinkClick: (metadata?: SelectedUrlsMetadata) => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
+  trackNextStepsLinkClick: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -100,6 +103,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         createAnalytics,
         trackHelpClick,
+        trackNextStepsLinkClick,
         node,
       }}
     >
@@ -157,6 +161,30 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
             update_analytics_logs_by_pk(
               pk_columns: { id: $id }
               _set: { has_clicked_help: true }
+              _append: { metadata: $metadata }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: lastAnalyticsLogId,
+          metadata,
+        },
+      });
+    }
+  }
+
+  async function trackNextStepsLinkClick(metadata?: SelectedUrlsMetadata) {
+    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+      await publicClient.mutate({
+        mutation: gql`
+          mutation UpdateHasClickNextStepsLink(
+            $id: bigint!
+            $metadata: jsonb = {}
+          ) {
+            update_analytics_logs_by_pk(
+              pk_columns: { id: $id }
               _append: { metadata: $metadata }
             ) {
               id
