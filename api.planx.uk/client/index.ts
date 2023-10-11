@@ -1,6 +1,7 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { userContext } from "../modules/auth/middleware";
 import { ServerError } from "../errors";
+import { buildJWTForAPIRole } from "../modules/auth/service";
 
 /**
  * @deprecated This client's permissions set are higher than required.
@@ -14,6 +15,19 @@ export const $admin = new CoreDomainClient({
   targetURL: process.env.HASURA_GRAPHQL_URL!,
 });
 
+/**
+ * Connects to Hasura using the "api" role
+ */
+export const $api = new CoreDomainClient({
+  auth: {
+    jwt: buildJWTForAPIRole(),
+  },
+  targetURL: process.env.HASURA_GRAPHQL_URL!,
+});
+
+/**
+ * Connects to Hasura using the "public" role
+ */
 export const $public = new CoreDomainClient({
   targetURL: process.env.HASURA_GRAPHQL_URL!,
 });
