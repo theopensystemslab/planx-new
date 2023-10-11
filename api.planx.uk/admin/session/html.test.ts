@@ -17,7 +17,7 @@ const mockGenerateHTMLData = jest.fn().mockResolvedValue({
 });
 jest.mock("../../client", () => {
   return {
-    $admin: {
+    $api: {
       export: {
         csvData: () => mockGenerateHTMLData(),
       },

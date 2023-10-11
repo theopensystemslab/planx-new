@@ -17,6 +17,9 @@ export const $admin = new CoreDomainClient({
 
 /**
  * Connects to Hasura using the "api" role
+ *
+ * Should be used when a request is not initiated by a user, but another PlanX service (e.g. Hasura events).
+ * Can also be used for "side effects" triggered by a user (e.g. writing audit logs)
  */
 export const $api = new CoreDomainClient({
   auth: {
