@@ -171,13 +171,21 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   >
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>
+                  <Link
+                    onClick={() => props.changeAnswer(filteredBreadcrumbs[0].nodeId)}
+                    component="button"
+                    fontSize="body2.fontSize"
+                  >
+                    Change
+                    <span style={visuallyHidden}>the answers in this section</span>
+                  </Link>
                 </Box>
                 <SummaryList
                   summaryBreadcrumbs={filteredBreadcrumbs}
                   flow={props.flow}
                   passport={props.passport}
                   changeAnswer={props.changeAnswer}
-                  showChangeButton={props.showChangeButton}
+                  showChangeButton={false}
                 />
               </React.Fragment>
             ),
