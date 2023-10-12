@@ -11,6 +11,7 @@ type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<'selectedUrls', string[]>;
+export type ResetClickMetadata = Record<'hasClickedNoticeReset', boolean>;
 
 let lastAnalyticsLogId: number | undefined = undefined;
 
@@ -18,11 +19,13 @@ const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
   trackNextStepsLinkClick: (metadata?: SelectedUrlsMetadata) => Promise<void>;
+  trackNoticeResetClick: (metadata?: ResetClickMetadata) =>Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
   trackNextStepsLinkClick: () => Promise.resolve(),
+  trackNoticeResetClick: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -104,6 +107,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         createAnalytics,
         trackHelpClick,
         trackNextStepsLinkClick,
+        trackNoticeResetClick,
         node,
       }}
     >
@@ -181,6 +185,30 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         mutation: gql`
           mutation UpdateHasClickNextStepsLink(
             $id: bigint!
+            $metadata: jsonb = {}
+          ) {
+            update_analytics_logs_by_pk(
+              pk_columns: { id: $id }
+              _append: { metadata: $metadata }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: lastAnalyticsLogId,
+          metadata,
+        },
+      });
+    }
+  }
+
+  async function trackNoticeResetClick(metadata?: ResetClickMetadata) {
+    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+      await publicClient.mutate({
+        mutation: gql`
+          mutation UpdateNoticeResetEnabled(
+            $id: bigint!,
             $metadata: jsonb = {}
           ) {
             update_analytics_logs_by_pk(
