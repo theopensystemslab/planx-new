@@ -482,10 +482,7 @@ const EditorToolbar: React.FC<{
                 <ListItemText>
                   {user.isPlatformAdmin
                     ? `All teams`
-                    : user.teams
-                        .map((team) => team.team.name)
-                        .concat(["Templates"])
-                        .join(", ")}
+                    : user.teams.map((team) => team.team.name).join(", ")}
                 </ListItemText>
               </MenuItem>
             )}

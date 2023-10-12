@@ -1,4 +1,4 @@
-import { User } from "@opensystemslab/planx-core/types";
+import { User, UserTeams } from "@opensystemslab/planx-core/types";
 import { _client } from "client";
 import jwtDecode from "jwt-decode";
 import { Team } from "types";
@@ -22,16 +22,13 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
   getUser: () => get().user,
 
   canUserEditTeam(teamSlug) {
-    const user = this.getUser();
+    const user = get().getUser();
     if (!user) return false;
 
-    return (
-      user.isPlatformAdmin ||
-      teamSlug === "templates" ||
-      user.teams.filter(
-        (team) => team.role === "teamEditor" && team.team.slug === teamSlug,
-      ).length > 0
-    );
+    const hasTeamEditorRole = (team: UserTeams) =>
+      team.role === "teamEditor" && team.team.slug === teamSlug;
+
+    return user.isPlatformAdmin || user.teams.some(hasTeamEditorRole);
   },
 
   async initUserStore(jwt: string) {
