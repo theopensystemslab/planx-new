@@ -171,11 +171,16 @@ async function go(
 
   // FLOODING
   if (formattedResult["flood"] && formattedResult["flood"].value) {
-    ["flood.zone.1", "flood.zone.2", "flood.zone.3"].forEach((zone) => 
-      formattedResult[zone] = {
-        fn: zone,
-        value: Boolean(formattedResult["flood"].data?.filter((entity) => entity["flood-risk-level"] === zone.split(".").pop()).length),
-      },
+    ["flood.zone.1", "flood.zone.2", "flood.zone.3"].forEach(
+      (zone) =>
+        (formattedResult[zone] = {
+          fn: zone,
+          value: Boolean(
+            formattedResult["flood"].data?.filter(
+              (entity) => entity["flood-risk-level"] === zone.split(".").pop(),
+            ).length,
+          ),
+        }),
     );
   }
 

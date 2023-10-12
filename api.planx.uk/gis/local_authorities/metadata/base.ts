@@ -133,7 +133,7 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     "digital-land-datasets": ["ancient-woodland"],
     category: "Ecology",
   },
-  "flood": {
+  flood: {
     active: true,
     neg: "is not in a Flood Risk Zone",
     pos: "is in a Flood Risk Zone",
