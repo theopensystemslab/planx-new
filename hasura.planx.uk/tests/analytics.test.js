@@ -69,4 +69,26 @@ describe("analytics and analytics_logs", () => {
       expect(i).toHaveNoMutationsFor("analytics_logs");
     });
   });
+
+  describe("api", () => {
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("cannot query analytics", () => {
+      expect(i.queries).not.toContain("analytics");
+    });
+
+    test("cannot query analytics_logs", () => {
+      expect(i.queries).not.toContain("analytics_logs");
+    });
+
+    test("cannot create, update, or delete analytics", () => {
+      expect(i).toHaveNoMutationsFor("analytics");
+    });
+
+    test("cannot create, update, or delete analytics_logs", () => {
+      expect(i).toHaveNoMutationsFor("analytics_logs");
+    });
+  });
 });

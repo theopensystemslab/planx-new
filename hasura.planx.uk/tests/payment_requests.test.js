@@ -127,6 +127,21 @@ describe("payment_requests", () => {
       expect(i).toHaveNoMutationsFor("payment_requests");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("has full access to query and mutate payment_requests", async () => {
+      expect(i.queries).toContain("payment_requests");
+      expect(i.mutations).toContain("insert_payment_requests");
+      expect(i.mutations).toContain("update_payment_requests");
+      expect(i.mutations).toContain("update_payment_requests_by_pk");
+      expect(i.mutations).toContain("delete_payment_requests");
+    });
+  });
 });
 
 const insertSessions = async (sessionIds) => {

@@ -625,5 +625,22 @@ describe("sessions", () => {
       expect(i).toHaveNoMutationsFor("sessions");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("cannot query sessions", () => {
+      expect(i.queries).not.toContain("sessions");
+    });
+
+    test("cannot create, update, or delete sessions", () => {
+      expect(i.mutations).not.toContain("insert_sessions");
+      expect(i.mutations).not.toContain("update_sessions");
+      expect(i.mutations).not.toContain("delete_sessions");
+    });
+  });
   
 });

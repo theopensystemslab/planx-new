@@ -458,4 +458,26 @@ describe("lowcal_sessions", () => {
       expect(i).toHaveNoMutationsFor("lowcal_sessions");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("cannot insert lowcal_sessions", () => {
+      expect(i.mutations).not.toContain("insert_lowcal_sessions");
+      expect(i.mutations).not.toContain("insert_lowcal_sessions_one");
+    });
+
+    test("can query and update local_sessions", () => {
+      expect(i.queries).toContain("lowcal_sessions");
+      expect(i.mutations).toContain("update_lowcal_sessions_by_pk");
+      expect(i.mutations).toContain("update_lowcal_sessions");
+    });
+
+    test("cannot delete lowcal_sessions", () => {
+      expect(i.mutations).not.toContain("delete_lowcal_sessions");
+    });
+  });
 });
