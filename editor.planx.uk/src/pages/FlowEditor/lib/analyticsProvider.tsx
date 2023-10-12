@@ -183,7 +183,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
-          mutation UpdateHasClickNextStepsLink(
+          mutation UpdateHasClickedNextStepsLink(
             $id: bigint!
             $metadata: jsonb = {}
           ) {
