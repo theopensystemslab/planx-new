@@ -207,7 +207,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
-          mutation UpdateNoticeResetEnabled(
+          mutation UpdateHasClickedNoticeReset(
             $id: bigint!,
             $metadata: jsonb = {}
           ) {
