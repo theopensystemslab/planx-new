@@ -1,10 +1,9 @@
 import { sign } from "jsonwebtoken";
-import { $admin } from "../../client";
+import { $api } from "../../client";
 import { User, Role } from "@opensystemslab/planx-core/types";
 
 export const buildJWT = async (email: string): Promise<string | undefined> => {
-  // TODO: 🐓 🥚
-  const user = await $admin.user.getByEmail(email);
+  const user = await $api.user.getByEmail(email);
   if (!user) return;
 
   const data = {

@@ -4,18 +4,6 @@ import { ServerError } from "../errors";
 import { buildJWTForAPIRole } from "../modules/auth/service";
 
 /**
- * @deprecated This client's permissions set are higher than required.
- * Should only be used by trusted service-to-service calls (e.g Hasura -> API).
- * Calls made by users should be directed through $public or the role-scoped getClient().
- *
- * Consider removing this and replacing with an "api" role using "backend-only" operations in Hasura
- */
-export const $admin = new CoreDomainClient({
-  auth: { adminSecret: process.env.HASURA_GRAPHQL_ADMIN_SECRET! },
-  targetURL: process.env.HASURA_GRAPHQL_URL!,
-});
-
-/**
  * Connects to Hasura using the "api" role
  *
  * Should be used when a request is not initiated by a user, but another PlanX service (e.g. Hasura events).
@@ -48,12 +36,12 @@ export const getClient = () => {
       message: "Missing user context",
     });
 
-  const client = new CoreDomainClient({
+  const $client = new CoreDomainClient({
     targetURL: process.env.HASURA_GRAPHQL_URL!,
     auth: {
       jwt: store.user.jwt,
     },
   });
 
-  return client;
+  return $client;
 };
