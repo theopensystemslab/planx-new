@@ -66,8 +66,8 @@ describe("team_members", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query teams members", () => {
-      expect(i.queries).not.toContain("team_members");
+    test("can query teams members", () => {
+      expect(i.queries).toContain("team_members");
     });
 
     test("cannot create, update, or delete team_members", () => {

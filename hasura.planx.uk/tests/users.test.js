@@ -73,8 +73,8 @@ describe("users", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query users", async () => {
-      expect(i.queries).not.toContain("users");
+    test("can query users", async () => {
+      expect(i.queries).toContain("users");
     });
 
     test("cannot create, update, or delete users", async () => {

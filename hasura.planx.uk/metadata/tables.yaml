@@ -1199,6 +1199,14 @@
           - role
           - id
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - team_id
+          - user_id
+          - role
+          - id
+        filter: {}
     - role: platformAdmin
       permission:
         columns:
@@ -1459,6 +1467,17 @@
           - is_platform_admin
           - email
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - first_name
+          - last_name
+          - created_at
+          - updated_at
+          - is_platform_admin
+          - email
+        filter: {}
     - role: platformAdmin
       permission:
         columns:
