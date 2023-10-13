@@ -6,7 +6,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { Store, useStore } from "./store";
 
-export type AnalyticsType = "init" | "resume";
+export type AnalyticsType = "init" | "resume" | "reset"
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 export type HelpClickMetadata = Record<string, string>;
@@ -18,11 +18,13 @@ const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
   trackNextStepsLinkClick: (metadata?: SelectedUrlsMetadata) => Promise<void>;
+  trackResetFlow: () => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
   trackNextStepsLinkClick: () => Promise.resolve(),
+  trackResetFlow: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -104,6 +106,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         createAnalytics,
         trackHelpClick,
         trackNextStepsLinkClick,
+        trackResetFlow,
         node,
       }}
     >
@@ -194,6 +197,31 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         variables: {
           id: lastAnalyticsLogId,
           metadata,
+        },
+      });
+    }
+  }
+
+
+  async function trackResetFlow() {
+    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+      await publicClient.mutate({
+        mutation: gql`
+          mutation UpdateHasResetFlow(
+            $id: bigint!
+            $flow_direction: String
+          ) {
+            update_analytics_logs_by_pk(
+              pk_columns: { id: $id }
+              _set: { flow_direction: $flow_direction }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: lastAnalyticsLogId,
+          flow_direction: 'reset'
         },
       });
     }
