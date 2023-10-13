@@ -23,6 +23,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "Heritage and conservation": "#EDDCD2",
   Ecology: "#E0EFCC",
   Trees: "#DBE7E4",
+  Flooding: "#ECECEC",
 };
 
 interface StyledConstraintProps extends BoxProps {
