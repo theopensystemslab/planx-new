@@ -55,3 +55,40 @@ export const trackAnalyticsLogExit = async ({
 
   return;
 };
+
+export const trackUserReset = async ({
+  id,
+  flow_direction,
+}: {
+  id: number;
+  flow_direction: string;
+}) => {
+  try {
+    await adminClient.request(
+      gql`
+        mutation UpdateAnalyticsLogUserReset(
+          $id: bigint!
+          $flow_direction: String
+        ) {
+          update_analytics_logs_by_pk(
+            pk_columns: { id: $id }
+            _set: { flow_direction: $flow_direction }
+          ) {
+            id
+          }
+        }
+      `,
+      {
+        id,
+        flow_direction: flow_direction,
+      },
+    );
+  } catch (e) {
+    // We need to catch this exception here otherwise the exception would become an unhandled rejection which brings down the whole node.js process
+    console.error(
+      "There's been an error while recording metrics for analytics but because this thread is non-blocking we didn't reject the request",
+      (e as Error).stack,
+    );
+  }
+  return;
+};

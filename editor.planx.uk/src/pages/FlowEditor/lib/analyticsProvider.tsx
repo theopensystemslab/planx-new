@@ -6,7 +6,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { Store, useStore } from "./store";
 
-export type AnalyticsType = "init" | "resume";
+export type AnalyticsType = "init" | "resume" | "reset"
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 export type HelpClickMetadata = Record<string, string>;
@@ -18,11 +18,13 @@ const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
   trackNextStepsLinkClick: (metadata?: SelectedUrlsMetadata) => Promise<void>;
+  trackUserResetConfirmation: () => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
   trackNextStepsLinkClick: () => Promise.resolve(),
+  trackUserResetConfirmation: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -104,6 +106,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         createAnalytics,
         trackHelpClick,
         trackNextStepsLinkClick,
+        trackUserResetConfirmation,
         node,
       }}
     >
@@ -199,6 +202,16 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
+  async function trackUserResetConfirmation(){
+    if (lastAnalyticsLogId && shouldTrackAnalytics) {
+      send(
+        `${
+          process.env.REACT_APP_API_URL
+        }/analytics/log-user-reset?analyticsLogId=${lastAnalyticsLogId.toString()}`,
+      );
+    }
+  };
+  
   async function createAnalytics(type: AnalyticsType) {
     if (shouldTrackAnalytics) {
       const response = await publicClient.mutate({

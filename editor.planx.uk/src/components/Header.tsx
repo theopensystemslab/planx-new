@@ -309,6 +309,7 @@ const PublicToolbar: React.FC<{
     state.id,
     state.teamTheme,
   ]);
+  const { trackUserResetConfirmation } = useAnalyticsTracking();
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
@@ -322,6 +323,7 @@ const PublicToolbar: React.FC<{
         "Are you sure you want to restart? This will delete your previous answers",
       )
     ) {
+      trackUserResetConfirmation();
       if (path === ApplicationPath.SingleSession) {
         clearLocalFlow(id);
         window.location.reload();

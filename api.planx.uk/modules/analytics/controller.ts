@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { trackAnalyticsLogExit } from "./service";
+import { trackAnalyticsLogExit, trackUserReset } from "./service";
 import { ValidatedRequestHandler } from "../../shared/middleware/validate";
 
 export const logAnalyticsSchema = z.object({
@@ -22,5 +22,11 @@ export const logUserExitController: LogAnalytics = async (req, res) => {
 export const logUserResumeController: LogAnalytics = async (req, res) => {
   const { analyticsLogId } = req.query;
   trackAnalyticsLogExit({ id: Number(analyticsLogId), isUserExit: false });
+  res.status(204).send();
+};
+
+export const logUserResetController: LogAnalytics = async (req, res) => {
+  const { analyticsLogId } = req.query;
+  trackUserReset({ id: Number(analyticsLogId), flow_direction: "reset" });
   res.status(204).send();
 };
