@@ -9,6 +9,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -75,6 +76,13 @@ const NoticeComponent: React.FC<Props> = (props) => {
     ? () => props.handleSubmit?.()
     : undefined;
 
+  const { trackResetFlow } = useAnalyticsTracking();
+
+  const handleNoticeResetClick = () => {
+    trackResetFlow()
+    props.resetPreview && props.resetPreview()
+  }
+
   return (
     <Card handleSubmit={handleSubmit} isValid>
       <>
@@ -105,7 +113,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
             variant="contained"
             size="large"
             type="submit"
-            onClick={props.resetPreview}
+            onClick={handleNoticeResetClick}
             sx={contentFlowSpacing}
           >
             Back to start
