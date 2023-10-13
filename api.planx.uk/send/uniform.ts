@@ -6,7 +6,7 @@ import fs from "fs";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
-import { $admin } from "../client";
+import { $api } from "../client";
 import { buildSubmissionExportZip } from "./exportZip";
 
 interface UniformClient {
@@ -373,7 +373,7 @@ const createUniformApplicationAuditRecord = async ({
   localAuthority: string;
   submissionDetails: UniformSubmissionResponse;
 }): Promise<UniformApplication> => {
-  const xml = await $admin.generateOneAppXML(payload?.sessionId);
+  const xml = await $api.generateOneAppXML(payload?.sessionId);
 
   const application: Record<
     "insert_uniform_applications_one",

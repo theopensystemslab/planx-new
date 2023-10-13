@@ -92,7 +92,10 @@ const validateSingleSessionRequest = async (
   try {
     const query = gql`
       query ValidateSingleSessionRequest($sessionId: uuid!) {
-        lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
+        lowcalSessions: lowcal_sessions(
+          where: { id: { _eq: $sessionId } }
+          limit: 1
+        ) {
           id
           data
           created_at
@@ -112,8 +115,12 @@ const validateSingleSessionRequest = async (
     const client = getClientForTemplate(template);
     const headers = getSaveAndReturnPublicHeaders(sessionId, email);
     const {
-      lowcal_sessions: [session],
-    } = await client.request(query, { sessionId }, headers);
+      lowcalSessions: [session],
+    } = await client.request<{ lowcalSessions: LowCalSession[] }>(
+      query,
+      { sessionId },
+      headers,
+    );
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 

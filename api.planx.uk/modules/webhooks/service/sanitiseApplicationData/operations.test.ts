@@ -31,7 +31,7 @@ const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
 const mockFindSession = jest.fn();
 jest.mock("../../../../client", () => {
   return {
-    $admin: {
+    $api: {
       session: {
         find: jest.fn().mockImplementation(() => mockFindSession()),
       },

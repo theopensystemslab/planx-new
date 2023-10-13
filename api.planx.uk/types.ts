@@ -75,7 +75,7 @@ export interface LowCalSession {
   has_user_saved: boolean;
   flow: {
     slug: string;
-    team?: Team;
+    team: Team;
   };
   lockedAt?: string;
   paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[];

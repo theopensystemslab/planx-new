@@ -9,9 +9,4 @@ const adminGraphQLClient = new GraphQLClient(process.env.HASURA_GRAPHQL_URL!, {
   },
 });
 
-/**
- * Connect to Hasura using the "Public" role
- */
-const publicGraphQLClient = new GraphQLClient(process.env.HASURA_GRAPHQL_URL!);
-
-export { adminGraphQLClient, publicGraphQLClient };
+export { adminGraphQLClient };

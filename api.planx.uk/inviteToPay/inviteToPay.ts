@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import type { PaymentRequest, KeyPath } from "@opensystemslab/planx-core/types";
 
 import { ServerError } from "../errors";
-import { $admin } from "../client";
+import { $api } from "../client";
 
 export async function inviteToPay(
   req: Request,
@@ -39,7 +39,7 @@ export async function inviteToPay(
   }
 
   // lock session before creating a payment request
-  const locked = await $admin.lockSession(sessionId);
+  const locked = await $api.lockSession(sessionId);
   if (locked === null) {
     return next(
       new ServerError({
@@ -63,7 +63,7 @@ export async function inviteToPay(
 
   let paymentRequest: PaymentRequest | undefined;
   try {
-    paymentRequest = await $admin.createPaymentRequest({
+    paymentRequest = await $api.createPaymentRequest({
       sessionId,
       applicantName,
       payeeName,
@@ -72,7 +72,7 @@ export async function inviteToPay(
     });
   } catch (e: unknown) {
     // revert the session lock on failure
-    await $admin.unlockSession(sessionId);
+    await $api.unlockSession(sessionId);
     return next(
       new ServerError({
         message:

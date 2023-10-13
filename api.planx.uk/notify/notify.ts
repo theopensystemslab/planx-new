@@ -1,11 +1,7 @@
-import { GraphQLClient } from "graphql-request";
 import { NotifyClient } from "notifications-node-client";
-import {
-  adminGraphQLClient as adminClient,
-  publicGraphQLClient as publicClient,
-} from "../hasura";
 import { softDeleteSession } from "../saveAndReturn/utils";
 import { NotifyConfig } from "../types";
+import { $api, $public } from "../client";
 
 const notifyClient = new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY);
 
@@ -84,7 +80,7 @@ const sendEmail = async (
   }
 };
 
-const getClientForTemplate = (template: Template): GraphQLClient =>
-  template in privateEmailTemplates ? adminClient : publicClient;
+const getClientForTemplate = (template: Template) =>
+  template in privateEmailTemplates ? $api.client : $public.client;
 
 export { sendEmail, getClientForTemplate };

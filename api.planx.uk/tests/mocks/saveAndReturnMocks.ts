@@ -144,7 +144,7 @@ export const mockValidateSingleSessionRequest = {
   name: "ValidateSingleSessionRequest",
   data: {
     flows_by_pk: mockFlow,
-    lowcal_sessions: [mockLowcalSession],
+    lowcalSessions: [mockLowcalSession],
   },
   variables: {
     sessionId: mockLowcalSession.id,

@@ -8,20 +8,15 @@ import {
   mockSoftDeleteLowcalSession,
   mockValidateSingleSessionRequest,
 } from "../tests/mocks/saveAndReturnMocks";
+import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 const SAVE_ENDPOINT = "/send-email/save";
 
-jest.mock("@opensystemslab/planx-core", () => {
-  return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
-      formatRawProjectTypes: jest
-        .fn()
-        .mockResolvedValue(["New office premises"]),
-    })),
-  };
-});
+jest
+  .spyOn(CoreDomainClient.prototype, "formatRawProjectTypes")
+  .mockResolvedValue("New office premises");
 
 describe("Send Email endpoint", () => {
   beforeEach(() => {
@@ -93,7 +88,7 @@ describe("Send Email endpoint", () => {
         name: "ValidateSingleSessionRequest",
         data: {
           flows_by_pk: mockFlow,
-          lowcal_sessions: [],
+          lowcalSessions: [],
         },
       });
 
@@ -258,7 +253,7 @@ describe("Setting up send email events", () => {
       name: "ValidateSingleSessionRequest",
       data: {
         flows_by_pk: mockFlow,
-        lowcal_sessions: [{ ...mockLowcalSession, has_user_saved: true }],
+        lowcalSessions: [{ ...mockLowcalSession, has_user_saved: true }],
       },
       matchOnVariables: false,
     });

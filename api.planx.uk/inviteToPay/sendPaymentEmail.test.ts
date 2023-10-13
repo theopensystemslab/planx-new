@@ -6,16 +6,11 @@ import {
   validatePaymentRequestNotFoundQueryMock,
   validatePaymentRequestQueryMock,
 } from "../tests/mocks/inviteToPayMocks";
+import { CoreDomainClient } from "@opensystemslab/planx-core";
 
-jest.mock("@opensystemslab/planx-core", () => {
-  return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
-      formatRawProjectTypes: jest
-        .fn()
-        .mockResolvedValue(["New office premises"]),
-    })),
-  };
-});
+jest
+  .spyOn(CoreDomainClient.prototype, "formatRawProjectTypes")
+  .mockResolvedValue("New office premises");
 
 const TEST_PAYMENT_REQUEST_ID = "09655c28-3f34-4619-9385-cd57312acc44";
 

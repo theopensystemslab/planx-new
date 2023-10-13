@@ -7,7 +7,7 @@ import {
   EventType,
   UniformEventData,
 } from "./types";
-import { $admin } from "../../../../client";
+import { $api } from "../../../../client";
 
 export const sendSlackNotification = async (
   data: EventData,
@@ -51,7 +51,7 @@ const getSessionIdFromEvent = (data: EventData, type: EventType) =>
   })[type];
 
 const getExemptionStatusesForSession = async (sessionId: string) => {
-  const session = await $admin.session.find(sessionId);
+  const session = await $api.session.find(sessionId);
   if (!session) throw Error(`Unable to find session with ID ${sessionId}`);
 
   const passport = new Passport(session.data.passport);

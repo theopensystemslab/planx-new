@@ -57,7 +57,7 @@ const mockGenerateOneAppXML = jest
 
 jest.mock("../client", () => {
   return {
-    $admin: {
+    $api: {
       generateOneAppXML: () => mockGenerateOneAppXML(),
       getDocumentTemplateNamesForSession: jest
         .fn()
