@@ -88,7 +88,7 @@ describe("Send Email endpoint", () => {
         name: "ValidateSingleSessionRequest",
         data: {
           flows_by_pk: mockFlow,
-          lowcal_sessions: [],
+          lowcalSessions: [],
         },
       });
 
@@ -253,7 +253,7 @@ describe("Setting up send email events", () => {
       name: "ValidateSingleSessionRequest",
       data: {
         flows_by_pk: mockFlow,
-        lowcal_sessions: [{ ...mockLowcalSession, has_user_saved: true }],
+        lowcalSessions: [{ ...mockLowcalSession, has_user_saved: true }],
       },
       matchOnVariables: false,
     });
