@@ -8,6 +8,11 @@ const securitySchemes = {
     scheme: "bearer",
     bearerFormat: "JWT",
   },
+  hasuraAuth: {
+    type: "apiKey",
+    in: "header",
+    name: "Authorization",
+  },
 };
 
 const parameters = {
