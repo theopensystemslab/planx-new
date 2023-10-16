@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from "express";
-import { getClient } from "../../client";
+import { NextFunction, Request, Response } from "express";
+import { $api } from "../../client";
 
 /**
  * @swagger
  * /admin/session/{sessionId}/bops:
  *  get:
  *    summary: Generates a Back Office Planning System (BOPS) payload
- *    description: Generates a BOPS payload, relies on a submission record in `bops_applications`
+ *    description: Generates a BOPS payload
  *    tags:
  *      - admin
  *    parameters:
@@ -20,10 +20,7 @@ export const getBOPSPayload = async (
   next: NextFunction,
 ) => {
   try {
-    const $client = getClient();
-    const { exportData } = await $client.export.bopsPayload(
-      req.params.sessionId,
-    );
+    const { exportData } = await $api.export.bopsPayload(req.params.sessionId);
     res.set("content-type", "application/json");
     return res.send(exportData);
   } catch (error) {
