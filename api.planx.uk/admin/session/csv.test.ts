@@ -5,16 +5,13 @@ import { authHeader } from "../../tests/mockJWT";
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/csv`;
 
-const mockGenerateCSVData = jest.fn().mockResolvedValue({
-  responses: [
-    {
-      question: "Is this a test?",
-      responses: [{ value: "Yes" }],
-      metadata: {},
-    },
-  ],
-  redactedResponses: [],
-});
+const mockGenerateCSVData = jest.fn().mockResolvedValue([
+  {
+    question: "Is this a test?",
+    responses: [{ value: "Yes" }],
+    metadata: {},
+  },
+]);
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
