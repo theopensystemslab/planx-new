@@ -528,6 +528,21 @@
           - has_user_saved
           - sanitised_at
         filter: {}
+    - role: platformAdmin
+      permission:
+        columns:
+          - data
+          - email
+          - created_at
+          - deleted_at
+          - locked_at
+          - submitted_at
+          - updated_at
+          - flow_id
+          - id
+          - has_user_saved
+          - sanitised_at
+        filter: {}
     - role: public
       permission:
         columns:

@@ -6,7 +6,7 @@ import { getClient } from "../../client";
  * /admin/session/{sessionId}/bops:
  *  get:
  *    summary: Generates a Back Office Planning System (BOPS) payload
- *    description: Generates a BOPS payload, relies on a submission record in `bops_applications`
+ *    description: Generates a BOPS payload
  *    tags:
  *      - admin
  *    parameters:
