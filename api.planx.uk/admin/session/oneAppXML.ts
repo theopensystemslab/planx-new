@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getClient } from "../../client";
+import { $api } from "../../client";
 
 /**
  * @swagger
@@ -20,8 +20,7 @@ export const getOneAppXML = async (
   next: NextFunction,
 ) => {
   try {
-    const $client = getClient();
-    const xml = await $client.generateOneAppXML(req.params.sessionId);
+    const xml = await $api.generateOneAppXML(req.params.sessionId);
     res.set("content-type", "text/xml");
     return res.send(xml);
   } catch (error) {

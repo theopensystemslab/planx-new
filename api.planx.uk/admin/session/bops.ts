@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { getClient } from "../../client";
+import { NextFunction, Request, Response } from "express";
+import { $api } from "../../client";
 
 /**
  * @swagger
@@ -20,10 +20,7 @@ export const getBOPSPayload = async (
   next: NextFunction,
 ) => {
   try {
-    const $client = getClient();
-    const { exportData } = await $client.export.bopsPayload(
-      req.params.sessionId,
-    );
+    const { exportData } = await $api.export.bopsPayload(req.params.sessionId);
     res.set("content-type", "application/json");
     return res.send(exportData);
   } catch (error) {
