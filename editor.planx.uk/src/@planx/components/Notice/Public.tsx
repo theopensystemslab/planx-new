@@ -79,9 +79,9 @@ const NoticeComponent: React.FC<Props> = (props) => {
   const { trackResetFlow } = useAnalyticsTracking();
 
   const handleNoticeResetClick = () => {
-    trackResetFlow()
-    props.resetPreview && props.resetPreview()
-  }
+    trackResetFlow();
+    props.resetPreview && props.resetPreview();
+  };
 
   return (
     <Card handleSubmit={handleSubmit} isValid>
