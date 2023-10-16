@@ -9,8 +9,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#d92224b
-    version: github.com/theopensystemslab/planx-core/d92224b
+    specifier: git+https://github.com/theopensystemslab/planx-core#fb061f6
+    version: github.com/theopensystemslab/planx-core/fb061f6
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -4117,8 +4117,8 @@ packages:
       punycode: 1.4.1
     dev: false
 
-  /fast-xml-parser@4.3.1:
-    resolution: {integrity: sha512-viVv3xb8D+SiS1W4cv4tva3bni08kAkx0gQnWrykMM8nXPc1FxqZPU00dCEVjkiCg4HoXd2jC4x29Nzg/l2DAA==}
+  /fast-xml-parser@4.3.2:
+    resolution: {integrity: sha512-rmrXUXwbJedoXkStenj1kkljNF7ugn5ZjR9FJcwmCfcCbtOMDghPajbc+Tck6vE6F5XsDmx+Pr2le9fw8+pXBg==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
@@ -8103,8 +8103,12 @@ packages:
     resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/d92224b:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d92224b}
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
+
+  github.com/theopensystemslab/planx-core/fb061f6:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/fb061f6}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -8119,7 +8123,7 @@ packages:
       copyfiles: 2.4.1
       docx: 8.2.3
       eslint: 8.50.0
-      fast-xml-parser: 4.3.1
+      fast-xml-parser: 4.3.2
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-schema-to-typescript: 13.1.1
@@ -8140,7 +8144,7 @@ packages:
       striptags: 3.2.0
       type-fest: 4.3.3
       uuid: 9.0.1
-      zod: 3.22.3
+      zod: 3.22.4
     transitivePeerDependencies:
       - '@types/react'
       - encoding
