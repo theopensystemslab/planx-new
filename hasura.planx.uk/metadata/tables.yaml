@@ -38,6 +38,7 @@
       permission:
         columns:
           - analytics_id
+          - created_at
           - id
         filter: {}
   update_permissions:
@@ -46,6 +47,7 @@
         columns:
           - has_clicked_help
           - metadata
+          - next_log_created_at
         filter: {}
         check: null
 - table:
