@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import { getUser } from "../globalHelpers";
 import {
   Action,
+  GQLQueryResult,
   Table,
   addUserToTeam,
   cleanup,
@@ -28,7 +29,7 @@ export class CustomWorld extends World {
   activeUserEmail!: string;
 
   error?: Error = undefined;
-  result: unknown[] | Record<"returning", unknown[]> | null = null;
+  result: GQLQueryResult = null;
 }
 
 Before<CustomWorld>("@team-admin-permissions", async function () {
