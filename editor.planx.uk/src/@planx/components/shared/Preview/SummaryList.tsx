@@ -14,9 +14,9 @@ export default SummaryListsBySections;
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 2fr 100px",
+  gridTemplateColumns: "1fr 2fr",
   gridRowGap: "10px",
-  marginTop: theme.spacing(4),
+  marginTop: theme.spacing(2),
   marginBottom: theme.spacing(4),
   "& > *": {
     borderBottom: `1px solid ${theme.palette.border.main}`,
@@ -38,10 +38,7 @@ const Grid = styled("dl")(({ theme }) => ({
     // middle column
     paddingLeft: "10px",
   },
-  "& dd:nth-of-type(2n)": {
-    // right column
-    textAlign: "right",
-  },
+
 }));
 
 const presentationalComponents: {
@@ -164,17 +161,17 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
           (filteredBreadcrumbs, i) =>
             Boolean(filteredBreadcrumbs.length) && (
               <React.Fragment key={i}>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", mt: 5 }}>
                   <Typography
                     component={props.sectionComponent || "h2"}
-                    variant="h4"
+                    variant="h3"
                   >
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>
                   <Link
                     onClick={() => props.changeAnswer(filteredBreadcrumbs[0].nodeId)}
                     component="button"
-                    fontSize="body2.fontSize"
+                    fontSize="body1.fontSize"
                   >
                     Change
                     <span style={visuallyHidden}>the answers in this section</span>
@@ -227,8 +224,8 @@ function SummaryList(props: SummaryListProps) {
               flow={props.flow}
               passport={props.passport}
             />
-            <dd>
-              {props.showChangeButton && (
+            {props.showChangeButton && (
+              <dd>  
                 <Link
                   onClick={() => handleClick(nodeId)}
                   component="button"
@@ -239,8 +236,8 @@ function SummaryList(props: SummaryListProps) {
                     {node.data?.title || node.data?.text || "this answer"}
                   </span>
                 </Link>
-              )}
-            </dd>
+              </dd>
+             )}
           </React.Fragment>
         ),
       )}
