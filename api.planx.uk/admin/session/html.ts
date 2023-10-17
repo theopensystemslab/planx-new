@@ -24,7 +24,7 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
     const session = await $client.session.find(req.params.sessionId);
     if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
 
-    const { responses } = await $client.export.csvData(req.params.sessionId);
+    const responses = await $client.export.csvData(req.params.sessionId);
     const boundingBox =
       session.data.passport.data["property.boundary.site.buffered"];
 
@@ -65,7 +65,7 @@ export const getRedactedHTMLExport: HTMLExportHandler = async (
     const session = await $client.session.find(req.params.sessionId);
     if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
 
-    const { redactedResponses } = await $client.export.csvData(
+    const redactedResponses = await $client.export.csvDataRedacted(
       req.params.sessionId,
     );
     const boundingBox =

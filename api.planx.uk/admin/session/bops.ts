@@ -20,7 +20,7 @@ export const getBOPSPayload = async (
   next: NextFunction,
 ) => {
   try {
-    const { exportData } = await $api.export.bopsPayload(req.params.sessionId);
+    const exportData = await $api.export.bopsPayload(req.params.sessionId);
     res.set("content-type", "application/json");
     return res.send(exportData);
   } catch (error) {

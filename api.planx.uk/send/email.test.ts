@@ -2,16 +2,13 @@ import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
 import app from "../server";
 
-const mockGenerateCSVData = jest.fn().mockResolvedValue({
-  responses: [
-    {
-      question: "Is this a test?",
-      responses: [{ value: "Yes" }],
-      metadata: {},
-    },
-  ],
-  redactedResponses: [],
-});
+const mockGenerateCSVData = jest.fn().mockResolvedValue([
+  {
+    question: "Is this a test?",
+    responses: [{ value: "Yes" }],
+    metadata: {},
+  },
+]);
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: jest.fn().mockImplementation(() => ({

@@ -20,7 +20,7 @@ export const getOneAppXML = async (
   next: NextFunction,
 ) => {
   try {
-    const xml = await $api.generateOneAppXML(req.params.sessionId);
+    const xml = await $api.export.oneAppPayload(req.params.sessionId);
     res.set("content-type", "text/xml");
     return res.send(xml);
   } catch (error) {

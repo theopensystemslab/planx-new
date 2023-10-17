@@ -6,9 +6,7 @@ import { expectedPayload } from "../../tests/mocks/bopsMocks";
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/bops`;
 
-const mockGenerateBOPSPayload = jest.fn().mockResolvedValue({
-  exportData: expectedPayload,
-});
+const mockGenerateBOPSPayload = jest.fn().mockResolvedValue(expectedPayload);
 
 jest.mock("@opensystemslab/planx-core", () => {
   return {

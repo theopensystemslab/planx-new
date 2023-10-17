@@ -12,7 +12,9 @@ const mockGenerateOneAppXML = jest
 jest.mock("../../client", () => {
   return {
     $api: {
-      generateOneAppXML: () => mockGenerateOneAppXML(),
+      export: {
+        oneAppPayload: () => mockGenerateOneAppXML(),
+      },
     },
   };
 });

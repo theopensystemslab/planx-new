@@ -27,7 +27,7 @@ export async function getCSVData(
 ) {
   try {
     const $client = getClient();
-    const { responses } = await $client.export.csvData(req.params.sessionId);
+    const responses = await $client.export.csvData(req.params.sessionId);
 
     if (req.query?.download) {
       stringify(responses, {
@@ -71,7 +71,7 @@ export async function getRedactedCSVData(
 ) {
   try {
     const $client = getClient();
-    const { redactedResponses } = await $client.export.csvData(
+    const redactedResponses = await $client.export.csvDataRedacted(
       req.params.sessionId,
     );
 

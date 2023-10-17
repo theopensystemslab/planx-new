@@ -70,7 +70,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     );
   }
   const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
-  const { exportData } = await $api.export.bopsPayload(payload?.sessionId);
+  const exportData = await $api.export.bopsPayload(payload?.sessionId);
 
   try {
     const bopsResponse = await axios({
