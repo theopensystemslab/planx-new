@@ -96,7 +96,9 @@ const StatusPage: React.FC<Props> = ({
               onClick={removeSessionIdSearchParam}
               sx={contentFlowSpacing}
             >
-              <Typography variant="body1" align="left">Start new application</Typography>
+              <Typography variant="body1" align="left">
+                Start new application
+              </Typography>
             </Link>
           </>
         )}

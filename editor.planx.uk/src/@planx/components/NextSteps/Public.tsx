@@ -1,5 +1,4 @@
 import { PublicProps } from "@planx/components/ui";
-
 import React from "react";
 import NextStepsList from "ui/NextStepsList";
 
@@ -19,10 +18,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <NextStepsList
-        steps={props.steps}
-        handleSubmit={props.handleSubmit}
-      />
+      <NextStepsList steps={props.steps} handleSubmit={props.handleSubmit} />
     </Card>
   );
 };
