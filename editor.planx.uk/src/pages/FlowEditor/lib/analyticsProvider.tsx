@@ -6,11 +6,11 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { Store, useStore } from "./store";
 
-export type AnalyticsType = "init" | "resume" | "reset"
-type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
+export type AnalyticsType = "init" | "resume";
+type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards" | "reset";
 
 export type HelpClickMetadata = Record<string, string>;
-export type SelectedUrlsMetadata = Record<'selectedUrls', string[]>;
+export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 
 let lastAnalyticsLogId: number | undefined = undefined;
 
@@ -206,10 +206,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
-          mutation UpdateHasResetFlow(
-            $id: bigint!
-            $flow_direction: String
-          ) {
+          mutation UpdateHasResetFlow($id: bigint!, $flow_direction: String) {
             update_analytics_logs_by_pk(
               pk_columns: { id: $id }
               _set: { flow_direction: $flow_direction }
@@ -220,7 +217,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         `,
         variables: {
           id: lastAnalyticsLogId,
-          flow_direction: 'reset'
+          flow_direction: "reset",
         },
       });
     }
