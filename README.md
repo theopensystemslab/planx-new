@@ -26,11 +26,14 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Download and install the following dependencies if you don't have them already:
 - [Docker](https://docs.docker.com/get-docker/)
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 - [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@8.6.6`
 - [Node](https://nodejs.org/en/download) `pnpm env use --global 18.16.1`
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
-1. Clone this repository.
+**If you're an OSL developer:**
+
+1. Clone this repository
 
 2. Setup your AWS CLI client with SSO - [detailed guide here](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/how-to-setup-aws-sso-credentials.md)
 
@@ -47,6 +50,30 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 8. Start the editor dev server, with `pnpm start`
 
 9. Open `http://localhost:3000` and login with your Google email address
+
+**If you're not a member of OSL, follow these steps:**
+
+1. Fork or clone this repository
+
+2. Copy all `.example` env files into their respective directories and replace 👻 with a string like "SECRET" or longer where noted
+
+3. Setup free OAuth Client ID credentails in the [Google Cloud APIs console](https://console.cloud.google.com/apis/credentials)
+  - Application type = "Web application"
+  - Authorised JavaScript origins = "http://localhost:3000"
+  - Authorised redirect URIs = "http://localhost:7002/auth/google/callback"
+  - Update the `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` env vars with your new credentials
+
+4. Run `pnpm start` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes). Please note you will not be able to run commands that sync seed data from production.
+
+5. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
+
+6. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) and add your Google email address to the `users` table. You'll also likely want to create an initial `team`. This will eventually allow you to authenticate into the application as an admin.
+
+7. Follow steps 7-9 above to start the editor and login !
+
+At this point you'll be running the full Planx application locally in a docker container. See our Github Actions pull request workflow as an example of how to deploy via docker to a virtual linux server, or explore the `infrastructure` directory for how to deploy via Pulumi infrastructure-as-code to AWS. 
+
+We'd love to hear what you're building on Planx, don't hesitate to get in touch with questions.
 
 ### Docker
 
@@ -111,3 +138,4 @@ There are a few dependent packages that are closely related to this project:
 
  - https://github.com/theopensystemslab/planx-core
  - https://github.com/theopensystemslab/map
+ - https://github.com/theopensystemslab/digital-planning-data-schemas
