@@ -39,7 +39,7 @@ export async function buildSubmissionExportZip({
   // add OneApp XML to the zip
   if (includeOneAppXML) {
     try {
-      const xml = await $api.generateOneAppXML(sessionId);
+      const xml = await $api.export.oneAppPayload(sessionId);
       const xmlStream = str(xml.trim());
       await zip.addStream({
         name: "proposal.xml", // must be named "proposal.xml" to be processed by Uniform
@@ -65,7 +65,8 @@ export async function buildSubmissionExportZip({
   }
 
   // generate csv data
-  const { responses, redactedResponses } = await $api.export.csvData(sessionId);
+  const responses = await $api.export.csvData(sessionId);
+  const redactedResponses = await $api.export.csvDataRedacted(sessionId);
 
   // write csv to the zip
   try {

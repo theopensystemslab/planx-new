@@ -80,7 +80,11 @@ function LinkStep(props: ListItemProps) {
       href={props.url}
       target="_blank"
       rel="noopener"
-      onClick={() => props.handleSelectingUrl && props.url && props.handleSelectingUrl(props.url)}
+      onClick={() =>
+        props.handleSelectingUrl &&
+        props.url &&
+        props.handleSelectingUrl(props.url)
+      }
     >
       <Step {...props} />
     </InnerLink>
@@ -119,19 +123,19 @@ const Step = ({ title, description, url }: ListItemProps) => (
 
 function NextStepsList(props: NextStepsListProps) {
   const [selectedUrls, setSelectedUrls] = useState<string[]>([]);
-  const { trackNextStepsLinkClick } = useAnalyticsTracking()
+  const { trackNextStepsLinkClick } = useAnalyticsTracking();
 
   const handleSelectingUrl = (newUrl: string) => {
-    setSelectedUrls(prevSelectedUrls => [...prevSelectedUrls, newUrl]);
-    trackNextStepsLinkClick({'selectedUrls': [...selectedUrls, newUrl]})
-  }
+    setSelectedUrls((prevSelectedUrls) => [...prevSelectedUrls, newUrl]);
+    trackNextStepsLinkClick({ selectedUrls: [...selectedUrls, newUrl] });
+  };
 
   return (
     <Root>
       {props.steps?.map((step, i) => (
         <StyledListItem key={i}>
           {step.url ? (
-            <LinkStep {...step} handleSelectingUrl={handleSelectingUrl}/>
+            <LinkStep {...step} handleSelectingUrl={handleSelectingUrl} />
           ) : (
             <ContinueStep {...step} handleSubmit={props.handleSubmit} />
           )}

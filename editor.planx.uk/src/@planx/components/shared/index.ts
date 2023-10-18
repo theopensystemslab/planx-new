@@ -19,12 +19,12 @@ export const parseMoreInformation = (
 });
 
 export interface Option {
-  id?: string;
+  id: string;
   data: {
     description?: string;
     flag?: string;
     img?: string;
-    text?: string;
+    text: string;
     val?: string;
   };
 }

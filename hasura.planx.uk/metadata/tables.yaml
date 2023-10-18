@@ -45,6 +45,7 @@
     - role: public
       permission:
         columns:
+          - flow_direction
           - has_clicked_help
           - metadata
           - next_log_created_at
