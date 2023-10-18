@@ -2,8 +2,8 @@ export const expectedPlanningPermissionPayload = {
   data: {
     application: {
       type: {
-        value: 'pp.full.householder',
-        description: 'Planning Permission - Full householder',
+        value: "pp.full.householder",
+        description: "Planning Permission - Full householder",
       },
       fee: {
         calculated: 206,
@@ -18,29 +18,29 @@ export const expectedPlanningPermissionPayload = {
           alternative: true,
         },
         reference: {
-          govPay: 'sandbox-ref-456',
+          govPay: "sandbox-ref-456",
         },
       },
       declaration: {
         accurate: true,
         connection: {
-          value: 'none',
+          value: "none",
         },
       },
     },
     user: {
-      role: 'proxy',
+      role: "proxy",
     },
     applicant: {
-      type: 'individual',
+      type: "individual",
       contact: {
         name: {
-          first: 'David',
-          last: 'Bowie',
+          first: "David",
+          last: "Bowie",
         },
-        email: 'ziggy@example.com',
+        email: "ziggy@example.com",
         phone: {
-          primary: 'Not provided by agent',
+          primary: "Not provided by agent",
         },
         company: {},
       },
@@ -48,31 +48,31 @@ export const expectedPlanningPermissionPayload = {
         sameAsSiteAddress: true,
       },
       siteContact: {
-        role: 'proxy',
+        role: "proxy",
       },
-      interest: 'owner.sole',
+      interest: "owner.sole",
       ownership: {
-        certificate: 'a',
+        certificate: "a",
       },
       agent: {
         contact: {
           name: {
-            first: 'Ziggy',
-            last: 'Stardust',
+            first: "Ziggy",
+            last: "Stardust",
           },
-          email: 'ziggy@example.com',
+          email: "ziggy@example.com",
           phone: {
-            primary: '01100 0110 0011',
+            primary: "01100 0110 0011",
           },
           company: {},
         },
         address: {
-          line1: '40 Stansfield Road',
-          line2: 'Brixton',
-          town: 'London',
-          county: 'Greater London',
-          postcode: 'SW9 9RZ',
-          country: 'UK',
+          line1: "40 Stansfield Road",
+          line2: "Brixton",
+          town: "London",
+          county: "Greater London",
+          postcode: "SW9 9RZ",
+          country: "UK",
         },
       },
     },
@@ -82,21 +82,21 @@ export const expectedPlanningPermissionPayload = {
         longitude: -0.1185926,
         x: 530787,
         y: 175754,
-        title: '40, STANSFIELD ROAD, LONDON',
-        singleLine: '40, STANSFIELD ROAD, LONDON, SW9 9RZ',
-        source: 'Ordnance Survey',
-        uprn: '100021892955',
-        usrn: '21901294',
-        pao: '40',
-        street: 'STANSFIELD ROAD',
-        town: 'LONDON',
-        postcode: 'SW9 9RZ',
+        title: "40, STANSFIELD ROAD, LONDON",
+        singleLine: "40, STANSFIELD ROAD, LONDON, SW9 9RZ",
+        source: "Ordnance Survey",
+        uprn: "100021892955",
+        usrn: "21901294",
+        pao: "40",
+        street: "STANSFIELD ROAD",
+        town: "LONDON",
+        postcode: "SW9 9RZ",
       },
       boundary: {
         site: {
-          type: 'Feature',
+          type: "Feature",
           geometry: {
-            type: 'Polygon',
+            type: "Polygon",
             coordinates: [
               [
                 [-0.1186569035053321, 51.465703531871384],
@@ -117,118 +117,118 @@ export const expectedPlanningPermissionPayload = {
       constraints: {
         planning: [
           {
-            value: 'tpo',
-            description: 'Tree Preservation Order (TPO) or zone',
+            value: "tpo",
+            description: "Tree Preservation Order (TPO) or zone",
             overlaps: false,
           },
           {
-            value: 'listed',
-            description: 'Listed Building',
+            value: "listed",
+            description: "Listed Building",
             overlaps: false,
           },
           {
-            value: 'article4',
-            description: 'Article 4 Direction area',
+            value: "article4",
+            description: "Article 4 Direction area",
             overlaps: false,
           },
           {
-            value: 'monument',
-            description: 'Site of a Scheduled Monument',
+            value: "monument",
+            description: "Site of a Scheduled Monument",
             overlaps: false,
           },
           {
-            value: 'designated',
-            description: 'Designated land',
+            value: "designated",
+            description: "Designated land",
             overlaps: false,
           },
           {
-            value: 'nature.SAC',
-            description: 'Special Area of Conservation (SAC)',
+            value: "nature.SAC",
+            description: "Special Area of Conservation (SAC)",
             overlaps: false,
           },
           {
-            value: 'nature.ASNW',
-            description: 'Ancient Semi-Natural Woodland (ASNW)',
+            value: "nature.ASNW",
+            description: "Ancient Semi-Natural Woodland (ASNW)",
             overlaps: false,
           },
           {
-            value: 'nature.SSSI',
-            description: 'Site of Special Scientific Interest (SSSI)',
+            value: "nature.SSSI",
+            description: "Site of Special Scientific Interest (SSSI)",
             overlaps: false,
           },
           {
-            value: 'locallyListed',
-            description: 'Locally Listed Building',
+            value: "locallyListed",
+            description: "Locally Listed Building",
             overlaps: false,
           },
           {
-            value: 'designated.SPA',
-            description: 'Special Protection Area (SPA)',
+            value: "designated.SPA",
+            description: "Special Protection Area (SPA)",
             overlaps: false,
           },
           {
-            value: 'designated.WHS',
-            description: 'UNESCO World Heritage Site or buffer zone',
+            value: "designated.WHS",
+            description: "UNESCO World Heritage Site or buffer zone",
             overlaps: false,
           },
           {
-            value: 'registeredPark',
-            description: 'Historic Park or Garden',
+            value: "registeredPark",
+            description: "Historic Park or Garden",
             overlaps: false,
           },
           {
-            value: 'designated.AONB',
-            description: 'Area of Outstanding Natural Beauty (AONB)',
+            value: "designated.AONB",
+            description: "Area of Outstanding Natural Beauty (AONB)",
             overlaps: false,
           },
           {
-            value: 'article4.caz',
-            description: 'Central Activities Zone (CAZ)',
+            value: "article4.caz",
+            description: "Central Activities Zone (CAZ)",
             overlaps: false,
           },
           {
-            value: 'designated.nationalPark',
-            description: 'National Park',
+            value: "designated.nationalPark",
+            description: "National Park",
             overlaps: false,
           },
           {
-            value: 'designated.conservationArea',
-            description: 'Conservation Area',
+            value: "designated.conservationArea",
+            description: "Conservation Area",
             overlaps: false,
           },
           {
-            value: 'designated.nationalPark.broads',
-            description: 'National Park - Broads',
+            value: "designated.nationalPark.broads",
+            description: "National Park - Broads",
             overlaps: false,
           },
           {
-            value: 'road.classified',
-            description: 'Classified Road',
+            value: "road.classified",
+            description: "Classified Road",
             overlaps: false,
           },
         ],
       },
-      localAuthorityDistrict: ['Lambeth'],
-      region: 'London',
+      localAuthorityDistrict: ["Lambeth"],
+      region: "London",
       type: {
-        value: 'residential.dwelling.house.terrace',
-        description: 'Terrace',
+        value: "residential.dwelling.house.terrace",
+        description: "Terrace",
       },
     },
     proposal: {
       projectType: [
         {
-          value: 'extend.roof.dormer',
-          description: 'Add a roof dormer',
+          value: "extend.roof.dormer",
+          description: "Add a roof dormer",
         },
       ],
       description:
-        'Roof extension to the rear of the property, incorporating starship launchpad.',
+        "Roof extension to the rear of the property, incorporating starship launchpad.",
       boundary: {
         site: {
-          type: 'Feature',
+          type: "Feature",
           geometry: {
-            type: 'Polygon',
+            type: "Polygon",
             coordinates: [
               [
                 [-0.1186569035053321, 51.465703531871384],
@@ -247,8 +247,8 @@ export const expectedPlanningPermissionPayload = {
         },
       },
       date: {
-        start: '2024-05-01',
-        completion: '2024-05-02',
+        start: "2024-05-01",
+        completion: "2024-05-02",
       },
       details: {
         extend: {
@@ -259,12 +259,12 @@ export const expectedPlanningPermissionPayload = {
         vehicleParking: {
           type: [
             {
-              value: 'cars.offStreet.residents',
-              description: 'Off-street parking for residents only',
+              value: "cars.offStreet.residents",
+              description: "Off-street parking for residents only",
             },
             {
-              value: 'bicycles.offStreet',
-              description: 'Off-street parking for bicycles',
+              value: "bicycles.offStreet",
+              description: "Off-street parking for bicycles",
             },
           ],
           cars: {
@@ -412,729 +412,729 @@ export const expectedPlanningPermissionPayload = {
   result: [],
   responses: [
     {
-      question: 'Is the property in Lambeth?',
+      question: "Is the property in Lambeth?",
       responses: [
         {
-          value: 'Yes',
+          value: "Yes",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'The property',
+        sectionName: "The property",
       },
     },
     {
-      question: 'What type of property is it?',
+      question: "What type of property is it?",
       responses: [
         {
-          value: 'House',
+          value: "House",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'The property',
+        sectionName: "The property",
       },
     },
     {
-      question: 'What type of house it is?',
+      question: "What type of house it is?",
       responses: [
         {
-          value: 'Terrace',
+          value: "Terrace",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'The property',
+        sectionName: "The property",
       },
     },
     {
-      question: 'Is the property in a flood zone?',
+      question: "Is the property in a flood zone?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'The property',
+        sectionName: "The property",
       },
     },
     {
-      question: 'What type of property is it?',
+      question: "What type of property is it?",
       responses: [
         {
-          value: 'House',
+          value: "House",
           metadata: {
-            flags: ['Listed building consent / Not required'],
+            flags: ["Listed building consent / Not required"],
           },
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'List the changes involved in the project',
+      question: "List the changes involved in the project",
       responses: [
         {
-          value: 'Add a roof extension',
+          value: "Add a roof extension",
           metadata: {
-            flags: ['Listed building consent / Not required'],
+            flags: ["Listed building consent / Not required"],
           },
         },
       ],
       metadata: {
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Have works already started?',
+      question: "Have works already started?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Is the property in a flood zone?',
+      question: "Is the property in a flood zone?",
       responses: [
         {
-          value: 'No',
-        },
-      ],
-      metadata: {
-        autoAnswered: true,
-        sectionName: 'About the project',
-      },
-    },
-    {
-      question: 'What type of changes does the project involve?',
-      responses: [
-        {
-          value: 'Extension',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Is the project to add an outbuilding?',
+      question: "What type of changes does the project involve?",
       responses: [
         {
-          value: 'No',
+          value: "Extension",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'How much new floor area is being added to the house?',
+      question: "Is the project to add an outbuilding?",
       responses: [
         {
-          value: 'Less than 100m²',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'About the project',
+        autoAnswered: true,
+        sectionName: "About the project",
+      },
+    },
+    {
+      question: "How much new floor area is being added to the house?",
+      responses: [
+        {
+          value: "Less than 100m²",
+        },
+      ],
+      metadata: {
+        sectionName: "About the project",
       },
     },
     {
       question:
-        'How much exactly is the internal floor area of the property increasing by?',
+        "How much exactly is the internal floor area of the property increasing by?",
       responses: [
         {
-          value: '45',
+          value: "45",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
       question:
-        'Does the project involve creating any new bedrooms or bathrooms?',
+        "Does the project involve creating any new bedrooms or bathrooms?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Describe the wall materials of the existing house',
+      question: "Describe the wall materials of the existing house",
       responses: [
         {
-          value: 'London stock brick',
+          value: "London stock brick",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Describe the wall materials of the new extension',
+      question: "Describe the wall materials of the new extension",
       responses: [
         {
-          value: 'Metallic cladding, reflective. Multiple colours.',
+          value: "Metallic cladding, reflective. Multiple colours.",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Describe the material of the roof of the existing house',
+      question: "Describe the material of the roof of the existing house",
       responses: [
         {
-          value: 'Grey slate',
+          value: "Grey slate",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Describe the material for the new roof of the extension',
+      question: "Describe the material for the new roof of the extension",
       responses: [
         {
-          value: 'Zinc panels',
+          value: "Zinc panels",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Describe the window materials of the existing house',
+      question: "Describe the window materials of the existing house",
       responses: [
         {
-          value: 'Wooden sash windows, painted white',
+          value: "Wooden sash windows, painted white",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Describe the window materials of the extension',
+      question: "Describe the window materials of the extension",
       responses: [
         {
-          value: 'Brushed steel.',
+          value: "Brushed steel.",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Describe the door materials of the existing house',
+      question: "Describe the door materials of the existing house",
       responses: [
         {
-          value: 'Wood, painted.',
+          value: "Wood, painted.",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Describe the door materials of the extension',
+      question: "Describe the door materials of the extension",
       responses: [
         {
-          value: 'No door present',
+          value: "No door present",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
       question:
-        'Are there any trees that could fall within the property or the areas affected by the project (the previously drawn outline)?',
+        "Are there any trees that could fall within the property or the areas affected by the project (the previously drawn outline)?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Does the project involve any of these?',
+      question: "Does the project involve any of these?",
       responses: [
         {
-          value: 'No, none of these',
+          value: "No, none of these",
         },
       ],
       metadata: {
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Is the property in Greater London?',
+      question: "Is the property in Greater London?",
       responses: [
         {
-          value: 'Yes',
+          value: "Yes",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Does the site include more than one property?',
+      question: "Does the site include more than one property?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Do you know the title number of the property?',
+      question: "Do you know the title number of the property?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
       question:
-        'Does the property have an Energy Performance Certificate (EPC)?',
+        "Does the property have an Energy Performance Certificate (EPC)?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'What type of application is this?',
+      question: "What type of application is this?",
       responses: [
         {
-          value: 'Planning permission for a home',
+          value: "Planning permission for a home",
         },
       ],
       metadata: {
         autoAnswered: true,
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'When will the works start?',
+      question: "When will the works start?",
       responses: [
         {
-          value: '2024-05-01',
+          value: "2024-05-01",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'When will the works be completed?',
+      question: "When will the works be completed?",
       responses: [
         {
-          value: '2024-05-02',
+          value: "2024-05-02",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Does the site include parking spaces for any of these?',
+      question: "Does the site include parking spaces for any of these?",
       responses: [
         {
-          value: 'Cars',
+          value: "Cars",
         },
         {
-          value: 'Bicycles',
+          value: "Bicycles",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Total number of car parking spaces before',
+      question: "Total number of car parking spaces before",
       responses: [
         {
-          value: '1',
+          value: "1",
         },
       ],
       metadata: {
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Total number of car parking spaces after',
+      question: "Total number of car parking spaces after",
       responses: [
         {
-          value: '1',
+          value: "1",
         },
       ],
       metadata: {
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'What types of car parking space are present?',
+      question: "What types of car parking space are present?",
       responses: [
         {
-          value: 'Off-street parking for residents only',
+          value: "Off-street parking for residents only",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Off-street, residents-only car spaces before',
+      question: "Off-street, residents-only car spaces before",
       responses: [
         {
-          value: '1',
+          value: "1",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Off-street, residents-only car spaces after',
+      question: "Off-street, residents-only car spaces after",
       responses: [
         {
-          value: '1',
+          value: "1",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'What type of bicycle parking is there?',
+      question: "What type of bicycle parking is there?",
       responses: [
         {
-          value: 'Off-street cycle parking',
+          value: "Off-street cycle parking",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Off-street bicycle spaces before',
+      question: "Off-street bicycle spaces before",
       responses: [
         {
-          value: '2',
+          value: "2",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Off-street bicycle spaces after',
+      question: "Off-street bicycle spaces after",
       responses: [
         {
-          value: '2',
+          value: "2",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'Greater London Authority Act 1999',
+            text: "Greater London Authority Act 1999",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Is the property on designated land?',
+      question: "Is the property on designated land?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Does the property include any of these?',
+      question: "Does the property include any of these?",
       responses: [
         {
-          value: 'None of these',
+          value: "None of these",
         },
       ],
       metadata: {
         autoAnswered: true,
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)',
+            text: "The Town and Country Planning (Development Management Procedure) (England) 2015 (as amended)",
           },
         ],
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Heritage Statement needed?',
+      question: "Heritage Statement needed?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'Is the property in a flood zone?',
+      question: "Is the property in a flood zone?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About the project',
+        sectionName: "About the project",
       },
     },
     {
-      question: 'What type of application is it?',
+      question: "What type of application is it?",
       responses: [
         {
-          value: 'Apply for planning permission',
+          value: "Apply for planning permission",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Your contact details',
+      question: "Your contact details",
       responses: [
         {
-          value: 'Mx Ziggy Stardust 01100 0110 0011 ziggy@example.com',
+          value: "Mx Ziggy Stardust 01100 0110 0011 ziggy@example.com",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Is this a test?',
+      question: "Is this a test?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Are you applying on behalf of someone else?',
+      question: "Are you applying on behalf of someone else?",
       responses: [
         {
-          value: 'Yes',
+          value: "Yes",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Which of these best describes you?',
+      question: "Which of these best describes you?",
       responses: [
         {
-          value: 'Friend or relative',
+          value: "Friend or relative",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Your contact address',
+      question: "Your contact address",
       responses: [
         {
           value:
-            '40 Stansfield Road, Brixton, London, Greater London, SW9 9RZ, UK',
+            "40 Stansfield Road, Brixton, London, Greater London, SW9 9RZ, UK",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Which of these best describes the applicant?',
+      question: "Which of these best describes the applicant?",
       responses: [
         {
-          value: 'Private individual',
+          value: "Private individual",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
       question: "Applicant's title",
       responses: [
         {
-          value: 'Mr',
+          value: "Mr",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Do you want to provide an email address for the applicant?',
+      question: "Do you want to provide an email address for the applicant?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Do you want to provide a telephone number for the applicant?',
+      question: "Do you want to provide a telephone number for the applicant?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
@@ -1142,39 +1142,39 @@ export const expectedPlanningPermissionPayload = {
         "Is the applicant's contact address the same as the property address?",
       responses: [
         {
-          value: 'Yes',
+          value: "Yes",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Which of these best describes you?',
+      question: "Which of these best describes you?",
       responses: [
         {
-          value: 'Friend or relative',
+          value: "Friend or relative",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
       question:
-        'We may need to visit your site to assess your application. If we do, who should we contact to arrange the visit?',
+        "We may need to visit your site to assess your application. If we do, who should we contact to arrange the visit?",
       responses: [
         {
-          value: 'Me',
+          value: "Me",
         },
       ],
       metadata: {
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
-      question: 'Which of these best describes you?',
+      question: "Which of these best describes you?",
       responses: [
         {
           value: "Friend or relative acting on the applicant's behalf",
@@ -1182,7 +1182,7 @@ export const expectedPlanningPermissionPayload = {
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
@@ -1190,314 +1190,314 @@ export const expectedPlanningPermissionPayload = {
         "Which of these best describes the applicant's interest in the land?",
       responses: [
         {
-          value: 'Sole owner',
+          value: "Sole owner",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Development Management Procedure) (England) Order 2015',
+            text: "The Town and Country Planning (Development Management Procedure) (England) Order 2015",
           },
         ],
-        sectionName: 'About you',
+        sectionName: "About you",
       },
     },
     {
       question:
-        'Did you get any pre-application advice from the council before making this application?',
+        "Did you get any pre-application advice from the council before making this application?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'What type of planning application are you making?',
+      question: "What type of planning application are you making?",
       responses: [
         {
-          value: 'Full planning permission',
+          value: "Full planning permission",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Is the property a home?',
+      question: "Is the property a home?",
       responses: [
         {
-          value: 'Yes',
+          value: "Yes",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'What types of changes does the application relate to?',
+      question: "What types of changes does the application relate to?",
       responses: [
         {
-          value: 'Extension',
+          value: "Extension",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'What type of extension is it?',
+      question: "What type of extension is it?",
       responses: [
         {
-          value: 'Roof extension',
+          value: "Roof extension",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'List the changes involved in the roof extension',
+      question: "List the changes involved in the roof extension",
       responses: [
         {
-          value: 'Add dormer',
+          value: "Add dormer",
         },
       ],
       metadata: {
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
       question:
-        'Is the purpose of the project to support the needs of a disabled resident?',
+        "Is the purpose of the project to support the needs of a disabled resident?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012, Regulation 14UK Statutory Instruments 2012 No. 2920 Regulation 4, Equalities Act 2010, Section 6 Children Act 1989, Part 3',
+            text: "The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012, Regulation 14UK Statutory Instruments 2012 No. 2920 Regulation 4, Equalities Act 2010, Section 6 Children Act 1989, Part 3",
           },
         ],
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Is it a prior approval application?',
+      question: "Is it a prior approval application?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Is the property a home?',
+      question: "Is the property a home?",
       responses: [
         {
-          value: 'Yes',
+          value: "Yes",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'What works does the project involve?',
+      question: "What works does the project involve?",
       responses: [
         {
-          value: 'Extension',
+          value: "Extension",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Is this application a resubmission?',
+      question: "Is this application a resubmission?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012, Regulation 9',
+            text: "The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012, Regulation 9",
           },
         ],
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Does the application qualify for a disability exemption?',
+      question: "Does the application qualify for a disability exemption?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Does the application qualify for a resubmission exemption?',
+      question: "Does the application qualify for a resubmission exemption?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Is the site a sports field?',
+      question: "Is the site a sports field?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 Chapter 2, Paragraph 3',
+            text: "The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 Chapter 2, Paragraph 3",
           },
         ],
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
       question:
-        'Is the application being made by (or on behalf of) a parish or community council?',
+        "Is the application being made by (or on behalf of) a parish or community council?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 - Regulation 11',
+            text: "The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 - Regulation 11",
           },
         ],
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
       question:
-        'Are you also submitting another proposal for the same site today?',
+        "Are you also submitting another proposal for the same site today?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 Chapter 2, Paragraph 10',
+            text: "The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 Chapter 2, Paragraph 10",
           },
         ],
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
       question:
-        'Does the application qualify for the sports club fee reduction?',
+        "Does the application qualify for the sports club fee reduction?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
       question:
-        'Does the application qualify for the parish council reduction?',
+        "Does the application qualify for the parish council reduction?",
       responses: [
         {
-          value: 'No',
-        },
-      ],
-      metadata: {
-        autoAnswered: true,
-        policyRefs: [
-          {
-            text: 'The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 - Regulation 11',
-          },
-        ],
-        sectionName: 'About this application',
-      },
-    },
-    {
-      question:
-        'Does the application qualify for the alternative application reduction?',
-      responses: [
-        {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
         policyRefs: [
           {
-            text: 'The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 Chapter 2, Paragraph 10',
+            text: "The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 - Regulation 11",
           },
         ],
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'What type of application is it?',
+      question:
+        "Does the application qualify for the alternative application reduction?",
       responses: [
         {
-          value: 'Full planning permission',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        policyRefs: [
+          {
+            text: "The Town and Country Planning (Fees for Applications, Deemed Applications, Requests and Site Visits) (England) Regulations 2012 Chapter 2, Paragraph 10",
+          },
+        ],
+        sectionName: "About this application",
       },
     },
     {
-      question: 'What does the project involve?',
+      question: "What type of application is it?",
       responses: [
         {
-          value: 'Extension',
+          value: "Full planning permission",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'How much new floor area is being created?',
+      question: "What does the project involve?",
       responses: [
         {
-          value: 'Less than 100m²',
+          value: "Extension",
+        },
+      ],
+      metadata: {
+        autoAnswered: true,
+        sectionName: "About this application",
+      },
+    },
+    {
+      question: "How much new floor area is being created?",
+      responses: [
+        {
+          value: "Less than 100m²",
           metadata: {
-            flags: ['Community infrastructure levy / Not liable'],
+            flags: ["Community infrastructure levy / Not liable"],
           },
         },
       ],
@@ -1505,19 +1505,19 @@ export const expectedPlanningPermissionPayload = {
         autoAnswered: true,
         policyRefs: [
           {
-            text: 'The Community Infrastructure Levy Regulations 2010, Regulation 42',
+            text: "The Community Infrastructure Levy Regulations 2010, Regulation 42",
           },
         ],
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Is this a householder planning application?',
+      question: "Is this a householder planning application?",
       responses: [
         {
-          value: 'Yes',
+          value: "Yes",
           metadata: {
-            flags: ['Community infrastructure levy / Not liable'],
+            flags: ["Community infrastructure levy / Not liable"],
           },
         },
       ],
@@ -1525,189 +1525,189 @@ export const expectedPlanningPermissionPayload = {
         autoAnswered: true,
         policyRefs: [
           {
-            text: 'The Community Infrastructure Levy Regulations 2010, Regulation 42',
+            text: "The Community Infrastructure Levy Regulations 2010, Regulation 42",
           },
         ],
-        sectionName: 'About this application',
+        sectionName: "About this application",
       },
     },
     {
-      question: 'Have the works already started?',
+      question: "Have the works already started?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'Upload drawings',
+        sectionName: "Upload drawings",
       },
     },
     {
-      question: 'What changes does the project involve?',
+      question: "What changes does the project involve?",
       responses: [
         {
-          value: 'Extension',
+          value: "Extension",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'Upload drawings',
+        sectionName: "Upload drawings",
       },
     },
     {
-      question: 'Is the project to add an outbuilding?',
+      question: "Is the project to add an outbuilding?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'Upload drawings',
+        sectionName: "Upload drawings",
       },
     },
     {
-      question: 'Which Local Planning authority is it?',
+      question: "Which Local Planning authority is it?",
       responses: [
         {
-          value: 'Lambeth',
+          value: "Lambeth",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'Check',
+        sectionName: "Check",
       },
     },
     {
-      question: 'Connections with London Borough of Lambeth',
+      question: "Connections with London Borough of Lambeth",
       responses: [
         {
-          value: 'None of the above apply to me',
+          value: "None of the above apply to me",
         },
       ],
       metadata: {
-        sectionName: 'Check',
+        sectionName: "Check",
       },
     },
     {
-      question: 'I confirm that:',
+      question: "I confirm that:",
       responses: [
         {
           value:
-            'The information contained in this application is truthful, accurate and complete, to the best of my knowledge',
+            "The information contained in this application is truthful, accurate and complete, to the best of my knowledge",
         },
       ],
       metadata: {
-        sectionName: 'Check',
+        sectionName: "Check",
       },
     },
     {
-      question: 'Does the application qualify for a disability exemption?',
+      question: "Does the application qualify for a disability exemption?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'Pay and send',
+        sectionName: "Pay and send",
       },
     },
     {
-      question: 'Does the application qualify for a resubmission exemption?',
+      question: "Does the application qualify for a resubmission exemption?",
       responses: [
         {
-          value: 'No',
+          value: "No",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'Pay and send',
+        sectionName: "Pay and send",
       },
     },
     {
-      question: 'Which Local Planning authority is it?',
+      question: "Which Local Planning authority is it?",
       responses: [
         {
-          value: 'Lambeth',
+          value: "Lambeth",
         },
       ],
       metadata: {
         autoAnswered: true,
-        sectionName: 'Pay and send',
+        sectionName: "Pay and send",
       },
     },
   ],
   files: [
     {
-      name: 'https://api.editor.planx.dev/file/private/vg0av01p/RoofPlan.pdf',
+      name: "https://api.editor.planx.dev/file/private/vg0av01p/RoofPlan.pdf",
       type: [
         {
-          value: 'property.drawing.roofPlan',
-          description: 'Roof plan - existing',
+          value: "property.drawing.roofPlan",
+          description: "Roof plan - existing",
         },
         {
-          value: 'proposal.drawing.roofPlan',
-          description: 'Roof plan - proposed',
+          value: "proposal.drawing.roofPlan",
+          description: "Roof plan - proposed",
         },
       ],
     },
     {
-      name: 'https://api.editor.planx.dev/file/private/ka97yl2c/Site%20plan.pdf',
+      name: "https://api.editor.planx.dev/file/private/ka97yl2c/Site%20plan.pdf",
       type: [
         {
-          value: 'property.drawing.sitePlan',
-          description: 'Site plan - existing',
+          value: "property.drawing.sitePlan",
+          description: "Site plan - existing",
         },
         {
-          value: 'proposal.drawing.sitePlan',
-          description: 'Site plan - proposed',
+          value: "proposal.drawing.sitePlan",
+          description: "Site plan - proposed",
         },
       ],
     },
     {
-      name: 'https://api.editor.planx.dev/file/private/osprppqo/Elevations.pdf',
+      name: "https://api.editor.planx.dev/file/private/osprppqo/Elevations.pdf",
       type: [
         {
-          value: 'property.drawing.elevation',
-          description: 'Elevation plan - existing',
+          value: "property.drawing.elevation",
+          description: "Elevation plan - existing",
         },
         {
-          value: 'proposal.drawing.elevation',
-          description: 'Elevation plan - proposed',
+          value: "proposal.drawing.elevation",
+          description: "Elevation plan - proposed",
         },
       ],
     },
     {
-      name: 'https://api.editor.planx.dev/file/private/cri3ziaj/Plan.pdf',
+      name: "https://api.editor.planx.dev/file/private/cri3ziaj/Plan.pdf",
       type: [
         {
-          value: 'property.drawing.floorPlan',
-          description: 'Floor plan - existing',
+          value: "property.drawing.floorPlan",
+          description: "Floor plan - existing",
         },
         {
-          value: 'proposal.drawing.floorPlan',
-          description: 'Floor plan - proposed',
+          value: "proposal.drawing.floorPlan",
+          description: "Floor plan - proposed",
         },
       ],
     },
   ],
   metadata: {
     service: {
-      flowId: '01e38c5d-e701-4e44-acdc-4d6b5cc3b854',
-      name: 'Apply for planning permission',
-      owner: 'Lambeth',
-      url: 'https://www.editor.planx.dev/lambeth/apply-for-planning-permission/preview',
+      flowId: "01e38c5d-e701-4e44-acdc-4d6b5cc3b854",
+      name: "Apply for planning permission",
+      owner: "Lambeth",
+      url: "https://www.editor.planx.dev/lambeth/apply-for-planning-permission/preview",
     },
     session: {
-      source: 'PlanX',
-      id: '81bcaa0f-baf5-4573-ba0a-ea868c573faf',
-      createdAt: '2023-10-01 00:00:00',
-      submittedAt: '2023-10-02 00:00:00',
+      source: "PlanX",
+      id: "81bcaa0f-baf5-4573-ba0a-ea868c573faf",
+      createdAt: "2023-10-01 00:00:00",
+      submittedAt: "2023-10-02 00:00:00",
     },
     schema: {
-      url: 'https://theopensystemslab.github.io/digital-planning-data-schemas/v0.0.1/schema.json',
+      url: "https://theopensystemslab.github.io/digital-planning-data-schemas/v0.0.1/schema.json",
     },
   },
 };

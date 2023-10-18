@@ -214,7 +214,10 @@ app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
 app.get("/admin/session/:sessionId/zip", generateZip);
 app.get("/admin/session/:sessionId/summary", getSessionSummary);
-app.get("/admin/session/:sessionId/digital-planning-application", getDigitalPlanningApplicationPayload);
+app.get(
+  "/admin/session/:sessionId/digital-planning-application",
+  getDigitalPlanningApplicationPayload,
+);
 
 app.post("/flows/:flowId/copy", useTeamEditorAuth, copyFlow);
 

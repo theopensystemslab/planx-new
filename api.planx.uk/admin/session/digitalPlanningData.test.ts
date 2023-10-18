@@ -6,13 +6,16 @@ import { expectedPlanningPermissionPayload } from "../../tests/mocks/digitalPlan
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/digital-planning-application`;
 
-const mockGenerateDigitalPlanningApplicationPayload = jest.fn().mockResolvedValue(expectedPlanningPermissionPayload);
+const mockGenerateDigitalPlanningApplicationPayload = jest
+  .fn()
+  .mockResolvedValue(expectedPlanningPermissionPayload);
 
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       export: {
-        digitalPlanningDataPayload: () => mockGenerateDigitalPlanningApplicationPayload(),
+        digitalPlanningDataPayload: () =>
+          mockGenerateDigitalPlanningApplicationPayload(),
       },
     })),
   };
@@ -43,6 +46,8 @@ describe("Digital Planning Application payload admin endpoint", () => {
       .set(authHeader({ role: "platformAdmin" }))
       .expect(200)
       .expect("content-type", "application/json; charset=utf-8")
-      .then((res) => expect(res.body).toEqual(expectedPlanningPermissionPayload));
+      .then((res) =>
+        expect(res.body).toEqual(expectedPlanningPermissionPayload),
+      );
   });
 });

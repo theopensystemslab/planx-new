@@ -20,12 +20,16 @@ export const getDigitalPlanningApplicationPayload = async (
   next: NextFunction,
 ) => {
   try {
-    const data = await $api.export.digitalPlanningDataPayload(req.params.sessionId);
+    const data = await $api.export.digitalPlanningDataPayload(
+      req.params.sessionId,
+    );
     res.set("content-type", "application/json");
     return res.send(data);
   } catch (error) {
     return next({
-      message: "Failed to make Digital Planning Application payload: " + (error as Error).message,
+      message:
+        "Failed to make Digital Planning Application payload: " +
+        (error as Error).message,
     });
   }
 };
