@@ -10,7 +10,7 @@ export type AnalyticsType = "init" | "resume";
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 export type HelpClickMetadata = Record<string, string>;
-export type SelectedUrlsMetadata = Record<'selectedUrls', string[]>;
+export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 
 let lastAnalyticsLogId: number | undefined = undefined;
 

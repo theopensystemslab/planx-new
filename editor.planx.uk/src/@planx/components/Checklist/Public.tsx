@@ -41,7 +41,7 @@ function getFlatOptions({
     return options;
   }
   if (groupedOptions) {
-    return groupedOptions.flatMap((group: any) => group.children);
+    return groupedOptions.flatMap((group) => group.children);
   }
   return [];
 }
@@ -142,9 +142,9 @@ const ChecklistComponent: React.FC<Props> = ({
         <ErrorWrapper error={formik.errors.checked} id={id}>
           <Grid container spacing={layout === ChecklistLayout.Images ? 2 : 0}>
             {options ? (
-              options.map((option: any) =>
+              options.map((option) =>
                 layout === ChecklistLayout.Basic ? (
-                  <FormWrapper>
+                  <FormWrapper key={option.id}>
                     <Grid item xs={12} key={option.data.text}>
                       <ChecklistItem
                         onChange={changeCheckbox(option.id)}
@@ -201,7 +201,7 @@ const ChecklistComponent: React.FC<Props> = ({
                               isExpanded ? "-expanded" : ""
                             }`}
                           >
-                            {group.children.map((option: any) => (
+                            {group.children.map((option) => (
                               <ChecklistItem
                                 onChange={changeCheckbox(option.id)}
                                 key={option.data.text}
