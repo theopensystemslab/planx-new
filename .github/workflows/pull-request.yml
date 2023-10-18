@@ -308,7 +308,7 @@ jobs:
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
           os_id: 1743
-          plan: vc2-1c-1gb
+          plan: vc2-1c-2gb
           pullrequest_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
           tag: pullrequest
