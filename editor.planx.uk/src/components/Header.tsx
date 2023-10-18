@@ -316,12 +316,15 @@ const PublicToolbar: React.FC<{
     theme.breakpoints.up("md"),
   );
 
+  const { trackResetFlow } = useAnalyticsTracking();
+
   const handleRestart = async () => {
     if (
       confirm(
         "Are you sure you want to restart? This will delete your previous answers",
       )
     ) {
+      trackResetFlow();
       if (path === ApplicationPath.SingleSession) {
         clearLocalFlow(id);
         window.location.reload();
