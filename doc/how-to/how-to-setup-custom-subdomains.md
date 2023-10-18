@@ -33,8 +33,8 @@ This guide will walk through the process of setting a custom domain for a new te
 
 4. **PlanX** - Format certificates if provided with PKCS #12
     ```shell
-    openssl pkcs12 -nocerts -nodes -in <FILENAME> -out council.key
-    openssl pkcs12 -nokeys -in <FILENAME> -out council.cert
+    openssl pkcs12 -nocerts -nodes -in <FILENAME> -out council.key [ -password pass:<PASSWORD> ]
+    openssl pkcs12 -nokeys -in <FILENAME> -out council.cert [ -password pass:<PASSWORD> ]
     ```
     
     The `.cert` file might contain the certificate chain inside it, so please separate the first certificate in the file (the certificate body) from the rest of the certificates in the file (the certificate chain).
