@@ -315,7 +315,7 @@ const PublicToolbar: React.FC<{
   const showCentredServiceTitle = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up("md"),
   );
-  
+
   const { trackResetFlow } = useAnalyticsTracking();
 
   const handleRestart = async () => {

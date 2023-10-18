@@ -1,5 +1,9 @@
 import { gql } from "@apollo/client";
-import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
+import {
+  DEFAULT_FLAG_CATEGORY,
+  Flag,
+  FlagSet,
+} from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
 import { publicClient } from "lib/graphql";
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -11,6 +15,15 @@ type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards" | "reset";
 
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
+
+type NodeMetadata = {
+  flagset?: FlagSet;
+  displayText?: {
+    heading?: string;
+    description?: string;
+  };
+  flag?: Flag;
+};
 
 let lastAnalyticsLogId: number | undefined = undefined;
 
@@ -120,7 +133,31 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       node?.type === TYPES.Content
         ? getContentTitle(node)
         : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
+    // On component transition create the new analytics log
+    const result = await insertNewAnalyticsLog(
+      direction,
+      analyticsId,
+      metadata,
+      node_title,
+    );
+    const id = result?.data.insert_analytics_logs_one?.id;
+    const newLogCreatedAt = result?.data.insert_analytics_logs_one?.created_at;
 
+    // On successful create of a new log update the previous log with the next_log_created_at
+    // This allows us to estimate how long a user spend on a card
+    if (lastAnalyticsLogId && newLogCreatedAt) {
+      updateLastLogWithNextLogCreatedAt(lastAnalyticsLogId, newLogCreatedAt);
+    }
+
+    lastAnalyticsLogId = id;
+  }
+
+  async function insertNewAnalyticsLog(
+    direction: AnalyticsLogDirection,
+    analyticsId: number,
+    metadata: NodeMetadata,
+    node_title: string,
+  ) {
     const result = await publicClient.mutate({
       mutation: gql`
         mutation InsertNewAnalyticsLog(
@@ -141,6 +178,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
             }
           ) {
             id
+            created_at
           }
         }
       `,
@@ -152,8 +190,32 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         node_title: node_title,
       },
     });
-    const id = result?.data.insert_analytics_logs_one?.id;
-    lastAnalyticsLogId = id;
+    return result;
+  }
+
+  async function updateLastLogWithNextLogCreatedAt(
+    lastAnalyticsLogId: number,
+    newLogCreatedAt: Date,
+  ) {
+    await publicClient.mutate({
+      mutation: gql`
+        mutation UpdateNextLogCreatedAt(
+          $id: bigint!
+          $next_log_created_at: timestamptz
+        ) {
+          update_analytics_logs_by_pk(
+            pk_columns: { id: $id }
+            _set: { next_log_created_at: $next_log_created_at }
+          ) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: lastAnalyticsLogId,
+        next_log_created_at: newLogCreatedAt,
+      },
+    });
   }
 
   async function trackHelpClick(metadata?: HelpClickMetadata) {
