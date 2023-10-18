@@ -164,6 +164,78 @@ describe("createFileList function", () => {
     expect(result).toEqual(expected);
   });
 
+  it("correctly handles unique file names", () => {
+    const fileTypes: FileType[] = [
+      {
+        fn: "files.documentA",
+        name: "Document A",
+        rule: {
+          fn: "documentA.required",
+          val: "true",
+          operator: Operator.Equals,
+          condition: Condition.RequiredIf,
+        },
+      },
+      {
+        fn: "files.documentB",
+        name: "Document B",
+        rule: {
+          fn: "documentB.recommended",
+          val: "true",
+          operator: Operator.Equals,
+          condition: Condition.RecommendedIf,
+        },
+      },
+      {
+        fn: "files.documentB",
+        name: "Document B",
+        rule: {
+          fn: "documentB.required",
+          val: "true",
+          operator: Operator.Equals,
+          condition: Condition.RequiredIf,
+        },
+      },
+    ];
+    const passport: Store.passport = {
+      data: {
+        "documentA.required": ["true"],
+        "documentB.recommended": ["true"],
+      },
+    };
+
+    const expected: FileList = {
+      required: [
+        {
+          fn: "files.documentA",
+          name: "Document A",
+          rule: {
+            fn: "documentA.required",
+            val: "true",
+            operator: Operator.Equals,
+            condition: Condition.RequiredIf,
+          },
+        },
+      ],
+      recommended: [
+        {
+          fn: "files.documentB",
+          name: "Document B",
+          rule: {
+            fn: "documentB.recommended",
+            val: "true",
+            operator: Operator.Equals,
+            condition: Condition.RecommendedIf,
+          },
+        },
+      ],
+      optional: [],
+    };
+    const result = createFileList({ passport, fileTypes });
+
+    expect(result).toEqual(expected);
+  });
+
   it("handles a complex list of FileTypes", () => {
     const fileTypes: FileType[] = [
       {
