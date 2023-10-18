@@ -315,6 +315,8 @@ const PublicToolbar: React.FC<{
   const showCentredServiceTitle = useMediaQuery((theme: Theme) =>
     theme.breakpoints.up("md"),
   );
+  
+  const { trackResetFlow } = useAnalyticsTracking();
 
   const handleRestart = async () => {
     if (
@@ -322,6 +324,7 @@ const PublicToolbar: React.FC<{
         "Are you sure you want to restart? This will delete your previous answers",
       )
     ) {
+      trackResetFlow();
       if (path === ApplicationPath.SingleSession) {
         clearLocalFlow(id);
         window.location.reload();
