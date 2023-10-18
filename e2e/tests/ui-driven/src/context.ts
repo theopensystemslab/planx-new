@@ -15,7 +15,7 @@ export interface Context {
   team: {
     id?: number;
     name: string;
-    slug?: string;
+    slug: string;
     logo: string;
     primaryColor: string;
     homepage: string;
@@ -50,13 +50,13 @@ export const contextDefaults: Context = {
 export async function setUpTestContext(
   initialContext: Context,
 ): Promise<Context> {
-  const core = getCoreDomainClient();
+  const $admin = getCoreDomainClient();
   const context: Context = { ...initialContext };
   if (context.user) {
-    context.user.id = await core.createUser(context.user);
+    context.user.id = await $admin.user.create(context.user);
   }
   if (context.team) {
-    context.team.id = await core.createTeam({
+    context.team.id = await $admin.team.create({
       slug: context.team.slug,
       name: context.team.name,
       logo: context.team.logo,
@@ -71,12 +71,12 @@ export async function setUpTestContext(
     context.team?.id &&
     context.user?.id
   ) {
-    context.flow.id = await core.createFlow({
+    context.flow.id = await $admin.flow.create({
       slug: context.flow.slug,
       teamId: context.team.id,
       data: context.flow!.data!,
     });
-    context.flow.publishedId = await core.publishFlow({
+    context.flow.publishedId = await $admin.flow.publish({
       flow: {
         id: context.flow.id,
         data: context.flow!.data!,

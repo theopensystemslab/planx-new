@@ -40,7 +40,7 @@ const createPaymentSendEvents = async (
     const now = new Date();
     const combinedResponse: CombinedResponse = {};
 
-    const session = await $api.getSessionById(payload.sessionId);
+    const session = await $api.session.find(payload.sessionId);
     if (!session) {
       return next({
         status: 400,

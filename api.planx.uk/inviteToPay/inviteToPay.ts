@@ -39,7 +39,7 @@ export async function inviteToPay(
   }
 
   // lock session before creating a payment request
-  const locked = await $api.lockSession(sessionId);
+  const locked = await $api.session.lock(sessionId);
   if (locked === null) {
     return next(
       new ServerError({
@@ -63,7 +63,7 @@ export async function inviteToPay(
 
   let paymentRequest: PaymentRequest | undefined;
   try {
-    paymentRequest = await $api.createPaymentRequest({
+    paymentRequest = await $api.paymentRequest.create({
       sessionId,
       applicantName,
       payeeName,
@@ -72,7 +72,7 @@ export async function inviteToPay(
     });
   } catch (e: unknown) {
     // revert the session lock on failure
-    await $api.unlockSession(sessionId);
+    await $api.session.unlock(sessionId);
     return next(
       new ServerError({
         message:

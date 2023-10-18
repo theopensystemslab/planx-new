@@ -58,6 +58,8 @@ export const setup = async () => {
   return world;
 };
 
+export type GQLQueryResult = unknown[] | Record<"returning", unknown[]> | null;
+
 export const performGQLQuery = async ({
   world,
   action,
@@ -66,7 +68,7 @@ export const performGQLQuery = async ({
   const query = queries[table][action];
   const variables = buildVariables(query, world);
   const client = (await getClient(world.activeUserEmail)).client;
-  const { result } = await client.request<Record<"result", any>>(
+  const { result } = await client.request<Record<"result", GQLQueryResult>>(
     query,
     variables,
   );
