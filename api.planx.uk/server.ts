@@ -72,6 +72,7 @@ import webhookRoutes from "./modules/webhooks/routes";
 import analyticsRoutes from "./modules/analytics/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
+import { getDigitalPlanningApplicationPayload } from "./admin/session/digitalPlanningData";
 import { $public } from "./client";
 
 const router = express.Router();
@@ -213,6 +214,10 @@ app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
 app.get("/admin/session/:sessionId/zip", generateZip);
 app.get("/admin/session/:sessionId/summary", getSessionSummary);
+app.get(
+  "/admin/session/:sessionId/digital-planning-application",
+  getDigitalPlanningApplicationPayload,
+);
 
 app.post("/flows/:flowId/copy", useTeamEditorAuth, copyFlow);
 
