@@ -33,6 +33,6 @@ SELECT
   notify_personalisation,
   boundary
 FROM sync_teams
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE;
 
 SELECT setval('teams_id_seq', max(id)) FROM teams;

@@ -30,7 +30,7 @@ SELECT
   email,
   is_platform_admin
 FROM sync_users
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE;
 
 ALTER TABLE
   users ENABLE TRIGGER grant_new_user_template_team_access;

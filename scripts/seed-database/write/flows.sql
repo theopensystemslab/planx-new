@@ -34,7 +34,7 @@ SELECT
   settings,
   copied_from
 FROM sync_flows
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
 UPDATE flows SET version = 1;
