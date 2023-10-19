@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, isAxiosError } from "axios";
 import { NextFunction, Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import FormData from "form-data";
@@ -157,9 +157,12 @@ export async function sendToUniform(
       application: applicationAuditRecord,
     });
   } catch (error) {
+    const errorMessage = isAxiosError(error)
+      ? JSON.stringify(error.toJSON())
+      : (error as Error).message;
     return next({
       error,
-      message: `Failed to send to Uniform (${localAuthority}): ${error}`,
+      message: `Failed to send to Uniform (${localAuthority}): ${errorMessage}`,
     });
   }
 }
@@ -219,7 +222,13 @@ async function authenticate({
   const response = await axios.request<RawUniformAuthResponse>(authConfig);
 
   if (!response.data.access_token) {
-    throw Error("Failed to authenticate to Uniform");
+    throw Error("Failed to authenticate to Uniform - no access token returned");
+  }
+
+  if (!response.data["organisation-name"] || response.data["organisation-id"]) {
+    throw Error(
+      "Failed to authenticate to Uniform - no organisation details returned",
+    );
   }
 
   const uniformAuthResponse: UniformAuthResponse = {
