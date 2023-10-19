@@ -12,4 +12,4 @@ INSERT INTO
 SELECT
   id, user_id, team_id, role
 FROM
-  sync_team_members ON CONFLICT (id) DO NOTHING;
+  sync_team_members ON CONFLICT (id) DO UPDATE;

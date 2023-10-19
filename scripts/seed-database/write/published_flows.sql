@@ -25,4 +25,4 @@ SELECT
   publisher_id,
   created_at
 FROM sync_published_flows
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE;
