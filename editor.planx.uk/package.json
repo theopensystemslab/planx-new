@@ -14,7 +14,7 @@
     "@mui/styles": "^5.14.5",
     "@mui/utils": "^5.14.5",
     "@opensystemslab/map": "^0.7.5",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#63feb54",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#2b7fa5b",
     "@tiptap/core": "^2.0.3",
     "@tiptap/extension-bold": "^2.0.3",
     "@tiptap/extension-bubble-menu": "^2.1.6",
