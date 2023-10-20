@@ -1,4 +1,4 @@
--- insert users skipping conflicts
+-- insert users overwriting conflicts
 CREATE TEMPORARY TABLE sync_users (
   id integer,
   first_name text,
@@ -30,7 +30,12 @@ SELECT
   email,
   is_platform_admin
 FROM sync_users
-ON CONFLICT (id) DO UPDATE;
+ON CONFLICT (id) DO UPDATE
+SET
+  first_name = EXCLUDED.first_name,
+  last_name = EXCLUDED.last_name,
+  email = EXCLUDED.email,
+  is_platform_admin = EXCLUDED.is_platform_admin;
 
 ALTER TABLE
   users ENABLE TRIGGER grant_new_user_template_team_access;
