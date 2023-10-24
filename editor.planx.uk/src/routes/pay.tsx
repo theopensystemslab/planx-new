@@ -4,6 +4,7 @@ import { publicClient } from "lib/graphql";
 import { getRetentionPeriod } from "lib/pay";
 import {
   compose,
+  map,
   mount,
   NaviRequest,
   redirect,
@@ -37,40 +38,39 @@ const payRoutes = compose(
   }),
 
   mount({
-    "/": route(async (req) => {
+    "/": map(async (req) => {
       const paymentRequest = await getPaymentRequest(req);
-      if (!paymentRequest) {
-        return {
-          title: makeTitle("Sorry, we can’t find that payment link"),
-          view: (
-            <ErrorPage title={"Sorry, we can’t find that payment link"}>
-              Please check you have the right link. If it still doesn’t work, it
-              may mean the payment link has expired or payment has already been
-              made.
-              <br />
-              <br />
-              Please contact the person who invited you to pay.
-            </ErrorPage>
-          ),
-        };
-      }
-      return {
+      if (!paymentRequest) return redirect("./not-found");
+
+      return route({
         title: makeTitle("Make a payment"),
         view: <MakePayment {...paymentRequest} />,
-      };
+      });
     }),
-    "/invite": route(async (req) => {
+    "/not-found": route({
+      title: makeTitle("Sorry, we can’t find that payment link"),
+      view: (
+        <ErrorPage title={"Sorry, we can’t find that payment link"}>
+          Please check you have the right link. If it still doesn’t work, it may
+          mean the payment link has expired or payment has already been made.
+          <br />
+          <br />
+          Please contact the person who invited you to pay.
+        </ErrorPage>
+      ),
+    }),
+    "/invite": map(async (req) => {
       const paymentRequest = await getPaymentRequest(req);
-      if (!paymentRequest) {
-        return {
-          title: makeTitle("Failed to generate payment request"),
-          view: <ErrorPage title={"Failed to generate payment request"} />,
-        };
-      }
-      return {
+      if (!paymentRequest) return redirect("./failed");
+
+      return route({
         title: makeTitle("Invite to pay"),
         view: <InviteToPay {...paymentRequest} />,
-      };
+      });
+    }),
+    "/invite/failed": route({
+      title: makeTitle("Failed to generate payment request"),
+      view: <ErrorPage title={"Failed to generate payment request"} />,
     }),
     "/pages/:page": redirect(
       (req) => `../../../preview/pages/${req.params.page}`,
@@ -84,7 +84,7 @@ const payRoutes = compose(
 const getPaymentRequest = async (
   req: NaviRequest,
 ): Promise<PaymentRequest | undefined> => {
-  const paymentRequestId = req.params["paymentRequestId"];
+  const paymentRequestId = req.query["paymentRequestId"];
   if (paymentRequestId) {
     const paymentRequest = await fetchPaymentRequest(paymentRequestId);
     return paymentRequest;
