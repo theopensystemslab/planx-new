@@ -3,6 +3,7 @@ import { TYPES } from "@planx/components/types";
 import { Store, vanillaStore } from "../store";
 
 const { getState, setState } = vanillaStore;
+const { upcomingCardIds, resetPreview, record, currentCard } = getState();
 
 const flow: Store.flow = {
   _root: {
@@ -46,34 +47,37 @@ const flow: Store.flow = {
 };
 
 beforeEach(() => {
-  getState().resetPreview();
+  resetPreview();
+  setState({ flow });
 });
 
 test.skip("A question is auto-answered when it is reached, not when its' `fn` is first added to the breadcrumbs/passport", () => {
-  setState({
-    flow,
-  });
+  const visitedNodes = () => Object.keys(getState().breadcrumbs);
 
-  expect(getState().upcomingCardIds()).toEqual([
+  // mimic "Continue" button and properly set visitedNodes()
+  const clickContinue = () => upcomingCardIds();
+
+  expect(upcomingCardIds()).toEqual([
     "SetValue",
     "Content",
     "AutomatedQuestion",
   ]);
 
-  // One step forwards
-  getState().record("SetValue", { data: { fruit: ["apple"] }, auto: true });
-  expect(getState().breadcrumbs).toMatchObject({
-    SetValue: {
-      auto: true,
-      data: {
-        fruit: ["apple"],
-      },
-    },
-  });
+  // Step forwards through the SetValue
+  record("SetValue", { data: { fruit: ["apple"] }, auto: true });
+  clickContinue();
 
-  // "AutomatedQuestion" should still be queued up, not already answered
-  expect(getState().upcomingCardIds()).toEqual([
-    "Content",
-    "AutomatedQuestion",
-  ]);
+  expect(currentCard()?.id).toBe("Content");
+
+  // "AutomatedQuestion" should still be queued up, not already answered based on SetValue
+  expect(visitedNodes()).not.toContain("AutomatedQuestion");
+  expect(upcomingCardIds()).toContain("AutomatedQuestion");
+
+  // Step forwards through Content
+  record("Content", { data: {}, auto: false });
+  clickContinue();
+
+  // "AutomatedQuestion" has now been auto-answered now, end of flow
+  expect(visitedNodes()).toContain("AutomatedQuestion");
+  expect(upcomingCardIds()).toEqual([]);
 });
