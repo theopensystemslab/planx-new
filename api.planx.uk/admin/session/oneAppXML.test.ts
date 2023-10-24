@@ -1,40 +1,28 @@
 import supertest from "supertest";
 import app from "../../server";
-import { queryMock } from "../../tests/graphqlQueryMock";
 import { authHeader } from "../../tests/mockJWT";
 
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/xml`;
 
+const mockGenerateOneAppXML = jest
+  .fn()
+  .mockResolvedValue("<dummy:xml></dummy:xml>");
+
+jest.mock("../../client", () => {
+  return {
+    $api: {
+      export: {
+        oneAppPayload: () => mockGenerateOneAppXML(),
+      },
+    },
+  };
+});
+
 describe("OneApp XML endpoint", () => {
-  beforeEach(() => {
-    queryMock.mockQuery({
-      name: "GetMostRecentUniformApplicationBySessionID",
-      variables: {
-        submission_reference: "abc123",
-      },
-      data: {
-        uniform_applications: [{ xml: "<dummy:xml></dummy:xml>" }],
-      },
-    });
-
-    queryMock.mockQuery({
-      name: "GetMostRecentUniformApplicationBySessionID",
-      variables: {
-        submission_reference: "xyz789",
-      },
-      data: {
-        uniform_applications: [],
-      },
-    });
-  });
-
-  afterEach(() => jest.clearAllMocks());
-  const auth = authHeader({ role: "platformAdmin" });
-
   it("requires a user to be logged in", async () => {
     await supertest(app)
-      .get(endpoint`abc123`)
+      .get(endpoint`123`)
       .expect(401)
       .then((res) =>
         expect(res.body).toEqual({
@@ -45,23 +33,15 @@ describe("OneApp XML endpoint", () => {
 
   it("requires a user to have the 'platformAdmin' role", async () => {
     await supertest(app)
-      .get(endpoint`abc123`)
+      .get(endpoint`123`)
       .set(authHeader({ role: "teamEditor" }))
       .expect(403);
   });
 
-  it("returns an error if sessionID is invalid", async () => {
-    await supertest(app)
-      .get(endpoint`xyz789`)
-      .set(auth)
-      .expect(500)
-      .then((res) => expect(res.body.error).toMatch(/Invalid sessionID/));
-  });
-
   it("returns XML", async () => {
     await supertest(app)
-      .get(endpoint`abc123`)
-      .set(auth)
+      .get(endpoint`123`)
+      .set(authHeader({ role: "platformAdmin" }))
       .expect(200)
       .expect("content-type", "text/xml; charset=utf-8")
       .then((res) => {

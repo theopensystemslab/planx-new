@@ -66,4 +66,19 @@ describe("users", () => {
       expect(i).toHaveNoMutationsFor("users");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("can query users", async () => {
+      expect(i.queries).toContain("users");
+    });
+
+    test("cannot create, update, or delete users", async () => {
+      expect(i).toHaveNoMutationsFor("users");
+    });
+  });
 });

@@ -133,22 +133,11 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     "digital-land-datasets": ["ancient-woodland"],
     category: "Ecology",
   },
-  "flood.zone1": {
-    active: false,
-    neg: "is not within a Flood Zone 1 (low risk)",
-    pos: "is within a Flood Zone 1 (low risk)",
-    category: "Flooding",
-  },
-  "flood.zone2": {
-    active: false,
-    neg: "is not within a Flood Zone 2 (medium risk)",
-    pos: "is within a Flood Zone 2 (medium risk)",
-    category: "Flooding",
-  },
-  "flood.zone3": {
-    active: false,
-    neg: "is not within a Flood Zone 3 (high risk)",
-    pos: "is within a Flood Zone 3 (high risk)",
+  flood: {
+    active: true,
+    neg: "is not in a Flood Risk Zone",
+    pos: "is in a Flood Risk Zone",
+    "digital-land-datasets": ["flood-risk-zone"],
     category: "Flooding",
   },
   "defence.explosives": {

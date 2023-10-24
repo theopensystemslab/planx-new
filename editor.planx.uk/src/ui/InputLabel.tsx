@@ -6,9 +6,6 @@ import React, { ReactNode } from "react";
 const Root = styled("label")(() => ({
   display: "block",
   width: "100%",
-  "& > :not(:first-child)": {
-    width: "100%",
-  },
 }));
 
 export default function InputLabel(props: {

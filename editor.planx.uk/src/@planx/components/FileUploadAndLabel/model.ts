@@ -125,8 +125,12 @@ export const createFileList = ({
   sortedFileTypes.forEach((fileType) => {
     const isUnique = !uniqueNames.includes(fileType.name);
     if (isUnique) {
-      uniqueNames.push(fileType.name);
-      populateFileList({ fileList, fileType, passport });
+      const isFileTypeAdded = populateFileList({
+        fileList,
+        fileType,
+        passport,
+      });
+      if (isFileTypeAdded) uniqueNames.push(fileType.name);
     }
   });
   return fileList;
@@ -139,6 +143,10 @@ const sortFileTypes = (fileTypes: FileType[]): FileType[] => {
   return sortedFileTypes;
 };
 
+/**
+ * Populate file list based on condition
+ * @returns true if file added, false if not
+ */
 const populateFileList = ({
   fileList,
   fileType,
@@ -147,27 +155,33 @@ const populateFileList = ({
   fileList: FileList;
   fileType: FileType;
   passport: Store.passport;
-}) => {
+}): boolean => {
   switch (fileType.rule.condition) {
     case Condition.AlwaysRequired:
       fileList.required.push(fileType);
-      break;
+      return true;
+
     case Condition.AlwaysRecommended:
       fileList.recommended.push(fileType);
-      break;
+      return true;
+
     case Condition.RequiredIf:
       if (isRuleMet(passport, fileType.rule)) {
         fileList.required.push(fileType);
+        return true;
       }
-      break;
+      return false;
+
     case Condition.RecommendedIf:
       if (isRuleMet(passport, fileType.rule)) {
         fileList.recommended.push(fileType);
+        return true;
       }
-      break;
+      return false;
+
     case Condition.NotRequired:
       fileList.optional.push(fileType);
-      break;
+      return true;
   }
 };
 

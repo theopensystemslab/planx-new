@@ -57,8 +57,7 @@ const mockGenerateOneAppXML = jest
 
 jest.mock("../client", () => {
   return {
-    $admin: {
-      generateOneAppXML: () => mockGenerateOneAppXML(),
+    $api: {
       getDocumentTemplateNamesForSession: jest
         .fn()
         .mockResolvedValue(["X", "Y"]),
@@ -66,16 +65,15 @@ jest.mock("../client", () => {
         find: () => mockGetSessionById(),
       },
       export: {
-        csvData: jest.fn().mockResolvedValue({
-          responses: [
-            {
-              question: "Test",
-              responses: [{ value: "Answer" }],
-              metadata: {},
-            },
-          ],
-          redactedResponses: [],
-        }),
+        csvData: jest.fn().mockResolvedValue([
+          {
+            question: "Test",
+            responses: [{ value: "Answer" }],
+            metadata: {},
+          },
+        ]),
+        csvDataRedacted: jest.fn().mockResolvedValue([]),
+        oneAppPayload: () => mockGenerateOneAppXML(),
       },
     },
   };

@@ -404,7 +404,7 @@ jobs:
               - [Editor](https://${{ env.FULL_DOMAIN }})
               - [Storybook](https://storybook.${{ env.FULL_DOMAIN }})
               - [Hasura](https://hasura.${{ env.FULL_DOMAIN }})
-              - [API](https://api.${{ env.FULL_DOMAIN }})
+              - [API](https://api.${{ env.FULL_DOMAIN }}/docs)
               - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
 
   healthcheck:

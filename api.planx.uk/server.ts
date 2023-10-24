@@ -40,7 +40,6 @@ import {
 } from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";
-import { adminGraphQLClient as adminClient } from "./hasura";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
   privateDownloadController,
@@ -73,6 +72,8 @@ import webhookRoutes from "./modules/webhooks/routes";
 import analyticsRoutes from "./modules/analytics/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
+import { getDigitalPlanningApplicationPayload } from "./admin/session/digitalPlanningData";
+import { $public } from "./client";
 
 const router = express.Router();
 
@@ -213,6 +214,10 @@ app.get("/admin/session/:sessionId/html", getHTMLExport);
 app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
 app.get("/admin/session/:sessionId/zip", generateZip);
 app.get("/admin/session/:sessionId/summary", getSessionSummary);
+app.get(
+  "/admin/session/:sessionId/digital-planning-application",
+  getDigitalPlanningApplicationPayload,
+);
 
 app.post("/flows/:flowId/copy", useTeamEditorAuth, copyFlow);
 
@@ -279,13 +284,21 @@ app.get(
   copyPortalAsFlow,
 );
 
-// unauthenticated because accessing flow schema only, no user data
+interface FlowSchema {
+  node: string;
+  type: string;
+  text: string;
+  planx_variable: string;
+}
+
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
-    const schema = await adminClient.request(
+    const { flowSchema } = await $public.client.request<{
+      flowSchema: FlowSchema[];
+    }>(
       gql`
         query ($flow_id: String!) {
-          get_flow_schema(args: { published_flow_id: $flow_id }) {
+          flowSchema: get_flow_schema(args: { published_flow_id: $flow_id }) {
             node
             type
             text
@@ -296,7 +309,7 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
       { flow_id: req.params.flowId },
     );
 
-    if (schema.get_flow_schema.length < 1) {
+    if (!flowSchema.length) {
       next({
         status: 404,
         message:
@@ -304,7 +317,7 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
       });
     } else {
       // build a CSV and stream it
-      stringify(schema.get_flow_schema, { header: true }).pipe(res);
+      stringify(flowSchema, { header: true }).pipe(res);
 
       res.header("Content-type", "text/csv");
       res.attachment(`${req.params.flowId}.csv`);

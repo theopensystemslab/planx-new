@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { $admin } from "../client";
+import { $api } from "../client";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import {
   ScheduledEventResponse,
@@ -40,7 +40,7 @@ const createPaymentSendEvents = async (
     const now = new Date();
     const combinedResponse: CombinedResponse = {};
 
-    const session = await $admin.getSessionById(payload.sessionId);
+    const session = await $api.session.find(payload.sessionId);
     if (!session) {
       return next({
         status: 400,

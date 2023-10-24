@@ -1,6 +1,6 @@
 import os from "os";
 import path from "path";
-import { $admin } from "../client";
+import { $api } from "../client";
 import { stringify } from "csv-stringify";
 import fs from "fs";
 import str from "string-to-stream";
@@ -28,7 +28,7 @@ export async function buildSubmissionExportZip({
   const zip = new ExportZip(sessionId);
 
   // fetch session data
-  const sessionData = await $admin.session.find(sessionId);
+  const sessionData = await $api.session.find(sessionId);
   if (!sessionData) {
     throw new Error(
       `session ${sessionId} not found so could not create Uniform submission zip`,
@@ -39,7 +39,7 @@ export async function buildSubmissionExportZip({
   // add OneApp XML to the zip
   if (includeOneAppXML) {
     try {
-      const xml = await $admin.generateOneAppXML(sessionId);
+      const xml = await $api.export.oneAppPayload(sessionId);
       const xmlStream = str(xml.trim());
       await zip.addStream({
         name: "proposal.xml", // must be named "proposal.xml" to be processed by Uniform
@@ -65,8 +65,8 @@ export async function buildSubmissionExportZip({
   }
 
   // generate csv data
-  const { responses, redactedResponses } =
-    await $admin.export.csvData(sessionId);
+  const responses = await $api.export.csvData(sessionId);
+  const redactedResponses = await $api.export.csvDataRedacted(sessionId);
 
   // write csv to the zip
   try {
@@ -84,7 +84,7 @@ export async function buildSubmissionExportZip({
 
   // add template files to zip
   const templateNames =
-    await $admin.getDocumentTemplateNamesForSession(sessionId);
+    await $api.getDocumentTemplateNamesForSession(sessionId);
   for (const templateName of templateNames || []) {
     try {
       const isTemplateSupported = hasRequiredDataForTemplate({

@@ -3,7 +3,7 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { $admin } from "../client";
+import { $api } from "../client";
 import { ServerError } from "../errors";
 
 interface SendToBOPSRequest {
@@ -70,7 +70,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     );
   }
   const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
-  const { exportData } = await $admin.export.bopsPayload(payload?.sessionId);
+  const exportData = await $api.export.bopsPayload(payload?.sessionId);
 
   try {
     const bopsResponse = await axios({

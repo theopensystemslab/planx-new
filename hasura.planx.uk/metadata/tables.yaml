@@ -38,14 +38,17 @@
       permission:
         columns:
           - analytics_id
+          - created_at
           - id
         filter: {}
   update_permissions:
     - role: public
       permission:
         columns:
+          - flow_direction
           - has_clicked_help
           - metadata
+          - next_log_created_at
         filter: {}
         check: null
 - table:
@@ -62,6 +65,52 @@
 - table:
     schema: public
     name: bops_applications
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - id
+          - req_headers
+          - request
+          - response
+          - response_headers
+          - bops_id
+          - destination_url
+          - session_id
+          - created_at
+          - sanitised_at
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - req_headers
+          - request
+          - response
+          - response_headers
+          - bops_id
+          - destination_url
+          - session_id
+          - created_at
+          - sanitised_at
+        filter: {}
+  update_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - req_headers
+          - request
+          - response
+          - response_headers
+          - bops_id
+          - destination_url
+          - session_id
+          - created_at
+          - sanitised_at
+        filter: {}
+        check: {}
   event_triggers:
     - name: setup_bops_applications_notifications
       definition:
@@ -90,6 +139,46 @@
 - table:
     schema: public
     name: email_applications
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - id
+          - request
+          - response
+          - recipient
+          - team_slug
+          - created_at
+          - sanitised_at
+          - session_id
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - request
+          - response
+          - recipient
+          - team_slug
+          - created_at
+          - sanitised_at
+          - session_id
+        filter: {}
+  update_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - request
+          - response
+          - recipient
+          - team_slug
+          - created_at
+          - sanitised_at
+          - session_id
+        filter: {}
+        check: {}
   event_triggers:
     - name: setup_email_applications_notifications
       definition:
@@ -119,6 +208,12 @@
       using:
         foreign_key_constraint_on: flow_id
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - document_template
+          - flow_id
+        filter: {}
     - role: public
       permission:
         columns:
@@ -177,6 +272,20 @@
           name: compile_flow_portals
       comment: Flow data with portals merged in
   insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - creator_id
+          - team_id
+          - settings
+          - slug
+          - created_at
+          - updated_at
+          - copied_from
+          - id
+          - version
+          - data
     - role: platformAdmin
       permission:
         check: {}
@@ -213,6 +322,22 @@
           - version
           - data
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - creator_id
+          - team_id
+          - settings
+          - slug
+          - created_at
+          - updated_at
+          - copied_from
+          - id
+          - version
+          - data
+        computed_fields:
+          - data_merged
+        filter: {}
     - role: platformAdmin
       permission:
         columns:
@@ -259,6 +384,21 @@
           - data_merged
         filter: {}
   update_permissions:
+    - role: api
+      permission:
+        columns:
+          - creator_id
+          - team_id
+          - settings
+          - slug
+          - created_at
+          - updated_at
+          - copied_from
+          - id
+          - version
+          - data
+        filter: {}
+        check: {}
     - role: platformAdmin
       permission:
         columns:
@@ -376,6 +516,21 @@
           - flow_id
           - id
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - data
+          - email
+          - created_at
+          - deleted_at
+          - locked_at
+          - submitted_at
+          - updated_at
+          - flow_id
+          - id
+          - has_user_saved
+          - sanitised_at
+        filter: {}
     - role: public
       permission:
         columns:
@@ -397,6 +552,22 @@
             - deleted_at:
                 _is_null: true
   update_permissions:
+    - role: api
+      permission:
+        columns:
+          - data
+          - email
+          - created_at
+          - deleted_at
+          - locked_at
+          - submitted_at
+          - updated_at
+          - flow_id
+          - id
+          - has_user_saved
+          - sanitised_at
+        filter: {}
+        check: {}
     - role: public
       permission:
         columns:
@@ -610,7 +781,36 @@
     - name: session
       using:
         foreign_key_constraint_on: session_id
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - session_preview_data
+          - applicant_name
+          - payee_email
+          - payee_name
+          - created_at
+          - paid_at
+          - id
+          - session_id
+          - govpay_payment_id
+          - payment_amount
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - session_preview_data
+          - applicant_name
+          - payee_email
+          - payee_name
+          - created_at
+          - paid_at
+          - id
+          - session_id
+          - govpay_payment_id
+          - payment_amount
+        filter: {}
     - role: public
       permission:
         columns:
@@ -624,6 +824,27 @@
         filter:
           id:
             _eq: x-hasura-payment-request-id
+  update_permissions:
+    - role: api
+      permission:
+        columns:
+          - session_preview_data
+          - applicant_name
+          - payee_email
+          - payee_name
+          - created_at
+          - paid_at
+          - id
+          - session_id
+          - govpay_payment_id
+          - payment_amount
+        filter: {}
+        check: {}
+  delete_permissions:
+    - role: api
+      permission:
+        backend_only: false
+        filter: {}
   event_triggers:
     - name: setup_payment_expiry_events
       definition:
@@ -751,6 +972,18 @@
           insertion_order: null
           column_mapping:
             session_id: id
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - payment_id
+          - status
+          - team_slug
+          - created_at
+          - flow_id
+          - session_id
+          - amount
 - table:
     schema: public
     name: payment_status_enum
@@ -758,6 +991,16 @@
 - table:
     schema: public
     name: planning_constraints_requests
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - id
+          - response
+          - destination_url
+          - session_id
+          - created_at
 - table:
     schema: public
     name: project_types
@@ -779,6 +1022,16 @@
       using:
         foreign_key_constraint_on: publisher_id
   insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - id
+          - publisher_id
+          - summary
+          - created_at
+          - flow_id
+          - data
     - role: platformAdmin
       permission:
         check: {}
@@ -808,6 +1061,16 @@
           - flow_id
           - data
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - publisher_id
+          - summary
+          - created_at
+          - flow_id
+          - data
+        filter: {}
     - role: platformAdmin
       permission:
         columns:
@@ -841,6 +1104,21 @@
 - table:
     schema: public
     name: reconciliation_requests
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - id
+          - response
+          - message
+          - session_id
+          - created_at
+  delete_permissions:
+    - role: api
+      permission:
+        backend_only: false
+        filter: {}
 - table:
     schema: public
     name: sessions
@@ -924,6 +1202,14 @@
           - role
           - id
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - team_id
+          - user_id
+          - role
+          - id
+        filter: {}
     - role: platformAdmin
       permission:
         columns:
@@ -999,6 +1285,23 @@
           - theme
           - updated_at
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - notify_personalisation
+          - settings
+          - theme
+          - domain
+          - name
+          - slug
+          - created_at
+          - updated_at
+          - boundary
+          - submission_email
+        computed_fields:
+          - boundary_bbox
+        filter: {}
     - role: platformAdmin
       permission:
         columns:
@@ -1061,6 +1364,49 @@
 - table:
     schema: public
     name: uniform_applications
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - id
+          - response
+          - idox_submission_id
+          - created_at
+          - destination
+          - xml
+          - payload
+          - sanitised_at
+          - submission_reference
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - response
+          - idox_submission_id
+          - created_at
+          - destination
+          - xml
+          - payload
+          - sanitised_at
+          - submission_reference
+        filter: {}
+  update_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - response
+          - idox_submission_id
+          - created_at
+          - destination
+          - xml
+          - payload
+          - sanitised_at
+          - submission_reference
+        filter: {}
+        check: {}
   event_triggers:
     - name: setup_uniform_applications_notifications
       definition:
@@ -1124,6 +1470,17 @@
           - is_platform_admin
           - email
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - first_name
+          - last_name
+          - created_at
+          - updated_at
+          - is_platform_admin
+          - email
+        filter: {}
     - role: platformAdmin
       permission:
         columns:

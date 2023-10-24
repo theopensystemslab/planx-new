@@ -22,7 +22,7 @@
     body: >
       {
         "access_token": "TEST_TOKEN",
-        "organisataion-name": "MOCKED",
+        "organisation-name": "MOCKED",
         "organisation-id": "MOCKED"
       }
 

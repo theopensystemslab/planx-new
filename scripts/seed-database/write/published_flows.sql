@@ -1,3 +1,4 @@
+-- insert published_flows overwriting conflicts
 CREATE TEMPORARY TABLE sync_published_flows (
   id int,
   data jsonb,
@@ -25,4 +26,10 @@ SELECT
   publisher_id,
   created_at
 FROM sync_published_flows
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE
+SET
+  data = EXCLUDED.data,
+  flow_id = EXCLUDED.flow_id,
+  summary = EXCLUDED.summary,
+  publisher_id = EXCLUDED.publisher_id,
+  created_at = EXCLUDED.created_at;

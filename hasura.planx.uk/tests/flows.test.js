@@ -140,4 +140,46 @@ describe("flows and operations", () => {
       expect(i.mutations).not.toContain("update_published_flows");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("can query flows", () => {
+      expect(i.queries).toContain("flows");
+    });
+
+    test("can create and update flows", () => {
+      expect(i.mutations).toContain("update_flows_by_pk");
+      expect(i.mutations).toContain("update_flows");
+    });
+
+    test("cannot delete flows", () => {
+      expect(i.mutations).not.toContain("delete_flows_by_pk");
+      expect(i.mutations).not.toContain("delete_flows");
+    });
+
+    test("cannot query or mutate operations", () => {
+      expect(i.queries).not.toContain("operations");
+      expect(i).toHaveNoMutationsFor("operations");
+    });
+
+    test("can query published flows", () => {
+      expect(i.queries).toContain("published_flows");
+    });
+
+    test("can create published_flows", () => {
+      expect(i.mutations).toContain("insert_published_flows_one");
+      expect(i.mutations).toContain("insert_published_flows");
+    });
+
+    test("cannot update or delete published_flows", () => {
+      expect(i.mutations).not.toContain("delete_published_flows_by_pk");
+      expect(i.mutations).not.toContain("delete_published_flows");
+      expect(i.mutations).not.toContain("update_published_flows_by_pk");
+      expect(i.mutations).not.toContain("update_published_flows");
+    });
+  });
 });

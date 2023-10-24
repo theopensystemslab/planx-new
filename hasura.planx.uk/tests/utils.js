@@ -83,6 +83,7 @@ const introspectAs = async (role, userId = undefined) => {
     public: gqlPublic,
     platformAdmin: gqlWithRole("platformAdmin", userId),
     teamEditor: gqlWithRole("teamEditor", userId),
+    api: gqlWithRole("api"),
   }[role]
   const INTROSPECTION_QUERY = `
     query IntrospectionQuery {

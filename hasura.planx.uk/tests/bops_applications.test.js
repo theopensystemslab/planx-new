@@ -59,4 +59,21 @@ describe("bops_applications", () => {
       expect(i).toHaveNoMutationsFor("bops_applications");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("can query and mutate bops applications", () => {
+      expect(i.queries).toContain("bops_applications");
+      expect(i.mutations).toContain("insert_bops_applications");
+      expect(i.mutations).toContain("update_bops_applications_by_pk");
+    });
+
+    test("cannot delete bops applications", () => {
+      expect(i.mutations).not.toContain("delete_bops_applications");
+    });
+  });
 });

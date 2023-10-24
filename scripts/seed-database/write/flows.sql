@@ -1,4 +1,4 @@
--- insert flows skipping conflicts
+-- insert flows overwriting conflicts
 CREATE TEMPORARY TABLE sync_flows (
   id uuid,
   team_id int,
@@ -34,7 +34,15 @@ SELECT
   settings,
   copied_from
 FROM sync_flows
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE
+SET
+  team_id = EXCLUDED.team_id,
+  slug = EXCLUDED.slug,
+  creator_id = EXCLUDED.creator_id,
+  data = EXCLUDED.data,
+  version = EXCLUDED.version,
+  settings = EXCLUDED.settings,
+  copied_from = EXCLUDED.copied_from;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
 UPDATE flows SET version = 1;

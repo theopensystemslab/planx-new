@@ -1,4 +1,4 @@
-import { $public, $admin } from "../client";
+import { $public, $api } from "../client";
 import { sendEmail } from "../notify";
 import { gql } from "graphql-request";
 import { convertSlugToName } from "../saveAndReturn/utils";
@@ -85,7 +85,7 @@ async function getDataForPayeeAndAgentEmails(
         applicantName: string;
       }[];
     }[];
-  } = await $admin.client.request(query, { sessionId });
+  } = await $api.client.request(query, { sessionId });
   const data = response.lowcal_sessions[0];
   const { emailReplyToId, helpEmail, helpOpeningHours, helpPhone } =
     data.flow.team.notifyPersonalisation;

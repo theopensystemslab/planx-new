@@ -71,4 +71,19 @@ describe("teams", () => {
       expect(i.mutations).not.toContain("insert_teams");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("can query teams", () => {
+      expect(i.queries).toContain("teams");
+    });
+
+    test("cannot create, update, or delete teams", () => {
+      expect(i).toHaveNoMutationsFor("teams");
+    });
+  });
 });

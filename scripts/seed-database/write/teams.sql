@@ -1,4 +1,4 @@
--- insert teams skipping conflicts
+-- insert teams overwriting conflicts
 CREATE TEMPORARY TABLE sync_teams (
   id integer,
   name text,
@@ -33,6 +33,13 @@ SELECT
   notify_personalisation,
   boundary
 FROM sync_teams
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE
+SET
+  name = EXCLUDED.name,
+  slug = EXCLUDED.slug,
+  theme = EXCLUDED.theme,
+  settings = EXCLUDED.settings,
+  notify_personalisation = EXCLUDED.notify_personalisation,
+  boundary = EXCLUDED.boundary;
 
 SELECT setval('teams_id_seq', max(id)) FROM teams;

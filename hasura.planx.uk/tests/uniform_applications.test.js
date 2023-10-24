@@ -59,4 +59,21 @@ describe("uniform_applications", () => {
       expect(i).toHaveNoMutationsFor("uniform_applications");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("has full access to query and mutate uniform applications", () => {
+      expect(i.queries).toContain("uniform_applications");
+      expect(i.mutations).toContain("insert_uniform_applications");
+      expect(i.mutations).toContain("update_uniform_applications_by_pk");
+    });
+
+    test("cannot delete uniform applications", () => {
+      expect(i.mutations).not.toContain("delete_uniform_applications");
+    })
+  });
 });

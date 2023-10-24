@@ -1,4 +1,4 @@
--- insert users skipping conflicts
+-- insert users overwriting conflicts
 CREATE TEMPORARY TABLE sync_users (
   id integer,
   first_name text,
@@ -10,6 +10,11 @@ CREATE TEMPORARY TABLE sync_users (
 );
 
 \copy sync_users FROM '/tmp/users.csv'  WITH (FORMAT csv, DELIMITER ';');
+
+-- Do not automatically generate team_member records for the templates team
+-- We manually truncate and replace the team_members table in another step
+ALTER TABLE
+  users DISABLE TRIGGER grant_new_user_template_team_access;
 
 INSERT INTO users (
   id,
@@ -25,6 +30,14 @@ SELECT
   email,
   is_platform_admin
 FROM sync_users
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE
+SET
+  first_name = EXCLUDED.first_name,
+  last_name = EXCLUDED.last_name,
+  email = EXCLUDED.email,
+  is_platform_admin = EXCLUDED.is_platform_admin;
+
+ALTER TABLE
+  users ENABLE TRIGGER grant_new_user_template_team_access;
 
 SELECT setval('users_id_seq', max(id)) FROM users;

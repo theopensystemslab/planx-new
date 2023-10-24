@@ -5,7 +5,7 @@ import SlackNotify from "slack-notify";
 import { logPaymentStatus } from "../send/helpers";
 import { usePayProxy } from "./proxy";
 import { addGovPayPaymentIdToPaymentRequest } from "../inviteToPay";
-import { $admin } from "../client";
+import { $api } from "../client";
 import { ServerError } from "../errors";
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
 
@@ -44,7 +44,7 @@ export async function makePaymentViaProxy(
     );
   }
 
-  const session = await $admin.session.findDetails(sessionId);
+  const session = await $api.session.findDetails(sessionId);
 
   if (session?.lockedAt) {
     return next(

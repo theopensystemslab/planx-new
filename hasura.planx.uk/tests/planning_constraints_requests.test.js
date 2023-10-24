@@ -59,4 +59,24 @@ describe("planning_constraints_requests", () => {
       expect(i).toHaveNoMutationsFor("planning_constraints_requests");
     });
   });
+
+  describe("api", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("api");
+    });
+
+    test("cannot query planning_constraints_requests", () => {
+      expect(i.queries).not.toContain("planning_constraints_requests");
+    })
+
+    test("can insert planning_constraints_requests", () => {
+      expect(i.mutations).toContain("insert_planning_constraints_requests");
+    });
+
+    test("cannot update or delete planning_constriants_requests", () => {
+      expect(i.mutations).not.toContain("update_planning_constraints_requests_by_pk");
+      expect(i.mutations).not.toContain("delete_planning_constraints_requests");
+    })
+  });
 });
