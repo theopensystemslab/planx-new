@@ -46,7 +46,7 @@ const config: PlaywrightTestConfig = {
   webServer: {
     command: `pnpm ui`,
     port: 3000,
-    reuseExistingServer: false,
+    reuseExistingServer: !process.env.CI,
   },
   /* Configure projects for major browsers */
   projects: [

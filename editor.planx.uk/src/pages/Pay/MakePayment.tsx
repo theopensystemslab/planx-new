@@ -305,7 +305,6 @@ function computePaymentState(govUkPayment: GovUKPayment | null): PaymentState {
   ) {
     return PaymentState.Pending;
   }
-  // PaymentStatus.cancelled, PaymentStatus.error, PaymentStatus.failed,
   return PaymentState.Failed;
 }
 

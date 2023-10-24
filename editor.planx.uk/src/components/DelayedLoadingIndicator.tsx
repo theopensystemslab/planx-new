@@ -33,7 +33,7 @@ const DelayedLoadingIndicator: React.FC<{
     >
       <CircularProgress aria-label="Loading" />
       <Typography variant="body2" sx={{ ml: "1rem" }}>
-        {text ?? "Loading…"}
+        {text ?? "Loading..."}
       </Typography>
     </Root>
   ) : null;
