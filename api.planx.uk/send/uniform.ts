@@ -225,7 +225,10 @@ async function authenticate({
     throw Error("Failed to authenticate to Uniform - no access token returned");
   }
 
-  if (!response.data["organisation-name"] || response.data["organisation-id"]) {
+  if (
+    !response.data["organisation-name"] ||
+    !response.data["organisation-id"]
+  ) {
     throw Error(
       "Failed to authenticate to Uniform - no organisation details returned",
     );

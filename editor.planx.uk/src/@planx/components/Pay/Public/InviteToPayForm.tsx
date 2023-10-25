@@ -13,10 +13,9 @@ import { WarningContainer } from "@planx/components/shared/Preview/WarningContai
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { isPreviewOnlyDomain } from "routes/utils";
-import useSWRMutation from "swr/mutation";
 import { ApplicationPath } from "types";
 import ErrorWrapper from "ui/ErrorWrapper";
 import Input from "ui/Input";
@@ -88,6 +87,8 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   paymentStatus,
 }) => {
   const [sessionId, path] = useStore((state) => [state.sessionId, state.path]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
   const navigation = useNavigation();
   const {
@@ -99,38 +100,39 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     window.scrollTo(0, 0);
   }, []);
 
-  const postRequest = async (
-    url: string,
-    { arg }: { arg: CreatePaymentRequest },
-  ) => {
+  const postRequest = async (createPaymentRequest: CreatePaymentRequest) => {
+    setIsLoading(true);
+    const url = `${process.env.REACT_APP_API_URL}/invite-to-pay/${sessionId}`;
     const response = await fetch(url, {
       method: "POST",
-      body: JSON.stringify(arg),
+      body: JSON.stringify(createPaymentRequest),
       headers: {
         "Content-Type": "application/json",
       },
     });
+    setIsLoading(false);
     if (!response.ok) {
+      setError(true);
       throw new Error(
-        `Error generating payment request for session ${sessionId}: ${error}`,
+        `Error generating payment request for session ${sessionId}: ${response.body}`,
       );
     }
     return response.json();
   };
-
-  const { trigger, isMutating, error } = useSWRMutation(
-    `${process.env.REACT_APP_API_URL}/invite-to-pay/${sessionId}`,
-    postRequest,
-  );
 
   const onSubmit = async (values: FormValues) => {
     const createPaymentRequest: CreatePaymentRequest = {
       ...values,
       sessionPreviewKeys: SESSION_PREVIEW_KEYS,
     };
-    const paymentRequest: PaymentRequest = await trigger(createPaymentRequest);
-    if (!error && paymentRequest.id)
-      redirectToConfirmationPage(paymentRequest.id);
+    try {
+      const paymentRequest: PaymentRequest = await postRequest(
+        createPaymentRequest,
+      );
+      if (paymentRequest.id) redirectToConfirmationPage(paymentRequest.id);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const redirectToConfirmationPage = (paymentRequestId: string) => {
@@ -153,7 +155,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     validationSchema,
   });
 
-  return isMutating ? (
+  return isLoading ? (
     <DelayedLoadingIndicator />
   ) : (
     <Card>
