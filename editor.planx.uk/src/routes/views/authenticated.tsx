@@ -16,6 +16,8 @@ export const authenticatedView = async () => {
 
   await useStore.getState().initUserStore(jwt);
 
+  useStore.getState().setPreviewEnvironment("editor");
+
   return (
     <AuthenticatedLayout>
       <View />
