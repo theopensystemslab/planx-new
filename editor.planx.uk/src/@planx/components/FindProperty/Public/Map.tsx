@@ -157,7 +157,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           </Link>
         </MapFooter>
       </MapContainer>
-      <DescriptionInput data-testid="new-address-input">
+      <DescriptionInput data-testid="new-address-input" mt={2}>
         <InputLabel
           label={props.descriptionLabel || DEFAULT_NEW_ADDRESS_LABEL}
           htmlFor={`${props.id}-siteDescription`}
