@@ -3,7 +3,7 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 
@@ -12,84 +12,85 @@ import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Question from "./Question";
 
-const ExternalPortal: React.FC<any> = React.memo(
-  (props) => {
-    const copyNode = useStore((state) => state.copyNode);
+const ExternalPortal: React.FC<any> = (props) => {
+  const copyNode = useStore((state) => state.copyNode);
+  const [href, setHref] = useState("Loading...");
 
-    const { data } = useQuery(
-      gql`
-        query GetFlow($id: uuid!) {
-          flows_by_pk(id: $id) {
+  const { data, loading } = useQuery(
+    gql`
+      query GetExternalPortal($id: uuid!) {
+        flows_by_pk(id: $id) {
+          id
+          slug
+          team {
             slug
-            team {
-              slug
-            }
           }
         }
-      `,
-      { variables: { id: props.data.flowId } },
-    );
+      }
+    `,
+    {
+      variables: { id: props.data.flowId },
+      onCompleted: (data) =>
+        setHref([data.flows_by_pk.team.slug, data.flows_by_pk.slug].join("/")),
+    },
+  );
 
-    const parent = getParentId(props.parent);
+  const parent = getParentId(props.parent);
 
-    const [{ isDragging }, drag] = useDrag({
-      item: {
-        id: props.id,
-        parent,
-        text: props.data.text,
-      },
-      type: "PORTAL",
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-    });
+  const [{ isDragging }, drag] = useDrag({
+    item: {
+      id: props.id,
+      parent,
+      text: props.data.text,
+    },
+    type: "PORTAL",
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
 
-    // If the flow referenced by an external portal has been deleted (eg !data),
-    //   still show a "Corrupted" node so that editors have a visual cue to "delete".
-    //   Until deleted, the flow schema will still contain a node reference to this portal causing dataMerged to fail
-    if (!data?.flows_by_pk) {
-      return (
-        <Question
-          hasFailed
-          type="Error"
-          id={props.id}
-          text="Corrupted external portal: flow no longer exists"
-        />
-      );
-    }
-
-    const handleContext = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      copyNode(props.id);
-    };
-
-    const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join("/");
-
-    let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
-    if (parent) {
-      editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
-    }
-
+  // If the flow referenced by an external portal has been deleted (eg !data),
+  //   still show a "Corrupted" node so that editors have a visual cue to "delete".
+  //   Until deleted, the flow schema will still contain a node reference to this portal causing dataMerged to fail
+  if (!loading && !data?.flows_by_pk) {
     return (
-      <>
-        <Hanger hidden={isDragging} before={props.id} parent={parent} />
-        <li
-          className={classNames("card", "portal", { isDragging })}
-          onContextMenu={handleContext}
-        >
-          <Link href={`/${href}`} prefetch={false} ref={drag}>
-            <span>{href}</span>
-          </Link>
-          <Link href={editHref} prefetch={false}>
-            <MoreVert titleAccess="Edit Portal" />
-          </Link>
-        </li>
-      </>
+      <Question
+        hasFailed
+        type="Error"
+        id={props.id}
+        text="Corrupted external portal: flow no longer exists"
+      />
     );
-  },
-  (a, b) => a.flowId === b.flowId,
-);
+  }
+
+  const handleContext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    copyNode(props.id);
+  };
+
+  let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
+  if (parent) {
+    editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
+  }
+
+  return (
+    <>
+      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <li
+        className={classNames("card", "portal", { isDragging })}
+        onContextMenu={handleContext}
+      >
+        <Link href={`/${href}`} prefetch={false} ref={drag}>
+          <span>{href}</span>
+        </Link>
+        <Link href={editHref} prefetch={false}>
+          <MoreVert titleAccess="Edit Portal" />
+        </Link>
+      </li>
+    </>
+  );
+};
 
 const InternalPortal: React.FC<any> = (props) => {
   const href = props.data.href || `${rootFlowPath(true)},${props.id}`;
