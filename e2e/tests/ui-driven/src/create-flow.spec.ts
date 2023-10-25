@@ -35,62 +35,6 @@ test.describe("Navigation", () => {
     await tearDownTestContext(context);
   });
 
-  test("Create a flow", async ({ browser }) => {
-    const page = await getTeamPage({
-      browser,
-      userId: context.user!.id!,
-      teamName: context.team.name,
-    });
-
-    page.on("dialog", (dialog) => dialog.accept(serviceProps.name));
-    await page.locator("button", { hasText: "Add a new service" }).click();
-
-    // update context to allow flow to be torn down
-    context.flow = { ...serviceProps };
-
-    await page.locator("li.hanger > a").click();
-    await page.getByRole("dialog").waitFor();
-
-    const questionText = "Is this a test?";
-    await page.getByPlaceholder("Text").fill(questionText);
-
-    await page.locator("button").filter({ hasText: "add new" }).click();
-    await page.getByPlaceholder("Option").fill("Yes");
-
-    await page.locator("button").filter({ hasText: "add new" }).click();
-    await page.getByPlaceholder("Option").nth(1).fill("No");
-
-    await page.locator("button").filter({ hasText: "Create question" }).click();
-    await expect(
-      page.locator("a").filter({ hasText: questionText }),
-    ).toBeVisible();
-
-    // Add a notice to the "Yes" path
-    const yesBranch = page.locator("#flow .card .options .option").nth(0);
-    await yesBranch.locator(".hanger > a").click();
-    await page.getByRole("dialog").waitFor();
-
-    await page.locator("select").selectOption({ label: "Notice" });
-    const yesBranchNoticeText = "Yes! this is a test";
-    await page.getByPlaceholder("Notice").fill(yesBranchNoticeText);
-    await page.locator("button").filter({ hasText: "Create notice" }).click();
-
-    // Add a notice to the "No" path
-    const noBranch = page.locator("#flow .card .options .option").nth(1);
-    await noBranch.locator(".hanger > a").click();
-    await page.getByRole("dialog").waitFor();
-
-    await page.locator("select").selectOption({ label: "Notice" });
-    const noBranchNoticeText = "Sorry, this is a test";
-    await page.getByPlaceholder("Notice").fill(noBranchNoticeText);
-    await page.locator("button").filter({ hasText: "Create notice" }).click();
-
-    const nodes = page.locator(".card");
-    await expect(nodes.getByText(questionText)).toBeVisible();
-    await expect(nodes.getByText(yesBranchNoticeText)).toBeVisible();
-    await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
-  });
-
   test("user data persists on page refresh @regression", async ({
     browser,
   }) => {
@@ -149,6 +93,62 @@ test.describe("Navigation", () => {
 
     await page.goBack();
     await expect(teamSlugInHeader).toBeHidden();
+  });
+
+  test("Create a flow", async ({ browser }) => {
+    const page = await getTeamPage({
+      browser,
+      userId: context.user!.id!,
+      teamName: context.team.name,
+    });
+
+    page.on("dialog", (dialog) => dialog.accept(serviceProps.name));
+    await page.locator("button", { hasText: "Add a new service" }).click();
+
+    // update context to allow flow to be torn down
+    context.flow = { ...serviceProps };
+
+    await page.locator("li.hanger > a").click();
+    await page.getByRole("dialog").waitFor();
+
+    const questionText = "Is this a test?";
+    await page.getByPlaceholder("Text").fill(questionText);
+
+    await page.locator("button").filter({ hasText: "add new" }).click();
+    await page.getByPlaceholder("Option").fill("Yes");
+
+    await page.locator("button").filter({ hasText: "add new" }).click();
+    await page.getByPlaceholder("Option").nth(1).fill("No");
+
+    await page.locator("button").filter({ hasText: "Create question" }).click();
+    await expect(
+      page.locator("a").filter({ hasText: questionText }),
+    ).toBeVisible();
+
+    // Add a notice to the "Yes" path
+    const yesBranch = page.locator("#flow .card .options .option").nth(0);
+    await yesBranch.locator(".hanger > a").click();
+    await page.getByRole("dialog").waitFor();
+
+    await page.locator("select").selectOption({ label: "Notice" });
+    const yesBranchNoticeText = "Yes! this is a test";
+    await page.getByPlaceholder("Notice").fill(yesBranchNoticeText);
+    await page.locator("button").filter({ hasText: "Create notice" }).click();
+
+    // Add a notice to the "No" path
+    const noBranch = page.locator("#flow .card .options .option").nth(1);
+    await noBranch.locator(".hanger > a").click();
+    await page.getByRole("dialog").waitFor();
+
+    await page.locator("select").selectOption({ label: "Notice" });
+    const noBranchNoticeText = "Sorry, this is a test";
+    await page.getByPlaceholder("Notice").fill(noBranchNoticeText);
+    await page.locator("button").filter({ hasText: "Create notice" }).click();
+
+    const nodes = page.locator(".card");
+    await expect(nodes.getByText(questionText)).toBeVisible();
+    await expect(nodes.getByText(yesBranchNoticeText)).toBeVisible();
+    await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
   });
 
   test("Preview a created flow", async ({ browser }: { browser: Browser }) => {
