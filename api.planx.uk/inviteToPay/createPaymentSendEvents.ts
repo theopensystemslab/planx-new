@@ -88,9 +88,11 @@ const createPaymentSendEvents = async (
     if (destinations.includes(Destination.Uniform)) {
       // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
       if (teamSlug === "buckinghamshire") {
-        teamSlug = session.data?.passport?.data?.[
+        const localAuthorities: string[] = session.data?.passport?.data?.[
           "property.localAuthorityDistrict"
-        ]
+        ] as string[];
+
+        teamSlug = localAuthorities
           ?.filter((name: string) => name !== "Buckinghamshire")[0]
           ?.toLowerCase()
           ?.replace(/\W+/g, "-");

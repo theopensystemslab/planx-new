@@ -14,7 +14,12 @@ import { TYPES } from "../types";
 import { ICONS } from "../ui";
 import type { Result } from "./model";
 
-const flags = groupBy(flatFlags, (f) => f.category);
+type FlagWithValue = Flag & { value: NonNullable<Flag["value"]> };
+
+const flagsWithValues = flatFlags.filter((flag): flag is FlagWithValue =>
+  Boolean(flag.value),
+);
+const flags = groupBy(flagsWithValues, (f) => f.category);
 
 interface FormData {
   flagSet: FlagSet;
