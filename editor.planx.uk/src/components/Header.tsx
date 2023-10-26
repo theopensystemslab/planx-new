@@ -6,7 +6,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
@@ -193,23 +192,28 @@ const TeamLogo: React.FC = () => {
   );
 };
 
-const Breadcrumbs: React.FC<{
-  handleClick?: (href: string) => void;
-}> = ({ handleClick }) => {
+const Breadcrumbs: React.FC = () => {
   const route = useCurrentRoute();
-  const team = useStore((state) => state.getTeam());
+  const [team, isStandalone] = useStore((state) => [
+    state.getTeam(),
+    state.previewEnvironment === "standalone",
+  ]);
 
   return (
     <BreadcrumbsRoot>
-      <ButtonBase
-        component="span"
-        color="#999"
-        onClick={() => handleClick && handleClick("/")}
+      <Link
+        style={{
+          color: "#fff",
+          textDecoration: "none",
+        }}
+        component={ReactNaviLink}
+        href={"/"}
+        prefetch={false}
+        {...(isStandalone && { target: "_blank" })}
       >
         Plan✕
-      </ButtonBase>
-
-      {team && (
+      </Link>
+      {team.slug && (
         <>
           {" / "}
           <Link
@@ -220,6 +224,7 @@ const Breadcrumbs: React.FC<{
             component={ReactNaviLink}
             href={`/${team.slug}`}
             prefetch={false}
+            {...(isStandalone && { target: "_blank" })}
           >
             {team.slug}
           </Link>
@@ -303,7 +308,6 @@ const NavBar: React.FC = () => {
 const PublicToolbar: React.FC<{
   showResetButton?: boolean;
 }> = ({ showResetButton = true }) => {
-  const { navigate } = useNavigation();
   const [path, id, teamTheme] = useStore((state) => [
     state.path,
     state.id,
@@ -346,11 +350,7 @@ const PublicToolbar: React.FC<{
         <Container maxWidth={false}>
           <InnerContainer>
             <LeftBox>
-              {teamTheme?.logo ? (
-                <TeamLogo />
-              ) : (
-                <Breadcrumbs handleClick={navigate} />
-              )}
+              {teamTheme?.logo ? <TeamLogo /> : <Breadcrumbs />}
             </LeftBox>
             {showCentredServiceTitle && <ServiceTitle />}
             <RightBox>
@@ -396,20 +396,14 @@ const EditorToolbar: React.FC<{
   headerRef: React.RefObject<HTMLElement>;
   route: Route;
 }> = ({ headerRef, route }) => {
+  const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
   const [togglePreview, user] = useStore((state) => [
     state.togglePreview,
     state.getUser(),
   ]);
 
-  const { navigate } = useNavigation();
-
   const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleClick = (href?: string) => {
-    if (href) navigate(href);
     setOpen(false);
   };
 
@@ -423,7 +417,7 @@ const EditorToolbar: React.FC<{
         <Container maxWidth={false}>
           <InnerContainer>
             <LeftBox>
-              <Breadcrumbs handleClick={handleClick}></Breadcrumbs>
+              <Breadcrumbs />
             </LeftBox>
             <RightBox>
               {user && (
@@ -502,7 +496,7 @@ const EditorToolbar: React.FC<{
             {route.data.flow && (
               <MenuItem
                 onClick={() =>
-                  handleClick([rootFlowPath(true), "settings"].join("/"))
+                  navigate([rootFlowPath(true), "settings"].join("/"))
                 }
               >
                 Settings
