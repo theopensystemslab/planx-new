@@ -107,7 +107,7 @@ export default function Component(props: Props) {
             <MapContainer environment={environment} size="large">
               <p style={visuallyHidden}>
                 An interactive map centred on your address, with a red pointer
-                to draw your site outline. Click to place points and connect the
+                to draw your property boundary. Click to place points and connect the
                 lines to make your site. Once you've closed the site shape,
                 click and drag the lines to modify it.
               </p>
@@ -142,7 +142,7 @@ export default function Component(props: Props) {
             </MapContainer>
             <MapFooter>
               <Typography variant="body1">
-                The site outline you have drawn is{" "}
+                The property boundary you have drawn is{" "}
                 <Typography
                   component="span"
                   noWrap
