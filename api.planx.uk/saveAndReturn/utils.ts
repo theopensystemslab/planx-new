@@ -136,7 +136,7 @@ const validateSingleSessionRequest = async (
 
 interface SessionDetails {
   hasUserSaved: boolean;
-  address: any;
+  address: string;
   projectType: string;
   id: string;
   expiryDate: string;
