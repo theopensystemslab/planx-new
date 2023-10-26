@@ -4,8 +4,13 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 import { gql } from "graphql-request";
 import intersection from "lodash/intersection";
-import { ComponentType } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  FlowGraph,
+  Node,
+} from "@opensystemslab/planx-core/types";
 import { userContext } from "../modules/auth/middleware";
+import type { Entry } from "type-fest";
 
 const validateAndDiffFlow = async (
   req: Request,
@@ -139,9 +144,9 @@ type ValidationResponse = {
   description?: string;
 };
 
-const validateSections = (flow: Record<string, any>): ValidationResponse => {
-  if (getSectionNodeIds(flow)?.length > 0) {
-    if (!sectionIsInFirstPosition(flow)) {
+const validateSections = (flowGraph: FlowGraph): ValidationResponse => {
+  if (getSectionNodeIds(flowGraph)?.length > 0) {
+    if (!sectionIsInFirstPosition(flowGraph)) {
       return {
         isValid: false,
         message: "Cannot publish an invalid flow",
@@ -149,7 +154,7 @@ const validateSections = (flow: Record<string, any>): ValidationResponse => {
       };
     }
 
-    if (!allSectionsOnRoot(flow)) {
+    if (!allSectionsOnRoot(flowGraph)) {
       return {
         isValid: false,
         message: "Cannot publish an invalid flow",
@@ -165,34 +170,35 @@ const validateSections = (flow: Record<string, any>): ValidationResponse => {
   };
 };
 
-const getSectionNodeIds = (flow: Record<string, any>): string[] => {
-  return Object.entries(flow)
-    .filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Section)
-    ?.map(([nodeId, _nodeData]) => nodeId);
+const getSectionNodeIds = (flowGraph: FlowGraph): string[] => {
+  const sectionNodes = Object.entries(flowGraph).filter((entry) =>
+    isComponentType(entry, ComponentType.Section),
+  );
+  return sectionNodes.map(([nodeId, _nodeData]) => nodeId);
 };
 
-const sectionIsInFirstPosition = (flow: Record<string, any>): boolean => {
-  const firstNodeId = flow["_root"].edges[0];
-  return flow[firstNodeId].type === ComponentType.Section;
+const sectionIsInFirstPosition = (flowGraph: FlowGraph): boolean => {
+  const firstNodeId = flowGraph["_root"].edges[0];
+  return flowGraph[firstNodeId].type === ComponentType.Section;
 };
 
-const allSectionsOnRoot = (flow: Record<string, any>): boolean => {
-  const sectionTypeNodeIds = getSectionNodeIds(flow);
+const allSectionsOnRoot = (flowData: FlowGraph): boolean => {
+  const sectionTypeNodeIds = getSectionNodeIds(flowData);
   const intersectingNodeIds = intersection(
-    flow["_root"].edges,
+    flowData["_root"].edges,
     sectionTypeNodeIds,
   );
   return intersectingNodeIds.length === sectionTypeNodeIds.length;
 };
 
-const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
+const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
   const invalidResponseTemplate = {
     isValid: false,
     message: "Cannot publish an invalid flow",
   };
 
-  if (inviteToPayEnabled(flow)) {
-    if (numberOfComponentType(flow, ComponentType.Pay) > 1) {
+  if (inviteToPayEnabled(flowGraph)) {
+    if (numberOfComponentType(flowGraph, ComponentType.Pay) > 1) {
       return {
         ...invalidResponseTemplate,
         description:
@@ -200,14 +206,14 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
       };
     }
 
-    if (!hasComponentType(flow, ComponentType.Send)) {
+    if (!hasComponentType(flowGraph, ComponentType.Send)) {
       return {
         ...invalidResponseTemplate,
         description: "When using Invite to Pay, your flow must have a Send",
       };
     }
 
-    if (numberOfComponentType(flow, ComponentType.Send) > 1) {
+    if (numberOfComponentType(flowGraph, ComponentType.Send) > 1) {
       return {
         ...invalidResponseTemplate,
         description:
@@ -215,7 +221,7 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
       };
     }
 
-    if (!hasComponentType(flow, ComponentType.FindProperty)) {
+    if (!hasComponentType(flowGraph, ComponentType.FindProperty)) {
       return {
         ...invalidResponseTemplate,
         description:
@@ -224,7 +230,11 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
     }
 
     if (
-      !hasComponentType(flow, ComponentType.Checklist, "proposal.projectType")
+      !hasComponentType(
+        flowGraph,
+        ComponentType.Checklist,
+        "proposal.projectType",
+      )
     ) {
       return {
         ...invalidResponseTemplate,
@@ -241,27 +251,40 @@ const validateInviteToPay = (flow: Record<string, any>): ValidationResponse => {
   };
 };
 
-const inviteToPayEnabled = (flow: Record<string, any>): boolean => {
-  const payNodeStatuses = Object.entries(flow)
-    .filter(([_nodeId, nodeData]) => nodeData?.type === ComponentType.Pay)
-    ?.map(([_nodeId, nodeData]) => nodeData?.data?.allowInviteToPay);
+const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
+  const payNodes = Object.entries(flowGraph).filter(
+    (entry): entry is [string, Node] =>
+      isComponentType(entry, ComponentType.Pay),
+  );
+  const payNodeStatuses = payNodes.map(
+    ([_nodeId, node]) => node?.data?.allowInviteToPay,
+  );
   return (
     payNodeStatuses.length > 0 &&
     payNodeStatuses.every((status) => status === true)
   );
 };
 
+const isComponentType = (
+  entry: Entry<FlowGraph>,
+  type: ComponentType,
+): entry is [string, Node] => {
+  const [nodeId, node] = entry;
+  if (nodeId === "_root") return false;
+  return Boolean(node?.type === type);
+};
+
 const hasComponentType = (
-  flow: Record<string, any>,
+  flowGraph: FlowGraph,
   type: ComponentType,
   fn?: string,
 ): boolean => {
-  const nodeIds = Object.entries(flow).filter(
-    ([_nodeId, nodeData]) => nodeData?.type === type,
+  const nodeIds = Object.entries(flowGraph).filter(
+    (entry): entry is [string, Node] => isComponentType(entry, type),
   );
   if (fn) {
     nodeIds
-      ?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)
+      ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
       ?.map(([nodeId, _nodeData]) => nodeId);
   } else {
     nodeIds?.map(([nodeId, _nodeData]) => nodeId);
@@ -270,16 +293,16 @@ const hasComponentType = (
 };
 
 const numberOfComponentType = (
-  flow: Record<string, any>,
+  flowGraph: FlowGraph,
   type: ComponentType,
   fn?: string,
 ): number => {
-  const nodeIds = Object.entries(flow).filter(
-    ([_nodeId, nodeData]) => nodeData?.type === type,
+  const nodeIds = Object.entries(flowGraph).filter(
+    (entry): entry is [string, Node] => isComponentType(entry, type),
   );
   if (fn) {
     nodeIds
-      ?.filter(([_nodeId, nodeData]) => nodeData?.data.fn === fn)
+      ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
       ?.map(([nodeId, _nodeData]) => nodeId);
   } else {
     nodeIds?.map(([nodeId, _nodeData]) => nodeId);

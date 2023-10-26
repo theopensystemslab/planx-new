@@ -42,6 +42,7 @@
     "string-to-stream": "^3.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "type-fest": "^4.6.0",
     "zod": "^3.22.3"
   },
   "scripts": {

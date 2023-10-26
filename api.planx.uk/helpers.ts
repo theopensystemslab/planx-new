@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 import { capitalize } from "lodash";
 import { adminGraphQLClient as adminClient } from "./hasura";
 import { Flow, Node } from "./types";
-import { ComponentType } from "@opensystemslab/planx-core/types";
+import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
@@ -135,7 +135,10 @@ const getPublishedFlowByDate = async (id: string, created_at: string) => {
 // Flatten a flow's data to include main content & portals in a single JSON representation
 // XXX: getFlowData & dataMerged are currently repeated in ../editor.planx.uk/src/lib/dataMergedHotfix.ts
 //        in order to load frontend /preview routes for flows that are not published
-const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
+const dataMerged = async (
+  id: string,
+  ob: { [key: string]: Node } = {},
+): Promise<FlowGraph> => {
   // get the primary flow data
   const { slug, data } = await getFlowData(id);
 
@@ -172,7 +175,8 @@ const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
     else ob[nodeId] = node;
   }
 
-  return ob;
+  // TODO: Don't cast here once types updated across API
+  return ob as FlowGraph;
 };
 
 /**

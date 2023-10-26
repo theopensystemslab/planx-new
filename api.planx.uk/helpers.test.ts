@@ -159,7 +159,9 @@ describe("dataMerged() function", () => {
   });
   it("handles multiple external portal nodes", async () => {
     const result = await dataMerged("parent-id");
-    const nodeTypes = Object.values(result).map((node) => node.type);
+    const nodeTypes = Object.values(result).map((node) =>
+      "type" in node ? node.type : undefined,
+    );
     const areAllPortalsFlattened = !nodeTypes.includes(
       ComponentType.ExternalPortal,
     );

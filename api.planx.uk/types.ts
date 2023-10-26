@@ -8,6 +8,9 @@ export interface Node {
   type?: number;
 }
 
+/**
+ * @deprecated Migrating to Flow and FlowGraph from planx-core
+ */
 export interface Flow {
   id: string;
   slug: string;
