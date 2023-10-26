@@ -95,7 +95,7 @@ function Component(props: Props) {
   useEffect(() => {
     if (previousSlotCount === undefined) return;
 
-    //  *** Show most recent upload at the top ***
+    // Show most recent upload at the top
     if (slots.length) setSlots(slots.reverse());
 
     // Only stop modal opening on initial return to node
