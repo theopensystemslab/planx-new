@@ -5,6 +5,7 @@ import {
   FlagSet,
 } from "@opensystemslab/planx-core/types";
 import { TYPES } from "@planx/components/types";
+import Bowser from "bowser";
 import { publicClient } from "lib/graphql";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -129,7 +130,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function track(direction: AnalyticsLogDirection, analyticsId: number) {
     const metadata = getNodeMetadata();
-    const node_title =
+    const nodeTitle =
       node?.type === TYPES.Content
         ? getContentTitle(node)
         : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
@@ -138,7 +139,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       direction,
       analyticsId,
       metadata,
-      node_title,
+      nodeTitle,
     );
     const id = result?.data.insert_analytics_logs_one?.id;
     const newLogCreatedAt = result?.data.insert_analytics_logs_one?.created_at;
@@ -156,7 +157,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     direction: AnalyticsLogDirection,
     analyticsId: number,
     metadata: NodeMetadata,
-    node_title: string,
+    nodeTitle: string,
   ) {
     const result = await publicClient.mutate({
       mutation: gql`
@@ -166,6 +167,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           $metadata: jsonb
           $node_type: Int
           $node_title: String
+          $user_agent: jsonb
         ) {
           insert_analytics_logs_one(
             object: {
@@ -187,7 +189,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         analytics_id: analyticsId,
         metadata: metadata,
         node_type: node?.type,
-        node_title: node_title,
+        node_title: nodeTitle,
       },
     });
     return result;
@@ -287,10 +289,17 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function createAnalytics(type: AnalyticsType) {
     if (shouldTrackAnalytics) {
+      const userAgent = Bowser.parse(window.navigator.userAgent);
       const response = await publicClient.mutate({
         mutation: gql`
           mutation InsertNewAnalytics($type: String, $flow_id: uuid) {
-            insert_analytics_one(object: { type: $type, flow_id: $flow_id }) {
+            insert_analytics_one(
+              object: {
+                type: $type
+                flow_id: $flow_id
+                user_agent: $user_agent
+              }
+            ) {
               id
             }
           }
@@ -298,6 +307,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         variables: {
           type,
           flow_id: flowId,
+          user_agent: userAgent,
         },
       });
       const id = response.data.insert_analytics_one.id;

@@ -1,0 +1,1 @@
+ALTER TABLE "public"."analytics" DROP COLUMN "user_agent"

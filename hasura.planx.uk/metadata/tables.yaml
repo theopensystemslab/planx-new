@@ -10,6 +10,7 @@
           - flow_id
           - id
           - type
+          - user_agent
   select_permissions:
     - role: public
       permission:
