@@ -24,8 +24,9 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
     if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
 
     const responses = await $api.export.csvData(req.params.sessionId);
-    const boundingBox =
-      session.data.passport.data["property.boundary.site.buffered"];
+    const boundingBox = session.data.passport.data[
+      "property.boundary.site.buffered"
+    ] as unknown as GeoJSON.Feature;
 
     const html = generateApplicationHTML({
       planXExportData: responses as PlanXExportData[],
@@ -66,8 +67,9 @@ export const getRedactedHTMLExport: HTMLExportHandler = async (
     const redactedResponses = await $api.export.csvDataRedacted(
       req.params.sessionId,
     );
-    const boundingBox =
-      session.data.passport.data["property.boundary.site.buffered"];
+    const boundingBox = session.data.passport.data[
+      "property.boundary.site.buffered"
+    ] as unknown as GeoJSON.Feature;
 
     const html = generateApplicationHTML({
       planXExportData: redactedResponses as PlanXExportData[],

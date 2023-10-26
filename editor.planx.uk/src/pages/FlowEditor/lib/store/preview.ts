@@ -102,7 +102,9 @@ export const previewStore: StateCreator<
     const possibleFlags = flatFlags.filter(
       (f) => f.category === DEFAULT_FLAG_CATEGORY,
     );
-    const flagKeys: string[] = possibleFlags.map((f) => f.value);
+    const flagKeys: string[] = possibleFlags
+      .map((flag) => flag.value)
+      .filter((value): value is string => Boolean(value));
 
     const breadcrumbIds = Object.keys(breadcrumbs);
 
