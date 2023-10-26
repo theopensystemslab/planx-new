@@ -9,6 +9,7 @@
           - created_at
           - flow_id
           - id
+          - referrer
           - type
           - user_agent
   select_permissions:

@@ -290,14 +290,22 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function createAnalytics(type: AnalyticsType) {
     if (shouldTrackAnalytics) {
       const userAgent = Bowser.parse(window.navigator.userAgent);
+      const referrer = document.referrer || null;
+
       const response = await publicClient.mutate({
         mutation: gql`
-          mutation InsertNewAnalytics($type: String, $flow_id: uuid) {
+          mutation InsertNewAnalytics(
+            $type: String
+            $flow_id: uuid
+            $user_agent: jsonb
+            $referrer: string
+          ) {
             insert_analytics_one(
               object: {
                 type: $type
                 flow_id: $flow_id
                 user_agent: $user_agent
+                referrer: $referrer
               }
             ) {
               id
@@ -308,6 +316,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           type,
           flow_id: flowId,
           user_agent: userAgent,
+          referrer,
         },
       });
       const id = response.data.insert_analytics_one.id;
