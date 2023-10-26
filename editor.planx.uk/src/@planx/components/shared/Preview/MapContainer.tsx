@@ -13,13 +13,12 @@ export const MapContainer = styled(Box)<MapContainerProps>(
     padding: theme.spacing(1, 0, 1, 0),
     width: "100%",
     maxWidth: "none",
-    height: "50vh",
     "& my-map": {
       width: "100%",
-      height: "100%",
+      // Only increase map size in Preview & Unpublished routes
+      height:
+        size === "large" && environment === "standalone" ? "70vh" : "50vh",
     },
-    // Only increase map size in Preview & Unpublished routes
-    ...(size === "large" && environment === "standalone" && { height: "70vh" }),
   }),
 );
 
