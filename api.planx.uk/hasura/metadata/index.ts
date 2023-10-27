@@ -16,7 +16,7 @@ interface ScheduledEventArgs {
   };
   webhook: string;
   schedule_at: Date;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
   comment: string;
 }
 

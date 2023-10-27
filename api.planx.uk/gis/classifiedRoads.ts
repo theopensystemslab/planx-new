@@ -14,7 +14,7 @@ type OSFeatures = {
     type: "Feature";
     geometry: {
       type: string;
-      coordinates: any[];
+      coordinates: number[];
     };
     properties: OSHighwayFeature;
   }[];

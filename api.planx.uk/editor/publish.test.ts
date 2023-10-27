@@ -3,8 +3,8 @@ import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
 import { authHeader } from "../tests/mockJWT";
 import app from "../server";
-import { Flow } from "../types";
 import { flowWithInviteToPay } from "../tests/mocks/inviteToPayData";
+import { FlowGraph } from "@opensystemslab/planx-core/types";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -168,7 +168,7 @@ describe("sections validation on diff", () => {
   });
 
   it("does not update if there are sections, but there is not a section in the first position", async () => {
-    const flowWithSections: Flow["data"] = {
+    const flowWithSections: FlowGraph = {
       _root: {
         edges: ["questionNode", "sectionNode"],
       },
@@ -205,7 +205,7 @@ describe("sections validation on diff", () => {
 
 describe("invite to pay validation on diff", () => {
   it("does not update if invite to pay is enabled, but there is not a Send component", async () => {
-    const { Send, ...invalidatedFlow } = flowWithInviteToPay;
+    const { Send: _Send, ...invalidatedFlow } = flowWithInviteToPay;
     invalidatedFlow["_root"].edges?.splice(
       invalidatedFlow["_root"].edges?.indexOf("Send"),
     );
@@ -266,7 +266,8 @@ describe("invite to pay validation on diff", () => {
   });
 
   it("does not update if invite to pay is enabled, but there is not a FindProperty (`_address`) component", async () => {
-    const { FindProperty, ...invalidatedFlow } = flowWithInviteToPay;
+    const { FindProperty: _FindProperty, ...invalidatedFlow } =
+      flowWithInviteToPay;
     invalidatedFlow["_root"].edges?.splice(
       invalidatedFlow["_root"].edges?.indexOf("FindProperty"),
     );
@@ -326,9 +327,9 @@ describe("invite to pay validation on diff", () => {
 
   it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
     const {
-      Checklist,
-      ChecklistOptionOne,
-      ChecklistOptionTwo,
+      Checklist: _Checklist,
+      ChecklistOptionOne: _ChecklistOptionOne,
+      ChecklistOptionTwo: _ChecklistOptionTwo,
       ...invalidatedFlow
     } = flowWithInviteToPay;
     invalidatedFlow["_root"].edges?.splice(
@@ -358,7 +359,7 @@ describe("invite to pay validation on diff", () => {
   });
 });
 
-const mockFlowData: Flow["data"] = {
+const mockFlowData: FlowGraph = {
   _root: {
     edges: [
       "SectionOne",

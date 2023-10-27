@@ -258,7 +258,7 @@ export const deleteHasuraEventLogs: Operation = async () => {
     AND created_at < now() - interval '6 months'
     RETURNING id;
   `);
-  const [_column_name, ...ids] = response.result.flat();
+  const [_column_name, ...ids] = response.result?.flat() || [];
   return ids;
 };
 
@@ -275,6 +275,6 @@ export const deleteHasuraScheduledEventsForSubmittedSessions: Operation =
     )
     RETURNING hse.id;
   `);
-    const [_column_name, ...ids] = response.result.flat();
+    const [_column_name, ...ids] = response?.result?.flat() || [];
     return ids;
   };

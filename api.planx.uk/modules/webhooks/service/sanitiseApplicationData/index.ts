@@ -1,5 +1,4 @@
 import SlackNotify from "slack-notify";
-import { Request, Response, NextFunction } from "express";
 
 import { getOperations, operationHandler } from "./operations";
 import { OperationResult } from "./types";

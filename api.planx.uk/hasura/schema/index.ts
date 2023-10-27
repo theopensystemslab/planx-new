@@ -14,9 +14,9 @@ interface SchemaAPIQuery {
  * POST a request to the Hasura Schema API
  * https://hasura.io/docs/latest/api-reference/schema-api/index/
  */
-const postToSchemaAPI = async (
+const postToSchemaAPI = async <T>(
   query: SchemaAPIQuery,
-): Promise<AxiosResponse<any>> => {
+): Promise<AxiosResponse<T>> => {
   try {
     return await Axios.post(
       process.env.HASURA_SCHEMA_URL!,
@@ -36,12 +36,19 @@ const postToSchemaAPI = async (
 };
 
 /**
+ * https://hasura.io/docs/latest/api-reference/schema-api/run-sql/#response
+ */
+interface RunSQLResponse {
+  result?: string[][];
+}
+
+/**
  * Run custom SQL via Hasura Schema API
  * https://hasura.io/docs/latest/api-reference/schema-api/run-sql/
  */
 export const runSQL = async (sql: string) => {
   try {
-    const response = await postToSchemaAPI({
+    const response = await postToSchemaAPI<RunSQLResponse>({
       type: "run_sql",
       args: {
         source: "default",

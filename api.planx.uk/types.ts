@@ -1,6 +1,9 @@
 import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
 
+/**
+ * @deprecated Migrating to Node from planx-core
+ */
 export interface Node {
   id?: string;
   data?: Record<string, any>;
@@ -8,6 +11,9 @@ export interface Node {
   type?: number;
 }
 
+/**
+ * @deprecated Migrating to Flow and FlowGraph from planx-core
+ */
 export interface Flow {
   id: string;
   slug: string;
@@ -94,7 +100,7 @@ type MinimumNotifyPersonalisation = {
 
 interface SaveAndReturnNotifyPersonalisation
   extends MinimumNotifyPersonalisation {
-  address?: any;
+  address?: string;
   projectType?: string;
   resumeLink?: string;
   teamName: string;

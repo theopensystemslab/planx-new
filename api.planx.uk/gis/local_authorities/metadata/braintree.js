@@ -9,7 +9,7 @@ https://environment.data.gov.uk/arcgis/rest/services
 */
 
 const braintreeDomain = "https://mapping.braintree.gov.uk/arcgis";
-const environmentDomain = "https://environment.data.gov.uk";
+const _environmentDomain = "https://environment.data.gov.uk";
 const A4_KEY = "PARISH";
 
 const planningConstraints = {
@@ -20,7 +20,7 @@ const planningConstraints = {
     serverIndex: 0,
     fields: ["OBJECTID"],
     neg: "is not in, or within, a Listed Building",
-    pos: (data) => ({
+    pos: (_data) => ({
       text: "is, or is within, a Listed Building (Grade 1)",
       description: null,
     }),
@@ -33,7 +33,7 @@ const planningConstraints = {
     serverIndex: 1,
     fields: ["OBJECTID"],
     neg: "is not in, or within, a Listed Building",
-    pos: (data) => ({
+    pos: (_data) => ({
       text: "is, or is within, a Listed Building (Grade 2)",
       description: null,
     }),
@@ -46,7 +46,7 @@ const planningConstraints = {
     serverIndex: 2,
     fields: ["OBJECTID"],
     neg: "is not in, or within, a Listed Building",
-    pos: (data) => ({
+    pos: (_data) => ({
       text: "is, or is within, a Listed Building (Grade 2*)",
       description: null,
     }),
@@ -59,7 +59,7 @@ const planningConstraints = {
     serverIndex: 3,
     fields: ["OBJECTID", "DESIGNATED"],
     neg: "is not in a Conservation Area",
-    pos: (data) => ({
+    pos: (_data) => ({
       text: "is in a Conservation Area",
       description: null,
     }),
@@ -98,7 +98,7 @@ const planningConstraints = {
     serverIndex: 4,
     fields: ["OBJECTID"],
     neg: "is not in a TPO (Tree Preservation Order) Zone",
-    pos: (data) => ({
+    pos: (_data) => ({
       text: "is in a TPO (Tree Preservation Order) Zone",
       description: null,
     }),
@@ -111,7 +111,7 @@ const planningConstraints = {
     serverIndex: 5,
     fields: ["OBJECTID", "AREAS"],
     neg: "is not in a TPO (Tree Preservation Order) Zone",
-    pos: (data) => ({
+    pos: (_data) => ({
       text: "is in a TPO (Tree Preservation Order) Zone",
       description: null,
     }),
@@ -124,7 +124,7 @@ const planningConstraints = {
     serverIndex: 6,
     fields: ["OBJECTID", "SPECIES", "REFERENCE_"],
     neg: "is not in a TPO (Tree Preservation Order) Zone",
-    pos: (data) => ({
+    pos: (_data) => ({
       text: "is in a TPO (Tree Preservation Order) Zone",
       description: null,
     }),
@@ -137,7 +137,7 @@ const planningConstraints = {
     serverIndex: 7,
     fields: ["OBJECTID", "GROUPS", "SPECIES"],
     neg: "is not in a TPO (Tree Preservation Order) Zone",
-    pos: (data) => ({
+    pos: (_data) => ({
       text: "is in a TPO (Tree Preservation Order) Zone",
       description: null,
     }),
