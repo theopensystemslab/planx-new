@@ -94,6 +94,10 @@ function Component(props: Props) {
   const previousSlotCount = usePrevious(slots.length);
   useEffect(() => {
     if (previousSlotCount === undefined) return;
+
+    // Show most recent upload at the top
+    if (slots.length) setSlots(slots.reverse());
+
     // Only stop modal opening on initial return to node
     if (isUserReturningToNode) return setIsUserReturningToNode(false);
     if (slots.length && dropzoneError) setDropzoneError(undefined);
