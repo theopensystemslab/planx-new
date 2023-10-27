@@ -17,7 +17,7 @@ import {
   expectConfirmation,
   saveSession,
   returnToSession,
-} from "./helpers";
+} from "./globalHelpers";
 import { gql } from "graphql-request";
 import type { Context } from "./context";
 import type { FlowGraph } from "@opensystemslab/planx-core/types";

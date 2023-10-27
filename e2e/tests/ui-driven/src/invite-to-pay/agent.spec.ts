@@ -1,5 +1,5 @@
 import { test, expect, Page, BrowserContext } from "@playwright/test";
-import { addSessionToContext, modifyFlow } from "../helpers";
+import { addSessionToContext, modifyFlow } from "../globalHelpers";
 import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import {
   Context,
@@ -15,9 +15,9 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
-import { saveSession } from "../helpers";
-import { returnToSession } from "../helpers";
-import { clickContinue } from "../helpers";
+import { saveSession } from "../globalHelpers";
+import { returnToSession } from "../globalHelpers";
+import { clickContinue } from "../globalHelpers";
 
 let context: Context = {
   ...contextDefaults,

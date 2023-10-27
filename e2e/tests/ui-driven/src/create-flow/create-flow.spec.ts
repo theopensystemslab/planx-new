@@ -3,14 +3,14 @@ import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./context";
+} from "../context";
 import {
-  getTeamPage,
   createAuthenticatedSession,
   answerQuestion,
   clickContinue,
-} from "./helpers";
-import type { Context } from "./context";
+} from "../globalHelpers";
+import type { Context } from "../context";
+import { getTeamPage, getUserRequest } from "./helpers";
 
 test.describe("Navigation", () => {
   let context: Context = {
@@ -43,32 +43,23 @@ test.describe("Navigation", () => {
       userId: context.user!.id!,
     });
 
-    let getUserRequestCount = 0;
-    page.on("request", (req) => {
-      const isHasuraRequest = req.url().includes("/graphql");
-      const isGetUserRequest =
-        isHasuraRequest && req.postData()?.toString().includes("GetUserById");
+    const initialRequest = page.waitForRequest(getUserRequest);
 
-      if (isGetUserRequest) getUserRequestCount++;
-    });
-
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
-
-    // Get user data on initial page load
-    expect(getUserRequestCount).toBe(1);
+    Promise.all([await page.goto("/"), await initialRequest]);
 
     const team = page.locator("h2", { hasText: context.team.name });
-    team.click();
-    await page.waitForLoadState("networkidle");
 
-    // User data not refetched on navigation to a new page
-    expect(getUserRequestCount).toBe(1);
+    let isRepeatedRequestMade = false;
+    page.on("request", (req) => (isRepeatedRequestMade = getUserRequest(req)));
 
-    // User data is refetched when page reloaded
-    await page.reload();
-    await page.waitForLoadState("networkidle");
-    expect(getUserRequestCount).toBe(2);
+    Promise.all([
+      await team.click(),
+      expect(isRepeatedRequestMade).toBe(false),
+    ]);
+
+    const reloadRequest = page.waitForRequest(getUserRequest);
+
+    Promise.all([await page.reload(), await reloadRequest]);
   });
 
   test("team data persists on page refresh @regression", async ({

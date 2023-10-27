@@ -5,10 +5,10 @@ import {
   answerContactInput,
   addSessionToContext,
   TEST_EMAIL,
-} from "../helpers";
+} from "../globalHelpers";
 import type { Page } from "@playwright/test";
 import { gql, GraphQLClient } from "graphql-request";
-import { fillInEmail } from "../helpers";
+import { fillInEmail } from "../globalHelpers";
 import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
 import { Context } from "../context";
 

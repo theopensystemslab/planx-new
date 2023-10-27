@@ -1,6 +1,6 @@
 import { test, expect, Page, APIRequestContext } from "@playwright/test";
 import { v4 as uuidV4 } from "uuid";
-import { fillGovUkCardDetails, cards } from "../helpers";
+import { fillGovUkCardDetails, cards } from "../globalHelpers";
 import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import {
   Context,
