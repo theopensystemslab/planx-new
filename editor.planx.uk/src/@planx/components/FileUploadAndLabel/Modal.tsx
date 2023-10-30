@@ -28,7 +28,6 @@ import {
   FileList,
   getTagsForSlot,
   removeSlots,
-  resetAllSlots,
 } from "./model";
 import { fileLabelSchema } from "./schema";
 
@@ -182,10 +181,6 @@ const SelectMultiple = (props: SelectMultipleProps) => {
 
     if (removedTags && removedTags.length > 0) {
       updatedFileList = removeSlots(removedTags, uploadedFile, fileList);
-    }
-
-    if (tags.length === 0 && previousTags) {
-      updatedFileList = resetAllSlots(fileList);
     }
 
     setFileList(updatedFileList);
