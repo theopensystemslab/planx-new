@@ -298,7 +298,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
             $type: String
             $flow_id: uuid
             $user_agent: jsonb
-            $referrer: string
+            $referrer: String
           ) {
             insert_analytics_one(
               object: {
