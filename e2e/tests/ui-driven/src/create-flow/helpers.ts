@@ -1,12 +1,10 @@
 import { Browser, Page, Request } from "@playwright/test";
 import { createAuthenticatedSession } from "../globalHelpers";
 
-export const getUserRequest = (req: Request) => {
+export const isGetUserRequest = (req: Request) => {
   const isHasuraRequest = req.url().includes("/graphql");
-  const isGetUserRequest = Boolean(
-    isHasuraRequest && req.postData()?.toString().includes("GetUserById"),
-  );
-  return isGetUserRequest;
+  const isGetUserOperation = req.postData()?.toString().includes("GetUserById");
+  return Boolean(isHasuraRequest && isGetUserOperation);
 };
 
 export async function getAdminPage({

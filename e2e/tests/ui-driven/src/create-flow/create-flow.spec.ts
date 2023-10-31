@@ -10,7 +10,7 @@ import {
   clickContinue,
 } from "../globalHelpers";
 import type { Context } from "../context";
-import { getTeamPage, getUserRequest } from "./helpers";
+import { getTeamPage, isGetUserRequest } from "./helpers";
 
 test.describe("Navigation", () => {
   let context: Context = {
@@ -43,21 +43,21 @@ test.describe("Navigation", () => {
       userId: context.user!.id!,
     });
 
-    const initialRequest = page.waitForRequest(getUserRequest);
+    const initialRequest = page.waitForRequest(isGetUserRequest);
 
     Promise.all([await page.goto("/"), await initialRequest]);
 
     const team = page.locator("h2", { hasText: context.team.name });
 
     let isRepeatedRequestMade = false;
-    page.on("request", (req) => (isRepeatedRequestMade = getUserRequest(req)));
+    page.on("request", (req) => (isRepeatedRequestMade = isGetUserRequest(req)));
 
     Promise.all([
       await team.click(),
       expect(isRepeatedRequestMade).toBe(false),
     ]);
 
-    const reloadRequest = page.waitForRequest(getUserRequest);
+    const reloadRequest = page.waitForRequest(isGetUserRequest);
 
     Promise.all([await page.reload(), await reloadRequest]);
   });

@@ -15,9 +15,7 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
-import { saveSession } from "../globalHelpers";
-import { returnToSession } from "../globalHelpers";
-import { clickContinue } from "../globalHelpers";
+import { saveSession, returnToSession, clickContinue } from "../globalHelpers";
 
 let context: Context = {
   ...contextDefaults,
