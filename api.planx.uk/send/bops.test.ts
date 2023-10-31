@@ -9,16 +9,19 @@ jest.mock("../saveAndReturn/utils", () => ({
 }));
 
 jest.mock("@opensystemslab/planx-core", () => {
+  const actualCoreDomainClient = jest.requireActual("@opensystemslab/planx-core").CoreDomainClient;
+
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
-      export: {
-        bopsPayload: () =>
+    CoreDomainClient: class extends actualCoreDomainClient {
+      constructor() {
+        super();
+        this.export.bopsPayload = () =>
           jest.fn().mockResolvedValue({
             exportData: expectedPayload,
             redactedExportData: expectedPayload,
-          }),
-      },
-    })),
+          });
+      }
+    }
   };
 });
 
@@ -29,7 +32,7 @@ describe(`sending an application to BOPS`, () => {
     queryMock.mockQuery({
       name: "FindApplication",
       data: {
-        bops_applications: [],
+        bopsApplications: [],
       },
       variables: { session_id: "123" },
     });
@@ -38,7 +41,7 @@ describe(`sending an application to BOPS`, () => {
       name: "CreateBopsApplication",
       matchOnVariables: false,
       data: {
-        insert_bops_applications_one: { id: 22 },
+        insertBopsApplication: { id: 22 },
       },
     });
   });
@@ -93,7 +96,7 @@ describe(`sending an application to BOPS`, () => {
     queryMock.mockQuery({
       name: "FindApplication",
       data: {
-        bops_applications: [
+        bopsApplications: [
           { response: { message: "Application created", id: "bops_app_id" } },
         ],
       },

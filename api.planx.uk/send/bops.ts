@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
@@ -10,6 +9,13 @@ interface SendToBOPSRequest {
   payload: {
     sessionId: string;
   };
+}
+
+interface CreateBopsApplication {
+  insertBopsApplication: {
+    id: string;
+    bopsId: string;
+  }
 }
 
 /**
@@ -87,7 +93,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
         markSessionAsSubmitted(payload?.sessionId);
 
-        const applicationId = await adminClient.request(
+        const applicationId = await $api.client.request<CreateBopsApplication>(
           gql`
             mutation CreateBopsApplication(
               $bops_id: String = ""
@@ -98,7 +104,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
               $response_headers: jsonb = {}
               $session_id: String!
             ) {
-              insert_bops_applications_one(
+              insertBopsApplication: insert_bops_applications_one(
                 object: {
                   bops_id: $bops_id
                   destination_url: $destination_url
@@ -110,7 +116,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
                 }
               ) {
                 id
-                bops_id
+                bopsId: bops_id
               }
             }
           `,
@@ -126,7 +132,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
 
         return {
           application: {
-            ...applicationId.insert_bops_applications_one,
+            ...applicationId.insertBopsApplication,
             bopsResponse: res.data,
           },
         };
@@ -159,16 +165,22 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+interface FindApplication {
+  bopsApplications: {
+    response: Record<string, string>
+  }[]
+}
+
 /**
  * Query the BOPS audit table to see if we already have an application for this session
  */
 async function checkBOPSAuditTable(
   sessionId: string,
 ): Promise<Record<string, string>> {
-  const application = await adminClient.request(
+  const application = await $api.client.request<FindApplication>(
     gql`
       query FindApplication($session_id: String = "") {
-        bops_applications(
+        bopsApplications: bops_applications(
           where: { session_id: { _eq: $session_id } }
           order_by: { created_at: desc }
         ) {
@@ -181,7 +193,7 @@ async function checkBOPSAuditTable(
     },
   );
 
-  return application?.bops_applications[0]?.response;
+  return application?.bopsApplications[0]?.response;
 }
 
 export { sendToBOPS };

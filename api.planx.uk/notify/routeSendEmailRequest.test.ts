@@ -218,7 +218,7 @@ describe("Send Email endpoint", () => {
         .getCalls()
         .find((mock) => mock.id === "SoftDeleteLowcalSession");
       expect(
-        softDeleteSessionMock?.response.data.update_lowcal_sessions_by_pk.id,
+        softDeleteSessionMock?.response.data.session.id,
       ).toEqual("123");
     });
   });
