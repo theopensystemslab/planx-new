@@ -19,10 +19,15 @@ const mockFormatRawProjectTypes = jest
   .mockResolvedValue(["New office premises"]);
 
 jest.mock("@opensystemslab/planx-core", () => {
+  const actualCoreDomainClient = jest.requireActual("@opensystemslab/planx-core").CoreDomainClient;
+
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
-      formatRawProjectTypes: () => mockFormatRawProjectTypes(),
-    })),
+    CoreDomainClient: class extends actualCoreDomainClient {
+      constructor() {
+        super();
+        this.formatRawProjectTypes = () => mockFormatRawProjectTypes();
+      }
+    }
   };
 });
 
@@ -227,7 +232,7 @@ describe("Resume Application endpoint", () => {
 
     queryMock.mockQuery({
       name: "ValidateRequest",
-      data: { teams: null, lowcal_sessions: null },
+      data: { teams: null, sessions: null },
       variables: body.payload,
     });
 
@@ -249,7 +254,7 @@ describe("Resume Application endpoint", () => {
     queryMock.mockQuery({
       name: "ValidateRequest",
       data: {
-        lowcal_sessions: [mockLowcalSession],
+        sessions: [mockLowcalSession],
         teams: [mockTeam],
       },
       variables: body.payload,
@@ -269,7 +274,7 @@ describe("Resume Application endpoint", () => {
 
     queryMock.mockQuery({
       name: "ValidateRequest",
-      data: { teams: [mockTeam], lowcal_sessions: [] },
+      data: { teams: [mockTeam], sessions: [] },
       variables: body.payload,
     });
 

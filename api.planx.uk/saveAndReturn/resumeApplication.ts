@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import { convertSlugToName, getResumeLink, calculateExpiryDate } from "./utils";
 import { sendEmail } from "../notify";
 import type { SiteAddress } from "@opensystemslab/planx-core/types";
-import { $public } from "../client";
+import { $api, $public } from "../client";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -42,6 +41,11 @@ const resumeApplication = async (
   }
 };
 
+interface ValidateRequest {
+  teams: Team[];
+  sessions: LowCalSession[] | null;
+}
+
 /**
  * Validate that there are sessions matching the request
  * XXX: Admin role is required here as we are relying on the combination of email
@@ -57,7 +61,7 @@ const validateRequest = async (
   try {
     const query = gql`
       query ValidateRequest($email: String, $teamSlug: String) {
-        lowcal_sessions(
+        sessions(
           where: {
             email: { _eq: $email }
             deleted_at: { _is_null: true }
@@ -81,7 +85,7 @@ const validateRequest = async (
         }
       }
     `;
-    const { lowcal_sessions, teams } = await adminClient.request(query, {
+    const { sessions, teams } = await $api.client.request<ValidateRequest>(query, {
       teamSlug,
       email: email.toLowerCase(),
     });
@@ -90,7 +94,7 @@ const validateRequest = async (
 
     return {
       team: teams[0],
-      sessions: lowcal_sessions,
+      sessions: sessions || [],
     };
   } catch (error) {
     throw Error("Unable to validate request");

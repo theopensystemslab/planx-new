@@ -13,11 +13,23 @@ import {
   stubUpdateLowcalSessionData,
 } from "../tests/mocks/saveAndReturnMocks";
 import type { Node, Flow, Breadcrumb } from "../types";
+import { userContext } from "../modules/auth/middleware";
+import { getJWT } from "../tests/mockJWT";
 
 const validateSessionPath = "/validate-session";
+const getStoreMock = jest.spyOn(userContext, "getStore");
 
 describe("Validate Session endpoint", () => {
   const reconciledData = omit(mockLowcalSession.data, "passport");
+
+  beforeEach(() => {
+    getStoreMock.mockReturnValue({
+      user: {
+        sub: "123",
+        jwt: getJWT({ role: "teamEditor" }),
+      },
+    });
+  });
 
   afterEach(() => {
     queryMock.reset();

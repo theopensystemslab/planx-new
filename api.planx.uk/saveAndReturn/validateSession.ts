@@ -1,7 +1,6 @@
 import { gql } from "graphql-request";
 import omit from "lodash.omit";
 import { NextFunction, Request, Response } from "express";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { getMostRecentPublishedFlow } from "../helpers";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
@@ -16,6 +15,8 @@ import type {
   PublishedFlow,
   Node,
 } from "../types";
+import { $api, $public, getClient } from "../client";
+import { getSaveAndReturnPublicHeaders } from "./utils";
 
 export interface ValidationResponse {
   message: string;
@@ -208,9 +209,10 @@ async function diffLatestPublishedFlow({
   flowId: string;
   since: string;
 }): Promise<PublishedFlow["data"] | null> {
+  const { client: $client } = getClient();
   const response: {
     diff_latest_published_flow: { data: PublishedFlow["data"] | null };
-  } = await adminClient.request(
+  } = await $client.request(
     gql`
       query GetFlowDiff($flowId: uuid!, $since: timestamptz!) {
         diff_latest_published_flow(
@@ -232,8 +234,9 @@ async function findSession({
   sessionId: string;
   email: string;
 }): Promise<Partial<LowCalSession> | undefined> {
+  const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response: { lowcal_sessions: Partial<LowCalSession>[] } =
-    await adminClient.request(
+    await $public.client.request(
       gql`
         query FindSession($sessionId: uuid!, $email: String!) {
           lowcal_sessions(
@@ -253,6 +256,7 @@ async function findSession({
         }
       `,
       { sessionId, email },
+      headers,
     );
   return response.lowcal_sessions.length
     ? response.lowcal_sessions[0]
@@ -263,7 +267,7 @@ async function createAuditEntry(
   sessionId: string,
   data: ValidationResponse,
 ): Promise<void> {
-  await adminClient.request(
+  await $api.client.request(
     gql`
       mutation InsertReconciliationRequests(
         $session_id: String = ""

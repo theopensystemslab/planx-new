@@ -154,7 +154,7 @@ export const mockValidateSingleSessionRequest = {
 export const mockSoftDeleteLowcalSession = {
   name: "SoftDeleteLowcalSession",
   data: {
-    update_lowcal_sessions_by_pk: {
+    session: {
       id: "123",
     },
   },
@@ -166,9 +166,9 @@ export const mockSoftDeleteLowcalSession = {
 export const mockSetupEmailNotifications = {
   name: "SetupEmailNotifications",
   data: {
-    update_lowcal_sessions_by_pk: {
+    session: {
       id: "123",
-      has_user_saved: true,
+      hasUserSaved: true,
     },
   },
   variables: {
