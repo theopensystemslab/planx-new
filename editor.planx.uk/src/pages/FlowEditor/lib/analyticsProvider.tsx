@@ -12,7 +12,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { Store, useStore } from "./store";
 
 export type AnalyticsType = "init" | "resume";
-type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards" | "reset";
+type AnalyticsLogDirection =
+  | AnalyticsType
+  | "forwards"
+  | "backwards"
+  | "reset"
+  | "save";
 
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
@@ -33,12 +38,14 @@ const analyticsContext = createContext<{
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
   trackNextStepsLinkClick: (metadata?: SelectedUrlsMetadata) => Promise<void>;
   trackResetFlow: () => Promise<void>;
+  trackSaveFlow: () => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
   trackNextStepsLinkClick: () => Promise.resolve(),
   trackResetFlow: () => Promise.resolve(),
+  trackSaveFlow: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -121,6 +128,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         trackHelpClick,
         trackNextStepsLinkClick,
         trackResetFlow,
+        trackSaveFlow,
         node,
       }}
     >
@@ -282,6 +290,27 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         variables: {
           id: lastAnalyticsLogId,
           flow_direction: "reset",
+        },
+      });
+    }
+  }
+
+  async function trackSaveFlow() {
+    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+      await publicClient.mutate({
+        mutation: gql`
+          mutation UpdateHasSavedFlow($id: bigint!, $flow_direction: String) {
+            update_analytics_logs_by_pk(
+              pk_columns: { id: $id }
+              _set: { flow_direction: $flow_direction }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: lastAnalyticsLogId,
+          flow_direction: "save",
         },
       });
     }
