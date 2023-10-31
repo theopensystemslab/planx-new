@@ -16,7 +16,6 @@ import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import merge from "lodash/merge";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
 import ErrorWrapper from "ui/ErrorWrapper";
@@ -28,7 +27,6 @@ import {
   FileList,
   getTagsForSlot,
   removeSlots,
-  resetAllSlots,
 } from "./model";
 import { fileLabelSchema } from "./schema";
 
@@ -172,23 +170,22 @@ const SelectMultiple = (props: SelectMultipleProps) => {
     previousTags: string[] | undefined,
     tags: string[],
   ) => {
-    let updatedFileList: FileList = merge(fileList);
     const updatedTags = tags.filter((tag) => !previousTags?.includes(tag));
     const removedTags = previousTags?.filter((tag) => !tags?.includes(tag));
 
     if (updatedTags.length > 0) {
-      updatedFileList = addOrAppendSlots(updatedTags, uploadedFile, fileList);
+      const updatedFileList = addOrAppendSlots(
+        updatedTags,
+        uploadedFile,
+        fileList,
+      );
+      setFileList(updatedFileList);
     }
 
     if (removedTags && removedTags.length > 0) {
-      updatedFileList = removeSlots(removedTags, uploadedFile, fileList);
+      const updatedFileList = removeSlots(removedTags, uploadedFile, fileList);
+      setFileList(updatedFileList);
     }
-
-    if (tags.length === 0 && previousTags) {
-      updatedFileList = resetAllSlots(fileList);
-    }
-
-    setFileList(updatedFileList);
   };
 
   useEffect(() => {
