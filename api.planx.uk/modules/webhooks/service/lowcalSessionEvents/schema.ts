@@ -7,6 +7,7 @@ export const createSessionEventSchema = z.object({
     createdAt: z.string().pipe(z.coerce.date()),
     payload: z.object({
       sessionId: z.string(),
+      email: z.string().email(),
     }),
   }),
 });

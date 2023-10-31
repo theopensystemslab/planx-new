@@ -45,7 +45,7 @@ export const sendSlackNotificationController: SendSlackNotification = async (
 };
 
 export const createPaymentInvitationEventsController: CreatePaymentEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
       const response = await createPaymentInvitationEvents(
         res.locals.parsedReq.body,
@@ -62,7 +62,7 @@ export const createPaymentInvitationEventsController: CreatePaymentEventControll
   };
 
 export const createPaymentReminderEventsController: CreatePaymentEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
       const response = await createPaymentReminderEvents(
         res.locals.parsedReq.body,
@@ -79,7 +79,7 @@ export const createPaymentReminderEventsController: CreatePaymentEventController
   };
 
 export const createPaymentExpiryEventsController: CreatePaymentEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
       const response = await createPaymentExpiryEvents(
         res.locals.parsedReq.body,
@@ -96,7 +96,7 @@ export const createPaymentExpiryEventsController: CreatePaymentEventController =
   };
 
 export const createSessionReminderEventController: CreateSessionEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
       const response = await createSessionReminderEvent(
         res.locals.parsedReq.body,
@@ -113,7 +113,7 @@ export const createSessionReminderEventController: CreateSessionEventController 
   };
 
 export const createSessionExpiryEventController: CreateSessionEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
       const response = await createSessionExpiryEvent(
         res.locals.parsedReq.body,

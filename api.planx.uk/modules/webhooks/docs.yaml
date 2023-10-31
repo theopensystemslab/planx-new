@@ -123,6 +123,9 @@ components:
           properties:
             sessionId:
               type: string
+            email:
+              type: string
+              format: email
   responses:
     SlackNotificationSuccessMessage:
       content:

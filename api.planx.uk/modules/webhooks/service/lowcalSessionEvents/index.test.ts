@@ -32,8 +32,23 @@ describe("Create reminder event webhook", () => {
   it("returns a 400 if a required value is missing", async () => {
     const missingCreatedAt = { createdAt: null, payload: {} };
     const missingPayload = { createdAt: new Date(), payload: null };
+    const missingEmail = {
+      createdAt: new Date(),
+      payload: { sessionId: "abc123" },
+    };
+    const missingSessionId = {
+      createdAt: new Date(),
+      payload: { email: "test@example.com" },
+    };
 
-    for (const body of [missingCreatedAt, missingPayload]) {
+    const invalidRequestBodies = [
+      missingCreatedAt,
+      missingPayload,
+      missingEmail,
+      missingSessionId,
+    ];
+
+    for (const body of invalidRequestBodies) {
       await post(ENDPOINT)
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send(body)
@@ -46,7 +61,10 @@ describe("Create reminder event webhook", () => {
   });
 
   it("returns a 200 on successful event setup", async () => {
-    const body = { createdAt: new Date(), payload: { sessionId: "123" } };
+    const body = {
+      createdAt: new Date(),
+      payload: { sessionId: "123", email: "test@example.com" },
+    };
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
@@ -64,7 +82,10 @@ describe("Create reminder event webhook", () => {
   });
 
   it("passes the correct arguments along to createScheduledEvent", async () => {
-    const body = { createdAt: new Date(), payload: { sessionId: "123" } };
+    const body = {
+      createdAt: new Date(),
+      payload: { sessionId: "123", email: "test@example.com" },
+    };
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
@@ -96,7 +117,10 @@ describe("Create reminder event webhook", () => {
   });
 
   it("returns a 500 on event setup failure", async () => {
-    const body = { createdAt: new Date(), payload: { sessionId: "123" } };
+    const body = {
+      createdAt: new Date(),
+      payload: { sessionId: "123", email: "test@example.com" },
+    };
     mockedCreateScheduledEvent.mockRejectedValue(new Error("Failed!"));
 
     await post(ENDPOINT)
@@ -143,7 +167,10 @@ describe("Create expiry event webhook", () => {
   });
 
   it("returns a 200 on successful event setup", async () => {
-    const body = { createdAt: new Date(), payload: { sessionId: "123" } };
+    const body = {
+      createdAt: new Date(),
+      payload: { sessionId: "123", email: "test@example.com" },
+    };
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
@@ -151,12 +178,16 @@ describe("Create expiry event webhook", () => {
       .send(body)
       .expect(200)
       .then((response) => {
+        // expect(mockedCreateScheduledEvent).toHaveBeenCalledWith(body.p)
         expect(response.body).toStrictEqual([mockScheduledEventResponse]);
       });
   });
 
   it("passes the correct arguments along to createScheduledEvent", async () => {
-    const body = { createdAt: new Date(), payload: { sessionId: "123" } };
+    const body = {
+      createdAt: new Date(),
+      payload: { sessionId: "123", email: "test@example.com" },
+    };
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
@@ -173,7 +204,10 @@ describe("Create expiry event webhook", () => {
   });
 
   it("returns a 500 on event setup failure", async () => {
-    const body = { createdAt: new Date(), payload: { sessionId: "123" } };
+    const body = {
+      createdAt: new Date(),
+      payload: { sessionId: "123", email: "test@example.com" },
+    };
     mockedCreateScheduledEvent.mockRejectedValue(new Error("Failed!"));
 
     await post(ENDPOINT)
