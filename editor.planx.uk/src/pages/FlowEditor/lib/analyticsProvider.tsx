@@ -37,15 +37,15 @@ const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
   trackNextStepsLinkClick: (metadata?: SelectedUrlsMetadata) => Promise<void>;
-  trackResetFlow: () => Promise<void>;
-  trackSaveFlow: () => Promise<void>;
+  trackFlowDirectionChange: (
+    flowDirection: AnalyticsLogDirection,
+  ) => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
   trackNextStepsLinkClick: () => Promise.resolve(),
-  trackResetFlow: () => Promise.resolve(),
-  trackSaveFlow: () => Promise.resolve(),
+  trackFlowDirectionChange: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -127,8 +127,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         createAnalytics,
         trackHelpClick,
         trackNextStepsLinkClick,
-        trackResetFlow,
-        trackSaveFlow,
+        trackFlowDirectionChange,
         node,
       }}
     >
@@ -274,11 +273,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  async function trackResetFlow() {
+  async function trackFlowDirectionChange(
+    flowDirection: AnalyticsLogDirection,
+  ) {
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
-          mutation UpdateHasResetFlow($id: bigint!, $flow_direction: String) {
+          mutation UpdateFlowDirection($id: bigint!, $flow_direction: String) {
             update_analytics_logs_by_pk(
               pk_columns: { id: $id }
               _set: { flow_direction: $flow_direction }
@@ -289,28 +290,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         `,
         variables: {
           id: lastAnalyticsLogId,
-          flow_direction: "reset",
-        },
-      });
-    }
-  }
-
-  async function trackSaveFlow() {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
-      await publicClient.mutate({
-        mutation: gql`
-          mutation UpdateHasSavedFlow($id: bigint!, $flow_direction: String) {
-            update_analytics_logs_by_pk(
-              pk_columns: { id: $id }
-              _set: { flow_direction: $flow_direction }
-            ) {
-              id
-            }
-          }
-        `,
-        variables: {
-          id: lastAnalyticsLogId,
-          flow_direction: "save",
+          flow_direction: flowDirection,
         },
       });
     }

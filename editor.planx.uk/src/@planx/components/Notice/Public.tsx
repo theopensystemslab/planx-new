@@ -76,10 +76,10 @@ const NoticeComponent: React.FC<Props> = (props) => {
     ? () => props.handleSubmit?.()
     : undefined;
 
-  const { trackResetFlow } = useAnalyticsTracking();
+  const { trackFlowDirectionChange } = useAnalyticsTracking();
 
   const handleNoticeResetClick = () => {
-    trackResetFlow();
+    trackFlowDirectionChange("reset");
     props.resetPreview && props.resetPreview();
   };
 

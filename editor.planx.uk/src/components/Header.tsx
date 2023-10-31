@@ -320,7 +320,7 @@ const PublicToolbar: React.FC<{
     theme.breakpoints.up("md"),
   );
 
-  const { trackResetFlow } = useAnalyticsTracking();
+  const { trackFlowDirectionChange } = useAnalyticsTracking();
 
   const handleRestart = async () => {
     if (
@@ -328,7 +328,7 @@ const PublicToolbar: React.FC<{
         "Are you sure you want to restart? This will delete your previous answers",
       )
     ) {
-      trackResetFlow();
+      trackFlowDirectionChange("reset");
       if (path === ApplicationPath.SingleSession) {
         clearLocalFlow(id);
         window.location.reload();

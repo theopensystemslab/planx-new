@@ -17,11 +17,11 @@ const InnerContainer = styled(Box)(({ theme }) => ({
 
 const SaveResumeButton: React.FC = () => {
   const saveToEmail = useStore((state) => state.saveToEmail);
-  const { trackSaveFlow } = useAnalyticsTracking();
+  const { trackFlowDirectionChange } = useAnalyticsTracking();
 
   const handleClick = () => {
     if (saveToEmail) {
-      trackSaveFlow();
+      trackFlowDirectionChange("save");
       useStore.setState({ path: ApplicationPath.Save });
     } else {
       useStore.setState({ path: ApplicationPath.Resume });
