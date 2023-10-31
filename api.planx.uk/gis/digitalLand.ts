@@ -5,9 +5,9 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { addDesignatedVariable, omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
+import { $api } from "../client";
 
 export interface LocalAuthorityMetadata {
   planningConstraints: {
@@ -73,7 +73,7 @@ async function go(
 
   // if analytics are "on", store an audit record of the raw response
   if (extras?.analytics !== "false") {
-    const _auditRecord = await adminClient.request(
+    const _auditRecord = await $api.client.request(
       gql`
         mutation CreatePlanningConstraintsRequest(
           $destination_url: String = ""
