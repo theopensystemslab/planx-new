@@ -11,7 +11,9 @@ const mockGenerateCSVData = jest.fn().mockResolvedValue([
 ]);
 
 jest.mock("@opensystemslab/planx-core", () => {
-  const actualCoreDomainClient = jest.requireActual("@opensystemslab/planx-core").CoreDomainClient;
+  const actualCoreDomainClient = jest.requireActual(
+    "@opensystemslab/planx-core",
+  ).CoreDomainClient;
 
   return {
     Passport: jest.fn().mockImplementation(() => ({

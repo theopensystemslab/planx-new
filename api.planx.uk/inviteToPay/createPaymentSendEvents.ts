@@ -124,8 +124,8 @@ interface GetTeamSlugByFlowId {
   flows: {
     team: {
       slug: string;
-    }
-  }
+    };
+  };
 }
 
 const getTeamSlugByFlowId = async (id: Flow["id"]): Promise<Team["slug"]> => {

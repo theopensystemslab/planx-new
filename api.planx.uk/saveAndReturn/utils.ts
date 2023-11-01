@@ -237,8 +237,8 @@ const getSaveAndReturnPublicHeaders = (sessionId: string, email: string) => ({
   "x-hasura-lowcal-email": email.toLowerCase(),
 });
 
-interface SetupEmailNotifications { 
-  session: { hasUserSaved: boolean } 
+interface SetupEmailNotifications {
+  session: { hasUserSaved: boolean };
 }
 
 // Update lowcal_sessions.has_user_saved column to kick-off the setup_lowcal_expiry_events &
@@ -259,7 +259,9 @@ const setupEmailEventTriggers = async (sessionId: string) => {
     `;
     const {
       session: { hasUserSaved },
-    } = await $api.client.request<SetupEmailNotifications>(mutation, { sessionId });
+    } = await $api.client.request<SetupEmailNotifications>(mutation, {
+      sessionId,
+    });
     return hasUserSaved;
   } catch (error) {
     throw new Error(

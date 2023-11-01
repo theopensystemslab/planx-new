@@ -15,7 +15,7 @@ interface CreateBopsApplication {
   insertBopsApplication: {
     id: string;
     bopsId: string;
-  }
+  };
 }
 
 /**
@@ -167,8 +167,8 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
 
 interface FindApplication {
   bopsApplications: {
-    response: Record<string, string>
-  }[]
+    response: Record<string, string>;
+  }[];
 }
 
 /**

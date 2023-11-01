@@ -9,7 +9,9 @@ jest.mock("../saveAndReturn/utils", () => ({
 }));
 
 jest.mock("@opensystemslab/planx-core", () => {
-  const actualCoreDomainClient = jest.requireActual("@opensystemslab/planx-core").CoreDomainClient;
+  const actualCoreDomainClient = jest.requireActual(
+    "@opensystemslab/planx-core",
+  ).CoreDomainClient;
 
   return {
     CoreDomainClient: class extends actualCoreDomainClient {
@@ -21,7 +23,7 @@ jest.mock("@opensystemslab/planx-core", () => {
             redactedExportData: expectedPayload,
           });
       }
-    }
+    },
   };
 });
 

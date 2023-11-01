@@ -85,10 +85,13 @@ const validateRequest = async (
         }
       }
     `;
-    const { sessions, teams } = await $api.client.request<ValidateRequest>(query, {
-      teamSlug,
-      email: email.toLowerCase(),
-    });
+    const { sessions, teams } = await $api.client.request<ValidateRequest>(
+      query,
+      {
+        teamSlug,
+        email: email.toLowerCase(),
+      },
+    );
 
     if (!teams?.length) throw Error;
 
