@@ -33,7 +33,7 @@ jobs:
       - uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
@@ -72,7 +72,7 @@ jobs:
       - uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
@@ -108,7 +108,7 @@ jobs:
       - uses: pnpm/action-setup@v2.4.0
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
@@ -141,7 +141,7 @@ jobs:
         with:
           version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
