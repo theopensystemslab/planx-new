@@ -58,8 +58,8 @@ dependencies:
     specifier: ^2.1.6
     version: 2.1.6(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
   '@tiptap/extension-bullet-list':
-    specifier: ^2.0.3
-    version: 2.0.3(@tiptap/core@2.0.3)
+    specifier: ^2.1.12
+    version: 2.1.12(@tiptap/core@2.0.3)
   '@tiptap/extension-document':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
@@ -7565,8 +7565,8 @@ packages:
       tippy.js: 6.3.7
     dev: false
 
-  /@tiptap/extension-bullet-list@2.0.3(@tiptap/core@2.0.3):
-    resolution: {integrity: sha512-RtaLiRvZbMTOje+FW5bn+mYogiIgNxOm065wmyLPypnTbLSeHeYkoqVSqzZeqUn+7GLnwgn1shirUe6csVE/BA==}
+  /@tiptap/extension-bullet-list@2.1.12(@tiptap/core@2.0.3):
+    resolution: {integrity: sha512-vtD8vWtNlmAZX8LYqt2yU9w3mU9rPCiHmbp4hDXJs2kBnI0Ju/qAyXFx6iJ3C3XyuMnMbJdDI9ee0spAvFz7cQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:
@@ -21024,7 +21024,6 @@ packages:
     id: github.com/theopensystemslab/planx-core/51fd5f7
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.1(@types/react@18.2.20)(react@18.2.0)
