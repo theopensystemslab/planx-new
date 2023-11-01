@@ -1,4 +1,4 @@
-import { TEST_EMAIL } from "../../ui-driven/src/helpers";
+import { TEST_EMAIL } from "../../ui-driven/src/globalHelpers";
 import { $admin } from "./client";
 
 export function createTeam(

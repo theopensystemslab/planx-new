@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { log } from "./helpers";
+import { log } from "./globalHelpers";
 import { sign } from "jsonwebtoken";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient, gql } from "graphql-request";

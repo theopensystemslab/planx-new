@@ -66,35 +66,6 @@ export async function createAuthenticatedSession({
   return page;
 }
 
-export async function getAdminPage({
-  browser,
-  userId,
-}: {
-  browser: Browser;
-  userId: number;
-}): Promise<Page> {
-  const page = await createAuthenticatedSession({ browser, userId });
-  await page.goto("/");
-  await page.waitForResponse((response) => {
-    return response.url().includes("/graphql");
-  });
-  return page;
-}
-
-export async function getTeamPage({
-  browser,
-  userId,
-  teamName,
-}: {
-  browser: Browser;
-  userId: number;
-  teamName: string;
-}): Promise<Page> {
-  const page = await getAdminPage({ browser, userId });
-  await page.locator("h2", { hasText: teamName }).click();
-  return page;
-}
-
 export async function saveSession({
   page,
   context,

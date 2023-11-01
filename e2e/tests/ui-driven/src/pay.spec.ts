@@ -5,7 +5,7 @@ import {
   getSessionId,
   log,
   waitForPaymentResponse,
-} from "./helpers";
+} from "./globalHelpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./mocks/flows/pay-flow.json";
 import { gql, GraphQLClient } from "graphql-request";

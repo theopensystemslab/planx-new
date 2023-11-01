@@ -16,7 +16,7 @@ import {
   returnToSession,
   saveSession,
   modifyFlow,
-} from "./helpers";
+} from "./globalHelpers";
 import type { Context } from "./context";
 
 test.describe("Save and return", () => {

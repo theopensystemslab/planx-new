@@ -12,7 +12,7 @@ import {
   mockPassport,
 } from "./mocks";
 import { $admin } from "../client";
-import { TEST_EMAIL } from "../../../ui-driven/src/helpers";
+import { TEST_EMAIL } from "../../../ui-driven/src/globalHelpers";
 import { createTeam, createUser } from "../globalHelpers";
 
 export async function setUpMocks() {

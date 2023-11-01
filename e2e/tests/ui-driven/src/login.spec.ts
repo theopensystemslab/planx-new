@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { createAuthenticatedSession } from "./helpers";
+import { createAuthenticatedSession } from "./globalHelpers";
 import {
   contextDefaults,
   setUpTestContext,
