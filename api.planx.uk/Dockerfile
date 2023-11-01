@@ -1,6 +1,6 @@
 ## BASE ##
 # 18.16.1 = LTS
-FROM node:18.16.1-alpine as base
+FROM node:21.1.0-alpine as base
 
 # Setup Git - required for fetching git dependencies (planx-core)
 RUN apk add --no-cache git 
@@ -21,7 +21,7 @@ RUN pnpm install --recursive --prefer-offline
 RUN pnpm build
 RUN pnpm prune --production
 
-FROM node:18.16.1-alpine as production
+FROM node:21.1.0-alpine as production
 WORKDIR /api
 
 ## PRODUCTION ##
