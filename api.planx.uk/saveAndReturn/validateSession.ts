@@ -15,8 +15,7 @@ import type {
   PublishedFlow,
   Node,
 } from "../types";
-import { $api, $public, getClient } from "../client";
-import { getSaveAndReturnPublicHeaders } from "./utils";
+import { $api, getClient } from "../client";
 
 export interface ValidationResponse {
   message: string;
@@ -227,6 +226,10 @@ async function diffLatestPublishedFlow({
   return response.diff_latest_published_flow.data;
 }
 
+interface FindSession {
+  sessions: Partial<LowCalSession>[];
+}
+
 async function findSession({
   sessionId,
   email,
@@ -234,33 +237,28 @@ async function findSession({
   sessionId: string;
   email: string;
 }): Promise<Partial<LowCalSession> | undefined> {
-  const headers = getSaveAndReturnPublicHeaders(sessionId, email);
-  const response: { lowcal_sessions: Partial<LowCalSession>[] } =
-    await $public.client.request(
-      gql`
-        query FindSession($sessionId: uuid!, $email: String!) {
-          lowcal_sessions(
-            where: { id: { _eq: $sessionId }, email: { _eq: $email } }
-            limit: 1
-          ) {
-            flow_id
-            data
-            updated_at
-            lockedAt: locked_at
-            paymentRequests: payment_requests {
-              id
-              payeeName: payee_name
-              payeeEmail: payee_email
-            }
+  const response = await $api.client.request<FindSession>(
+    gql`
+      query FindSession($sessionId: uuid!, $email: String!) {
+        sessions: lowcal_sessions(
+          where: { id: { _eq: $sessionId }, email: { _eq: $email } }
+          limit: 1
+        ) {
+          flow_id
+          data
+          updated_at
+          lockedAt: locked_at
+          paymentRequests: payment_requests {
+            id
+            payeeName: payee_name
+            payeeEmail: payee_email
           }
         }
-      `,
-      { sessionId, email },
-      headers,
-    );
-  return response.lowcal_sessions.length
-    ? response.lowcal_sessions[0]
-    : undefined;
+      }
+    `,
+    { sessionId, email },
+  );
+  return response.sessions.length ? response.sessions[0] : undefined;
 }
 
 async function createAuditEntry(

@@ -73,7 +73,7 @@ export const mockLowcalSession: LowCalSession = {
 export const mockFindSession = (breadcrumbs = {}) => ({
   name: "FindSession",
   data: {
-    lowcal_sessions: [
+    sessions: [
       {
         ...mockLowcalSession,
         data: {
@@ -92,7 +92,7 @@ export const mockFindSession = (breadcrumbs = {}) => ({
 export const mockNotFoundSession = {
   name: "FindSession",
   data: {
-    lowcal_sessions: [],
+    sessions: [],
   },
   variables: {
     sessionId: "not-found-id",
