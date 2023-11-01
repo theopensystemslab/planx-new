@@ -50,7 +50,10 @@ test.describe("Navigation", () => {
     const team = page.locator("h2", { hasText: context.team.name });
 
     let isRepeatedRequestMade = false;
-    page.on("request", (req) => (isRepeatedRequestMade = isGetUserRequest(req)));
+    page.on(
+      "request",
+      (req) => (isRepeatedRequestMade = isGetUserRequest(req)),
+    );
 
     Promise.all([
       await team.click(),
