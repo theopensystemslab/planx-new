@@ -236,8 +236,8 @@ devDependencies:
     specifier: ^13.3.2
     version: 13.3.2
   node-dev:
-    specifier: ^7.4.3
-    version: 7.4.3
+    specifier: ^8.0.0
+    version: 8.0.0
   prettier:
     specifier: ^3.0.2
     version: 3.0.2
@@ -6176,9 +6176,9 @@ packages:
       - supports-color
     dev: true
 
-  /node-dev@7.4.3:
-    resolution: {integrity: sha512-o8aYipN28xY+WEunMHHiNc3hpPSkGG8ulHyYBapNbkg4dQxohmhx6jiRbiFhTF6zy+5IwljUGv1EcuxsaWI4Bw==}
-    engines: {node: '>=12'}
+  /node-dev@8.0.0:
+    resolution: {integrity: sha512-GXc0KxmBXfQxMPdymOui40yvC5W/RXFwmuUDT65wvTAO/o9wAsddYC8q4EHKxq3Qqt+uLS/g7XKdgVcsjyk9lw==}
+    engines: {node: '>=14'}
     hasBin: true
     dependencies:
       dateformat: 3.0.3
@@ -8155,7 +8155,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/51fd5f7}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.1(react@18.2.0)
