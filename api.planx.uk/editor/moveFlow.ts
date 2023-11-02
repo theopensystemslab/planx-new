@@ -37,7 +37,7 @@ const moveFlow = async (
 };
 
 interface GetTeam {
-  teams: Pick<Team, "id">[]
+  teams: Pick<Team, "id">[];
 }
 
 const getTeamIdBySlug = async (slug: Team["slug"]): Promise<Team["id"]> => {
@@ -58,7 +58,7 @@ const getTeamIdBySlug = async (slug: Team["slug"]): Promise<Team["id"]> => {
 };
 
 interface UpdateFlow {
-  flow: Pick<Flow, "id">
+  flow: Pick<Flow, "id">;
 }
 
 const updateFlow = async (

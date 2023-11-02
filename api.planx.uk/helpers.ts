@@ -7,7 +7,7 @@ import { $public, getClient } from "./client";
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
   const { client: $client } = getClient();
-  const { flow } = await $client.request<{ flow: Flow | null}>(
+  const { flow } = await $client.request<{ flow: Flow | null }>(
     gql`
       query GetFlowData($id: uuid!) {
         flow: flows_by_pk(id: $id) {
@@ -94,9 +94,9 @@ interface PublishedFlows {
   flow: {
     publishedFlows: {
       // TODO: use FlowGraph from planx-core here
-      data: Flow["data"]
-    }[] 
-  } | null
+      data: Flow["data"];
+    }[];
+  } | null;
 }
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
@@ -107,7 +107,10 @@ const getMostRecentPublishedFlow = async (
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
         flow: flows_by_pk(id: $id) {
-          publishedFlows: published_flows(limit: 1, order_by: { created_at: desc }) {
+          publishedFlows: published_flows(
+            limit: 1
+            order_by: { created_at: desc }
+          ) {
             data
           }
         }
@@ -115,10 +118,10 @@ const getMostRecentPublishedFlow = async (
     `,
     { id },
   );
-  
+
   const mostRecent = flow?.publishedFlows?.[0]?.data;
   if (!mostRecent) throw Error(`Published flow not found for flow ${id}`);
-  
+
   return mostRecent;
 };
 

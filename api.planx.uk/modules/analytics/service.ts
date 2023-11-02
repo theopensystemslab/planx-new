@@ -6,7 +6,7 @@ interface UpdateAnalyticsLogUserExit {
     id: string;
     userExit: boolean;
     analyticsId: string;
-  }
+  };
 }
 
 export const trackAnalyticsLogExit = async ({

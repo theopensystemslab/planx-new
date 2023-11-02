@@ -54,9 +54,9 @@ interface UpdateFlow {
   flow: {
     id: string;
     slug: string;
-    data: FlowGraph
+    data: FlowGraph;
     updatedAt: string;
-  }
+  };
 }
 
 /**
@@ -150,7 +150,10 @@ const findAndReplaceInFlow = async (
       const response = await $client.request<UpdateFlow>(
         gql`
           mutation UpdateFlow($data: jsonb = {}, $id: uuid!) {
-            flow: update_flows_by_pk(pk_columns: { id: $id }, _set: { data: $data }) {
+            flow: update_flows_by_pk(
+              pk_columns: { id: $id }
+              _set: { data: $data }
+            ) {
               id
               slug
               data
@@ -164,8 +167,7 @@ const findAndReplaceInFlow = async (
         },
       );
 
-      const updatedFlow =
-        response.flow && response.flow.data;
+      const updatedFlow = response.flow && response.flow.data;
 
       res.json({
         message: `Found ${

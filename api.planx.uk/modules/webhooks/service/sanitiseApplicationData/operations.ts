@@ -78,10 +78,12 @@ export const getExpiredSessionIds = async (): Promise<string[]> => {
   `;
   const {
     lowcal_sessions: sessions,
-  }: { lowcal_sessions: Record<"id", string>[] } =
-    await $api.client.request(query, {
+  }: { lowcal_sessions: Record<"id", string>[] } = await $api.client.request(
+    query,
+    {
       retentionPeriod: getRetentionPeriod(),
-    });
+    },
+  );
   const sessionIds = sessions.map((session) => session.id);
   return sessionIds;
 };

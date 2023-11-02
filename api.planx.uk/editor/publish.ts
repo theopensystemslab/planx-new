@@ -75,8 +75,8 @@ interface PublishFlow {
     flowId: string;
     publisherId: string;
     createdAt: string;
-    data: FlowGraph
-  }
+    data: FlowGraph;
+  };
 }
 
 const publishFlow = async (
@@ -127,8 +127,7 @@ const publishFlow = async (
       );
 
       const publishedFlow =
-        response.publishedFlow &&
-        response.publishedFlow.data;
+        response.publishedFlow && response.publishedFlow.data;
 
       const alteredNodes = Object.keys(delta).map((key) => ({
         id: key,

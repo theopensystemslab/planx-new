@@ -7,7 +7,7 @@ import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
 import { Breadcrumb, Flow, LowCalSession, Passport, Team } from "../../types";
-import { $api } from '../../client';
+import { $api } from "../../client";
 
 /**
  * @swagger
@@ -73,7 +73,9 @@ interface SessionSummary {
 const getSessionSummaryById = async (
   sessionId: Session["id"],
 ): Promise<SessionSummary | null> => {
-  const { session } = await $api.client.request<Record<"session", SessionSummary | null>>(
+  const { session } = await $api.client.request<
+    Record<"session", SessionSummary | null>
+  >(
     gql`
       query GetSessionSummary($sessionId: uuid!) {
         session: lowcal_sessions_by_pk(id: $sessionId) {

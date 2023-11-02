@@ -6,7 +6,7 @@ import {
   fetchPaymentViaProxyWithCallback,
 } from "../pay";
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { $api } from '../client';
+import { $api } from "../client";
 
 interface GetPaymentRequestDetails {
   paymentRequest: {
@@ -16,11 +16,11 @@ interface GetPaymentRequestDetails {
       flowId: string;
       flow: {
         team: {
-          slug: string
-        }
-      }
+          slug: string;
+        };
+      };
     };
-  } | null
+  } | null;
 }
 
 // middleware used by routes:
@@ -47,9 +47,10 @@ export async function fetchPaymentRequestDetails(
       }
     }
   `;
-  const { paymentRequest } = await $api.client.request<GetPaymentRequestDetails>(query, {
-    paymentRequestId: req.params.paymentRequest,
-  });
+  const { paymentRequest } =
+    await $api.client.request<GetPaymentRequestDetails>(query, {
+      paymentRequestId: req.params.paymentRequest,
+    });
   if (!paymentRequest) {
     return next(
       new ServerError({

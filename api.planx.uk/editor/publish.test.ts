@@ -15,7 +15,7 @@ beforeAll(() => {
       jwt: getJWT({ role: "teamEditor" }),
     },
   });
-})
+});
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -119,7 +119,7 @@ describe("publish", () => {
     await supertest(app)
       .post("/flows/1/publish")
       .set(auth)
-      // .expect(200)
+      .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
           alteredNodes: [

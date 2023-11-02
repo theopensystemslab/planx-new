@@ -35,17 +35,21 @@ jest.mock("@opensystemslab/planx-core", () => {
     "@opensystemslab/planx-core",
   ).CoreDomainClient;
 
-  const actualPassport = jest.requireActual("@opensystemslab/planx-core").Passport;
+  const actualPassport = jest.requireActual(
+    "@opensystemslab/planx-core",
+  ).Passport;
 
   return {
     Passport: actualPassport,
     CoreDomainClient: class extends actualCoreDomainClient {
       constructor() {
         super();
-        this.session.find = jest.fn().mockImplementation(() => mockFindSession());
+        this.session.find = jest
+          .fn()
+          .mockImplementation(() => mockFindSession());
       }
     },
-  }
+  };
 });
 
 const s3Mock = () => {
