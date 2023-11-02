@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#51fd5f7
-    version: github.com/theopensystemslab/planx-core/51fd5f7
+    specifier: git+https://github.com/theopensystemslab/planx-core#c923d21
+    version: github.com/theopensystemslab/planx-core/c923d21
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -527,8 +527,8 @@ packages:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
-  /@types/geojson@7946.0.11:
-    resolution: {integrity: sha512-L7A0AINMXQpVwxHJ4jxD6/XjZ4NDufaRlUJHjNIFKYUFBH1SvOW+neaqb0VTRSLW5suSrSu19ObFEFnfNcr+qg==}
+  /@types/geojson@7946.0.12:
+    resolution: {integrity: sha512-uK2z1ZHJyC0nQRbuovXFt4mzXDwf27vQeUWNhfKGwRcWW429GOhP8HxUHlM6TLH4bzmlv/HlEjpvJh3JfmGsAA==}
     dev: false
 
   /@types/glob@7.2.0:
@@ -2494,8 +2494,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/51fd5f7:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/51fd5f7}
+  github.com/theopensystemslab/planx-core/c923d21:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c923d21}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2504,7 +2504,7 @@ packages:
       '@emotion/react': 11.11.1(react@18.2.0)
       '@emotion/styled': 11.11.0(@emotion/react@11.11.1)(react@18.2.0)
       '@mui/material': 5.14.15(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(react-dom@18.2.0)(react@18.2.0)
-      '@types/geojson': 7946.0.11
+      '@types/geojson': 7946.0.12
       ajv: 8.12.0
       ajv-formats: 2.1.1(ajv@8.12.0)
       copyfiles: 2.4.1
