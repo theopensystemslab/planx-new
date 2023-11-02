@@ -29,14 +29,23 @@ jest.mock("../../../../hasura/schema");
 const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
 
 const mockFindSession = jest.fn();
-jest.mock("../../../../client", () => {
+
+jest.mock("@opensystemslab/planx-core", () => {
+  const actualCoreDomainClient = jest.requireActual(
+    "@opensystemslab/planx-core",
+  ).CoreDomainClient;
+
+  const actualPassport = jest.requireActual("@opensystemslab/planx-core").Passport;
+
   return {
-    $api: {
-      session: {
-        find: jest.fn().mockImplementation(() => mockFindSession()),
-      },
+    Passport: actualPassport,
+    CoreDomainClient: class extends actualCoreDomainClient {
+      constructor() {
+        super();
+        this.session.find = jest.fn().mockImplementation(() => mockFindSession());
+      }
     },
-  };
+  }
 });
 
 const s3Mock = () => {

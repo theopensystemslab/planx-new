@@ -4,7 +4,7 @@ export const mockSanitiseLowcalSessionsMutation = {
   name: "SanitiseLowcalSessions",
   matchOnVariables: false,
   data: {
-    update_lowcal_sessions: {
+    sessions: {
       returning: mockIds,
     },
   },
@@ -14,7 +14,7 @@ export const mockSanitiseUniformApplicationsMutation = {
   name: "SanitiseUniformApplications",
   matchOnVariables: false,
   data: {
-    update_uniform_applications: {
+    uniformApplications: {
       returning: mockIds,
     },
   },
@@ -24,7 +24,7 @@ export const mockSanitiseBOPSApplicationsMutation = {
   name: "SanitiseBOPSApplications",
   matchOnVariables: false,
   data: {
-    update_bops_applications: {
+    bopsApplications: {
       returning: mockIds,
     },
   },
@@ -34,7 +34,7 @@ export const mockSanitiseEmailApplicationsMutation = {
   name: "SanitiseEmailApplications",
   matchOnVariables: false,
   data: {
-    update_email_applications: {
+    emailApplications: {
       returning: mockIds,
     },
   },
@@ -44,7 +44,7 @@ export const mockDeleteReconciliationRequestsMutation = {
   name: "DeleteReconciliationRequests",
   matchOnVariables: false,
   data: {
-    delete_reconciliation_requests: {
+    reconciliationRequests: {
       returning: mockIds,
     },
   },
@@ -54,7 +54,7 @@ export const mockDeletePaymentRequests = {
   name: "DeletePaymentRequests",
   matchOnVariables: false,
   data: {
-    delete_payment_requests: {
+    paymentRequests: {
       returning: mockIds,
     },
   },
