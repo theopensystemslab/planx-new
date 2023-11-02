@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { gql } from "graphql-request";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { Flow, Team } from "../types";
+import { $public, getClient } from "../client";
 
 const moveFlow = async (
   req: Request,
@@ -36,8 +36,12 @@ const moveFlow = async (
   }
 };
 
+interface GetTeam {
+  teams: Pick<Team, "id">[]
+}
+
 const getTeamIdBySlug = async (slug: Team["slug"]): Promise<Team["id"]> => {
-  const data = await adminClient.request(
+  const data = await $public.client.request<GetTeam>(
     gql`
       query GetTeam($slug: String!) {
         teams(where: { slug: { _eq: $slug } }) {
@@ -53,14 +57,19 @@ const getTeamIdBySlug = async (slug: Team["slug"]): Promise<Team["id"]> => {
   return data?.teams[0].id;
 };
 
+interface UpdateFlow {
+  flow: Pick<Flow, "id">
+}
+
 const updateFlow = async (
   flowId: Flow["id"],
   teamId: Team["id"],
 ): Promise<Flow["id"]> => {
-  const data = await adminClient.request(
+  const { client: $client } = getClient();
+  const { flow } = await $client.request<UpdateFlow>(
     gql`
       mutation UpdateFlow($id: uuid!, $team_id: Int!) {
-        update_flows_by_pk(
+        flow: update_flows_by_pk(
           pk_columns: { id: $id }
           _set: { team_id: $team_id }
         ) {
@@ -74,7 +83,7 @@ const updateFlow = async (
     },
   );
 
-  return data?.update_flows_by_pk?.id;
+  return flow.id;
 };
 
 export { moveFlow };
