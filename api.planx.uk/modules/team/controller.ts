@@ -36,9 +36,9 @@ export type RemoveMember = ValidatedRequestHandler<
   TeamMemberResponse
 >;
 
-export const addMember: UpsertMember = async (req, res, next) => {
-  const { teamSlug } = req.params;
-  const { userEmail, role } = req.body;
+export const addMember: UpsertMember = async (_req, res, next) => {
+  const { teamSlug } = res.locals.parsedReq.params;
+  const { userEmail, role } = res.locals.parsedReq.body;
 
   try {
     await Service.addMember({ userEmail, teamSlug, role });
@@ -53,9 +53,9 @@ export const addMember: UpsertMember = async (req, res, next) => {
   }
 };
 
-export const changeMemberRole: UpsertMember = async (req, res, next) => {
-  const { teamSlug } = req.params;
-  const { userEmail, role } = req.body;
+export const changeMemberRole: UpsertMember = async (_req, res, next) => {
+  const { teamSlug } = res.locals.parsedReq.params;
+  const { userEmail, role } = res.locals.parsedReq.body;
 
   try {
     await Service.changeMemberRole({ userEmail, teamSlug, role });
@@ -67,9 +67,9 @@ export const changeMemberRole: UpsertMember = async (req, res, next) => {
   }
 };
 
-export const removeMember: RemoveMember = async (req, res, next) => {
-  const { teamSlug } = req.params;
-  const { userEmail } = req.body;
+export const removeMember: RemoveMember = async (_req, res, next) => {
+  const { teamSlug } = res.locals.parsedReq.params;
+  const { userEmail } = res.locals.parsedReq.body;
 
   try {
     await Service.removeMember({ userEmail, teamSlug });

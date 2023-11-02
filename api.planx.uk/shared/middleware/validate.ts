@@ -19,11 +19,9 @@ export const validate =
         query: req.query,
       });
 
-      // Assign parsed values to the request object
+      // Assign parsed values to the response object
       // Required for schemas to transform or coerce raw requests
-      req.params = parsedReq.params;
-      req.body = parsedReq.body;
-      req.query = parsedReq.query;
+      res.locals.parsedReq = parsedReq;
 
       return next();
     } catch (error) {
@@ -40,8 +38,9 @@ export type ValidatedRequestHandler<
   TSchema extends ZodSchema,
   TResponse,
 > = RequestHandler<
-  z.infer<TSchema>["params"],
+  Request["params"],
   TResponse,
-  z.infer<TSchema>["body"],
-  z.infer<TSchema>["query"]
+  Request["body"],
+  Request["query"],
+  { parsedReq: z.infer<TSchema> }
 >;

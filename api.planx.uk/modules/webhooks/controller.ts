@@ -16,7 +16,7 @@ import { SanitiseApplicationData } from "./service/sanitiseApplicationData/types
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
-  req,
+  _req,
   res,
   next,
 ) => {
@@ -27,8 +27,9 @@ export const sendSlackNotificationController: SendSlackNotification = async (
     });
   }
 
-  const eventData = req.body.event.data.new;
-  const eventType = req.query.type;
+  const { body, query } = res.locals.parsedReq;
+  const eventData = body.event.data.new;
+  const eventType = query.type;
 
   try {
     const data = await sendSlackNotification(eventData, eventType);
@@ -44,9 +45,11 @@ export const sendSlackNotificationController: SendSlackNotification = async (
 };
 
 export const createPaymentInvitationEventsController: CreatePaymentEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
-      const response = await createPaymentInvitationEvents(req.body);
+      const response = await createPaymentInvitationEvents(
+        res.locals.parsedReq.body,
+      );
       res.json(response);
     } catch (error) {
       return next(
@@ -59,9 +62,11 @@ export const createPaymentInvitationEventsController: CreatePaymentEventControll
   };
 
 export const createPaymentReminderEventsController: CreatePaymentEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
-      const response = await createPaymentReminderEvents(req.body);
+      const response = await createPaymentReminderEvents(
+        res.locals.parsedReq.body,
+      );
       res.json(response);
     } catch (error) {
       return next(
@@ -74,9 +79,11 @@ export const createPaymentReminderEventsController: CreatePaymentEventController
   };
 
 export const createPaymentExpiryEventsController: CreatePaymentEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
-      const response = await createPaymentExpiryEvents(req.body);
+      const response = await createPaymentExpiryEvents(
+        res.locals.parsedReq.body,
+      );
       res.json(response);
     } catch (error) {
       return next(
@@ -89,9 +96,11 @@ export const createPaymentExpiryEventsController: CreatePaymentEventController =
   };
 
 export const createSessionReminderEventController: CreateSessionEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
-      const response = await createSessionReminderEvent(req.body);
+      const response = await createSessionReminderEvent(
+        res.locals.parsedReq.body,
+      );
       res.json(response);
     } catch (error) {
       return next(
@@ -104,9 +113,11 @@ export const createSessionReminderEventController: CreateSessionEventController 
   };
 
 export const createSessionExpiryEventController: CreateSessionEventController =
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
-      const response = await createSessionExpiryEvent(req.body);
+      const response = await createSessionExpiryEvent(
+        res.locals.parsedReq.body,
+      );
       res.json(response);
     } catch (error) {
       return next(

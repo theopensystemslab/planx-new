@@ -21,10 +21,11 @@ export type CreateUser = ValidatedRequestHandler<
   UserResponse
 >;
 
-export const createUser: CreateUser = async (req, res, next) => {
+export const createUser: CreateUser = async (_req, res, next) => {
   try {
+    const newUser = res.locals.parsedReq.body;
     const $client = getClient();
-    await $client.user.create(req.body);
+    await $client.user.create(newUser);
     return res.send({ message: "Successfully created user" });
   } catch (error) {
     return next(
@@ -44,9 +45,9 @@ export type DeleteUser = ValidatedRequestHandler<
   UserResponse
 >;
 
-export const deleteUser: DeleteUser = async (req, res, next) => {
+export const deleteUser: DeleteUser = async (_req, res, next) => {
   try {
-    const { email } = req.params;
+    const { email } = res.locals.parsedReq.params;
     const $client = getClient();
 
     const user = await $client.user.getByEmail(email);
