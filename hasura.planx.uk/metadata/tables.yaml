@@ -1116,6 +1116,16 @@
           - message
           - session_id
           - created_at
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - response
+          - message
+          - session_id
+          - created_at
+        filter: {}
   delete_permissions:
     - role: api
       permission:

@@ -15,7 +15,7 @@ import type {
   PublishedFlow,
   Node,
 } from "../types";
-import { $api, getClient } from "../client";
+import { $api } from "../client";
 
 export interface ValidationResponse {
   message: string;
@@ -208,10 +208,9 @@ async function diffLatestPublishedFlow({
   flowId: string;
   since: string;
 }): Promise<PublishedFlow["data"] | null> {
-  const { client: $client } = getClient();
   const response: {
     diff_latest_published_flow: { data: PublishedFlow["data"] | null };
-  } = await $client.request(
+  } = await $api.client.request(
     gql`
       query GetFlowDiff($flowId: uuid!, $since: timestamptz!) {
         diff_latest_published_flow(
