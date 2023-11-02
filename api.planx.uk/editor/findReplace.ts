@@ -1,8 +1,9 @@
 import { Flow } from "./../types";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { gql } from "graphql-request";
 import { getFlowData } from "../helpers";
 import { Request, Response, NextFunction } from "express";
+import { getClient } from "../client";
+import { FlowGraph } from "@opensystemslab/planx-core/types";
 
 interface MatchResult {
   matches: Flow["data"];
@@ -48,6 +49,15 @@ const getMatches = (
     flowData: flowData,
   };
 };
+
+interface UpdateFlow {
+  flow: {
+    id: string;
+    slug: string;
+    data: FlowGraph
+    updatedAt: string;
+  }
+}
 
 /**
  * @swagger
@@ -136,14 +146,15 @@ const findAndReplaceInFlow = async (
       }
 
       // if matches, proceed with mutation to update flow data
-      const response = await adminClient.request(
+      const { client: $client } = getClient();
+      const response = await $client.request<UpdateFlow>(
         gql`
           mutation UpdateFlow($data: jsonb = {}, $id: uuid!) {
-            update_flows_by_pk(pk_columns: { id: $id }, _set: { data: $data }) {
+            flow: update_flows_by_pk(pk_columns: { id: $id }, _set: { data: $data }) {
               id
               slug
               data
-              updated_at
+              updatedAt: updated_at
             }
           }
         `,
@@ -154,7 +165,7 @@ const findAndReplaceInFlow = async (
       );
 
       const updatedFlow =
-        response.update_flows_by_pk && response.update_flows_by_pk.data;
+        response.flow && response.flow.data;
 
       res.json({
         message: `Found ${
