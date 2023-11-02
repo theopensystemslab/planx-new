@@ -1,6 +1,8 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { dataMerged, getFormattedEnvironment, isLiveEnv } from "./helpers";
 import { queryMock } from "./tests/graphqlQueryMock";
+import { userContext } from "./modules/auth/middleware";
+import { getJWT } from "./tests/mockJWT";
 
 describe("getEnvironment function", () => {
   const OLD_ENV = process.env;
@@ -62,6 +64,14 @@ describe("isLiveEnv() function", () => {
 });
 
 describe("dataMerged() function", () => {
+  const getStoreMock = jest.spyOn(userContext, "getStore");
+  getStoreMock.mockReturnValue({
+    user: {
+      sub: "123",
+      jwt: getJWT({ role: "teamEditor" }),
+    },
+  });
+
   beforeEach(() => {
     const unflattenedParent = {
       _root: {
@@ -135,7 +145,7 @@ describe("dataMerged() function", () => {
         id: "child-id",
       },
       data: {
-        flows_by_pk: {
+        flow: {
           slug: "child-flow",
           data: unflattenedChild,
           team_id: 123,
@@ -149,7 +159,7 @@ describe("dataMerged() function", () => {
         id: "parent-id",
       },
       data: {
-        flows_by_pk: {
+        flow: {
           slug: "parent-flow",
           data: unflattenedParent,
           team_id: 123,

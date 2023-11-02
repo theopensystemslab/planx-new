@@ -3,13 +3,15 @@ import { capitalize } from "lodash";
 import { adminGraphQLClient as adminClient } from "./hasura";
 import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
+import { getClient } from "./client";
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
-  const data = await adminClient.request(
+  const { client: $client } = getClient();
+  const { flow } = await $client.request<{ flow: Flow | null}>(
     gql`
       query GetFlowData($id: uuid!) {
-        flows_by_pk(id: $id) {
+        flow: flows_by_pk(id: $id) {
           slug
           data
           team_id
@@ -18,8 +20,9 @@ const getFlowData = async (id: string): Promise<Flow> => {
     `,
     { id },
   );
-
-  return data.flows_by_pk;
+  if (!flow) throw Error(`Unable to get flow with id ${id}`);
+  
+  return flow;
 };
 
 // Insert a new flow into the `flows` table

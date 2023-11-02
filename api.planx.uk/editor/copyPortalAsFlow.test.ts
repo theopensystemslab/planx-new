@@ -10,7 +10,7 @@ beforeEach(() => {
     name: "GetFlowData",
     matchOnVariables: false,
     data: {
-      flows_by_pk: {
+      flow: {
         data: mockFlowData,
       },
     },
