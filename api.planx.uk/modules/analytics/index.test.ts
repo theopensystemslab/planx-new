@@ -34,8 +34,8 @@ describe("Logging analytics", () => {
         user_exit: true,
       },
       data: {
-        update_analytics_logs_by_pk: {
-          analytics_id: 12345,
+        analyticsLog: {
+          analyticsId: 12345,
         },
       },
     });
@@ -57,8 +57,8 @@ describe("Logging analytics", () => {
         user_exit: false,
       },
       data: {
-        update_analytics_logs_by_pk: {
-          analytics_id: 12345,
+        analyticsLog: {
+          analyticsId: 12345,
         },
       },
     });
@@ -77,8 +77,8 @@ describe("Logging analytics", () => {
       name: "UpdateAnalyticsLogUserExit",
       matchOnVariables: false,
       data: {
-        update_analytics_logs_by_pk: {
-          analytics_id: 12345,
+        analyticsLogs: {
+          analyticsId: 12345,
         },
       },
       graphqlErrors: [
