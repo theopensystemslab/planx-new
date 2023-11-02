@@ -35,7 +35,7 @@ beforeEach(() => {
     name: "PublishFlow",
     matchOnVariables: false,
     data: {
-      insert_published_flows_one: {
+      publishedFlow: {
         data: mockFlowData,
       },
     },
@@ -99,7 +99,7 @@ describe("publish", () => {
       name: "PublishFlow",
       matchOnVariables: false,
       data: {
-        insert_published_flows_one: {
+        publishedFlow: {
           data: alteredFlow,
         },
       },
