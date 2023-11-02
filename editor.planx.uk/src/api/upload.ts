@@ -47,7 +47,7 @@ function handleUpload(
       "Content-Type": "multipart/form-data",
     },
     onUploadProgress: ({ loaded, total }) => {
-      if (onProgress) {
+      if (onProgress && total) {
         onProgress(loaded / total);
       }
     },
