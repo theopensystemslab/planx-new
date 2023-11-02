@@ -20,7 +20,7 @@ beforeEach(() => {
     name: "InsertFlow",
     matchOnVariables: false,
     data: {
-      insert_flows_one: {
+      newFlow: {
         id: 2,
       },
     },
@@ -30,7 +30,7 @@ beforeEach(() => {
     name: "InsertOperation",
     matchOnVariables: false,
     data: {
-      insert_operations_one: {
+      operation: {
         id: 1,
       },
     },

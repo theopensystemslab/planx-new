@@ -21,7 +21,7 @@ const getFlowData = async (id: string): Promise<Flow> => {
     { id },
   );
   if (!flow) throw Error(`Unable to get flow with id ${id}`);
-  
+
   return flow;
 };
 
@@ -33,7 +33,8 @@ const insertFlow = async (
   creatorId?: number,
   copiedFrom?: Flow["id"],
 ) => {
-  const data = await adminClient.request(
+  const { client: $client } = getClient();
+  const data = await $client.request<{ flow: { id: string } }>(
     gql`
       mutation InsertFlow(
         $team_id: Int!
@@ -42,7 +43,7 @@ const insertFlow = async (
         $creator_id: Int
         $copied_from: uuid
       ) {
-        insert_flows_one(
+        flow: insert_flows_one(
           object: {
             team_id: $team_id
             slug: $slug
@@ -65,16 +66,17 @@ const insertFlow = async (
     },
   );
 
-  if (data) await createAssociatedOperation(data?.insert_flows_one?.id);
-  return data?.insert_flows_one;
+  if (data) await createAssociatedOperation(data?.flow?.id);
+  return data?.flow;
 };
 
 // Add a row to `operations` for an inserted flow, otherwise ShareDB throws a silent error when opening the flow in the UI
 const createAssociatedOperation = async (flowId: Flow["id"]) => {
-  const data = await adminClient.request(
+  const { client: $client } = getClient();
+  const data = await $client.request<{ operation: { id: string } }>(
     gql`
       mutation InsertOperation($flow_id: uuid!, $data: jsonb = {}) {
-        insert_operations_one(
+        operation: insert_operations_one(
           object: { flow_id: $flow_id, version: 1, data: $data }
         ) {
           id
@@ -86,7 +88,7 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
     },
   );
 
-  return data?.insert_operations_one;
+  return data?.operation;
 };
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
