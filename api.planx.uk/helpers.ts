@@ -3,7 +3,7 @@ import { capitalize } from "lodash";
 import { adminGraphQLClient as adminClient } from "./hasura";
 import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
-import { getClient } from "./client";
+import { $public, getClient } from "./client";
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
@@ -91,15 +91,24 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
   return data?.operation;
 };
 
+interface GetMostRecentPublishedFlow {
+  flow: {
+    publishedFlows: {
+      // TODO: use FlowGraph from planx-core here
+      data: Flow["data"]
+    }[] 
+  } | null
+}
+
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (
   id: string,
 ): Promise<Flow["data"]> => {
-  const data = await adminClient.request(
+  const { flow } = await $public.client.request<GetMostRecentPublishedFlow>(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
-        flows_by_pk(id: $id) {
-          published_flows(limit: 1, order_by: { created_at: desc }) {
+        flow: flows_by_pk(id: $id) {
+          publishedFlows: published_flows(limit: 1, order_by: { created_at: desc }) {
             data
           }
         }
@@ -107,8 +116,11 @@ const getMostRecentPublishedFlow = async (
     `,
     { id },
   );
-
-  return data.flows_by_pk.published_flows?.[0]?.data;
+  
+  const mostRecent = flow?.publishedFlows?.[0]?.data;
+  if (!mostRecent) throw Error(`Flow ${id} is not yet published`);
+  
+  return mostRecent;
 };
 
 // Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)

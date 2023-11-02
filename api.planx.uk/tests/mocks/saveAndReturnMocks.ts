@@ -103,8 +103,8 @@ export const mockNotFoundSession = {
 export const mockGetMostRecentPublishedFlow = (data: Flow["data"]) => ({
   name: "GetMostRecentPublishedFlow",
   data: {
-    flows_by_pk: {
-      published_flows: [
+    flow: {
+      publishedFlows: [
         {
           data,
         },

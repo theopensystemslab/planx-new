@@ -32,8 +32,8 @@ beforeEach(() => {
     name: "GetMostRecentPublishedFlow",
     matchOnVariables: false,
     data: {
-      flows_by_pk: {
-        published_flows: [
+      flow: {
+        publishedFlows: [
           {
             data: mockFlowData,
           },
@@ -66,7 +66,7 @@ it("requires a user to have the 'teamEditor' role", async () => {
     .expect(403);
 });
 
-describe.only("publish", () => {
+describe("publish", () => {
   it("does not update if there are no new changes", async () => {
     await supertest(app)
       .post("/flows/1/publish")
@@ -80,7 +80,7 @@ describe.only("publish", () => {
       });
   });
 
-  it.only("updates published flow and returns altered nodes if there have been changes", async () => {
+  it("updates published flow and returns altered nodes if there have been changes", async () => {
     const alteredFlow = {
       ...mockFlowData,
       ResultNode: {

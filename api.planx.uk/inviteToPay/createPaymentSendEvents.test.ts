@@ -38,8 +38,8 @@ describe("Create payment send events webhook", () => {
       name: "GetMostRecentPublishedFlow",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
-          published_flows: [
+        flow: {
+          publishedFlows: [
             {
               data: flowWithInviteToPay,
             },
