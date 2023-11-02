@@ -6,6 +6,7 @@ import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -203,8 +204,11 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 // For applicable component types, display a list of their question & answers with a "change" link
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
-  const handleClick = (nodeId: string) => {
-    props.changeAnswer(nodeId);
+  const { trackBackwardsNavigationByNodeId } = useAnalyticsTracking();
+
+  const handleChangeAnswer = (id: string) => {
+    trackBackwardsNavigationByNodeId(id, "change");
+    props.changeAnswer(id);
   };
 
   return (
@@ -222,7 +226,7 @@ function SummaryList(props: SummaryListProps) {
             <dd>
               {props.showChangeButton && (
                 <Link
-                  onClick={() => handleClick(nodeId)}
+                  onClick={() => handleChangeAnswer(nodeId)}
                   component="button"
                   fontSize="body2.fontSize"
                 >

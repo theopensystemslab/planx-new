@@ -21,6 +21,7 @@ type AnalyticsLogDirection =
 
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
+export type BackwardsNaviagtionInitiatorType = "change" | "back";
 
 type NodeMetadata = {
   flagset?: FlagSet;
@@ -29,6 +30,8 @@ type NodeMetadata = {
     description?: string;
   };
   flag?: Flag;
+  title?: string;
+  type?: TYPES;
 };
 
 let lastAnalyticsLogId: number | undefined = undefined;
@@ -40,12 +43,17 @@ const analyticsContext = createContext<{
   trackFlowDirectionChange: (
     flowDirection: AnalyticsLogDirection,
   ) => Promise<void>;
+  trackBackwardsNavigationByNodeId: (
+    nodeId: string,
+    backwardsNavigationType: BackwardsNaviagtionInitiatorType,
+  ) => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
   trackNextStepsLinkClick: () => Promise.resolve(),
   trackFlowDirectionChange: () => Promise.resolve(),
+  trackBackwardsNavigationByNodeId: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -64,6 +72,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     resultData,
     previewEnvironment,
     flowId,
+    flow,
   ] = useStore((state) => [
     state.currentCard,
     state.breadcrumbs,
@@ -72,6 +81,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     state.resultData,
     state.previewEnvironment,
     state.id,
+    state.flow,
   ]);
   const node = currentCard();
   const isAnalyticsEnabled =
@@ -128,6 +138,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         trackHelpClick,
         trackNextStepsLinkClick,
         trackFlowDirectionChange,
+        trackBackwardsNavigationByNodeId,
         node,
       }}
     >
@@ -296,6 +307,39 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
+  async function trackBackwardsNavigationByNodeId(
+    nodeId: string,
+    initiator: BackwardsNaviagtionInitiatorType,
+  ) {
+    const targetNodeMetadata = getTitleAndTypeFromFlow(nodeId);
+    console.log("Target node info: ", targetNodeMetadata);
+    const metadata: Record<string, NodeMetadata> = {};
+    metadata[`${initiator}`] = targetNodeMetadata;
+    console.log("Metadata payload:", metadata);
+
+    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+      await publicClient.mutate({
+        mutation: gql`
+          mutation UpdateHaInitiatedBackwardsNavigation(
+            $id: bigint!
+            $metadata: jsonb = {}
+          ) {
+            update_analytics_logs_by_pk(
+              pk_columns: { id: $id }
+              _append: { metadata: $metadata }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: lastAnalyticsLogId,
+          metadata,
+        },
+      });
+    }
+  }
+
   async function createAnalytics(type: AnalyticsType) {
     if (shouldTrackAnalytics) {
       const userAgent = Bowser.parse(window.navigator.userAgent);
@@ -349,6 +393,15 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       default:
         return {};
     }
+  }
+
+  function getTitleAndTypeFromFlow(nodeId: string) {
+    const { data, type } = flow[nodeId];
+    const nodeMetadata: NodeMetadata = {
+      title: data?.text,
+      type: type,
+    };
+    return nodeMetadata;
   }
 };
 
