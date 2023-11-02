@@ -168,7 +168,7 @@ interface GetTeamEmailSettings {
 }
 
 async function getTeamEmailSettings(localAuthority: string) {
-  const response = await $public.client.request<GetTeamEmailSettings>(
+  const response = await $api.client.request<GetTeamEmailSettings>(
     gql`
       query GetTeamEmailSettings($slug: String) {
         teams(where: { slug: { _eq: $slug } }) {
