@@ -1,6 +1,5 @@
 import { gql } from "graphql-request";
 import { capitalize } from "lodash";
-import { adminGraphQLClient as adminClient } from "./hasura";
 import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
 import { $public, getClient } from "./client";
@@ -91,7 +90,7 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
   return data?.operation;
 };
 
-interface GetMostRecentPublishedFlow {
+interface PublishedFlows {
   flow: {
     publishedFlows: {
       // TODO: use FlowGraph from planx-core here
@@ -104,7 +103,7 @@ interface GetMostRecentPublishedFlow {
 const getMostRecentPublishedFlow = async (
   id: string,
 ): Promise<Flow["data"]> => {
-  const { flow } = await $public.client.request<GetMostRecentPublishedFlow>(
+  const { flow } = await $public.client.request<PublishedFlows>(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
         flow: flows_by_pk(id: $id) {
@@ -118,35 +117,9 @@ const getMostRecentPublishedFlow = async (
   );
   
   const mostRecent = flow?.publishedFlows?.[0]?.data;
-  if (!mostRecent) throw Error(`Flow ${id} is not yet published`);
+  if (!mostRecent) throw Error(`Published flow not found for flow ${id}`);
   
   return mostRecent;
-};
-
-// Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)
-//   created_at refers to published date, value passed in as param should be lowcal_session.updated_at
-const getPublishedFlowByDate = async (id: string, created_at: string) => {
-  const data = await adminClient.request(
-    gql`
-      query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {
-        flows_by_pk(id: $id) {
-          published_flows(
-            limit: 1
-            order_by: { created_at: desc }
-            where: { created_at: { _lte: $created_at } }
-          ) {
-            data
-          }
-        }
-      }
-    `,
-    {
-      id,
-      created_at,
-    },
-  );
-
-  return data.flows_by_pk.published_flows?.[0]?.data;
 };
 
 // Flatten a flow's data to include main content & portals in a single JSON representation
@@ -266,7 +239,6 @@ const getFormattedEnvironment = (): string => {
 export {
   getFlowData,
   getMostRecentPublishedFlow,
-  getPublishedFlowByDate,
   dataMerged,
   getChildren,
   makeUniqueFlow,
