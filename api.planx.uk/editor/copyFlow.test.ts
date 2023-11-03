@@ -20,7 +20,7 @@ beforeEach(() => {
     name: "InsertFlow",
     matchOnVariables: false,
     data: {
-      newFlow: {
+      flow: {
         id: 2,
       },
     },

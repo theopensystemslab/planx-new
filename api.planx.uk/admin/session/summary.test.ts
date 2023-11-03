@@ -14,7 +14,7 @@ describe("Session summary admin endpoint", () => {
         sessionId: "abc123",
       },
       data: {
-        session: {},
+        lowcalSession: {},
       },
     });
   });

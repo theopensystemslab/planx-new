@@ -73,12 +73,12 @@ interface SessionSummary {
 const getSessionSummaryById = async (
   sessionId: Session["id"],
 ): Promise<SessionSummary | null> => {
-  const { session } = await $api.client.request<
-    Record<"session", SessionSummary | null>
+  const { lowcalSession } = await $api.client.request<
+    Record<"lowcalSession", SessionSummary | null>
   >(
     gql`
       query GetSessionSummary($sessionId: uuid!) {
-        session: lowcal_sessions_by_pk(id: $sessionId) {
+        lowcalSession: lowcal_sessions_by_pk(id: $sessionId) {
           flow {
             id
             slug
@@ -114,5 +114,5 @@ const getSessionSummaryById = async (
     },
   );
 
-  return session;
+  return lowcalSession;
 };
