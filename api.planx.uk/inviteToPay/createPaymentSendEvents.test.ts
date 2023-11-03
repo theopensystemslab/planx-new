@@ -52,7 +52,7 @@ describe("Create payment send events webhook", () => {
       name: "GetTeamSlugByFlowId",
       matchOnVariables: false,
       data: {
-        flows: {
+        flow: {
           team: {
             slug: "southwark",
           },

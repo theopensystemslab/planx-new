@@ -43,7 +43,7 @@ const resumeApplication = async (
 
 interface ValidateRequest {
   teams: Team[];
-  sessions: LowCalSession[] | null;
+  lowcalSessions: LowCalSession[] | null;
 }
 
 /**
@@ -85,19 +85,17 @@ const validateRequest = async (
         }
       }
     `;
-    const { sessions, teams } = await $api.client.request<ValidateRequest>(
-      query,
-      {
+    const { lowcalSessions, teams } =
+      await $api.client.request<ValidateRequest>(query, {
         teamSlug,
         email: email.toLowerCase(),
-      },
-    );
+      });
 
     if (!teams?.length) throw Error;
 
     return {
       team: teams[0],
-      sessions: sessions || [],
+      sessions: lowcalSessions || [],
     };
   } catch (error) {
     throw Error("Unable to validate request");

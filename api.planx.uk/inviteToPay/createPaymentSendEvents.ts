@@ -121,7 +121,7 @@ const createPaymentSendEvents = async (
 };
 
 interface GetTeamSlugByFlowId {
-  flows: {
+  flow: {
     team: {
       slug: string;
     };
@@ -132,7 +132,7 @@ const getTeamSlugByFlowId = async (id: Flow["id"]): Promise<Team["slug"]> => {
   const data = await $public.client.request<GetTeamSlugByFlowId>(
     gql`
       query GetTeamSlugByFlowId($id: uuid!) {
-        flows: flows_by_pk(id: $id) {
+        flow: flows_by_pk(id: $id) {
           team {
             slug
           }
@@ -142,7 +142,7 @@ const getTeamSlugByFlowId = async (id: Flow["id"]): Promise<Team["slug"]> => {
     { id },
   );
 
-  return data.flows.team.slug;
+  return data.flow.team.slug;
 };
 
 export { createPaymentSendEvents };
