@@ -1,5 +1,13 @@
 import { gql } from "graphql-request";
-import { adminGraphQLClient as adminClient } from "../../hasura";
+import { $public } from "../../client";
+
+interface UpdateAnalyticsLogUserExit {
+  analyticsLog: {
+    id: string;
+    userExit: boolean;
+    analyticsId: string;
+  };
+}
 
 export const trackAnalyticsLogExit = async ({
   id,
@@ -9,16 +17,16 @@ export const trackAnalyticsLogExit = async ({
   isUserExit: boolean;
 }) => {
   try {
-    const result = await adminClient.request(
+    const result = await $public.client.request<UpdateAnalyticsLogUserExit>(
       gql`
         mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
-          update_analytics_logs_by_pk(
+          analyticsLog: update_analytics_logs_by_pk(
             pk_columns: { id: $id }
             _set: { user_exit: $user_exit }
           ) {
             id
-            user_exit
-            analytics_id
+            userExit: user_exit
+            analyticsId: analytics_id
           }
         }
       `,
@@ -28,8 +36,8 @@ export const trackAnalyticsLogExit = async ({
       },
     );
 
-    const analyticsId = result.update_analytics_logs_by_pk.analytics_id;
-    await adminClient.request(
+    const analyticsId = result.analyticsLog.analyticsId;
+    await $public.client.request(
       gql`
         mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
           update_analytics_by_pk(

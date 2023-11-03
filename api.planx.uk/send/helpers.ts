@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 import airbrake from "../airbrake";
-import { adminGraphQLClient } from "../hasura";
+import { $api } from "../client";
 
 export async function logPaymentStatus({
   sessionId,
@@ -78,7 +78,7 @@ async function insertPaymentStatus({
   status: string;
   amount: number;
 }): Promise<void> {
-  const _response = await adminGraphQLClient.request(
+  const _response = await $api.client.request(
     gql`
       mutation InsertPaymentStatus(
         $flowId: uuid!

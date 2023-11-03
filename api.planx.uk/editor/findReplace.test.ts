@@ -10,7 +10,7 @@ beforeEach(() => {
     name: "GetFlowData",
     matchOnVariables: false,
     data: {
-      flows_by_pk: {
+      flow: {
         data: mockFlowData,
         slug: "test",
       },
@@ -21,7 +21,7 @@ beforeEach(() => {
     name: "UpdateFlow",
     matchOnVariables: false,
     data: {
-      update_flows_by_pk: {
+      flow: {
         data: replacedFlowData,
         slug: "test",
       },

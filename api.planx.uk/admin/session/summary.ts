@@ -6,8 +6,8 @@ import {
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
-import { adminGraphQLClient as adminClient } from "../../hasura";
 import { Breadcrumb, Flow, LowCalSession, Passport, Team } from "../../types";
+import { $api } from "../../client";
 
 /**
  * @swagger
@@ -28,9 +28,9 @@ export async function getSessionSummary(
   next: NextFunction,
 ) {
   try {
-    const data = await getSessionSummaryById(req.params.sessionId);
-    if (data) {
-      res.send(data);
+    const session = await getSessionSummaryById(req.params.sessionId);
+    if (session) {
+      res.send(session);
     } else {
       res.send({
         message: `Cannot find data for this session; double-check your sessionId is correct`,
@@ -72,11 +72,13 @@ interface SessionSummary {
 
 const getSessionSummaryById = async (
   sessionId: Session["id"],
-): Promise<SessionSummary> => {
-  const data = await adminClient.request(
+): Promise<SessionSummary | null> => {
+  const { lowcalSession } = await $api.client.request<
+    Record<"lowcalSession", SessionSummary | null>
+  >(
     gql`
       query GetSessionSummary($sessionId: uuid!) {
-        lowcal_sessions_by_pk(id: $sessionId) {
+        lowcalSession: lowcal_sessions_by_pk(id: $sessionId) {
           flow {
             id
             slug
@@ -112,5 +114,5 @@ const getSessionSummaryById = async (
     },
   );
 
-  return data?.lowcal_sessions_by_pk;
+  return lowcalSession;
 };

@@ -1,12 +1,27 @@
 import { gql } from "graphql-request";
 import { NextFunction, Request, Response } from "express";
-import { adminGraphQLClient as client } from "../hasura";
 import { ServerError } from "../errors";
 import {
   postPaymentNotificationToSlack,
   fetchPaymentViaProxyWithCallback,
 } from "../pay";
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
+import { $api } from "../client";
+
+interface GetPaymentRequestDetails {
+  paymentRequest: {
+    sessionId: string;
+    paymentAmount: number;
+    session: {
+      flowId: string;
+      flow: {
+        team: {
+          slug: string;
+        };
+      };
+    };
+  } | null;
+}
 
 // middleware used by routes:
 //  * /payment-request/:paymentRequest/pay
@@ -18,11 +33,11 @@ export async function fetchPaymentRequestDetails(
 ) {
   const query = gql`
     query GetPaymentRequestDetails($paymentRequestId: uuid!) {
-      payment_requests_by_pk(id: $paymentRequestId) {
-        session_id
-        payment_amount
+      paymentRequest: payment_requests_by_pk(id: $paymentRequestId) {
+        sessionId: session_id
+        paymentAmount: payment_amount
         session {
-          flow_id
+          flowId: flow_id
           flow {
             team {
               slug
@@ -32,10 +47,11 @@ export async function fetchPaymentRequestDetails(
       }
     }
   `;
-  const { payment_requests_by_pk } = await client.request(query, {
-    paymentRequestId: req.params.paymentRequest,
-  });
-  if (!payment_requests_by_pk) {
+  const { paymentRequest } =
+    await $api.client.request<GetPaymentRequestDetails>(query, {
+      paymentRequestId: req.params.paymentRequest,
+    });
+  if (!paymentRequest) {
     return next(
       new ServerError({
         message: "payment request not found",
@@ -43,16 +59,16 @@ export async function fetchPaymentRequestDetails(
       }),
     );
   }
-  const sessionId = payment_requests_by_pk.session_id;
+  const sessionId = paymentRequest.sessionId;
   if (sessionId) req.query.sessionId = sessionId;
 
-  const localAuthority = payment_requests_by_pk.session?.flow?.team?.slug;
+  const localAuthority = paymentRequest.session?.flow?.team?.slug;
   if (localAuthority) req.params.localAuthority = localAuthority;
 
-  const flowId = payment_requests_by_pk.session?.flow_id;
+  const flowId = paymentRequest.session?.flowId;
   if (flowId) req.query.flowId = flowId;
 
-  const paymentAmount = payment_requests_by_pk.payment_amount;
+  const paymentAmount = paymentRequest.paymentAmount.toString();
   if (paymentAmount) req.params.paymentAmount = paymentAmount;
 
   next();
@@ -109,7 +125,7 @@ export const addGovPayPaymentIdToPaymentRequest = async (
     }
   `;
   try {
-    await client.request(query, {
+    await $api.client.request(query, {
       paymentRequestId,
       govPayPaymentId: govUKPayment.payment_id,
     });
@@ -117,6 +133,15 @@ export const addGovPayPaymentIdToPaymentRequest = async (
     throw Error(`payment request ${paymentRequestId} not updated`);
   }
 };
+
+interface MarkPaymentRequestAsPaid {
+  updatePaymentRequestPaidAt: {
+    affectedRows: number;
+  };
+  appendGovUKPaymentToSessionData: {
+    affectedRows: number;
+  };
+}
 
 export const markPaymentRequestAsPaid = async (
   paymentRequestId: string,
@@ -147,7 +172,7 @@ export const markPaymentRequestAsPaid = async (
   `;
   try {
     const { updatePaymentRequestPaidAt, appendGovUKPaymentToSessionData } =
-      await client.request(query, {
+      await $api.client.request<MarkPaymentRequestAsPaid>(query, {
         paymentRequestId,
         govUkPayment: { govUkPayment },
       });

@@ -1,17 +1,28 @@
 import supertest from "supertest";
 
 import { queryMock } from "../tests/graphqlQueryMock";
-import { authHeader } from "../tests/mockJWT";
+import { authHeader, getJWT } from "../tests/mockJWT";
 import app from "../server";
 import { flowWithInviteToPay } from "../tests/mocks/inviteToPayData";
 import { FlowGraph } from "@opensystemslab/planx-core/types";
+import { userContext } from "../modules/auth/middleware";
+
+beforeAll(() => {
+  const getStoreMock = jest.spyOn(userContext, "getStore");
+  getStoreMock.mockReturnValue({
+    user: {
+      sub: "123",
+      jwt: getJWT({ role: "teamEditor" }),
+    },
+  });
+});
 
 beforeEach(() => {
   queryMock.mockQuery({
     name: "GetFlowData",
     matchOnVariables: false,
     data: {
-      flows_by_pk: {
+      flow: {
         data: mockFlowData,
       },
     },
@@ -21,8 +32,8 @@ beforeEach(() => {
     name: "GetMostRecentPublishedFlow",
     matchOnVariables: false,
     data: {
-      flows_by_pk: {
-        published_flows: [
+      flow: {
+        publishedFlows: [
           {
             data: mockFlowData,
           },
@@ -35,7 +46,7 @@ beforeEach(() => {
     name: "PublishFlow",
     matchOnVariables: false,
     data: {
-      insert_published_flows_one: {
+      publishedFlow: {
         data: mockFlowData,
       },
     },
@@ -89,7 +100,7 @@ describe("publish", () => {
       name: "GetFlowData",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
+        flow: {
           data: alteredFlow,
         },
       },
@@ -99,7 +110,7 @@ describe("publish", () => {
       name: "PublishFlow",
       matchOnVariables: false,
       data: {
-        insert_published_flows_one: {
+        publishedFlow: {
           data: alteredFlow,
         },
       },
@@ -147,7 +158,7 @@ describe("sections validation on diff", () => {
       name: "GetFlowData",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
+        flow: {
           data: alteredFlow,
         },
       },
@@ -182,7 +193,7 @@ describe("sections validation on diff", () => {
       name: "GetFlowData",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
+        flow: {
           data: flowWithSections,
         },
       },
@@ -214,7 +225,7 @@ describe("invite to pay validation on diff", () => {
       name: "GetFlowData",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
+        flow: {
           data: invalidatedFlow,
         },
       },
@@ -247,7 +258,7 @@ describe("invite to pay validation on diff", () => {
       name: "GetFlowData",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
+        flow: {
           data: alteredFlow,
         },
       },
@@ -276,7 +287,7 @@ describe("invite to pay validation on diff", () => {
       name: "GetFlowData",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
+        flow: {
           data: invalidatedFlow,
         },
       },
@@ -307,7 +318,7 @@ describe("invite to pay validation on diff", () => {
       name: "GetFlowData",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
+        flow: {
           data: invalidFlow,
         },
       },
@@ -340,7 +351,7 @@ describe("invite to pay validation on diff", () => {
       name: "GetFlowData",
       matchOnVariables: false,
       data: {
-        flows_by_pk: {
+        flow: {
           data: invalidatedFlow,
         },
       },

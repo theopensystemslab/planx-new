@@ -26,7 +26,7 @@ beforeEach(() => {
       team_id: "1",
     },
     data: {
-      update_flows_by_pk: {
+      flow: {
         id: "1",
       },
     },
