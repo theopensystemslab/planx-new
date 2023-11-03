@@ -4,31 +4,33 @@ import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
 import { mockLowcalSession, mockTeam } from "../tests/mocks/saveAndReturnMocks";
 import { buildContentFromSessions } from "./resumeApplication";
+import { PartialDeep } from "type-fest";
 
 const ENDPOINT = "/resume-application";
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
-
-type DeepPartial<T> = T extends object
-  ? {
-      [P in keyof T]?: DeepPartial<T[P]>;
-    }
-  : T;
 
 const mockFormatRawProjectTypes = jest
   .fn()
   .mockResolvedValue(["New office premises"]);
 
 jest.mock("@opensystemslab/planx-core", () => {
+  const actualCoreDomainClient = jest.requireActual(
+    "@opensystemslab/planx-core",
+  ).CoreDomainClient;
+
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
-      formatRawProjectTypes: () => mockFormatRawProjectTypes(),
-    })),
+    CoreDomainClient: class extends actualCoreDomainClient {
+      constructor() {
+        super();
+        this.formatRawProjectTypes = () => mockFormatRawProjectTypes();
+      }
+    },
   };
 });
 
 describe("buildContentFromSessions function", () => {
   it("should return correctly formatted content for a single session", async () => {
-    const sessions: DeepPartial<LowCalSession>[] = [
+    const sessions: PartialDeep<LowCalSession>[] = [
       {
         data: {
           passport: {
@@ -62,7 +64,7 @@ describe("buildContentFromSessions function", () => {
   });
 
   it("should return correctly formatted content for multiple session", async () => {
-    const sessions: DeepPartial<LowCalSession>[] = [
+    const sessions: PartialDeep<LowCalSession>[] = [
       {
         data: {
           passport: {
@@ -137,7 +139,7 @@ describe("buildContentFromSessions function", () => {
   });
 
   it("should handle an empty address field", async () => {
-    const sessions: DeepPartial<LowCalSession>[] = [
+    const sessions: PartialDeep<LowCalSession>[] = [
       {
         data: {
           passport: {
@@ -170,7 +172,7 @@ describe("buildContentFromSessions function", () => {
 
   it("should handle an empty project type field", async () => {
     mockFormatRawProjectTypes.mockResolvedValueOnce("");
-    const sessions: DeepPartial<LowCalSession>[] = [
+    const sessions: PartialDeep<LowCalSession>[] = [
       {
         data: {
           passport: {
@@ -227,7 +229,7 @@ describe("Resume Application endpoint", () => {
 
     queryMock.mockQuery({
       name: "ValidateRequest",
-      data: { teams: null, lowcal_sessions: null },
+      data: { teams: null, sessions: null },
       variables: body.payload,
     });
 
@@ -249,7 +251,7 @@ describe("Resume Application endpoint", () => {
     queryMock.mockQuery({
       name: "ValidateRequest",
       data: {
-        lowcal_sessions: [mockLowcalSession],
+        sessions: [mockLowcalSession],
         teams: [mockTeam],
       },
       variables: body.payload,
@@ -269,7 +271,7 @@ describe("Resume Application endpoint", () => {
 
     queryMock.mockQuery({
       name: "ValidateRequest",
-      data: { teams: [mockTeam], lowcal_sessions: [] },
+      data: { teams: [mockTeam], sessions: [] },
       variables: body.payload,
     });
 

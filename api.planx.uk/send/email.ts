@@ -1,11 +1,13 @@
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import capitalize from "lodash/capitalize";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { sendEmail } from "../notify";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { buildSubmissionExportZip } from "./exportZip";
+import { $api, $public } from "../client";
+import { NotifyPersonalisation } from "@opensystemslab/planx-core/dist/types/team";
+import { Session } from "@opensystemslab/planx-core/types";
 
 /**
  * @swagger
@@ -158,8 +160,15 @@ export async function downloadApplicationFiles(
   }
 }
 
+interface GetTeamEmailSettings {
+  teams: {
+    sendToEmail: string;
+    notifyPersonalisation: NotifyPersonalisation;
+  }[];
+}
+
 async function getTeamEmailSettings(localAuthority: string) {
-  const response = await adminClient.request(
+  const response = await $api.client.request<GetTeamEmailSettings>(
     gql`
       query GetTeamEmailSettings($slug: String) {
         teams(where: { slug: { _eq: $slug } }) {
@@ -176,11 +185,20 @@ async function getTeamEmailSettings(localAuthority: string) {
   return response?.teams[0];
 }
 
+interface GetSessionEmailDetailsById {
+  session: {
+    email: string;
+    flow: {
+      slug: string;
+    };
+  } | null;
+}
+
 async function getSessionEmailDetailsById(sessionId: string) {
-  const response = await adminClient.request(
+  const response = await $api.client.request<GetSessionEmailDetailsById>(
     gql`
       query GetSessionEmailDetails($id: uuid!) {
-        lowcal_sessions_by_pk(id: $id) {
+        session: lowcal_sessions_by_pk(id: $id) {
           email
           flow {
             slug
@@ -193,14 +211,23 @@ async function getSessionEmailDetailsById(sessionId: string) {
     },
   );
 
-  return response?.lowcal_sessions_by_pk;
+  if (!response.session)
+    throw Error(
+      `Cannot find session ${sessionId} in GetSessionEmailDetails query`,
+    );
+
+  return response.session;
+}
+
+interface GetSessionData {
+  session: Partial<Pick<Session, "data">>;
 }
 
 async function getSessionData(sessionId: string) {
-  const response = await adminClient.request(
+  const response = await $api.client.request<GetSessionData>(
     gql`
       query GetSessionData($id: uuid!) {
-        lowcal_sessions_by_pk(id: $id) {
+        session: lowcal_sessions_by_pk(id: $id) {
           data
         }
       }
@@ -210,7 +237,13 @@ async function getSessionData(sessionId: string) {
     },
   );
 
-  return response?.lowcal_sessions_by_pk?.data;
+  return response?.session?.data;
+}
+
+interface CreateEmailApplication {
+  application: {
+    id?: string;
+  };
 }
 
 async function insertAuditEntry(
@@ -223,7 +256,7 @@ async function insertAuditEntry(
     expiryDate?: string;
   },
 ) {
-  const response = await adminClient.request(
+  const response = await $api.client.request<CreateEmailApplication>(
     gql`
       mutation CreateEmailApplication(
         $session_id: uuid!
@@ -232,7 +265,7 @@ async function insertAuditEntry(
         $request: jsonb
         $response: jsonb
       ) {
-        insert_email_applications_one(
+        application: insert_email_applications_one(
           object: {
             session_id: $session_id
             team_slug: $team_slug
@@ -254,5 +287,5 @@ async function insertAuditEntry(
     },
   );
 
-  return response?.insert_email_applications_one?.id;
+  return response?.application?.id;
 }

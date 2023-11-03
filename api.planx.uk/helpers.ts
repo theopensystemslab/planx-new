@@ -1,15 +1,16 @@
 import { gql } from "graphql-request";
 import { capitalize } from "lodash";
-import { adminGraphQLClient as adminClient } from "./hasura";
 import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
+import { $public, getClient } from "./client";
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
-  const data = await adminClient.request(
+  const { client: $client } = getClient();
+  const { flow } = await $client.request<{ flow: Flow | null }>(
     gql`
       query GetFlowData($id: uuid!) {
-        flows_by_pk(id: $id) {
+        flow: flows_by_pk(id: $id) {
           slug
           data
           team_id
@@ -18,8 +19,9 @@ const getFlowData = async (id: string): Promise<Flow> => {
     `,
     { id },
   );
+  if (!flow) throw Error(`Unable to get flow with id ${id}`);
 
-  return data.flows_by_pk;
+  return flow;
 };
 
 // Insert a new flow into the `flows` table
@@ -30,7 +32,8 @@ const insertFlow = async (
   creatorId?: number,
   copiedFrom?: Flow["id"],
 ) => {
-  const data = await adminClient.request(
+  const { client: $client } = getClient();
+  const data = await $client.request<{ flow: { id: string } }>(
     gql`
       mutation InsertFlow(
         $team_id: Int!
@@ -39,7 +42,7 @@ const insertFlow = async (
         $creator_id: Int
         $copied_from: uuid
       ) {
-        insert_flows_one(
+        flow: insert_flows_one(
           object: {
             team_id: $team_id
             slug: $slug
@@ -62,16 +65,17 @@ const insertFlow = async (
     },
   );
 
-  if (data) await createAssociatedOperation(data?.insert_flows_one?.id);
-  return data?.insert_flows_one;
+  if (data) await createAssociatedOperation(data?.flow?.id);
+  return data?.flow;
 };
 
 // Add a row to `operations` for an inserted flow, otherwise ShareDB throws a silent error when opening the flow in the UI
 const createAssociatedOperation = async (flowId: Flow["id"]) => {
-  const data = await adminClient.request(
+  const { client: $client } = getClient();
+  const data = await $client.request<{ operation: { id: string } }>(
     gql`
       mutation InsertOperation($flow_id: uuid!, $data: jsonb = {}) {
-        insert_operations_one(
+        operation: insert_operations_one(
           object: { flow_id: $flow_id, version: 1, data: $data }
         ) {
           id
@@ -83,18 +87,30 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
     },
   );
 
-  return data?.insert_operations_one;
+  return data?.operation;
 };
+
+interface PublishedFlows {
+  flow: {
+    publishedFlows: {
+      // TODO: use FlowGraph from planx-core here
+      data: Flow["data"];
+    }[];
+  } | null;
+}
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (
   id: string,
 ): Promise<Flow["data"]> => {
-  const data = await adminClient.request(
+  const { flow } = await $public.client.request<PublishedFlows>(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
-        flows_by_pk(id: $id) {
-          published_flows(limit: 1, order_by: { created_at: desc }) {
+        flow: flows_by_pk(id: $id) {
+          publishedFlows: published_flows(
+            limit: 1
+            order_by: { created_at: desc }
+          ) {
             data
           }
         }
@@ -103,33 +119,10 @@ const getMostRecentPublishedFlow = async (
     { id },
   );
 
-  return data.flows_by_pk.published_flows?.[0]?.data;
-};
+  const mostRecent = flow?.publishedFlows?.[0]?.data;
+  if (!mostRecent) throw Error(`Published flow not found for flow ${id}`);
 
-// Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)
-//   created_at refers to published date, value passed in as param should be lowcal_session.updated_at
-const getPublishedFlowByDate = async (id: string, created_at: string) => {
-  const data = await adminClient.request(
-    gql`
-      query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {
-        flows_by_pk(id: $id) {
-          published_flows(
-            limit: 1
-            order_by: { created_at: desc }
-            where: { created_at: { _lte: $created_at } }
-          ) {
-            data
-          }
-        }
-      }
-    `,
-    {
-      id,
-      created_at,
-    },
-  );
-
-  return data.flows_by_pk.published_flows?.[0]?.data;
+  return mostRecent;
 };
 
 // Flatten a flow's data to include main content & portals in a single JSON representation
@@ -249,7 +242,6 @@ const getFormattedEnvironment = (): string => {
 export {
   getFlowData,
   getMostRecentPublishedFlow,
-  getPublishedFlowByDate,
   dataMerged,
   getChildren,
   makeUniqueFlow,

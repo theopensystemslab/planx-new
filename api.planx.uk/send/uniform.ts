@@ -3,7 +3,6 @@ import { NextFunction, Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import FormData from "form-data";
 import fs from "fs";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 import { $api } from "../client";
@@ -174,7 +173,7 @@ async function checkUniformAuditTable(
   sessionId: string,
 ): Promise<UniformSubmissionResponse | undefined> {
   const application: Record<"uniform_applications", UniformApplication[]> =
-    await adminClient.request(
+    await $api.client.request(
       gql`
         query FindApplication($submission_reference: String = "") {
           uniform_applications(
@@ -390,7 +389,7 @@ const createUniformApplicationAuditRecord = async ({
   const application: Record<
     "insert_uniform_applications_one",
     UniformApplication
-  > = await adminClient.request(
+  > = await $api.client.request(
     gql`
       mutation CreateUniformApplication(
         $idox_submission_id: String = ""

@@ -1,11 +1,11 @@
 import { gql } from "graphql-request";
 import { subMonths } from "date-fns";
 
-import { Operation, OperationResult } from "./types";
-import { adminGraphQLClient } from "../../../../hasura";
+import { Operation, OperationResult, QueryResult } from "./types";
 import { runSQL } from "../../../../hasura/schema";
 import { getFilesForSession } from "../../../../session/files";
 import { deleteFilesByURL } from "../../../../s3/deleteFile";
+import { $api } from "../../../../client";
 
 const RETENTION_PERIOD_MONTHS = 6;
 export const getRetentionPeriod = () =>
@@ -78,10 +78,12 @@ export const getExpiredSessionIds = async (): Promise<string[]> => {
   `;
   const {
     lowcal_sessions: sessions,
-  }: { lowcal_sessions: Record<"id", string>[] } =
-    await adminGraphQLClient.request(query, {
+  }: { lowcal_sessions: Record<"id", string>[] } = await $api.client.request(
+    query,
+    {
       retentionPeriod: getRetentionPeriod(),
-    });
+    },
+  );
   const sessionIds = sessions.map((session) => session.id);
   return sessionIds;
 };
@@ -105,10 +107,12 @@ export const deleteApplicationFiles: Operation = async () => {
   return deletedFiles;
 };
 
+type Result = { returning: QueryResult };
+
 export const sanitiseLowcalSessions: Operation = async () => {
   const mutation = gql`
     mutation SanitiseLowcalSessions($retentionPeriod: timestamptz) {
-      update_lowcal_sessions(
+      sessions: update_lowcal_sessions(
         _set: { data: {}, email: "", sanitised_at: "now()" }
         where: {
           sanitised_at: { _is_null: true }
@@ -125,8 +129,8 @@ export const sanitiseLowcalSessions: Operation = async () => {
     }
   `;
   const {
-    update_lowcal_sessions: { returning: result },
-  } = await adminGraphQLClient.request(mutation, {
+    sessions: { returning: result },
+  } = await $api.client.request<{ sessions: Result }>(mutation, {
     retentionPeriod: getRetentionPeriod(),
   });
   return result;
@@ -135,7 +139,7 @@ export const sanitiseLowcalSessions: Operation = async () => {
 export const sanitiseUniformApplications: Operation = async () => {
   const mutation = gql`
     mutation SanitiseUniformApplications($retentionPeriod: timestamptz) {
-      update_uniform_applications(
+      uniformApplications: update_uniform_applications(
         _set: { payload: null, sanitised_at: "now()" }
         where: {
           sanitised_at: { _is_null: true }
@@ -149,8 +153,8 @@ export const sanitiseUniformApplications: Operation = async () => {
     }
   `;
   const {
-    update_uniform_applications: { returning: result },
-  } = await adminGraphQLClient.request(mutation, {
+    uniformApplications: { returning: result },
+  } = await $api.client.request<{ uniformApplications: Result }>(mutation, {
     retentionPeriod: getRetentionPeriod(),
   });
   return result;
@@ -159,7 +163,7 @@ export const sanitiseUniformApplications: Operation = async () => {
 export const sanitiseBOPSApplications: Operation = async () => {
   const mutation = gql`
     mutation SanitiseBOPSApplications($retentionPeriod: timestamptz) {
-      update_bops_applications(
+      bopsApplications: update_bops_applications(
         _set: { request: {}, sanitised_at: "now()" }
         where: {
           sanitised_at: { _is_null: true }
@@ -173,8 +177,8 @@ export const sanitiseBOPSApplications: Operation = async () => {
     }
   `;
   const {
-    update_bops_applications: { returning: result },
-  } = await adminGraphQLClient.request(mutation, {
+    bopsApplications: { returning: result },
+  } = await $api.client.request<{ bopsApplications: Result }>(mutation, {
     retentionPeriod: getRetentionPeriod(),
   });
   return result;
@@ -183,7 +187,7 @@ export const sanitiseBOPSApplications: Operation = async () => {
 export const sanitiseEmailApplications: Operation = async () => {
   const mutation = gql`
     mutation SanitiseEmailApplications($retentionPeriod: timestamptz) {
-      update_email_applications(
+      emailApplications: update_email_applications(
         _set: { request: {}, sanitised_at: "now()" }
         where: {
           sanitised_at: { _is_null: true }
@@ -197,8 +201,8 @@ export const sanitiseEmailApplications: Operation = async () => {
     }
   `;
   const {
-    update_email_applications: { returning: result },
-  } = await adminGraphQLClient.request(mutation, {
+    emailApplications: { returning: result },
+  } = await $api.client.request<{ emailApplications: Result }>(mutation, {
     retentionPeriod: getRetentionPeriod(),
   });
   return result;
@@ -207,7 +211,7 @@ export const sanitiseEmailApplications: Operation = async () => {
 export const deleteReconciliationRequests: Operation = async () => {
   const mutation = gql`
     mutation DeleteReconciliationRequests($retentionPeriod: timestamptz) {
-      delete_reconciliation_requests(
+      reconciliationRequests: delete_reconciliation_requests(
         where: { created_at: { _lt: $retentionPeriod } }
       ) {
         returning {
@@ -217,8 +221,8 @@ export const deleteReconciliationRequests: Operation = async () => {
     }
   `;
   const {
-    delete_reconciliation_requests: { returning: result },
-  } = await adminGraphQLClient.request(mutation, {
+    reconciliationRequests: { returning: result },
+  } = await $api.client.request<{ reconciliationRequests: Result }>(mutation, {
     retentionPeriod: getRetentionPeriod(),
   });
   return result;
@@ -227,7 +231,7 @@ export const deleteReconciliationRequests: Operation = async () => {
 export const deletePaymentRequests: Operation = async () => {
   const mutation = gql`
     mutation DeletePaymentRequests($retentionPeriod: timestamptz) {
-      delete_payment_requests(
+      paymentRequests: delete_payment_requests(
         where: { created_at: { _lt: $retentionPeriod } }
       ) {
         returning {
@@ -237,8 +241,8 @@ export const deletePaymentRequests: Operation = async () => {
     }
   `;
   const {
-    delete_payment_requests: { returning: result },
-  } = await adminGraphQLClient.request(mutation, {
+    paymentRequests: { returning: result },
+  } = await $api.client.request<{ paymentRequests: Result }>(mutation, {
     retentionPeriod: getRetentionPeriod(),
   });
   return result;

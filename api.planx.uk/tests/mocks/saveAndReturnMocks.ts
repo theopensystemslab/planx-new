@@ -73,7 +73,7 @@ export const mockLowcalSession: LowCalSession = {
 export const mockFindSession = (breadcrumbs = {}) => ({
   name: "FindSession",
   data: {
-    lowcal_sessions: [
+    sessions: [
       {
         ...mockLowcalSession,
         data: {
@@ -92,7 +92,7 @@ export const mockFindSession = (breadcrumbs = {}) => ({
 export const mockNotFoundSession = {
   name: "FindSession",
   data: {
-    lowcal_sessions: [],
+    sessions: [],
   },
   variables: {
     sessionId: "not-found-id",
@@ -103,8 +103,8 @@ export const mockNotFoundSession = {
 export const mockGetMostRecentPublishedFlow = (data: Flow["data"]) => ({
   name: "GetMostRecentPublishedFlow",
   data: {
-    flows_by_pk: {
-      published_flows: [
+    flow: {
+      publishedFlows: [
         {
           data,
         },
@@ -154,7 +154,7 @@ export const mockValidateSingleSessionRequest = {
 export const mockSoftDeleteLowcalSession = {
   name: "SoftDeleteLowcalSession",
   data: {
-    update_lowcal_sessions_by_pk: {
+    session: {
       id: "123",
     },
   },
@@ -166,9 +166,9 @@ export const mockSoftDeleteLowcalSession = {
 export const mockSetupEmailNotifications = {
   name: "SetupEmailNotifications",
   data: {
-    update_lowcal_sessions_by_pk: {
+    session: {
       id: "123",
-      has_user_saved: true,
+      hasUserSaved: true,
     },
   },
   variables: {

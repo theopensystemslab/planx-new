@@ -1,8 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { $api } from "../client";
-import { adminGraphQLClient as adminClient } from "../hasura";
+import { $api, $public } from "../client";
 import {
   ScheduledEventResponse,
   createScheduledEvent,
@@ -121,11 +120,19 @@ const createPaymentSendEvents = async (
   }
 };
 
+interface GetTeamSlugByFlowId {
+  flow: {
+    team: {
+      slug: string;
+    };
+  };
+}
+
 const getTeamSlugByFlowId = async (id: Flow["id"]): Promise<Team["slug"]> => {
-  const data = await adminClient.request(
+  const data = await $public.client.request<GetTeamSlugByFlowId>(
     gql`
       query GetTeamSlugByFlowId($id: uuid!) {
-        flows_by_pk(id: $id) {
+        flow: flows_by_pk(id: $id) {
           team {
             slug
           }
@@ -135,7 +142,7 @@ const getTeamSlugByFlowId = async (id: Flow["id"]): Promise<Team["slug"]> => {
     { id },
   );
 
-  return data.flows_by_pk.team.slug;
+  return data.flow.team.slug;
 };
 
 export { createPaymentSendEvents };

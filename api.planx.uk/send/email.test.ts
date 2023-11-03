@@ -9,17 +9,23 @@ const mockGenerateCSVData = jest.fn().mockResolvedValue([
     metadata: {},
   },
 ]);
+
 jest.mock("@opensystemslab/planx-core", () => {
+  const actualCoreDomainClient = jest.requireActual(
+    "@opensystemslab/planx-core",
+  ).CoreDomainClient;
+
   return {
     Passport: jest.fn().mockImplementation(() => ({
       files: jest.fn().mockImplementation(() => []),
     })),
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
-      getDocumentTemplateNamesForSession: jest.fn(),
-      export: {
-        csvData: () => mockGenerateCSVData(),
-      },
-    })),
+    CoreDomainClient: class extends actualCoreDomainClient {
+      constructor() {
+        super();
+        this.getDocumentTemplateNamesForSession = jest.fn();
+        this.export.csvData = () => mockGenerateCSVData();
+      }
+    },
   };
 });
 
@@ -55,7 +61,7 @@ describe(`sending an application by email to a planning office`, () => {
       name: "GetSessionData",
       matchOnVariables: false,
       data: {
-        lowcal_sessions_by_pk: { data: {} },
+        session: { data: {} },
       },
       variables: { id: "123" },
     });
@@ -64,7 +70,7 @@ describe(`sending an application by email to a planning office`, () => {
       name: "GetSessionEmailDetails",
       matchOnVariables: false,
       data: {
-        lowcal_sessions_by_pk: {
+        session: {
           email: "applicant@test.com",
           flow: { slug: "test-flow" },
         },
@@ -76,7 +82,7 @@ describe(`sending an application by email to a planning office`, () => {
       name: "MarkSessionAsSubmitted",
       matchOnVariables: false,
       data: {
-        update_lowcal_sessions_by_pk: { id: "123" },
+        session: { id: "123" },
       },
       variables: { sessionId: "123" },
     });
@@ -85,7 +91,7 @@ describe(`sending an application by email to a planning office`, () => {
       name: "CreateEmailApplication",
       matchOnVariables: false,
       data: {
-        insert_email_applications_one: { id: 1 },
+        application: { id: 1 },
       },
       variables: {
         sessionId: "123",
@@ -181,7 +187,7 @@ describe(`downloading application data received by email`, () => {
       name: "GetSessionData",
       matchOnVariables: false,
       data: {
-        lowcal_sessions_by_pk: { data: { passport: { test: "dummy data" } } },
+        session: { data: { passport: { test: "dummy data" } } },
       },
       variables: { id: "123" },
     });
@@ -218,7 +224,7 @@ describe(`downloading application data received by email`, () => {
         "/download-application-files/123?email=planners@southwark.gov.uk&localAuthority=southwark",
       )
       .expect(200)
-      .then(() => {
+      .then((_res) => {
         expect(mockBuildSubmissionExportZip).toHaveBeenCalledWith({
           sessionId: "123",
         });

@@ -69,8 +69,8 @@ describe("reconciliation_requests", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query reconciliation_requests", () => {
-      expect(i.queries).not.toContain("reconciliation_requests");
+    test("can query reconciliation_requests", () => {
+      expect(i.queries).toContain("reconciliation_requests");
     });
 
     test("cannot update reconciliation_requests", () => {
@@ -83,6 +83,7 @@ describe("reconciliation_requests", () => {
 
     test("can insert reconciliation requests", () => {
       expect(i.mutations).toContain("insert_reconciliation_requests");
+      expect(i.mutations).toContain("insert_reconciliation_requests_one");
     });
   });
 });

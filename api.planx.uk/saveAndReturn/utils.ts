@@ -1,10 +1,9 @@
 import { SiteAddress } from "@opensystemslab/planx-core/types";
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import { Template, getClientForTemplate, sendEmail } from "../notify";
-import { $public } from "../client";
+import { $api, $public } from "../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
@@ -201,7 +200,7 @@ const softDeleteSession = async (sessionId: string) => {
         }
       }
     `;
-    await adminClient.request(mutation, { sessionId });
+    await $api.client.request(mutation, { sessionId });
   } catch (error) {
     throw new Error(`Error deleting session ${sessionId}`);
   }
@@ -223,7 +222,7 @@ const markSessionAsSubmitted = async (sessionId: string) => {
         }
       }
     `;
-    await adminClient.request(mutation, { sessionId });
+    await $api.client.request(mutation, { sessionId });
   } catch (error) {
     throw new Error(`Error marking session ${sessionId} as submitted`);
   }
@@ -238,6 +237,10 @@ const getSaveAndReturnPublicHeaders = (sessionId: string, email: string) => ({
   "x-hasura-lowcal-email": email.toLowerCase(),
 });
 
+interface SetupEmailNotifications {
+  session: { hasUserSaved: boolean };
+}
+
 // Update lowcal_sessions.has_user_saved column to kick-off the setup_lowcal_expiry_events &
 // setup_lowcal_reminder_events event triggers in Hasura
 // Should only run once on initial save of a session
@@ -245,18 +248,20 @@ const setupEmailEventTriggers = async (sessionId: string) => {
   try {
     const mutation = gql`
       mutation SetupEmailNotifications($sessionId: uuid!) {
-        update_lowcal_sessions_by_pk(
+        session: update_lowcal_sessions_by_pk(
           pk_columns: { id: $sessionId }
           _set: { has_user_saved: true }
         ) {
           id
-          has_user_saved
+          hasUserSaved: has_user_saved
         }
       }
     `;
     const {
-      update_lowcal_sessions_by_pk: { has_user_saved: hasUserSaved },
-    } = await adminClient.request(mutation, { sessionId });
+      session: { hasUserSaved },
+    } = await $api.client.request<SetupEmailNotifications>(mutation, {
+      sessionId,
+    });
     return hasUserSaved;
   } catch (error) {
     throw new Error(

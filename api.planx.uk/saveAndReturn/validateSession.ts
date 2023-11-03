@@ -1,7 +1,6 @@
 import { gql } from "graphql-request";
 import omit from "lodash.omit";
 import { NextFunction, Request, Response } from "express";
-import { adminGraphQLClient as adminClient } from "../hasura";
 import { getMostRecentPublishedFlow } from "../helpers";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
@@ -16,6 +15,7 @@ import type {
   PublishedFlow,
   Node,
 } from "../types";
+import { $api } from "../client";
 
 export interface ValidationResponse {
   message: string;
@@ -210,7 +210,7 @@ async function diffLatestPublishedFlow({
 }): Promise<PublishedFlow["data"] | null> {
   const response: {
     diff_latest_published_flow: { data: PublishedFlow["data"] | null };
-  } = await adminClient.request(
+  } = await $api.client.request(
     gql`
       query GetFlowDiff($flowId: uuid!, $since: timestamptz!) {
         diff_latest_published_flow(
@@ -225,6 +225,10 @@ async function diffLatestPublishedFlow({
   return response.diff_latest_published_flow.data;
 }
 
+interface FindSession {
+  sessions: Partial<LowCalSession>[];
+}
+
 async function findSession({
   sessionId,
   email,
@@ -232,38 +236,35 @@ async function findSession({
   sessionId: string;
   email: string;
 }): Promise<Partial<LowCalSession> | undefined> {
-  const response: { lowcal_sessions: Partial<LowCalSession>[] } =
-    await adminClient.request(
-      gql`
-        query FindSession($sessionId: uuid!, $email: String!) {
-          lowcal_sessions(
-            where: { id: { _eq: $sessionId }, email: { _eq: $email } }
-            limit: 1
-          ) {
-            flow_id
-            data
-            updated_at
-            lockedAt: locked_at
-            paymentRequests: payment_requests {
-              id
-              payeeName: payee_name
-              payeeEmail: payee_email
-            }
+  const response = await $api.client.request<FindSession>(
+    gql`
+      query FindSession($sessionId: uuid!, $email: String!) {
+        sessions: lowcal_sessions(
+          where: { id: { _eq: $sessionId }, email: { _eq: $email } }
+          limit: 1
+        ) {
+          flow_id
+          data
+          updated_at
+          lockedAt: locked_at
+          paymentRequests: payment_requests {
+            id
+            payeeName: payee_name
+            payeeEmail: payee_email
           }
         }
-      `,
-      { sessionId, email },
-    );
-  return response.lowcal_sessions.length
-    ? response.lowcal_sessions[0]
-    : undefined;
+      }
+    `,
+    { sessionId, email },
+  );
+  return response.sessions.length ? response.sessions[0] : undefined;
 }
 
 async function createAuditEntry(
   sessionId: string,
   data: ValidationResponse,
 ): Promise<void> {
-  await adminClient.request(
+  await $api.client.request(
     gql`
       mutation InsertReconciliationRequests(
         $session_id: String = ""
