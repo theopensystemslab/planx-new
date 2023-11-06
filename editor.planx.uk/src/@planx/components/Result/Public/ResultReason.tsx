@@ -6,6 +6,7 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Caret from "ui/icons/Caret";
@@ -140,6 +141,13 @@ const ResultReason: React.FC<IResultReason> = ({
       : ""
   }`;
 
+  const { trackBackwardsNavigationByNodeId } = useAnalyticsTracking();
+
+  const handleChangeAnswer = (id: string) => {
+    trackBackwardsNavigationByNodeId(id, "change");
+    changeAnswer(id);
+  };
+
   return (
     <Root>
       <StyledAccordion
@@ -179,7 +187,7 @@ const ResultReason: React.FC<IResultReason> = ({
                   component="button"
                   onClick={(event) => {
                     event.stopPropagation();
-                    changeAnswer(id);
+                    handleChangeAnswer(id);
                   }}
                 >
                   Change
