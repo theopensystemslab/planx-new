@@ -312,10 +312,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     initiator: BackwardsNaviagtionInitiatorType,
   ) {
     const targetNodeMetadata = getTitleAndTypeFromFlow(nodeId);
-    console.log("Target node info: ", targetNodeMetadata);
     const metadata: Record<string, NodeMetadata> = {};
     metadata[`${initiator}`] = targetNodeMetadata;
-    console.log("Metadata payload:", metadata);
 
     if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await publicClient.mutate({
