@@ -7,7 +7,6 @@ jest.mock("fs", () => ({
   existsSync: () => true,
   unlinkSync: () => undefined,
   createWriteStream: () => undefined,
-  writeFileSync: () => undefined,
   rmSync: () => undefined,
 }));
 

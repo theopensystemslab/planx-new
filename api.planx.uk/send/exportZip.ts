@@ -197,9 +197,7 @@ export class ExportZip {
       throw new Error("file not found");
     }
     const filePath = path.join(this.tmpDir, name);
-    fs.writeFileSync(filePath, body as Buffer);
-    this.zip.addLocalFile(filePath);
-    fs.unlinkSync(filePath);
+    this.zip.addFile(filePath, body as Buffer);
   }
 
   toBuffer(): Buffer {
