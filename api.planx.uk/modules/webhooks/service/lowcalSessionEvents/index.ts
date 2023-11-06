@@ -1,6 +1,6 @@
 import { addDays } from "date-fns";
 
-import { createScheduledEvent } from "../../../../hasura/metadata";
+import { createScheduledEvent } from "../../../../lib/hasura/metadata";
 import {
   DAYS_UNTIL_EXPIRY,
   REMINDER_DAYS_FROM_EXPIRY,
