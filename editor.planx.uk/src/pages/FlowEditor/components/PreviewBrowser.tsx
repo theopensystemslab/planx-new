@@ -10,7 +10,13 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
-import { ExternalLink, Globe, RefreshCw, Terminal } from "react-feather";
+import {
+  BarChart,
+  ExternalLink,
+  Globe,
+  RefreshCw,
+  Terminal,
+} from "react-feather";
 import { useAsync } from "react-use";
 import Input from "ui/Input";
 
@@ -93,6 +99,7 @@ const PreviewBrowser: React.FC<{
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
     flowId,
+    flowMetabaseLink,
     resetPreview,
     publishFlow,
     lastPublished,
@@ -100,6 +107,7 @@ const PreviewBrowser: React.FC<{
     validateAndDiffFlow,
   ] = useStore((state) => [
     state.id,
+    state.flowMetabaseLink,
     state.resetPreview,
     state.publishFlow,
     state.lastPublished,
@@ -162,6 +170,19 @@ const PreviewBrowser: React.FC<{
               <ExternalLink />
             </Link>
           </Tooltip>
+
+          {!!flowMetabaseLink && (
+            <Tooltip arrow title="Open analytics page">
+              <Link
+                href={flowMetabaseLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <BarChart />
+              </Link>
+            </Tooltip>
+          )}
 
           <Tooltip arrow title="Open published service">
             <Link
