@@ -53,7 +53,7 @@ const CUSTOM_DOMAINS =
           name: "newcastle",
         },
         {
-          domain: "planningservices.stablans.gov.uk",
+          domain: "planningservices.stalbans.gov.uk",
           name: "stalbans",
         },
       ]
