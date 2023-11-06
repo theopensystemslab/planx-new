@@ -2,10 +2,10 @@ import { gql } from "graphql-request";
 import { subMonths } from "date-fns";
 
 import { Operation, OperationResult, QueryResult } from "./types";
-import { runSQL } from "../../../../hasura/schema";
-import { getFilesForSession } from "../../../../session/files";
+import { runSQL } from "../../../../lib/hasura/schema";
 import { deleteFilesByURL } from "../../../../s3/deleteFile";
 import { $api } from "../../../../client";
+import { Passport } from "@opensystemslab/planx-core";
 
 const RETENTION_PERIOD_MONTHS = 6;
 export const getRetentionPeriod = () =>
@@ -97,7 +97,11 @@ export const deleteApplicationFiles: Operation = async () => {
 
   const sessionIds = await getExpiredSessionIds();
   for (const sessionId of sessionIds) {
-    const files = await getFilesForSession(sessionId);
+    const session = await $api.session.find(sessionId);
+    if (!session) {
+      throw Error(`Unable to find session matching id ${sessionId}`);
+    }
+    const files = new Passport(session.data.passport).files();
     if (files.length) {
       const deleted = await deleteFilesByURL(files);
       deletedFiles.push(...deleted);

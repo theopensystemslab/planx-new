@@ -1,4 +1,4 @@
-import { runSQL } from "../../../../hasura/schema";
+import { runSQL } from "../../../../lib/hasura/schema";
 import { queryMock } from "../../../../tests/graphqlQueryMock";
 import {
   mockIds,
@@ -25,7 +25,7 @@ import {
   deleteHasuraScheduledEventsForSubmittedSessions,
 } from "./operations";
 
-jest.mock("../../../../hasura/schema");
+jest.mock("../../../../lib/hasura/schema");
 const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
 
 const mockFindSession = jest.fn();

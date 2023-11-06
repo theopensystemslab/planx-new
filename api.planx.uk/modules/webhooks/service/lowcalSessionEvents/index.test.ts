@@ -1,10 +1,10 @@
 import supertest from "supertest";
 import app from "../../../../server";
-import { createScheduledEvent } from "../../../../hasura/metadata";
+import { createScheduledEvent } from "../../../../lib/hasura/metadata";
 
 const { post } = supertest(app);
 
-jest.mock("../../../../hasura/metadata");
+jest.mock("../../../../lib/hasura/metadata");
 const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<
   typeof createScheduledEvent
 >;

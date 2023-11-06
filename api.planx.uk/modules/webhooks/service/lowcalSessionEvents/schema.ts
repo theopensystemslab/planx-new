@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ValidatedRequestHandler } from "../../../../shared/middleware/validate";
-import { ScheduledEventResponse } from "../../../../hasura/metadata";
+import { ScheduledEventResponse } from "../../../../lib/hasura/metadata";
 
 export const createSessionEventSchema = z.object({
   body: z.object({

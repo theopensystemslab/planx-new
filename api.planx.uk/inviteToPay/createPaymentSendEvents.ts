@@ -5,7 +5,7 @@ import { $api, $public } from "../client";
 import {
   ScheduledEventResponse,
   createScheduledEvent,
-} from "../hasura/metadata";
+} from "../lib/hasura/metadata";
 import { getMostRecentPublishedFlow } from "../helpers";
 import { Flow, Node, Team } from "../types";
 
