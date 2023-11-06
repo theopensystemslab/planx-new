@@ -6,8 +6,7 @@ import { $public, getClient } from "./client";
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
-  const { client: $client } = getClient();
-  const { flow } = await $client.request<{ flow: Flow | null }>(
+  const { flow } = await $public.client.request<{ flow: Flow | null }>(
     gql`
       query GetFlowData($id: uuid!) {
         flow: flows_by_pk(id: $id) {

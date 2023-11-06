@@ -9,6 +9,7 @@ import passport from "passport";
 import { RequestHandler } from "http-proxy-middleware";
 import { Role } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
+import { Request } from "express";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -86,6 +87,11 @@ export const useFilePermission: RequestHandler = (req, _res, next): void => {
   return next();
 };
 
+export const getToken = (req: Request) =>
+  req.cookies?.jwt ??
+  req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
+  req.query?.token;
+
 // XXX: Currently not checking for JWT and including req.user in every
 //      express endpoint because authentication also uses req.user. More info:
 //      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
@@ -95,10 +101,7 @@ export const useJWT = expressjwt({
   algorithms: ["HS256"],
   credentialsRequired: true,
   requestProperty: "user",
-  getToken: (req) =>
-    req.cookies?.jwt ??
-    req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
-    req.query?.token,
+  getToken: getToken,
 });
 
 export const useGoogleAuth: RequestHandler = (req, res, next) => {
@@ -163,7 +166,7 @@ export const useRoleAuth: UseRoleAuth =
         {
           user: {
             ...req.user,
-            jwt: req.cookies.jwt,
+            jwt: getToken(req),
           },
         },
         () => next(),
@@ -190,7 +193,7 @@ export const useLoginAuth: RequestHandler = (req, res, next) =>
         {
           user: {
             ...req.user,
-            jwt: req.cookies.jwt,
+            jwt: getToken(req),
           },
         },
         () => next(),
