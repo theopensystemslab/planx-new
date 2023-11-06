@@ -8,6 +8,14 @@ import {
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { $api } from "../client";
 
+// https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/#json-body-parameters-for-39-create-a-payment-39
+interface GovPayCreatePayment {
+  amount: number;
+  reference: string;
+  description: string;
+  return_url: string;
+}
+
 interface GetPaymentRequestDetails {
   paymentRequest: {
     sessionId: string;
@@ -83,17 +91,30 @@ export async function buildPaymentPayload(
   if (!req.query.returnURL) {
     return next(
       new ServerError({
-        message: "missing required returnURL query param",
+        message: "Missing required returnURL query param",
         status: 400,
       }),
     );
   }
-  req.body = {
-    amount: req.params.paymentAmount,
-    reference: req.query.sessionId,
+
+  if (!req.query.sessionId) {
+    return next(
+      new ServerError({
+        message: "Missing required sessionId query param",
+        status: 400,
+      }),
+    );
+  }
+
+  const createPaymentBody: GovPayCreatePayment = {
+    amount: parseInt(req.params.paymentAmount),
+    reference: req.query.sessionId as string,
     description: "New application (nominated payee)",
-    return_url: req.query.returnURL,
+    return_url: req.query.returnURL as string,
   };
+
+  req.body = createPaymentBody;
+
   next();
 }
 
