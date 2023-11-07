@@ -176,7 +176,7 @@ const nodeRoutes = mount({
 const getFlowMetadata = async (
   flow: string,
   team: string,
-): Promise<{ flowSettings: FlowSettings; flowMetabaseLink: string }> => {
+): Promise<{ flowSettings: FlowSettings; flowAnalyticsLink: string }> => {
   const { data } = await client.query({
     query: gql`
       query GetFlow($slug: String!, $team_slug: String!) {
@@ -186,7 +186,7 @@ const getFlowMetadata = async (
         ) {
           id
           flowSettings: settings
-          flowMetabaseLink: metabase_link
+          flowAnalyticsLink: analytics_link
         }
       }
     `,
@@ -197,7 +197,7 @@ const getFlowMetadata = async (
   });
   const metadata = {
     flowSettings: data.flows[0]?.flowSettings,
-    flowMetabaseLink: data.flows[0]?.flowMetabaseLink,
+    flowAnalyticsLink: data.flows[0]?.flowAnalyticsLink,
   };
   return metadata;
 };
@@ -209,11 +209,11 @@ const routes = compose(
 
   withView(async (req) => {
     const [flow, ...breadcrumbs] = req.params.flow.split(",");
-    const { flowSettings, flowMetabaseLink } = await getFlowMetadata(
+    const { flowSettings, flowAnalyticsLink } = await getFlowMetadata(
       flow,
       req.params.team,
     );
-    useStore.setState({ flowSettings, flowMetabaseLink });
+    useStore.setState({ flowSettings, flowAnalyticsLink });
 
     return (
       <>

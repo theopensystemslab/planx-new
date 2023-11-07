@@ -347,7 +347,7 @@
           - creator_id
           - data
           - id
-          - metabase_link
+          - analytics_link
           - settings
           - slug
           - team_id
@@ -378,7 +378,7 @@
           - creator_id
           - data
           - id
-          - metabase_link
+          - analytics_link
           - settings
           - slug
           - team_id

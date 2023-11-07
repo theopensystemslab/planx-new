@@ -99,7 +99,7 @@ const PreviewBrowser: React.FC<{
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
     flowId,
-    flowMetabaseLink,
+    flowAnalyticsLink,
     resetPreview,
     publishFlow,
     lastPublished,
@@ -107,7 +107,7 @@ const PreviewBrowser: React.FC<{
     validateAndDiffFlow,
   ] = useStore((state) => [
     state.id,
-    state.flowMetabaseLink,
+    state.flowAnalyticsLink,
     state.resetPreview,
     state.publishFlow,
     state.lastPublished,
@@ -160,10 +160,10 @@ const PreviewBrowser: React.FC<{
             />
           </Tooltip>
 
-          {flowMetabaseLink ? (
+          {flowAnalyticsLink ? (
             <Tooltip arrow title="Open analytics page">
               <Link
-                href={flowMetabaseLink}
+                href={flowAnalyticsLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"
