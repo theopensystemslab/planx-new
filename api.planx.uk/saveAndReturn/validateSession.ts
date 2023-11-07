@@ -138,6 +138,8 @@ async function reconcileSessionData({
   const alteredSectionIds = new Set<string>();
 
   const currentFlow = await getMostRecentPublishedFlow(sessionData.id);
+  if (!currentFlow)
+    throw Error(`Unable to find published flow for flow ${sessionData.id}`);
 
   // create ordered breadcrumbs to be able to look up section IDs later
   const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(

@@ -101,7 +101,7 @@ interface PublishedFlows {
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (
   id: string,
-): Promise<Flow["data"]> => {
+): Promise<Flow["data"] | undefined> => {
   const { flow } = await $public.client.request<PublishedFlows>(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
@@ -119,8 +119,6 @@ const getMostRecentPublishedFlow = async (
   );
 
   const mostRecent = flow?.publishedFlows?.[0]?.data;
-  if (!mostRecent) throw Error(`Published flow not found for flow ${id}`);
-
   return mostRecent;
 };
 
