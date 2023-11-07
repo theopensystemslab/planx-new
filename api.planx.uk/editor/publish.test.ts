@@ -67,6 +67,20 @@ it("requires a user to have the 'teamEditor' role", async () => {
 });
 
 describe("publish", () => {
+  it("publishes for the first time", async () => {
+    queryMock.mockQuery({
+      name: "GetMostRecentPublishedFlow",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          publishedFlows: [],
+        },
+      },
+    });
+
+    await supertest(app).post("/flows/1/publish").set(auth).expect(200);
+  });
+
   it("does not update if there are no new changes", async () => {
     await supertest(app)
       .post("/flows/1/publish")
