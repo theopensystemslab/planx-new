@@ -66,8 +66,8 @@ describe("planning_constraints_requests", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query planning_constraints_requests", () => {
-      expect(i.queries).not.toContain("planning_constraints_requests");
+    test("can query planning_constraints_requests", () => {
+      expect(i.queries).toContain("planning_constraints_requests");
     })
 
     test("can insert planning_constraints_requests", () => {

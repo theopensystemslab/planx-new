@@ -1003,6 +1003,16 @@
           - destination_url
           - session_id
           - created_at
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - response
+          - destination_url
+          - session_id
+          - created_at
+        filter: {}
 - table:
     schema: public
     name: project_types
