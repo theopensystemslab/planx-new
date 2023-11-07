@@ -36,6 +36,8 @@ const standaloneView = async (req: NaviRequest) => {
   state.setGlobalSettings(globalSettings[0]);
   state.setTeam(team);
 
+  console.log('Standalone state: ', state)
+
   return (
     <PublicLayout>
       <View />

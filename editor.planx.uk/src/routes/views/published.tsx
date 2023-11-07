@@ -47,6 +47,8 @@ export const publishedView = async (req: NaviRequest) => {
   state.setGlobalSettings(data.globalSettings[0]);
   state.setTeam(flow.team);
 
+  console.log('Published state: ', state)
+
   return (
     <PublicLayout>
       <SaveAndReturnLayout>

@@ -40,6 +40,8 @@ export const unpublishedView = async (req: NaviRequest) => {
   state.setGlobalSettings(data.globalSettings[0]);
   state.setTeam(flow.team);
 
+  console.log('Unpublished settings: ', state)
+
   return (
     <PublicLayout>
       <View />

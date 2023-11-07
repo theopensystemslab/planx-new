@@ -209,6 +209,8 @@ const routes = compose(
       req.params.team,
     );
     useStore.setState({ flowSettings });
+    const state = useStore.getState()
+    console.log('Flow state:', state)
 
     return (
       <>
