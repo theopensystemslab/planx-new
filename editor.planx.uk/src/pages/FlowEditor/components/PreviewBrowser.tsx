@@ -160,18 +160,7 @@ const PreviewBrowser: React.FC<{
             />
           </Tooltip>
 
-          <Tooltip arrow title="Open editor preview">
-            <Link
-              href={props.url.replace("/preview", "/unpublished")}
-              target="_blank"
-              rel="noopener noreferrer"
-              color="inherit"
-            >
-              <ExternalLink />
-            </Link>
-          </Tooltip>
-
-          {!!flowMetabaseLink && (
+          {flowMetabaseLink ? (
             <Tooltip arrow title="Open analytics page">
               <Link
                 href={flowMetabaseLink}
@@ -182,7 +171,24 @@ const PreviewBrowser: React.FC<{
                 <BarChart />
               </Link>
             </Tooltip>
+          ) : (
+            <Tooltip arrow title="Analytics page unavailable">
+              <Link component={"button"} disabled>
+                <BarChart />
+              </Link>
+            </Tooltip>
           )}
+
+          <Tooltip arrow title="Open editor preview">
+            <Link
+              href={props.url.replace("/preview", "/unpublished")}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="inherit"
+            >
+              <ExternalLink />
+            </Link>
+          </Tooltip>
 
           <Tooltip arrow title="Open published service">
             <Link
