@@ -263,7 +263,7 @@ export function PlanningConstraintsContent(
           refreshConstraints={refreshConstraints}
         />
       )}
-      {positiveConstraints.length > 0 && (
+      {!showError && positiveConstraints.length > 0 && (
         <>
           <Typography variant="h3" component="h2" gutterBottom>
             These are the planning constraints we think apply to this property
@@ -283,31 +283,33 @@ export function PlanningConstraintsContent(
           <PlanningConditionsInfo />
         </>
       )}
-      {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
-        <>
-          <Typography variant="h3" component="h2">
-            It looks like there are no constraints on this property
-          </Typography>
-          <Typography variant="body2">
-            Based on the information you've given it looks like there are no
-            planning constraints on your property that might limit what you can
-            do.
-          </Typography>
-          <Typography variant="body2">
-            Continue with your application to tell us more about your project.
-          </Typography>
-          <SimpleExpand
-            id="negative-constraints-list"
-            buttonText={{
-              open: "Show the things we checked",
-              closed: "Hide constraints that don't apply",
-            }}
-          >
-            <ConstraintsList data={negativeConstraints} metadata={metadata} />
-          </SimpleExpand>
-          <PlanningConditionsInfo />
-        </>
-      )}
+      {!showError &&
+        positiveConstraints.length === 0 &&
+        negativeConstraints.length > 0 && (
+          <>
+            <Typography variant="h3" component="h2">
+              It looks like there are no constraints on this property
+            </Typography>
+            <Typography variant="body2">
+              Based on the information you've given it looks like there are no
+              planning constraints on your property that might limit what you
+              can do.
+            </Typography>
+            <Typography variant="body2">
+              Continue with your application to tell us more about your project.
+            </Typography>
+            <SimpleExpand
+              id="negative-constraints-list"
+              buttonText={{
+                open: "Show the things we checked",
+                closed: "Hide constraints that don't apply",
+              }}
+            >
+              <ConstraintsList data={negativeConstraints} metadata={metadata} />
+            </SimpleExpand>
+            <PlanningConditionsInfo />
+          </>
+        )}
     </Card>
   );
 }
