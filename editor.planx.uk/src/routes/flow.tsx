@@ -185,7 +185,7 @@ const getFlowSettings = async (
           where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
         ) {
           id
-          settings
+          flowSettings: settings
         }
       }
     `,
@@ -194,7 +194,7 @@ const getFlowSettings = async (
       team_slug: team,
     },
   });
-  return data.flows[0]?.settings;
+  return data.flows[0]?.flowSettings;
 };
 
 const routes = compose(
@@ -204,8 +204,11 @@ const routes = compose(
 
   withView(async (req) => {
     const [flow, ...breadcrumbs] = req.params.flow.split(",");
-    const settings: FlowSettings = await getFlowSettings(flow, req.params.team);
-    useStore.getState().setFlowSettings(settings);
+    const flowSettings: FlowSettings = await getFlowSettings(
+      flow,
+      req.params.team,
+    );
+    useStore.setState({ flowSettings });
 
     return (
       <>

@@ -27,7 +27,7 @@ const flowSettingsRoutes = compose(
               }
             ) {
               id
-              settings
+              flowSettings: settings
             }
           }
         `,
@@ -37,8 +37,8 @@ const flowSettingsRoutes = compose(
         },
       });
 
-      const settings: FlowSettings = data.flows[0].settings;
-      useStore.getState().setFlowSettings(settings);
+      const flowSettings: FlowSettings = data.flows[0].flowSettings;
+      useStore.setState({ flowSettings });
 
       return {
         title: makeTitle(

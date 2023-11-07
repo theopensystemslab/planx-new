@@ -9,7 +9,6 @@ import { TeamStore } from "./team";
 
 export interface SettingsStore {
   flowSettings?: FlowSettings;
-  setFlowSettings: (flowSettings?: FlowSettings) => void;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
@@ -23,8 +22,6 @@ export const settingsStore: StateCreator<
   SettingsStore
 > = (set, get) => ({
   flowSettings: undefined,
-
-  setFlowSettings: (flowSettings) => set({ flowSettings }),
 
   globalSettings: undefined,
 

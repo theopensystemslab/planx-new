@@ -10,7 +10,7 @@ import { Flow, GlobalSettings } from "types";
 import { getTeamFromDomain } from "../utils";
 
 interface StandaloneViewData {
-  flows: Pick<Flow, "team" | "settings">[];
+  flows: Pick<Flow, "team" | "flowSettings">[];
   globalSettings: GlobalSettings[];
 }
 
@@ -25,14 +25,15 @@ const standaloneView = async (req: NaviRequest) => {
   const data = await fetchDataForStandaloneView(flowSlug, teamSlug);
 
   const {
-    flows: [{ team, settings: flowSettings }],
+    flows: [{ team, flowSettings }],
     globalSettings,
   } = data;
+
+  useStore.setState({ flowSettings });
 
   const state = useStore.getState();
   state.setFlowNameFromSlug(flowSlug);
   state.setGlobalSettings(globalSettings[0]);
-  state.setFlowSettings(flowSettings);
   state.setTeam(team);
 
   return (

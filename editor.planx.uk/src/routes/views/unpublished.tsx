@@ -31,11 +31,13 @@ export const unpublishedView = async (req: NaviRequest) => {
 
   const flowData = await dataMerged(flow.id);
 
+  const flowSettings = flow.flowSettings;
+  useStore.setState({ flowSettings });
+
   const state = useStore.getState();
   state.setFlow({ id: flow.id, flow: flowData, flowSlug });
   state.setFlowNameFromSlug(flowSlug);
   state.setGlobalSettings(data.globalSettings[0]);
-  state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
 
   return (
@@ -69,7 +71,7 @@ const fetchDataForUnpublishedView = async (
               notifyPersonalisation: notify_personalisation
               boundaryBBox: boundary_bbox
             }
-            settings
+            flowSettings: settings
             slug
           }
 

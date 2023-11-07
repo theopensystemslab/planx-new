@@ -31,18 +31,20 @@ export const publishedView = async (req: NaviRequest) => {
   const data = await fetchDataForPublishedView(flowSlug, teamSlug);
 
   const flow = data.flows[0];
+  const flowSettings = data.flows[0]?.flowSettings;
   if (!flow) throw new NotFoundError(req.originalUrl);
 
   const publishedFlow = flow.publishedFlows[0]?.data;
   const flowData = publishedFlow ? publishedFlow : await dataMerged(flow.id);
   setPath(flowData, req);
 
+  useStore.setState({ flowSettings });
+
   const state = useStore.getState();
   // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
   // load pre-flattened published flow if exists, else load & flatten flow
   state.setFlow({ id: flow.id, flow: flowData, flowSlug });
   state.setGlobalSettings(data.globalSettings[0]);
-  state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
 
   return (
@@ -78,7 +80,7 @@ const fetchDataForPublishedView = async (
               notifyPersonalisation: notify_personalisation
               boundaryBBox: boundary_bbox
             }
-            settings
+            flowSettings: settings
             publishedFlows: published_flows(
               limit: 1
               order_by: { created_at: desc }

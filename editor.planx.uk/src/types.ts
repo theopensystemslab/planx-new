@@ -13,7 +13,7 @@ export interface Flow {
   id: string;
   slug: string;
   team: Team;
-  settings?: FlowSettings;
+  flowSettings?: FlowSettings;
 }
 
 export interface Team {
