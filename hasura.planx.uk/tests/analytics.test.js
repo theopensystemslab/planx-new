@@ -12,10 +12,16 @@ describe("analytics and analytics_logs", () => {
       expect(i.queries).toContain("analytics_logs");
     });
 
-    test("can create analytics but not update or delete them", () => {
+    test("can create analytics", () => {
       expect(i.mutations).toContain("insert_analytics_one");
-      expect(i.mutations).not.toContain("update_analytics_by_pk");
-      expect(i.mutations).not.toContain("update_analytics");
+    });
+
+    test("can update analytics", () => {
+      expect(i.mutations).toContain("update_analytics_by_pk");
+      expect(i.mutations).toContain("update_analytics");
+    });
+
+    test("cannot delete analytics", () => {
       expect(i.mutations).not.toContain("delete_analytics");
       expect(i.mutations).not.toContain("delete_analytics_by_pk");
     });
@@ -25,7 +31,7 @@ describe("analytics and analytics_logs", () => {
       expect(i.mutations).toContain("update_analytics_logs_by_pk");
       expect(i.mutations).not.toContain("delete_analytics_logs");
       expect(i.mutations).not.toContain("delete_analytics_logs_by_pk");
-    })
+    });
   });
 
   describe("admin", () => {
