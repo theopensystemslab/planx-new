@@ -20,3 +20,10 @@ hasura.planx.uk/.env.test
 /playwright-report/
 /playwright/.cache/
 api.planx.uk/tmp/
+
+# Ignore certificate files
+*.chain
+*.key
+*.pfx
+*.pkcs12
+*.p12
