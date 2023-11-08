@@ -22,8 +22,9 @@ hasura.planx.uk/.env.test
 api.planx.uk/tmp/
 
 # Ignore certificate files
-*.chain
-*.key
-*.pfx
-*.pkcs12
-*.p12
+**/*.chain
+**/*.cert
+**/*.key
+**/*.pfx
+**/*.pkcs12
+**/*.p12
