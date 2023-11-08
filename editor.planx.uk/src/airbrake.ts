@@ -15,6 +15,7 @@ function getEnvForAllowedHosts(host: string) {
     case "planningservices.lambeth.gov.uk":
     case "planningservices.southwark.gov.uk":
     case "planningservices.buckinghamshire.gov.uk":
+    case "planningservices.camden.gov.uk":
     case "editor.planx.uk":
       return "production";
 
