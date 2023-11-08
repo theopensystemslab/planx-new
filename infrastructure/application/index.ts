@@ -56,6 +56,10 @@ const CUSTOM_DOMAINS =
           domain: "planningservices.stalbans.gov.uk",
           name: "stalbans",
         },
+        {
+          domain: "planningservices.camden.gov.uk",
+          name: "camden",
+        },
       ]
     : [];
 
