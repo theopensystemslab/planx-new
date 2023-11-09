@@ -10,7 +10,13 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
-import { ExternalLink, Globe, RefreshCw, Terminal } from "react-feather";
+import {
+  BarChart,
+  ExternalLink,
+  Globe,
+  RefreshCw,
+  Terminal,
+} from "react-feather";
 import { useAsync } from "react-use";
 import Input from "ui/Input";
 
@@ -93,6 +99,7 @@ const PreviewBrowser: React.FC<{
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
     flowId,
+    flowAnalyticsLink,
     resetPreview,
     publishFlow,
     lastPublished,
@@ -100,6 +107,7 @@ const PreviewBrowser: React.FC<{
     validateAndDiffFlow,
   ] = useStore((state) => [
     state.id,
+    state.flowAnalyticsLink,
     state.resetPreview,
     state.publishFlow,
     state.lastPublished,
@@ -151,6 +159,25 @@ const PreviewBrowser: React.FC<{
               onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
             />
           </Tooltip>
+
+          {flowAnalyticsLink ? (
+            <Tooltip arrow title="Open analytics page">
+              <Link
+                href={flowAnalyticsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <BarChart />
+              </Link>
+            </Tooltip>
+          ) : (
+            <Tooltip arrow title="Analytics page unavailable">
+              <Link component={"button"} disabled aria-disabled={true}>
+                <BarChart />
+              </Link>
+            </Tooltip>
+          )}
 
           <Tooltip arrow title="Open editor preview">
             <Link
