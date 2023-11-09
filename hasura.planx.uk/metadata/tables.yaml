@@ -213,6 +213,9 @@
         template_engine: Kriti
 - table:
     schema: public
+    name: flow_answers
+- table:
+    schema: public
     name: flow_document_templates
   object_relationships:
     - name: flow
