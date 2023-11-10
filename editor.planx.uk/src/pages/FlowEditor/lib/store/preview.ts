@@ -31,6 +31,13 @@ import type { SharedStore } from "./shared";
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 let memoizedPreviousCardId: string | undefined = undefined;
 let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
+
+const WHITE_LIST_QUESTIONS = ["proposal.ProjectType", "cake"]
+
+interface ComputePassportOptions {
+  whiteList?: boolean;
+}
+
 export interface PreviewStore extends Store.Store {
   collectedFlags: (
     upToNodeId: Store.nodeId,
@@ -43,7 +50,7 @@ export interface PreviewStore extends Store.Store {
     upcomingCardIds?: Store.nodeId[],
   ) => Store.nodeId | undefined;
   canGoBack: (node: Store.node | null) => boolean;
-  computePassport: () => Readonly<Store.passport>;
+  computePassport: (options?: ComputePassportOptions) => Readonly<Store.passport>;
   record: (id: Store.nodeId, userData?: Store.userData) => void;
   resultData: (
     flagSet?: string,
@@ -196,16 +203,14 @@ export const previewStore: StateCreator<
     );
   },
 
-  computePassport: () => {
-    const { flow, breadcrumbs } = get();
+  computePassport: (options?: ComputePassportOptions) => {
+    const { flow, breadcrumbs} = get();
     const passport = Object.entries(breadcrumbs).reduce(
       (acc, [id, { data = {}, answers = [] }]) => {
         if (!flow[id]) return acc;
-
         const key = flow[id].data?.fn;
-
         const passportData: Store.passport["data"] = {};
-
+  
         if (key) {
           const passportValue = answers
             .map((id: string) => flow[id]?.data?.val)
@@ -213,10 +218,10 @@ export const previewStore: StateCreator<
               (val) =>
                 val !== undefined && val !== null && String(val).trim() !== "",
             );
-
+  
           if (passportValue.length > 0) {
             const existingValue = acc.data?.[key] ?? [];
-
+  
             const combined = existingValue
               .concat(passportValue)
               .reduce(
@@ -228,11 +233,18 @@ export const previewStore: StateCreator<
                 },
                 [],
               );
-
+  
             passportData[key] = uniq(combined);
+      
+            // Check if key is in the white list, skip if not
+            if (options && options?.whiteList && !WHITE_LIST_QUESTIONS.includes(key)) {
+              return acc;
+            }
+
+
           }
         }
-
+  
         const responseData = Object.entries(data).reduce(
           (_acc, [id, value]) => {
             _acc![id] = value;
@@ -254,9 +266,9 @@ export const previewStore: StateCreator<
         data: {},
       } as Store.passport,
     );
-
     return passport;
   },
+  
 
   // record() notably handles removing cachedBreadcrumbs for dependent component types
   //   ie if you 'go back' to change your address, DrawBoundary and PlanningConstraints shouldn't be retained because they reference the property site passport, but answers to other questions can be retained

@@ -47,6 +47,7 @@ const analyticsContext = createContext<{
     nodeId: string,
     backwardsNavigationType: BackwardsNaviagtionInitiatorType,
   ) => Promise<void>;
+  trackUserWhiteListAnswers: () => Promise<void>;
   node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
@@ -54,6 +55,7 @@ const analyticsContext = createContext<{
   trackNextStepsLinkClick: () => Promise.resolve(),
   trackFlowDirectionChange: () => Promise.resolve(),
   trackBackwardsNavigationByNodeId: () => Promise.resolve(),
+  trackUserWhiteListAnswers: () => Promise.resolve(),
   node: null,
 });
 const { Provider } = analyticsContext;
@@ -65,6 +67,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [
+    state,
     currentCard,
     breadcrumbs,
     analyticsId,
@@ -74,6 +77,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     flowId,
     flow,
   ] = useStore((state) => [
+    state,
     state.currentCard,
     state.breadcrumbs,
     state.analyticsId,
@@ -89,15 +93,18 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   const shouldTrackAnalytics =
     previewEnvironment === "standalone" && isAnalyticsEnabled;
   const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
+  // const state = useStore((state) => state);
 
   const onPageExit = () => {
     if (lastAnalyticsLogId && shouldTrackAnalytics) {
+      console.log('Page Visibility Change')
       if (document.visibilityState === "hidden") {
         send(
           `${
             process.env.REACT_APP_API_URL
           }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`,
         );
+        trackUserWhiteListAnswers()
       }
       if (document.visibilityState === "visible") {
         send(
@@ -139,6 +146,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         trackNextStepsLinkClick,
         trackFlowDirectionChange,
         trackBackwardsNavigationByNodeId,
+        trackUserWhiteListAnswers,
         node,
       }}
     >
@@ -337,6 +345,34 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       });
     }
   }
+
+ async function trackUserWhiteListAnswers(){
+  if (lastAnalyticsLogId && shouldTrackAnalytics){
+    const whiteListedPassport = JSON.stringify(state.computePassport({whiteList: true}).data)
+    console.log(whiteListedPassport)
+    await publicClient.mutate({
+      mutation: gql`
+        mutation InsertNewFlowAnswers(
+          $flow_id: uuid
+          $answers: jsonb = {}
+        ) {
+          insert_flow_answers_one(
+            object: {
+              flow_id: $flow_id
+              answers: $answers
+            }
+          ) {
+            id
+          }
+        }
+      `,
+      variables: {
+        flow_id: "70288283-0984-49f3-810b-b4b700032d3b",
+        answers:  whiteListedPassport,
+      },
+    });
+  }
+ }
 
   async function createAnalytics(type: AnalyticsType) {
     if (shouldTrackAnalytics) {

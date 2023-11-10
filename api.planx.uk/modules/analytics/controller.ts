@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { trackAnalyticsLogExit } from "./service";
+import { trackAnalyticsLogExit, trackUserWhiteListAnswers } from "./service";
 import { ValidatedRequestHandler } from "../../shared/middleware/validate";
 
 export const logAnalyticsSchema = z.object({
@@ -24,3 +24,9 @@ export const logUserResumeController: LogAnalytics = async (_req, res) => {
   trackAnalyticsLogExit({ id: analyticsLogId, isUserExit: false });
   res.status(204).send();
 };
+
+export const logUserWhiteListAnswers: any = async(_req, res) => {
+  const {data} = res.locals.query;
+  trackUserWhiteListAnswers({data: data});
+  res.status(204).send();
+}
