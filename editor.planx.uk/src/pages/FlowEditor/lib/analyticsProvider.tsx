@@ -67,7 +67,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [
-    state,
+    // state,
     currentCard,
     breadcrumbs,
     analyticsId,
@@ -77,7 +77,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     flowId,
     flow,
   ] = useStore((state) => [
-    state,
+    // state,
     state.currentCard,
     state.breadcrumbs,
     state.analyticsId,
@@ -93,7 +93,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   const shouldTrackAnalytics =
     previewEnvironment === "standalone" && isAnalyticsEnabled;
   const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
-  // const state = useStore((state) => state);
+  const state = useStore((state) => state);
 
   const onPageExit = () => {
     if (lastAnalyticsLogId && shouldTrackAnalytics) {
@@ -347,7 +347,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
  async function trackUserWhiteListAnswers(){
-  if (lastAnalyticsLogId && shouldTrackAnalytics){
+  const flowId = state.id;
+  console.log('What is the flow id', flowId)
+  if (lastAnalyticsLogId && shouldTrackAnalytics && flowId){
     const whiteListedPassport = JSON.stringify(state.computePassport({whiteList: true}).data)
     console.log(whiteListedPassport)
     await publicClient.mutate({
@@ -367,7 +369,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       `,
       variables: {
-        flow_id: "70288283-0984-49f3-810b-b4b700032d3b",
+        flow_id: flowId,
         answers:  whiteListedPassport,
       },
     });
