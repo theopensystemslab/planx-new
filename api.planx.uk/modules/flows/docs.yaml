@@ -23,6 +23,16 @@ components:
       type: string
       required: true
   schemas:
+    Node:
+      type: object
+      properties:
+        id: string
+        type: number
+        data: object
+        edges:
+          type: array
+          items:
+            type: string
     CopyFlow:
       type: object
       properties:
@@ -88,6 +98,20 @@ components:
               updatedFlow:
                 $ref: "#/components/schemas/FlowData"
                 required: false
+    PublishFlow:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                required: true
+              alteredNodes:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Node"
+              updatedFlow:
 paths:
   /flows/{flowId}/copy:
     post:
@@ -158,5 +182,23 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/SuccessMessage"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/publish:
+    post:
+      summary: Publish a flow
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - in: query
+          name: summary
+          type: text
+          required: false
+          description: Optional text to summarise the published changes
+      responses:
+        "200":
+          $ref: "#/components/responses/PublishFlow"
         "500":
           $ref: "#/components/responses/ErrorMessage"

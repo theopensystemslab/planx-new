@@ -87,7 +87,6 @@ describe("publish", () => {
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          alteredNodes: null,
           message: "No new changes to publish",
         });
       });
@@ -135,6 +134,7 @@ describe("publish", () => {
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
+          message: "Changes published",
           alteredNodes: [
             {
               id: "ResultNode",

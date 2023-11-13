@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
-import { publishFlow } from "./publish/service";
+import { publishFlowController } from "./publish/controller";
 import { $public } from "../../client";
 import { gql } from "graphql-request";
 import { stringify } from "csv-stringify";
@@ -16,6 +16,7 @@ import {
 } from "./findReplace/controller";
 import { moveFlowController, moveFlowSchema } from "./moveFlow/controller";
 import { validateAndDiffFlow } from "./validate/service";
+import { publishFlowSchema } from "./publish/controller";
 const router = Router();
 
 router.post(
@@ -46,8 +47,14 @@ router.post(
   moveFlowController,
 );
 
+router.post(
+  "/:flowId/publish",
+  useTeamEditorAuth,
+  validate(publishFlowSchema),
+  publishFlowController,
+);
+
 router.post("/:flowId/diff", useTeamEditorAuth, validateAndDiffFlow);
-router.post("/:flowId/publish", useTeamEditorAuth, publishFlow);
 
 interface FlowSchema {
   node: string;
