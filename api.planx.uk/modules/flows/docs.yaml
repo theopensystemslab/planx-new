@@ -30,6 +30,17 @@ components:
         insert:
           type: boolean
           description: Operator to indicate if the copied flow should be inserted to the database, or simple returned in the response body
+    FlowData:
+      type: object
+      additionalProperties: true
+      properties:
+        _root:
+          type: object
+          properties:
+            edges:
+              type: array
+              items:
+                type: string
   responses:
     CopyFlow:
       content:
@@ -45,8 +56,7 @@ components:
                 type: string
                 length: 5
               data:
-                # TODO: Create shared schema for flow structure in API docs
-                type: object
+                $ref: "#/components/schemas/FlowData"
     CopyFlowAsPortal:
       content:
         application/json:
@@ -56,7 +66,23 @@ components:
               message:
                 type: string
               data:
-                type: object
+                $ref: "#/components/schemas/FlowData"
+    FindAndReplace:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                required: true
+              matches:
+                oneOf:
+                  - $ref: "#/components/schemas/FlowData"
+                  - type: "null"
+              updatedFlow:
+                $ref: "#/components/schemas/FlowData"
+                required: false
 paths:
   /flows/{flowId}/copy:
     post:
@@ -86,5 +112,25 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CopyFlowAsPortal"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/search:
+    post:
+      summary: Find and replace
+      description: Find and replace a data variable in a flow
+      tags: ["flows"]
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - in: query
+          name: find
+          type: string
+          required: true
+        - in: query
+          name: replace
+          type: string
+          required: false
+      responses:
+        "200":
+          $ref: "#/components/responses/FindAndReplace"
         "500":
           $ref: "#/components/responses/ErrorMessage"

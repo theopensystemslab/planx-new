@@ -2,7 +2,6 @@ import { Router } from "express";
 import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
 import { publishFlow, validateAndDiffFlow } from "./service/publish";
 import { moveFlow } from "./service/moveFlow";
-import { findAndReplaceInFlow } from "./service/findReplace";
 import { $public } from "../../client";
 import { gql } from "graphql-request";
 import { stringify } from "csv-stringify";
@@ -12,6 +11,10 @@ import {
   copyFlowAsPortalSchema,
   copyPortalAsFlowController,
 } from "./copyFlowAsPortal/controller";
+import {
+  findAndReplaceController,
+  findAndReplaceSchema,
+} from "./findReplace/controller";
 const router = Router();
 
 router.post(
@@ -20,60 +23,13 @@ router.post(
   validate(copyFlowSchema),
   copyFlowController,
 );
-router.post("/:flowId/diff", useTeamEditorAuth, validateAndDiffFlow);
-router.post("/:flowId/move/:teamSlug", useTeamEditorAuth, moveFlow);
-router.post("/:flowId/publish", useTeamEditorAuth, publishFlow);
 
-/**
- * @swagger
- * /flows/{flowId}/search:
- *  post:
- *    summary: Find and replace
- *    description: Find and replace a data variable in a flow
- *    tags:
- *      - flows
- *    parameters:
- *      - in: path
- *        name: flowId
- *        type: string
- *        required: true
- *      - in: query
- *        name: find
- *        type: string
- *        required: true
- *      - in: query
- *        name: replace
- *        type: string
- *        required: false
- *    responses:
- *      '200':
- *        description: OK
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  required: true
- *                matches:
- *                  type: object
- *                  required: true
- *                  additionalProperties: true
- *                updatedFlow:
- *                  type: object
- *                  required: false
- *                  additionalProperties: true
- *                  properties:
- *                    _root:
- *                      type: object
- *                      properties:
- *                        edges:
- *                          type: array
- *                          items:
- *                            type: string
- */
-router.post("/:flowId/search", usePlatformAdminAuth, findAndReplaceInFlow);
+router.post(
+  "/:flowId/search",
+  usePlatformAdminAuth,
+  validate(findAndReplaceSchema),
+  findAndReplaceController,
+);
 
 router.put(
   "/:flowId/copy-portal/:portalNodeId",
@@ -81,6 +37,10 @@ router.put(
   validate(copyFlowAsPortalSchema),
   copyPortalAsFlowController,
 );
+
+router.post("/:flowId/diff", useTeamEditorAuth, validateAndDiffFlow);
+router.post("/:flowId/move/:teamSlug", useTeamEditorAuth, moveFlow);
+router.post("/:flowId/publish", useTeamEditorAuth, publishFlow);
 
 interface FlowSchema {
   node: string;
