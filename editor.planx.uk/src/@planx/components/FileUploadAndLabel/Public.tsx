@@ -240,11 +240,12 @@ function Component(props: Props) {
                       ),
                     );
                     setFileUploadStatus(`${slot.file.path} was deleted`);
-                    removeSlots(
+                    const updatedFileList = removeSlots(
                       getTagsForSlot(slot.id, fileList),
                       slot,
                       fileList,
                     );
+                    setFileList(updatedFileList);
                   }}
                 />
               );
