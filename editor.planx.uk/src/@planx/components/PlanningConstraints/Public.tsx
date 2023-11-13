@@ -60,6 +60,7 @@ function Component(props: Props) {
   const digitalLandOrganisations: string[] = [
     "opensystemslab", // for UK-wide testing, subject to data availability
     "barnet",
+    "birmingham",
     "buckinghamshire",
     "canterbury",
     "camden",
