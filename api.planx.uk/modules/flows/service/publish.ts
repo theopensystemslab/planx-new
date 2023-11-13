@@ -1,6 +1,6 @@
 import * as jsondiffpatch from "jsondiffpatch";
 import { Request, Response, NextFunction } from "express";
-import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
+import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
 import { gql } from "graphql-request";
 import intersection from "lodash/intersection";
 import {
@@ -8,9 +8,9 @@ import {
   FlowGraph,
   Node,
 } from "@opensystemslab/planx-core/types";
-import { userContext } from "../modules/auth/middleware";
+import { userContext } from "../../auth/middleware";
 import type { Entry } from "type-fest";
-import { getClient } from "../client";
+import { getClient } from "../../../client";
 
 const validateAndDiffFlow = async (
   req: Request,

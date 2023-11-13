@@ -1,9 +1,9 @@
 import supertest from "supertest";
 
-import { queryMock } from "../tests/graphqlQueryMock";
-import { authHeader } from "../tests/mockJWT";
-import app from "../server";
-import { Flow } from "../types";
+import { queryMock } from "../../../tests/graphqlQueryMock";
+import { authHeader } from "../../../tests/mockJWT";
+import app from "../../../server";
+import { Flow } from "../../../types";
 
 beforeEach(() => {
   queryMock.mockQuery({

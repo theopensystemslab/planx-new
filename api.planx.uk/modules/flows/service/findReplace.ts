@@ -1,8 +1,8 @@
-import { Flow } from "./../types";
+import { Flow } from "../../../types";
 import { gql } from "graphql-request";
-import { getFlowData } from "../helpers";
+import { getFlowData } from "../../../helpers";
 import { Request, Response, NextFunction } from "express";
-import { getClient } from "../client";
+import { getClient } from "../../../client";
 import { FlowGraph } from "@opensystemslab/planx-core/types";
 
 interface MatchResult {

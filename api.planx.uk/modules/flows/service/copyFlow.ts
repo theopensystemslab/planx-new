@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { makeUniqueFlow, getFlowData, insertFlow } from "../helpers";
-import { Flow } from "../types";
-import { userContext } from "../modules/auth/middleware";
+import { makeUniqueFlow, getFlowData, insertFlow } from "../../../helpers";
+import { Flow } from "../../../types";
+import { userContext } from "../../auth/middleware";
 
 const copyFlow = async (
   req: Request,

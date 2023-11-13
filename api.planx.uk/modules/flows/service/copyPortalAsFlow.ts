@@ -1,6 +1,6 @@
-import { getFlowData, getChildren, makeUniqueFlow } from "../helpers";
+import { getFlowData, getChildren, makeUniqueFlow } from "../../../helpers";
 import { Request, Response, NextFunction } from "express";
-import { Flow } from "../types";
+import { Flow } from "../../../types";
 
 /**
  * Copies an internal portal and transforms it to be an independent flow

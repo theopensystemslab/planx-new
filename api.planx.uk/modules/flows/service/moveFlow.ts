@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { gql } from "graphql-request";
-import { Flow, Team } from "../types";
-import { $public, getClient } from "../client";
+import { Flow, Team } from "../../../types";
+import { $public, getClient } from "../../../client";
 
 const moveFlow = async (
   req: Request,
