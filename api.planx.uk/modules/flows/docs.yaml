@@ -241,3 +241,20 @@ paths:
           $ref: "#/components/responses/ValidateAndDiff"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/download-schema:
+    post:
+      summary: Download flow schema
+      description: Download a CSV file representing the flow's schema
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+      responses:
+        "200":
+          content:
+            text/csv:
+              schema:
+                type: string
+        "500":
+          $ref: "#/components/responses/ErrorMessage"

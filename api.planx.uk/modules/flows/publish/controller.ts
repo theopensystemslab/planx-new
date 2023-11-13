@@ -2,6 +2,7 @@ import { Node } from "@opensystemslab/planx-core/types";
 import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
 import { z } from "zod";
 import { publishFlow } from "./service";
+import { ServerError } from "../../../errors";
 
 interface PublishFlowResponse {
   message: string;
@@ -37,6 +38,8 @@ export const publishFlowController: PublishFlowController = async (
       message: alteredNodes ? "Changes published" : "No new changes to publish",
     });
   } catch (error) {
-    return next(error);
+    return next(
+      new ServerError({ message: `Failed to publish flow: ${error}` }),
+    );
   }
 };

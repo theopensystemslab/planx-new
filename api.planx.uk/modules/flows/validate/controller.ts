@@ -2,6 +2,7 @@ import { Node } from "@opensystemslab/planx-core/types";
 import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
 import { z } from "zod";
 import { validateAndDiffFlow } from "./service";
+import { ServerError } from "../../../errors";
 
 interface ValidateAndDiffResponse {
   message: string;
@@ -27,6 +28,10 @@ export const validateAndDiffFlowController: ValidateAndDiffFlowController =
       const result = await validateAndDiffFlow(flowId);
       return res.json(result);
     } catch (error) {
-      return next(error);
+      return next(
+        new ServerError({
+          message: `Failed to validate and diff flow: ${error}`,
+        }),
+      );
     }
   };

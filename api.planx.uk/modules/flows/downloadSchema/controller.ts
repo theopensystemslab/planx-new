@@ -1,0 +1,41 @@
+import { z } from "zod";
+import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
+import { stringify } from "csv-stringify";
+import { getFlowSchema } from "./service";
+import { ServerError } from "../../../errors";
+
+interface DownloadFlowSchemaResponse {
+  message: string;
+  alteredNodes: Node[] | null;
+  description?: string;
+}
+
+export const downloadFlowSchema = z.object({
+  params: z.object({
+    flowId: z.string(),
+  }),
+});
+
+export type DownloadFlowSchemaController = ValidatedRequestHandler<
+  typeof downloadFlowSchema,
+  DownloadFlowSchemaResponse
+>;
+
+export const downloadFlowSchemaController: DownloadFlowSchemaController =
+  async (_res, res, next) => {
+    try {
+      const { flowId } = res.locals.parsedReq.params;
+      const flowSchema = await getFlowSchema(flowId);
+
+      // Build a CSV and stream it
+      stringify(flowSchema, { header: true }).pipe(res);
+      res.header("Content-type", "text/csv");
+      res.attachment(`${flowId}.csv`);
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: `Failed to download flow schema: ${error}`,
+        }),
+      );
+    }
+  };
