@@ -41,7 +41,7 @@ describe("File upload", () => {
   });
 
   describe("Private", () => {
-    const ENDPOINT = "/private-file-upload";
+    const ENDPOINT = "/file/private/upload";
 
     it("should not upload without filename", async () => {
       await supertest(app)
@@ -89,7 +89,7 @@ describe("File upload", () => {
       }));
 
       await supertest(app)
-        .post("/private-file-upload")
+        .post("/file/private/upload")
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
@@ -101,7 +101,7 @@ describe("File upload", () => {
   });
 
   describe("Public", () => {
-    const ENDPOINT = "/public-file-upload";
+    const ENDPOINT = "/file/public/upload";
 
     it("should not upload without filename", async () => {
       await supertest(app)

@@ -12,21 +12,17 @@ import {
 const router = Router();
 
 router.post(
-  "/private-file-upload",
+  "/private/upload",
   multer().single("file"),
   privateUploadController,
 );
 
-router.post(
-  "/public-file-upload",
-  multer().single("file"),
-  publicUploadController,
-);
+router.post("/public/upload", multer().single("file"), publicUploadController);
 
-router.get("/file/public/:fileKey/:fileName", publicDownloadController);
+router.get("/public/:fileKey/:fileName", publicDownloadController);
 
 router.get(
-  "/file/private/:fileKey/:fileName",
+  "/private/:fileKey/:fileName",
   useFilePermission,
   privateDownloadController,
 );
