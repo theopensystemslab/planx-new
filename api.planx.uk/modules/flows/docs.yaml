@@ -1,0 +1,62 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  name: flows
+  description: Flow associated requests
+components:
+  parameters:
+    flowId:
+      in: path
+      name: flowId
+      type: string
+      required: true
+  schemas:
+    CopyFlow:
+      type: object
+      properties:
+        replaceValue:
+          type: string
+          example: ab123
+          length: 5
+          description: When copying a flow, we make nodeIds unique by replacing part of the original nodeId string
+          required: true
+        insert:
+          type: boolean
+          description: Operator to indicate if the copied flow should be inserted to the database, or simple returned in the response body
+  responses:
+    CopyFlow:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              inserted:
+                type: boolean
+              replaceValue:
+                type: string
+                length: 5
+              data:
+                # TODO: Create shared schema for flow structure in API docs
+                type: object 
+paths:
+  /flows/{flowId}/copy:
+    post:
+      summary: Copy a flow
+      tags: ["flows"]
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopyFlow"
+      responses:
+        "200":
+          $ref: "#/components/responses/CopyFlow"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"

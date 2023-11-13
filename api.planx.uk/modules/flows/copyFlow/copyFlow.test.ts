@@ -42,7 +42,7 @@ const auth = authHeader({ role: "teamEditor" });
 it("returns an error if authorization headers are not set", async () => {
   const validBody = {
     insert: false,
-    replaceValue: "T3ST",
+    replaceValue: "T3ST1",
   };
 
   await supertest(app)
@@ -59,7 +59,7 @@ it("returns an error if authorization headers are not set", async () => {
 it("returns an error if the user does not have the correct role", async () => {
   const validBody = {
     insert: false,
-    replaceValue: "T3ST",
+    replaceValue: "T3ST1",
   };
 
   await supertest(app)
@@ -80,16 +80,15 @@ it("returns an error if required replacement characters are not provided in the 
     .set(auth)
     .expect(400)
     .then((res) => {
-      expect(res.body).toEqual({
-        error: "Missing required values to proceed",
-      });
+      expect(res.body).toHaveProperty("issues");
+      expect(res.body).toHaveProperty("name", "ZodError");
     });
 });
 
 it("returns copied unique flow data without inserting a new record", async () => {
   const body = {
     insert: false,
-    replaceValue: "T3ST",
+    replaceValue: "T3ST1",
   };
 
   await supertest(app)
@@ -105,7 +104,7 @@ it("returns copied unique flow data without inserting a new record", async () =>
 it("inserts copied unique flow data", async () => {
   const body = {
     insert: true,
-    replaceValue: "T3ST",
+    replaceValue: "T3ST1",
   };
 
   await supertest(app)
@@ -154,28 +153,28 @@ const mockFlowData: Flow["data"] = {
 // the copied flow data with unique nodeIds using the replaceValue
 const mockCopiedFlowData: Flow["data"] = {
   _root: {
-    edges: ["rUilJQT3ST", "kNX8ReT3ST"],
+    edges: ["rUilJT3ST1", "kNX8RT3ST1"],
   },
-  rUilJQT3ST: {
+  rUilJT3ST1: {
     type: 100,
     data: {
       text: "Copy or paste?",
     },
-    edges: ["Yh7t91T3ST", "h8DSw4T3ST"],
+    edges: ["Yh7t9T3ST1", "h8DSwT3ST1"],
   },
-  Yh7t91T3ST: {
+  Yh7t9T3ST1: {
     type: 200,
     data: {
       text: "Copy",
     },
   },
-  h8DSw4T3ST: {
+  h8DSwT3ST1: {
     type: 200,
     data: {
       text: "Paste",
     },
   },
-  kNX8ReT3ST: {
+  kNX8RT3ST1: {
     type: 110,
     data: {
       title: "Why do you want to copy this flow?",
@@ -187,13 +186,13 @@ const mockCopiedFlowData: Flow["data"] = {
 const mockCopyFlowResponse = {
   message: `Successfully copied undefined`, // 'undefined' just reflects that we haven't mocked a flow.name here!
   inserted: false,
-  replaceValue: "T3ST",
+  replaceValue: "T3ST1",
   data: mockCopiedFlowData,
 };
 
 const mockCopyFlowResponseInserted = {
   message: `Successfully copied undefined`,
   inserted: true,
-  replaceValue: "T3ST",
+  replaceValue: "T3ST1",
   data: mockCopiedFlowData,
 };

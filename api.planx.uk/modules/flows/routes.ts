@@ -1,17 +1,22 @@
 import { Router } from "express";
 import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
-import { copyFlow } from "./service/copyFlow";
 import { publishFlow, validateAndDiffFlow } from "./service/publish";
 import { moveFlow } from "./service/moveFlow";
 import { findAndReplaceInFlow } from "./service/findReplace";
 import { copyPortalAsFlow } from "./service/copyPortalAsFlow";
 import { $public } from "../../client";
 import { gql } from "graphql-request";
-import { stringify } from "csv-stringify/.";
-
+import { stringify } from "csv-stringify";
+import { copyFlowController, copyFlowSchema } from "./copyFlow/controller";
+import { validate } from "../../shared/middleware/validate";
 const router = Router();
 
-router.post("/:flowId/copy", useTeamEditorAuth, copyFlow);
+router.post(
+  "/:flowId/copy",
+  useTeamEditorAuth,
+  validate(copyFlowSchema),
+  copyFlowController,
+);
 router.post("/:flowId/diff", useTeamEditorAuth, validateAndDiffFlow);
 router.post("/:flowId/move/:teamSlug", useTeamEditorAuth, moveFlow);
 router.post("/:flowId/publish", useTeamEditorAuth, publishFlow);
