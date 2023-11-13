@@ -3,12 +3,15 @@ import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
 import { publishFlow, validateAndDiffFlow } from "./service/publish";
 import { moveFlow } from "./service/moveFlow";
 import { findAndReplaceInFlow } from "./service/findReplace";
-import { copyPortalAsFlow } from "./service/copyPortalAsFlow";
 import { $public } from "../../client";
 import { gql } from "graphql-request";
 import { stringify } from "csv-stringify";
 import { copyFlowController, copyFlowSchema } from "./copyFlow/controller";
 import { validate } from "../../shared/middleware/validate";
+import {
+  copyFlowAsPortalSchema,
+  copyPortalAsFlowController,
+} from "./copyFlowAsPortal/controller";
 const router = Router();
 
 router.post(
@@ -72,10 +75,11 @@ router.post("/:flowId/publish", useTeamEditorAuth, publishFlow);
  */
 router.post("/:flowId/search", usePlatformAdminAuth, findAndReplaceInFlow);
 
-router.get(
+router.put(
   "/:flowId/copy-portal/:portalNodeId",
   usePlatformAdminAuth,
-  copyPortalAsFlow,
+  validate(copyFlowAsPortalSchema),
+  copyPortalAsFlowController,
 );
 
 interface FlowSchema {

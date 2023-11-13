@@ -12,6 +12,11 @@ components:
       name: flowId
       type: string
       required: true
+    portalNodeId:
+      in: path
+      name: portalNodeId
+      type: string
+      required: true
   schemas:
     CopyFlow:
       type: object
@@ -41,7 +46,17 @@ components:
                 length: 5
               data:
                 # TODO: Create shared schema for flow structure in API docs
-                type: object 
+                type: object
+    CopyFlowAsPortal:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              data:
+                type: object
 paths:
   /flows/{flowId}/copy:
     post:
@@ -58,5 +73,18 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/CopyFlow"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/copy-portal/{portalNodeId}:
+    put:
+      summary: Create a new flow from a portal
+      description: Copies an internal portal and transforms it to be an independent flow
+      tags: ["flows"]
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - $ref: "#/components/parameters/portalNodeId"
+      responses:
+        "200":
+          $ref: "#/components/responses/CopyFlowAsPortal"
         "500":
           $ref: "#/components/responses/ErrorMessage"
