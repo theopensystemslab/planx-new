@@ -54,15 +54,8 @@ import { sendToUniform } from "./send/uniform";
 import { copyFlow } from "./editor/copyFlow";
 import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
-import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
-import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
-import { getBOPSPayload } from "./admin/session/bops";
-import { getCSVData, getRedactedCSVData } from "./admin/session/csv";
-import { getHTMLExport, getRedactedHTMLExport } from "./admin/session/html";
-import { generateZip } from "./admin/session/zip";
-import { getSessionSummary } from "./admin/session/summary";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
@@ -70,9 +63,9 @@ import miscRoutes from "./modules/misc/routes";
 import userRoutes from "./modules/user/routes";
 import webhookRoutes from "./modules/webhooks/routes";
 import analyticsRoutes from "./modules/analytics/routes";
+import adminRoutes from "./modules/admin/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
-import { getDigitalPlanningApplicationPayload } from "./admin/session/digitalPlanningData";
 import { $public } from "./client";
 
 const router = express.Router();
@@ -190,6 +183,7 @@ app.use("/user", userRoutes);
 app.use("/team", teamRoutes);
 app.use("/webhooks", webhookRoutes);
 app.use("/analytics", analyticsRoutes);
+app.use("/admin", adminRoutes);
 
 app.use("/gis", router);
 
@@ -203,21 +197,6 @@ app.get("/gis", (_req, _res, next) => {
 app.get("/gis/:localAuthority", locationSearch);
 
 app.get("/roads", classifiedRoadsSearch);
-
-app.use("/admin", usePlatformAdminAuth);
-app.get("/admin/feedback", downloadFeedbackCSV);
-app.get("/admin/session/:sessionId/xml", getOneAppXML);
-app.get("/admin/session/:sessionId/bops", getBOPSPayload);
-app.get("/admin/session/:sessionId/csv", getCSVData);
-app.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
-app.get("/admin/session/:sessionId/html", getHTMLExport);
-app.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
-app.get("/admin/session/:sessionId/zip", generateZip);
-app.get("/admin/session/:sessionId/summary", getSessionSummary);
-app.get(
-  "/admin/session/:sessionId/digital-planning-application",
-  getDigitalPlanningApplicationPayload,
-);
 
 app.post("/flows/:flowId/copy", useTeamEditorAuth, copyFlow);
 

@@ -1,5 +1,5 @@
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
-import { $api } from "../../client";
+import { $api } from "../../../client";
 import type { RequestHandler } from "express";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 

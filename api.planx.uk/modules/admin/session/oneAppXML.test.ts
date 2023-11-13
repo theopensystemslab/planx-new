@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import app from "../../server";
-import { authHeader } from "../../tests/mockJWT";
+import app from "../../../server";
+import { authHeader } from "../../../tests/mockJWT";
 
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/xml`;
@@ -9,7 +9,7 @@ const mockGenerateOneAppXML = jest
   .fn()
   .mockResolvedValue("<dummy:xml></dummy:xml>");
 
-jest.mock("../../client", () => {
+jest.mock("../../../client", () => {
   return {
     $api: {
       export: {

@@ -1,7 +1,7 @@
 import supertest from "supertest";
-import app from "../../server";
-import { queryMock } from "../../tests/graphqlQueryMock";
-import { authHeader } from "../../tests/mockJWT";
+import app from "../../../server";
+import { queryMock } from "../../../tests/graphqlQueryMock";
+import { authHeader } from "../../../tests/mockJWT";
 
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/summary`;

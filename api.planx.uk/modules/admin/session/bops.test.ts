@@ -1,7 +1,7 @@
 import supertest from "supertest";
-import app from "../../server";
-import { authHeader } from "../../tests/mockJWT";
-import { expectedPayload } from "../../tests/mocks/bopsMocks";
+import app from "../../../server";
+import { authHeader } from "../../../tests/mockJWT";
+import { expectedPayload } from "../../../tests/mocks/bopsMocks";
 
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/bops`;

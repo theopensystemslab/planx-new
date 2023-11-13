@@ -1,8 +1,9 @@
-import { Feedback, parseFeedback } from "./downloadFeedbackCSV";
+import { parseFeedback } from "./downloadFeedbackCSV";
 import supertest from "supertest";
-import app from "../../server";
-import { authHeader } from "../../tests/mockJWT";
+import app from "../../../../server";
+import { authHeader } from "../../../../tests/mockJWT";
 import Axios from "axios";
+import { Feedback } from "./types";
 
 jest.mock("axios");
 const mockAxios = Axios as jest.Mocked<typeof Axios>;
@@ -72,8 +73,11 @@ describe("Download feedback CSV endpoint", () => {
     await supertest(app)
       .get(ENDPOINT)
       .set(auth)
-      .expect(401)
-      .then((res) => expect(res.body).toEqual({ error: "Missing cookie" }));
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toHaveProperty("issues");
+        expect(res.body).toHaveProperty("name", "ZodError");
+      });
   });
 
   it("returns an error if request to FeedbackFish fails", async () => {

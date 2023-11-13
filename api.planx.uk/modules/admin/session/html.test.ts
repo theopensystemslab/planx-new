@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import app from "../../server";
-import { authHeader } from "../../tests/mockJWT";
+import app from "../../../server";
+import { authHeader } from "../../../tests/mockJWT";
 
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/html`;
@@ -15,7 +15,7 @@ const mockGenerateHTMLData = jest.fn().mockResolvedValue({
   ],
   redactedResponses: [],
 });
-jest.mock("../../client", () => {
+jest.mock("../../../client", () => {
   return {
     $api: {
       export: {
