@@ -24,7 +24,7 @@ INSERT INTO flows (
   version,
   settings,
   copied_from,
-  null as analytics_link,
+  analytics_link
 )
 SELECT
   id,
@@ -35,7 +35,7 @@ SELECT
   version,
   settings,
   copied_from,
-  analytics_link
+  NULL
 FROM sync_flows
 ON CONFLICT (id) DO UPDATE
 SET
@@ -46,7 +46,7 @@ SET
   version = EXCLUDED.version,
   settings = EXCLUDED.settings,
   copied_from = EXCLUDED.copied_from,
-  analytics_link = null;
+  analytics_link = NULL;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
 UPDATE flows SET version = 1;
