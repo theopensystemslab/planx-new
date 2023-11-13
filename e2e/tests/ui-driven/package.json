@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#799ce44",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
     "graphql": "^16.8.1",
