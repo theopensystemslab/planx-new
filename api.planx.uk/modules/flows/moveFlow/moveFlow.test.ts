@@ -6,7 +6,7 @@ import app from "../../../server";
 
 beforeEach(() => {
   queryMock.mockQuery({
-    name: "GetTeam",
+    name: "GetTeamBySlug",
     variables: {
       slug: "new-team",
     },

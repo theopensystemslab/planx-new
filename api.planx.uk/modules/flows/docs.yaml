@@ -12,6 +12,11 @@ components:
       name: flowId
       type: string
       required: true
+    teamId:
+      in: path
+      name: teamId
+      type: string
+      required: true
     portalNodeId:
       in: path
       name: portalNodeId
@@ -88,6 +93,8 @@ paths:
     post:
       summary: Copy a flow
       tags: ["flows"]
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/flowId"
       requestBody:
@@ -106,6 +113,8 @@ paths:
       summary: Create a new flow from a portal
       description: Copies an internal portal and transforms it to be an independent flow
       tags: ["flows"]
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/flowId"
         - $ref: "#/components/parameters/portalNodeId"
@@ -119,6 +128,8 @@ paths:
       summary: Find and replace
       description: Find and replace a data variable in a flow
       tags: ["flows"]
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/flowId"
         - in: query
@@ -132,5 +143,20 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/FindAndReplace"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/move/{teamSlug}:
+    post:
+      summary: Move a flow
+      description: Move ownership of a flow from one team to another
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - $ref: "#/components/parameters/teamId"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"

@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
 import { publishFlow, validateAndDiffFlow } from "./service/publish";
-import { moveFlow } from "./service/moveFlow";
 import { $public } from "../../client";
 import { gql } from "graphql-request";
 import { stringify } from "csv-stringify";
@@ -15,6 +14,7 @@ import {
   findAndReplaceController,
   findAndReplaceSchema,
 } from "./findReplace/controller";
+import { moveFlowController, moveFlowSchema } from "./moveFlow/controller";
 const router = Router();
 
 router.post(
@@ -38,8 +38,14 @@ router.put(
   copyPortalAsFlowController,
 );
 
+router.post(
+  "/:flowId/move/:teamSlug",
+  useTeamEditorAuth,
+  validate(moveFlowSchema),
+  moveFlowController,
+);
+
 router.post("/:flowId/diff", useTeamEditorAuth, validateAndDiffFlow);
-router.post("/:flowId/move/:teamSlug", useTeamEditorAuth, moveFlow);
 router.post("/:flowId/publish", useTeamEditorAuth, publishFlow);
 
 interface FlowSchema {
