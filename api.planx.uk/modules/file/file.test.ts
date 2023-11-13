@@ -48,10 +48,11 @@ describe("File upload", () => {
         .post(ENDPOINT)
         .field("filename", "")
         .attach("file", Buffer.from("some data"), "some_file.txt")
-        .expect(422)
+        .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toBe("missing filename");
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
         });
     });
 
@@ -59,10 +60,10 @@ describe("File upload", () => {
       await supertest(app)
         .post(ENDPOINT)
         .field("filename", "some filename")
-        .expect(422)
+        .expect(500)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toBe("missing file");
+          expect(res.body.error).toMatch(/Missing file/);
         });
     });
 
@@ -94,7 +95,7 @@ describe("File upload", () => {
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
         .then((res) => {
-          expect(res.body).toEqual({ error: "S3 error!" });
+          expect(res.body.error).toMatch(/S3 error!/);
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
     });
@@ -108,10 +109,11 @@ describe("File upload", () => {
         .post(ENDPOINT)
         .field("filename", "")
         .attach("file", Buffer.from("some data"), "some_file.txt")
-        .expect(422)
+        .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toBe("missing filename");
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
         });
     });
 
@@ -119,10 +121,10 @@ describe("File upload", () => {
       await supertest(app)
         .post(ENDPOINT)
         .field("filename", "some filename")
-        .expect(422)
+        .expect(500)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toBe("missing file");
+          expect(res.body.error).toMatch(/Missing file/);
         });
     });
 
@@ -154,7 +156,7 @@ describe("File upload", () => {
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
         .then((res) => {
-          expect(res.body).toEqual({ error: "S3 error!" });
+          expect(res.body.error).toMatch(/S3 error!/);
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
     });
@@ -206,10 +208,10 @@ describe("File download", () => {
 
       await supertest(app)
         .get(`/file/public/${filePath}`)
-        .expect(400)
+        .expect(500)
         .then((res) => {
           expect(mockGetObject).toHaveBeenCalledTimes(1);
-          expect(res.body.error).toBe("bad request");
+          expect(res.body.error).toMatch(/Bad request/);
         });
     });
 
@@ -224,7 +226,7 @@ describe("File download", () => {
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
         .then((res) => {
-          expect(res.body).toEqual({ error: "S3 error!" });
+          expect(res.body.error).toMatch(/S3 error!/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });
@@ -249,10 +251,10 @@ describe("File download", () => {
 
       await supertest(app)
         .get(`/file/public/${filePath}`)
-        .expect(400)
+        .expect(500)
         .then((res) => {
           expect(mockGetObject).toHaveBeenCalledTimes(1);
-          expect(res.body.error).toBe("bad request");
+          expect(res.body.error).toMatch(/Bad request/);
         });
     });
 
@@ -303,7 +305,7 @@ describe("File download", () => {
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
         .then((res) => {
-          expect(res.body).toEqual({ error: "S3 error!" });
+          expect(res.body.error).toMatch(/S3 error!/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });
