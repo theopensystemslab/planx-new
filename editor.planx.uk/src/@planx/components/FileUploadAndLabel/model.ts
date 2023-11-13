@@ -1,4 +1,5 @@
 import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import sortBy from "lodash/sortBy";
 import uniqBy from "lodash/uniqBy";
 import { Store } from "pages/FlowEditor/lib/store";
@@ -367,7 +368,7 @@ export const removeSlots = (
   uploadedFile: FileUploadSlot,
   fileList: FileList,
 ): FileList => {
-  const updatedFileList: FileList = cloneDeep(fileList);
+  const updatedFileList: FileList = merge(fileList);
   const categories = Object.keys(updatedFileList) as Array<
     keyof typeof updatedFileList
   >;
