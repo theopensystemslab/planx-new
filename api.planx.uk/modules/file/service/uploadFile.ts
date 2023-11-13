@@ -17,7 +17,7 @@ export const uploadPublicFile = async (
   const fileUrl = buildFileUrl(key, "public");
 
   return {
-    file_type: fileType,
+    fileType,
     fileUrl,
   };
 };
@@ -38,7 +38,7 @@ export const uploadPrivateFile = async (
   const fileUrl = buildFileUrl(key, "private");
 
   return {
-    file_type: fileType,
+    fileType,
     fileUrl,
   };
 };

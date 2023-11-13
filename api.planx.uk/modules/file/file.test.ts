@@ -74,7 +74,7 @@ describe("File upload", () => {
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .then((res) => {
           expect(res.body).toEqual({
-            file_type: "text/plain",
+            fileType: "text/plain",
             fileUrl: expect.stringContaining(
               "/file/private/nanoid/modified%20key",
             ),
@@ -135,7 +135,7 @@ describe("File upload", () => {
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .then((res) => {
           expect(res.body).toEqual({
-            file_type: "text/plain",
+            fileType: "text/plain",
             fileUrl: expect.stringContaining(
               "file/public/nanoid/modified%20key",
             ),

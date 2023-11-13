@@ -13,8 +13,7 @@ assert(process.env.AWS_ACCESS_KEY);
 assert(process.env.AWS_SECRET_KEY);
 
 interface UploadFileResponse {
-  // TODO: change to snake case
-  file_type: string | null;
+  fileType: string | null;
   fileUrl: string;
 }
 
