@@ -54,15 +54,18 @@ import { sendToUniform } from "./send/uniform";
 import { copyFlow } from "./editor/copyFlow";
 import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
-import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
-import { getOneAppXML } from "./admin/session/oneAppXML";
+import { downloadFeedbackCSV } from "./modules/admin/feedback/downloadFeedbackCSV";
+import { getOneAppXML } from "./modules/admin/session/oneAppXML";
 import { gql } from "graphql-request";
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
-import { getBOPSPayload } from "./admin/session/bops";
-import { getCSVData, getRedactedCSVData } from "./admin/session/csv";
-import { getHTMLExport, getRedactedHTMLExport } from "./admin/session/html";
-import { generateZip } from "./admin/session/zip";
-import { getSessionSummary } from "./admin/session/summary";
+import { getBOPSPayload } from "./modules/admin/session/bops";
+import { getCSVData, getRedactedCSVData } from "./modules/admin/session/csv";
+import {
+  getHTMLExport,
+  getRedactedHTMLExport,
+} from "./modules/admin/session/html";
+import { generateZip } from "./modules/admin/session/zip";
+import { getSessionSummary } from "./modules/admin/session/summary";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
@@ -72,7 +75,7 @@ import webhookRoutes from "./modules/webhooks/routes";
 import analyticsRoutes from "./modules/analytics/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
-import { getDigitalPlanningApplicationPayload } from "./admin/session/digitalPlanningData";
+import { getDigitalPlanningApplicationPayload } from "./modules/admin/session/digitalPlanningData";
 import { $public } from "./client";
 
 const router = express.Router();

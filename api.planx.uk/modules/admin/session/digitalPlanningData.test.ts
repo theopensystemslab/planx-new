@@ -1,7 +1,7 @@
 import supertest from "supertest";
-import app from "../../server";
-import { authHeader } from "../../tests/mockJWT";
-import { expectedPlanningPermissionPayload } from "../../tests/mocks/digitalPlanningDataMocks";
+import app from "../../../server";
+import { authHeader } from "../../../tests/mockJWT";
+import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks";
 
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/digital-planning-application`;

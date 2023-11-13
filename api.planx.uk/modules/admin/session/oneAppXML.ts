@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { $api } from "../../client";
+import { $api } from "../../../client";
 
 /**
  * @swagger

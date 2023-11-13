@@ -1,7 +1,7 @@
 import { Feedback, parseFeedback } from "./downloadFeedbackCSV";
 import supertest from "supertest";
-import app from "../../server";
-import { authHeader } from "../../tests/mockJWT";
+import app from "../../../server";
+import { authHeader } from "../../../tests/mockJWT";
 import Axios from "axios";
 
 jest.mock("axios");
