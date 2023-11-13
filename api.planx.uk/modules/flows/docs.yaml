@@ -108,10 +108,35 @@ components:
                 type: string
                 required: true
               alteredNodes:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Node"
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/Node"
+                  - type: "null"
               updatedFlow:
+                $ref: "#/components/schemas/FlowData"
+                required: false
+    ValidateAndDiff:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                required: false
+              description:
+                type: string
+                required: false
+              alteredNodes:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/Node"
+                  - type: "null"
+              updatedFlow:
+                $ref: "#/components/schemas/FlowData"
+                required: false
 paths:
   /flows/{flowId}/copy:
     post:
@@ -200,5 +225,19 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/PublishFlow"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/diff:
+    post:
+      summary: Diff and validate a flow
+      description: Validate and view the diff between the current unpublished version of a flow and the most recently published version
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+      responses:
+        "200":
+          $ref: "#/components/responses/ValidateAndDiff"
         "500":
           $ref: "#/components/responses/ErrorMessage"

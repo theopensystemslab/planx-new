@@ -23,7 +23,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
   const mostRecent = await getMostRecentPublishedFlow(flowId);
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
-  if (!delta) return;
+  if (!delta) return null;
 
   const { client: $client } = getClient();
   const response = await $client.request<PublishFlow>(

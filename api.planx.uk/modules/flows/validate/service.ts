@@ -1,5 +1,4 @@
 import * as jsondiffpatch from "jsondiffpatch";
-import { Request, Response, NextFunction } from "express";
 import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
 import intersection from "lodash/intersection";
 import {
@@ -9,61 +8,53 @@ import {
 } from "@opensystemslab/planx-core/types";
 import type { Entry } from "type-fest";
 
-const validateAndDiffFlow = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<Response | NextFunction | void> => {
-  try {
-    const flattenedFlow = await dataMerged(req.params.flowId);
+const validateAndDiffFlow = async (flowId: string) => {
+  const flattenedFlow = await dataMerged(flowId);
 
-    const {
-      isValid: sectionsAreValid,
+  const {
+    isValid: sectionsAreValid,
+    message: sectionsValidationMessage,
+    description: sectionsValidationDescription,
+  } = validateSections(flattenedFlow);
+  if (!sectionsAreValid) {
+    return {
+      alteredNodes: null,
       message: sectionsValidationMessage,
       description: sectionsValidationDescription,
-    } = validateSections(flattenedFlow);
-    if (!sectionsAreValid) {
-      return res.json({
-        alteredNodes: null,
-        message: sectionsValidationMessage,
-        description: sectionsValidationDescription,
-      });
-    }
+    };
+  }
 
-    const {
-      isValid: payIsValid,
+  const {
+    isValid: payIsValid,
+    message: payValidationMessage,
+    description: payValidationDescription,
+  } = validateInviteToPay(flattenedFlow);
+  if (!payIsValid) {
+    return {
+      alteredNodes: null,
       message: payValidationMessage,
       description: payValidationDescription,
-    } = validateInviteToPay(flattenedFlow);
-    if (!payIsValid) {
-      return res.json({
-        alteredNodes: null,
-        message: payValidationMessage,
-        description: payValidationDescription,
-      });
-    }
-
-    const mostRecent = await getMostRecentPublishedFlow(req.params.flowId);
-    const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
-
-    if (delta) {
-      const alteredNodes = Object.keys(delta).map((key) => ({
-        id: key,
-        ...flattenedFlow[key],
-      }));
-
-      return res.json({
-        alteredNodes,
-      });
-    } else {
-      return res.json({
-        alteredNodes: null,
-        message: "No new changes to publish",
-      });
-    }
-  } catch (error) {
-    return next(error);
+    };
   }
+
+  const mostRecent = await getMostRecentPublishedFlow(flowId);
+  const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
+
+  if (!delta)
+    return {
+      alteredNodes: null,
+      message: "No new changes to publish",
+    };
+
+  const alteredNodes = Object.keys(delta).map((key) => ({
+    id: key,
+    ...flattenedFlow[key],
+  }));
+
+  return {
+    alteredNodes,
+    message: "Changes valid",
+  };
 };
 
 type ValidationResponse = {

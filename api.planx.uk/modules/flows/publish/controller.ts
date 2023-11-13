@@ -5,7 +5,7 @@ import { publishFlow } from "./service";
 
 interface PublishFlowResponse {
   message: string;
-  alteredNodes?: Node[];
+  alteredNodes: Node[] | null;
 }
 
 export const publishFlowSchema = z.object({

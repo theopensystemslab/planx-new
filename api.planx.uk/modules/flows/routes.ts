@@ -15,7 +15,10 @@ import {
   findAndReplaceSchema,
 } from "./findReplace/controller";
 import { moveFlowController, moveFlowSchema } from "./moveFlow/controller";
-import { validateAndDiffFlow } from "./validate/service";
+import {
+  validateAndDiffFlowController,
+  validateAndDiffSchema,
+} from "./validate/controller";
 import { publishFlowSchema } from "./publish/controller";
 const router = Router();
 
@@ -54,7 +57,12 @@ router.post(
   publishFlowController,
 );
 
-router.post("/:flowId/diff", useTeamEditorAuth, validateAndDiffFlow);
+router.post(
+  "/:flowId/diff",
+  useTeamEditorAuth,
+  validate(validateAndDiffSchema),
+  validateAndDiffFlowController,
+);
 
 interface FlowSchema {
   node: string;
