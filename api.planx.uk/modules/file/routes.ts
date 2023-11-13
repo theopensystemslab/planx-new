@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import multer from "multer";
-import { useFilePermission } from "../auth/middleware";
+import { useFilePermission, useTeamEditorAuth } from "../auth/middleware";
 import {
   downloadFileSchema,
   privateDownloadController,
@@ -15,17 +15,18 @@ import { validate } from "../../shared/middleware/validate";
 const router = Router();
 
 router.post(
-  "/private/upload",
-  multer().single("file"),
-  validate(uploadFileSchema),
-  privateUploadController,
-);
-
-router.post(
   "/public/upload",
   multer().single("file"),
   validate(uploadFileSchema),
   publicUploadController,
+);
+
+router.post(
+  "/private/upload",
+  multer().single("file"),
+  useTeamEditorAuth,
+  validate(uploadFileSchema),
+  privateUploadController,
 );
 
 router.get(

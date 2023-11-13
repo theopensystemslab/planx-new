@@ -77,7 +77,7 @@ export type DownloadController = ValidatedRequestHandler<
 >;
 
 export const publicDownloadController: DownloadController = async (
-  req,
+  _req,
   res,
   next,
 ) => {
@@ -99,7 +99,7 @@ export const publicDownloadController: DownloadController = async (
 };
 
 export const privateDownloadController: DownloadController = async (
-  req,
+  _req,
   res,
   next,
 ) => {

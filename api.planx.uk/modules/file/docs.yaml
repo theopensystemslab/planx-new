@@ -1,0 +1,99 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: file
+    description: Endpoints for uploading and downloading files
+components:
+  parameters:
+    fileKey:
+      in: path
+      name: fileKey
+      type: string
+      required: true
+    fileName:
+      in: path
+      name: fileName
+      type: string
+      required: true
+  schemas:
+    UploadFile:
+      type: object
+      properties:
+        filename:
+          type: string
+          required: true
+        file:
+          type: string
+          format: binary
+  responses:
+    UploadFile:
+      type: object
+      properties:
+        fileType:
+          oneOf:
+            - type: string
+            - type: "null"
+        fileUrl:
+          type: string
+    DownloadFile:
+      description: Successful response
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+paths:
+  /file/private/upload:
+    post:
+      tags: ["file"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UploadFile"
+      responses:
+        "200":
+          $ref: "#/components/responses/UploadFile"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /file/public/upload:
+    post:
+      tags: ["file"]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UploadFile"
+      responses:
+        "200":
+          $ref: "#/components/responses/UploadFile"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /file/public/{fileKey}/{fileName}:
+    get:
+      tags: ["file"]
+      parameters:
+        - $ref: "#/components/parameters/fileKey"
+        - $ref: "#/components/parameters/fileName"
+      responses:
+        "200":
+          $ref: "#/components/responses/DownloadFile"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /file/private/{fileKey}/{fileName}:
+    get:
+      tags: ["file"]
+      parameters:
+        - $ref: "#/components/parameters/fileKey"
+        - $ref: "#/components/parameters/fileName"
+      security:
+        - fileAPIKeyAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/DownloadFile"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"

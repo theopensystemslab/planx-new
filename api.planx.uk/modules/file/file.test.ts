@@ -2,6 +2,7 @@ import supertest from "supertest";
 
 import app from "../../server";
 import { deleteFilesByURL } from "./service/deleteFile";
+import { authHeader } from "../../tests/mockJWT";
 
 let mockPutObject: jest.Mocked<() => void>;
 let mockGetObject: jest.Mocked<() => void>;
@@ -42,10 +43,23 @@ describe("File upload", () => {
 
   describe("Private", () => {
     const ENDPOINT = "/file/private/upload";
+    const auth = authHeader({ role: "teamEditor" });
+
+    it("returns an error if authorization headers are not set", async () => {
+      await supertest(app)
+        .post("/flows/1/move/new-team")
+        .expect(401)
+        .then((res) => {
+          expect(res.body).toEqual({
+            error: "No authorization token was found",
+          });
+        });
+    });
 
     it("should not upload without filename", async () => {
       await supertest(app)
         .post(ENDPOINT)
+        .set(auth)
         .field("filename", "")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(400)
@@ -59,6 +73,7 @@ describe("File upload", () => {
     it("should not upload without file", async () => {
       await supertest(app)
         .post(ENDPOINT)
+        .set(auth)
         .field("filename", "some filename")
         .expect(500)
         .then((res) => {
@@ -70,6 +85,7 @@ describe("File upload", () => {
     it("should upload file", async () => {
       await supertest(app)
         .post(ENDPOINT)
+        .set(auth)
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .then((res) => {
@@ -91,6 +107,7 @@ describe("File upload", () => {
 
       await supertest(app)
         .post("/file/private/upload")
+        .set(auth)
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
