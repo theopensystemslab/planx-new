@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
-import { publishFlow, validateAndDiffFlow } from "./service/publish";
+import { publishFlow } from "./publish/service";
 import { $public } from "../../client";
 import { gql } from "graphql-request";
 import { stringify } from "csv-stringify";
@@ -15,6 +15,7 @@ import {
   findAndReplaceSchema,
 } from "./findReplace/controller";
 import { moveFlowController, moveFlowSchema } from "./moveFlow/controller";
+import { validateAndDiffFlow } from "./validate/service";
 const router = Router();
 
 router.post(

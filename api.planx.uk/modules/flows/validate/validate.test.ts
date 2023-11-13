@@ -56,103 +56,14 @@ beforeEach(() => {
 const auth = authHeader({ role: "platformAdmin" });
 
 it("requires a user to be logged in", async () => {
-  await supertest(app).post("/flows/1/publish").expect(401);
+  await supertest(app).post("/flows/1/diff").expect(401);
 });
 
 it("requires a user to have the 'teamEditor' role", async () => {
   await supertest(app)
-    .post("/flows/1/publish")
+    .post("/flows/1/diff")
     .set(authHeader({ role: "teamViewer" }))
     .expect(403);
-});
-
-describe("publish", () => {
-  it("publishes for the first time", async () => {
-    queryMock.mockQuery({
-      name: "GetMostRecentPublishedFlow",
-      matchOnVariables: false,
-      data: {
-        flow: {
-          publishedFlows: [],
-        },
-      },
-    });
-
-    await supertest(app).post("/flows/1/publish").set(auth).expect(200);
-  });
-
-  it("does not update if there are no new changes", async () => {
-    await supertest(app)
-      .post("/flows/1/publish")
-      .set(auth)
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({
-          alteredNodes: null,
-          message: "No new changes to publish",
-        });
-      });
-  });
-
-  it("updates published flow and returns altered nodes if there have been changes", async () => {
-    const alteredFlow = {
-      ...mockFlowData,
-      ResultNode: {
-        data: {
-          flagSet: "Planning permission",
-          overrides: {
-            NO_APP_REQUIRED: {
-              heading: "Some Other Heading",
-            },
-          },
-        },
-        type: 3,
-      },
-    };
-
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flow: {
-          data: alteredFlow,
-        },
-      },
-    });
-
-    queryMock.mockQuery({
-      name: "PublishFlow",
-      matchOnVariables: false,
-      data: {
-        publishedFlow: {
-          data: alteredFlow,
-        },
-      },
-    });
-
-    await supertest(app)
-      .post("/flows/1/publish")
-      .set(auth)
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({
-          alteredNodes: [
-            {
-              id: "ResultNode",
-              type: 3,
-              data: {
-                flagSet: "Planning permission",
-                overrides: {
-                  NO_APP_REQUIRED: {
-                    heading: "Some Other Heading",
-                  },
-                },
-              },
-            },
-          ],
-        });
-      });
-  });
 });
 
 describe("sections validation on diff", () => {
