@@ -1,8 +1,9 @@
 import assert from "assert";
-import { uploadPrivateFile, uploadPublicFile } from "./uploadFile";
-import { getFileFromS3 } from "./getFile";
+
 import { NextFunction, Request, Response } from "express";
-import { buildFilePath } from "./utils";
+import { uploadPrivateFile, uploadPublicFile } from "./service/uploadFile";
+import { buildFilePath } from "./service/utils";
+import { getFileFromS3 } from "./service/getFile";
 
 assert(process.env.AWS_S3_BUCKET);
 assert(process.env.AWS_S3_REGION);

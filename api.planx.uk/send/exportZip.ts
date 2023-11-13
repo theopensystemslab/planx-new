@@ -5,7 +5,7 @@ import { stringify } from "csv-stringify";
 import fs from "fs";
 import str from "string-to-stream";
 import AdmZip from "adm-zip";
-import { getFileFromS3 } from "../s3/getFile";
+import { getFileFromS3 } from "../modules/file/service/getFile";
 import {
   hasRequiredDataForTemplate,
   generateMapHTML,

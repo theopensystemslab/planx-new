@@ -1,7 +1,7 @@
 import supertest from "supertest";
 
-import app from "../server";
-import { deleteFilesByURL } from "./deleteFile";
+import app from "../../server";
+import { deleteFilesByURL } from "./service/deleteFile";
 
 let mockPutObject: jest.Mocked<() => void>;
 let mockGetObject: jest.Mocked<() => void>;
