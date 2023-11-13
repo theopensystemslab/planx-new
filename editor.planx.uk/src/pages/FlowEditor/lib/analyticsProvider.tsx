@@ -35,6 +35,7 @@ type NodeMetadata = {
 };
 
 let lastAnalyticsLogId: number | undefined = undefined;
+// let whiteListAnswerId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
@@ -67,7 +68,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [
-    // state,
+    computePassport,
     currentCard,
     breadcrumbs,
     analyticsId,
@@ -77,7 +78,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     flowId,
     flow,
   ] = useStore((state) => [
-    // state,
+    state.computePassport,
     state.currentCard,
     state.breadcrumbs,
     state.analyticsId,
@@ -93,17 +94,16 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   const shouldTrackAnalytics =
     previewEnvironment === "standalone" && isAnalyticsEnabled;
   const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
-  const state = useStore((state) => state);
 
   const onPageExit = () => {
     if (lastAnalyticsLogId && shouldTrackAnalytics) {
-      console.log('Page Visibility Change')
       if (document.visibilityState === "hidden") {
         send(
           `${
             process.env.REACT_APP_API_URL
           }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`,
         );
+        // This could maybe be an update if the user has previously resumed? 
         trackUserWhiteListAnswers()
       }
       if (document.visibilityState === "visible") {
@@ -112,6 +112,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
             process.env.REACT_APP_API_URL
           }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`,
         );
+        // Could the id of the flow_answers for the session be stored in local storage to manage the resume stuff? 
       }
     }
   };
@@ -123,7 +124,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       if (shouldTrackAnalytics)
         document.removeEventListener("visibilitychange", onPageExit);
     };
-  }, []);
+  }, [flowId]);
 
   // Track component transition
   useEffect(() => {
@@ -347,12 +348,10 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
  async function trackUserWhiteListAnswers(){
-  const flowId = state.id;
-  console.log('What is the flow id', flowId)
-  if (lastAnalyticsLogId && shouldTrackAnalytics && flowId){
-    const whiteListedPassport = JSON.stringify(state.computePassport({whiteList: true}).data)
-    console.log(whiteListedPassport)
-    await publicClient.mutate({
+  console.log('Analytics session ID:', analyticsId)
+  if (shouldTrackAnalytics && flowId){
+    const whiteListedPassport = JSON.stringify(computePassport({whiteList: true}).data)
+    const response = await publicClient.mutate({
       mutation: gql`
         mutation InsertNewFlowAnswers(
           $flow_id: uuid
@@ -373,6 +372,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         answers:  whiteListedPassport,
       },
     });
+    console.log('The tracked answer session id', response.data.insert_flow_answers_one.id)
   }
  }
 
@@ -409,6 +409,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         },
       });
       const id = response.data.insert_analytics_one.id;
+      console.log('The new analytics', id)
       setAnalyticsId(id);
       track(type, id);
     }

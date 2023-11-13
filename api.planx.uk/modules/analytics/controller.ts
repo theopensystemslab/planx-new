@@ -24,4 +24,3 @@ export const logUserResumeController: LogAnalytics = async (_req, res) => {
   trackAnalyticsLogExit({ id: analyticsLogId, isUserExit: false });
   res.status(204).send();
 };
-
