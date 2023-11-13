@@ -24,7 +24,7 @@ INSERT INTO flows (
   version,
   settings,
   copied_from,
-  null
+  null as analytics_link,
 )
 SELECT
   id,
