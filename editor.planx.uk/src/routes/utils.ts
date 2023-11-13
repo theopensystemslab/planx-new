@@ -56,6 +56,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.southwark.gov.uk",
   "planningservices.doncaster.gov.uk",
   "planningservices.medway.gov.uk",
+  "planningservices.camden.gov.uk",
   // XXX: un-comment the next line to test custom domains locally
   // "localhost",
 ];
