@@ -418,6 +418,7 @@
           - data
           - settings
           - slug
+          - team_id
         filter: {}
         check: null
     - role: teamEditor
@@ -426,6 +427,7 @@
           - data
           - settings
           - slug
+          - team_id
         filter:
           team:
             members:
