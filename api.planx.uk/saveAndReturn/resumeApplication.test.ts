@@ -229,7 +229,7 @@ describe("Resume Application endpoint", () => {
 
     queryMock.mockQuery({
       name: "ValidateRequest",
-      data: { teams: null, sessions: null },
+      data: { teams: null, lowcalSessions: null },
       variables: body.payload,
     });
 
@@ -251,7 +251,7 @@ describe("Resume Application endpoint", () => {
     queryMock.mockQuery({
       name: "ValidateRequest",
       data: {
-        sessions: [mockLowcalSession],
+        lowcalSessions: [mockLowcalSession],
         teams: [mockTeam],
       },
       variables: body.payload,
@@ -271,7 +271,7 @@ describe("Resume Application endpoint", () => {
 
     queryMock.mockQuery({
       name: "ValidateRequest",
-      data: { teams: [mockTeam], sessions: [] },
+      data: { teams: [mockTeam], lowcalSessions: [] },
       variables: body.payload,
     });
 

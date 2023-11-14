@@ -61,7 +61,7 @@ const validateRequest = async (
   try {
     const query = gql`
       query ValidateRequest($email: String, $teamSlug: String) {
-        sessions(
+        lowcalSessions: lowcal_sessions(
           where: {
             email: { _eq: $email }
             deleted_at: { _is_null: true }
