@@ -1,6 +1,5 @@
 import { gql } from "graphql-request";
 import omit from "lodash.omit";
-import { NextFunction, Request, Response } from "express";
 import { getMostRecentPublishedFlow } from "../../../helpers";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
@@ -16,13 +15,7 @@ import type {
   Node,
 } from "../../../types";
 import { $api } from "../../../client";
-
-export interface ValidationResponse {
-  message: string;
-  changesFound: boolean | null;
-  alteredSectionIds?: Array<string>;
-  reconciledSessionData: Omit<LowCalSessionData, "passport">;
-}
+import { ValidationResponse } from "../controller";
 
 export type ReconciledSession = {
   alteredSectionIds: Array<string>;
@@ -33,98 +26,60 @@ export type ReconciledSession = {
 //  * collected flags
 //  * component dependencies like FindProperty, DrawBoundary, PlanningConstraints
 export async function validateSession(
-  req: Request,
-  res: Response,
-  next: NextFunction,
+  sessionId: string,
+  fetchedSession: Partial<LowCalSession>,
 ) {
-  try {
-    const { email, sessionId } = req.body.payload;
+  const sessionData = omit(fetchedSession.data!, "passport");
+  const sessionUpdatedAt = fetchedSession.updated_at!;
+  const flowId = fetchedSession.flow_id!;
 
-    if (!email || !sessionId) {
-      return next({
-        status: 400,
-        message: "Required value missing",
-      });
-    }
-
-    const fetchedSession = await findSession({
-      sessionId,
-      email: email.toLowerCase(),
-    });
-    if (!fetchedSession) {
-      return next({
-        status: 404,
-        message: "Unable to find your session",
-      });
-    }
-
-    if (fetchedSession.lockedAt) {
-      return res.status(403).send({
-        status: 403,
-        message: "Session locked",
-        paymentRequest: {
-          ...fetchedSession.paymentRequests?.[0],
-        },
-      });
-    }
-
-    const sessionData = omit(fetchedSession.data!, "passport");
-    const sessionUpdatedAt = fetchedSession.updated_at!;
-    const flowId = fetchedSession.flow_id!;
-
-    // if a user has paid, skip reconciliation
-    const userHasPaid = sessionData?.govUkPayment?.state?.status === "created";
-    if (userHasPaid) {
-      const responseData: ValidationResponse = {
-        message: "Payment process initiated, skipping reconciliation",
-        changesFound: null,
-        reconciledSessionData: sessionData,
-      };
-      await createAuditEntry(sessionId, responseData);
-      return res.status(200).json(responseData);
-    }
-
-    // fetch the latest flow diffs for this session's flow
-    const flowDiff = await diffLatestPublishedFlow({
-      flowId,
-      since: sessionUpdatedAt,
-    });
-
-    if (!flowDiff) {
-      const responseData: ValidationResponse = {
-        message: "No content changes since last save point",
-        changesFound: false,
-        reconciledSessionData: sessionData,
-      };
-      await createAuditEntry(sessionId, responseData);
-      return res.status(200).json(responseData);
-    }
-
-    const alteredNodes = Object.entries(flowDiff).map(([nodeId, node]) => ({
-      ...node,
-      id: nodeId,
-    }));
-
-    const { reconciledSessionData, alteredSectionIds } =
-      await reconcileSessionData({ sessionData, alteredNodes });
-
+  // if a user has paid, skip reconciliation
+  const userHasPaid = sessionData?.govUkPayment?.state?.status === "created";
+  if (userHasPaid) {
     const responseData: ValidationResponse = {
-      message:
-        "This service has been updated since you last saved your application." +
-        " We will ask you to answer any updated questions again when you continue.",
-      changesFound: true,
-      alteredSectionIds,
-      reconciledSessionData,
+      message: "Payment process initiated, skipping reconciliation",
+      changesFound: null,
+      reconciledSessionData: sessionData,
     };
-
     await createAuditEntry(sessionId, responseData);
-    return res.status(200).json(responseData);
-  } catch (error) {
-    return next({
-      error,
-      message: "Failed to validate session",
-    });
+    return responseData;
   }
+
+  // fetch the latest flow diffs for this session's flow
+  const flowDiff = await diffLatestPublishedFlow({
+    flowId,
+    since: sessionUpdatedAt,
+  });
+
+  if (!flowDiff) {
+    const responseData: ValidationResponse = {
+      message: "No content changes since last save point",
+      changesFound: false,
+      reconciledSessionData: sessionData,
+    };
+    await createAuditEntry(sessionId, responseData);
+    return responseData;
+  }
+
+  const alteredNodes = Object.entries(flowDiff).map(([nodeId, node]) => ({
+    ...node,
+    id: nodeId,
+  }));
+
+  const { reconciledSessionData, alteredSectionIds } =
+    await reconcileSessionData({ sessionData, alteredNodes });
+
+  const responseData: ValidationResponse = {
+    message:
+      "This service has been updated since you last saved your application." +
+      " We will ask you to answer any updated questions again when you continue.",
+    changesFound: true,
+    alteredSectionIds,
+    reconciledSessionData,
+  };
+
+  await createAuditEntry(sessionId, responseData);
+  return responseData;
 }
 
 async function reconcileSessionData({
@@ -231,7 +186,7 @@ interface FindSession {
   sessions: Partial<LowCalSession>[];
 }
 
-async function findSession({
+export async function findSession({
   sessionId,
   email,
 }: {

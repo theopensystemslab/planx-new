@@ -49,10 +49,8 @@ describe("Validate Session endpoint", () => {
         .send(invalidBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty(
-            "error",
-            "Required value missing",
-          );
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
         });
     }
   });

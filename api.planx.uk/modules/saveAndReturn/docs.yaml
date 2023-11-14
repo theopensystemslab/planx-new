@@ -22,6 +22,22 @@ components:
                   email:
                     type: string
                     format: email
+    ValidateSession:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payload:
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+                    format: uuid
+                  email:
+                    type: string
+                    format: email
   responses:
     ResumeApplication:
       content:
@@ -37,6 +53,46 @@ components:
                 oneOf:
                   - type: string
                   - type: "null"
+    ValidationResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        changesFound:
+          type: boolean
+          nullable: true
+        alteredSectionIds:
+          type: array
+          items:
+            type: string
+        reconciledSessionData:
+          type: object
+          properties:
+            breadcrumbs:
+              type: object
+            id:
+              type: string
+            # TODO: Add $ref here when documenting payment endpoints
+            govUkPayment:
+              required: false
+              type: object
+    LockedSessionResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          enum:
+            - Session locked
+        paymentRequest:
+          type: object
+          properties:
+            id:
+              type: string
+            payeeEmail:
+              type: string
+              format: email
+            payeeName:
+              type: string
 paths:
   /resume-application:
     post:
@@ -49,3 +105,19 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ResumeApplication"
+  /validate-session:
+    post:
+      summary: Validate session
+      description: Validates the session and reconciles the session's breadcrumbs to account for any differences between the current published flow and the last flow version a user traversed.
+      tags:
+        - save and return
+      requestBody:
+        $ref: "#/components/schema/ValidateSession"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/responses/ValidationResponse"
+                  - $ref: "#/components/responses/LockedSessionResponse"

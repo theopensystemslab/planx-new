@@ -79,7 +79,7 @@ const validateRequest = async (
       sessions: lowcalSessions || [],
     };
   } catch (error) {
-    throw Error(`Unable to validate request: ${error}`);
+    throw Error("Unable to validate request");
   }
 };
 

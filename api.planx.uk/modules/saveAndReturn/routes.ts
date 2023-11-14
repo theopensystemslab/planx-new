@@ -3,10 +3,11 @@ import { Router } from "express";
 import {
   resumeApplicationController,
   resumeApplicationSchema,
+  validateSessionController,
+  validateSessionSchema,
 } from "./controller";
 import { sendEmailLimiter } from "../../rateLimit";
 import { validate } from "../../shared/middleware/validate";
-import { validateSession } from "./service/validateSession";
 
 const router = Router();
 
@@ -16,6 +17,10 @@ router.post(
   validate(resumeApplicationSchema),
   resumeApplicationController,
 );
-router.post("/validate-session", validateSession);
+router.post(
+  "/validate-session",
+  validate(validateSessionSchema),
+  validateSessionController,
+);
 
 export default router;
