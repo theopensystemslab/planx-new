@@ -5,7 +5,6 @@ import { getFileFromS3 } from "./service/getFile";
 import { z } from "zod";
 import { ValidatedRequestHandler } from "../../shared/middleware/validate";
 import { ServerError } from "../../errors";
-import { S3 } from "aws-sdk";
 
 assert(process.env.AWS_S3_BUCKET);
 assert(process.env.AWS_S3_REGION);
@@ -73,7 +72,7 @@ export const downloadFileSchema = z.object({
 
 export type DownloadController = ValidatedRequestHandler<
   typeof downloadFileSchema,
-  S3.Body | undefined
+  Buffer | undefined
 >;
 
 export const publicDownloadController: DownloadController = async (

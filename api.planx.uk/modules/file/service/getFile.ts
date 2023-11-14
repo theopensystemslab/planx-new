@@ -11,7 +11,7 @@ export const getFileFromS3 = async (fileId: string) => {
   const file = await s3.getObject(params).promise();
 
   return {
-    body: file.Body,
+    body: file.Body as Buffer,
     isPrivate: file.Metadata?.is_private === "true",
     headers: {
       "Content-Type": file.ContentType,
