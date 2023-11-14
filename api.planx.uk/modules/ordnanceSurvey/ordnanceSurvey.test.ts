@@ -1,8 +1,8 @@
 import { Request } from "express";
 import nock from "nock";
 import supertest from "supertest";
-import app from "../server";
-import { appendAPIKey, OS_DOMAIN } from "./ordnanceSurvey";
+import app from "../../server";
+import { appendAPIKey, OS_DOMAIN } from "./controller";
 
 const { get } = supertest(app);
 

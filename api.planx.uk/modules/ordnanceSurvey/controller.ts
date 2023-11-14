@@ -1,4 +1,4 @@
-import { useProxy } from "./index";
+import { useProxy } from "../../shared/middleware/proxy";
 import { NextFunction, Request, Response } from "express";
 import { IncomingMessage } from "http";
 

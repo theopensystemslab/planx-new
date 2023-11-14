@@ -53,7 +53,6 @@ import { downloadApplicationFiles, sendToEmail } from "./send/email";
 import { sendToUniform } from "./send/uniform";
 import { copyFlow } from "./editor/copyFlow";
 import { moveFlow } from "./editor/moveFlow";
-import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { gql } from "graphql-request";
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 import { googleStrategy } from "./modules/auth/strategy/google";
@@ -64,6 +63,7 @@ import userRoutes from "./modules/user/routes";
 import webhookRoutes from "./modules/webhooks/routes";
 import analyticsRoutes from "./modules/analytics/routes";
 import adminRoutes from "./modules/admin/routes";
+import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 import { $public } from "./client";
@@ -184,6 +184,7 @@ app.use("/team", teamRoutes);
 app.use("/webhooks", webhookRoutes);
 app.use("/analytics", analyticsRoutes);
 app.use("/admin", adminRoutes);
+app.use(ordnanceSurveyRoutes);
 
 app.use("/gis", router);
 
@@ -357,8 +358,6 @@ app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
 app.post("/invite-to-pay/:sessionId", inviteToPay);
-
-app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
