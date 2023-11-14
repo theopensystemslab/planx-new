@@ -1,0 +1,62 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: ordnance survey
+    description: Proxy authenticated requests to the OS Data Hub APIs
+    externalDocs:
+      url: https://osdatahub.os.uk/docs
+components:
+  schemas:
+    AnyParams:
+      description: Any query parameters accepted by OS Data Hub APIs
+      name: queryParams
+      in: query
+      schema:
+        type: object
+        example:
+          key1: value1
+          key2: value2
+    AnyBody:
+      description: Any JSON body accepted by OS Data Hub APIs
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              key1: value1
+              key2: value2
+paths:
+  /proxy/ordnance-survey:
+    get:
+      tags: [ordnance survey]
+      parameters:
+        - $ref: "#/components/schemas/AnyParams"
+      requestBody:
+        $ref: "#/components/schemas/AnyBody"
+    put:
+      tags: [ordnance survey]
+      parameters:
+        - $ref: "#/components/schemas/AnyParams"
+      requestBody:
+        $ref: "#/components/schemas/AnyBody"
+    post:
+      tags: [ordnance survey]
+      parameters:
+        - $ref: "#/components/schemas/AnyParams"
+      requestBody:
+        $ref: "#/components/schemas/AnyBody"
+    delete:
+      tags: [ordnance survey]
+      parameters:
+        - $ref: "#/components/schemas/AnyParams"
+      requestBody:
+        $ref: "#/components/schemas/AnyBody"
+    patch:
+      tags: [ordnance survey]
+      parameters:
+        - $ref: "#/components/schemas/AnyParams"
+      requestBody:
+        $ref: "#/components/schemas/AnyBody"
