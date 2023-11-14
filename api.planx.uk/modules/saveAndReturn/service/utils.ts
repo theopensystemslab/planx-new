@@ -2,7 +2,7 @@ import { SiteAddress } from "@opensystemslab/planx-core/types";
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
 import { LowCalSession, Team } from "../../../types";
-import { Template, getClientForTemplate, sendEmail } from "../../../notify";
+import { Template, getClientForTemplate, sendEmail } from "../../../lib/notify";
 import { $api, $public } from "../../../client";
 
 const DAYS_UNTIL_EXPIRY = 28;

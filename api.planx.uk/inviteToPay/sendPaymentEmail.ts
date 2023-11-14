@@ -4,7 +4,7 @@ import {
   convertSlugToName,
   getServiceLink,
 } from "../modules/saveAndReturn/service/utils";
-import { Template, getClientForTemplate, sendEmail } from "../notify";
+import { Template, getClientForTemplate, sendEmail } from "../lib/notify";
 import { InviteToPayNotifyConfig } from "../types";
 import { Team } from "../types";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";

@@ -2,9 +2,9 @@ import supertest from "supertest";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
 import { sendAgentAndPayeeConfirmationEmail } from "./sendConfirmationEmail";
-import { sendEmail } from "../notify/notify";
+import { sendEmail } from "../lib/notify";
 
-jest.mock("../notify/notify", () => ({
+jest.mock("../lib/notify", () => ({
   sendEmail: jest.fn(),
 }));
 

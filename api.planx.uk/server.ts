@@ -17,7 +17,7 @@ import { locationSearch } from "./gis/index";
 import { validateAndDiffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
 import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
-import { routeSendEmailRequest } from "./notify";
+import { routeSendEmailRequest } from "./notify/routeSendEmailRequest";
 import {
   makePaymentViaProxy,
   fetchPaymentViaProxy,

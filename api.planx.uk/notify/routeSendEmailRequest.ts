@@ -4,7 +4,7 @@ import {
   sendAgentAndPayeeConfirmationEmail,
 } from "../inviteToPay";
 import { sendSingleApplicationEmail } from "../modules/saveAndReturn/service/utils";
-import { Template } from "./notify";
+import { Template } from "../lib/notify";
 import { ServerError } from "../errors";
 
 export async function routeSendEmailRequest(

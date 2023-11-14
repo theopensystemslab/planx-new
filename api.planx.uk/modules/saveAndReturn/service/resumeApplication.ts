@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 import { LowCalSession, Team } from "../../../types";
 import { convertSlugToName, getResumeLink, calculateExpiryDate } from "./utils";
-import { sendEmail } from "../../../notify";
+import { sendEmail } from "../../../lib/notify";
 import type { SiteAddress } from "@opensystemslab/planx-core/types";
 import { $api, $public } from "../../../client";
 
