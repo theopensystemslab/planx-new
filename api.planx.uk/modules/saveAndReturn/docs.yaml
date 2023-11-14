@@ -1,0 +1,51 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: save and return
+    description: Endpoints used for "Save and Return" functionality
+components:
+  schema:
+    ResumeApplication:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payload:
+                type: object
+                properties:
+                  teamSlug:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+  responses:
+    ResumeApplication:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                required: true
+                type: string
+              expiryDate:
+                required: false
+                oneOf:
+                  - type: string
+                  - type: "null"
+paths:
+  /resume-application:
+    post:
+      summary: Resume application
+      description: Request a "resume" email which lists all of your open applications. This email acts as a "dashboard" for the user.
+      tags:
+        - save and return
+      requestBody:
+        $ref: "#/components/schema/ResumeApplication"
+      responses:
+        "200":
+          $ref: "#/components/responses/ResumeApplication"
