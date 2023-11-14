@@ -99,8 +99,8 @@ dependencies:
     specifier: ^3.3.6
     version: 3.3.6
   notifications-node-client:
-    specifier: ^7.0.0
-    version: 7.0.0
+    specifier: ^7.0.6
+    version: 7.0.6
   passport:
     specifier: ^0.5.3
     version: 0.5.3
@@ -2632,14 +2632,6 @@ packages:
       util: 0.12.5
       uuid: 8.0.0
       xml2js: 0.5.0
-    dev: false
-
-  /axios@0.25.0:
-    resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
-    dependencies:
-      follow-redirects: 1.15.2
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /axios@1.6.1:
@@ -6239,11 +6231,11 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /notifications-node-client@7.0.0:
-    resolution: {integrity: sha512-lVVUAlllj7HWRTXJMXoLGdNi5XXYtQyuU50m/m9bRKt/3TK0aKa2cyzYjseElW9kFpQRx2rM3SgaEvPrVcnGqg==}
+  /notifications-node-client@7.0.6:
+    resolution: {integrity: sha512-qo6eZMGdyaQnj/bkOnPb/d0a0sHIjiBzXlmICLPXYSD4pB3LYa537OhuZGuaFcSnkrM4NzbQhbQHAYX1NnbQgw==}
     engines: {node: '>=14.17.3', npm: '>=6.14.13'}
     dependencies:
-      axios: 0.25.0
+      axios: 1.6.1
       jsonwebtoken: 9.0.1
     transitivePeerDependencies:
       - debug
