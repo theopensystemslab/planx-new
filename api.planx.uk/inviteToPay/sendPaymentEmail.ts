@@ -3,7 +3,7 @@ import {
   calculateExpiryDate,
   convertSlugToName,
   getServiceLink,
-} from "../saveAndReturn/utils";
+} from "../modules/saveAndReturn/service/utils";
 import { Template, getClientForTemplate, sendEmail } from "../notify";
 import { InviteToPayNotifyConfig } from "../types";
 import { Team } from "../types";

@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import capitalize from "lodash/capitalize";
-import { markSessionAsSubmitted } from "../saveAndReturn/utils";
+import { markSessionAsSubmitted } from "../modules/saveAndReturn/service/utils";
 import { sendEmail } from "../notify";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { buildSubmissionExportZip } from "./exportZip";
-import { $api, $public } from "../client";
+import { $api } from "../client";
 import { NotifyPersonalisation } from "@opensystemslab/planx-core/dist/types/team";
 import { Session } from "@opensystemslab/planx-core/types";
 

@@ -1,4 +1,4 @@
-import { Team } from "../types";
+import { Team } from "../../../types";
 import { convertSlugToName, getResumeLink } from "./utils";
 
 describe("convertSlugToName util function", () => {

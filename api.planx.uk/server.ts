@@ -17,7 +17,6 @@ import { locationSearch } from "./gis/index";
 import { validateAndDiffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
 import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
-import { resumeApplication, validateSession } from "./saveAndReturn";
 import { routeSendEmailRequest } from "./notify";
 import {
   makePaymentViaProxy,
@@ -57,6 +56,7 @@ import analyticsRoutes from "./modules/analytics/routes";
 import adminRoutes from "./modules/admin/routes";
 import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes";
 import fileRoutes from "./modules/file/routes";
+import saveAndReturnRoutes from "./modules/saveAndReturn/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 import { $public } from "./client";
@@ -178,8 +178,8 @@ app.use("/webhooks", webhookRoutes);
 app.use("/analytics", analyticsRoutes);
 app.use("/admin", adminRoutes);
 app.use(ordnanceSurveyRoutes);
-app.use(fileRoutes);
 app.use("/file", fileRoutes);
+app.use(saveAndReturnRoutes);
 
 app.use("/gis", router);
 
@@ -309,8 +309,6 @@ app.post(
   useSendEmailAuth,
   routeSendEmailRequest,
 );
-app.post("/resume-application", sendEmailLimiter, resumeApplication);
-app.post("/validate-session", validateSession);
 
 app.post("/invite-to-pay/:sessionId", inviteToPay);
 

@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 import omit from "lodash.omit";
 import { NextFunction, Request, Response } from "express";
-import { getMostRecentPublishedFlow } from "../helpers";
+import { getMostRecentPublishedFlow } from "../../../helpers";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type {
@@ -14,8 +14,8 @@ import type {
   LowCalSessionData,
   PublishedFlow,
   Node,
-} from "../types";
-import { $api } from "../client";
+} from "../../../types";
+import { $api } from "../../../client";
 
 export interface ValidationResponse {
   message: string;

@@ -1,9 +1,9 @@
 import { SiteAddress } from "@opensystemslab/planx-core/types";
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
-import { LowCalSession, Team } from "../types";
-import { Template, getClientForTemplate, sendEmail } from "../notify";
-import { $api, $public } from "../client";
+import { LowCalSession, Team } from "../../../types";
+import { Template, getClientForTemplate, sendEmail } from "../../../notify";
+import { $api, $public } from "../../../client";
 
 const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];

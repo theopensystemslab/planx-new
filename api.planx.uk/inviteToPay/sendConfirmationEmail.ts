@@ -1,7 +1,7 @@
 import { $public, $api } from "../client";
 import { sendEmail } from "../notify";
 import { gql } from "graphql-request";
-import { convertSlugToName } from "../saveAndReturn/utils";
+import { convertSlugToName } from "../modules/saveAndReturn/service/utils";
 import type { AgentAndPayeeSubmissionNotifyConfig } from "../types";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
