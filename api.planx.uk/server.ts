@@ -306,26 +306,6 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   }
 });
 
-// allows an applicant to download their application data on the Confirmation page
-app.post("/download-application", async (req, res, next) => {
-  if (!req.body) {
-    res.send({
-      message: "Missing application `data` to download",
-    });
-  }
-
-  try {
-    // build a CSV and stream the response
-    stringify(req.body, {
-      columns: ["question", "responses", "metadata"],
-      header: true,
-    }).pipe(res);
-    res.header("Content-type", "text/csv");
-  } catch (err) {
-    next(err);
-  }
-});
-
 app.post(
   "/private-file-upload",
   multer().single("file"),

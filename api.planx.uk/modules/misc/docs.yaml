@@ -79,3 +79,39 @@ paths:
                           example: "teamEditor"
         "401":
           $ref: "#/components/responses/Unauthorised"
+  /download-application:
+    post:
+      summary: Download application
+      description: Allows an applicant to download their application data on the Confirmation page
+      tags:
+        - misc
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  required: true
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      question:
+                        type: string
+                        required: true
+                      responses:
+                        type: any
+                        required: true
+                      metadata:
+                        type: any
+                        required: false
+      responses:
+        "200":
+          content:
+            text/csv:
+              schema:
+                type: string
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
