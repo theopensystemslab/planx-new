@@ -3,7 +3,7 @@ import { subMonths } from "date-fns";
 
 import { Operation, OperationResult, QueryResult } from "./types";
 import { runSQL } from "../../../../lib/hasura/schema";
-import { deleteFilesByURL } from "../../../../s3/deleteFile";
+import { deleteFilesByURL } from "../../../file/service/deleteFile";
 import { $api } from "../../../../client";
 import { Passport } from "@opensystemslab/planx-core";
 

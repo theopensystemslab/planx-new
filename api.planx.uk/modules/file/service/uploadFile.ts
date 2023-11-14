@@ -2,7 +2,7 @@ import S3 from "aws-sdk/clients/s3";
 import { customAlphabet } from "nanoid";
 import { getType } from "mime";
 import { s3Factory } from "./utils";
-import { isLiveEnv } from "../helpers";
+import { isLiveEnv } from "../../../helpers";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 
 export const uploadPublicFile = async (
@@ -17,7 +17,7 @@ export const uploadPublicFile = async (
   const fileUrl = buildFileUrl(key, "public");
 
   return {
-    file_type: fileType,
+    fileType,
     fileUrl,
   };
 };
@@ -38,7 +38,7 @@ export const uploadPrivateFile = async (
   const fileUrl = buildFileUrl(key, "private");
 
   return {
-    file_type: fileType,
+    fileType,
     fileUrl,
   };
 };

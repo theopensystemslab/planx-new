@@ -203,7 +203,7 @@ describe("Modal trigger", () => {
     );
     const mockedPost = mockedAxios.post.mockResolvedValue({
       data: {
-        file_type: "image/png",
+        fileType: "image/png",
         fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
       },
     });
@@ -236,14 +236,14 @@ describe("Modal trigger", () => {
     const mockedPost = mockedAxios.post
       .mockResolvedValueOnce({
         data: {
-          file_type: "image/png",
+          fileType: "image/png",
           fileUrl:
             "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
         },
       })
       .mockResolvedValueOnce({
         data: {
-          file_type: "image/png",
+          fileType: "image/png",
           fileUrl:
             "https://api.editor.planx.dev/file/private/gws7l5d1/test2.jpg",
         },
@@ -282,14 +282,14 @@ describe("Modal trigger", () => {
     mockedAxios.post
       .mockResolvedValueOnce({
         data: {
-          file_type: "image/png",
+          fileType: "image/png",
           fileUrl:
             "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
         },
       })
       .mockResolvedValueOnce({
         data: {
-          file_type: "image/png",
+          fileType: "image/png",
           fileUrl:
             "https://api.editor.planx.dev/file/private/gws7l5d1/test2.jpg",
         },
@@ -343,7 +343,7 @@ describe("Adding tags and syncing state", () => {
     // Upload one file
     mockedAxios.post.mockResolvedValueOnce({
       data: {
-        file_type: "image/png",
+        fileType: "image/png",
         fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
       },
     });
@@ -406,7 +406,7 @@ describe("Adding tags and syncing state", () => {
     // Upload one file
     mockedAxios.post.mockResolvedValueOnce({
       data: {
-        file_type: "image/png",
+        fileType: "image/png",
         fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test1.jpg",
       },
     });
@@ -472,7 +472,7 @@ describe("Error handling", () => {
 
     mockedAxios.post.mockResolvedValueOnce({
       data: {
-        file_type: "image/png",
+        fileType: "image/png",
         fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.png",
       },
     });
@@ -524,7 +524,7 @@ describe("Error handling", () => {
 
     mockedAxios.post.mockResolvedValue({
       data: {
-        file_type: "image/png",
+        fileType: "image/png",
         fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
       },
     });
@@ -565,7 +565,7 @@ describe("Error handling", () => {
 
     mockedAxios.post.mockResolvedValue({
       data: {
-        file_type: "image/png",
+        fileType: "image/png",
         fileUrl: "https://api.editor.planx.dev/file/private/gws7l5d1/test.jpg",
       },
     });

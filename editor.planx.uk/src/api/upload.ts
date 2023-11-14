@@ -36,8 +36,8 @@ function handleUpload(
 
   // Private uploads for test applications should be handled by the staging environment
   const paths = {
-    public: `${process.env.REACT_APP_API_URL}/public-file-upload`,
-    private: `${process.env.REACT_APP_API_URL}/private-file-upload`,
+    public: `${process.env.REACT_APP_API_URL}/file/public/upload`,
+    private: `${process.env.REACT_APP_API_URL}/file/private/upload`,
   };
 
   const endpoint = paths[path];

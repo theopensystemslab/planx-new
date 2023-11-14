@@ -8,6 +8,13 @@ const securitySchemes = {
     scheme: "bearer",
     bearerFormat: "JWT",
   },
+  fileAPIKeyAuth: {
+    type: "apiKey",
+    in: "header",
+    name: "api-key",
+    description:
+      "API key granted to third-party integration partners to access files uploaded by users as part of their application",
+  },
   hasuraAuth: {
     type: "apiKey",
     in: "header",

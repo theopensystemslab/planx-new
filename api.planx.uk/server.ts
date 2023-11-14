@@ -11,7 +11,6 @@ import pinoLogger from "express-pino-logger";
 import { Server } from "http";
 import passport from "passport";
 import helmet from "helmet";
-import multer from "multer";
 
 import { ServerError } from "./errors";
 import { locationSearch } from "./gis/index";
@@ -32,7 +31,6 @@ import {
   fetchPaymentRequestViaProxy,
 } from "./inviteToPay";
 import {
-  useFilePermission,
   useHasuraAuth,
   useSendEmailAuth,
   usePlatformAdminAuth,
@@ -41,12 +39,6 @@ import {
 
 import airbrake from "./airbrake";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
-import {
-  privateDownloadController,
-  privateUploadController,
-  publicDownloadController,
-  publicUploadController,
-} from "./s3";
 import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { downloadApplicationFiles, sendToEmail } from "./send/email";
@@ -64,6 +56,7 @@ import webhookRoutes from "./modules/webhooks/routes";
 import analyticsRoutes from "./modules/analytics/routes";
 import adminRoutes from "./modules/admin/routes";
 import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes";
+import fileRoutes from "./modules/file/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 import { $public } from "./client";
@@ -185,6 +178,8 @@ app.use("/webhooks", webhookRoutes);
 app.use("/analytics", analyticsRoutes);
 app.use("/admin", adminRoutes);
 app.use(ordnanceSurveyRoutes);
+app.use(fileRoutes);
+app.use("/file", fileRoutes);
 
 app.use("/gis", router);
 
@@ -306,26 +301,6 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
     next(err);
   }
 });
-
-app.post(
-  "/private-file-upload",
-  multer().single("file"),
-  privateUploadController,
-);
-
-app.post(
-  "/public-file-upload",
-  multer().single("file"),
-  publicUploadController,
-);
-
-app.get("/file/public/:fileKey/:fileName", publicDownloadController);
-
-app.get(
-  "/file/private/:fileKey/:fileName",
-  useFilePermission,
-  privateDownloadController,
-);
 
 assert(process.env.GOVUK_NOTIFY_API_KEY);
 app.post(
