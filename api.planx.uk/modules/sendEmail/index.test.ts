@@ -1,13 +1,13 @@
 import supertest from "supertest";
-import app from "../server";
-import { queryMock } from "../tests/graphqlQueryMock";
+import app from "../../server";
+import { queryMock } from "../../tests/graphqlQueryMock";
 import {
   mockFlow,
   mockLowcalSession,
   mockSetupEmailNotifications,
   mockSoftDeleteLowcalSession,
   mockValidateSingleSessionRequest,
-} from "../tests/mocks/saveAndReturnMocks";
+} from "../../tests/mocks/saveAndReturnMocks";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses

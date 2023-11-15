@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import {
   sendSinglePaymentEmail,
   sendAgentAndPayeeConfirmationEmail,
-} from "../inviteToPay";
-import { sendSingleApplicationEmail } from "../modules/saveAndReturn/service/utils";
-import { Template } from "../lib/notify";
-import { ServerError } from "../errors";
+} from "../../inviteToPay";
+import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils";
+import { Template } from "../../lib/notify";
+import { ServerError } from "../../errors";
 
 export async function routeSendEmailRequest(
   req: Request,
