@@ -43,6 +43,68 @@ describe("File upload", () => {
 
   describe("Private", () => {
     const ENDPOINT = "/file/private/upload";
+
+    it("should not upload without filename", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .field("filename", "")
+        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .expect(400)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
+        });
+    });
+
+    it("should not upload without file", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .field("filename", "some filename")
+        .expect(500)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body.error).toMatch(/Missing file/);
+        });
+    });
+
+    it("should upload file", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .field("filename", "some_file.txt")
+        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .then((res) => {
+          expect(res.body).toEqual({
+            fileType: "text/plain",
+            fileUrl: expect.stringContaining(
+              "/file/private/nanoid/modified%20key",
+            ),
+          });
+        });
+      expect(mockPutObject).toHaveBeenCalledTimes(1);
+      expect(mockGetSignedUrl).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle S3 error", async () => {
+      mockPutObject = jest.fn(() => ({
+        promise: () => Promise.reject(new Error("S3 error!")),
+      }));
+
+      await supertest(app)
+        .post("/file/private/upload")
+        .field("filename", "some_file.txt")
+        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/S3 error!/);
+        });
+      expect(mockPutObject).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("Public", () => {
+    const ENDPOINT = "/file/public/upload";
+
     const auth = authHeader({ role: "teamEditor" });
 
     it("returns an error if authorization headers are not set", async () => {
@@ -92,68 +154,6 @@ describe("File upload", () => {
           expect(res.body).toEqual({
             fileType: "text/plain",
             fileUrl: expect.stringContaining(
-              "/file/private/nanoid/modified%20key",
-            ),
-          });
-        });
-      expect(mockPutObject).toHaveBeenCalledTimes(1);
-      expect(mockGetSignedUrl).toHaveBeenCalledTimes(1);
-    });
-
-    it("should handle S3 error", async () => {
-      mockPutObject = jest.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!")),
-      }));
-
-      await supertest(app)
-        .post("/file/private/upload")
-        .set(auth)
-        .field("filename", "some_file.txt")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
-        .expect(500)
-        .then((res) => {
-          expect(res.body.error).toMatch(/S3 error!/);
-        });
-      expect(mockPutObject).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe("Public", () => {
-    const ENDPOINT = "/file/public/upload";
-
-    it("should not upload without filename", async () => {
-      await supertest(app)
-        .post(ENDPOINT)
-        .field("filename", "")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
-        .expect(400)
-        .then((res) => {
-          expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
-        });
-    });
-
-    it("should not upload without file", async () => {
-      await supertest(app)
-        .post(ENDPOINT)
-        .field("filename", "some filename")
-        .expect(500)
-        .then((res) => {
-          expect(mockPutObject).not.toHaveBeenCalled();
-          expect(res.body.error).toMatch(/Missing file/);
-        });
-    });
-
-    it("should upload file", async () => {
-      await supertest(app)
-        .post(ENDPOINT)
-        .field("filename", "some_file.txt")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
-        .then((res) => {
-          expect(res.body).toEqual({
-            fileType: "text/plain",
-            fileUrl: expect.stringContaining(
               "file/public/nanoid/modified%20key",
             ),
           });
@@ -169,6 +169,7 @@ describe("File upload", () => {
 
       await supertest(app)
         .post(ENDPOINT)
+        .set(auth)
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
