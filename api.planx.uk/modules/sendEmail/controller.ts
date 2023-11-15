@@ -4,34 +4,15 @@ import {
 } from "../../inviteToPay";
 import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils";
 import { ServerError } from "../../errors";
-import { z } from "zod";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate";
 import { NextFunction } from "express";
-
-interface SendEmailResponse {
-  message: string;
-  expiryDate?: string;
-}
-
-export const singleApplicationEmailSchema = z.object({
-  body: z.object({
-    payload: z.object({
-      email: z.string().email(),
-      sessionId: z.string(),
-    }),
-  }),
-  params: z.object({
-    template: z.enum(["reminder", "expiry", "save"]),
-  }),
-});
-
-export type SingleApplicationEmail = ValidatedRequestHandler<
-  typeof singleApplicationEmailSchema,
-  SendEmailResponse
->;
+import {
+  ConfirmationEmail,
+  PaymentEmail,
+  SingleApplicationEmail,
+} from "./types";
 
 export const singleApplicationEmailController: SingleApplicationEmail = async (
-  req,
+  _req,
   res,
   next,
 ) => {
@@ -50,29 +31,6 @@ export const singleApplicationEmailController: SingleApplicationEmail = async (
   }
 };
 
-export const paymentEmailSchema = z.object({
-  body: z.object({
-    payload: z.object({
-      paymentRequestId: z.string(),
-    }),
-  }),
-  params: z.object({
-    template: z.enum([
-      "invite-to-pay",
-      "invite-to-pay-agent",
-      "payment-reminder",
-      "payment-reminder-agent",
-      "payment-expiry",
-      "payment-expiry-agent",
-    ]),
-  }),
-});
-
-export type PaymentEmail = ValidatedRequestHandler<
-  typeof paymentEmailSchema,
-  SendEmailResponse
->;
-
 export const paymentEmailController: PaymentEmail = async (_req, res, next) => {
   const { paymentRequestId } = res.locals.parsedReq.body.payload;
   const { template } = res.locals.parsedReq.params;
@@ -87,24 +45,6 @@ export const paymentEmailController: PaymentEmail = async (_req, res, next) => {
     emailErrorHandler(next, error, template);
   }
 };
-
-export const confirmationEmailSchema = z.object({
-  body: z.object({
-    payload: z.object({
-      sessionId: z.string(),
-      lockedAt: z.string(),
-      email: z.string().email(),
-    }),
-  }),
-  params: z.object({
-    template: z.enum(["confirmation"]),
-  }),
-});
-
-export type ConfirmationEmail = ValidatedRequestHandler<
-  typeof confirmationEmailSchema,
-  SendEmailResponse
->;
 
 export const confirmationEmailController: ConfirmationEmail = async (
   _req,

@@ -108,7 +108,7 @@ describe("Invite to pay confirmation templates cannot be sent individually", () 
     test(`the "${template}" template`, async () => {
       const data = {
         payload: {
-          sessionId: "TestSesionID",
+          sessionId: "TestSessionID",
           lockedAt: "2023-05-18T12:49:22.839068+00:00",
         },
       };
@@ -116,8 +116,10 @@ describe("Invite to pay confirmation templates cannot be sent individually", () 
         .post(`/send-email/${template}`)
         .set("Authorization", "testtesttest")
         .send(data)
-        .expect(400, {
-          error: `Failed to send "${template}" email. Invalid template`,
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
         });
     });
   }

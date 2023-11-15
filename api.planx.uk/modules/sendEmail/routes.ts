@@ -2,14 +2,16 @@ import { Router } from "express";
 import { useSendEmailAuth } from "../auth/middleware";
 import {
   confirmationEmailController,
-  confirmationEmailSchema,
   paymentEmailController,
-  paymentEmailSchema,
   singleApplicationEmailController,
-  singleApplicationEmailSchema,
 } from "./controller";
 import { sendEmailLimiter } from "../../rateLimit";
 import { validate } from "../../shared/middleware/validate";
+import {
+  confirmationEmailSchema,
+  paymentEmailSchema,
+  singleApplicationEmailSchema,
+} from "./types";
 
 const router = Router();
 

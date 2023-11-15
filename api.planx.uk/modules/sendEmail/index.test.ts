@@ -39,10 +39,8 @@ describe("Send Email endpoint", () => {
           .send(invalidBody)
           .expect(400)
           .then((response) => {
-            expect(response.body).toHaveProperty(
-              "error",
-              'Failed to send "save" email. Required value missing',
-            );
+            expect(response.body).toHaveProperty("issues");
+            expect(response.body).toHaveProperty("name", "ZodError");
           });
       }
     });
@@ -75,9 +73,10 @@ describe("Send Email endpoint", () => {
       await supertest(app)
         .post(SAVE_ENDPOINT)
         .send(data)
-        .expect(500)
+        .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty("error");
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
         });
     });
 
