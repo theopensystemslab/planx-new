@@ -13,6 +13,7 @@ import ColorPicker from "ui/ColorPicker";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
+import Radio from "ui/Radio";
 import RichTextInput from "ui/RichTextInput";
 
 export type Props = EditorProps<TYPES.Content, Content>;
@@ -37,6 +38,24 @@ const ContentComponent: React.FC<Props> = (props) => {
               name="content"
               value={formik.values.content}
               onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <Radio
+              options={[
+                {
+                  value: false,
+                  label: "Transparent background",
+                },
+                {
+                  value: true,
+                  label: "Custom background colour",
+                },
+              ]}
+              value={formik.values.customBackground}
+              onChange={(customBackground) => {
+                formik.setFieldValue("customBackground", customBackground);
+              }}
             />
           </InputRow>
           <ColorPicker

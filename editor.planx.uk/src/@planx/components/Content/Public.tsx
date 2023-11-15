@@ -13,8 +13,6 @@ export type Props = PublicProps<Content>;
 const Content = styled(Box, {
   shouldForwardProp: (prop) => prop !== "color",
 })<{ color?: string }>(({ theme, color }) => ({
-  padding: theme.spacing(2),
-  backgroundColor: color,
   color:
     mostReadable(color || "#fff", [
       "#fff",
@@ -25,10 +23,15 @@ const Content = styled(Box, {
   },
 }));
 
-const ContentComponent: React.FC<Props> = (props) => {
+const ContentComponent: React.FC<Props> = (props, theme) => {
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
-      <Content color={props.color} data-testid="content">
+      <Content
+        color={props.customBackground === true ? props.color : theme.primary}
+        bgcolor={props.customBackground === true ? props.color : "transparent"}
+        data-testid="content"
+        p={props.customBackground === true ? 2 : 0}
+      >
         <ReactMarkdownOrHtml
           source={props.content}
           openLinksOnNewTab
