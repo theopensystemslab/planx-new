@@ -17,6 +17,7 @@ const router = Router();
 router.post(
   "/public/upload",
   multer().single("file"),
+  useTeamEditorAuth,
   validate(uploadFileSchema),
   publicUploadController,
 );
@@ -24,7 +25,6 @@ router.post(
 router.post(
   "/private/upload",
   multer().single("file"),
-  useTeamEditorAuth,
   validate(uploadFileSchema),
   privateUploadController,
 );
