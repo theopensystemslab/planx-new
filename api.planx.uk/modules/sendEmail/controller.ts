@@ -1,106 +1,148 @@
-import { NextFunction, Request, Response } from "express";
 import {
   sendSinglePaymentEmail,
   sendAgentAndPayeeConfirmationEmail,
 } from "../../inviteToPay";
 import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils";
-import { Template } from "../../lib/notify";
 import { ServerError } from "../../errors";
+import { z } from "zod";
+import { ValidatedRequestHandler } from "../../shared/middleware/validate";
+import { NextFunction } from "express";
 
-export async function routeSendEmailRequest(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+interface SendEmailResponse {
+  message: string;
+  expiryDate?: string;
+}
+
+export const singleApplicationEmailSchema = z.object({
+  body: z.object({
+    payload: z.object({
+      email: z.string().email(),
+      sessionId: z.string(),
+    }),
+  }),
+  params: z.object({
+    template: z.enum(["reminder", "expiry", "save"]),
+  }),
+});
+
+export type SingleApplicationEmail = ValidatedRequestHandler<
+  typeof singleApplicationEmailSchema,
+  SendEmailResponse
+>;
+
+export const singleApplicationEmailController: SingleApplicationEmail = async (
+  req,
+  res,
+  next,
+) => {
+  const { email, sessionId } = res.locals.parsedReq.body.payload;
+  const { template } = res.locals.parsedReq.params;
+
   try {
-    const { email, sessionId, paymentRequestId, lockedAt } = req.body.payload;
-    const template = req.params.template as Template;
+    const response = await sendSingleApplicationEmail({
+      template,
+      email,
+      sessionId,
+    });
+    return res.json(response);
+  } catch (error) {
+    emailErrorHandler(next, error, template);
+  }
+};
 
-    const invalidTemplate = (_unknownTemplate?: never) => {
-      throw new ServerError({
-        message: "Invalid template",
-        status: 400,
-      });
-    };
+export const paymentEmailSchema = z.object({
+  body: z.object({
+    payload: z.object({
+      paymentRequestId: z.string(),
+    }),
+  }),
+  params: z.object({
+    template: z.enum([
+      "invite-to-pay",
+      "invite-to-pay-agent",
+      "payment-reminder",
+      "payment-reminder-agent",
+      "payment-expiry",
+      "payment-expiry-agent",
+    ]),
+  }),
+});
 
-    const handleSingleApplicationEmail = async () => {
-      if (!email || !sessionId) {
-        throw new ServerError({
-          status: 400,
-          message: "Required value missing",
-        });
-      }
+export type PaymentEmail = ValidatedRequestHandler<
+  typeof paymentEmailSchema,
+  SendEmailResponse
+>;
+
+export const paymentEmailController: PaymentEmail = async (_req, res, next) => {
+  const { paymentRequestId } = res.locals.parsedReq.body.payload;
+  const { template } = res.locals.parsedReq.params;
+
+  try {
+    const response = await sendSinglePaymentEmail({
+      template,
+      paymentRequestId,
+    });
+    return res.json(response);
+  } catch (error) {
+    emailErrorHandler(next, error, template);
+  }
+};
+
+export const confirmationEmailSchema = z.object({
+  body: z.object({
+    payload: z.object({
+      sessionId: z.string(),
+      lockedAt: z.string(),
+      email: z.string().email(),
+    }),
+  }),
+  params: z.object({
+    template: z.enum(["confirmation"]),
+  }),
+});
+
+export type ConfirmationEmail = ValidatedRequestHandler<
+  typeof confirmationEmailSchema,
+  SendEmailResponse
+>;
+
+export const confirmationEmailController: ConfirmationEmail = async (
+  _req,
+  res,
+  next,
+) => {
+  const { lockedAt, sessionId, email } = res.locals.parsedReq.body.payload;
+  const { template } = res.locals.parsedReq.params;
+
+  try {
+    // if the session is locked we can infer that a payment request has been initiated
+    const paymentRequestInitiated = Boolean(lockedAt);
+    if (paymentRequestInitiated) {
+      const response = await sendAgentAndPayeeConfirmationEmail(sessionId);
+      return res.json(response);
+    } else {
       const response = await sendSingleApplicationEmail({
         template,
         email,
         sessionId,
       });
       return res.json(response);
-    };
-
-    const handlePaymentEmails = async () => {
-      if (!paymentRequestId) {
-        throw new ServerError({
-          status: 400,
-          message: "Required `paymentRequestId` missing",
-        });
-      }
-      const response = await sendSinglePaymentEmail({
-        template,
-        paymentRequestId,
-      });
-      return res.json(response);
-    };
-
-    const handleInviteToPayConfirmationEmails = async () => {
-      if (!sessionId) {
-        throw new ServerError({
-          status: 400,
-          message: "Required `sessionId` missing",
-        });
-      }
-      const response = await sendAgentAndPayeeConfirmationEmail(sessionId);
-      return res.json(response);
-    };
-
-    switch (template) {
-      case "reminder":
-      case "expiry":
-      case "save":
-        return await handleSingleApplicationEmail();
-      case "invite-to-pay":
-      case "invite-to-pay-agent":
-      case "payment-reminder":
-      case "payment-reminder-agent":
-      case "payment-expiry":
-      case "payment-expiry-agent":
-        return await handlePaymentEmails();
-      case "confirmation": {
-        // if the session is locked we can infer that a payment request has been initiated
-        const paymentRequestInitiated = Boolean(lockedAt);
-        if (paymentRequestInitiated) {
-          return await handleInviteToPayConfirmationEmails();
-        } else {
-          return await handleSingleApplicationEmail();
-        }
-      }
-      case "resume":
-      case "submit":
-      case "confirmation-agent":
-      case "confirmation-payee":
-        // templates that are already handled by other routes
-        return invalidTemplate();
-      default:
-        return invalidTemplate(template);
     }
   } catch (error) {
-    next(
-      new ServerError({
-        status: error instanceof ServerError ? error.status : undefined,
-        message: `Failed to send "${req.params.template}" email. ${
-          (error as Error).message
-        }`,
-      }),
-    );
+    emailErrorHandler(next, error, template);
   }
-}
+};
+
+const emailErrorHandler = (
+  next: NextFunction,
+  error: unknown,
+  template: string,
+) =>
+  next(
+    new ServerError({
+      status: error instanceof ServerError ? error.status : undefined,
+      message: `Failed to send "${template}" email. ${
+        (error as Error).message
+      }`,
+    }),
+  );
