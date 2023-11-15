@@ -178,7 +178,6 @@ app.use("/webhooks", webhookRoutes);
 app.use("/analytics", analyticsRoutes);
 app.use("/admin", adminRoutes);
 app.use(ordnanceSurveyRoutes);
-app.use(fileRoutes);
 app.use("/file", fileRoutes);
 
 app.use("/gis", router);
