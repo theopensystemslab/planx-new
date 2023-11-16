@@ -1,7 +1,6 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface Content extends MoreInformation {
-  customBackground: boolean;
   content: string;
   color?: string;
 }
@@ -11,6 +10,5 @@ export const parseContent = (
 ): Content => ({
   content: data?.content || "",
   color: data?.color,
-  customBackground: data?.customBackground,
   ...parseMoreInformation(data),
 });

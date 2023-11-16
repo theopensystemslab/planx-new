@@ -13,6 +13,7 @@ export type Props = PublicProps<Content>;
 const Content = styled(Box, {
   shouldForwardProp: (prop) => prop !== "color",
 })<{ color?: string }>(({ theme, color }) => ({
+  backgroundColor: color,
   color:
     mostReadable(color || "#fff", [
       "#fff",
@@ -23,14 +24,17 @@ const Content = styled(Box, {
   },
 }));
 
-const ContentComponent: React.FC<Props> = (props, theme) => {
+Content.defaultProps = {
+  color: "#ffffff",
+};
+
+const ContentComponent: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
       <Content
-        color={props.customBackground === true ? props.color : theme.primary}
-        bgcolor={props.customBackground === true ? props.color : "transparent"}
+        color={props.color}
         data-testid="content"
-        p={props.customBackground === true ? 2 : 0}
+        p={props.color === ("#ffffff" || undefined) ? 0 : 2}
       >
         <ReactMarkdownOrHtml
           source={props.content}

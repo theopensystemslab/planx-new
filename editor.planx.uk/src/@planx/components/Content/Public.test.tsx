@@ -10,12 +10,7 @@ test("const { user } = setups correctly", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <Content
-      content="hello"
-      customBackground={true}
-      color="#fff"
-      handleSubmit={handleSubmit}
-    />,
+    <Content content="hello" color="#fff" handleSubmit={handleSubmit} />,
   );
 
   expect(content()).toHaveTextContent("hello");
@@ -30,7 +25,7 @@ test("const { user } = setups correctly", async () => {
 });
 
 test("use light text color if color param is dark", () => {
-  setup(<Content content="dark" customBackground={true} color="#000" />);
+  setup(<Content content="dark" color="#000" />);
   expect(content()).toHaveStyle({
     background: "#000",
     color: "#fff",
@@ -38,9 +33,7 @@ test("use light text color if color param is dark", () => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(
-    <Content content="dark" customBackground={true} color="#000" />,
-  );
+  const { container } = setup(<Content content="dark" color="#000" />);
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
