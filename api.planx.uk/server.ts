@@ -13,11 +13,7 @@ import passport from "passport";
 import helmet from "helmet";
 
 import { ServerError } from "./errors";
-import {
-  makePaymentViaProxy,
-  fetchPaymentViaProxy,
-  makeInviteToPayPaymentViaProxy,
-} from "./pay";
+import { makeInviteToPayPaymentViaProxy } from "./modules/pay/controller";
 import {
   inviteToPay,
   fetchPaymentRequestDetails,
@@ -46,6 +42,7 @@ import saveAndReturnRoutes from "./modules/saveAndReturn/routes";
 import sendEmailRoutes from "./modules/sendEmail/routes";
 import fileRoutes from "./modules/file/routes";
 import gisRoutes from "./modules/gis/routes";
+import payRoutes from "./modules/pay/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 
@@ -116,12 +113,6 @@ app.get("/download-application-files/:sessionId", downloadApplicationFiles);
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
 });
 
-// used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
-app.post("/pay/:localAuthority", makePaymentViaProxy);
-
-// used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
-app.get("/pay/:localAuthority/:paymentId", fetchPaymentViaProxy);
-
 app.post(
   "/payment-request/:paymentRequest/pay",
   fetchPaymentRequestDetails,
@@ -170,6 +161,7 @@ app.use(saveAndReturnRoutes);
 app.use(sendEmailRoutes);
 app.use("/flows", flowRoutes);
 app.use(gisRoutes);
+app.use(payRoutes);
 
 // allows an applicant to download their application data on the Confirmation page
 app.post("/download-application", async (req, res, next) => {

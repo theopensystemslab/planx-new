@@ -1,13 +1,15 @@
 import assert from "assert";
 import { NextFunction, Request, Response } from "express";
 import { responseInterceptor } from "http-proxy-middleware";
-import SlackNotify from "slack-notify";
-import { logPaymentStatus } from "../send/helpers";
+import { logPaymentStatus } from "../../send/helpers";
 import { usePayProxy } from "./proxy";
-import { $api } from "../client";
-import { ServerError } from "../errors";
+import { $api } from "../../client";
+import { ServerError } from "../../errors";
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { addGovPayPaymentIdToPaymentRequest } from "./utils";
+import {
+  addGovPayPaymentIdToPaymentRequest,
+  postPaymentNotificationToSlack,
+} from "./service";
 
 assert(process.env.SLACK_WEBHOOK_URL);
 
@@ -182,24 +184,4 @@ export function fetchPaymentViaProxyWithCallback(
       req,
     )(req, res, next);
   };
-}
-
-export async function postPaymentNotificationToSlack(
-  req: Request,
-  govUkResponse: GovUKPayment,
-  label = "",
-) {
-  // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
-  if (govUkResponse?.payment_provider !== "sandbox") {
-    const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-    const getStatus = (state: GovUKPayment["state"]) =>
-      state.status + (state.message ? ` (${state.message})` : "");
-    const payMessage = `:coin: New GOV Pay payment ${label} *${
-      govUkResponse.payment_id
-    }* with status *${getStatus(govUkResponse.state)}* [${
-      req.params.localAuthority
-    }]`;
-    await slack.send(payMessage);
-    console.log("Payment notification posted to Slack");
-  }
 }
