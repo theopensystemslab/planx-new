@@ -307,7 +307,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
           aria-haspopup="dialog"
           size="small"
         >
-          <span>Help</span>
+          <span>Info</span>
         </InfoButton>
       )}
       <MoreInfo open={open} handleClose={() => setOpen(false)}>

@@ -11,7 +11,7 @@ import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
-const HelpButtonMinWidth = "75px";
+const HelpButtonMinWidth = "70px";
 
 interface IQuestionHeader {
   title?: string;
@@ -30,7 +30,7 @@ const Description = styled(Box)(({ theme }) => ({
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
   width: theme.breakpoints.values.formWrap,
-  maxWidth: `calc(100% - ${HelpButtonMinWidth})`,
+  maxWidth: `calc(100% - (${HelpButtonMinWidth} + 4px))`,
   [theme.breakpoints.up("contentWrap")]: {
     maxWidth: "100%",
   },
@@ -45,21 +45,19 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "stretch",
   width: HelpButtonMinWidth,
-  top: theme.spacing(6),
-  right: 0,
-  [theme.breakpoints.up("sm")]: {
-    top: theme.spacing(6.5),
-  },
+  top: "-4px",
+  right: "-6px",
   [theme.breakpoints.up("md")]: {
-    top: theme.spacing(8.5),
-    width: "110px",
+    width: "80px",
+    top: 0,
+    right: 0,
   },
   [theme.breakpoints.up("lg")]: {
-    width: "140px",
+    width: "100px",
   },
   "#embedded-browser &": {
+    top: "-60px",
     width: "80px",
-    top: theme.spacing(13),
   },
 }));
 
@@ -68,20 +66,16 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   position: "sticky",
   right: 0,
   minHeight: "44px",
-  padding: "0.35em 1em",
+  padding: "0.35em 0.5em",
   alignSelf: "flex-start",
-  borderRadius: "50px 0 0 50px",
   minWidth: "100%",
   boxShadow: "none",
-  backgroundColor: theme.palette.text.primary,
+  borderRadius: "3px",
   fontSize: "1.125em",
-  filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5))",
-  [theme.breakpoints.up("md")]: {
-    padding: "0.35em 1em 0.35em 0.5em",
-  },
+  filter: "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.5))",
   [theme.breakpoints.up("lg")]: {
     minHeight: "48px",
-    fontSize: "1.375em",
+    fontSize: "1.25em",
     top: theme.spacing(1),
   },
   "#embedded-browser &": {
@@ -112,7 +106,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 
   return (
     <>
-      <Box mb={1}>
+      <Box mb={1} sx={{ minHeight: "2em" }}>
         {title && (
           <TitleWrapper mr={1} pt={0.5}>
             <Typography
@@ -135,6 +129,22 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               />
             </Typography>
           </Description>
+        )}
+        {!!(info || policyRef || howMeasured) && (
+          <HelpButtonWrapper>
+            <HelpButton
+              title={`More information`}
+              aria-label={`See more information about "${title}"`}
+              onClick={handleHelpClick}
+              aria-haspopup="dialog"
+              data-testid="more-info-button"
+              variant="outlined"
+              color="primary"
+              sx={{ width: "100%" }}
+            >
+              Help
+            </HelpButton>
+          </HelpButtonWrapper>
         )}
         <MoreInfo open={open} handleClose={() => setOpen(false)}>
           {info && info !== emptyContent ? (
@@ -160,21 +170,6 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         </MoreInfo>
         {img && <Image src={img} alt="question" />}
       </Box>
-      {!!(info || policyRef || howMeasured) && (
-        <HelpButtonWrapper>
-          <HelpButton
-            title={`More information`}
-            aria-label={`See more information about "${title}"`}
-            onClick={handleHelpClick}
-            aria-haspopup="dialog"
-            data-testid="more-info-button"
-            variant="contained"
-            sx={{ width: "100%" }}
-          >
-            Help
-          </HelpButton>
-        </HelpButtonWrapper>
-      )}
     </>
   );
 };

@@ -263,9 +263,13 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
           },
           outlined: {
             borderWidth: "2px 2px 3px",
-            borderColor: "currentcolor",
+            borderColor: palette.primary.main,
+            color: palette.text.primary,
+            backgroundColor: palette.common.white,
             "&:hover": {
               borderWidth: "2px 2px 3px",
+              backgroundColor: palette.primary.dark,
+              color: palette.common.white,
             },
           },
         },
