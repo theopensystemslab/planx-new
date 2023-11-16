@@ -70,6 +70,7 @@ function Component(props: Props) {
     "medway",
     "newcastle",
     "southwark",
+    "st-albans",
   ];
 
   const digitalLandParams: Record<string, string> = {
