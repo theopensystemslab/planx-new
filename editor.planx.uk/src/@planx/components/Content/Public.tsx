@@ -34,7 +34,7 @@ const ContentComponent: React.FC<Props> = (props) => {
       <Content
         color={props.color}
         data-testid="content"
-        p={props.color === ("#ffffff" || undefined) ? 0 : 2}
+        p={(props.color === "#ffffff" || !props.color) ? 0 : 2}
       >
         <ReactMarkdownOrHtml
           source={props.content}
