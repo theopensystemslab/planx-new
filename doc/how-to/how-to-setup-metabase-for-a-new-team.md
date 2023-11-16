@@ -14,7 +14,14 @@ Metabase is set up and running on both Staging and Production environments, but 
 ![Screenshot - Add a Collection](./images/setup-metabase/new_collection.png)
 
 3. Duplicate existing Dashboards (FOIYNPP, LDC) from an existing team, renaming them and adding to new Collection.
-   * Not all teams host the same services on PlanX. Ensure you only duplicate Dashboards for which teams have an associated flows. This can be checked via the PlanX Editor
+
+![Screenshot - Duplicate and existing dashboard](./images/setup-metabase/duplicate_an_existing_dashboard.png)
+
+   * Not all teams host the same services on PlanX. Ensure you only duplicate Dashboards for which teams have an associated flows. This can be checked via the PlanX Editor.
+
+![Screenshot - Only duplicate the dashboard](./images/setup-metabase/only_duplicate_dashboard.png)
+
+   * Ensure "Only duplicate the dashboard" is selected. This avoids unecessarily duplicating the visualisations which we maintain.
 
 4. Navigate to the new Collection, and edit each Dashboard to update the FlowID variable.
 
