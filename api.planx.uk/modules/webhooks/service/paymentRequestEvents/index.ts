@@ -4,7 +4,7 @@ import { createScheduledEvent } from "../../../../lib/hasura/metadata";
 import {
   DAYS_UNTIL_EXPIRY,
   REMINDER_DAYS_FROM_EXPIRY,
-} from "../../../../saveAndReturn/utils";
+} from "../../../saveAndReturn/service/utils";
 import { CreatePaymentEvent } from "./schema";
 
 /**

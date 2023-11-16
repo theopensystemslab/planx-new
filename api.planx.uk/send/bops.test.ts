@@ -4,7 +4,7 @@ import { queryMock } from "../tests/graphqlQueryMock";
 import app from "../server";
 import { expectedPayload } from "../tests/mocks/bopsMocks";
 
-jest.mock("../saveAndReturn/utils", () => ({
+jest.mock("../modules/saveAndReturn/service/utils", () => ({
   markSessionAsSubmitted: jest.fn(),
 }));
 

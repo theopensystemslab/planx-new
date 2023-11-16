@@ -1,5 +1,5 @@
 import { NotifyClient } from "notifications-node-client";
-import { softDeleteSession } from "../saveAndReturn/utils";
+import { softDeleteSession } from "../modules/saveAndReturn/service/utils";
 import { NotifyConfig } from "../types";
 import { $api, $public } from "../client";
 

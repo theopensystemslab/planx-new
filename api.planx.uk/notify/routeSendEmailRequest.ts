@@ -3,7 +3,7 @@ import {
   sendSinglePaymentEmail,
   sendAgentAndPayeeConfirmationEmail,
 } from "../inviteToPay";
-import { sendSingleApplicationEmail } from "../saveAndReturn/utils";
+import { sendSingleApplicationEmail } from "../modules/saveAndReturn/service/utils";
 import { Template } from "./notify";
 import { ServerError } from "../errors";
 

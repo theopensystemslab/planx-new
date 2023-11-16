@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { markSessionAsSubmitted } from "../saveAndReturn/utils";
+import { markSessionAsSubmitted } from "../modules/saveAndReturn/service/utils";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { $api } from "../client";

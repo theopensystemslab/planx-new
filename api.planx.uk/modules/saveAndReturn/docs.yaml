@@ -1,0 +1,123 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: save and return
+    description: Endpoints used for "Save and Return" functionality
+components:
+  schema:
+    ResumeApplication:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payload:
+                type: object
+                properties:
+                  teamSlug:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+    ValidateSession:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payload:
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+                    format: uuid
+                  email:
+                    type: string
+                    format: email
+  responses:
+    ResumeApplication:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                required: true
+                type: string
+              expiryDate:
+                required: false
+                oneOf:
+                  - type: string
+                  - type: "null"
+    ValidationResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        changesFound:
+          type: boolean
+          nullable: true
+        alteredSectionIds:
+          type: array
+          items:
+            type: string
+        reconciledSessionData:
+          type: object
+          properties:
+            breadcrumbs:
+              type: object
+            id:
+              type: string
+            # TODO: Add $ref here when documenting payment endpoints
+            govUkPayment:
+              required: false
+              type: object
+    LockedSessionResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          enum:
+            - Session locked
+        paymentRequest:
+          type: object
+          properties:
+            id:
+              type: string
+            payeeEmail:
+              type: string
+              format: email
+            payeeName:
+              type: string
+paths:
+  /resume-application:
+    post:
+      summary: Resume application
+      description: Request a "resume" email which lists all of your open applications. This email acts as a "dashboard" for the user.
+      tags:
+        - save and return
+      requestBody:
+        $ref: "#/components/schema/ResumeApplication"
+      responses:
+        "200":
+          $ref: "#/components/responses/ResumeApplication"
+  /validate-session:
+    post:
+      summary: Validate session
+      description: Validates the session and reconciles the session's breadcrumbs to account for any differences between the current published flow and the last flow version a user traversed.
+      tags:
+        - save and return
+      requestBody:
+        $ref: "#/components/schema/ValidateSession"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/responses/ValidationResponse"
+                  - $ref: "#/components/responses/LockedSessionResponse"

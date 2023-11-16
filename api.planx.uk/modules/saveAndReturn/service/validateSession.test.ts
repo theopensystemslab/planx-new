@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import omit from "lodash.omit";
-import app from "../server";
-import { queryMock } from "../tests/graphqlQueryMock";
+import app from "../../../server";
+import { queryMock } from "../../../tests/graphqlQueryMock";
 import {
   mockFlow,
   mockLowcalSession,
@@ -11,10 +11,10 @@ import {
   mockGetMostRecentPublishedFlow,
   stubInsertReconciliationRequests,
   stubUpdateLowcalSessionData,
-} from "../tests/mocks/saveAndReturnMocks";
-import type { Node, Flow, Breadcrumb } from "../types";
-import { userContext } from "../modules/auth/middleware";
-import { getJWT } from "../tests/mockJWT";
+} from "../../../tests/mocks/saveAndReturnMocks";
+import type { Node, Flow, Breadcrumb } from "../../../types";
+import { userContext } from "../../auth/middleware";
+import { getJWT } from "../../../tests/mockJWT";
 
 const validateSessionPath = "/validate-session";
 const getStoreMock = jest.spyOn(userContext, "getStore");
@@ -49,10 +49,8 @@ describe("Validate Session endpoint", () => {
         .send(invalidBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty(
-            "error",
-            "Required value missing",
-          );
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
         });
     }
   });

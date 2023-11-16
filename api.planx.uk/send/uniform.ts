@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import FormData from "form-data";
 import fs from "fs";
-import { markSessionAsSubmitted } from "../saveAndReturn/utils";
+import { markSessionAsSubmitted } from "../modules/saveAndReturn/service/utils";
 import { gql } from "graphql-request";
 import { $api } from "../client";
 import { buildSubmissionExportZip } from "./exportZip";

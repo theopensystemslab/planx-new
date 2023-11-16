@@ -1,44 +1,25 @@
-import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { LowCalSession, Team } from "../types";
+import { LowCalSession, Team } from "../../../types";
 import { convertSlugToName, getResumeLink, calculateExpiryDate } from "./utils";
-import { sendEmail } from "../notify";
+import { sendEmail } from "../../../notify";
 import type { SiteAddress } from "@opensystemslab/planx-core/types";
-import { $api, $public } from "../client";
+import { $api, $public } from "../../../client";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
  */
-const resumeApplication = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { teamSlug, email } = req.body.payload;
-    if (!teamSlug || !email)
-      return next({
-        status: 400,
-        message: "Required value missing",
-      });
+const resumeApplication = async (teamSlug: string, email: string) => {
+  const { team, sessions } = await validateRequest(teamSlug, email);
+  // Protect against phishing by returning a positive response even if no matching sessions found
+  if (!sessions.length) return { message: "Success" };
 
-    const { team, sessions } = await validateRequest(teamSlug, email);
-    // Protect against phishing by returning a positive response even if no matching sessions found
-    if (!sessions.length) return res.json({ message: "Success" });
-
-    const config = {
-      personalisation: await getPersonalisation(sessions, team),
-      reference: null,
-      emailReplyToId: team.notifyPersonalisation.emailReplyToId,
-    };
-    const response = await sendEmail("resume", email, config);
-    return res.json(response);
-  } catch (error) {
-    return next({
-      error,
-      message: `Failed to send "Resume" email. ${(error as Error).message}`,
-    });
-  }
+  const config = {
+    personalisation: await getPersonalisation(sessions, team),
+    reference: null,
+    emailReplyToId: team.notifyPersonalisation.emailReplyToId,
+  };
+  const response = await sendEmail("resume", email, config);
+  return response;
 };
 
 interface ValidateRequest {

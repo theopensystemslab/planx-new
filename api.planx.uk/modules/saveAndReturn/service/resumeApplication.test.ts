@@ -1,8 +1,11 @@
-import { LowCalSession, Team } from "./../types";
+import { LowCalSession, Team } from "../../../types";
 import supertest from "supertest";
-import app from "../server";
-import { queryMock } from "../tests/graphqlQueryMock";
-import { mockLowcalSession, mockTeam } from "../tests/mocks/saveAndReturnMocks";
+import app from "../../../server";
+import { queryMock } from "../../../tests/graphqlQueryMock";
+import {
+  mockLowcalSession,
+  mockTeam,
+} from "../../../tests/mocks/saveAndReturnMocks";
 import { buildContentFromSessions } from "./resumeApplication";
 import { PartialDeep } from "type-fest";
 
@@ -216,10 +219,8 @@ describe("Resume Application endpoint", () => {
         .send(invalidBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty(
-            "error",
-            "Required value missing",
-          );
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
         });
     }
   });
