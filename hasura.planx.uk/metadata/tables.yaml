@@ -1324,17 +1324,18 @@
     - role: api
       permission:
         columns:
-          - id
-          - notify_personalisation
-          - settings
-          - theme
-          - domain
-          - name
-          - slug
-          - created_at
-          - updated_at
           - boundary
+          - created_at
+          - domain
+          - id
+          - name
+          - notify_personalisation
+          - reference_code
+          - settings
+          - slug
           - submission_email
+          - theme
+          - updated_at
         computed_fields:
           - boundary_bbox
         filter: {}
@@ -1346,6 +1347,7 @@
           - id
           - name
           - notify_personalisation
+          - reference_code
           - settings
           - slug
           - theme
@@ -1362,6 +1364,7 @@
           - id
           - name
           - notify_personalisation
+          - reference_code
           - settings
           - slug
           - theme
@@ -1377,6 +1380,7 @@
           - id
           - name
           - notify_personalisation
+          - reference_code
           - settings
           - slug
           - theme
