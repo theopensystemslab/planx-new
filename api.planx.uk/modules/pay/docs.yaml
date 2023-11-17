@@ -22,6 +22,24 @@ components:
       format: uuid
       required: true
   schemas:
+    InviteToPayRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payeeEmail:
+                type: string
+                format: email
+              payeeName:
+                type: string
+              applicantName:
+                type: string
+              sessionPreviewKeys:
+                type: array
+                items:
+                  type: array
+                  items: string
     CreatePaymentRequest:
       description: |
         Payment response for the GovPay API
@@ -335,3 +353,14 @@ paths:
         "200":
           $ref: "#/components/responses/FetchPaymentResponse"
   /invite-to-pay/{sessionId}:
+    post:
+      summary: Generate a payment request
+      tags:
+        - pay
+      parameters:
+        - $ref: "#/components/parameters/sessionId"
+      requestBody:
+        $ref: "#/components/schemas/InviteToPayRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/CreatePaymentResponse"
