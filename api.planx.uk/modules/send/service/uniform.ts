@@ -44,26 +44,6 @@ interface SendToUniformPayload {
   sessionId: string;
 }
 
-/**
- * @swagger
- * /uniform/{localAuthority}:
- *  post:
- *    summary: Submits an application to Uniform
- *    description: Submits an application to Uniform
- *    tags:
- *      - submissions
- *    parameters:
- *      - $ref: '#/components/parameters/localAuthority'
- *    security:
- *      - hasuraAuth: []
- *    requestBody:
- *      description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/SessionPayload'
- */
 export async function sendToUniform(
   req: Request,
   res: Response,

@@ -9,26 +9,6 @@ import { $api } from "../../../client";
 import { NotifyPersonalisation } from "@opensystemslab/planx-core/dist/types/team";
 import { Session } from "@opensystemslab/planx-core/types";
 
-/**
- * @swagger
- * /email-submission/{localAuthority}:
- *  post:
- *    summary: Sends an application by email using GOV.UK Notify
- *    description: Send an application by email using GOV.UK Notify. The email body includes a link to download the application files.
- *    tags:
- *      - submissions
- *    parameters:
- *      - $ref: '#/components/parameters/localAuthority'
- *    security:
- *      - hasuraAuth: []
- *    requestBody:
- *      description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/SessionPayload'
- */
 export async function sendToEmail(
   req: Request,
   res: Response,

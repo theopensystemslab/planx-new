@@ -1,0 +1,57 @@
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: send
+paths:
+  /bops/{localAuthority}:
+    post:
+      summary: Submits an application to the Back Office Planning System (BOPS)
+      description: Submits an application to the Back Office Planning System (BOPS)
+      tags:
+        - send
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+      security:
+        - hasuraAuth: []
+      requestBody:
+        description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionPayload"
+  /email-submission/{localAuthority}:
+    post:
+      summary: Sends an application by email using GOV.UK Notify
+      description: Send an application by email using GOV.UK Notify. The email body includes a link to download the application files.
+      tags:
+        - submissions
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+      security:
+        - hasuraAuth: []
+      requestBody:
+        description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionPayload"
+  /uniform/{localAuthority}:
+    post:
+      summary: Submits an application to Uniform
+      description: Submits an application to Uniform
+      tags:
+        - submissions
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+      security:
+        - hasuraAuth: []
+      requestBody:
+        description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionPayload"

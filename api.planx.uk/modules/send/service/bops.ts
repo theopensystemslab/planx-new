@@ -17,27 +17,6 @@ interface CreateBopsApplication {
     bopsId: string;
   };
 }
-
-/**
- * @swagger
- * /bops/{localAuthority}:
- *  post:
- *    summary: Submits an application to the Back Office Planning System (BOPS)
- *    description: Submits an application to the Back Office Planning System (BOPS)
- *    tags:
- *      - submissions
- *    parameters:
- *      - $ref: '#/components/parameters/localAuthority'
- *    security:
- *      - hasuraAuth: []
- *    requestBody:
- *      description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/SessionPayload'
- */
 const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload }: SendToBOPSRequest = req.body;
