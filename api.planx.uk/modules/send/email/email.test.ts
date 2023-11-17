@@ -34,7 +34,7 @@ const mockBuildSubmissionExportZip = jest.fn().mockImplementation(() => ({
   toBuffer: () => Buffer.from("test"),
 }));
 
-jest.mock("./exportZip", () => {
+jest.mock("../utils/exportZip", () => {
   return {
     buildSubmissionExportZip: (input: string) =>
       Promise.resolve(mockBuildSubmissionExportZip(input)),

@@ -54,7 +54,7 @@ const mockGenerateOneAppXML = jest
   .fn()
   .mockResolvedValue({ trim: () => "<dummy:xml></dummy:xml>" });
 
-jest.mock("../client", () => {
+jest.mock("../../../client", () => {
   return {
     $api: {
       getDocumentTemplateNamesForSession: jest
