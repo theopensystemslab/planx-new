@@ -1,17 +1,21 @@
 import { Router } from "express";
 import {
   fetchPaymentViaProxy,
+  inviteToPay,
   makeInviteToPayPaymentViaProxy,
   makePaymentViaProxy,
 } from "./controller";
 import { isTeamUsingGovPay } from "./middleware";
-import { paymentProxySchema } from "./types";
+import {
+  inviteToPaySchema,
+  paymentProxySchema,
+  paymentRequestProxySchema,
+} from "./types";
 import { validate } from "../../shared/middleware/validate";
 import {
   buildPaymentPayload,
   fetchPaymentRequestDetails,
   fetchPaymentRequestViaProxy,
-  inviteToPay,
 } from "./service/inviteToPay";
 
 const router = Router();
@@ -35,15 +39,21 @@ router.post(
   isTeamUsingGovPay,
   fetchPaymentRequestDetails,
   buildPaymentPayload,
+  validate(paymentRequestProxySchema),
   makeInviteToPayPaymentViaProxy,
 );
 
 router.get(
   "/payment-request/:paymentRequest/payment/:paymentId",
   fetchPaymentRequestDetails,
+  validate(paymentProxySchema),
   fetchPaymentRequestViaProxy,
 );
 
-router.post("/invite-to-pay/:sessionId", inviteToPay);
+router.post(
+  "/invite-to-pay/:sessionId",
+  validate(inviteToPaySchema),
+  inviteToPay,
+);
 
 export default router;

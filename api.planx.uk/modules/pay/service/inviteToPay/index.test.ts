@@ -69,10 +69,8 @@ describe("Invite to pay API route", () => {
         .send(invalidPostBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty(
-            "error",
-            "JSON body must contain payeeName",
-          );
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
         });
     });
 
@@ -83,10 +81,8 @@ describe("Invite to pay API route", () => {
         .send(invalidPostBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty(
-            "error",
-            "JSON body must contain payeeEmail",
-          );
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
         });
     });
 
