@@ -45,6 +45,7 @@ import gisRoutes from "./modules/gis/routes";
 import payRoutes from "./modules/pay/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
+import { isTeamUsingGovPay } from "./modules/pay/middleware";
 
 const app = express();
 
@@ -115,6 +116,7 @@ app.get("/download-application-files/:sessionId", downloadApplicationFiles);
 
 app.post(
   "/payment-request/:paymentRequest/pay",
+  isTeamUsingGovPay,
   fetchPaymentRequestDetails,
   buildPaymentPayload,
   makeInviteToPayPaymentViaProxy,

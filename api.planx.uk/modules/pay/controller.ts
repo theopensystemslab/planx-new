@@ -20,19 +20,6 @@ export async function makePaymentViaProxy(
   res: Response,
   next: NextFunction,
 ) {
-  // confirm that this local authority (aka team) has a pay token configured before creating the proxy
-  const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
-
-  if (!isSupported) {
-    return next(
-      new ServerError({
-        message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
-        status: 400,
-      }),
-    );
-  }
-
   const flowId = req.query?.flowId as string | undefined;
   const sessionId = req.query?.sessionId as string | undefined;
   const teamSlug = req.params.localAuthority;
@@ -86,17 +73,6 @@ export async function makeInviteToPayPaymentViaProxy(
   res: Response,
   next: NextFunction,
 ) {
-  // confirm that this local authority (aka team) has a pay token configured before creating the proxy
-  const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
-
-  if (!isSupported) {
-    return next({
-      status: 400,
-      message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
-    });
-  }
-
   const flowId = req.query?.flowId as string | undefined;
   const sessionId = req.query?.sessionId as string | undefined;
   const paymentRequestId = req.params?.paymentRequest as string;
