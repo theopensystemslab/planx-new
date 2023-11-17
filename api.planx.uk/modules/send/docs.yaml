@@ -3,6 +3,22 @@ info:
   version: 0.1.0
 tags:
   - name: send
+components:
+  schemas:
+    EventSchema:
+      type: object
+      properties:
+        localAuthority:
+          type: string
+        body:
+          type: object
+          properties:
+            sessionId:
+              type: string
+              format: uuid
+      required:
+        - localAuthority
+        - body
 paths:
   /bops/{localAuthority}:
     post:
@@ -55,3 +71,31 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+  /create-send-events/{sessionId}:
+    post:
+      summary: Create send events
+      description: Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: "#/components/schemas/EventSchema"
+                bops:
+                  $ref: "#/components/schemas/EventSchema"
+                uniform:
+                  $ref: "#/components/schemas/EventSchema"
+              required:
+                - email
+                - bops
+                - uniform
+      parameters:
+        - in: query
+          name: sessionId
+          required: true
+          schema:
+            type: string
+            format: uuid
