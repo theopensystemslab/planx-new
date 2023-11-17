@@ -7,7 +7,7 @@ import {
   rollupResultLayers,
   addDesignatedVariable,
 } from "../helpers.js";
-import { planningConstraints } from "./metadata/scotland";
+import { planningConstraints } from "./metadata/scotland.js";
 
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);

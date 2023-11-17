@@ -7,7 +7,7 @@ import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
 import { addDesignatedVariable, omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
-import { $api } from "../client";
+import { $api } from "../../../client";
 
 export interface LocalAuthorityMetadata {
   planningConstraints: {

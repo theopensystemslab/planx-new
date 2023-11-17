@@ -13,7 +13,6 @@ import passport from "passport";
 import helmet from "helmet";
 
 import { ServerError } from "./errors";
-import { locationSearch } from "./gis/index";
 import {
   makePaymentViaProxy,
   fetchPaymentViaProxy,
@@ -33,7 +32,6 @@ import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { downloadApplicationFiles, sendToEmail } from "./send/email";
 import { sendToUniform } from "./send/uniform";
-import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
@@ -47,10 +45,9 @@ import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes";
 import saveAndReturnRoutes from "./modules/saveAndReturn/routes";
 import sendEmailRoutes from "./modules/sendEmail/routes";
 import fileRoutes from "./modules/file/routes";
+import gisRoutes from "./modules/gis/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
-
-const router = express.Router();
 
 const app = express();
 
@@ -172,19 +169,7 @@ app.use("/file", fileRoutes);
 app.use(saveAndReturnRoutes);
 app.use(sendEmailRoutes);
 app.use("/flows", flowRoutes);
-
-app.use("/gis", router);
-
-app.get("/gis", (_req, _res, next) => {
-  next({
-    status: 400,
-    message: "Please specify a local authority",
-  });
-});
-
-app.get("/gis/:localAuthority", locationSearch);
-
-app.get("/roads", classifiedRoadsSearch);
+app.use(gisRoutes);
 
 // allows an applicant to download their application data on the Confirmation page
 app.post("/download-application", async (req, res, next) => {

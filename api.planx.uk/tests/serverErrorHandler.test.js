@@ -31,7 +31,7 @@ describe("bad requests", () => {
   });
 
   test(`app.get("/gis")`, async () => {
-    await get("/gis").expect(400);
+    await get("/gis").expect(404);
   });
 
   test(`app.get("/gis/wrong")`, async () => {
