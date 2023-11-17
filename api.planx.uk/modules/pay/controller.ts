@@ -10,28 +10,19 @@ import {
   addGovPayPaymentIdToPaymentRequest,
   postPaymentNotificationToSlack,
 } from "./service";
+import { PaymentProxyController } from "./types";
 
 assert(process.env.SLACK_WEBHOOK_URL);
 
 // exposed as /pay/:localAuthority and also used as middleware
 // returns the url to make a gov uk payment
-export async function makePaymentViaProxy(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const flowId = req.query?.flowId as string | undefined;
-  const sessionId = req.query?.sessionId as string | undefined;
-  const teamSlug = req.params.localAuthority;
-
-  if (!flowId || !sessionId || !teamSlug) {
-    return next(
-      new ServerError({
-        message: "Missing required query param",
-        status: 400,
-      }),
-    );
-  }
+export const makePaymentViaProxy: PaymentProxyController = async (
+  req,
+  res,
+  next,
+) => {
+  const { flowId, sessionId } = res.locals.parsedReq.query;
+  const teamSlug = res.locals.parsedReq.params.localAuthority;
 
   const session = await $api.session.findDetails(sessionId);
 
@@ -66,7 +57,7 @@ export async function makePaymentViaProxy(
     },
     req,
   )(req, res, next);
-}
+};
 
 export async function makeInviteToPayPaymentViaProxy(
   req: Request,
@@ -119,11 +110,10 @@ export const fetchPaymentViaProxy = fetchPaymentViaProxyWithCallback(
 
 export function fetchPaymentViaProxyWithCallback(
   callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>,
-) {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    const flowId = req.query?.flowId as string | undefined;
-    const sessionId = req.query?.sessionId as string | undefined;
-    const teamSlug = req.params.localAuthority;
+): PaymentProxyController {
+  return async (req, res, next) => {
+    const { flowId, sessionId } = res.locals.parsedReq.query;
+    const teamSlug = res.locals.parsedReq.params.localAuthority;
 
     // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
     usePayProxy(
