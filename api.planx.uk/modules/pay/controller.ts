@@ -9,7 +9,7 @@ import { GovUKPayment } from "@opensystemslab/planx-core/types";
 import {
   addGovPayPaymentIdToPaymentRequest,
   postPaymentNotificationToSlack,
-} from "./service";
+} from "./service/utils";
 import { PaymentProxyController } from "./types";
 
 assert(process.env.SLACK_WEBHOOK_URL);

@@ -1,7 +1,7 @@
 import {
   sendSinglePaymentEmail,
   sendAgentAndPayeeConfirmationEmail,
-} from "../../inviteToPay";
+} from "../pay/service/inviteToPay";
 import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils";
 import { ServerError } from "../../errors";
 import { NextFunction } from "express";

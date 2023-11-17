@@ -1,10 +1,10 @@
 import { gql } from "graphql-request";
 import { NextFunction, Request, Response } from "express";
-import { ServerError } from "../errors";
-import { fetchPaymentViaProxyWithCallback } from "../modules/pay/controller";
+import { ServerError } from "../../../../errors";
+import { fetchPaymentViaProxyWithCallback } from "../../controller";
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { $api } from "../client";
-import { postPaymentNotificationToSlack } from "../modules/pay/service";
+import { $api } from "../../../../client";
+import { postPaymentNotificationToSlack } from "../utils";
 
 // https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/#json-body-parameters-for-39-create-a-payment-39
 interface GovPayCreatePayment {

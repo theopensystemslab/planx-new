@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import type { PaymentRequest, KeyPath } from "@opensystemslab/planx-core/types";
 
-import { ServerError } from "../errors";
-import { $api } from "../client";
+import { ServerError } from "../../../../errors";
+import { $api } from "../../../../client";
 
 export async function inviteToPay(
   req: Request,

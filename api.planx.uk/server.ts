@@ -19,7 +19,7 @@ import {
   fetchPaymentRequestDetails,
   buildPaymentPayload,
   fetchPaymentRequestViaProxy,
-} from "./inviteToPay";
+} from "./modules/pay/service/inviteToPay";
 import { useHasuraAuth } from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";

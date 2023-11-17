@@ -1,11 +1,11 @@
 import supertest from "supertest";
-import app from "../server";
-import { queryMock } from "../tests/graphqlQueryMock";
+import app from "../../../../server";
+import { queryMock } from "../../../../tests/graphqlQueryMock";
 
 import {
   validatePaymentRequestNotFoundQueryMock,
   validatePaymentRequestQueryMock,
-} from "../tests/mocks/inviteToPayMocks";
+} from "../../../../tests/mocks/inviteToPayMocks";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 jest
