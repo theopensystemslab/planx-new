@@ -1,5 +1,5 @@
 import { $public, $api } from "../client";
-import { sendEmail } from "../notify";
+import { sendEmail } from "../lib/notify";
 import { gql } from "graphql-request";
 import { convertSlugToName } from "../modules/saveAndReturn/service/utils";
 import type { AgentAndPayeeSubmissionNotifyConfig } from "../types";

@@ -17,7 +17,6 @@ import { locationSearch } from "./gis/index";
 import { validateAndDiffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
 import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
-import { routeSendEmailRequest } from "./notify";
 import {
   makePaymentViaProxy,
   fetchPaymentViaProxy,
@@ -31,13 +30,12 @@ import {
 } from "./inviteToPay";
 import {
   useHasuraAuth,
-  useSendEmailAuth,
   usePlatformAdminAuth,
   useTeamEditorAuth,
 } from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";
-import { sendEmailLimiter, apiLimiter } from "./rateLimit";
+import { apiLimiter } from "./rateLimit";
 import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { downloadApplicationFiles, sendToEmail } from "./send/email";
@@ -56,6 +54,7 @@ import analyticsRoutes from "./modules/analytics/routes";
 import adminRoutes from "./modules/admin/routes";
 import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes";
 import fileRoutes from "./modules/file/routes";
+import sendEmailRoutes from "./modules/sendEmail/routes";
 import saveAndReturnRoutes from "./modules/saveAndReturn/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
@@ -107,6 +106,7 @@ app.use(helmet());
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
 app.post("/create-send-events/:sessionId", createSendEvents);
 
+assert(process.env.GOVUK_NOTIFY_API_KEY);
 assert(process.env.HASURA_PLANX_API_KEY);
 
 assert(process.env.BOPS_API_TOKEN);
@@ -180,6 +180,7 @@ app.use("/admin", adminRoutes);
 app.use(ordnanceSurveyRoutes);
 app.use("/file", fileRoutes);
 app.use(saveAndReturnRoutes);
+app.use(sendEmailRoutes);
 
 app.use("/gis", router);
 
@@ -301,14 +302,6 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
     next(err);
   }
 });
-
-assert(process.env.GOVUK_NOTIFY_API_KEY);
-app.post(
-  "/send-email/:template",
-  sendEmailLimiter,
-  useSendEmailAuth,
-  routeSendEmailRequest,
-);
 
 app.post("/invite-to-pay/:sessionId", inviteToPay);
 

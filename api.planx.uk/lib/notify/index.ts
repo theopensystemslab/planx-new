@@ -1,7 +1,7 @@
 import { NotifyClient } from "notifications-node-client";
-import { softDeleteSession } from "../modules/saveAndReturn/service/utils";
-import { NotifyConfig } from "../types";
-import { $api, $public } from "../client";
+import { softDeleteSession } from "../../modules/saveAndReturn/service/utils";
+import { NotifyConfig } from "../../types";
+import { $api, $public } from "../../client";
 
 const notifyClient = new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY);
 

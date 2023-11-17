@@ -1,0 +1,95 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: send email
+    description: Send templated emails via the GovNotify service
+components:
+  schemas:
+    SendEmailRequest:
+      type: object
+      properties:
+        payload:
+          oneOf:
+            - $ref: "#/components/schemas/SingleApplicationPayload"
+            - $ref: "#/components/schemas/PaymentPayload"
+            - $ref: "#/components/schemas/ConfirmationPayload"
+    SingleApplicationPayload:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        sessionId:
+          type: string
+    PaymentPayload:
+      type: object
+      properties:
+        paymentRequestId:
+          type: string
+    ConfirmationPayload:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        lockedAt:
+          type: string
+          format: date-time
+          nullable: true
+        email:
+          type: string
+          format: email
+  responses:
+    SendEmailResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        expiryDate:
+          type: string
+          format: date-time
+          nullable: true
+paths:
+  /send-email/{template}:
+    post:
+      tags: [send email]
+      summary: Send an email
+      parameters:
+        - name: template
+          in: path
+          required: true
+          schema:
+            type: string
+            description: GovNotify template to use
+            enum:
+              [
+                "reminder",
+                "expiry",
+                "save",
+                "invite-to-pay",
+                "invite-to-pay-agent",
+                "payment-reminder",
+                "payment-reminder-agent",
+                "payment-expiry",
+                "payment-expiry-agent",
+                "confirmation",
+              ]
+      requestBody:
+        description: |
+          Request body for sending email.
+          The structure varies based on the template.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendEmailRequest"
+      responses:
+        "200":
+          description: Email sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/SendEmailResponse"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
