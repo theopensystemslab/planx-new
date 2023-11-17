@@ -1,11 +1,8 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
+import { CombinedResponse, createScheduledEvent } from "../../../../lib/hasura/metadata";
 import { $api, $public } from "../../../../client";
-import {
-  ScheduledEventResponse,
-  createScheduledEvent,
-} from "../../../../lib/hasura/metadata";
 import { getMostRecentPublishedFlow } from "../../../../helpers";
 import { Flow, Node, Team } from "../../../../types";
 
@@ -13,12 +10,6 @@ enum Destination {
   BOPS = "bops",
   Uniform = "uniform",
   Email = "email",
-}
-
-interface CombinedResponse {
-  bops?: ScheduledEventResponse;
-  uniform?: ScheduledEventResponse;
-  email?: ScheduledEventResponse;
 }
 
 // Create "One-off Scheduled Events" in Hasura when a payment request is paid

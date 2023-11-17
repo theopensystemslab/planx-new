@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createSendEvents } from "./service/createSendEvents";
+import { createSendEvents } from "./createSendEvents/controller";
 import { useHasuraAuth } from "../auth/middleware";
-import { sendToBOPS } from "./service/bops";
-import { sendToUniform } from "./service/uniform";
-import { downloadApplicationFiles, sendToEmail } from "./service/email";
+import { sendToBOPS } from "./bops/bops";
+import { sendToUniform } from "./uniform/uniform";
+import { downloadApplicationFiles, sendToEmail } from "./email/email";
 
 const router = Router();
 

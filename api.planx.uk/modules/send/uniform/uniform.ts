@@ -6,7 +6,7 @@ import fs from "fs";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
 import { gql } from "graphql-request";
 import { $api } from "../../../client";
-import { buildSubmissionExportZip } from "./exportZip";
+import { buildSubmissionExportZip } from "../utils/exportZip";
 
 interface UniformClient {
   clientId: string;

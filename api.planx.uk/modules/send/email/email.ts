@@ -4,7 +4,7 @@ import capitalize from "lodash/capitalize";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
 import { sendEmail } from "../../../lib/notify";
 import { EmailSubmissionNotifyConfig } from "../../../types";
-import { buildSubmissionExportZip } from "./exportZip";
+import { buildSubmissionExportZip } from "../utils/exportZip";
 import { $api } from "../../../client";
 import { NotifyPersonalisation } from "@opensystemslab/planx-core/dist/types/team";
 import { Session } from "@opensystemslab/planx-core/types";
