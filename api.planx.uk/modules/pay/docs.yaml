@@ -15,29 +15,20 @@ components:
       type: string
       format: uuid
       required: true
-paths:
-  /pay/{localAuthority}:
-    post:
-      summary: Initiate a new payment
+    paymentRequest:
+      in: path
+      name: paymentId
+      type: string
+      format: uuid
+      required: true
+  schemas:
+    CreatePaymentRequest:
       description: |
-        Initiate a GovPay payment via proxy. This will return a GovPay URL which we can forward the user to in order for them to make a payment.
+        Payment response for the GovPay API
 
-        Docs: [https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/](https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/)
-      tags:
-        - pay
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - $ref: "#/components/parameters/localAuthority"
-        - in: body
-          name: paymentRequest
-          description: |
-            Payment details required by GovPay API
-
-            Docs: [https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/#example-request-for-39-create-a-payment-39](https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/#example-request-for-39-create-a-payment-39)
-          required: true
+        Docs: [https://docs.payments.service.gov.uk/api_reference/single_payment_reference/#example-response-for-get-information-about-a-single-payment](https://docs.payments.service.gov.uk/api_reference/single_payment_reference/#example-response-for-get-information-about-a-single-payment)
+      content:
+        application/json:
           schema:
             type: object
             properties:
@@ -98,148 +89,204 @@ paths:
               language:
                 type: string
                 example: "en"
-      responses:
-        "200":
-          content:
-            application/json:
-              description: |
-                Successful payment response
+  responses:
+    CreatePaymentResponse:
+      content:
+        application/json:
+          description: |
+            Successful payment response
 
-                Docs: [https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/#example-response-for-39-create-a-payment-39](https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/#example-response-for-39-create-a-payment-39)
-              schema:
+            Docs: [https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/#example-response-for-39-create-a-payment-39](https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/#example-response-for-39-create-a-payment-39)
+          schema:
+            type: object
+            properties:
+              amount:
+                type: integer
+                format: int32
+                example: 14500
+              description:
+                type: string
+                example: "Pay your council tax."
+              reference:
+                type: string
+                example: "12345"
+              language:
+                type: string
+                example: "en"
+              state:
                 type: object
                 properties:
-                  amount:
+                  status:
+                    type: string
+                    example: "created"
+                  finished:
+                    type: boolean
+                    example: false
+              payment_id:
+                type: string
+                example: "hu20sqlact5260q2nanm0q8u93"
+              payment_provider:
+                type: string
+                example: "stripe"
+              created_date:
+                type: string
+                format: date-time
+                example: "2022-03-25T13:11:29.019Z"
+              refund_summary:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "pending"
+                  amount_available:
                     type: integer
                     format: int32
                     example: 14500
-                  description:
-                    type: string
-                    example: "Pay your council tax."
-                  reference:
-                    type: string
-                    example: "12345"
-                  language:
-                    type: string
-                    example: "en"
-                  state:
+                  amount_submitted:
+                    type: integer
+                    format: int32
+                    example: 0
+              settlement_summary:
+                type: object
+                properties: {}
+              delayed_capture:
+                type: boolean
+                example: false
+              moto:
+                type: boolean
+                example: false
+              return_url:
+                type: string
+                format: uri
+                example: "https://your.service.gov.uk/completed"
+              _links:
+                type: object
+                properties:
+                  self:
                     type: object
                     properties:
-                      status:
+                      href:
                         type: string
-                        example: "created"
-                      finished:
-                        type: boolean
-                        example: false
-                  payment_id:
-                    type: string
-                    example: "hu20sqlact5260q2nanm0q8u93"
-                  payment_provider:
-                    type: string
-                    example: "stripe"
-                  created_date:
-                    type: string
-                    format: date-time
-                    example: "2022-03-25T13:11:29.019Z"
-                  refund_summary:
-                    type: object
-                    properties:
-                      status:
+                        format: uri
+                        example: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93"
+                      method:
                         type: string
-                        example: "pending"
-                      amount_available:
-                        type: integer
-                        format: int32
-                        example: 14500
-                      amount_submitted:
-                        type: integer
-                        format: int32
-                        example: 0
-                  settlement_summary:
-                    type: object
-                    properties: {}
-                  delayed_capture:
-                    type: boolean
-                    example: false
-                  moto:
-                    type: boolean
-                    example: false
-                  return_url:
-                    type: string
-                    format: uri
-                    example: "https://your.service.gov.uk/completed"
-                  _links:
+                        example: "GET"
+                  next_url:
                     type: object
                     properties:
-                      self:
+                      href:
+                        type: string
+                        format: uri
+                        example: "https://www.payments.service.gov.uk/secure/ef1b6ff1-db34-4c62-b854-3ed4ba3c4049"
+                      method:
+                        type: string
+                        example: "GET"
+                  next_url_post:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: "application/x-www-form-urlencoded"
+                      params:
                         type: object
                         properties:
-                          href:
+                          chargeTokenId:
                             type: string
-                            format: uri
-                            example: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93"
-                          method:
-                            type: string
-                            example: "GET"
-                      next_url:
-                        type: object
-                        properties:
-                          href:
-                            type: string
-                            format: uri
-                            example: "https://www.payments.service.gov.uk/secure/ef1b6ff1-db34-4c62-b854-3ed4ba3c4049"
-                          method:
-                            type: string
-                            example: "GET"
-                      next_url_post:
-                        type: object
-                        properties:
-                          type:
-                            type: string
-                            example: "application/x-www-form-urlencoded"
-                          params:
-                            type: object
-                            properties:
-                              chargeTokenId:
-                                type: string
-                                example: "ef1b6ff1-db34-4c62-b854-3ed4ba3c4049"
-                          href:
-                            type: string
-                            format: uri
-                            example: "https://www.payments.service.gov.uk/secure"
-                          method:
-                            type: string
-                            example: "POST"
-                      events:
-                        type: object
-                        properties:
-                          href:
-                            type: string
-                            format: uri
-                            example: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93/events"
-                          method:
-                            type: string
-                            example: "GET"
-                      refunds:
-                        type: object
-                        properties:
-                          href:
-                            type: string
-                            format: uri
-                            example: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93/refunds"
-                          method:
-                            type: string
-                            example: "GET"
-                      cancel:
-                        type: object
-                        properties:
-                          href:
-                            type: string
-                            format: uri
-                            example: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93/cancel"
-                          method:
-                            type: string
-                            example: "POST"
+                            example: "ef1b6ff1-db34-4c62-b854-3ed4ba3c4049"
+                      href:
+                        type: string
+                        format: uri
+                        example: "https://www.payments.service.gov.uk/secure"
+                      method:
+                        type: string
+                        example: "POST"
+                  events:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        format: uri
+                        example: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93/events"
+                      method:
+                        type: string
+                        example: "GET"
+                  refunds:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        format: uri
+                        example: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93/refunds"
+                      method:
+                        type: string
+                        example: "GET"
+                  cancel:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        format: uri
+                        example: "https://publicapi.payments.service.gov.uk/v1/payments/hu20sqlact5260q2nanm0q8u93/cancel"
+                      method:
+                        type: string
+                        example: "POST"
+    FetchPaymentResponse:
+      content:
+        application/json:
+          description: |
+            Payment response for the GovPay API
+
+            Docs: [https://docs.payments.service.gov.uk/api_reference/single_payment_reference/#example-response-for-get-information-about-a-single-payment](https://docs.payments.service.gov.uk/api_reference/single_payment_reference/#example-response-for-get-information-about-a-single-payment)
+          schema:
+            type: object
+            properties:
+              amount:
+                type: integer
+                format: int32
+                example: 3750
+              state:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  finished:
+                    type: boolean
+                    example: true
+              payment_id:
+                type: string
+                example: "hu20sqlact5260q2nanm0q8u93"
+              _links:
+                type: object
+                properties:
+                  next_url:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                        format: uri
+                        example: "https://www.payments.service.gov.uk/secure/ef1b6ff1-db34-4c62-b854-3ed4ba3c4049"
+                      method:
+                        type: string
+                        example: "GET"
+paths:
+  /pay/{localAuthority}:
+    post:
+      summary: Initiate a new payment
+      description: |
+        Initiate a GovPay payment via proxy. This will return a GovPay URL which we can forward the user to in order for them to make a payment.
+
+        Docs: [https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/](https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/)
+      tags:
+        - pay
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+      requestBody:
+        $ref: "#/components/schemas/CreatePaymentRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/CreatePaymentResponse"
   /pay/{localAuthority}/{paymentId}:
     get:
       summary: Get payment status
@@ -254,41 +301,37 @@ paths:
         - $ref: "#/components/parameters/paymentId"
       responses:
         "200":
-          content:
-            application/json:
-              description: |
-                Payment response for the GovPay API
+          $ref: "#/components/responses/FetchPaymentResponse"
+  /payment-request/{paymentRequest}/pay:
+    post:
+      summary: Create a request for an "invite to pay" payment
+      description: |
+        Create a payment request via a proxied request to the GovPay API
 
-                Docs: [https://docs.payments.service.gov.uk/api_reference/single_payment_reference/#example-response-for-get-information-about-a-single-payment](https://docs.payments.service.gov.uk/api_reference/single_payment_reference/#example-response-for-get-information-about-a-single-payment)
-              schema:
-                type: object
-                properties:
-                  amount:
-                    type: integer
-                    format: int32
-                    example: 3750
-                  state:
-                    type: object
-                    properties:
-                      status:
-                        type: string
-                        example: "success"
-                      finished:
-                        type: boolean
-                        example: true
-                  payment_id:
-                    type: string
-                    example: "hu20sqlact5260q2nanm0q8u93"
-                  _links:
-                    type: object
-                    properties:
-                      next_url:
-                        type: object
-                        properties:
-                          href:
-                            type: string
-                            format: uri
-                            example: "https://www.payments.service.gov.uk/secure/ef1b6ff1-db34-4c62-b854-3ed4ba3c4049"
-                          method:
-                            type: string
-                            example: "GET"
+        Docs: [https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/](https://docs.payments.service.gov.uk/api_reference/create_a_payment_reference/)
+      tags:
+        - pay
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+        - $ref: "#/components/parameters/paymentRequest"
+      requestBody:
+        $ref: "#/components/schemas/CreatePaymentRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/CreatePaymentResponse"
+  /payment-request/{paymentRequest}/payment/{paymentId}:
+    get:
+      summary: Get status for an "invite to pay" payment
+      description: |
+        Get the status of a payment via a proxied request to the GovPay API
+
+        Docs: [https://docs.payments.service.gov.uk/api_reference/single_payment_reference/#get-information-about-a-single-payment-api-reference](https://docs.payments.service.gov.uk/api_reference/single_payment_reference/#get-information-about-a-single-payment-api-reference)
+      tags:
+        - pay
+      parameters:
+        - $ref: "#/components/parameters/paymentRequest"
+        - $ref: "#/components/parameters/paymentId"
+      responses:
+        "200":
+          $ref: "#/components/responses/FetchPaymentResponse"
+  /invite-to-pay/{sessionId}:
