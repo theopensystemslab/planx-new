@@ -1,10 +1,10 @@
 import assert from "assert";
 import { Request } from "express";
 import { responseInterceptor } from "http-proxy-middleware";
-import { logPaymentStatus } from "../../send/helpers";
 import { usePayProxy } from "./proxy";
 import { $api } from "../../client";
 import { ServerError } from "../../errors";
+import { logPaymentStatus } from "../send/service/helpers";
 import { GovUKPayment, PaymentRequest } from "@opensystemslab/planx-core/types";
 import {
   addGovPayPaymentIdToPaymentRequest,

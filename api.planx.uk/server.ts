@@ -10,16 +10,9 @@ import pinoLogger from "express-pino-logger";
 import { Server } from "http";
 import passport from "passport";
 import helmet from "helmet";
-
 import { ServerError } from "./errors";
-import { useHasuraAuth } from "./modules/auth/middleware";
-
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
-import { sendToBOPS } from "./send/bops";
-import { createSendEvents } from "./send/createSendEvents";
-import { downloadApplicationFiles, sendToEmail } from "./send/email";
-import { sendToUniform } from "./send/uniform";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
@@ -35,6 +28,7 @@ import sendEmailRoutes from "./modules/sendEmail/routes";
 import fileRoutes from "./modules/file/routes";
 import gisRoutes from "./modules/gis/routes";
 import payRoutes from "./modules/pay/routes";
+import sendRoutes from "./modules/send/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 
@@ -79,27 +73,16 @@ app.use(apiLimiter);
 // Secure Express by setting various HTTP headers
 app.use(helmet());
 
-// Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-app.post("/create-send-events/:sessionId", createSendEvents);
-
 assert(process.env.GOVUK_NOTIFY_API_KEY);
 assert(process.env.HASURA_PLANX_API_KEY);
-
 assert(process.env.BOPS_API_TOKEN);
 assert(process.env.BOPS_SUBMISSION_URL_LAMBETH);
 assert(process.env.BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE);
 assert(process.env.BOPS_SUBMISSION_URL_SOUTHWARK);
 assert(process.env.BOPS_SUBMISSION_URL_CAMDEN);
 assert(process.env.BOPS_SUBMISSION_URL_GLOUCESTER);
-app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
-
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
-app.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
-
-app.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
-
-app.get("/download-application-files/:sessionId", downloadApplicationFiles);
 
 ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
@@ -141,6 +124,7 @@ app.use(sendEmailRoutes);
 app.use("/flows", flowRoutes);
 app.use(gisRoutes);
 app.use(payRoutes);
+app.use(sendRoutes);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {

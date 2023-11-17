@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   ScheduledEventResponse,
   createScheduledEvent,
-} from "../lib/hasura/metadata";
+} from "../../../lib/hasura/metadata";
 
 interface CombinedResponse {
   bops?: ScheduledEventResponse;

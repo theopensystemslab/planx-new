@@ -1,8 +1,8 @@
 import nock from "nock";
 import supertest from "supertest";
-import { queryMock } from "../tests/graphqlQueryMock";
-import app from "../server";
-import { expectedPayload } from "../tests/mocks/bopsMocks";
+import { queryMock } from "../../../tests/graphqlQueryMock";
+import app from "../../../server";
+import { expectedPayload } from "../../../tests/mocks/bopsMocks";
 
 jest.mock("../modules/saveAndReturn/service/utils", () => ({
   markSessionAsSubmitted: jest.fn(),

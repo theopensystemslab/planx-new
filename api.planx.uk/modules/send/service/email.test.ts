@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import { queryMock } from "../tests/graphqlQueryMock";
-import app from "../server";
+import { queryMock } from "../../../tests/graphqlQueryMock";
+import app from "../../../server";
 
 const mockGenerateCSVData = jest.fn().mockResolvedValue([
   {
