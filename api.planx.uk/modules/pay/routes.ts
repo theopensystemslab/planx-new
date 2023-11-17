@@ -5,18 +5,18 @@ import {
   makeInviteToPayPaymentViaProxy,
   makePaymentViaProxy,
 } from "./controller";
-import { isTeamUsingGovPay } from "./middleware";
+import {
+  buildPaymentPayload,
+  fetchPaymentRequestDetails,
+  isTeamUsingGovPay,
+} from "./middleware";
 import {
   inviteToPaySchema,
   paymentProxySchema,
   paymentRequestProxySchema,
 } from "./types";
 import { validate } from "../../shared/middleware/validate";
-import {
-  buildPaymentPayload,
-  fetchPaymentRequestDetails,
-  fetchPaymentRequestViaProxy,
-} from "./service/inviteToPay";
+import { fetchPaymentRequestViaProxy } from "./service/inviteToPay";
 
 const router = Router();
 
