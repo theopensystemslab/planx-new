@@ -50,7 +50,7 @@ export const confirmationEmailSchema = z.object({
   body: z.object({
     payload: z.object({
       sessionId: z.string(),
-      lockedAt: z.string().optional(),
+      lockedAt: z.string().or(z.null()),
       email: z.string().email(),
     }),
   }),
