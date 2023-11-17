@@ -42,7 +42,7 @@ paths:
       summary: Sends an application by email using GOV.UK Notify
       description: Send an application by email using GOV.UK Notify. The email body includes a link to download the application files.
       tags:
-        - submissions
+        - send
       parameters:
         - $ref: "#/components/parameters/localAuthority"
       security:
@@ -59,7 +59,7 @@ paths:
       summary: Submits an application to Uniform
       description: Submits an application to Uniform
       tags:
-        - submissions
+        - send
       parameters:
         - $ref: "#/components/parameters/localAuthority"
       security:
@@ -75,6 +75,8 @@ paths:
     post:
       summary: Create send events
       description: Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
+      tags:
+        - send
       requestBody:
         required: true
         content:
@@ -99,3 +101,38 @@ paths:
           schema:
             type: string
             format: uuid
+  /download-application-files/{sessionId}:
+    get:
+      summary: Download application files
+      description: Download application files via a link send to a team's "send to email" email address
+      tags:
+        - send
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: sessionId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+            format: email
+        - in: query
+          name: localAuthority
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/DownloadFile"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"

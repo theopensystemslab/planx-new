@@ -3,9 +3,10 @@ import { createSendEvents } from "./createSendEvents/controller";
 import { useHasuraAuth } from "../auth/middleware";
 import { sendToBOPS } from "./bops/bops";
 import { sendToUniform } from "./uniform/uniform";
-import { downloadApplicationFiles, sendToEmail } from "./email/email";
+import { sendToEmail } from "./email";
 import { validate } from "../../shared/middleware/validate";
 import { combinedEventsPayloadSchema } from "./createSendEvents/types";
+import { downloadApplicationFiles } from "./downloadApplicationFiles";
 
 const router = Router();
 
