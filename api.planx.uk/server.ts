@@ -4,7 +4,6 @@ import assert from "assert";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors from "cors";
-import { stringify } from "csv-stringify";
 import express, { ErrorRequestHandler } from "express";
 import noir from "pino-noir";
 import pinoLogger from "express-pino-logger";
@@ -142,26 +141,6 @@ app.use(sendEmailRoutes);
 app.use("/flows", flowRoutes);
 app.use(gisRoutes);
 app.use(payRoutes);
-
-// allows an applicant to download their application data on the Confirmation page
-app.post("/download-application", async (req, res, next) => {
-  if (!req.body) {
-    res.send({
-      message: "Missing application `data` to download",
-    });
-  }
-
-  try {
-    // build a CSV and stream the response
-    stringify(req.body, {
-      columns: ["question", "responses", "metadata"],
-      header: true,
-    }).pipe(res);
-    res.header("Content-type", "text/csv");
-  } catch (err) {
-    next(err);
-  }
-});
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
