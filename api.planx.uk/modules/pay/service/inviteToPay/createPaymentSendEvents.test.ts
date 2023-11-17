@@ -4,7 +4,7 @@ import { createScheduledEvent } from "../../../../lib/hasura/metadata";
 import { queryMock } from "../../../../tests/graphqlQueryMock";
 import { flowWithInviteToPay } from "../../../../tests/mocks/inviteToPayData";
 
-jest.mock("../lib/hasura/metadata");
+jest.mock("../../../../lib/hasura/metadata");
 const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<
   typeof createScheduledEvent
 >;

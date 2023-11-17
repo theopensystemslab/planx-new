@@ -13,13 +13,6 @@ import passport from "passport";
 import helmet from "helmet";
 
 import { ServerError } from "./errors";
-import { makeInviteToPayPaymentViaProxy } from "./modules/pay/controller";
-import {
-  inviteToPay,
-  fetchPaymentRequestDetails,
-  buildPaymentPayload,
-  fetchPaymentRequestViaProxy,
-} from "./modules/pay/service/inviteToPay";
 import { useHasuraAuth } from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";
@@ -45,7 +38,6 @@ import gisRoutes from "./modules/gis/routes";
 import payRoutes from "./modules/pay/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
-import { isTeamUsingGovPay } from "./modules/pay/middleware";
 
 const app = express();
 
@@ -114,20 +106,6 @@ app.get("/download-application-files/:sessionId", downloadApplicationFiles);
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
 });
 
-app.post(
-  "/payment-request/:paymentRequest/pay",
-  isTeamUsingGovPay,
-  fetchPaymentRequestDetails,
-  buildPaymentPayload,
-  makeInviteToPayPaymentViaProxy,
-);
-
-app.get(
-  "/payment-request/:paymentRequest/payment/:paymentId",
-  fetchPaymentRequestDetails,
-  fetchPaymentRequestViaProxy,
-);
-
 // needed for storing original URL to redirect to in login flow
 app.use(
   cookieSession({
@@ -184,8 +162,6 @@ app.post("/download-application", async (req, res, next) => {
     next(err);
   }
 });
-
-app.post("/invite-to-pay/:sessionId", inviteToPay);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {

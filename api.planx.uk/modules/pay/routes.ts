@@ -1,8 +1,18 @@
 import { Router } from "express";
-import { fetchPaymentViaProxy, makePaymentViaProxy } from "./controller";
+import {
+  fetchPaymentViaProxy,
+  makeInviteToPayPaymentViaProxy,
+  makePaymentViaProxy,
+} from "./controller";
 import { isTeamUsingGovPay } from "./middleware";
 import { paymentProxySchema } from "./types";
 import { validate } from "../../shared/middleware/validate";
+import {
+  buildPaymentPayload,
+  fetchPaymentRequestDetails,
+  fetchPaymentRequestViaProxy,
+  inviteToPay,
+} from "./service/inviteToPay";
 
 const router = Router();
 
@@ -19,5 +29,21 @@ router.get(
   validate(paymentProxySchema),
   fetchPaymentViaProxy,
 );
+
+router.post(
+  "/payment-request/:paymentRequest/pay",
+  isTeamUsingGovPay,
+  fetchPaymentRequestDetails,
+  buildPaymentPayload,
+  makeInviteToPayPaymentViaProxy,
+);
+
+router.get(
+  "/payment-request/:paymentRequest/payment/:paymentId",
+  fetchPaymentRequestDetails,
+  fetchPaymentRequestViaProxy,
+);
+
+router.post("/invite-to-pay/:sessionId", inviteToPay);
 
 export default router;

@@ -4,7 +4,7 @@ import { queryMock } from "../../../../tests/graphqlQueryMock";
 import { sendAgentAndPayeeConfirmationEmail } from "./sendConfirmationEmail";
 import { sendEmail } from "../../../../lib/notify";
 
-jest.mock("../lib/notify", () => ({
+jest.mock("../../../../lib/notify", () => ({
   sendEmail: jest.fn(),
 }));
 
