@@ -70,7 +70,6 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   alignSelf: "flex-start",
   minWidth: "100%",
   boxShadow: "none",
-  borderRadius: "3px",
   fontSize: "1.125em",
   filter: "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.5))",
   [theme.breakpoints.up("lg")]: {
