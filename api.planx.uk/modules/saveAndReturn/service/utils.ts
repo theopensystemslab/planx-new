@@ -265,7 +265,7 @@ const setupEmailEventTriggers = async (sessionId: string) => {
     return hasUserSaved;
   } catch (error) {
     throw new Error(
-      `Error setting up email notifications for session ${sessionId}`,
+      `Error setting up email notifications for session ${sessionId}. Error: ${error}`,
     );
   }
 };
