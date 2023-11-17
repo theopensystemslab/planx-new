@@ -186,6 +186,7 @@ describe("Send Email endpoint", () => {
             payload: {
               sessionId: "123",
               email: TEST_EMAIL,
+              lockedAt: null,
             },
           };
           await supertest(app)

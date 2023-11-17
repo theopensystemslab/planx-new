@@ -72,7 +72,8 @@ const sendSingleApplicationEmail = async ({
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
     const firstSave = !session.hasUserSaved;
-    if (firstSave) await setupEmailEventTriggers(sessionId);
+    if (firstSave && !session.submittedAt)
+      await setupEmailEventTriggers(sessionId);
     return await sendEmail(template, email, config);
   } catch (error) {
     throw Error((error as Error).message);
@@ -98,6 +99,7 @@ const validateSingleSessionRequest = async (
           id
           data
           created_at
+          submitted_at
           has_user_saved
           flow {
             slug
@@ -139,6 +141,7 @@ interface SessionDetails {
   projectType: string;
   id: string;
   expiryDate: string;
+  submittedAt: string | null;
 }
 
 /**
@@ -162,6 +165,7 @@ const getSessionDetails = async (
     id: session.id,
     expiryDate: calculateExpiryDate(session.created_at),
     hasUserSaved: session.has_user_saved,
+    submittedAt: session.submitted_at,
   };
 };
 
