@@ -240,8 +240,9 @@
         columns:
           - flow_id
           - node
-          - type
           - planx_variable
+          - text
+          - type
         filter: {}
 - table:
     schema: public
@@ -1217,9 +1218,6 @@
             - locked_at:
                 _is_null: true
         check: null
-- table:
-    schema: public
-    name: submission_services_summary
 - table:
     schema: public
     name: team_members

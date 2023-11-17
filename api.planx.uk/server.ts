@@ -14,9 +14,6 @@ import helmet from "helmet";
 
 import { ServerError } from "./errors";
 import { locationSearch } from "./gis/index";
-import { validateAndDiffFlow, publishFlow } from "./editor/publish";
-import { findAndReplaceInFlow } from "./editor/findReplace";
-import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
 import {
   makePaymentViaProxy,
   fetchPaymentViaProxy,
@@ -28,11 +25,7 @@ import {
   buildPaymentPayload,
   fetchPaymentRequestViaProxy,
 } from "./inviteToPay";
-import {
-  useHasuraAuth,
-  usePlatformAdminAuth,
-  useTeamEditorAuth,
-} from "./modules/auth/middleware";
+import { useHasuraAuth } from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
@@ -40,9 +33,6 @@ import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { downloadApplicationFiles, sendToEmail } from "./send/email";
 import { sendToUniform } from "./send/uniform";
-import { copyFlow } from "./editor/copyFlow";
-import { moveFlow } from "./editor/moveFlow";
-import { gql } from "graphql-request";
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
@@ -52,13 +42,13 @@ import userRoutes from "./modules/user/routes";
 import webhookRoutes from "./modules/webhooks/routes";
 import analyticsRoutes from "./modules/analytics/routes";
 import adminRoutes from "./modules/admin/routes";
+import flowRoutes from "./modules/flows/routes";
 import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes";
-import fileRoutes from "./modules/file/routes";
-import sendEmailRoutes from "./modules/sendEmail/routes";
 import saveAndReturnRoutes from "./modules/saveAndReturn/routes";
+import sendEmailRoutes from "./modules/sendEmail/routes";
+import fileRoutes from "./modules/file/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
-import { $public } from "./client";
 
 const router = express.Router();
 
@@ -181,6 +171,7 @@ app.use(ordnanceSurveyRoutes);
 app.use("/file", fileRoutes);
 app.use(saveAndReturnRoutes);
 app.use(sendEmailRoutes);
+app.use("/flows", flowRoutes);
 
 app.use("/gis", router);
 
@@ -195,109 +186,21 @@ app.get("/gis/:localAuthority", locationSearch);
 
 app.get("/roads", classifiedRoadsSearch);
 
-app.post("/flows/:flowId/copy", useTeamEditorAuth, copyFlow);
+// allows an applicant to download their application data on the Confirmation page
+app.post("/download-application", async (req, res, next) => {
+  if (!req.body) {
+    res.send({
+      message: "Missing application `data` to download",
+    });
+  }
 
-app.post("/flows/:flowId/diff", useTeamEditorAuth, validateAndDiffFlow);
-
-app.post("/flows/:flowId/move/:teamSlug", useTeamEditorAuth, moveFlow);
-
-app.post("/flows/:flowId/publish", useTeamEditorAuth, publishFlow);
-
-/**
- * @swagger
- * /flows/{flowId}/search:
- *  post:
- *    summary: Find and replace
- *    description: Find and replace a data variable in a flow
- *    tags:
- *      - flows
- *    parameters:
- *      - in: path
- *        name: flowId
- *        type: string
- *        required: true
- *      - in: query
- *        name: find
- *        type: string
- *        required: true
- *      - in: query
- *        name: replace
- *        type: string
- *        required: false
- *    responses:
- *      '200':
- *        description: OK
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  required: true
- *                matches:
- *                  type: object
- *                  required: true
- *                  additionalProperties: true
- *                updatedFlow:
- *                  type: object
- *                  required: false
- *                  additionalProperties: true
- *                  properties:
- *                    _root:
- *                      type: object
- *                      properties:
- *                        edges:
- *                          type: array
- *                          items:
- *                            type: string
- */
-app.post("/flows/:flowId/search", usePlatformAdminAuth, findAndReplaceInFlow);
-
-app.get(
-  "/flows/:flowId/copy-portal/:portalNodeId",
-  usePlatformAdminAuth,
-  copyPortalAsFlow,
-);
-
-interface FlowSchema {
-  node: string;
-  type: string;
-  text: string;
-  planx_variable: string;
-}
-
-app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
-    const { flowSchema } = await $public.client.request<{
-      flowSchema: FlowSchema[];
-    }>(
-      gql`
-        query ($flow_id: String!) {
-          flowSchema: get_flow_schema(args: { published_flow_id: $flow_id }) {
-            node
-            type
-            text
-            planx_variable
-          }
-        }
-      `,
-      { flow_id: req.params.flowId },
-    );
-
-    if (!flowSchema.length) {
-      next({
-        status: 404,
-        message:
-          "Can't find a schema for this flow. Make sure it's published or try a different flow id.",
-      });
-    } else {
-      // build a CSV and stream it
-      stringify(flowSchema, { header: true }).pipe(res);
-
-      res.header("Content-type", "text/csv");
-      res.attachment(`${req.params.flowId}.csv`);
-    }
+    // build a CSV and stream the response
+    stringify(req.body, {
+      columns: ["question", "responses", "metadata"],
+      header: true,
+    }).pipe(res);
+    res.header("Content-type", "text/csv");
   } catch (err) {
     next(err);
   }

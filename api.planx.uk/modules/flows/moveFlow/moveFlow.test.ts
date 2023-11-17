@@ -1,12 +1,12 @@
 import supertest from "supertest";
 
-import { queryMock } from "../tests/graphqlQueryMock";
-import { authHeader } from "../tests/mockJWT";
-import app from "../server";
+import { queryMock } from "../../../tests/graphqlQueryMock";
+import { authHeader } from "../../../tests/mockJWT";
+import app from "../../../server";
 
 beforeEach(() => {
   queryMock.mockQuery({
-    name: "GetTeam",
+    name: "GetTeamBySlug",
     variables: {
       slug: "new-team",
     },

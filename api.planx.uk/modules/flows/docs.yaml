@@ -1,0 +1,260 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  name: flows
+  description: Flow associated requests
+components:
+  parameters:
+    flowId:
+      in: path
+      name: flowId
+      type: string
+      required: true
+    teamId:
+      in: path
+      name: teamId
+      type: string
+      required: true
+    portalNodeId:
+      in: path
+      name: portalNodeId
+      type: string
+      required: true
+  schemas:
+    Node:
+      type: object
+      properties:
+        id: string
+        type: number
+        data: object
+        edges:
+          type: array
+          items:
+            type: string
+    CopyFlow:
+      type: object
+      properties:
+        replaceValue:
+          type: string
+          example: ab123
+          length: 5
+          description: When copying a flow, we make nodeIds unique by replacing part of the original nodeId string
+          required: true
+        insert:
+          type: boolean
+          description: Operator to indicate if the copied flow should be inserted to the database, or simple returned in the response body
+    FlowData:
+      type: object
+      additionalProperties: true
+      properties:
+        _root:
+          type: object
+          properties:
+            edges:
+              type: array
+              items:
+                type: string
+  responses:
+    CopyFlow:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              inserted:
+                type: boolean
+              replaceValue:
+                type: string
+                length: 5
+              data:
+                $ref: "#/components/schemas/FlowData"
+    CopyFlowAsPortal:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              data:
+                $ref: "#/components/schemas/FlowData"
+    FindAndReplace:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                required: true
+              matches:
+                oneOf:
+                  - $ref: "#/components/schemas/FlowData"
+                  - type: "null"
+              updatedFlow:
+                $ref: "#/components/schemas/FlowData"
+                required: false
+    PublishFlow:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                required: true
+              alteredNodes:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/Node"
+                  - type: "null"
+              updatedFlow:
+                $ref: "#/components/schemas/FlowData"
+                required: false
+    ValidateAndDiff:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                required: false
+              description:
+                type: string
+                required: false
+              alteredNodes:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/Node"
+                  - type: "null"
+              updatedFlow:
+                $ref: "#/components/schemas/FlowData"
+                required: false
+paths:
+  /flows/{flowId}/copy:
+    post:
+      summary: Copy a flow
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopyFlow"
+      responses:
+        "200":
+          $ref: "#/components/responses/CopyFlow"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/copy-portal/{portalNodeId}:
+    put:
+      summary: Create a new flow from a portal
+      description: Copies an internal portal and transforms it to be an independent flow
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - $ref: "#/components/parameters/portalNodeId"
+      responses:
+        "200":
+          $ref: "#/components/responses/CopyFlowAsPortal"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/search:
+    post:
+      summary: Find and replace
+      description: Find and replace a data variable in a flow
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - in: query
+          name: find
+          type: string
+          required: true
+        - in: query
+          name: replace
+          type: string
+          required: false
+      responses:
+        "200":
+          $ref: "#/components/responses/FindAndReplace"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/move/{teamSlug}:
+    post:
+      summary: Move a flow
+      description: Move ownership of a flow from one team to another
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - $ref: "#/components/parameters/teamId"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/publish:
+    post:
+      summary: Publish a flow
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - in: query
+          name: summary
+          type: text
+          required: false
+          description: Optional text to summarise the published changes
+      responses:
+        "200":
+          $ref: "#/components/responses/PublishFlow"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/diff:
+    post:
+      summary: Diff and validate a flow
+      description: Validate and view the diff between the current unpublished version of a flow and the most recently published version
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+      responses:
+        "200":
+          $ref: "#/components/responses/ValidateAndDiff"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/download-schema:
+    post:
+      summary: Download flow schema
+      description: Download a CSV file representing the flow's schema
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+      responses:
+        "200":
+          content:
+            text/csv:
+              schema:
+                type: string
+        "500":
+          $ref: "#/components/responses/ErrorMessage"

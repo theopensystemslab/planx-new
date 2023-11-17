@@ -1,9 +1,9 @@
 import supertest from "supertest";
 
-import { queryMock } from "../tests/graphqlQueryMock";
-import { authHeader } from "../tests/mockJWT";
-import app from "../server";
-import { Flow } from "../types";
+import { queryMock } from "../../../tests/graphqlQueryMock";
+import { authHeader } from "../../../tests/mockJWT";
+import app from "../../../server";
+import { Flow } from "../../../types";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -46,11 +46,10 @@ it("throws an error if missing query parameter `find`", async () => {
   await supertest(app)
     .post("/flows/1/search")
     .set(auth)
-    .expect(401)
+    .expect(400)
     .then((res) => {
-      expect(res.body).toEqual({
-        error: `Expected at least one query parameter "find"`,
-      });
+      expect(res.body).toHaveProperty("issues");
+      expect(res.body).toHaveProperty("name", "ZodError");
     });
 });
 
@@ -86,6 +85,7 @@ it("does not replace if no matches are found", async () => {
     .then((res) => {
       expect(res.body).toEqual({
         message: `Didn't find "bananas" in this flow, nothing to replace`,
+        matches: null,
       });
     });
 });
