@@ -6,7 +6,6 @@ import { validate } from "../../shared/middleware/validate";
 
 const router = Router();
 
-// used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 router.post(
   "/pay/:localAuthority",
   isTeamUsingGovPay,
@@ -14,7 +13,6 @@ router.post(
   makePaymentViaProxy,
 );
 
-// used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
 router.get(
   "/pay/:localAuthority/:paymentId",
   isTeamUsingGovPay,
