@@ -1,0 +1,1 @@
+alter table "public"."analytics_logs" add column "input_errors" jsonb NULL DEFAULT '[]';
