@@ -194,7 +194,8 @@ export const previewStore: StateCreator<
 
   getType: (node: Store.node | null) => {
     const { flow } = get();
-    const currentNodeType = flow[node!.id!]?.type;
+    if (!node?.id) return;
+    const currentNodeType = flow[node.id]?.type;
     return currentNodeType;
   },
 
