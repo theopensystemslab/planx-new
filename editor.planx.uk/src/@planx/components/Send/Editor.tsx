@@ -2,7 +2,7 @@ import Warning from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { useFormik } from "formik";
+import { getIn, useFormik } from "formik";
 import React from "react";
 import ChecklistItem from "ui/ChecklistItem";
 import ErrorWrapper from "ui/ErrorWrapper";
@@ -89,7 +89,7 @@ const SendComponent: React.FC<Props> = (props) => {
             />
           </InputRow>
           <Box mt={2}>
-            <ErrorWrapper error={formik.errors.destinations}>
+            <ErrorWrapper error={getIn(formik.errors, "destinations")}>
               <Grid container spacing={0}>
                 {options.map((option) => (
                   <Grid item xs={12} key={option.value}>

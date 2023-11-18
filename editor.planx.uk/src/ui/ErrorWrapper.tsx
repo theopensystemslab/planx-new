@@ -2,11 +2,12 @@ import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ERROR_MESSAGE } from "@planx/components/shared/constants";
-import React, { ReactElement } from "react";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import React, { ReactElement, useEffect } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export interface Props {
-  error: string | string[] | undefined;
+  error?: string;
   children?: ReactElement;
   id?: string;
 }
@@ -34,16 +35,21 @@ const ErrorText = styled(Typography)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
-export default function ErrorWrapper(props: Props): FCReturn {
-  const id = props.id ? `${ERROR_MESSAGE}-${props.id}` : undefined;
+export default function ErrorWrapper({ id, error, children }: Props): FCReturn {
+  const inputId = id ? `${ERROR_MESSAGE}-${id}` : undefined;
+  const { trackInputErrors } = useAnalyticsTracking();
+
+  useEffect(() => {
+    error && trackInputErrors(error);
+  }, [error, trackInputErrors]);
 
   return (
     // role="status" immediately announces the error to screenreaders without interrupting focus
-    <Root error={props.error} role="status" data-testid="error-wrapper">
-      <ErrorText id={id} data-testid={id} variant="body1">
-        {props?.error}
+    <Root error={error} role="status" data-testid="error-wrapper">
+      <ErrorText id={inputId} data-testid={inputId} variant="body1">
+        {error && error}
       </ErrorText>
-      {props.children || null}
+      {children || null}
     </Root>
   );
 }
