@@ -21,7 +21,7 @@ type AnalyticsLogDirection =
 
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
-export type BackwardsNaviagtionInitiatorType = "change" | "back";
+export type BackwardsNavigationInitiatorType = "change" | "back";
 
 type NodeMetadata = {
   flagset?: FlagSet;
@@ -45,7 +45,7 @@ const analyticsContext = createContext<{
   ) => Promise<void>;
   trackBackwardsNavigationByNodeId: (
     nodeId: string,
-    backwardsNavigationType: BackwardsNaviagtionInitiatorType,
+    backwardsNavigationType: BackwardsNavigationInitiatorType,
   ) => Promise<void>;
   node: Store.node | null;
 }>({
@@ -309,7 +309,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function trackBackwardsNavigationByNodeId(
     nodeId: string,
-    initiator: BackwardsNaviagtionInitiatorType,
+    initiator: BackwardsNavigationInitiatorType,
   ) {
     const targetNodeMetadata = getTitleAndTypeFromFlow(nodeId);
     const metadata: Record<string, NodeMetadata> = {};
