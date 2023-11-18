@@ -6,14 +6,14 @@ select
 	t.slug as team_slug,
 	a.type as analytics_type,
 	a.created_at as analytics_created_at,
-	a.user_agent as user_agent,
-	a.referrer as referrer,
-	al.flow_direction as flow_direction,
-	al.metadata as metadata,
+	user_agent,
+	referrer,
+	flow_direction,
+	metadata,
 	al.user_exit as is_user_exit,
-	al.node_type as node_type,
-	al.node_title as node_title,
-	al.has_clicked_help as has_clicked_help,
+	node_type,
+	node_title,
+	has_clicked_help,
 	CAST(EXTRACT(EPOCH FROM (al.next_log_created_at - al.created_at)) as numeric (10, 1)) as time_spent_on_node_seconds
 from analytics a
 	left join analytics_logs al on a.id = al.analytics_id
