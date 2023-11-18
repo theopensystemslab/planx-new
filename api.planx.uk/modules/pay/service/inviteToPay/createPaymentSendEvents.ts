@@ -1,7 +1,10 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { CombinedResponse, createScheduledEvent } from "../../../../lib/hasura/metadata";
+import {
+  CombinedResponse,
+  createScheduledEvent,
+} from "../../../../lib/hasura/metadata";
 import { $api, $public } from "../../../../client";
 import { getMostRecentPublishedFlow } from "../../../../helpers";
 import { Flow, Node, Team } from "../../../../types";
