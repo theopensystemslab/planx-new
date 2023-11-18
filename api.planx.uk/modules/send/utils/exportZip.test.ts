@@ -1,6 +1,6 @@
-import { mockLowcalSession } from "../tests/mocks/saveAndReturnMocks";
+import { mockLowcalSession } from "../../../tests/mocks/saveAndReturnMocks";
 import { buildSubmissionExportZip } from "./exportZip";
-import type { LowCalSession } from "../types";
+import type { LowCalSession } from "../../../types";
 
 jest.mock("fs", () => ({
   mkdtempSync: () => "tmpdir",
@@ -54,7 +54,7 @@ const mockGenerateOneAppXML = jest
   .fn()
   .mockResolvedValue({ trim: () => "<dummy:xml></dummy:xml>" });
 
-jest.mock("../client", () => {
+jest.mock("../../../client", () => {
   return {
     $api: {
       getDocumentTemplateNamesForSession: jest

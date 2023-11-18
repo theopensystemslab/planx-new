@@ -9,6 +9,12 @@ interface ScheduledEvent {
   args: ScheduledEventArgs;
 }
 
+export interface CombinedResponse {
+  bops?: ScheduledEventResponse;
+  uniform?: ScheduledEventResponse;
+  email?: ScheduledEventResponse;
+}
+
 interface ScheduledEventArgs {
   headers: Record<string, string>[];
   retry_conf: {

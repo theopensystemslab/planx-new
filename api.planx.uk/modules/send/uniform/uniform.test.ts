@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../server";
+import app from "../../../server";
 
 describe(`sending an application to uniform`, () => {
   it("fails without authorization header", async () => {

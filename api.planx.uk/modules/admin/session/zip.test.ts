@@ -2,7 +2,7 @@ import supertest from "supertest";
 import app from "../../../server";
 import { authHeader } from "../../../tests/mockJWT";
 
-jest.mock("../../../send/exportZip", () => ({
+jest.mock("../../send/utils/exportZip", () => ({
   buildSubmissionExportZip: jest.fn().mockResolvedValue({
     filename: "tests/mocks/test.zip",
     remove: jest.fn,

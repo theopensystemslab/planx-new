@@ -3,10 +3,10 @@ import { NextFunction, Request, Response } from "express";
 import { Buffer } from "node:buffer";
 import FormData from "form-data";
 import fs from "fs";
-import { markSessionAsSubmitted } from "../modules/saveAndReturn/service/utils";
+import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
 import { gql } from "graphql-request";
-import { $api } from "../client";
-import { buildSubmissionExportZip } from "./exportZip";
+import { $api } from "../../../client";
+import { buildSubmissionExportZip } from "../utils/exportZip";
 
 interface UniformClient {
   clientId: string;
@@ -44,26 +44,6 @@ interface SendToUniformPayload {
   sessionId: string;
 }
 
-/**
- * @swagger
- * /uniform/{localAuthority}:
- *  post:
- *    summary: Submits an application to Uniform
- *    description: Submits an application to Uniform
- *    tags:
- *      - submissions
- *    parameters:
- *      - $ref: '#/components/parameters/localAuthority'
- *    security:
- *      - hasuraAuth: []
- *    requestBody:
- *      description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/SessionPayload'
- */
 export async function sendToUniform(
   req: Request,
   res: Response,

@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import { queryMock } from "../tests/graphqlQueryMock";
-import app from "../server";
+import { queryMock } from "../../../tests/graphqlQueryMock";
+import app from "../../../server";
 
 const mockGenerateCSVData = jest.fn().mockResolvedValue([
   {
@@ -34,7 +34,7 @@ const mockBuildSubmissionExportZip = jest.fn().mockImplementation(() => ({
   toBuffer: () => Buffer.from("test"),
 }));
 
-jest.mock("./exportZip", () => {
+jest.mock("../utils/exportZip", () => {
   return {
     buildSubmissionExportZip: (input: string) =>
       Promise.resolve(mockBuildSubmissionExportZip(input)),

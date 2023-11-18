@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { buildSubmissionExportZip } from "../../../send/exportZip";
+import { buildSubmissionExportZip } from "../../send/utils/exportZip";
 
 /**
  * @swagger
