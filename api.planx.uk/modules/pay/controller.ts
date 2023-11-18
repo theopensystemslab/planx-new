@@ -1,48 +1,32 @@
 import assert from "assert";
-import { NextFunction, Request, Response } from "express";
+import { Request } from "express";
 import { responseInterceptor } from "http-proxy-middleware";
-import SlackNotify from "slack-notify";
-import { logPaymentStatus } from "../send/helpers";
+import { logPaymentStatus } from "../../send/helpers";
 import { usePayProxy } from "./proxy";
-import { $api } from "../client";
-import { ServerError } from "../errors";
-import { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { addGovPayPaymentIdToPaymentRequest } from "./utils";
+import { $api } from "../../client";
+import { ServerError } from "../../errors";
+import { GovUKPayment, PaymentRequest } from "@opensystemslab/planx-core/types";
+import {
+  addGovPayPaymentIdToPaymentRequest,
+  postPaymentNotificationToSlack,
+} from "./service/utils";
+import {
+  InviteToPayController,
+  PaymentProxyController,
+  PaymentRequestProxyController,
+} from "./types";
 
 assert(process.env.SLACK_WEBHOOK_URL);
 
 // exposed as /pay/:localAuthority and also used as middleware
 // returns the url to make a gov uk payment
-export async function makePaymentViaProxy(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  // confirm that this local authority (aka team) has a pay token configured before creating the proxy
-  const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
-
-  if (!isSupported) {
-    return next(
-      new ServerError({
-        message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
-        status: 400,
-      }),
-    );
-  }
-
-  const flowId = req.query?.flowId as string | undefined;
-  const sessionId = req.query?.sessionId as string | undefined;
-  const teamSlug = req.params.localAuthority;
-
-  if (!flowId || !sessionId || !teamSlug) {
-    return next(
-      new ServerError({
-        message: "Missing required query param",
-        status: 400,
-      }),
-    );
-  }
+export const makePaymentViaProxy: PaymentProxyController = async (
+  req,
+  res,
+  next,
+) => {
+  const { flowId, sessionId } = res.locals.parsedReq.query;
+  const teamSlug = res.locals.parsedReq.params.localAuthority;
 
   const session = await $api.session.findDetails(sessionId);
 
@@ -77,28 +61,16 @@ export async function makePaymentViaProxy(
     },
     req,
   )(req, res, next);
-}
+};
 
-export async function makeInviteToPayPaymentViaProxy(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  // confirm that this local authority (aka team) has a pay token configured before creating the proxy
-  const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
-
-  if (!isSupported) {
-    return next({
-      status: 400,
-      message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
-    });
-  }
-
-  const flowId = req.query?.flowId as string | undefined;
-  const sessionId = req.query?.sessionId as string | undefined;
-  const paymentRequestId = req.params?.paymentRequest as string;
-  const teamSlug = req.params.localAuthority;
+export const makeInviteToPayPaymentViaProxy: PaymentRequestProxyController = (
+  req,
+  res,
+  next,
+) => {
+  const { flowId, sessionId } = res.locals.parsedReq.query;
+  const { localAuthority: teamSlug, paymentRequest: paymentRequestId } =
+    res.locals.parsedReq.params;
 
   // drop req.params.localAuthority from the path when redirecting
   // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
@@ -130,7 +102,7 @@ export async function makeInviteToPayPaymentViaProxy(
     },
     req,
   )(req, res, next);
-}
+};
 
 // exposed as /pay/:localAuthority/:paymentId and also used as middleware
 // fetches the status of the payment
@@ -141,11 +113,10 @@ export const fetchPaymentViaProxy = fetchPaymentViaProxyWithCallback(
 
 export function fetchPaymentViaProxyWithCallback(
   callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>,
-) {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    const flowId = req.query?.flowId as string | undefined;
-    const sessionId = req.query?.sessionId as string | undefined;
-    const teamSlug = req.params.localAuthority;
+): PaymentProxyController {
+  return async (req, res, next) => {
+    const { flowId, sessionId } = res.locals.parsedReq.query;
+    const teamSlug = res.locals.parsedReq.params.localAuthority;
 
     // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
     usePayProxy(
@@ -184,22 +155,56 @@ export function fetchPaymentViaProxyWithCallback(
   };
 }
 
-export async function postPaymentNotificationToSlack(
-  req: Request,
-  govUkResponse: GovUKPayment,
-  label = "",
-) {
-  // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
-  if (govUkResponse?.payment_provider !== "sandbox") {
-    const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-    const getStatus = (state: GovUKPayment["state"]) =>
-      state.status + (state.message ? ` (${state.message})` : "");
-    const payMessage = `:coin: New GOV Pay payment ${label} *${
-      govUkResponse.payment_id
-    }* with status *${getStatus(govUkResponse.state)}* [${
-      req.params.localAuthority
-    }]`;
-    await slack.send(payMessage);
-    console.log("Payment notification posted to Slack");
+export const inviteToPay: InviteToPayController = async (_req, res, next) => {
+  const { sessionId } = res.locals.parsedReq.params;
+  const { payeeEmail, payeeName, applicantName, sessionPreviewKeys } =
+    res.locals.parsedReq.body;
+  // lock session before creating a payment request
+  const locked = await $api.session.lock(sessionId);
+  if (locked === null) {
+    return next(
+      new ServerError({
+        message: "session not found",
+        status: 404,
+      }),
+    );
   }
-}
+  if (locked === false) {
+    const cause = new Error(
+      "this session could not be locked, perhaps because it is already locked",
+    );
+    return next(
+      new ServerError({
+        message: `could not initiate a payment request: ${cause.message}`,
+        status: 400,
+        cause,
+      }),
+    );
+  }
+
+  let paymentRequest: PaymentRequest | undefined;
+  try {
+    paymentRequest = await $api.paymentRequest.create({
+      sessionId,
+      applicantName,
+      payeeName,
+      payeeEmail,
+      sessionPreviewKeys,
+    });
+  } catch (e: unknown) {
+    // revert the session lock on failure
+    await $api.session.unlock(sessionId);
+    return next(
+      new ServerError({
+        message:
+          e instanceof Error
+            ? `could not initiate a payment request: ${e.message}`
+            : "could not initiate a payment request due to an unknown error",
+        status: 500,
+        cause: e,
+      }),
+    );
+  }
+
+  res.json(paymentRequest);
+};

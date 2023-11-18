@@ -4,7 +4,6 @@ import assert from "assert";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors from "cors";
-import { stringify } from "csv-stringify";
 import express, { ErrorRequestHandler } from "express";
 import noir from "pino-noir";
 import pinoLogger from "express-pino-logger";
@@ -13,17 +12,6 @@ import passport from "passport";
 import helmet from "helmet";
 
 import { ServerError } from "./errors";
-import {
-  makePaymentViaProxy,
-  fetchPaymentViaProxy,
-  makeInviteToPayPaymentViaProxy,
-} from "./pay";
-import {
-  inviteToPay,
-  fetchPaymentRequestDetails,
-  buildPaymentPayload,
-  fetchPaymentRequestViaProxy,
-} from "./inviteToPay";
 import { useHasuraAuth } from "./modules/auth/middleware";
 
 import airbrake from "./airbrake";
@@ -46,6 +34,7 @@ import saveAndReturnRoutes from "./modules/saveAndReturn/routes";
 import sendEmailRoutes from "./modules/sendEmail/routes";
 import fileRoutes from "./modules/file/routes";
 import gisRoutes from "./modules/gis/routes";
+import payRoutes from "./modules/pay/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 
@@ -116,25 +105,6 @@ app.get("/download-application-files/:sessionId", downloadApplicationFiles);
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
 });
 
-// used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
-app.post("/pay/:localAuthority", makePaymentViaProxy);
-
-// used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
-app.get("/pay/:localAuthority/:paymentId", fetchPaymentViaProxy);
-
-app.post(
-  "/payment-request/:paymentRequest/pay",
-  fetchPaymentRequestDetails,
-  buildPaymentPayload,
-  makeInviteToPayPaymentViaProxy,
-);
-
-app.get(
-  "/payment-request/:paymentRequest/payment/:paymentId",
-  fetchPaymentRequestDetails,
-  fetchPaymentRequestViaProxy,
-);
-
 // needed for storing original URL to redirect to in login flow
 app.use(
   cookieSession({
@@ -170,28 +140,7 @@ app.use(saveAndReturnRoutes);
 app.use(sendEmailRoutes);
 app.use("/flows", flowRoutes);
 app.use(gisRoutes);
-
-// allows an applicant to download their application data on the Confirmation page
-app.post("/download-application", async (req, res, next) => {
-  if (!req.body) {
-    res.send({
-      message: "Missing application `data` to download",
-    });
-  }
-
-  try {
-    // build a CSV and stream the response
-    stringify(req.body, {
-      columns: ["question", "responses", "metadata"],
-      header: true,
-    }).pipe(res);
-    res.header("Content-type", "text/csv");
-  } catch (err) {
-    next(err);
-  }
-});
-
-app.post("/invite-to-pay/:sessionId", inviteToPay);
+app.use(payRoutes);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {

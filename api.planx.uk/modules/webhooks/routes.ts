@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { useHasuraAuth } from "../auth/middleware";
-import { createPaymentSendEvents } from "../../inviteToPay/createPaymentSendEvents";
+import { createPaymentSendEvents } from "../pay/service/inviteToPay/createPaymentSendEvents";
 import { validate } from "../../shared/middleware/validate";
 import {
   createPaymentExpiryEventsController,

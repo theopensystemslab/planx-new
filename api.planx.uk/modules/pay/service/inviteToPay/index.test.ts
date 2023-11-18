@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import { queryMock } from "../tests/graphqlQueryMock";
-import app from "../server";
+import { queryMock } from "../../../../tests/graphqlQueryMock";
+import app from "../../../../server";
 import {
   validSessionQueryMock,
   notFoundQueryMock,
@@ -10,14 +10,14 @@ import {
   unlockSessionQueryMock,
   getPublishedFlowDataQueryMock,
   createPaymentRequestQueryMock,
-} from "../tests/mocks/inviteToPayMocks";
+} from "../../../../tests/mocks/inviteToPayMocks";
 import {
   payee,
   applicant,
   validSession,
   notFoundSession,
   paymentRequestResponse,
-} from "../tests/mocks/inviteToPayData";
+} from "../../../../tests/mocks/inviteToPayData";
 
 describe("Invite to pay API route", () => {
   const inviteToPayBaseRoute = "/invite-to-pay";
@@ -69,10 +69,8 @@ describe("Invite to pay API route", () => {
         .send(invalidPostBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty(
-            "error",
-            "JSON body must contain payeeName",
-          );
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
         });
     });
 
@@ -83,10 +81,8 @@ describe("Invite to pay API route", () => {
         .send(invalidPostBody)
         .expect(400)
         .then((response) => {
-          expect(response.body).toHaveProperty(
-            "error",
-            "JSON body must contain payeeEmail",
-          );
+          expect(response.body).toHaveProperty("issues");
+          expect(response.body).toHaveProperty("name", "ZodError");
         });
     });
 

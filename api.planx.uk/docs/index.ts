@@ -36,7 +36,7 @@ const parameters = {
     type: "string",
     required: true,
     description:
-      "Name of the Local Authority, usually the same as Planx `team`",
+      "Name of the Local Authority, usually the same as PlanX `team`",
   },
   hasuraAuth: {
     name: "authorization",

@@ -3,12 +3,16 @@ import {
   calculateExpiryDate,
   convertSlugToName,
   getServiceLink,
-} from "../modules/saveAndReturn/service/utils";
-import { Template, getClientForTemplate, sendEmail } from "../lib/notify";
-import { InviteToPayNotifyConfig } from "../types";
-import { Team } from "../types";
+} from "../../../saveAndReturn/service/utils";
+import {
+  Template,
+  getClientForTemplate,
+  sendEmail,
+} from "../../../../lib/notify";
+import { InviteToPayNotifyConfig } from "../../../../types";
+import { Team } from "../../../../types";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
-import { $public } from "../client";
+import { $public } from "../../../../client";
 
 interface SessionDetails {
   email: string;

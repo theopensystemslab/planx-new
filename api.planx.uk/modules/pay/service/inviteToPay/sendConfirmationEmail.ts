@@ -1,8 +1,8 @@
-import { $public, $api } from "../client";
-import { sendEmail } from "../lib/notify";
+import { $public, $api } from "../../../../client";
+import { sendEmail } from "../../../../lib/notify";
 import { gql } from "graphql-request";
-import { convertSlugToName } from "../modules/saveAndReturn/service/utils";
-import type { AgentAndPayeeSubmissionNotifyConfig } from "../types";
+import { convertSlugToName } from "../../../saveAndReturn/service/utils";
+import type { AgentAndPayeeSubmissionNotifyConfig } from "../../../../types";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
   const { personalisation, applicantEmail, payeeEmail, projectTypes } =
