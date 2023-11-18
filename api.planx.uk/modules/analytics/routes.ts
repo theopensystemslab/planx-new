@@ -9,12 +9,12 @@ import {
 const router = Router();
 
 router.post(
-  "/log-user-exit",
+  "/analytics/log-user-exit",
   validate(logAnalyticsSchema),
   logUserExitController,
 );
 router.post(
-  "/log-user-resume",
+  "/analytics/log-user-resume",
   validate(logAnalyticsSchema),
   logUserResumeController,
 );

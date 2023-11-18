@@ -24,49 +24,49 @@ import {
 const router = Router();
 
 router.post(
-  "/:flowId/copy",
+  "/flows/:flowId/copy",
   useTeamEditorAuth,
   validate(copyFlowSchema),
   copyFlowController,
 );
 
 router.post(
-  "/:flowId/search",
+  "/flows/:flowId/search",
   usePlatformAdminAuth,
   validate(findAndReplaceSchema),
   findAndReplaceController,
 );
 
 router.put(
-  "/:flowId/copy-portal/:portalNodeId",
+  "/flows/:flowId/copy-portal/:portalNodeId",
   usePlatformAdminAuth,
   validate(copyFlowAsPortalSchema),
   copyPortalAsFlowController,
 );
 
 router.post(
-  "/:flowId/move/:teamSlug",
+  "/flows/:flowId/move/:teamSlug",
   useTeamEditorAuth,
   validate(moveFlowSchema),
   moveFlowController,
 );
 
 router.post(
-  "/:flowId/publish",
+  "/flows/:flowId/publish",
   useTeamEditorAuth,
   validate(publishFlowSchema),
   publishFlowController,
 );
 
 router.post(
-  "/:flowId/diff",
+  "/flows/:flowId/diff",
   useTeamEditorAuth,
   validate(validateAndDiffSchema),
   validateAndDiffFlowController,
 );
 
 router.get(
-  "/:flowId/download-schema",
+  "/flows/:flowId/download-schema",
   validate(downloadFlowSchema),
   downloadFlowSchemaController,
 );

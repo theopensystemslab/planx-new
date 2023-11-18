@@ -15,7 +15,7 @@ import { validate } from "../../shared/middleware/validate";
 const router = Router();
 
 router.post(
-  "/public/upload",
+  "/file/public/upload",
   multer().single("file"),
   useTeamEditorAuth,
   validate(uploadFileSchema),
@@ -23,20 +23,20 @@ router.post(
 );
 
 router.post(
-  "/private/upload",
+  "/file/private/upload",
   multer().single("file"),
   validate(uploadFileSchema),
   privateUploadController,
 );
 
 router.get(
-  "/public/:fileKey/:fileName",
+  "/file/public/:fileKey/:fileName",
   validate(downloadFileSchema),
   publicDownloadController,
 );
 
 router.get(
-  "/private/:fileKey/:fileName",
+  "/file/private/:fileKey/:fileName",
   useFilePermission,
   validate(downloadFileSchema),
   privateDownloadController,
