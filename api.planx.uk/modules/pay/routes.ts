@@ -36,9 +36,9 @@ router.get(
 
 router.post(
   "/payment-request/:paymentRequest/pay",
-  isTeamUsingGovPay,
   fetchPaymentRequestDetails,
   buildPaymentPayload,
+  isTeamUsingGovPay,
   validate(paymentRequestProxySchema),
   makeInviteToPayPaymentViaProxy,
 );
@@ -46,6 +46,7 @@ router.post(
 router.get(
   "/payment-request/:paymentRequest/payment/:paymentId",
   fetchPaymentRequestDetails,
+  isTeamUsingGovPay,
   validate(paymentProxySchema),
   fetchPaymentRequestViaProxy,
 );
