@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
+import { TYPES } from "@planx/components/types";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -61,6 +62,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     govUkPayment,
     canGoBack,
     setPreviewEnvironment,
+    getType,
   ] = useStore((state) => [
     state.previousCard,
     state.record,
@@ -72,6 +74,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.govUkPayment,
     state.canGoBack,
     state.setPreviewEnvironment,
+    state.getType,
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, node, trackBackwardsNavigationByNodeId } =
@@ -158,9 +161,14 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     [node?.id],
   );
 
+  const showBackBar = useMemo(
+    () => getType(node) !== TYPES.Confirmation,
+    [node, getType],
+  );
+
   return (
     <Box width="100%" role="main">
-      <BackBar>
+      <BackBar hidden={!showBackBar}>
         <Container maxWidth={false}>
           <BackButton hidden={!showBackButton} onClick={() => goBack()}>
             <ArrowBackIcon fontSize="small" />
