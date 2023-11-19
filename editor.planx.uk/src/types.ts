@@ -42,6 +42,7 @@ export interface TeamSettings {
   };
   supportEmail?: string;
   boundary?: string;
+  hasPlanningData?: boolean;
 }
 
 export interface NotifyPersonalisation {
