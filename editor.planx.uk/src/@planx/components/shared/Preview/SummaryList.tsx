@@ -113,21 +113,17 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 
   const isValidComponent = ([nodeId, userData]: BreadcrumbEntry) => {
     const node = props.flow[nodeId];
-    const Component = node.type && presentationalComponents[node.type];
-
-    const isPresentationalComponent = Boolean(Component);
     const doesNodeExist = Boolean(props.flow[nodeId]);
+    if (!doesNodeExist) return false;
+
+    const Component = node.type && presentationalComponents[node.type];
+    const isPresentationalComponent = Boolean(Component);
     const isAutoAnswered = userData.auto;
     const isInfoOnlyMode =
       node.type === TYPES.FileUploadAndLabel &&
       props.flow[nodeId].data?.hideDropZone;
 
-    return (
-      doesNodeExist &&
-      !isAutoAnswered &&
-      isPresentationalComponent &&
-      !isInfoOnlyMode
-    );
+    return !isAutoAnswered && isPresentationalComponent && !isInfoOnlyMode;
   };
 
   const removeNonPresentationalNodes = (
