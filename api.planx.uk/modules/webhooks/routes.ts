@@ -17,43 +17,46 @@ import { createSessionEventSchema } from "./service/lowcalSessionEvents/schema";
 
 const router = Router();
 
-router.use("/hasura", useHasuraAuth);
+router.use("/webhooks/hasura", useHasuraAuth);
 router.post(
-  "/hasura/create-payment-invitation-events",
+  "/webhooks/hasura/create-payment-invitation-events",
   validate(createPaymentEventSchema),
   createPaymentInvitationEventsController,
 );
 router.post(
-  "/hasura/create-payment-reminder-events",
+  "/webhooks/hasura/create-payment-reminder-events",
   validate(createPaymentEventSchema),
   createPaymentReminderEventsController,
 );
 router.post(
-  "/hasura/create-payment-expiry-events",
+  "/webhooks/hasura/create-payment-expiry-events",
   validate(createPaymentEventSchema),
   createPaymentExpiryEventsController,
 );
 router.post(
-  "/hasura/send-slack-notification",
+  "/webhooks/hasura/send-slack-notification",
   validate(sendSlackNotificationSchema),
   sendSlackNotificationController,
 );
 router.post(
-  "/hasura/create-reminder-event",
+  "/webhooks/hasura/create-reminder-event",
   validate(createSessionEventSchema),
   createSessionReminderEventController,
 );
 router.post(
-  "/hasura/create-expiry-event",
+  "/webhooks/hasura/create-expiry-event",
   validate(createSessionEventSchema),
   createSessionExpiryEventController,
 );
 router.post(
-  "/hasura/sanitise-application-data",
+  "/webhooks/hasura/sanitise-application-data",
   sanitiseApplicationDataController,
 );
 
 // TODO: Convert to the new API module structure
-router.post("/hasura/create-payment-send-events", createPaymentSendEvents);
+router.post(
+  "/webhooks/hasura/create-payment-send-events",
+  createPaymentSendEvents,
+);
 
 export default router;

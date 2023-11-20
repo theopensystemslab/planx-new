@@ -10,8 +10,8 @@ import {
 
 const router = Router();
 
-router.use(usePlatformAdminAuth);
-router.put("/", validate(createUserSchema), createUser);
-router.delete("/:email", validate(deleteUserSchema), deleteUser);
+router.use("/user", usePlatformAdminAuth);
+router.put("/user", validate(createUserSchema), createUser);
+router.delete("/user/:email", validate(deleteUserSchema), deleteUser);
 
 export default router;

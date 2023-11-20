@@ -110,21 +110,22 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: true }));
 
+// Setup API routes
+app.use(adminRoutes);
+app.use(analyticsRoutes);
 app.use(authRoutes);
+app.use(fileRoutes);
+app.use(flowRoutes);
+app.use(gisRoutes);
 app.use(miscRoutes);
-app.use("/user", userRoutes);
-app.use("/team", teamRoutes);
-app.use("/webhooks", webhookRoutes);
-app.use("/analytics", analyticsRoutes);
-app.use("/admin", adminRoutes);
 app.use(ordnanceSurveyRoutes);
-app.use("/file", fileRoutes);
+app.use(payRoutes);
 app.use(saveAndReturnRoutes);
 app.use(sendEmailRoutes);
-app.use("/flows", flowRoutes);
-app.use(gisRoutes);
-app.use(payRoutes);
 app.use(sendRoutes);
+app.use(teamRoutes);
+app.use(userRoutes);
+app.use(webhookRoutes);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {

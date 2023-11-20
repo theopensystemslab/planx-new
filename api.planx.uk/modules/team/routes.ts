@@ -5,19 +5,19 @@ import { validate } from "../../shared/middleware/validate";
 
 const router = Router();
 
-router.use(AuthMiddleware.usePlatformAdminAuth);
+router.use("/team/", AuthMiddleware.usePlatformAdminAuth);
 router.put(
-  "/:teamSlug/add-member",
+  "/team/:teamSlug/add-member",
   validate(Controller.upsertMemberSchema),
   Controller.addMember,
 );
 router.patch(
-  "/:teamSlug/change-member-role",
+  "/team/:teamSlug/change-member-role",
   validate(Controller.upsertMemberSchema),
   Controller.changeMemberRole,
 );
 router.delete(
-  "/:teamSlug/remove-member",
+  "/team/:teamSlug/remove-member",
   validate(Controller.removeMemberSchema),
   Controller.removeMember,
 );

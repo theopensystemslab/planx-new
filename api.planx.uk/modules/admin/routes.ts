@@ -13,24 +13,24 @@ import { downloadFeedbackCSV } from "./controller";
 
 const router = Router();
 
-router.use(usePlatformAdminAuth);
+router.use("/admin/", usePlatformAdminAuth);
 router.get(
-  "/feedback",
+  "/admin/feedback",
   validate(downloadFeedbackCSVSchema),
   downloadFeedbackCSV,
 );
 
 // TODO: Split the routes below into controller and service components
-router.get("/session/:sessionId/xml", getOneAppXML);
-router.get("/session/:sessionId/bops", getBOPSPayload);
-router.get("/session/:sessionId/csv", getCSVData);
-router.get("/session/:sessionId/csv-redacted", getRedactedCSVData);
-router.get("/session/:sessionId/html", getHTMLExport);
-router.get("/session/:sessionId/html-redacted", getRedactedHTMLExport);
-router.get("/session/:sessionId/zip", generateZip);
-router.get("/session/:sessionId/summary", getSessionSummary);
+router.get("/admin/session/:sessionId/xml", getOneAppXML);
+router.get("/admin/session/:sessionId/bops", getBOPSPayload);
+router.get("/admin/session/:sessionId/csv", getCSVData);
+router.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
+router.get("/admin/session/:sessionId/html", getHTMLExport);
+router.get("/admin/session/:sessionId/html-redacted", getRedactedHTMLExport);
+router.get("/admin/session/:sessionId/zip", generateZip);
+router.get("/admin/session/:sessionId/summary", getSessionSummary);
 router.get(
-  "/session/:sessionId/digital-planning-application",
+  "/admin/session/:sessionId/digital-planning-application",
   getDigitalPlanningApplicationPayload,
 );
 
