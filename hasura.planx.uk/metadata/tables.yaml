@@ -556,6 +556,7 @@
           - data
           - has_user_saved
           - id
+          - submitted_at
           - updated_at
         filter:
           _and:
