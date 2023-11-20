@@ -4,6 +4,7 @@ import { queryMock } from "../../../tests/graphqlQueryMock";
 import { authHeader } from "../../../tests/mockJWT";
 import app from "../../../server";
 import { Flow } from "../../../types";
+import { userContext } from "../../auth/middleware";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -171,6 +172,56 @@ it("inserts copied unique flow data", async () => {
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual(mockCopyFlowResponseInserted);
+    });
+});
+
+it("throws an error if the a GraphQL operation fails", async () => {
+  const body = {
+    insert: true,
+    replaceValue: "T3ST1",
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        data: null,
+      },
+    },
+    graphqlErrors: [
+      {
+        message: "Something went wrong",
+      },
+    ],
+  });
+
+  await supertest(app)
+    .post("/flows/1/copy")
+    .send(body)
+    .set(auth)
+    .expect(500)
+    .then((res) => {
+      expect(res.body.error).toMatch(/Failed to copy flow/);
+    });
+});
+
+it("throws an error if user details are missing", async () => {
+  const getStoreMock = jest.spyOn(userContext, "getStore");
+  getStoreMock.mockReturnValue(undefined);
+
+  const body = {
+    insert: true,
+    replaceValue: "T3ST1",
+  };
+
+  await supertest(app)
+    .post("/flows/1/copy")
+    .send(body)
+    .set(auth)
+    .expect(500)
+    .then((res) => {
+      expect(res.body.error).toMatch(/Failed to copy flow/);
     });
 });
 

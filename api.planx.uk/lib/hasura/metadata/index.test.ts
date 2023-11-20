@@ -1,7 +1,10 @@
 import { createScheduledEvent, RequiredScheduledEventArgs } from ".";
-import Axios from "axios";
+import Axios, { AxiosError } from "axios";
 
-jest.mock("axios");
+jest.mock("axios", () => ({
+  ...jest.requireActual("axios"),
+  post: jest.fn(),
+}));
 const mockAxios = Axios as jest.Mocked<typeof Axios>;
 
 const mockScheduledEvent: RequiredScheduledEventArgs = {
@@ -13,6 +16,11 @@ const mockScheduledEvent: RequiredScheduledEventArgs = {
 
 test("createScheduledEvent returns an error if request fails", async () => {
   mockAxios.post.mockRejectedValue(new Error());
+  await expect(createScheduledEvent(mockScheduledEvent)).rejects.toThrow();
+});
+
+test("createScheduledEvent returns an error if Axios errors", async () => {
+  mockAxios.post.mockRejectedValue(new AxiosError());
   await expect(createScheduledEvent(mockScheduledEvent)).rejects.toThrow();
 });
 

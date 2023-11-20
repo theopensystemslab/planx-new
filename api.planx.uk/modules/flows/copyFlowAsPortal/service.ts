@@ -7,7 +7,6 @@ import { Flow } from "../../../types";
 const copyPortalAsFlow = async (flowId: string, portalNodeId: string) => {
   // fetch the parent flow data
   const flow = await getFlowData(flowId);
-  if (!flow) throw Error("Unknown flowId");
 
   // confirm that the node id provided is a valid portal
   if (

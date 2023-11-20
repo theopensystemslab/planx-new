@@ -62,3 +62,50 @@ it("moves a flow to a new team", async () => {
       });
     });
 });
+
+it("returns an error when the service errors", async () => {
+  queryMock.reset();
+  queryMock.mockQuery({
+    name: "GetTeamBySlug",
+    variables: {
+      slug: "new-team",
+    },
+    data: {
+      teams: null,
+    },
+    graphqlErrors: [
+      {
+        message: "Something went wrong",
+      },
+    ],
+  });
+
+  await supertest(app)
+    .post("/flows/1/move/new-team")
+    .set(authHeader({ role: "teamEditor" }))
+    .expect(500)
+    .then((res) => {
+      expect(res.body.error).toMatch(/Failed to move flow/);
+    });
+});
+
+it("returns an error for an invalid team", async () => {
+  queryMock.reset();
+  queryMock.mockQuery({
+    name: "GetTeamBySlug",
+    variables: {
+      slug: "new-team",
+    },
+    data: {
+      teams: [],
+    },
+  });
+
+  await supertest(app)
+    .post("/flows/1/move/new-team")
+    .set(authHeader({ role: "teamEditor" }))
+    .expect(500)
+    .then((res) => {
+      expect(res.body.error).toMatch(/Unable to find a team matching slug/);
+    });
+});

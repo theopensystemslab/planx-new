@@ -18,6 +18,8 @@ export async function sendToEmail(
 
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
   const { payload } = req.body;
+  const localAuthority = req.params.localAuthority;
+
   if (!payload?.sessionId) {
     return next({
       status: 400,
@@ -26,7 +28,6 @@ export async function sendToEmail(
   }
 
   try {
-    const localAuthority = req.params.localAuthority;
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
     const { sendToEmail, notifyPersonalisation } =
       await getTeamEmailSettings(localAuthority);
@@ -44,7 +45,7 @@ export async function sendToEmail(
     // Prepare email template
     const config: EmailSubmissionNotifyConfig = {
       personalisation: {
-        serviceName: flowName || "PlanX",
+        serviceName: flowName,
         sessionId: payload.sessionId,
         applicantEmail: email,
         downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${localAuthority}`,
@@ -54,12 +55,7 @@ export async function sendToEmail(
 
     // Send the email
     const response = await sendEmail("submit", sendToEmail, config);
-    if (response?.message !== "Success") {
-      return next({
-        status: 500,
-        message: `Failed to send "Submit" email (${localAuthority}): ${response?.message}`,
-      });
-    }
+
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(payload.sessionId);
 
@@ -78,7 +74,9 @@ export async function sendToEmail(
   } catch (error) {
     return next({
       error,
-      message: `Failed to send "Submit" email. ${(error as Error).message}`,
+      message: `Failed to send "Submit" email (${localAuthority}): ${
+        (error as Error).message
+      }`,
     });
   }
 }

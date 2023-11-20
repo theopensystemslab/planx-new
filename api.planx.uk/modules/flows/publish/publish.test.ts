@@ -153,4 +153,17 @@ describe("publish", () => {
         });
       });
   });
+
+  it("throws an error if user details are missing", async () => {
+    const getStoreMock = jest.spyOn(userContext, "getStore");
+    getStoreMock.mockReturnValue(undefined);
+
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(auth)
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/User details missing from request/);
+      });
+  });
 });
