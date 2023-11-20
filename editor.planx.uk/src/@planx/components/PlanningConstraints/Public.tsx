@@ -55,23 +55,11 @@ function Component(props: Props) {
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  // Configure which planx teams should query Digital Land (or continue to use custom GIS) and set URL params accordingly
-  //   In future, Digital Land will theoretically support any UK address and this list won't be necessary, but data collection still limited to select councils!
-  const digitalLandOrganisations: string[] = [
-    "opensystemslab", // for UK-wide testing, subject to data availability
-    "barnet",
-    "birmingham",
-    "buckinghamshire",
-    "canterbury",
-    "camden",
-    "doncaster",
-    "gloucester",
-    "lambeth",
-    "medway",
-    "newcastle",
-    "southwark",
-    "st-albans",
-  ];
+  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly
+  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
+  const hasPlanningData = useStore(
+    (state) => state.teamSettings?.hasPlanningData,
+  );
 
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
@@ -89,9 +77,7 @@ function Component(props: Props) {
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
-      digitalLandOrganisations.includes(teamSlug)
-        ? digitalLandParams
-        : customGisParams,
+      hasPlanningData ? digitalLandParams : customGisParams,
     ).toString();
 
   const fetcher: Fetcher<GISResponse | GISResponse["constraints"]> = (
@@ -119,10 +105,7 @@ function Component(props: Props) {
     error: roadsError,
     isValidating: isValidatingRoads,
   } = useSWR(
-    () =>
-      usrn && digitalLandOrganisations.includes(teamSlug)
-        ? classifiedRoadsEndpoint
-        : null,
+    () => (usrn && hasPlanningData ? classifiedRoadsEndpoint : null),
     fetcher,
     { revalidateOnFocus: false },
   );
@@ -154,7 +137,7 @@ function Component(props: Props) {
             const _constraints: Array<
               EnhancedGISResponse | GISResponse["constraints"]
             > = [];
-            if (digitalLandOrganisations.includes(teamSlug)) {
+            if (hasPlanningData) {
               if (data && !dataError)
                 _constraints.push({
                   ...data,
