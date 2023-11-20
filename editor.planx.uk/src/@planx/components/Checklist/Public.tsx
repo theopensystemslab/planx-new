@@ -4,7 +4,7 @@ import type { Checklist, Group } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { useFormik } from "formik";
+import { getIn, useFormik } from "formik";
 import React, { useState } from "react";
 import ChecklistItem from "ui/ChecklistItem";
 import ErrorWrapper from "ui/ErrorWrapper";
@@ -139,7 +139,7 @@ const ChecklistComponent: React.FC<Props> = ({
         img={img}
       />
       <FullWidthWrapper>
-        <ErrorWrapper error={formik.errors.checked} id={id}>
+        <ErrorWrapper error={getIn(formik.errors, "checked")} id={id}>
           <Grid container spacing={layout === ChecklistLayout.Images ? 2 : 0}>
             {options ? (
               options.map((option) =>

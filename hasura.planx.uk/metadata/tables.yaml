@@ -38,6 +38,7 @@
           - flow_direction
           - has_clicked_help
           - id
+          - input_errors
           - metadata
           - node_title
           - node_type
@@ -57,6 +58,7 @@
         columns:
           - flow_direction
           - has_clicked_help
+          - input_errors
           - metadata
           - next_log_created_at
           - user_exit

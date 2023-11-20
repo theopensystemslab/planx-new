@@ -21,7 +21,7 @@ type AnalyticsLogDirection =
 
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
-export type BackwardsNaviagtionInitiatorType = "change" | "back";
+export type BackwardsNavigationInitiatorType = "change" | "back";
 
 type NodeMetadata = {
   flagset?: FlagSet;
@@ -45,9 +45,10 @@ const analyticsContext = createContext<{
   ) => Promise<void>;
   trackBackwardsNavigationByNodeId: (
     nodeId: string,
-    backwardsNavigationType: BackwardsNaviagtionInitiatorType,
+    backwardsNavigationType: BackwardsNavigationInitiatorType,
   ) => Promise<void>;
   node: Store.node | null;
+  trackInputErrors: (error: string) => Promise<void>;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
@@ -55,6 +56,7 @@ const analyticsContext = createContext<{
   trackFlowDirectionChange: () => Promise.resolve(),
   trackBackwardsNavigationByNodeId: () => Promise.resolve(),
   node: null,
+  trackInputErrors: () => Promise.resolve(),
 });
 const { Provider } = analyticsContext;
 
@@ -140,6 +142,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         trackFlowDirectionChange,
         trackBackwardsNavigationByNodeId,
         node,
+        trackInputErrors,
       }}
     >
       {children}
@@ -309,7 +312,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function trackBackwardsNavigationByNodeId(
     nodeId: string,
-    initiator: BackwardsNaviagtionInitiatorType,
+    initiator: BackwardsNavigationInitiatorType,
   ) {
     const targetNodeMetadata = getTitleAndTypeFromFlow(nodeId);
     const metadata: Record<string, NodeMetadata> = {};
@@ -400,6 +403,30 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       type: type,
     };
     return nodeMetadata;
+  }
+
+  /**
+   * Capture user input errors caught by ErrorWrapper component
+   */
+  async function trackInputErrors(error: string) {
+    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+      await publicClient.mutate({
+        mutation: gql`
+          mutation TrackInputErrors($id: bigint!, $error: jsonb) {
+            update_analytics_logs_by_pk(
+              pk_columns: { id: $id }
+              _append: { input_errors: $error }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: lastAnalyticsLogId,
+          error,
+        },
+      });
+    }
   }
 };
 
