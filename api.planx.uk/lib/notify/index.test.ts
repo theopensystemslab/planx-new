@@ -17,8 +17,8 @@ const mockConfig: NotifyConfig = {
 
 describe("sendEmail", () => {
   it("throws an error if an invalid template is used", async () => {
-    // @ts-expect-error Argument of type "invalidTemplate" is not assignable to parameter
     await expect(
+      // @ts-expect-error Argument of type "invalidTemplate" is not assignable to parameter
       sendEmail("invalidTemplate", "test@example.com", {}),
     ).rejects.toThrow();
   });
