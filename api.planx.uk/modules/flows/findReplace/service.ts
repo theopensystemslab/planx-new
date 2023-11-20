@@ -64,7 +64,6 @@ const findAndReplaceInFlow = async (
   replace?: string,
 ) => {
   const flow = await getFlowData(flowId);
-  if (!flow) throw Error("Unknown flowId");
 
   // Find
   if (!replace) {

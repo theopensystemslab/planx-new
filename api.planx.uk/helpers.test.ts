@@ -1,5 +1,10 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { dataMerged, getFormattedEnvironment, isLiveEnv } from "./helpers";
+import {
+  dataMerged,
+  getFlowData,
+  getFormattedEnvironment,
+  isLiveEnv,
+} from "./helpers";
 import { queryMock } from "./tests/graphqlQueryMock";
 import { userContext } from "./modules/auth/middleware";
 import { getJWT } from "./tests/mockJWT";
@@ -167,6 +172,7 @@ describe("dataMerged() function", () => {
       },
     });
   });
+
   it("handles multiple external portal nodes", async () => {
     const result = await dataMerged("parent-id");
     const nodeTypes = Object.values(result).map((node) =>
@@ -178,5 +184,21 @@ describe("dataMerged() function", () => {
 
     // All external portals have been flattened / replaced
     expect(areAllPortalsFlattened).toBe(true);
+  });
+});
+
+describe("getFlowData() function", () => {
+  it("throws an error if a flow is not found", async () => {
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      variables: {
+        id: "child-id",
+      },
+      data: {
+        flow: null,
+      },
+    });
+
+    await expect(getFlowData("child-id")).rejects.toThrow();
   });
 });

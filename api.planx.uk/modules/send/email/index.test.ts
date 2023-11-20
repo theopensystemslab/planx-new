@@ -59,19 +59,19 @@ describe(`sending an application by email to a planning office`, () => {
 
     queryMock.mockQuery({
       name: "GetSessionData",
-      matchOnVariables: false,
       data: {
         session: { data: {} },
       },
       variables: { id: "123" },
+      matchOnVariables: true,
     });
 
     queryMock.mockQuery({
       name: "GetSessionEmailDetails",
-      matchOnVariables: false,
+      matchOnVariables: true,
       data: {
         session: {
-          email: "applicant@test.com",
+          email: "simulate-delivered@notifications.service.gov.uk",
           flow: { slug: "test-flow" },
         },
       },
@@ -170,6 +170,26 @@ describe(`sending an application by email to a planning office`, () => {
         });
       });
   });
+
+  it("errors if session detail can't be found", async () => {
+    queryMock.mockQuery({
+      name: "GetSessionEmailDetails",
+      matchOnVariables: false,
+      data: {
+        session: null,
+      },
+      variables: { id: "123" },
+    });
+
+    await supertest(app)
+      .post("/email-submission/other-council")
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .send({ payload: { sessionId: "123" } })
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Cannot find session/);
+      });
+  });
 });
 
 describe(`downloading application data received by email`, () => {
@@ -185,7 +205,7 @@ describe(`downloading application data received by email`, () => {
 
     queryMock.mockQuery({
       name: "GetSessionData",
-      matchOnVariables: false,
+      matchOnVariables: true,
       data: {
         session: { data: { passport: { test: "dummy data" } } },
       },
@@ -215,6 +235,27 @@ describe(`downloading application data received by email`, () => {
           error:
             "Provided email address is not enabled to access application files",
         });
+      });
+  });
+
+  it("errors if session data is not found", async () => {
+    queryMock.mockQuery({
+      name: "GetSessionData",
+      data: {
+        session: { data: null },
+      },
+      variables: { id: "456" },
+    });
+
+    await supertest(app)
+      .get(
+        "/download-application-files/456?email=planners@southwark.gov.uk&localAuthority=southwark",
+      )
+      .expect(400)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Failed to find session data for this sessionId/,
+        );
       });
   });
 

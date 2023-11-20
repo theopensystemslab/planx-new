@@ -115,6 +115,31 @@ it("updates flow data and returns matches if there are matches", async () => {
     });
 });
 
+it("returns an error thrown by the service", async () => {
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        data: null,
+      },
+    },
+    graphqlErrors: [
+      {
+        message: "Something went wrong",
+      },
+    ],
+  });
+
+  await supertest(app)
+    .post("/flows/1/search?find=designated.monument&replace=monument")
+    .set(auth)
+    .expect(500)
+    .then((res) => {
+      expect(res.body.error).toMatch(/Failed to find and replace/);
+    });
+});
+
 const mockFlowData: Flow["data"] = {
   _root: {
     edges: ["RRQwM2zAgy", "vcTgmVQAre", "QsEdip17H5"],
