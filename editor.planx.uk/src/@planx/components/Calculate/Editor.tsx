@@ -1,4 +1,5 @@
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -69,7 +70,11 @@ export default function Component(props: Props) {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Calculate" Icon={ICONS[TYPES.Calculate]} />
+        <ModalSectionContent title="Calculate" Icon={ICONS[TYPES.Calculate]}>
+          <Typography variant="body2">
+            This component does math! Write formulas using <a href="https://mathjs.org/index.html" target="_blank">Math.js</a>, omitting the <code>math.</code> prefix
+          </Typography>
+        </ModalSectionContent>
         <ModalSectionContent title="Output">
           <InputRow>
             <Input
