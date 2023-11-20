@@ -59,7 +59,6 @@
     "nanoid-good": "^3.1.0",
     "natsort": "^2.0.3",
     "navi": "^0.15.0",
-    "p-memoize": "^7.1.1",
     "postcode": "^5.1.0",
     "prop-types": "^15.8.1",
     "ramda": "^0.28.0",

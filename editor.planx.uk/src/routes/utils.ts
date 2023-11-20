@@ -2,7 +2,6 @@ import { TYPES as NodeTypes } from "@planx/components/types";
 import gql from "graphql-tag";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { NaviRequest, NotFoundError } from "navi";
-import pMemoize from "p-memoize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
@@ -69,11 +68,12 @@ const QUERY_GET_TEAM_BY_DOMAIN = gql`
   query GetTeamByDomain($domain: String!) {
     teams(limit: 1, where: { domain: { _eq: $domain } }) {
       slug
+      id
     }
   }
 `;
 
-export const getTeamFromDomain = pMemoize(async (domain: string) => {
+export const getTeamFromDomain = async (domain: string) => {
   const {
     data: { teams },
   } = await publicClient.query({
@@ -84,7 +84,7 @@ export const getTeamFromDomain = pMemoize(async (domain: string) => {
   });
 
   return teams?.[0]?.slug;
-});
+};
 
 /**
  * Prevents accessing a different team than the one associated with the custom domain.
