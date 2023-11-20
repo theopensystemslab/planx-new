@@ -173,9 +173,11 @@ const PreviewBrowser: React.FC<{
             </Tooltip>
           ) : (
             <Tooltip arrow title="Analytics page unavailable">
-              <Link component={"button"} disabled aria-disabled={true}>
-                <BarChart />
-              </Link>
+              <Box>
+                <Link component={"button"} disabled aria-disabled={true}>
+                  <BarChart />
+                </Link>
+              </Box>
             </Tooltip>
           )}
 
