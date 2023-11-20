@@ -14,6 +14,7 @@ select
 	node_type,
 	node_title,
 	has_clicked_help,
+	input_errors,
 	CAST(EXTRACT(EPOCH FROM (al.next_log_created_at - al.created_at)) as numeric (10, 1)) as time_spent_on_node_seconds
 from analytics a
 	left join analytics_logs al on a.id = al.analytics_id
