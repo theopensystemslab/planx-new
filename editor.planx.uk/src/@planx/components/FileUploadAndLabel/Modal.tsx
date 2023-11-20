@@ -147,7 +147,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
   const [tags, setTags] = useState<string[]>(initialTags);
-  const previousTags = usePrevious(tags);
+  const previousTags = usePrevious(tags) || initialTags;
   const [open, setOpen] = React.useState(false);
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
