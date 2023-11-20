@@ -31,6 +31,15 @@ import type { SharedStore } from "./shared";
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 let memoizedPreviousCardId: string | undefined = undefined;
 let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
+
+
+// const WHITE_LIST_QUESTIONS = ["proposal.ProjectType"]
+const WHITE_LIST_QUESTIONS = ["application.fee.exemption.disability"]
+
+interface ComputePassportOptions {
+  whiteList?: boolean;
+}
+
 export interface PreviewStore extends Store.Store {
   collectedFlags: (
     upToNodeId: Store.nodeId,
@@ -43,7 +52,7 @@ export interface PreviewStore extends Store.Store {
     upcomingCardIds?: Store.nodeId[],
   ) => Store.nodeId | undefined;
   canGoBack: (node: Store.node | null) => boolean;
-  computePassport: () => Readonly<Store.passport>;
+  computePassport: (options?: ComputePassportOptions) => Readonly<Store.passport>;
   record: (id: Store.nodeId, userData?: Store.userData) => void;
   resultData: (
     flagSet?: string,
@@ -196,7 +205,7 @@ export const previewStore: StateCreator<
     );
   },
 
-  computePassport: () => {
+  computePassport: (options?: ComputePassportOptions) => {
     const { flow, breadcrumbs } = get();
     const passport = Object.entries(breadcrumbs).reduce(
       (acc, [id, { data = {}, answers = [] }]) => {
@@ -230,6 +239,14 @@ export const previewStore: StateCreator<
               );
 
             passportData[key] = uniq(combined);
+
+            // Check if key is in the white list, skip if not
+            console.log('Options', options)
+            console.log('Whitelist options', options?.whiteList)
+            console.log(WHITE_LIST_QUESTIONS)
+            if (options && options?.whiteList && !WHITE_LIST_QUESTIONS.includes(key)) {
+              return acc;
+            }
           }
         }
 

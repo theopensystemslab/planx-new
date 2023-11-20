@@ -577,6 +577,28 @@ describe("changeAnswer", () => {
     expect(getState().breadcrumbs).not.toContain(originalAnswer);
     expect(getState().cachedBreadcrumbs).toStrictEqual(originalAnswer);
   });
+
+  test.only("should return only whitelist answers when the option is passed", () => {
+    const breadcrumbs = breadcrumbsDependentOnPassport;
+    const flow = { ...flowWithPassportComponents };
+
+    setState({
+      flow,
+      breadcrumbs,
+      cachedBreadcrumbs: {},
+    });
+    console.log('Here')
+    console.log('Full passport', computePassport())
+    console.log('Whitelist passport', computePassport({whiteList: true}))
+
+    // Assert our initial passport state is correct
+    expect(computePassport({whiteList: true})).toEqual({
+      data: {
+        "application.fee.exemption.disability": ["true"],
+      },
+    });
+    
+  });
 });
 
 describe("resetPreview", () => {
