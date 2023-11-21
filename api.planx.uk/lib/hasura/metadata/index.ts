@@ -54,8 +54,7 @@ const postToMetadataAPI = async (
       },
     );
   } catch (error) {
-    const isAxiosErrorBool = isAxiosError(error);
-    const errorMessage = isAxiosErrorBool
+    const errorMessage = isAxiosError(error)
       ? JSON.stringify(error.toJSON())
       : (error as Error).message;
     throw Error(`Failed to POST to Hasura Metadata API: ${errorMessage}`);
