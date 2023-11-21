@@ -14,6 +14,7 @@ import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
 
 import type { Calculate } from "./model";
 import { evaluate, getVariables, parseCalculate } from "./model";
@@ -85,6 +86,17 @@ export default function Component(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
+          <OptionButton
+            selected={formik.values.formatOutputForAutomations}
+            onClick={() => {
+              formik.setFieldValue(
+                "formatOutputForAutomations",
+                !formik.values.formatOutputForAutomations,
+              );
+            }}
+          >
+            Format the output to automate a future Question or Checklist only
+          </OptionButton>
         </ModalSectionContent>
         <ModalSectionContent title="Formula">
           <InputRow>

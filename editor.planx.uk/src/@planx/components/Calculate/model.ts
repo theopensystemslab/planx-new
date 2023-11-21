@@ -7,6 +7,7 @@ export interface Calculate extends MoreInformation {
   defaults: Record<string, number>;
   formula: string;
   samples: Record<string, number>;
+  formatOutputForAutomations?: boolean;
 }
 
 export interface Input {
@@ -22,6 +23,7 @@ export const parseCalculate = (
   defaults: data?.defaults || {},
   formula: data?.formula || "",
   samples: data?.samples || {},
+  formatOutputForAutomations: data?.formatOutputForAutomations || false,
 });
 
 export function getVariables(input: string): Set<string> {
@@ -82,7 +84,7 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
   }
 }
 
-// Serialization is only necessary internally.                     v
+// Serialization is only necessary internally.
 // Mathjs can't handle keys with dots in their names e.g. `property.number`
 // This complexity should never be exposed to this component's consumers.
 function serialize(x: string) {
