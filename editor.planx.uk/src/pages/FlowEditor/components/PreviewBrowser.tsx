@@ -1,3 +1,8 @@
+import LanguageIcon from "@mui/icons-material/Language";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -10,13 +15,6 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
-import {
-  BarChart,
-  ExternalLink,
-  Globe,
-  RefreshCw,
-  Terminal,
-} from "react-feather";
 import { useAsync } from "react-use";
 import Input from "ui/Input";
 
@@ -146,7 +144,7 @@ const PreviewBrowser: React.FC<{
             value={props.url.replace("/preview", "/unpublished")}
           />
           <Tooltip arrow title="Refresh preview">
-            <RefreshCw
+            <RefreshIcon
               onClick={() => {
                 resetPreview();
                 setKey((a) => !a);
@@ -155,7 +153,7 @@ const PreviewBrowser: React.FC<{
           </Tooltip>
 
           <Tooltip arrow title="Toggle debug console">
-            <Terminal
+            <MenuOpenIcon
               onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
             />
           </Tooltip>
@@ -168,14 +166,14 @@ const PreviewBrowser: React.FC<{
                 rel="noopener noreferrer"
                 color="inherit"
               >
-                <BarChart />
+                <SignalCellularAltIcon />
               </Link>
             </Tooltip>
           ) : (
             <Tooltip arrow title="Analytics page unavailable">
               <Box>
                 <Link component={"button"} disabled aria-disabled={true}>
-                  <BarChart />
+                  <SignalCellularAltIcon />
                 </Link>
               </Box>
             </Tooltip>
@@ -188,7 +186,7 @@ const PreviewBrowser: React.FC<{
               rel="noopener noreferrer"
               color="inherit"
             >
-              <ExternalLink />
+              <OpenInNewIcon />
             </Link>
           </Tooltip>
 
@@ -199,7 +197,7 @@ const PreviewBrowser: React.FC<{
               rel="noopener noreferrer"
               color="inherit"
             >
-              <Globe />
+              <LanguageIcon />
             </Link>
           </Tooltip>
         </Box>
