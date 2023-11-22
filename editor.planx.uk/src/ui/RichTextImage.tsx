@@ -14,12 +14,11 @@ import {
   ReactNodeViewRenderer,
 } from "@tiptap/react";
 import React from "react";
-import { GOVUK_YELLOW } from "theme";
 
 const StyledNodeViewWrapper = styled(NodeViewWrapper, {
   shouldForwardProp: (prop) => prop !== "selected",
-})<NodeViewWrapperProps & { selected: boolean }>(({ selected }) => ({
-  outline: selected ? `3px solid ${GOVUK_YELLOW}` : undefined,
+})<NodeViewWrapperProps & { selected: boolean }>(({ selected, theme }) => ({
+  outline: selected ? `3px solid ${theme.palette.action.focus}` : undefined,
   position: "relative",
 }));
 
