@@ -1,13 +1,13 @@
 import React from "react";
 import { setup } from "testUtils";
 
-import Public from "./Public";
+import Calculate from "./Public";
 
 describe("Calculate component", () => {
   it("renders correctly", () => {
     const handleSubmit = jest.fn();
     setup(
-      <Public
+      <Calculate
         output="testGroup"
         formula="pickRandom([1,2])"
         formatOutputForAutomations={true}
