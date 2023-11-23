@@ -49,7 +49,7 @@ const DebugConsole = () => {
     ],
   );
   return (
-    <Console>
+    <Console borderTop={2} borderColor="border.main" bgcolor="background.paper">
       <Typography variant="body2">
         <a
           href={`${process.env.REACT_APP_API_URL}/flows/${flowId}/download-schema`}
