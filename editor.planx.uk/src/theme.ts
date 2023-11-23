@@ -14,12 +14,7 @@ import createPalette, {
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
 
-export const GOVUK_YELLOW = "#FFDD00";
-
-export const DEFAULT_PRIMARY_COLOR = "#0010A4";
-const TEXT_COLOR_PRIMARY = "#0B0C0C";
-const TEXT_COLOR_SECONDARY = "#505A5F";
-const BG_COLOR_DEFAULT = "#FFFFFF";
+const DEFAULT_PRIMARY_COLOR = "#0010A4";
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -30,22 +25,22 @@ const SPACING_TIGHT = "-0.02em";
 const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   primary: {
     main: DEFAULT_PRIMARY_COLOR,
-    contrastText: BG_COLOR_DEFAULT,
+    contrastText: "#FFFFFF",
   },
   background: {
-    default: BG_COLOR_DEFAULT,
+    default: "#FFFFFF",
     paper: "#F9F8F8",
   },
   secondary: {
     main: "#F3F2F1",
   },
   text: {
-    primary: TEXT_COLOR_PRIMARY,
-    secondary: TEXT_COLOR_SECONDARY,
+    primary: "#0B0C0C",
+    secondary: "#505A5F",
   },
   action: {
     selected: "#F8F8F8",
-    focus: GOVUK_YELLOW,
+    focus: "#FFDD00",
   },
   error: {
     main: "#D4351C",
@@ -59,7 +54,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   border: {
     main: "#B1B4B6",
-    input: TEXT_COLOR_PRIMARY,
+    input: "#0B0C0C",
     light: "#E0E0E0",
   },
 };
@@ -68,19 +63,19 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
 // https://design-system.service.gov.uk/get-started/focus-states/
 // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
 export const focusStyle = {
-  color: TEXT_COLOR_PRIMARY,
-  backgroundColor: GOVUK_YELLOW,
-  boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px ${TEXT_COLOR_PRIMARY}`,
+  color: DEFAULT_PALETTE.text?.primary,
+  backgroundColor: DEFAULT_PALETTE.action?.focus,
+  boxShadow: `0 -2px ${DEFAULT_PALETTE.action?.focus}, 0 4px ${DEFAULT_PALETTE.text?.primary}`,
   textDecoration: "none",
   outline: "3px solid transparent",
 };
 
 // Ensure that if the element already has a border, the border gets thicker
 export const borderedFocusStyle = {
-  outline: `3px solid ${GOVUK_YELLOW}`,
+  outline: `3px solid ${DEFAULT_PALETTE.action?.focus}`,
   outlineOffset: 0,
   zIndex: 1,
-  boxShadow: `inset 0 0 0 2px ${TEXT_COLOR_PRIMARY}`,
+  boxShadow: `inset 0 0 0 2px ${DEFAULT_PALETTE.text?.primary}`,
   backgroundColor: "transparent",
 };
 
@@ -141,12 +136,12 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       subtitle1: {
         fontSize: "1.375rem",
         lineHeight: LINE_HEIGHT_BASE,
-        color: TEXT_COLOR_SECONDARY,
+        color: palette.text.secondary,
       },
       subtitle2: {
         fontSize: "1.188rem",
         lineHeight: LINE_HEIGHT_BASE,
-        color: TEXT_COLOR_SECONDARY,
+        color: palette.text.secondary,
       },
       body1: {
         fontSize: "1.188rem",
@@ -195,7 +190,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
           },
           body: {
-            backgroundColor: BG_COLOR_DEFAULT,
+            backgroundColor: palette.background.default,
             lineHeight: LINE_HEIGHT_BASE,
           },
           hr: {
@@ -210,7 +205,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             "&:focus-visible": {
               ...focusStyle,
               // !important is required here as setting disableElevation = true removes boxShadow
-              boxShadow: `inset 0 -4px 0 ${TEXT_COLOR_PRIMARY} !important`,
+              boxShadow: `inset 0 -4px 0 ${DEFAULT_PALETTE.text?.primary} !important`,
               // Hover should not overwrite focus
               "&:hover": focusStyle,
             },
@@ -240,9 +235,9 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             minWidth: "3em",
           },
           text: {
-            color: TEXT_COLOR_SECONDARY,
+            color: palette.text.secondary,
             "&:hover": {
-              color: TEXT_COLOR_PRIMARY,
+              color: palette.text.primary,
             },
           },
           sizeSmall: {
@@ -279,8 +274,8 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             borderRadius: 0,
             "&:focus-visible": {
               "& svg, div": {
-                color: "black",
-                borderColor: "black",
+                color: palette.common.black,
+                borderColor: palette.common.black,
               },
               "&>*:hover": {
                 backgroundColor: "transparent",
@@ -341,7 +336,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             height: "44px",
             padding: 0,
             margin: "0 0.75em 0 0",
-            color: TEXT_COLOR_PRIMARY,
+            color: palette.text.primary,
             "& .MuiSvgIcon-root": {
               // Hide default MUI SVG, we'll use pseudo elements as Gov.uk
               visibility: "hidden",
@@ -354,7 +349,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               left: "2px",
               width: "40px",
               height: "40px",
-              color: TEXT_COLOR_PRIMARY,
+              color: palette.text.primary,
               border: "2px solid currentcolor",
               borderRadius: "50%",
               background: "rgba(0,0,0,0)",
@@ -368,7 +363,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               width: 0,
               height: 0,
               transform: "translate(-50%, -50%)",
-              color: TEXT_COLOR_PRIMARY,
+              color: palette.text.primary,
               border: "10px solid currentcolor",
               borderRadius: "50%",
               background: "currentcolor",
@@ -382,7 +377,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
               borderWidth: "4px",
               outline: "3px solid rgba(0,0,0,0)",
               outlineOffset: "1px",
-              boxShadow: `0 0 0 4px ${GOVUK_YELLOW}`,
+              boxShadow: `0 0 0 4px ${palette.action.focus}`,
             },
           },
         },
