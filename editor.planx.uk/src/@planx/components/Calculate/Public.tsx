@@ -3,8 +3,8 @@ import type { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 
-import type { Calculate } from "../model";
-import { evaluate } from "../model";
+import type { Calculate } from "./model";
+import { evaluate } from "./model";
 
 export type Props = PublicProps<Calculate>;
 

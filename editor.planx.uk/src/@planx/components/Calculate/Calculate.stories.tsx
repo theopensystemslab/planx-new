@@ -6,7 +6,7 @@ import React from "react";
 import Wrapper from "../fixtures/Wrapper";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import Editor from "./Editor";
-import Public from "./Public/index";
+import Public from "./Public";
 
 export default {
   title: "PlanX Components/Calculate",
