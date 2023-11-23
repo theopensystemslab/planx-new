@@ -1,7 +1,8 @@
 import { TYPES } from "@planx/components/types";
+import DOMPurify from "dompurify";
 import { enablePatches, produceWithPatches } from "immer";
-import { isEqual } from "lodash";
 import difference from "lodash/difference";
+import isEqual from "lodash/isEqual";
 import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
@@ -46,7 +47,7 @@ const isExternalPortalNodeType = (id: string, graph: Graph): boolean =>
 
 const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
-    return trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, ""));
+    return DOMPurify.sanitize(trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, "")));
   } else if ((x && typeof x === "object") || x instanceof Object) {
     return Object.entries(x).reduce((acc, [k, v]) => {
       v = sanitize(v);
