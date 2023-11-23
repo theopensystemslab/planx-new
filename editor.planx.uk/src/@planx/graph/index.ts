@@ -45,9 +45,10 @@ const isSectionNodeType = (id: string, graph: Graph): boolean =>
 const isExternalPortalNodeType = (id: string, graph: Graph): boolean =>
   graph[id]?.type === TYPES.ExternalPortal;
 
-const sanitize = (x: any) => {
+export const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
-    return DOMPurify.sanitize(trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, "")));
+    x = DOMPurify.sanitize(x as string);
+    return trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, ""));
   } else if ((x && typeof x === "object") || x instanceof Object) {
     return Object.entries(x).reduce((acc, [k, v]) => {
       v = sanitize(v);
