@@ -189,6 +189,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           $node_type: Int
           $node_title: String
           $user_agent: jsonb
+          $node_fn: String
         ) {
           insert_analytics_logs_one(
             object: {
@@ -198,6 +199,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
               metadata: $metadata
               node_type: $node_type
               node_title: $node_title
+              node_fn: $node_fn
             }
           ) {
             id
@@ -211,6 +213,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         metadata: metadata,
         node_type: node?.type,
         node_title: nodeTitle,
+        node_fn: node?.data?.fn || node?.data?.val,
       },
     });
     return result;
