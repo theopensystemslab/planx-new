@@ -26,6 +26,29 @@ describe("updating", () => {
       expect(ops).toEqual([]);
     });
 
+    test("doesn't save unsafe data", () => {
+      const [graph, ops] = update("a", {
+        description: "<p>Test<img src=x onerror=prompt('Stored XSS')/></p>",
+      })({
+        a: {
+          data: {
+            text: "efef",
+          },
+        },
+      });
+
+      expect(graph).toEqual({
+        a: {
+          data: {
+            text: "efef",
+            description: `<p>Test<img src="x"></p>`,
+          },
+        },
+      });
+
+      expect(ops).toEqual([{ oi: `<p>Test<img src="x"></p>`, p: ["a", "data", "description"] }]);
+    });
+
     test("add a field to a without affecting existing data", () => {
       const [graph, ops] = update("a", { foo: "bar" })({
         a: {
