@@ -137,13 +137,13 @@ test("ignores empty values", () => {
   ]);
 });
 
-test.skip("sanitizes unsafe input", () => {
+test("sanitizes unsafe input", () => {
   const [graph, ops] = add({
     id: "test",
     type: 100,
     data: {
       text: "efef",
-      description: "<p>Test<img src=x onerror=prompt('Stored XSS')/></p>"
+      description: "<p>Test<img src=x onerror=prompt('Stored XSS')/></p>",
     },
   })({});
   expect(graph).toEqual({
@@ -160,7 +160,7 @@ test.skip("sanitizes unsafe input", () => {
   });
   expect(ops).toEqual([
     { oi: { edges: ["test"] }, p: ["_root"] },
-    { oi: { data: { text: "efef", description: `<p>Test<img src="x"></p>`}}, p: ["test"] },
+    { oi: { data: { text: "efef", description: `<p>Test<img src="x"></p>` }, type: 100 }, p: ["test"] },
   ]);
 });
 

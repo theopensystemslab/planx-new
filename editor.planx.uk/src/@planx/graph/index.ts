@@ -52,6 +52,7 @@ export const sanitize = (x: any) => {
   } else if ((x && typeof x === "object") || x instanceof Object) {
     return Object.entries(x).reduce((acc, [k, v]) => {
       v = sanitize(v);
+      acc[k] = v;
       if (
         !isSomething(v) ||
         (typeof v === "object" && Object.keys(v as object).length === 0)
