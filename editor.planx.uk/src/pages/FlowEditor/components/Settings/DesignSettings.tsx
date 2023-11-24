@@ -32,7 +32,7 @@ const DesignSettings: React.FC = () => {
           How your service appears to public users
         </Typography>
       </EditorRow>
-      <EditorRow>
+      <EditorRow background>
         <InputGroup flowSpacing>
           <InputLegend>Theme colour</InputLegend>
           <InputCaption>
@@ -54,7 +54,7 @@ const DesignSettings: React.FC = () => {
         </InputGroup>
       </EditorRow>
 
-      <EditorRow>
+      <EditorRow background>
         <InputGroup flowSpacing>
           <InputLegend>Logo</InputLegend>
           <InputCaption>
@@ -80,7 +80,7 @@ const DesignSettings: React.FC = () => {
         </InputGroup>
       </EditorRow>
 
-      <EditorRow>
+      <EditorRow background>
         <InputGroup flowSpacing>
           <InputLegend>Favicon</InputLegend>
           <InputCaption>

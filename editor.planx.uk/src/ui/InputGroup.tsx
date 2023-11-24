@@ -3,7 +3,6 @@ import DragHandle from "@mui/icons-material/DragHandle";
 import Box, { BoxProps } from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import React, { PropsWithChildren, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
@@ -38,7 +37,7 @@ const Root = styled("fieldset", {
   },
   ...(flowSpacing && {
     "& > div > * + *": {
-      ...contentFlowSpacing(theme),
+      marginTop: theme.spacing(1.5),
     },
   }),
 }));
