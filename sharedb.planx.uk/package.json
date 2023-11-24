@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@teamwork/websocket-json-stream": "^2.0.0",
+    "dompurify": "^3.0.6",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.11.3",
     "sharedb": "^3.3.1",

@@ -1,5 +1,6 @@
 const { Pool } = require("pg");
 const { DB } = require("sharedb");
+const DOMPurify = require("dompurify");
 
 function PostgresDB(options) {
   if (!(this instanceof PostgresDB)) {
@@ -25,6 +26,22 @@ function rollback(client, done) {
   client.query("ROLLBACK", (err) => done(err));
 }
 
+// Also see editor.planx.uk/src/@planx/graph/index.ts
+// This is a simplified implementation that only handles purification of unsafe values, it does not handle empty values
+function sanitize(x) {
+  if ((x && typeof x === "string") || x instanceof String) {
+    return DOMPurify.sanitize(x);
+  } else if ((x && typeof x === "object") || x instanceof Object) {
+    return Object.entries(x).reduce((acc, [k, v]) => {
+      v = sanitize(v);
+      acc[k] = v;
+      return acc;
+    }, x);
+  } else {
+    return x;
+  }
+}
+
 // Persists an op and snapshot if it is for the next version. Calls back with
 // callback(err, succeeded)
 PostgresDB.prototype.commit = function (
@@ -35,6 +52,10 @@ PostgresDB.prototype.commit = function (
   _options,
   callback
 ) {
+  // Remove any unsafe values from this operation before committing
+  op = sanitize(op);
+  console.log('sanitised op', op);
+
   const { uId: actorId } = op.m;
 
   /*
