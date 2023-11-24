@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import React, { ReactNode } from "react";
 
-const Root = styled(Box)(({ theme }) => ({
+const Label = styled(Typography)(({ theme }) => ({
   flexShrink: 1,
   flexGrow: 0,
   paddingRight: theme.spacing(2),
@@ -10,8 +10,12 @@ const Root = styled(Box)(({ theme }) => ({
   "&:not(:first-child)": {
     paddingLeft: theme.spacing(2),
   },
-}));
+})) as typeof Typography;
 
 export default function InputRowLabel({ children }: { children: ReactNode }) {
-  return <Root>{children}</Root>;
+  return (
+    <Label variant="body2" component="label">
+      {children}
+    </Label>
+  );
 }

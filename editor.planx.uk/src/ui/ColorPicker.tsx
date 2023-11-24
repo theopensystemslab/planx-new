@@ -24,7 +24,6 @@ const Root = styled(Box, {
   display: "flex",
   alignItems: "center",
   ...(inline && {
-    height: 50,
     padding: theme.spacing(2, 0),
     "& .popover": {
       top: "calc(100% - 4px)",
@@ -32,15 +31,14 @@ const Root = styled(Box, {
   }),
 }));
 
-const Swatch = styled(Box)(() => ({
+const Swatch = styled(Box)(({ theme }) => ({
   background: "#fff",
   display: "inline-block",
   cursor: "pointer",
-  position: "absolute",
-  top: 0,
-  left: 0,
-  width: 18,
-  height: 18,
+  marginRight: theme.spacing(1),
+  width: 24,
+  height: 24,
+  border: `2px solid ${theme.palette.border.input}`,
 }));
 
 const Cover = styled(ButtonBase)(() => ({
@@ -64,11 +62,12 @@ const StyledButtonBase = styled(ButtonBase, {
   fontFamily: "inherit",
   fontSize: 15,
   position: "relative",
-  display: "block",
+  display: "flex",
+  alignItems: "center",
   textAlign: "left",
-  paddingLeft: theme.spacing(4),
-  paddingRight: theme.spacing(2),
+  padding: theme.spacing(1, 2),
   whiteSpace: "nowrap",
+  backgroundColor: theme.palette.common.white,
   ...(show && {
     color: theme.palette.primary.dark,
     "& .swatch": {
@@ -94,7 +93,7 @@ export default function ColorPicker(props: Props): FCReturn {
 
   return (
     <Root inline={props.inline}>
-      <Typography mr={2} variant="body2">
+      <Typography mr={2} variant="body2" component="label">
         {props.label || "Background colour"}:{" "}
       </Typography>
       <StyledButtonBase show={show} onClick={handleClick} disableRipple>

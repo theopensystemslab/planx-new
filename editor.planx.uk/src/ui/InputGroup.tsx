@@ -3,6 +3,7 @@ import DragHandle from "@mui/icons-material/DragHandle";
 import Box, { BoxProps } from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import React, { PropsWithChildren, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
@@ -13,12 +14,19 @@ interface Props {
   deleteInputGroup?: any;
   deletable?: boolean;
   draggable?: boolean;
+  flowSpacing?: boolean;
   id?: string;
   index?: number;
   handleMove?: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const Root = styled("fieldset")(({ theme }) => ({
+interface RootProps extends BoxProps {
+  flowSpacing?: boolean;
+}
+
+const Root = styled("fieldset", {
+  shouldForwardProp: (prop) => prop !== "flowSpacing",
+})<RootProps>(({ flowSpacing, theme }) => ({
   border: 0,
   margin: 0,
   padding: 0,
@@ -28,6 +36,11 @@ const Root = styled("fieldset")(({ theme }) => ({
   "& .inputGroup + .inputGroup": {
     marginTop: 0,
   },
+  ...(flowSpacing && {
+    "& > div > * + *": {
+      ...contentFlowSpacing(theme),
+    },
+  }),
 }));
 
 const Label = styled("legend")(({ theme }) => ({
@@ -107,6 +120,7 @@ export default function InputGroup({
   id,
   index = 0,
   handleMove,
+  flowSpacing,
 }: Props): FCReturn {
   const [deleteHover, setDeleteHover] = React.useState(false);
 
@@ -169,7 +183,7 @@ export default function InputGroup({
   if (draggable) drag(drop(ref));
 
   return (
-    <Root ref={ref} className="inputGroup">
+    <Root ref={ref} className="inputGroup" flowSpacing={flowSpacing}>
       {label && <Label>{label}</Label>}
       <Content
         deletable={deletable}
