@@ -37,6 +37,18 @@ describe("BOPS payload admin endpoint", () => {
       .expect(403);
   });
 
+  it("returns an error if the XML generation fails", async () => {
+    mockGenerateBOPSPayload.mockRejectedValueOnce("Error!");
+
+    await supertest(app)
+      .get(endpoint`123`)
+      .set(authHeader({ role: "platformAdmin" }))
+      .expect(500)
+      .then(res => {
+        expect(res.body.error).toMatch(/Failed to get BOPS payload/);
+      });
+  });
+
   it("returns a JSON payload", async () => {
     await supertest(app)
       .get(endpoint`123`)

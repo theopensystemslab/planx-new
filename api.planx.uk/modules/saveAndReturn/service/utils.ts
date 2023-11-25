@@ -147,7 +147,7 @@ interface SessionDetails {
 /**
  * Parse session details into an object which will be read by email template
  */
-const getSessionDetails = async (
+export const getSessionDetails = async (
   session: LowCalSession,
 ): Promise<SessionDetails> => {
   const passportProtectTypes =
@@ -248,7 +248,7 @@ interface SetupEmailNotifications {
 // Update lowcal_sessions.has_user_saved column to kick-off the setup_lowcal_expiry_events &
 // setup_lowcal_reminder_events event triggers in Hasura
 // Should only run once on initial save of a session
-const setupEmailEventTriggers = async (sessionId: string) => {
+export const setupEmailEventTriggers = async (sessionId: string) => {
   try {
     const mutation = gql`
       mutation SetupEmailNotifications($sessionId: uuid!) {
