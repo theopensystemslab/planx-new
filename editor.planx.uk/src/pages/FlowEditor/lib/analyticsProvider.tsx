@@ -19,6 +19,11 @@ type AnalyticsLogDirection =
   | "reset"
   | "save";
 
+const allowList = [
+  "proposal.projectType",
+  "application.delcaration.connection",
+];
+
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 export type BackwardsNavigationInitiatorType = "change" | "back";
@@ -75,6 +80,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     previewEnvironment,
     flowId,
     flow,
+    previousCard,
   ] = useStore((state) => [
     state.currentCard,
     state.breadcrumbs,
@@ -84,8 +90,10 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     state.previewEnvironment,
     state.id,
     state.flow,
+    state.previousCard,
   ]);
   const node = currentCard();
+  const previousNodeId = previousCard(node);
   const isAnalyticsEnabled =
     new URL(window.location.href).searchParams.get("analytics") !== "false";
   const shouldTrackAnalytics =
@@ -171,6 +179,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       updateLastLogWithNextLogCreatedAt(lastAnalyticsLogId, newLogCreatedAt);
     }
 
+    if (lastAnalyticsLogId && previousNodeId) {
+      await updateLastLogWithAllowListAnswers(
+        lastAnalyticsLogId,
+        previousNodeId,
+      );
+    }
+
     lastAnalyticsLogId = id;
   }
 
@@ -242,6 +257,34 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         next_log_created_at: newLogCreatedAt,
       },
     });
+  }
+
+  async function updateLastLogWithAllowListAnswers(
+    lastAnalyticsLogId: number,
+    previousNodeId: string,
+  ) {
+    const allowListAnswers = getAllowListAnswers(previousNodeId);
+    if (allowListAnswers) {
+      await publicClient.mutate({
+        mutation: gql`
+          mutation UpdateAllowListAnswers(
+            $id: bigint!
+            $allow_list_answers: jsonb
+          ) {
+            update_analytics_logs_by_pk(
+              pk_columns: { id: $id }
+              _set: { allow_list_answers: $allow_list_answers }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: lastAnalyticsLogId,
+          allow_list_answers: allowListAnswers,
+        },
+      });
+    }
   }
 
   async function trackHelpClick(metadata?: HelpClickMetadata) {
@@ -406,6 +449,19 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       type: type,
     };
     return nodeMetadata;
+  }
+
+  // Relies on being called at a point where the user has answered the Qs on the node.
+  function getAllowListAnswers(nodeId: string) {
+    const { data } = flow[nodeId];
+    const nodeFn = data?.fn || data?.val || null;
+    if (nodeFn && allowList.includes(nodeFn)) {
+      const answerIds = breadcrumbs[nodeId].answers;
+      const answerValues = answerIds?.map((answerId) => {
+        return flow[answerId].data.val;
+      });
+      return answerValues;
+    }
   }
 
   /**

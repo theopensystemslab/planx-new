@@ -57,6 +57,7 @@
     - role: public
       permission:
         columns:
+          - allow_list_answers
           - flow_direction
           - has_clicked_help
           - input_errors
