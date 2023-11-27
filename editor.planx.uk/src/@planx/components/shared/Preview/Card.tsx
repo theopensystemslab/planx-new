@@ -24,6 +24,7 @@ export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
 
 const InnerContainer = styled(Box)(({ theme }) => ({
   maxWidth: "100%",
+  position: "relative",
   "& > * + *": {
     ...contentFlowSpacing(theme),
   },
