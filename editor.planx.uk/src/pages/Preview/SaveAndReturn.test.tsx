@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { act, screen } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { axe, setup } from "testUtils";
@@ -65,6 +65,31 @@ describe("Save and Return component", () => {
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it("does not store the sessionId as part of the URL once an email has been submitted", async () => {
+    const children = <Button>Testing 123</Button>;
+    const { user } = setup(<SaveAndReturn children={children}></SaveAndReturn>);
+
+    const sessionId = getState().sessionId;
+    expect(sessionId).toBeDefined();
+
+    await user.type(screen.getByLabelText("Email address"), "test@test.com");
+    await user.type(
+      screen.getByLabelText("Confirm email address"),
+      "test@test.com",
+    );
+
+    expect(window.location.href).not.toContain("sessionId");
+    expect(window.location.href).not.toContain(sessionId);
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Testing 123")).toBeInTheDocument();
+    });
+
+    expect(window.location.href).not.toContain(`sessionId=${sessionId}`);
   });
 });
 
