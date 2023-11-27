@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const ShareDB = require("sharedb");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
 const PostgresDB = require("./sharedb-postgresql");
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
 
 const { PORT = 8000, JWT_SECRET, PG_URL } = process.env;
 assert(JWT_SECRET);
@@ -15,6 +17,10 @@ const sharedb = new ShareDB({
     ssl: false,
   }),
 });
+
+// Setup JSDOM and DOMPurify
+const window = new JSDOM("").window;
+const DOMPurify = createDOMPurify(window);
 
 // Register middleware hooks
 
@@ -34,11 +40,40 @@ sharedb.use("commit", (context, done) => {
   try {
     const { op, agent } = context;
     op.m.uId = agent.connectSession.userId;
+    op.op = op.op.map(sanitiseOperation);
   } catch (e) {
     console.error("Error committing to ShareDB: ", e);
   };
   done();
 });
+
+/**
+ * @description Sanitise operations which insert or update nodes
+ */
+function sanitiseOperation(op) {
+  const isInsertOrUpdate = "oi" in op;
+  if (isInsertOrUpdate) {
+    op.oi = sanitise(op.oi);
+  };
+  return op;
+}
+
+/**
+ * @description Recursively traverse updated data in order to find string values, and then sanitise these by calling DOMPurify. Input could be an entire node, or a single property of a node, depending on the operation.
+ */
+function sanitise(input) {
+  if ((input && typeof input === "string") || input instanceof String) {
+    return DOMPurify.sanitize(input);
+  } else if ((input && typeof input === "object") || input instanceof Object) {
+    return Object.entries(input).reduce((acc, [k, v]) => {
+      v = sanitise(v);
+      acc[k] = v;
+      return acc;
+    }, input);
+  } else {
+    return input;
+  }
+}
 
 const wss = new Server({
   port: PORT,
