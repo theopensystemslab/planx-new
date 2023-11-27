@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import { styled, Theme } from "@mui/material/styles";
+import DOMPurify from "dompurify";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
@@ -56,7 +57,7 @@ export default function ReactMarkdownOrHtml(props: {
     return (
       <HTMLRoot
         color={props.textColor}
-        dangerouslySetInnerHTML={{ __html: incrementHeaders }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(incrementHeaders) }}
         id={props.id}
       />
     );

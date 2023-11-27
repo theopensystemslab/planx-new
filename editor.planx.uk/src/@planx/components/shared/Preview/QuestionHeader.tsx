@@ -47,6 +47,7 @@ const HelpButtonWrapper = styled(Box)(({ theme }) => ({
   width: HelpButtonMinWidth,
   top: "-4px",
   right: "-6px",
+  pointerEvents: "none",
   [theme.breakpoints.up("md")]: {
     width: "80px",
     top: 0,
@@ -72,6 +73,7 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   boxShadow: "none",
   fontSize: "1.125em",
   filter: "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.5))",
+  pointerEvents: "auto",
   [theme.breakpoints.up("lg")]: {
     minHeight: "48px",
     fontSize: "1.25em",
