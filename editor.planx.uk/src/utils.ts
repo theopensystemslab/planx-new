@@ -62,3 +62,9 @@ export const removeSessionIdSearchParam = () => {
   window.history.pushState({}, document.title, currentURL);
   window.location.reload();
 };
+
+export const removeSessionIdSearchParamWithoutReloading = () => {
+  const currentURL = new URL(window.location.href);
+  currentURL.searchParams.delete("sessionId");
+  window.history.replaceState({}, document.title, currentURL);
+};

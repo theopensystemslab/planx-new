@@ -16,6 +16,7 @@ import { ApplicationPath, SendEmailPayload } from "types";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
+import { removeSessionIdSearchParamWithoutReloading } from "utils";
 import { object, string } from "yup";
 
 import ReconciliationPage from "./ReconciliationPage";
@@ -215,7 +216,14 @@ const ResumePage: React.FC = () => {
     getInitialEmailValue(route.url.query.email),
   );
   const [paymentRequest, setPaymentRequest] = useState<MinPaymentRequest>();
-  const sessionId = useCurrentRoute().url.query.sessionId;
+
+  // Read the sessionId from the url to validate against
+  const sessionId = route.url.query.sessionId;
+
+  // As the sessionId has been extracted it can now be removed to avoid
+  // unnecessarily exposing it
+  removeSessionIdSearchParamWithoutReloading();
+
   const [reconciliationResponse, setReconciliationResponse] =
     useState<ReconciliationResponse>();
 

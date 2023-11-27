@@ -67,7 +67,7 @@ describe("Save and Return component", () => {
     expect(results).toHaveNoViolations();
   });
 
-  it("stores the sessionId as part of the URL once an email has been submitted", async () => {
+  it("does not store the sessionId as part of the URL once an email has been submitted", async () => {
     const children = <Button>Testing 123</Button>;
     const { user } = setup(<SaveAndReturn children={children}></SaveAndReturn>);
 
@@ -89,7 +89,7 @@ describe("Save and Return component", () => {
       expect(screen.getByText("Testing 123")).toBeInTheDocument();
     });
 
-    expect(window.location.href).toContain(`sessionId=${sessionId}`);
+    expect(window.location.href).not.toContain(`sessionId=${sessionId}`);
   });
 });
 
