@@ -206,15 +206,17 @@ describe("Send Email endpoint", () => {
         name: "ValidateSingleSessionRequest",
         data: {
           flows_by_pk: mockFlow,
-          lowcalSessions: [{
-            ...mockLowcalSession,
-            id: "456",
-          }],
+          lowcalSessions: [
+            {
+              ...mockLowcalSession,
+              id: "456",
+            },
+          ],
         },
         variables: {
-          sessionId: "456"
+          sessionId: "456",
         },
-      })
+      });
 
       queryMock.mockQuery({
         name: "SetupEmailNotifications",
@@ -227,7 +229,7 @@ describe("Send Email endpoint", () => {
         variables: {
           sessionId: "456",
         },
-      })
+      });
 
       queryMock.mockQuery({
         name: "SoftDeleteLowcalSession",
@@ -259,8 +261,8 @@ describe("Send Email endpoint", () => {
         .set("Authorization", "testtesttest")
         .send(data)
         .expect(500)
-        .then(res => {
-          expect(res.body.error).toMatch(/Error deleting session/)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Error deleting session/);
         });
     });
 

@@ -44,7 +44,7 @@ describe("BOPS payload admin endpoint", () => {
       .get(endpoint`123`)
       .set(authHeader({ role: "platformAdmin" }))
       .expect(500)
-      .then(res => {
+      .then((res) => {
         expect(res.body.error).toMatch(/Failed to get BOPS payload/);
       });
   });

@@ -41,14 +41,18 @@ describe("Digital Planning Application payload admin endpoint", () => {
   });
 
   it("returns an error if the XML generation fails", async () => {
-    mockGenerateDigitalPlanningApplicationPayload.mockRejectedValueOnce("Error!");
+    mockGenerateDigitalPlanningApplicationPayload.mockRejectedValueOnce(
+      "Error!",
+    );
 
     await supertest(app)
       .get(endpoint`123`)
       .set(authHeader({ role: "platformAdmin" }))
       .expect(500)
-      .then(res => {
-        expect(res.body.error).toMatch(/Failed to make Digital Planning Application payload/);
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Failed to make Digital Planning Application payload/,
+        );
       });
   });
 

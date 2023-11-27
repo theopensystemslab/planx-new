@@ -136,8 +136,10 @@ describe("Send email endpoint for invite to pay templates", () => {
     const templates = ["payment-expiry", "payment-expiry-agent"];
 
     for (const template of templates) {
-      describe(`${ template } Template`, () => {
-        it.todo("soft deletes the payment_request when a payment expiry email is sent");
+      describe(`${template} Template`, () => {
+        it.todo(
+          "soft deletes the payment_request when a payment expiry email is sent",
+        );
       });
     }
   });

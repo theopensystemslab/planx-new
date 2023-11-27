@@ -45,7 +45,7 @@ describe("OneApp XML endpoint", () => {
       .get(endpoint`123`)
       .set(authHeader({ role: "platformAdmin" }))
       .expect(500)
-      .then(res => {
+      .then((res) => {
         expect(res.body.error).toMatch(/Failed to get OneApp XML/);
       });
   });
