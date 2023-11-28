@@ -249,7 +249,7 @@ const Breadcrumbs: React.FC = () => {
       )}
       {route.data.flow && (
         <>
-          {useStore.getState().canUserEditTeam(route.data.team) ? (
+          {useStore.getState().canUserEditTeam(team.slug) ? (
             <Edit />
           ) : (
             <Visibility />
@@ -400,9 +400,10 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef, route }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [togglePreview, user] = useStore((state) => [
+  const [togglePreview, user, team] = useStore((state) => [
     state.togglePreview,
     state.getUser(),
+    state.getTeam(),
   ]);
 
   const handleClose = () => {
@@ -506,7 +507,7 @@ const EditorToolbar: React.FC<{
             )}
 
             {/* Only show global settings link from top-level admin view */}
-            {!route.data.flow && !route.data.team && (
+            {!route.data.flow && !team.slug && (
               <MenuItem onClick={() => navigate("/global-settings")}>
                 Global Settings
               </MenuItem>
