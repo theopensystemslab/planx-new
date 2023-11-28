@@ -43,6 +43,7 @@ export interface PreviewStore extends Store.Store {
     upcomingCardIds?: Store.nodeId[],
   ) => Store.nodeId | undefined;
   canGoBack: (node: Store.node | null) => boolean;
+  getType: (node: Store.node | null) => TYPES | undefined;
   computePassport: () => Readonly<Store.passport>;
   record: (id: Store.nodeId, userData?: Store.userData) => void;
   resultData: (
@@ -187,13 +188,15 @@ export const previewStore: StateCreator<
   canGoBack: (node: Store.node | null) => {
     // XXX: node is a required param until upcomingNodes().shift() is
     //      optimised/memoized, see related isFinalCard() comment below
-    const { flow, hasPaid, previousCard } = get();
-    return (
-      Boolean(node?.id) &&
-      flow[node!.id!]?.type !== TYPES.Confirmation &&
-      Boolean(previousCard(node)) &&
-      !hasPaid()
-    );
+    const { hasPaid, previousCard } = get();
+    return Boolean(node?.id) && Boolean(previousCard(node)) && !hasPaid();
+  },
+
+  getType: (node: Store.node | null) => {
+    const { flow } = get();
+    if (!node?.id) return;
+    const currentNodeType = flow[node.id]?.type;
+    return currentNodeType;
   },
 
   computePassport: () => {

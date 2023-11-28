@@ -108,24 +108,6 @@ describe("cannot go back if", () => {
     expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
   });
 
-  test("it's the confirmation component", () => {
-    setState({
-      breadcrumbs: {
-        XYoJeox7F0: {
-          auto: false,
-          answers: ["VfJAj7agvC"],
-        },
-        "8ZSxuIfFYE": {
-          auto: true,
-        },
-        bmsSl3ScbV: {
-          auto: false,
-        },
-      },
-    });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
-  });
-
   test("the applicant made a payment", () => {
     setState({
       breadcrumbs: {
