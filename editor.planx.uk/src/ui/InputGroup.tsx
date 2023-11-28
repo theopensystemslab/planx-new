@@ -3,6 +3,7 @@ import DragHandle from "@mui/icons-material/DragHandle";
 import Box, { BoxProps } from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import React, { PropsWithChildren, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
@@ -42,10 +43,10 @@ const Root = styled("fieldset", {
   }),
 }));
 
-const Label = styled("legend")(({ theme }) => ({
-  fontSize: 15,
-  padding: theme.spacing(1.5, 0),
-}));
+const Label = styled(Typography)(({ theme }) => ({
+  display: "block",
+  padding: theme.spacing(0.75, 0),
+})) as typeof Typography;
 
 const Drag = styled(Box)(({ theme }) => ({
   position: "absolute",
@@ -183,7 +184,11 @@ export default function InputGroup({
 
   return (
     <Root ref={ref} className="inputGroup" flowSpacing={flowSpacing}>
-      {label && <Label>{label}</Label>}
+      {label && (
+        <Label variant="subtitle2" component="label">
+          {label}
+        </Label>
+      )}
       <Content
         deletable={deletable}
         draggable={draggable}

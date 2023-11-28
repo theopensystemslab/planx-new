@@ -58,7 +58,9 @@ const DesignSettings: React.FC = () => {
         <InputGroup flowSpacing>
           <InputLegend>Logo</InputLegend>
           <InputCaption>
-            Set the logo to be used in the header of the service.
+            Set the logo to be used in the header of the service. The logo
+            should contrast with a dark background colour and have a transparent
+            background.
           </InputCaption>
           <Link variant="body2" href="https://www.planx.uk">
             See our guide for logos

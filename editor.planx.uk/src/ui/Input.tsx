@@ -37,26 +37,36 @@ const StyledInputBase = styled(InputBase, {
   shouldForwardProp: (prop) =>
     !["format", "bordered"].includes(prop.toString()),
 })<StyledInputBase>(({ theme, format, bordered }) => ({
-  backgroundColor: "#fff",
+  backgroundColor: theme.palette.common.white,
   // Maintain 16px minimum input size to prevent zoom on iOS
   fontSize: "1rem",
   width: "100%",
   padding: theme.spacing(0, 1.5),
   height: 50,
+  border: `1px solid ${theme.palette.border.light}`,
   "& input": {
     fontWeight: "inherit",
+  },
+  "& ::placeholder": {
+    color: theme.palette.text.secondary,
+    opacity: "0.5",
+  },
+  "&:focus-within": {
+    border: `1px solid ${theme.palette.border.input}`,
+    boxShadow: `inset 0px 0px 0px 1px ${theme.palette.border.input}`,
+    outline: `3px solid ${theme.palette.action.focus}`,
   },
   ...(bordered && {
     border: `2px solid ${theme.palette.text.primary}`,
   }),
   ...(format === "data" && {
-    backgroundColor: "#fafafa",
+    backgroundColor: theme.palette.common.white,
   }),
   ...(format === "bold" && {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
   }),
   ...(format === "large" && {
-    backgroundColor: "#fff",
+    backgroundColor: theme.palette.common.white,
     height: 50,
     fontSize: 25,
     width: "100%",

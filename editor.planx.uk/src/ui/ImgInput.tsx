@@ -12,16 +12,17 @@ import PublicFileUploadButton from "./PublicFileUploadButton";
 
 const ImageUploadContainer = styled(Box)(() => ({
   height: 50,
-  width: 50,
   position: "relative",
+  flexGrow: 0,
+  display: "flex",
+  flexDirection: "row-reverse",
+  alignItems: "center",
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  position: "absolute",
   backgroundColor: "rgba(0, 0, 0, 0.5)",
   color: theme.palette.common.white,
-  top: 0,
-  right: 0,
+  marginLeft: theme.spacing(0.5),
 }));
 
 /** Uploads an image and returns corresponding URL */

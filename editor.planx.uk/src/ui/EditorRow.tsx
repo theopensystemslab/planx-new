@@ -12,7 +12,7 @@ const Root = styled(Box, {
 })<RootProps>(({ background, theme }) => ({
   display: "block",
   width: "100%",
-  padding: theme.spacing(2.5),
+  padding: theme.spacing(2.5, 0),
   "&:first-of-type": {
     paddingTop: 0,
   },
@@ -20,10 +20,10 @@ const Root = styled(Box, {
     ...contentFlowSpacing(theme),
   },
   ...(background && {
-    background: theme.palette.common.white,
+    background: theme.palette.background.paper,
     marginTop: theme.spacing(2),
-    border: `1px solid #e5e9f2`,
-    filter: `drop-shadow(rgba(0, 0, 0, 0.1) 0px 1px 0px)`,
+    padding: theme.spacing(2.5),
+    border: `1px solid ${theme.palette.border.light}`,
   }),
 }));
 

@@ -44,7 +44,7 @@ const OptionEditor: React.FC<{
       {props.value.id && (
         <input type="hidden" value={props.value.id} readOnly />
       )}
-      <InputRowItem width="50%">
+      <InputRowItem width="100%">
         <Input
           // required
           format="bold"
@@ -86,6 +86,7 @@ const OptionEditor: React.FC<{
             },
           });
         }}
+        sx={{ width: "160px", maxWidth: "160px" }}
       />
     </InputRow>
     <InputRow>
@@ -210,7 +211,7 @@ export const Question: React.FC<Props> = (props) => {
           </InputGroup>
         </ModalSectionContent>
 
-        <ModalSectionContent title="Options">
+        <ModalSectionContent subtitle="Options">
           <ListManager
             values={formik.values.options}
             onChange={(newOptions) => {

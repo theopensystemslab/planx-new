@@ -8,12 +8,12 @@ const Root = styled(Box, {
   display: "flex",
   width: "100%",
   "&:not(:last-child)": {
-    marginBottom: 2,
+    marginBottom: 5,
   },
   "& > *": {
     flexGrow: 1,
     marginLeft: 1,
-    marginRight: 1,
+    marginRight: 5,
     "&:first-child": {
       marginLeft: 0,
     },
