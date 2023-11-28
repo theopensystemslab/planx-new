@@ -92,7 +92,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   ]);
 
   const node = currentCard();
-  const [previousNodeId, setPreviousNodeId] = useState<any>();
+  const [previousNodeId, setPreviousNodeId] = useState<string>();
 
   const isAnalyticsEnabled =
     new URL(window.location.href).searchParams.get("analytics") !== "false";
@@ -140,7 +140,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       setPreviousBreadcrumb(breadcrumbs);
 
       // Track the id of the previous node for updating allow_list answers
-      setPreviousNodeId(node?.id);
+      if (node?.id) setPreviousNodeId(node?.id);
     }
   }, [breadcrumbs]);
 
@@ -456,7 +456,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const { data } = flow[nodeId];
     const nodeFn = data?.fn || data?.val || null;
     if (nodeFn && allowList.includes(nodeFn)) {
-      const answerIds = breadcrumbs[nodeId].answers;
+      const answerIds = breadcrumbs[nodeId]?.answers;
       const answerValues = answerIds?.map((answerId) => {
         return flow[answerId].data.val;
       });
