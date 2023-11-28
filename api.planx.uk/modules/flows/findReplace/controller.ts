@@ -4,6 +4,12 @@ import { z } from "zod";
 import { ServerError } from "../../../errors";
 import { findAndReplaceInFlow } from "./service";
 import { FlowGraph } from "@opensystemslab/planx-core/types";
+import { JSDOM } from "jsdom";
+import createDOMPurify from "dompurify";
+
+// Setup JSDOM and DOMPurify
+const window = new JSDOM("").window;
+const DOMPurify = createDOMPurify(window);
 
 interface FindAndReplaceResponse {
   message: string;
@@ -17,7 +23,10 @@ export const findAndReplaceSchema = z.object({
   }),
   query: z.object({
     find: z.string(),
-    replace: z.string().optional(),
+    replace: z
+      .string()
+      .optional()
+      .transform((val) => val && DOMPurify.sanitize(val)),
   }),
 });
 
