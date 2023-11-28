@@ -48,7 +48,7 @@ export const copyFlowController: CopyFlowController = async (
     });
   } catch (error) {
     return next(
-      new ServerError({ message: `Failed to copy flow. Error: ${error}`}),
+      new ServerError({ message: `Failed to copy flow. Error: ${error}` }),
     );
   }
 };

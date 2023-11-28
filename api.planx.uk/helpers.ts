@@ -24,9 +24,9 @@ const getFlowData = async (id: string): Promise<Flow> => {
 };
 
 interface InsertFlow {
-  flow: { 
-    id: string 
-  } 
+  flow: {
+    id: string;
+  };
 }
 // Insert a new flow into the `flows` table
 const insertFlow = async (
@@ -38,27 +38,29 @@ const insertFlow = async (
 ) => {
   const { client: $client } = getClient();
   try {
-    const { flow: { id } } = await $client.request<InsertFlow>(
+    const {
+      flow: { id },
+    } = await $client.request<InsertFlow>(
       gql`
-      mutation InsertFlow(
-        $team_id: Int!
-        $slug: String!
-        $creator_id: Int
-        $copied_from: uuid
-      ) {
-        flow: insert_flows_one(
-          object: {
-            team_id: $team_id
-            slug: $slug
-            version: 1
-            creator_id: $creator_id
-            copied_from: $copied_from
-          }
+        mutation InsertFlow(
+          $team_id: Int!
+          $slug: String!
+          $creator_id: Int
+          $copied_from: uuid
         ) {
-          id
+          flow: insert_flows_one(
+            object: {
+              team_id: $team_id
+              slug: $slug
+              version: 1
+              creator_id: $creator_id
+              copied_from: $copied_from
+            }
+          ) {
+            id
+          }
         }
-      }
-    `,
+      `,
       {
         team_id: teamId,
         slug: slug,
@@ -66,20 +68,20 @@ const insertFlow = async (
         copied_from: copiedFrom,
       },
     );
-    
+
     // Populate flow data using API role now that we know user has permission to insert flow
     // Access to flow.data column is restricted to limit unsafe content that could be inserted
     await $api.client.request<InsertFlow>(
       gql`
-      mutation UpdateFlowData($data: jsonb = {}, $id: uuid!) {
-        flow: update_flows_by_pk(
-          pk_columns: { id: $id }
-          _set: { data: $data }
-        ) {
-          id
+        mutation UpdateFlowData($data: jsonb = {}, $id: uuid!) {
+          flow: update_flows_by_pk(
+            pk_columns: { id: $id }
+            _set: { data: $data }
+          ) {
+            id
+          }
         }
-      }
-    `,
+      `,
       {
         id: id,
         data: flowData,
@@ -89,7 +91,9 @@ const insertFlow = async (
     await createAssociatedOperation(id);
     return { id };
   } catch (error) {
-    throw Error(`User ${creatorId} failed to insert flow to teamId ${teamId}. Please check permissions.`);
+    throw Error(
+      `User ${creatorId} failed to insert flow to teamId ${teamId}. Please check permissions.`,
+    );
   }
 };
 

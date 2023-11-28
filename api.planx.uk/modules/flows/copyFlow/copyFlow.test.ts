@@ -128,7 +128,7 @@ it("returns an error if the operation to insert a new flow fails", async () => {
     ],
     variables: {
       id: "3",
-    }
+    },
   });
 
   await supertest(app)
