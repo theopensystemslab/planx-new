@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 import { capitalize } from "lodash";
 import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
-import { $public, getClient } from "./client";
+import { $api, $public, getClient } from "./client";
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
@@ -23,6 +23,11 @@ const getFlowData = async (id: string): Promise<Flow> => {
   return flow;
 };
 
+interface InsertFlow {
+  flow: { 
+    id: string 
+  } 
+}
 // Insert a new flow into the `flows` table
 const insertFlow = async (
   teamId: number,
@@ -32,12 +37,12 @@ const insertFlow = async (
   copiedFrom?: Flow["id"],
 ) => {
   const { client: $client } = getClient();
-  const data = await $client.request<{ flow: { id: string } }>(
-    gql`
+  try {
+    const { flow: { id } } = await $client.request<InsertFlow>(
+      gql`
       mutation InsertFlow(
         $team_id: Int!
         $slug: String!
-        $data: jsonb = {}
         $creator_id: Int
         $copied_from: uuid
       ) {
@@ -45,7 +50,6 @@ const insertFlow = async (
           object: {
             team_id: $team_id
             slug: $slug
-            data: $data
             version: 1
             creator_id: $creator_id
             copied_from: $copied_from
@@ -55,17 +59,38 @@ const insertFlow = async (
         }
       }
     `,
-    {
-      team_id: teamId,
-      slug: slug,
-      data: flowData,
-      creator_id: creatorId,
-      copied_from: copiedFrom,
-    },
-  );
+      {
+        team_id: teamId,
+        slug: slug,
+        creator_id: creatorId,
+        copied_from: copiedFrom,
+      },
+    );
+    
+    // Populate flow data using API role now that we know user has permission to insert flow
+    // Access to flow.data column is restricted to limit unsafe content that could be inserted
+    await $api.client.request<InsertFlow>(
+      gql`
+      mutation UpdateFlowData($data: jsonb = {}, $id: uuid!) {
+        flow: update_flows_by_pk(
+          pk_columns: { id: $id }
+          _set: { data: $data }
+        ) {
+          id
+        }
+      }
+    `,
+      {
+        id: id,
+        data: flowData,
+      },
+    );
 
-  if (data) await createAssociatedOperation(data?.flow?.id);
-  return data?.flow;
+    await createAssociatedOperation(id);
+    return { id };
+  } catch (error) {
+    throw Error(`User ${creatorId} failed to insert flow to teamId ${teamId}. Please check permissions.`);
+  }
 };
 
 // Add a row to `operations` for an inserted flow, otherwise ShareDB throws a silent error when opening the flow in the UI
