@@ -229,15 +229,6 @@ export async function expectSections({
   await expect(pageStatuses).toContainText(sections.map((s) => s.status));
 }
 
-export async function getSessionId(page: Page): Promise<string> {
-  // the session id is not available in the url so find it in a test utility component
-  const sessionId: string | null = await page
-    .getByTestId("sessionId")
-    .getAttribute("data-sessionid");
-  if (!sessionId) throw new Error("Session ID not found on page");
-  return sessionId!;
-}
-
 export async function fillGovUkCardDetails({
   page,
   cardNumber,
@@ -310,17 +301,16 @@ export async function setFeatureFlag(page: Page, featureFlag: string) {
   );
 }
 
-export async function getSessionIdFromURL(page: Page): Promise<string> {
-  const url = await new URL(page.url());
-  const sessionId = url.searchParams.get("sessionId");
-  if (!sessionId)
-    throw Error("Session ID missing from page. URL " + url.toString());
+export async function getSessionId(page: Page): Promise<string> {
+  // @ts-expect-error - Property api does not exist on type Window & typeof globalThis
+  const sessionId = page.evaluate(() => window.api.getState().sessionId);
+  if (!sessionId) throw Error("Session ID missing from window");
   return sessionId;
 }
 
 export async function addSessionToContext(page: Page, context: Context) {
-  const sessionId = await getSessionIdFromURL(page);
-  await context.sessionIds!.push(sessionId);
+  const sessionId = await getSessionId(page);
+  context.sessionIds!.push(sessionId);
   return sessionId;
 }
 
