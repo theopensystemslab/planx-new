@@ -193,11 +193,9 @@ export class ExportZip {
     const s3Key = url.split("/").slice(-2).join("/");
     const decodedS3Key = decodeURIComponent(s3Key);
     const { body } = await getFileFromS3(decodedS3Key);
-    if (!body) {
-      throw new Error("file not found");
-    }
-    const filePath = path.join(this.tmpDir, name);
-    this.zip.addFile(filePath, body as Buffer);
+    if (!body) throw new Error("file not found");
+
+    this.zip.addFile(name, body as Buffer);
   }
 
   toBuffer(): Buffer {
