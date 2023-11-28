@@ -48,8 +48,6 @@ paths:
   /file/private/upload:
     post:
       tags: ["file"]
-      security:
-        - bearerAuth: []
       requestBody:
         content:
           multipart/form-data:
@@ -63,6 +61,8 @@ paths:
   /file/public/upload:
     post:
       tags: ["file"]
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           multipart/form-data:
