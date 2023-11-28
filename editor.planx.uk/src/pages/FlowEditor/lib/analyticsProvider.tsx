@@ -80,7 +80,6 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     previewEnvironment,
     flowId,
     flow,
-    previousCard,
   ] = useStore((state) => [
     state.currentCard,
     state.breadcrumbs,
@@ -90,10 +89,11 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     state.previewEnvironment,
     state.id,
     state.flow,
-    state.previousCard,
   ]);
+
   const node = currentCard();
-  const previousNodeId = previousCard(node);
+  const [previousNodeId, setPreviousNodeId] = useState<any>();
+
   const isAnalyticsEnabled =
     new URL(window.location.href).searchParams.get("analytics") !== "false";
   const shouldTrackAnalytics =
@@ -138,6 +138,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       if (curLength < prevLength) track("backwards", analyticsId);
 
       setPreviousBreadcrumb(breadcrumbs);
+
+      // Track the id of the previous node for updating allow_list answers
+      setPreviousNodeId(node?.id);
     }
   }, [breadcrumbs]);
 
@@ -180,10 +183,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (lastAnalyticsLogId && previousNodeId) {
-      await updateLastLogWithAllowListAnswers(
-        lastAnalyticsLogId,
-        previousNodeId,
-      );
+      updateLastLogWithAllowListAnswers(lastAnalyticsLogId, previousNodeId);
     }
 
     lastAnalyticsLogId = id;
