@@ -37,7 +37,7 @@ describe("BOPS payload admin endpoint", () => {
       .expect(403);
   });
 
-  it("returns an error if the XML generation fails", async () => {
+  it("returns an error if the BOPS payload generation fails", async () => {
     mockGenerateBOPSPayload.mockRejectedValueOnce("Error!");
 
     await supertest(app)
