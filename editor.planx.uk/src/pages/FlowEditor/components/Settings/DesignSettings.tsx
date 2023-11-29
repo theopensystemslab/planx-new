@@ -7,7 +7,7 @@ import React from "react";
 import ColorPicker from "ui/ColorPicker";
 import EditorRow from "ui/EditorRow";
 import { FeaturePlaceholder } from "ui/FeaturePlaceholder";
-import InputCaption from "ui/InputCaption";
+import InputDescription from "ui/InputDescription";
 import InputGroup from "ui/InputGroup";
 import InputLegend from "ui/InputLegend";
 import InputRow from "ui/InputRow";
@@ -45,13 +45,15 @@ const DesignSettings: React.FC = () => {
           <EditorRow background>
             <InputGroup flowSpacing>
               <InputLegend>Theme colour</InputLegend>
-              <InputCaption>
+              <InputDescription>
                 Set the theme colour. The theme colour should be a dark colour
                 that contrasts with white ("#ffffff").
-              </InputCaption>
-              <Link variant="body2" href="https://www.planx.uk">
-                See our guide for setting theme colours
-              </Link>
+              </InputDescription>
+              <InputDescription>
+                <Link href="https://www.planx.uk">
+                  See our guide for setting theme colours
+                </Link>
+              </InputDescription>
               <InputRow>
                 <InputRowItem>
                   <ColorPicker
@@ -66,14 +68,14 @@ const DesignSettings: React.FC = () => {
           <EditorRow background>
             <InputGroup flowSpacing>
               <InputLegend>Logo</InputLegend>
-              <InputCaption>
+              <InputDescription>
                 Set the logo to be used in the header of the service. The logo
                 should contrast with a dark background colour and have a
                 transparent background.
-              </InputCaption>
-              <Link variant="body2" href="https://www.planx.uk">
-                See our guide for logos
-              </Link>
+              </InputDescription>
+              <InputDescription>
+                <Link href="https://www.planx.uk">See our guide for logos</Link>
+              </InputDescription>
               <InputRow>
                 <InputRowLabel>Logo:</InputRowLabel>
                 <InputRowItem width={50}>
@@ -93,13 +95,15 @@ const DesignSettings: React.FC = () => {
           <EditorRow background>
             <InputGroup flowSpacing>
               <InputLegend>Favicon</InputLegend>
-              <InputCaption>
+              <InputDescription>
                 Set the favicon to be used in the browser tab. The favicon
                 should be 32x32px and in .ico or .png format.
-              </InputCaption>
-              <Link variant="body2" href="https://www.planx.uk">
-                See our guide for favicons
-              </Link>
+              </InputDescription>
+              <InputDescription>
+                <Link href="https://www.planx.uk">
+                  See our guide for favicons
+                </Link>
+              </InputDescription>
               <InputRow>
                 <InputRowLabel>Favicon:</InputRowLabel>
                 <InputRowItem width={50}>
