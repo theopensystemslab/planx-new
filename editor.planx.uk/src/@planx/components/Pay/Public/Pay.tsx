@@ -303,8 +303,6 @@ function Component(props: Props) {
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />
       )}
-      {/* session id exposed for testing purposes */}
-      <span data-testid="sessionId" data-sessionid={sessionId}></span>
     </>
   );
 }
