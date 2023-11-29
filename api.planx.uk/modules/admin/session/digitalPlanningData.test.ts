@@ -40,7 +40,7 @@ describe("Digital Planning Application payload admin endpoint", () => {
       .expect(403);
   });
 
-  it("returns an error if the XML generation fails", async () => {
+  it("returns an error if the Digital Planning payload generation fails", async () => {
     mockGenerateDigitalPlanningApplicationPayload.mockRejectedValueOnce(
       "Error!",
     );
