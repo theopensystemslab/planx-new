@@ -162,6 +162,15 @@ describe("Data sanitation operations", () => {
       expect(mockRunSQL).toHaveBeenCalled();
       expect(result).toEqual(mockIds);
     });
+
+    it("handles empty responses", async () => {
+      mockRunSQL.mockResolvedValue({
+        result: undefined,
+      });
+      const result = await deleteHasuraEventLogs();
+      expect(mockRunSQL).toHaveBeenCalled();
+      expect(result).toHaveLength(0);
+    });
   });
 
   describe("deleteApplicationFiles", () => {
@@ -187,6 +196,12 @@ describe("Data sanitation operations", () => {
       const fileCount = mockIds.length * filesPerMockSessionCount;
       expect(deletedFiles).toHaveLength(fileCount);
     });
+
+    it("handles missing sessions", async () => {
+      queryMock.mockQuery(mockGetExpiredSessionIdsQuery);
+      mockFindSession.mockResolvedValue(null);
+      await expect(deleteApplicationFiles()).rejects.toThrow();
+    });
   });
 
   describe("deleteHasuraScheduledEventsForSubmittedSessions", () => {
@@ -197,6 +212,15 @@ describe("Data sanitation operations", () => {
       const result = await deleteHasuraScheduledEventsForSubmittedSessions();
       expect(mockRunSQL).toHaveBeenCalled();
       expect(result).toEqual(mockIds);
+    });
+
+    it("handles empty responses", async () => {
+      mockRunSQL.mockResolvedValue({
+        result: undefined,
+      });
+      const result = await deleteHasuraScheduledEventsForSubmittedSessions();
+      expect(mockRunSQL).toHaveBeenCalled();
+      expect(result).toHaveLength(0);
     });
   });
 });

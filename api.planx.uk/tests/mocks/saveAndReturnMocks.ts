@@ -100,6 +100,31 @@ export const mockNotFoundSession = {
   },
 };
 
+export const mockLockedSession = {
+  name: "FindSession",
+  data: {
+    sessions: [
+      {
+        lockedAt: "2023-01-02-11.22.33.444444",
+      },
+    ],
+  },
+  variables: {
+    sessionId: "locked-id",
+    email: mockLowcalSession.email,
+  },
+};
+
+export const mockErrorSession = {
+  name: "FindSession",
+  data: {},
+  graphqlErrors: [
+    {
+      message: "Something went wrong",
+    },
+  ],
+};
+
 export const mockGetMostRecentPublishedFlow = (data: Flow["data"]) => ({
   name: "GetMostRecentPublishedFlow",
   data: {
@@ -149,6 +174,18 @@ export const mockValidateSingleSessionRequest = {
   variables: {
     sessionId: mockLowcalSession.id,
   },
+  matchOnVariables: true,
+};
+
+export const mockValidateSingleSessionRequestMissingSession = {
+  name: "ValidateSingleSessionRequest",
+  data: {
+    flows_by_pk: mockFlow,
+    lowcalSessions: [],
+  },
+  variables: {
+    sessionId: mockLowcalSession.id,
+  },
 };
 
 export const mockSoftDeleteLowcalSession = {
@@ -161,6 +198,7 @@ export const mockSoftDeleteLowcalSession = {
   variables: {
     sessionId: "123",
   },
+  matchOnVariables: true,
 };
 
 export const mockSetupEmailNotifications = {

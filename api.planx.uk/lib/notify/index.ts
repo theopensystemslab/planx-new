@@ -66,7 +66,7 @@ const sendEmail = async (
       expiryDate?: string;
     } = { message: "Success" };
     if (template === "expiry")
-      softDeleteSession(config.personalisation.sessionId!);
+      await softDeleteSession(config.personalisation.sessionId!);
     if (template === "save")
       returnValue.expiryDate = config.personalisation.expiryDate;
     return returnValue;

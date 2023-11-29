@@ -11,6 +11,8 @@ import {
   mockGetMostRecentPublishedFlow,
   stubInsertReconciliationRequests,
   stubUpdateLowcalSessionData,
+  mockLockedSession,
+  mockErrorSession,
 } from "../../../tests/mocks/saveAndReturnMocks";
 import type { Node, Flow, Breadcrumb } from "../../../types";
 import { userContext } from "../../auth/middleware";
@@ -73,6 +75,42 @@ describe("Validate Session endpoint", () => {
           "error",
           "Unable to find your session",
         );
+      });
+  });
+
+  it("returns a 403 if the session is locked", async () => {
+    queryMock.mockQuery(mockLockedSession);
+
+    const data = {
+      payload: {
+        sessionId: "locked-id",
+        email: mockLowcalSession.email,
+      },
+    };
+    await supertest(app)
+      .post(validateSessionPath)
+      .send(data)
+      .expect(403)
+      .then((response) => {
+        expect(response.body.message).toMatch(/Session locked/);
+      });
+  });
+
+  it("returns an error message if the service fails", async () => {
+    queryMock.mockQuery(mockErrorSession);
+
+    const data = {
+      payload: {
+        sessionId: "locked-id",
+        email: mockLowcalSession.email,
+      },
+    };
+    await supertest(app)
+      .post(validateSessionPath)
+      .send(data)
+      .expect(500)
+      .then((response) => {
+        expect(response.body.error).toMatch(/Failed to validate session/);
       });
   });
 

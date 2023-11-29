@@ -40,6 +40,22 @@ describe("Digital Planning Application payload admin endpoint", () => {
       .expect(403);
   });
 
+  it("returns an error if the Digital Planning payload generation fails", async () => {
+    mockGenerateDigitalPlanningApplicationPayload.mockRejectedValueOnce(
+      "Error!",
+    );
+
+    await supertest(app)
+      .get(endpoint`123`)
+      .set(authHeader({ role: "platformAdmin" }))
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Failed to make Digital Planning Application payload/,
+        );
+      });
+  });
+
   it("returns a valid JSON payload", async () => {
     await supertest(app)
       .get(endpoint`123`)
