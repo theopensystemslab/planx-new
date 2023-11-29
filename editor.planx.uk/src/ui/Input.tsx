@@ -60,7 +60,7 @@ const StyledInputBase = styled(InputBase, {
     border: `2px solid ${theme.palette.text.primary}`,
   }),
   ...(format === "data" && {
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.paper,
   }),
   ...(format === "bold" && {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,

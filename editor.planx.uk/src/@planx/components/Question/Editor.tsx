@@ -91,7 +91,6 @@ const OptionEditor: React.FC<{
     </InputRow>
     <InputRow>
       <Input
-        format="data"
         value={props.value.data.description || ""}
         placeholder="Description"
         onChange={(ev) => {

@@ -150,6 +150,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         <Input
           required
           name="fn"
+          format="data"
           value={props.value.fn}
           onChange={(e) =>
             props.onChange(merge(props.value, { fn: e.target.value }))
