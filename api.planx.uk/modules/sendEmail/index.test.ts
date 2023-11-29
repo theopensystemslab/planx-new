@@ -7,6 +7,7 @@ import {
   mockSetupEmailNotifications,
   mockSoftDeleteLowcalSession,
   mockValidateSingleSessionRequest,
+  mockValidateSingleSessionRequestMissingSession,
 } from "../../tests/mocks/saveAndReturnMocks";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 
@@ -200,6 +201,71 @@ describe("Send Email endpoint", () => {
   });
 
   describe("'Expiry' template", () => {
+    it("returns an error if unable to delete the session", async () => {
+      queryMock.mockQuery({
+        name: "ValidateSingleSessionRequest",
+        data: {
+          flows_by_pk: mockFlow,
+          lowcalSessions: [
+            {
+              ...mockLowcalSession,
+              id: "456",
+            },
+          ],
+        },
+        variables: {
+          sessionId: "456",
+        },
+      });
+
+      queryMock.mockQuery({
+        name: "SetupEmailNotifications",
+        data: {
+          session: {
+            id: "456",
+            hasUserSaved: true,
+          },
+        },
+        variables: {
+          sessionId: "456",
+        },
+      });
+
+      queryMock.mockQuery({
+        name: "SoftDeleteLowcalSession",
+        data: {
+          update_lowcal_sessions_by_pk: {
+            id: "456",
+          },
+        },
+        variables: {
+          sessionId: "456",
+        },
+        matchOnVariables: true,
+        graphqlErrors: [
+          {
+            message: "Something went wrong",
+          },
+        ],
+      });
+
+      const data = {
+        payload: {
+          sessionId: "456",
+          email: TEST_EMAIL,
+        },
+      };
+
+      await supertest(app)
+        .post(`/send-email/expiry`)
+        .set("Authorization", "testtesttest")
+        .send(data)
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Error deleting session/);
+        });
+    });
+
     it("soft deletes the session when an expiry email is sent", async () => {
       const data = {
         payload: {
@@ -237,6 +303,18 @@ describe("Setting up send email events", () => {
     queryMock.reset();
     queryMock.mockQuery(mockSoftDeleteLowcalSession);
     queryMock.mockQuery(mockSetupEmailNotifications);
+  });
+
+  test("Missing sessions are handled", async () => {
+    queryMock.mockQuery(mockValidateSingleSessionRequestMissingSession);
+
+    await supertest(app)
+      .post(SAVE_ENDPOINT)
+      .send(data)
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Unable to find session/);
+      });
   });
 
   test("Initial save sets ups email notifications", async () => {

@@ -38,8 +38,6 @@ const sendSinglePaymentEmail = async ({
       paymentRequestId,
       template,
     );
-    if (!session || !paymentRequest)
-      throw Error(`Invalid payment request: ${paymentRequestId}`);
     const config = await getInviteToPayNotifyConfig(session, paymentRequest);
     const recipient = template.includes("-agent")
       ? session.email

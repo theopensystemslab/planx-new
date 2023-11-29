@@ -40,4 +40,6 @@ describe("zip data admin endpoint", () => {
       .expect(200)
       .expect("content-type", "application/zip");
   });
+
+  it.todo("returns an error if the service fails");
 });

@@ -174,6 +174,18 @@ export const mockValidateSingleSessionRequest = {
   variables: {
     sessionId: mockLowcalSession.id,
   },
+  matchOnVariables: true,
+};
+
+export const mockValidateSingleSessionRequestMissingSession = {
+  name: "ValidateSingleSessionRequest",
+  data: {
+    flows_by_pk: mockFlow,
+    lowcalSessions: [],
+  },
+  variables: {
+    sessionId: mockLowcalSession.id,
+  },
 };
 
 export const mockSoftDeleteLowcalSession = {
@@ -186,6 +198,7 @@ export const mockSoftDeleteLowcalSession = {
   variables: {
     sessionId: "123",
   },
+  matchOnVariables: true,
 };
 
 export const mockSetupEmailNotifications = {

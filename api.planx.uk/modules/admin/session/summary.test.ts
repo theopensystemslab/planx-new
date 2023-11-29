@@ -39,6 +39,10 @@ describe("Session summary admin endpoint", () => {
       .expect(403);
   });
 
+  it.todo("returns an error if the service fails");
+
+  it.todo("returns an error if the session can't be found");
+
   it("returns JSON", async () => {
     await supertest(app)
       .get(endpoint`abc123`)
