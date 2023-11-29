@@ -21,7 +21,7 @@ type AnalyticsLogDirection =
 
 const allowList = [
   "proposal.projectType",
-  "application.delcaration.connection",
+  "application.declaration.connection",
 ];
 
 export type HelpClickMetadata = Record<string, string>;
