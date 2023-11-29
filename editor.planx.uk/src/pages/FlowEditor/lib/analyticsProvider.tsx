@@ -454,7 +454,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Relies on being called at a point where the user has answered the Qs on the node.
   function getAllowListAnswers(nodeId: string) {
     const { data } = flow[nodeId];
-    const nodeFn = data?.fn || data?.val || null;
+    const nodeFn = data?.fn || data?.val;
     if (nodeFn && allowList.includes(nodeFn)) {
       const answerIds = breadcrumbs[nodeId]?.answers;
       const answerValues = answerIds?.map((answerId) => {
