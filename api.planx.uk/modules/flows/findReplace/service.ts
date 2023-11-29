@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 import { getFlowData } from "../../../helpers";
-import { getClient } from "../../../client";
+import { $api } from "../../../client";
 import { FlowGraph } from "@opensystemslab/planx-core/types";
 import { Flow } from "../../../types";
 
@@ -84,8 +84,10 @@ const findAndReplaceInFlow = async (
   }
 
   // if matches, proceed with mutation to update flow data
-  const { client: $client } = getClient();
-  const response = await $client.request<UpdateFlow>(
+
+  // XXX: This is using the API Hasura role
+  // If Find and Replace functionality is expanded to roles other than platformAdmin we'll need a manual permission check here to ensure that the user has permission to update the flows.data column
+  const response = await $api.client.request<UpdateFlow>(
     gql`
       mutation UpdateFlow($data: jsonb = {}, $id: uuid!) {
         flow: update_flows_by_pk(

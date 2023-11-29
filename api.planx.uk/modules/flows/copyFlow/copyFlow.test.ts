@@ -27,6 +27,16 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
+    name: "UpdateFlowData",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        id: 2,
+      },
+    },
+  });
+
+  queryMock.mockQuery({
     name: "InsertOperation",
     matchOnVariables: false,
     data: {
@@ -82,6 +92,53 @@ it("returns an error if required replacement characters are not provided in the 
     .then((res) => {
       expect(res.body).toHaveProperty("issues");
       expect(res.body).toHaveProperty("name", "ZodError");
+    });
+});
+
+it("returns an error if the operation to insert a new flow fails", async () => {
+  queryMock.reset();
+
+  const body = {
+    insert: true,
+    replaceValue: "T3ST1",
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        data: mockFlowData,
+      },
+    },
+  });
+
+  queryMock.mockQuery({
+    name: "InsertFlow",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        id: 2,
+      },
+    },
+    graphqlErrors: [
+      {
+        message: "Something went wrong",
+      },
+    ],
+    variables: {
+      id: "3",
+    },
+  });
+
+  await supertest(app)
+    .post("/flows/3/copy")
+    .send(body)
+    .set(auth)
+    .expect(500)
+    .then((res) => {
+      expect(res.body.error).toMatch(/failed to insert flow/);
+      expect(res.body.error).toMatch(/Please check permissions/);
     });
 });
 

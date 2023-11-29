@@ -307,16 +307,15 @@
       permission:
         check: {}
         columns:
+          - copied_from
+          - created_at
           - creator_id
-          - team_id
+          - id
           - settings
           - slug
-          - created_at
+          - team_id
           - updated_at
-          - copied_from
-          - id
           - version
-          - data
     - role: teamEditor
       permission:
         check:
@@ -328,16 +327,15 @@
                 - role:
                     _eq: teamEditor
         columns:
+          - copied_from
+          - created_at
           - creator_id
-          - team_id
+          - id
           - settings
           - slug
-          - created_at
+          - team_id
           - updated_at
-          - copied_from
-          - id
           - version
-          - data
   select_permissions:
     - role: api
       permission:
@@ -421,7 +419,6 @@
     - role: platformAdmin
       permission:
         columns:
-          - data
           - settings
           - slug
           - team_id
@@ -430,7 +427,6 @@
     - role: teamEditor
       permission:
         columns:
-          - data
           - settings
           - slug
           - team_id

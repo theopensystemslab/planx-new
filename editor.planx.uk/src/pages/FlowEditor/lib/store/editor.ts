@@ -170,12 +170,11 @@ export const editorStore: StateCreator<
   },
 
   createFlow: async (teamId, newSlug) => {
-    const data = { [ROOT_NODE_KEY]: { edges: [] } };
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow($data: jsonb, $slug: String, $teamId: Int) {
           insert_flows_one(
-            object: { data: $data, slug: $slug, team_id: $teamId, version: 1 }
+            object: { slug: $slug, team_id: $teamId, version: 1 }
           ) {
             id
             data
@@ -185,7 +184,6 @@ export const editorStore: StateCreator<
       variables: {
         slug: newSlug,
         teamId,
-        data,
       },
     })) as any;
 
@@ -209,7 +207,7 @@ export const editorStore: StateCreator<
           seq: 1,
           src: "143711878a0ab64c35c32c6055358f5e",
           create: {
-            data,
+            data: { [ROOT_NODE_KEY]: { edges: [] } },
             type: "http://sharejs.org/types/JSONv0",
           },
         },
