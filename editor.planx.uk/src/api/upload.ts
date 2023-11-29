@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios, { RawAxiosRequestHeaders } from "axios";
+import { getCookie } from "lib/cookie";
 
 export { uploadPrivateFile, uploadPublicFile };
 
@@ -8,7 +9,13 @@ async function uploadPublicFile(
   file: any,
   { onProgress }: { onProgress?: (p: any) => void } = {},
 ) {
-  const { data } = await handleUpload(file, { onProgress, path: "public" });
+  const token = getCookie("jwt");
+  const authRequestHeader = { Authorization: `Bearer ${token}` };
+  const { data } = await handleUpload(
+    file,
+    { onProgress, path: "public" },
+    authRequestHeader,
+  );
 
   return data.fileUrl;
 }
@@ -28,6 +35,7 @@ function handleUpload(
     onProgress,
     path: path,
   }: { onProgress?: (p: any) => void; path: "public" | "private" },
+  authHeader?: RawAxiosRequestHeaders,
 ) {
   const formData = new FormData();
 
@@ -45,6 +53,7 @@ function handleUpload(
   return axios.post(endpoint, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
+      ...(authHeader && authHeader),
     },
     onUploadProgress: ({ loaded, total }) => {
       if (onProgress && total) {
