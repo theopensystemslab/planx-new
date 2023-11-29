@@ -1222,6 +1222,18 @@
         check: null
 - table:
     schema: public
+    name: team_integrations
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - team_id
+          - staging_bops_submission_url
+          - production_bops_submission_url
+        filter: {}
+- table:
+    schema: public
     name: team_members
   object_relationships:
     - name: team
@@ -1284,6 +1296,14 @@
 - table:
     schema: public
     name: teams
+  object_relationships:
+    - name: integrations
+      using:
+        foreign_key_constraint_on:
+          column: team_id
+          table:
+            schema: public
+            name: team_integrations
   array_relationships:
     - name: flows
       using:
