@@ -45,8 +45,8 @@ dependencies:
     specifier: ^0.7.5
     version: 0.7.5
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#41f4683
-    version: github.com/theopensystemslab/planx-core/41f4683(@types/react@18.2.20)
+    specifier: git+https://github.com/theopensystemslab/planx-core#d38a7d3
+    version: github.com/theopensystemslab/planx-core/d38a7d3(@types/react@18.2.20)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -20780,9 +20780,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/41f4683(@types/react@18.2.20):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/41f4683}
-    id: github.com/theopensystemslab/planx-core/41f4683
+  github.com/theopensystemslab/planx-core/d38a7d3(@types/react@18.2.20):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d38a7d3}
+    id: github.com/theopensystemslab/planx-core/d38a7d3
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
