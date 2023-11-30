@@ -28,6 +28,8 @@ jest.mock("@opensystemslab/planx-core", () => {
 });
 
 describe(`sending an application to BOPS`, () => {
+  const submissionURL = "https://test.bops-test.com";
+
   beforeEach(() => {
     queryMock.mockQuery({
       name: "FindApplication",
@@ -44,23 +46,41 @@ describe(`sending an application to BOPS`, () => {
         insertBopsApplication: { id: 22 },
       },
     });
-  });
-
-  it("proxies request and returns hasura id", async () => {
-    const submissionURL = "bops.test"
 
     queryMock.mockQuery({
       name: "GetStagingBopsSubmissionURL",
       data: {
-        teams: [{
-          integrations: {
-            bopsSubmissionURL: submissionURL
+        teams: [
+          {
+            integrations: {
+              bopsSubmissionURL: submissionURL,
+            },
           },
-        }],
+        ],
       },
-      matchOnVariables: false,
+      variables: {
+        slug: "southwark",
+      },
     });
 
+    queryMock.mockQuery({
+      name: "GetStagingBopsSubmissionURL",
+      data: {
+        teams: [
+          {
+            integrations: {
+              bopsSubmissionURL: null,
+            },
+          },
+        ],
+      },
+      variables: {
+        slug: "unsupported-team",
+      },
+    });
+  });
+
+  it("proxies request and returns hasura id", async () => {
     nock(`${submissionURL}/api/v1/planning_applications`).post("").reply(200, {
       application: "0000123",
     });
