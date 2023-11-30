@@ -13,11 +13,22 @@ const styles = (theme: Theme) => ({
   "& strong": {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
-  "& p:last-of-type": {
+  "& p:last-child, & ul:last-child, & ol:last-child": {
     marginBottom: 0,
   },
   "& img": {
     maxWidth: "100%",
+  },
+  "& ol li, & ul li": {
+    marginTop: "0.5em",
+  },
+  "& ol p, & ul p": {
+    margin: 0,
+  },
+  "& h1, & h2, & h3": {
+    "& strong": {
+      fontWeight: "inherit",
+    },
   },
 });
 
@@ -57,7 +68,9 @@ export default function ReactMarkdownOrHtml(props: {
     return (
       <HTMLRoot
         color={props.textColor}
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(incrementHeaders) }}
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(incrementHeaders),
+        }}
         id={props.id}
       />
     );

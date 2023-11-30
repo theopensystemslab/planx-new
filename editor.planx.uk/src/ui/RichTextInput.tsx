@@ -1,5 +1,3 @@
-import "./RichTextInput.css";
-
 import Check from "@mui/icons-material/Check";
 import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
@@ -10,9 +8,11 @@ import FormatListBulleted from "@mui/icons-material/FormatListBulleted";
 import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
 import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { type InputBaseProps } from "@mui/material/InputBase";
 import Popover from "@mui/material/Popover";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { type Editor, type JSONContent } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
@@ -60,6 +60,101 @@ interface Props extends InputBaseProps {
   bordered?: boolean;
   errorMessage?: string;
 }
+
+export const RichContentContainer = styled(Box)(({ theme }) => ({
+  position: "relative",
+  "& .ProseMirror": {
+    padding: "12px 15px",
+    backgroundColor: theme.palette.common.white,
+    minHeight: "50px",
+    border: `1px solid ${theme.palette.border.light}`,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    "& a": {
+      color: "currentColor",
+    },
+    "& > *": {
+      margin: 0,
+    },
+    "& > * + *": {
+      marginTop: theme.spacing(1),
+    },
+    "& ol, & ul": {
+      marginBottom: theme.spacing(1),
+    },
+    "& ol li, & ul li": {
+      margin: theme.spacing(0.5, 0, 0),
+    },
+    "& ol p, & ul p": {
+      margin: 0,
+    },
+    "& h1, & h2, & h3": {
+      "& strong": {
+        fontWeight: "inherit",
+      },
+    },
+    // Styles for placeholder text, to match ui/Input.tsx
+    "& p.is-editor-empty:first-child::before": {
+      color: theme.palette.text.secondary,
+      opacity: "0.5",
+      content: `attr(data-placeholder)`,
+      float: "left",
+      height: 0,
+      pointerEvents: "none",
+    },
+    // Focus styles
+    "&.ProseMirror-focused": {
+      border: `1px solid ${theme.palette.border.input}`,
+      boxShadow: `inset 0px 0px 0px 1px ${theme.palette.border.input}`,
+      outline: `3px solid ${theme.palette.action.focus}`,
+    },
+    // Styles for injected passport/mention
+    "& .passport": {
+      backgroundColor: theme.palette.secondary.main,
+      color: theme.palette.text.primary,
+      padding: theme.spacing(0.25, 0.5),
+      borderRadius: "4px",
+    },
+  },
+}));
+
+const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({
+  background: theme.palette.background.default,
+  boxShadow: "0 2px 6px 0 rgba(0, 0, 0, 0.2)",
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0.25),
+}));
+
+const MentionItems = styled(Box)(({ theme }) => ({
+  background: theme.palette.common.white,
+  fontSize: "0.875em",
+  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+  borderRadius: "4px",
+  width: "150px",
+  overflow: "hidden",
+  padding: theme.spacing(0.25),
+}));
+
+const MentionItemsButton = styled(Button)(({ theme }) => ({
+  border: 0,
+  background: "none",
+  boxShadow: "none",
+  padding: theme.spacing(0.25),
+  display: "block",
+  width: "100%",
+  textAlign: "left",
+  "&.mention-item-selected": {
+    background: `rgba(0, 0, 0, 0.03)`,
+  },
+}));
+
+const MentionItemsEmpty = styled(Typography)(({ theme }) => ({
+  padding: theme.spacing(0.25),
+  margin: 0,
+  color: theme.palette.text.secondary,
+}));
 
 const passportClassName = "passport";
 
@@ -395,9 +490,9 @@ const RichTextInput: FC<Props> = (props) => {
   }, [isAddingLink]);
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <RichContentContainer>
       {editor && (
-        <BubbleMenu
+        <StyledBubbleMenu
           editor={editor}
           tippyOptions={{ duration: 100 }}
           className="bubble-menu"
@@ -568,7 +663,7 @@ const RichTextInput: FC<Props> = (props) => {
               <LinkIcon />
             </IconButton>
           )}
-        </BubbleMenu>
+        </StyledBubbleMenu>
       )}
       <EditorContent editor={editor} />
       {contentHierarchyError && (
@@ -576,7 +671,7 @@ const RichTextInput: FC<Props> = (props) => {
           <PopupError id="content-error" error={contentHierarchyError} />
         </Box>
       )}
-    </Box>
+    </RichContentContainer>
   );
 };
 
@@ -709,21 +804,22 @@ const MentionList = forwardRef((props: MentionListProps, ref) => {
   }));
 
   return (
-    <div className="mention-items">
+    <MentionItems>
       {props.query.length > 0 && (
-        <button
-          className="mention-add-button"
+        <MentionItemsButton
+          variant="text"
           onClick={() => {
             props.command({ id: props.query });
             variablesStore.addVariable(props.query);
           }}
         >
           + Add <span className={passportClassName}>@{props.query}</span>
-        </button>
+        </MentionItemsButton>
       )}
       {props.items.length > 0 ? (
         props.items.map((item: any, index: number) => (
-          <button
+          <MentionItemsButton
+            variant="text"
             className={`mention-item ${
               index === selectedIndex ? "mention-item-selected" : ""
             }`}
@@ -731,12 +827,12 @@ const MentionList = forwardRef((props: MentionListProps, ref) => {
             onClick={() => selectItem(index)}
           >
             <span className={passportClassName}>@{item}</span>
-          </button>
+          </MentionItemsButton>
         ))
       ) : (
-        <p className="mention-items-empty">No results</p>
+        <MentionItemsEmpty variant="body2">No results</MentionItemsEmpty>
       )}
-    </div>
+    </MentionItems>
   );
 });
 
