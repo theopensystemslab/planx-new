@@ -1,7 +1,11 @@
 .ProseMirror {
-  padding: 15px;
+  padding: 12px 15px;
   background-color: #fff;
   min-height: 50px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .ProseMirror > * {
@@ -13,11 +17,18 @@
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
-  color: #adb5bd;
+  color: #505a5f;
+  opacity: 0.5;
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+.ProseMirror.ProseMirror-focused {
+  border: 1px solid #000;
+  box-shadow: inset 0px 0px 0px 1px #000;
+  outline: 3px solid #ffdd00;
 }
 
 .passport {

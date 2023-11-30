@@ -47,7 +47,7 @@ const InternalPortalForm: React.FC<{
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
       <div>
-        Create new internal portal:{" "}
+        <label htmlFor="portalFlowId">Create new internal portal: </label>
         <InputField
           name="text"
           onChange={formik.handleChange}
@@ -55,6 +55,7 @@ const InternalPortalForm: React.FC<{
           rows={2}
           value={formik.values.text}
           disabled={!!formik.values.flowId}
+          id="portalFlowId"
           // required={!formik.values.flowId} (was ignored by @testing-library?)
         />
         {formik.errors.text && <FormError message={formik.errors.text} />}

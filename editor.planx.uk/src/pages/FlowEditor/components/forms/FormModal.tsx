@@ -21,15 +21,19 @@ import { useStore } from "../../lib/store";
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
   "& > * > *": {
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
-  float: "right",
-  margin: 0,
-  padding: 0,
+  margin: "0 0 0 auto",
+  padding: theme.spacing(1),
   color: theme.palette.grey[600],
+}));
+
+const TypeSelect = styled("select")(() => ({
+  fontSize: "1em",
+  padding: "0.25em",
 }));
 
 const NodeTypeSelect: React.FC<{
@@ -37,7 +41,7 @@ const NodeTypeSelect: React.FC<{
   onChange: (newValue: string) => void;
 }> = (props) => {
   return (
-    <select
+    <TypeSelect
       value={fromSlug(props.value)}
       onChange={(ev) => {
         props.onChange(ev.target.value);
@@ -85,7 +89,7 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Outputs">
         <option value={TYPES.Send}>Send</option>
       </optgroup>
-    </select>
+    </TypeSelect>
   );
 };
 
@@ -120,7 +124,14 @@ const FormModal: React.FC<{
       disableScrollLock
       onClose={handleClose}
     >
-      <DialogTitle>
+      <DialogTitle
+        sx={{
+          py: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         {!handleDelete && (
           <NodeTypeSelect
             value={type}

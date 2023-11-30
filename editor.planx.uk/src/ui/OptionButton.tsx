@@ -12,8 +12,8 @@ const Root = styled(ButtonBase, {
     !["selected", "backgroundColor"].includes(prop.toString()),
 })<Props>(({ theme, selected, backgroundColor }) => ({
   height: 50,
-  paddingLeft: 50,
-  paddingRight: theme.spacing(3),
+  padding: theme.spacing(0, 3, 0, 5),
+  marginBottom: theme.spacing(0.5),
   fontSize: 15,
   position: "relative",
   fontFamily: "inherit",
@@ -21,18 +21,20 @@ const Root = styled(ButtonBase, {
   width: "auto",
   minWidth: 200,
   textAlign: "left",
+  border: `1px solid ${theme.palette.border.light}`,
+  backgroundColor: theme.palette.common.white,
   "&::before": {
     content: "''",
     position: "absolute",
-    height: 10,
-    width: 10,
-    left: 20,
-    top: 20,
+    height: 12,
+    width: 12,
+    left: 18,
+    top: 18,
     borderRadius: "50%",
-    backgroundColor: theme.palette.grey[500],
+    backgroundColor: theme.palette.grey[400],
     ...(selected && {
       color: "#fff",
-      backgroundColor: backgroundColor || theme.palette.success.light,
+      backgroundColor: backgroundColor || theme.palette.success.main,
     }),
   },
   ...(!selected && {
@@ -41,7 +43,7 @@ const Root = styled(ButtonBase, {
     },
   }),
   ...(selected && {
-    backgroundColor: theme.palette.grey[300],
+    backgroundColor: theme.palette.grey[200],
   }),
 }));
 

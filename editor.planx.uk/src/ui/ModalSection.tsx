@@ -3,9 +3,9 @@ import { styled } from "@mui/material/styles";
 import React, { PropsWithChildren } from "react";
 
 const Root = styled(Box)(({ theme }) => ({
-  paddingBottom: theme.spacing(3),
+  padding: theme.spacing(2, 0),
   "& + .modalSection": {
-    borderTop: "0.5px solid #bbb",
+    borderTop: `1px solid ${theme.palette.border.main}`,
   },
 }));
 

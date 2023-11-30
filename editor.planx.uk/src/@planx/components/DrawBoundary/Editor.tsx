@@ -65,6 +65,7 @@ function DrawBoundaryComponent(props: Props) {
               <Input
                 name="dataFieldBoundary"
                 placeholder=""
+                format="data"
                 value={formik.values.dataFieldBoundary}
                 onChange={formik.handleChange}
               />
@@ -75,6 +76,7 @@ function DrawBoundaryComponent(props: Props) {
               <Input
                 name="dataFieldArea"
                 placeholder="property.boundary.area"
+                format="data"
                 value={formik.values.dataFieldArea}
                 onChange={formik.handleChange}
               />

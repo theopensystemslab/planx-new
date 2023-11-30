@@ -18,7 +18,7 @@ export type Props = EditorProps<TYPES.Confirmation, Confirmation>;
 
 function StepEditor(props: ListManagerEditorProps<Step>) {
   return (
-    <Box>
+    <Box width="100%">
       <InputRow>
         <Input
           required

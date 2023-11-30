@@ -146,7 +146,7 @@ const OptionEditor: React.FC<{
 
 const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
-    <ModalSectionContent title="Options">
+    <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
         <Box>
           {formik.values.groupedOptions.map(

@@ -12,7 +12,8 @@ const classes = {
 
 const Root = styled(InputBase)(({ theme }) => ({
   [`&.${classes.root}`]: {
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: theme.palette.common.white,
+    border: `1px solid ${theme.palette.border.light}`,
     transition: "background-color 0.2s ease-out",
     display: "block",
     width: "100%",

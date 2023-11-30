@@ -73,7 +73,11 @@ export default function Component(props: Props) {
       <ModalSection>
         <ModalSectionContent title="Calculate" Icon={ICONS[TYPES.Calculate]}>
           <Typography variant="body2">
-            This component does math! Write formulas using <a href="https://mathjs.org/index.html" target="_blank">Math.js</a>, omitting the <code>math.</code> prefix
+            This component does math! Write formulas using{" "}
+            <a href="https://mathjs.org/index.html" target="_blank">
+              Math.js
+            </a>
+            , omitting the <code>math.</code> prefix
           </Typography>
         </ModalSectionContent>
         <ModalSectionContent title="Output">
@@ -82,6 +86,7 @@ export default function Component(props: Props) {
               required
               placeholder="output data field"
               name="output"
+              format="data"
               value={formik.values.output}
               onChange={formik.handleChange}
             />

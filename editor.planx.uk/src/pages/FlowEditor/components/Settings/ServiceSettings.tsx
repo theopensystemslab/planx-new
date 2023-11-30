@@ -4,8 +4,10 @@ import Switch, { SwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import React from "react";
+import EditorRow from "ui/EditorRow";
 import Input, { Props as InputProps } from "ui/Input";
 import InputGroup from "ui/InputGroup";
+import InputLegend from "ui/InputLegend";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 import RichTextInput from "ui/RichTextInput";
@@ -29,8 +31,8 @@ const TextInput: React.FC<{
   contentInputProps,
 }) => {
   return (
-    <Box mb={2} width="100%">
-      <Box my={2} display="flex" alignItems="center">
+    <Box width="100%">
+      <Box mb={2} display="flex" alignItems="center">
         <Switch {...switchProps} color="primary" />
         <Typography variant="h4" component="h5">
           {title}
@@ -98,15 +100,15 @@ const ServiceSettings: React.FC = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Box pb={3} borderBottom={1}>
+      <EditorRow>
         <Typography variant="h2" component="h3" gutterBottom>
           Elements
         </Typography>
         <Typography variant="body1">
           Manage the features that users will be able to see
         </Typography>
-      </Box>
-      <Box borderBottom={1} pb={3}>
+      </EditorRow>
+      <EditorRow background>
         <TextInput
           title="Legal Disclaimer"
           description="Displayed before a user submits their application"
@@ -126,61 +128,61 @@ const ServiceSettings: React.FC = () => {
             onChange: formik.handleChange,
           }}
         />
-      </Box>
-      <Box pt={2}>
-        <Typography variant="h3" component="h4">
-          <strong>Footer Links</strong>
-        </Typography>
-        <InputGroup>
-          <TextInput
-            title="Help Page"
-            richText
-            description="A place to communicate FAQs, useful tips, or contact information"
-            switchProps={{
-              name: "elements.help.show",
-              checked: formik.values.elements?.help?.show,
-              onChange: formik.handleChange,
-            }}
-            headingInputProps={{
-              name: "elements.help.heading",
-              value: formik.values.elements?.help?.heading,
-              onChange: formik.handleChange,
-            }}
-            contentInputProps={{
-              name: "elements.help.content",
-              value: formik.values.elements?.help?.content,
-              onChange: formik.handleChange,
-            }}
-          />
-
-          <TextInput
-            title="Privacy Page"
-            richText
-            description="Your privacy policy"
-            switchProps={{
-              name: "elements.privacy.show",
-              checked: formik.values.elements?.privacy?.show,
-              onChange: formik.handleChange,
-            }}
-            headingInputProps={{
-              name: "elements.privacy.heading",
-              value: formik.values.elements?.privacy?.heading,
-              onChange: formik.handleChange,
-            }}
-            contentInputProps={{
-              name: "elements.privacy.content",
-              value: formik.values.elements?.privacy?.content,
-              onChange: formik.handleChange,
-            }}
-          />
+      </EditorRow>
+      <EditorRow background>
+        <InputGroup flowSpacing>
+          <InputLegend>Footer Links</InputLegend>
+          <InputRow>
+            <TextInput
+              title="Help Page"
+              richText
+              description="A place to communicate FAQs, useful tips, or contact information"
+              switchProps={{
+                name: "elements.help.show",
+                checked: formik.values.elements?.help?.show,
+                onChange: formik.handleChange,
+              }}
+              headingInputProps={{
+                name: "elements.help.heading",
+                value: formik.values.elements?.help?.heading,
+                onChange: formik.handleChange,
+              }}
+              contentInputProps={{
+                name: "elements.help.content",
+                value: formik.values.elements?.help?.content,
+                onChange: formik.handleChange,
+              }}
+            />
+          </InputRow>
+          <InputRow>
+            <TextInput
+              title="Privacy Page"
+              richText
+              description="Your privacy policy"
+              switchProps={{
+                name: "elements.privacy.show",
+                checked: formik.values.elements?.privacy?.show,
+                onChange: formik.handleChange,
+              }}
+              headingInputProps={{
+                name: "elements.privacy.heading",
+                value: formik.values.elements?.privacy?.heading,
+                onChange: formik.handleChange,
+              }}
+              contentInputProps={{
+                name: "elements.privacy.content",
+                value: formik.values.elements?.privacy?.content,
+                onChange: formik.handleChange,
+              }}
+            />
+          </InputRow>
         </InputGroup>
-
-        <Box py={2} justifyContent="flex-end" mb={4}>
-          <Button type="submit" variant="contained" color="primary">
-            Save
-          </Button>
-        </Box>
-      </Box>
+      </EditorRow>
+      <EditorRow>
+        <Button type="submit" variant="contained" color="primary">
+          Update elements
+        </Button>
+      </EditorRow>
     </form>
   );
 };

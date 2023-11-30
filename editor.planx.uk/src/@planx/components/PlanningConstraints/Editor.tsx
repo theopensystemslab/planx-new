@@ -53,6 +53,7 @@ function PlanningConstraintsComponent(props: Props) {
           <InputGroup label="Planning constraints data field">
             <InputRow>
               <Input
+                format="data"
                 name="fn"
                 placeholder={formik.values.fn}
                 value={formik.values.fn}

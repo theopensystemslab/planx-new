@@ -3,6 +3,7 @@ import DragHandle from "@mui/icons-material/DragHandle";
 import Box, { BoxProps } from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import React, { PropsWithChildren, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
@@ -13,12 +14,19 @@ interface Props {
   deleteInputGroup?: any;
   deletable?: boolean;
   draggable?: boolean;
+  flowSpacing?: boolean;
   id?: string;
   index?: number;
   handleMove?: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const Root = styled("fieldset")(({ theme }) => ({
+interface RootProps extends BoxProps {
+  flowSpacing?: boolean;
+}
+
+const Root = styled("fieldset", {
+  shouldForwardProp: (prop) => prop !== "flowSpacing",
+})<RootProps>(({ flowSpacing, theme }) => ({
   border: 0,
   margin: 0,
   padding: 0,
@@ -28,12 +36,17 @@ const Root = styled("fieldset")(({ theme }) => ({
   "& .inputGroup + .inputGroup": {
     marginTop: 0,
   },
+  ...(flowSpacing && {
+    "& > div > * + *": {
+      marginTop: theme.spacing(1.5),
+    },
+  }),
 }));
 
-const Label = styled("legend")(({ theme }) => ({
-  fontSize: 15,
-  padding: theme.spacing(1.5, 0),
-}));
+const Label = styled(Typography)(({ theme }) => ({
+  display: "block",
+  padding: theme.spacing(0.75, 0),
+})) as typeof Typography;
 
 const Drag = styled(Box)(({ theme }) => ({
   position: "absolute",
@@ -107,6 +120,7 @@ export default function InputGroup({
   id,
   index = 0,
   handleMove,
+  flowSpacing,
 }: Props): FCReturn {
   const [deleteHover, setDeleteHover] = React.useState(false);
 
@@ -169,8 +183,12 @@ export default function InputGroup({
   if (draggable) drag(drop(ref));
 
   return (
-    <Root ref={ref} className="inputGroup">
-      {label && <Label>{label}</Label>}
+    <Root ref={ref} className="inputGroup" flowSpacing={flowSpacing}>
+      {label && (
+        <Label variant="subtitle2" component="label">
+          {label}
+        </Label>
+      )}
       <Content
         deletable={deletable}
         draggable={draggable}

@@ -36,7 +36,7 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Container maxWidth="sm" disableGutters>
+        <Container maxWidth="formWrap" disableGutters>
           <Box py={7}>{children}</Box>
         </Container>
       )}
@@ -56,10 +56,11 @@ interface LinkTabProps {
   href?: string;
 }
 
-const StyledTab = styled(Tab)(() => ({
+const StyledTab = styled(Tab)(({ theme }) => ({
   position: "relative",
   zIndex: 1,
   textTransform: "none",
+  background: theme.palette.background.default,
 })) as typeof Tab;
 
 function LinkTab(props: LinkTabProps) {
@@ -84,16 +85,16 @@ const classes = {
   tabIndicator: `${PREFIX}-tabIndicator`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   flexGrow: 1,
-  backgroundColor: "#f2f2f2",
+  backgroundColor: theme.palette.background.default,
   position: "absolute",
   top: HEADER_HEIGHT,
   left: 0,
   right: 0,
   minHeight: `calc(100% - ${HEADER_HEIGHT}px)`,
   [`& .${classes.tabs}`]: {
-    backgroundColor: "#ddd",
+    backgroundColor: theme.palette.border.main,
   },
   [`& .${classes.tabIndicator}`]: {
     height: "100%",
