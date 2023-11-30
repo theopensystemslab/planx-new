@@ -3,7 +3,6 @@ config:
     secure: AAABABxcp8r3CZAw1kXuXkwPZ8cKRDQyOg4+gVvqzKuCFWb8BEU=
   application:airbrake-project-key:
     secure: AAABABujxMHxU8Abj4QpyQTz7bLt3AP2wBFaypVkDZ2khzc6eh6lHLljTEkzpLUncno3gNNDXnrmxzXvqKnQdQ==
-  application:bops-api-root-domain: bops-staging.services
   application:bops-api-token:
     secure: AAABAJx2KnnFeuEmwRB5VyE790TeYxiKmWFuVXVY8Lb7+HDNRYND8Pfd9d61zjwPzi9Jf2ZlT0OH++1MXYafhdQO28Y=
   application:cloudflare-zone-id:
