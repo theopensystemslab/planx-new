@@ -27,8 +27,6 @@ jest.mock("@opensystemslab/planx-core", () => {
   };
 });
 
-const submissionURL = process.env.BOPS_SUBMISSION_URL_SOUTHWARK;
-
 describe(`sending an application to BOPS`, () => {
   beforeEach(() => {
     queryMock.mockQuery({
@@ -49,6 +47,20 @@ describe(`sending an application to BOPS`, () => {
   });
 
   it("proxies request and returns hasura id", async () => {
+    const submissionURL = "bops.test"
+
+    queryMock.mockQuery({
+      name: "GetStagingBopsSubmissionURL",
+      data: {
+        teams: [{
+          integrations: {
+            bopsSubmissionURL: submissionURL
+          },
+        }],
+      },
+      matchOnVariables: false,
+    });
+
     nock(`${submissionURL}/api/v1/planning_applications`).post("").reply(200, {
       application: "0000123",
     });
