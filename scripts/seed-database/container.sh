@@ -33,6 +33,11 @@ for table in "${tables[@]}"; do
   fi
 done
 
+# Copy subset of team_integrations columns
+# Do not copy production values
+psql --quiet ${REMOTE_PG} --command="\\copy (SELECT id, team_id, staging_bops_submission_url FROM team_integrations TO '/tmp/team_integrations.csv' (FORMAT csv, DELIMITER ';');"
+echo team_integrations downloaded
+
 psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"
 echo published_flows downloaded
 
