@@ -1,34 +1,22 @@
-import { TYPES } from "@planx/components/types";
 import cloneDeep from "lodash/cloneDeep";
 
-import { Store, vanillaStore } from "../store";
-import {
-  removeNodesDependentOnPassport,
-  removeOrphansFromBreadcrumbs,
-} from "../store/preview";
-import breadcrumbsDependentOnPassportMock from "./mocks/breadcrumbsDependentOnPassport.json";
-import flowWithAutoAnswersMock from "./mocks/flowWithAutoAnswers.json";
-import flowWithPassportComponentsMock from "./mocks/flowWithPassportComponents.json";
+import { Store, vanillaStore } from "../../store";
+import { removeNodesDependentOnPassport } from "../../store/preview";
+import breadcrumbsDependentOnPassportMock from "../mocks/breadcrumbsDependentOnPassport.json";
+import flowWithPassportComponentsMock from "../mocks/flowWithPassportComponents.json";
 
 const { getState, setState } = vanillaStore;
+
 let breadcrumbsDependentOnPassport = cloneDeep(
   breadcrumbsDependentOnPassportMock,
 ) as Store.breadcrumbs;
+
 let flowWithPassportComponents = cloneDeep(
   flowWithPassportComponentsMock,
 ) as Store.flow;
-const flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
 
-const {
-  record,
-  upcomingCardIds,
-  currentCard,
-  resetPreview,
-  hasPaid,
-  previousCard,
-  changeAnswer,
-  computePassport,
-} = getState();
+const { record, resetPreview, previousCard, currentCard, changeAnswer } =
+  getState();
 
 beforeEach(() => {
   resetPreview();
@@ -38,214 +26,6 @@ beforeEach(() => {
   flowWithPassportComponents = cloneDeep(
     flowWithPassportComponentsMock,
   ) as Store.flow;
-});
-
-test("it lists upcoming cards", () => {
-  setState({
-    flow: {
-      _root: {
-        edges: ["a", "b"],
-      },
-      a: {
-        type: TYPES.Statement,
-        edges: ["c"],
-      },
-      b: {
-        type: TYPES.Statement,
-      },
-      c: {
-        type: TYPES.Response,
-        edges: ["d"],
-      },
-      d: {
-        type: TYPES.Statement,
-        edges: ["e", "f"],
-      },
-      e: { type: TYPES.Response },
-      f: { type: TYPES.Response },
-    },
-  });
-
-  expect(upcomingCardIds()).toEqual(["a"]);
-
-  record("a", { answers: ["c"] });
-
-  expect(upcomingCardIds()).toEqual(["d"]);
-
-  record("d", { answers: ["e", "f"] });
-
-  expect(upcomingCardIds()).toEqual([]);
-});
-
-test("notice", () => {
-  setState({
-    flow: {
-      _root: {
-        edges: ["a"],
-      },
-      a: {
-        type: TYPES.Notice,
-      },
-    },
-  });
-
-  expect(upcomingCardIds()).toEqual(["a"]);
-});
-
-test("crawling with portals", () => {
-  setState({
-    flow: {
-      _root: {
-        edges: ["a", "b"],
-      },
-      a: {
-        type: TYPES.InternalPortal,
-        edges: ["c"],
-      },
-      b: {
-        edges: ["d"],
-      },
-      c: {
-        edges: ["d"],
-      },
-      d: {},
-    },
-  });
-
-  expect(upcomingCardIds()).toEqual(["c", "b"]);
-});
-
-describe("error handling", () => {
-  test("cannot record id that doesn't exist", () => {
-    setState({
-      flow: {
-        _root: {
-          edges: ["a", "b"],
-        },
-        a: {
-          type: TYPES.InternalPortal,
-          edges: ["c"],
-        },
-        b: {
-          edges: ["d"],
-        },
-        c: {
-          edges: ["d"],
-        },
-        d: {},
-      },
-    });
-
-    expect(() => record("x", {})).toThrow("id not found");
-  });
-});
-
-test("record(id, undefined) clears up breadcrumbs", () => {
-  setState({
-    flow: {
-      _root: {
-        edges: ["a", "b"],
-      },
-      a: {
-        type: TYPES.Statement,
-        edges: ["c"],
-      },
-      b: {
-        type: TYPES.Statement,
-      },
-      c: {
-        type: TYPES.Response,
-        edges: ["d"],
-      },
-      d: {
-        type: TYPES.Statement,
-        edges: ["e", "f"],
-      },
-      e: { type: TYPES.Response },
-      f: { type: TYPES.Response },
-    },
-  });
-  record("a", { answers: ["c"] });
-  record("d", { answers: ["e", "f"] });
-  expect(getState().breadcrumbs).toEqual({
-    a: { answers: ["c"], auto: false },
-    d: { answers: ["e", "f"], auto: false },
-  });
-
-  record("a");
-
-  expect(getState().breadcrumbs).toEqual({});
-});
-
-test("hasPaid is updated if a Pay component has been recorded", () => {
-  setState({
-    flow: {
-      _root: {
-        edges: ["a", "b"],
-      },
-      a: {
-        type: TYPES.Statement,
-        edges: ["c"],
-      },
-      b: {
-        type: TYPES.Statement,
-      },
-      c: {
-        type: TYPES.Pay,
-      },
-
-      d: { type: TYPES.Response },
-      e: { type: TYPES.Review },
-    },
-  });
-
-  record("a", { answers: ["c"] });
-  expect(hasPaid()).toBe(false);
-
-  record("c", {});
-  expect(getState().breadcrumbs).toEqual({
-    a: { answers: ["c"], auto: false },
-    c: { auto: false },
-  });
-
-  expect(hasPaid()).toBe(true);
-});
-
-describe("removeOrphansFromBreadcrumbs", () => {
-  test("Deletes orphans from breadcrumbs when changing answers", () => {
-    const payload = {
-      ...mockFlowData,
-      userData: {
-        auto: false,
-        answers: ["4FRZMfNlXf"],
-      },
-    };
-
-    const actual = removeOrphansFromBreadcrumbs(payload);
-
-    const expected = {
-      mBFPszBssY: mockBreadcrumbs["mBFPszBssY"],
-      OjcsvOxVum: mockBreadcrumbs["OjcsvOxVum"],
-    };
-
-    expect(actual).toEqual(expected);
-  });
-
-  test("Should keep breadcrumbs when tree is not changed", () => {
-    const payload = {
-      ...mockFlowData,
-      userData: {
-        auto: false,
-        answers: ["4FRZMfNlXf", "IzT93uCmyF"],
-      },
-    };
-
-    const actual = removeOrphansFromBreadcrumbs(payload);
-
-    const expected = mockBreadcrumbs;
-
-    expect(actual).toEqual(expected);
-  });
 });
 
 describe("removeNodesDependentOnPassport", () => {
@@ -280,7 +60,7 @@ describe("removeNodesDependentOnPassport", () => {
   });
 });
 
-describe("record", () => {
+describe("nodesDependentOnPassport with record", () => {
   test("should remove Draw Boundary and Planning contraints from cachedBreadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
@@ -434,7 +214,7 @@ describe("record", () => {
   });
 });
 
-describe("previousCard", () => {
+describe("nodesDependentOnPassport with previousCard", () => {
   test("To be the card before the current one", () => {
     const breadcrumbs = {
       findProperty: breadcrumbsDependentOnPassport.findProperty,
@@ -471,7 +251,7 @@ describe("previousCard", () => {
   });
 });
 
-describe("changeAnswer", () => {
+describe("nodesDependentOnPassport with changeAnswer", () => {
   test("should set state correctly", () => {
     const breadcrumbs = {
       text: breadcrumbsDependentOnPassport.text,
@@ -517,87 +297,6 @@ describe("changeAnswer", () => {
     const changedBreadcrumbKeys = Object.keys(changedBreadcrumbs);
     const originalBreadcrumbKeys = Object.keys(breadcrumbsDependentOnPassport);
     expect(changedBreadcrumbKeys).toStrictEqual(originalBreadcrumbKeys);
-  });
-
-  test("should auto-answer future nodes with the updated passport variable correctly", () => {
-    // See https://trello.com/c/B8xMMJLo/1930-changes-from-the-review-page-that-affect-the-fee-do-not-update-the-fee
-    //   and https://editor.planx.uk/testing/autoanswer-change-test
-    const flow = { ...flowWithAutoAnswers };
-
-    // Mock initial state as if we've initially answered "Yes" to the question and reached the Review component, about to click "change"
-    const breadcrumbs = {
-      rCjETwjwE3: {
-        auto: false,
-        answers: ["b0qdvLAxIL"],
-      },
-      vgj2UNYK9r: {
-        answers: ["X9JjnbPpnd"],
-        auto: true,
-      },
-    } as Store.breadcrumbs;
-    const cachedBreadcrumbs = {} as Store.cachedBreadcrumbs;
-
-    setState({
-      flow,
-      breadcrumbs,
-      cachedBreadcrumbs,
-    });
-
-    // Assert our initial passport state is correct
-    expect(computePassport()).toEqual({
-      data: {
-        "application.fee.exemption.disability": ["true"],
-      },
-    });
-
-    // Change the question answer from "Yes" to "No"
-    changeAnswer("rCjETwjwE3");
-    record("rCjETwjwE3", {
-      answers: ["ykNZocRJtQ"],
-      auto: false,
-    });
-
-    expect(getState().changedNode).toEqual("rCjETwjwE3");
-
-    // Confirm the passport has updated to reflect new answer and has not retained previous answer
-    expect(computePassport()).toEqual({
-      data: {
-        "application.fee.exemption.disability": ["false"],
-      },
-    });
-
-    const originalAnswer = {
-      vgj2UNYK9r: {
-        answers: ["X9JjnbPpnd"],
-        auto: true,
-      },
-    } as Store.cachedBreadcrumbs;
-
-    // Confirm that our original answer is still preserved in cachedBreadcrumbs, but not included in current breadcrumbs
-    expect(getState().breadcrumbs).not.toContain(originalAnswer);
-    expect(getState().cachedBreadcrumbs).toStrictEqual(originalAnswer);
-  });
-});
-
-describe("resetPreview", () => {
-  test("should reset preview state correctly for a local storage session", async () => {
-    setState({
-      sessionId: "123",
-    });
-
-    resetPreview();
-    expect(getState().sessionId).toBe("");
-  });
-
-  test("should reset preview state correctly for a save & return session", async () => {
-    setState({
-      sessionId: "123",
-      saveToEmail: "test@council.gov.uk",
-    });
-
-    resetPreview();
-    expect(getState().sessionId).toBe("");
-    expect(getState().saveToEmail).toBe("");
   });
 });
 

@@ -1,9 +1,11 @@
-import { vanillaStore } from "../store";
+import { vanillaStore } from "../../store";
 
 const { getState, setState } = vanillaStore;
 
+const { resetPreview, previousCard, currentCard } = getState();
+
 beforeEach(() => {
-  getState().resetPreview();
+  resetPreview();
 });
 
 const setup = (args = {}) =>
@@ -22,7 +24,7 @@ const setup = (args = {}) =>
 describe("store.previousCard is", () => {
   test("undefined when there are no breadcrumbs", () => {
     setup();
-    expect(getState().previousCard(getState().currentCard())).toBeUndefined();
+    expect(previousCard(currentCard())).toBeUndefined();
   });
 
   test("undefined when cards were automatically answered", () => {
@@ -32,7 +34,7 @@ describe("store.previousCard is", () => {
         b: { auto: true },
       },
     });
-    expect(getState().previousCard(getState().currentCard())).toBeUndefined();
+    expect(previousCard(currentCard())).toBeUndefined();
   });
 
   test("the most recent human-answered card id", () => {
@@ -43,6 +45,6 @@ describe("store.previousCard is", () => {
       },
     });
 
-    expect(getState().previousCard(getState().currentCard())).toEqual("a");
+    expect(previousCard(currentCard())).toEqual("a");
   });
 });

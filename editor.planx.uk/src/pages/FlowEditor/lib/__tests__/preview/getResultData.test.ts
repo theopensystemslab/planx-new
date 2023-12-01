@@ -1,6 +1,6 @@
-import { getResultData } from "../store/preview";
+import { getResultData } from "../../store/preview";
 
-test("result data", () => {
+test("Default result data", () => {
   const result = getResultData({}, {});
 
   expect(result).toEqual({
@@ -18,3 +18,11 @@ test("result data", () => {
     },
   });
 });
+
+test.todo("Returns correct result based on collected flags");
+
+test.todo(
+  "Returns correct, custom text based on collected flags and overrides",
+);
+
+test.todo("Returns result data for flagsets beyond `Planning permission`");
