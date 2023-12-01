@@ -102,7 +102,7 @@
     "@babel/preset-typescript": "^7.23.0",
     "@craco/craco": "^6.4.5",
     "@react-theming/storybook-addon": "^1.1.10",
-    "@storybook/addon-a11y": "^7.1.1",
+    "@storybook/addon-a11y": "^7.6.3",
     "@storybook/addon-actions": "^7.1.1",
     "@storybook/addon-essentials": "^7.1.1",
     "@storybook/addon-links": "^7.3.2",
