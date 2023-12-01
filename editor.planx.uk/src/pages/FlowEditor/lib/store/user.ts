@@ -1,6 +1,6 @@
 import { User, UserTeams } from "@opensystemslab/planx-core/types";
 import { _client } from "client";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { Team } from "types";
 import type { StateCreator } from "zustand";
 
