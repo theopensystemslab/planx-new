@@ -5,9 +5,7 @@ CREATE TEMPORARY TABLE sync_team_integrations (
   staging_bops_submission_url text
 );
 
-\COPY sync_team_integrations
-FROM
-  '/tmp/team_integrations.csv' WITH (FORMAT csv, DELIMITER ';');
+\COPY sync_team_integrations FROM '/tmp/team_integrations.csv' WITH (FORMAT csv, DELIMITER ';');
 
 INSERT INTO
   team_integrations (id, team_id, staging_bops_submission_url)
