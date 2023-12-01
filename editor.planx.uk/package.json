@@ -52,7 +52,7 @@
     "graphql-tag": "^2.12.6",
     "immer": "^9.0.21",
     "js-cookie": "^3.0.5",
-    "jwt-decode": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "marked": "^4.3.0",
     "mathjs": "^11.8.2",
