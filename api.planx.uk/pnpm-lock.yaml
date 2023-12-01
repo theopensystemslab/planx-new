@@ -69,8 +69,8 @@ dependencies:
     specifier: ^4.3.0
     version: 4.3.0(graphql@16.8.1)
   helmet:
-    specifier: ^7.0.0
-    version: 7.0.0
+    specifier: ^7.1.0
+    version: 7.1.0
   http-proxy-middleware:
     specifier: ^2.0.6
     version: 2.0.6(@types/express@4.17.17)
@@ -4771,8 +4771,8 @@ packages:
     dependencies:
       function-bind: 1.1.1
 
-  /helmet@7.0.0:
-    resolution: {integrity: sha512-MsIgYmdBh460ZZ8cJC81q4XJknjG567wzEmv46WOBblDb6TUd3z8/GhgmsM9pn8g2B80tAJ4m5/d3Bi1KrSUBQ==}
+  /helmet@7.1.0:
+    resolution: {integrity: sha512-g+HZqgfbpXdCkme/Cd/mZkV0aV3BZZZSugecH03kl38m/Kmdx8jKjBikpDj2cr+Iynv4KpYEviojNdTJActJAg==}
     engines: {node: '>=16.0.0'}
     dev: false
 
