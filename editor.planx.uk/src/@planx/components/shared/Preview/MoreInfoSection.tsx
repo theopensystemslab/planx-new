@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 
 const Root = styled(Box)(({ theme }) => ({
-  "& img, & p": {
+  "& img, & p, & ul, & ol": {
     marginBottom: "1rem",
     marginTop: 0,
   },

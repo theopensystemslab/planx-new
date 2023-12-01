@@ -1,5 +1,3 @@
-import "./RichTextInput.css";
-
 import Check from "@mui/icons-material/Check";
 import Error from "@mui/icons-material/Error";
 import Box from "@mui/material/Box";

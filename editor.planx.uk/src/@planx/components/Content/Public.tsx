@@ -22,6 +22,9 @@ const Content = styled(Box, {
   "& a": {
     color: getContrastTextColor(color || "#fff", theme.palette.primary.main),
   },
+  "& *:first-child": {
+    marginTop: 0,
+  },
 }));
 
 Content.defaultProps = {
@@ -34,7 +37,7 @@ const ContentComponent: React.FC<Props> = (props) => {
       <Content
         color={props.color}
         data-testid="content"
-        p={(props.color === "#ffffff" || !props.color) ? 0 : 2}
+        p={props.color === "#ffffff" || !props.color ? 0 : 2}
       >
         <ReactMarkdownOrHtml
           source={props.content}
