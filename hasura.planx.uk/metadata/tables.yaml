@@ -1002,6 +1002,18 @@
           - flow_id
           - session_id
           - amount
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - payment_id
+          - status
+          - team_slug
+          - created_at
+          - flow_id
+          - session_id
+          - amount
+        filter: {}
 - table:
     schema: public
     name: payment_status_enum

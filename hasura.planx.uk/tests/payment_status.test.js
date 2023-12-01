@@ -73,9 +73,9 @@ describe("payment_status", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query payment_status", () => {
-      expect(i.queries).not.toContain("payment_status");
-    })
+    test("can query payment_status", () => {
+      expect(i.queries).toContain("payment_status");
+    });
 
     test("can insert payment_status", () => {
       expect(i.mutations).toContain("insert_payment_status");
