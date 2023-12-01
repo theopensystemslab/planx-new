@@ -18,6 +18,7 @@ export interface LocalAuthorityMetadata {
 }
 
 const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
+  birmingham: require("./local_authorities/metadata/birmingham"),
   buckinghamshire: require("./local_authorities/metadata/buckinghamshire"),
   camden: require("./local_authorities/metadata/camden"),
   canterbury: require("./local_authorities/metadata/canterbury"),
