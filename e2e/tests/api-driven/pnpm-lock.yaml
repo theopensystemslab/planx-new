@@ -9,8 +9,8 @@ dependencies:
     specifier: ^9.3.0
     version: 9.3.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#d38a7d3
-    version: github.com/theopensystemslab/planx-core/d38a7d3
+    specifier: git+https://github.com/theopensystemslab/planx-core#e19754f
+    version: github.com/theopensystemslab/planx-core/e19754f
   axios:
     specifier: ^1.6.0
     version: 1.6.0
@@ -741,10 +741,6 @@ packages:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
     dev: false
 
-  /@types/prop-types@15.7.9:
-    resolution: {integrity: sha512-n1yyPsugYNSmHgxDFjicaI2+gCNjsBck8UX9kuofAKlc0h1bL+20oSF72KeNaW2DUlesbEVCFgyV2dPGTiY42g==}
-    dev: false
-
   /@types/react-transition-group@4.4.8:
     resolution: {integrity: sha512-QmQ22q+Pb+HQSn04NL3HtrqHwYMf4h3QKArOy5F8U5nEVMaihBs3SR10WiOM1iwPz5jIo8x/u11al+iEGZZrvg==}
     dependencies:
@@ -754,7 +750,7 @@ packages:
   /@types/react@18.2.18:
     resolution: {integrity: sha512-da4NTSeBv/P34xoZPhtcLkmZuJ+oYaCxHmyHzwaDQo9RQPBeXV+06gEk2FpqEcsX9XrnNLvRpVh6bdavDSjtiQ==}
     dependencies:
-      '@types/prop-types': 15.7.9
+      '@types/prop-types': 15.7.11
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
     dev: false
@@ -2825,8 +2821,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/d38a7d3:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d38a7d3}
+  github.com/theopensystemslab/planx-core/e19754f:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e19754f}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

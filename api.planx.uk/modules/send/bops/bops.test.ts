@@ -27,9 +27,9 @@ jest.mock("@opensystemslab/planx-core", () => {
   };
 });
 
-const submissionURL = process.env.BOPS_SUBMISSION_URL_SOUTHWARK;
-
 describe(`sending an application to BOPS`, () => {
+  const submissionURL = "https://test.bops-test.com";
+
   beforeEach(() => {
     queryMock.mockQuery({
       name: "FindApplication",
@@ -44,6 +44,38 @@ describe(`sending an application to BOPS`, () => {
       matchOnVariables: false,
       data: {
         insertBopsApplication: { id: 22 },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetStagingBopsSubmissionURL",
+      data: {
+        teams: [
+          {
+            integrations: {
+              bopsSubmissionURL: submissionURL,
+            },
+          },
+        ],
+      },
+      variables: {
+        slug: "southwark",
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetStagingBopsSubmissionURL",
+      data: {
+        teams: [
+          {
+            integrations: {
+              bopsSubmissionURL: null,
+            },
+          },
+        ],
+      },
+      variables: {
+        slug: "unsupported-team",
       },
     });
   });

@@ -76,11 +76,6 @@ app.use(helmet());
 assert(process.env.GOVUK_NOTIFY_API_KEY);
 assert(process.env.HASURA_PLANX_API_KEY);
 assert(process.env.BOPS_API_TOKEN);
-assert(process.env.BOPS_SUBMISSION_URL_LAMBETH);
-assert(process.env.BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE);
-assert(process.env.BOPS_SUBMISSION_URL_SOUTHWARK);
-assert(process.env.BOPS_SUBMISSION_URL_CAMDEN);
-assert(process.env.BOPS_SUBMISSION_URL_GLOUCESTER);
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
 
