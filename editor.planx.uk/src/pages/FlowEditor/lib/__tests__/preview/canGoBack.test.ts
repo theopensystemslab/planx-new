@@ -1,54 +1,56 @@
-import { Store, vanillaStore } from "../store";
+import { TYPES } from "@planx/components/types";
+
+import { Store, vanillaStore } from "../../store";
 
 const { getState, setState } = vanillaStore;
 
 // https://imgur.com/VFV64ax
 const flow: Store.flow = {
   _root: {
-    edges: ["XYoJeox7F0", "8ZSxuIfFYE", "bmsSl3ScbV", "ltuI9xrBHk"],
+    edges: ["Question", "Pay", "Content", "Confirmation"],
   },
-  XYoJeox7F0: {
-    type: 100,
+  Question: {
+    type: TYPES.Statement,
     data: {
       text: "first question",
     },
-    edges: ["VfJAj7agvC", "YQXjsVsGqf"],
+    edges: ["NoFeeAnswerPath", "FeeAnswerPath"],
   },
-  VfJAj7agvC: {
-    type: 200,
+  NoFeeAnswerPath: {
+    type: TYPES.Response,
     data: {
       text: "no fee",
     },
   },
-  YQXjsVsGqf: {
-    type: 200,
+  FeeAnswerPath: {
+    type: TYPES.Response,
     data: {
       text: "fee",
     },
-    edges: ["DlgsufM3OK"],
+    edges: ["Calculate"],
   },
-  DlgsufM3OK: {
-    type: 700,
+  Calculate: {
+    type: TYPES.Calculate,
     data: {
       output: "fee",
       formula: "10",
     },
   },
-  "8ZSxuIfFYE": {
-    type: 400,
+  Pay: {
+    type: TYPES.Pay,
     data: {
       title: "Pay for your application",
       fn: "fee",
     },
   },
-  ltuI9xrBHk: {
-    type: 725,
+  Confirmation: {
+    type: TYPES.Confirmation,
     data: {
       heading: "Application sent",
     },
   },
-  bmsSl3ScbV: {
-    type: 250,
+  Content: {
+    type: TYPES.Content,
     data: {
       content: "<p>after payment</p>\n",
     },
@@ -66,9 +68,9 @@ describe("can go back if", () => {
   test("the previous component was manually answered", () => {
     setState({
       breadcrumbs: {
-        XYoJeox7F0: {
+        Question: {
           auto: false,
-          answers: ["VfJAj7agvC"],
+          answers: ["NoFeeAnswerPath"],
         },
       },
     });
@@ -78,11 +80,11 @@ describe("can go back if", () => {
   test("the user skipped the payment component", () => {
     setState({
       breadcrumbs: {
-        XYoJeox7F0: {
+        Question: {
           auto: false,
-          answers: ["VfJAj7agvC"],
+          answers: ["NoFeeAnswerPath"],
         },
-        "8ZSxuIfFYE": {
+        Pay: {
           auto: true,
         },
       },
@@ -99,9 +101,9 @@ describe("cannot go back if", () => {
   test("the only previous component was auto-answered", () => {
     setState({
       breadcrumbs: {
-        XYoJeox7F0: {
+        Question: {
           auto: true,
-          answers: ["VfJAj7agvC"],
+          answers: ["NoFeeAnswerPath"],
         },
       },
     });
@@ -111,17 +113,17 @@ describe("cannot go back if", () => {
   test("the applicant made a payment", () => {
     setState({
       breadcrumbs: {
-        XYoJeox7F0: {
+        Question: {
           auto: false,
-          answers: ["YQXjsVsGqf"],
+          answers: ["FeeAnswerPath"],
         },
-        DlgsufM3OK: {
+        Calculate: {
           auto: true,
           data: {
             fee: 10,
           },
         },
-        "8ZSxuIfFYE": {
+        Pay: {
           auto: false,
         },
       },
@@ -132,21 +134,21 @@ describe("cannot go back if", () => {
   test("changing a component's answer", () => {
     setState({
       breadcrumbs: {
-        XYoJeox7F0: {
+        Question: {
           auto: false,
-          answers: ["YQXjsVsGqf"],
+          answers: ["FeeAnswerPath"],
         },
-        DlgsufM3OK: {
+        Calculate: {
           auto: true,
           data: {
             fee: 10,
           },
         },
-        "8ZSxuIfFYE": {
+        Pay: {
           auto: false,
         },
       },
-      changedNode: "ltuI9xrBHk",
+      changedNode: "Confirmation",
     });
     expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
   });

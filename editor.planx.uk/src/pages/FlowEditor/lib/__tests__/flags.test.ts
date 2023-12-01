@@ -94,33 +94,33 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
             val: "MISSING_INFO",
             text: "Missing information",
           },
-          type: 200,
+          type: TYPES.Response,
           edges: ["missing_info_content"],
         },
         q2: {
           data: {
             text: "another",
           },
-          type: 100,
+          type: TYPES.Statement,
           edges: ["missing_2", "nothing_2"],
         },
         missing_info_content: {
           data: {
             content: "missing info",
           },
-          type: 250,
+          type: TYPES.Content,
         },
         nothing_2: {
           data: {
             text: "nothing",
           },
-          type: 200,
+          type: TYPES.Response,
         },
         no_result: {
           data: {
             text: "(No Result)",
           },
-          type: 200,
+          type: TYPES.Response,
           edges: ["q2"],
         },
         missing_2: {
@@ -128,38 +128,38 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
             flag: "MISSING_INFO",
             text: "missing",
           },
-          type: 200,
+          type: TYPES.Response,
         },
         immune: {
           data: {
             val: "IMMUNE",
             text: "Immune",
           },
-          type: 200,
+          type: TYPES.Response,
         },
         filter: {
           data: {
             fn: "flag",
           },
-          type: 500,
+          type: TYPES.Filter,
           edges: ["missing_info", "immune", "no_result"],
         },
         q1: {
-          type: 100,
+          type: TYPES.Statement,
           data: {
             text: "q",
           },
           edges: ["missing_1", "nothing_1"],
         },
         missing_1: {
-          type: 200,
+          type: TYPES.Response,
           data: {
             text: "missing",
             flag: "MISSING_INFO",
           },
         },
         nothing_1: {
-          type: 200,
+          type: TYPES.Response,
           data: {
             text: "nothing",
           },

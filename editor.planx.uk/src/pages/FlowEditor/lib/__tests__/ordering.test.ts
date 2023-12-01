@@ -6,108 +6,112 @@ const { getState, setState } = vanillaStore;
 
 const flow: Store.flow = {
   _root: {
-    edges: ["P36QH99kvZ", "uYvBtZO8AN"],
+    edges: ["QuestionTrolley", "ChecklistTrolley"],
   },
-  uYvBtZO8AN: {
+  ChecklistTrolley: {
     type: TYPES.Checklist,
     data: {
       allRequired: false,
       text: "shopping trolley 2",
       fn: "item",
     },
-    edges: ["6J02AGJpgH", "9wMrjIHzW4"],
+    edges: ["AppleChecklistResponse", "BananaChecklistResponse"],
   },
-  "6J02AGJpgH": {
+  AppleChecklistResponse: {
     data: {
       text: "apple",
       val: "food.fruit.apple",
     },
     type: TYPES.Response,
-    edges: ["J1u7Gpf8S1", "vR40DW4oAn", "mNzbrbhCsT"],
+    edges: [
+      "AppleQuestionWithoutFn",
+      "AutoAnsweredBananaQuestion",
+      "FinalContent",
+    ],
   },
-  "9wMrjIHzW4": {
+  BananaChecklistResponse: {
     data: {
       text: "banana",
       val: "food.fruit.banana",
     },
     type: TYPES.Response,
   },
-  vR40DW4oAn: {
+  AutoAnsweredBananaQuestion: {
     type: TYPES.Statement,
     data: {
       text: "did you choose the banana?",
       fn: "item",
     },
-    edges: ["y9sfwmwRG3", "ojPenHnK0K"],
+    edges: ["YesBanana", "NoBanana"],
   },
-  y9sfwmwRG3: {
+  YesBanana: {
     type: TYPES.Response,
     data: {
       text: "yes",
       val: "food.fruit.banana",
     },
   },
-  ojPenHnK0K: {
+  NoBanana: {
     type: TYPES.Response,
     data: {
       text: "no",
     },
-    edges: ["bpbEbD6fHo"],
+    edges: ["BananaQuestionWithoutFn"],
   },
-  mNzbrbhCsT: {
+  FinalContent: {
     type: TYPES.Content,
     data: {
       content: "<p>last thing</p>\n",
     },
   },
-  bpbEbD6fHo: {
+  BananaQuestionWithoutFn: {
     type: TYPES.Statement,
     data: {
       text: "will you be eating the banana today?",
     },
-    edges: ["jUDIdyRnl3", "gDIoLjLoFW"],
+    edges: ["YesEatingBanana", "NoEatingBanana"],
   },
-  jUDIdyRnl3: {
+  YesEatingBanana: {
     type: TYPES.Response,
     data: {
       text: "yes",
     },
   },
-  gDIoLjLoFW: {
+  NoEatingBanana: {
     type: TYPES.Response,
     data: {
       text: "no",
     },
   },
-  J1u7Gpf8S1: {
+  AppleQuestionWithoutFn: {
     type: TYPES.Statement,
     data: {
       text: "you chose apple",
     },
-    edges: ["ij94v25xVZ"],
+    edges: ["YesApple"],
   },
-  ij94v25xVZ: {
+  YesApple: {
     type: TYPES.Response,
     data: {
       text: "i did",
     },
   },
-  P36QH99kvZ: {
+  QuestionTrolley: {
     type: TYPES.Statement,
     data: {
       fn: "item",
       text: "shopping trolley 1",
     },
-    edges: ["TMRY4IGTwG", "3dCm8g4wBY"],
+    edges: ["AppleQuestionResponse", "BananaQuestionResponse"],
   },
-  TMRY4IGTwG: {
+  AppleQuestionResponse: {
     type: TYPES.Response,
     data: {
       text: "apple",
       val: "food.fruit.apple",
     },
   },
-  "3dCm8g4wBY": {
+  BananaQuestionResponse: {
     type: TYPES.Response,
     data: {
       text: "banana",
@@ -120,24 +124,50 @@ beforeEach(() => {
   getState().resetPreview();
 });
 
-test("order", () => {
+test("Nodes are asked in the expected order", () => {
   setState({
     flow,
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["P36QH99kvZ", "uYvBtZO8AN"]);
-  getState().record("P36QH99kvZ", { answers: ["TMRY4IGTwG"] });
+  // Root nodes are immediately queued up in upcomingCardIds()
   expect(getState().upcomingCardIds()).toEqual([
-    "J1u7Gpf8S1",
-    "bpbEbD6fHo",
-    "mNzbrbhCsT",
+    "QuestionTrolley",
+    "ChecklistTrolley",
   ]);
-  getState().record("J1u7Gpf8S1", { answers: ["ij94v25xVZ"] }); // you chose apple - i did
-  expect(getState().upcomingCardIds()).toEqual(["bpbEbD6fHo", "mNzbrbhCsT"]);
+
+  // Proceed through first Question and answer "Apple"
+  getState().record("QuestionTrolley", { answers: ["AppleQuestionResponse"] });
+  getState().upcomingCardIds(); // mimic "Continue"
+
+  // New upcoming cards
+  expect(getState().upcomingCardIds()).toEqual([
+    "AppleQuestionWithoutFn",
+    "BananaQuestionWithoutFn",
+    "FinalContent",
+  ]);
+
+  // Two nodes have been auto-answered based on Question response
   expect(getState().breadcrumbs).toEqual({
-    J1u7Gpf8S1: { answers: ["ij94v25xVZ"], auto: false },
-    P36QH99kvZ: { answers: ["TMRY4IGTwG"], auto: false },
-    uYvBtZO8AN: { answers: ["6J02AGJpgH"], auto: true },
-    vR40DW4oAn: { answers: ["ojPenHnK0K"], auto: true },
+    AutoAnsweredBananaQuestion: { answers: ["NoBanana"], auto: true },
+    ChecklistTrolley: { answers: ["AppleChecklistResponse"], auto: true },
+    QuestionTrolley: { answers: ["AppleQuestionResponse"], auto: false },
+  });
+
+  // Manually answer a branched Question
+  getState().record("AppleQuestionWithoutFn", { answers: ["YesApple"] });
+  getState().upcomingCardIds();
+
+  // Updated upcoming cards
+  expect(getState().upcomingCardIds()).toEqual([
+    "BananaQuestionWithoutFn",
+    "FinalContent",
+  ]);
+
+  // Updated breadcrumbs
+  expect(getState().breadcrumbs).toEqual({
+    AppleQuestionWithoutFn: { answers: ["YesApple"], auto: false },
+    QuestionTrolley: { answers: ["AppleQuestionResponse"], auto: false },
+    ChecklistTrolley: { answers: ["AppleChecklistResponse"], auto: true },
+    AutoAnsweredBananaQuestion: { answers: ["NoBanana"], auto: true },
   });
 });

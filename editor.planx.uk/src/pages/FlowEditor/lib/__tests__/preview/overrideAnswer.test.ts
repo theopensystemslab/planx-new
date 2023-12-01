@@ -1,4 +1,4 @@
-import { vanillaStore } from "../store";
+import { vanillaStore } from "../../store";
 
 const { getState, setState } = vanillaStore;
 
