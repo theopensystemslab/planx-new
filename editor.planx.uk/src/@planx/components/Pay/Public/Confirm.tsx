@@ -125,7 +125,6 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
             <Button
               variant="contained"
               color="secondary"
-              style={{ borderBottom: `solid 2px lightgrey` }}
               size="large"
               onClick={props.changePage}
               disabled={Boolean(props?.paymentStatus)}

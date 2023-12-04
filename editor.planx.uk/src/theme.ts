@@ -239,6 +239,9 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             padding: "0.7em 1.25em",
             lineHeight: LINE_HEIGHT_BASE,
             minWidth: "3em",
+            "&:hover": {
+              boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
+            }
           },
           text: {
             color: palette.text.secondary,
