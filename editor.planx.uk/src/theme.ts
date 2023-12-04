@@ -70,13 +70,19 @@ export const focusStyle = {
   outline: "3px solid transparent",
 };
 
-// Ensure that if the element already has a border, the border gets thicker
-export const borderedFocusStyle = {
+// Default focus style for input
+export const inputFocusStyle = {
   outline: `3px solid ${DEFAULT_PALETTE.action?.focus}`,
-  outlineOffset: 0,
+  outlineOffset: -1,
   zIndex: 1,
   boxShadow: `inset 0 0 0 2px ${DEFAULT_PALETTE.text?.primary}`,
-  backgroundColor: "transparent",
+};
+
+// Ensure that if the element already has a border, the border gets thicker
+export const borderedFocusStyle = {
+  ...inputFocusStyle,
+  outlineOffset: 0,
+  background: "transparent",
 };
 
 export const linkStyle = (primaryColor?: string) => ({

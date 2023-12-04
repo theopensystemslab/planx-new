@@ -6,7 +6,11 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import {
+  borderedFocusStyle,
+  FONT_WEIGHT_SEMI_BOLD,
+  inputFocusStyle,
+} from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
 
@@ -51,11 +55,6 @@ const StyledInputBase = styled(InputBase, {
     color: theme.palette.text.secondary,
     opacity: "0.5",
   },
-  "&:focus-within": {
-    border: `1px solid ${theme.palette.border.input}`,
-    boxShadow: `inset 0px 0px 0px 1px ${theme.palette.border.input}`,
-    outline: `3px solid ${theme.palette.action.focus}`,
-  },
   ...(bordered && {
     border: `2px solid ${theme.palette.text.primary}`,
   }),
@@ -80,6 +79,7 @@ const StyledInputBase = styled(InputBase, {
     },
   },
   [`&.${classes.focused}`]: {
+    ...inputFocusStyle,
     ...(bordered && borderedFocusStyle),
   },
 }));
