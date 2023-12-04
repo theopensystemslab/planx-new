@@ -144,13 +144,13 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     active: false,
     neg: "is not an Explosives or Ordnance Storage site",
     pos: "is an Explosives or Ordnance Storage site",
-    category: "Military and defense",
+    category: "Military and defence",
   },
   "defence.safeguarded": {
     active: false,
     neg: "is not on Safeguarded land",
     pos: "is on Safeguarded land",
-    category: "Military and defense",
+    category: "Military and defence",
   },
   hazard: {
     active: false,
