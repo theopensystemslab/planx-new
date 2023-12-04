@@ -145,7 +145,11 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const sendToBOPSV2 = async (req: Request, res: Response, next: NextFunction) => {
+const sendToBOPSV2 = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload }: SendToBOPSRequest = req.body;
   if (!payload) {
@@ -183,7 +187,9 @@ const sendToBOPSV2 = async (req: Request, res: Response, next: NextFunction) => 
     );
   }
   const target = `${bopsSubmissionURL}/api/v2/planning_applications`;
-  const exportData = await $api.export.digitalPlanningDataPayload(payload?.sessionId);
+  const exportData = await $api.export.digitalPlanningDataPayload(
+    payload?.sessionId,
+  );
 
   try {
     const bopsResponse = await axios({
@@ -290,9 +296,9 @@ async function checkBOPSAuditTable(
     gql`
       query FindApplication($session_id: String = "", $search_string: String) {
         bopsApplications: bops_applications(
-          where: { 
-            session_id: { _eq: $session_id },
-            destination_url: {_like: $search_string }
+          where: {
+            session_id: { _eq: $session_id }
+            destination_url: { _like: $search_string }
           }
           order_by: { created_at: desc }
         ) {

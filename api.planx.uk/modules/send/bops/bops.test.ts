@@ -36,7 +36,10 @@ describe(`sending an application to BOPS`, () => {
       data: {
         bopsApplications: [],
       },
-      variables: { session_id: "123", search_string: "%/api/v1/planning_applications" },
+      variables: {
+        session_id: "123",
+        search_string: "%/api/v1/planning_applications",
+      },
     });
 
     queryMock.mockQuery({
@@ -102,7 +105,10 @@ describe(`sending an application to BOPS`, () => {
           { response: { message: "Application created", id: "bops_app_id" } },
         ],
       },
-      variables: { session_id: "previously_submitted_app", search_string: "%/api/v1/planning_applications" },
+      variables: {
+        session_id: "previously_submitted_app",
+        search_string: "%/api/v1/planning_applications",
+      },
     });
 
     await supertest(app)
@@ -127,7 +133,10 @@ describe(`sending an application to BOPS v2`, () => {
       data: {
         bopsApplications: [],
       },
-      variables: { session_id: "123", search_string: "%/api/v2/planning_applications" },
+      variables: {
+        session_id: "123",
+        search_string: "%/api/v2/planning_applications",
+      },
     });
 
     queryMock.mockQuery({
@@ -195,7 +204,10 @@ describe(`sending an application to BOPS v2`, () => {
           { response: { message: "Application created", id: "bops_app_id" } },
         ],
       },
-      variables: { session_id: "previously_submitted_app", search_string: "%/api/v2/planning_applications" },
+      variables: {
+        session_id: "previously_submitted_app",
+        search_string: "%/api/v2/planning_applications",
+      },
     });
 
     await supertest(app)
