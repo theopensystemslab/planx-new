@@ -47,6 +47,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { inputFocusStyle } from "theme";
 import tippy, { type Instance } from "tippy.js";
 import { create } from "zustand";
 
@@ -105,9 +106,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     },
     // Focus styles
     "&.ProseMirror-focused": {
-      border: `1px solid ${theme.palette.border.input}`,
-      boxShadow: `inset 0px 0px 0px 1px ${theme.palette.border.input}`,
-      outline: `3px solid ${theme.palette.action.focus}`,
+      ...inputFocusStyle,
     },
     // Styles for injected passport/mention
     "& .passport": {
