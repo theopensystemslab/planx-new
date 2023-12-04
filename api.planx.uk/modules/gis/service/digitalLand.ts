@@ -230,6 +230,7 @@ async function go(
           value: true,
           text: baseSchema["article4"].pos,
           data: formattedResult[localCaz].data,
+          category: baseSchema["article4"].category,
         };
       }
     }
