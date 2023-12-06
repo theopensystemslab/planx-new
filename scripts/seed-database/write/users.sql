@@ -38,7 +38,7 @@ SET
   first_name = EXCLUDED.first_name,
   last_name = EXCLUDED.last_name,
   email = EXCLUDED.email,
-  is_platform_admin = EXCLUDED.is_platform_admin;
+  is_platform_admin = EXCLUDED.is_platform_admin,
   is_staging_only = EXCLUDED.is_staging_only;
 
 ALTER TABLE
