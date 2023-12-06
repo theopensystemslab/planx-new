@@ -63,7 +63,7 @@ function sanitiseOperation(op) {
  */
 function sanitise(input) {
   if ((input && typeof input === "string") || input instanceof String) {
-    return DOMPurify.sanitize(input);
+    return DOMPurify.sanitize(input, { ADD_ATTR: ["target"] });
   } else if ((input && typeof input === "object") || input instanceof Object) {
     return Object.entries(input).reduce((acc, [k, v]) => {
       v = sanitise(v);
