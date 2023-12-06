@@ -1547,13 +1547,14 @@
     - role: api
       permission:
         columns:
-          - id
-          - first_name
-          - last_name
           - created_at
-          - updated_at
-          - is_platform_admin
           - email
+          - first_name
+          - id
+          - is_platform_admin
+          - is_staging_only
+          - last_name
+          - updated_at
         filter: {}
     - role: platformAdmin
       permission:
