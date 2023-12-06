@@ -1,6 +1,3 @@
 - function:
     schema: public
     name: diff_latest_published_flow
-- function:
-    schema: public
-    name: get_flow_schema
