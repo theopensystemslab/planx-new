@@ -7,6 +7,8 @@ CREATE TEMPORARY TABLE sync_users (
   created_at timestamptz,
   updated_at timestamptz,
   is_platform_admin boolean
+  -- ,
+  -- is_staging_only boolean
 );
 
 \copy sync_users FROM '/tmp/users.csv'  WITH (FORMAT csv, DELIMITER ';');
@@ -22,6 +24,8 @@ INSERT INTO users (
   last_name,
   email,
   is_platform_admin
+  -- ,
+  -- is_staging_only
 )
 SELECT
   id,
@@ -29,6 +33,8 @@ SELECT
   last_name,
   email,
   is_platform_admin
+  -- ,
+  -- is_staging_only
 FROM sync_users
 ON CONFLICT (id) DO UPDATE
 SET
@@ -36,6 +42,7 @@ SET
   last_name = EXCLUDED.last_name,
   email = EXCLUDED.email,
   is_platform_admin = EXCLUDED.is_platform_admin;
+  -- is_staging_only = EXCLUDED.is_staging_only;
 
 ALTER TABLE
   users ENABLE TRIGGER grant_new_user_template_team_access;
