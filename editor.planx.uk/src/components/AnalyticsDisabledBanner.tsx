@@ -33,7 +33,7 @@ const AnalyticsDisabledBanner: React.FC = () => {
       {isAnalyticsDisabled() && showAnalyticsWarning && (
         <AnalyticsWarning>
           <Container
-            maxWidth={false}
+            maxWidth="contentWrap"
             sx={{
               display: "flex",
               alignItems: "center",

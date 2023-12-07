@@ -26,7 +26,7 @@ const FeatureFlagBanner: React.FC = () => {
       {isUsingFeatureFlag() && showWarning && (
         <TestEnvironmentWarning>
           <Container
-            maxWidth={false}
+            maxWidth="contentWrap"
             sx={{
               display: "flex",
               alignItems: "center",
