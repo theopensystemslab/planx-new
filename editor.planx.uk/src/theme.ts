@@ -226,6 +226,25 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         },
       },
       MuiButton: {
+        variants: [
+          {
+            props: { variant: 'help' },
+            style: {
+              color: palette.primary.main,
+              backgroundColor: palette.background.paper,
+              boxShadow: "none",
+              borderBottom: `2px dotted ${palette.primary.main}`,
+              padding: "0.5em 0.5em",
+              "&:hover": {
+                boxShadow: `0 1px 0 ${palette.primary.main}`,
+              },
+              "&:hover, &:focus": {
+                borderColor: palette.text.primary,
+                borderStyle: "solid",
+              },
+            },
+          },
+        ],
         defaultProps: {
           // Removes default box shadow on buttons
           disableElevation: true,
