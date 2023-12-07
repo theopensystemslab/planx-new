@@ -71,7 +71,11 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 },
                 {
                   value: "long",
-                  label: "Long",
+                  label: "Long (250 characters)",
+                },
+                {
+                  value: "extraLong",
+                  label: "Extra long (500 characters)",
                 },
                 {
                   value: "email",
