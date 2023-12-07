@@ -1,3 +1,4 @@
+import HelpIcon from '@mui/icons-material/Help';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -10,8 +11,6 @@ import { emptyContent } from "ui/RichTextInput";
 import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
-
-const HelpButtonMinWidth = "70px";
 
 interface IQuestionHeader {
   title?: string;
@@ -30,57 +29,14 @@ const Description = styled(Box)(({ theme }) => ({
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
   width: theme.breakpoints.values.formWrap,
-  maxWidth: `calc(100% - (${HelpButtonMinWidth} + 4px))`,
-  [theme.breakpoints.up("contentWrap")]: {
-    maxWidth: "100%",
-  },
-}));
-
-const HelpButtonWrapper = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  maxWidth: "none",
-  height: "100%",
-  zIndex: "1000",
-  flexShrink: 0,
-  display: "flex",
-  justifyContent: "stretch",
-  width: HelpButtonMinWidth,
-  top: "-4px",
-  right: "-6px",
-  pointerEvents: "none",
-  [theme.breakpoints.up("md")]: {
-    width: "80px",
-    top: 0,
-    right: 0,
-  },
-  [theme.breakpoints.up("lg")]: {
-    width: "100px",
-  },
-  "#embedded-browser &": {
-    top: "-60px",
-    width: "80px",
-  },
 }));
 
 export const HelpButton = styled(Button)(({ theme }) => ({
-  top: theme.spacing(0.75),
-  position: "sticky",
-  right: 0,
-  minHeight: "44px",
-  padding: "0.35em 0.5em",
-  alignSelf: "flex-start",
-  minWidth: "100%",
-  boxShadow: "none",
-  fontSize: "1.125em",
-  filter: "drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.5))",
-  pointerEvents: "auto",
-  [theme.breakpoints.up("lg")]: {
-    minHeight: "48px",
-    fontSize: "1.25em",
-    top: theme.spacing(1),
-  },
-  "#embedded-browser &": {
-    fontSize: "1em",
+  display: "flex",
+  alignItems: "center",
+  marginTop: theme.spacing(1.5),
+  "& > svg": {
+    marginRight: theme.spacing(0.25),
   },
 })) as typeof Button;
 
@@ -132,20 +88,17 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           </Description>
         )}
         {!!(info || policyRef || howMeasured) && (
-          <HelpButtonWrapper>
-            <HelpButton
+          <HelpButton
+              variant="help"
+              size="large"
               title={`More information`}
               aria-label={`See more information about "${title}"`}
               onClick={handleHelpClick}
               aria-haspopup="dialog"
               data-testid="more-info-button"
-              variant="outlined"
-              color="primary"
-              sx={{ width: "100%" }}
             >
-              Help
-            </HelpButton>
-          </HelpButtonWrapper>
+              <HelpIcon /> Help
+          </HelpButton>
         )}
         <MoreInfo open={open} handleClose={() => setOpen(false)}>
           {info && info !== emptyContent ? (
