@@ -36,7 +36,7 @@ export const HelpButton = styled(Button)(({ theme }) => ({
   alignItems: "center",
   marginTop: theme.spacing(1.5),
   "& > svg": {
-    marginRight: theme.spacing(0.25),
+    marginRight: theme.spacing(0.5),
   },
 })) as typeof Button;
 
@@ -97,7 +97,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               aria-haspopup="dialog"
               data-testid="more-info-button"
             >
-              <HelpIcon /> Help
+              <HelpIcon /> More info
           </HelpButton>
         )}
         <MoreInfo open={open} handleClose={() => setOpen(false)}>
