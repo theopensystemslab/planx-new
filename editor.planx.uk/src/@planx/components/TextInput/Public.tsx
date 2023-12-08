@@ -48,8 +48,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
               else if (type === "phone") return "tel";
               return "text";
             })(props.type)}
-            multiline={props.type === "long"}
-            rows={props.type === "long" ? 5 : undefined}
+            multiline={props.type && ["long", "extraLong"].includes(props.type)}
+            rows={props.type && ["long", "extraLong"].includes(props.type) ? 5 : undefined}
             name="text"
             value={formik.values.text}
             bordered

@@ -7,6 +7,7 @@ export type UserData = string;
 export enum TextInputType {
   Short = "short",
   Long = "long",
+  ExtraLong = "extraLong",
   Email = "email",
   Phone = "phone",
 }
@@ -30,6 +31,9 @@ export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
         if (type === TextInputType.Long) {
           return "Your answer must be 250 characters or fewer.";
         }
+        if (type === TextInputType.ExtraLong) {
+          return "Your answer must be 500 characters or fewer.";
+        }
         if (type === TextInputType.Email) {
           return "Enter an email address in the correct format, like name@example.com";
         }
@@ -42,10 +46,13 @@ export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
           return true;
         }
         if (type === TextInputType.Short) {
-          return Boolean(value && value.length < 120);
+          return Boolean(value && value.length <= 120);
         }
         if (type === TextInputType.Long) {
-          return Boolean(value && value.length < 250);
+          return Boolean(value && value.length <= 250);
+        }
+        if (type === TextInputType.ExtraLong) {
+          return Boolean(value && value.length <= 500);
         }
         if (type === TextInputType.Email) {
           return Boolean(value && emailRegex.test(value));
