@@ -9,7 +9,6 @@ export const logger = getErrorLogger();
  */
 function getEnvForAllowedHosts(host: string) {
   switch (host) {
-    case "planningservices.newcastle.gov.uk":
     case "planningservices.medway.gov.uk":
     case "planningservices.doncaster.gov.uk":
     case "planningservices.lambeth.gov.uk":
