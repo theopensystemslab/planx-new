@@ -79,10 +79,9 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
  */
 assert(process.env.FILE_API_KEY, "Missing environment variable 'FILE_API_KEY'");
 export const useFilePermission: RequestHandler = (req, _res, next): void => {
-  const isAuthenticated = isEqual(
-    req.headers["api-key"] as string,
-    process.env.FILE_API_KEY!,
-  );
+  const isAuthenticated =
+    isEqual(req.headers["api-key"] as string, process.env.FILE_API_KEY!) ||
+    isEqual(req.headers["api-key"] as string, process.env.FILE_API_KEY_NEXUS!);
   if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
   return next();
 };
