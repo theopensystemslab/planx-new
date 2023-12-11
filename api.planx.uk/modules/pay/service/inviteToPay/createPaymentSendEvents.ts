@@ -66,6 +66,14 @@ const createPaymentSendEvents = async (
         comment: `bops_submission_${payload.sessionId}`,
       });
       combinedResponse[Destination.BOPS] = bopsEvent;
+
+      const bopsV2Event = await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/bops-v2/${teamSlug}`,
+        schedule_at: new Date(now.getTime() + 30 * 1000),
+        payload: eventPayload,
+        comment: `bops_v2_submission_${payload.sessionId}`,
+      });
+      combinedResponse["bops_v2"] = bopsV2Event;
     }
 
     if (destinations.includes(Destination.Email)) {

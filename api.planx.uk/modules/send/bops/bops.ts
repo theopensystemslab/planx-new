@@ -289,7 +289,7 @@ interface FindApplication {
  */
 async function checkBOPSAuditTable(
   sessionId: string,
-  version: string,
+  version: "v1" | "v2",
 ): Promise<Record<string, string>> {
   const searchString = `%/api/${version}/planning_applications`;
   const application = await $api.client.request<FindApplication>(
