@@ -309,6 +309,10 @@ export = async () => {
             value: config.requireSecret("file-api-key"),
           },
           {
+            name: "FILE_API_KEY_NEXUS",
+            value: config.requireSecret("file-api-key-nexus"),
+          },
+          {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
           },
