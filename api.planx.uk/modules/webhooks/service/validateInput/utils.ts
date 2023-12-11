@@ -7,7 +7,7 @@ const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 
 /**
- * Function which returns - 
+ * Function which returns -
  *   - true for valid data
  *   - false for invalid data
  */
