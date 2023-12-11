@@ -3,6 +3,7 @@ import supertest from "supertest";
 import { queryMock } from "../../../tests/graphqlQueryMock";
 import app from "../../../server";
 import { expectedPayload } from "../../../tests/mocks/bopsMocks";
+import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks";
 
 jest.mock("../../saveAndReturn/service/utils", () => ({
   markSessionAsSubmitted: jest.fn(),
@@ -21,6 +22,10 @@ jest.mock("@opensystemslab/planx-core", () => {
           jest.fn().mockResolvedValue({
             exportData: expectedPayload,
             redactedExportData: expectedPayload,
+          });
+        this.export.digitalPlanningDataPayload = () =>
+          jest.fn().mockResolvedValue({
+            exportData: expectedPlanningPermissionPayload,
           });
       }
     },
@@ -148,9 +153,7 @@ describe(`sending an application to BOPS v2`, () => {
     });
   });
 
-  it.todo("throws an error if payload is invalid");
-
-  it.skip("proxies request and returns hasura id", async () => {
+  it("proxies request and returns hasura id", async () => {
     nock(`${submissionURL}/api/v2/planning_applications`).post("").reply(200, {
       application: "0000123",
     });
