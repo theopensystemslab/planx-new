@@ -3,6 +3,7 @@ import { $api } from "../../client";
 import { User, Role } from "@opensystemslab/planx-core/types";
 
 export const buildJWT = async (email: string): Promise<string | undefined> => {
+  await checkUserCanAccessEnv(email, process.env.NODE_ENV);
   const user = await $api.user.getByEmail(email);
   if (!user) return;
 
@@ -58,4 +59,17 @@ const getAllowedRolesForUser = (user: User): Role[] => {
  */
 const getDefaultRoleForUser = (user: User): Role => {
   return user.isPlatformAdmin ? "platformAdmin" : "teamEditor";
+};
+
+/**
+ * A staging-only user cannot access production, but can access all other envs
+ */
+export const checkUserCanAccessEnv = async (
+  email: string,
+  env?: string,
+): Promise<boolean> => {
+  const isStagingOnlyUser = await $api.user.isStagingOnly(email);
+  const isProductionEnv = env === "production";
+  const userCanAccessEnv = !(isProductionEnv && isStagingOnlyUser);
+  return userCanAccessEnv;
 };

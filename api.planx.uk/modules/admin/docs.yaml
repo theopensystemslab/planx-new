@@ -18,6 +18,7 @@ paths:
           type: string
           description: Cookie from FeedbackFish to authenticate request
           required: true
+          allowReserved: true
       responses:
         "200":
           content:

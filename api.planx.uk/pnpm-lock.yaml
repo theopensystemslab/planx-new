@@ -9,8 +9,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#415ae86
-    version: github.com/theopensystemslab/planx-core/415ae86
+    specifier: git+https://github.com/theopensystemslab/planx-core#b78ca10
+    version: github.com/theopensystemslab/planx-core/b78ca10
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -6209,9 +6209,9 @@ packages:
       object-visit: 1.0.1
     dev: true
 
-  /marked@9.1.6:
-    resolution: {integrity: sha512-jcByLnIFkd5gSXZmjNvS1TlmRhCXZjIzHYlaGkPlLIekG55JDR2Z4va9tZwCiP+/RDERiNhMOFu01xd6O5ct1Q==}
-    engines: {node: '>= 16'}
+  /marked@11.0.0:
+    resolution: {integrity: sha512-2GsW34uXaFEGTQ/+3rCnNC6vUYTAgFuDLGl70v/aWinA5mIJtTrrFAmfbLOfVvgPyxXuDVL9He/7reCK+6j3Sw==}
+    engines: {node: '>= 18'}
     hasBin: true
     dev: false
 
@@ -8582,10 +8582,11 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/415ae86:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/415ae86}
+  github.com/theopensystemslab/planx-core/b78ca10:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b78ca10}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
+    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.1(react@18.2.0)
@@ -8612,7 +8613,7 @@ packages:
       lodash.omit: 4.5.0
       lodash.set: 4.3.2
       lodash.startcase: 4.4.0
-      marked: 9.1.6
+      marked: 11.0.0
       prettier: 3.0.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)

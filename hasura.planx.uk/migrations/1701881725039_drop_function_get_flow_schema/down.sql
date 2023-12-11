@@ -1,0 +1,4 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- DROP FUNCTION public.get_flow_schema CASCADE;
+-- DROP TABLE public.flow_schemas CASCADE;

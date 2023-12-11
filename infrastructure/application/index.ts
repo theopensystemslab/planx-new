@@ -49,10 +49,6 @@ const CUSTOM_DOMAINS =
           name: "medway",
         },
         {
-          domain: "planningservices.newcastle.gov.uk",
-          name: "newcastle",
-        },
-        {
           domain: "planningservices.stalbans.gov.uk",
           name: "stalbans",
         },
@@ -311,6 +307,10 @@ export = async () => {
           {
             name: "FILE_API_KEY",
             value: config.requireSecret("file-api-key"),
+          },
+          {
+            name: "FILE_API_KEY_NEXUS",
+            value: config.requireSecret("file-api-key-nexus"),
           },
           {
             name: "GOOGLE_CLIENT_ID",

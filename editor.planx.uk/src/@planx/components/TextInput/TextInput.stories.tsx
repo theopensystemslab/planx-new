@@ -16,6 +16,7 @@ export default {
       options: [
         TextInputType.Short,
         TextInputType.Long,
+        TextInputType.ExtraLong,
         TextInputType.Email,
         TextInputType.Phone,
       ],
@@ -33,8 +34,16 @@ export const EmptyFormShortText: StoryObj = {
 export const EmptyFormLongText: StoryObj = {
   args: {
     title: "Describe your project",
-    description: "Be as descriptive as you can",
+    description: "Be as descriptive as you can. You have 250 characters.",
     type: TextInputType.Long,
+  },
+};
+
+export const EmptyFormExtraLongText: StoryObj = {
+  args: {
+    title: "Describe your project",
+    description: "Be as descriptive as you can. You have 500 characters.",
+    type: TextInputType.ExtraLong,
   },
 };
 

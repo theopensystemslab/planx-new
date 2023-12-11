@@ -26,7 +26,9 @@ export const findAndReplaceSchema = z.object({
     replace: z
       .string()
       .optional()
-      .transform((val) => val && DOMPurify.sanitize(val)),
+      .transform(
+        (val) => val && DOMPurify.sanitize(val, { ADD_ATTR: ["target"] }),
+      ),
   }),
 });
 

@@ -6,8 +6,6 @@ import { ServerError } from "../../../errors";
 
 interface DownloadFlowSchemaResponse {
   message: string;
-  alteredNodes: Node[] | null;
-  description?: string;
 }
 
 export const downloadFlowSchema = z.object({
@@ -34,7 +32,7 @@ export const downloadFlowSchemaController: DownloadFlowSchemaController =
     } catch (error) {
       return next(
         new ServerError({
-          message: `Failed to download flow schema: ${error}`,
+          message: `Failed to download schema for flow ${res.locals.parsedReq.params?.flowId}: ${error}`,
         }),
       );
     }
