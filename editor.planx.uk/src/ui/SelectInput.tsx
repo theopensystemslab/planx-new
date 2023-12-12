@@ -22,9 +22,13 @@ const classes = {
 
 const Root = styled(Select)(({ theme }) => ({
   width: "100%",
-  padding: theme.spacing(0, 1.5),
+  padding: 0,
   height: 50,
   backgroundColor: "#fff",
+  "& .MuiSelect-select": {
+    width: "100%",
+    padding: theme.spacing(1, 1.5),
+  },
   [`&.${classes.rootSelect}`]: {
     paddingRight: theme.spacing(6),
     boxSizing: "border-box",
