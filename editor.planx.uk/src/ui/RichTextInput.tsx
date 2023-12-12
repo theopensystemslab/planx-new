@@ -74,6 +74,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     justifyContent: "center",
     "& a": {
       color: "currentColor",
+      wordBreak: "break-all",
     },
     "& > *": {
       margin: 0,
