@@ -15,31 +15,34 @@ const hasuraValidateInputRequestSchema = z.object({
   }),
 });
 
-type HasuraValidateInputRequestSchema = z.infer<
+type HasuraValidateInputRequest = z.infer<
   typeof hasuraValidateInputRequestSchema
 >;
 
-interface IsCleanJSONBSchema {
+interface IsCleanJSONBRequest {
   body: {
     isClean: boolean;
   };
 }
+
+type isCleanJSONBSchema = z.ZodType<
+  IsCleanJSONBRequest,
+  z.ZodTypeDef,
+  HasuraValidateInputRequest
+>;
 
 /**
  * Schema which iterates over values of a JSONB column
  * Checks using DOMPurify to ensure that user-submitted HTML is clean
  * Fails fast - will reject on first instance of unclean HTML
  */
-export const isCleanJSONBSchema: z.ZodType<
-  IsCleanJSONBSchema,
-  z.ZodTypeDef,
-  HasuraValidateInputRequestSchema
-> = hasuraValidateInputRequestSchema.transform((original) => {
-  const isClean = original.body.data.input.every((input) =>
-    isObjectValid(input, isCleanHTML),
-  );
-  return { body: { isClean } };
-});
+export const isCleanJSONBSchema: isCleanJSONBSchema =
+  hasuraValidateInputRequestSchema.transform((original) => {
+    const isClean = original.body.data.input.every((input) =>
+      isObjectValid(input, isCleanHTML),
+    );
+    return { body: { isClean } };
+  });
 
 export type IsCleanJSONBController = ValidatedRequestHandler<
   typeof isCleanJSONBSchema,
