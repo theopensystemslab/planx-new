@@ -16,7 +16,10 @@ export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 /**
  * Validate that a provided string (e.g. API key) matches the expected value
  */
-const isEqual = (provided = "", expected: string): boolean => {
+export const isEqual = (provided = "", expected: string): boolean => {
+  // Reject test against falsey values - could indicate unset secret
+  if (!expected) return false;
+
   const hash = crypto.createHash("SHA512");
   return crypto.timingSafeEqual(
     hash.copy().update(provided).digest(),
