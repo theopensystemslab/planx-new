@@ -86,7 +86,7 @@ const OptionEditor: React.FC<{
             },
           });
         }}
-        sx={{ width: "160px", maxWidth: "160px" }}
+        sx={{ width: { md: "160px" }, maxWidth: "160px" }}
       />
     </InputRow>
     <InputRow>

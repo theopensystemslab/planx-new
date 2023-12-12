@@ -178,7 +178,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                     </IconButton>
                   </Box>
                 </Box>
-                <Box pl={4}>
+                <Box pl={{ md: 2 }}>
                   <ListManager
                     values={groupedOption.children}
                     onChange={(newOptions) => {
