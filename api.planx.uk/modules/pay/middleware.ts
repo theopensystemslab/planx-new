@@ -128,7 +128,7 @@ export async function buildPaymentPayload(
     metadata: {
       source: "PlanX",
       flow:
-        req.query.returnURL.toString().split("?")?.[0]?.split("/").pop() ||
+        new URL(req.query.returnURL as string).pathname.split("/")[0] ||
         (req.query.returnURL as string),
       inviteToPay: true,
     },
