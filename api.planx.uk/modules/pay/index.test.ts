@@ -53,6 +53,11 @@ describe("sending a payment to GOV.UK Pay", () => {
         reference: "12343543",
         description: "New application",
         return_url: "https://editor.planx.uk",
+        metadata: {
+          source: "PlanX",
+          flow: "apply-for-a-lawful-development-certificate",
+          inviteToPay: false,
+        },
       })
       .expect(200)
       .then((res) => {
