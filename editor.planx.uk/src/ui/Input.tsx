@@ -67,7 +67,6 @@ const StyledInputBase = styled(InputBase, {
   ...(format === "large" && {
     backgroundColor: theme.palette.common.white,
     height: 50,
-    fontSize: 25,
     width: "100%",
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
   }),
