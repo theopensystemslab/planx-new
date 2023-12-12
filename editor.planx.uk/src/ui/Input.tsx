@@ -51,9 +51,6 @@ const StyledInputBase = styled(InputBase, {
   "& input": {
     fontWeight: "inherit",
   },
-  "& input a": {
-    wordBreak: "break-all",
-  },
   "& ::placeholder": {
     color: theme.palette.text.secondary,
     opacity: "0.5",
