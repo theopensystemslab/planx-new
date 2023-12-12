@@ -90,6 +90,11 @@ interface GovPayCreatePayment {
   reference: string;
   description: string;
   return_url: string;
+  metadata?: {
+    source: "PlanX";
+    flow: string;
+    inviteToPay: boolean;
+  };
 }
 
 export async function buildPaymentPayload(
@@ -120,6 +125,13 @@ export async function buildPaymentPayload(
     reference: req.query.sessionId as string,
     description: "New application (nominated payee)",
     return_url: req.query.returnURL as string,
+    metadata: {
+      source: "PlanX",
+      flow:
+        new URL(req.query.returnURL as string).pathname.split("/")[0] ||
+        (req.query.returnURL as string),
+      inviteToPay: true,
+    },
   };
 
   req.body = createPaymentBody;

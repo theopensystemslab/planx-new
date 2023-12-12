@@ -40,7 +40,11 @@ export interface GovUKCreatePaymentPayload {
     };
   };
   language?: string;
-  metadata?: any;
+  metadata?: {
+    source: "PlanX";
+    flow: string;
+    inviteToPay: boolean;
+  };
 }
 
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
@@ -63,6 +67,11 @@ export const createPayload = (
   reference,
   description: "New application",
   return_url: getReturnURL(reference),
+  metadata: {
+    source: "PlanX",
+    flow: useStore.getState().flowSlug,
+    inviteToPay: false,
+  },
 });
 
 /**
