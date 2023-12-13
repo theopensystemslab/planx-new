@@ -23,6 +23,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
       "article4.birmingham.moorPool": "7",
       "article4.birmingham.moseleyVillage": "20",
       "article4.birmingham.oldYardley": "5",
+      "article4.birmingham.sellyOak": "35",
       "article4.birmingham.sellyPark": "34",
       "article4.birmingham.sellyParkAvenues": "33",
       "article4.birmingham.stAgnes": "22",
