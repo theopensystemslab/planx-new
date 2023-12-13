@@ -213,7 +213,7 @@ function Component(props: Props) {
           }
           if (titleBoundary) {
             newPassportData["property.boundary.title"] = titleBoundary;
-            newPassportData["property.boundary.title.area"] = area(titleBoundary as any);
+            newPassportData["property.boundary.title.area"] = Number(area(titleBoundary as any).toFixed(4));
           }
 
           props.handleSubmit?.({ data: { ...newPassportData } });
