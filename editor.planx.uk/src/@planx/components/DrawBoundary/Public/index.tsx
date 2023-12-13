@@ -30,18 +30,21 @@ const BUFFER_IN_METERS = 75;
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
+  const passport = useStore((state) => state.computePassport());
+
   const previousBoundary =
-    props.previouslySubmittedData?.data?.[props.dataFieldBoundary];
+    props.previouslySubmittedData?.data?.[props.dataFieldBoundary] || passport.data?.["property.boundary.title"];
   const previousArea =
     props.previouslySubmittedData?.data?.[props.dataFieldArea];
+  const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
+  const [area, setArea] = useState<number | undefined>(previousArea);
+
   const previousFile =
     props.previouslySubmittedData?.data?.[PASSPORT_UPLOAD_KEY];
   const startPage = previousFile ? "upload" : "draw";
   const [page, setPage] = useState<"draw" | "upload">(startPage);
-  const passport = useStore((state) => state.computePassport());
-  const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
-  const [area, setArea] = useState<number | undefined>(previousArea);
+
   const addressPoint =
     passport?.data?._address?.longitude &&
     passport?.data?._address?.latitude &&
@@ -123,6 +126,7 @@ export default function Component(props: Props) {
                 drawMode
                 drawPointer="crosshair"
                 drawGeojsonData={JSON.stringify(boundary)}
+                drawGeojsonDataBuffer={8}
                 clipGeojsonData={
                   addressPoint &&
                   JSON.stringify(

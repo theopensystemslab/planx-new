@@ -55,6 +55,7 @@ function Component(props: Props) {
     string[] | undefined
   >();
   const [regions, setRegions] = useState<string[] | undefined>();
+  const [titleBoundary, setTitleBoundary] = useState<GeoJSONObject | undefined>();
   const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
 
   const teamSettings = useStore((state) => state.teamSettings);
@@ -68,9 +69,10 @@ function Component(props: Props) {
   });
   options.append("dataset", "local-authority-district");
   options.append("dataset", "region"); // proxy for Greater London Authority (GLA) boundary
+  options.append("dataset", "title-boundary")
 
   // https://www.planning.data.gov.uk/docs#/Search%20entity
-  const root = `https://www.planning.data.gov.uk/entity.json?`;
+  const root = `https://www.planning.data.gov.uk/entity.geojson?`;
   const digitalLandEndpoint = root + options;
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, isValidating } = useSWR(
@@ -100,18 +102,22 @@ function Component(props: Props) {
   );
 
   useEffect(() => {
-    if (address && data?.count > 0) {
+    if (address && data?.features?.length > 0) {
       const lads: string[] = [];
       const regions: string[] = [];
-      data.entities.forEach((entity: any) => {
-        if (entity.dataset === "local-authority-district") {
-          lads.push(entity.name);
-        } else if (entity.dataset === "region") {
-          regions.push(entity.name);
+      let title: GeoJSONObject | undefined = undefined;
+      data.features.forEach((feature: any) => {
+        if (feature.properties.dataset === "local-authority-district") {
+          lads.push(feature.properties.name);
+        } else if (feature.properties.dataset === "region") {
+          regions.push(feature.properties.name);
+        } else if (feature.properties.dataset === "title-boundary") {
+          title = feature;
         }
       });
       setLocalAuthorityDistricts([...new Set(lads)]);
       setRegions([...new Set(regions)]);
+      setTitleBoundary(title);
     }
   }, [data, address]);
 
@@ -203,6 +209,10 @@ function Component(props: Props) {
           }
           if (regions) {
             newPassportData["property.region"] = regions;
+          }
+          if (titleBoundary) {
+            newPassportData["property.boundary.title"] = titleBoundary;
+            // TODO also calculate & set "property.boundary.title.area"
           }
 
           props.handleSubmit?.({ data: { ...newPassportData } });
