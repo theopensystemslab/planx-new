@@ -269,18 +269,23 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         mutation: gql`
           mutation UpdateAllowListAnswers(
             $id: bigint!
+            $allow_list: [String]
             $allow_list_answers: jsonb
           ) {
-            update_analytics_logs_by_pk(
-              pk_columns: { id: $id }
+            update_analytics_logs(
+              # Once we have the node_id we can also use this to avoid assigning the incorrect answers
+              where: { id: { _eq: $id }, node_fn: { _in: $allow_list } }
               _set: { allow_list_answers: $allow_list_answers }
             ) {
-              id
+              returning {
+                id
+              }
             }
           }
         `,
         variables: {
           id: lastAnalyticsLogId,
+          allow_list: allowList,
           allow_list_answers: allowListAnswers,
         },
       });
@@ -451,16 +456,16 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     return nodeMetadata;
   }
 
-  // Relies on being called at a point where the user has answered the Qs on the node.
   function getAllowListAnswers(nodeId: string) {
     const { data } = flow[nodeId];
     const nodeFn = data?.fn || data?.val;
     if (nodeFn && allowList.includes(nodeFn)) {
       const answerIds = breadcrumbs[nodeId]?.answers;
       const answerValues = answerIds?.map((answerId) => {
-        return flow[answerId].data.val;
+        return flow[answerId]?.data?.val;
       });
-      return answerValues;
+      const filteredAnswers = answerValues?.filter(Boolean);
+      return filteredAnswers;
     }
   }
 
