@@ -13,9 +13,11 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export default SummaryListsBySections;
 
-const Grid = styled("dl")(({ theme }) => ({
+const Grid = styled("dl", {
+  shouldForwardProp: (prop) => prop !== "showChangeButton",
+})<{ showChangeButton?: boolean }>(({ theme, showChangeButton }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 2fr",
+  gridTemplateColumns: showChangeButton ? "1fr 2fr 100px" : "1fr 2fr",
   gridRowGap: "10px",
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(4),
@@ -39,7 +41,10 @@ const Grid = styled("dl")(({ theme }) => ({
     // middle column
     paddingLeft: "10px",
   },
-
+  "& dd:nth-of-type(2n)": {
+    // right column
+    textAlign: "right",
+  },
 }));
 
 const presentationalComponents: {
@@ -213,7 +218,7 @@ function SummaryList(props: SummaryListProps) {
   };
 
   return (
-    <Grid>
+    <Grid showChangeButton={props.showChangeButton}>
       {props.summaryBreadcrumbs.map(
         ({ component: Component, nodeId, node, userData }, i) => (
           <React.Fragment key={i}>
@@ -482,8 +487,8 @@ function FileUploadAndLabel(props: ComponentProps) {
         <ul>
           {uniqueFilenames.length
             ? uniqueFilenames.map((filename, index) => (
-                <li key={index}>{filename}</li>
-              ))
+              <li key={index}>{filename}</li>
+            ))
             : "No files uploaded"}
         </ul>
       </dd>
@@ -508,7 +513,7 @@ function getAnswers(props: ComponentProps): string[] {
   try {
     const array = props!.userData!.answers!;
     if (Array.isArray(array)) return array;
-  } catch (err) {}
+  } catch (err) { }
   return [];
 }
 
@@ -521,6 +526,6 @@ function getAnswersByNode(props: ComponentProps): any {
   try {
     const variableName: string = props.node!.data!.fn!;
     return props.userData?.data![variableName || props.nodeId];
-  } catch (err) {}
+  } catch (err) { }
   return "";
 }
