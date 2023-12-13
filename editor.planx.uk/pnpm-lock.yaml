@@ -42,8 +42,8 @@ dependencies:
     specifier: ^5.14.5
     version: 5.14.5(react@18.2.0)
   '@opensystemslab/map':
-    specifier: ^0.7.5
-    version: 0.7.5
+    specifier: ^0.7.8
+    version: 0.7.8
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#b78ca10
     version: github.com/theopensystemslab/planx-core/b78ca10(@types/react@18.2.20)
@@ -4487,8 +4487,8 @@ packages:
     resolution: {integrity: sha512-jnOD+/+dSrfTWYfSXBXlo5l5f0q1UuJo3tkbMDCYA2lKUYq79jaxqtGEvnRoh049nt1vdo1+45RinipU6FGY2g==}
     dev: false
 
-  /@lit/reactive-element@1.6.3:
-    resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
+  /@lit/reactive-element@2.0.2:
+    resolution: {integrity: sha512-SVOwLAWUQg3Ji1egtOt1UiFe4zdDpnWHyc5qctSceJ5XIu0Uc76YmGpIjZgx9YJ0XtdW0Jm507sDvjOu+HnB8w==}
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.1.2
     dev: false
@@ -4959,21 +4959,21 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@0.7.5:
-    resolution: {integrity: sha512-06x0F1T1Fmk5tHM8CFNDxJQiKkilQgQamvLFf3RAGE8+8lnoM2omZQZusqAIGO5dviVZCWCYQzqiAlBsJdiWnw==}
+  /@opensystemslab/map@0.7.8:
+    resolution: {integrity: sha512-o2ucH0PoRNoPRRNj+Lbiw/OQMAqSt8M8gWHTqFFtYmLro7nRE0sWLGcjPmZhfPVRi+gmKUBFwVk6dyiYsTlNQw==}
     dependencies:
       '@turf/union': 6.5.0
       accessible-autocomplete: 2.0.4
       file-saver: 2.0.5
       govuk-frontend: 4.7.0
       jspdf: 2.5.1
-      lit: 2.8.0
+      lit: 3.1.0
       ol: 7.5.2
       ol-ext: 4.0.13(ol@7.5.2)
-      ol-mapbox-style: 10.7.0
+      ol-mapbox-style: 12.1.1(ol@7.5.2)
       postcode: 5.1.0
       proj4: 2.9.2
-      rambda: 7.5.0
+      rambda: 8.6.0
     dev: false
 
   /@petamoriken/float16@3.8.4:
@@ -14486,26 +14486,26 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /lit-element@3.3.3:
-    resolution: {integrity: sha512-XbeRxmTHubXENkV4h8RIPyr8lXc+Ff28rkcQzw3G6up2xg5E8Zu1IgOWIwBLEQsu3cOVFqdYwiVi0hv0SlpqUA==}
+  /lit-element@4.0.2:
+    resolution: {integrity: sha512-/W6WQZUa5VEXwC7H9tbtDMdSs9aWil3Ou8hU6z2cOKWbsm/tXPAcsoaHVEtrDo0zcOIE5GF6QgU55tlGL2Nihg==}
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.1.2
-      '@lit/reactive-element': 1.6.3
-      lit-html: 2.8.0
+      '@lit/reactive-element': 2.0.2
+      lit-html: 3.1.0
     dev: false
 
-  /lit-html@2.8.0:
-    resolution: {integrity: sha512-o9t+MQM3P4y7M7yNzqAyjp7z+mQGa4NS4CxiyLqFPyFWyc4O+nodLrkrxSaCTrla6M5YOLaT3RpbbqjszB5g3Q==}
+  /lit-html@3.1.0:
+    resolution: {integrity: sha512-FwAjq3iNsaO6SOZXEIpeROlJLUlrbyMkn4iuv4f4u1H40Jw8wkeR/OUXZUHUoiYabGk8Y4Y0F/rgq+R4MrOLmA==}
     dependencies:
       '@types/trusted-types': 2.0.7
     dev: false
 
-  /lit@2.8.0:
-    resolution: {integrity: sha512-4Sc3OFX9QHOJaHbmTMk28SYgVxLN3ePDjg7hofEft2zWlehFL3LiAuapWc4U/kYwMYJSh2hTCPZ6/LIC7ii0MA==}
+  /lit@3.1.0:
+    resolution: {integrity: sha512-rzo/hmUqX8zmOdamDAeydfjsGXbbdtAFqMhmocnh2j9aDYqbu0fjXygjCa0T99Od9VQ/2itwaGrjZz/ZELVl7w==}
     dependencies:
-      '@lit/reactive-element': 1.6.3
-      lit-element: 3.3.3
-      lit-html: 2.8.0
+      '@lit/reactive-element': 2.0.2
+      lit-element: 4.0.2
+      lit-html: 3.1.0
     dev: false
 
   /loader-runner@4.3.0:
@@ -15601,6 +15601,16 @@ packages:
 
   /ol-mapbox-style@10.7.0:
     resolution: {integrity: sha512-S/UdYBuOjrotcR95Iq9AejGYbifKeZE85D9VtH11ryJLQPTZXZSW1J5bIXcr4AlAH6tyjPPHTK34AdkwB32Myw==}
+    dependencies:
+      '@mapbox/mapbox-gl-style-spec': 13.28.0
+      mapbox-to-css-font: 2.4.2
+      ol: 7.5.2
+    dev: false
+
+  /ol-mapbox-style@12.1.1(ol@7.5.2):
+    resolution: {integrity: sha512-jjIQO2BiO/GTjJO/2Idw0WQQAGorPXewZ5wEuusXM8BRXZHIa3mmDZDWoBWtb0H4VHB9RpLsTbRMj5Dquo9Etg==}
+    peerDependencies:
+      ol: 8.x || 7.x
     dependencies:
       '@mapbox/mapbox-gl-style-spec': 13.28.0
       mapbox-to-css-font: 2.4.2
@@ -17093,8 +17103,8 @@ packages:
     dependencies:
       performance-now: 2.1.0
 
-  /rambda@7.5.0:
-    resolution: {integrity: sha512-y/M9weqWAH4iopRd7EHDEQQvpFPHj1AA3oHozE9tfITHUtTR7Z9PSlIRRG2l1GuW7sefC1cXFfIcF+cgnShdBA==}
+  /rambda@8.6.0:
+    resolution: {integrity: sha512-Ax+/bAcV2h4wINXx6wm0792G5uXZAl78rzhei+FqmHezg45vbeTUyDAmDNbSdjNOL6LGN8AUEvzaYD7oO5eYrw==}
     dev: false
 
   /ramda@0.28.0:
