@@ -110,6 +110,9 @@ dependencies:
   '@tiptap/suggestion':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+  '@turf/area':
+    specifier: ^6.5.0
+    version: 6.5.0
   '@turf/buffer':
     specifier: ^6.5.0
     version: 6.5.0
@@ -4648,7 +4651,7 @@ packages:
       '@babel/runtime': 7.23.5
       '@emotion/is-prop-valid': 1.2.1
       '@mui/types': 7.2.10(@types/react@18.2.20)
-      '@mui/utils': 5.14.5(react@18.2.0)
+      '@mui/utils': 5.14.19(@types/react@18.2.20)(react@18.2.0)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.20
       clsx: 2.0.0
@@ -7177,6 +7180,13 @@ packages:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
     dev: true
 
+  /@turf/area@6.5.0:
+    resolution: {integrity: sha512-xCZdiuojokLbQ+29qR6qoMD89hv+JAgWjLrwSEWL+3JV8IXKeNFl6XkEJz9HGkVpnXvQKJoRz4/liT+8ZZ5Jyg==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+      '@turf/meta': 6.5.0
+    dev: false
+
   /@turf/bbox@6.5.0:
     resolution: {integrity: sha512-RBbLaao5hXTYyyg577iuMtDB8ehxMlUqHEJiMs8jT1GHkFhr6sYre3lmLsPeYEi/ZKj5TP5tt7fkzNdJ4GIVyw==}
     dependencies:
@@ -9642,7 +9652,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
   /concat-stream@1.6.2:
     resolution: {integrity: sha512-27HBghJxjiZtIk3Ycvn/4kbJk/1uZuJFfuPEns6LaEvpvG1f0hTea8lilrouyo9mVc2GWdcEZ8OLoGmSADlrCw==}

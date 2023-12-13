@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
+import area from "@turf/area";
 import { GeoJSONObject } from "@turf/helpers";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -105,7 +106,7 @@ function Component(props: Props) {
     if (address && data?.features?.length > 0) {
       const lads: string[] = [];
       const regions: string[] = [];
-      let title: GeoJSONObject | undefined = undefined;
+      let title: GeoJSONObject | undefined;
       data.features.forEach((feature: any) => {
         if (feature.properties.dataset === "local-authority-district") {
           lads.push(feature.properties.name);
@@ -212,7 +213,7 @@ function Component(props: Props) {
           }
           if (titleBoundary) {
             newPassportData["property.boundary.title"] = titleBoundary;
-            // TODO also calculate & set "property.boundary.title.area"
+            newPassportData["property.boundary.title.area"] = area(titleBoundary as any);
           }
 
           props.handleSubmit?.({ data: { ...newPassportData } });
