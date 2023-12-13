@@ -127,9 +127,12 @@ export async function buildPaymentPayload(
     return_url: req.query.returnURL as string,
     metadata: {
       source: "PlanX",
+      // Payment requests have /pay path suffix, so get flow-slug from second-to-last position
       flow:
-        new URL(req.query.returnURL as string).pathname.split("/")[0] ||
-        (req.query.returnURL as string),
+        (req.query.returnURL as string)
+          .split("?")?.[0]
+          ?.split("/")
+          ?.slice(-2, -1)?.[0] || "Could not parse service name",
       inviteToPay: true,
     },
   };
