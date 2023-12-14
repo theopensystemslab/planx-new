@@ -6,7 +6,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";
-import { FeatureCollection, GeoJSONObject } from "@turf/helpers";
+import { Feature, GeoJSONObject } from "@turf/helpers";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -56,9 +56,7 @@ function Component(props: Props) {
     string[] | undefined
   >();
   const [regions, setRegions] = useState<string[] | undefined>();
-  const [titleBoundary, setTitleBoundary] = useState<
-    GeoJSONObject | undefined
-  >();
+  const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
   const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
 
   const teamSettings = useStore((state) => state.teamSettings);
@@ -108,7 +106,7 @@ function Component(props: Props) {
     if (address && data?.features?.length > 0) {
       const lads: string[] = [];
       const regions: string[] = [];
-      let title: GeoJSONObject | undefined;
+      let title: Feature | undefined;
       data.features.forEach((feature: any) => {
         if (feature.properties.dataset === "local-authority-district") {
           lads.push(feature.properties.name);
@@ -215,7 +213,7 @@ function Component(props: Props) {
           }
           if (titleBoundary) {
             const areaSquareMetres =
-              Math.round(area(titleBoundary as FeatureCollection) * 100) / 100;
+              Math.round(area(titleBoundary as Feature) * 100) / 100;
             newPassportData["property.boundary.title"] = titleBoundary;
             newPassportData["property.boundary.title.area"] = areaSquareMetres;
             newPassportData["property.boundary.title.area.hectares"] =

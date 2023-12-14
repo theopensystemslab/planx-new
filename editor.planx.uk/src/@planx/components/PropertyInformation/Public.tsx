@@ -7,6 +7,7 @@ import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
+import { Feature } from "@turf/helpers";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import { publicClient } from "lib/graphql";
@@ -25,13 +26,19 @@ import type { PropertyInformation } from "./model";
 export default Component;
 
 function Component(props: PublicProps<PropertyInformation>) {
-  const [address, propertyType, localAuthorityDistrict, overrideAnswer] =
-    useStore((state) => [
-      state.computePassport().data?._address,
-      state.computePassport().data?.["property.type"],
-      state.computePassport().data?.["property.localAuthorityDistrict"],
-      state.overrideAnswer,
-    ]);
+  const [
+    address,
+    propertyType,
+    localAuthorityDistrict,
+    titleBoundary,
+    overrideAnswer,
+  ] = useStore((state) => [
+    state.computePassport().data?._address,
+    state.computePassport().data?.["property.type"],
+    state.computePassport().data?.["property.localAuthorityDistrict"],
+    state.computePassport().data?.["property.boundary.title"],
+    state.overrideAnswer,
+  ]);
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
     client: publicClient,
   });
@@ -44,6 +51,7 @@ function Component(props: PublicProps<PropertyInformation>) {
       address={address}
       propertyType={propertyType}
       localAuthorityDistrict={localAuthorityDistrict}
+      titleBoundary={titleBoundary}
       blpuCodes={blpuCodes}
       previousFeedback={props.previouslySubmittedData?.feedback}
       overrideAnswer={overrideAnswer}
@@ -75,6 +83,7 @@ export interface PresentationalProps {
   address?: SiteAddress;
   propertyType?: string[];
   localAuthorityDistrict?: string[];
+  titleBoundary?: Feature;
   blpuCodes?: any;
   previousFeedback?: string;
   overrideAnswer: (fn: string) => void;
@@ -100,6 +109,7 @@ export function Presentational(props: PresentationalProps) {
     address,
     propertyType,
     localAuthorityDistrict,
+    titleBoundary,
     blpuCodes,
     previousFeedback,
     overrideAnswer,
@@ -151,8 +161,9 @@ export function Presentational(props: PresentationalProps) {
       <QuestionHeader title={title} description={description} />
       <MapContainer>
         <p style={visuallyHidden}>
-          A static map centred on the property address, showing the Ordnance
-          Survey basemap features.
+          A static map centred on the property address, showing the title
+          boundary of your site from the Land Registry atop an Ordnance Survey
+          basemap.
         </p>
         {/* @ts-ignore */}
         <my-map
@@ -167,6 +178,9 @@ export function Presentational(props: PresentationalProps) {
           markerLatitude={address?.latitude}
           markerLongitude={address?.longitude}
           // markerColor={team?.settings?.design?.color} // defaults to black
+          geojsonData={JSON.stringify(titleBoundary)}
+          geojsonColor="#0010A4"
+          geojsonBuffer={30}
         />
       </MapContainer>
       {propertyDetails && (
