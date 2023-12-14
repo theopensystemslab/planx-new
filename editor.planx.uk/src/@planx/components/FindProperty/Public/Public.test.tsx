@@ -34,67 +34,41 @@ const osAddressProps = {
   "property.type": ["residential.HMO.parent"],
   "property.localAuthorityDistrict": ["Southwark"],
   "property.region": ["London"],
-  "property.boundary.title.area": 1234.9753,
+  "property.boundary.title.area": 1234.98,
+  "property.boundary.title.area.hectares": 0.123498,
   "property.boundary.title": {
-    "geometry": {
-      "type": "MultiPolygon",
-      "coordinates": [
+    geometry: {
+      type: "MultiPolygon",
+      coordinates: [
         [
           [
-            [
-              -0.076691,
-              51.484197
-            ],
-            [
-              -0.075933,
-              51.484124
-            ],
-            [
-              -0.075856,
-              51.484369
-            ],
-            [
-              -0.075889,
-              51.484372
-            ],
-            [
-              -0.0759,
-              51.484324
-            ],
-            [
-              -0.076391,
-              51.484369
-            ],
-            [
-              -0.076388,
-              51.484383
-            ],
-            [
-              -0.076644,
-              51.484409
-            ],
-            [
-              -0.076691,
-              51.484197
-            ]
-          ]
-        ]
-      ]
+            [-0.076691, 51.484197],
+            [-0.075933, 51.484124],
+            [-0.075856, 51.484369],
+            [-0.075889, 51.484372],
+            [-0.0759, 51.484324],
+            [-0.076391, 51.484369],
+            [-0.076388, 51.484383],
+            [-0.076644, 51.484409],
+            [-0.076691, 51.484197],
+          ],
+        ],
+      ],
     },
-    "type": "Feature",
-    "properties": {
+    type: "Feature",
+    properties: {
       "entry-date": "2023-12-12",
       "start-date": "2011-08-25",
       "end-date": "",
-      "entity": 12000601059,
-      "name": "",
-      "dataset": "title-boundary",
-      "typology": "geography",
-      "reference": "52725257",
-      "prefix": "title-boundary",
-      "organisation-entity": "13"
-    }
-  }
+      entity: 12000601059,
+      name: "",
+      dataset: "title-boundary",
+      typology: "geography",
+      reference: "52725257",
+      prefix: "title-boundary",
+      "organisation-entity": "13",
+    },
+  },
 };
 
 const proposedAddressProps = {
@@ -108,67 +82,41 @@ const proposedAddressProps = {
   },
   "property.localAuthorityDistrict": ["Southwark"],
   "property.region": ["London"],
-  "property.boundary.title.area": 1234.9753,
+  "property.boundary.title.area": 1234.98,
+  "property.boundary.title.area.hectares": 0.123498,
   "property.boundary.title": {
-    "geometry": {
-      "type": "MultiPolygon",
-      "coordinates": [
+    geometry: {
+      type: "MultiPolygon",
+      coordinates: [
         [
           [
-            [
-              -0.076691,
-              51.484197
-            ],
-            [
-              -0.075933,
-              51.484124
-            ],
-            [
-              -0.075856,
-              51.484369
-            ],
-            [
-              -0.075889,
-              51.484372
-            ],
-            [
-              -0.0759,
-              51.484324
-            ],
-            [
-              -0.076391,
-              51.484369
-            ],
-            [
-              -0.076388,
-              51.484383
-            ],
-            [
-              -0.076644,
-              51.484409
-            ],
-            [
-              -0.076691,
-              51.484197
-            ]
-          ]
-        ]
-      ]
+            [-0.076691, 51.484197],
+            [-0.075933, 51.484124],
+            [-0.075856, 51.484369],
+            [-0.075889, 51.484372],
+            [-0.0759, 51.484324],
+            [-0.076391, 51.484369],
+            [-0.076388, 51.484383],
+            [-0.076644, 51.484409],
+            [-0.076691, 51.484197],
+          ],
+        ],
+      ],
     },
-    "type": "Feature",
-    "properties": {
+    type: "Feature",
+    properties: {
       "entry-date": "2023-12-12",
       "start-date": "2011-08-25",
       "end-date": "",
-      "entity": 12000601059,
-      "name": "",
-      "dataset": "title-boundary",
-      "typology": "geography",
-      "reference": "52725257",
-      "prefix": "title-boundary",
-      "organisation-entity": "13"
-    }
-  }
+      entity: 12000601059,
+      name: "",
+      dataset: "title-boundary",
+      typology: "geography",
+      reference: "52725257",
+      prefix: "title-boundary",
+      "organisation-entity": "13",
+    },
+  },
 };
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
