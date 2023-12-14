@@ -6,7 +6,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";
-import { GeoJSONObject } from "@turf/helpers";
+import { FeatureCollection, GeoJSONObject } from "@turf/helpers";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -56,7 +56,9 @@ function Component(props: Props) {
     string[] | undefined
   >();
   const [regions, setRegions] = useState<string[] | undefined>();
-  const [titleBoundary, setTitleBoundary] = useState<GeoJSONObject | undefined>();
+  const [titleBoundary, setTitleBoundary] = useState<
+    GeoJSONObject | undefined
+  >();
   const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
 
   const teamSettings = useStore((state) => state.teamSettings);
@@ -70,7 +72,7 @@ function Component(props: Props) {
   });
   options.append("dataset", "local-authority-district");
   options.append("dataset", "region"); // proxy for Greater London Authority (GLA) boundary
-  options.append("dataset", "title-boundary")
+  options.append("dataset", "title-boundary");
 
   // https://www.planning.data.gov.uk/docs#/Search%20entity
   const root = `https://www.planning.data.gov.uk/entity.geojson?`;
@@ -212,8 +214,12 @@ function Component(props: Props) {
             newPassportData["property.region"] = regions;
           }
           if (titleBoundary) {
+            const areaSquareMetres =
+              Math.round(area(titleBoundary as FeatureCollection) * 100) / 100;
             newPassportData["property.boundary.title"] = titleBoundary;
-            newPassportData["property.boundary.title.area"] = Number(area(titleBoundary as any).toFixed(4));
+            newPassportData["property.boundary.title.area"] = areaSquareMetres;
+            newPassportData["property.boundary.title.area.hectares"] =
+              areaSquareMetres / 10000;
           }
 
           props.handleSubmit?.({ data: { ...newPassportData } });

@@ -13,9 +13,11 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export default SummaryListsBySections;
 
-const Grid = styled("dl")(({ theme }) => ({
+const Grid = styled("dl", {
+  shouldForwardProp: (prop) => prop !== "showChangeButton",
+})<{ showChangeButton?: boolean }>(({ theme, showChangeButton }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 2fr",
+  gridTemplateColumns: showChangeButton ? "1fr 2fr 100px" : "1fr 2fr",
   gridRowGap: "10px",
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(4),
@@ -39,7 +41,10 @@ const Grid = styled("dl")(({ theme }) => ({
     // middle column
     paddingLeft: "10px",
   },
-
+  "& dd:nth-of-type(2n)": {
+    // right column
+    textAlign: "right",
+  },
 }));
 
 const presentationalComponents: {
@@ -158,7 +163,13 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
           (filteredBreadcrumbs, i) =>
             Boolean(filteredBreadcrumbs.length) && (
               <React.Fragment key={i}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", mt: 5 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mt: 5,
+                  }}
+                >
                   <Typography
                     component={props.sectionComponent || "h2"}
                     variant="h3"
@@ -166,12 +177,16 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>
                   <Link
-                    onClick={() => props.changeAnswer(filteredBreadcrumbs[0].nodeId)}
+                    onClick={() =>
+                      props.changeAnswer(filteredBreadcrumbs[0].nodeId)
+                    }
                     component="button"
                     fontSize="body1.fontSize"
                   >
                     Change
-                    <span style={visuallyHidden}>the answers in this section</span>
+                    <span style={visuallyHidden}>
+                      the answers in this section
+                    </span>
                   </Link>
                 </Box>
                 <SummaryList
@@ -213,7 +228,7 @@ function SummaryList(props: SummaryListProps) {
   };
 
   return (
-    <Grid>
+    <Grid showChangeButton={props.showChangeButton}>
       {props.summaryBreadcrumbs.map(
         ({ component: Component, nodeId, node, userData }, i) => (
           <React.Fragment key={i}>
@@ -225,7 +240,7 @@ function SummaryList(props: SummaryListProps) {
               passport={props.passport}
             />
             {props.showChangeButton && (
-              <dd>  
+              <dd>
                 <Link
                   onClick={() => handleChangeAnswer(nodeId)}
                   component="button"
@@ -237,7 +252,7 @@ function SummaryList(props: SummaryListProps) {
                   </span>
                 </Link>
               </dd>
-             )}
+            )}
           </React.Fragment>
         ),
       )}

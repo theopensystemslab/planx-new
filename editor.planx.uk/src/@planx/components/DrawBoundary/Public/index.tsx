@@ -26,16 +26,18 @@ export type Boundary = GeometryObject | undefined;
 
 // Buffer applied to the address point to clip this map extent
 //   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
-const BUFFER_IN_METERS = 75;
+const BUFFER_IN_METERS = 100;
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
   const passport = useStore((state) => state.computePassport());
 
   const previousBoundary =
-    props.previouslySubmittedData?.data?.[props.dataFieldBoundary] || passport.data?.["property.boundary.title"];
+    props.previouslySubmittedData?.data?.[props.dataFieldBoundary] ||
+    passport.data?.["property.boundary.title"];
   const previousArea =
-    props.previouslySubmittedData?.data?.[props.dataFieldArea] || passport.data?.["property.boundary.title.area"];
+    props.previouslySubmittedData?.data?.[props.dataFieldArea] ||
+    passport.data?.["property.boundary.title.area"];
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [area, setArea] = useState<number | undefined>(previousArea);
 
@@ -126,7 +128,7 @@ export default function Component(props: Props) {
                 drawMode
                 drawPointer="crosshair"
                 drawGeojsonData={JSON.stringify(boundary)}
-                drawGeojsonDataBuffer={8}
+                drawGeojsonDataBuffer={10}
                 clipGeojsonData={
                   addressPoint &&
                   JSON.stringify(
