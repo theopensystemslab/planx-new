@@ -7,6 +7,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";
 import { Feature, GeoJSONObject } from "@turf/helpers";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -187,6 +188,12 @@ function Component(props: Props) {
                 </Typography>
               </Link>
             </Box>
+          )}
+          {Boolean(address) && isValidating && (
+            <DelayedLoadingIndicator
+              msDelayBeforeVisible={50}
+              text="Fetching data..."
+            />
           )}
         </>
       );
