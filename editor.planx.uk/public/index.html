@@ -39,5 +39,18 @@
       To begin the development, run `pnpm start`.
       To create a production bundle, use `pnpm build`.
     -->
+
+    <!-- Manually add team body class for demo -->
+    <script>
+      const [team] = window.location.pathname
+        .split("/")
+        .map((value) => value.replaceAll("-", " "))
+        .slice(1, 3);
+    
+      const body = document.body;
+      body.classList.remove(...body.classList);
+      body.classList.add("team--" + team);
+    </script>
+  <!-- end demo script -->
   </body>
 </html>

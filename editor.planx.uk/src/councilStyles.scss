@@ -1,0 +1,40 @@
+// Light/dark text to contrast button background color
+$text-black: #0b0c0c;
+$text-white: #ffffff;
+
+// Action colour per council
+.MuiButton-containedPrimary:not(.Mui-disabled),
+.arrowButton {
+  body.team--buckinghamshire & {
+    color: $text-black;
+    background: #96bb36;
+  }
+  body.team--canterbury & {
+    color: $text-black;
+    background: #f9b400;
+  }
+  body.team--camden & {
+    color: $text-black;
+    background: #ead95b;
+  }
+  body.team--lambeth & {
+    color: $text-white;
+    background: #069;
+  }
+  body.team--braintree & {
+    color: $text-white;
+    background: #005e8a;
+  }
+  body.team--gateshead & {
+    color: $text-white;
+    background: #045a90;
+  }
+  body.team--gloucester & {
+    color: $text-white;
+    background: #0054a4;
+  }
+  body.team--newcastle & {
+    color: $text-white;
+    background: #1111d5;
+  }
+}

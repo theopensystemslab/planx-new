@@ -31,3 +31,6 @@ declare module "@mui/material/styles/createPalette" {
     border?: { main: string; input: string; light: string };
   }
 }
+
+// Import council specific CSS for demo purposes
+import "./councilStyles.scss";
