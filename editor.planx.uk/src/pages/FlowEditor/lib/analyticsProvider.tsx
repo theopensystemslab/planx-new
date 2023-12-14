@@ -126,6 +126,16 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       const curLength = Object.keys(breadcrumbs).length;
       const prevLength = Object.keys(previousBreadcrumbs).length;
 
+      const lastBreadcrumbNodeId = Object.keys(breadcrumbs)[curLength - 1];
+
+      // Nothing to track - first card
+      if (!lastBreadcrumbNodeId) return;
+
+      const lastBreadcrumb = breadcrumbs[lastBreadcrumbNodeId];
+
+      // Don't track analytics for auto-answers (nodes user did not see)
+      if (lastBreadcrumb.auto) return;
+
       if (curLength > prevLength) track("forwards", analyticsId);
       if (curLength < prevLength) track("backwards", analyticsId);
 
