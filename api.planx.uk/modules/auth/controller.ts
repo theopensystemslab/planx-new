@@ -53,7 +53,6 @@ export const handleSuccess = (req: Request, res: Response) => {
       if (isLiveEnv()) {
         cookie.secure = true;
         cookie.sameSite = "none";
-        cookie.httpOnly = true;
       }
 
       res.cookie("jwt", req.user.jwt, cookie);
