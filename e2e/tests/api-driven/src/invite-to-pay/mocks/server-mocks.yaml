@@ -11,7 +11,7 @@
         "messsage": "MOCKED RESPONSE"
       }
 
-# UNIFORM token generation
+# UNIFORM token generation, access_token is mock JWT with "organisation-name" & "organisation-id" properties
 - request:
     method: POST
     path: /
@@ -21,9 +21,9 @@
       Content-Type: application/json
     body: >
       {
-        "access_token": "TEST_TOKEN",
-        "organisation-name": "MOCKED",
-        "organisation-id": "MOCKED"
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbmlzYXRpb24tbmFtZSI6Ik1PQ0tFRCIsIm9yZ2FuaXNhdGlvbi1pZCI6Ik1PQ0tFRCJ9.p0DE8MUc9obE751XWOYPQWWtLXtq8-kJMPre4VuOBHg",
+        "token_type": "Bearer",
+        "expires_in": 35999
       }
 
 # UNIFORM submissions
