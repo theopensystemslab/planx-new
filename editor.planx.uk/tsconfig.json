@@ -16,7 +16,8 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es6",
-    "typeRoots": ["src/types"]
+    "typeRoots": ["src/types"],
+    "sourceMap": true,
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

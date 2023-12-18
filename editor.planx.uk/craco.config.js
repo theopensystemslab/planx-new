@@ -4,6 +4,12 @@ module.exports = {
   plugins: [
     {
       plugin: CracoEsbuildPlugin,
+      options: {
+        esbuildLoaderOptions: {
+          loader: "tsx",
+          sourcemap: true,
+        },
+      },
     },
   ],
   typescript: {

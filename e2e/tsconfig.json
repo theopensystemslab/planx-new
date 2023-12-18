@@ -12,7 +12,8 @@
     "strict": true,
     "noImplicitAny": false,
     "target": "es2021",
-    "noEmit": true
+    "noEmit": true,
+    "sourceMap": true
   },
   "exclude": ["node_modules"]
 }
