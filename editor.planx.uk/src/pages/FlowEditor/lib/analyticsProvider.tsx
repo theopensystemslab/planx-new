@@ -151,16 +151,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function track(direction: AnalyticsLogDirection, analyticsId: number) {
     if (!node) {
-      return 
+      return;
     }
     const metadata = getNodeMetadata(node);
-    const nodeTitle =
-      node?.type === TYPES.Content
-        ? getContentTitle(node)
-        : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
-    const nodeId = node?.id || null;
-
+    const nodeTitle = extractNodeTitle(node);
     // On component transition create the new analytics log
+    const nodeId = node?.id || null;
     const result = await insertNewAnalyticsLog(
       direction,
       analyticsId,
@@ -168,6 +164,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       nodeTitle,
       nodeId,
     );
+
     const id = result?.data.insert_analytics_logs_one?.id;
     const newLogCreatedAt = result?.data.insert_analytics_logs_one?.created_at;
 
@@ -388,7 +385,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  function getNodeMetadata (node: Store.node) {
+  function getNodeMetadata(node: Store.node) {
     switch (node?.type) {
       case TYPES.Result:
         const flagSet = node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
@@ -436,6 +433,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         },
       });
     }
+  }
+
+  function extractNodeTitle(node: Store.node) {
+    const nodeTitle =
+      node?.type === TYPES.Content
+        ? getContentTitle(node)
+        : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
+    return nodeTitle;
   }
 };
 
