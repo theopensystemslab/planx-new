@@ -155,7 +155,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       node?.type === TYPES.Content
         ? getContentTitle(node)
         : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
-    const nodeId = node?.id || "Unknown";
+    const nodeId = node?.id || null;
 
     // On component transition create the new analytics log
     const result = await insertNewAnalyticsLog(
@@ -182,7 +182,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     analyticsId: number,
     metadata: NodeMetadata,
     nodeTitle: string,
-    nodeId: string,
+    nodeId: string | null,
   ) {
     const result = await publicClient.mutate({
       mutation: gql`
