@@ -8,6 +8,7 @@ import { TYPES } from "@planx/components/types";
 import Bowser from "bowser";
 import { publicClient } from "lib/graphql";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { usePrevious } from "react-use";
 
 import { Store, useStore } from "./store";
 
@@ -90,7 +91,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     new URL(window.location.href).searchParams.get("analytics") !== "false";
   const shouldTrackAnalytics =
     previewEnvironment === "standalone" && isAnalyticsEnabled;
-  const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
+  const previousBreadcrumbs = usePrevious(breadcrumbs);
 
   const onPageExit = () => {
     if (lastAnalyticsLogId && shouldTrackAnalytics) {
@@ -125,8 +126,6 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldTrackAnalytics && analyticsId && node?.id) {
       const logDirection = detemineLogDirection();
       if (logDirection) track(logDirection, analyticsId, node.id);
-
-      setPreviousBreadcrumb(breadcrumbs);
     }
   }, [breadcrumbs]);
 
@@ -448,11 +447,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   function detemineLogDirection() {
-    const curLength = Object.keys(breadcrumbs).length;
-    const prevLength = Object.keys(previousBreadcrumbs).length;
+    if (previousBreadcrumbs) {
+      const curLength = Object.keys(breadcrumbs).length;
+      const prevLength = Object.keys(previousBreadcrumbs).length;
 
-    if (curLength > prevLength) return "forwards";
-    if (curLength < prevLength) return "backwards";
+      if (curLength > prevLength) return "forwards";
+      if (curLength < prevLength) return "backwards";
+    }
   }
 };
 
