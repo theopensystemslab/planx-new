@@ -1,8 +1,6 @@
 import { CookieOptions, RequestHandler, Response } from "express";
 import { Request } from "express-jwt";
 
-import { isLiveEnv } from "../../helpers";
-
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
     status: 401,
