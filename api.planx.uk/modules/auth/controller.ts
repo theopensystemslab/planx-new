@@ -29,12 +29,14 @@ export const handleSuccess = (req: Request, res: Response) => {
 
   const isStagingOrProd = returnTo.includes("editor.planx.");
 
-  isStagingOrProd ? setJWTCookie(returnTo, res, req) : setJWTSearchParams(returnTo, res, req);
+  isStagingOrProd
+    ? setJWTCookie(returnTo, res, req)
+    : setJWTSearchParams(returnTo, res, req);
 };
 
 /**
- * Handle auth for staging and production 
- * 
+ * Handle auth for staging and production
+ *
  * Use a httpOnly cookie to pass the JWT securely back to the client.
  * The client will then use the JWT to make authenticated requests to the API.
  */
@@ -42,7 +44,7 @@ function setJWTCookie(returnTo: string, res: Response, req: Request) {
   const cookie: CookieOptions = {
     domain: `.${new URL(returnTo).host}`,
     maxAge: new Date(
-      new Date().setFullYear(new Date().getFullYear() + 1)
+      new Date().setFullYear(new Date().getFullYear() + 1),
     ).getTime(),
     httpOnly: true,
     secure: true,
@@ -56,7 +58,7 @@ function setJWTCookie(returnTo: string, res: Response, req: Request) {
 
 /**
  * Handle auth for local development and Pizzas
- * 
+ *
  * We can't use cookies cross-domain.
  * Inject the JWT into the return URL, which can then be set as a cookie by the frontend
  */
@@ -65,4 +67,3 @@ function setJWTSearchParams(returnTo: string, res: Response, req: Request) {
   url.searchParams.set("jwt", req.user!.jwt);
   res.redirect(url.href);
 }
-
