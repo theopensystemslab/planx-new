@@ -150,7 +150,10 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   async function track(direction: AnalyticsLogDirection, analyticsId: number) {
-    const metadata = getNodeMetadata();
+    if (!node) {
+      return 
+    }
+    const metadata = getNodeMetadata(node);
     const nodeTitle =
       node?.type === TYPES.Content
         ? getContentTitle(node)
@@ -385,7 +388,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  function getNodeMetadata() {
+  function getNodeMetadata (node: Store.node) {
     switch (node?.type) {
       case TYPES.Result:
         const flagSet = node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
