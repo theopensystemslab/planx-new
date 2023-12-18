@@ -3,6 +3,7 @@ import { useHasuraAuth } from "../auth/middleware";
 import { createPaymentSendEvents } from "../pay/service/inviteToPay/createPaymentSendEvents";
 import { validate } from "../../shared/middleware/validate";
 import {
+  isCleanJSONBController,
   createPaymentExpiryEventsController,
   createPaymentInvitationEventsController,
   createPaymentReminderEventsController,
@@ -14,6 +15,7 @@ import {
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema";
 import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema";
 import { createSessionEventSchema } from "./service/lowcalSessionEvents/schema";
+import { isCleanJSONBSchema } from "./service/validateInput/schema";
 
 const router = Router();
 
@@ -51,6 +53,12 @@ router.post(
 router.post(
   "/webhooks/hasura/sanitise-application-data",
   sanitiseApplicationDataController,
+);
+
+router.post(
+  "/webhooks/hasura/validate-input/jsonb/clean-html",
+  validate(isCleanJSONBSchema),
+  isCleanJSONBController,
 );
 
 // TODO: Convert to the new API module structure

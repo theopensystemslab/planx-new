@@ -1,12 +1,17 @@
 import { Request, RequestHandler, Response, NextFunction } from "express";
-import { AnyZodObject, ZodSchema, ZodTypeAny, ZodUnion, z } from "zod";
+import { z } from "zod";
 
 /**
  * Middleware to validate incoming requests to the API
  * Takes a ZodSchema and returns a validated, and typed, Request object
  */
 export const validate =
-  (schema: AnyZodObject | ZodUnion<readonly [ZodTypeAny, ...ZodTypeAny[]]>) =>
+  (
+    schema:
+      | z.AnyZodObject
+      | z.ZodUnion<readonly [z.ZodTypeAny, ...z.ZodTypeAny[]]>
+      | z.ZodType<any, z.ZodTypeDef, any>,
+  ) =>
   async (
     req: Request<z.infer<typeof schema>>,
     res: Response,
@@ -35,7 +40,7 @@ export const validate =
  * Accepts a ZodSchema representing the request and a Response type
  */
 export type ValidatedRequestHandler<
-  TSchema extends ZodSchema,
+  TSchema extends z.ZodSchema,
   TResponse,
 > = RequestHandler<
   Request["params"],
