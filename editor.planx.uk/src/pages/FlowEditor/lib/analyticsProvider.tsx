@@ -122,12 +122,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Track component transition
   useEffect(() => {
-    if (shouldTrackAnalytics && analyticsId) {
+    if (shouldTrackAnalytics && analyticsId && node?.id) {
       const curLength = Object.keys(breadcrumbs).length;
       const prevLength = Object.keys(previousBreadcrumbs).length;
 
-      if (curLength > prevLength) track("forwards", analyticsId);
-      if (curLength < prevLength) track("backwards", analyticsId);
+      if (curLength > prevLength) track("forwards", analyticsId, node.id);
+      if (curLength < prevLength) track("backwards", analyticsId, node.id);
 
       setPreviousBreadcrumb(breadcrumbs);
     }
@@ -149,14 +149,17 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     </Provider>
   );
 
-  async function track(direction: AnalyticsLogDirection, analyticsId: number) {
-    if (!node) {
-      return;
-    }
-    const metadata = getNodeMetadata(node);
-    const nodeTitle = extractNodeTitle(node);
+  async function track(
+    direction: AnalyticsLogDirection,
+    analyticsId: number,
+    nodeId: string,
+  ) {
+    const nodeToTrack = flow[nodeId];
+
+    const metadata = getNodeMetadata(nodeToTrack);
+    const nodeTitle = extractNodeTitle(nodeToTrack);
+
     // On component transition create the new analytics log
-    const nodeId = node?.id || null;
     const result = await insertNewAnalyticsLog(
       direction,
       analyticsId,
@@ -381,7 +384,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       const id = response.data.insert_analytics_one.id;
       setAnalyticsId(id);
-      track(type, id);
+      if (node?.id) track(type, id, node?.id);
     }
   }
 
