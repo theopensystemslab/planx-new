@@ -151,6 +151,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function track(direction: AnalyticsLogDirection, analyticsId: number) {
     const metadata = getNodeMetadata();
+    const nodeType = node?.type ? TYPES[node.type] : null;
     const nodeTitle =
       node?.type === TYPES.Content
         ? getContentTitle(node)
@@ -162,6 +163,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       direction,
       analyticsId,
       metadata,
+      nodeType,
       nodeTitle,
       nodeId,
     );
@@ -181,6 +183,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     direction: AnalyticsLogDirection,
     analyticsId: number,
     metadata: NodeMetadata,
+    nodeType: string | null,
     nodeTitle: string,
     nodeId: string | null,
   ) {
@@ -190,7 +193,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           $flow_direction: String
           $analytics_id: bigint
           $metadata: jsonb
-          $node_type: Int
+          $node_type: String
           $node_title: String
           $node_id: String
         ) {
@@ -214,7 +217,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         flow_direction: direction,
         analytics_id: analyticsId,
         metadata: metadata,
-        node_type: node?.type,
+        node_type: nodeType,
         node_title: nodeTitle,
         node_id: nodeId,
       },
