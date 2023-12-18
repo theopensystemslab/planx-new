@@ -103,6 +103,7 @@ describe("isCleanHTML() helper function", () => {
     `<div><p>This content is inside a div.</p></div>`,
     `<h2>Subheading</h2><p>This is a paragraph under the subheading.</p>`,
     `<div><h1>Main Title</h1><p>This is a <b>nested</b> paragraph with a <i>nested</i> element.</p></div>`,
+    `<div><h1>Content with image</h1><img src="dogs.png" alt="Dog photo"></div>`,
   ];
 
   for (const example of cleanHTML) {
