@@ -124,8 +124,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Track component transition
   useEffect(() => {
     if (shouldTrackAnalytics && analyticsId && node?.id) {
-      const logDirection = detemineLogDirection();
-      if (logDirection) track(logDirection, analyticsId, node.id);
+      track(node.id);
     }
   }, [breadcrumbs]);
 
@@ -146,36 +145,40 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   async function track(
-    direction: AnalyticsLogDirection,
-    analyticsId: number,
     nodeId: string,
+    direction?: AnalyticsLogDirection,
+    analyticsSessionId?: number,
   ) {
+    // Either use passed in arguments or infer from local data
     const nodeToTrack = flow[nodeId];
-
-    const metadata = getNodeMetadata(nodeToTrack);
-    const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
-    const nodeTitle = extractNodeTitle(nodeToTrack);
-
-    // On component transition create the new analytics log
-    const result = await insertNewAnalyticsLog(
-      direction,
-      analyticsId,
-      metadata,
-      nodeType,
-      nodeTitle,
-      nodeId,
-    );
-
-    const id = result?.data.insert_analytics_logs_one?.id;
-    const newLogCreatedAt = result?.data.insert_analytics_logs_one?.created_at;
-
-    // On successful create of a new log update the previous log with the next_log_created_at
-    // This allows us to estimate how long a user spend on a card
-    if (lastAnalyticsLogId && newLogCreatedAt) {
-      updateLastLogWithNextLogCreatedAt(lastAnalyticsLogId, newLogCreatedAt);
+    const logDirection = direction ? direction : detemineLogDirection();
+    const analyticsSession = analyticsSessionId
+      ? analyticsSessionId
+      : analyticsId;
+    // Ensure essential log data is available
+    if (nodeToTrack && logDirection && analyticsSession) {
+      const metadata = getNodeMetadata(nodeToTrack);
+      const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
+      const nodeTitle = extractNodeTitle(nodeToTrack);
+      // On component transition create the new analytics log
+      const result = await insertNewAnalyticsLog(
+        logDirection,
+        analyticsSession,
+        metadata,
+        nodeType,
+        nodeTitle,
+        nodeId,
+      );
+      const id = result?.data.insert_analytics_logs_one?.id;
+      const newLogCreatedAt =
+        result?.data.insert_analytics_logs_one?.created_at;
+      // On successful create of a new log update the previous log with the next_log_created_at
+      // This allows us to estimate how long a user spend on a card
+      if (lastAnalyticsLogId && newLogCreatedAt) {
+        updateLastLogWithNextLogCreatedAt(lastAnalyticsLogId, newLogCreatedAt);
+      }
+      lastAnalyticsLogId = id;
     }
-
-    lastAnalyticsLogId = id;
   }
 
   async function insertNewAnalyticsLog(
@@ -384,7 +387,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       const id = response.data.insert_analytics_one.id;
       setAnalyticsId(id);
       const currentNodeId = currentCard()?.id;
-      if (currentNodeId) track(type, id, currentNodeId);
+      if (currentNodeId) track(currentNodeId, type, id);
     }
   }
 
