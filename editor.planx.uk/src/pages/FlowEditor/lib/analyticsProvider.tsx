@@ -123,11 +123,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Track component transition
   useEffect(() => {
     if (shouldTrackAnalytics && analyticsId && node?.id) {
-      const curLength = Object.keys(breadcrumbs).length;
-      const prevLength = Object.keys(previousBreadcrumbs).length;
-
-      if (curLength > prevLength) track("forwards", analyticsId, node.id);
-      if (curLength < prevLength) track("backwards", analyticsId, node.id);
+      const logDirection = detemineLogDirection();
+      if (logDirection) track(logDirection, analyticsId, node.id);
 
       setPreviousBreadcrumb(breadcrumbs);
     }
@@ -444,6 +441,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         ? getContentTitle(node)
         : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
     return nodeTitle;
+  }
+
+  function detemineLogDirection() {
+    const curLength = Object.keys(breadcrumbs).length;
+    const prevLength = Object.keys(previousBreadcrumbs).length;
+
+    if (curLength > prevLength) return "forwards";
+    if (curLength < prevLength) return "backwards";
   }
 };
 
