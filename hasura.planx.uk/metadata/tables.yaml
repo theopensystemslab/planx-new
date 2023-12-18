@@ -1,6 +1,6 @@
 - table:
-    name: analytics
     schema: public
+    name: analytics
   insert_permissions:
     - role: public
       permission:
@@ -26,8 +26,8 @@
         filter: {}
         check: null
 - table:
-    name: analytics_logs
     schema: public
+    name: analytics_logs
   insert_permissions:
     - role: public
       permission:
@@ -40,6 +40,7 @@
           - id
           - input_errors
           - metadata
+          - node_id
           - node_title
           - node_type
           - user_exit
@@ -65,11 +66,11 @@
         filter: {}
         check: null
 - table:
+    schema: public
     name: analytics_summary
-    schema: public
 - table:
-    name: blpu_codes
     schema: public
+    name: blpu_codes
   select_permissions:
     - role: public
       permission:
@@ -79,8 +80,8 @@
           - value
         filter: {}
 - table:
-    name: bops_applications
     schema: public
+    name: bops_applications
   insert_permissions:
     - role: api
       permission:
@@ -134,27 +135,27 @@
         insert:
           columns: '*'
       retry_conf:
-        interval_sec: 30
         num_retries: 1
+        interval_sec: 30
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
         - name: authorization
           value_from_env: HASURA_PLANX_API_KEY
       request_transform:
+        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         method: POST
+        version: 2
         query_params:
           type: bops-submission
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
-        version: 2
 - table:
-    name: document_template
     schema: public
+    name: document_template
   is_enum: true
 - table:
-    name: email_applications
     schema: public
+    name: email_applications
   insert_permissions:
     - role: api
       permission:
@@ -202,23 +203,23 @@
         insert:
           columns: '*'
       retry_conf:
-        interval_sec: 30
         num_retries: 1
+        interval_sec: 30
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
         - name: authorization
           value_from_env: HASURA_PLANX_API_KEY
       request_transform:
+        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         method: POST
+        version: 2
         query_params:
           type: email-submission
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
-        version: 2
 - table:
-    name: flow_document_templates
     schema: public
+    name: flow_document_templates
   object_relationships:
     - name: flow
       using:
@@ -237,8 +238,8 @@
           - flow_id
         filter: {}
 - table:
-    name: flows
     schema: public
+    name: flows
   object_relationships:
     - name: creator
       using:
@@ -252,28 +253,28 @@
         foreign_key_constraint_on:
           column: flow_id
           table:
-            name: flow_document_templates
             schema: public
+            name: flow_document_templates
     - name: operations
       using:
         foreign_key_constraint_on:
           column: flow_id
           table:
-            name: operations
             schema: public
+            name: operations
     - name: published_flows
       using:
         foreign_key_constraint_on:
           column: flow_id
           table:
-            name: published_flows
             schema: public
+            name: published_flows
   computed_fields:
     - name: data_merged
       definition:
         function:
-          name: compile_flow_portals
           schema: public
+          name: compile_flow_portals
       comment: Flow data with portals merged in
   insert_permissions:
     - role: api
@@ -429,9 +430,11 @@
   delete_permissions:
     - role: platformAdmin
       permission:
+        backend_only: false
         filter: {}
     - role: teamEditor
       permission:
+        backend_only: false
         filter:
           team:
             members:
@@ -441,8 +444,8 @@
                 - role:
                     _eq: teamEditor
 - table:
-    name: global_settings
     schema: public
+    name: global_settings
   insert_permissions:
     - role: platformAdmin
       permission:
@@ -477,35 +480,35 @@
         filter: {}
         check: {}
 - table:
-    name: lowcal_sessions
     schema: public
+    name: lowcal_sessions
   object_relationships:
     - name: flow
       using:
         manual_configuration:
+          remote_table:
+            schema: public
+            name: flows
+          insertion_order: null
           column_mapping:
             flow_id: id
-          insertion_order: null
-          remote_table:
-            name: flows
-            schema: public
   array_relationships:
     - name: payment_requests
       using:
         foreign_key_constraint_on:
           column: session_id
           table:
-            name: payment_requests
             schema: public
+            name: payment_requests
     - name: payment_status
       using:
         manual_configuration:
+          remote_table:
+            schema: public
+            name: payment_status
+          insertion_order: null
           column_mapping:
             id: session_id
-          insertion_order: null
-          remote_table:
-            name: payment_status
-            schema: public
   insert_permissions:
     - role: public
       permission:
@@ -597,8 +600,8 @@
           columns:
             - submitted_at
       retry_conf:
-        interval_sec: 10
         num_retries: 0
+        interval_sec: 10
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
@@ -615,11 +618,11 @@
                 "lockedAt": {{$body.event.data.new.locked_at}}
               }
             }
+        url: '{{$base_url}}/send-email/confirmation'
         method: POST
+        version: 2
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/send-email/confirmation'
-        version: 2
     - name: setup_lowcal_expiry_events
       definition:
         enable_manual: false
@@ -627,8 +630,8 @@
           columns:
             - has_user_saved
       retry_conf:
-        interval_sec: 10
         num_retries: 3
+        interval_sec: 10
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
@@ -645,11 +648,11 @@
                 "email": {{$body.event.data.new.email}}
               }
             }
+        url: '{{$base_url}}/webhooks/hasura/create-expiry-event'
         method: POST
+        version: 2
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-expiry-event'
-        version: 2
     - name: setup_lowcal_reminder_events
       definition:
         enable_manual: false
@@ -657,8 +660,8 @@
           columns:
             - has_user_saved
       retry_conf:
-        interval_sec: 10
         num_retries: 3
+        interval_sec: 10
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
@@ -675,14 +678,14 @@
                 "email": {{$body.event.data.new.email}}
               }
             }
+        url: '{{$base_url}}/webhooks/hasura/create-reminder-event'
         method: POST
+        version: 2
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-reminder-event'
-        version: 2
 - table:
-    name: operations
     schema: public
+    name: operations
   object_relationships:
     - name: actor
       using:
@@ -778,8 +781,8 @@
                       _eq: teamEditor
         check: {}
 - table:
-    name: payment_requests
     schema: public
+    name: payment_requests
   object_relationships:
     - name: session
       using:
@@ -846,6 +849,7 @@
   delete_permissions:
     - role: api
       permission:
+        backend_only: false
         filter: {}
   event_triggers:
     - name: setup_payment_expiry_events
@@ -854,8 +858,8 @@
         insert:
           columns: '*'
       retry_conf:
-        interval_sec: 10
         num_retries: 3
+        interval_sec: 10
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
@@ -871,19 +875,19 @@
                 "paymentRequestId": {{$body.event.data.new.id}}
               }
             }
+        url: '{{$base_url}}/webhooks/hasura/create-payment-expiry-events'
         method: POST
+        version: 2
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-payment-expiry-events'
-        version: 2
     - name: setup_payment_invitation_events
       definition:
         enable_manual: false
         insert:
           columns: '*'
       retry_conf:
-        interval_sec: 10
         num_retries: 3
+        interval_sec: 10
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
@@ -899,19 +903,19 @@
                 "paymentRequestId": {{$body.event.data.new.id}}
               }
             }
+        url: '{{$base_url}}/webhooks/hasura/create-payment-invitation-events'
         method: POST
+        version: 2
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-payment-invitation-events'
-        version: 2
     - name: setup_payment_reminder_events
       definition:
         enable_manual: false
         insert:
           columns: '*'
       retry_conf:
-        interval_sec: 10
         num_retries: 3
+        interval_sec: 10
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
@@ -927,11 +931,11 @@
                 "paymentRequestId": {{$body.event.data.new.id}}
               }
             }
+        url: '{{$base_url}}/webhooks/hasura/create-payment-reminder-events'
         method: POST
+        version: 2
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-payment-reminder-events'
-        version: 2
     - name: setup_payment_send_events
       definition:
         enable_manual: false
@@ -939,8 +943,8 @@
           columns:
             - paid_at
       retry_conf:
-        interval_sec: 10
         num_retries: 3
+        interval_sec: 10
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
@@ -956,24 +960,24 @@
                 "sessionId": {{$body.event.data.new.session_id}}
               }
             }
+        url: '{{$base_url}}/webhooks/hasura/create-payment-send-events'
         method: POST
+        version: 2
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-payment-send-events'
-        version: 2
 - table:
-    name: payment_status
     schema: public
+    name: payment_status
   object_relationships:
     - name: lowcal_session
       using:
         manual_configuration:
+          remote_table:
+            schema: public
+            name: lowcal_sessions
+          insertion_order: null
           column_mapping:
             session_id: id
-          insertion_order: null
-          remote_table:
-            name: lowcal_sessions
-            schema: public
   insert_permissions:
     - role: api
       permission:
@@ -999,12 +1003,12 @@
           - amount
         filter: {}
 - table:
-    name: payment_status_enum
     schema: public
+    name: payment_status_enum
   is_enum: true
 - table:
-    name: planning_constraints_requests
     schema: public
+    name: planning_constraints_requests
   insert_permissions:
     - role: api
       permission:
@@ -1026,8 +1030,8 @@
           - created_at
         filter: {}
 - table:
-    name: project_types
     schema: public
+    name: project_types
   select_permissions:
     - role: public
       permission:
@@ -1036,8 +1040,8 @@
           - value
         filter: {}
 - table:
-    name: published_flows
     schema: public
+    name: published_flows
   object_relationships:
     - name: flow
       using:
@@ -1126,8 +1130,8 @@
           - summary
         filter: {}
 - table:
-    name: reconciliation_requests
     schema: public
+    name: reconciliation_requests
   insert_permissions:
     - role: api
       permission:
@@ -1151,16 +1155,17 @@
   delete_permissions:
     - role: api
       permission:
+        backend_only: false
         filter: {}
 - table:
-    name: sessions
     schema: public
+    name: sessions
   computed_fields:
     - name: payment_id
       definition:
         function:
-          name: sessions_payment
           schema: public
+          name: sessions_payment
       comment: A computed field to find the latest successful payment associated with a session
   insert_permissions:
     - role: public
@@ -1216,8 +1221,8 @@
                 _is_null: true
         check: null
 - table:
-    name: team_integrations
     schema: public
+    name: team_integrations
   select_permissions:
     - role: api
       permission:
@@ -1228,8 +1233,8 @@
           - production_bops_submission_url
         filter: {}
 - table:
-    name: team_members
     schema: public
+    name: team_members
   object_relationships:
     - name: team
       using:
@@ -1286,39 +1291,40 @@
   delete_permissions:
     - role: platformAdmin
       permission:
+        backend_only: false
         filter: {}
 - table:
-    name: teams
     schema: public
+    name: teams
   object_relationships:
     - name: integrations
       using:
         foreign_key_constraint_on:
           column: team_id
           table:
-            name: team_integrations
             schema: public
+            name: team_integrations
   array_relationships:
     - name: flows
       using:
         foreign_key_constraint_on:
           column: team_id
           table:
-            name: flows
             schema: public
+            name: flows
     - name: members
       using:
         foreign_key_constraint_on:
           column: team_id
           table:
-            name: team_members
             schema: public
+            name: team_members
   computed_fields:
     - name: boundary_bbox
       definition:
         function:
-          name: boundary_bbox
           schema: public
+          name: boundary_bbox
       comment: Bounding box of the team's full boundary
   insert_permissions:
     - role: platformAdmin
@@ -1418,8 +1424,8 @@
         filter: {}
         check: null
 - table:
-    name: uniform_applications
     schema: public
+    name: uniform_applications
   insert_permissions:
     - role: api
       permission:
@@ -1470,49 +1476,49 @@
         insert:
           columns: '*'
       retry_conf:
-        interval_sec: 30
         num_retries: 1
+        interval_sec: 30
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
         - name: authorization
           value_from_env: HASURA_PLANX_API_KEY
       request_transform:
+        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         method: POST
+        version: 2
         query_params:
           type: uniform-submission
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
-        version: 2
 - table:
-    name: user_roles
     schema: public
+    name: user_roles
   is_enum: true
 - table:
-    name: users
     schema: public
+    name: users
   array_relationships:
     - name: created_flows
       using:
         foreign_key_constraint_on:
           column: creator_id
           table:
-            name: flows
             schema: public
+            name: flows
     - name: operations
       using:
         foreign_key_constraint_on:
           column: actor_id
           table:
-            name: operations
             schema: public
+            name: operations
     - name: teams
       using:
         foreign_key_constraint_on:
           column: user_id
           table:
-            name: team_members
             schema: public
+            name: team_members
   insert_permissions:
     - role: platformAdmin
       permission:

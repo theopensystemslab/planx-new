@@ -155,12 +155,15 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       node?.type === TYPES.Content
         ? getContentTitle(node)
         : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
+    const nodeId = node?.id || "Unknown";
+
     // On component transition create the new analytics log
     const result = await insertNewAnalyticsLog(
       direction,
       analyticsId,
       metadata,
       nodeTitle,
+      nodeId,
     );
     const id = result?.data.insert_analytics_logs_one?.id;
     const newLogCreatedAt = result?.data.insert_analytics_logs_one?.created_at;
@@ -179,6 +182,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     analyticsId: number,
     metadata: NodeMetadata,
     nodeTitle: string,
+    nodeId: string,
   ) {
     const result = await publicClient.mutate({
       mutation: gql`
@@ -188,7 +192,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           $metadata: jsonb
           $node_type: Int
           $node_title: String
-          $user_agent: jsonb
+          $node_id: String
         ) {
           insert_analytics_logs_one(
             object: {
@@ -198,6 +202,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
               metadata: $metadata
               node_type: $node_type
               node_title: $node_title
+              node_id: $node_id
             }
           ) {
             id
@@ -211,6 +216,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         metadata: metadata,
         node_type: node?.type,
         node_title: nodeTitle,
+        node_id: nodeId,
       },
     });
     return result;
