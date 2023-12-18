@@ -381,7 +381,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       const id = response.data.insert_analytics_one.id;
       setAnalyticsId(id);
-      if (node?.id) track(type, id, node?.id);
+      const currentNodeId = currentCard()?.id;
+      if (currentNodeId) track(type, id, currentNodeId);
     }
   }
 
