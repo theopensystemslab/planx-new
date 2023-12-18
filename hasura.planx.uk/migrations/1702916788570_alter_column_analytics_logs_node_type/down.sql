@@ -1,12 +1,9 @@
--- ALTER COLUMN will fail if dependent view exists
 DROP VIEW public.analytics_summary;
 
--- Update column type from integer to text
 ALTER TABLE public.analytics_logs
 ALTER COLUMN node_type TYPE INTEGER 
 USING node_type::integer;
 
--- Do a one-time update of historic records
 UPDATE public.analytics_logs SET node_type = 
     CASE 
         WHEN node_type = 'Flow' THEN 1
@@ -42,7 +39,6 @@ UPDATE public.analytics_logs SET node_type =
         ELSE null
     END;
 
--- Re-create the view
 CREATE OR REPLACE VIEW public.analytics_summary AS 
 select 
 	a.id as analytics_id,
