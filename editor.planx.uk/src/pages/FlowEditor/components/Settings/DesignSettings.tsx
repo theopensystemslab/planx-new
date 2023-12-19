@@ -16,9 +16,15 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import PublicFileUploadButton from "ui/shared/PublicFileUploadButton";
 
 const DesignSettings: React.FC = () => {
-  const formik = useFormik<{ bgColor: string }>({
+  const formik = useFormik<{
+    bgColor: string;
+    primaryColor: string;
+    secondaryColor: string;
+  }>({
     initialValues: {
       bgColor: "#000",
+      primaryColor: "#000",
+      secondaryColor: "#000",
     },
     onSubmit: () => {},
     validate: () => {},
@@ -60,6 +66,42 @@ const DesignSettings: React.FC = () => {
                     color={formik.values.bgColor}
                     onChange={(color) => formik.setFieldValue("bgColor", color)}
                     label="Theme colour"
+                  />
+                </InputRowItem>
+              </InputRow>
+            </InputGroup>
+          </EditorRow>
+          <EditorRow background>
+            <InputGroup flowSpacing>
+              <InputLegend>Action/link colours</InputLegend>
+              <InputDescription>
+                Set the theme colour. The theme colour should be a dark colour
+                that contrasts with white ("#ffffff").
+              </InputDescription>
+              <InputDescription>
+                <Link href="https://www.planx.uk">
+                  See our guide for setting action colours
+                </Link>
+              </InputDescription>
+              <InputRow>
+                <InputRowItem>
+                  <ColorPicker
+                    color={formik.values.primaryColor}
+                    onChange={(color) =>
+                      formik.setFieldValue("primaryColor", color)
+                    }
+                    label="Primary button colour"
+                  />
+                </InputRowItem>
+              </InputRow>
+              <InputRow>
+                <InputRowItem>
+                  <ColorPicker
+                    color={formik.values.secondaryColor}
+                    onChange={(color) =>
+                      formik.setFieldValue("secondaryColor", color)
+                    }
+                    label="Text link colour"
                   />
                 </InputRowItem>
               </InputRow>

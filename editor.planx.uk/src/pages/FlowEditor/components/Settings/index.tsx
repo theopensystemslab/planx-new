@@ -95,6 +95,7 @@ const Root = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   minHeight: `calc(100% - ${HEADER_HEIGHT}px)`,
+  zIndex: "2000",
   [`& .${classes.tabs}`]: {
     backgroundColor: theme.palette.border.main,
   },
