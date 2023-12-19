@@ -155,7 +155,7 @@ export async function findQuestion({
   page: Page;
   title: string;
 }): Promise<Locator> {
-  const group = await page.getByRole("radiogroup", { name: title });
+  const group = page.getByRole("radiogroup", { name: title });
   await expect(group).toBeVisible();
   return group;
 }
@@ -198,7 +198,7 @@ export async function expectNotice({
   page: Page;
   text: string;
 }) {
-  const notice = await page.locator("h3", { hasText: text });
+  const notice = page.locator("h3", { hasText: text });
   await expect(notice).toBeVisible();
 }
 
@@ -209,7 +209,7 @@ export async function expectConfirmation({
   page: Page;
   text: string;
 }) {
-  const confirmation = await page.locator("h1", { hasText: text });
+  const confirmation = page.locator("h1", { hasText: text });
   await expect(confirmation).toBeVisible();
 }
 
@@ -223,8 +223,8 @@ export async function expectSections({
     status: string;
   }[];
 }) {
-  const pageSections = await page.locator("dl dt");
-  const pageStatuses = await page.locator("dl dd");
+  const pageSections = page.locator("dl dt");
+  const pageStatuses = page.locator("dl dd");
   await expect(pageSections).toContainText(sections.map((s) => s.title));
   await expect(pageStatuses).toContainText(sections.map((s) => s.status));
 }

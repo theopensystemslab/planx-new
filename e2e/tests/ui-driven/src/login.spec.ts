@@ -37,7 +37,7 @@ test.describe("Login", () => {
       return response.url().includes("/graphql");
     });
 
-    const team = await page.locator("h2", { hasText: context.team.name });
+    const team = page.locator("h2", { hasText: context.team.name });
     await expect(team).toBeVisible();
   });
 
