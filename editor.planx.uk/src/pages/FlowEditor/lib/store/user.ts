@@ -48,8 +48,10 @@ const getLoggedInUser = async () => {
   const headers = { authorization: `Bearer ${jwt}` };
   try {
     const response = await axios.get<User>(url, { headers });
+    console.log({ response });
+    console.log({ data: JSON.stringify(response.data) });
     return response.data;
   } catch (error) {
-    throw Error("Failed to fetch user matching JWT cookie");
+    throw Error("Failed to fetch user matching JWT");
   }
 };
