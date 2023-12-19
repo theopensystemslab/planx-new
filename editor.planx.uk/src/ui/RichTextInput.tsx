@@ -72,6 +72,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    wordBreak: "break-word",
     "& a": {
       color: "currentColor",
     },

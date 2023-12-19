@@ -90,6 +90,11 @@ interface GovPayCreatePayment {
   reference: string;
   description: string;
   return_url: string;
+  metadata?: {
+    source: "PlanX";
+    flow: string;
+    inviteToPay: boolean;
+  };
 }
 
 export async function buildPaymentPayload(
@@ -120,6 +125,16 @@ export async function buildPaymentPayload(
     reference: req.query.sessionId as string,
     description: "New application (nominated payee)",
     return_url: req.query.returnURL as string,
+    metadata: {
+      source: "PlanX",
+      // Payment requests have /pay path suffix, so get flow-slug from second-to-last position
+      flow:
+        (req.query.returnURL as string)
+          .split("?")?.[0]
+          ?.split("/")
+          ?.slice(-2, -1)?.[0] || "Could not parse service name",
+      inviteToPay: true,
+    },
   };
 
   req.body = createPaymentBody;

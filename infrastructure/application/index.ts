@@ -680,6 +680,10 @@ export = async () => {
                 includeSubdomains: true,
                 preload: true,
               },
+              // Set X-Content-Type-Options = "nosniff"
+              contentTypeOptions: { 
+                override: true,
+              },
             },
           }
         ).id,

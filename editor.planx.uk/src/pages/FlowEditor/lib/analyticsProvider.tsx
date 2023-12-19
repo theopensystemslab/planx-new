@@ -122,12 +122,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Track component transition
   useEffect(() => {
-    if (shouldTrackAnalytics && analyticsId) {
-      const curLength = Object.keys(breadcrumbs).length;
-      const prevLength = Object.keys(previousBreadcrumbs).length;
-
-      if (curLength > prevLength) track("forwards", analyticsId);
-      if (curLength < prevLength) track("backwards", analyticsId);
+    if (shouldTrackAnalytics && analyticsId && node?.id) {
+      const logDirection = detemineLogDirection();
+      if (logDirection) track(logDirection, analyticsId, node.id);
 
       setPreviousBreadcrumb(breadcrumbs);
     }
@@ -149,19 +146,27 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     </Provider>
   );
 
-  async function track(direction: AnalyticsLogDirection, analyticsId: number) {
-    const metadata = getNodeMetadata();
-    const nodeTitle =
-      node?.type === TYPES.Content
-        ? getContentTitle(node)
-        : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
+  async function track(
+    direction: AnalyticsLogDirection,
+    analyticsId: number,
+    nodeId: string,
+  ) {
+    const nodeToTrack = flow[nodeId];
+
+    const metadata = getNodeMetadata(nodeToTrack);
+    const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
+    const nodeTitle = extractNodeTitle(nodeToTrack);
+
     // On component transition create the new analytics log
     const result = await insertNewAnalyticsLog(
       direction,
       analyticsId,
       metadata,
+      nodeType,
       nodeTitle,
+      nodeId,
     );
+
     const id = result?.data.insert_analytics_logs_one?.id;
     const newLogCreatedAt = result?.data.insert_analytics_logs_one?.created_at;
 
@@ -178,7 +183,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     direction: AnalyticsLogDirection,
     analyticsId: number,
     metadata: NodeMetadata,
+    nodeType: string | null,
     nodeTitle: string,
+    nodeId: string | null,
   ) {
     const result = await publicClient.mutate({
       mutation: gql`
@@ -186,9 +193,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           $flow_direction: String
           $analytics_id: bigint
           $metadata: jsonb
-          $node_type: Int
+          $node_type: String
           $node_title: String
-          $user_agent: jsonb
+          $node_id: String
         ) {
           insert_analytics_logs_one(
             object: {
@@ -198,6 +205,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
               metadata: $metadata
               node_type: $node_type
               node_title: $node_title
+              node_id: $node_id
             }
           ) {
             id
@@ -209,8 +217,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         flow_direction: direction,
         analytics_id: analyticsId,
         metadata: metadata,
-        node_type: node?.type,
+        node_type: nodeType,
         node_title: nodeTitle,
+        node_id: nodeId,
       },
     });
     return result;
@@ -375,11 +384,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       const id = response.data.insert_analytics_one.id;
       setAnalyticsId(id);
-      track(type, id);
+      const currentNodeId = currentCard()?.id;
+      if (currentNodeId) track(type, id, currentNodeId);
     }
   }
 
-  function getNodeMetadata() {
+  function getNodeMetadata(node: Store.node) {
     switch (node?.type) {
       case TYPES.Result:
         const flagSet = node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
@@ -427,6 +437,22 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         },
       });
     }
+  }
+
+  function extractNodeTitle(node: Store.node) {
+    const nodeTitle =
+      node?.type === TYPES.Content
+        ? getContentTitle(node)
+        : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
+    return nodeTitle;
+  }
+
+  function detemineLogDirection() {
+    const curLength = Object.keys(breadcrumbs).length;
+    const prevLength = Object.keys(previousBreadcrumbs).length;
+
+    if (curLength > prevLength) return "forwards";
+    if (curLength < prevLength) return "backwards";
   }
 };
 

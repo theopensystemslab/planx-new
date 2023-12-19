@@ -16,16 +16,26 @@ const SectionContentGrid = styled(Grid)(({ theme }) => ({
   paddingTop: theme.spacing(2),
   paddingBottom: theme.spacing(2),
   flexWrap: "nowrap",
+  [theme.breakpoints.down("md")]: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
 }));
 
 const LeftGutter = styled(Grid)(({ theme }) => ({
-  flex: `0 0 ${theme.spacing(6)}`,
+  flex: `0 0 ${theme.spacing(3)}`,
   textAlign: "center",
+  [theme.breakpoints.up("md")]: {
+    flex: `0 0 ${theme.spacing(6)}`,
+  },
 }));
 
 const SectionContent = styled(Grid)(({ theme }) => ({
   flexGrow: 1,
-  paddingRight: theme.spacing(6),
+  width: "100%",
+  [theme.breakpoints.up("md")]: {
+    paddingRight: theme.spacing(6),
+  },
 }));
 
 const Title = styled(Typography)(({ theme }) => ({

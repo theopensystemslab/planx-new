@@ -9,6 +9,8 @@ config:
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
   application:file-api-key:
     secure: AAABAGyTfLujGho+V0tEhFXQRET5FjYK6txyaFTB3gY/VaKzq8yNlocJTAM5nt8mBhF6T+AeQD2GxW63
+  application:file-api-key-nexus:
+    secure: AAABAB2cv4GAf8RqN1hHbRbO68p8o4kLJYWsip9BoPdobrNtQB787M3s+gJnKKl9DfyXRHOXHGc=
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAN5E+De3A3HtpLVaSNTDwk9Uz4r2d5g8SIRVbNOd2fj3eU+lGJXjVbEAnxezr14hwabbfwW2ptjcFzqkhG7OmQ==
