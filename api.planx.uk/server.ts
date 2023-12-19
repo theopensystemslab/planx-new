@@ -51,6 +51,7 @@ app.use(
   cors({
     credentials: true,
     methods: "*",
+    origin: "http://localhost:3000",
   }),
 );
 

@@ -98,6 +98,7 @@ test.describe("Navigation", () => {
 
     page.on("dialog", (dialog) => dialog.accept(serviceProps.name));
     await page.locator("button", { hasText: "Add a new service" }).click();
+    page.waitForResponse((res) => res.url().includes("/v1/graphql"));
 
     // update context to allow flow to be torn down
     context.flow = { ...serviceProps };

@@ -187,6 +187,7 @@ const getFlowMetadata = async (
           id
           flowSettings: settings
           flowAnalyticsLink: analytics_link
+          data
         }
       }
     `,

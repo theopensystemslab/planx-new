@@ -44,10 +44,8 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
 
 const getLoggedInUser = async () => {
   const url = `${process.env.REACT_APP_API_URL}/user/me`;
-  const jwt = getCookie("jwt");
-  const headers = { authorization: `Bearer ${jwt}` };
   try {
-    const response = await axios.get<User>(url, { headers });
+    const response = await axios.get<User>(url, { withCredentials: true });
     console.log({ response });
     console.log({ data: JSON.stringify(response.data) });
     return response.data;
