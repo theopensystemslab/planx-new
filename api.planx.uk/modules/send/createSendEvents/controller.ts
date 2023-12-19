@@ -36,13 +36,16 @@ const createSendEvents: CreateSendEventsController = async (
       });
       combinedResponse["bops"] = bopsEvent;
 
-      const bopsV2Event = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/bops-v2/${bops.localAuthority}`,
-        schedule_at: new Date(now.getTime() + 45 * 1000),
-        payload: bops.body,
-        comment: `bops_v2_submission_${sessionId}`,
-      });
-      combinedResponse["bops_v2"] = bopsV2Event;
+      const isProduction = process.env.APP_ENVIRONMENT === "production";
+      if (!isProduction) {
+        const bopsV2Event = await createScheduledEvent({
+          webhook: `{{HASURA_PLANX_API_URL}}/bops-v2/${bops.localAuthority}`,
+          schedule_at: new Date(now.getTime() + 45 * 1000),
+          payload: bops.body,
+          comment: `bops_v2_submission_${sessionId}`,
+        });
+        combinedResponse["bops_v2"] = bopsV2Event;
+      }
     }
 
     if (uniform) {

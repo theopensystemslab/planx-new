@@ -153,7 +153,7 @@ describe(`sending an application to BOPS v2`, () => {
     });
   });
 
-  it("proxies request and returns hasura id", async () => {
+  it("successfully proxies request and returns hasura id", async () => {
     nock(`${submissionURL}/api/v2/planning_applications`).post("").reply(200, {
       application: "0000123",
     });
