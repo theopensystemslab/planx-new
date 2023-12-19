@@ -50,6 +50,11 @@ const analyticsContext = createContext<{
   ) => Promise<void>;
   node: Store.node | null;
   trackInputErrors: (error: string) => Promise<void>;
+  track: (
+    nodeId: string,
+    direction?: AnalyticsLogDirection,
+    analyticsSessionId?: number,
+  ) => Promise<void>;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
@@ -58,6 +63,7 @@ const analyticsContext = createContext<{
   trackBackwardsNavigationByNodeId: () => Promise.resolve(),
   node: null,
   trackInputErrors: () => Promise.resolve(),
+  track: () => Promise.resolve(),
 });
 const { Provider } = analyticsContext;
 
@@ -140,6 +146,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         trackBackwardsNavigationByNodeId,
         node,
         trackInputErrors,
+        track,
       }}
     >
       {children}
@@ -477,6 +484,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (updatedBreadcrumbKeys) {
       updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
         const breadcrumb = breadcrumbs[breadcrumbKey];
+        //Note the changes implemented with this approach break the ordering as
+        // the visible node can have mutliple subsequent logs which aren't answered.
         if (breadcrumb.auto) {
           track(breadcrumbKey);
         }

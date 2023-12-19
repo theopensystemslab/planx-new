@@ -3,8 +3,9 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
 import { styled, Theme, useTheme } from "@mui/material/styles";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useEffect } from "react";
 import { ApplicationPath } from "types";
 
 import SaveResumeButton from "./SaveResumeButton";
@@ -47,9 +48,20 @@ const Card: React.FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme();
-  const path = useStore((state) => state.path);
+  const [path, currentCard] = useStore((state) => [
+    state.path,
+    state.currentCard,
+  ]);
   const showSaveResumeButton =
     path === ApplicationPath.SaveAndReturn && handleSubmit;
+  const { track } = useAnalyticsTracking();
+
+  useEffect(() => {
+    // The Card component is only rendered when there's content the user will
+    // see
+    const visibileNode = currentCard();
+    if (visibileNode?.id) track(visibileNode?.id);
+  }, []);
 
   return (
     <Fade
