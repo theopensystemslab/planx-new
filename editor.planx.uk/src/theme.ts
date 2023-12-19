@@ -228,13 +228,13 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       MuiButton: {
         variants: [
           {
-            props: { variant: 'help' },
+            props: { variant: "help" },
             style: {
               color: palette.primary.main,
-              backgroundColor: palette.background.paper,
               boxShadow: "none",
               borderBottom: `2px dotted ${palette.primary.main}`,
-              padding: "0.5em 0.5em",
+              padding: "0.25em 0.1em",
+              width: "auto",
               "&:hover": {
                 boxShadow: `0 1px 0 ${palette.primary.main}`,
               },
@@ -260,7 +260,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             minWidth: "3em",
             "&:hover": {
               boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
-            }
+            },
           },
           text: {
             color: palette.text.secondary,

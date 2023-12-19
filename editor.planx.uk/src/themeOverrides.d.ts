@@ -33,7 +33,7 @@ declare module "@mui/material/styles/createPalette" {
 }
 
 // Append our custom variants to MUI Button
-declare module '@mui/material/Button' {
+declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     help: true;
   }

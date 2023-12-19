@@ -1,4 +1,4 @@
-import HelpIcon from '@mui/icons-material/Help';
+import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -89,15 +89,16 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         )}
         {!!(info || policyRef || howMeasured) && (
           <HelpButton
-              variant="help"
-              size="large"
-              title={`More information`}
-              aria-label={`See more information about "${title}"`}
-              onClick={handleHelpClick}
-              aria-haspopup="dialog"
-              data-testid="more-info-button"
-            >
-              <HelpIcon /> More info
+            variant="help"
+            size="large"
+            title={`More information`}
+            aria-label={`See more information about "${title}"`}
+            onClick={handleHelpClick}
+            aria-haspopup="dialog"
+            data-testid="more-info-button"
+            sx={{ mt: 2 }}
+          >
+            <HelpIcon /> More information
           </HelpButton>
         )}
         <MoreInfo open={open} handleClose={() => setOpen(false)}>
