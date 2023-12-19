@@ -102,6 +102,9 @@ test.describe("Navigation", () => {
     // update context to allow flow to be torn down
     context.flow = { ...serviceProps };
 
+    // @ts-expect-error Missing api
+    page.evaluate(() => console.log(window.api.getState().flow));
+
     await page.locator("li.hanger > a").click();
     await page.getByRole("dialog").waitFor();
 
