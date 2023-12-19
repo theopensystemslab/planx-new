@@ -29,12 +29,14 @@ const Description = styled(Box)(({ theme }) => ({
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
   width: theme.breakpoints.values.formWrap,
+  maxWidth: "100%",
 }));
 
 export const HelpButton = styled(Button)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   marginTop: theme.spacing(1.5),
+  fontSize: "inherit",
   "& > svg": {
     marginRight: theme.spacing(0.5),
   },
@@ -88,18 +90,18 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           </Description>
         )}
         {!!(info || policyRef || howMeasured) && (
-          <HelpButton
-            variant="help"
-            size="large"
-            title={`More information`}
-            aria-label={`See more information about "${title}"`}
-            onClick={handleHelpClick}
-            aria-haspopup="dialog"
-            data-testid="more-info-button"
-            sx={{ mt: 2 }}
-          >
-            <HelpIcon /> More information
-          </HelpButton>
+          <Typography variant="subtitle1" component="div">
+            <HelpButton
+              variant="help"
+              title={`More information`}
+              aria-label={`See more information about "${title}"`}
+              onClick={handleHelpClick}
+              aria-haspopup="dialog"
+              data-testid="more-info-button"
+            >
+              <HelpIcon /> More information
+            </HelpButton>
+          </Typography>
         )}
         <MoreInfo open={open} handleClose={() => setOpen(false)}>
           {info && info !== emptyContent ? (

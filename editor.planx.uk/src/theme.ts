@@ -232,13 +232,21 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             style: {
               color: palette.primary.main,
               boxShadow: "none",
-              borderBottom: `2px dotted ${palette.primary.main}`,
               padding: "0.25em 0.1em",
               width: "auto",
+              fontWeight: "initial",
+              fontSize: "inherit",
+              textDecoration: "underline",
+              textDecorationThickness: "2px",
+              textDecorationStyle: "dotted",
+              textUnderlineOffset: "4px",
               "&:hover": {
-                boxShadow: `0 1px 0 ${palette.primary.main}`,
+                textDecoration: "underline",
+                textDecorationThickness: "3px",
+                background: "transparent",
+                boxShadow: "none",
               },
-              "&:hover, &:focus": {
+              "&:focus": {
                 borderColor: palette.text.primary,
                 borderStyle: "solid",
               },
