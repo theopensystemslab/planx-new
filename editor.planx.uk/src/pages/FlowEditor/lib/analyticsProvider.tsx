@@ -33,9 +33,10 @@ type NodeMetadata = {
   flag?: Flag;
   title?: string;
   type?: TYPES;
+  isAutoAnswered?: boolean | null;
 };
 
-let lastAnalyticsLogId: number | undefined = undefined;
+let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
@@ -100,19 +101,19 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   const previousBreadcrumbs = usePrevious(breadcrumbs);
 
   const onPageExit = () => {
-    if (lastAnalyticsLogId && shouldTrackAnalytics) {
+    if (lastVisibleNodeAnalyticsLogId && shouldTrackAnalytics) {
       if (document.visibilityState === "hidden") {
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`,
+          }/analytics/log-user-exit?analyticsLogId=${lastVisibleNodeAnalyticsLogId.toString()}`,
         );
       }
       if (document.visibilityState === "visible") {
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`,
+          }/analytics/log-user-resume?analyticsLogId=${lastVisibleNodeAnalyticsLogId?.toString()}`,
         );
       }
     }
@@ -166,9 +167,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       : analyticsId;
     // Ensure essential log data is available
     if (nodeToTrack && logDirection && analyticsSession) {
-      const metadata = getNodeMetadata(nodeToTrack);
+      const metadata: NodeMetadata = getNodeMetadata(nodeToTrack);
       const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
       const nodeTitle = extractNodeTitle(nodeToTrack);
+      const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
+      metadata["isAutoAnswered"] = isAutoAnswered;
+
       // On component transition create the new analytics log
       const result = await insertNewAnalyticsLog(
         logDirection,
@@ -183,10 +187,17 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         result?.data.insert_analytics_logs_one?.created_at;
       // On successful create of a new log update the previous log with the next_log_created_at
       // This allows us to estimate how long a user spend on a card
-      if (lastAnalyticsLogId && newLogCreatedAt) {
-        updateLastLogWithNextLogCreatedAt(lastAnalyticsLogId, newLogCreatedAt);
+      if (lastVisibleNodeAnalyticsLogId && newLogCreatedAt && !isAutoAnswered) {
+        // This should only be called when a new log is shown to the user!
+        updateLastLogWithNextLogCreatedAt(
+          lastVisibleNodeAnalyticsLogId,
+          newLogCreatedAt,
+        );
       }
-      lastAnalyticsLogId = id;
+      if (!breadcrumbs[nodeId]?.auto) {
+        // Only update if the node was actually shown to the user
+        lastVisibleNodeAnalyticsLogId = id;
+      }
     }
   }
 
@@ -237,7 +248,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   async function updateLastLogWithNextLogCreatedAt(
-    lastAnalyticsLogId: number,
+    lastVisibleNodeAnalyticsLogId: number,
     newLogCreatedAt: Date,
   ) {
     await publicClient.mutate({
@@ -255,14 +266,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       `,
       variables: {
-        id: lastAnalyticsLogId,
+        id: lastVisibleNodeAnalyticsLogId,
         next_log_created_at: newLogCreatedAt,
       },
     });
   }
 
   async function trackHelpClick(metadata?: HelpClickMetadata) {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb = {}) {
@@ -276,7 +287,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           metadata,
         },
       });
@@ -284,7 +295,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   async function trackNextStepsLinkClick(metadata?: SelectedUrlsMetadata) {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation UpdateHasClickNextStepsLink(
@@ -300,7 +311,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           metadata,
         },
       });
@@ -310,7 +321,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function trackFlowDirectionChange(
     flowDirection: AnalyticsLogDirection,
   ) {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation UpdateFlowDirection($id: bigint!, $flow_direction: String) {
@@ -323,7 +334,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           flow_direction: flowDirection,
         },
       });
@@ -338,7 +349,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const metadata: Record<string, NodeMetadata> = {};
     metadata[`${initiator}`] = targetNodeMetadata;
 
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation UpdateHaInitiatedBackwardsNavigation(
@@ -354,7 +365,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           metadata,
         },
       });
@@ -430,7 +441,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
    * Capture user input errors caught by ErrorWrapper component
    */
   async function trackInputErrors(error: string) {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation TrackInputErrors($id: bigint!, $error: jsonb) {
@@ -443,7 +454,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           error,
         },
       });
