@@ -7,7 +7,7 @@ import {
 import { TYPES } from "@planx/components/types";
 import Bowser from "bowser";
 import { publicClient } from "lib/graphql";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { usePrevious } from "react-use";
 
 import { Store, useStore } from "./store";
@@ -121,10 +121,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
-  // Track component transition
+  // Track if nodes have been auto answered on component transistion
   useEffect(() => {
-    if (shouldTrackAnalytics && analyticsId && node?.id) {
-      track(node.id);
+    if (shouldTrackAnalytics && analyticsId) {
+      // Note that when going backwards through flows when a node is landed on
+      // it might auto answer nodes in the future which will still be 'forwards' direction logs
+      trackAutoTrueNodes();
     }
   }, [breadcrumbs]);
 
@@ -453,9 +455,32 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (previousBreadcrumbs) {
       const curLength = Object.keys(breadcrumbs).length;
       const prevLength = Object.keys(previousBreadcrumbs).length;
-
       if (curLength > prevLength) return "forwards";
       if (curLength < prevLength) return "backwards";
+    }
+  }
+
+  function findUpdatedBreadcrumbKeys(): string[] | undefined {
+    if (previousBreadcrumbs) {
+      const currentKeys = Object.keys(breadcrumbs);
+      const previousKeys = Object.keys(previousBreadcrumbs);
+
+      const updatedBreadcrumbKeys = currentKeys.filter(
+        (breadcrumb) => !previousKeys.includes(breadcrumb),
+      );
+      return updatedBreadcrumbKeys;
+    }
+  }
+
+  function trackAutoTrueNodes() {
+    const updatedBreadcrumbKeys = findUpdatedBreadcrumbKeys();
+    if (updatedBreadcrumbKeys) {
+      updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
+        const breadcrumb = breadcrumbs[breadcrumbKey];
+        if (breadcrumb.auto) {
+          track(breadcrumbKey);
+        }
+      });
     }
   }
 };
