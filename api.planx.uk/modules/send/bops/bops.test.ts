@@ -164,6 +164,8 @@ describe(`sending an application to BOPS`, () => {
 });
 
 describe(`sending an application to BOPS v2`, () => {
+  const submissionURL = "https://test.bops-test.com";
+
   beforeEach(() => {
     queryMock.mockQuery({
       name: "FindApplication",
@@ -181,6 +183,38 @@ describe(`sending an application to BOPS v2`, () => {
       matchOnVariables: false,
       data: {
         insertBopsApplication: { id: 22 },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetStagingBopsSubmissionURL",
+      data: {
+        teams: [
+          {
+            integrations: {
+              bopsSubmissionURL: submissionURL,
+            },
+          },
+        ],
+      },
+      variables: {
+        slug: "southwark",
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetStagingBopsSubmissionURL",
+      data: {
+        teams: [
+          {
+            integrations: {
+              bopsSubmissionURL: null,
+            },
+          },
+        ],
+      },
+      variables: {
+        slug: "unsupported-team",
       },
     });
   });
