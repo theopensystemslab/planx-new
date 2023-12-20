@@ -50,7 +50,6 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     localAuthority,
     env,
   );
-  console.log({ bopsSubmissionURL });
   const isSupported = Boolean(bopsSubmissionURL);
   if (!isSupported) {
     return next(
@@ -186,7 +185,6 @@ const sendToBOPSV2 = async (
     localAuthority,
     env,
   );
-  console.log({ bopsSubmissionURL });
   const isSupported = Boolean(bopsSubmissionURL);
   if (!isSupported) {
     return next(
