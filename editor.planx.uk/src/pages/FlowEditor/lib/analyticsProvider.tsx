@@ -157,7 +157,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     analyticsSessionId?: number,
   ) {
     const nodeToTrack = flow[nodeId];
-    const logDirection = direction || detemineLogDirection();
+    const logDirection = direction || determineLogDirection();
     const analyticsSession = analyticsSessionId || analyticsId;
 
     if (!nodeToTrack || !logDirection || !analyticsSession) {
@@ -472,7 +472,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     return nodeTitle;
   }
 
-  function detemineLogDirection() {
+  function determineLogDirection() {
     if (previousBreadcrumbs) {
       const curLength = Object.keys(breadcrumbs).length;
       const prevLength = Object.keys(previousBreadcrumbs).length;
