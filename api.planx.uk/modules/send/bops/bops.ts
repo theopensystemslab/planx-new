@@ -44,7 +44,8 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   // a local or staging API instance should send to the BOPS staging endpoint
   // production should send to the BOPS production endpoint
   const localAuthority = req.params.localAuthority;
-  const env = process.env.NODE_ENV === "production" ? "production" : "staging";
+  const env =
+    process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
   const bopsSubmissionURL = await $api.team.getBopsSubmissionURL(
     localAuthority,
     env,
@@ -178,21 +179,13 @@ const sendToBOPSV2 = async (
   // a local or staging API instance should send to the BOPS staging endpoint
   // production should send to the BOPS production endpoint
   const localAuthority = req.params.localAuthority;
-  const env = process.env.NODE_ENV === "production" ? "production" : "staging";
+  const env =
+    process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
   const bopsSubmissionURL = await $api.team.getBopsSubmissionURL(
     localAuthority,
     env,
   );
   const isSupported = Boolean(bopsSubmissionURL);
-  if (!isSupported) {
-    return next(
-      new ServerError({
-        status: 400,
-        message: `Back-office Planning System (BOPS) is not enabled for this local authority (${localAuthority})`,
-      }),
-    );
-  }
-
   if (!isSupported) {
     return next(
       new ServerError({
