@@ -100,7 +100,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     previewEnvironment === "standalone" && isAnalyticsEnabled;
   const previousBreadcrumbs = usePrevious(breadcrumbs);
 
-  const onPageExit = () => {
+  const trackVisibilityChange = () => {
     if (lastVisibleNodeAnalyticsLogId && shouldTrackAnalytics) {
       if (document.visibilityState === "hidden") {
         send(
@@ -119,14 +119,16 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  useEffect(() => {
+  const onVisibilityChange = () => {
     if (shouldTrackAnalytics)
-      document.addEventListener("visibilitychange", onPageExit);
+      document.addEventListener("visibilitychange", trackVisibilityChange);
     return () => {
       if (shouldTrackAnalytics)
-        document.removeEventListener("visibilitychange", onPageExit);
+        document.removeEventListener("visibilitychange", trackVisibilityChange);
     };
-  }, []);
+  };
+
+  useEffect(onVisibilityChange, []);
 
   // Track if nodes have been auto answered on component transistion
   useEffect(() => {
