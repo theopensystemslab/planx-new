@@ -33,7 +33,7 @@ type NodeMetadata = {
   flag?: Flag;
   title?: string;
   type?: TYPES;
-  isAutoAnswered?: boolean | null;
+  isAutoAnswered?: boolean;
 };
 
 let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;
@@ -164,11 +164,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    const metadata: NodeMetadata = getNodeMetadata(nodeToTrack);
+    const metadata: NodeMetadata = getNodeMetadata(nodeToTrack, nodeId);
     const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
     const nodeTitle = extractNodeTitle(nodeToTrack);
-    const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
-    metadata["isAutoAnswered"] = isAutoAnswered;
 
     const result = await insertNewAnalyticsLog(
       logDirection,
@@ -186,14 +184,18 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    if (lastVisibleNodeAnalyticsLogId && newLogCreatedAt && !isAutoAnswered) {
+    if (
+      lastVisibleNodeAnalyticsLogId &&
+      newLogCreatedAt &&
+      !metadata.isAutoAnswered
+    ) {
       updateLastLogWithNextLogCreatedAt(
         lastVisibleNodeAnalyticsLogId,
         newLogCreatedAt,
       );
     }
 
-    if (!breadcrumbs[nodeId]?.auto) {
+    if (!metadata.isAutoAnswered) {
       lastVisibleNodeAnalyticsLogId = id;
     }
   }
@@ -408,7 +410,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  function getNodeMetadata(node: Store.node) {
+  function getNodeMetadata(node: Store.node, nodeId: string) {
+    const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
     switch (node?.type) {
       case TYPES.Result:
         const flagSet = node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
@@ -418,10 +421,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           flagSet,
           displayText,
           flag,
+          isAutoAnswered
         };
 
       default:
-        return {};
+        return {
+          isAutoAnswered
+        };
     }
   }
 
