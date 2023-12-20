@@ -60,11 +60,11 @@ paths:
           $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
-  /me:
+  /user/me:
     get:
       summary: Get information about currently logged in user
       tags:
-        - misc
+        - user
       security:
         - bearerAuth: []
       responses:
