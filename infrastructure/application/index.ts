@@ -326,26 +326,6 @@ export = async () => {
           },
           { name: "SESSION_SECRET", value: config.requireSecret("session-secret") },
           { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
-          {
-            name: "BOPS_SUBMISSION_URL_LAMBETH",
-            value: pulumi.interpolate`https://lambeth.${config.requireSecret("bops-api-root-domain")}`,
-          },
-          {
-            name: "BOPS_SUBMISSION_URL_SOUTHWARK",
-            value: pulumi.interpolate`https://southwark.${config.requireSecret("bops-api-root-domain")}`,
-          },
-          {
-            name: "BOPS_SUBMISSION_URL_BUCKINGHAMSHIRE",
-            value: pulumi.interpolate`https://buckinghamshire.${config.requireSecret("bops-api-root-domain")}`,
-          },
-          {
-            name: "BOPS_SUBMISSION_URL_CAMDEN",
-            value: pulumi.interpolate`https://camden.${config.requireSecret("bops-api-root-domain")}`,
-          },
-          {
-            name: "BOPS_SUBMISSION_URL_GLOUCESTER",
-            value: pulumi.interpolate`https://gloucester.${config.requireSecret("bops-api-root-domain")}`,
-          },
           { name: "BOPS_API_TOKEN", value: config.requireSecret("bops-api-token") },
           { name: "JWT_SECRET", value: config.requireSecret("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },
