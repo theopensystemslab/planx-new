@@ -130,13 +130,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(onVisibilityChange, []);
 
-  // Track if nodes have been auto answered on component transistion
   useEffect(() => {
-    if (shouldTrackAnalytics && analyticsId) {
-      // Note that when going backwards through flows when a node is landed on
-      // it might auto answer nodes in the future which will still be 'forwards' direction logs
-      trackAutoTrueNodes();
-    }
+    if (shouldTrackAnalytics && analyticsId) trackAutoTrueNodes();
   }, [breadcrumbs]);
 
   return (
