@@ -8,13 +8,13 @@ import AuthenticatedLayout from "../../pages/layout/AuthenticatedLayout";
 
 /**
  * View wrapper for all authenticated routes
- * Parses JWT and inits user store
+ * Initialises user store
  */
 export const authenticatedView = async () => {
   const jwt = getCookie("jwt");
   if (!jwt) return redirect("/login");
 
-  await useStore.getState().initUserStore(jwt);
+  await useStore.getState().initUserStore();
 
   useStore.getState().setPreviewEnvironment("editor");
 
