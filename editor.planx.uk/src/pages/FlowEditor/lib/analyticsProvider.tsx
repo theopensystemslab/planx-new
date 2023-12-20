@@ -156,45 +156,45 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     direction?: AnalyticsLogDirection,
     analyticsSessionId?: number,
   ) {
-    // Either use passed in arguments or infer from local data
     const nodeToTrack = flow[nodeId];
-    const logDirection = direction ? direction : detemineLogDirection();
-    const analyticsSession = analyticsSessionId
-      ? analyticsSessionId
-      : analyticsId;
-    // Ensure essential log data is available
-    if (nodeToTrack && logDirection && analyticsSession) {
-      const metadata: NodeMetadata = getNodeMetadata(nodeToTrack);
-      const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
-      const nodeTitle = extractNodeTitle(nodeToTrack);
-      const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
-      metadata["isAutoAnswered"] = isAutoAnswered;
+    const logDirection = direction || detemineLogDirection();
+    const analyticsSession = analyticsSessionId || analyticsId;
 
-      // On component transition create the new analytics log
-      const result = await insertNewAnalyticsLog(
-        logDirection,
-        analyticsSession,
-        metadata,
-        nodeType,
-        nodeTitle,
-        nodeId,
+    if (!nodeToTrack || !logDirection || !analyticsSession) {
+      return;
+    }
+
+    const metadata: NodeMetadata = getNodeMetadata(nodeToTrack);
+    const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
+    const nodeTitle = extractNodeTitle(nodeToTrack);
+    const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
+    metadata["isAutoAnswered"] = isAutoAnswered;
+
+    const result = await insertNewAnalyticsLog(
+      logDirection,
+      analyticsSession,
+      metadata,
+      nodeType,
+      nodeTitle,
+      nodeId,
+    );
+
+    const { id, created_at: newLogCreatedAt } =
+      result?.data.insert_analytics_logs_one || {};
+
+    if (!id || !newLogCreatedAt) {
+      return;
+    }
+
+    if (lastVisibleNodeAnalyticsLogId && newLogCreatedAt && !isAutoAnswered) {
+      updateLastLogWithNextLogCreatedAt(
+        lastVisibleNodeAnalyticsLogId,
+        newLogCreatedAt,
       );
-      const id = result?.data.insert_analytics_logs_one?.id;
-      const newLogCreatedAt =
-        result?.data.insert_analytics_logs_one?.created_at;
-      // On successful create of a new log update the previous log with the next_log_created_at
-      // This allows us to estimate how long a user spend on a card
-      if (lastVisibleNodeAnalyticsLogId && newLogCreatedAt && !isAutoAnswered) {
-        // This should only be called when a new log is shown to the user!
-        updateLastLogWithNextLogCreatedAt(
-          lastVisibleNodeAnalyticsLogId,
-          newLogCreatedAt,
-        );
-      }
-      if (!breadcrumbs[nodeId]?.auto) {
-        // Only update if the node was actually shown to the user
-        lastVisibleNodeAnalyticsLogId = id;
-      }
+    }
+
+    if (!breadcrumbs[nodeId]?.auto) {
+      lastVisibleNodeAnalyticsLogId = id;
     }
   }
 
@@ -492,8 +492,6 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (updatedBreadcrumbKeys) {
       updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
         const breadcrumb = breadcrumbs[breadcrumbKey];
-        //Note the changes implemented with this approach break the ordering as
-        // the visible node can have mutliple subsequent logs which aren't answered.
         if (breadcrumb.auto) {
           track(breadcrumbKey);
         }
