@@ -25,7 +25,7 @@ export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 export type BackwardsNavigationInitiatorType = "change" | "back";
 
 type NodeMetadata = {
-  flagset?: FlagSet;
+  flagSet?: FlagSet;
   displayText?: {
     heading?: string;
     description?: string;
@@ -421,12 +421,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           flagSet,
           displayText,
           flag,
-          isAutoAnswered
+          isAutoAnswered,
         };
 
       default:
         return {
-          isAutoAnswered
+          isAutoAnswered,
         };
     }
   }
