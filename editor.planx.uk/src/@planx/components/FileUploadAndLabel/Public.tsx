@@ -54,6 +54,14 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
+const FileList = styled(List)(({ theme }) => ({
+  width: "100%",
+  maxWidth: theme.breakpoints.values.formWrap,
+  [theme.breakpoints.up("md")]: {
+    marginTop: "-1em",
+  },
+}));
+
 export const InfoButton = styled(Button)(({ theme }) => ({
   minWidth: 0,
   marginLeft: theme.spacing(1.5),
@@ -174,13 +182,7 @@ function Component(props: Props) {
               </ErrorWrapper>
             </>
           )}
-          <List
-            disablePadding
-            sx={{
-              width: "100%",
-              marginTop: { md: "-1em" },
-            }}
-          >
+          <FileList disablePadding>
             {(Object.keys(fileList) as Array<keyof typeof fileList>)
               .filter(isCategoryVisible)
               .flatMap((fileListCategory) => [
@@ -209,7 +211,7 @@ function Component(props: Props) {
                   </ListItem>
                 )),
               ])}
-          </List>
+          </FileList>
         </DropzoneContainer>
         <ErrorWrapper error={fileListError} id={`${props.id}-fileList`}>
           <Box>

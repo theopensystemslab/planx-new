@@ -28,6 +28,11 @@ const Description = styled(Box)(({ theme }) => ({
   },
 }));
 
+const QuestionHeaderWrapper = styled(Box)(({ theme }) => ({
+  maxWidth: theme.breakpoints.values.formWrap,
+  marginBottom: theme.spacing(1),
+}));
+
 const TitleWrapper = styled(Box)(({ theme }) => ({
   width: theme.breakpoints.values.formWrap,
   maxWidth: `calc(100% - (${HelpButtonMinWidth} + 4px))`,
@@ -107,7 +112,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 
   return (
     <>
-      <Box mb={1} sx={{ minHeight: "2em" }}>
+      <QuestionHeaderWrapper>
         {title && (
           <TitleWrapper mr={1} pt={0.5}>
             <Typography
@@ -170,7 +175,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           ) : undefined}
         </MoreInfo>
         {img && <Image src={img} alt="question" />}
-      </Box>
+      </QuestionHeaderWrapper>
     </>
   );
 };
