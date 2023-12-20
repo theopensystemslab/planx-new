@@ -59,8 +59,8 @@ const Card: React.FC<Props> = ({
   useEffect(() => {
     // The Card component is only rendered when there's content the user will
     // see
-    const visibileNode = currentCard();
-    if (visibileNode?.id) track(visibileNode?.id);
+    const visibleNode = currentCard();
+    if (visibleNode?.id) track(visibleNode?.id);
   }, []);
 
   return (
