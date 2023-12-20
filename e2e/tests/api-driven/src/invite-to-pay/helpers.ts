@@ -164,13 +164,13 @@ const setupMockBopsSubmissionUrl = async (teamId: number) => {
   await $admin.client.request(
     gql`
       mutation SetupTeamIntegrationE2E(
-        $staging_bops_submission_url: String
-        $team_id: Int
+        $stagingBopsSubmissionUrl: String
+        $teamId: Int
       ) {
         insert_team_integrations_one(
           object: {
-            teamId: $team_id
-            stagingBopsSubmissionUrl: $staging_bops_submission_url
+            team_id: $teamId
+            staging_bops_submission_url: $stagingBopsSubmissionUrl
           }
         ) {
           id
