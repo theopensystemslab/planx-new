@@ -35,7 +35,7 @@ const editorRoutes = mount({
     } catch (err) {
       console.error(err);
     } finally {
-      const cookieString = `jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      const cookieString = `loggedIn=; jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
       // remove jwt cookie for non planx domains (netlify preview urls)
       document.cookie = cookieString;
       // remove jwt cookie for planx domains (staging and production)
