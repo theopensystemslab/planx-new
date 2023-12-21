@@ -47,8 +47,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { inputFocusStyle } from "theme";
 import tippy, { type Instance } from "tippy.js";
-import { inputFocusStyle } from "ui/editor/theme";
 import { create } from "zustand";
 
 import Input from "../shared/Input";

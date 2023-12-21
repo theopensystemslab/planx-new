@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { getFeedbackMetadata } from "lib/feedback";
 import React, { useEffect, useState } from "react";
 import { Link as ReactNaviLink } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 const Root = styled("footer")(({ theme }) => ({
   color: theme.palette.common.white,

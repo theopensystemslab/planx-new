@@ -1,7 +1,7 @@
 import MuiButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import { darken, styled } from "@mui/material/styles";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export enum TagType {
   Alert = "alert",

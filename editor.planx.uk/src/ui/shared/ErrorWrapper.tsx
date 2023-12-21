@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { ERROR_MESSAGE } from "@planx/components/shared/constants";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React, { ReactElement, useEffect } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export interface Props {
   error?: string;

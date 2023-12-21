@@ -10,7 +10,7 @@ import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
   inputFocusStyle,
-} from "ui/editor/theme";
+} from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
 

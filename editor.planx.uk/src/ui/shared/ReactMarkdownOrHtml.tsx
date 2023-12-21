@@ -3,7 +3,7 @@ import { styled, Theme } from "@mui/material/styles";
 import DOMPurify from "dompurify";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "ui/editor/theme";
+import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
 const styles = (theme: Theme) => ({
   "& a": linkStyle(theme.palette.primary.main),

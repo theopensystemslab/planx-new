@@ -9,7 +9,7 @@ import format from "date-fns/format";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export default SummaryListsBySections;
 

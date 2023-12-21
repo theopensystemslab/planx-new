@@ -12,7 +12,7 @@ import { PublicProps } from "@planx/components/ui";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
-import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Notice>;

@@ -22,7 +22,7 @@ import { ToastContainer } from "react-toastify";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
-import { defaultTheme } from "./ui/editor/theme";
+import { defaultTheme } from "./theme";
 
 if (process.env.REACT_APP_ENV !== "production") {
   console.log(`ENV: ${process.env.REACT_APP_ENV}`);

@@ -12,7 +12,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
-import { generateTeamTheme } from "ui/editor/theme";
+import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";

@@ -11,8 +11,8 @@ import { submitFeedback } from "lib/feedback";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import type { Node, TextContent } from "types";
-import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
 
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
