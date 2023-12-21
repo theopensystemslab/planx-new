@@ -434,9 +434,6 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
               $node_id: String!
             ) {
               update_analytics_logs(
-                // Update the analytics log for the last visible node but
-                // additionally check that the node_ids match to avoid
-                // incorrectly capturing incorrect data 
                 where: { id: { _eq: $id }, node_id: { _eq: $node_id } }
                 _set: { allow_list_answers: $allow_list_answers }
               ) {
