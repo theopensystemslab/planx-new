@@ -52,6 +52,7 @@
           - analytics_id
           - created_at
           - id
+          - node_id
           - user_exit
         filter: {}
   update_permissions:

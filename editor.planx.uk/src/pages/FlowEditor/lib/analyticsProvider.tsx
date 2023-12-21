@@ -20,6 +20,11 @@ type AnalyticsLogDirection =
   | "reset"
   | "save";
 
+const allowList = [
+  "proposal.projectType",
+  "application.declaration.connection",
+];
+
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 export type BackwardsNavigationInitiatorType = "change" | "back";
@@ -132,7 +137,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(onVisibilityChange, []);
 
   useEffect(() => {
-    if (shouldTrackAnalytics && analyticsId) trackAutoTrueNodes();
+    if (shouldTrackAnalytics && analyticsId) trackBreadcrumbChanges();
   }, [breadcrumbs]);
 
   return (
@@ -417,6 +422,53 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
+  async function updateLastVisibleNodeLogWithAllowListAnswers(nodeId: string) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
+      const allowListAnswers = getAllowListAnswers(nodeId);
+      if (allowListAnswers) {
+        await publicClient.mutate({
+          mutation: gql`
+            mutation UpdateAllowListAnswers(
+              $id: bigint!
+              $allow_list_answers: jsonb
+              $node_id: String!
+            ) {
+              update_analytics_logs(
+                // Update the analytics log for the last visible node but
+                // additionally check that the node_ids match to avoid
+                // incorrectly capturing incorrect data 
+                where: { id: { _eq: $id }, node_id: { _eq: $node_id } }
+                _set: { allow_list_answers: $allow_list_answers }
+              ) {
+                returning {
+                  id
+                }
+              }
+            }
+          `,
+          variables: {
+            id: lastVisibleNodeAnalyticsLogId,
+            allow_list_answers: allowListAnswers,
+            node_id: nodeId,
+          },
+        });
+      }
+    }
+  }
+
+  function getAllowListAnswers(nodeId: string) {
+    const { data } = flow[nodeId];
+    const nodeFn = data?.fn || data?.val;
+    if (nodeFn && allowList.includes(nodeFn)) {
+      const answerIds = breadcrumbs[nodeId]?.answers;
+      const answerValues = answerIds?.map((answerId) => {
+        return flow[answerId]?.data?.val;
+      });
+      const filteredAnswers = answerValues?.filter(Boolean);
+      return filteredAnswers;
+    }
+  }
+
   function getNodeMetadata(node: Store.node, nodeId: string) {
     const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
     switch (node?.type) {
@@ -502,13 +554,15 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  function trackAutoTrueNodes() {
+  function trackBreadcrumbChanges() {
     const updatedBreadcrumbKeys = findUpdatedBreadcrumbKeys();
     if (updatedBreadcrumbKeys) {
       updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
         const breadcrumb = breadcrumbs[breadcrumbKey];
         if (breadcrumb.auto) {
           track(breadcrumbKey);
+        } else {
+          updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey);
         }
       });
     }
