@@ -6,11 +6,11 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { getIn, useFormik } from "formik";
 import React, { useState } from "react";
-import ChecklistItem from "ui/ChecklistItem";
-import ErrorWrapper from "ui/ErrorWrapper";
-import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
-import FormWrapper from "ui/FormWrapper";
-import FullWidthWrapper from "ui/FullWidthWrapper";
+import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
+import FormWrapper from "ui/public/FormWrapper";
+import FullWidthWrapper from "ui/public/FullWidthWrapper";
+import ChecklistItem from "ui/shared/ChecklistItem";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { array, object } from "yup";
 
 import { Option } from "../shared";

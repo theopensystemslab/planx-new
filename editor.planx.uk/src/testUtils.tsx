@@ -6,7 +6,7 @@ import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { configureAxe } from "jest-axe";
 import React from "react";
 
-import { defaultTheme } from "../src/theme";
+import { defaultTheme } from "./theme";
 
 export const axe = configureAxe({
   rules: {

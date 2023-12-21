@@ -7,8 +7,8 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import DateInputComponent from "ui/DateInput";
-import InputRow from "ui/InputRow";
+import DateInputComponent from "ui/shared/DateInput";
+import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";

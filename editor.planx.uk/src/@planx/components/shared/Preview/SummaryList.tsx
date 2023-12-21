@@ -163,7 +163,13 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
           (filteredBreadcrumbs, i) =>
             Boolean(filteredBreadcrumbs.length) && (
               <React.Fragment key={i}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", mt: 5 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mt: 5,
+                  }}
+                >
                   <Typography
                     component={props.sectionComponent || "h2"}
                     variant="h3"
@@ -171,12 +177,16 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>
                   <Link
-                    onClick={() => props.changeAnswer(filteredBreadcrumbs[0].nodeId)}
+                    onClick={() =>
+                      props.changeAnswer(filteredBreadcrumbs[0].nodeId)
+                    }
                     component="button"
                     fontSize="body1.fontSize"
                   >
                     Change
-                    <span style={visuallyHidden}>the answers in this section</span>
+                    <span style={visuallyHidden}>
+                      the answers in this section
+                    </span>
                   </Link>
                 </Box>
                 <SummaryList
@@ -230,7 +240,7 @@ function SummaryList(props: SummaryListProps) {
               passport={props.passport}
             />
             {props.showChangeButton && (
-              <dd>  
+              <dd>
                 <Link
                   onClick={() => handleChangeAnswer(nodeId)}
                   component="button"
@@ -242,7 +252,7 @@ function SummaryList(props: SummaryListProps) {
                   </span>
                 </Link>
               </dd>
-             )}
+            )}
           </React.Fragment>
         ),
       )}
@@ -487,8 +497,8 @@ function FileUploadAndLabel(props: ComponentProps) {
         <ul>
           {uniqueFilenames.length
             ? uniqueFilenames.map((filename, index) => (
-              <li key={index}>{filename}</li>
-            ))
+                <li key={index}>{filename}</li>
+              ))
             : "No files uploaded"}
         </ul>
       </dd>
@@ -513,7 +523,7 @@ function getAnswers(props: ComponentProps): string[] {
   try {
     const array = props!.userData!.answers!;
     if (Array.isArray(array)) return array;
-  } catch (err) { }
+  } catch (err) {}
   return [];
 }
 
@@ -526,6 +536,6 @@ function getAnswersByNode(props: ComponentProps): any {
   try {
     const variableName: string = props.node!.data!.fn!;
     return props.userData?.data![variableName || props.nodeId];
-  } catch (err) { }
+  } catch (err) {}
   return "";
 }

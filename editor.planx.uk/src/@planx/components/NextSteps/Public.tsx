@@ -1,6 +1,6 @@
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
-import NextStepsList from "ui/NextStepsList";
+import NextStepsList from "ui/public/NextStepsList";
 
 import Card from "../shared/Preview/Card";
 import QuestionHeader from "../shared/Preview/QuestionHeader";

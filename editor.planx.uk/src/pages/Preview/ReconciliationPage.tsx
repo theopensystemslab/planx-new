@@ -11,7 +11,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
 import type { ReconciliationResponse } from "types";
-import Banner from "ui/Banner";
+import Banner from "ui/public/Banner";
 
 interface Props {
   bannerHeading: string;

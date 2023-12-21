@@ -69,7 +69,9 @@ export default function ReactMarkdownOrHtml(props: {
       <HTMLRoot
         color={props.textColor}
         dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(incrementHeaders, { ADD_ATTR: ["target"] }),
+          __html: DOMPurify.sanitize(incrementHeaders, {
+            ADD_ATTR: ["target"],
+          }),
         }}
         id={props.id}
       />

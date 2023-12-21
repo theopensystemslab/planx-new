@@ -7,14 +7,14 @@ import {
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import Input from "ui/Input";
-import InputGroup from "ui/InputGroup";
-import InputRow from "ui/InputRow";
-import InputRowItem from "ui/InputRowItem";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
-import OptionButton from "ui/OptionButton";
-import RichTextInput from "ui/RichTextInput";
+import InputGroup from "ui/editor/InputGroup";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import OptionButton from "ui/editor/OptionButton";
+import RichTextInput from "ui/editor/RichTextInput";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
 
 import type { FindProperty } from "./model";
 import {

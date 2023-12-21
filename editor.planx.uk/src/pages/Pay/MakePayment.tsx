@@ -13,8 +13,8 @@ import { format } from "date-fns";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
-import Banner from "ui/Banner";
-import { DescriptionList } from "ui/DescriptionList";
+import Banner from "ui/public/Banner";
+import { DescriptionList } from "ui/public/DescriptionList";
 import { z } from "zod";
 
 import {

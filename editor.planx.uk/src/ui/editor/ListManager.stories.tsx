@@ -2,8 +2,8 @@ import Box from "@mui/material/Box";
 import { Meta } from "@storybook/react";
 import React, { ChangeEvent, useState } from "react";
 
+import Input from "../shared/Input";
 import ColorPicker from "./ColorPicker";
-import Input from "./Input";
 import ListManager from "./ListManager";
 
 const metadata: Meta = {

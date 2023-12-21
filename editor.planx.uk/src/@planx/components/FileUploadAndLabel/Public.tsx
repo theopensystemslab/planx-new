@@ -15,10 +15,10 @@ import {
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
-import ErrorWrapper from "ui/ErrorWrapper";
-import FullWidthWrapper from "ui/FullWidthWrapper";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
-import { emptyContent } from "ui/RichTextInput";
+import { emptyContent } from "ui/editor/RichTextInput";
+import FullWidthWrapper from "ui/public/FullWidthWrapper";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";

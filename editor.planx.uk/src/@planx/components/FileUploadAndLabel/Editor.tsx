@@ -14,19 +14,19 @@ import {
 import { useFormik } from "formik";
 import { lowerCase, merge, upperFirst } from "lodash";
 import React from "react";
-import ImgInput from "ui/ImgInput";
-import Input from "ui/Input";
-import InputRow from "ui/InputRow";
-import InputRowItem from "ui/InputRowItem";
+import ImgInput from "ui/editor/ImgInput";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
-} from "ui/ListManager";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
-import { ModalSubtitle } from "ui/ModalSubtitle";
-import OptionButton from "ui/OptionButton";
-import RichTextInput from "ui/RichTextInput";
-import SelectInput from "ui/SelectInput";
+} from "ui/editor/ListManager";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import { ModalSubtitle } from "ui/editor/ModalSubtitle";
+import OptionButton from "ui/editor/OptionButton";
+import RichTextInput from "ui/editor/RichTextInput";
+import SelectInput from "ui/editor/SelectInput";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
 
 import {
   checkIfConditionalRule,

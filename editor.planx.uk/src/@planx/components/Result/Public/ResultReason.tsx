@@ -10,7 +10,7 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Caret from "ui/icons/Caret";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import type { Node } from "../../../../types";
 

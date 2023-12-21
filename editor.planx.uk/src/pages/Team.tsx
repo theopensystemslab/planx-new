@@ -18,7 +18,7 @@ import { Link, useNavigation } from "react-navi";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
-import SimpleMenu from "../ui/SimpleMenu";
+import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
 
 const Root = styled(Box)(() => ({

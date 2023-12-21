@@ -5,10 +5,10 @@ import { Flag, FlagSet, flatFlags } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
 import React, { useState } from "react";
-import Input from "ui/Input";
-import InputRow from "ui/InputRow";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
 
 import { TYPES } from "../types";
 import { ICONS } from "../ui";

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import React from "react";
 
-import OptionButton from "./OptionButton";
+import OptionButton from "../editor/OptionButton";
 
 interface RadioProps<T> {
   value?: T;

@@ -1,7 +1,7 @@
 import Collapse from "@mui/material/Collapse";
 import Link from "@mui/material/Link";
 import React, { useState } from "react";
-import Input from "ui/Input";
+import Input from "ui/shared/Input";
 
 export interface Props {
   children: JSX.Element[] | JSX.Element;

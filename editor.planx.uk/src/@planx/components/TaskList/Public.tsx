@@ -3,7 +3,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { TaskList } from "@planx/components/TaskList/model";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
-import NumberedList from "ui/NumberedList";
+import NumberedList from "ui/public/NumberedList";
 
 export type Props = PublicProps<TaskList>;
 

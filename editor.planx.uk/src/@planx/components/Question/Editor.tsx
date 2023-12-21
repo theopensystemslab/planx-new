@@ -1,14 +1,14 @@
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
-import ImgInput from "ui/ImgInput";
-import Input from "ui/Input";
-import InputGroup from "ui/InputGroup";
-import InputRow from "ui/InputRow";
-import InputRowItem from "ui/InputRowItem";
-import ListManager from "ui/ListManager";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
-import RichTextInput from "ui/RichTextInput";
+import ImgInput from "ui/editor/ImgInput";
+import InputGroup from "ui/editor/InputGroup";
+import ListManager from "ui/editor/ListManager";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import RichTextInput from "ui/editor/RichTextInput";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option, parseMoreInformation } from "../shared";
 import PermissionSelect from "../shared/PermissionSelect";

@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
-} from "ui/ExternalPlanningSiteDialog";
+} from "ui/public/ExternalPlanningSiteDialog";
 
 import {
   DEFAULT_NEW_ADDRESS_TITLE,
