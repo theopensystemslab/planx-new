@@ -14,6 +14,7 @@ import Card from "../shared/Preview/Card";
 import QuestionHeader from "../shared/Preview/QuestionHeader";
 import type { Section } from "./model";
 import { computeSectionStatuses } from "./model";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 
 export type Props = PublicProps<Section>;
 
@@ -134,11 +135,16 @@ export function SectionsOverviewList({
     alteredSectionIds,
   });
 
+  const { trackBackwardsNavigationByNodeId } = useAnalyticsTracking();
+
   const changeFirstAnswerInSection = (sectionId: string) => {
     const sectionIndex = flow._root.edges?.indexOf(sectionId);
     if (sectionIndex !== undefined) {
       const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
-      if (firstNodeInSection) changeAnswer(firstNodeInSection);
+      if (firstNodeInSection) {
+        trackBackwardsNavigationByNodeId(firstNodeInSection, "change");
+        changeAnswer(firstNodeInSection)
+      }
     }
   };
 

@@ -157,6 +157,13 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
       .map(removeNonPresentationalNodes)
       .map((section) => section.map(makeSummaryBreadcrumb));
 
+    const { trackBackwardsNavigationByNodeId } = useAnalyticsTracking();
+
+    const handleChangeAnswer = (id: string) => {
+      trackBackwardsNavigationByNodeId(id, "change");
+      props.changeAnswer(id);
+    };
+
     return (
       <>
         {sectionsWithFilteredBreadcrumbs.map(
@@ -178,7 +185,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   </Typography>
                   <Link
                     onClick={() =>
-                      props.changeAnswer(filteredBreadcrumbs[0].nodeId)
+                      handleChangeAnswer(filteredBreadcrumbs[0].nodeId)
                     }
                     component="button"
                     fontSize="body1.fontSize"
