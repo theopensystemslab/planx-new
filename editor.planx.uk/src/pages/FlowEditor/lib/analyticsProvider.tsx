@@ -168,6 +168,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const metadata: NodeMetadata = getNodeMetadata(nodeToTrack, nodeId);
     const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
     const nodeTitle = extractNodeTitle(nodeToTrack);
+    const nodeFn = nodeToTrack?.data?.fn || nodeToTrack?.data?.val;
 
     const result = await insertNewAnalyticsLog(
       logDirection,
@@ -176,6 +177,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       nodeType,
       nodeTitle,
       nodeId,
+      nodeFn,
     );
 
     const { id, created_at: newLogCreatedAt } =
@@ -208,6 +210,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     nodeType: string | null,
     nodeTitle: string,
     nodeId: string | null,
+    nodeFn: string | null,
   ) {
     const result = await publicClient.mutate({
       mutation: gql`
@@ -218,6 +221,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           $node_type: String
           $node_title: String
           $node_id: String
+          $node_fn: String
         ) {
           insert_analytics_logs_one(
             object: {
@@ -228,6 +232,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
               node_type: $node_type
               node_title: $node_title
               node_id: $node_id
+              node_fn: $node_fn
             }
           ) {
             id
@@ -242,6 +247,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         node_type: nodeType,
         node_title: nodeTitle,
         node_id: nodeId,
+        node_fn: nodeFn,
       },
     });
     return result;

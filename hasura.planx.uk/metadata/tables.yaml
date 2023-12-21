@@ -40,6 +40,7 @@
           - id
           - input_errors
           - metadata
+          - node_fn
           - node_id
           - node_title
           - node_type
@@ -57,6 +58,7 @@
     - role: public
       permission:
         columns:
+          - allow_list_answers
           - flow_direction
           - has_clicked_help
           - input_errors
