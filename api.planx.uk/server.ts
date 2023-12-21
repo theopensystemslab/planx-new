@@ -63,6 +63,17 @@ if (process.env.NODE_ENV !== "test") {
   app.use(
     pinoLogger({
       serializers: noir(["req.headers.authorization"], "**REDACTED**"),
+      autoLogging: {
+        ignore: (req) => {
+          const isAWSHealthchecker =
+            req.headers["user-agent"] === "ELB-HealthChecker/2.0";
+          const isLocalDockerHealthchecker =
+            req.headers["user-agent"] === "Wget" &&
+            req.headers.host === "localhost:7002";
+
+          return isAWSHealthchecker || isLocalDockerHealthchecker;
+        },
+      },
     }),
   );
 }
