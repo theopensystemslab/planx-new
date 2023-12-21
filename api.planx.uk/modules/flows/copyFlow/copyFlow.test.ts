@@ -28,16 +28,6 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
-    name: "UpdateFlowData",
-    matchOnVariables: false,
-    data: {
-      flow: {
-        id: 2,
-      },
-    },
-  });
-
-  queryMock.mockQuery({
     name: "InsertOperation",
     matchOnVariables: false,
     data: {
