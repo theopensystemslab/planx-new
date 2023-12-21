@@ -41,17 +41,25 @@ export const handleSuccess = (req: Request, res: Response) => {
  * The client will then use the JWT to make authenticated requests to the API.
  */
 function setJWTCookie(returnTo: string, res: Response, req: Request) {
-  const cookie: CookieOptions = {
+  const defaultCookieOptions: CookieOptions = {
     domain: `.${new URL(returnTo).host}`,
     maxAge: new Date(
       new Date().setFullYear(new Date().getFullYear() + 1),
     ).getTime(),
-    httpOnly: true,
-    secure: true,
     sameSite: "none",
   };
 
-  res.cookie("jwt", req.user!.jwt, cookie);
+  const httpOnlyCookieOptions: CookieOptions = {
+    ...defaultCookieOptions,
+    httpOnly: true,
+    secure: true,
+  };
+
+  // Set secure, httpOnly cookie with JWT
+  res.cookie("jwt", req.user!.jwt, httpOnlyCookieOptions);
+
+  // Set second cookie which can be read by browser to detect presence of the unreadable httpOnly cookie
+  res.cookie("loggedIn", true, defaultCookieOptions);
 
   res.redirect(returnTo);
 }
