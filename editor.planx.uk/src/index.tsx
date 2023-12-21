@@ -35,8 +35,9 @@ if (!window.customElements.get("my-map")) {
 }
 
 const hasJWT = (): boolean | void => {
-  const jwtCookie = getCookie("jwt");
-  if (jwtCookie) return true;
+  // This cookie indicates the presence of the secure httpOnly "jwt" cookie
+  const loggedInCookie = getCookie("loggedIn");
+  if (loggedInCookie) return true;
 
   // If JWT not set via cookie, check search params
   const jwtSearchParams = new URLSearchParams(window.location.search).get(
