@@ -78,8 +78,8 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
   '@tiptap/extension-link':
-    specifier: ^2.0.3
-    version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+    specifier: ^2.1.13
+    version: 2.1.13(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
   '@tiptap/extension-list-item':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
@@ -158,9 +158,6 @@ dependencies:
   js-cookie:
     specifier: ^3.0.5
     version: 3.0.5
-  jwt-decode:
-    specifier: ^4.0.0
-    version: 4.0.0
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -7126,8 +7123,8 @@ packages:
       '@tiptap/core': 2.0.3(@tiptap/pm@2.0.3)
     dev: false
 
-  /@tiptap/extension-link@2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3):
-    resolution: {integrity: sha512-H72tXQ5rkVCkAhFaf08fbEU7EBUCK0uocsqOF+4th9sOlrhfgyJtc8Jv5EXPDpxNgG5jixSqWBo0zKXQm9s9eg==}
+  /@tiptap/extension-link@2.1.13(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3):
+    resolution: {integrity: sha512-wuGMf3zRtMHhMrKm9l6Tft5M2N21Z0UP1dZ5t1IlOAvOeYV2QZ5UynwFryxGKLO0NslCBLF/4b/HAdNXbfXWUA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
@@ -14420,11 +14417,6 @@ packages:
       pako: 1.0.11
       readable-stream: 2.3.8
       setimmediate: 1.0.5
-    dev: false
-
-  /jwt-decode@4.0.0:
-    resolution: {integrity: sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==}
-    engines: {node: '>=18'}
     dev: false
 
   /keyv@4.5.4:
