@@ -14,8 +14,8 @@ import {
 import { GeoJSONObject } from "@turf/helpers";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
-import Input from "ui/Input";
-import InputLabel from "ui/InputLabel";
+import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input";
 
 import { DEFAULT_NEW_ADDRESS_LABEL, SiteAddress } from "../model";
 

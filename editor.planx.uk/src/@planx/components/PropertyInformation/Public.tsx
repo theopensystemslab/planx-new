@@ -14,7 +14,7 @@ import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";

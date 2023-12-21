@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { FeaturePlaceholder } from "ui/FeaturePlaceholder";
+import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 
 const ServiceFlags: React.FC = () => {
   return (

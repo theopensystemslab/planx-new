@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import InputField from "ui/InputField";
+import InputField from "ui/editor/InputField";
 
 const meta = {
   title: "Design System/Atoms/Form Elements/InputField",

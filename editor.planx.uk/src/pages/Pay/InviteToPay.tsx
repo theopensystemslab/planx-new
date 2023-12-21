@@ -10,7 +10,7 @@ import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import Banner from "ui/Banner";
+import Banner from "ui/public/Banner";
 
 const List = styled("ul")(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,

@@ -5,9 +5,9 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useCurrentRoute } from "react-navi";
-import Input from "ui/Input";
-import InputLabel from "ui/InputLabel";
-import InputRow from "ui/InputRow";
+import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
 import { object, ref, string } from "yup";
 
 const confirmEmailSchema = object({

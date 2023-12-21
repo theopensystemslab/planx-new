@@ -4,10 +4,10 @@ import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import isNil from "lodash/isNil";
 import React, { useEffect, useRef } from "react";
-import Input from "ui/Input";
-import InputLabel from "ui/InputLabel";
-import InputRow from "ui/InputRow";
-import InputRowLabel from "ui/InputRowLabel";
+import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowLabel from "ui/shared/InputRowLabel";
 import { object, string } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";

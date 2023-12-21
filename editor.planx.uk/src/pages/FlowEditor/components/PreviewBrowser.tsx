@@ -16,7 +16,7 @@ import Typography from "@mui/material/Typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
-import Input from "ui/Input";
+import Input from "ui/shared/Input";
 
 import { TYPES } from "../../../@planx/components/types";
 import Questions from "../../Preview/Questions";

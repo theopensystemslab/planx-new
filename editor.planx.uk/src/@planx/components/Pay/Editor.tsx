@@ -5,12 +5,12 @@ import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import Input from "ui/Input";
-import InputRow from "ui/InputRow";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
-import OptionButton from "ui/OptionButton";
-import RichTextInput from "ui/RichTextInput";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import OptionButton from "ui/editor/OptionButton";
+import RichTextInput from "ui/editor/RichTextInput";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
 
 function Component(props: any) {
   const formik = useFormik<Pay>({

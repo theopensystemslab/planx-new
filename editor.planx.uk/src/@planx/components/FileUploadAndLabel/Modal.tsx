@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
-import ErrorWrapper from "ui/ErrorWrapper";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";

@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
 import React, { PropsWithChildren } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
 import Caret from "ui/icons/Caret";
 
 const StyledButton = styled(Button)(() => ({

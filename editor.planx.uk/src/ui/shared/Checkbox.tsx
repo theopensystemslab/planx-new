@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import React from "react";
-import { borderedFocusStyle } from "theme";
+import { borderedFocusStyle } from "ui/editor/theme";
 
 const Root = styled(Box)(({ theme }) => ({
   display: "inline-flex",

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import Radio from "ui/Radio";
+import Radio from "ui/shared/Radio";
 
 const meta = {
   title: "Design System/Atoms/Form Elements/Radio",

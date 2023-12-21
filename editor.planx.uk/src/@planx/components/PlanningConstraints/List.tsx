@@ -16,7 +16,7 @@ import groupBy from "lodash/groupBy";
 import React, { ReactNode, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import Caret from "ui/icons/Caret";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",

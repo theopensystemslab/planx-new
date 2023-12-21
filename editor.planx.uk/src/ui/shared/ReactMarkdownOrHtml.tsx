@@ -3,7 +3,7 @@ import { styled, Theme } from "@mui/material/styles";
 import DOMPurify from "dompurify";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "ui/editor/theme";
 
 const styles = (theme: Theme) => ({
   "& a": linkStyle(theme.palette.primary.main),
@@ -69,7 +69,9 @@ export default function ReactMarkdownOrHtml(props: {
       <HTMLRoot
         color={props.textColor}
         dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(incrementHeaders, { ADD_ATTR: ["target"] }),
+          __html: DOMPurify.sanitize(incrementHeaders, {
+            ADD_ATTR: ["target"],
+          }),
         }}
         id={props.id}
       />

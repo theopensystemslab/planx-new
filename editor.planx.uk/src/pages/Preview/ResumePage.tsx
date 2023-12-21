@@ -13,9 +13,9 @@ import { useCurrentRoute } from "react-navi";
 import { Link as ReactNaviLink } from "react-navi";
 import type { ReconciliationResponse, Session } from "types";
 import { ApplicationPath, SendEmailPayload } from "types";
-import Input from "ui/Input";
-import InputLabel from "ui/InputLabel";
-import InputRow from "ui/InputRow";
+import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
 import { object, string } from "yup";
 
 import ReconciliationPage from "./ReconciliationPage";

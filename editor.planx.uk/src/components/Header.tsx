@@ -30,13 +30,13 @@ import {
   useCurrentRoute,
   useNavigation,
 } from "react-navi";
+import { ApplicationPath } from "types";
 import {
   borderedFocusStyle,
   focusStyle,
   FONT_WEIGHT_SEMI_BOLD,
   LINE_HEIGHT_BASE,
-} from "theme";
-import { ApplicationPath } from "types";
+} from "ui/editor/theme";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";

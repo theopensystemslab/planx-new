@@ -17,10 +17,10 @@ import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { isPreviewOnlyDomain } from "routes/utils";
 import { ApplicationPath } from "types";
-import ErrorWrapper from "ui/ErrorWrapper";
-import Input from "ui/Input";
-import InputLabel from "ui/InputLabel";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import InputLabel from "ui/public/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import Input from "ui/shared/Input";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { object, string } from "yup";
 
 // Passport keys which will be used to display a preview of the session to the payee as part of their journey

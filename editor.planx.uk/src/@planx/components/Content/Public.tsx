@@ -6,7 +6,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Content>;
 

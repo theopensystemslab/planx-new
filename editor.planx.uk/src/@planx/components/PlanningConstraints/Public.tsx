@@ -16,7 +16,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import useSWR, { Fetcher } from "swr";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";

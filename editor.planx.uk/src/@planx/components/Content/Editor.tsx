@@ -9,11 +9,11 @@ import {
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import ColorPicker from "ui/ColorPicker";
-import InputRow from "ui/InputRow";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
-import RichTextInput from "ui/RichTextInput";
+import ColorPicker from "ui/editor/ColorPicker";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import RichTextInput from "ui/editor/RichTextInput";
+import InputRow from "ui/shared/InputRow";
 
 export type Props = EditorProps<TYPES.Content, Content>;
 

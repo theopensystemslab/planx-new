@@ -3,9 +3,9 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import Input from "ui/Input";
-import InputLabel from "ui/InputLabel";
-import InputRowItem from "ui/InputRowItem";
+import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input";
+import InputRowItem from "ui/shared/InputRowItem";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import type { Contact, ContactInput } from "./model";

@@ -15,8 +15,8 @@ import buffer from "@turf/buffer";
 import { type GeometryObject, point } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import FullWidthWrapper from "ui/FullWidthWrapper";
+import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
+import FullWidthWrapper from "ui/public/FullWidthWrapper";
 
 import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
 

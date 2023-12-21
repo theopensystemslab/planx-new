@@ -241,7 +241,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
             minWidth: "3em",
             "&:hover": {
               boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
-            }
+            },
           },
           text: {
             color: palette.text.secondary,

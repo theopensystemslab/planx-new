@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { ReactNode } from "react";
 
-import Caret from "./icons/Caret";
+import Caret from "../icons/Caret";
 
 export function ExpandableList(props: { children: ReactNode }): FCReturn {
   return (

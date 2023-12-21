@@ -9,7 +9,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useNavigation } from "react-navi";
 import { FOOTER_ITEMS } from "types";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",

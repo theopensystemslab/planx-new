@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import Checkbox from "ui/Checkbox";
+import Checkbox from "ui/shared/Checkbox";
 
 import { Props as ButtonBaseProps } from "./ButtonBase";
 

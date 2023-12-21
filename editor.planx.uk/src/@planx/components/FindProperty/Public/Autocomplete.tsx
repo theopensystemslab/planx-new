@@ -9,8 +9,8 @@ import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
-import Input from "ui/Input";
-import InputLabel from "ui/InputLabel";
+import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input";
 
 import type { SiteAddress } from "../model";
 import { FETCH_BLPU_CODES } from "../Public";

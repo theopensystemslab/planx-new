@@ -4,9 +4,9 @@ import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD } from "ui/editor/theme";
 import Caret from "ui/icons/Caret";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 const STEP_DIAMETER = "45px";
 const STEP_SPACER = "60px";
