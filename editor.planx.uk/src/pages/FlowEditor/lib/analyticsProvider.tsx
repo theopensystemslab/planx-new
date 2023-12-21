@@ -7,7 +7,8 @@ import {
 import { TYPES } from "@planx/components/types";
 import Bowser from "bowser";
 import { publicClient } from "lib/graphql";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect } from "react";
+import { usePrevious } from "react-use";
 
 import { Store, useStore } from "./store";
 
@@ -24,7 +25,7 @@ export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 export type BackwardsNavigationInitiatorType = "change" | "back";
 
 type NodeMetadata = {
-  flagset?: FlagSet;
+  flagSet?: FlagSet;
   displayText?: {
     heading?: string;
     description?: string;
@@ -32,9 +33,10 @@ type NodeMetadata = {
   flag?: Flag;
   title?: string;
   type?: TYPES;
+  isAutoAnswered?: boolean;
 };
 
-let lastAnalyticsLogId: number | undefined = undefined;
+let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
@@ -49,6 +51,11 @@ const analyticsContext = createContext<{
   ) => Promise<void>;
   node: Store.node | null;
   trackInputErrors: (error: string) => Promise<void>;
+  track: (
+    nodeId: string,
+    direction?: AnalyticsLogDirection,
+    analyticsSessionId?: number,
+  ) => Promise<void>;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
@@ -57,6 +64,7 @@ const analyticsContext = createContext<{
   trackBackwardsNavigationByNodeId: () => Promise.resolve(),
   node: null,
   trackInputErrors: () => Promise.resolve(),
+  track: () => Promise.resolve(),
 });
 const { Provider } = analyticsContext;
 
@@ -90,44 +98,40 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     new URL(window.location.href).searchParams.get("analytics") !== "false";
   const shouldTrackAnalytics =
     previewEnvironment === "standalone" && isAnalyticsEnabled;
-  const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
+  const previousBreadcrumbs = usePrevious(breadcrumbs);
 
-  const onPageExit = () => {
-    if (lastAnalyticsLogId && shouldTrackAnalytics) {
+  const trackVisibilityChange = () => {
+    if (lastVisibleNodeAnalyticsLogId && shouldTrackAnalytics) {
       if (document.visibilityState === "hidden") {
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`,
+          }/analytics/log-user-exit?analyticsLogId=${lastVisibleNodeAnalyticsLogId.toString()}`,
         );
       }
       if (document.visibilityState === "visible") {
         send(
           `${
             process.env.REACT_APP_API_URL
-          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`,
+          }/analytics/log-user-resume?analyticsLogId=${lastVisibleNodeAnalyticsLogId?.toString()}`,
         );
       }
     }
   };
 
-  useEffect(() => {
+  const onVisibilityChange = () => {
     if (shouldTrackAnalytics)
-      document.addEventListener("visibilitychange", onPageExit);
+      document.addEventListener("visibilitychange", trackVisibilityChange);
     return () => {
       if (shouldTrackAnalytics)
-        document.removeEventListener("visibilitychange", onPageExit);
+        document.removeEventListener("visibilitychange", trackVisibilityChange);
     };
-  }, []);
+  };
 
-  // Track component transition
+  useEffect(onVisibilityChange, []);
+
   useEffect(() => {
-    if (shouldTrackAnalytics && analyticsId && node?.id) {
-      const logDirection = detemineLogDirection();
-      if (logDirection) track(logDirection, analyticsId, node.id);
-
-      setPreviousBreadcrumb(breadcrumbs);
-    }
+    if (shouldTrackAnalytics && analyticsId) trackAutoTrueNodes();
   }, [breadcrumbs]);
 
   return (
@@ -140,6 +144,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         trackBackwardsNavigationByNodeId,
         node,
         trackInputErrors,
+        track,
       }}
     >
       {children}
@@ -147,36 +152,52 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   async function track(
-    direction: AnalyticsLogDirection,
-    analyticsId: number,
     nodeId: string,
+    direction?: AnalyticsLogDirection,
+    analyticsSessionId?: number,
   ) {
     const nodeToTrack = flow[nodeId];
+    const logDirection = direction || determineLogDirection();
+    const analyticsSession = analyticsSessionId || analyticsId;
 
-    const metadata = getNodeMetadata(nodeToTrack);
+    if (!nodeToTrack || !logDirection || !analyticsSession) {
+      return;
+    }
+
+    const metadata: NodeMetadata = getNodeMetadata(nodeToTrack, nodeId);
     const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
     const nodeTitle = extractNodeTitle(nodeToTrack);
 
-    // On component transition create the new analytics log
     const result = await insertNewAnalyticsLog(
-      direction,
-      analyticsId,
+      logDirection,
+      analyticsSession,
       metadata,
       nodeType,
       nodeTitle,
       nodeId,
     );
 
-    const id = result?.data.insert_analytics_logs_one?.id;
-    const newLogCreatedAt = result?.data.insert_analytics_logs_one?.created_at;
+    const { id, created_at: newLogCreatedAt } =
+      result?.data.insert_analytics_logs_one || {};
 
-    // On successful create of a new log update the previous log with the next_log_created_at
-    // This allows us to estimate how long a user spend on a card
-    if (lastAnalyticsLogId && newLogCreatedAt) {
-      updateLastLogWithNextLogCreatedAt(lastAnalyticsLogId, newLogCreatedAt);
+    if (!id || !newLogCreatedAt) {
+      return;
     }
 
-    lastAnalyticsLogId = id;
+    if (
+      lastVisibleNodeAnalyticsLogId &&
+      newLogCreatedAt &&
+      !metadata.isAutoAnswered
+    ) {
+      updateLastLogWithNextLogCreatedAt(
+        lastVisibleNodeAnalyticsLogId,
+        newLogCreatedAt,
+      );
+    }
+
+    if (!metadata.isAutoAnswered) {
+      lastVisibleNodeAnalyticsLogId = id;
+    }
   }
 
   async function insertNewAnalyticsLog(
@@ -226,7 +247,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   async function updateLastLogWithNextLogCreatedAt(
-    lastAnalyticsLogId: number,
+    lastVisibleNodeAnalyticsLogId: number,
     newLogCreatedAt: Date,
   ) {
     await publicClient.mutate({
@@ -244,14 +265,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       `,
       variables: {
-        id: lastAnalyticsLogId,
+        id: lastVisibleNodeAnalyticsLogId,
         next_log_created_at: newLogCreatedAt,
       },
     });
   }
 
   async function trackHelpClick(metadata?: HelpClickMetadata) {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb = {}) {
@@ -265,7 +286,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           metadata,
         },
       });
@@ -273,7 +294,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   async function trackNextStepsLinkClick(metadata?: SelectedUrlsMetadata) {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation UpdateHasClickNextStepsLink(
@@ -289,7 +310,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           metadata,
         },
       });
@@ -299,7 +320,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function trackFlowDirectionChange(
     flowDirection: AnalyticsLogDirection,
   ) {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation UpdateFlowDirection($id: bigint!, $flow_direction: String) {
@@ -312,7 +333,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           flow_direction: flowDirection,
         },
       });
@@ -327,7 +348,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const metadata: Record<string, NodeMetadata> = {};
     metadata[`${initiator}`] = targetNodeMetadata;
 
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation UpdateHaInitiatedBackwardsNavigation(
@@ -343,7 +364,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           metadata,
         },
       });
@@ -385,11 +406,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       const id = response.data.insert_analytics_one.id;
       setAnalyticsId(id);
       const currentNodeId = currentCard()?.id;
-      if (currentNodeId) track(type, id, currentNodeId);
+      if (currentNodeId) track(currentNodeId, type, id);
     }
   }
 
-  function getNodeMetadata(node: Store.node) {
+  function getNodeMetadata(node: Store.node, nodeId: string) {
+    const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
     switch (node?.type) {
       case TYPES.Result:
         const flagSet = node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
@@ -399,10 +421,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           flagSet,
           displayText,
           flag,
+          isAutoAnswered,
         };
 
       default:
-        return {};
+        return {
+          isAutoAnswered,
+        };
     }
   }
 
@@ -419,7 +444,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
    * Capture user input errors caught by ErrorWrapper component
    */
   async function trackInputErrors(error: string) {
-    if (shouldTrackAnalytics && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastVisibleNodeAnalyticsLogId) {
       await publicClient.mutate({
         mutation: gql`
           mutation TrackInputErrors($id: bigint!, $error: jsonb) {
@@ -432,7 +457,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         `,
         variables: {
-          id: lastAnalyticsLogId,
+          id: lastVisibleNodeAnalyticsLogId,
           error,
         },
       });
@@ -447,12 +472,37 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     return nodeTitle;
   }
 
-  function detemineLogDirection() {
-    const curLength = Object.keys(breadcrumbs).length;
-    const prevLength = Object.keys(previousBreadcrumbs).length;
+  function determineLogDirection() {
+    if (previousBreadcrumbs) {
+      const curLength = Object.keys(breadcrumbs).length;
+      const prevLength = Object.keys(previousBreadcrumbs).length;
+      if (curLength > prevLength) return "forwards";
+      if (curLength < prevLength) return "backwards";
+    }
+  }
 
-    if (curLength > prevLength) return "forwards";
-    if (curLength < prevLength) return "backwards";
+  function findUpdatedBreadcrumbKeys(): string[] | undefined {
+    if (previousBreadcrumbs) {
+      const currentKeys = Object.keys(breadcrumbs);
+      const previousKeys = Object.keys(previousBreadcrumbs);
+
+      const updatedBreadcrumbKeys = currentKeys.filter(
+        (breadcrumb) => !previousKeys.includes(breadcrumb),
+      );
+      return updatedBreadcrumbKeys;
+    }
+  }
+
+  function trackAutoTrueNodes() {
+    const updatedBreadcrumbKeys = findUpdatedBreadcrumbKeys();
+    if (updatedBreadcrumbKeys) {
+      updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
+        const breadcrumb = breadcrumbs[breadcrumbKey];
+        if (breadcrumb.auto) {
+          track(breadcrumbKey);
+        }
+      });
+    }
   }
 };
 
