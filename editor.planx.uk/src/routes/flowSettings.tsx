@@ -2,10 +2,8 @@ import gql from "graphql-tag";
 import { publicClient } from "lib/graphql";
 import { compose, mount, redirect, route, withData } from "navi";
 import DataManagerSettings from "pages/FlowEditor/components/Settings/DataManagerSettings";
-import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import ServiceFlags from "pages/FlowEditor/components/Settings/ServiceFlags";
 import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
-import TeamSettings from "pages/FlowEditor/components/Settings/TeamSettings";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -19,7 +17,7 @@ const flowSettingsRoutes = compose(
   })),
 
   mount({
-    "/": redirect("./team"),
+    "/": redirect("./service"),
     "/:tab": route(async (req) => {
       const { data } = await publicClient.query({
         query: gql`
@@ -53,11 +51,6 @@ const flowSettingsRoutes = compose(
           currentTab={req.params.tab}
           tabs={[
             {
-              name: "Team",
-              route: "team",
-              Component: TeamSettings,
-            },
-            {
               name: "Service",
               route: "service",
               Component: ServiceSettings,
@@ -66,11 +59,6 @@ const flowSettingsRoutes = compose(
               name: "Service Flags",
               route: "flags",
               Component: ServiceFlags,
-            },
-            {
-              name: "Design",
-              route: "design",
-              Component: DesignSettings,
             },
             {
               name: "Data",
