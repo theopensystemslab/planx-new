@@ -62,7 +62,10 @@ const errorLink = onError(({ graphQLErrors, operation }) => {
   }
 });
 
-const handleHasuraGraphQLErrors = (errors: GraphQLErrors, operation: Operation) => {
+const handleHasuraGraphQLErrors = (
+  errors: GraphQLErrors,
+  operation: Operation,
+) => {
   errors.forEach(({ message, locations, path }) => {
     console.error(
       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
@@ -75,7 +78,6 @@ const handleHasuraGraphQLErrors = (errors: GraphQLErrors, operation: Operation) 
   });
 };
 
-
 const parseErrorTypeFromHasuraResponse = (message: string) => {
   const permissionErrors = [
     // Constraints error - user does not have access to this resource
@@ -84,15 +86,13 @@ const parseErrorTypeFromHasuraResponse = (message: string) => {
     /not found in type/gi,
   ];
 
-  const validationErrors = [
-    /Invalid HTML content/gi
-  ];
-  
+  const validationErrors = [/Invalid HTML content/gi];
+
   return {
     permission: permissionErrors.some((re) => re.test(message)),
     validation: validationErrors.some((re) => re.test(message)),
   };
-}
+};
 
 const handleValidationErrors = (operation: Operation) => {
   const user = useStore.getState().getUser();
@@ -105,7 +105,7 @@ const handleValidationErrors = (operation: Operation) => {
     hideProgressBar: true,
     progress: undefined,
   });
-}
+};
 
 const handlePermissionErrors = (operation: Operation) => {
   const user = useStore.getState().getUser();
