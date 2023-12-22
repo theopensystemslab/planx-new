@@ -18,6 +18,9 @@ const mockTeam1: Team = {
   slug: "opensystemslab",
   theme: {
     logo: "logo.jpg",
+    primary: "#0010A4",
+    secondary: null,
+    favicon: null,
   },
 };
 

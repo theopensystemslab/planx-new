@@ -183,7 +183,7 @@ const TeamLogo: React.FC = () => {
   const altText = teamSettings?.homepage
     ? `${teamName} Homepage (opens in a new tab)`
     : `${teamName} Logo`;
-  const logo = <Logo alt={altText} src={teamTheme?.logo} />;
+  const logo = <Logo alt={altText} src={teamTheme?.logo ?? undefined} />;
   return teamSettings?.homepage ? (
     <LogoLink href={teamSettings?.homepage} target="_blank">
       {logo}
