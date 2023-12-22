@@ -502,7 +502,7 @@ const EditorToolbar: React.FC<{
                   navigate([rootFlowPath(true), "settings"].join("/"))
                 }
               >
-                Settings
+                Flow Settings
               </MenuItem>
             )}
 
