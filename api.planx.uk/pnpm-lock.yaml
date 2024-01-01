@@ -57,8 +57,8 @@ dependencies:
     specifier: ^7.0.0
     version: 7.0.0
   express-rate-limit:
-    specifier: ^6.7.0
-    version: 6.7.1(express@4.18.2)
+    specifier: ^7.1.5
+    version: 7.1.5(express@4.18.2)
   form-data:
     specifier: ^4.0.0
     version: 4.0.0
@@ -4179,11 +4179,11 @@ packages:
       pino-http: 6.6.0
     dev: false
 
-  /express-rate-limit@6.7.1(express@4.18.2):
-    resolution: {integrity: sha512-eH4VgI64Nowd2vC5Xylx0lLYovWIp2gRFtTklWDbhSDydGAPQUjvr1B7aQ2/ZADrAi6bJ51qSizKIXWAZ1WCQw==}
-    engines: {node: '>= 14.0.0'}
+  /express-rate-limit@7.1.5(express@4.18.2):
+    resolution: {integrity: sha512-/iVogxu7ueadrepw1bS0X0kaRC/U0afwiYRSLg68Ts+p4Dc85Q5QKsOnPS/QUjPMHvOJQtBDrZgvkOzf8ejUYw==}
+    engines: {node: '>= 16'}
     peerDependencies:
-      express: ^4 || ^5
+      express: 4 || 5 || ^5.0.0-beta.1
     dependencies:
       express: 4.18.2
     dev: false
@@ -8591,7 +8591,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/95b54b3}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.1(react@18.2.0)
