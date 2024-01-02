@@ -15,6 +15,8 @@ export const rootFlowPath = (includePortals = false) => {
   return includePortals ? path : path.split(",")[0];
 };
 
+export const rootTeamPath = () => window.location.pathname.split("/").slice(0, 2).join("/");
+
 export const isSaveReturnFlow = (flowData: Record<string, any>): boolean =>
   Boolean(
     Object.values(flowData).find(

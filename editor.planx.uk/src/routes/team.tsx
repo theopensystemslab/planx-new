@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { compose, lazy, mount, route, withView } from "navi";
+import { compose, lazy, mount, route, withData, withView } from "navi";
 import React from "react";
 
 import { client } from "../lib/graphql";
@@ -14,6 +14,10 @@ let cached: { flowSlug?: string; teamSlug?: string } = {
 };
 
 const routes = compose(
+  withData((req) => ({
+    team: req.params.team,
+  })),
+
   withView(async (req) => await teamView(req)),
 
   mount({
@@ -21,6 +25,8 @@ const routes = compose(
       title: makeTitle(useStore.getState().teamName),
       view: <Team />,
     })),
+
+    "/settings": lazy(() => import("./teamSettings")),
 
     "/:flow": lazy(async (req) => {
       const [slug] = req.params.flow.split(",");
