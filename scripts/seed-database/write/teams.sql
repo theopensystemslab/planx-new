@@ -3,6 +3,7 @@ CREATE TEMPORARY TABLE sync_teams (
   id integer,
   name text,
   slug text,
+  -- TODO: Drop this and fetch from team_themes
   theme jsonb,
   created_at timestamptz,
   updated_at timestamptz,
@@ -20,7 +21,6 @@ INSERT INTO teams (
   id,
   name,
   slug,
-  theme,
   settings,
   notify_personalisation,
   boundary,
@@ -30,7 +30,6 @@ SELECT
   id,
   name,
   slug,
-  theme,
   settings,
   notify_personalisation,
   boundary,
@@ -40,7 +39,6 @@ ON CONFLICT (id) DO UPDATE
 SET
   name = EXCLUDED.name,
   slug = EXCLUDED.slug,
-  theme = EXCLUDED.theme,
   settings = EXCLUDED.settings,
   notify_personalisation = EXCLUDED.notify_personalisation,
   boundary = EXCLUDED.boundary,

@@ -1365,6 +1365,75 @@
       permission:
         filter: {}
 - table:
+    name: team_themes
+    schema: public
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+      comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+      comment: ""
+    - role: public
+      permission:
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+        check: null
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+        check: null
+      comment: ""
+- table:
     name: teams
     schema: public
   object_relationships:
@@ -1374,6 +1443,13 @@
           column: team_id
           table:
             name: team_integrations
+            schema: public
+    - name: theme
+      using:
+        foreign_key_constraint_on:
+          column: team_id
+          table:
+            name: team_themes
             schema: public
   array_relationships:
     - name: flows
@@ -1411,7 +1487,6 @@
           - settings
           - slug
           - submission_email
-          - theme
           - updated_at
   select_permissions:
     - role: api
@@ -1427,7 +1502,6 @@
           - settings
           - slug
           - submission_email
-          - theme
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -1443,7 +1517,6 @@
           - reference_code
           - settings
           - slug
-          - theme
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -1460,7 +1533,6 @@
           - reference_code
           - settings
           - slug
-          - theme
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -1476,7 +1548,6 @@
           - reference_code
           - settings
           - slug
-          - theme
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -1491,7 +1562,6 @@
           - settings
           - slug
           - submission_email
-          - theme
         filter: {}
         check: null
 - table:
