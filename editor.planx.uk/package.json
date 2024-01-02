@@ -81,7 +81,7 @@
     "reconnecting-websocket": "^4.4.0",
     "require-from-string": "^2.0.2",
     "rxjs": "^7.8.1",
-    "scroll-into-view-if-needed": "^2.2.31",
+    "scroll-into-view-if-needed": "^3.1.0",
     "sharedb": "^3.3.2",
     "striptags": "^3.2.0",
     "swr": "^2.2.4",
