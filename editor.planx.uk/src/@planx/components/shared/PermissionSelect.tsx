@@ -2,8 +2,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { flatFlags } from "@opensystemslab/planx-core/types";
 import groupBy from "lodash/groupBy";
 import React from "react";
-import type { Props as SelectInputProps } from "ui/SelectInput";
-import SelectInput from "ui/SelectInput";
+import type { Props as SelectInputProps } from "ui/editor/SelectInput";
+import SelectInput from "ui/editor/SelectInput";
 
 const flags = groupBy(flatFlags, (f) => f.category);
 

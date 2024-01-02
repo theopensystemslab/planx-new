@@ -15,8 +15,8 @@ import { useFormik } from "formik";
 import { Store } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import FormWrapper from "ui/FormWrapper";
-import FullWidthWrapper from "ui/FullWidthWrapper";
+import FormWrapper from "ui/public/FormWrapper";
+import FullWidthWrapper from "ui/public/FullWidthWrapper";
 
 export interface IQuestion {
   id?: string;

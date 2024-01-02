@@ -4,12 +4,12 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { getIn, useFormik } from "formik";
 import React from "react";
-import ChecklistItem from "ui/ChecklistItem";
-import ErrorWrapper from "ui/ErrorWrapper";
-import Input from "ui/Input";
-import InputRow from "ui/InputRow";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ChecklistItem from "ui/shared/ChecklistItem";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
 import { array, object } from "yup";
 
 import { TYPES } from "../types";

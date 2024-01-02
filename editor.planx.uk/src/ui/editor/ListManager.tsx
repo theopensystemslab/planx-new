@@ -16,7 +16,7 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 
-import { removeAt, setAt } from "../utils";
+import { removeAt, setAt } from "../../utils";
 
 export interface EditorProps<T> {
   index?: number;

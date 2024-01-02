@@ -5,11 +5,11 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import type { TextContent } from "types";
-import Input from "ui/Input";
-import InputRow from "ui/InputRow";
-import InputRowItem from "ui/InputRowItem";
-import ListManager from "ui/ListManager";
-import RichTextInput from "ui/RichTextInput";
+import ListManager from "ui/editor/ListManager";
+import RichTextInput from "ui/editor/RichTextInput";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
 import { slugify } from "utils";
 
 function Component() {

@@ -6,6 +6,7 @@ import {
   InMemoryCache,
   Operation,
 } from "@apollo/client";
+import { GraphQLErrors } from "@apollo/client/errors";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 import { logger } from "airbrake";
@@ -48,40 +49,9 @@ const publicHttpLink = createHttpLink({
   headers: { "x-hasura-role": "public" },
 });
 
-const handlePermissionErrors = (message: string, operation: Operation) => {
-  const permissionErrors = [
-    // Constraints error - user does not have access to this resource
-    /permission has failed/gi,
-    // Query or mutation error - user does not have access to this query
-    /not found in type/gi,
-  ];
-
-  const isPermissionError = permissionErrors.some((re) => re.test(message));
-
-  if (isPermissionError) {
-    const user = useStore.getState().getUser();
-    const team = useStore.getState().teamName;
-    logger.notify(
-      `[Permission error]: User ${user?.id} cannot execute ${operation.operationName} for ${team}`,
-    );
-
-    toast.error("Permission error", {
-      toastId: "permission_error",
-      hideProgressBar: true,
-      progress: undefined,
-    });
-  }
-};
-
 const errorLink = onError(({ graphQLErrors, operation }) => {
   if (graphQLErrors) {
-    // GraphQL errors are not retried
-    graphQLErrors.forEach(({ message, locations, path }) => {
-      console.error(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-      );
-      handlePermissionErrors(message, operation);
-    });
+    handleHasuraGraphQLErrors(graphQLErrors, operation);
   } else {
     toast.error("Network error, attempting to reconnect…", {
       toastId,
@@ -91,6 +61,65 @@ const errorLink = onError(({ graphQLErrors, operation }) => {
     });
   }
 });
+
+const handleHasuraGraphQLErrors = (
+  errors: GraphQLErrors,
+  operation: Operation,
+) => {
+  errors.forEach(({ message, locations, path }) => {
+    console.error(
+      `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+    );
+
+    const errors = parseErrorTypeFromHasuraResponse(message);
+
+    if (errors.validation) handleValidationErrors(operation);
+    if (errors.permission) handlePermissionErrors(operation);
+  });
+};
+
+const parseErrorTypeFromHasuraResponse = (message: string) => {
+  const permissionErrors = [
+    // Constraints error - user does not have access to this resource
+    /permission has failed/gi,
+    // Query or mutation error - user does not have access to this query
+    /not found in type/gi,
+  ];
+
+  const validationErrors = [/Invalid HTML content/gi];
+
+  return {
+    permission: permissionErrors.some((re) => re.test(message)),
+    validation: validationErrors.some((re) => re.test(message)),
+  };
+};
+
+const handleValidationErrors = (operation: Operation) => {
+  const user = useStore.getState().getUser();
+  logger.notify(
+    `[Validation error]: User ${user?.id} cannot submit invalid HTML via ${operation.operationName} mutation`,
+  );
+
+  toast.error("Validation error - data not saved", {
+    toastId: "validation_error",
+    hideProgressBar: true,
+    progress: undefined,
+  });
+};
+
+const handlePermissionErrors = (operation: Operation) => {
+  const user = useStore.getState().getUser();
+  const team = useStore.getState().teamName;
+  logger.notify(
+    `[Permission error]: User ${user?.id} cannot execute ${operation.operationName} for ${team}`,
+  );
+
+  toast.error("Permission error", {
+    toastId: "permission_error",
+    hideProgressBar: true,
+    progress: undefined,
+  });
+};
 
 const retryLink = new RetryLink({
   delay: {

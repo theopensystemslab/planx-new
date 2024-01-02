@@ -2,6 +2,9 @@ import { z } from "zod";
 import { ValidatedRequestHandler } from "../../shared/middleware/validate";
 import { getClient } from "../../client";
 import { ServerError } from "../../errors";
+import { RequestHandler } from "express";
+import { User } from "@opensystemslab/planx-core/types";
+import { userContext } from "../auth/middleware";
 
 interface UserResponse {
   message: string;
@@ -61,5 +64,32 @@ export const deleteUser: DeleteUser = async (_req, res, next) => {
     return next(
       new ServerError({ message: "Failed to delete user", cause: error }),
     );
+  }
+};
+
+export const getLoggedInUserDetails: RequestHandler<
+  Record<string, never>,
+  User
+> = async (_req, res, next) => {
+  try {
+    const $client = getClient();
+
+    const id = userContext.getStore()?.user.sub;
+    if (!id)
+      throw new ServerError({
+        message: "User ID missing from request",
+        status: 400,
+      });
+
+    const user = await $client.user.getById(parseInt(id));
+    if (!user)
+      throw new ServerError({
+        message: `Unable to locate user with ID ${id}`,
+        status: 400,
+      });
+
+    res.json(user);
+  } catch (error) {
+    next(error);
   }
 };

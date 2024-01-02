@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import React from "react";
-import Banner from "ui/Banner";
+import Banner from "ui/public/Banner";
 
 const ResultSummary = ({ heading, description, color }: any) => (
   <Banner heading={heading} color={color}>

@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import CollapsibleInput from "ui/CollapsibleInput";
+import CollapsibleInput from "ui/public/CollapsibleInput";
 
 interface Props {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

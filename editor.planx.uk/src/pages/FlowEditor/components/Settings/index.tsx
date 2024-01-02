@@ -9,19 +9,21 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
-import { Link, useCurrentRoute, useNavigation } from "react-navi";
-import { rootFlowPath } from "routes/utils";
+import { Link, useNavigation } from "react-navi";
 
-import DataManagerSettings from "./DataManagerSettings";
-import DesignSettings from "./DesignSettings";
-import ServiceFlags from "./ServiceFlags";
-import ServiceSettings from "./ServiceSettings";
-import TeamSettings from "./TeamSettings";
+interface SettingsProps {
+  currentTab: string;
+  tabs: {
+    route: string;
+    name: string;
+    Component: React.FC;
+  }[];
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
-  index: any;
-  value: any;
+  index: number;
+  value: number;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -44,7 +46,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: any) {
+function a11yProps(index: number) {
   return {
     id: `nav-tab-${index}`,
     "aria-controls": `nav-tabpanel-${index}`,
@@ -103,22 +105,14 @@ const Root = styled(Box)(({ theme }) => ({
   },
 }));
 
-const tabsOrder = ["team", "service", "flags", "design", "data-manager"];
-
-const NavTabs: React.FC<{ tab?: string }> = (props) => {
+const Settings: React.FC<SettingsProps> = ({ currentTab, tabs }) => {
   const { navigate } = useNavigation();
-  const { data } = useCurrentRoute();
-
-  const flowBaseRoute = rootFlowPath(true);
-
-  const makeHref = (path: any) =>
-    [data.mountpath, path].filter(Boolean).join("/");
 
   const handleChange = (event: React.ChangeEvent<any>) => {
     navigate(event.currentTarget.pathname);
   };
 
-  const value = tabsOrder.indexOf(props.tab || "");
+  const value = tabs.findIndex(({ route }) => route === currentTab);
 
   return (
     <Root>
@@ -137,33 +131,20 @@ const NavTabs: React.FC<{ tab?: string }> = (props) => {
                 indicator: classes.tabIndicator,
               }}
             >
-              <LinkTab label="Team" href={makeHref("")} {...a11yProps(0)} />
-              <LinkTab
-                label="Service"
-                href={makeHref("service")}
-                {...a11yProps(1)}
-              />
-              <LinkTab
-                label="Flags"
-                href={makeHref("flags")}
-                {...a11yProps(2)}
-              />
-              <LinkTab
-                label="Design"
-                href={makeHref("design")}
-                {...a11yProps(3)}
-              />
-              <LinkTab
-                label="Data Manager"
-                href={makeHref("data-manager")}
-                {...a11yProps(4)}
-              />
+              {tabs.map(({ name, route }, index) => (
+                <LinkTab
+                  key={`${name}-LinkTab`}
+                  label={name}
+                  href={`./${route}`}
+                  {...a11yProps(index)}
+                />
+              ))}
             </Tabs>
           </Grid>
           <Grid item>
             <IconButton
               component={Link}
-              href={flowBaseRoute}
+              href={"../../"}
               aria-label="Close"
               size="large"
             >
@@ -172,23 +153,13 @@ const NavTabs: React.FC<{ tab?: string }> = (props) => {
           </Grid>
         </Grid>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        <TeamSettings />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <ServiceSettings />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <ServiceFlags />
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        <DesignSettings />
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        <DataManagerSettings />
-      </TabPanel>
+      {tabs.map(({ name, Component }, index) => (
+        <TabPanel value={value} index={index} key={`${name}-TabPanel`}>
+          <Component />
+        </TabPanel>
+      ))}
     </Root>
   );
 };
 
-export default NavTabs;
+export default Settings;

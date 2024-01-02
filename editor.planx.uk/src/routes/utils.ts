@@ -15,6 +15,9 @@ export const rootFlowPath = (includePortals = false) => {
   return includePortals ? path : path.split(",")[0];
 };
 
+export const rootTeamPath = () =>
+  window.location.pathname.split("/").slice(0, 2).join("/");
+
 export const isSaveReturnFlow = (flowData: Record<string, any>): boolean =>
   Boolean(
     Object.values(flowData).find(
@@ -57,6 +60,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.medway.gov.uk",
   "planningservices.camden.gov.uk",
   "planningservices.stalbans.gov.uk",
+  "planningservices.barnet.gov.uk",
   // XXX: un-comment the next line to test custom domains locally
   // "localhost",
 ];

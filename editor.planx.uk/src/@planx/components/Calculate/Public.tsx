@@ -16,7 +16,9 @@ export default function Component(props: Props) {
     props.handleSubmit?.({
       ...makeData(
         props,
-        props.formatOutputForAutomations ? [evaluatedResult.toString()] : evaluatedResult,
+        props.formatOutputForAutomations
+          ? [evaluatedResult.toString()]
+          : evaluatedResult,
         props.output,
       ),
       // don't show this component to the user, auto=true required

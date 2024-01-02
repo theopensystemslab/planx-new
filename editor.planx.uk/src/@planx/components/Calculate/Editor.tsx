@@ -9,12 +9,12 @@ import {
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import Input from "ui/Input";
-import InputGroup from "ui/InputGroup";
-import InputRow from "ui/InputRow";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
-import OptionButton from "ui/OptionButton";
+import InputGroup from "ui/editor/InputGroup";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import OptionButton from "ui/editor/OptionButton";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
 
 import type { Calculate } from "./model";
 import { evaluate, getVariables, parseCalculate } from "./model";

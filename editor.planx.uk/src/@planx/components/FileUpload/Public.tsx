@@ -5,7 +5,7 @@ import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
 import { FileWithPath } from "react-dropzone";
-import ErrorWrapper from "ui/ErrorWrapper";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { array } from "yup";
 
 import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";

@@ -9,7 +9,7 @@ export function createTeam(
       name: "E2E Test Team",
       slug: "E2E",
       logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
-      primaryColor: "#444444",
+      primaryColour: "#444444",
       submissionEmail: TEST_EMAIL,
       homepage: "planx.uk",
       ...args,

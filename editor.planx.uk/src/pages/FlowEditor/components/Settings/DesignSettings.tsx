@@ -4,16 +4,16 @@ import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
-import ColorPicker from "ui/ColorPicker";
-import EditorRow from "ui/EditorRow";
-import { FeaturePlaceholder } from "ui/FeaturePlaceholder";
-import InputDescription from "ui/InputDescription";
-import InputGroup from "ui/InputGroup";
-import InputLegend from "ui/InputLegend";
-import InputRow from "ui/InputRow";
-import InputRowItem from "ui/InputRowItem";
-import InputRowLabel from "ui/InputRowLabel";
-import PublicFileUploadButton from "ui/PublicFileUploadButton";
+import ColorPicker from "ui/editor/ColorPicker";
+import EditorRow from "ui/editor/EditorRow";
+import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
+import InputDescription from "ui/editor/InputDescription";
+import InputGroup from "ui/editor/InputGroup";
+import InputLegend from "ui/editor/InputLegend";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
+import InputRowLabel from "ui/shared/InputRowLabel";
+import PublicFileUploadButton from "ui/shared/PublicFileUploadButton";
 
 const DesignSettings: React.FC = () => {
   const formik = useFormik<{ bgColor: string }>({

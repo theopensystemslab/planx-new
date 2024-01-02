@@ -3,9 +3,9 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import Input from "ui/Input";
-import InputLabel from "ui/InputLabel";
-import InputRow from "ui/InputRow";
+import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
@@ -49,7 +49,11 @@ const TextInputComponent: React.FC<Props> = (props) => {
               return "text";
             })(props.type)}
             multiline={props.type && ["long", "extraLong"].includes(props.type)}
-            rows={props.type && ["long", "extraLong"].includes(props.type) ? 5 : undefined}
+            rows={
+              props.type && ["long", "extraLong"].includes(props.type)
+                ? 5
+                : undefined
+            }
             name="text"
             value={formik.values.text}
             bordered

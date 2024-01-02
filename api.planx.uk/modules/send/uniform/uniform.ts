@@ -1,11 +1,12 @@
 import axios, { AxiosRequestConfig, isAxiosError } from "axios";
 import { NextFunction, Request, Response } from "express";
-import { Buffer } from "node:buffer";
 import FormData from "form-data";
 import fs from "fs";
-import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
 import { gql } from "graphql-request";
+import jwt from "jsonwebtoken";
+import { Buffer } from "node:buffer";
 import { $api } from "../../../client";
+import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
 import { buildSubmissionExportZip } from "../utils/exportZip";
 
 interface UniformClient {
@@ -21,8 +22,6 @@ interface UniformSubmissionResponse {
 
 interface RawUniformAuthResponse {
   access_token: string;
-  "organisation-name": string;
-  "organisation-id": string;
 }
 
 interface UniformAuthResponse {
@@ -204,19 +203,21 @@ async function authenticate({
     throw Error("Failed to authenticate to Uniform - no access token returned");
   }
 
-  if (
-    !response.data["organisation-name"] ||
-    !response.data["organisation-id"]
-  ) {
+  // Decode access_token to get "organisation-name" & "organisation-id"
+  const decodedAccessToken = jwt.decode(response.data.access_token) as any;
+  const organisation = decodedAccessToken?.["organisation-name"];
+  const organisationId = decodedAccessToken?.["organisation-id"];
+
+  if (!organisation || !organisationId) {
     throw Error(
-      "Failed to authenticate to Uniform - no organisation details returned",
+      "Failed to authenticate to Uniform - failed to decode organisation details from access_token",
     );
   }
 
   const uniformAuthResponse: UniformAuthResponse = {
     token: response.data.access_token,
-    organisation: response.data["organisation-name"],
-    organisationId: response.data["organisation-id"],
+    organisation: organisation,
+    organisationId: organisationId,
   };
 
   return uniformAuthResponse;

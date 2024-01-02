@@ -40,6 +40,7 @@
           - id
           - input_errors
           - metadata
+          - node_id
           - node_title
           - node_type
           - user_exit
@@ -290,6 +291,15 @@
           - id
           - version
           - data
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
     - role: platformAdmin
       permission:
         check: {}
@@ -297,12 +307,22 @@
           - copied_from
           - created_at
           - creator_id
+          - data
           - id
           - settings
           - slug
           - team_id
           - updated_at
           - version
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
     - role: teamEditor
       permission:
         check:
@@ -317,12 +337,22 @@
           - copied_from
           - created_at
           - creator_id
+          - data
           - id
           - settings
           - slug
           - team_id
           - updated_at
           - version
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
   select_permissions:
     - role: api
       permission:
@@ -403,17 +433,37 @@
           - data
         filter: {}
         check: {}
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
     - role: platformAdmin
       permission:
         columns:
+          - data
           - settings
           - slug
           - team_id
         filter: {}
         check: null
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
     - role: teamEditor
       permission:
         columns:
+          - data
           - settings
           - slug
           - team_id
@@ -426,6 +476,15 @@
                 - role:
                     _eq: teamEditor
         check: null
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
   delete_permissions:
     - role: platformAdmin
       permission:
@@ -450,6 +509,15 @@
         columns:
           - id
           - footer_content
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
   select_permissions:
     - role: platformAdmin
       permission:
@@ -476,6 +544,15 @@
           - id
         filter: {}
         check: {}
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
 - table:
     name: lowcal_sessions
     schema: public
@@ -1288,6 +1365,75 @@
       permission:
         filter: {}
 - table:
+    name: team_themes
+    schema: public
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+      comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+      comment: ""
+    - role: public
+      permission:
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+        check: null
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - favicon
+          - logo
+          - primary_colour
+          - secondary_colour
+        filter: {}
+        check: null
+      comment: ""
+- table:
     name: teams
     schema: public
   object_relationships:
@@ -1297,6 +1443,13 @@
           column: team_id
           table:
             name: team_integrations
+            schema: public
+    - name: theme
+      using:
+        foreign_key_constraint_on:
+          column: team_id
+          table:
+            name: team_themes
             schema: public
   array_relationships:
     - name: flows
@@ -1334,7 +1487,6 @@
           - settings
           - slug
           - submission_email
-          - theme
           - updated_at
   select_permissions:
     - role: api
@@ -1350,7 +1502,6 @@
           - settings
           - slug
           - submission_email
-          - theme
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -1366,7 +1517,6 @@
           - reference_code
           - settings
           - slug
-          - theme
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -1383,7 +1533,6 @@
           - reference_code
           - settings
           - slug
-          - theme
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -1399,7 +1548,6 @@
           - reference_code
           - settings
           - slug
-          - theme
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -1414,7 +1562,6 @@
           - settings
           - slug
           - submission_email
-          - theme
         filter: {}
         check: null
 - table:

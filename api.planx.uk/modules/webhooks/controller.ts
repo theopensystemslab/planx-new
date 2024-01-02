@@ -14,6 +14,7 @@ import {
 } from "./service/paymentRequestEvents";
 import { SanitiseApplicationData } from "./service/sanitiseApplicationData/types";
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData";
+import { IsCleanJSONBController } from "./service/validateInput/schema";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   _req,
@@ -144,3 +145,26 @@ export const sanitiseApplicationDataController: SanitiseApplicationData =
       );
     }
   };
+
+export const isCleanJSONBController: IsCleanJSONBController = async (
+  _req,
+  res,
+  next,
+) => {
+  try {
+    const { isClean } = res.locals.parsedReq.body;
+
+    return isClean
+      ? res.status(200).send()
+      : res.status(400).json({
+          message: "Invalid HTML content",
+        });
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: "Failed to validate application data",
+        cause: error,
+      }),
+    );
+  }
+};

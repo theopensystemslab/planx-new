@@ -71,7 +71,12 @@ const fetchDataForPublishedView = async (
           ) {
             id
             team {
-              theme
+              theme {
+                primary: primary_colour
+                secondary: secondary_colour
+                logo
+                favicon
+              }
               name
               settings
               slug

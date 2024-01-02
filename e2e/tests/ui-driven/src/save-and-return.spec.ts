@@ -82,7 +82,7 @@ test.describe("Save and return", () => {
         shouldContinue: false,
       });
 
-      const reviewTitle = await page.locator("h1", {
+      const reviewTitle = page.locator("h1", {
         hasText: "Resume your application",
       });
       await expect(reviewTitle).toBeVisible();

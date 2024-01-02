@@ -6,10 +6,10 @@ import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import Banner from "ui/Banner";
-import FileDownload from "ui/FileDownload";
-import NumberedList from "ui/NumberedList";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import Banner from "ui/public/Banner";
+import FileDownload from "ui/public/FileDownload";
+import NumberedList from "ui/public/NumberedList";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { makeCsvData } from "../Send/uniform";
 import type { Confirmation } from "./model";

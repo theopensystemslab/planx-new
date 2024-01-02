@@ -14,6 +14,7 @@ import {
 import { $admin } from "../client";
 import { TEST_EMAIL } from "../../../ui-driven/src/globalHelpers";
 import { createTeam, createUser } from "../globalHelpers";
+import gql from "graphql-tag";
 
 export async function setUpMocks() {
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
@@ -159,12 +160,37 @@ export async function cleanup({
   }
 }
 
+const setupMockBopsSubmissionUrl = async (teamId: number) => {
+  await $admin.client.request(
+    gql`
+      mutation SetupTeamIntegrationE2E(
+        $stagingBopsSubmissionUrl: String
+        $teamId: Int
+      ) {
+        insert_team_integrations_one(
+          object: {
+            team_id: $teamId
+            staging_bops_submission_url: $stagingBopsSubmissionUrl
+          }
+        ) {
+          id
+        }
+      }
+    `,
+    {
+      teamId,
+      stagingBopsSubmissionUrl: "http://mock-server:8080",
+    },
+  );
+};
+
 export const setup = async () => {
   await setUpMocks();
-  const world = {
-    teamId: await createTeam(),
-    userId: await createUser(),
-  };
+  const teamId = await createTeam();
+  const userId = await createUser();
+  await setupMockBopsSubmissionUrl(teamId);
+
+  const world = { teamId, userId };
 
   return world;
 };

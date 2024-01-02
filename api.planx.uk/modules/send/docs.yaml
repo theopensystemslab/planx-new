@@ -37,6 +37,23 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+  /bops-v2/{localAuthority}:
+    post:
+      summary: Submits an application to the Back Office Planning System (BOPS) v2
+      description: Submits an application to the Back Office Planning System (BOPS) using the ODP Schema payload (v2)
+      tags:
+        - send
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+      security:
+        - hasuraAuth: []
+      requestBody:
+        description: This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionPayload"
   /email-submission/{localAuthority}:
     post:
       summary: Sends an application by email using GOV.UK Notify

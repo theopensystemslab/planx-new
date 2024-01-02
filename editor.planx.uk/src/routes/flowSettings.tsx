@@ -1,6 +1,9 @@
 import gql from "graphql-tag";
 import { publicClient } from "lib/graphql";
 import { compose, mount, redirect, route, withData } from "navi";
+import DataManagerSettings from "pages/FlowEditor/components/Settings/DataManagerSettings";
+import ServiceFlags from "pages/FlowEditor/components/Settings/ServiceFlags";
+import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -14,7 +17,7 @@ const flowSettingsRoutes = compose(
   })),
 
   mount({
-    "/": redirect("./team"),
+    "/": redirect("./service"),
     "/:tab": route(async (req) => {
       const { data } = await publicClient.query({
         query: gql`
@@ -42,9 +45,30 @@ const flowSettingsRoutes = compose(
 
       return {
         title: makeTitle(
-          [req.params.team, req.params.flow, "Settings"].join("/"),
+          [req.params.team, req.params.flow, "Flow Settings"].join("/"),
         ),
-        view: <Settings tab={req.params.tab} />,
+        view: (
+          <Settings
+            currentTab={req.params.tab}
+            tabs={[
+              {
+                name: "Service",
+                route: "service",
+                Component: ServiceSettings,
+              },
+              {
+                name: "Service Flags",
+                route: "flags",
+                Component: ServiceFlags,
+              },
+              {
+                name: "Data",
+                route: "data-manager",
+                Component: DataManagerSettings,
+              },
+            ]}
+          />
+        ),
       };
     }),
   }),

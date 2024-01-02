@@ -1,8 +1,8 @@
 import { TYPES } from "@planx/components/types";
 import { useFormik } from "formik";
 import React from "react";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
 
 import { ICONS } from "../ui";
 

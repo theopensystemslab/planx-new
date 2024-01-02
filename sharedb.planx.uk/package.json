@@ -9,7 +9,7 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.11.3",
     "sharedb": "^4.1.1",
-    "ws": "^8.14.2"
+    "ws": "^8.16.0"
   },
   "scripts": {
     "dev": "node-dev server.js",

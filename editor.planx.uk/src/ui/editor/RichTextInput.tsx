@@ -51,8 +51,8 @@ import { inputFocusStyle } from "theme";
 import tippy, { type Instance } from "tippy.js";
 import { create } from "zustand";
 
-import Input from "./Input";
-import PublicFileUploadButton from "./PublicFileUploadButton";
+import Input from "../shared/Input";
+import PublicFileUploadButton from "../shared/PublicFileUploadButton";
 import CustomImage from "./RichTextImage";
 
 interface Props extends InputBaseProps {

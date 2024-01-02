@@ -17,7 +17,7 @@ export interface Context {
     name: string;
     slug: string;
     logo: string;
-    primaryColor: string;
+    primaryColour: string;
     homepage: string;
     submissionEmail: string;
   };
@@ -41,7 +41,7 @@ export const contextDefaults: Context = {
     name: "E2E Test Team",
     slug: "E2E",
     logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
-    primaryColor: "#444444",
+    primaryColour: "#444444",
     homepage: "planx.uk",
     submissionEmail: "simulate-delivered@notifications.service.gov.uk",
   },
@@ -60,7 +60,7 @@ export async function setUpTestContext(
       slug: context.team.slug,
       name: context.team.name,
       logo: context.team.logo,
-      primaryColor: context.team.primaryColor,
+      primaryColour: context.team.primaryColour,
       homepage: context.team.homepage,
       submissionEmail: context.team.submissionEmail,
     });

@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useState } from "react";
 
-import PublicFileUploadButton from "./PublicFileUploadButton";
+import PublicFileUploadButton from "../shared/PublicFileUploadButton";
 
 const ImageUploadContainer = styled(Box)(() => ({
   height: 50,

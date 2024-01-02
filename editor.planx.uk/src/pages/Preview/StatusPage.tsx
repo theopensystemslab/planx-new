@@ -7,11 +7,11 @@ import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import Banner from "ui/Banner";
+import Banner from "ui/public/Banner";
 import { removeSessionIdSearchParam } from "utils";
 
 import { makeCsvData } from "../../@planx/components/Send/uniform";
-import FileDownload from "../../ui/FileDownload";
+import FileDownload from "../../ui/public/FileDownload";
 
 interface Props {
   bannerHeading: string;

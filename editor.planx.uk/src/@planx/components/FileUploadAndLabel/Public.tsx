@@ -15,10 +15,10 @@ import {
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
-import ErrorWrapper from "ui/ErrorWrapper";
-import FullWidthWrapper from "ui/FullWidthWrapper";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
-import { emptyContent } from "ui/RichTextInput";
+import { emptyContent } from "ui/editor/RichTextInput";
+import FullWidthWrapper from "ui/public/FullWidthWrapper";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
@@ -51,6 +51,14 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     gridAutoFlow: "column",
     gridAutoColumns: "1fr",
+  },
+}));
+
+const UploadList = styled(List)(({ theme }) => ({
+  width: "100%",
+  maxWidth: theme.breakpoints.values.formWrap,
+  [theme.breakpoints.up("md")]: {
+    marginTop: "-1em",
   },
 }));
 
@@ -174,13 +182,7 @@ function Component(props: Props) {
               </ErrorWrapper>
             </>
           )}
-          <List
-            disablePadding
-            sx={{
-              width: "100%",
-              marginTop: { md: "-1em" },
-            }}
-          >
+          <UploadList disablePadding>
             {(Object.keys(fileList) as Array<keyof typeof fileList>)
               .filter(isCategoryVisible)
               .flatMap((fileListCategory) => [
@@ -209,7 +211,7 @@ function Component(props: Props) {
                   </ListItem>
                 )),
               ])}
-          </List>
+          </UploadList>
         </DropzoneContainer>
         <ErrorWrapper error={fileListError} id={`${props.id}-fileList`}>
           <Box>

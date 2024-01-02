@@ -4,8 +4,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React from "react";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
-import { emptyContent } from "ui/RichTextInput";
+import { emptyContent } from "ui/editor/RichTextInput";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
@@ -26,6 +26,11 @@ const Description = styled(Box)(({ theme }) => ({
   "& p": {
     margin: theme.spacing(1, 0),
   },
+}));
+
+const QuestionHeaderWrapper = styled(Box)(({ theme }) => ({
+  maxWidth: theme.breakpoints.values.formWrap,
+  marginBottom: theme.spacing(1),
 }));
 
 const TitleWrapper = styled(Box)(({ theme }) => ({
@@ -107,7 +112,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 
   return (
     <>
-      <Box mb={1} sx={{ minHeight: "2em" }}>
+      <QuestionHeaderWrapper>
         {title && (
           <TitleWrapper mr={1} pt={0.5}>
             <Typography
@@ -170,7 +175,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           ) : undefined}
         </MoreInfo>
         {img && <Image src={img} alt="question" />}
-      </Box>
+      </QuestionHeaderWrapper>
     </>
   );
 };

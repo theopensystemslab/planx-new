@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import OptionButton from "ui/OptionButton";
+import OptionButton from "ui/editor/OptionButton";
 
 const meta = {
   title: "Design System/Atoms/Form Elements/OptionButton",

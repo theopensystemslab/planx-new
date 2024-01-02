@@ -27,8 +27,10 @@ export interface Team {
 }
 
 export interface TeamTheme {
-  primary?: string;
-  logo?: string;
+  primary: string;
+  secondary: string | null;
+  logo: string | null;
+  favicon: string | null;
 }
 
 export interface TeamSettings {

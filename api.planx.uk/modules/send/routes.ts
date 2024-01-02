@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createSendEvents } from "./createSendEvents/controller";
 import { useHasuraAuth } from "../auth/middleware";
-import { sendToBOPS } from "./bops/bops";
+import { sendToBOPS, sendToBOPSV2 } from "./bops/bops";
 import { sendToUniform } from "./uniform/uniform";
 import { sendToEmail } from "./email";
 import { validate } from "../../shared/middleware/validate";
@@ -16,6 +16,7 @@ router.post(
   createSendEvents,
 );
 router.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
+router.post("/bops-v2/:localAuthority", useHasuraAuth, sendToBOPSV2);
 router.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
 router.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
 router.get("/download-application-files/:sessionId", downloadApplicationFiles);

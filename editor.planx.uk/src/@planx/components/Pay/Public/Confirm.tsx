@@ -9,9 +9,9 @@ import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton"
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ApplicationPath } from "types";
-import Banner from "ui/Banner";
-import FormWrapper from "ui/FormWrapper";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import Banner from "ui/public/Banner";
+import FormWrapper from "ui/public/FormWrapper";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
