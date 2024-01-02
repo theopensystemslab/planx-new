@@ -144,6 +144,8 @@ export default function Component(props: Props) {
                 markerLongitude={Number(passport?.data?._address?.longitude)}
                 resetControlImage="trash"
                 osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+                osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+                drawGeojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
               />
             </MapContainer>
             <MapFooter>

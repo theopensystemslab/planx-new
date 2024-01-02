@@ -181,6 +181,8 @@ export function Presentational(props: PresentationalProps) {
           geojsonData={JSON.stringify(titleBoundary)}
           geojsonColor="#0010A4"
           geojsonBuffer={30}
+          osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+          geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
         />
       </MapContainer>
       {propertyDetails && (
