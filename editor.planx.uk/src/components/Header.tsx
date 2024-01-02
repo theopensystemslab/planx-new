@@ -40,7 +40,7 @@ import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
-import { rootFlowPath } from "../routes/utils";
+import { rootFlowPath, rootTeamPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 import FeatureFlagBanner from "./FeatureFlagBanner";
 import TestEnvironmentBanner from "./TestEnvironmentBanner";
@@ -499,7 +499,7 @@ const EditorToolbar: React.FC<{
             {(route.data.team && !route.data.flow) &&(
               <MenuItem
                 onClick={() =>
-                  navigate([rootFlowPath(true), "settings"].join("/"))
+                  navigate(`${rootTeamPath()}/settings`)
                 }
               >
                 Team Settings
