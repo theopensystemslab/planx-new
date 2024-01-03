@@ -40,6 +40,9 @@ export const isCleanHTML = (input: unknown): boolean => {
 
   const cleanHTML = DOMPurify.sanitize(input, { ADD_ATTR: ["target"] });
   // DOMPurify has not removed any attributes or values
-  const isClean = cleanHTML.length === input.length;
+  const isClean = cleanHTML.length === unescapeHTML(input).length;
   return isClean;
 };
+
+const unescapeHTML = (input: string): string =>
+  input.replace(/&quot;/gi, '"').replace(/&apos;/gi, "'");
