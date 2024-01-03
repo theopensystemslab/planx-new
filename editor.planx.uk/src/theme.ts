@@ -226,6 +226,33 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
         },
       },
       MuiButton: {
+        variants: [
+          {
+            props: { variant: "help" },
+            style: {
+              color: palette.primary.main,
+              boxShadow: "none",
+              padding: "0.25em 0.1em",
+              width: "auto",
+              fontWeight: "initial",
+              fontSize: "inherit",
+              textDecoration: "underline",
+              textDecorationThickness: "2px",
+              textDecorationStyle: "dotted",
+              textUnderlineOffset: "4px",
+              "&:hover": {
+                textDecoration: "underline",
+                textDecorationThickness: "3px",
+                background: "transparent",
+                boxShadow: "none",
+              },
+              "&:focus": {
+                borderColor: palette.text.primary,
+                borderStyle: "solid",
+              },
+            },
+          },
+        ],
         defaultProps: {
           // Removes default box shadow on buttons
           disableElevation: true,

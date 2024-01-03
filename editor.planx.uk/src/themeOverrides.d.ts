@@ -31,3 +31,10 @@ declare module "@mui/material/styles/createPalette" {
     border?: { main: string; input: string; light: string };
   }
 }
+
+// Append our custom variants to MUI Button
+declare module "@mui/material/Button" {
+  interface ButtonPropsVariantOverrides {
+    help: true;
+  }
+}
