@@ -139,7 +139,7 @@ export async function clickContinue({
 
 export async function clickBack({ page }: { page: Page }) {
   const waitPromise = waitForDebugLog(page); // assume debug message is triggered on state transition
-  await page.getByRole("button", { name: "Back", exact: true }).click();
+  await page.getByTestId("backButton").click();
   await waitPromise;
 }
 
