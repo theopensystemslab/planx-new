@@ -7,7 +7,7 @@ import {
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ErrorFallback from "components/ErrorFallback";
-import PhaseBanner from "components/PhaseBanner";
+import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -64,7 +64,7 @@ const PublicFooter: React.FC = () => {
   );
   return (
     <Box>
-      <PhaseBanner />
+      <Feedback />
       <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
           <Box pr={2} display="flex">

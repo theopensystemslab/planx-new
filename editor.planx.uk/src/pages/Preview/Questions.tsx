@@ -23,7 +23,7 @@ const BackBar = styled(Box)(() => ({
   zIndex: "1000",
 }));
 
-const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
+export const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
   visibility: "visible",
   pointerEvents: "auto",
   display: "flex",
