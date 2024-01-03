@@ -128,11 +128,14 @@ const FeedbackComponent: React.FC = () => {
             </FeedbackTitle>
             <FeedbackBody>
               <FeedbackForm>
-                <InputLabel label="What were you doing?">
-                  <Input multiline bordered />
+                <InputLabel
+                  label="What were you doing?"
+                  htmlFor="issue-input-1"
+                >
+                  <Input multiline bordered id="issue-input-1" />
                 </InputLabel>
-                <InputLabel label="What went wrong?">
-                  <Input multiline bordered />
+                <InputLabel label="What went wrong?" htmlFor="issue-input-2">
+                  <Input multiline bordered id="issue-input-2" />
                 </InputLabel>
                 <FeedbackDisclaimer />
                 <Button variant="contained" sx={{ marginTop: 2.5 }}>
