@@ -405,6 +405,7 @@ export const previewStore: StateCreator<
               (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
           );
         })
+        .slice(0, 1)
         .forEach((id) => {
           const node = flow[id];
 

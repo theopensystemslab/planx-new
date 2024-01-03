@@ -51,25 +51,17 @@ beforeEach(() => {
   setState({ flow });
 });
 
-test("Root nodes are immediately queued up", () => {
-  expect(upcomingCardIds()).toEqual([
-    "SetValue",
-    "Content",
-    "AutomatedQuestion",
-  ]);
+test("The first _root edge is immediately queued up", () => {
+  expect(upcomingCardIds()).toEqual(["SetValue"]);
 });
 
-test.skip("A node is only auto-answered when it is the first upcomingCardId(), not when its' `fn` is first added to the breadcrumbs/passport", () => {
+test("A node is only auto-answered when it is the first upcomingCardId(), not when its' `fn` is first added to the breadcrumbs/passport", () => {
   const visitedNodes = () => Object.keys(getState().breadcrumbs);
 
   // mimic "Continue" button and properly set visitedNodes()
   const clickContinue = () => upcomingCardIds();
 
-  expect(upcomingCardIds()).toEqual([
-    "SetValue",
-    "Content",
-    "AutomatedQuestion",
-  ]);
+  expect(upcomingCardIds()).toEqual(["SetValue"]);
 
   // Step forwards through the SetValue
   record("SetValue", { data: { fruit: ["apple"] }, auto: true });
@@ -79,7 +71,7 @@ test.skip("A node is only auto-answered when it is the first upcomingCardId(), n
 
   // "AutomatedQuestion" should still be queued up, not already answered based on SetValue
   expect(visitedNodes()).not.toContain("AutomatedQuestion");
-  expect(upcomingCardIds()).toContain("AutomatedQuestion");
+  // expect(upcomingCardIds()).toContain("AutomatedQuestion");
 
   // Step forwards through Content
   record("Content", { data: {}, auto: false });
@@ -147,5 +139,5 @@ test("crawling with portals", () => {
     },
   });
 
-  expect(upcomingCardIds()).toEqual(["c", "b"]);
+  expect(upcomingCardIds()).toEqual(["c"]);
 });
