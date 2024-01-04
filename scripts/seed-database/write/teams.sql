@@ -3,8 +3,6 @@ CREATE TEMPORARY TABLE sync_teams (
   id integer,
   name text,
   slug text,
-  -- TODO: Drop this and fetch from team_themes
-  theme jsonb,
   created_at timestamptz,
   updated_at timestamptz,
   settings jsonb,
