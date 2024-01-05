@@ -63,10 +63,10 @@ export async function createAuthenticatedSession({
       value: token,
     },
     {
-      name: "loggedIn",
+      name: "auth",
       domain: "localhost",
       path: "/",
-      value: true,
+      value: { loggedIn: true },
     },
   ]);
   return page;

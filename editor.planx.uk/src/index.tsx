@@ -36,8 +36,8 @@ if (!window.customElements.get("my-map")) {
 
 const hasJWT = (): boolean | void => {
   // This cookie indicates the presence of the secure httpOnly "jwt" cookie
-  const loggedInCookie = getCookie("loggedIn");
-  if (loggedInCookie) return true;
+  const authCookie = getCookie("auth");
+  if (authCookie) return true;
 
   // If JWT not set via cookie, check search params
   const jwtSearchParams = new URLSearchParams(window.location.search).get(
@@ -47,6 +47,7 @@ const hasJWT = (): boolean | void => {
 
   // Remove JWT from URL, and re-run this function
   setCookie("jwt", jwtSearchParams);
+  setCookie("auth", { loggedIn: true });
   window.location.href = "/";
 };
 

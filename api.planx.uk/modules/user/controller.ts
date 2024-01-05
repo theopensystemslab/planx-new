@@ -69,7 +69,7 @@ export const deleteUser: DeleteUser = async (_req, res, next) => {
 
 export const getLoggedInUserDetails: RequestHandler<
   Record<string, never>,
-  User
+  User & { jwt: string | undefined }
 > = async (_req, res, next) => {
   try {
     const $client = getClient();
@@ -88,7 +88,12 @@ export const getLoggedInUserDetails: RequestHandler<
         status: 400,
       });
 
-    res.json(user);
+    const jwt = userContext.getStore()?.user.jwt;
+
+    res.json({
+      ...user,
+      jwt: jwt,
+    });
   } catch (error) {
     next(error);
   }

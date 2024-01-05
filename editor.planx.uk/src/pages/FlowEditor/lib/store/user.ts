@@ -6,8 +6,9 @@ import type { StateCreator } from "zustand";
 
 export interface UserStore {
   user?: User;
+  jwt?: string;
 
-  setUser: (user: User) => void;
+  setUser: (user: User & { jwt: string }) => void;
   getUser: () => User | undefined;
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
   initUserStore: () => Promise<void>;
@@ -17,7 +18,7 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
   set,
   get,
 ) => ({
-  setUser: (user: User) => set({ user }),
+  setUser: ({ jwt, ...user }) => set({ jwt, user }),
 
   getUser: () => get().user,
 
@@ -44,7 +45,9 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
 const getLoggedInUser = async () => {
   const url = `${process.env.REACT_APP_API_URL}/user/me`;
   try {
-    const response = await axios.get<User>(url, { withCredentials: true });
+    const response = await axios.get<User & { jwt: string }>(url, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw Error("Failed to fetch user matching JWT cookie");
