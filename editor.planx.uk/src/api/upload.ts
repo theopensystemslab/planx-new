@@ -1,5 +1,5 @@
 import axios, { RawAxiosRequestHeaders } from "axios";
-import { getCookie } from "lib/cookie";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 export { uploadPrivateFile, uploadPublicFile };
 
@@ -9,7 +9,7 @@ async function uploadPublicFile(
   file: any,
   { onProgress }: { onProgress?: (p: any) => void } = {},
 ) {
-  const token = getCookie("jwt");
+  const token = useStore.getState().jwt;
   const authRequestHeader = { Authorization: `Bearer ${token}` };
   const { data } = await handleUpload(
     file,

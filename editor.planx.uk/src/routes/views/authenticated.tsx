@@ -1,4 +1,3 @@
-import { getCookie } from "lib/cookie";
 import { redirect } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -11,7 +10,7 @@ import AuthenticatedLayout from "../../pages/layout/AuthenticatedLayout";
  * Initialises user store
  */
 export const authenticatedView = async () => {
-  const jwt = getCookie("jwt");
+  const jwt = useStore.getState().jwt;
   if (!jwt) return redirect("/login");
 
   await useStore.getState().initUserStore();
