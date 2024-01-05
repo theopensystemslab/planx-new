@@ -1,6 +1,7 @@
 import { isObject } from "lodash";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
+import { userContext } from "../../../auth/middleware";
 
 // Setup JSDOM and DOMPurify
 const window = new JSDOM("").window;
@@ -39,7 +40,35 @@ export const isCleanHTML = (input: unknown): boolean => {
   if (typeof input !== "string") return true;
 
   const cleanHTML = DOMPurify.sanitize(input, { ADD_ATTR: ["target"] });
+
   // DOMPurify has not removed any attributes or values
-  const isClean = cleanHTML.length === input.length;
+  const isClean =
+    cleanHTML.length === input.length ||
+    unescapeHTML(cleanHTML).length === unescapeHTML(input).length;
+
+  if (!isClean) logUncleanHTMLError(input, cleanHTML);
+
   return isClean;
 };
+
+/**
+ * Explicity log error when unsafe HTML is encountered
+ * This is very likely a content / sanitation error as opposed to a security issue
+ * Logging this should help us identify and resolve these
+ */
+const logUncleanHTMLError = (input: string, cleanHTML: string) => {
+  const userId = userContext.getStore()?.user.sub;
+
+  console.error({
+    message: `Warning: Unclean HTML submitted!`,
+    userId,
+    input,
+    cleanHTML,
+  });
+};
+
+const unescapeHTML = (input: string): string =>
+  input
+    .replace(/&quot;/gi, '"')
+    .replace(/&apos;/gi, "'")
+    .replace(/&nbsp;/gi, " ");
