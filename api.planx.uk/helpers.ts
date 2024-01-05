@@ -77,7 +77,7 @@ const insertFlow = async (
     return { id };
   } catch (error) {
     throw Error(
-      `User ${creatorId} failed to insert flow to teamId ${teamId}. Please check permissions.`,
+      `User ${creatorId} failed to insert flow to teamId ${teamId}. Please check permissions. Error: ${error}`,
     );
   }
 };

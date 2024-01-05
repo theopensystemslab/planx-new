@@ -67,10 +67,7 @@ export const InfoButton = styled(Button)(({ theme }) => ({
   marginLeft: theme.spacing(1.5),
   boxShadow: "none",
   color: theme.palette.primary.main,
-  padding: "0.33em 0.5em",
   minHeight: "44px",
-  textDecoration: "underline",
-  textUnderlineOffset: "0.15em",
 })) as typeof Button;
 
 function Component(props: Props) {
@@ -303,6 +300,7 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
       </Box>
       {!!(info || policyRef || howMeasured) && (
         <InfoButton
+          variant="help"
           title={`More information`}
           aria-label={`See more information about "${props.name}"`}
           onClick={() => handleHelpClick({ [props.fn]: props.name })}
