@@ -13,6 +13,8 @@ import { logger } from "airbrake";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 
+import { getCookie } from "./cookie";
+
 const toastId = "error_toast";
 
 // function used to verify response status
@@ -37,7 +39,7 @@ const authHttpLink = createHttpLink({
   uri: process.env.REACT_APP_HASURA_URL,
   fetch: customFetch,
   headers: {
-    authorization: `Bearer ${useStore.getState().jwt}`,
+    authorization: `Bearer ${getCookie("jwt")}`,
   },
 });
 
