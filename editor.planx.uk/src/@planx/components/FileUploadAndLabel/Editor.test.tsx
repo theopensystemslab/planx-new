@@ -19,6 +19,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
       isPlatformAdmin: true,
       email: "test@test.com",
       teams: [],
+      jwt: "x.y.z",
     });
   });
 

@@ -9,7 +9,6 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
-import { jwtDecode } from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
 import ErrorPage from "pages/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analyticsProvider";
@@ -36,30 +35,20 @@ if (!window.customElements.get("my-map")) {
 }
 
 const hasJWT = (): boolean | void => {
-  let jwt = getCookie("jwt");
-  if (jwt) {
-    try {
-      if (
-        Number(
-          (jwtDecode(jwt) as any)["https://hasura.io/jwt/claims"][
-            "x-hasura-user-id"
-          ],
-        ) > 0
-      ) {
-        return true;
-      }
-    } catch (e) {}
-    window.location.href = "/logout";
-  } else {
-    jwt = new URLSearchParams(window.location.search).get("jwt");
-    if (jwt) {
-      setCookie("jwt", jwt);
-      // set the jwt, and remove it from the url, then re-run this function
-      window.location.href = "/";
-    } else {
-      return false;
-    }
-  }
+  // This cookie indicates the presence of the secure httpOnly "jwt" cookie
+  const authCookie = getCookie("auth");
+  if (authCookie) return true;
+
+  // If JWT not set via cookie, check search params
+  const jwtSearchParams = new URLSearchParams(window.location.search).get(
+    "jwt",
+  );
+  if (!jwtSearchParams) return false;
+
+  // Remove JWT from URL, and re-run this function
+  setCookie("jwt", jwtSearchParams);
+  setCookie("auth", { loggedIn: true });
+  window.location.href = "/";
 };
 
 const Layout: React.FC<{

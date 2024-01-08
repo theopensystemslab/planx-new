@@ -5,3 +5,4 @@
 \include write/published_flows.sql
 \include write/team_members.sql
 \include write/team_integrations.sql
+\include write/team_themes.sql

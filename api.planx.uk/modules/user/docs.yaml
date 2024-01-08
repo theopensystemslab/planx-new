@@ -91,6 +91,9 @@ paths:
                   isPlatformAdmin:
                     type: boolean
                     example: true
+                  jwt:
+                    type: string
+                    example: xxxxx.yyyyy.zzzzz
                   teams:
                     type: array
                     items:
