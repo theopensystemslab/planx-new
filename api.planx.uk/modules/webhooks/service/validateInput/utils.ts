@@ -1,7 +1,7 @@
 import { isObject } from "lodash";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
-import { userContext } from "../../../auth/middleware";
+import { reportError } from "../../../send/utils/helpers";
 
 // Setup JSDOM and DOMPurify
 const window = new JSDOM("").window;
@@ -57,11 +57,8 @@ export const isCleanHTML = (input: unknown): boolean => {
  * Logging this should help us identify and resolve these
  */
 const logUncleanHTMLError = (input: string, cleanHTML: string) => {
-  const userId = userContext.getStore()?.user.sub;
-
-  console.error({
+  reportError({
     message: `Warning: Unclean HTML submitted!`,
-    userId,
     input,
     cleanHTML,
   });
@@ -71,4 +68,5 @@ const unescapeHTML = (input: string): string =>
   input
     .replace(/&quot;/gi, '"')
     .replace(/&apos;/gi, "'")
-    .replace(/&nbsp;/gi, " ");
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&");
