@@ -66,7 +66,7 @@ export async function createAuthenticatedSession({
       name: "auth",
       domain: "localhost",
       path: "/",
-      value: { loggedIn: true },
+      value: JSON.stringify({ loggedIn: true }),
     },
   ]);
   return page;
