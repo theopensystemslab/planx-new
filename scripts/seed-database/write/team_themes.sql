@@ -30,7 +30,6 @@ FROM
   sync_team_themes ON CONFLICT (id) DO
 UPDATE
 SET
-  team_id = EXCLUDED.team_id,
   primary_colour = EXCLUDED.primary_colour,
   secondary_colour = EXCLUDED.secondary_colour,
   logo = EXCLUDED.logo,
