@@ -30,7 +30,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
       "article4.barnet.totteridgeB": "A4D12",
       "article4.barnet.woodStreet": "A4D13",
       "article4.barnet.hmo": "A4D14",
-      "article4.barnet.hmo": "A4D15",
+      "article4.barnet.agriculturalLand": "A4D15",
     },
   },
 };
