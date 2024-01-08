@@ -62,6 +62,12 @@ export async function createAuthenticatedSession({
       path: "/",
       value: token,
     },
+    {
+      name: "auth",
+      domain: "localhost",
+      path: "/",
+      value: JSON.stringify({ loggedIn: true }),
+    },
   ]);
   return page;
 }

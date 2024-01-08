@@ -10,7 +10,6 @@ import {
   update,
 } from "@planx/graph";
 import axios from "axios";
-import { getCookie } from "lib/cookie";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
@@ -21,7 +20,7 @@ import type { StateCreator } from "zustand";
 
 import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
-import type { Store } from ".";
+import { type Store } from ".";
 import type { SharedStore } from "./shared";
 import { UserStore } from "./user";
 
@@ -141,7 +140,7 @@ export const editorStore: StateCreator<
   },
 
   copyFlow: async (flowId: string) => {
-    const token = getCookie("jwt");
+    const token = get().jwt;
 
     // when copying a flow, we make nodeIds unique by replacing part of the original nodeId string.
     //   the onboarding script will often provide a meaningful string reflecting the team name (eg "LAM"),
@@ -237,7 +236,7 @@ export const editorStore: StateCreator<
   },
 
   validateAndDiffFlow(flowId: string) {
-    const token = getCookie("jwt");
+    const token = get().jwt;
 
     return axios.post(
       `${process.env.REACT_APP_API_URL}/flows/${flowId}/diff`,
@@ -340,7 +339,7 @@ export const editorStore: StateCreator<
       return Promise.resolve();
     }
 
-    const token = getCookie("jwt");
+    const token = get().jwt;
 
     return axios
       .post(
@@ -390,7 +389,7 @@ export const editorStore: StateCreator<
   },
 
   publishFlow(flowId: string, summary?: string) {
-    const token = getCookie("jwt");
+    const token = get().jwt;
 
     const urlWithParams = (url: string, params: any) =>
       [url, new URLSearchParams(omitBy(params, isEmpty))]
