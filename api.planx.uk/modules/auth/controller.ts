@@ -47,12 +47,12 @@ function setJWTCookie(returnTo: string, res: Response, req: Request) {
       new Date().setFullYear(new Date().getFullYear() + 1),
     ).getTime(),
     sameSite: "none",
+    secure: true,
   };
 
   const httpOnlyCookieOptions: CookieOptions = {
     ...defaultCookieOptions,
     httpOnly: true,
-    secure: true,
   };
 
   // Set secure, httpOnly cookie with JWT
