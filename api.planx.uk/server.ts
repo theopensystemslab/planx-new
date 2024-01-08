@@ -43,7 +43,13 @@ app.use(
     credentials: true,
     methods: "*",
     origin: process.env.EDITOR_URL_EXT,
-    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept",
+    allowedHeaders: [
+      "Accept",
+      "Authorization",
+      "Content-Type",
+      "Origin",
+      "X-Requested-With",
+    ],
   }),
 );
 
