@@ -20,10 +20,10 @@ type AnalyticsLogDirection =
   | "reset"
   | "save";
 
-const allowList = [
+const ALLOW_LIST = [
   "proposal.projectType",
   "application.declaration.connection",
-];
+] as const;
 
 export type HelpClickMetadata = Record<string, string>;
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
@@ -456,7 +456,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   function getAllowListAnswers(nodeId: string) {
     const { data } = flow[nodeId];
     const nodeFn = data?.fn || data?.val;
-    if (nodeFn && allowList.includes(nodeFn)) {
+    if (nodeFn && ALLOW_LIST.includes(nodeFn)) {
       const answerIds = breadcrumbs[nodeId]?.answers;
       const answerValues = answerIds?.map((answerId) => {
         return flow[answerId]?.data?.val;
