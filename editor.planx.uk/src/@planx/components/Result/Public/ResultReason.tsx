@@ -141,10 +141,10 @@ const ResultReason: React.FC<IResultReason> = ({
       : ""
   }`;
 
-  const { trackBackwardsNavigationByNodeId } = useAnalyticsTracking();
+  const { trackBackwardsNavigation } = useAnalyticsTracking();
 
   const handleChangeAnswer = (id: string) => {
-    trackBackwardsNavigationByNodeId(id, "change");
+    trackBackwardsNavigation("change", id);
     changeAnswer(id);
   };
 

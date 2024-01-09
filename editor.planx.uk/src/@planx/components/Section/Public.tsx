@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import Tag, { TagType } from "@planx/components/shared/Buttons/Tag";
 import type { PublicProps } from "@planx/components/ui";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { SectionNode, SectionStatus } from "types";
@@ -14,7 +15,6 @@ import Card from "../shared/Preview/Card";
 import QuestionHeader from "../shared/Preview/QuestionHeader";
 import type { Section } from "./model";
 import { computeSectionStatuses } from "./model";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 
 export type Props = PublicProps<Section>;
 
@@ -135,15 +135,15 @@ export function SectionsOverviewList({
     alteredSectionIds,
   });
 
-  const { trackBackwardsNavigationByNodeId } = useAnalyticsTracking();
+  const { trackBackwardsNavigation } = useAnalyticsTracking();
 
   const changeFirstAnswerInSection = (sectionId: string) => {
     const sectionIndex = flow._root.edges?.indexOf(sectionId);
     if (sectionIndex !== undefined) {
       const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
       if (firstNodeInSection) {
-        trackBackwardsNavigationByNodeId(firstNodeInSection, "change");
-        changeAnswer(firstNodeInSection)
+        trackBackwardsNavigation("change", firstNodeInSection);
+        changeAnswer(firstNodeInSection);
       }
     }
   };
