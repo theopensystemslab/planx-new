@@ -1,4 +1,3 @@
-
 import { compose, mount, redirect, route, withData } from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import TeamSettings from "pages/FlowEditor/components/Settings/TeamSettings";
@@ -9,16 +8,15 @@ import { makeTitle } from "./utils";
 
 const flowSettingsRoutes = compose(
   withData((req) => ({
-    mountpath: req.mountpath
+    mountpath: req.mountpath,
   })),
 
   mount({
     "/": redirect("./team"),
     "/:tab": route(async (req) => ({
-        title: makeTitle(
-          [req.params.team, "Team Settings"].join("/"),
-        ),
-        view: <Settings
+      title: makeTitle([req.params.team, "Team Settings"].join("/")),
+      view: (
+        <Settings
           currentTab={req.params.tab}
           tabs={[
             {
@@ -32,8 +30,9 @@ const flowSettingsRoutes = compose(
               Component: DesignSettings,
             },
           ]}
-          />,
-      }))
+        />
+      ),
+    })),
   }),
 );
 
