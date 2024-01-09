@@ -1,4 +1,3 @@
-
 import { postToSlack } from "../sanitiseApplicationData";
 import { operationHandler } from "../sanitiseApplicationData/operations";
 import { OperationResult } from "../sanitiseApplicationData/types";
