@@ -18,12 +18,12 @@ export const sanitiseApplicationData = async () => {
   }
 
   const operationFailed = results.some((result) => result.status === "failure");
-  if (operationFailed) await postToSlack(results);
+  if (operationFailed) await postToSlack(results, "Data Sanitation");
 
   return { operationFailed, results };
 };
 
-export const postToSlack = async (results: OperationResult[]) => {
+export const postToSlack = async (results: OperationResult[], jobName: string) => {
   const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
   const text = results.map((result) =>
     result.status === "failure"
@@ -35,6 +35,6 @@ export const postToSlack = async (results: OperationResult[]) => {
   await slack.send({
     channel: "#planx-notifications-internal",
     text: text.join("\n"),
-    username: `Data Sanitation Cron Job (${env})`,
+    username: `${jobName} Cron Job (${env})`,
   });
 };
