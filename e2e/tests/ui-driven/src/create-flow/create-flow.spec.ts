@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { test, expect, Browser } from "@playwright/test";
 import {
   contextDefaults,
@@ -14,7 +12,7 @@ import {
 import type { Context } from "../context";
 import { getTeamPage, isGetUserRequest } from "./helpers";
 
-test.skip("Navigation", () => {
+test.describe("Navigation", () => {
   let context: Context = {
     ...contextDefaults,
   };
