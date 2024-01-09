@@ -33,6 +33,7 @@ type NodeMetadata = {
   flag?: Flag;
   title?: string;
   type?: TYPES;
+  id?: string;
   isAutoAnswered?: boolean;
 };
 
@@ -45,9 +46,9 @@ const analyticsContext = createContext<{
   trackFlowDirectionChange: (
     flowDirection: AnalyticsLogDirection,
   ) => Promise<void>;
-  trackBackwardsNavigationByNodeId: (
-    nodeId: string,
+  trackBackwardsNavigation: (
     backwardsNavigationType: BackwardsNavigationInitiatorType,
+    nodeId?: string,
   ) => Promise<void>;
   node: Store.node | null;
   trackInputErrors: (error: string) => Promise<void>;
@@ -61,7 +62,7 @@ const analyticsContext = createContext<{
   trackHelpClick: () => Promise.resolve(),
   trackNextStepsLinkClick: () => Promise.resolve(),
   trackFlowDirectionChange: () => Promise.resolve(),
-  trackBackwardsNavigationByNodeId: () => Promise.resolve(),
+  trackBackwardsNavigation: () => Promise.resolve(),
   node: null,
   trackInputErrors: () => Promise.resolve(),
   track: () => Promise.resolve(),
@@ -141,7 +142,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         trackHelpClick,
         trackNextStepsLinkClick,
         trackFlowDirectionChange,
-        trackBackwardsNavigationByNodeId,
+        trackBackwardsNavigation,
         node,
         trackInputErrors,
         track,
@@ -340,11 +341,11 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  async function trackBackwardsNavigationByNodeId(
-    nodeId: string,
+  async function trackBackwardsNavigation(
     initiator: BackwardsNavigationInitiatorType,
+    nodeId?: string,
   ) {
-    const targetNodeMetadata = getTitleAndTypeFromFlow(nodeId);
+    const targetNodeMetadata = nodeId ? getTargetNodeDataFromFlow(nodeId) : {};
     const metadata: Record<string, NodeMetadata> = {};
     metadata[`${initiator}`] = targetNodeMetadata;
 
@@ -431,11 +432,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  function getTitleAndTypeFromFlow(nodeId: string) {
-    const { data, type } = flow[nodeId];
+  function getTargetNodeDataFromFlow(nodeId: string) {
+    const node = flow[nodeId];
     const nodeMetadata: NodeMetadata = {
-      title: data?.text,
-      type: type,
+      title: extractNodeTitle(node),
+      type: node.type,
+      id: nodeId,
     };
     return nodeMetadata;
   }
