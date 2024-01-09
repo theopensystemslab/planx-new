@@ -261,16 +261,16 @@ const sendToBOPSV2 = async (
       .catch((error) => {
         if (error.response) {
           throw new Error(
-            `Sending to BOPS v2 failed (${localAuthority}):\n${JSON.stringify(
-              error.response.data,
-              null,
-              2,
-            )}`,
+            `Sending to BOPS v2 failed (${[localAuthority, payload?.sessionId]
+              .filter(Boolean)
+              .join(" - ")}):\n${JSON.stringify(error.response.data, null, 2)}`,
           );
         } else {
           // re-throw other errors
           throw new Error(
-            `Sending to BOPS v2 failed (${localAuthority}):\n${error}`,
+            `Sending to BOPS v2 failed (${[localAuthority, payload?.sessionId]
+              .filter(Boolean)
+              .join(" - ")}):\n${error}`,
           );
         }
       });
@@ -279,7 +279,12 @@ const sendToBOPSV2 = async (
     next(
       new ServerError({
         status: 500,
-        message: `Sending to BOPS v2 failed (${localAuthority})`,
+        message: `Sending to BOPS v2 failed (${[
+          localAuthority,
+          payload?.sessionId,
+        ]
+          .filter(Boolean)
+          .join(" - ")})`,
         cause: err,
       }),
     );
