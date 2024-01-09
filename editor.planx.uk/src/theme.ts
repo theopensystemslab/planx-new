@@ -13,8 +13,10 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
+import { TeamTheme } from "types";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
+const DEFAULT_SECONDARY_COLOR = "#F3F2F1";
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -32,7 +34,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     paper: "#F9F8F8",
   },
   secondary: {
-    main: "#F3F2F1",
+    main: DEFAULT_SECONDARY_COLOR,
   },
   text: {
     primary: "#0B0C0C",
@@ -100,10 +102,13 @@ export const linkStyle = (primaryColor?: string) => ({
   "&:focus-visible": focusStyle,
 });
 
-const getThemeOptions = (primaryColor: string): ThemeOptions => {
+const getThemeOptions = (teamTheme?: TeamTheme): ThemeOptions => {
   const teamPalette: Partial<PaletteOptions> = {
     primary: {
-      main: primaryColor,
+      main: teamTheme?.primary || DEFAULT_PRIMARY_COLOR,
+    },
+    secondary: {
+      main: teamTheme?.secondary || DEFAULT_SECONDARY_COLOR,
     },
   };
   const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
@@ -430,14 +435,19 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
 
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
-  primaryColor: string = DEFAULT_PRIMARY_COLOR,
+  teamTheme: TeamTheme = {
+    primary: DEFAULT_PRIMARY_COLOR,
+    secondary: DEFAULT_SECONDARY_COLOR,
+    logo: null,
+    favicon: null,
+  },
 ): MUITheme => {
-  const themeOptions = getThemeOptions(primaryColor);
+  const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
   return theme;
 };
 
 // A static MUI theme based on PlanX's default palette
-const defaultTheme = generateTeamTheme(DEFAULT_PRIMARY_COLOR);
+const defaultTheme = generateTeamTheme();
 
 export { defaultTheme, generateTeamTheme };
