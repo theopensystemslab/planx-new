@@ -27,7 +27,7 @@ const Root = styled(Box, {
   }),
 }));
 
-export default function InputRow({
+export default function EditorRow({
   children,
   background,
 }: {
