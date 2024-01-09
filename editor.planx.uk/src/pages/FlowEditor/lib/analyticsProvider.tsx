@@ -32,7 +32,7 @@ type NodeMetadata = {
   };
   flag?: Flag;
   title?: string;
-  type?: TYPES;
+  type?: string | null;
   id?: string;
   isAutoAnswered?: boolean;
 };
@@ -434,9 +434,10 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   function getTargetNodeDataFromFlow(nodeId: string) {
     const node = flow[nodeId];
+    const nodeType = node?.type ? TYPES[node.type] : null;
     const nodeMetadata: NodeMetadata = {
       title: extractNodeTitle(node),
-      type: node.type,
+      type: nodeType,
       id: nodeId,
     };
     return nodeMetadata;
