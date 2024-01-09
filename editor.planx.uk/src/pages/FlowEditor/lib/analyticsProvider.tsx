@@ -432,10 +432,10 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   function getTitleAndTypeFromFlow(nodeId: string) {
-    const { data, type } = flow[nodeId];
+    const node = flow[nodeId];
     const nodeMetadata: NodeMetadata = {
-      title: data?.text,
-      type: type,
+      title: extractNodeTitle(node),
+      type: node.type,
     };
     return nodeMetadata;
   }
