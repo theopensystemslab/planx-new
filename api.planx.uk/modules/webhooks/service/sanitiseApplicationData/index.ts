@@ -23,7 +23,10 @@ export const sanitiseApplicationData = async () => {
   return { operationFailed, results };
 };
 
-export const postToSlack = async (results: OperationResult[], jobName: string) => {
+export const postToSlack = async (
+  results: OperationResult[],
+  jobName: string,
+) => {
   const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
   const text = results.map((result) =>
     result.status === "failure"

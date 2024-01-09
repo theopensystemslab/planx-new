@@ -55,10 +55,7 @@ router.post(
   "/webhooks/hasura/sanitise-application-data",
   sanitiseApplicationDataController,
 );
-router.post(
-  "/webhooks/hasura/analyze-sessions",
-  analyzeSessionsController,
-);
+router.post("/webhooks/hasura/analyze-sessions", analyzeSessionsController);
 router.post(
   "/webhooks/hasura/validate-input/jsonb/clean-html",
   validate(isCleanJSONBSchema),
