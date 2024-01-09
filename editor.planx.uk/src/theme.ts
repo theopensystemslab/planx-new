@@ -16,8 +16,8 @@ import { deepmerge } from "@mui/utils";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
 
-const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.2;
+const DEFAULT_PRIMARY_COLOR = "#0010A4";
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
