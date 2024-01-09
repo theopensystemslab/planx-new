@@ -34,8 +34,8 @@ export const userStore: StateCreator<UserStore, [], [], UserStore> = (
 
   async initUserStore() {
     const { getUser, setUser } = get();
-
-    if (getUser()) return;
+    const currentUser = getUser();
+    if (currentUser) return;
 
     const user = await getLoggedInUser();
     setUser(user);
