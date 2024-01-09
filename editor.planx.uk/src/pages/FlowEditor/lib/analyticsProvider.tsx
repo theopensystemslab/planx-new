@@ -33,6 +33,7 @@ type NodeMetadata = {
   flag?: Flag;
   title?: string;
   type?: TYPES;
+  id?: string;
   isAutoAnswered?: boolean;
 };
 
@@ -344,7 +345,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     initiator: BackwardsNavigationInitiatorType,
     nodeId?: string,
   ) {
-    const targetNodeMetadata = nodeId ? getTitleAndTypeFromFlow(nodeId) : {};
+    const targetNodeMetadata = nodeId ? getTargetNodeDataFromFlow(nodeId) : {};
     const metadata: Record<string, NodeMetadata> = {};
     metadata[`${initiator}`] = targetNodeMetadata;
 
@@ -431,11 +432,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  function getTitleAndTypeFromFlow(nodeId: string) {
+  function getTargetNodeDataFromFlow(nodeId: string) {
     const node = flow[nodeId];
     const nodeMetadata: NodeMetadata = {
       title: extractNodeTitle(node),
       type: node.type,
+      id: nodeId,
     };
     return nodeMetadata;
   }
