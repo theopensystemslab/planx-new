@@ -47,26 +47,28 @@ const flowSettingsRoutes = compose(
         title: makeTitle(
           [req.params.team, req.params.flow, "Flow Settings"].join("/"),
         ),
-        view: <Settings 
-          currentTab={req.params.tab}
-          tabs={[
-            {
-              name: "Service",
-              route: "service",
-              Component: ServiceSettings,
-            },
-            {
-              name: "Service Flags",
-              route: "flags",
-              Component: ServiceFlags,
-            },
-            {
-              name: "Data",
-              route: "data-manager",
-              Component: DataManagerSettings,
-            },
-          ]}
-          />,
+        view: (
+          <Settings
+            currentTab={req.params.tab}
+            tabs={[
+              {
+                name: "Service",
+                route: "service",
+                Component: ServiceSettings,
+              },
+              {
+                name: "Service Flags",
+                route: "flags",
+                Component: ServiceFlags,
+              },
+              {
+                name: "Data",
+                route: "data-manager",
+                Component: DataManagerSettings,
+              },
+            ]}
+          />
+        ),
       };
     }),
   }),
