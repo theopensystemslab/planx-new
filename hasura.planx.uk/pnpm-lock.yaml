@@ -1,9 +1,16 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+overrides:
+  follow-redirects@<1.15.4: '>=1.15.4'
+
 devDependencies:
   hasura-cli:
-    specifier: ^2.28.0
-    version: 2.28.0
+    specifier: ^2.36.1
+    version: 2.36.1
 
 packages:
 
@@ -17,7 +24,7 @@ packages:
   /axios@0.21.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.4
     transitivePeerDependencies:
       - debug
     dev: true
@@ -46,8 +53,8 @@ packages:
     engines: {node: '>=0.8.0'}
     dev: true
 
-  /follow-redirects@1.15.2:
-    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
+  /follow-redirects@1.15.4:
+    resolution: {integrity: sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -61,8 +68,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /hasura-cli@2.28.0:
-    resolution: {integrity: sha512-7QfoacQ30GKJ1Ar6AIRAE5Pv3JdC7P48WO754AFgwb0wr9/00BezsEt0IU7ENOrCQnV7VgXDS2DvGB/tYrSTDw==}
+  /hasura-cli@2.36.1:
+    resolution: {integrity: sha512-h8MHlkkgjlnmFsjzJ+FYDecIB0zswtdvFszXLPsSsyOuCuIIGejAx3rSPFVIxyiZVXohbsJcgjJBe7r91BV3Wg==}
     engines: {node: '>=8'}
     hasBin: true
     requiresBuild: true
