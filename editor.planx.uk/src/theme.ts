@@ -14,9 +14,10 @@ import createPalette, {
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
+import { getContrastTextColor } from "styleUtils";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
-const DEFAULT_SECONDARY_COLOR = "#F3F2F1";
+const DEFAULT_TONAL_OFFSET = 0.2;
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -34,11 +35,20 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     paper: "#F9F8F8",
   },
   secondary: {
-    main: DEFAULT_SECONDARY_COLOR,
+    main: "#F3F2F1",
   },
   text: {
     primary: "#0B0C0C",
     secondary: "#505A5F",
+  },
+  link: {
+    main: DEFAULT_PRIMARY_COLOR
+  },
+  prompt: {
+    main: DEFAULT_PRIMARY_COLOR,
+    contrastText: "#FFFFFF",
+    light: lighten(DEFAULT_PRIMARY_COLOR, DEFAULT_TONAL_OFFSET),
+    dark: darken(DEFAULT_PRIMARY_COLOR, DEFAULT_TONAL_OFFSET),
   },
   action: {
     selected: "#F8F8F8",
@@ -59,6 +69,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     input: "#0B0C0C",
     light: "#E0E0E0",
   },
+  tonalOffset: DEFAULT_TONAL_OFFSET,
 };
 
 // GOVUK Focus style
@@ -87,8 +98,8 @@ export const borderedFocusStyle = {
   background: "transparent",
 };
 
-export const linkStyle = (primaryColor?: string) => ({
-  color: primaryColor || "inherit",
+export const linkStyle = (linkColour: string) => ({
+  color: linkColour || "inherit",
   textDecoration: "underline",
   textDecorationThickness: "1px",
   textUnderlineOffset: "0.1em",
@@ -102,10 +113,19 @@ export const linkStyle = (primaryColor?: string) => ({
   "&:focus-visible": focusStyle,
 });
 
-const getThemeOptions = (teamTheme?: TeamTheme): ThemeOptions => {
+const getThemeOptions = ({ primaryColour, linkColour, actionColour}: TeamTheme): ThemeOptions => {
   const teamPalette: Partial<PaletteOptions> = {
     primary: {
-      main: teamTheme?.primaryColour || DEFAULT_PRIMARY_COLOR,
+      main: primaryColour,
+    },
+    link: {
+      main: linkColour,
+    },
+    prompt: {
+      main: actionColour,
+      light: lighten(actionColour, DEFAULT_TONAL_OFFSET),
+      dark: darken(actionColour, DEFAULT_TONAL_OFFSET),
+      contrastText: getContrastTextColor(actionColour, "#FFF")!,
     },
   };
   const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
@@ -339,7 +359,7 @@ const getThemeOptions = (teamTheme?: TeamTheme): ThemeOptions => {
       MuiLink: {
         styleOverrides: {
           root: {
-            ...linkStyle(palette.primary.main),
+            ...linkStyle(palette.link.main),
             "&:disabled": {
               color: palette.text.disabled,
               cursor: "default",
