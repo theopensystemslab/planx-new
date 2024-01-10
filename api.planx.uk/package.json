@@ -8,7 +8,7 @@
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "aws-sdk": "^2.1467.0",
-    "axios": "^1.6.2",
+    "axios": "^1.6.5",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^1.4.0",
@@ -37,7 +37,7 @@
     "mime": "^3.0.0",
     "multer": "^1.4.5-lts.1",
     "nanoid": "^3.3.7",
-    "notifications-node-client": "^7.0.6",
+    "notifications-node-client": "^8.0.0",
     "passport": "^0.5.3",
     "passport-google-oauth20": "^2.0.0",
     "pino-noir": "^2.2.1",
@@ -124,6 +124,9 @@
         "react",
         "react-dom"
       ]
+    },
+    "overrides": {
+      "follow-redirects@<1.15.4": ">=1.15.4"
     }
   }
 }
