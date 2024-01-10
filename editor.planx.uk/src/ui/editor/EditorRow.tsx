@@ -16,7 +16,7 @@ const Root = styled(Box, {
   "&:first-of-type": {
     paddingTop: 0,
   },
-  "& > * + *": {
+  "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),
   },
   ...(background && {
