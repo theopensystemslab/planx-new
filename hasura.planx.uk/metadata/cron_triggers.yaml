@@ -1,6 +1,6 @@
 - name: analyze_sessions
   webhook: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/analyze-sessions'
-  schedule: '* * * * *'
+  schedule: 0 3 * * *
   include_in_metadata: true
   payload: {}
   headers:
