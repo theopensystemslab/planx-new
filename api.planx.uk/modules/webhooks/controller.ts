@@ -15,6 +15,7 @@ import {
 import { SanitiseApplicationData } from "./service/sanitiseApplicationData/types";
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData";
 import { IsCleanJSONBController } from "./service/validateInput/schema";
+import { analyzeSessions } from "./service/analyzeSessions";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   _req,
@@ -145,6 +146,25 @@ export const sanitiseApplicationDataController: SanitiseApplicationData =
       );
     }
   };
+
+export const analyzeSessionsController: SanitiseApplicationData = async (
+  _req,
+  res,
+  next,
+) => {
+  try {
+    const { operationFailed, results } = await analyzeSessions();
+    if (operationFailed) res.status(500);
+    return res.json(results);
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: "Failed to update session analytics",
+        cause: error,
+      }),
+    );
+  }
+};
 
 export const isCleanJSONBController: IsCleanJSONBController = async (
   _req,
