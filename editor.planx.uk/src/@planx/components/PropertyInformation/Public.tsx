@@ -11,6 +11,7 @@ import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import { publicClient } from "lib/graphql";
 import find from "lodash/find";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
@@ -237,6 +238,13 @@ function PropertyDetails(props: PropertyDetailsProps) {
   const { data, showPropertyTypeOverride, overrideAnswer } = props;
   const filteredData = data.filter((d) => Boolean(d.detail));
 
+  const { trackBackwardsNavigation } = useAnalyticsTracking();
+
+  const handleOverrideAnswer = (fn: string) => {
+    trackBackwardsNavigation("change");
+    overrideAnswer(fn);
+  };
+
   return (
     <PropertyDetailsList component="dl">
       {filteredData.map(({ heading, detail, fn }: PropertyDetail) => (
@@ -251,7 +259,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
                 onClick={(event) => {
                   event.stopPropagation();
                   // Specify the passport key (eg data.fn, data.val) that should be overwritten
-                  overrideAnswer(fn);
+                  handleOverrideAnswer(fn);
                 }}
               >
                 Change

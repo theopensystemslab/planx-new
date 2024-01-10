@@ -113,6 +113,8 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     state.getSortedBreadcrumbsBySection,
   ]);
 
+  const { trackBackwardsNavigation } = useAnalyticsTracking();
+
   const isValidComponent = ([nodeId, userData]: BreadcrumbEntry) => {
     const node = props.flow[nodeId];
     const doesNodeExist = Boolean(props.flow[nodeId]);
@@ -157,6 +159,11 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
       .map(removeNonPresentationalNodes)
       .map((section) => section.map(makeSummaryBreadcrumb));
 
+    const handleChangeAnswer = (id: string) => {
+      trackBackwardsNavigation("change", id);
+      props.changeAnswer(id);
+    };
+
     return (
       <>
         {sectionsWithFilteredBreadcrumbs.map(
@@ -178,7 +185,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   </Typography>
                   <Link
                     onClick={() =>
-                      props.changeAnswer(filteredBreadcrumbs[0].nodeId)
+                      handleChangeAnswer(filteredBreadcrumbs[0].nodeId)
                     }
                     component="button"
                     fontSize="body1.fontSize"
@@ -220,10 +227,10 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 // For applicable component types, display a list of their question & answers with a "change" link
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
-  const { trackBackwardsNavigationByNodeId } = useAnalyticsTracking();
+  const { trackBackwardsNavigation } = useAnalyticsTracking();
 
   const handleChangeAnswer = (id: string) => {
-    trackBackwardsNavigationByNodeId(id, "change");
+    trackBackwardsNavigation("change", id);
     props.changeAnswer(id);
   };
 

@@ -7,13 +7,12 @@ import {
   Operation,
 } from "@apollo/client";
 import { GraphQLErrors } from "@apollo/client/errors";
+import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 import { logger } from "airbrake";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
-
-import { getCookie } from "./cookie";
 
 const toastId = "error_toast";
 
@@ -38,9 +37,6 @@ const customFetch = async (
 const authHttpLink = createHttpLink({
   uri: process.env.REACT_APP_HASURA_URL,
   fetch: customFetch,
-  headers: {
-    authorization: `Bearer ${getCookie("jwt")}`,
-  },
 });
 
 const publicHttpLink = createHttpLink({
@@ -132,10 +128,47 @@ const retryLink = new RetryLink({
 });
 
 /**
+ * Set auth header in Apollo client
+ * Must be done post-authentication once we have a value for JWT
+ */
+export const authMiddleware = setContext(async () => {
+  const jwt = await getJWT();
+
+  return {
+    headers: {
+      authorization: jwt ? `Bearer ${jwt}` : undefined,
+    },
+  };
+});
+
+/**
+ * Get the JWT from the store, and wait if not available
+ */
+const getJWT = async () => {
+  const jwt = useStore.getState().jwt;
+  if (jwt) return jwt;
+
+  return await waitForAuthentication();
+};
+
+/**
+ * Wait for authentication by subscribing to the JWT changes
+ */
+const waitForAuthentication = async () =>
+  new Promise<string>((resolve) => {
+    const unsubscribe = useStore.subscribe(({ jwt }) => {
+      if (jwt) {
+        unsubscribe();
+        resolve(jwt);
+      }
+    });
+  });
+
+/**
  * Client used to make all requests by authorised users
  */
 export const client = new ApolloClient({
-  link: from([retryLink, errorLink, authHttpLink]),
+  link: from([retryLink, errorLink, authMiddleware, authHttpLink]),
   cache: new InMemoryCache(),
 });
 
