@@ -193,7 +193,7 @@ export async function answerChecklist({
   });
   await expect(checklist).toBeVisible();
   for (const answer of answers) {
-    await page.locator("label", { hasText: answer }).click();
+    await page.getByRole("button", { name: answer, exact: true }).click();
   }
 }
 
