@@ -1,9 +1,11 @@
-import { GeoJSONObject } from "@turf/helpers";
+import {
+  NotifyPersonalisation,
+  Team,
+  TeamSettings,
+  TeamTheme,
+} from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
-import { NotifyPersonalisation, TeamSettings } from "types";
-import { TeamTheme } from "types";
-import { Team } from "types";
 import type { StateCreator } from "zustand";
 
 export interface TeamStore {
@@ -13,7 +15,7 @@ export interface TeamStore {
   teamSettings?: TeamSettings;
   teamSlug: string;
   notifyPersonalisation?: NotifyPersonalisation;
-  boundaryBBox?: GeoJSONObject;
+  boundaryBBox?: Team["boundaryBBox"];
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;

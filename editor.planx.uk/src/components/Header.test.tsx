@@ -1,10 +1,10 @@
+import { Team } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
 import { vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
 import { axe, setup } from "testUtils";
-import { Team } from "types";
 
 import flowWithoutSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithClones.json";
 import flowWithThreeSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithThreeSections.json";
@@ -18,8 +18,9 @@ const mockTeam1: Team = {
   slug: "opensystemslab",
   theme: {
     logo: "logo.jpg",
-    primary: "#0010A4",
-    secondary: null,
+    primaryColour: "#0010A4",
+    actionColour: "#0010A4",
+    linkColour: "#0010A4",
     favicon: null,
   },
 };

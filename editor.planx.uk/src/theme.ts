@@ -13,7 +13,7 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
-import { TeamTheme } from "types";
+import { TeamTheme } from "@opensystemslab/planx-core/types";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_SECONDARY_COLOR = "#F3F2F1";
@@ -105,10 +105,7 @@ export const linkStyle = (primaryColor?: string) => ({
 const getThemeOptions = (teamTheme?: TeamTheme): ThemeOptions => {
   const teamPalette: Partial<PaletteOptions> = {
     primary: {
-      main: teamTheme?.primary || DEFAULT_PRIMARY_COLOR,
-    },
-    secondary: {
-      main: teamTheme?.secondary || DEFAULT_SECONDARY_COLOR,
+      main: teamTheme?.primaryColour || DEFAULT_PRIMARY_COLOR,
     },
   };
   const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
@@ -436,8 +433,9 @@ const getThemeOptions = (teamTheme?: TeamTheme): ThemeOptions => {
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
   teamTheme: TeamTheme = {
-    primary: DEFAULT_PRIMARY_COLOR,
-    secondary: DEFAULT_SECONDARY_COLOR,
+    primaryColour: DEFAULT_PRIMARY_COLOR,
+    actionColour: DEFAULT_PRIMARY_COLOR,
+    linkColour: DEFAULT_PRIMARY_COLOR,
     logo: null,
     favicon: null,
   },
