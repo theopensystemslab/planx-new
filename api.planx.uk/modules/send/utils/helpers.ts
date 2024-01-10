@@ -47,7 +47,7 @@ export async function logPaymentStatus({
 }
 
 // tmp explicit error handling
-function reportError(obj: object) {
+export function reportError(obj: object) {
   if (airbrake) {
     airbrake.notify(obj);
     return;

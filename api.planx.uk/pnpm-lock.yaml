@@ -68,6 +68,9 @@ dependencies:
   graphql-request:
     specifier: ^4.3.0
     version: 4.3.0(graphql@16.8.1)
+  he:
+    specifier: ^1.2.0
+    version: 1.2.0
   helmet:
     specifier: ^7.1.0
     version: 7.1.0
@@ -166,6 +169,9 @@ devDependencies:
   '@types/express-pino-logger':
     specifier: ^4.0.5
     version: 4.0.5
+  '@types/he':
+    specifier: ^1.2.3
+    version: 1.2.3
   '@types/jest':
     specifier: ^29.5.11
     version: 29.5.11
@@ -2034,6 +2040,10 @@ packages:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
       '@types/node': 18.18.1
+    dev: true
+
+  /@types/he@1.2.3:
+    resolution: {integrity: sha512-q67/qwlxblDzEDvzHhVkwc1gzVWxaNxeyHUBF4xElrvjL11O+Ytze+1fGpBHlr/H9myiBUaUXNnNPmBHxxfAcA==}
     dev: true
 
   /@types/http-errors@2.0.1:
@@ -4727,6 +4737,11 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       function-bind: 1.1.2
+    dev: false
+
+  /he@1.2.0:
+    resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
+    hasBin: true
     dev: false
 
   /helmet@7.1.0:
