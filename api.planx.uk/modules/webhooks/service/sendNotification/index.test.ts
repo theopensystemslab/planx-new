@@ -75,7 +75,7 @@ describe("Send Slack notifications endpoint", () => {
     it("returns a 400 if 'type' is missing", async () => {
       const body = { event: {} };
       await post(ENDPOINT)
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
@@ -87,7 +87,7 @@ describe("Send Slack notifications endpoint", () => {
     it("returns a 400 if 'type' is incorrect", async () => {
       const body = { event: {} };
       await post(ENDPOINT + "?type=test-submission")
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
@@ -98,7 +98,7 @@ describe("Send Slack notifications endpoint", () => {
 
     it("returns a 400 if 'event' is missing", async () => {
       await post(ENDPOINT + "?type=bops-submission")
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .expect(400)
         .then((response) => {
           expect(response.body).toHaveProperty("issues");
@@ -124,7 +124,7 @@ describe("Send Slack notifications endpoint", () => {
       process.env.APP_ENVIRONMENT = "staging";
       await post(ENDPOINT)
         .query({ type: "bops-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(200)
         .then((response) => {
@@ -137,7 +137,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "bops-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(200)
         .then((response) => {
@@ -157,7 +157,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "bops-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(500)
         .then((response) => {
@@ -186,7 +186,7 @@ describe("Send Slack notifications endpoint", () => {
       process.env.APP_ENVIRONMENT = "staging";
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(200)
         .then((response) => {
@@ -199,7 +199,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(200)
         .then((response) => {
@@ -221,7 +221,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(200)
         .then((response) => {
@@ -237,7 +237,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(200)
         .then((response) => {
@@ -251,7 +251,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(500)
         .then((response) => {
@@ -266,7 +266,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(500)
         .then((response) => {
@@ -297,7 +297,7 @@ describe("Send Slack notifications endpoint", () => {
       process.env.APP_ENVIRONMENT = "staging";
       await post(ENDPOINT)
         .query({ type: "email-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(200)
         .then((response) => {
@@ -310,7 +310,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "email-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(200)
         .then((response) => {
@@ -331,7 +331,7 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "email-submission" })
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(500)
         .then((response) => {

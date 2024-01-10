@@ -77,7 +77,7 @@ describe("Create payment send events webhook", () => {
   it("returns a 400 if a required value is missing", async () => {
     await supertest(app)
       .post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { somethingElse: "123" } })
       .expect(400)
       .then((response) =>
@@ -92,7 +92,7 @@ describe("Create payment send events webhook", () => {
 
     await supertest(app)
       .post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
       .expect(200)
       .then((response) => {
@@ -108,7 +108,7 @@ describe("Create payment send events webhook", () => {
 
     await supertest(app)
       .post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => {
@@ -131,7 +131,7 @@ describe("Create payment send events webhook", () => {
 
     await supertest(app)
       .post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(500)
       .then((response) => {

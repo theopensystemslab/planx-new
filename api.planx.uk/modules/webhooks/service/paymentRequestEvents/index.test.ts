@@ -36,7 +36,7 @@ describe("Create payment invitation events webhook", () => {
 
     for (const body of [missingCreatedAt, missingPayload]) {
       await post(ENDPOINT)
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
@@ -54,7 +54,7 @@ describe("Create payment invitation events webhook", () => {
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => {
@@ -75,7 +75,7 @@ describe("Create payment invitation events webhook", () => {
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => {
@@ -113,7 +113,7 @@ describe("Create payment invitation events webhook", () => {
     mockedCreateScheduledEvent.mockRejectedValue(new Error("Failed!"));
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(500)
       .then((response) => {
@@ -145,7 +145,7 @@ describe("Create payment reminder events webhook", () => {
 
     for (const body of [missingCreatedAt, missingPayload]) {
       await post(ENDPOINT)
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
@@ -163,7 +163,7 @@ describe("Create payment reminder events webhook", () => {
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => {
@@ -186,7 +186,7 @@ describe("Create payment reminder events webhook", () => {
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => {
@@ -244,7 +244,7 @@ describe("Create payment reminder events webhook", () => {
     mockedCreateScheduledEvent.mockRejectedValue(new Error("Failed!"));
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(500)
       .then((response) => {
@@ -276,7 +276,7 @@ describe("Create payment expiry events webhook", () => {
 
     for (const body of [missingCreatedAt, missingPayload]) {
       await post(ENDPOINT)
-        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(400)
         .then((response) => {
@@ -294,7 +294,7 @@ describe("Create payment expiry events webhook", () => {
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => {
@@ -315,7 +315,7 @@ describe("Create payment expiry events webhook", () => {
     mockedCreateScheduledEvent.mockResolvedValue(mockScheduledEventResponse);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => {
@@ -353,7 +353,7 @@ describe("Create payment expiry events webhook", () => {
     mockedCreateScheduledEvent.mockRejectedValue(new Error("Failed!"));
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(500)
       .then((response) => {

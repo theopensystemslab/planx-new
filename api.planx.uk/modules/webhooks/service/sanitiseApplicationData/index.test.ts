@@ -33,7 +33,7 @@ describe("Sanitise application data webhook", () => {
     mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .expect(500)
       .then((response) =>
         expect(response.body.error).toMatch(
@@ -55,7 +55,7 @@ describe("Sanitise application data webhook", () => {
     ]);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .expect(200)
       .then((response) => {
         expect(mockOperation1).toHaveBeenCalled();
@@ -96,7 +96,7 @@ describe("Sanitise application data webhook", () => {
     ]);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .expect(500)
       .then((response) => {
         expect(mockOperation1).toHaveBeenCalled();
@@ -150,7 +150,7 @@ describe("Sanitise application data webhook", () => {
     ]);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .expect(500)
       .then((response) => {
         expect(mockOperation1).toHaveBeenCalled();

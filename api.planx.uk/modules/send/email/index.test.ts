@@ -113,7 +113,7 @@ describe(`sending an application by email to a planning office`, () => {
   it("succeeds when provided with valid data", async () => {
     await supertest(app)
       .post("/email-submission/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
       .expect(200)
       .then((res) => {
@@ -133,7 +133,7 @@ describe(`sending an application by email to a planning office`, () => {
   it("errors if the payload body does not include a sessionId", async () => {
     await supertest(app)
       .post("/email-submission/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { somethingElse: "123" } })
       .expect(400)
       .then((res) => {
@@ -160,7 +160,7 @@ describe(`sending an application by email to a planning office`, () => {
 
     await supertest(app)
       .post("/email-submission/other-council")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
       .expect(400)
       .then((res) => {
@@ -183,7 +183,7 @@ describe(`sending an application by email to a planning office`, () => {
 
     await supertest(app)
       .post("/email-submission/other-council")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
       .expect(500)
       .then((res) => {
