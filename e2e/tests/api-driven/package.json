@@ -7,7 +7,7 @@
   "dependencies": {
     "@cucumber/cucumber": "^9.3.0",
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#af52a96",
-    "axios": "^1.6.0",
+    "axios": "^1.6.5",
     "dotenv": "^16.3.1",
     "dotenv-expand": "^10.0.0",
     "graphql": "^16.8.1",

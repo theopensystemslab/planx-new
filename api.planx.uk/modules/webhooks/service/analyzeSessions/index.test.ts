@@ -38,7 +38,7 @@ describe("Analyze sessions webhook", () => {
     mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .expect(500)
       .then((response) =>
         expect(response.body.error).toMatch(
@@ -63,7 +63,7 @@ describe("Analyze sessions webhook", () => {
     ]);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .expect(200)
       .then((response) => {
         expect(mockOperation1).toHaveBeenCalled();
@@ -107,7 +107,7 @@ describe("Analyze sessions webhook", () => {
     ]);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .expect(500)
       .then((response) => {
         expect(mockOperation1).toHaveBeenCalled();
@@ -164,7 +164,7 @@ describe("Analyze sessions webhook", () => {
     ]);
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .expect(500)
       .then((response) => {
         expect(mockOperation1).toHaveBeenCalled();

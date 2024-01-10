@@ -95,7 +95,7 @@ describe(`sending an application to BOPS`, () => {
 
     await supertest(app)
       .post("/bops/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
       .expect(200)
       .then((res) => {
@@ -115,7 +115,7 @@ describe(`sending an application to BOPS`, () => {
   it("throws an error if payload is missing", async () => {
     await supertest(app)
       .post("/bops/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: null })
       .expect(400)
       .then((res) => {
@@ -126,7 +126,7 @@ describe(`sending an application to BOPS`, () => {
   it("throws an error if team is unsupported", async () => {
     await supertest(app)
       .post("/bops/unsupported-team")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
       .expect(400)
       .then((res) => {
@@ -150,7 +150,7 @@ describe(`sending an application to BOPS`, () => {
 
     await supertest(app)
       .post("/bops/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "previously_submitted_app" } })
       .expect(200)
       .then((res) => {
@@ -226,7 +226,7 @@ describe(`sending an application to BOPS v2`, () => {
 
     await supertest(app)
       .post("/bops-v2/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
       .expect(200)
       .then((res) => {
@@ -246,7 +246,7 @@ describe(`sending an application to BOPS v2`, () => {
   it("throws an error if payload is missing", async () => {
     await supertest(app)
       .post("/bops-v2/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: null })
       .expect(400)
       .then((res) => {
@@ -257,7 +257,7 @@ describe(`sending an application to BOPS v2`, () => {
   it("throws an error if team is unsupported", async () => {
     await supertest(app)
       .post("/bops-v2/unsupported-team")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
       .expect(400)
       .then((res) => {
@@ -281,7 +281,7 @@ describe(`sending an application to BOPS v2`, () => {
 
     await supertest(app)
       .post("/bops-v2/southwark")
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "previously_submitted_app" } })
       .expect(200)
       .then((res) => {
