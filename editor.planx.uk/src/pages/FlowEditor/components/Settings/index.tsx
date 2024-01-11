@@ -8,16 +8,16 @@ import { styled } from "@mui/material/styles";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { HEADER_HEIGHT } from "components/Header";
-import React  from "react";
+import React from "react";
 import { Link, useNavigation } from "react-navi";
 
 interface SettingsProps {
-  currentTab: string,
+  currentTab: string;
   tabs: {
-    route: string,
-    name: string,
-    Component: React.FC,
-  }[]
+    route: string;
+    name: string;
+    Component: React.FC;
+  }[];
 }
 
 interface TabPanelProps {
@@ -95,7 +95,6 @@ const Root = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   minHeight: `calc(100% - ${HEADER_HEIGHT}px)`,
-  zIndex: "2000",
   [`& .${classes.tabs}`]: {
     backgroundColor: theme.palette.border.main,
   },
@@ -132,14 +131,14 @@ const Settings: React.FC<SettingsProps> = ({ currentTab, tabs }) => {
                 indicator: classes.tabIndicator,
               }}
             >
-              {tabs.map(({ name, route }, index) =>
+              {tabs.map(({ name, route }, index) => (
                 <LinkTab
                   key={`${name}-LinkTab`}
                   label={name}
                   href={`./${route}`}
                   {...a11yProps(index)}
                 />
-              )}
+              ))}
             </Tabs>
           </Grid>
           <Grid item>
@@ -154,11 +153,11 @@ const Settings: React.FC<SettingsProps> = ({ currentTab, tabs }) => {
           </Grid>
         </Grid>
       </AppBar>
-      {tabs.map(({ name, Component }, index) =>
+      {tabs.map(({ name, Component }, index) => (
         <TabPanel value={value} index={index} key={`${name}-TabPanel`}>
           <Component />
         </TabPanel>
-      )}
+      ))}
     </Root>
   );
 };
