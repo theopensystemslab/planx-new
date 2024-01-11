@@ -1,8 +1,13 @@
 {
   "devDependencies": {
-    "hasura-cli": "^2.28.0"
+    "hasura-cli": "^2.36.1"
   },
   "scripts": {
     "start": "hasura console --envfile ./../.env"
+  },
+  "pnpm": {
+    "overrides": {
+      "follow-redirects@<1.15.4": ">=1.15.4"
+    }
   }
 }

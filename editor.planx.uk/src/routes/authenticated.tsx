@@ -16,7 +16,7 @@ const editorRoutes = compose(
     "/": route(async () => {
       const { data } = await client.query({
         query: gql`
-          query {
+          query GetTeams {
             teams(order_by: { name: asc }) {
               id
               name

@@ -59,7 +59,8 @@ function setJWTCookie(returnTo: string, res: Response, req: Request) {
   res.cookie("jwt", req.user!.jwt, httpOnlyCookieOptions);
 
   // Set second cookie which can be read by browser to detect presence of the unreadable httpOnly cookie
-  res.cookie("auth", { loggedIn: true }, defaultCookieOptions);
+  const authCookie = btoa(JSON.stringify({ loggedIn: true }));
+  res.cookie("auth", authCookie, defaultCookieOptions);
 
   res.redirect(returnTo);
 }

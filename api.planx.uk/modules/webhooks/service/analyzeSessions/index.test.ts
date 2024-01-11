@@ -1,6 +1,8 @@
 import supertest from "supertest";
+
 import app from "../../../../server";
 import * as operations from "./operations";
+import * as sharedOperations from "../sanitiseApplicationData/operations";
 
 const mockSend = jest.fn();
 const mockSlackNotify = jest.fn().mockImplementation(() => {
@@ -15,8 +17,8 @@ jest.mock("slack-notify", () => {
 
 const { post } = supertest(app);
 
-describe("Sanitise application data webhook", () => {
-  const ENDPOINT = "/webhooks/hasura/sanitise-application-data";
+describe("Analyze sessions webhook", () => {
+  const ENDPOINT = "/webhooks/hasura/analyze-sessions";
 
   it("returns a 401 without correct authentication", async () => {
     await post(ENDPOINT)
@@ -29,7 +31,10 @@ describe("Sanitise application data webhook", () => {
   });
 
   it("returns a 500 if an unhandled error is thrown whilst running operations", async () => {
-    const mockOperationHandler = jest.spyOn(operations, "operationHandler");
+    const mockOperationHandler = jest.spyOn(
+      sharedOperations,
+      "operationHandler",
+    );
     mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
 
     await post(ENDPOINT)
@@ -37,7 +42,7 @@ describe("Sanitise application data webhook", () => {
       .expect(500)
       .then((response) =>
         expect(response.body.error).toMatch(
-          /Failed to sanitise application data/,
+          /Failed to update session analytics/,
         ),
       );
   });
@@ -47,7 +52,10 @@ describe("Sanitise application data webhook", () => {
     const mockOperation2 = jest.fn().mockResolvedValue(["456", "789"]);
     const mockOperation3 = jest.fn().mockResolvedValue(["abc", "def", "ghi"]);
 
-    const mockGetOperations = jest.spyOn(operations, "getOperations");
+    const mockGetOperations = jest.spyOn(
+      operations,
+      "getAnalyzeSessionOperations",
+    );
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,
@@ -88,7 +96,10 @@ describe("Sanitise application data webhook", () => {
       .mockRejectedValue(new Error("Query failed!"));
     const mockOperation3 = jest.fn().mockResolvedValue(["abc", "def", "ghi"]);
 
-    const mockGetOperations = jest.spyOn(operations, "getOperations");
+    const mockGetOperations = jest.spyOn(
+      operations,
+      "getAnalyzeSessionOperations",
+    );
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,
@@ -142,7 +153,10 @@ describe("Sanitise application data webhook", () => {
       .fn()
       .mockRejectedValue(new Error("Query failed!"));
 
-    const mockGetOperations = jest.spyOn(operations, "getOperations");
+    const mockGetOperations = jest.spyOn(
+      operations,
+      "getAnalyzeSessionOperations",
+    );
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,

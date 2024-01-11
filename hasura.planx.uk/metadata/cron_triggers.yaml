@@ -1,3 +1,12 @@
+- name: analyze_sessions
+  webhook: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/analyze-sessions'
+  schedule: 0 3 * * *
+  include_in_metadata: true
+  payload: {}
+  headers:
+    - name: authorization
+      value_from_env: HASURA_PLANX_API_KEY
+  comment: Parses allow-list answers for submitted sessions to retain for analytics post-sanitation
 - name: sanitise_application_data
   webhook: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/sanitise-application-data'
   schedule: 0 2 * * *

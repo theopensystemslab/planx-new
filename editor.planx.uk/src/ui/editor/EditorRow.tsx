@@ -16,7 +16,7 @@ const Root = styled(Box, {
   "&:first-of-type": {
     paddingTop: 0,
   },
-  "& > * + *": {
+  "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),
   },
   ...(background && {
@@ -27,7 +27,7 @@ const Root = styled(Box, {
   }),
 }));
 
-export default function InputRow({
+export default function EditorRow({
   children,
   background,
 }: {

@@ -8,7 +8,7 @@ export interface OperationResult {
   errorMessage?: string;
 }
 
-export type QueryResult = string[];
+export type QueryResult = string[] | string;
 
 export type Operation = () => Promise<QueryResult>;
 

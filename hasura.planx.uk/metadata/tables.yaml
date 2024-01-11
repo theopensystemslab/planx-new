@@ -40,6 +40,7 @@
           - id
           - input_errors
           - metadata
+          - node_fn
           - node_id
           - node_title
           - node_type
@@ -51,12 +52,14 @@
           - analytics_id
           - created_at
           - id
+          - node_id
           - user_exit
         filter: {}
   update_permissions:
     - role: public
       permission:
         columns:
+          - allow_list_answers
           - flow_direction
           - has_clicked_help
           - input_errors
@@ -607,6 +610,7 @@
           - updated_at
           - flow_id
           - id
+          - allow_list_answers
           - has_user_saved
           - sanitised_at
         filter: {}
@@ -635,17 +639,18 @@
     - role: api
       permission:
         columns:
-          - data
-          - email
+          - allow_list_answers
           - created_at
+          - data
           - deleted_at
+          - email
+          - flow_id
+          - has_user_saved
+          - id
           - locked_at
+          - sanitised_at
           - submitted_at
           - updated_at
-          - flow_id
-          - id
-          - has_user_saved
-          - sanitised_at
         filter: {}
         check: {}
     - role: public

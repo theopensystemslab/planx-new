@@ -18,6 +18,8 @@ config:
     secure: AAABADroqKJ1/CanxoghKyCutFA8bmiPBuafrNYGNMn1H16jXiHuytHUUByTbXZZHtANciv7rkQEJosUmyay5j/ZFKu9TeS2WaIGBD913EVlv4iXDw3Y5OU2bSocROlYQm7/
   application:gov-uk-pay-token-lambeth:
     secure: AAABAPy5USkd8/hwq6vFXP45BXsYFUltR6gj8PoiZkOLRPUd1wgQ3Yhgc1Cyn+lb5cZrXBoVPjuVhm/UvBN82DNzRTl2TxAakCQQIrBU5xil+m9UnbY82CNSMDuEaWwMpR3C
+  application:gov-uk-pay-token-medway:
+    secure: AAABAOf9pQgmUkPWbyBQpkd2eZDtzx8WhHfPMD+V8lDLP/hqo24ZZyCrDfq6VBrcEeZVL89dvJ/PIVng9V5xFDKwpRcChTsOsen6epWGE/I0zwDdwrONmxgbPXnGgxLDtiEp
   application:gov-uk-pay-token-southwark:
     secure: AAABALGCrA9ZqRLql+ZHRQD/q6GiGNihtdgPL/7k5d37vgjqW115YR30HG9ofE00qP2Hkr2ZkYkJhVCIr9G5l1wSGXBNI+ldXxTCU8PWLGWv+Xa+Sv5Ltgd9egmwBBqUgvwe
   application:govuk-notify-api-key:

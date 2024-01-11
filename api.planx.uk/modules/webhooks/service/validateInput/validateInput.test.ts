@@ -25,7 +25,7 @@ describe("Dirty HTML", () => {
     };
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(400)
       .then((response) => {
@@ -55,7 +55,7 @@ describe("Dirty HTML", () => {
     };
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(400)
       .then((response) => {
@@ -75,7 +75,7 @@ describe("Clean HTML", () => {
     };
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => expect(response.body).toEqual({}));
@@ -101,7 +101,7 @@ describe("Clean HTML", () => {
     };
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => expect(response.body).toEqual({}));
@@ -120,7 +120,7 @@ describe("Mixed clean and dirty HTML", () => {
     };
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(400)
       .then((response) => {
@@ -151,7 +151,7 @@ describe("Mixed clean and dirty HTML", () => {
     };
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(400)
       .then((response) => {
@@ -180,7 +180,7 @@ describe("Non-HTML input", () => {
     };
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => expect(response.body).toEqual({}));
@@ -213,7 +213,7 @@ describe("Non-HTML input", () => {
     };
 
     await post(ENDPOINT)
-      .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send(body)
       .expect(200)
       .then((response) => expect(response.body).toEqual({}));
