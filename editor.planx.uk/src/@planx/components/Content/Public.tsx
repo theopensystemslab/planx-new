@@ -20,7 +20,7 @@ const Content = styled(Box, {
       theme.palette.text.primary,
     ])?.toHexString() || theme.palette.text.primary,
   "& a": {
-    color: getContrastTextColor(color || "#fff", theme.palette.primary.main),
+    color: getContrastTextColor(color || "#fff", theme.palette.link.main),
   },
   "& *:first-child": {
     marginTop: 0,

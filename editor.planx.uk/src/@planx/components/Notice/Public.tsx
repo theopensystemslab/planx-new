@@ -29,10 +29,14 @@ const Container = styled(Box, {
     justifyContent: "space-between",
     padding: theme.spacing(2),
     backgroundColor: customColor,
-    color: mostReadable(customColor, [
-      "#fff",
-      theme.palette.text.primary,
-    ])?.toHexString(),
+    color:
+      mostReadable(customColor || "#fff", [
+        "#fff",
+        theme.palette.text.primary,
+      ])?.toHexString() || theme.palette.text.primary,
+    "& a": {
+      color: "inherit !important",
+    },
     "&:before": {
       content: "' '",
       position: "absolute",
