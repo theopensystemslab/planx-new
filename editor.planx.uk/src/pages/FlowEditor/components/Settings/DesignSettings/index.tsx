@@ -2,9 +2,11 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { Team } from "@opensystemslab/planx-core/types";
 import { FormikProps, getIn } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect, useState } from "react";
 import EditorRow from "ui/editor/EditorRow";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 import InputGroup from "ui/editor/InputGroup";
@@ -30,6 +32,26 @@ type SettingsFormProps = {
   input: React.ReactElement;
   formik: FormikProps<any>;
   preview?: React.ReactElement;
+};
+
+const useTeam = () => {
+  const [team, setTeam] = useState<Team>({} as Team);
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
+        if (!fetchedTeam) throw Error("Unable to find team");
+        setTeam(fetchedTeam);
+      } catch (error) {
+        console.error("Error fetching team:", error);
+      }
+    };
+
+    fetchTeam();
+  }, []);
+
+  return team;
 };
 
 export const SettingsForm: React.FC<SettingsFormProps> = ({
@@ -79,6 +101,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 
 const DesignSettings: React.FC = () => {
   const isUsingFeatureFlag = hasFeatureFlag("SHOW_TEAM_SETTINGS");
+  const team = useTeam();
 
   return (
     <>
@@ -96,7 +119,7 @@ const DesignSettings: React.FC = () => {
         </EditorRow>
       ) : (
         <>
-          <ThemeAndLogoForm />
+          <ThemeAndLogoForm team={team} />
           <ButtonForm />
           <TextLinkForm />
           <FaviconForm />

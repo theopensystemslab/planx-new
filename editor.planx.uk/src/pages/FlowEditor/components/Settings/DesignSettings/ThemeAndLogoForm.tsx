@@ -1,7 +1,10 @@
 import Link from "@mui/material/Link";
+import { getContrastRatio, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { Team, TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect, useState } from "react";
 import ColorPicker from "ui/editor/ColorPicker";
 import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
@@ -9,17 +12,42 @@ import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import PublicFileUploadButton from "ui/shared/PublicFileUploadButton";
 
-import { DesignPreview, EXAMPLE_COLOUR, SettingsForm } from ".";
+import { DesignPreview, SettingsForm } from ".";
 
-export const ThemeAndLogoForm: React.FC = () => {
-  const formik = useFormik<{
-    themeColor: string;
-  }>({
-    initialValues: {
-      themeColor: EXAMPLE_COLOUR,
+type FormValues = Pick<TeamTheme, "primaryColour" | "logo">;
+
+export const ThemeAndLogoForm: React.FC<{ team: Team }> = ({ team }) => {
+  const theme = useTheme();
+
+  useEffect(() => {
+    setInitialValues({
+      primaryColour: team.theme?.primaryColour,
+      logo: team.theme?.logo,
+    })
+  }, [team])
+  
+  const [initialValues, setInitialValues] = useState<FormValues>({
+    primaryColour: "",
+    logo: "",
+  })
+
+  const formik = useFormik<FormValues>({
+    initialValues,
+    onSubmit: async (values, { resetForm }) => {
+      await useStore.getState().updateTeamTheme(values);
+      // Reset "dirty" status to disable Save & Reset buttons
+      resetForm({ values });
     },
-    onSubmit: () => {},
-    validate: () => {},
+    validateOnBlur: false,
+    validateOnChange: false,
+    enableReinitialize: true,
+    validate: ({ primaryColour }) => {
+      const isContrastThresholdMet = getContrastRatio("#FFF", primaryColour) > theme.palette.contrastThreshold;
+
+      if (!isContrastThresholdMet) {
+        return { primaryColour: "Theme colour does not meet accessibility contrast requirements (3:1)"}
+      };
+    },
   });
 
   return (
@@ -46,8 +74,8 @@ export const ThemeAndLogoForm: React.FC = () => {
           <InputRow>
             <InputRowItem>
               <ColorPicker
-                color={formik.values.themeColor}
-                onChange={(color) => formik.setFieldValue("themeColor", color)}
+                color={formik.values.primaryColour}
+                onChange={(color) => formik.setFieldValue("primaryColour", color)}
                 label="Theme colour"
               />
             </InputRowItem>
@@ -55,7 +83,7 @@ export const ThemeAndLogoForm: React.FC = () => {
           <InputRow>
             <InputRowLabel>Logo:</InputRowLabel>
             <InputRowItem width={50}>
-              <PublicFileUploadButton />
+              <PublicFileUploadButton onChange={(newUrl) => formik.setFieldValue("logo", newUrl)}/>
             </InputRowItem>
             <Typography
               color="text.secondary"
@@ -69,12 +97,15 @@ export const ThemeAndLogoForm: React.FC = () => {
         </>
       }
       preview={
-        <DesignPreview bgcolor={EXAMPLE_COLOUR}>
-          <img
-            width="140"
-            src="https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/barnet.svg"
-            alt="council logo"
-          />
+        <DesignPreview bgcolor={formik.values.primaryColour}>
+          { formik.values.logo 
+            ? <img
+              width="140"
+              src={formik.values.logo}
+              alt="council logo"
+            />
+            : <Typography color={theme.palette.primary.contrastText}>{team?.name}</Typography>
+          }
         </DesignPreview>
       }
     />
