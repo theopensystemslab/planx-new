@@ -1,7 +1,9 @@
+import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Team, User, UserTeams } from "@opensystemslab/planx-core/types";
 import axios from "axios";
-import { _client } from "client";
 import type { StateCreator } from "zustand";
+
+import { EditorStore } from "./editor";
 
 export interface UserStore {
   user?: User;
@@ -13,11 +15,20 @@ export interface UserStore {
   initUserStore: () => Promise<void>;
 }
 
-export const userStore: StateCreator<UserStore, [], [], UserStore> = (
-  set,
-  get,
-) => ({
-  setUser: ({ jwt, ...user }) => set({ jwt, user }),
+export const userStore: StateCreator<
+  UserStore & EditorStore,
+  [],
+  [],
+  UserStore
+> = (set, get) => ({
+  setUser: ({ jwt, ...user }) => {
+    const authenticatedClient = new CoreDomainClient({
+      targetURL: process.env.REACT_APP_HASURA_URL!,
+      auth: { jwt },
+    });
+    set({ $client: authenticatedClient });
+    set({ jwt, user })
+  },
 
   getUser: () => get().user,
 

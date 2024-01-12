@@ -1,3 +1,4 @@
+import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { capitalize } from "lodash";
 import { removeSessionIdSearchParam } from "utils";
@@ -31,6 +32,8 @@ export interface SharedStore extends Store.Store {
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
   setFlowSlug: (flowSlug: string) => void;
   setFlowNameFromSlug: (flowSlug: string) => void;
+  $public: CoreDomainClient,
+  $client: CoreDomainClient,
 }
 
 export const sharedStore: StateCreator<
@@ -107,4 +110,12 @@ export const sharedStore: StateCreator<
     const flowName = capitalize(flowSlug.replaceAll?.("-", " "));
     set({ flowName });
   },
+
+  $public: new CoreDomainClient({
+    targetURL: process.env.REACT_APP_HASURA_URL!,
+  }),
+
+  $client: new CoreDomainClient({
+    targetURL: process.env.REACT_APP_HASURA_URL!,
+  }),
 });
