@@ -13,7 +13,7 @@ export interface Send extends MoreInformation {
 }
 
 export const DEFAULT_TITLE = "Send";
-export const DEFAULT_DESTINATION = Destination.BOPS;
+export const DEFAULT_DESTINATION = Destination.Email;
 
 export const parseContent = (data: Record<string, any> | undefined): Send => ({
   ...parseMoreInformation(data),
