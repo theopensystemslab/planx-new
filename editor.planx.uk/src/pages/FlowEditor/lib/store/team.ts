@@ -24,6 +24,7 @@ export interface TeamStore {
   initTeamStore: (slug: string) => Promise<void>;
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
+  updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
 }
 
 export const teamStore: StateCreator<
@@ -114,5 +115,11 @@ export const teamStore: StateCreator<
     const { teamSlug, $client } = get();
     const team = await $client.team.getBySlug(teamSlug);
     return team;
+  },
+
+  updateTeamTheme: async (theme: Partial<TeamTheme>) => {
+    const { teamId, $client } = get();
+    const isSuccess = await $client.team.updateTheme(teamId, theme);
+    return isSuccess;
   },
 });
