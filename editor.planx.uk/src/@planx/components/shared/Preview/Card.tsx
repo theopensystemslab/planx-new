@@ -83,7 +83,7 @@ const Card: React.FC<Props> = ({
             {handleSubmit && (
               <Button
                 variant="contained"
-                color="primary"
+                color="prompt"
                 size="large"
                 type="submit"
                 disabled={!isValid}

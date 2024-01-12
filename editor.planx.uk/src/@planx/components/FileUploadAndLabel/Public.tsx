@@ -66,7 +66,6 @@ export const InfoButton = styled(Button)(({ theme }) => ({
   minWidth: 0,
   marginLeft: theme.spacing(1.5),
   boxShadow: "none",
-  color: theme.palette.primary.main,
   minHeight: "44px",
 })) as typeof Button;
 

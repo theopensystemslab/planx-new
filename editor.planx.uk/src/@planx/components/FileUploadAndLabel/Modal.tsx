@@ -117,6 +117,7 @@ export const FileTaggingModal = ({
               variant="contained"
               onClick={handleValidation}
               data-testid="modal-done-button"
+              color="prompt"
             >
               Done
             </Button>
@@ -202,7 +203,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
         sx={{
           top: "16%",
           textDecoration: "underline",
-          color: (theme) => theme.palette.primary.main,
+          color: (theme) => theme.palette.link.main,
           "&[data-shrink=true]": {
             textDecoration: "none",
             color: (theme) => theme.palette.text.primary,
@@ -284,6 +285,7 @@ const SelectMultiple = (props: SelectMultipleProps) => {
             </Typography>
             <Button
               variant="contained"
+              color="prompt"
               onClick={handleClose}
               aria-label="Close list"
             >
