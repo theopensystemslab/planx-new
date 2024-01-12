@@ -2,13 +2,14 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { FormikProps } from "formik";
+import { FormikProps, getIn } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import EditorRow from "ui/editor/EditorRow";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { ButtonForm } from "./ButtonForm";
 import { FaviconForm } from "./FaviconFrom";
@@ -54,21 +55,23 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
             {preview}
           </Box>
         )}
-        <Box>
-          <Button type="submit" variant="contained" disabled={!formik.dirty}>
-            Save
-          </Button>
-          <Button
-            onClick={() => formik.resetForm()}
-            type="reset"
-            variant="contained"
-            disabled={!formik.dirty}
-            color="secondary"
-            sx={{ ml: 1.5 }}
-          >
-            Reset changes
-          </Button>
-        </Box>
+        <ErrorWrapper error={getIn(formik.errors, "primaryColour")} id="design-settings-theme-error">
+          <Box>
+            <Button type="submit" variant="contained" disabled={!formik.dirty}>
+              Save
+            </Button>
+            <Button
+              onClick={() => formik.resetForm()}
+              type="reset"
+              variant="contained"
+              disabled={!formik.dirty}
+              color="secondary"
+              sx={{ ml: 1.5 }}
+            >
+              Reset changes
+            </Button>
+          </Box>
+        </ErrorWrapper>
       </form>
     </EditorRow>
   );
