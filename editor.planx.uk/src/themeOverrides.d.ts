@@ -25,10 +25,14 @@ declare module "@mui/material/styles" {
 declare module "@mui/material/styles/createPalette" {
   interface Palette {
     border: { main: string; input: string; light: string };
+    link: { main: string; };
+    prompt: { main: string; contrastText: string; light: string; dark: string; };
   }
 
   interface PaletteOptions {
     border?: { main: string; input: string; light: string };
+    link?: { main: string; };
+    prompt?: { main: string; contrastText: string; light: string; dark: string; };
   }
 }
 
@@ -36,5 +40,9 @@ declare module "@mui/material/styles/createPalette" {
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     help: true;
+  }
+
+  interface ButtonPropsColorOverrides {
+    prompt: true;
   }
 }

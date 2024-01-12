@@ -4,10 +4,10 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { Team } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { Link } from "react-navi";
 
-import type { Team } from "../types";
 import { useStore } from "./FlowEditor/lib/store";
 
 interface Props {

@@ -1376,65 +1376,71 @@
     - role: api
       permission:
         columns:
-          - id
-          - team_id
+          - action_colour
           - favicon
+          - id
+          - link_colour
           - logo
           - primary_colour
-          - secondary_colour
+          - team_id
         filter: {}
       comment: ""
     - role: platformAdmin
       permission:
         columns:
-          - id
-          - team_id
+          - action_colour
           - favicon
+          - id
+          - link_colour
           - logo
           - primary_colour
-          - secondary_colour
+          - team_id
         filter: {}
       comment: ""
     - role: public
       permission:
         columns:
-          - id
-          - team_id
+          - action_colour
           - favicon
+          - id
+          - link_colour
           - logo
           - primary_colour
-          - secondary_colour
+          - team_id
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - id
-          - team_id
+          - action_colour
           - favicon
+          - id
+          - link_colour
           - logo
           - primary_colour
-          - secondary_colour
+          - team_id
         filter: {}
       comment: ""
   update_permissions:
     - role: platformAdmin
       permission:
         columns:
+          - action_colour
           - favicon
+          - link_colour
           - logo
           - primary_colour
-          - secondary_colour
         filter: {}
         check: null
       comment: ""
     - role: teamEditor
       permission:
         columns:
+          - action_colour
           - favicon
+          - link_colour
           - logo
           - primary_colour
-          - secondary_colour
         filter: {}
         check: null
       comment: ""

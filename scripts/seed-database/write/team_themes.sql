@@ -1,3 +1,5 @@
+-- TODO: Update to add action_color and link_colour columns
+
 -- insert teams_themes overwriting conflicts
 CREATE TEMPORARY TABLE sync_team_themes (
   id integer,
@@ -15,7 +17,7 @@ INSERT INTO
     id,
     team_id,
     primary_colour,
-    secondary_colour,
+    -- secondary_colour,
     logo,
     favicon
   )
@@ -23,7 +25,7 @@ SELECT
   id,
   team_id,
   primary_colour,
-  secondary_colour,
+  -- secondary_colour,
   logo,
   favicon
 FROM
@@ -31,7 +33,7 @@ FROM
 UPDATE
 SET
   primary_colour = EXCLUDED.primary_colour,
-  secondary_colour = EXCLUDED.secondary_colour,
+  -- secondary_colour = EXCLUDED.secondary_colour,
   logo = EXCLUDED.logo,
   favicon = EXCLUDED.favicon;
 SELECT

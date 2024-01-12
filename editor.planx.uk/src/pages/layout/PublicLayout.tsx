@@ -88,8 +88,8 @@ const PublicFooter: React.FC = () => {
 };
 
 const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  const teamPrimaryColor = useStore((state) => state.teamTheme?.primary);
-  const teamMUITheme = generateTeamTheme(teamPrimaryColor);
+  const teamTheme = useStore((state) => state.teamTheme);
+  const teamMUITheme = generateTeamTheme(teamTheme);
 
   return (
     <StyledEngineProvider injectFirst>

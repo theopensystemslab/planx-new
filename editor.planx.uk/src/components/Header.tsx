@@ -565,7 +565,7 @@ const Header: React.FC = () => {
       elevation={0}
       color="transparent"
       ref={headerRef}
-      style={{ backgroundColor: theme?.primary || "#2c2c2c" }}
+      style={{ backgroundColor: theme?.primaryColour || "#2c2c2c" }}
     >
       <Toolbar headerRef={headerRef}></Toolbar>
     </Root>

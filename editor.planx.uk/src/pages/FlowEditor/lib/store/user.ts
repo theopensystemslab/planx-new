@@ -1,7 +1,6 @@
-import { User, UserTeams } from "@opensystemslab/planx-core/types";
+import { Team, User, UserTeams } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { _client } from "client";
-import { Team } from "types";
 import type { StateCreator } from "zustand";
 
 export interface UserStore {

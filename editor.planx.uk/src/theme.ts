@@ -13,8 +13,11 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
+import { TeamTheme } from "@opensystemslab/planx-core/types";
+import { getContrastTextColor } from "styleUtils";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
+const DEFAULT_TONAL_OFFSET = 0.2;
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -38,6 +41,15 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     primary: "#0B0C0C",
     secondary: "#505A5F",
   },
+  link: {
+    main: DEFAULT_PRIMARY_COLOR
+  },
+  prompt: {
+    main: DEFAULT_PRIMARY_COLOR,
+    contrastText: "#FFFFFF",
+    light: lighten(DEFAULT_PRIMARY_COLOR, DEFAULT_TONAL_OFFSET),
+    dark: darken(DEFAULT_PRIMARY_COLOR, DEFAULT_TONAL_OFFSET),
+  },
   action: {
     selected: "#F8F8F8",
     focus: "#FFDD00",
@@ -57,6 +69,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     input: "#0B0C0C",
     light: "#E0E0E0",
   },
+  tonalOffset: DEFAULT_TONAL_OFFSET,
 };
 
 // GOVUK Focus style
@@ -85,8 +98,8 @@ export const borderedFocusStyle = {
   background: "transparent",
 };
 
-export const linkStyle = (primaryColor?: string) => ({
-  color: primaryColor || "inherit",
+export const linkStyle = (linkColour: string) => ({
+  color: linkColour || "inherit",
   textDecoration: "underline",
   textDecorationThickness: "1px",
   textUnderlineOffset: "0.1em",
@@ -100,10 +113,19 @@ export const linkStyle = (primaryColor?: string) => ({
   "&:focus-visible": focusStyle,
 });
 
-const getThemeOptions = (primaryColor: string): ThemeOptions => {
+const getThemeOptions = ({ primaryColour, linkColour, actionColour}: TeamTheme): ThemeOptions => {
   const teamPalette: Partial<PaletteOptions> = {
     primary: {
-      main: primaryColor,
+      main: primaryColour,
+    },
+    link: {
+      main: linkColour,
+    },
+    prompt: {
+      main: actionColour,
+      light: lighten(actionColour, DEFAULT_TONAL_OFFSET),
+      dark: darken(actionColour, DEFAULT_TONAL_OFFSET),
+      contrastText: getContrastTextColor(actionColour, "#FFF")!,
     },
   };
   const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
@@ -337,7 +359,7 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
       MuiLink: {
         styleOverrides: {
           root: {
-            ...linkStyle(palette.primary.main),
+            ...linkStyle(palette.link.main),
             "&:disabled": {
               color: palette.text.disabled,
               cursor: "default",
@@ -430,14 +452,20 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
 
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
-  primaryColor: string = DEFAULT_PRIMARY_COLOR,
+  teamTheme: TeamTheme = {
+    primaryColour: DEFAULT_PRIMARY_COLOR,
+    actionColour: DEFAULT_PRIMARY_COLOR,
+    linkColour: DEFAULT_PRIMARY_COLOR,
+    logo: null,
+    favicon: null,
+  },
 ): MUITheme => {
-  const themeOptions = getThemeOptions(primaryColor);
+  const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
   return theme;
 };
 
 // A static MUI theme based on PlanX's default palette
-const defaultTheme = generateTeamTheme(DEFAULT_PRIMARY_COLOR);
+const defaultTheme = generateTeamTheme();
 
 export { defaultTheme, generateTeamTheme };

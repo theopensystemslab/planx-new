@@ -72,8 +72,9 @@ const fetchDataForPublishedView = async (
             id
             team {
               theme {
-                primary: primary_colour
-                secondary: secondary_colour
+                primaryColour: primary_colour
+                actionColour: action_colour
+                linkColour: link_colour
                 logo
                 favicon
               }
