@@ -38,11 +38,15 @@ useSwaggerDocs(app);
 
 app.set("trust proxy", 1);
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  next();
+});
+
 app.use(
   cors({
     credentials: true,
     methods: "*",
-    origin: process.env.EDITOR_URL_EXT,
     allowedHeaders: [
       "Accept",
       "Authorization",
