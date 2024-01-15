@@ -12,7 +12,8 @@ import Typography from "@mui/material/Typography";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import FeedbackPhaseBanner from "components/FeedbackPhaseBanner";
 import { BackButton } from "pages/Preview/Questions";
-import React from "react";
+import React, { useState } from "react";
+import { usePrevious } from "react-use";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import FeedbackOption from "ui/public/FeedbackOption";
 import InputLabel from "ui/public/InputLabel";
@@ -66,79 +67,240 @@ const FeedbackForm = styled("form")(({ theme }) => ({
 }));
 
 const FeedbackComponent: React.FC = () => {
-  return (
-    <>
-      <FeedbackWrapper>
-        <FeedbackPhaseBanner />
-      </FeedbackWrapper>
+  enum FeedbackView {
+    PhaseBanner,
+    FeedbackTriage,
+    ReportAnIssue,
+    ShareAnIdea,
+    ShareAComment,
+    ThanksForFeedback,
+  }
 
+  enum FeedbackViewClickEvents {
+    Close,
+    Back,
+    OpenTriage,
+    OpenReportAnIssue,
+    OpenShareAnIdea,
+    OpenShareAComment,
+  }
+
+  const [currentFeedbackView, setCurrentFeedbackView] = useState<FeedbackView>(
+    FeedbackView.PhaseBanner,
+  );
+  const previousFeedbackView = usePrevious(currentFeedbackView);
+
+  function handleFeedbackViewClick(event: FeedbackViewClickEvents) {
+    switch (event) {
+      case FeedbackViewClickEvents.Close:
+        setCurrentFeedbackView(FeedbackView.PhaseBanner);
+        break;
+      case FeedbackViewClickEvents.Back:
+        setCurrentFeedbackView(FeedbackView.FeedbackTriage);
+        break;
+      case FeedbackViewClickEvents.OpenTriage:
+        setCurrentFeedbackView(FeedbackView.FeedbackTriage);
+        break;
+      case FeedbackViewClickEvents.OpenReportAnIssue:
+        setCurrentFeedbackView(FeedbackView.ReportAnIssue);
+        break;
+      case FeedbackViewClickEvents.OpenShareAnIdea:
+        setCurrentFeedbackView(FeedbackView.ShareAnIdea);
+        break;
+      case FeedbackViewClickEvents.OpenShareAComment:
+        setCurrentFeedbackView(FeedbackView.ShareAComment);
+        break;
+    }
+  }
+
+  const handleFeedbackFormSubmit = (e: any) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formDataPayload: any = {};
+
+    for (const [key, value] of formData.entries()) {
+      formDataPayload[key] = value;
+    }
+
+    console.log("The user inputs", formDataPayload);
+    // Prep the form data payload?
+
+    setCurrentFeedbackView(FeedbackView.ThanksForFeedback);
+  };
+
+  function BackAndCloseFeedbackHeader(): FCReturn {
+    return (
+      <FeedbackHeader>
+        <BackButton
+          onClick={() => handleFeedbackViewClick(FeedbackViewClickEvents.Back)}
+        >
+          <ArrowBackIcon fontSize="small" />
+          Back
+        </BackButton>
+        <CloseButton
+          onClick={() => handleFeedbackViewClick(FeedbackViewClickEvents.Close)}
+        >
+          <IconButton
+            role="button"
+            title="Close panel"
+            aria-label="Close panel"
+            size="large"
+            color="inherit"
+          >
+            <CloseIcon />
+          </IconButton>
+        </CloseButton>
+      </FeedbackHeader>
+    );
+  }
+
+  interface TitleAndCloseProps {
+    title: string;
+    icon?: any;
+  }
+
+  function TitleAndCloseFeedbackHeader(props: TitleAndCloseProps): FCReturn {
+    return (
+      <FeedbackHeader>
+        <FeedbackTitle>
+          {props.icon && <props.icon />}
+          <Typography variant="h3" component="h2">
+            {props.title}
+          </Typography>
+        </FeedbackTitle>
+        <CloseButton
+          onClick={() => handleFeedbackViewClick(FeedbackViewClickEvents.Close)}
+        >
+          <IconButton
+            role="button"
+            title="Close panel"
+            aria-label="Close panel"
+            size="large"
+            color="inherit"
+          >
+            <CloseIcon />
+          </IconButton>
+        </CloseButton>
+      </FeedbackHeader>
+    );
+  }
+
+  function ReportAnIssueTopBar(): FCReturn {
+    if (previousFeedbackView === FeedbackView.PhaseBanner) {
+      return (
+        <TitleAndCloseFeedbackHeader
+          icon={WarningIcon}
+          title="Report an issue"
+        />
+      );
+    } else
+      return (
+        <>
+          <BackAndCloseFeedbackHeader />
+          <FeedbackTitle>
+            <WarningIcon />
+            <Typography variant="h3" component="h2">
+              Report an issue
+            </Typography>
+          </FeedbackTitle>
+        </>
+      );
+  }
+
+  function FeedbackPhaseBannerView(): FCReturn {
+    return (
+      <FeedbackWrapper>
+        <FeedbackPhaseBanner
+          handleFeedbackClick={() =>
+            handleFeedbackViewClick(FeedbackViewClickEvents.OpenTriage)
+          }
+          handleReportAnIssueClick={() =>
+            handleFeedbackViewClick(FeedbackViewClickEvents.OpenReportAnIssue)
+          }
+        />
+      </FeedbackWrapper>
+    );
+  }
+
+  function FeedbackTriage(): FCReturn {
+    return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
           <FeedbackRow>
-            <FeedbackHeader>
-              <Typography variant="h3" component="h2">
-                What would you like to share?
-              </Typography>
-              <CloseButton>
-                <IconButton
-                  role="button"
-                  title="Close panel"
-                  aria-label="Close panel"
-                  size="large"
-                  color="inherit"
-                >
-                  <CloseIcon />
-                </IconButton>
-              </CloseButton>
-            </FeedbackHeader>
+            <TitleAndCloseFeedbackHeader title="What would you like to share?" />
             <FeedbackBody>
-              <FeedbackOption Icon={WarningIcon} label="Issue" showArrow />
-              <FeedbackOption Icon={LightbulbIcon} label="Idea" showArrow />
-              <FeedbackOption Icon={MoreHorizIcon} label="Comment" showArrow />
+              <FeedbackOption
+                handleClick={() =>
+                  handleFeedbackViewClick(
+                    FeedbackViewClickEvents.OpenReportAnIssue,
+                  )
+                }
+                Icon={WarningIcon}
+                label="Issue"
+                showArrow
+              />
+              <FeedbackOption
+                handleClick={() =>
+                  handleFeedbackViewClick(
+                    FeedbackViewClickEvents.OpenShareAnIdea,
+                  )
+                }
+                Icon={LightbulbIcon}
+                label="Idea"
+                showArrow
+              />
+              <FeedbackOption
+                handleClick={() =>
+                  handleFeedbackViewClick(
+                    FeedbackViewClickEvents.OpenShareAComment,
+                  )
+                }
+                Icon={MoreHorizIcon}
+                label="Comment"
+                showArrow
+              />
             </FeedbackBody>
           </FeedbackRow>
         </Container>
       </FeedbackWrapper>
+    );
+  }
 
+  function FeedbackReportAnIssue(): FCReturn {
+    return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
           <FeedbackRow>
-            <FeedbackHeader>
-              <BackButton>
-                <ArrowBackIcon fontSize="small" />
-                Back
-              </BackButton>
-              <CloseButton>
-                <IconButton
-                  role="button"
-                  title="Close panel"
-                  aria-label="Close panel"
-                  size="large"
-                  color="inherit"
-                >
-                  <CloseIcon />
-                </IconButton>
-              </CloseButton>
-            </FeedbackHeader>
-            <FeedbackTitle>
-              <WarningIcon />
-              <Typography variant="h3" component="h2">
-                Report an issue
-              </Typography>
-            </FeedbackTitle>
+            <ReportAnIssueTopBar />
             <FeedbackBody>
-              <FeedbackForm>
+              <FeedbackForm onSubmit={(e) => handleFeedbackFormSubmit(e)}>
                 <InputLabel
                   label="What were you doing?"
                   htmlFor="issue-input-1"
                 >
-                  <Input multiline bordered id="issue-input-1" />
+                  <Input
+                    required
+                    multiline
+                    bordered
+                    id="issue-input-1"
+                    name="userContext"
+                  />
                 </InputLabel>
                 <InputLabel label="What went wrong?" htmlFor="issue-input-2">
-                  <Input multiline bordered id="issue-input-2" />
+                  <Input
+                    required
+                    multiline
+                    bordered
+                    id="issue-input-2"
+                    name="userComment"
+                  />
                 </InputLabel>
                 <FeedbackDisclaimer />
-                <Button variant="contained" sx={{ marginTop: 2.5 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ marginTop: 2.5 }}
+                >
                   Send feedback
                 </Button>
               </FeedbackForm>
@@ -146,38 +308,36 @@ const FeedbackComponent: React.FC = () => {
           </FeedbackRow>
         </Container>
       </FeedbackWrapper>
+    );
+  }
 
+  function FeedbackShareAnIdea(): FCReturn {
+    return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
           <FeedbackRow>
-            <FeedbackHeader>
-              <BackButton>
-                <ArrowBackIcon fontSize="small" />
-                Back
-              </BackButton>
-              <CloseButton>
-                <IconButton
-                  role="button"
-                  title="Close panel"
-                  aria-label="Close panel"
-                  size="large"
-                  color="inherit"
-                >
-                  <CloseIcon />
-                </IconButton>
-              </CloseButton>
-            </FeedbackHeader>
+            <BackAndCloseFeedbackHeader />
             <FeedbackTitle>
               <LightbulbIcon />
               <Typography variant="h3" component="h2" id="idea-title">
                 Share an idea
               </Typography>
             </FeedbackTitle>
-            <FeedbackBody>
+            <FeedbackBody onSubmit={(e) => handleFeedbackFormSubmit(e)}>
               <FeedbackForm>
-                <Input multiline bordered aria-describedby="idea-title" />
+                <Input
+                  name="useComment"
+                  required
+                  multiline
+                  bordered
+                  aria-describedby="idea-title"
+                />
                 <FeedbackDisclaimer />
-                <Button variant="contained" sx={{ marginTop: 2.5 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ marginTop: 2.5 }}
+                >
                   Send feedback
                 </Button>
               </FeedbackForm>
@@ -185,27 +345,15 @@ const FeedbackComponent: React.FC = () => {
           </FeedbackRow>
         </Container>
       </FeedbackWrapper>
+    );
+  }
 
+  function FeedbackShareAComment(): FCReturn {
+    return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
           <FeedbackRow>
-            <FeedbackHeader>
-              <BackButton>
-                <ArrowBackIcon fontSize="small" />
-                Back
-              </BackButton>
-              <CloseButton>
-                <IconButton
-                  role="button"
-                  title="Close panel"
-                  aria-label="Close panel"
-                  size="large"
-                  color="inherit"
-                >
-                  <CloseIcon />
-                </IconButton>
-              </CloseButton>
-            </FeedbackHeader>
+            <BackAndCloseFeedbackHeader />
             <FeedbackTitle>
               <MoreHorizIcon />
               <Typography variant="h3" component="h2" id="comment-title">
@@ -213,10 +361,20 @@ const FeedbackComponent: React.FC = () => {
               </Typography>
             </FeedbackTitle>
             <FeedbackBody>
-              <FeedbackForm>
-                <Input multiline bordered aria-describedby="comment-title" />
+              <FeedbackForm onSubmit={(e) => handleFeedbackFormSubmit(e)}>
+                <Input
+                  name="userComment"
+                  required
+                  multiline
+                  bordered
+                  aria-describedby="comment-title"
+                />
                 <FeedbackDisclaimer />
-                <Button variant="contained" sx={{ marginTop: 2.5 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ marginTop: 2.5 }}
+                >
                   Send feedback
                 </Button>
               </FeedbackForm>
@@ -224,26 +382,15 @@ const FeedbackComponent: React.FC = () => {
           </FeedbackRow>
         </Container>
       </FeedbackWrapper>
+    );
+  }
 
+  function FeedbackThanksForFeedback(): FCReturn {
+    return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
           <FeedbackRow>
-            <FeedbackHeader>
-              <Typography variant="h3" component="h2">
-                Thank you for sharing feedback
-              </Typography>
-              <CloseButton>
-                <IconButton
-                  role="button"
-                  title="Close panel"
-                  aria-label="Close panel"
-                  size="large"
-                  color="inherit"
-                >
-                  <CloseIcon />
-                </IconButton>
-              </CloseButton>
-            </FeedbackHeader>
+            <TitleAndCloseFeedbackHeader title="Thank you for sharing feedback" />
             <FeedbackBody>
               <Typography variant="body1">
                 We appreciate it lorem ipsum dolor sit amet, consectetuer
@@ -253,8 +400,27 @@ const FeedbackComponent: React.FC = () => {
           </FeedbackRow>
         </Container>
       </FeedbackWrapper>
-    </>
-  );
+    );
+  }
+
+  function Feedback(): FCReturn {
+    switch (currentFeedbackView) {
+      case FeedbackView.PhaseBanner:
+        return <FeedbackPhaseBannerView />;
+      case FeedbackView.FeedbackTriage:
+        return <FeedbackTriage />;
+      case FeedbackView.ReportAnIssue:
+        return <FeedbackReportAnIssue />;
+      case FeedbackView.ShareAnIdea:
+        return <FeedbackShareAnIdea />;
+      case FeedbackView.ShareAComment:
+        return <FeedbackShareAComment />;
+      case FeedbackView.ThanksForFeedback:
+        return <FeedbackThanksForFeedback />;
+    }
+  }
+
+  return <Feedback />;
 };
 
 export default FeedbackComponent;
