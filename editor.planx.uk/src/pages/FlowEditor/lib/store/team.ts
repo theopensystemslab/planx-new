@@ -26,10 +26,12 @@ export interface TeamStore {
   fetchCurrentTeam: () => Promise<Team>;
 }
 
-export const teamStore: StateCreator<TeamStore & SharedStore, [], [], TeamStore> = (
-  set,
-  get,
-) => ({
+export const teamStore: StateCreator<
+  TeamStore & SharedStore,
+  [],
+  [],
+  TeamStore
+> = (set, get) => ({
   teamId: 0,
   teamTheme: {} as TeamTheme,
   teamName: "",
@@ -109,9 +111,8 @@ export const teamStore: StateCreator<TeamStore & SharedStore, [], [], TeamStore>
    * Does not necessarily match team held in store as this is context-based (e.g. we don't use the team theme in the Editor)
    */
   fetchCurrentTeam: async () => {
-    const { teamSlug, $client } = get()
+    const { teamSlug, $client } = get();
     const team = await $client.team.getBySlug(teamSlug);
-    console.log({team})
     return team;
   },
 });

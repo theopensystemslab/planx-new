@@ -30,7 +30,7 @@ const mockTeam2: Team = {
   name: "Closed Systems Lab",
   slug: "closedsystemslab",
   theme: {
-    logo: "logo.jpg",
+    logo: null,
     primaryColour: "#0010A4",
     actionColour: "#0010A4",
     linkColour: "#0010A4",

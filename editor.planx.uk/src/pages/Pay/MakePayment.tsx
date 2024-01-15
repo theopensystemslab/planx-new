@@ -170,7 +170,7 @@ export default function MakePayment({
     );
 
   const PaymentDetails = () => {
-    const $public = useStore(state => state.$public);
+    const $public = useStore((state) => state.$public);
     const [projectType, setProjectType] = useState<string | undefined>();
 
     useEffect(() => {

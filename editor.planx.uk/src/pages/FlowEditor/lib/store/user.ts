@@ -27,7 +27,7 @@ export const userStore: StateCreator<
       auth: { jwt },
     });
     set({ $client: authenticatedClient });
-    set({ jwt, user })
+    set({ jwt, user });
   },
 
   getUser: () => get().user,
