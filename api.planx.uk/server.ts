@@ -42,9 +42,9 @@ const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
   const isTest = process.env.NODE_ENV === "test";
   const isDevelopment = process.env.APP_ENVIRONMENT === "development";
   const allowList = process.env.CORS_ALLOWLIST?.split(", ") || [];
-  const isAllowed = origin && allowList.includes(origin);
+  const isAllowed = Boolean(origin && allowList.includes(origin));
 
-  isTest || isDevelopment || isAllowed
+  !origin || isTest || isDevelopment || isAllowed
     ? callback(null, true)
     : callback(new Error("Not allowed by CORS"));
 };
