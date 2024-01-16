@@ -8,9 +8,11 @@ import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import type { StateCreator } from "zustand";
 
+import { SharedStore } from "./shared";
+
 export interface TeamStore {
   teamId: number;
-  teamTheme?: TeamTheme;
+  teamTheme: TeamTheme;
   teamName: string;
   teamSettings?: TeamSettings;
   teamSlug: string;
@@ -21,14 +23,17 @@ export interface TeamStore {
   getTeam: () => Team;
   initTeamStore: (slug: string) => Promise<void>;
   clearTeamStore: () => void;
+  fetchCurrentTeam: () => Promise<Team>;
 }
 
-export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
-  set,
-  get,
-) => ({
+export const teamStore: StateCreator<
+  TeamStore & SharedStore,
+  [],
+  [],
+  TeamStore
+> = (set, get) => ({
   teamId: 0,
-  teamTheme: undefined,
+  teamTheme: {} as TeamTheme,
   teamName: "",
   teamSettings: undefined,
   teamSlug: "",
@@ -100,4 +105,14 @@ export const teamStore: StateCreator<TeamStore, [], [], TeamStore> = (
       notifyPersonalisation: undefined,
       boundaryBBox: undefined,
     }),
+
+  /**
+   * Fetch current team
+   * Does not necessarily match team held in store as this is context-based (e.g. we don't use the team theme in the Editor)
+   */
+  fetchCurrentTeam: async () => {
+    const { teamSlug, $client } = get();
+    const team = await $client.team.getBySlug(teamSlug);
+    return team;
+  },
 });

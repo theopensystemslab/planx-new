@@ -8,7 +8,6 @@ import {
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
 import axios from "axios";
-import { _public } from "client";
 import { format } from "date-fns";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -171,11 +170,12 @@ export default function MakePayment({
     );
 
   const PaymentDetails = () => {
+    const $public = useStore((state) => state.$public);
     const [projectType, setProjectType] = useState<string | undefined>();
 
     useEffect(() => {
       const fetchProjectType = async () => {
-        const projectType = await _public.formatRawProjectTypes(
+        const projectType = await $public.formatRawProjectTypes(
           rawProjectTypes,
         );
         setProjectType(projectType);
