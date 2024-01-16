@@ -3,7 +3,7 @@ import { json, urlencoded } from "body-parser";
 import assert from "assert";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import express, { ErrorRequestHandler } from "express";
 import noir from "pino-noir";
 import pinoLogger from "express-pino-logger";
@@ -38,11 +38,22 @@ useSwaggerDocs(app);
 
 app.set("trust proxy", 1);
 
+const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
+  const isTest = process.env.NODE_ENV === "test";
+  const isDevelopment = process.env.APP_ENVIRONMENT === "development";
+  const allowList = process.env.CORS_ALLOWLIST?.split(", ") || [];
+  const isAllowed = Boolean(origin && allowList.includes(origin));
+
+  !origin || isTest || isDevelopment || isAllowed
+    ? callback(null, true)
+    : callback(new Error("Not allowed by CORS"));
+};
+
 app.use(
   cors({
     credentials: true,
     methods: "*",
-    origin: process.env.EDITOR_URL_EXT,
+    origin: checkAllowedOrigins,
     allowedHeaders: [
       "Accept",
       "Authorization",
