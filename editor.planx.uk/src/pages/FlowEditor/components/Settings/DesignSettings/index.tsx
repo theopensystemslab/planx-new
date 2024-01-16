@@ -137,7 +137,7 @@ const DesignSettings: React.FC = () => {
       ) : (
         <>
           <ThemeAndLogoForm team={team} onSuccess={() => setOpen(true)} />
-          <ButtonForm />
+          <ButtonForm team={team} onSuccess={() => setOpen(true)} />
           <TextLinkForm />
           <FaviconForm />
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
