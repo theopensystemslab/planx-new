@@ -1,5 +1,7 @@
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
@@ -14,7 +16,7 @@ import InputLegend from "ui/editor/InputLegend";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { ButtonForm } from "./ButtonForm";
-import { FaviconForm } from "./FaviconFrom";
+import { FaviconForm } from "./FaviconForm";
 import { TextLinkForm } from "./TextLinkForm";
 import { ThemeAndLogoForm } from "./ThemeAndLogoForm";
 
@@ -77,7 +79,10 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
             {preview}
           </Box>
         )}
-        <ErrorWrapper error={getIn(formik.errors, "primaryColour")} id="design-settings-theme-error">
+        <ErrorWrapper
+          error={getIn(formik.errors, "primaryColour")}
+          id="design-settings-theme-error"
+        >
           <Box>
             <Button type="submit" variant="contained" disabled={!formik.dirty}>
               Save
@@ -102,6 +107,18 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 const DesignSettings: React.FC = () => {
   const isUsingFeatureFlag = hasFeatureFlag("SHOW_TEAM_SETTINGS");
   const team = useTeam();
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   return (
     <>
@@ -119,10 +136,19 @@ const DesignSettings: React.FC = () => {
         </EditorRow>
       ) : (
         <>
-          <ThemeAndLogoForm team={team} />
+          <ThemeAndLogoForm team={team} onSuccess={() => setOpen(true)} />
           <ButtonForm />
           <TextLinkForm />
           <FaviconForm />
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              Theme updated successfully
+            </Alert>
+          </Snackbar>
         </>
       )}
     </>

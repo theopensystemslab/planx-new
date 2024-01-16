@@ -16,37 +16,48 @@ import { DesignPreview, SettingsForm } from ".";
 
 type FormValues = Pick<TeamTheme, "primaryColour" | "logo">;
 
-export const ThemeAndLogoForm: React.FC<{ team: Team }> = ({ team }) => {
+export const ThemeAndLogoForm: React.FC<{
+  team: Team;
+  onSuccess: () => void;
+}> = ({ team, onSuccess }) => {
   const theme = useTheme();
 
   useEffect(() => {
     setInitialValues({
       primaryColour: team.theme?.primaryColour,
       logo: team.theme?.logo,
-    })
-  }, [team])
-  
+    });
+  }, [team]);
+
   const [initialValues, setInitialValues] = useState<FormValues>({
     primaryColour: "",
     logo: "",
-  })
+  });
 
   const formik = useFormik<FormValues>({
     initialValues,
     onSubmit: async (values, { resetForm }) => {
-      await useStore.getState().updateTeamTheme(values);
-      // Reset "dirty" status to disable Save & Reset buttons
-      resetForm({ values });
+      const isSuccess = await useStore.getState().updateTeamTheme(values);
+      if (isSuccess) {
+        onSuccess();
+        // Reset "dirty" status to disable Save & Reset buttons
+        resetForm({ values });
+      }
     },
     validateOnBlur: false,
     validateOnChange: false,
     enableReinitialize: true,
     validate: ({ primaryColour }) => {
-      const isContrastThresholdMet = getContrastRatio("#FFF", primaryColour) > theme.palette.contrastThreshold;
+      const isContrastThresholdMet =
+        getContrastRatio("#FFF", primaryColour) >
+        theme.palette.contrastThreshold;
 
       if (!isContrastThresholdMet) {
-        return { primaryColour: "Theme colour does not meet accessibility contrast requirements (3:1)"}
-      };
+        return {
+          primaryColour:
+            "Theme colour does not meet accessibility contrast requirements (3:1)",
+        };
+      }
     },
   });
 
@@ -75,7 +86,9 @@ export const ThemeAndLogoForm: React.FC<{ team: Team }> = ({ team }) => {
             <InputRowItem>
               <ColorPicker
                 color={formik.values.primaryColour}
-                onChange={(color) => formik.setFieldValue("primaryColour", color)}
+                onChange={(color) =>
+                  formik.setFieldValue("primaryColour", color)
+                }
                 label="Theme colour"
               />
             </InputRowItem>
@@ -83,7 +96,9 @@ export const ThemeAndLogoForm: React.FC<{ team: Team }> = ({ team }) => {
           <InputRow>
             <InputRowLabel>Logo:</InputRowLabel>
             <InputRowItem width={50}>
-              <PublicFileUploadButton onChange={(newUrl) => formik.setFieldValue("logo", newUrl)}/>
+              <PublicFileUploadButton
+                onChange={(newUrl) => formik.setFieldValue("logo", newUrl)}
+              />
             </InputRowItem>
             <Typography
               color="text.secondary"
@@ -98,14 +113,13 @@ export const ThemeAndLogoForm: React.FC<{ team: Team }> = ({ team }) => {
       }
       preview={
         <DesignPreview bgcolor={formik.values.primaryColour}>
-          { formik.values.logo 
-            ? <img
-              width="140"
-              src={formik.values.logo}
-              alt="council logo"
-            />
-            : <Typography color={theme.palette.primary.contrastText}>{team?.name}</Typography>
-          }
+          {formik.values.logo ? (
+            <img width="140" src={formik.values.logo} alt="council logo" />
+          ) : (
+            <Typography color={theme.palette.primary.contrastText}>
+              {team?.name}
+            </Typography>
+          )}
         </DesignPreview>
       }
     />
