@@ -171,7 +171,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
       opacity: 0.3;
     }
 
-    > span:not(:first-child) {
+    > span:not(:nth-child(1)) {
       margin-left: 6px;
     }
   }
@@ -352,7 +352,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
           $lineWidth;
         background-repeat: no-repeat, repeat-x, repeat-x;
 
-        &:first-child {
+        &:nth-child(1) {
           background-position:
             top center,
             top right,
@@ -392,7 +392,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
           $lineWidth 100%,
           1px 100%;
 
-        &:first-child {
+        &:nth-child(1) {
           background-position:
             left center,
             left bottom,
