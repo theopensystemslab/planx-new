@@ -221,6 +221,10 @@
         url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         version: 2
 - table:
+    name: feedback_type_enum
+    schema: public
+  is_enum: true
+- table:
     name: flow_document_templates
     schema: public
   object_relationships:
