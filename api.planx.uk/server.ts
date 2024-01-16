@@ -38,11 +38,19 @@ useSwaggerDocs(app);
 
 app.set("trust proxy", 1);
 
+const CORS_ALLOWLIST = process.env.CORS_ALLOWLIST?.split(", ") || [];
+
 app.use(
   cors({
     credentials: true,
     methods: "*",
-    origin: process.env.EDITOR_URL_EXT,
+    origin: function (origin, callback) {
+      if (origin && CORS_ALLOWLIST.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     allowedHeaders: [
       "Accept",
       "Authorization",

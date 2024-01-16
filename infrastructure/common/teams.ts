@@ -31,4 +31,9 @@ export const teams: Team[] = [
   },
 ];
 
+export type CustomDomains = Array<{
+  name: string,
+  domain: string
+}>;
+
 export default { teams }
