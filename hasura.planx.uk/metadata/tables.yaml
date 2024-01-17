@@ -221,6 +221,16 @@
         url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         version: 2
 - table:
+    name: feedback
+    schema: public
+  object_relationships:
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
+    - name: team
+      using:
+        foreign_key_constraint_on: team_id
+- table:
     name: feedback_status_enum
     schema: public
   is_enum: true
