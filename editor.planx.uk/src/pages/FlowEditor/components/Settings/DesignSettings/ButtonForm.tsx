@@ -1,23 +1,47 @@
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
+import { darken, useTheme } from "@mui/material/styles";
+import { Team, TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect, useState } from "react";
+import { getContrastTextColor } from "styleUtils";
 import ColorPicker from "ui/editor/ColorPicker";
 import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { DesignPreview, EXAMPLE_COLOUR, SettingsForm } from ".";
+import { DesignPreview, SettingsForm } from ".";
 
-export const ButtonForm: React.FC = () => {
-  const formik = useFormik<{
-    buttonColor: string;
-  }>({
-    initialValues: {
-      buttonColor: EXAMPLE_COLOUR,
+type FormValues = Pick<TeamTheme, "actionColour">;
+
+export const ButtonForm: React.FC<{ team: Team; onSuccess: () => void }> = ({
+  team,
+  onSuccess,
+}) => {
+  const theme = useTheme();
+
+  useEffect(() => {
+    setInitialValues({ actionColour: team.theme?.actionColour });
+  }, [team]);
+
+  const [initialValues, setInitialValues] = useState<FormValues>({
+    actionColour: "",
+  });
+
+  const formik = useFormik<FormValues>({
+    initialValues,
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateTeamTheme(values);
+      if (isSuccess) {
+        onSuccess();
+        // Reset "dirty" status to disable Save & Reset buttons
+        resetForm({ values });
+      }
     },
-    onSubmit: () => {},
-    validate: () => {},
+    validateOnBlur: false,
+    validateOnChange: false,
+    enableReinitialize: true,
   });
 
   return (
@@ -42,8 +66,8 @@ export const ButtonForm: React.FC = () => {
         <InputRow>
           <InputRowItem>
             <ColorPicker
-              color={formik.values.buttonColor}
-              onChange={(color) => formik.setFieldValue("buttonColor", color)}
+              color={formik.values.actionColour}
+              onChange={(color) => formik.setFieldValue("actionColour", color)}
               label="Button colour"
             />
           </InputRowItem>
@@ -51,7 +75,20 @@ export const ButtonForm: React.FC = () => {
       }
       preview={
         <DesignPreview bgcolor="white">
-          <Button variant="contained" sx={{ backgroundColor: EXAMPLE_COLOUR }}>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: formik.values.actionColour,
+              color: formik.values.actionColour
+                ? getContrastTextColor(formik.values.actionColour, "#FFF")
+                : "#FFF",
+              "&:hover": {
+                backgroundColor: formik.values.actionColour
+                  ? darken(formik.values.actionColour, 0.2)
+                  : theme.palette.prompt.dark,
+              },
+            }}
+          >
             Example primary button
           </Button>
         </DesignPreview>
