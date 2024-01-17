@@ -60,6 +60,10 @@ const CUSTOM_DOMAINS: CustomDomains =
           domain: "planningservices.barnet.gov.uk",
           name: "barnet",
         },
+        {
+          domain: "planningservices.tewkesbury.gov.uk",
+          name: "tewkesbury",
+        },
       ]
     : [];
 
