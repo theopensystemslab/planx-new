@@ -9,6 +9,7 @@ import { Operation } from "../sanitiseApplicationData/types";
 const ALLOW_LIST = [
   "proposal.projectType",
   "application.declaration.connection",
+  "property.type",
 ];
 
 export const getAnalyzeSessionOperations = (): Operation[] => [
