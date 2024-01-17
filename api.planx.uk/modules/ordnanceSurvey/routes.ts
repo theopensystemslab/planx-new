@@ -11,6 +11,10 @@ const osProxyCORSOptions = {
 };
 
 router.options("/proxy/ordnance-survey", cors(osProxyCORSOptions));
-router.use("/proxy/ordnance-survey", cors(osProxyCORSOptions), useOrdnanceSurveyProxy);
+router.use(
+  "/proxy/ordnance-survey",
+  cors(osProxyCORSOptions),
+  useOrdnanceSurveyProxy,
+);
 
 export default router;
