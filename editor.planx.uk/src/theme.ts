@@ -17,7 +17,7 @@ import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
-const DEFAULT_TONAL_OFFSET = 0.2;
+const DEFAULT_TONAL_OFFSET = 0.1;
 
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
@@ -252,7 +252,7 @@ const getThemeOptions = ({ primaryColour, linkColour, actionColour}: TeamTheme):
           {
             props: { variant: "help" },
             style: {
-              color: palette.primary.main,
+              color: palette.link.main,
               boxShadow: "none",
               padding: "0.25em 0.1em",
               width: "auto",

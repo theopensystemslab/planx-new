@@ -22,7 +22,7 @@ interface RootProps extends ButtonBaseProps {
 }
 
 const FauxLink = styled(Box)(({ theme }) => ({
-  color: theme.palette.primary.main,
+  color: theme.palette.link.main,
   textDecoration: "underline",
   whiteSpace: "nowrap",
 }));
