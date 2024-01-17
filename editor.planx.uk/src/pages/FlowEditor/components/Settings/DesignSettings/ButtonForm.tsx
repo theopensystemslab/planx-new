@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-import { darken, getContrastRatio, useTheme } from "@mui/material/styles";
+import { darken, useTheme } from "@mui/material/styles";
 import { Team, TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -42,18 +42,6 @@ export const ButtonForm: React.FC<{ team: Team; onSuccess: () => void }> = ({
     validateOnBlur: false,
     validateOnChange: false,
     enableReinitialize: true,
-    validate: ({ actionColour }) => {
-      const isContrastThresholdMet =
-        getContrastRatio("#FFF", actionColour) >
-        theme.palette.contrastThreshold;
-
-      if (!isContrastThresholdMet) {
-        return {
-          primaryColour:
-            "Colour does not meet accessability contrast requirements (3:1)",
-        };
-      }
-    },
   });
 
   return (
