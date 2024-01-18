@@ -80,7 +80,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
           </Box>
         )}
         <ErrorWrapper
-          error={getIn(formik.errors, "primaryColour")}
+          error={Object.values(formik.errors).join(", ")}
           id="design-settings-theme-error"
         >
           <Box>
@@ -138,7 +138,7 @@ const DesignSettings: React.FC = () => {
         <>
           <ThemeAndLogoForm team={team} onSuccess={() => setOpen(true)} />
           <ButtonForm team={team} onSuccess={() => setOpen(true)} />
-          <TextLinkForm />
+          <TextLinkForm team={team} onSuccess={() => setOpen(true)} />
           <FaviconForm />
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert
