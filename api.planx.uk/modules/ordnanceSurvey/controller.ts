@@ -40,7 +40,8 @@ const isValid = (req: Request): boolean =>
 const setCORPHeaders = (proxyRes: IncomingMessage, req: Request): void => {
   proxyRes.headers["Cross-Origin-Resource-Policy"] = "cross-origin";
   proxyRes.headers["Access-Control-Allow-Origin"] = req.headers.origin;
-  proxyRes.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept";
+  proxyRes.headers["Access-Control-Allow-Headers"] =
+    "Origin, X-Requested-With, Content-Type, Accept";
 };
 
 export const appendAPIKey = (fullPath: string, req: Request): string => {
