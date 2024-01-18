@@ -65,11 +65,11 @@ const PublicFooter: React.FC = () => {
       Boolean(item),
   );
 
-  const isUsingFeatureFlag = () => hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
+  const isUsingFeatureFlag = hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
 
   return (
     <Box>
-      {isUsingFeatureFlag() ? <Feedback /> : <PhaseBanner />}
+      {isUsingFeatureFlag ? <Feedback /> : <PhaseBanner />}
       <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
           <Box pr={2} display="flex">

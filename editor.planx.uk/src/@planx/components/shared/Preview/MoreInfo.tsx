@@ -62,7 +62,7 @@ const CloseButton = styled(Box)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const isUsingFeatureFlag = () => hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
+const isUsingFeatureFlag = hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
 
 interface IMoreInfo {
   open: boolean;
@@ -98,7 +98,7 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
     <Container maxWidth={false} role="main" sx={{ bgcolor: "white" }}>
       <DrawerContent>{children}</DrawerContent>
     </Container>
-    {isUsingFeatureFlag() && <MoreInfoFeedbackComponent />}
+    {isUsingFeatureFlag && <MoreInfoFeedbackComponent />}
   </Root>
 );
 
