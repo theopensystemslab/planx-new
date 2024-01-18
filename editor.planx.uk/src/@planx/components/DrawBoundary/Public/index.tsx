@@ -111,15 +111,20 @@ export default function Component(props: Props) {
           <FullWidthWrapper>
             <MapContainer environment={environment} size="large">
               <p style={visuallyHidden}>
-                An interactive map centred on your address, with a red pointer
-                to draw your property boundary. Click to place points and
-                connect the lines to make your site. Once you've closed the site
-                shape, click and drag the lines to modify it.
+                An interactive map centred on your address, pre-populated with a
+                red boundary that includes the entire property, using
+                information from the Land Registry. You can accept this boundary
+                as your location plan by continuing, you can amend it by
+                clicking and dragging the points, or you can erase it by
+                clicking the reset button and draw a new custom boundary.
               </p>
               {!props.hideFileUpload && (
                 <p style={visuallyHidden}>
-                  If you cannot draw, you can upload a location plan file using
-                  the link below.
+                  If you prefer to upload a location plan file instead of using
+                  the map, please reset the map view first to erase the
+                  pre-populated boundary. Then click the "Upload a location plan
+                  instead" link below. A location plan can only be submitted as
+                  a digital boundary or file, not both.
                 </p>
               )}
               {/* @ts-ignore */}

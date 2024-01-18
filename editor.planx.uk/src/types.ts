@@ -1,5 +1,4 @@
-import { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { GeoJSONObject } from "@turf/helpers";
+import { GovUKPayment, Team } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
@@ -15,45 +14,6 @@ export interface Flow {
   team: Team;
   settings?: FlowSettings;
 }
-
-export interface Team {
-  id: number;
-  name: string;
-  slug: string;
-  settings?: TeamSettings;
-  theme?: TeamTheme;
-  notifyPersonalisation?: NotifyPersonalisation;
-  boundaryBBox?: GeoJSONObject;
-}
-
-export interface TeamTheme {
-  primary: string;
-  secondary: string | null;
-  logo: string | null;
-  favicon: string | null;
-}
-
-export interface TeamSettings {
-  design?: {
-    color?: string;
-  };
-  homepage?: string;
-  externalPlanningSite: {
-    name: string;
-    url: string;
-  };
-  supportEmail?: string;
-  boundary?: string;
-  hasPlanningData?: boolean;
-}
-
-export interface NotifyPersonalisation {
-  helpEmail: string;
-  helpPhone: string;
-  emailReplyToId: string;
-  helpOpeningHours: string;
-}
-
 export interface GlobalSettings {
   footerContent?: { [key: string]: TextContent };
 }

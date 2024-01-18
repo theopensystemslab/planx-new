@@ -40,10 +40,11 @@ const innerStyle = (theme: Theme) => ({
   textDecoration: "none",
   borderBottom: `1px solid theme.palette.text.secondary`,
   "&:hover > .arrowButton": {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.prompt.dark,
   },
   "&:focus > .arrowButton": {
     backgroundColor: theme.palette.text.primary,
+    color: theme.palette.common.white,
   },
 });
 
@@ -67,8 +68,8 @@ const ArrowButton = styled("span")(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.common.white,
+  backgroundColor: theme.palette.prompt.main,
+  color: theme.palette.prompt.contrastText,
   width: "50px",
   height: "50px",
   flexShrink: "0",

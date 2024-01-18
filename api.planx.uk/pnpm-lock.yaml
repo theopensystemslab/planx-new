@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#af52a96
-    version: github.com/theopensystemslab/planx-core/af52a96
+    specifier: git+https://github.com/theopensystemslab/planx-core#4b625d9
+    version: github.com/theopensystemslab/planx-core/4b625d9
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -5648,6 +5648,7 @@ packages:
       chalk: 3.0.0
       diff-match-patch: 1.0.5
     dev: false
+    bundledDependencies: []
 
   /jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
@@ -8311,8 +8312,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/af52a96:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/af52a96}
+  github.com/theopensystemslab/planx-core/4b625d9:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4b625d9}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

@@ -163,8 +163,9 @@ export function Presentational(props: PresentationalProps) {
       <MapContainer>
         <p style={visuallyHidden}>
           A static map centred on the property address, showing the title
-          boundary of your site from the Land Registry atop an Ordnance Survey
-          basemap.
+          boundary, often called the "blue-line" boundary in planning, of your
+          site. This boundary is sourced from the Land Registry and displayed
+          atop an Ordnance Survey basemap.
         </p>
         {/* @ts-ignore */}
         <my-map
@@ -183,7 +184,7 @@ export function Presentational(props: PresentationalProps) {
           geojsonColor="#0010A4"
           geojsonBuffer={30}
           osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
-          geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
+          geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
         />
       </MapContainer>
       {propertyDetails && (

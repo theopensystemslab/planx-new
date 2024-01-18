@@ -23,6 +23,7 @@ type AnalyticsLogDirection =
 const ALLOW_LIST = [
   "proposal.projectType",
   "application.declaration.connection",
+  "property.type",
 ] as const;
 
 export type HelpClickMetadata = Record<string, string>;
@@ -107,7 +108,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   const previousBreadcrumbs = usePrevious(breadcrumbs);
 
   const trackVisibilityChange = () => {
-    skipUpdateIfNotTracking();
+    if (shouldSkipTracking()) return;
+
     switch (document.visibilityState) {
       case "hidden":
         send(
@@ -285,14 +287,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }
 
-  function skipUpdateIfNotTracking() {
-    if (!shouldTrackAnalytics || !lastVisibleNodeAnalyticsLogId) {
-      return;
-    }
+  function shouldSkipTracking() {
+    return !shouldTrackAnalytics || !lastVisibleNodeAnalyticsLogId;
   }
 
   async function trackHelpClick(metadata?: HelpClickMetadata) {
-    skipUpdateIfNotTracking();
+    if (shouldSkipTracking()) return;
+
     await publicClient.mutate({
       mutation: gql`
         mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb = {}) {
@@ -313,7 +314,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   async function trackNextStepsLinkClick(metadata?: SelectedUrlsMetadata) {
-    skipUpdateIfNotTracking();
+    if (shouldSkipTracking()) return;
+
     await publicClient.mutate({
       mutation: gql`
         mutation UpdateHasClickNextStepsLink(
@@ -338,7 +340,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function trackFlowDirectionChange(
     flowDirection: AnalyticsLogDirection,
   ) {
-    skipUpdateIfNotTracking();
+    if (shouldSkipTracking()) return;
+
     await publicClient.mutate({
       mutation: gql`
         mutation UpdateFlowDirection($id: bigint!, $flow_direction: String) {
@@ -361,7 +364,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     initiator: BackwardsNavigationInitiatorType,
     nodeId?: string,
   ) {
-    skipUpdateIfNotTracking();
+    if (shouldSkipTracking()) return;
+
     const targetNodeMetadata = nodeId ? getTargetNodeDataFromFlow(nodeId) : {};
     const metadata: Record<string, NodeMetadata> = {};
     metadata[`${initiator}`] = targetNodeMetadata;
@@ -426,7 +430,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   async function updateLastVisibleNodeLogWithAllowListAnswers(nodeId: string) {
-    skipUpdateIfNotTracking();
+    if (shouldSkipTracking()) return;
 
     const allowListAnswers = getAllowListAnswers(nodeId);
     if (!allowListAnswers) return;
@@ -505,7 +509,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
    * Capture user input errors caught by ErrorWrapper component
    */
   async function trackInputErrors(error: string) {
-    skipUpdateIfNotTracking();
+    if (shouldSkipTracking()) return;
+
     await publicClient.mutate({
       mutation: gql`
         mutation TrackInputErrors($id: bigint!, $error: jsonb) {

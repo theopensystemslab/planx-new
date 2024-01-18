@@ -6,10 +6,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { TeamSettings } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useState } from "react";
-import { TeamSettings } from "types";
 
 export enum DialogPurpose {
   MissingProjectType,

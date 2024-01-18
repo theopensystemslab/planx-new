@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.8",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#af52a96",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#4b625d9",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "aws-sdk": "^2.1467.0",

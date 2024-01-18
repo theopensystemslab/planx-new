@@ -10,9 +10,9 @@ import * as mime from "mime";
 import * as tldjs from "tldjs";
 import * as url from "url";
 
-import { generateTeamSecrets } from "./utils/generateTeamSecrets";
+import { generateTeamSecrets, generateCORSAllowList, addRedirectToCloudFlareListenerRule } from "./utils";
 import { createHasuraService } from "./services/hasura";
-import { addRedirectToCloudFlareListenerRule } from "./utils/addListenerRule";
+import { CustomDomains } from "../common/teams";
 
 const config = new pulumi.Config();
 
@@ -25,7 +25,7 @@ const data = new pulumi.StackReference(`planx/data/${env}`);
 // You can generate tokens here: https://dash.cloudflare.com/profile/api-tokens
 new pulumi.Config("cloudflare").requireSecret("apiToken");
 
-const CUSTOM_DOMAINS =
+const CUSTOM_DOMAINS: CustomDomains =
   env === "production"
     ? [
         {
@@ -59,6 +59,10 @@ const CUSTOM_DOMAINS =
         {
           domain: "planningservices.barnet.gov.uk",
           name: "barnet",
+        },
+        {
+          domain: "planningservices.tewkesbury.gov.uk",
+          name: "tewkesbury",
         },
       ]
     : [];
@@ -377,6 +381,7 @@ export = async () => {
             name: "ORDNANCE_SURVEY_API_KEY",
             value: config.requireSecret("ordnance-survey-api-key"),
           },
+          generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
           ...generateTeamSecrets(config, env),
         ],
       },
