@@ -80,7 +80,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
           </Box>
         )}
         <ErrorWrapper
-          error={getIn(formik.errors, "primaryColour")}
+          error={Object.values(formik.errors).join(", ")}
           id="design-settings-theme-error"
         >
           <Box>
