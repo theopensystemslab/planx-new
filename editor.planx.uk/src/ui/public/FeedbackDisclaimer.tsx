@@ -9,7 +9,7 @@ export default function FeedbackDisclaimer(): FCReturn {
       <Typography variant="body2">
         Please do not include any personal or financial information in your
         feedback. If you choose to do so we will process your personal data
-        according to our <Link>privacy policy</Link>.
+        according to our <Link href="#">privacy policy (TODO)</Link>.
       </Typography>
     </Box>
   );
