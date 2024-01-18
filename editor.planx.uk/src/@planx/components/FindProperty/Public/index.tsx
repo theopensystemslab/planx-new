@@ -8,7 +8,7 @@ import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";
 import { Feature, GeoJSONObject } from "@turf/helpers";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import ExternalPlanningSiteDialog, {
@@ -205,7 +205,7 @@ function Component(props: Props) {
       isValid={Boolean(address) && !isValidating}
       handleSubmit={() => {
         if (address) {
-          const newPassportData: any = {};
+          const newPassportData: Store.userData["data"] = {};
           newPassportData["_address"] = address;
           if (address?.planx_value) {
             newPassportData["property.type"] = [address.planx_value];

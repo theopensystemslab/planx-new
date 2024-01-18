@@ -12,17 +12,17 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
 import type { PublicProps } from "@planx/components/ui";
 import buffer from "@turf/buffer";
-import { type GeometryObject, point } from "@turf/helpers";
+import { type Feature, point } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 
-import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
+import { DrawBoundary, PASSPORT_UPLOAD_KEY, UserDrawAction } from "../model";
 
 export type Props = PublicProps<DrawBoundary>;
 
-export type Boundary = GeometryObject | undefined;
+export type Boundary = Feature | undefined;
 
 // Buffer applied to the address point to clip this map extent
 //   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
@@ -89,7 +89,33 @@ export default function Component(props: Props) {
 
   return (
     <Card
-      handleSubmit={handleSubmit}
+      handleSubmit={() => {
+        const newPassportData: Store.userData["data"] = {};
+
+        // Used the map
+        if (boundary && props.dataFieldBoundary) {
+          newPassportData[props.dataFieldBoundary] = addUserActionProp(
+            boundary,
+            passport,
+          );
+          newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
+            boundary,
+            BUFFER_IN_METERS,
+            { units: "meters" },
+          );
+        }
+        if (area && props.dataFieldArea) {
+          newPassportData[props.dataFieldArea] = area;
+          newPassportData[`${props.dataFieldArea}.hectares`] = area / 10000;
+        }
+
+        // Uploaded a file
+        if (slots.length) {
+          newPassportData[PASSPORT_UPLOAD_KEY] = slots;
+        }
+
+        props.handleSubmit?.({ data: { ...newPassportData } });
+      }}
       isValid={props.hideFileUpload ? true : Boolean(boundary || slots[0]?.url)}
     >
       {getBody()}
@@ -207,27 +233,30 @@ export default function Component(props: Props) {
       );
     }
   }
+}
 
-  function handleSubmit() {
-    const data: Store.userData["data"] = (() => {
-      // set userData depending if user draws boundary or uploads file
-      return {
-        [props.dataFieldBoundary]:
-          boundary && props.dataFieldBoundary ? boundary : undefined,
-        [`${props.dataFieldBoundary}.buffered`]:
-          boundary && props.dataFieldBoundary
-            ? buffer(boundary, BUFFER_IN_METERS, { units: "meters" })
-            : undefined,
-        [props.dataFieldArea]:
-          boundary && props.dataFieldBoundary ? area : undefined,
-        [`${props.dataFieldArea}.hectares`]:
-          boundary && area && props.dataFieldBoundary
-            ? area / 10000
-            : undefined,
-        [PASSPORT_UPLOAD_KEY]: slots.length ? slots : undefined,
+// Adds a GeoJSON property indicating how the user proceeded
+function addUserActionProp(
+  boundary: Boundary,
+  passport: Readonly<Store.passport>,
+): Boundary {
+  if (boundary) {
+    if (
+      boundary.geometry === passport.data?.["property.boundary.title"]?.geometry
+    ) {
+      boundary["properties"] = {
+        ...boundary["properties"],
+        planx_user_action: UserDrawAction.Accept,
       };
-    })();
-
-    props.handleSubmit?.({ data });
+    } else if (boundary?.properties?.dataset === "title-boundary") {
+      boundary["properties"] = {
+        ...boundary["properties"],
+        planx_user_action: UserDrawAction.Ammend,
+      };
+    } else {
+      boundary["properties"] = { planx_user_action: UserDrawAction.Custom };
+    }
   }
+
+  return boundary;
 }

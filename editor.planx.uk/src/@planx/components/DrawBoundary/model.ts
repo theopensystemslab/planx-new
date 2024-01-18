@@ -1,5 +1,11 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
+export enum UserDrawAction {
+  Accept = "Accepted title boundary",
+  Ammend = "Ammended title boundary",
+  Custom = "Drew custom boundary",
+}
+
 export interface DrawBoundary extends MoreInformation {
   title: string;
   description: string;
