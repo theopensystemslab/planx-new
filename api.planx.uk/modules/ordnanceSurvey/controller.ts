@@ -1,6 +1,7 @@
 import { useProxy } from "../../shared/middleware/proxy";
 import { NextFunction, Request, Response } from "express";
 import { IncomingMessage } from "http";
+import { request } from "https";
 
 export const OS_DOMAIN = "https://api.os.uk";
 
@@ -28,7 +29,7 @@ export const useOrdnanceSurveyProxy = async (
 
   return useProxy({
     target: OS_DOMAIN,
-    onProxyRes: (proxyRes) => setCORPHeaders(proxyRes),
+    onProxyRes: (proxyRes) => setCORPHeaders(proxyRes, req),
     pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req),
   })(req, res, next);
 };
@@ -36,8 +37,10 @@ export const useOrdnanceSurveyProxy = async (
 const isValid = (req: Request): boolean =>
   MAP_ALLOWLIST.some((re) => re.test(req.headers?.referer as string));
 
-const setCORPHeaders = (proxyRes: IncomingMessage): void => {
+const setCORPHeaders = (proxyRes: IncomingMessage, req: Request): void => {
   proxyRes.headers["Cross-Origin-Resource-Policy"] = "cross-origin";
+  proxyRes.headers["Access-Control-Allow-Origin"] = req.headers.origin;
+  proxyRes.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept";
 };
 
 export const appendAPIKey = (fullPath: string, req: Request): string => {
