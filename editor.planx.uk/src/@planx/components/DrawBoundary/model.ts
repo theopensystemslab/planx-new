@@ -1,9 +1,10 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
-export enum UserDrawAction {
-  Accept = "Accepted title boundary",
-  Ammend = "Ammended title boundary",
-  Custom = "Drew custom boundary",
+export enum DrawBoundaryUserAction {
+  Accept = "Accepted the title boundary",
+  Ammend = "Ammended the title boundary",
+  Draw = "Drew a custom boundary",
+  Upload = "Uploaded a location plan",
 }
 
 export interface DrawBoundary extends MoreInformation {
@@ -38,3 +39,4 @@ export const DEFAULT_PASSPORT_AREA_KEY = "property.boundary.area" as const;
 export const DEFAULT_TITLE = "Draw the boundary of the property" as const;
 export const DEFAULT_TITLE_FOR_UPLOADING = "Upload a location plan" as const;
 export const PASSPORT_UPLOAD_KEY = "proposal.drawing.locationPlan" as const; // not added to editor yet
+export const PASSPORT_COMPONENT_ACTION_KEY = "drawBoundary.action" as const; // internal use only

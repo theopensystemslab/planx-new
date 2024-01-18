@@ -12,13 +12,18 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
 import type { PublicProps } from "@planx/components/ui";
 import buffer from "@turf/buffer";
-import { type Feature, point } from "@turf/helpers";
+import { type Feature,point } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 
-import { DrawBoundary, PASSPORT_UPLOAD_KEY, UserDrawAction } from "../model";
+import {
+  DrawBoundary,
+  DrawBoundaryUserAction,
+  PASSPORT_COMPONENT_ACTION_KEY,
+  PASSPORT_UPLOAD_KEY,
+} from "../model";
 
 export type Props = PublicProps<DrawBoundary>;
 
@@ -94,24 +99,39 @@ export default function Component(props: Props) {
 
         // Used the map
         if (boundary && props.dataFieldBoundary) {
-          newPassportData[props.dataFieldBoundary] = addUserActionProp(
-            boundary,
-            passport,
-          );
+          newPassportData[props.dataFieldBoundary] = boundary;
           newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
             boundary,
             BUFFER_IN_METERS,
             { units: "meters" },
           );
-        }
-        if (area && props.dataFieldArea) {
-          newPassportData[props.dataFieldArea] = area;
-          newPassportData[`${props.dataFieldArea}.hectares`] = area / 10000;
+
+          if (area && props.dataFieldArea) {
+            newPassportData[props.dataFieldArea] = area;
+            newPassportData[`${props.dataFieldArea}.hectares`] = area / 10000;
+          }
+
+          // Track the type of map interaction
+          if (
+            boundary?.geometry ===
+            passport.data?.["property.boundary.title"]?.geometry
+          ) {
+            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+              DrawBoundaryUserAction.Accept;
+          } else if (boundary?.properties?.dataset === "title-boundary") {
+            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+              DrawBoundaryUserAction.Ammend;
+          } else {
+            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+              DrawBoundaryUserAction.Draw;
+          }
         }
 
         // Uploaded a file
         if (slots.length) {
           newPassportData[PASSPORT_UPLOAD_KEY] = slots;
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            DrawBoundaryUserAction.Upload;
         }
 
         props.handleSubmit?.({ data: { ...newPassportData } });
@@ -233,30 +253,4 @@ export default function Component(props: Props) {
       );
     }
   }
-}
-
-// Adds a GeoJSON property indicating how the user proceeded
-function addUserActionProp(
-  boundary: Boundary,
-  passport: Readonly<Store.passport>,
-): Boundary {
-  if (boundary) {
-    if (
-      boundary.geometry === passport.data?.["property.boundary.title"]?.geometry
-    ) {
-      boundary["properties"] = {
-        ...boundary["properties"],
-        planx_user_action: UserDrawAction.Accept,
-      };
-    } else if (boundary?.properties?.dataset === "title-boundary") {
-      boundary["properties"] = {
-        ...boundary["properties"],
-        planx_user_action: UserDrawAction.Ammend,
-      };
-    } else {
-      boundary["properties"] = { planx_user_action: UserDrawAction.Custom };
-    }
-  }
-
-  return boundary;
 }
