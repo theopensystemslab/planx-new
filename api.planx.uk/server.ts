@@ -39,12 +39,18 @@ useSwaggerDocs(app);
 app.set("trust proxy", 1);
 
 const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
-  const isTest = process.env.NODE_ENV === "test";
-  const isDevelopment = process.env.APP_ENVIRONMENT === "development";
-  const allowList = process.env.CORS_ALLOWLIST?.split(", ") || [];
-  const isAllowed = Boolean(origin && allowList.includes(origin));
+  if (!origin) return callback(null, true);
 
-  !origin || isTest || isDevelopment || isAllowed
+  const isTest = process.env.NODE_ENV === "test";
+  const localDevEnvs =
+    /^http:\/\/(127\.0\.0\.1|localhost):(3000|5173|6006|7007)$/;
+  const isDevelopment =
+    process.env.APP_ENVIRONMENT === "development" || localDevEnvs.test(origin);
+  const allowList = process.env.CORS_ALLOWLIST?.split(", ") || [];
+  const isAllowed = Boolean(allowList.includes(origin));
+  const isMapDocs = Boolean(origin.endsWith("oslmap.netlify.app"));
+
+  isTest || isDevelopment || isAllowed || isMapDocs
     ? callback(null, true)
     : callback(new Error("Not allowed by CORS"));
 };
