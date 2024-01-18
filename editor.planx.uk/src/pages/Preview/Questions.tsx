@@ -23,7 +23,7 @@ const BackBar = styled(Box)(() => ({
   zIndex: "1000",
 }));
 
-const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
+export const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
   visibility: "visible",
   pointerEvents: "auto",
   display: "flex",
@@ -170,7 +170,11 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     <Box width="100%" role="main">
       <BackBar hidden={!showBackBar}>
         <Container maxWidth={false}>
-          <BackButton hidden={!showBackButton} onClick={() => goBack()}>
+          <BackButton
+            hidden={!showBackButton}
+            data-testid="backButton"
+            onClick={() => goBack()}
+          >
             <ArrowBackIcon fontSize="small" />
             Back
           </BackButton>

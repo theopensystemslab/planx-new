@@ -7,7 +7,9 @@ import {
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import ErrorFallback from "components/ErrorFallback";
+import Feedback from "components/Feedback";
 import PhaseBanner from "components/PhaseBanner";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -62,9 +64,12 @@ const PublicFooter: React.FC = () => {
     (item): item is { title: string; href: string; bold: boolean } =>
       Boolean(item),
   );
+
+  const isUsingFeatureFlag = hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
+
   return (
     <Box>
-      <PhaseBanner />
+      {isUsingFeatureFlag ? <Feedback /> : <PhaseBanner />}
       <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
           <Box pr={2} display="flex">
