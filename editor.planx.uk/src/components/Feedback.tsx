@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import PhaseBanner from "components/PhaseBanner";
+import FeedbackPhaseBanner from "components/FeedbackPhaseBanner";
 import { BackButton } from "pages/Preview/Questions";
 import React from "react";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
@@ -69,7 +69,7 @@ const FeedbackComponent: React.FC = () => {
   return (
     <>
       <FeedbackWrapper>
-        <PhaseBanner />
+        <FeedbackPhaseBanner />
       </FeedbackWrapper>
 
       <FeedbackWrapper>
