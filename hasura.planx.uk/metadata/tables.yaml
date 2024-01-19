@@ -230,6 +230,28 @@
     - name: team
       using:
         foreign_key_constraint_on: team_id
+  insert_permissions:
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - address
+          - breadcrumbs
+          - component_metadata
+          - created_at
+          - device
+          - feedback_type
+          - flow_id
+          - help_text
+          - id
+          - node_id
+          - node_text
+          - project_type
+          - status
+          - team_id
+          - user_comment
+          - user_context
+      comment: Allow users who want to leave feedback on their experience to write to the table
 - table:
     name: feedback_status_enum
     schema: public
