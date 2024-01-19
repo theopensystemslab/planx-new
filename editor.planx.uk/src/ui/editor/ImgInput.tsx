@@ -30,10 +30,12 @@ export default function ImgInput({
   img,
   onChange,
   acceptedFileTypes,
+  backgroundColor,
 }: {
   img?: string;
   onChange?: (newUrl?: string) => void;
-  acceptedFileTypes?: AcceptedFileTypes
+  acceptedFileTypes?: AcceptedFileTypes;
+  backgroundColor?: string;
 }): FCReturn {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -79,7 +81,13 @@ export default function ImgInput({
           Remove
         </MenuItem>
       </Menu>
-      <img width={50} height={50} src={img} alt="embedded img" />
+      <img 
+        width={50} 
+        height={50} 
+        src={img} 
+        alt="embedded img" 
+        style={{ display: "block", backgroundColor: backgroundColor }}
+      />
     </ImageUploadContainer>
   ) : (
     <Tooltip title="Drop file here">
