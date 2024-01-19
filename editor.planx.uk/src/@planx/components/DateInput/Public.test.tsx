@@ -33,6 +33,7 @@ test("submits a date", async () => {
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
       [componentId]: "2010-05-22",
+      [componentId + ".epoch"]: 1274486400,
     },
   });
 });
@@ -59,6 +60,7 @@ test("recovers previously submitted date when clicking the back button", async (
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
       [componentId]: "2010-05-22",
+      [componentId + ".epoch"]: 1274486400,
     },
   });
 });
@@ -87,6 +89,7 @@ test("recovers previously submitted date when clicking the back button even if a
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
       [dataField]: "2010-05-22",
+      [dataField + ".epoch"]: 1274486400,
     },
   });
 });

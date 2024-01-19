@@ -60,6 +60,9 @@ export default function Component(props: Props) {
       // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
       if (typeof result === "number") {
         return result;
+        // Allow component to output booleans
+      } else if (typeof result === "boolean") {
+        return result;
       } else {
         return UNKNOWN;
       }

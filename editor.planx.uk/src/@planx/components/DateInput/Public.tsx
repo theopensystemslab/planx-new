@@ -22,7 +22,18 @@ const DateInputPublic: React.FC<Props> = (props) => {
       date: getPreviouslySubmittedData(props) ?? "",
     },
     onSubmit: (values) => {
-      props.handleSubmit?.(makeData(props, values.date));
+      const isoDate = makeData(props, values.date).data;
+      const passportKey = Object.keys(isoDate)[0];
+      const epochDate = {
+        [passportKey + ".epoch"]: new Date(values.date).valueOf() / 1000,
+      };
+
+      props.handleSubmit?.({
+        data: {
+          ...isoDate,
+          ...epochDate,
+        },
+      });
     },
     validateOnBlur: false,
     validateOnChange: false,

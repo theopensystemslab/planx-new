@@ -37,7 +37,7 @@ export const makeData = <T>(
   props: any,
   value: T,
   overwriteKey?: string,
-): {} | { data: Record<string, T> } => {
+): Record<string, never> | { data: Record<string, T> } => {
   if (isEmpty(value)) return {};
   else
     return {
