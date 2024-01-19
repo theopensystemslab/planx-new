@@ -10,9 +10,10 @@ import {
 } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
+import { squareMetresToHectares } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
 import buffer from "@turf/buffer";
-import { type Feature,point } from "@turf/helpers";
+import { type Feature, point } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -108,7 +109,8 @@ export default function Component(props: Props) {
 
           if (area && props.dataFieldArea) {
             newPassportData[props.dataFieldArea] = area;
-            newPassportData[`${props.dataFieldArea}.hectares`] = area / 10000;
+            newPassportData[`${props.dataFieldArea}.hectares`] =
+              squareMetresToHectares(area);
           }
 
           // Track the type of map interaction
@@ -120,7 +122,7 @@ export default function Component(props: Props) {
               DrawBoundaryUserAction.Accept;
           } else if (boundary?.properties?.dataset === "title-boundary") {
             newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
-              DrawBoundaryUserAction.Ammend;
+              DrawBoundaryUserAction.Amend;
           } else {
             newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
               DrawBoundaryUserAction.Draw;

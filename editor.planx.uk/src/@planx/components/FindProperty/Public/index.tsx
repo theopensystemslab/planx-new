@@ -4,6 +4,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { squareMetresToHectares } from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";
 import { Feature, GeoJSONObject } from "@turf/helpers";
@@ -224,7 +225,7 @@ function Component(props: Props) {
             newPassportData["property.boundary.title"] = titleBoundary;
             newPassportData["property.boundary.title.area"] = areaSquareMetres;
             newPassportData["property.boundary.title.area.hectares"] =
-              areaSquareMetres / 10000;
+              squareMetresToHectares(areaSquareMetres);
           }
 
           props.handleSubmit?.({ data: { ...newPassportData } });

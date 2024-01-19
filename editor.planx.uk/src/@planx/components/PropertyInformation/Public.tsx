@@ -27,32 +27,25 @@ import type { PropertyInformation } from "./model";
 export default Component;
 
 function Component(props: PublicProps<PropertyInformation>) {
-  const [
-    address,
-    propertyType,
-    localAuthorityDistrict,
-    titleBoundary,
-    overrideAnswer,
-  ] = useStore((state) => [
-    state.computePassport().data?._address,
-    state.computePassport().data?.["property.type"],
-    state.computePassport().data?.["property.localAuthorityDistrict"],
-    state.computePassport().data?.["property.boundary.title"],
+  const [passport, overrideAnswer] = useStore((state) => [
+    state.computePassport(),
     state.overrideAnswer,
   ]);
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
     client: publicClient,
   });
 
-  return address ? (
+  return passport.data?._address ? (
     <Presentational
       title={props.title}
       description={props.description}
       showPropertyTypeOverride={props.showPropertyTypeOverride}
-      address={address}
-      propertyType={propertyType}
-      localAuthorityDistrict={localAuthorityDistrict}
-      titleBoundary={titleBoundary}
+      address={passport.data?._address}
+      propertyType={passport.data?.["property.type"]}
+      localAuthorityDistrict={
+        passport.data?.["property.localAuthorityDistrict"]
+      }
+      titleBoundary={passport.data?.["property.boundary.title"]}
       blpuCodes={blpuCodes}
       previousFeedback={props.previouslySubmittedData?.feedback}
       overrideAnswer={overrideAnswer}

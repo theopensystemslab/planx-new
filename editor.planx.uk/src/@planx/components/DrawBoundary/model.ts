@@ -2,7 +2,7 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 
 export enum DrawBoundaryUserAction {
   Accept = "Accepted the title boundary",
-  Ammend = "Ammended the title boundary",
+  Amend = "Amended the title boundary",
   Draw = "Drew a custom boundary",
   Upload = "Uploaded a location plan",
 }
