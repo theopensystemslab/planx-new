@@ -1,4 +1,5 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
+import { content } from "./content";
 
 export enum DrawBoundaryUserAction {
   Accept = "Accepted the title boundary",
@@ -25,18 +26,19 @@ export const parseDrawBoundary = (
   data: Record<string, any> | undefined,
 ): DrawBoundary => ({
   ...parseMoreInformation(data),
-  title: data?.title || DEFAULT_TITLE,
-  description: data?.description || "",
-  titleForUploading: data?.titleForUploading || DEFAULT_TITLE_FOR_UPLOADING,
-  descriptionForUploading: data?.descriptionForUploading || "",
-  hideFileUpload: data?.hideFileUpload || false,
-  dataFieldBoundary: data?.dataFieldBoundary || DEFAULT_PASSPORT_BOUNDARY_KEY,
-  dataFieldArea: data?.dataFieldArea || DEFAULT_PASSPORT_AREA_KEY,
+  title: data?.title || content?.["title"],
+  description: data?.description || content?.["description"],
+  titleForUploading: data?.titleForUploading || content?.["titleForUploading"],
+  descriptionForUploading:
+    data?.descriptionForUploading || content?.["descriptionForUploading"],
+  hideFileUpload: data?.hideFileUpload || content?.["hideFileUpload"],
+  dataFieldBoundary: data?.dataFieldBoundary || content?.["dataFieldBoundary"],
+  dataFieldArea: data?.dataFieldArea || content?.["dataFieldArea"],
+  info: data?.info || content?.["info"],
+  policyRef: data?.policyRef || content?.["policyRef"],
+  howMeasured: data?.howMeasured || content?.["howMeasured"],
+  definitionImg: data?.definitionImg || content?.["definitionImg"],
 });
 
-export const DEFAULT_PASSPORT_BOUNDARY_KEY = "property.boundary.site" as const;
-export const DEFAULT_PASSPORT_AREA_KEY = "property.boundary.area" as const;
-export const DEFAULT_TITLE = "Draw the boundary of the property" as const;
-export const DEFAULT_TITLE_FOR_UPLOADING = "Upload a location plan" as const;
 export const PASSPORT_UPLOAD_KEY = "proposal.drawing.locationPlan" as const; // not added to editor yet
 export const PASSPORT_COMPONENT_ACTION_KEY = "drawBoundary.action" as const; // internal use only
