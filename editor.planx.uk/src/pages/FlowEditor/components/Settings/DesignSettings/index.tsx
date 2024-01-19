@@ -5,7 +5,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
-import { FormikProps, getIn } from "formik";
+import { FormikProps } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -139,7 +139,7 @@ const DesignSettings: React.FC = () => {
           <ThemeAndLogoForm team={team} onSuccess={() => setOpen(true)} />
           <ButtonForm team={team} onSuccess={() => setOpen(true)} />
           <TextLinkForm team={team} onSuccess={() => setOpen(true)} />
-          <FaviconForm />
+          <FaviconForm team={team} onSuccess={() => setOpen(true)} />
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert
               onClose={handleClose}

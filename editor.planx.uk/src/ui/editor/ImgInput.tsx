@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useState } from "react";
 
-import PublicFileUploadButton from "../shared/PublicFileUploadButton";
+import PublicFileUploadButton, { AcceptedFileTypes } from "../shared/PublicFileUploadButton";
 
 const ImageUploadContainer = styled(Box)(() => ({
   height: 50,
@@ -29,9 +29,11 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 export default function ImgInput({
   img,
   onChange,
+  acceptedFileTypes,
 }: {
   img?: string;
   onChange?: (newUrl?: string) => void;
+  acceptedFileTypes?: AcceptedFileTypes
 }): FCReturn {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -88,6 +90,7 @@ export default function ImgInput({
             onChange && onChange(newUrl);
           }}
           disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+          acceptedFileTypes={acceptedFileTypes}
         />
       </ImageUploadContainer>
     </Tooltip>

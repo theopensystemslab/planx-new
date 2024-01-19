@@ -41,7 +41,7 @@ export const teamStore: StateCreator<
   notifyPersonalisation: undefined,
   boundaryBBox: undefined,
 
-  setTeam: (team) =>
+  setTeam: (team) => {
     set({
       teamId: team.id,
       teamTheme: team.theme,
@@ -50,7 +50,13 @@ export const teamStore: StateCreator<
       teamSlug: team.slug,
       notifyPersonalisation: team.notifyPersonalisation,
       boundaryBBox: team.boundaryBBox,
-    }),
+    });
+
+    if (team.theme?.favicon) {
+      const favicon = document.getElementById("favicon") as HTMLLinkElement;
+      favicon.href = team.theme.favicon;
+    }
+  },
 
   getTeam: () => ({
     id: get().teamId,
