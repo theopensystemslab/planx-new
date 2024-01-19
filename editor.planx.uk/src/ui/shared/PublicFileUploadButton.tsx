@@ -8,10 +8,19 @@ import { uploadPublicFile } from "api/upload";
 import React, { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 
+export type AcceptedFileTypes = Record<string, ImageFileExtensions[]>;
+
+export type ImageFileExtensions = ".jpg" | ".jpeg" | ".png" | ".svg" | ".ico";
+
+export const DEFAULT_FILETYPES: AcceptedFileTypes = { 
+  "image/*": [".jpg", ".jpeg", ".png", ".svg"],
+};
+
 export interface Props {
   onChange?: (image: string) => void;
   variant?: "tooltip";
   disabled?: boolean;
+  acceptedFileTypes?: AcceptedFileTypes;
 }
 
 interface RootProps extends ButtonBaseProps {
@@ -41,7 +50,7 @@ const Root = styled(ButtonBase, {
 }));
 
 export default function PublicFileUploadButton(props: Props): FCReturn {
-  const { onChange, variant, disabled } = props;
+  const { onChange, variant, disabled, acceptedFileTypes } = props;
 
   const [status, setStatus] = useState<
     { type: "none" } | { type: "loading" } | { type: "error"; msg: string }
@@ -86,9 +95,7 @@ export default function PublicFileUploadButton(props: Props): FCReturn {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
-      "image/*": [".jpg", ".jpeg", ".png", ".svg"],
-    },
+    accept: acceptedFileTypes || DEFAULT_FILETYPES,
   });
 
   if (status.type === "loading") {
