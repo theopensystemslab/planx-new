@@ -494,7 +494,7 @@ const RichTextInput: FC<Props> = (props) => {
       {editor && (
         <StyledBubbleMenu
           editor={editor}
-          tippyOptions={{ duration: 100 }}
+          tippyOptions={{ duration: 100, moveTransition: "transform 0.2s ease-out" }}
           className="bubble-menu"
         >
           {addingLink ? (
