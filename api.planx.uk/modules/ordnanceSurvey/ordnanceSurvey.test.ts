@@ -17,7 +17,6 @@ describe("Ordnance Survey proxy endpoint", () => {
       .reply(200, { test: "returned tile" });
 
     await get(ENDPOINT + TILE_PATH)
-      .set({ referer: "https://123.planx.pizza/" })
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual({
@@ -33,7 +32,6 @@ describe("Ordnance Survey proxy endpoint", () => {
       .reply(200, { test: "returned tile" });
 
     await get(ENDPOINT + TILE_PATH + "?srs=3857")
-      .set({ referer: "https://www.planx.dev/" })
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual({
@@ -49,83 +47,12 @@ describe("Ordnance Survey proxy endpoint", () => {
       .reply(401, { test: "failed request" });
 
     await get(ENDPOINT + TILE_PATH)
-      .set({ referer: "https://www.planx.uk/" })
       .expect(401)
       .then((response) => {
         expect(response.body).toEqual({
           test: "failed request",
         });
       });
-  });
-
-  describe("CORS functionality", () => {
-    it("blocks requests which are not from a valid referrer", async () => {
-      await get(ENDPOINT + TILE_PATH)
-        .set({ referer: "https://www.invalid-site.com/" })
-        .expect(401)
-        .then((response) => {
-          expect(response.body).toEqual({
-            error: "Unauthorised",
-          });
-        });
-    });
-
-    it("allows requests from allow-listed URLs", async () => {
-      nock(OS_DOMAIN)
-        .get(TILE_PATH)
-        .query({ key: process.env.ORDNANCE_SURVEY_API_KEY })
-        .reply(200, { test: "returned tile" });
-
-      await get(ENDPOINT + TILE_PATH)
-        .set({ referer: "https://oslmap.netlify.app/" })
-        .expect(200)
-        .then((response) => {
-          expect(response.body).toEqual({
-            test: "returned tile",
-          });
-          expect(response.headers["cross-origin-resource-policy"]).toEqual(
-            "cross-origin",
-          );
-        });
-    });
-
-    it("allows requests from PlanX", async () => {
-      nock(OS_DOMAIN)
-        .get(TILE_PATH)
-        .query({ key: process.env.ORDNANCE_SURVEY_API_KEY })
-        .reply(200, { test: "returned tile" });
-
-      await get(ENDPOINT + TILE_PATH)
-        .set({ referer: "https://www.planx.dev/" })
-        .expect(200)
-        .then((response) => {
-          expect(response.body).toEqual({
-            test: "returned tile",
-          });
-          expect(response.headers["cross-origin-resource-policy"]).toEqual(
-            "cross-origin",
-          );
-        });
-    });
-
-    it("allows requests from custom domains", async () => {
-      nock(OS_DOMAIN)
-        .get(TILE_PATH)
-        .query({ key: process.env.ORDNANCE_SURVEY_API_KEY })
-        .reply(200, { test: "returned tile" });
-
-      await get(ENDPOINT + TILE_PATH)
-        .set({ referer: "https://planningservices.buckinghamshire.gov.uk/" })
-        .expect(200)
-        .then((response) => {
-          expect(response.body).toEqual({
-            test: "returned tile",
-          });
-          expect(response.headers["cross-origin-resource-policy"]).toEqual(
-            "cross-origin",
-          );
-        });
-    });
   });
 });
 
