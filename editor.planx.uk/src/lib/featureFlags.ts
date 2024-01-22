@@ -2,6 +2,7 @@
 const AVAILABLE_FEATURE_FLAGS = [
   "DISABLE_SAVE_AND_RETURN",
   "SHOW_TEAM_SETTINGS",
+  "SHOW_INTERNAL_FEEDBACK",
 ] as const;
 
 type featureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];

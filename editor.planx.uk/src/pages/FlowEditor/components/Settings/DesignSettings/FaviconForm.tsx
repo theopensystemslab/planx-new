@@ -1,25 +1,22 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
+import ImgInput from "ui/editor/ImgInput";
 import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
-import PublicFileUploadButton from "ui/shared/PublicFileUploadButton";
 
-import { EXAMPLE_COLOUR, SettingsForm } from ".";
+import { FormProps, SettingsForm } from ".";
 
-export const FaviconForm: React.FC = () => {
-  const formik = useFormik<{
-    textLinkColor: string;
-  }>({
-    initialValues: {
-      textLinkColor: EXAMPLE_COLOUR,
-    },
-    onSubmit: () => {},
-    validate: () => {},
-  });
+export const FaviconForm: React.FC<FormProps> = ({ formikConfig }) => {
+  const formik = useFormik<TeamTheme>(formikConfig);
+
+  const updateFavicon = (newFile: string | undefined) => newFile 
+    ? formik.setFieldValue("favicon", newFile)
+    : formik.setFieldValue("favicon", null);
 
   return (
     <SettingsForm
@@ -39,8 +36,16 @@ export const FaviconForm: React.FC = () => {
       input={
         <InputRow>
           <InputRowLabel>Favicon:</InputRowLabel>
-          <InputRowItem width={50}>
-            <PublicFileUploadButton />
+          <InputRowItem width={formik.values.favicon ? 90 : 50}>
+            <ImgInput 
+              img={formik.values.favicon || undefined} 
+              onChange={updateFavicon}
+              acceptedFileTypes={{
+                "image/png": [".png"],
+                "image/x-icon": [".ico"],
+                "image/vnd.microsoft.icon": [".ico"],
+              }}
+            />
           </InputRowItem>
           <Typography
             color="text.secondary"

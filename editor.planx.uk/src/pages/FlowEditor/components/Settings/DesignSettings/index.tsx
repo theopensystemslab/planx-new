@@ -4,8 +4,8 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { Team } from "@opensystemslab/planx-core/types";
-import { FormikProps, getIn } from "formik";
+import { Team, TeamTheme } from "@opensystemslab/planx-core/types";
+import { FormikConfig, FormikProps } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -32,29 +32,13 @@ type SettingsFormProps = {
   legend: string;
   description: React.ReactElement;
   input: React.ReactElement;
-  formik: FormikProps<any>;
+  formik: FormikProps<TeamTheme>;
   preview?: React.ReactElement;
 };
 
-const useTeam = () => {
-  const [team, setTeam] = useState<Team>({} as Team);
-
-  useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
-        if (!fetchedTeam) throw Error("Unable to find team");
-        setTeam(fetchedTeam);
-      } catch (error) {
-        console.error("Error fetching team:", error);
-      }
-    };
-
-    fetchTeam();
-  }, []);
-
-  return team;
-};
+export interface FormProps {
+  formikConfig: FormikConfig<TeamTheme>;
+}
 
 export const SettingsForm: React.FC<SettingsFormProps> = ({
   formik,
@@ -106,7 +90,42 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 
 const DesignSettings: React.FC = () => {
   const isUsingFeatureFlag = hasFeatureFlag("SHOW_TEAM_SETTINGS");
-  const team = useTeam();
+  const [formikConfig, setFormikConfig] = useState<FormikConfig<TeamTheme> | undefined>(undefined);
+
+  const onSubmit: FormikConfig<TeamTheme>["onSubmit"] = async (values, { resetForm }) => {
+    const isSuccess = await useStore.getState().updateTeamTheme(values);
+    if (isSuccess) {
+      setOpen(true);
+      // Reset "dirty" status to disable Save & Reset buttons
+      resetForm({ values });
+    }
+  };
+
+  /**
+   * Fetch current team and setup shared form config
+   */
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
+        if (!fetchedTeam) throw Error("Unable to find team");
+
+        setFormikConfig({
+          initialValues: fetchedTeam.theme,
+          onSubmit,
+          validateOnBlur: false,
+          validateOnChange: false,
+          enableReinitialize: true,
+        });
+      } catch (error) {
+        console.error("Error fetching team:", error);
+      }
+    };
+
+    fetchTeam();
+  }, []);
+
+
   const [open, setOpen] = useState(false);
 
   const handleClose = (
@@ -136,10 +155,14 @@ const DesignSettings: React.FC = () => {
         </EditorRow>
       ) : (
         <>
-          <ThemeAndLogoForm team={team} onSuccess={() => setOpen(true)} />
-          <ButtonForm team={team} onSuccess={() => setOpen(true)} />
-          <TextLinkForm team={team} onSuccess={() => setOpen(true)} />
-          <FaviconForm />
+          {formikConfig &&
+            <>
+              <ThemeAndLogoForm formikConfig={formikConfig} />
+              <ButtonForm formikConfig={formikConfig} />
+              <TextLinkForm formikConfig={formikConfig} />
+              <FaviconForm formikConfig={formikConfig} />
+            </>
+          }
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert
               onClose={handleClose}

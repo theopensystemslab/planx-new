@@ -1,8 +1,11 @@
 import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Drawer, { DrawerProps } from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import MoreInfoFeedbackComponent from "components/MoreInfoFeedback";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 
 const PREFIX = "MoreInfo";
@@ -34,22 +37,22 @@ const Root = styled(Drawer, {
   [`& .${classes.drawerPaper}`]: {
     width: "100%",
     maxWidth: drawerWidth,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     border: 0,
     boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
   },
 }));
 
-const DrawerContent = styled("div")(({ theme }) => ({
-  padding: theme.spacing(2.5, 4, 6, 0),
+const DrawerContent = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2.5, 4, 2, 0),
   fontSize: "1rem",
   lineHeight: "1.5",
   [theme.breakpoints.up("sm")]: {
-    padding: theme.spacing(6, 4, 6, 1),
+    padding: theme.spacing(6, 4, 4, 1),
   },
 }));
 
-const CloseButton = styled("div")(({ theme }) => ({
+const CloseButton = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
@@ -58,6 +61,8 @@ const CloseButton = styled("div")(({ theme }) => ({
   right: theme.spacing(1),
   color: theme.palette.text.primary,
 }));
+
+const isUsingFeatureFlag = hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
 
 interface IMoreInfo {
   open: boolean;
@@ -90,9 +95,10 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
         <CloseIcon />
       </IconButton>
     </CloseButton>
-    <Container maxWidth={false} role="main">
+    <Container maxWidth={false} role="main" sx={{ bgcolor: "white" }}>
       <DrawerContent>{children}</DrawerContent>
     </Container>
+    {isUsingFeatureFlag && <MoreInfoFeedbackComponent />}
   </Root>
 );
 

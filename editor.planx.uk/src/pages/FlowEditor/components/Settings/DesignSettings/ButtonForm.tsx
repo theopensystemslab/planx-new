@@ -1,48 +1,19 @@
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { darken, useTheme } from "@mui/material/styles";
-import { Team, TeamTheme } from "@opensystemslab/planx-core/types";
+import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import ColorPicker from "ui/editor/ColorPicker";
 import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { DesignPreview, SettingsForm } from ".";
-
-type FormValues = Pick<TeamTheme, "actionColour">;
-
-export const ButtonForm: React.FC<{ team: Team; onSuccess: () => void }> = ({
-  team,
-  onSuccess,
-}) => {
+import { DesignPreview, FormProps, SettingsForm } from ".";
+export const ButtonForm: React.FC<FormProps> = ({ formikConfig }) => {
   const theme = useTheme();
-
-  useEffect(() => {
-    setInitialValues({ actionColour: team.theme?.actionColour });
-  }, [team]);
-
-  const [initialValues, setInitialValues] = useState<FormValues>({
-    actionColour: "",
-  });
-
-  const formik = useFormik<FormValues>({
-    initialValues,
-    onSubmit: async (values, { resetForm }) => {
-      const isSuccess = await useStore.getState().updateTeamTheme(values);
-      if (isSuccess) {
-        onSuccess();
-        // Reset "dirty" status to disable Save & Reset buttons
-        resetForm({ values });
-      }
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    enableReinitialize: true,
-  });
+  const formik = useFormik<TeamTheme>(formikConfig);
 
   return (
     <SettingsForm

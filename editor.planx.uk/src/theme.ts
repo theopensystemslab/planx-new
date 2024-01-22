@@ -288,7 +288,7 @@ const getThemeOptions = ({
           root: {
             borderRadius: 0,
             textTransform: "none",
-            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
+            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.25)",
             padding: "0.7em 1.25em",
             lineHeight: LINE_HEIGHT_BASE,
             minWidth: "3em",
