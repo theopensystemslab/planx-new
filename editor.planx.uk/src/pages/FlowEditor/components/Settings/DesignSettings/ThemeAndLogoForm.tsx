@@ -14,7 +14,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DesignPreview, FormProps, SettingsForm } from ".";
 
-export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
+export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig, onSuccess }) => {
   const theme = useTheme();
   const teamSlug = useStore((state) => state.teamSlug);
 
@@ -30,6 +30,17 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
           primaryColour:
             "Theme colour does not meet accessibility contrast requirements (3:1)",
         };
+      }
+    },
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateTeamTheme({
+        primaryColour: values.primaryColour,
+        logo: values.logo,
+      });
+      if (isSuccess) {
+        onSuccess();
+        // Reset "dirty" status to disable Save & Reset buttons
+        resetForm({ values });
       }
     },
   });

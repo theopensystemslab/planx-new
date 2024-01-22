@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { Team, TeamTheme } from "@opensystemslab/planx-core/types";
+import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { FormikConfig, FormikProps } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -38,6 +38,7 @@ type SettingsFormProps = {
 
 export interface FormProps {
   formikConfig: FormikConfig<TeamTheme>;
+  onSuccess: () => void;
 }
 
 export const SettingsForm: React.FC<SettingsFormProps> = ({
@@ -92,15 +93,6 @@ const DesignSettings: React.FC = () => {
   const isUsingFeatureFlag = hasFeatureFlag("SHOW_TEAM_SETTINGS");
   const [formikConfig, setFormikConfig] = useState<FormikConfig<TeamTheme> | undefined>(undefined);
 
-  const onSubmit: FormikConfig<TeamTheme>["onSubmit"] = async (values, { resetForm }) => {
-    const isSuccess = await useStore.getState().updateTeamTheme(values);
-    if (isSuccess) {
-      setOpen(true);
-      // Reset "dirty" status to disable Save & Reset buttons
-      resetForm({ values });
-    }
-  };
-
   /**
    * Fetch current team and setup shared form config
    */
@@ -112,7 +104,8 @@ const DesignSettings: React.FC = () => {
 
         setFormikConfig({
           initialValues: fetchedTeam.theme,
-          onSubmit,
+          // This value will be set per form section
+          onSubmit: () => {},
           validateOnBlur: false,
           validateOnChange: false,
           enableReinitialize: true,
@@ -139,6 +132,8 @@ const DesignSettings: React.FC = () => {
     setOpen(false);
   };
 
+  const onSuccess = () => setOpen(true);
+
   return (
     <>
       <EditorRow>
@@ -157,10 +152,10 @@ const DesignSettings: React.FC = () => {
         <>
           {formikConfig &&
             <>
-              <ThemeAndLogoForm formikConfig={formikConfig} />
-              <ButtonForm formikConfig={formikConfig} />
-              <TextLinkForm formikConfig={formikConfig} />
-              <FaviconForm formikConfig={formikConfig} />
+              <ThemeAndLogoForm formikConfig={formikConfig} onSuccess={onSuccess} />
+              <ButtonForm formikConfig={formikConfig} onSuccess={onSuccess} />
+              <TextLinkForm formikConfig={formikConfig} onSuccess={onSuccess} />
+              <FaviconForm formikConfig={formikConfig} onSuccess={onSuccess} />
             </>
           }
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
