@@ -27,8 +27,8 @@ export const ButtonForm: React.FC<FormProps> = ({ formikConfig }) => {
             the selected colour (being either black or white).
           </InputDescription>
           <InputDescription>
-            <Link href="https://www.planx.uk">
-              See our guide for setting button colours
+            <Link href="#">
+              See our guide for setting button colours (TODO)
             </Link>
           </InputDescription>
         </>

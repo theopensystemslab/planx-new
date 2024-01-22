@@ -47,6 +47,11 @@ export default function ImgInput({
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
+  const handleRemove = () => {
+    onChange && onChange(undefined);
+    setAnchorEl(null);
+  }
+
   return img ? (
     <ImageUploadContainer>
       <StyledIconButton
@@ -73,9 +78,7 @@ export default function ImgInput({
           View
         </MenuItem>
         <MenuItem
-          onClick={() => {
-            onChange && onChange(undefined);
-          }}
+          onClick={handleRemove}
           disabled={!useStore.getState().canUserEditTeam(teamSlug)}
         >
           Remove

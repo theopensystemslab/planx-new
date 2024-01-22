@@ -16,7 +16,7 @@ import { DesignPreview, FormProps, SettingsForm } from ".";
 
 export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
   const theme = useTheme();
-  const teamName = useStore((state) => state.teamName);
+  const teamSlug = useStore((state) => state.teamSlug);
 
   const formik = useFormik<TeamTheme>({
     ...formikConfig,
@@ -100,7 +100,7 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
             <img width="140" src={formik.values.logo} alt="council logo" />
           ) : (
             <Typography color={theme.palette.primary.contrastText}>
-              {teamName}
+              Plan✕ / {teamSlug}
             </Typography>
           )}
         </DesignPreview>
