@@ -29,7 +29,7 @@ export const FaviconForm: React.FC<FormProps> = ({ formikConfig }) => {
             32x32px and in .ico or .png format.
           </InputDescription>
           <InputDescription>
-            <Link href="https://www.planx.uk">See our guide for favicons</Link>
+            <Link href="#">See our guide for favicons (TODO)</Link>
           </InputDescription>
         </>
       }

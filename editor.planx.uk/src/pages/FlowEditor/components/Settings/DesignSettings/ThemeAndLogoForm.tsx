@@ -6,17 +6,17 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker";
+import ImgInput from "ui/editor/ImgInput";
 import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
-import PublicFileUploadButton from "ui/shared/PublicFileUploadButton";
 
 import { DesignPreview, FormProps, SettingsForm } from ".";
 
 export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
   const theme = useTheme();
-  const teamName = useStore((state) => state.teamName);
+  const teamSlug = useStore((state) => state.teamSlug);
 
   const formik = useFormik<TeamTheme>({
     ...formikConfig,
@@ -33,6 +33,10 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
       }
     },
   });
+
+  const updateLogo = (newFile: string | undefined) => newFile
+    ? formik.setFieldValue("logo", newFile)
+    : formik.setFieldValue("logo", null);
 
   return (
     <SettingsForm
@@ -68,9 +72,15 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
           </InputRow>
           <InputRow>
             <InputRowLabel>Logo:</InputRowLabel>
-            <InputRowItem width={50}>
-              <PublicFileUploadButton
-                onChange={(newUrl) => formik.setFieldValue("logo", newUrl)}
+            <InputRowItem width={formik.values.logo ? 90 : 50}> 
+              <ImgInput
+                backgroundColor={formik.values.primaryColour}
+                img={formik.values.logo || undefined}
+                onChange={updateLogo}
+                acceptedFileTypes={{
+                  "image/png": [".png"],
+                  "image/svg+xml": [".svg"],
+                }}
               />
             </InputRowItem>
             <Typography
@@ -90,7 +100,7 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
             <img width="140" src={formik.values.logo} alt="council logo" />
           ) : (
             <Typography color={theme.palette.primary.contrastText}>
-              {teamName}
+              Plan✕ / {teamSlug}
             </Typography>
           )}
         </DesignPreview>

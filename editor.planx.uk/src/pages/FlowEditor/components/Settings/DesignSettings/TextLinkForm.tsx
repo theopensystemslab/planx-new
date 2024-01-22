@@ -39,8 +39,8 @@ export const TextLinkForm: React.FC<FormProps> = ({ formikConfig }) => {
             white ("#ffffff").
           </InputDescription>
           <InputDescription>
-            <Link href="https://www.planx.uk">
-              See our guide for setting text link colours
+            <Link href="#">
+              See our guide for setting text link colours (TODO)
             </Link>
           </InputDescription>
         </>
