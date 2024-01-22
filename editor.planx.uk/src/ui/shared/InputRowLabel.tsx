@@ -7,7 +7,7 @@ const Label = styled(Typography)(({ theme }) => ({
   flexGrow: 0,
   paddingRight: theme.spacing(2),
   alignSelf: "center",
-  "&:not(:first-child)": {
+  "&:not(:nth-child(1))": {
     paddingLeft: theme.spacing(2),
   },
 })) as typeof Typography;
