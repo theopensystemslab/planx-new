@@ -4,9 +4,12 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { squareMetresToHectares } from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
-import { GeoJSONObject } from "@turf/helpers";
-import { useStore } from "pages/FlowEditor/lib/store";
+import area from "@turf/area";
+import { Feature, GeoJSONObject } from "@turf/helpers";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import ExternalPlanningSiteDialog, {
@@ -55,6 +58,7 @@ function Component(props: Props) {
     string[] | undefined
   >();
   const [regions, setRegions] = useState<string[] | undefined>();
+  const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
   const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
 
   const teamSettings = useStore((state) => state.teamSettings);
@@ -68,9 +72,10 @@ function Component(props: Props) {
   });
   options.append("dataset", "local-authority-district");
   options.append("dataset", "region"); // proxy for Greater London Authority (GLA) boundary
+  options.append("dataset", "title-boundary");
 
   // https://www.planning.data.gov.uk/docs#/Search%20entity
-  const root = `https://www.planning.data.gov.uk/entity.json?`;
+  const root = `https://www.planning.data.gov.uk/entity.geojson?`;
   const digitalLandEndpoint = root + options;
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, isValidating } = useSWR(
@@ -100,18 +105,22 @@ function Component(props: Props) {
   );
 
   useEffect(() => {
-    if (address && data?.count > 0) {
+    if (address && data?.features?.length > 0) {
       const lads: string[] = [];
       const regions: string[] = [];
-      data.entities.forEach((entity: any) => {
-        if (entity.dataset === "local-authority-district") {
-          lads.push(entity.name);
-        } else if (entity.dataset === "region") {
-          regions.push(entity.name);
+      let title: Feature | undefined;
+      data.features.forEach((feature: any) => {
+        if (feature.properties.dataset === "local-authority-district") {
+          lads.push(feature.properties.name);
+        } else if (feature.properties.dataset === "region") {
+          regions.push(feature.properties.name);
+        } else if (feature.properties.dataset === "title-boundary") {
+          title = feature;
         }
       });
       setLocalAuthorityDistricts([...new Set(lads)]);
       setRegions([...new Set(regions)]);
+      setTitleBoundary(title);
     }
   }, [data, address]);
 
@@ -181,6 +190,12 @@ function Component(props: Props) {
               </Link>
             </Box>
           )}
+          {Boolean(address) && isValidating && (
+            <DelayedLoadingIndicator
+              msDelayBeforeVisible={50}
+              text="Fetching data..."
+            />
+          )}
         </>
       );
     }
@@ -191,7 +206,7 @@ function Component(props: Props) {
       isValid={Boolean(address) && !isValidating}
       handleSubmit={() => {
         if (address) {
-          const newPassportData: any = {};
+          const newPassportData: Store.userData["data"] = {};
           newPassportData["_address"] = address;
           if (address?.planx_value) {
             newPassportData["property.type"] = [address.planx_value];
@@ -203,6 +218,14 @@ function Component(props: Props) {
           }
           if (regions) {
             newPassportData["property.region"] = regions;
+          }
+          if (titleBoundary) {
+            const areaSquareMetres =
+              Math.round(area(titleBoundary as Feature) * 100) / 100;
+            newPassportData["property.boundary.title"] = titleBoundary;
+            newPassportData["property.boundary.title.area"] = areaSquareMetres;
+            newPassportData["property.boundary.title.area.hectares"] =
+              squareMetresToHectares(areaSquareMetres);
           }
 
           props.handleSubmit?.({ data: { ...newPassportData } });

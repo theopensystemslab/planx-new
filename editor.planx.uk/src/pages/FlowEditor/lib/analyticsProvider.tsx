@@ -24,6 +24,7 @@ const ALLOW_LIST = [
   "proposal.projectType",
   "application.declaration.connection",
   "property.type",
+  "drawBoundary.action",
 ] as const;
 
 export type HelpClickMetadata = Record<string, string>;

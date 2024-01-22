@@ -7,6 +7,7 @@ export const presentationalPropsMock: Pick<
   | "address"
   | "propertyType"
   | "localAuthorityDistrict"
+  | "titleBoundary"
 > = {
   title: "About the property",
   description: "This is the information we currently have about the property",
@@ -31,4 +32,37 @@ export const presentationalPropsMock: Pick<
   },
   propertyType: ["residential.HMO.parent"],
   localAuthorityDistrict: ["Southwark"],
+  titleBoundary: {
+    geometry: {
+      type: "MultiPolygon",
+      coordinates: [
+        [
+          [
+            [-0.076691, 51.484197],
+            [-0.075933, 51.484124],
+            [-0.075856, 51.484369],
+            [-0.075889, 51.484372],
+            [-0.0759, 51.484324],
+            [-0.076391, 51.484369],
+            [-0.076388, 51.484383],
+            [-0.076644, 51.484409],
+            [-0.076691, 51.484197],
+          ],
+        ],
+      ],
+    },
+    type: "Feature",
+    properties: {
+      "entry-date": "2023-12-12",
+      "start-date": "2011-08-25",
+      "end-date": "",
+      entity: 12000601059,
+      name: "",
+      dataset: "title-boundary",
+      typology: "geography",
+      reference: "52725257",
+      prefix: "title-boundary",
+      "organisation-entity": "13",
+    },
+  },
 };

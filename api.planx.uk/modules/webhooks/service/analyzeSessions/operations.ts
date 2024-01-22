@@ -10,6 +10,7 @@ const ALLOW_LIST = [
   "proposal.projectType",
   "application.declaration.connection",
   "property.type",
+  "drawBoundary.action",
 ];
 
 export const getAnalyzeSessionOperations = (): Operation[] => [

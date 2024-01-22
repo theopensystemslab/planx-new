@@ -6,6 +6,10 @@ export const validateEmail = (email: string) => {
   return regex.test(email);
 };
 
+export const squareMetresToHectares = (squareMetres: number): number => {
+  return squareMetres / 10000; // 0.0001 hectares in 1 square metre
+};
+
 const isEmpty = (x: any) =>
   isNil(x) ||
   (Array.isArray(x) && x.length === 0) ||

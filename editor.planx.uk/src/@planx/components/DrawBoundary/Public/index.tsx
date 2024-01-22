@@ -10,38 +10,49 @@ import {
 } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
+import { squareMetresToHectares } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
 import buffer from "@turf/buffer";
-import { type GeometryObject, point } from "@turf/helpers";
+import { type Feature, point } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 
-import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
+import {
+  DrawBoundary,
+  DrawBoundaryUserAction,
+  PASSPORT_COMPONENT_ACTION_KEY,
+  PASSPORT_UPLOAD_KEY,
+} from "../model";
 
 export type Props = PublicProps<DrawBoundary>;
 
-export type Boundary = GeometryObject | undefined;
+export type Boundary = Feature | undefined;
 
 // Buffer applied to the address point to clip this map extent
 //   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
-const BUFFER_IN_METERS = 75;
+const BUFFER_IN_METERS = 100;
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
+  const passport = useStore((state) => state.computePassport());
+
   const previousBoundary =
-    props.previouslySubmittedData?.data?.[props.dataFieldBoundary];
+    props.previouslySubmittedData?.data?.[props.dataFieldBoundary] ||
+    passport.data?.["property.boundary.title"];
   const previousArea =
-    props.previouslySubmittedData?.data?.[props.dataFieldArea];
+    props.previouslySubmittedData?.data?.[props.dataFieldArea] ||
+    passport.data?.["property.boundary.title.area"];
+  const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
+  const [area, setArea] = useState<number | undefined>(previousArea);
+
   const previousFile =
     props.previouslySubmittedData?.data?.[PASSPORT_UPLOAD_KEY];
   const startPage = previousFile ? "upload" : "draw";
   const [page, setPage] = useState<"draw" | "upload">(startPage);
-  const passport = useStore((state) => state.computePassport());
-  const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
-  const [area, setArea] = useState<number | undefined>(previousArea);
+
   const addressPoint =
     passport?.data?._address?.longitude &&
     passport?.data?._address?.latitude &&
@@ -84,7 +95,49 @@ export default function Component(props: Props) {
 
   return (
     <Card
-      handleSubmit={handleSubmit}
+      handleSubmit={() => {
+        const newPassportData: Store.userData["data"] = {};
+
+        // Used the map
+        if (boundary && props.dataFieldBoundary) {
+          newPassportData[props.dataFieldBoundary] = boundary;
+          newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
+            boundary,
+            BUFFER_IN_METERS,
+            { units: "meters" },
+          );
+
+          if (area && props.dataFieldArea) {
+            newPassportData[props.dataFieldArea] = area;
+            newPassportData[`${props.dataFieldArea}.hectares`] =
+              squareMetresToHectares(area);
+          }
+
+          // Track the type of map interaction
+          if (
+            boundary?.geometry ===
+            passport.data?.["property.boundary.title"]?.geometry
+          ) {
+            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+              DrawBoundaryUserAction.Accept;
+          } else if (boundary?.properties?.dataset === "title-boundary") {
+            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+              DrawBoundaryUserAction.Amend;
+          } else {
+            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+              DrawBoundaryUserAction.Draw;
+          }
+        }
+
+        // Uploaded a file
+        if (slots.length) {
+          newPassportData[PASSPORT_UPLOAD_KEY] = slots;
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            DrawBoundaryUserAction.Upload;
+        }
+
+        props.handleSubmit?.({ data: { ...newPassportData } });
+      }}
       isValid={props.hideFileUpload ? true : Boolean(boundary || slots[0]?.url)}
     >
       {getBody()}
@@ -106,15 +159,20 @@ export default function Component(props: Props) {
           <FullWidthWrapper>
             <MapContainer environment={environment} size="large">
               <p style={visuallyHidden}>
-                An interactive map centred on your address, with a red pointer
-                to draw your property boundary. Click to place points and
-                connect the lines to make your site. Once you've closed the site
-                shape, click and drag the lines to modify it.
+                An interactive map centred on your address, pre-populated with a
+                red boundary that includes the entire property, using
+                information from the Land Registry. You can accept this boundary
+                as your location plan by continuing, you can amend it by
+                clicking and dragging the points, or you can erase it by
+                clicking the reset button and draw a new custom boundary.
               </p>
               {!props.hideFileUpload && (
                 <p style={visuallyHidden}>
-                  If you cannot draw, you can upload a location plan file using
-                  the link below.
+                  If you prefer to upload a location plan file instead of using
+                  the map, please reset the map view first to erase the
+                  pre-populated boundary. Then click the "Upload a location plan
+                  instead" link below. A location plan can only be submitted as
+                  a digital boundary or file, not both.
                 </p>
               )}
               {/* @ts-ignore */}
@@ -123,6 +181,7 @@ export default function Component(props: Props) {
                 drawMode
                 drawPointer="crosshair"
                 drawGeojsonData={JSON.stringify(boundary)}
+                drawGeojsonDataBuffer={10}
                 clipGeojsonData={
                   addressPoint &&
                   JSON.stringify(
@@ -138,6 +197,8 @@ export default function Component(props: Props) {
                 markerLongitude={Number(passport?.data?._address?.longitude)}
                 resetControlImage="trash"
                 osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+                osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+                drawGeojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
               />
             </MapContainer>
             <MapFooter>
@@ -193,28 +254,5 @@ export default function Component(props: Props) {
         </>
       );
     }
-  }
-
-  function handleSubmit() {
-    const data: Store.userData["data"] = (() => {
-      // set userData depending if user draws boundary or uploads file
-      return {
-        [props.dataFieldBoundary]:
-          boundary && props.dataFieldBoundary ? boundary : undefined,
-        [`${props.dataFieldBoundary}.buffered`]:
-          boundary && props.dataFieldBoundary
-            ? buffer(boundary, BUFFER_IN_METERS, { units: "meters" })
-            : undefined,
-        [props.dataFieldArea]:
-          boundary && props.dataFieldBoundary ? area : undefined,
-        [`${props.dataFieldArea}.hectares`]:
-          boundary && area && props.dataFieldBoundary
-            ? area / 10000
-            : undefined,
-        [PASSPORT_UPLOAD_KEY]: slots.length ? slots : undefined,
-      };
-    })();
-
-    props.handleSubmit?.({ data });
   }
 }
