@@ -42,7 +42,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     secondary: "#505A5F",
   },
   link: {
-    main: DEFAULT_PRIMARY_COLOR
+    main: DEFAULT_PRIMARY_COLOR,
   },
   prompt: {
     main: DEFAULT_PRIMARY_COLOR,
@@ -113,7 +113,11 @@ export const linkStyle = (linkColour: string) => ({
   "&:focus-visible": focusStyle,
 });
 
-const getThemeOptions = ({ primaryColour, linkColour, actionColour}: TeamTheme): ThemeOptions => {
+const getThemeOptions = ({
+  primaryColour,
+  linkColour,
+  actionColour,
+}: TeamTheme): ThemeOptions => {
   const teamPalette: Partial<PaletteOptions> = {
     primary: {
       main: primaryColour,

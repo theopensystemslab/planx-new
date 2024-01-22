@@ -3,6 +3,7 @@ import Link from "@mui/material/Link";
 import { darken, useTheme } from "@mui/material/styles";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import ColorPicker from "ui/editor/ColorPicker";
@@ -11,9 +12,25 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { DesignPreview, FormProps, SettingsForm } from ".";
-export const ButtonForm: React.FC<FormProps> = ({ formikConfig }) => {
+
+export const ButtonForm: React.FC<FormProps> = ({
+  formikConfig,
+  onSuccess,
+}) => {
   const theme = useTheme();
-  const formik = useFormik<TeamTheme>(formikConfig);
+  const formik = useFormik<TeamTheme>({
+    ...formikConfig,
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateTeamTheme({
+        actionColour: values.actionColour,
+      });
+      if (isSuccess) {
+        onSuccess();
+        // Reset "dirty" status to disable Save & Reset buttons
+        resetForm({ values });
+      }
+    },
+  });
 
   return (
     <SettingsForm

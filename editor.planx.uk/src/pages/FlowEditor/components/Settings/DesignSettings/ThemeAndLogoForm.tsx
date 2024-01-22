@@ -14,7 +14,10 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DesignPreview, FormProps, SettingsForm } from ".";
 
-export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
+export const ThemeAndLogoForm: React.FC<FormProps> = ({
+  formikConfig,
+  onSuccess,
+}) => {
   const theme = useTheme();
   const teamSlug = useStore((state) => state.teamSlug);
 
@@ -32,11 +35,23 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
         };
       }
     },
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateTeamTheme({
+        primaryColour: values.primaryColour,
+        logo: values.logo,
+      });
+      if (isSuccess) {
+        onSuccess();
+        // Reset "dirty" status to disable Save & Reset buttons
+        resetForm({ values });
+      }
+    },
   });
 
-  const updateLogo = (newFile: string | undefined) => newFile
-    ? formik.setFieldValue("logo", newFile)
-    : formik.setFieldValue("logo", null);
+  const updateLogo = (newFile: string | undefined) =>
+    newFile
+      ? formik.setFieldValue("logo", newFile)
+      : formik.setFieldValue("logo", null);
 
   return (
     <SettingsForm
@@ -72,7 +87,7 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig }) => {
           </InputRow>
           <InputRow>
             <InputRowLabel>Logo:</InputRowLabel>
-            <InputRowItem width={formik.values.logo ? 90 : 50}> 
+            <InputRowItem width={formik.values.logo ? 90 : 50}>
               <ImgInput
                 backgroundColor={formik.values.primaryColour}
                 img={formik.values.logo || undefined}
