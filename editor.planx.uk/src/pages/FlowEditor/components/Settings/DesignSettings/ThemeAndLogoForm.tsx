@@ -14,7 +14,10 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DesignPreview, FormProps, SettingsForm } from ".";
 
-export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig, onSuccess }) => {
+export const ThemeAndLogoForm: React.FC<FormProps> = ({
+  formikConfig,
+  onSuccess,
+}) => {
   const theme = useTheme();
   const teamSlug = useStore((state) => state.teamSlug);
 
@@ -45,9 +48,10 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig, onSuccess 
     },
   });
 
-  const updateLogo = (newFile: string | undefined) => newFile
-    ? formik.setFieldValue("logo", newFile)
-    : formik.setFieldValue("logo", null);
+  const updateLogo = (newFile: string | undefined) =>
+    newFile
+      ? formik.setFieldValue("logo", newFile)
+      : formik.setFieldValue("logo", null);
 
   return (
     <SettingsForm
@@ -83,7 +87,7 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({ formikConfig, onSuccess 
           </InputRow>
           <InputRow>
             <InputRowLabel>Logo:</InputRowLabel>
-            <InputRowItem width={formik.values.logo ? 90 : 50}> 
+            <InputRowItem width={formik.values.logo ? 90 : 50}>
               <ImgInput
                 backgroundColor={formik.values.primaryColour}
                 img={formik.values.logo || undefined}

@@ -11,7 +11,10 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { DesignPreview, FormProps, SettingsForm } from ".";
 
-export const TextLinkForm: React.FC<FormProps> = ({ formikConfig, onSuccess }) => {
+export const TextLinkForm: React.FC<FormProps> = ({
+  formikConfig,
+  onSuccess,
+}) => {
   const theme = useTheme();
 
   const formik = useFormik<TeamTheme>({

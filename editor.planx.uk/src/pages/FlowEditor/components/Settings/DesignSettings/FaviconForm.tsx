@@ -12,7 +12,10 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { FormProps, SettingsForm } from ".";
 
-export const FaviconForm: React.FC<FormProps> = ({ formikConfig, onSuccess }) => {
+export const FaviconForm: React.FC<FormProps> = ({
+  formikConfig,
+  onSuccess,
+}) => {
   const formik = useFormik<TeamTheme>({
     ...formikConfig,
     onSubmit: async (values, { resetForm }) => {
@@ -27,9 +30,10 @@ export const FaviconForm: React.FC<FormProps> = ({ formikConfig, onSuccess }) =>
     },
   });
 
-  const updateFavicon = (newFile: string | undefined) => newFile 
-    ? formik.setFieldValue("favicon", newFile)
-    : formik.setFieldValue("favicon", null);
+  const updateFavicon = (newFile: string | undefined) =>
+    newFile
+      ? formik.setFieldValue("favicon", newFile)
+      : formik.setFieldValue("favicon", null);
 
   return (
     <SettingsForm
@@ -50,8 +54,8 @@ export const FaviconForm: React.FC<FormProps> = ({ formikConfig, onSuccess }) =>
         <InputRow>
           <InputRowLabel>Favicon:</InputRowLabel>
           <InputRowItem width={formik.values.favicon ? 90 : 50}>
-            <ImgInput 
-              img={formik.values.favicon || undefined} 
+            <ImgInput
+              img={formik.values.favicon || undefined}
               onChange={updateFavicon}
               acceptedFileTypes={{
                 "image/png": [".png"],

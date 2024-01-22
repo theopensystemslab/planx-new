@@ -78,19 +78,27 @@ const SendComponent: React.FC<Props> = (props) => {
     //   Don't actually restrict selection because flowSlug matching is imperfect for some valid test cases
     const flowSlug = window.location.pathname?.split("/")?.[1];
     if (
-      value === Destination.BOPS && 
+      value === Destination.BOPS &&
       newCheckedValues.includes(value) &&
-      !["apply-for-a-lawful-development-certificate", "apply-for-prior-approval", "apply-for-planning-permission"].includes(flowSlug)
+      ![
+        "apply-for-a-lawful-development-certificate",
+        "apply-for-prior-approval",
+        "apply-for-planning-permission",
+      ].includes(flowSlug)
     ) {
-      alert("BOPS only accepts Lawful Development Certificate, Prior Approval, and Planning Permission submissions. Please do not select if you're building another type of submission service!");
+      alert(
+        "BOPS only accepts Lawful Development Certificate, Prior Approval, and Planning Permission submissions. Please do not select if you're building another type of submission service!",
+      );
     }
-    
+
     if (
       value === Destination.Uniform &&
-      newCheckedValues.includes(value) && 
+      newCheckedValues.includes(value) &&
       flowSlug !== "apply-for-a-lawful-development-certificate"
     ) {
-      alert("Uniform only accepts Lawful Development Certificate submissions. Please do not select if you're building another type of submission service!");
+      alert(
+        "Uniform only accepts Lawful Development Certificate submissions. Please do not select if you're building another type of submission service!",
+      );
     }
   };
 
@@ -128,8 +136,9 @@ const SendComponent: React.FC<Props> = (props) => {
           <Box display="flex" mt={2}>
             <Warning titleAccess="Warning" color="primary" fontSize="large" />
             <Typography variant="body2" ml={1}>
-              API tokens may be required to submit successfully. Check in with PlanX developers before launching your
-              service to make sure that submissions are configured for your environment.
+              API tokens may be required to submit successfully. Check in with
+              PlanX developers before launching your service to make sure that
+              submissions are configured for your environment.
             </Typography>
           </Box>
         </ModalSectionContent>

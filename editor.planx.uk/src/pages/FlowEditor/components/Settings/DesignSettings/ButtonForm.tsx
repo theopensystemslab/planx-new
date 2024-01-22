@@ -13,7 +13,10 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { DesignPreview, FormProps, SettingsForm } from ".";
 
-export const ButtonForm: React.FC<FormProps> = ({ formikConfig, onSuccess }) => {
+export const ButtonForm: React.FC<FormProps> = ({
+  formikConfig,
+  onSuccess,
+}) => {
   const theme = useTheme();
   const formik = useFormik<TeamTheme>({
     ...formikConfig,

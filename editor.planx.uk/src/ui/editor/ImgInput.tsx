@@ -8,7 +8,9 @@ import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useState } from "react";
 
-import PublicFileUploadButton, { AcceptedFileTypes } from "../shared/PublicFileUploadButton";
+import PublicFileUploadButton, {
+  AcceptedFileTypes,
+} from "../shared/PublicFileUploadButton";
 
 const ImageUploadContainer = styled(Box)(() => ({
   height: 50,
@@ -50,7 +52,7 @@ export default function ImgInput({
   const handleRemove = () => {
     onChange && onChange(undefined);
     setAnchorEl(null);
-  }
+  };
 
   return img ? (
     <ImageUploadContainer>
@@ -84,11 +86,11 @@ export default function ImgInput({
           Remove
         </MenuItem>
       </Menu>
-      <img 
-        width={50} 
-        height={50} 
-        src={img} 
-        alt="embedded img" 
+      <img
+        width={50}
+        height={50}
+        src={img}
+        alt="embedded img"
         style={{ display: "block", backgroundColor: backgroundColor }}
       />
     </ImageUploadContainer>

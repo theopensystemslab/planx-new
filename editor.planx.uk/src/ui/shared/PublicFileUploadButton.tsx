@@ -12,7 +12,7 @@ export type AcceptedFileTypes = Record<string, ImageFileExtensions[]>;
 
 export type ImageFileExtensions = ".jpg" | ".jpeg" | ".png" | ".svg" | ".ico";
 
-export const DEFAULT_FILETYPES: AcceptedFileTypes = { 
+export const DEFAULT_FILETYPES: AcceptedFileTypes = {
   "image/*": [".jpg", ".jpeg", ".png", ".svg"],
 };
 

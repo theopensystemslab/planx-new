@@ -91,7 +91,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 
 const DesignSettings: React.FC = () => {
   const isUsingFeatureFlag = hasFeatureFlag("SHOW_TEAM_SETTINGS");
-  const [formikConfig, setFormikConfig] = useState<FormikConfig<TeamTheme> | undefined>(undefined);
+  const [formikConfig, setFormikConfig] = useState<
+    FormikConfig<TeamTheme> | undefined
+  >(undefined);
 
   /**
    * Fetch current team and setup shared form config
@@ -117,7 +119,6 @@ const DesignSettings: React.FC = () => {
 
     fetchTeam();
   }, []);
-
 
   const [open, setOpen] = useState(false);
 
@@ -150,14 +151,17 @@ const DesignSettings: React.FC = () => {
         </EditorRow>
       ) : (
         <>
-          {formikConfig &&
+          {formikConfig && (
             <>
-              <ThemeAndLogoForm formikConfig={formikConfig} onSuccess={onSuccess} />
+              <ThemeAndLogoForm
+                formikConfig={formikConfig}
+                onSuccess={onSuccess}
+              />
               <ButtonForm formikConfig={formikConfig} onSuccess={onSuccess} />
               <TextLinkForm formikConfig={formikConfig} onSuccess={onSuccess} />
               <FaviconForm formikConfig={formikConfig} onSuccess={onSuccess} />
             </>
-          }
+          )}
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert
               onClose={handleClose}
