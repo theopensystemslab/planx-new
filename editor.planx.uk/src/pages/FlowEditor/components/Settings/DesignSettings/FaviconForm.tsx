@@ -1,42 +1,18 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { Team, TeamTheme } from "@opensystemslab/planx-core/types";
+import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ImgInput from "ui/editor/ImgInput";
 import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { SettingsForm } from ".";
+import { FormProps, SettingsForm } from ".";
 
-type FormValues = Pick<TeamTheme, "favicon">;
-
-export const FaviconForm: React.FC<{ team: Team, onSuccess: () => void }> = ({ team, onSuccess }) => {
-  useEffect(() => {
-    setInitialValues({ favicon: team.theme?.favicon || "" });
-  }, [team]);
-
-  const [initialValues, setInitialValues] = useState<FormValues>({
-    favicon: "",
-  });
-
-  const formik = useFormik<FormValues>({
-    initialValues,
-    validateOnBlur: false,
-    validateOnChange: false,
-    enableReinitialize: true,
-    onSubmit: async (values, { resetForm }) => {
-      const isSuccess = await useStore.getState().updateTeamTheme(values);
-      if (isSuccess) {
-        onSuccess();
-        // Reset "dirty" status to disable Save & Reset buttons
-        resetForm({ values });
-      }
-    },
-  });
+export const FaviconForm: React.FC<FormProps> = ({ formikConfig }) => {
+  const formik = useFormik<TeamTheme>(formikConfig);
 
   const updateFavicon = (newFile: string | undefined) => newFile 
     ? formik.setFieldValue("favicon", newFile)
