@@ -1,5 +1,6 @@
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
+import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
@@ -8,7 +9,7 @@ interface Props {
   subtitle?: string;
   children?: JSX.Element[] | JSX.Element;
   author?: string;
-  Icon?: any;
+  Icon?: typeof SvgIcon;
 }
 
 const SectionContentGrid = styled(Grid)(({ theme }) => ({

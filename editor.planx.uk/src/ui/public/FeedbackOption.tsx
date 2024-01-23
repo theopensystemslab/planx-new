@@ -1,12 +1,13 @@
 import EastIcon from "@mui/icons-material/East";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
+import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
 interface Props {
   label: string;
-  icon?: any;
+  Icon?: typeof SvgIcon;
   showArrow?: boolean;
   format?: "positive" | "negative";
 }
@@ -61,9 +62,9 @@ const ArrowButton = styled("span")(({ theme }) => ({
 export default function FeedbackOption(props: Props): FCReturn {
   return (
     <Root {...props}>
-      {props.icon && (
+      {props.Icon && (
         <Icon className="buttonIcon">
-          <props.icon />
+          <props.Icon />
         </Icon>
       )}
       <Label variant="h4" component="span">

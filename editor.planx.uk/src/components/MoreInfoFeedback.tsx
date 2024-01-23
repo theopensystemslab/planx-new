@@ -36,11 +36,11 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           </Typography>
           <FeedbackBody>
             <FeedbackOption
-              icon={CheckCircleIcon}
+              Icon={CheckCircleIcon}
               label="Yes"
               format="positive"
             />
-            <FeedbackOption icon={CancelIcon} label="No" format="negative" />
+            <FeedbackOption Icon={CancelIcon} label="No" format="negative" />
           </FeedbackBody>
         </Container>
       </MoreInfoFeedback>

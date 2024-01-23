@@ -11,7 +11,7 @@ interface Props {
   children: JSX.Element[] | JSX.Element;
   label?: string;
   grow?: boolean;
-  deleteInputGroup?: any;
+  deleteInputGroup?: () => void;
   deletable?: boolean;
   draggable?: boolean;
   flowSpacing?: boolean;
