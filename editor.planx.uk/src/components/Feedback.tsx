@@ -67,48 +67,26 @@ const FeedbackForm = styled("form")(({ theme }) => ({
 }));
 
 const FeedbackComponent: React.FC = () => {
-  enum View {
-    PhaseBanner,
-    FeedbackTriage,
-    ReportAnIssue,
-    ShareAnIdea,
-    ShareAComment,
-    ThanksForFeedback,
-  }
+  type FeedbackCategory = "issue" | "idea" | "comment";
 
-  enum ClickEvents {
-    Close,
-    Back,
-    OpenTriage,
-    OpenReportAnIssue,
-    OpenShareAnIdea,
-    OpenShareAComment,
-  }
+  type View = "banner" | "triage" | FeedbackCategory | "thanks";
 
-  const [currentFeedbackView, setCurrentFeedbackView] = useState<View>(
-    View.PhaseBanner,
-  );
+  type ClickEvents = "close" | "back" | "triage" | FeedbackCategory;
+
+  const [currentFeedbackView, setCurrentFeedbackView] =
+    useState<View>("banner");
   const previousFeedbackView = usePrevious(currentFeedbackView);
 
   function handleFeedbackViewClick(event: ClickEvents) {
     switch (event) {
-      case ClickEvents.Close:
-        setCurrentFeedbackView(View.PhaseBanner);
+      case "close":
+        setCurrentFeedbackView("banner");
         break;
-      case ClickEvents.Back:
-        setCurrentFeedbackView(View.FeedbackTriage);
+      case "back":
+        setCurrentFeedbackView("triage");
         break;
-      case ClickEvents.OpenTriage:
-        setCurrentFeedbackView(View.FeedbackTriage);
-        break;
-      case ClickEvents.OpenReportAnIssue:
-        setCurrentFeedbackView(View.ReportAnIssue);
-        break;
-      case ClickEvents.OpenShareAnIdea:
-        setCurrentFeedbackView(View.ShareAnIdea);
-        break;
-      case ClickEvents.OpenShareAComment:
-        setCurrentFeedbackView(View.ShareAComment);
+      default:
+        setCurrentFeedbackView(event);
         break;
     }
   }
@@ -125,17 +103,17 @@ const FeedbackComponent: React.FC = () => {
     console.log("The user inputs", formDataPayload);
     // Prep the form data payload?
 
-    setCurrentFeedbackView(View.ThanksForFeedback);
+    setCurrentFeedbackView("thanks");
   };
 
   function BackAndCloseFeedbackHeader(): FCReturn {
     return (
       <FeedbackHeader>
-        <BackButton onClick={() => handleFeedbackViewClick(ClickEvents.Back)}>
+        <BackButton onClick={() => handleFeedbackViewClick("back")}>
           <ArrowBackIcon fontSize="small" />
           Back
         </BackButton>
-        <CloseButton onClick={() => handleFeedbackViewClick(ClickEvents.Close)}>
+        <CloseButton onClick={() => handleFeedbackViewClick("close")}>
           <IconButton
             role="button"
             title="Close panel"
@@ -164,7 +142,7 @@ const FeedbackComponent: React.FC = () => {
             {props.title}
           </Typography>
         </FeedbackTitle>
-        <CloseButton onClick={() => handleFeedbackViewClick(ClickEvents.Close)}>
+        <CloseButton onClick={() => handleFeedbackViewClick("close")}>
           <IconButton
             role="button"
             title="Close panel"
@@ -180,7 +158,7 @@ const FeedbackComponent: React.FC = () => {
   }
 
   function ReportAnIssueTopBar(): FCReturn {
-    if (previousFeedbackView === View.PhaseBanner) {
+    if (previousFeedbackView === "banner") {
       return (
         <TitleAndCloseFeedbackHeader
           icon={WarningIcon}
@@ -205,12 +183,8 @@ const FeedbackComponent: React.FC = () => {
     return (
       <FeedbackWrapper>
         <FeedbackPhaseBanner
-          handleFeedbackClick={() =>
-            handleFeedbackViewClick(ClickEvents.OpenTriage)
-          }
-          handleReportAnIssueClick={() =>
-            handleFeedbackViewClick(ClickEvents.OpenReportAnIssue)
-          }
+          handleFeedbackClick={() => handleFeedbackViewClick("triage")}
+          handleReportAnIssueClick={() => handleFeedbackViewClick("issue")}
         />
       </FeedbackWrapper>
     );
@@ -224,25 +198,19 @@ const FeedbackComponent: React.FC = () => {
             <TitleAndCloseFeedbackHeader title="What would you like to share?" />
             <FeedbackBody>
               <FeedbackOption
-                handleClick={() =>
-                  handleFeedbackViewClick(ClickEvents.OpenReportAnIssue)
-                }
+                handleClick={() => handleFeedbackViewClick("issue")}
                 Icon={WarningIcon}
                 label="Issue"
                 showArrow
               />
               <FeedbackOption
-                handleClick={() =>
-                  handleFeedbackViewClick(ClickEvents.OpenShareAnIdea)
-                }
+                handleClick={() => handleFeedbackViewClick("idea")}
                 Icon={LightbulbIcon}
                 label="Idea"
                 showArrow
               />
               <FeedbackOption
-                handleClick={() =>
-                  handleFeedbackViewClick(ClickEvents.OpenShareAComment)
-                }
+                handleClick={() => handleFeedbackViewClick("comment")}
                 Icon={MoreHorizIcon}
                 label="Comment"
                 showArrow
@@ -393,17 +361,17 @@ const FeedbackComponent: React.FC = () => {
 
   function Feedback(): FCReturn {
     switch (currentFeedbackView) {
-      case View.PhaseBanner:
+      case "banner":
         return <FeedbackPhaseBannerView />;
-      case View.FeedbackTriage:
+      case "triage":
         return <FeedbackTriage />;
-      case View.ReportAnIssue:
+      case "issue":
         return <FeedbackReportAnIssue />;
-      case View.ShareAnIdea:
+      case "idea":
         return <FeedbackShareAnIdea />;
-      case View.ShareAComment:
+      case "comment":
         return <FeedbackShareAComment />;
-      case View.ThanksForFeedback:
+      case "thanks":
         return <FeedbackThanksForFeedback />;
     }
   }
