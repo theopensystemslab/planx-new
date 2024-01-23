@@ -44,8 +44,12 @@ export const ButtonForm: React.FC<FormProps> = ({
             the selected colour (being either black or white).
           </InputDescription>
           <InputDescription>
-            <Link href="#">
-              See our guide for setting button colours (TODO)
+            <Link
+              href="https://opensystemslab.notion.site/10-Customise-the-appearance-of-your-services-3811fe9707534f6cbc0921fc44a2b193"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              See our guide for setting button colours
             </Link>
           </InputDescription>
         </>

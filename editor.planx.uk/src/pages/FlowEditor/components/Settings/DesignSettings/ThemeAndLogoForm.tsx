@@ -66,7 +66,11 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
             (your theme colour) and have a transparent background.
           </InputDescription>
           <InputDescription>
-            <Link href="https://www.planx.uk">
+            <Link
+              href="https://opensystemslab.notion.site/10-Customise-the-appearance-of-your-services-3811fe9707534f6cbc0921fc44a2b193"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               See our guide for setting theme colours and logos
             </Link>
           </InputDescription>
