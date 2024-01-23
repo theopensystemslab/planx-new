@@ -53,8 +53,12 @@ export const TextLinkForm: React.FC<FormProps> = ({
             white ("#ffffff").
           </InputDescription>
           <InputDescription>
-            <Link href="#">
-              See our guide for setting text link colours (TODO)
+            <Link
+              href="https://opensystemslab.notion.site/10-Customise-the-appearance-of-your-services-3811fe9707534f6cbc0921fc44a2b193"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              See our guide for setting text link colours
             </Link>
           </InputDescription>
         </>

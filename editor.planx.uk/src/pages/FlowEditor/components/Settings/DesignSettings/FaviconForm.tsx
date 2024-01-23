@@ -46,7 +46,13 @@ export const FaviconForm: React.FC<FormProps> = ({
             32x32px and in .ico or .png format.
           </InputDescription>
           <InputDescription>
-            <Link href="#">See our guide for favicons (TODO)</Link>
+            <Link
+              href="https://opensystemslab.notion.site/10-Customise-the-appearance-of-your-services-3811fe9707534f6cbc0921fc44a2b193"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              See our guide for favicons
+            </Link>
           </InputDescription>
         </>
       }
