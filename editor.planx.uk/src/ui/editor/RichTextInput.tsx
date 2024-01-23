@@ -497,7 +497,7 @@ const RichTextInput: FC<Props> = (props) => {
           tippyOptions={{
             duration: 100,
             // Hack to "stop" transition of BubbleMenu
-            moveTransition: "transform 600s"
+            moveTransition: "transform 600s",
           }}
           className="bubble-menu"
         >

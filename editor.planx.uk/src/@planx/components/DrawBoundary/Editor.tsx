@@ -16,11 +16,7 @@ import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
 import type { DrawBoundary } from "./model";
-import {
-  DEFAULT_TITLE,
-  DEFAULT_TITLE_FOR_UPLOADING,
-  parseDrawBoundary,
-} from "./model";
+import { parseDrawBoundary } from "./model";
 
 export type Props = EditorProps<TYPES.DrawBoundary, DrawBoundary>;
 
@@ -46,7 +42,7 @@ function DrawBoundaryComponent(props: Props) {
           <InputRow>
             <Input
               format="large"
-              placeholder={DEFAULT_TITLE}
+              placeholder={props.node?.data?.title}
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
@@ -84,13 +80,13 @@ function DrawBoundaryComponent(props: Props) {
           </InputGroup>
         </ModalSectionContent>
         <ModalSectionContent
-          title={DEFAULT_TITLE_FOR_UPLOADING}
+          title={props.node?.data?.titleForUploading}
           Icon={ICONS[TYPES.DrawBoundary]}
         >
           <InputRow>
             <Input
               format="large"
-              placeholder={DEFAULT_TITLE_FOR_UPLOADING}
+              placeholder={props.node?.data?.titleForUploading}
               name="titleForUploading"
               value={formik.values.titleForUploading}
               onChange={formik.handleChange}
