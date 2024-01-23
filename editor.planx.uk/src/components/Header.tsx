@@ -400,10 +400,11 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef, route }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [togglePreview, user, team] = useStore((state) => [
+  const [togglePreview, user, team, canUserEditTeam] = useStore((state) => [
     state.togglePreview,
     state.getUser(),
     state.getTeam(),
+    state.canUserEditTeam,
   ]);
 
   const handleClose = () => {
@@ -413,6 +414,9 @@ const EditorToolbar: React.FC<{
   const handleMenuToggle = () => {
     setOpen(!open);
   };
+
+  const isTeamSettingsVisible =
+    route.data.team && !route.data.flow && canUserEditTeam(team.slug);
 
   return (
     <>
@@ -496,7 +500,7 @@ const EditorToolbar: React.FC<{
             )}
 
             {/* Only show team settings link if inside a team route  */}
-            {route.data.team && !route.data.flow && (
+            {isTeamSettingsVisible && (
               <MenuItem onClick={() => navigate(`${rootTeamPath()}/settings`)}>
                 Team Settings
               </MenuItem>
