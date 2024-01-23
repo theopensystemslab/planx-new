@@ -415,8 +415,14 @@ const EditorToolbar: React.FC<{
     setOpen(!open);
   };
 
+  const isFlowSettingsVisible =
+    route.data.flow && !route.data.flow && canUserEditTeam(team.slug);
+
   const isTeamSettingsVisible =
     route.data.team && !route.data.flow && canUserEditTeam(team.slug);
+
+  const isGlobalSettingsVisible =
+    !route.data.flow && !team.slug && user?.isPlatformAdmin;
 
   return (
     <>
@@ -507,7 +513,7 @@ const EditorToolbar: React.FC<{
             )}
 
             {/* Only show flow settings link if inside a flow route  */}
-            {route.data.flow && (
+            {isFlowSettingsVisible && (
               <MenuItem
                 onClick={() =>
                   navigate([rootFlowPath(true), "settings"].join("/"))
@@ -518,7 +524,7 @@ const EditorToolbar: React.FC<{
             )}
 
             {/* Only show global settings link from top-level admin view */}
-            {!route.data.flow && !team.slug && (
+            {isGlobalSettingsVisible && (
               <MenuItem onClick={() => navigate("/global-settings")}>
                 Global Settings
               </MenuItem>
