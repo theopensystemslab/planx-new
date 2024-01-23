@@ -140,9 +140,11 @@ export async function buildSubmissionExportZip({
     });
 
     // generate and add an HTML boundary document for the submission to zip
+    const userAction = passport.data?.["drawBoundary.action"];
     const boundaryHTML = generateMapHTML({
       geojson,
       boundingBox,
+      userAction,
     });
     await zip.addFile({
       name: "LocationPlan.htm",
