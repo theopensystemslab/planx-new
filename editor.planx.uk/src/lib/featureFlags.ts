@@ -5,14 +5,14 @@ const AVAILABLE_FEATURE_FLAGS = [
   "SHOW_INTERNAL_FEEDBACK",
 ] as const;
 
-type featureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
+type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
 /**
  * get list of feature flags that have been enabled for this session
  * @returns Set of feature flag strings
  */
 const activeFeatureFlags = (() => {
-  let flags: Set<featureFlag> = new Set();
+  let flags: Set<FeatureFlag> = new Set();
   try {
     const existingFlags = localStorage.getItem("FEATURE_FLAGS");
     if (existingFlags) {
@@ -28,7 +28,7 @@ const activeFeatureFlags = (() => {
  * @param autoReload reload the page after change? default = true
  */
 export const toggleFeatureFlag = (
-  featureFlag: featureFlag,
+  featureFlag: FeatureFlag,
   autoReload = true,
 ) => {
   const supportedFlag = AVAILABLE_FEATURE_FLAGS.includes(featureFlag);
@@ -56,7 +56,7 @@ export const toggleFeatureFlag = (
  * @param flag flag name
  * @returns boolean
  */
-export const hasFeatureFlag = (featureFlag: featureFlag) =>
+export const hasFeatureFlag = (featureFlag: FeatureFlag) =>
   activeFeatureFlags.has(featureFlag);
 
 // add methods to window for easy access in browser console

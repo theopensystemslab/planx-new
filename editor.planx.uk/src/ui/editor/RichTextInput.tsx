@@ -97,7 +97,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
       },
     },
     // Styles for placeholder text, to match ui/Input.tsx
-    "& p.is-editor-empty:first-child::before": {
+    "& p.is-editor-empty:nth-child(1)::before": {
       color: theme.palette.text.secondary,
       opacity: "0.5",
       content: `attr(data-placeholder)`,
@@ -494,7 +494,11 @@ const RichTextInput: FC<Props> = (props) => {
       {editor && (
         <StyledBubbleMenu
           editor={editor}
-          tippyOptions={{ duration: 100 }}
+          tippyOptions={{
+            duration: 100,
+            // Hack to "stop" transition of BubbleMenu
+            moveTransition: "transform 600s",
+          }}
           className="bubble-menu"
         >
           {addingLink ? (

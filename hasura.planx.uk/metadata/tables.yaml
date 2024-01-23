@@ -221,6 +221,46 @@
         url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         version: 2
 - table:
+    name: feedback
+    schema: public
+  object_relationships:
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
+    - name: team
+      using:
+        foreign_key_constraint_on: team_id
+  insert_permissions:
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - address
+          - breadcrumbs
+          - component_metadata
+          - created_at
+          - device
+          - feedback_type
+          - flow_id
+          - help_text
+          - id
+          - node_id
+          - node_text
+          - project_type
+          - status
+          - team_id
+          - user_comment
+          - user_context
+      comment: Allow users who want to leave feedback on their experience to write to the table
+- table:
+    name: feedback_status_enum
+    schema: public
+  is_enum: true
+- table:
+    name: feedback_type_enum
+    schema: public
+  is_enum: true
+- table:
     name: flow_document_templates
     schema: public
   object_relationships:

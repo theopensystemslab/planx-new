@@ -2,6 +2,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput";
 import InputDescription from "ui/editor/InputDescription";
@@ -11,12 +12,28 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { FormProps, SettingsForm } from ".";
 
-export const FaviconForm: React.FC<FormProps> = ({ formikConfig }) => {
-  const formik = useFormik<TeamTheme>(formikConfig);
+export const FaviconForm: React.FC<FormProps> = ({
+  formikConfig,
+  onSuccess,
+}) => {
+  const formik = useFormik<TeamTheme>({
+    ...formikConfig,
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateTeamTheme({
+        favicon: values.favicon,
+      });
+      if (isSuccess) {
+        onSuccess();
+        // Reset "dirty" status to disable Save & Reset buttons
+        resetForm({ values });
+      }
+    },
+  });
 
-  const updateFavicon = (newFile: string | undefined) => newFile 
-    ? formik.setFieldValue("favicon", newFile)
-    : formik.setFieldValue("favicon", null);
+  const updateFavicon = (newFile: string | undefined) =>
+    newFile
+      ? formik.setFieldValue("favicon", newFile)
+      : formik.setFieldValue("favicon", null);
 
   return (
     <SettingsForm
@@ -29,7 +46,13 @@ export const FaviconForm: React.FC<FormProps> = ({ formikConfig }) => {
             32x32px and in .ico or .png format.
           </InputDescription>
           <InputDescription>
-            <Link href="https://www.planx.uk">See our guide for favicons</Link>
+            <Link
+              href="https://opensystemslab.notion.site/10-Customise-the-appearance-of-your-services-3811fe9707534f6cbc0921fc44a2b193"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              See our guide for favicons
+            </Link>
           </InputDescription>
         </>
       }
@@ -37,8 +60,8 @@ export const FaviconForm: React.FC<FormProps> = ({ formikConfig }) => {
         <InputRow>
           <InputRowLabel>Favicon:</InputRowLabel>
           <InputRowItem width={formik.values.favicon ? 90 : 50}>
-            <ImgInput 
-              img={formik.values.favicon || undefined} 
+            <ImgInput
+              img={formik.values.favicon || undefined}
               onChange={updateFavicon}
               acceptedFileTypes={{
                 "image/png": [".png"],
