@@ -12,7 +12,7 @@ export const parseContent = (
   title: data?.title || "About the property",
   description:
     data?.description ||
-    "This is the information we currently have about the property",
+    "This is the information we currently have about the property, including its title boundary shown in blue from the Land Registry",
   showPropertyTypeOverride: data?.showPropertyTypeOverride || false,
   ...parseMoreInformation(data),
 });
