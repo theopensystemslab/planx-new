@@ -92,9 +92,9 @@ const FeedbackComponent: React.FC = () => {
               </CloseButton>
             </FeedbackHeader>
             <FeedbackBody>
-              <FeedbackOption icon={WarningIcon} label="Issue" showArrow />
-              <FeedbackOption icon={LightbulbIcon} label="Idea" showArrow />
-              <FeedbackOption icon={MoreHorizIcon} label="Comment" showArrow />
+              <FeedbackOption Icon={WarningIcon} label="Issue" showArrow />
+              <FeedbackOption Icon={LightbulbIcon} label="Idea" showArrow />
+              <FeedbackOption Icon={MoreHorizIcon} label="Comment" showArrow />
             </FeedbackBody>
           </FeedbackRow>
         </Container>

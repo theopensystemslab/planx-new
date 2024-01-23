@@ -62,7 +62,7 @@ const routes = compose(
           return route({
             title: "Flow Not Found",
             view: <p>Flow Not Found</p>,
-          }) as any;
+          });
         }
 
         useStore.getState().setFlowSlug(slug);

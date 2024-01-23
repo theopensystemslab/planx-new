@@ -3,7 +3,7 @@ import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { ChromePicker } from "react-color";
+import { ChromePicker, ColorChangeHandler } from "react-color";
 
 export interface Props {
   label?: string;
@@ -88,7 +88,7 @@ export default function ColorPicker(props: Props): FCReturn {
     setShow(false);
   };
 
-  const handleChange = (newColor: any) => {
+  const handleChange: ColorChangeHandler = (newColor) => {
     props.onChange && props.onChange(newColor.hex);
   };
 

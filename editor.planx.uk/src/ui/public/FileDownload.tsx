@@ -2,11 +2,12 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { CSVData } from "@planx/components/Send/model";
 import React from "react";
 
 export interface Props {
   filename: string;
-  data: { question: string; responses: any; metadata?: any }[];
+  data: CSVData;
   text?: string;
 }
 

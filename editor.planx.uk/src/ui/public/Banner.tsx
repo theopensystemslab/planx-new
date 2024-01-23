@@ -1,13 +1,14 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled, Theme } from "@mui/material/styles";
+import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 
 interface BannerProps {
   heading?: string;
-  Icon?: any;
+  Icon?: typeof SvgIcon;
   iconTitle?: string;
   color?: { background: string; text: string };
   children?: React.ReactNode;

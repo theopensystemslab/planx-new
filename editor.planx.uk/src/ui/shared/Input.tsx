@@ -1,4 +1,7 @@
-import InputBase, { InputBaseProps } from "@mui/material/InputBase";
+import InputBase, {
+  InputBaseClasses,
+  InputBaseProps,
+} from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
 import React, {
   ChangeEvent,
@@ -16,14 +19,14 @@ import ErrorWrapper from "./ErrorWrapper";
 
 const PREFIX = "Input";
 
-const classes = {
+const classes: Partial<InputBaseClasses> = {
   multiline: `${PREFIX}-multiline`,
   focused: `${PREFIX}-focused`,
 };
 
 export interface Props extends InputBaseProps {
   format?: "large" | "bold" | "data";
-  classes?: any;
+  classes?: InputBaseClasses;
   className?: string;
   grow?: boolean;
   large?: boolean;
