@@ -67,7 +67,7 @@ const FeedbackForm = styled("form")(({ theme }) => ({
 }));
 
 const FeedbackComponent: React.FC = () => {
-  enum FeedbackView {
+  enum View {
     PhaseBanner,
     FeedbackTriage,
     ReportAnIssue,
@@ -76,7 +76,7 @@ const FeedbackComponent: React.FC = () => {
     ThanksForFeedback,
   }
 
-  enum FeedbackViewClickEvents {
+  enum ClickEvents {
     Close,
     Back,
     OpenTriage,
@@ -85,30 +85,30 @@ const FeedbackComponent: React.FC = () => {
     OpenShareAComment,
   }
 
-  const [currentFeedbackView, setCurrentFeedbackView] = useState<FeedbackView>(
-    FeedbackView.PhaseBanner,
+  const [currentFeedbackView, setCurrentFeedbackView] = useState<View>(
+    View.PhaseBanner,
   );
   const previousFeedbackView = usePrevious(currentFeedbackView);
 
-  function handleFeedbackViewClick(event: FeedbackViewClickEvents) {
+  function handleFeedbackViewClick(event: ClickEvents) {
     switch (event) {
-      case FeedbackViewClickEvents.Close:
-        setCurrentFeedbackView(FeedbackView.PhaseBanner);
+      case ClickEvents.Close:
+        setCurrentFeedbackView(View.PhaseBanner);
         break;
-      case FeedbackViewClickEvents.Back:
-        setCurrentFeedbackView(FeedbackView.FeedbackTriage);
+      case ClickEvents.Back:
+        setCurrentFeedbackView(View.FeedbackTriage);
         break;
-      case FeedbackViewClickEvents.OpenTriage:
-        setCurrentFeedbackView(FeedbackView.FeedbackTriage);
+      case ClickEvents.OpenTriage:
+        setCurrentFeedbackView(View.FeedbackTriage);
         break;
-      case FeedbackViewClickEvents.OpenReportAnIssue:
-        setCurrentFeedbackView(FeedbackView.ReportAnIssue);
+      case ClickEvents.OpenReportAnIssue:
+        setCurrentFeedbackView(View.ReportAnIssue);
         break;
-      case FeedbackViewClickEvents.OpenShareAnIdea:
-        setCurrentFeedbackView(FeedbackView.ShareAnIdea);
+      case ClickEvents.OpenShareAnIdea:
+        setCurrentFeedbackView(View.ShareAnIdea);
         break;
-      case FeedbackViewClickEvents.OpenShareAComment:
-        setCurrentFeedbackView(FeedbackView.ShareAComment);
+      case ClickEvents.OpenShareAComment:
+        setCurrentFeedbackView(View.ShareAComment);
         break;
     }
   }
@@ -125,21 +125,17 @@ const FeedbackComponent: React.FC = () => {
     console.log("The user inputs", formDataPayload);
     // Prep the form data payload?
 
-    setCurrentFeedbackView(FeedbackView.ThanksForFeedback);
+    setCurrentFeedbackView(View.ThanksForFeedback);
   };
 
   function BackAndCloseFeedbackHeader(): FCReturn {
     return (
       <FeedbackHeader>
-        <BackButton
-          onClick={() => handleFeedbackViewClick(FeedbackViewClickEvents.Back)}
-        >
+        <BackButton onClick={() => handleFeedbackViewClick(ClickEvents.Back)}>
           <ArrowBackIcon fontSize="small" />
           Back
         </BackButton>
-        <CloseButton
-          onClick={() => handleFeedbackViewClick(FeedbackViewClickEvents.Close)}
-        >
+        <CloseButton onClick={() => handleFeedbackViewClick(ClickEvents.Close)}>
           <IconButton
             role="button"
             title="Close panel"
@@ -168,9 +164,7 @@ const FeedbackComponent: React.FC = () => {
             {props.title}
           </Typography>
         </FeedbackTitle>
-        <CloseButton
-          onClick={() => handleFeedbackViewClick(FeedbackViewClickEvents.Close)}
-        >
+        <CloseButton onClick={() => handleFeedbackViewClick(ClickEvents.Close)}>
           <IconButton
             role="button"
             title="Close panel"
@@ -186,7 +180,7 @@ const FeedbackComponent: React.FC = () => {
   }
 
   function ReportAnIssueTopBar(): FCReturn {
-    if (previousFeedbackView === FeedbackView.PhaseBanner) {
+    if (previousFeedbackView === View.PhaseBanner) {
       return (
         <TitleAndCloseFeedbackHeader
           icon={WarningIcon}
@@ -212,10 +206,10 @@ const FeedbackComponent: React.FC = () => {
       <FeedbackWrapper>
         <FeedbackPhaseBanner
           handleFeedbackClick={() =>
-            handleFeedbackViewClick(FeedbackViewClickEvents.OpenTriage)
+            handleFeedbackViewClick(ClickEvents.OpenTriage)
           }
           handleReportAnIssueClick={() =>
-            handleFeedbackViewClick(FeedbackViewClickEvents.OpenReportAnIssue)
+            handleFeedbackViewClick(ClickEvents.OpenReportAnIssue)
           }
         />
       </FeedbackWrapper>
@@ -231,9 +225,7 @@ const FeedbackComponent: React.FC = () => {
             <FeedbackBody>
               <FeedbackOption
                 handleClick={() =>
-                  handleFeedbackViewClick(
-                    FeedbackViewClickEvents.OpenReportAnIssue,
-                  )
+                  handleFeedbackViewClick(ClickEvents.OpenReportAnIssue)
                 }
                 Icon={WarningIcon}
                 label="Issue"
@@ -241,9 +233,7 @@ const FeedbackComponent: React.FC = () => {
               />
               <FeedbackOption
                 handleClick={() =>
-                  handleFeedbackViewClick(
-                    FeedbackViewClickEvents.OpenShareAnIdea,
-                  )
+                  handleFeedbackViewClick(ClickEvents.OpenShareAnIdea)
                 }
                 Icon={LightbulbIcon}
                 label="Idea"
@@ -251,9 +241,7 @@ const FeedbackComponent: React.FC = () => {
               />
               <FeedbackOption
                 handleClick={() =>
-                  handleFeedbackViewClick(
-                    FeedbackViewClickEvents.OpenShareAComment,
-                  )
+                  handleFeedbackViewClick(ClickEvents.OpenShareAComment)
                 }
                 Icon={MoreHorizIcon}
                 label="Comment"
@@ -405,17 +393,17 @@ const FeedbackComponent: React.FC = () => {
 
   function Feedback(): FCReturn {
     switch (currentFeedbackView) {
-      case FeedbackView.PhaseBanner:
+      case View.PhaseBanner:
         return <FeedbackPhaseBannerView />;
-      case FeedbackView.FeedbackTriage:
+      case View.FeedbackTriage:
         return <FeedbackTriage />;
-      case FeedbackView.ReportAnIssue:
+      case View.ReportAnIssue:
         return <FeedbackReportAnIssue />;
-      case FeedbackView.ShareAnIdea:
+      case View.ShareAnIdea:
         return <FeedbackShareAnIdea />;
-      case FeedbackView.ShareAComment:
+      case View.ShareAComment:
         return <FeedbackShareAComment />;
-      case FeedbackView.ThanksForFeedback:
+      case View.ThanksForFeedback:
         return <FeedbackThanksForFeedback />;
     }
   }
