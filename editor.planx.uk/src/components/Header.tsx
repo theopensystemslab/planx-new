@@ -400,10 +400,11 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef, route }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [togglePreview, user, team] = useStore((state) => [
+  const [togglePreview, user, team, canUserEditTeam] = useStore((state) => [
     state.togglePreview,
     state.getUser(),
     state.getTeam(),
+    state.canUserEditTeam,
   ]);
 
   const handleClose = () => {
@@ -413,6 +414,15 @@ const EditorToolbar: React.FC<{
   const handleMenuToggle = () => {
     setOpen(!open);
   };
+
+  const isFlowSettingsVisible =
+    route.data.flow && !route.data.flow && canUserEditTeam(team.slug);
+
+  const isTeamSettingsVisible =
+    route.data.team && !route.data.flow && canUserEditTeam(team.slug);
+
+  const isGlobalSettingsVisible =
+    !route.data.flow && !team.slug && user?.isPlatformAdmin;
 
   return (
     <>
@@ -496,14 +506,14 @@ const EditorToolbar: React.FC<{
             )}
 
             {/* Only show team settings link if inside a team route  */}
-            {route.data.team && !route.data.flow && (
+            {isTeamSettingsVisible && (
               <MenuItem onClick={() => navigate(`${rootTeamPath()}/settings`)}>
                 Team Settings
               </MenuItem>
             )}
 
             {/* Only show flow settings link if inside a flow route  */}
-            {route.data.flow && (
+            {isFlowSettingsVisible && (
               <MenuItem
                 onClick={() =>
                   navigate([rootFlowPath(true), "settings"].join("/"))
@@ -514,7 +524,7 @@ const EditorToolbar: React.FC<{
             )}
 
             {/* Only show global settings link from top-level admin view */}
-            {!route.data.flow && !team.slug && (
+            {isGlobalSettingsVisible && (
               <MenuItem onClick={() => navigate("/global-settings")}>
                 Global Settings
               </MenuItem>

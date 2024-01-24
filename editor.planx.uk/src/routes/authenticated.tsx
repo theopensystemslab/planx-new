@@ -1,5 +1,13 @@
 import gql from "graphql-tag";
-import { compose, lazy, mount, route, withView } from "navi";
+import {
+  compose,
+  lazy,
+  map,
+  mount,
+  NotFoundError,
+  route,
+  withView,
+} from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -34,22 +42,30 @@ const editorRoutes = compose(
       };
     }),
 
-    "/global-settings": route(async () => {
-      const { data } = await client.query({
-        query: gql`
-          query {
-            globalSettings: global_settings {
-              footerContent: footer_content
-            }
-          }
-        `,
-      });
-      useStore.getState().setGlobalSettings(data.globalSettings[0]);
+    "/global-settings": map(async (req) => {
+      const isAuthorised = useStore.getState().user?.isPlatformAdmin;
+      if (!isAuthorised)
+        throw new NotFoundError(
+          `User does not have access to ${req.originalUrl}`,
+        );
 
-      return {
-        title: makeTitle("Global Settings"),
-        view: <GlobalSettingsView />,
-      };
+      return route(async () => {
+        const { data } = await client.query({
+          query: gql`
+            query {
+              globalSettings: global_settings {
+                footerContent: footer_content
+              }
+            }
+          `,
+        });
+        useStore.getState().setGlobalSettings(data.globalSettings[0]);
+
+        return {
+          title: makeTitle("Global Settings"),
+          view: <GlobalSettingsView />,
+        };
+      });
     }),
 
     "/:team": lazy(() => import("./team")),
