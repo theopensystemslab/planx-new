@@ -46,8 +46,8 @@ dependencies:
     specifier: ^0.7.9
     version: 0.7.9
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#4b625d9
-    version: github.com/theopensystemslab/planx-core/4b625d9(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#0ab281d
+    version: github.com/theopensystemslab/planx-core/0ab281d(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -12075,8 +12075,8 @@ packages:
     resolution: {integrity: sha512-HPtaa38cPgWvaCFmRNhlc6NG7pv6NUHqjPgVAkWGoB9mQMwYB27/K0CvOM5Czy+qpT3e8XJ6Q4aPAnzpNpzNaw==}
     dev: false
 
-  /fast-xml-parser@4.3.2:
-    resolution: {integrity: sha512-rmrXUXwbJedoXkStenj1kkljNF7ugn5ZjR9FJcwmCfcCbtOMDghPajbc+Tck6vE6F5XsDmx+Pr2le9fw8+pXBg==}
+  /fast-xml-parser@4.3.3:
+    resolution: {integrity: sha512-coV/D1MhrShMvU6D0I+VAK3umz6hUaxxhL0yp/9RjfiYUfAv14rDhGQL+PLForhMdr0wq3PiV07WtkkNjJjNHg==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
@@ -14488,8 +14488,8 @@ packages:
   /json-parse-even-better-errors@2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
 
-  /json-schema-to-typescript@13.1.1:
-    resolution: {integrity: sha512-F3CYhtA7F3yPbb8vF7sFchk/2dnr1/yTKf8RcvoNpjnh67ZS/ZMH1ElLt5KHAtf2/bymiejLQQszszPWEeTdSw==}
+  /json-schema-to-typescript@13.1.2:
+    resolution: {integrity: sha512-17G+mjx4nunvOpkPvcz7fdwUwYCEwyH8vR3Ym3rFiQ8uzAL3go+c1306Kk7iGRk8HuXBXqy+JJJmpYl0cvOllw==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     dependencies:
@@ -17062,8 +17062,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier@3.1.1:
-    resolution: {integrity: sha512-22UbSzg8luF4UuZtzgiUOfcGM8s4tjBv6dJRT7j275NXsy2jb4aJa4NNveul5x4eqlF1wuhuR2RElK71RvmVaw==}
+  /prettier@3.2.4:
+    resolution: {integrity: sha512-FWu1oLHKCrtpO1ypU6J0SbK2d9Ckwysq6bHj/uaCP26DxrPpppCLQRGVuqAxSTvhF00AcvDRyYrLNW7ocBhFFQ==}
     engines: {node: '>=14'}
     hasBin: true
     dev: false
@@ -21153,9 +21153,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/4b625d9(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4b625d9}
-    id: github.com/theopensystemslab/planx-core/4b625d9
+  github.com/theopensystemslab/planx-core/0ab281d(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0ab281d}
+    id: github.com/theopensystemslab/planx-core/0ab281d
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -21171,10 +21171,10 @@ packages:
       copyfiles: 2.4.1
       docx: 8.5.0
       eslint: 8.56.0
-      fast-xml-parser: 4.3.2
+      fast-xml-parser: 4.3.3
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
-      json-schema-to-typescript: 13.1.1
+      json-schema-to-typescript: 13.1.2
       lodash.capitalize: 4.2.1
       lodash.get: 4.4.2
       lodash.groupby: 4.6.0
@@ -21186,7 +21186,7 @@ packages:
       lodash.set: 4.3.2
       lodash.startcase: 4.4.0
       marked: 11.1.1
-      prettier: 3.1.1
+      prettier: 3.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       type-fest: 4.9.0

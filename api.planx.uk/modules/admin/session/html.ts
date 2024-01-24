@@ -2,6 +2,7 @@ import { generateApplicationHTML } from "@opensystemslab/planx-core";
 import { $api } from "../../../client";
 import type { RequestHandler } from "express";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
+import { DrawBoundaryUserAction } from "@opensystemslab/planx-core/dist/templates/html/map/Map";
 
 type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;
 
@@ -27,10 +28,14 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
     const boundingBox = session.data.passport.data[
       "property.boundary.site.buffered"
     ] as unknown as GeoJSON.Feature;
+    const userAction = session.data.passport.data?.[
+      "drawBoundary.action"
+    ] as unknown as DrawBoundaryUserAction | undefined;
 
     const html = generateApplicationHTML({
       planXExportData: responses as PlanXExportData[],
       boundingBox,
+      userAction,
     });
 
     res.header("Content-type", "text/html");
@@ -70,10 +75,14 @@ export const getRedactedHTMLExport: HTMLExportHandler = async (
     const boundingBox = session.data.passport.data[
       "property.boundary.site.buffered"
     ] as unknown as GeoJSON.Feature;
+    const userAction = session.data.passport.data?.[
+      "drawBoundary.action"
+    ] as unknown as DrawBoundaryUserAction | undefined;
 
     const html = generateApplicationHTML({
       planXExportData: redactedResponses as PlanXExportData[],
       boundingBox,
+      userAction,
     });
 
     res.header("Content-type", "text/html");
