@@ -27,33 +27,24 @@ const FeedbackBody = styled(Box)(({ theme }) => ({
 }));
 
 const MoreInfoFeedbackComponent: React.FC = () => {
-  enum FeedbackView {
-    YesNo,
-    Input,
-    ThankYou,
-  }
+  type View = "yes/no" | "input" | "thanks";
 
-  enum FeedbackSentimentOption {
-    Yes,
-    No,
-  }
+  type Sentiment = "helpful" | "unhelpful";
 
-  const [currentFeedbackView, setCurrentFeedbackView] = useState(
-    FeedbackView.YesNo,
-  );
-  const [feedbackOption, setFeedbackOption] =
-    useState<FeedbackSentimentOption | null>(null);
+  const [currentFeedbackView, setCurrentFeedbackView] =
+    useState<View>("yes/no");
+  const [feedbackOption, setFeedbackOption] = useState<Sentiment | null>(null);
 
-  const handleFeedbackOptionClick = (event: FeedbackSentimentOption) => {
+  const handleFeedbackOptionClick = (event: Sentiment) => {
     switch (event) {
-      case FeedbackSentimentOption.Yes:
-        setCurrentFeedbackView(FeedbackView.Input);
-        setFeedbackOption(FeedbackSentimentOption.Yes);
+      case "helpful":
+        setCurrentFeedbackView("input");
+        setFeedbackOption("helpful");
         break;
 
-      case FeedbackSentimentOption.No:
-        setCurrentFeedbackView(FeedbackView.Input);
-        setFeedbackOption(FeedbackSentimentOption.No);
+      case "unhelpful":
+        setCurrentFeedbackView("input");
+        setFeedbackOption("unhelpful");
         break;
     }
   };
@@ -73,7 +64,7 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     console.log("The user inputs", formDataPayload);
     // Prep the form data payload?
 
-    setCurrentFeedbackView(FeedbackView.ThankYou);
+    setCurrentFeedbackView("thanks");
   };
 
   function FeedbackYesNo(): FCReturn {
@@ -85,17 +76,13 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           </Typography>
           <FeedbackBody>
             <FeedbackOption
-              handleClick={() =>
-                handleFeedbackOptionClick(FeedbackSentimentOption.Yes)
-              }
+              handleClick={() => handleFeedbackOptionClick("helpful")}
               Icon={CheckCircleIcon}
               label="Yes"
               format="positive"
             />
             <FeedbackOption
-              handleClick={() =>
-                handleFeedbackOptionClick(FeedbackSentimentOption.No)
-              }
+              handleClick={() => handleFeedbackOptionClick("unhelpful")}
               Icon={CancelIcon}
               label="No"
               format="negative"
@@ -153,13 +140,13 @@ const MoreInfoFeedbackComponent: React.FC = () => {
 
   function MoreInfoFeedbackView(): FCReturn {
     switch (currentFeedbackView) {
-      case FeedbackView.YesNo:
+      case "yes/no":
         return <FeedbackYesNo />;
 
-      case FeedbackView.Input:
+      case "input":
         return <FeedbackInput />;
 
-      case FeedbackView.ThankYou:
+      case "thanks":
         return <FeedbackThankYou />;
     }
   }
