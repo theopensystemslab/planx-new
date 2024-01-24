@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import FeedbackPhaseBanner from "components/FeedbackPhaseBanner";
@@ -130,14 +131,14 @@ const FeedbackComponent: React.FC = () => {
 
   interface TitleAndCloseProps {
     title: string;
-    icon?: any;
+    Icon?: typeof SvgIcon;
   }
 
   function TitleAndCloseFeedbackHeader(props: TitleAndCloseProps): FCReturn {
     return (
       <FeedbackHeader>
         <FeedbackTitle>
-          {props.icon && <props.icon />}
+          {props.Icon && <props.Icon />}
           <Typography variant="h3" component="h2">
             {props.title}
           </Typography>
@@ -161,7 +162,7 @@ const FeedbackComponent: React.FC = () => {
     if (previousFeedbackView === "banner") {
       return (
         <TitleAndCloseFeedbackHeader
-          icon={WarningIcon}
+          Icon={WarningIcon}
           title="Report an issue"
         />
       );
