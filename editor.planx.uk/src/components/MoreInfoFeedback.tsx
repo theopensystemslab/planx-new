@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import React from "react";
+import React, { useState } from "react";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import FeedbackOption from "ui/public/FeedbackOption";
 import Input from "ui/shared/Input";
@@ -27,8 +27,48 @@ const FeedbackBody = styled(Box)(({ theme }) => ({
 }));
 
 const MoreInfoFeedbackComponent: React.FC = () => {
-  return (
-    <>
+  type View = "yes/no" | "input" | "thanks";
+
+  type Sentiment = "helpful" | "unhelpful";
+
+  const [currentFeedbackView, setCurrentFeedbackView] =
+    useState<View>("yes/no");
+  const [feedbackOption, setFeedbackOption] = useState<Sentiment | null>(null);
+
+  const handleFeedbackOptionClick = (event: Sentiment) => {
+    switch (event) {
+      case "helpful":
+        setCurrentFeedbackView("input");
+        setFeedbackOption("helpful");
+        break;
+
+      case "unhelpful":
+        setCurrentFeedbackView("input");
+        setFeedbackOption("unhelpful");
+        break;
+    }
+  };
+
+  const handleFeedbackFormSubmit = (e: any) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const formDataPayload: any = {};
+
+    for (const [key, value] of formData.entries()) {
+      formDataPayload[key] = value;
+    }
+
+    console.log("The users selection", feedbackOption);
+
+    console.log("The user inputs", formDataPayload);
+    // Prep the form data payload?
+
+    setCurrentFeedbackView("thanks");
+  };
+
+  function FeedbackYesNo(): FCReturn {
+    return (
       <MoreInfoFeedback>
         <Container maxWidth={false}>
           <Typography variant="h4" component="h3" gutterBottom>
@@ -36,32 +76,52 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           </Typography>
           <FeedbackBody>
             <FeedbackOption
+              onClick={() => handleFeedbackOptionClick("helpful")}
               Icon={CheckCircleIcon}
               label="Yes"
               format="positive"
             />
-            <FeedbackOption Icon={CancelIcon} label="No" format="negative" />
+            <FeedbackOption
+              onClick={() => handleFeedbackOptionClick("unhelpful")}
+              Icon={CancelIcon}
+              label="No"
+              format="negative"
+            />
           </FeedbackBody>
         </Container>
       </MoreInfoFeedback>
+    );
+  }
 
+  function FeedbackInput(): FCReturn {
+    return (
       <MoreInfoFeedback>
         <Container maxWidth={false}>
           <Typography variant="h4" component="h3" gutterBottom>
             Please help us to improve this service by sharing feedback
           </Typography>
           <FeedbackBody>
-            <form>
-              <Input multiline bordered aria-describedby="comment-title" />
+            <form onSubmit={(e) => handleFeedbackFormSubmit(e)}>
+              <Input
+                name="userComment"
+                required
+                multiline
+                bordered
+                aria-describedby="comment-title"
+              />
               <FeedbackDisclaimer />
-              <Button variant="contained" sx={{ marginTop: 2.5 }}>
+              <Button type="submit" variant="contained" sx={{ marginTop: 2.5 }}>
                 Send feedback
               </Button>
             </form>
           </FeedbackBody>
         </Container>
       </MoreInfoFeedback>
+    );
+  }
 
+  function FeedbackThankYou(): FCReturn {
+    return (
       <MoreInfoFeedback>
         <Container maxWidth={false}>
           <Typography variant="h4" component="h3" gutterBottom>
@@ -75,8 +135,23 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           </FeedbackBody>
         </Container>
       </MoreInfoFeedback>
-    </>
-  );
+    );
+  }
+
+  function MoreInfoFeedbackView(): FCReturn {
+    switch (currentFeedbackView) {
+      case "yes/no":
+        return <FeedbackYesNo />;
+
+      case "input":
+        return <FeedbackInput />;
+
+      case "thanks":
+        return <FeedbackThankYou />;
+    }
+  }
+
+  return <MoreInfoFeedbackView />;
 };
 
 export default MoreInfoFeedbackComponent;

@@ -10,6 +10,7 @@ interface Props {
   Icon?: typeof SvgIcon;
   showArrow?: boolean;
   format?: "positive" | "negative";
+  onClick: () => void;
 }
 
 const Root = styled(Button, {

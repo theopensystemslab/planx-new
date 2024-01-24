@@ -43,7 +43,12 @@ const BetaFlag = styled(Box)(({ theme }) => ({
   },
 }));
 
-export default function FeedbackPhaseBanner(): FCReturn {
+interface Props {
+  handleFeedbackClick: () => void;
+  handleReportAnIssueClick: () => void;
+}
+
+export default function PhaseBanner(props: Props): FCReturn {
   return (
     <Root>
       <Container maxWidth="contentWrap">
@@ -71,11 +76,14 @@ export default function FeedbackPhaseBanner(): FCReturn {
               textAlign="left"
               mt="0.2em"
             >
-              This is a new service. Your <Link>feedback</Link> will help us
-              improve it.
+              This is a new service. Your{" "}
+              <Link onClick={() => props.handleFeedbackClick()}>feedback</Link>{" "}
+              will help us improve it.
             </Typography>
           </PhaseWrap>
-          <ReportButton>Report an issue with this page</ReportButton>
+          <ReportButton onClick={() => props.handleReportAnIssueClick()}>
+            Report an issue with this page
+          </ReportButton>
         </Inner>
       </Container>
     </Root>
