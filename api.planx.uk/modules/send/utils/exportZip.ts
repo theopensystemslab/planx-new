@@ -136,7 +136,7 @@ export async function buildSubmissionExportZip({
   // add an optional GeoJSON file to zip
   const geojson = passport?.data?.["property.boundary.site"];
   if (geojson) {
-    geojson["properties"]["planx_user_action"] = userAction;
+    if (userAction) geojson["properties"]["planx_user_action"] = userAction;
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
     zip.addFile({
       name: "LocationPlanGeoJSON.geojson",
