@@ -62,6 +62,7 @@ export const FaviconForm: React.FC<FormProps> = ({
           <InputRowItem width={formik.values.favicon ? 90 : 50}>
             <ImgInput
               img={formik.values.favicon || undefined}
+              backgroundColor={formik.values.primaryColour}
               onChange={updateFavicon}
               acceptedFileTypes={{
                 "image/png": [".png"],
