@@ -17,7 +17,11 @@ const Root = styled(Box)(({ theme }) => ({
 }));
 
 // Render a button which lets the applicant download their application data as a CSV
-export default function FileDownload(props: Props): FCReturn {
+export default function FileDownload({
+  data,
+  filename,
+  text,
+}: Props): FCReturn {
   const downloadCsv = (filename: string, content: string) => {
     const csv = "data:text/csv;charset=utf-8," + content;
     const data = encodeURI(csv);
@@ -39,15 +43,15 @@ export default function FileDownload(props: Props): FCReturn {
               Accept: "application/json",
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(props.data),
+            body: JSON.stringify({ data }),
           })
             .then((res) => res.text())
-            .then((data) => downloadCsv(props.filename, data))
+            .then((data) => downloadCsv(filename, data))
             .catch((error) => console.log(error));
         }}
       >
         <Typography variant="body2">
-          {props.text || "Download your application (.csv)"}
+          {text || "Download your application (.csv)"}
         </Typography>
       </Link>
     </Root>
