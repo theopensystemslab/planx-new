@@ -411,7 +411,7 @@ function DrawBoundary(props: ComponentProps) {
               geojsonData={JSON.stringify(geodata)}
               geojsonColor="#ff0000"
               geojsonFill
-              geojsonBuffer="20"
+              geojsonBuffer={20}
               osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
               hideResetControl
               staticMode

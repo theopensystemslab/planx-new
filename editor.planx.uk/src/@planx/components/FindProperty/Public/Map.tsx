@@ -126,7 +126,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           drawType="Point"
           geojsonData={JSON.stringify(props?.boundary)}
           geojsonColor="#efefef"
-          geojsonBuffer="10"
+          geojsonBuffer={10}
           resetControlImage="trash"
           showScale
           showNorthArrow
