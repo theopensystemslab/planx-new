@@ -63,7 +63,7 @@ const OptionEditor: React.FC<{
         ) : null}
         <InputRowItem width="50%">
           <Input
-            // required
+            required
             format="bold"
             value={props.value.data.text || ""}
             onChange={(ev) => {
@@ -155,6 +155,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 <Box display="flex" pb={1}>
                   <InputRow>
                     <Input
+                      required
                       format="bold"
                       name={`groupedOptions[${groupIndex}].title`}
                       value={groupedOption.title}
