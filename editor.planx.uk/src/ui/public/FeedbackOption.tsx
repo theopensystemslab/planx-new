@@ -10,7 +10,7 @@ interface Props {
   Icon?: typeof SvgIcon;
   showArrow?: boolean;
   format?: "positive" | "negative";
-  handleClick: () => void;
+  onClick: () => void;
 }
 
 const Root = styled(Button, {
@@ -62,7 +62,7 @@ const ArrowButton = styled("span")(({ theme }) => ({
 
 export default function FeedbackOption(props: Props): FCReturn {
   return (
-    <Root onClick={() => props.handleClick()} {...props}>
+    <Root {...props}>
       {props.Icon && (
         <Icon className="buttonIcon">
           <props.Icon />

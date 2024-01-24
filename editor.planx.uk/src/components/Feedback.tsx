@@ -199,19 +199,19 @@ const FeedbackComponent: React.FC = () => {
             <TitleAndCloseFeedbackHeader title="What would you like to share?" />
             <FeedbackBody>
               <FeedbackOption
-                handleClick={() => handleFeedbackViewClick("issue")}
+                onClick={() => handleFeedbackViewClick("issue")}
                 Icon={WarningIcon}
                 label="Issue"
                 showArrow
               />
               <FeedbackOption
-                handleClick={() => handleFeedbackViewClick("idea")}
+                onClick={() => handleFeedbackViewClick("idea")}
                 Icon={LightbulbIcon}
                 label="Idea"
                 showArrow
               />
               <FeedbackOption
-                handleClick={() => handleFeedbackViewClick("comment")}
+                onClick={() => handleFeedbackViewClick("comment")}
                 Icon={MoreHorizIcon}
                 label="Comment"
                 showArrow

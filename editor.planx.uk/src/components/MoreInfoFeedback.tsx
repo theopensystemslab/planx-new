@@ -76,13 +76,13 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           </Typography>
           <FeedbackBody>
             <FeedbackOption
-              handleClick={() => handleFeedbackOptionClick("helpful")}
+              onClick={() => handleFeedbackOptionClick("helpful")}
               Icon={CheckCircleIcon}
               label="Yes"
               format="positive"
             />
             <FeedbackOption
-              handleClick={() => handleFeedbackOptionClick("unhelpful")}
+              onClick={() => handleFeedbackOptionClick("unhelpful")}
               Icon={CancelIcon}
               label="No"
               format="negative"
