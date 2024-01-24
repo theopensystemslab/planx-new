@@ -190,7 +190,7 @@ const FeedbackComponent: React.FC = () => {
     );
   }
 
-  function FeedbackTriage(): FCReturn {
+  function Triage(): FCReturn {
     return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
@@ -222,7 +222,7 @@ const FeedbackComponent: React.FC = () => {
     );
   }
 
-  function FeedbackReportAnIssue(): FCReturn {
+  function ReportAnIssue(): FCReturn {
     return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
@@ -267,7 +267,7 @@ const FeedbackComponent: React.FC = () => {
     );
   }
 
-  function FeedbackShareAnIdea(): FCReturn {
+  function ShareAnIdea(): FCReturn {
     return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
@@ -304,7 +304,7 @@ const FeedbackComponent: React.FC = () => {
     );
   }
 
-  function FeedbackShareAComment(): FCReturn {
+  function ShareAComment(): FCReturn {
     return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
@@ -341,7 +341,7 @@ const FeedbackComponent: React.FC = () => {
     );
   }
 
-  function FeedbackThanksForFeedback(): FCReturn {
+  function ThanksForFeedback(): FCReturn {
     return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
@@ -364,15 +364,15 @@ const FeedbackComponent: React.FC = () => {
       case "banner":
         return <FeedbackPhaseBannerView />;
       case "triage":
-        return <FeedbackTriage />;
+        return <Triage />;
       case "issue":
-        return <FeedbackReportAnIssue />;
+        return <ReportAnIssue />;
       case "idea":
-        return <FeedbackShareAnIdea />;
+        return <ShareAnIdea />;
       case "comment":
-        return <FeedbackShareAComment />;
+        return <ShareAComment />;
       case "thanks":
-        return <FeedbackThanksForFeedback />;
+        return <ThanksForFeedback />;
     }
   }
 
