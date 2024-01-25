@@ -1,0 +1,1 @@
+alter table "public"."feedback" add column "node_text" text;

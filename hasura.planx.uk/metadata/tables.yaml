@@ -245,7 +245,6 @@
           - help_text
           - id
           - node_id
-          - node_text
           - project_type
           - status
           - team_id
