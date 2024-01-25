@@ -192,7 +192,7 @@ export default function Component(props: Props) {
                 maxZoom={23}
                 latitude={Number(passport?.data?._address?.latitude)}
                 longitude={Number(passport?.data?._address?.longitude)}
-                showMarker
+                showCentreMarker
                 markerLatitude={Number(passport?.data?._address?.latitude)}
                 markerLongitude={Number(passport?.data?._address?.longitude)}
                 resetControlImage="trash"
