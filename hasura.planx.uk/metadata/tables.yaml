@@ -242,7 +242,6 @@
           - device
           - feedback_type
           - flow_id
-          - help_text
           - id
           - node_id
           - project_type

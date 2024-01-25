@@ -1,0 +1,1 @@
+alter table "public"."feedback" add column "help_text" text;
