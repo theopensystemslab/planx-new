@@ -46,7 +46,7 @@ const OptionEditor: React.FC<{
       )}
       <InputRowItem width="100%">
         <Input
-          // required
+          required
           format="bold"
           value={props.value.data.text || ""}
           onChange={(ev) => {
