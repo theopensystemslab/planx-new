@@ -169,7 +169,7 @@ export function Presentational(props: PresentationalProps) {
           osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
           hideResetControl
           staticMode
-          showMarker
+          showCentreMarker
           markerLatitude={address?.latitude}
           markerLongitude={address?.longitude}
           // markerColor={team?.settings?.design?.color} // defaults to black
