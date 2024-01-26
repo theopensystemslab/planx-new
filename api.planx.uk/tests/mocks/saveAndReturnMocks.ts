@@ -37,6 +37,7 @@ export const mockLowcalSession: LowCalSession = {
         _address: {
           single_line_address: "1 High Street",
         },
+        "drawBoundary.action": "Amended the title boundary",
         "proposal.projectType": ["new.office"],
         "property.boundary.site": {
           type: "Feature",
