@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import omit from "lodash.omit";
+import { omit } from "lodash";
 import app from "../../../server";
 import { queryMock } from "../../../tests/graphqlQueryMock";
 import {
