@@ -109,7 +109,9 @@ describe("buildSubmissionExportZip", () => {
           ],
         ],
       },
-      properties: null,
+      properties: {
+        planx_user_action: "Amended the title boundary",
+      },
     };
     const expectedBuffer = Buffer.from(JSON.stringify(geojson, null, 2));
     await buildSubmissionExportZip({ sessionId: "1234" });
