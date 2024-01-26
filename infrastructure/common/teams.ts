@@ -14,6 +14,7 @@ interface Team {
   name: string;
   // Must match "name" in the Digital Land dataset "local-authority-district" (https://www.planning.data.gov.uk/dataset/local-authority-district)
   uniformInstances?: string[];
+  stagingOnly?: boolean;
 };
 
 export const teams: Team[] = [
@@ -30,10 +31,12 @@ export const teams: Team[] = [
     uniformInstances: ["Southwark"]
   },
   {
-    name: "Medway"
+    name: "Medway",
+    stagingOnly: true
   },
   {
-    name: "Gloucester"
+    name: "Gloucester",
+    stagingOnly: true
   }
 ];
 

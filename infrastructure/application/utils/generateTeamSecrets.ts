@@ -25,6 +25,7 @@ export const generateTeamSecrets = (
 ): awsx.ecs.KeyValuePair[] => {
   const secrets: awsx.ecs.KeyValuePair[] = [];
   teams.forEach((team) => {
+    if (env === "production" && team?.stagingOnly) return;
     secrets.push({
       name: `GOV_UK_PAY_TOKEN_${name(team.name)}`,
       value:
