@@ -25,15 +25,27 @@ export const generateTeamSecrets = (
 ): awsx.ecs.KeyValuePair[] => {
   const secrets: awsx.ecs.KeyValuePair[] = [];
   teams.forEach((team) => {
-    if (team?.govPayStagingOnly && env !== "production") {
-      secrets.push({
-        name: `GOV_UK_PAY_TOKEN_${name(team.name)}`,
-        value:
-          env === "sandbox"
-            ? "sandbox"
-            : config.require(`gov-uk-pay-token-${value(team.name)}`),
-      });
-    }
+    switch(env) {
+      case "sandbox":
+        secrets.push({
+          name: `GOV_UK_PAY_TOKEN_${name(team.name)}`,
+          value: "sandbox"
+        });
+        break;
+      case "staging":
+        secrets.push({
+          name: `GOV_UK_PAY_TOKEN_${name(team.name)}`,
+          value: config.require(`gov-uk-pay-token-${value(team.name)}`),
+        });
+        break;
+      case "production":
+        if (!team?.govPayStagingOnly) {
+          secrets.push({
+            name: `GOV_UK_PAY_TOKEN_${name(team.name)}`,
+            value: config.require(`gov-uk-pay-token-${value(team.name)}`),
+          });
+        }
+    };
     team.uniformInstances?.forEach((instance) => {
       secrets.push({
         name: `UNIFORM_CLIENT_${name(instance)}`,
