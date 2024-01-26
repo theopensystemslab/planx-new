@@ -39,7 +39,7 @@ export const generateTeamSecrets = (
         });
         break;
       case "production":
-        if (!team.govPayStagingOnly) {
+        if (!team?.govPayStagingOnly) {
           secrets.push({
             name: `GOV_UK_PAY_TOKEN_${name(team.name)}`,
             value: config.require(`gov-uk-pay-token-${value(team.name)}`),
