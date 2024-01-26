@@ -106,7 +106,7 @@ assert(process.env.BOPS_API_TOKEN);
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
 
-// Medway has sandbox pay only, so skip assertion as this will fail in production
+// Medway & Gloucester have sandbox pay only, so skip assertion as this will fail in production
 ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
 });

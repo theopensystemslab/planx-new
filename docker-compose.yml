@@ -156,6 +156,8 @@ services:
       UNIFORM_CLIENT_WYCOMBE: ${UNIFORM_CLIENT_WYCOMBE}
       # Medway
       GOV_UK_PAY_TOKEN_MEDWAY: ${GOV_UK_PAY_TOKEN_MEDWAY}
+      # Gloucester
+      GOV_UK_PAY_TOKEN_GLOUCESTER: ${GOV_UK_PAY_TOKEN_GLOUCESTER}
 
   sharedb:
     restart: unless-stopped

@@ -16,6 +16,8 @@ config:
     secure: AAABAGQuqQDU4S+vR+cQaFoa6xAeWU9clVaNonQ/dq0R8Dke+o0y7ALOmYMy4fOX4Pa6HiZl85npU/cbwy8HdMYaiA==
   application:gov-uk-pay-token-buckinghamshire:
     secure: AAABADroqKJ1/CanxoghKyCutFA8bmiPBuafrNYGNMn1H16jXiHuytHUUByTbXZZHtANciv7rkQEJosUmyay5j/ZFKu9TeS2WaIGBD913EVlv4iXDw3Y5OU2bSocROlYQm7/
+  application:gov-uk-pay-token-gloucester:
+    secure: AAABANCvH7gf+3Bs9vZxg1QkkFUDnDnn0dn9n0UlDo3rJdF5ThFzqg4dc+mSxAyQ4OXZLPxvFmVmMY9QZNSZKGqXYSY2CJjed2GeGmQ5zHAOzSjkomxQqtpaRANAb3s7NQkn
   application:gov-uk-pay-token-lambeth:
     secure: AAABAPy5USkd8/hwq6vFXP45BXsYFUltR6gj8PoiZkOLRPUd1wgQ3Yhgc1Cyn+lb5cZrXBoVPjuVhm/UvBN82DNzRTl2TxAakCQQIrBU5xil+m9UnbY82CNSMDuEaWwMpR3C
   application:gov-uk-pay-token-medway:
