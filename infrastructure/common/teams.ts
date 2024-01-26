@@ -29,6 +29,12 @@ export const teams: Team[] = [
     name: "Southwark",
     uniformInstances: ["Southwark"]
   },
+  {
+    name: "Medway"
+  },
+  {
+    name: "Gloucester"
+  }
 ];
 
 export type CustomDomains = Array<{
