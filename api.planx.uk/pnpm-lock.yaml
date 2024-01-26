@@ -98,9 +98,6 @@ dependencies:
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
-  lodash.omit:
-    specifier: ^4.5.0
-    version: 4.5.0
   mime:
     specifier: ^3.0.0
     version: 3.0.0
@@ -187,9 +184,6 @@ devDependencies:
   '@types/lodash':
     specifier: ^4.14.202
     version: 4.14.202
-  '@types/lodash.omit':
-    specifier: ^4.5.9
-    version: 4.5.9
   '@types/mime':
     specifier: ^3.0.4
     version: 3.0.4
@@ -1940,12 +1934,6 @@ packages:
 
   /@types/keygrip@1.0.6:
     resolution: {integrity: sha512-lZuNAY9xeJt7Bx4t4dx0rYCDqGPW8RXhQZK1td7d4H6E9zYbLoOtjBvfwdTKpsyxQI/2jv+armjX/RW+ZNpXOQ==}
-    dev: true
-
-  /@types/lodash.omit@4.5.9:
-    resolution: {integrity: sha512-zuAVFLUPJMOzsw6yawshsYGgq2hWUHtsZgeXHZmSFhaQQFC6EQ021uDKHkSjOpNhSvtNSU9165/o3o/Q51GpTw==}
-    dependencies:
-      '@types/lodash': 4.14.202
     dev: true
 
   /@types/lodash@4.14.202:

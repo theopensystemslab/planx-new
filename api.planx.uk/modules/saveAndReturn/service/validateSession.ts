@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import omit from "lodash.omit";
+import { omit } from "lodash";
 import { getMostRecentPublishedFlow } from "../../../helpers";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
