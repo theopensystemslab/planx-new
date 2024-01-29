@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#d1a224c
-    version: github.com/theopensystemslab/planx-core/d1a224c
+    specifier: git+https://github.com/theopensystemslab/planx-core#ce539b0
+    version: github.com/theopensystemslab/planx-core/ce539b0
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -53,6 +53,9 @@ dependencies:
   express:
     specifier: ^4.18.2
     version: 4.18.2
+  express-async-errors:
+    specifier: ^3.1.1
+    version: 3.1.1(express@4.18.2)
   express-jwt:
     specifier: ^8.4.1
     version: 8.4.1
@@ -3938,6 +3941,14 @@ packages:
       jest-util: 29.7.0
     dev: true
 
+  /express-async-errors@3.1.1(express@4.18.2):
+    resolution: {integrity: sha512-h6aK1da4tpqWSbyCa3FxB/V6Ehd4EEB15zyQq9qe75OZBp0krinNKuH4rAY+S/U/2I36vdLAUFSjQJ+TFmODng==}
+    peerDependencies:
+      express: ^4.16.2
+    dependencies:
+      express: 4.18.2
+    dev: false
+
   /express-jwt@8.4.1:
     resolution: {integrity: sha512-IZoZiDv2yZJAb3QrbaSATVtTCYT11OcqgFGoTN4iKVyN6NBkBkhtVIixww5fmakF0Upt5HfOxJuS6ZmJVeOtTQ==}
     engines: {node: '>= 8.0.0'}
@@ -5827,10 +5838,6 @@ packages:
     resolution: {integrity: sha512-GK3g5RPZWTRSeLSpgP8Xhra+pnjBC56q9FZYe1d5RN3TJ35dbkGy3YqBSMbyCrlbi+CM9Z3Jk5yTL7RCsqboyQ==}
     dev: false
 
-  /lodash.omit@4.5.0:
-    resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
-    dev: false
-
   /lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
     dev: false
@@ -5909,8 +5916,8 @@ packages:
       object-visit: 1.0.1
     dev: true
 
-  /marked@11.1.1:
-    resolution: {integrity: sha512-EgxRjgK9axsQuUa/oKMx5DEY8oXpKJfk61rT5iY3aRlgU6QJtUcxU5OAymdhCvWvhYcd9FKmO5eQoX8m9VGJXg==}
+  /marked@11.2.0:
+    resolution: {integrity: sha512-HR0m3bvu0jAPYiIvLUUQtdg1g6D247//lvcekpHO1WMvbwDlwSkZAX9Lw4F4YHE1T0HaaNve0tuAWuV1UJ6vtw==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
@@ -8275,8 +8282,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/d1a224c:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d1a224c}
+  github.com/theopensystemslab/planx-core/ce539b0:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ce539b0}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -8297,7 +8304,7 @@ packages:
       graphql-request: 6.1.0(graphql@16.8.1)
       json-schema-to-typescript: 13.1.2
       lodash: 4.17.21
-      marked: 11.1.1
+      marked: 11.2.0
       prettier: 3.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)

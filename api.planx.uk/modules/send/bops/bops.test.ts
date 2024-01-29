@@ -56,12 +56,13 @@ describe(`sending an application to BOPS`, () => {
     });
 
     queryMock.mockQuery({
-      name: "GetStagingBopsSubmissionURL",
+      name: "GetStagingIntegrations",
       data: {
         teams: [
           {
             integrations: {
               bopsSubmissionURL: submissionURL,
+              bopsSecret: null,
             },
           },
         ],
@@ -72,15 +73,9 @@ describe(`sending an application to BOPS`, () => {
     });
 
     queryMock.mockQuery({
-      name: "GetStagingBopsSubmissionURL",
+      name: "GetStagingIntegrations",
       data: {
-        teams: [
-          {
-            integrations: {
-              bopsSubmissionURL: null,
-            },
-          },
-        ],
+        teams: [],
       },
       variables: {
         slug: "unsupported-team",
@@ -128,9 +123,11 @@ describe(`sending an application to BOPS`, () => {
       .post("/bops/unsupported-team")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
-      .expect(400)
+      .expect(500)
       .then((res) => {
-        expect(res.body.error).toMatch(/not enabled for this local authority/);
+        expect(res.body.error).toMatch(
+          /No team matching "unsupported-team" found/,
+        );
       });
   });
 
@@ -187,12 +184,15 @@ describe(`sending an application to BOPS v2`, () => {
     });
 
     queryMock.mockQuery({
-      name: "GetStagingBopsSubmissionURL",
+      name: "GetStagingIntegrations",
       data: {
         teams: [
           {
             integrations: {
               bopsSubmissionURL: submissionURL,
+              // Decodes to "abc123"
+              bopsSecret:
+                "ccd96ddbcf94af4899a1fe9c88752547:e913b3b604f0610ee57abb822e6cc6fd",
             },
           },
         ],
@@ -203,15 +203,9 @@ describe(`sending an application to BOPS v2`, () => {
     });
 
     queryMock.mockQuery({
-      name: "GetStagingBopsSubmissionURL",
+      name: "GetStagingIntegrations",
       data: {
-        teams: [
-          {
-            integrations: {
-              bopsSubmissionURL: null,
-            },
-          },
-        ],
+        teams: [],
       },
       variables: {
         slug: "unsupported-team",
@@ -220,9 +214,14 @@ describe(`sending an application to BOPS v2`, () => {
   });
 
   it("successfully proxies request and returns hasura id", async () => {
-    nock(`${submissionURL}/api/v2/planning_applications`).post("").reply(200, {
-      application: "0000123",
-    });
+    const expectedHeaders = { authorization: "Bearer abc123" };
+    const nockScope = nock(`${submissionURL}/api/v2/planning_applications`, {
+      reqheaders: expectedHeaders,
+    })
+      .post("")
+      .reply(200, {
+        application: "0000123",
+      });
 
     await supertest(app)
       .post("/bops-v2/southwark")
@@ -233,6 +232,9 @@ describe(`sending an application to BOPS v2`, () => {
         expect(res.body).toEqual({
           application: { id: 22, bopsResponse: { application: "0000123" } },
         });
+
+        // Check nock was called with expected headers
+        expect(nockScope.isDone()).toBe(true);
       });
   });
 
@@ -259,9 +261,11 @@ describe(`sending an application to BOPS v2`, () => {
       .post("/bops-v2/unsupported-team")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
-      .expect(400)
+      .expect(500)
       .then((res) => {
-        expect(res.body.error).toMatch(/not enabled for this local authority/);
+        expect(res.body.error).toMatch(
+          /No team matching "unsupported-team" found/,
+        );
       });
   });
 
