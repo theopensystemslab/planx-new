@@ -46,7 +46,9 @@ const validateRequest = async (
           where: {
             email: { _eq: $email }
             deleted_at: { _is_null: true }
+            locked_at: { _is_null: true }
             submitted_at: { _is_null: true }
+            sanitised_at: { _is_null: true }
             flow: { team: { slug: { _eq: $teamSlug } } }
           }
           order_by: { flow: { slug: asc }, created_at: asc }
