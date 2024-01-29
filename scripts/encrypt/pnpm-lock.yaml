@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#ce539b0
-    version: github.com/theopensystemslab/planx-core/ce539b0
+    specifier: git+https://github.com/theopensystemslab/planx-core#02c3999
+    version: github.com/theopensystemslab/planx-core/02c3999
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@20.11.10)(typescript@5.3.3)
@@ -2097,8 +2097,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/ce539b0:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ce539b0}
+  github.com/theopensystemslab/planx-core/02c3999:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/02c3999}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
