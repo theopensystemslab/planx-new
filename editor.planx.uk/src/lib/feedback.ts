@@ -1,4 +1,8 @@
+import { gql } from "@apollo/client";
+import Bowser from "bowser";
 import { useStore } from "pages/FlowEditor/lib/store";
+
+import { publicClient } from "./graphql";
 
 export const submitFeedback = (
   text: string,
@@ -49,3 +53,84 @@ export const getFeedbackMetadata = (): Record<string, string> => {
   };
   return feedbackMetadata;
 };
+
+export async function getInternalFeedbackMetadata(componentMetadata = {}) {
+  const {
+    breadcrumbs,
+    currentCard,
+    computePassport,
+    fetchCurrentTeam,
+    id: flowId,
+  } = useStore.getState();
+  const { data: passportData } = computePassport();
+  const { id: teamId } = await fetchCurrentTeam();
+  const node = currentCard();
+  const projectType = passportData?.["proposal.projectType"]?.[0];
+  const metadata = {
+    teamId,
+    flowId,
+    nodeId: node?.id,
+    projectType: projectType,
+    address:
+      passportData?._address?.single_line_address ||
+      passportData?._address?.title,
+    device: Bowser.parse(window.navigator.userAgent),
+    breadcrumbs: breadcrumbs,
+    componentMetadata,
+  };
+
+  return metadata;
+}
+
+export async function insertFeedbackMutation(data: {
+  teamId: number;
+  flowId: string;
+  nodeId: string | null;
+  projectType: string;
+  address: string;
+  device: any;
+  breadcrumbs: any;
+  componentMetadata: any;
+  userContext: string;
+  userComment: string;
+  feedbackType: string;
+}): Promise<number> {
+  const result = await publicClient.mutate({
+    mutation: gql`
+      mutation InsertFeedback(
+        $teamId: Int
+        $flowId: uuid
+        $nodeId: String
+        $projectType: String
+        $address: String
+        $device: jsonb
+        $breadcrumbs: jsonb
+        $componentMetadata: jsonb
+        $userContext: String
+        $userComment: String
+        $feedbackType: feedback_type_enum_enum
+      ) {
+        insert_feedback(
+          objects: {
+            team_id: $teamId
+            flow_id: $flowId
+            node_id: $nodeId
+            project_type: $projectType
+            address: $address
+            device: $device
+            breadcrumbs: $breadcrumbs
+            component_metadata: $componentMetadata
+            user_context: $userContext
+            user_comment: $userComment
+            feedback_type: $feedbackType
+          }
+        ) {
+          affected_rows
+        }
+      }
+    `,
+    variables: data,
+  });
+
+  return result.data.insert_feedback.affected_rows;
+}

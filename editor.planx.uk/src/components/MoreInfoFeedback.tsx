@@ -6,6 +6,10 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
+import {
+  getInternalFeedbackMetadata,
+  insertFeedbackMutation,
+} from "lib/feedback";
 import React, { useState } from "react";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import FeedbackOption from "ui/public/FeedbackOption";
@@ -49,7 +53,7 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     }
   };
 
-  const handleFeedbackFormSubmit = (e: any) => {
+  async function handleFeedbackFormSubmit(e: any) {
     e.preventDefault();
 
     const formData = new FormData(e.target);
@@ -59,13 +63,17 @@ const MoreInfoFeedbackComponent: React.FC = () => {
       formDataPayload[key] = value;
     }
 
-    console.log("The users selection", feedbackOption);
+    // Extract relevant data above the flow/card
+    const metadata: any = await getInternalFeedbackMetadata();
 
-    console.log("The user inputs", formDataPayload);
-    // Prep the form data payload?
+    // Check the feedback type
+    const feedbackType = { feedbackType: feedbackOption };
 
+    const data = { ...metadata, ...feedbackType, ...formDataPayload };
+
+    await insertFeedbackMutation(data);
     setCurrentFeedbackView("thanks");
-  };
+  }
 
   function FeedbackYesNo(): FCReturn {
     return (

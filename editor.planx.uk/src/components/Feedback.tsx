@@ -12,6 +12,10 @@ import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import FeedbackPhaseBanner from "components/FeedbackPhaseBanner";
+import {
+  getInternalFeedbackMetadata,
+  insertFeedbackMutation,
+} from "lib/feedback";
 import { BackButton } from "pages/Preview/Questions";
 import React, { useState } from "react";
 import { usePrevious } from "react-use";
@@ -92,20 +96,27 @@ const FeedbackComponent: React.FC = () => {
     }
   }
 
-  const handleFeedbackFormSubmit = (e: any) => {
+  async function handleFeedbackFormSubmit(e: any) {
+    // Prevent form reloading page
     e.preventDefault();
+
+    // Extract input data from form
     const formData = new FormData(e.target);
     const formDataPayload: any = {};
-
     for (const [key, value] of formData.entries()) {
       formDataPayload[key] = value;
     }
 
-    console.log("The user inputs", formDataPayload);
-    // Prep the form data payload?
+    // Extract relevant data above the flow/card
+    const metadata: any = await getInternalFeedbackMetadata();
 
+    // Check the feedback type
+    const feedbackType = { feedbackType: currentFeedbackView };
+    const data = { ...metadata, ...feedbackType, ...formDataPayload };
+
+    await insertFeedbackMutation(data);
     setCurrentFeedbackView("thanks");
-  };
+  }
 
   function BackAndCloseFeedbackHeader(): FCReturn {
     return (
@@ -283,7 +294,7 @@ const FeedbackComponent: React.FC = () => {
             <FeedbackBody onSubmit={(e) => handleFeedbackFormSubmit(e)}>
               <FeedbackForm>
                 <Input
-                  name="useComment"
+                  name="userComment"
                   required
                   multiline
                   bordered
