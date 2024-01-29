@@ -192,7 +192,7 @@ describe(`sending an application to BOPS v2`, () => {
               bopsSubmissionURL: submissionURL,
               // Decodes to "abc123"
               bopsSecret:
-                "ccd96ddbcf94af4899a1fe9c88752547:e913b3b604f0610ee57abb822e6cc6fd",
+                "668514b455572ca39c46e49396506b29:6c6df14c7fd405dbf380533ba0dcae39",
             },
           },
         ],
