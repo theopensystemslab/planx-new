@@ -27,7 +27,7 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     "digital-land-datasets": ["central-activities-zone"],
     category: "General policy",
   },
-  "brownfieldSite": {
+  brownfieldSite: {
     active: true,
     neg: "is not on Brownfield land",
     pos: "is on Brownfield land",
@@ -127,7 +127,7 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     neg: "is not in a Ramsar Site",
     pos: "is in a Ramsar Site",
     "digital-land-datasets": ["ramsar"],
-    "category": "Ecology",
+    category: "Ecology",
   },
   "nature.SAC": {
     active: true,
