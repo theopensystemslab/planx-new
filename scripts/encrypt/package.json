@@ -1,0 +1,17 @@
+{
+  "name": "encrypt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "encrypt": "ts-node index.ts"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#02c3999",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -46,19 +46,12 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   const localAuthority = req.params.localAuthority;
   const env =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
-  const bopsSubmissionURL = await $api.team.getBopsSubmissionURL(
-    localAuthority,
+
+  const { bopsSubmissionURL, bopsToken } = await $api.team.getIntegrations({
+    slug: localAuthority,
+    encryptionKey: process.env.ENCRYPTION_KEY!,
     env,
-  );
-  const isSupported = Boolean(bopsSubmissionURL);
-  if (!isSupported) {
-    return next(
-      new ServerError({
-        status: 400,
-        message: `Back-office Planning System (BOPS) is not enabled for this local authority (${localAuthority})`,
-      }),
-    );
-  }
+  });
   const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
   const exportData = await $api.export.bopsPayload(payload?.sessionId);
 
@@ -69,7 +62,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       adapter: "http",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
+        Authorization: `Bearer ${bopsToken || process.env.BOPS_API_TOKEN}`,
       },
       data: exportData,
     })
@@ -181,19 +174,11 @@ const sendToBOPSV2 = async (
   const localAuthority = req.params.localAuthority;
   const env =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
-  const bopsSubmissionURL = await $api.team.getBopsSubmissionURL(
-    localAuthority,
+  const { bopsSubmissionURL, bopsToken } = await $api.team.getIntegrations({
+    slug: localAuthority,
+    encryptionKey: process.env.ENCRYPTION_KEY!,
     env,
-  );
-  const isSupported = Boolean(bopsSubmissionURL);
-  if (!isSupported) {
-    return next(
-      new ServerError({
-        status: 400,
-        message: `Back-office Planning System (BOPS) is not enabled for this local authority (${localAuthority})`,
-      }),
-    );
-  }
+  });
   const target = `${bopsSubmissionURL}/api/v2/planning_applications`;
   const exportData = await $api.export.digitalPlanningDataPayload(
     payload?.sessionId,
@@ -206,7 +191,7 @@ const sendToBOPSV2 = async (
       adapter: "http",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
+        Authorization: `Bearer ${bopsToken || process.env.BOPS_API_TOKEN}`,
       },
       data: exportData,
     })

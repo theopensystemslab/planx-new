@@ -381,6 +381,10 @@ export = async () => {
             name: "ORDNANCE_SURVEY_API_KEY",
             value: config.requireSecret("ordnance-survey-api-key"),
           },
+          {
+            name: "ENCRYPTION_KEY",
+            value: config.requireSecret("encryption-key"),
+          },
           generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
           ...generateTeamSecrets(config, env),
         ],
