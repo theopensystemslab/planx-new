@@ -78,6 +78,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               role="heading"
               aria-level={1}
               component="h1"
+              sx={{ textWrap: "balance" }}
             >
               {title}
             </Typography>
