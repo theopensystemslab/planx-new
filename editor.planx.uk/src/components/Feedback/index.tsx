@@ -14,12 +14,13 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import { BackButton } from "pages/Preview/Questions";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { usePrevious } from "react-use";
 import FeedbackOption from "ui/public/FeedbackOption";
-
 import FeedbackForm from "./FeedbackForm";
 import FeedbackPhaseBanner from "./FeedbackPhaseBanner";
+import { useStore } from "pages/FlowEditor/lib/store";
+
 
 const FeedbackWrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -89,6 +90,13 @@ const Feedback: React.FC = () => {
   const [currentFeedbackView, setCurrentFeedbackView] =
     useState<View>("banner");
   const previousFeedbackView = usePrevious(currentFeedbackView);
+  const breadcrumbs = useStore((state) => state.breadcrumbs);
+
+  useEffect(() => {
+    if (currentFeedbackView === "thanks") {
+      setCurrentFeedbackView("banner");
+    }
+  }, [breadcrumbs]);
 
   function handleFeedbackViewClick(event: ClickEvents) {
     switch (event) {
