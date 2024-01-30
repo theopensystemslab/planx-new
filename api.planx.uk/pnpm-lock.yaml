@@ -53,6 +53,9 @@ dependencies:
   express:
     specifier: ^4.18.2
     version: 4.18.2
+  express-async-errors:
+    specifier: ^3.1.1
+    version: 3.1.1(express@4.18.2)
   express-jwt:
     specifier: ^8.4.1
     version: 8.4.1
@@ -3937,6 +3940,14 @@ packages:
       jest-message-util: 29.7.0
       jest-util: 29.7.0
     dev: true
+
+  /express-async-errors@3.1.1(express@4.18.2):
+    resolution: {integrity: sha512-h6aK1da4tpqWSbyCa3FxB/V6Ehd4EEB15zyQq9qe75OZBp0krinNKuH4rAY+S/U/2I36vdLAUFSjQJ+TFmODng==}
+    peerDependencies:
+      express: ^4.16.2
+    dependencies:
+      express: 4.18.2
+    dev: false
 
   /express-jwt@8.4.1:
     resolution: {integrity: sha512-IZoZiDv2yZJAb3QrbaSATVtTCYT11OcqgFGoTN4iKVyN6NBkBkhtVIixww5fmakF0Upt5HfOxJuS6ZmJVeOtTQ==}

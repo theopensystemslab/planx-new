@@ -1,4 +1,5 @@
 import "isomorphic-fetch";
+import "express-async-errors";
 import { json, urlencoded } from "body-parser";
 import assert from "assert";
 import cookieParser from "cookie-parser";
