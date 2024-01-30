@@ -1,7 +1,6 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -11,9 +10,10 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import React, { useState } from "react";
-import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import FeedbackOption from "ui/public/FeedbackOption";
-import Input from "ui/shared/Input";
+
+import { UserFeedback } from ".";
+import FeedbackForm from "./FeedbackForm";
 
 const MoreInfoFeedback = styled(Box)(({ theme }) => ({
   borderTop: `2px solid ${theme.palette.border.main}`,
@@ -53,24 +53,10 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     }
   };
 
-  async function handleFeedbackFormSubmit(e: any) {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const formDataPayload: any = {};
-
-    for (const [key, value] of formData.entries()) {
-      formDataPayload[key] = value;
-    }
-
-    // Extract relevant data above the flow/card
+  async function handleFeedbackFormSubmit(values: UserFeedback) {
     const metadata: any = await getInternalFeedbackMetadata();
-
-    // Check the feedback type
     const feedbackType = { feedbackType: feedbackOption };
-
-    const data = { ...metadata, ...feedbackType, ...formDataPayload };
-
+    const data = { ...metadata, ...feedbackType, ...values };
     await insertFeedbackMutation(data);
     setCurrentFeedbackView("thanks");
   }
@@ -102,6 +88,13 @@ const MoreInfoFeedbackComponent: React.FC = () => {
   }
 
   function FeedbackInput(): FCReturn {
+    const commentFormInputs = [
+      {
+        name: "userComment",
+        ariaDescribedBy: "comment-title",
+      },
+    ];
+
     return (
       <MoreInfoFeedback>
         <Container maxWidth={false}>
@@ -109,19 +102,10 @@ const MoreInfoFeedbackComponent: React.FC = () => {
             Please help us to improve this service by sharing feedback
           </Typography>
           <FeedbackBody>
-            <form onSubmit={(e) => handleFeedbackFormSubmit(e)}>
-              <Input
-                name="userComment"
-                required
-                multiline
-                bordered
-                aria-describedby="comment-title"
-              />
-              <FeedbackDisclaimer />
-              <Button type="submit" variant="contained" sx={{ marginTop: 2.5 }}>
-                Send feedback
-              </Button>
-            </form>
+            <FeedbackForm
+              inputs={commentFormInputs}
+              handleSubmit={handleFeedbackFormSubmit}
+            />
           </FeedbackBody>
         </Container>
       </MoreInfoFeedback>
