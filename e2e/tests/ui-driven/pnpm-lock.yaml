@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#d1a224c
-    version: github.com/theopensystemslab/planx-core/d1a224c
+    specifier: git+https://github.com/theopensystemslab/planx-core#aa93cbf
+    version: github.com/theopensystemslab/planx-core/aa93cbf
   axios:
     specifier: ^1.6.2
     version: 1.6.5
@@ -1728,8 +1728,8 @@ packages:
       es5-ext: 0.10.62
     dev: false
 
-  /marked@11.1.1:
-    resolution: {integrity: sha512-EgxRjgK9axsQuUa/oKMx5DEY8oXpKJfk61rT5iY3aRlgU6QJtUcxU5OAymdhCvWvhYcd9FKmO5eQoX8m9VGJXg==}
+  /marked@11.2.0:
+    resolution: {integrity: sha512-HR0m3bvu0jAPYiIvLUUQtdg1g6D247//lvcekpHO1WMvbwDlwSkZAX9Lw4F4YHE1T0HaaNve0tuAWuV1UJ6vtw==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
@@ -2528,8 +2528,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/d1a224c:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d1a224c}
+  github.com/theopensystemslab/planx-core/aa93cbf:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aa93cbf}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2550,7 +2550,7 @@ packages:
       graphql-request: 6.1.0(graphql@16.8.1)
       json-schema-to-typescript: 13.1.2
       lodash: 4.17.21
-      marked: 11.1.1
+      marked: 11.2.0
       prettier: 3.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)

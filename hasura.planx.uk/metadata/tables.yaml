@@ -1345,9 +1345,11 @@
       permission:
         columns:
           - id
-          - team_id
-          - staging_bops_submission_url
+          - production_bops_secret
           - production_bops_submission_url
+          - staging_bops_secret
+          - staging_bops_submission_url
+          - team_id
         filter: {}
 - table:
     name: team_members
