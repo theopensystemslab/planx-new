@@ -56,7 +56,11 @@ function Banner(props: BannerProps) {
             titleAccess={props.iconTitle}
           />
         )}
-        {props.heading && <Typography variant="h1">{props.heading}</Typography>}
+        {props.heading && (
+          <Typography variant="h1" sx={{ textWrap: "balance" }}>
+            {props.heading}
+          </Typography>
+        )}
         {props.children}
       </Container>
     </Root>
