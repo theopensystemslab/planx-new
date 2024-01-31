@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#aa93cbf
-    version: github.com/theopensystemslab/planx-core/aa93cbf
+    specifier: git+https://github.com/theopensystemslab/planx-core#d74afe2
+    version: github.com/theopensystemslab/planx-core/d74afe2
   axios:
     specifier: ^1.6.2
     version: 1.6.5
@@ -2528,8 +2528,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/aa93cbf:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aa93cbf}
+  github.com/theopensystemslab/planx-core/d74afe2:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d74afe2}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
