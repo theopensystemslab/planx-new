@@ -12,7 +12,7 @@ import {
 import React, { useState } from "react";
 import FeedbackOption from "ui/public/FeedbackOption";
 
-import { UserFeedback } from ".";
+import { FeedbackFormInput, UserFeedback } from ".";
 import FeedbackForm from "./FeedbackForm";
 
 const MoreInfoFeedback = styled(Box)(({ theme }) => ({
@@ -25,9 +25,7 @@ const MoreInfoFeedback = styled(Box)(({ theme }) => ({
 
 const FeedbackBody = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1, 0),
-  "& form > * + *": {
-    ...contentFlowSpacing(theme),
-  },
+  "& form > * + *": contentFlowSpacing(theme),
 }));
 
 const MoreInfoFeedbackComponent: React.FC = () => {
@@ -88,7 +86,7 @@ const MoreInfoFeedbackComponent: React.FC = () => {
   }
 
   function FeedbackInput(): FCReturn {
-    const commentFormInputs = [
+    const commentFormInputs: FeedbackFormInput[] = [
       {
         name: "userComment",
         ariaDescribedBy: "comment-title",
