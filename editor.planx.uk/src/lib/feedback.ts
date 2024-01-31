@@ -54,6 +54,11 @@ export const getFeedbackMetadata = (): Record<string, string> => {
   return feedbackMetadata;
 };
 
+type UserData = {
+  breadcrumbs: Store.breadcrumbs;
+  passport: Store.passport;
+};
+
 export type FeedbackMetadata = {
   teamId?: number;
   flowId?: string;
@@ -61,8 +66,8 @@ export type FeedbackMetadata = {
   projectType?: string;
   address?: string;
   device: Bowser.Parser.ParsedResult;
-  breadcrumbs: Store.breadcrumbs;
-  componentMetadata: { [key: string]: any };
+  userData: UserData;
+  componentMetadata?: { [key: string]: any };
 };
 
 export async function getInternalFeedbackMetadata(
@@ -79,6 +84,10 @@ export async function getInternalFeedbackMetadata(
   const { id: teamId } = await fetchCurrentTeam();
   const node = currentCard();
   const projectType = passportData?.["proposal.projectType"]?.[0];
+  const userData = {
+    breadcrumbs: breadcrumbs,
+    passport: computePassport(),
+  };
   const metadata = {
     teamId,
     flowId,
@@ -88,8 +97,7 @@ export async function getInternalFeedbackMetadata(
       passportData?._address?.single_line_address ||
       passportData?._address?.title,
     device: Bowser.parse(window.navigator.userAgent),
-    breadcrumbs: breadcrumbs,
-    componentMetadata,
+    userData: userData,
   };
 
   return metadata;
@@ -102,7 +110,7 @@ export async function insertFeedbackMutation(data: {
   projectType?: string;
   address?: string;
   device?: Bowser.Parser.ParsedResult;
-  breadcrumbs?: Store.breadcrumbs;
+  userData?: UserData;
   componentMetadata?: { [key: string]: any };
   userContext?: string;
   userComment: string;
@@ -117,7 +125,7 @@ export async function insertFeedbackMutation(data: {
         $projectType: String
         $address: String
         $device: jsonb
-        $breadcrumbs: jsonb
+        $userData: jsonb
         $componentMetadata: jsonb
         $userContext: String
         $userComment: String!
@@ -131,7 +139,7 @@ export async function insertFeedbackMutation(data: {
             project_type: $projectType
             address: $address
             device: $device
-            breadcrumbs: $breadcrumbs
+            user_data: $userData
             component_metadata: $componentMetadata
             user_context: $userContext
             user_comment: $userComment
