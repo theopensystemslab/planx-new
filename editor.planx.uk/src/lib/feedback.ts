@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import Bowser from "bowser";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 
 import { publicClient } from "./graphql";
 
@@ -54,7 +54,20 @@ export const getFeedbackMetadata = (): Record<string, string> => {
   return feedbackMetadata;
 };
 
-export async function getInternalFeedbackMetadata(componentMetadata = {}) {
+export type FeedbackMetadata = {
+  teamId?: number;
+  flowId?: string;
+  nodeId?: string | null;
+  projectType?: string;
+  address?: string;
+  device: Bowser.Parser.ParsedResult;
+  breadcrumbs: Store.breadcrumbs;
+  componentMetadata: { [key: string]: any };
+};
+
+export async function getInternalFeedbackMetadata(
+  componentMetadata = {},
+): Promise<FeedbackMetadata> {
   const {
     breadcrumbs,
     currentCard,
@@ -83,18 +96,18 @@ export async function getInternalFeedbackMetadata(componentMetadata = {}) {
 }
 
 export async function insertFeedbackMutation(data: {
-  teamId: number;
-  flowId: string;
-  nodeId: string | null;
-  projectType: string;
-  address: string;
-  device: any;
-  breadcrumbs: any;
-  componentMetadata: any;
-  userContext: string;
+  teamId?: number;
+  flowId?: string;
+  nodeId?: string | null;
+  projectType?: string;
+  address?: string;
+  device?: Bowser.Parser.ParsedResult;
+  breadcrumbs?: Store.breadcrumbs;
+  componentMetadata?: { [key: string]: any };
+  userContext?: string;
   userComment: string;
   feedbackType: string;
-}): Promise<number> {
+}) {
   const result = await publicClient.mutate({
     mutation: gql`
       mutation InsertFeedback(
@@ -107,8 +120,8 @@ export async function insertFeedbackMutation(data: {
         $breadcrumbs: jsonb
         $componentMetadata: jsonb
         $userContext: String
-        $userComment: String
-        $feedbackType: feedback_type_enum_enum
+        $userComment: String!
+        $feedbackType: feedback_type_enum_enum!
       ) {
         insert_feedback(
           objects: {

@@ -13,14 +13,14 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { BackButton } from "pages/Preview/Questions";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
 import FeedbackOption from "ui/public/FeedbackOption";
+
 import FeedbackForm from "./FeedbackForm";
 import FeedbackPhaseBanner from "./FeedbackPhaseBanner";
-import { useStore } from "pages/FlowEditor/lib/store";
-
 
 const FeedbackWrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -113,7 +113,7 @@ const Feedback: React.FC = () => {
   }
 
   async function handleFeedbackFormSubmit(values: UserFeedback) {
-    const metadata: any = await getInternalFeedbackMetadata();
+    const metadata = await getInternalFeedbackMetadata();
     const feedbackType = { feedbackType: currentFeedbackView };
     const data = { ...metadata, ...feedbackType, ...values };
     await insertFeedbackMutation(data);
