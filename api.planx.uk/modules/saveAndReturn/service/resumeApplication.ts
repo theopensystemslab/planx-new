@@ -121,21 +121,20 @@ const buildContentFromSessions = async (
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 
-    // Filter out any sessions that are expired
+    // Filter out any sessions that are expired (safety net for failed sanitation)
     const today = new Date();
     const sessionAge = differenceInDays(today, new Date(session.created_at));
 
-    if (sessionAge > DAYS_UNTIL_EXPIRY) {
+    if (sessionAge < DAYS_UNTIL_EXPIRY)
       return `Service: ${service}
-        Address: ${addressLine || "Address not submitted"}
-        Project type: ${projectType || "Project type not submitted"}
-        Expiry Date: ${expiryDate}
-        Link: ${resumeLink}`;
-    }
+      Address: ${addressLine || "Address not submitted"}
+      Project type: ${projectType || "Project type not submitted"}
+      Expiry Date: ${expiryDate}
+      Link: ${resumeLink}`;
   };
 
   const content = await Promise.all(sessions.map(contentBuilder));
-  return content.join("\n\n");
+  return content.filter(Boolean).join("\n\n");
 };
 
 export { buildContentFromSessions, resumeApplication };
