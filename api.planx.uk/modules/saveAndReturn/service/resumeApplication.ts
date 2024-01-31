@@ -1,9 +1,15 @@
-import { gql } from "graphql-request";
-import { LowCalSession, Team } from "../../../types";
-import { convertSlugToName, getResumeLink, calculateExpiryDate } from "./utils";
-import { sendEmail } from "../../../lib/notify";
 import type { SiteAddress } from "@opensystemslab/planx-core/types";
+import { differenceInDays } from "date-fns";
+import { gql } from "graphql-request";
 import { $api, $public } from "../../../client";
+import { sendEmail } from "../../../lib/notify";
+import { LowCalSession, Team } from "../../../types";
+import {
+  DAYS_UNTIL_EXPIRY,
+  calculateExpiryDate,
+  convertSlugToName,
+  getResumeLink,
+} from "./utils";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -46,7 +52,9 @@ const validateRequest = async (
           where: {
             email: { _eq: $email }
             deleted_at: { _is_null: true }
+            locked_at: { _is_null: true }
             submitted_at: { _is_null: true }
+            sanitised_at: { _is_null: true }
             flow: { team: { slug: { _eq: $teamSlug } } }
           }
           order_by: { flow: { slug: asc }, created_at: asc }
@@ -113,7 +121,12 @@ const buildContentFromSessions = async (
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 
-    return `Service: ${service}
+    // Filter out any sessions that are expired (safety net for failed sanitation)
+    const today = new Date();
+    const sessionAge = differenceInDays(today, new Date(session.created_at));
+
+    if (sessionAge < DAYS_UNTIL_EXPIRY)
+      return `Service: ${service}
       Address: ${addressLine || "Address not submitted"}
       Project type: ${projectType || "Project type not submitted"}
       Expiry Date: ${expiryDate}
@@ -121,7 +134,7 @@ const buildContentFromSessions = async (
   };
 
   const content = await Promise.all(sessions.map(contentBuilder));
-  return content.join("\n\n");
+  return content.filter(Boolean).join("\n\n");
 };
 
-export { resumeApplication, buildContentFromSessions };
+export { buildContentFromSessions, resumeApplication };

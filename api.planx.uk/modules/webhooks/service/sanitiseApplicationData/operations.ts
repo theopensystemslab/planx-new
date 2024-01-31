@@ -68,8 +68,12 @@ export const getExpiredSessionIds = async (): Promise<string[]> => {
     query GetExpiredSessionIds($retentionPeriod: timestamptz) {
       lowcal_sessions(
         where: {
-          submitted_at: { _lt: $retentionPeriod }
           sanitised_at: { _is_null: true }
+          _or: [
+            { deleted_at: { _lt: $retentionPeriod } }
+            { submitted_at: { _lt: $retentionPeriod } }
+            { locked_at: { _lt: $retentionPeriod } }
+          ]
         }
       ) {
         id
@@ -123,6 +127,7 @@ export const sanitiseLowcalSessions: Operation = async () => {
           _or: [
             { deleted_at: { _lt: $retentionPeriod } }
             { submitted_at: { _lt: $retentionPeriod } }
+            { locked_at: { _lt: $retentionPeriod } }
           ]
         }
       ) {
