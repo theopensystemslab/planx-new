@@ -11,10 +11,7 @@ import Input from "ui/shared/Input";
 import { FeedbackFormInput, FormProps, UserFeedback } from ".";
 
 const Form = styled("form")(({ theme }) => ({
-  "& > *": {
-    // Assuming contentFlowSpacing is a function that returns styles
-    ...contentFlowSpacing(theme),
-  },
+  "& > *": contentFlowSpacing(theme),
 }));
 
 function FormInputs({
