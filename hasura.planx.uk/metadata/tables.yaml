@@ -241,6 +241,7 @@
           - flow_id
           - id
           - node_id
+          - node_type
           - status
           - team_id
           - user_comment
