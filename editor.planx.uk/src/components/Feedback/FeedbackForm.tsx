@@ -58,17 +58,12 @@ function FormInputs({
   );
 }
 
-const getInitialValues = (inputs: FeedbackFormInput[]) => {
-  const initialValues: UserFeedback = {} as UserFeedback;
-  inputs.forEach((input) => {
-    initialValues[input.name as keyof UserFeedback] = "";
-  });
-  return initialValues;
-};
-
 const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
-  const formik = useFormik({
-    initialValues: getInitialValues(inputs),
+  const formik = useFormik<UserFeedback>({
+    initialValues: {
+      userContext: undefined,
+      userComment: "",
+    },
     onSubmit: handleSubmit,
   });
 
