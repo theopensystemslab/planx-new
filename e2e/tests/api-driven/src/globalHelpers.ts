@@ -8,8 +8,6 @@ export function createTeam(
     $admin.team.create({
       name: "E2E Test Team",
       slug: "E2E",
-      logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
-      primaryColour: "#444444",
       submissionEmail: TEST_EMAIL,
       homepage: "planx.uk",
       ...args,
