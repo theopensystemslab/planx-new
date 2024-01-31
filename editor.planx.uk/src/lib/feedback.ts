@@ -63,16 +63,11 @@ export type FeedbackMetadata = {
   teamId?: number;
   flowId?: string;
   nodeId?: string | null;
-  projectType?: string;
-  address?: string;
   device: Bowser.Parser.ParsedResult;
   userData: UserData;
-  componentMetadata?: { [key: string]: any };
 };
 
-export async function getInternalFeedbackMetadata(
-  componentMetadata = {},
-): Promise<FeedbackMetadata> {
+export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
   const {
     breadcrumbs,
     currentCard,
@@ -80,10 +75,8 @@ export async function getInternalFeedbackMetadata(
     fetchCurrentTeam,
     id: flowId,
   } = useStore.getState();
-  const { data: passportData } = computePassport();
   const { id: teamId } = await fetchCurrentTeam();
   const node = currentCard();
-  const projectType = passportData?.["proposal.projectType"]?.[0];
   const userData = {
     breadcrumbs: breadcrumbs,
     passport: computePassport(),
@@ -92,10 +85,6 @@ export async function getInternalFeedbackMetadata(
     teamId,
     flowId,
     nodeId: node?.id,
-    projectType: projectType,
-    address:
-      passportData?._address?.single_line_address ||
-      passportData?._address?.title,
     device: Bowser.parse(window.navigator.userAgent),
     userData: userData,
   };
@@ -107,11 +96,8 @@ export async function insertFeedbackMutation(data: {
   teamId?: number;
   flowId?: string;
   nodeId?: string | null;
-  projectType?: string;
-  address?: string;
   device?: Bowser.Parser.ParsedResult;
   userData?: UserData;
-  componentMetadata?: { [key: string]: any };
   userContext?: string;
   userComment: string;
   feedbackType: string;
@@ -122,11 +108,8 @@ export async function insertFeedbackMutation(data: {
         $teamId: Int
         $flowId: uuid
         $nodeId: String
-        $projectType: String
-        $address: String
         $device: jsonb
         $userData: jsonb
-        $componentMetadata: jsonb
         $userContext: String
         $userComment: String!
         $feedbackType: feedback_type_enum_enum!
@@ -136,11 +119,8 @@ export async function insertFeedbackMutation(data: {
             team_id: $teamId
             flow_id: $flowId
             node_id: $nodeId
-            project_type: $projectType
-            address: $address
             device: $device
             user_data: $userData
-            component_metadata: $componentMetadata
             user_context: $userContext
             user_comment: $userComment
             feedback_type: $feedbackType

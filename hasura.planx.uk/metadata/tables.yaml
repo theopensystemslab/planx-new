@@ -235,15 +235,12 @@
       permission:
         check: {}
         columns:
-          - address
-          - component_metadata
           - created_at
           - device
           - feedback_type
           - flow_id
           - id
           - node_id
-          - project_type
           - status
           - team_id
           - user_comment
