@@ -26,12 +26,8 @@ const Option: React.FC<any> = (props) => {
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
     >
-      <Link
-        href={href}
-        prefetch={false}
-        onClick={(e) => e.preventDefault()}
-        style={{ background, color }}
-      >
+      <Link href={href} prefetch={false} onClick={(e) => e.preventDefault()}>
+        <div className="band" style={{ background, color }}></div>
         <span>{props.data.text}</span>
       </Link>
       <ol className="decisions">

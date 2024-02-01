@@ -2,9 +2,9 @@ $background: #f2f2f2;
 $black: #2c2c2c;
 $endpointRadius: 45px;
 $hangerRadius: 14px;
-$lineColor: #cacaca;
+$lineColor: #aaa;
 $lineWidth: 1px;
-$padding: 7px;
+$padding: 12px;
 $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNc8B8AAkUBofXwZpQAAAAASUVORK5CYII=);
 
 @mixin circle($radius) {
@@ -145,15 +145,15 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 
   & > a {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     text-decoration: none;
     cursor: pointer;
     color: $black;
     border: 1px solid $lineColor;
-    background: white;
+    background: $background;
     user-select: none;
-    padding: 6px 12px;
+    padding: 4px 12px;
 
     * {
       pointer-events: none;
@@ -166,13 +166,17 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 
     > svg {
       margin-left: -6px;
-      width: 16px;
-      height: 16px;
-      opacity: 0.3;
+      width: 24px;
+      height: 24px;
+      opacity: 0.75;
     }
 
     > span:not(:nth-child(1)) {
       margin-left: 6px;
+    }
+
+    &:hover {
+      border-color: #2c2c2c;
     }
   }
 }
@@ -229,7 +233,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 
   > a {
     $size: 14px;
-    display: inline-block;
+    display: flex;
     // width: $size;
     text-decoration: none;
     border: 1px solid #a0a0a0;
@@ -303,9 +307,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   }
   align-items: center;
 
-  &.isNote {
+  &.question.isNote {
     > a {
-      background: yellow !important;
+      background: #f3f0ba !important;
     }
   }
 
@@ -421,6 +425,15 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
       align-items: center;
       > a {
         pointer-events: none;
+        position: relative;
+        padding-top: 20px;
+        .band {
+          width: 100%;
+          height: 15px;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
       }
 
       [data-layout="top-down"] & {
