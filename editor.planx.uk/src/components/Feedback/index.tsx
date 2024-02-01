@@ -100,8 +100,19 @@ const Feedback: React.FC = () => {
 
   const feedbackComponentRef = useRef<HTMLDivElement | null>(null);
 
+  const shouldScrollToView = () => {
+    switch (currentFeedbackView) {
+      case "banner":
+        return false;
+      case "thanks":
+        return false;
+      default:
+        return true;
+    }
+  };
+
   useEffect(() => {
-    if (currentFeedbackView !== "banner" && currentFeedbackView !== "thanks") {
+    if (shouldScrollToView()) {
       feedbackComponentRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "start",
