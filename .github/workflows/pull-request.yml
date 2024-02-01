@@ -73,7 +73,7 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
@@ -116,7 +116,7 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
@@ -154,7 +154,7 @@ jobs:
         run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
