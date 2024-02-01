@@ -52,7 +52,8 @@ const MoreInfoFeedbackComponent: React.FC = () => {
   };
 
   async function handleFeedbackFormSubmit(values: UserFeedback) {
-    const metadata: any = await getInternalFeedbackMetadata();
+    if (!feedbackOption) return;
+    const metadata = await getInternalFeedbackMetadata();
     const feedbackType = { feedbackType: feedbackOption };
     const data = { ...metadata, ...feedbackType, ...values };
     await insertFeedbackMutation(data);
