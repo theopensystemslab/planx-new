@@ -107,9 +107,8 @@ async function go(
   if (res && res.count > 0 && res.entities) {
     res.entities.forEach((entity: { dataset: any }) => {
       // get the planx variable that corresponds to this entity's 'dataset', should never be null because our initial request is filtered on 'dataset'
-      const key = Object.keys(baseSchema).find(
-        (key) =>
-          baseSchema[key]["digital-land-datasets"]?.includes(entity.dataset),
+      const key = Object.keys(baseSchema).find((key) =>
+        baseSchema[key]["digital-land-datasets"]?.includes(entity.dataset),
       );
       // because there can be many digital land datasets per planx variable, check if this key is already in our result
       if (key && Object.keys(formattedResult).includes(key)) {
@@ -255,11 +254,8 @@ async function go(
     .then((responses) => {
       responses.forEach((response: any) => {
         // get the planx variable that corresponds to this 'dataset', should never be null because we only requested known datasets
-        const key = Object.keys(baseSchema).find(
-          (key) =>
-            baseSchema[key]["digital-land-datasets"]?.includes(
-              response.dataset,
-            ),
+        const key = Object.keys(baseSchema).find((key) =>
+          baseSchema[key]["digital-land-datasets"]?.includes(response.dataset),
         );
         if (key) metadata[key] = response;
       });
