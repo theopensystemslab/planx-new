@@ -22,3 +22,7 @@ SET
   team_id = EXCLUDED.team_id,
   staging_bops_submission_url = EXCLUDED.staging_bops_submission_url,
   staging_bops_secret = EXCLUDED.staging_bops_secret;
+SELECT
+  setval('team_integrations_id_seq', max(id))
+FROM
+  team_integrations;
