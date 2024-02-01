@@ -376,9 +376,9 @@ const Feedback: React.FC = () => {
   }
 
   return (
-    <div ref={feedbackComponentRef}>
+    <Box ref={feedbackComponentRef}>
       <Feedback />
-    </div>
+    </Box>
   );
 };
 
