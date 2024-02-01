@@ -45,8 +45,8 @@ dependencies:
     specifier: ^6.4.5
     version: 6.4.5
   date-fns:
-    specifier: ^2.29.3
-    version: 2.29.3
+    specifier: ^3.3.1
+    version: 3.3.1
   dompurify:
     specifier: ^3.0.6
     version: 3.0.6
@@ -3298,9 +3298,8 @@ packages:
       whatwg-url: 14.0.0
     dev: false
 
-  /date-fns@2.29.3:
-    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
-    engines: {node: '>=0.11'}
+  /date-fns@3.3.1:
+    resolution: {integrity: sha512-y8e109LYGgoQDveiEBD3DYXKba1jWf5BA8YU1FL5Tvm0BTdEfy54WLCwnuYWZNnzzvALy/QQ4Hov+Q9RVRv+Zw==}
     dev: false
 
   /dateformat@3.0.3:
@@ -8286,7 +8285,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aa93cbf}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.3(react@18.2.0)
