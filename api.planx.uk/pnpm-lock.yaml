@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#aa93cbf
-    version: github.com/theopensystemslab/planx-core/aa93cbf
+    specifier: git+https://github.com/theopensystemslab/planx-core#d74afe2
+    version: github.com/theopensystemslab/planx-core/d74afe2
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -8285,10 +8285,11 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/aa93cbf:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aa93cbf}
+  github.com/theopensystemslab/planx-core/d74afe2:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d74afe2}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
+    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.3(react@18.2.0)

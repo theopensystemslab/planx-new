@@ -59,8 +59,6 @@ export async function setUpTestContext(
     context.team.id = await $admin.team.create({
       slug: context.team.slug,
       name: context.team.name,
-      logo: context.team.logo,
-      primaryColour: context.team.primaryColour,
       homepage: context.team.homepage,
       submissionEmail: context.team.submissionEmail,
     });
