@@ -9,7 +9,7 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FeedbackOption from "ui/public/FeedbackOption";
 
 import { FeedbackFormInput, UserFeedback } from ".";
@@ -36,6 +36,16 @@ const MoreInfoFeedbackComponent: React.FC = () => {
   const [currentFeedbackView, setCurrentFeedbackView] =
     useState<View>("yes/no");
   const [feedbackOption, setFeedbackOption] = useState<Sentiment | null>(null);
+  const feedbackComponentRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (currentFeedbackView === "input") {
+      feedbackComponentRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [currentFeedbackView]);
 
   const handleFeedbackOptionClick = (event: Sentiment) => {
     switch (event) {
@@ -142,7 +152,11 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     }
   }
 
-  return <MoreInfoFeedbackView />;
+  return (
+    <Box ref={feedbackComponentRef}>
+      <MoreInfoFeedbackView />
+    </Box>
+  );
 };
 
 export default MoreInfoFeedbackComponent;
