@@ -39,7 +39,7 @@ jobs:
         id: commit
         run: |
           echo "commit=$(git show -s --format=%s)" >> $GITHUB_OUTPUT
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
