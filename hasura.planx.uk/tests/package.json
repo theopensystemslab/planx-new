@@ -5,7 +5,7 @@
     "build-jwt": "DOTENV_CONFIG_PATH=../.env.test node -r dotenv/config scripts/buildJWT.js"
   },
   "dependencies": {
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.1",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.1",
