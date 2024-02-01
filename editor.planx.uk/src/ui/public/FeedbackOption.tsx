@@ -15,7 +15,7 @@ interface Props {
 
 const Root = styled(Button, {
   shouldForwardProp: (prop) =>
-    !["fullWidth", "format", "Icon"].includes(prop.toString()),
+    !["fullWidth", "format", "Icon", "showArrow"].includes(prop.toString()),
 })<Props>(({ theme, showArrow, format }) => ({
   backgroundColor: theme.palette.common.white,
   color: theme.palette.text.primary,
