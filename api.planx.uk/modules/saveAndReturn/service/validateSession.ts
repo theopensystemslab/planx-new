@@ -104,8 +104,8 @@ async function reconcileSessionData({
 
   const findParentNode = (nodeId: string): string | undefined => {
     const [parentId, _] =
-      Object.entries(currentFlow).find(
-        ([_, node]) => node.edges?.includes(nodeId),
+      Object.entries(currentFlow).find(([_, node]) =>
+        node.edges?.includes(nodeId),
       ) || [];
     return parentId;
   };
