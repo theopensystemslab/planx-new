@@ -103,7 +103,6 @@ const Feedback: React.FC = () => {
   const shouldScrollToView = () => {
     switch (currentFeedbackView) {
       case "banner":
-        return false;
       case "thanks":
         return false;
       default:
