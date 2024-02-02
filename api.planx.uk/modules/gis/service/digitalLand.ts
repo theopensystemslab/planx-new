@@ -187,7 +187,7 @@ async function go(
 
   // --- LISTED BUILDINGS ---
   if (formattedResult["listed"] && formattedResult["listed"].value) {
-    ["listd.grade.I", "listed.grade.II", "listed.grade.II*"].forEach(
+    ["listed.grade.I", "listed.grade.II", "listed.grade.II*"].forEach(
       (grade) =>
         (formattedResult[grade] = {
           fn: grade,
