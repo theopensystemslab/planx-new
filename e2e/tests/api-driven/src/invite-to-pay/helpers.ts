@@ -163,17 +163,15 @@ export async function cleanup({
 const setupMockBopsSubmissionUrl = async (teamId: number) => {
   await $admin.client.request(
     gql`
-      mutation SetupTeamIntegrationE2E(
+      mutation UpdateTeamIntegrationE2E(
         $stagingBopsSubmissionUrl: String
         $teamId: Int
       ) {
-        insert_team_integrations_one(
-          object: {
-            team_id: $teamId
-            staging_bops_submission_url: $stagingBopsSubmissionUrl
-          }
+        update_team_integrations(
+          where: { team_id: { _eq: $teamId } }
+          _set: { staging_bops_submission_url: $stagingBopsSubmissionUrl }
         ) {
-          id
+          affected_rows
         }
       }
     `,
