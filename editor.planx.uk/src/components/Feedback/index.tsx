@@ -15,7 +15,7 @@ import {
 } from "lib/feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { BackButton } from "pages/Preview/Questions";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePrevious } from "react-use";
 import FeedbackOption from "ui/public/FeedbackOption";
 
@@ -97,6 +97,27 @@ const Feedback: React.FC = () => {
       setCurrentFeedbackView("banner");
     }
   }, [breadcrumbs]);
+
+  const feedbackComponentRef = useRef<HTMLDivElement | null>(null);
+
+  const shouldScrollToView = () => {
+    switch (currentFeedbackView) {
+      case "banner":
+      case "thanks":
+        return false;
+      default:
+        return true;
+    }
+  };
+
+  useEffect(() => {
+    if (shouldScrollToView()) {
+      feedbackComponentRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [currentFeedbackView]);
 
   function handleFeedbackViewClick(event: ClickEvents) {
     switch (event) {
@@ -364,7 +385,11 @@ const Feedback: React.FC = () => {
     }
   }
 
-  return <Feedback />;
+  return (
+    <Box ref={feedbackComponentRef}>
+      <Feedback />
+    </Box>
+  );
 };
 
 export default Feedback;
