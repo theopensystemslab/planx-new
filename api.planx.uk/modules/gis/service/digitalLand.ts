@@ -107,8 +107,9 @@ async function go(
   if (res && res.count > 0 && res.entities) {
     res.entities.forEach((entity: { dataset: any }) => {
       // get the planx variable that corresponds to this entity's 'dataset', should never be null because our initial request is filtered on 'dataset'
-      const key = Object.keys(baseSchema).find((key) =>
-        baseSchema[key]["digital-land-datasets"]?.includes(entity.dataset),
+      const key = Object.keys(baseSchema).find(
+        (key) =>
+          baseSchema[key]["digital-land-datasets"]?.includes(entity.dataset),
       );
       // because there can be many digital land datasets per planx variable, check if this key is already in our result
       if (key && Object.keys(formattedResult).includes(key)) {
@@ -170,7 +171,7 @@ async function go(
       formattedResult[broads] = { fn: broads, value: false };
   }
 
-  // FLOODING
+  // --- FLOODING ---
   if (formattedResult["flood"] && formattedResult["flood"].value) {
     ["flood.zone.1", "flood.zone.2", "flood.zone.3"].forEach(
       (zone) =>
@@ -186,7 +187,20 @@ async function go(
   }
 
   // --- LISTED BUILDINGS ---
-  // TODO add granular variables to reflect grade (eg `listed.grade1`), not reflected in content yet though
+  if (formattedResult["listed"] && formattedResult["listed"].value) {
+    ["listd.grade.I", "listed.grade.II", "listed.grade.II*"].forEach(
+      (grade) =>
+        (formattedResult[grade] = {
+          fn: grade,
+          value: Boolean(
+            formattedResult["listed"].data?.filter(
+              (entity) =>
+                entity["listed-building-grade"] === grade.split(".").pop(),
+            ).length,
+          ),
+        }),
+    );
+  }
 
   // --- ARTICLE 4S ---
   // only attempt to set granular a4s if we have metadata for this local authority; proceed with non-granular a4 queries under "opensystemslab" team etc
@@ -254,8 +268,11 @@ async function go(
     .then((responses) => {
       responses.forEach((response: any) => {
         // get the planx variable that corresponds to this 'dataset', should never be null because we only requested known datasets
-        const key = Object.keys(baseSchema).find((key) =>
-          baseSchema[key]["digital-land-datasets"]?.includes(response.dataset),
+        const key = Object.keys(baseSchema).find(
+          (key) =>
+            baseSchema[key]["digital-land-datasets"]?.includes(
+              response.dataset,
+            ),
         );
         if (key) metadata[key] = response;
       });
