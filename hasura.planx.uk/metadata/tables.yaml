@@ -1340,6 +1340,10 @@
 - table:
     name: team_integrations
     schema: public
+  object_relationships:
+    - name: team
+      using:
+        foreign_key_constraint_on: team_id
   select_permissions:
     - role: api
       permission:
