@@ -7,7 +7,7 @@ config:
     secure: AAABALRtSjQMRjERtkHs6WBOI7MBMw4bFOuHO8qLLPe9Pfg8Nlbp61XalZA1pmXsRt/T+59fGcdqbKA5WRkOZVibhFo=
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
   application:encryption-key:
-    secure: AAABAPhLlb8bwYKCvJW3vOnM8e9yEx7wW/EUWJQWsF2nEej7Zs0/zIm5hoJq1ltDZ6D4YU1WmAxyrgh1vSQTatJNl55q56gNWwrpZTZamg/9IH5nPo+PzOrkWxBErzC+
+    secure: AAABAGbTpoRtazwoNFNmaPCW0RdeTqjhEzQuYR1kl4ft7EWNxqswAu8Dc9T+YBxkYr3uaHbu5obzyo8I4QuVgg==
   application:file-api-key:
     secure: AAABAGyTfLujGho+V0tEhFXQRET5FjYK6txyaFTB3gY/VaKzq8yNlocJTAM5nt8mBhF6T+AeQD2GxW63
   application:file-api-key-nexus:
