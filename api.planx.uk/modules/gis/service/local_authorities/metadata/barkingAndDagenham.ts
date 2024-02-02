@@ -16,7 +16,8 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
     records: {
       "article4.barkingAndDagenham.additionalStoreys.dagenhamVillage": "A4D01",
       "article4.barkingAndDagenham.additionalStoreys.lymington": "A4D02",
-      "article4.barkingAndDagenham.becontree": "Proposed Becontree Design Guide Article 4",
+      "article4.barkingAndDagenham.becontree":
+        "Proposed Becontree Design Guide Article 4",
       // "article4.barkingAndDagenham.becontree.corners": "TBD",
       "article4.barkingAndDagenham.hmo": "A4D03",
     },
