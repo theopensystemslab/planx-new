@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { getFeedbackMetadata } from "lib/feedback";
 import React, { useEffect, useState } from "react";
 import { Link as ReactNaviLink } from "react-navi";
@@ -80,6 +81,8 @@ export default function Footer(props: Props) {
 
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID;
 
+  const isUsingFeatureFlag = hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
+
   useEffect(() => {
     let feedbackFishPostMessageWorkingCorrectly: boolean;
     const handleMessage = (event: MessageEvent) => {
@@ -134,7 +137,7 @@ export default function Footer(props: Props) {
           {items
             ?.filter((item) => item.title)
             .map((item) => <FooterItem {...item} key={item.title} />)}
-          {feedbackFishId && (
+          {feedbackFishId && !isUsingFeatureFlag && (
             <>
               {feedbackPrivacyNoteVisible && (
                 <FeedbackPrivacyNote onClose={handleFeedbackPrivacyNoteClose} />

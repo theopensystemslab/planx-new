@@ -1,15 +1,19 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
+import {
+  getInternalFeedbackMetadata,
+  insertFeedbackMutation,
+} from "lib/feedback";
 import React, { useState } from "react";
-import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import FeedbackOption from "ui/public/FeedbackOption";
-import Input from "ui/shared/Input";
+
+import { FeedbackFormInput, UserFeedback } from ".";
+import FeedbackForm from "./FeedbackForm";
 
 const MoreInfoFeedback = styled(Box)(({ theme }) => ({
   borderTop: `2px solid ${theme.palette.border.main}`,
@@ -21,9 +25,7 @@ const MoreInfoFeedback = styled(Box)(({ theme }) => ({
 
 const FeedbackBody = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1, 0),
-  "& form > * + *": {
-    ...contentFlowSpacing(theme),
-  },
+  "& form > * + *": contentFlowSpacing(theme),
 }));
 
 const MoreInfoFeedbackComponent: React.FC = () => {
@@ -49,23 +51,14 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     }
   };
 
-  const handleFeedbackFormSubmit = (e: any) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const formDataPayload: any = {};
-
-    for (const [key, value] of formData.entries()) {
-      formDataPayload[key] = value;
-    }
-
-    console.log("The users selection", feedbackOption);
-
-    console.log("The user inputs", formDataPayload);
-    // Prep the form data payload?
-
+  async function handleFeedbackFormSubmit(values: UserFeedback) {
+    if (!feedbackOption) return;
+    const metadata = await getInternalFeedbackMetadata();
+    const feedbackType = { feedbackType: feedbackOption };
+    const data = { ...metadata, ...feedbackType, ...values };
+    await insertFeedbackMutation(data);
     setCurrentFeedbackView("thanks");
-  };
+  }
 
   function FeedbackYesNo(): FCReturn {
     return (
@@ -94,6 +87,13 @@ const MoreInfoFeedbackComponent: React.FC = () => {
   }
 
   function FeedbackInput(): FCReturn {
+    const commentFormInputs: FeedbackFormInput[] = [
+      {
+        name: "userComment",
+        ariaDescribedBy: "comment-title",
+      },
+    ];
+
     return (
       <MoreInfoFeedback>
         <Container maxWidth={false}>
@@ -101,19 +101,10 @@ const MoreInfoFeedbackComponent: React.FC = () => {
             Please help us to improve this service by sharing feedback
           </Typography>
           <FeedbackBody>
-            <form onSubmit={(e) => handleFeedbackFormSubmit(e)}>
-              <Input
-                name="userComment"
-                required
-                multiline
-                bordered
-                aria-describedby="comment-title"
-              />
-              <FeedbackDisclaimer />
-              <Button type="submit" variant="contained" sx={{ marginTop: 2.5 }}>
-                Send feedback
-              </Button>
-            </form>
+            <FeedbackForm
+              inputs={commentFormInputs}
+              handleSubmit={handleFeedbackFormSubmit}
+            />
           </FeedbackBody>
         </Container>
       </MoreInfoFeedback>

@@ -4,21 +4,23 @@ import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
-import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import FeedbackPhaseBanner from "components/FeedbackPhaseBanner";
+import {
+  getInternalFeedbackMetadata,
+  insertFeedbackMutation,
+} from "lib/feedback";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { BackButton } from "pages/Preview/Questions";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
-import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import FeedbackOption from "ui/public/FeedbackOption";
-import InputLabel from "ui/public/InputLabel";
-import Input from "ui/shared/Input";
+
+import FeedbackForm from "./FeedbackForm";
+import FeedbackPhaseBanner from "./FeedbackPhaseBanner";
 
 const FeedbackWrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -61,13 +63,24 @@ const FeedbackBody = styled(Box)(({ theme }) => ({
   maxWidth: theme.breakpoints.values.formWrap,
 }));
 
-const FeedbackForm = styled("form")(({ theme }) => ({
-  "& > *": {
-    ...contentFlowSpacing(theme),
-  },
-}));
+export type UserFeedback = {
+  userContext?: string;
+  userComment: string;
+};
 
-const FeedbackComponent: React.FC = () => {
+export interface FormProps {
+  inputs: FeedbackFormInput[];
+  handleSubmit: (values: UserFeedback) => void;
+}
+
+export type FeedbackFormInput = {
+  name: keyof UserFeedback;
+  label?: string;
+  id?: string;
+  ariaDescribedBy?: string;
+};
+
+const Feedback: React.FC = () => {
   type FeedbackCategory = "issue" | "idea" | "comment";
 
   type View = "banner" | "triage" | FeedbackCategory | "thanks";
@@ -77,6 +90,13 @@ const FeedbackComponent: React.FC = () => {
   const [currentFeedbackView, setCurrentFeedbackView] =
     useState<View>("banner");
   const previousFeedbackView = usePrevious(currentFeedbackView);
+  const breadcrumbs = useStore((state) => state.breadcrumbs);
+
+  useEffect(() => {
+    if (currentFeedbackView === "thanks") {
+      setCurrentFeedbackView("banner");
+    }
+  }, [breadcrumbs]);
 
   function handleFeedbackViewClick(event: ClickEvents) {
     switch (event) {
@@ -92,20 +112,13 @@ const FeedbackComponent: React.FC = () => {
     }
   }
 
-  const handleFeedbackFormSubmit = (e: any) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const formDataPayload: any = {};
-
-    for (const [key, value] of formData.entries()) {
-      formDataPayload[key] = value;
-    }
-
-    console.log("The user inputs", formDataPayload);
-    // Prep the form data payload?
-
+  async function handleFeedbackFormSubmit(values: UserFeedback) {
+    const metadata = await getInternalFeedbackMetadata();
+    const feedbackType = { feedbackType: currentFeedbackView };
+    const data = { ...metadata, ...feedbackType, ...values };
+    await insertFeedbackMutation(data);
     setCurrentFeedbackView("thanks");
-  };
+  }
 
   function BackAndCloseFeedbackHeader(): FCReturn {
     return (
@@ -224,43 +237,29 @@ const FeedbackComponent: React.FC = () => {
   }
 
   function ReportAnIssue(): FCReturn {
+    const issueFormInputs: FeedbackFormInput[] = [
+      {
+        name: "userContext",
+        label: "What were you doing?",
+        id: "issue-input-1",
+      },
+      {
+        name: "userComment",
+        label: "What went wrong?",
+        id: "issue-input-2",
+      },
+    ];
+
     return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
           <FeedbackRow>
             <ReportAnIssueTopBar />
             <FeedbackBody>
-              <FeedbackForm onSubmit={(e) => handleFeedbackFormSubmit(e)}>
-                <InputLabel
-                  label="What were you doing?"
-                  htmlFor="issue-input-1"
-                >
-                  <Input
-                    required
-                    multiline
-                    bordered
-                    id="issue-input-1"
-                    name="userContext"
-                  />
-                </InputLabel>
-                <InputLabel label="What went wrong?" htmlFor="issue-input-2">
-                  <Input
-                    required
-                    multiline
-                    bordered
-                    id="issue-input-2"
-                    name="userComment"
-                  />
-                </InputLabel>
-                <FeedbackDisclaimer />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ marginTop: 2.5 }}
-                >
-                  Send feedback
-                </Button>
-              </FeedbackForm>
+              <FeedbackForm
+                inputs={issueFormInputs}
+                handleSubmit={handleFeedbackFormSubmit}
+              />
             </FeedbackBody>
           </FeedbackRow>
         </Container>
@@ -269,6 +268,13 @@ const FeedbackComponent: React.FC = () => {
   }
 
   function ShareAnIdea(): FCReturn {
+    const shareFormInputs: FeedbackFormInput[] = [
+      {
+        name: "userComment",
+        ariaDescribedBy: "idea-title",
+      },
+    ];
+
     return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
@@ -280,24 +286,11 @@ const FeedbackComponent: React.FC = () => {
                 Share an idea
               </Typography>
             </FeedbackTitle>
-            <FeedbackBody onSubmit={(e) => handleFeedbackFormSubmit(e)}>
-              <FeedbackForm>
-                <Input
-                  name="useComment"
-                  required
-                  multiline
-                  bordered
-                  aria-describedby="idea-title"
-                />
-                <FeedbackDisclaimer />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ marginTop: 2.5 }}
-                >
-                  Send feedback
-                </Button>
-              </FeedbackForm>
+            <FeedbackBody>
+              <FeedbackForm
+                inputs={shareFormInputs}
+                handleSubmit={handleFeedbackFormSubmit}
+              />
             </FeedbackBody>
           </FeedbackRow>
         </Container>
@@ -306,6 +299,13 @@ const FeedbackComponent: React.FC = () => {
   }
 
   function ShareAComment(): FCReturn {
+    const commentFormInputs: FeedbackFormInput[] = [
+      {
+        name: "userComment",
+        ariaDescribedBy: "comment-title",
+      },
+    ];
+
     return (
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
@@ -318,23 +318,10 @@ const FeedbackComponent: React.FC = () => {
               </Typography>
             </FeedbackTitle>
             <FeedbackBody>
-              <FeedbackForm onSubmit={(e) => handleFeedbackFormSubmit(e)}>
-                <Input
-                  name="userComment"
-                  required
-                  multiline
-                  bordered
-                  aria-describedby="comment-title"
-                />
-                <FeedbackDisclaimer />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ marginTop: 2.5 }}
-                >
-                  Send feedback
-                </Button>
-              </FeedbackForm>
+              <FeedbackForm
+                inputs={commentFormInputs}
+                handleSubmit={handleFeedbackFormSubmit}
+              />
             </FeedbackBody>
           </FeedbackRow>
         </Container>
@@ -380,4 +367,4 @@ const FeedbackComponent: React.FC = () => {
   return <Feedback />;
 };
 
-export default FeedbackComponent;
+export default Feedback;
