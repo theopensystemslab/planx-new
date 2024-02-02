@@ -35,6 +35,7 @@ interface FileTaggingModalProps {
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
   setShowModal: (value: React.SetStateAction<boolean>) => void;
+  removeFile: (slot: FileUploadSlot) => void;
 }
 
 const ListHeader = styled(Box)(({ theme }) => ({
@@ -52,6 +53,7 @@ export const FileTaggingModal = ({
   fileList,
   setFileList,
   setShowModal,
+  removeFile,
 }: FileTaggingModalProps) => {
   const [error, setError] = useState<string | undefined>();
 
@@ -95,7 +97,11 @@ export const FileTaggingModal = ({
         </Box>
         {uploadedFiles.map((slot) => (
           <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
-            <UploadedFileCard {...slot} key={slot.id} />
+            <UploadedFileCard
+              {...slot}
+              key={slot.id}
+              removeFile={() => removeFile(slot)}
+            />
             <SelectMultiple
               uploadedFile={slot}
               fileList={fileList}

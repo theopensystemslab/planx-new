@@ -155,6 +155,17 @@ function Component(props: Props) {
     }
   };
 
+  const removeFile = (slot: FileUploadSlot) => {
+    setSlots(slots.filter((currentSlot) => currentSlot.file !== slot.file));
+    setFileUploadStatus(`${slot.file.path} was deleted`);
+    const updatedFileList = removeSlots(
+      getTagsForSlot(slot.id, fileList),
+      slot,
+      fileList,
+    );
+    setFileList(updatedFileList);
+  };
+
   return (
     <Card
       handleSubmit={props.hideDropZone ? props.handleSubmit : validateAndSubmit}
@@ -222,6 +233,7 @@ function Component(props: Props) {
                 fileList={fileList}
                 setFileList={setFileList}
                 setShowModal={setShowModal}
+                removeFile={removeFile}
               />
             )}
             {slots.map((slot) => {
@@ -231,20 +243,7 @@ function Component(props: Props) {
                   key={slot.id}
                   tags={getTagsForSlot(slot.id, fileList)}
                   onChange={onUploadedFileCardChange}
-                  removeFile={() => {
-                    setSlots(
-                      slots.filter(
-                        (currentSlot) => currentSlot.file !== slot.file,
-                      ),
-                    );
-                    setFileUploadStatus(`${slot.file.path} was deleted`);
-                    const updatedFileList = removeSlots(
-                      getTagsForSlot(slot.id, fileList),
-                      slot,
-                      fileList,
-                    );
-                    setFileList(updatedFileList);
-                  }}
+                  removeFile={() => removeFile(slot)}
                 />
               );
             })}

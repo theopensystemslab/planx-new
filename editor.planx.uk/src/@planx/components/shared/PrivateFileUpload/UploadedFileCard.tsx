@@ -12,7 +12,7 @@ import ImagePreview from "components/ImagePreview";
 import React from "react";
 
 interface Props extends FileUploadSlot {
-  removeFile?: () => void;
+  removeFile: () => void;
   onChange?: () => void;
   tags?: string[];
 }
