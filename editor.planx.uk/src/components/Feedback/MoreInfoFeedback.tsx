@@ -130,8 +130,9 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           </Typography>
           <FeedbackBody>
             <Typography variant="body2">
-              We appreciate it lorem ipsum dolor sit amet, consectetuer
-              adipiscing elit. Aenean commodo ligula eget dolor.
+              Your input on the helpfulness of the provided assistance is
+              crucial for us to refine and improve. We appreciate your time in
+              helping us enhance our services.
             </Typography>
           </FeedbackBody>
         </Container>

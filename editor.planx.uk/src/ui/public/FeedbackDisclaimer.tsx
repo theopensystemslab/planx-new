@@ -9,7 +9,15 @@ export default function FeedbackDisclaimer(): FCReturn {
       <Typography variant="body2">
         Please do not include any personal or financial information in your
         feedback. If you choose to do so we will process your personal data
-        according to our <Link href="#">privacy policy (TODO)</Link>.
+        according to our{" "}
+        <Link
+          href="https://www.planx.uk/privacy"
+          target="_blank"
+          rel="noopener"
+        >
+          privacy policy
+        </Link>
+        .
       </Typography>
     </Box>
   );
