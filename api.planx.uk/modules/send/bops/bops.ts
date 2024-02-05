@@ -47,15 +47,15 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   const env =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
-  const { bopsSubmissionURL, bopsToken } = await $api.team.getIntegrations({
-    slug: localAuthority,
-    encryptionKey: process.env.ENCRYPTION_KEY!,
-    env,
-  });
-  const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
-  const exportData = await $api.export.bopsPayload(payload?.sessionId);
-
   try {
+    const { bopsSubmissionURL, bopsToken } = await $api.team.getIntegrations({
+      slug: localAuthority,
+      encryptionKey: process.env.ENCRYPTION_KEY!,
+      env,
+    });
+    const target = `${bopsSubmissionURL}/api/v1/planning_applications`;
+    const exportData = await $api.export.bopsPayload(payload?.sessionId);
+
     const bopsResponse = await axios({
       method: "POST",
       url: target,
@@ -121,7 +121,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
               error.response.data,
               null,
               2,
-            )}`,
+            )}. Error: ${error}`,
           );
         } else {
           // re-throw other errors
@@ -135,7 +135,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     next(
       new ServerError({
         status: 500,
-        message: `Sending to BOPS failed (${localAuthority})`,
+        message: `Sending to BOPS failed (${localAuthority}). Error ${err}`,
         cause: err,
       }),
     );
@@ -174,17 +174,18 @@ const sendToBOPSV2 = async (
   const localAuthority = req.params.localAuthority;
   const env =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
-  const { bopsSubmissionURL, bopsToken } = await $api.team.getIntegrations({
-    slug: localAuthority,
-    encryptionKey: process.env.ENCRYPTION_KEY!,
-    env,
-  });
-  const target = `${bopsSubmissionURL}/api/v2/planning_applications`;
-  const exportData = await $api.export.digitalPlanningDataPayload(
-    payload?.sessionId,
-  );
 
   try {
+    const { bopsSubmissionURL, bopsToken } = await $api.team.getIntegrations({
+      slug: localAuthority,
+      encryptionKey: process.env.ENCRYPTION_KEY!,
+      env,
+    });
+    const target = `${bopsSubmissionURL}/api/v2/planning_applications`;
+    const exportData = await $api.export.digitalPlanningDataPayload(
+      payload?.sessionId,
+    );
+
     const bopsResponse = await axios({
       method: "POST",
       url: target,
@@ -269,7 +270,7 @@ const sendToBOPSV2 = async (
           payload?.sessionId,
         ]
           .filter(Boolean)
-          .join(" - ")})`,
+          .join(" - ")}). Error: ${err}`,
         cause: err,
       }),
     );
