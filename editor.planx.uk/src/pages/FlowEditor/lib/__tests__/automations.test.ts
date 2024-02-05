@@ -144,7 +144,7 @@ describe("(advanced) if the passport contains", () => {
           },
           _setter: {},
           contains: {
-            type: TYPES.Answer,
+            type: TYPES.Question,
             data: { fn: "item" },
             edges: shuffle([
               "apples",
