@@ -112,7 +112,7 @@ paths:
                 - bops
                 - uniform
       parameters:
-        - in: query
+        - in: path
           name: sessionId
           required: true
           schema:
