@@ -358,8 +358,8 @@ const Feedback: React.FC = () => {
             <TitleAndCloseFeedbackHeader title="Thank you for sharing feedback" />
             <FeedbackBody>
               <Typography variant="body1">
-                We appreciate it lorem ipsum dolor sit amet, consectetuer
-                adipiscing elit. Aenean commodo ligula eget dolor.
+                Your insights are invaluable and help us improve our services.
+                We appreciate your time and input.
               </Typography>
             </FeedbackBody>
           </FeedbackRow>
