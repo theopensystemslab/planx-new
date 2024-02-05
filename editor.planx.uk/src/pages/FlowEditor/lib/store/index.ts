@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { isPreviewOnlyDomain } from "routes/utils";
 import { create, UseBoundStore } from "zustand";
 import { createStore, StoreApi } from "zustand/vanilla";

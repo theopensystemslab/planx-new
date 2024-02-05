@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import { Flag, FlagSet, flatFlags } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
 import React, { useState } from "react";
@@ -10,7 +11,6 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { TYPES } from "../types";
 import { ICONS } from "../ui";
 import type { Result } from "./model";
 

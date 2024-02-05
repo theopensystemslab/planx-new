@@ -2,6 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
@@ -22,7 +23,6 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option, parseMoreInformation } from "../shared";
 import PermissionSelect from "../shared/PermissionSelect";
-import { TYPES } from "../types";
 import { ICONS, InternalNotes, MoreInformation } from "../ui";
 import type { Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
@@ -319,7 +319,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,
-                  type: TYPES.Response,
+                  type: TYPES.Answer,
                 }))
             : groupedOptions
             ? groupedOptions
@@ -328,7 +328,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,
-                  type: TYPES.Response,
+                  type: TYPES.Answer,
                 }))
             : [],
         );

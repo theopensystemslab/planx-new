@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 export const SLUGS: {
   [key in TYPES]: string;
@@ -24,13 +24,13 @@ export const SLUGS: {
   [TYPES.Pay]: "pay",
   [TYPES.PlanningConstraints]: "planning-constraints",
   [TYPES.PropertyInformation]: "property-information",
-  [TYPES.Response]: "question",
+  [TYPES.Answer]: "question",
   [TYPES.Result]: "result",
   [TYPES.Review]: "review",
   [TYPES.Section]: "section",
   [TYPES.Send]: "send",
   [TYPES.SetValue]: "set-value",
-  [TYPES.Statement]: "question",
+  [TYPES.Question]: "question",
   [TYPES.TaskList]: "task-list",
   [TYPES.TextInput]: "text-input",
 } as const;

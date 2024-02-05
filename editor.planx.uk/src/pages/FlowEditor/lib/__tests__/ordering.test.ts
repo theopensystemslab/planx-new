@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import { Store, vanillaStore } from "../store";
 
@@ -22,7 +22,7 @@ const flow: Store.flow = {
       text: "apple",
       val: "food.fruit.apple",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: [
       "AppleQuestionWithoutFn",
       "AutoAnsweredBananaQuestion",
@@ -34,10 +34,10 @@ const flow: Store.flow = {
       text: "banana",
       val: "food.fruit.banana",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   AutoAnsweredBananaQuestion: {
-    type: TYPES.Statement,
+    type: TYPES.Question,
     data: {
       text: "did you choose the banana?",
       fn: "item",
@@ -45,14 +45,14 @@ const flow: Store.flow = {
     edges: ["YesBanana", "NoBanana"],
   },
   YesBanana: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "yes",
       val: "food.fruit.banana",
     },
   },
   NoBanana: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "no",
     },
@@ -65,39 +65,39 @@ const flow: Store.flow = {
     },
   },
   BananaQuestionWithoutFn: {
-    type: TYPES.Statement,
+    type: TYPES.Question,
     data: {
       text: "will you be eating the banana today?",
     },
     edges: ["YesEatingBanana", "NoEatingBanana"],
   },
   YesEatingBanana: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "yes",
     },
   },
   NoEatingBanana: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "no",
     },
   },
   AppleQuestionWithoutFn: {
-    type: TYPES.Statement,
+    type: TYPES.Question,
     data: {
       text: "you chose apple",
     },
     edges: ["YesApple"],
   },
   YesApple: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "i did",
     },
   },
   QuestionTrolley: {
-    type: TYPES.Statement,
+    type: TYPES.Question,
     data: {
       fn: "item",
       text: "shopping trolley 1",
@@ -105,14 +105,14 @@ const flow: Store.flow = {
     edges: ["AppleQuestionResponse", "BananaQuestionResponse"],
   },
   AppleQuestionResponse: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "apple",
       val: "food.fruit.apple",
     },
   },
   BananaQuestionResponse: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "banana",
       val: "food.fruit.banana",

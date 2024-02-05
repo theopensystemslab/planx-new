@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import { Store, vanillaStore } from "../../store";
 
@@ -14,14 +14,14 @@ const flow: Store.flow = {
       val: "apple",
       text: "Apple",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   ResponsePear: {
     data: {
       val: "pear",
       text: "Pear",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   SetValue: {
     data: {
@@ -35,7 +35,7 @@ const flow: Store.flow = {
       fn: "fruit",
       text: "Which fruit?",
     },
-    type: TYPES.Statement,
+    type: TYPES.Question,
     edges: ["ResponseApple", "ResponsePear"],
   },
   Content: {
@@ -97,22 +97,22 @@ test("it lists upcoming cards", () => {
         edges: ["a", "b"],
       },
       a: {
-        type: TYPES.Statement,
+        type: TYPES.Question,
         edges: ["c"],
       },
       b: {
-        type: TYPES.Statement,
+        type: TYPES.Question,
       },
       c: {
-        type: TYPES.Response,
+        type: TYPES.Answer,
         edges: ["d"],
       },
       d: {
-        type: TYPES.Statement,
+        type: TYPES.Question,
         edges: ["e", "f"],
       },
-      e: { type: TYPES.Response },
-      f: { type: TYPES.Response },
+      e: { type: TYPES.Answer },
+      f: { type: TYPES.Answer },
     },
   });
 

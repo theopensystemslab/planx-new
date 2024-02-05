@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import { Store, vanillaStore } from "../store";
 
@@ -19,14 +19,14 @@ const flow: Store.flow = {
       val: "food.bread",
       text: "bread",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   "0vojjvJ6rP": {
     data: {
       val: "food",
       text: "food",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["mOPogpQa7V"],
   },
   "2PT6bTPTqj": {
@@ -34,7 +34,7 @@ const flow: Store.flow = {
       fn: "item",
       text: "contains",
     },
-    type: TYPES.Statement,
+    type: TYPES.Question,
     edges: ["oB2vfxQs4D", "ykhO0drpaY", "U9S73zxy9n", "LwozLZdXCA"],
   },
   "3H2bGdzpIN": {
@@ -42,7 +42,7 @@ const flow: Store.flow = {
       fn: "item",
       text: "Does the basket contain apples?",
     },
-    type: TYPES.Statement,
+    type: TYPES.Question,
     edges: ["BJpKurp49I", "hKebzlFQDa"],
   },
   "4JPWSgnGtI": {
@@ -50,7 +50,7 @@ const flow: Store.flow = {
       val: "tool",
       text: "tools",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["KcLGMm3UWw"],
   },
   "52ZNXBMLDP": {
@@ -74,14 +74,14 @@ const flow: Store.flow = {
       val: "tool.spanner",
       text: "spanner",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   AFX3QwbOCd: {
     data: {
       fn: "item",
       text: "Which does the basket contain?",
     },
-    type: TYPES.Statement,
+    type: TYPES.Question,
     edges: ["4JPWSgnGtI", "0vojjvJ6rP"],
   },
   BJpKurp49I: {
@@ -89,21 +89,21 @@ const flow: Store.flow = {
       val: "food.fruit.apple",
       text: "Yes",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   BloOMLvLJK: {
     data: {
       val: "food.fruit.banana",
       text: "banana",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   EqfqaqZ6CH: {
     data: {
       val: "food.fruit.apple",
       text: "apple",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   HV0gV8DOil: {
     data: {
@@ -119,7 +119,7 @@ const flow: Store.flow = {
       val: "food.fruit.banana",
       text: "banana",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   Imks7j68BD: {
     data: {
@@ -142,7 +142,7 @@ const flow: Store.flow = {
     data: {
       text: "neither apples nor bread",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["52ZNXBMLDP"],
   },
   OvNhSiRfdL: {
@@ -150,14 +150,14 @@ const flow: Store.flow = {
       val: "tool.spanner",
       text: "spanner",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   U9S73zxy9n: {
     data: {
       val: "food.fruit.apple,food.bread",
       text: "apples and bread",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["t3SCqQKeUK"],
   },
   g0IAKsBVPQ: {
@@ -172,14 +172,14 @@ const flow: Store.flow = {
     data: {
       text: "No",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   lTosE7Xo1j: {
     data: {
       val: "food.fruit.apple",
       text: "apple",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   mOPogpQa7V: {
     data: {
@@ -194,7 +194,7 @@ const flow: Store.flow = {
       val: "food.fruit.apple",
       text: "apples",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["6RR1J1lmrM"],
   },
   pXFKKRG6lE: {
@@ -202,7 +202,7 @@ const flow: Store.flow = {
       val: "food.bread",
       text: "bread",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
   },
   t3SCqQKeUK: {
     data: {
@@ -217,7 +217,7 @@ const flow: Store.flow = {
       val: "food.bread",
       text: "bread",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["g0IAKsBVPQ"],
   },
 };

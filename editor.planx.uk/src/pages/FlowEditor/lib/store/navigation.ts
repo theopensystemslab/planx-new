@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { findLast, pick } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";

@@ -13,12 +13,12 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Input from "ui/shared/Input";
 
-import { TYPES } from "../../../@planx/components/types";
 import Questions from "../../Preview/Questions";
 import { useStore } from "../lib/store";
 

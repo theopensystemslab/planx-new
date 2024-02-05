@@ -1,5 +1,5 @@
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
 import { FullStore, Store, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";

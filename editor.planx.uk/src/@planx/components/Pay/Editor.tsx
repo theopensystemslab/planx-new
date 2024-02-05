@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Pay, validationSchema } from "@planx/components/Pay/model";
 import { parseMoreInformation } from "@planx/components/shared";
-import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";

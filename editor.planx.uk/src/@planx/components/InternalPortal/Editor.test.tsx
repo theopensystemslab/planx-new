@@ -1,8 +1,8 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { axe, setup } from "testUtils";
 
-import { TYPES } from "../types";
 import InternalPortalForm from "./Editor";
 
 describe("adding an internal portal", () => {

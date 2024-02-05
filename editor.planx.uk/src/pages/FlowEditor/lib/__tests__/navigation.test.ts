@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import { FullStore, vanillaStore } from "../store";
 import flowWithoutSections from "./mocks/flowWithClones.json";
@@ -25,7 +25,7 @@ test("filterFlowByType() correctly returns a filtered view of the given flow", (
   );
 
   // Three Statements in test flow
-  const statementResult = filterFlowByType(TYPES.Statement);
+  const statementResult = filterFlowByType(TYPES.Question);
   expect(Object.keys(statementResult)).toEqual(
     expect.arrayContaining([
       "firstQuestion",

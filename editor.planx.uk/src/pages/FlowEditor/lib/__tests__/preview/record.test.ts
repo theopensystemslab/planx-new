@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import { vanillaStore } from "../../store";
 
@@ -37,22 +37,22 @@ test("record(id, undefined) clears up breadcrumbs", () => {
         edges: ["a", "b"],
       },
       a: {
-        type: TYPES.Statement,
+        type: TYPES.Question,
         edges: ["c"],
       },
       b: {
-        type: TYPES.Statement,
+        type: TYPES.Question,
       },
       c: {
-        type: TYPES.Response,
+        type: TYPES.Answer,
         edges: ["d"],
       },
       d: {
-        type: TYPES.Statement,
+        type: TYPES.Question,
         edges: ["e", "f"],
       },
-      e: { type: TYPES.Response },
-      f: { type: TYPES.Response },
+      e: { type: TYPES.Answer },
+      f: { type: TYPES.Answer },
     },
   });
   record("a", { answers: ["c"] });

@@ -1,6 +1,6 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NumberInput } from "@planx/components/NumberInput/model";
 import { parseNumberInput } from "@planx/components/NumberInput/model";
-import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
   ICONS,

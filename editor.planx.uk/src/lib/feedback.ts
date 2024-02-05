@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 

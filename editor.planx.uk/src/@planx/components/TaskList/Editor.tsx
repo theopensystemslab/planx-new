@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
 import { parseTaskList } from "@planx/components/TaskList/model";
-import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
   ICONS,

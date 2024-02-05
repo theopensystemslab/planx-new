@@ -3,6 +3,7 @@ import {
   GOV_PAY_PASSPORT_KEY,
   GovUKPayment,
 } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import AddressInput from "@planx/components/AddressInput/Public";
 import Calculate from "@planx/components/Calculate/Public";
 import Checklist from "@planx/components/Checklist/Public";
@@ -28,7 +29,6 @@ import Send from "@planx/components/Send/Public";
 import SetValue from "@planx/components/SetValue/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
-import { TYPES } from "@planx/components/types";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
@@ -211,7 +211,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.SetValue:
       return <SetValue {...allProps} />;
 
-    case TYPES.Statement:
+    case TYPES.Question:
       return (
         <Question
           {...allProps}
@@ -254,7 +254,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Filter:
     case TYPES.Flow:
     case TYPES.InternalPortal:
-    case TYPES.Response:
+    case TYPES.Answer:
     case undefined:
       return null;
     default:
