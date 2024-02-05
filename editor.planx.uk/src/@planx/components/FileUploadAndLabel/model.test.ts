@@ -2,6 +2,7 @@ import { Store } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/Public";
+import { TYPES } from "../types";
 import {
   mockFileList,
   mockFileListManyTagsOneSlot,
@@ -418,6 +419,17 @@ describe("generatePayload function", () => {
     expect(result.data?.fileFn?.[0].filename).toEqual("first.jpg");
     expect(result.data?.fileFn?.[1].filename).toEqual("second.jpg");
     expect(result.data?.fileFn?.[2].filename).toEqual("third.jpg");
+  });
+
+  it("captures the original file list in state", () => {
+    const result = generatePayload(mockFileList);
+
+    expect(result).toHaveProperty("state");
+    expect(result.state).toHaveProperty("requestedFiles");
+    expect(result.state?.requestedFiles).toMatchObject(mockFileList);
+    
+    expect(result.state).toHaveProperty("type");
+    expect(result.state?.type).toEqual(TYPES.FileUploadAndLabel);
   });
 });
 

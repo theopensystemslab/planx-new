@@ -6,6 +6,7 @@ import { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation, parseMoreInformation } from "../shared";
+import { TYPES } from "../types";
 
 /**
  * Conditions which can apply to a rule
@@ -243,7 +244,13 @@ export const generatePayload = (fileList: FileList): Store.userData => {
     newPassportData[userFile.fn] = formatUserFiles(userFile);
   });
 
-  return { data: newPassportData };
+  return { 
+    data: newPassportData,
+    state: { 
+      requestedFiles: fileList,
+      type: TYPES.FileUploadAndLabel,
+    },
+  };
 };
 
 const getCachedSlotsFromPreviousData = (

@@ -136,16 +136,17 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
         answers = [],
         auto = false,
         feedback = undefined,
+        state = undefined,
       } = (() => {
         try {
-          const { answers = [], data, auto, feedback } = userData as any;
-          return { answers: answers.filter(Boolean), data, auto, feedback };
+          const { answers = [], data, auto, feedback, state } = userData as any;
+          return { answers: answers.filter(Boolean), data, auto, feedback, state };
         } catch (err) {
           return {};
         }
       })();
 
-      record(id, { answers, data, auto, feedback });
+      record(id, { answers, data, auto, feedback, state });
     };
 
   const goBack = useCallback(() => {

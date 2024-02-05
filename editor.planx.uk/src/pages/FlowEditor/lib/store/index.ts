@@ -21,12 +21,21 @@ export declare namespace Store {
   export type Store = Record<string | number | symbol, unknown>;
   export type nodeId = string;
   export type flow = Record<nodeId, node>;
+  /**
+   * State of node at time user visited it
+   * State will be stored to breadcrumbs, but not captured in passport
+   */
+  export type NodeState = {
+    type: TYPES,
+    [key: string]: any,
+  };
   export type userData = {
     answers?: Array<string>;
     data?: Record<string, any>;
     auto?: boolean;
     override?: Record<string, any>;
     feedback?: string;
+    state?: NodeState;
   };
   export type breadcrumbs = Record<nodeId, userData>;
   export type cachedBreadcrumbs = Record<nodeId, userData> | undefined;
