@@ -145,6 +145,7 @@ function FooterItem(props: {
   href?: string;
   onClick?: () => void;
   bold?: boolean;
+  newTab?: boolean;
 }) {
   const title = (
     <Typography
@@ -160,6 +161,8 @@ function FooterItem(props: {
       component={ReactNaviLink}
       href={props.href}
       prefetch={false}
+      target={props.newTab ? "_blank" : ""}
+      rel={props.newTab ? "noopener" : ""}
     >
       {title}
     </Link>
