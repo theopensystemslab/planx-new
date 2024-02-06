@@ -8,7 +8,7 @@ import FileUpload from "./Public";
 test("renders correctly and blocks submit if there are no files added", async () => {
   const handleSubmit = jest.fn();
 
-  setup(<FileUpload handleSubmit={handleSubmit} />);
+  setup(<FileUpload fn="someKey" handleSubmit={handleSubmit} />);
 
   expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
 
@@ -26,6 +26,7 @@ test("recovers previously submitted files when clicking the back button", async 
 
   const { user } = setup(
     <FileUpload
+      fn="someKey"
       id={componentId}
       handleSubmit={handleSubmit}
       previouslySubmittedData={uploadedFile}
@@ -85,6 +86,7 @@ it("should not have any accessibility violations", async () => {
 
   const { container } = setup(
     <FileUpload
+      fn="someKey"
       id={componentId}
       handleSubmit={handleSubmit}
       description="description"

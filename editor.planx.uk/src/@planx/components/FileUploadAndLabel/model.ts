@@ -1,11 +1,18 @@
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
 import uniqBy from "lodash/uniqBy";
-import { Store } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation, parseMoreInformation } from "../shared";
+
+export const PASSPORT_REQUESTED_FILES_KEY = "_requestedFiles" as const;
+
+export interface RequestedFile {
+  fn: string;
+  condition: Condition;
+}
 
 /**
  * Conditions which can apply to a rule
@@ -220,6 +227,11 @@ const formatUserFiles = (userFile: UserFileWithSlots): FormattedUserFile[] =>
     },
   }));
 
+const formatRequestedFiles = ({
+  fn,
+  rule: { condition },
+}: FileType): RequestedFile => ({ fn, condition });
+
 /**
  * Type guard to coerce UserFile -> UserFileWithSlot
  */
@@ -233,17 +245,32 @@ const hasSlots = (userFile: UserFile): userFile is UserFileWithSlots =>
 export const generatePayload = (fileList: FileList): Store.userData => {
   const newPassportData: Store.userData["data"] = {};
 
-  const uploadedFiles = [
+  const requestedFiles = [
     ...fileList.required,
     ...fileList.recommended,
     ...fileList.optional,
-  ].filter(hasSlots);
+  ];
+
+  const uploadedFiles = requestedFiles.filter(hasSlots);
 
   uploadedFiles.forEach((userFile) => {
     newPassportData[userFile.fn] = formatUserFiles(userFile);
   });
 
-  return { data: newPassportData };
+  const existingRequestedFiles: FileType[] =
+    useStore.getState().computePassport().data?.[
+      PASSPORT_REQUESTED_FILES_KEY
+    ] || [];
+
+  return {
+    data: {
+      ...newPassportData,
+      [PASSPORT_REQUESTED_FILES_KEY]: [
+        ...existingRequestedFiles,
+        ...requestedFiles.map(formatRequestedFiles),
+      ],
+    },
+  };
 };
 
 const getCachedSlotsFromPreviousData = (

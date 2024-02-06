@@ -16,6 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic = {
   args: {
+    fn: "roofPlan",
     title: "Upload roof plan",
     description:
       "The plan should show the roof of the building as it looks today.",
