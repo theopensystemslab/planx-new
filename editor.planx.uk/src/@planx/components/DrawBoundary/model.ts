@@ -42,7 +42,7 @@ export const parseDrawBoundary = (
   definitionImg: data?.definitionImg || defaultContent?.["definitionImg"],
 });
 
-export const PASSPORT_UPLOAD_KEY = "proposal.drawing.locationPlan" as const; // not added to editor yet
+export const PASSPORT_UPLOAD_KEY = "locationPlan" as const; // not added to editor yet
 export const PASSPORT_COMPONENT_ACTION_KEY = "drawBoundary.action" as const; // internal use only
 
 // Default content as of Jan 2024 when title boundaries were introduced
