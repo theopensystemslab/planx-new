@@ -24,7 +24,6 @@ import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
 import Section from "@planx/components/Section/Public";
-import { getWorkStatus } from "@planx/components/Send/bops";
 import Send from "@planx/components/Send/Public";
 import SetValue from "@planx/components/SetValue/Public";
 import TaskList from "@planx/components/TaskList/Public";
@@ -266,6 +265,15 @@ const Node: React.FC<any> = (props: Props) => {
 
 function exhaustiveCheck(type: never): never {
   throw new Error(`Missing type ${type}`);
+}
+
+function getWorkStatus(passport: Store.passport): string | undefined {
+  switch (passport?.data?.["application.type"]?.toString()) {
+    case "ldc.existing":
+      return "existing";
+    case "ldc.proposed":
+      return "proposed";
+  }
 }
 
 export default Node;

@@ -2,16 +2,16 @@ import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { QuestionAndResponses } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "ui/public/Banner";
 import FileDownload from "ui/public/FileDownload";
 import NumberedList from "ui/public/NumberedList";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
-import { makeCsvData } from "../Send/uniform";
 import type { Confirmation } from "./model";
 
 const Table = styled("table")(({ theme }) => ({
@@ -31,23 +31,24 @@ const Table = styled("table")(({ theme }) => ({
 export type Props = PublicProps<Confirmation>;
 
 export default function ConfirmationComponent(props: Props) {
-  const [breadcrumbs, flow, passport, sessionId, flowName] = useStore(
-    (state) => [
-      state.breadcrumbs,
-      state.flow,
-      state.computePassport(),
-      state.sessionId,
-      state.flowName,
-    ],
-  );
+  const [data, setData] = useState<QuestionAndResponses[]>([]);
 
-  // make a CSV data structure based on the payloads we Send to BOPs/Uniform
-  const data = makeCsvData({
-    breadcrumbs,
-    flow,
-    flowName,
-    passport,
-    sessionId,
+  const [sessionId, $public] = useStore((state) => [
+    state.sessionId,
+    state.$public,
+  ]);
+
+  useEffect(() => {
+    async function makeCsvData() {
+      const csvData = await $public.export.csvData(sessionId);
+      if (csvData) {
+        setData(csvData);
+      }
+    }
+
+    if (data.length < 1) {
+      makeCsvData();
+    }
   });
 
   return (
@@ -80,14 +81,7 @@ export default function ConfirmationComponent(props: Props) {
           </Table>
         )}
 
-        {
-          <FileDownload
-            data={data}
-            filename={
-              props.details?.["Planning Application Reference"] || "application"
-            }
-          />
-        }
+        {<FileDownload data={data} filename={sessionId || "application"} />}
 
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
