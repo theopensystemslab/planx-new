@@ -42,14 +42,12 @@ const StatusPage: React.FC<Props> = ({
   ]);
 
   useEffect(() => {
-    async function makeCsvData() {
+    const makeCsvData = async () => {
       const csvData = await $public.export.csvData(sessionId);
-      if (csvData) {
-        setData(csvData);
-      }
-    }
+      setData(csvData);
+    };
 
-    if (data.length < 1) {
+    if (data?.length < 1) {
       makeCsvData();
     }
   });
