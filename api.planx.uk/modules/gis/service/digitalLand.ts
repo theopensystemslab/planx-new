@@ -17,9 +17,9 @@ export interface LocalAuthorityMetadata {
   };
 }
 
-/** When a team publishes their granular Article 4 data, add them to this list */
+/** When a team publishes their granular Article 4 data, add them to this list. Key must match team slug */
 const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
-  barkingAndDagenham: require("./local_authorities/metadata/barkingAndDagenham"),
+  "barking-and-dagenham": require("./local_authorities/metadata/barkingAndDagenham"),
   barnet: require("./local_authorities/metadata/barnet"),
   birmingham: require("./local_authorities/metadata/birmingham"),
   buckinghamshire: require("./local_authorities/metadata/buckinghamshire"),
