@@ -32,6 +32,9 @@ export const getOperations = (): Operation[] => [
 
   // Queued up scheduled events (backup method to PG function/trigger)
   deleteHasuraScheduledEventsForSubmittedSessions,
+
+  // Feedback records
+  deleteFeedback,
 ];
 
 export const operationHandler = async (
@@ -291,3 +294,23 @@ export const deleteHasuraScheduledEventsForSubmittedSessions: Operation =
     const [_column_name, ...ids] = response?.result?.flat() || [];
     return ids;
   };
+
+export const deleteFeedback: Operation = async () => {
+  const mutation = gql`
+    mutation DeleteFeedback($retentionPeriod: timestamptz) {
+      feedback: delete_feedback(
+        where: { created_at: { _lt: $retentionPeriod } }
+      ) {
+        returning {
+          id
+        }
+      }
+    }
+  `;
+  const {
+    feedback: { returning: result },
+  } = await $api.client.request<{ feedback: Result }>(mutation, {
+    retentionPeriod: getRetentionPeriod(),
+  });
+  return result;
+};

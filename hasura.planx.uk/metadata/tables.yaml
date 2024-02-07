@@ -248,6 +248,29 @@
           - user_context
           - user_data
       comment: Allow users who want to leave feedback on their experience to write to the table
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - team_id
+          - device
+          - user_data
+          - feedback_type
+          - node_id
+          - created_at
+          - flow_id
+          - node_type
+          - status
+          - user_comment
+          - user_context
+        filter: {}
+      comment: ""
+  delete_permissions:
+    - role: api
+      permission:
+        filter: {}
+      comment: ""
 - table:
     name: feedback_status_enum
     schema: public

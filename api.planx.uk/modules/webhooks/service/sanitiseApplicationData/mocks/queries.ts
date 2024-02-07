@@ -67,3 +67,13 @@ export const mockGetExpiredSessionIdsQuery = {
     lowcal_sessions: [{ id: "id1" }, { id: "id2" }, { id: "id3" }],
   },
 };
+
+export const mockDeleteFeedbackMutation = {
+  name: "DeleteFeedback",
+  matchOnVariables: false,
+  data: {
+    feedback: {
+      returning: mockIds,
+    },
+  },
+};

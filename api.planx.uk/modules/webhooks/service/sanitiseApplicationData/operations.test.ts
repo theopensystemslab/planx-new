@@ -9,6 +9,7 @@ import {
   mockSanitiseUniformApplicationsMutation,
   mockGetExpiredSessionIdsQuery,
   mockDeletePaymentRequests,
+  mockDeleteFeedbackMutation,
 } from "./mocks/queries";
 import {
   deleteHasuraEventLogs,
@@ -23,6 +24,7 @@ import {
   deleteApplicationFiles,
   deletePaymentRequests,
   deleteHasuraScheduledEventsForSubmittedSessions,
+  deleteFeedback,
 } from "./operations";
 
 jest.mock("../../../../lib/hasura/schema");
@@ -141,6 +143,10 @@ describe("Data sanitation operations", () => {
       {
         operation: deletePaymentRequests,
         query: mockDeletePaymentRequests,
+      },
+      {
+        operation: deleteFeedback,
+        query: mockDeleteFeedbackMutation,
       },
     ];
 
