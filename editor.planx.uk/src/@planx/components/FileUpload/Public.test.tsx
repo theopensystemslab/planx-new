@@ -3,6 +3,7 @@ import { uniqueId } from "lodash";
 import React from "react";
 import { axe, setup } from "testUtils";
 
+import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import FileUpload from "./Public";
 
 test("renders correctly and blocks submit if there are no files added", async () => {
@@ -18,33 +19,16 @@ test("renders correctly and blocks submit if there are no files added", async ()
 test("recovers previously submitted files when clicking the back button", async () => {
   const handleSubmit = jest.fn();
   const componentId = uniqueId();
-  const uploadedFile = {
-    data: {
-      [componentId]: [dummyFile],
-    },
-  };
-
-  const { user } = setup(
-    <FileUpload
-      fn="someKey"
-      id={componentId}
-      handleSubmit={handleSubmit}
-      previouslySubmittedData={uploadedFile}
-    />,
-  );
-
-  await user.click(screen.getByTestId("continue-button"));
-
-  expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
-});
-
-test("recovers previously submitted files when clicking the back button even if a data field is set", async () => {
-  const handleSubmit = jest.fn();
-  const componentId = uniqueId();
   const dataField = "data-field";
   const uploadedFile = {
     data: {
       [dataField]: [dummyFile],
+      [PASSPORT_REQUESTED_FILES_KEY]: [
+        {
+          fn: dataField,
+          condition: "AlwaysRequired",
+        },
+      ],
     },
   };
 
