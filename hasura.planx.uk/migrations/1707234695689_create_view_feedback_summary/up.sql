@@ -20,10 +20,13 @@ SELECT
     published_flow_node.data ->> 'info' AS help_text,
     published_flow_node.data ->> 'policyRef' AS help_sources,
     published_flow_node.data ->> 'howMeasured' AS help_definition,
-    (fb.user_data -> 'passport' -> 'data' -> '_address' ->> 'single_line_address') AS street_address,
-    (fb.user_data -> 'passport' -> 'data' -> '_address' ->> 'uprn') AS UPRN,
+    COALESCE(
+        fb.user_data -> 'passport' -> 'data' -> '_address' ->> 'single_line_address',
+        fb.user_data -> 'passport' -> 'data' -> '_address' ->> 'title'
+    ) AS address,
+    (fb.user_data -> 'passport' -> 'data' -> '_address' ->> 'uprn') AS uprn,
     (fb.user_data -> 'passport' -> 'data' ->> 'proposal.projectType') AS project_type,
-    (fb.user_data -> 'passport' -> 'data' ->> 'property.constraints.planning') AS constraints,
+    (fb.user_data -> 'passport' -> 'data' ->> 'property.constraints.planning') AS intersecting_constraints,
     published_flow_node.data AS node_data
 FROM 
     feedback fb
