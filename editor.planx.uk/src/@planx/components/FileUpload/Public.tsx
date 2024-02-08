@@ -8,10 +8,7 @@ import { FileWithPath } from "react-dropzone";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { array } from "yup";
 
-import {
-  FileList,
-  PASSPORT_REQUESTED_FILES_KEY,
-} from "../FileUploadAndLabel/model";
+import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 

@@ -227,11 +227,6 @@ const formatUserFiles = (userFile: UserFileWithSlots): FormattedUserFile[] =>
     },
   }));
 
-const formatRequestedFiles = ({
-  fn,
-  rule: { condition },
-}: FileType): RequestedFile => ({ fn, condition });
-
 /**
  * Type guard to coerce UserFile -> UserFileWithSlot
  */
