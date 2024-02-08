@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
+import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -493,6 +494,7 @@ function ContactInput(props: ComponentProps) {
 function FileUploadAndLabel(props: ComponentProps) {
   const userFiles = Object.entries(props?.userData?.data || {});
   const allFilenames: string[] = userFiles
+    .filter(([key]) => key !== PASSPORT_REQUESTED_FILES_KEY)
     .map(([_key, value]) => value.map((file: any) => file.filename))
     .flat();
   const uniqueFilenames = [...new Set(allFilenames)];
