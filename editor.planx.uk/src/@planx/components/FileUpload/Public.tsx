@@ -1,20 +1,21 @@
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { Store } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
 import { FileWithPath } from "react-dropzone";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { array } from "yup";
 
+import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
 interface Props extends MoreInformation {
   id?: string;
   title?: string;
-  fn?: string;
+  fn: string;
   description?: string;
   handleSubmit: handleSubmit;
   previouslySubmittedData?: Store.userData;
@@ -50,27 +51,55 @@ const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = useState<FileUploadSlot[]>(recoveredSlots ?? []);
   const [validationError, setValidationError] = useState<string>();
 
+  const uploadedFiles = (slots: FileUploadSlot[]) =>
+    makeData(
+      props,
+      slots.map((slot) => ({
+        url: slot.url,
+        filename: slot.file.path,
+        cachedSlot: {
+          ...slot,
+          file: {
+            path: slot.file.path,
+            type: slot.file.type,
+            size: slot.file.size,
+          },
+        },
+      })),
+    );
+
+  const updatedRequestedFiles = () => {
+    // const { required, recommended, optional } = useStore
+    //   .getState()
+    //   .requestedFiles();
+
+    const { required, recommended, optional } = useStore
+      .getState()
+      .computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY] || {
+      required: [],
+      recommended: [],
+      optional: [],
+    };
+
+    return {
+      [PASSPORT_REQUESTED_FILES_KEY]: {
+        required: [...required, props.fn],
+        recommended,
+        optional,
+      },
+    };
+  };
+
   const handleSubmit = () => {
     slotsSchema
       .validate(slots)
       .then(() => {
-        props.handleSubmit(
-          makeData(
-            props,
-            slots.map((slot) => ({
-              url: slot.url,
-              filename: slot.file.path,
-              cachedSlot: {
-                ...slot,
-                file: {
-                  path: slot.file.path,
-                  type: slot.file.type,
-                  size: slot.file.size,
-                },
-              },
-            })),
-          ),
-        );
+        props.handleSubmit({
+          data: {
+            ...uploadedFiles(slots).data,
+            ...updatedRequestedFiles(),
+          },
+        });
       })
       .catch((err) => {
         setValidationError(err.message);
