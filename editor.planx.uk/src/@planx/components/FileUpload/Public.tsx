@@ -69,9 +69,17 @@ const FileUpload: React.FC<Props> = (props) => {
     );
 
   const updatedRequestedFiles = () => {
+    // const { required, recommended, optional } = useStore
+    //   .getState()
+    //   .requestedFiles();
+
     const { required, recommended, optional } = useStore
       .getState()
-      .requestedFiles();
+      .computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY] || {
+      required: [],
+      recommended: [],
+      optional: [],
+    };
 
     return {
       [PASSPORT_REQUESTED_FILES_KEY]: {

@@ -78,7 +78,7 @@ export interface PreviewStore extends Store.Store {
   path: ApplicationPath;
   saveToEmail?: string;
   overrideAnswer: (fn: string) => void;
-  requestedFiles: () => FileList;
+  // requestedFiles: () => FileList;
 }
 
 export const previewStore: StateCreator<
@@ -638,14 +638,15 @@ export const previewStore: StateCreator<
     }
   },
 
-  requestedFiles: () => {
-    const { computePassport } = get();
-    const currentRequestedFiles =
-      computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY];
-    const emptyFileList = { required: [], recommended: [], optional: [] };
+  // TODO: Fix this!
+  // requestedFiles: () => {
+  //   const { computePassport } = get();
+  //   const currentRequestedFiles =
+  //     computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY];
+  //   const emptyFileList = { required: [], recommended: [], optional: [] };
 
-    return currentRequestedFiles || emptyFileList;
-  },
+  //   return currentRequestedFiles || emptyFileList;
+  // },
 });
 
 const knownNots = (
