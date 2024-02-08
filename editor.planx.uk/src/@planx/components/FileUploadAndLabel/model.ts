@@ -239,12 +239,9 @@ const hasSlots = (userFile: UserFile): userFile is UserFileWithSlots =>
   Boolean(userFile?.slots);
 
 const getUpdatedRequestedFiles = (fileList: FileList) => {
-  const emptyFileList = { required: [], recommended: [], optional: [] };
-
-  const { required, recommended, optional }: FileList =
-    useStore.getState().computePassport().data?.[
-      PASSPORT_REQUESTED_FILES_KEY
-    ] || emptyFileList;
+  const { required, recommended, optional } = useStore
+    .getState()
+    .requestedFiles();
 
   return {
     [PASSPORT_REQUESTED_FILES_KEY]: {

@@ -8,6 +8,10 @@ import {
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
+import {
+  FileList,
+  PASSPORT_REQUESTED_FILES_KEY,
+} from "@planx/components/FileUploadAndLabel/model";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
@@ -74,6 +78,7 @@ export interface PreviewStore extends Store.Store {
   path: ApplicationPath;
   saveToEmail?: string;
   overrideAnswer: (fn: string) => void;
+  requestedFiles: () => FileList;
 }
 
 export const previewStore: StateCreator<
@@ -631,6 +636,15 @@ export const previewStore: StateCreator<
     } else {
       throw new Error("overrideNodeId not found");
     }
+  },
+
+  requestedFiles: () => {
+    const { computePassport } = get();
+    const currentRequestedFiles =
+      computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY];
+    const emptyFileList = { required: [], recommended: [], optional: [] };
+
+    return currentRequestedFiles || emptyFileList;
   },
 });
 
