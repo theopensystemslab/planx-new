@@ -1,3 +1,5 @@
+import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
+
 export const mockLink = "my-file.png";
 export const uploadedPlanUrl = "http://someurl.com/whjhnh65/plan.png";
 
@@ -10,6 +12,11 @@ export const fileUploadBreadcrumbs = {
           filename: "my-file.png",
         },
       ],
+      [PASSPORT_REQUESTED_FILES_KEY]: {
+        required: ["fileUpload"],
+        recommended: [],
+        optional: [],
+      },
     },
   },
 };
@@ -44,6 +51,11 @@ export const fileUploadPassport = {
         filename: "my-file.png",
       },
     ],
+    [PASSPORT_REQUESTED_FILES_KEY]: {
+      required: ["fileUpload"],
+      recommended: [],
+      optional: [],
+    },
   },
 };
 
@@ -88,6 +100,11 @@ export const uploadedPlansBreadcrumb = {
         },
       ],
     },
+    [PASSPORT_REQUESTED_FILES_KEY]: {
+      required: ["locationPlan"],
+      recommended: [],
+      optional: [],
+    },
   },
 };
 
@@ -124,6 +141,11 @@ export const uploadedPlansPassport = {
         url: uploadedPlanUrl,
       },
     ],
+    [PASSPORT_REQUESTED_FILES_KEY]: {
+      required: ["locationPlan"],
+      recommended: [],
+      optional: [],
+    },
   },
 };
 
