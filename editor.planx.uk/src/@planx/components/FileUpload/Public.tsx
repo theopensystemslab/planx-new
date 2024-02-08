@@ -9,9 +9,8 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { array } from "yup";
 
 import {
-  Condition,
+  FileList,
   PASSPORT_REQUESTED_FILES_KEY,
-  RequestedFile,
 } from "../FileUploadAndLabel/model";
 import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
@@ -55,16 +54,6 @@ const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = useState<FileUploadSlot[]>(recoveredSlots ?? []);
   const [validationError, setValidationError] = useState<string>();
 
-  const existingRequestedFiles: RequestedFile[] =
-    useStore(
-      (state) => state.computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY],
-    ) || [];
-
-  const requestedFile: RequestedFile = {
-    fn: props.fn,
-    condition: Condition.AlwaysRequired,
-  };
-
   const uploadedFiles = (slots: FileUploadSlot[]) =>
     makeData(
       props,
@@ -82,6 +71,23 @@ const FileUpload: React.FC<Props> = (props) => {
       })),
     );
 
+  const updatedRequestedFiles = () => {
+    const emptyFileList = { required: [], recommended: [], optional: [] };
+
+    const { required, recommended, optional }: FileList =
+      useStore.getState().computePassport().data?.[
+        PASSPORT_REQUESTED_FILES_KEY
+      ] || emptyFileList;
+
+    return {
+      [PASSPORT_REQUESTED_FILES_KEY]: {
+        required: [...required, props.fn],
+        recommended,
+        optional,
+      },
+    };
+  };
+
   const handleSubmit = () => {
     slotsSchema
       .validate(slots)
@@ -89,10 +95,7 @@ const FileUpload: React.FC<Props> = (props) => {
         props.handleSubmit({
           data: {
             ...uploadedFiles(slots).data,
-            [PASSPORT_REQUESTED_FILES_KEY]: [
-              ...existingRequestedFiles,
-              requestedFile,
-            ],
+            ...updatedRequestedFiles(),
           },
         });
       })

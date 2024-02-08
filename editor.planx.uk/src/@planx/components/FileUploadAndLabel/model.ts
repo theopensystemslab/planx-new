@@ -238,6 +238,26 @@ const formatRequestedFiles = ({
 const hasSlots = (userFile: UserFile): userFile is UserFileWithSlots =>
   Boolean(userFile?.slots);
 
+const getUpdatedRequestedFiles = (fileList: FileList) => {
+  const emptyFileList = { required: [], recommended: [], optional: [] };
+
+  const { required, recommended, optional }: FileList =
+    useStore.getState().computePassport().data?.[
+      PASSPORT_REQUESTED_FILES_KEY
+    ] || emptyFileList;
+
+  return {
+    [PASSPORT_REQUESTED_FILES_KEY]: {
+      required: [...required, ...fileList.required.map(({ fn }) => fn)],
+      recommended: [
+        ...recommended,
+        ...fileList.recommended.map(({ fn }) => fn),
+      ],
+      optional: [...optional, ...fileList.optional.map(({ fn }) => fn)],
+    },
+  };
+};
+
 /**
  * Generate payload for FileUploadAndLabel breadcrumb
  * Not responsible for validation - this happens at the component level
@@ -245,30 +265,22 @@ const hasSlots = (userFile: UserFile): userFile is UserFileWithSlots =>
 export const generatePayload = (fileList: FileList): Store.userData => {
   const newPassportData: Store.userData["data"] = {};
 
-  const requestedFiles = [
+  const uploadedFiles = [
     ...fileList.required,
     ...fileList.recommended,
     ...fileList.optional,
-  ];
-
-  const uploadedFiles = requestedFiles.filter(hasSlots);
+  ].filter(hasSlots);
 
   uploadedFiles.forEach((userFile) => {
     newPassportData[userFile.fn] = formatUserFiles(userFile);
   });
 
-  const existingRequestedFiles: FileType[] =
-    useStore.getState().computePassport().data?.[
-      PASSPORT_REQUESTED_FILES_KEY
-    ] || [];
+  const requestedFiles = getUpdatedRequestedFiles(fileList);
 
   return {
     data: {
       ...newPassportData,
-      [PASSPORT_REQUESTED_FILES_KEY]: [
-        ...existingRequestedFiles,
-        ...requestedFiles.map(formatRequestedFiles),
-      ],
+      ...requestedFiles,
     },
   };
 };

@@ -23,12 +23,7 @@ test("recovers previously submitted files when clicking the back button", async 
   const uploadedFile = {
     data: {
       [dataField]: [dummyFile],
-      [PASSPORT_REQUESTED_FILES_KEY]: [
-        {
-          fn: dataField,
-          condition: "AlwaysRequired",
-        },
-      ],
+      [PASSPORT_REQUESTED_FILES_KEY]: [dataField],
     },
   };
 

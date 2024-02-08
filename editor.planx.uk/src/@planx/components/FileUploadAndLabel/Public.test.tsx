@@ -660,23 +660,9 @@ describe("Submitting data", () => {
     const requestedFiles = submitted?.data?._requestedFiles;
 
     expect(requestedFiles).toBeDefined();
-    expect(requestedFiles).toHaveLength(3);
-    expect(requestedFiles).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          fn: "roofPlan",
-          condition: Condition.AlwaysRequired,
-        }),
-        expect.objectContaining({
-          fn: "heritage",
-          condition: Condition.AlwaysRecommended,
-        }),
-        expect.objectContaining({
-          fn: "utilityBill",
-          condition: Condition.NotRequired,
-        }),
-      ]),
-    );
+    expect(requestedFiles.required).toContain("roofPlan");
+    expect(requestedFiles.recommended).toContain("heritage");
+    expect(requestedFiles.optional).toContain("utilityBill");
   });
 
   it("appends to the list of existing requested files", async () => {
@@ -691,12 +677,11 @@ describe("Submitting data", () => {
               filename: "file.jpg",
             },
           ],
-          [PASSPORT_REQUESTED_FILES_KEY]: [
-            {
-              fn: "anotherFileType",
-              condition: Condition.AlwaysRequired,
-            },
-          ],
+          [PASSPORT_REQUESTED_FILES_KEY]: {
+            required: ["anotherFileType"],
+            recommended: [],
+            optional: [],
+          },
         },
       },
     };
@@ -750,28 +735,13 @@ describe("Submitting data", () => {
     const submitted = handleSubmit.mock.calls[0][0];
     const requestedFiles = submitted?.data?._requestedFiles;
 
-    expect(requestedFiles).toEqual(
-      expect.arrayContaining([
-        // Existing files from previous components
-        expect.objectContaining({
-          fn: "anotherFileType",
-          condition: Condition.AlwaysRequired,
-        }),
-        // Requested files from this component
-        expect.objectContaining({
-          fn: "roofPlan",
-          condition: Condition.AlwaysRequired,
-        }),
-        expect.objectContaining({
-          fn: "heritage",
-          condition: Condition.AlwaysRecommended,
-        }),
-        expect.objectContaining({
-          fn: "utilityBill",
-          condition: Condition.NotRequired,
-        }),
-      ]),
-    );
+    // Existing files from previous components
+    expect(requestedFiles.required).toContain("anotherFileType");
+
+    // Requested files from this component
+    expect(requestedFiles.required).toContain("roofPlan");
+    expect(requestedFiles.recommended).toContain("heritage");
+    expect(requestedFiles.optional).toContain("utilityBill");
   });
 });
 
