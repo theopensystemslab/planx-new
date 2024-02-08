@@ -76,7 +76,7 @@ export const uploadedPlansBreadcrumb = {
   EO6DzPso8o: {
     auto: false,
     data: {
-      "proposal.drawing.locationPlan": [
+      locationPlan: [
         {
           file: {
             path: "fut.email.png",
@@ -113,7 +113,7 @@ export const uploadedPlansPassport = {
     "property.type": ["residential.dwelling.house.terrace"],
     "property.localAuthorityDistrict": ["Southwark"],
     "property.region": ["London"],
-    "proposal.drawing.locationPlan": [
+    locationPlan: [
       {
         file: {
           path: "fut.email.png",

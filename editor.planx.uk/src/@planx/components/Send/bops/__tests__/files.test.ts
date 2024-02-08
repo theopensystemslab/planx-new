@@ -99,10 +99,10 @@ describe("It extracts tags for", () => {
     },
     "Location plan": {
       key:
-        PASSPORT_UPLOAD_KEY === "proposal.drawing.locationPlan"
+        PASSPORT_UPLOAD_KEY === "locationPlan"
           ? PASSPORT_UPLOAD_KEY
           : "key changed unexpectedly!",
-      tags: ["Proposed", /*"Drawing",*/ "Site", "Plan"],
+      tags: [/*"Proposed", "Drawing",*/ "Site", "Plan"],
     },
     "Existing site plan": {
       key: "property.drawing.sitePlan",
