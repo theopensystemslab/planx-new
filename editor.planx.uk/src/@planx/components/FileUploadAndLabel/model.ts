@@ -1,11 +1,18 @@
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
 import uniqBy from "lodash/uniqBy";
-import { Store } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation, parseMoreInformation } from "../shared";
+
+export const PASSPORT_REQUESTED_FILES_KEY = "_requestedFiles" as const;
+
+export interface RequestedFile {
+  fn: string;
+  condition: Condition;
+}
 
 /**
  * Conditions which can apply to a rule
@@ -226,6 +233,31 @@ const formatUserFiles = (userFile: UserFileWithSlots): FormattedUserFile[] =>
 const hasSlots = (userFile: UserFile): userFile is UserFileWithSlots =>
   Boolean(userFile?.slots);
 
+const getUpdatedRequestedFiles = (fileList: FileList) => {
+  // const { required, recommended, optional } = useStore
+  //   .getState()
+  //   .requestedFiles();
+
+  const { required, recommended, optional } = useStore
+    .getState()
+    .computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY] || {
+    required: [],
+    recommended: [],
+    optional: [],
+  };
+
+  return {
+    [PASSPORT_REQUESTED_FILES_KEY]: {
+      required: [...required, ...fileList.required.map(({ fn }) => fn)],
+      recommended: [
+        ...recommended,
+        ...fileList.recommended.map(({ fn }) => fn),
+      ],
+      optional: [...optional, ...fileList.optional.map(({ fn }) => fn)],
+    },
+  };
+};
+
 /**
  * Generate payload for FileUploadAndLabel breadcrumb
  * Not responsible for validation - this happens at the component level
@@ -243,7 +275,14 @@ export const generatePayload = (fileList: FileList): Store.userData => {
     newPassportData[userFile.fn] = formatUserFiles(userFile);
   });
 
-  return { data: newPassportData };
+  const requestedFiles = getUpdatedRequestedFiles(fileList);
+
+  return {
+    data: {
+      ...newPassportData,
+      ...requestedFiles,
+    },
+  };
 };
 
 const getCachedSlotsFromPreviousData = (

@@ -77,7 +77,13 @@ export default function PhaseBanner(props: Props): FCReturn {
               mt="0.2em"
             >
               This is a new service. Your{" "}
-              <Link onClick={() => props.handleFeedbackClick()}>feedback</Link>{" "}
+              <Link
+                component={"button"}
+                sx={{ verticalAlign: "top" }}
+                onClick={() => props.handleFeedbackClick()}
+              >
+                feedback
+              </Link>{" "}
               will help us improve it.
             </Typography>
           </PhaseWrap>

@@ -253,6 +253,9 @@
     schema: public
   is_enum: true
 - table:
+    name: feedback_summary
+    schema: public
+- table:
     name: feedback_type_enum
     schema: public
   is_enum: true

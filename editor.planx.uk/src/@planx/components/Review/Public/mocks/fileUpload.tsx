@@ -1,3 +1,5 @@
+import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
+
 export const mockLink = "my-file.png";
 export const uploadedPlanUrl = "http://someurl.com/whjhnh65/plan.png";
 
@@ -10,6 +12,11 @@ export const fileUploadBreadcrumbs = {
           filename: "my-file.png",
         },
       ],
+      [PASSPORT_REQUESTED_FILES_KEY]: {
+        required: ["fileUpload"],
+        recommended: [],
+        optional: [],
+      },
     },
   },
 };
@@ -44,6 +51,11 @@ export const fileUploadPassport = {
         filename: "my-file.png",
       },
     ],
+    [PASSPORT_REQUESTED_FILES_KEY]: {
+      required: ["fileUpload"],
+      recommended: [],
+      optional: [],
+    },
   },
 };
 
@@ -76,7 +88,7 @@ export const uploadedPlansBreadcrumb = {
   EO6DzPso8o: {
     auto: false,
     data: {
-      "proposal.drawing.locationPlan": [
+      locationPlan: [
         {
           file: {
             path: "fut.email.png",
@@ -87,6 +99,11 @@ export const uploadedPlansBreadcrumb = {
           url: uploadedPlanUrl,
         },
       ],
+    },
+    [PASSPORT_REQUESTED_FILES_KEY]: {
+      required: ["locationPlan"],
+      recommended: [],
+      optional: [],
     },
   },
 };
@@ -113,7 +130,7 @@ export const uploadedPlansPassport = {
     "property.type": ["residential.dwelling.house.terrace"],
     "property.localAuthorityDistrict": ["Southwark"],
     "property.region": ["London"],
-    "proposal.drawing.locationPlan": [
+    locationPlan: [
       {
         file: {
           path: "fut.email.png",
@@ -124,6 +141,11 @@ export const uploadedPlansPassport = {
         url: uploadedPlanUrl,
       },
     ],
+    [PASSPORT_REQUESTED_FILES_KEY]: {
+      required: ["locationPlan"],
+      recommended: [],
+      optional: [],
+    },
   },
 };
 

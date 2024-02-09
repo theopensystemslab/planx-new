@@ -3,12 +3,13 @@ import { uniqueId } from "lodash";
 import React from "react";
 import { axe, setup } from "testUtils";
 
+import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import FileUpload from "./Public";
 
 test("renders correctly and blocks submit if there are no files added", async () => {
   const handleSubmit = jest.fn();
 
-  setup(<FileUpload handleSubmit={handleSubmit} />);
+  setup(<FileUpload fn="someKey" handleSubmit={handleSubmit} />);
 
   expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
 
@@ -18,32 +19,15 @@ test("renders correctly and blocks submit if there are no files added", async ()
 test("recovers previously submitted files when clicking the back button", async () => {
   const handleSubmit = jest.fn();
   const componentId = uniqueId();
-  const uploadedFile = {
-    data: {
-      [componentId]: [dummyFile],
-    },
-  };
-
-  const { user } = setup(
-    <FileUpload
-      id={componentId}
-      handleSubmit={handleSubmit}
-      previouslySubmittedData={uploadedFile}
-    />,
-  );
-
-  await user.click(screen.getByTestId("continue-button"));
-
-  expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
-});
-
-test("recovers previously submitted files when clicking the back button even if a data field is set", async () => {
-  const handleSubmit = jest.fn();
-  const componentId = uniqueId();
   const dataField = "data-field";
   const uploadedFile = {
     data: {
       [dataField]: [dummyFile],
+      [PASSPORT_REQUESTED_FILES_KEY]: {
+        required: [dataField],
+        recommended: [],
+        optional: [],
+      },
     },
   };
 
@@ -85,6 +69,7 @@ it("should not have any accessibility violations", async () => {
 
   const { container } = setup(
     <FileUpload
+      fn="someKey"
       id={componentId}
       handleSubmit={handleSubmit}
       description="description"

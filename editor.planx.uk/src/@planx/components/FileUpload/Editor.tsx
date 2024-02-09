@@ -62,7 +62,7 @@ function Component(props: any) {
           </InputRow>
           <InputRow>
             <Input
-              // required
+              required
               format="data"
               name="fn"
               value={formik.values.fn}

@@ -172,7 +172,7 @@ async function go(
       formattedResult[broads] = { fn: broads, value: false };
   }
 
-  // FLOODING
+  // --- FLOODING ---
   if (formattedResult["flood"] && formattedResult["flood"].value) {
     ["flood.zone.1", "flood.zone.2", "flood.zone.3"].forEach(
       (zone) =>
@@ -188,7 +188,20 @@ async function go(
   }
 
   // --- LISTED BUILDINGS ---
-  // TODO add granular variables to reflect grade (eg `listed.grade1`), not reflected in content yet though
+  if (formattedResult["listed"] && formattedResult["listed"].value) {
+    ["listed.grade.I", "listed.grade.II", "listed.grade.II*"].forEach(
+      (grade) =>
+        (formattedResult[grade] = {
+          fn: grade,
+          value: Boolean(
+            formattedResult["listed"].data?.filter(
+              (entity) =>
+                entity["listed-building-grade"] === grade.split(".").pop(),
+            ).length,
+          ),
+        }),
+    );
+  }
 
   // --- ARTICLE 4S ---
   // only attempt to set granular a4s if we have metadata for this local authority; proceed with non-granular a4 queries under "opensystemslab" team etc
