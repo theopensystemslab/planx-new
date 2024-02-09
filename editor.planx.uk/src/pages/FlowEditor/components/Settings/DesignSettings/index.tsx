@@ -6,11 +6,9 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { FormikConfig, FormikProps } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import EditorRow from "ui/editor/EditorRow";
-import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -90,7 +88,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 };
 
 const DesignSettings: React.FC = () => {
-  const isUsingFeatureFlag = hasFeatureFlag("SHOW_TEAM_SETTINGS");
   const [formikConfig, setFormikConfig] = useState<
     FormikConfig<TeamTheme> | undefined
   >(undefined);
@@ -145,34 +142,19 @@ const DesignSettings: React.FC = () => {
           How your service appears to public users
         </Typography>
       </EditorRow>
-      {!isUsingFeatureFlag ? (
-        <EditorRow>
-          <FeaturePlaceholder title="Feature in development" />{" "}
-        </EditorRow>
-      ) : (
+      {formikConfig && (
         <>
-          {formikConfig && (
-            <>
-              <ThemeAndLogoForm
-                formikConfig={formikConfig}
-                onSuccess={onSuccess}
-              />
-              <ButtonForm formikConfig={formikConfig} onSuccess={onSuccess} />
-              <TextLinkForm formikConfig={formikConfig} onSuccess={onSuccess} />
-              <FaviconForm formikConfig={formikConfig} onSuccess={onSuccess} />
-            </>
-          )}
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert
-              onClose={handleClose}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Theme updated successfully
-            </Alert>
-          </Snackbar>
+          <ThemeAndLogoForm formikConfig={formikConfig} onSuccess={onSuccess} />
+          <ButtonForm formikConfig={formikConfig} onSuccess={onSuccess} />
+          <TextLinkForm formikConfig={formikConfig} onSuccess={onSuccess} />
+          <FaviconForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>
       )}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Theme updated successfully
+        </Alert>
+      </Snackbar>
     </>
   );
 };
