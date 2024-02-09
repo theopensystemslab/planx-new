@@ -308,7 +308,7 @@ const Team: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Typography variant="h2" component="h1" gutterBottom>
+          <Typography variant="h2" component="h1">
             My services
           </Typography>
           {useStore.getState().canUserEditTeam(slug) ? (
@@ -317,6 +317,24 @@ const Team: React.FC = () => {
             <Visibility />
           )}
         </Box>
+        {useStore.getState().canUserEditTeam(slug) && (
+          <AddButton
+            onClick={() => {
+              const newFlowName = prompt("Service name");
+              if (newFlowName) {
+                const newFlowSlug = slugify(newFlowName);
+                useStore
+                  .getState()
+                  .createFlow(teamId, newFlowSlug)
+                  .then((newId: string) => {
+                    navigation.navigate(`/${slug}/${newId}`);
+                  });
+              }
+            }}
+          >
+            Add a new service
+          </AddButton>
+        )}
         {flows && (
           <DashboardList>
             {flows.map((flow: any) => (
@@ -330,24 +348,6 @@ const Team: React.FC = () => {
                 }}
               />
             ))}
-            {useStore.getState().canUserEditTeam(slug) && (
-              <AddButton
-                onClick={() => {
-                  const newFlowName = prompt("Service name");
-                  if (newFlowName) {
-                    const newFlowSlug = slugify(newFlowName);
-                    useStore
-                      .getState()
-                      .createFlow(teamId, newFlowSlug)
-                      .then((newId: string) => {
-                        navigation.navigate(`/${slug}/${newId}`);
-                      });
-                  }
-                }}
-              >
-                Add a new service
-              </AddButton>
-            )}
           </DashboardList>
         )}
       </Dashboard>
