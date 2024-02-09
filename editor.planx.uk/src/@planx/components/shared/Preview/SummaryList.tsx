@@ -6,10 +6,11 @@ import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { TYPES } from "@planx/components/types";
+import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export default SummaryListsBySections;
@@ -210,42 +211,72 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
   const { trackBackwardsNavigation } = useAnalyticsTracking();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [nodeToChange, setNodeToChange] = useState<Store.nodeId | undefined>(
+    undefined,
+  );
 
-  const handleChangeAnswer = (id: string) => {
-    trackBackwardsNavigation("change", id);
-    props.changeAnswer(id);
+  const handleCloseDialog = (isConfirmed: boolean) => {
+    setIsDialogOpen(false);
+    if (isConfirmed && nodeToChange) {
+      trackBackwardsNavigation("change", nodeToChange);
+      props.changeAnswer(nodeToChange);
+    }
+  };
+
+  const handleChange = (nodeId: Store.nodeId) => {
+    setNodeToChange(nodeId);
+    setIsDialogOpen(true);
   };
 
   return (
-    <Grid showChangeButton={props.showChangeButton}>
-      {props.summaryBreadcrumbs.map(
-        ({ component: Component, nodeId, node, userData }, i) => (
-          <React.Fragment key={i}>
-            <Component
-              nodeId={nodeId}
-              node={node}
-              userData={userData}
-              flow={props.flow}
-              passport={props.passport}
-            />
-            {props.showChangeButton && (
-              <dd>
-                <Link
-                  onClick={() => handleChangeAnswer(nodeId)}
-                  component="button"
-                  fontSize="body2.fontSize"
-                >
-                  Change
-                  <span style={visuallyHidden}>
-                    {node.data?.title || node.data?.text || "this answer"}
-                  </span>
-                </Link>
-              </dd>
-            )}
-          </React.Fragment>
-        ),
-      )}
-    </Grid>
+    <>
+      <Grid showChangeButton={props.showChangeButton}>
+        {props.summaryBreadcrumbs.map(
+          ({ component: Component, nodeId, node, userData }, i) => (
+            <React.Fragment key={i}>
+              <Component
+                nodeId={nodeId}
+                node={node}
+                userData={userData}
+                flow={props.flow}
+                passport={props.passport}
+              />
+              {props.showChangeButton && (
+                <dd>
+                  <Link
+                    onClick={() => handleChange(nodeId)}
+                    component="button"
+                    fontSize="body2.fontSize"
+                  >
+                    Change
+                    <span style={visuallyHidden}>
+                      {node.data?.title || node.data?.text || "this answer"}
+                    </span>
+                  </Link>
+                </dd>
+              )}
+            </React.Fragment>
+          ),
+        )}
+      </Grid>
+      <ConfirmationDialog
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+        title="Confirm"
+        confirmText="Yes"
+        cancelText="No"
+      >
+        <Typography>
+          If you change this answer, you’ll need confirm all the other answers
+          after it. This is because a changed answer might mean we have new or
+          different questions to ask.
+          <br />
+          <br />
+          Are you sure you want to change your answer?
+        </Typography>
+      </ConfirmationDialog>
+    </>
   );
 }
 
