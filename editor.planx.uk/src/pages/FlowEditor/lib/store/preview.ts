@@ -78,7 +78,7 @@ export interface PreviewStore extends Store.Store {
   path: ApplicationPath;
   saveToEmail?: string;
   overrideAnswer: (fn: string) => void;
-  // requestedFiles: () => FileList;
+  requestedFiles: () => FileList;
 }
 
 export const previewStore: StateCreator<
@@ -638,15 +638,17 @@ export const previewStore: StateCreator<
     }
   },
 
-  // TODO: Fix this!
-  // requestedFiles: () => {
-  //   const { computePassport } = get();
-  //   const currentRequestedFiles =
-  //     computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY];
-  //   const emptyFileList = { required: [], recommended: [], optional: [] };
+  requestedFiles: () => {
+    // Importing PASSPORT_REQUESTED_FILES_KEY causes tests to fail - possible circular dependency issue?
+    // Repeating it here so find and replace still points to this hardcoded value
+    const PASSPORT_REQUESTED_FILES_KEY = "_requestedFiles";
+    const { computePassport } = get();
+    const currentRequestedFiles =
+      computePassport().data?.[PASSPORT_REQUESTED_FILES_KEY];
+    const emptyFileList = { required: [], recommended: [], optional: [] };
 
-  //   return currentRequestedFiles || emptyFileList;
-  // },
+    return currentRequestedFiles || emptyFileList;
+  },
 });
 
 const knownNots = (
