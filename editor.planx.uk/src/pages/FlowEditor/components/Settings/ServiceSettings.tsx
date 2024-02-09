@@ -1,9 +1,11 @@
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import EditorRow from "ui/editor/EditorRow";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
@@ -72,6 +74,19 @@ const TextInput: React.FC<{
 const ServiceSettings: React.FC = () => {
   const flowSettings = useStore((state) => state.flowSettings);
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+
+  const handleClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setIsAlertOpen(false);
+  };
+
   const formik = useFormik<FlowSettings>({
     initialValues: {
       elements: {
@@ -92,8 +107,9 @@ const ServiceSettings: React.FC = () => {
         },
       },
     },
-    onSubmit: (values) => {
-      useStore.getState().updateFlowSettings(values);
+    onSubmit: async (values) => {
+      await useStore.getState().updateFlowSettings(values);
+      setIsAlertOpen(true);
     },
     validate: () => {},
   });
@@ -179,10 +195,24 @@ const ServiceSettings: React.FC = () => {
         </InputGroup>
       </EditorRow>
       <EditorRow>
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={!formik.dirty}
+        >
           Update elements
         </Button>
       </EditorRow>
+      <Snackbar
+        open={isAlertOpen}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Service settings updated successfully
+        </Alert>
+      </Snackbar>
     </form>
   );
 };
