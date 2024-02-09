@@ -7,7 +7,6 @@ import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useFormik } from "formik";
-import { submitFeedback } from "lib/feedback";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useState } from "react";
@@ -104,9 +103,6 @@ const Result: React.FC<Props> = ({
     },
     onSubmit: (values, { resetForm }) => {
       if (values.feedback) {
-        submitFeedback(values.feedback, "Inaccurate Result", {
-          responses: responses,
-        });
         resetForm();
       }
       handleSubmit?.({ feedback: values.feedback });
