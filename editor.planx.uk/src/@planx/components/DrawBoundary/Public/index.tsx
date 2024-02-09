@@ -3,6 +3,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
+import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import Card from "@planx/components/shared/Preview/Card";
 import {
   MapContainer,
@@ -134,6 +135,17 @@ export default function Component(props: Props) {
           newPassportData[PASSPORT_UPLOAD_KEY] = slots;
           newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
             DrawBoundaryUserAction.Upload;
+
+          // Track as requested file
+          const { required, recommended, optional } = passport.data?.[
+            PASSPORT_REQUESTED_FILES_KEY
+          ] || { required: [], recommended: [], optional: [] };
+
+          newPassportData[PASSPORT_REQUESTED_FILES_KEY] = {
+            required: [...required, PASSPORT_UPLOAD_KEY],
+            recommended,
+            optional,
+          };
         }
 
         props.handleSubmit?.({ data: { ...newPassportData } });

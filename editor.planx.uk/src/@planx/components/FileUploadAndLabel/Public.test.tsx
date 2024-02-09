@@ -8,13 +8,13 @@ import {
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import axios from "axios";
 import { vanillaStore } from "pages/FlowEditor/lib/store";
-import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import { FullStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { axe, setup } from "testUtils";
 import { Breadcrumbs } from "types";
 
 import { mockFileTypes, mockFileTypesUniqueKeys } from "./mocks";
-import { Condition, PASSPORT_REQUESTED_FILES_KEY } from "./model";
+import { PASSPORT_REQUESTED_FILES_KEY } from "./model";
 import FileUploadAndLabelComponent from "./Public";
 
 const { getState, setState } = vanillaStore;
@@ -716,9 +716,6 @@ describe("Submitting data", () => {
     };
 
     act(() => setState({ flow, breadcrumbs }));
-
-    const passport = useStore.getState().computePassport();
-    console.log({ passport });
 
     const handleSubmit = jest.fn();
     const { user } = setup(

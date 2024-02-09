@@ -1,13 +1,29 @@
+import { Breadcrumbs } from "@opensystemslab/planx-core/types";
+import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { screen } from "@testing-library/react";
+import axios from "axios";
+import { useStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { act } from "react-dom/test-utils";
 import { axe, setup } from "testUtils";
 
+import {
+  DrawBoundaryUserAction,
+  PASSPORT_COMPONENT_ACTION_KEY,
+  PASSPORT_UPLOAD_KEY,
+} from "../model";
 import DrawBoundary from "./";
+
+jest.mock("axios");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+global.URL.createObjectURL = jest.fn();
+
+const { getState, setState } = vanillaStore;
 
 test("recovers previously submitted files when clicking the back button", async () => {
   const handleSubmit = jest.fn();
   const previouslySubmittedData = {
-    "locationPlan": [
+    locationPlan: [
       {
         file: {
           path: "placeholder.png",
@@ -146,4 +162,213 @@ test("hides the upload option and allows user to continue without drawing if edi
 
   await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
+});
+
+test("captures output data in the correct format when uploading a file", async () => {
+  // Setup file mock
+  const mockFileName = "test.png";
+  const mockFileURL =
+    "https://api.editor.planx.dev/file/private/gws7l5d1/test.png";
+
+  const file = new File(["test"], mockFileName, { type: "image/png" });
+
+  const mockedPost = mockedAxios.post.mockResolvedValueOnce({
+    data: {
+      fileType: "image/png",
+      fileUrl: mockFileURL,
+    },
+  });
+
+  const handleSubmit = jest.fn();
+
+  const { user } = setup(
+    <DrawBoundary
+      dataFieldBoundary="property.boundary.site"
+      dataFieldArea="property.area.site"
+      description=""
+      descriptionForUploading=""
+      title="Draw a boundary"
+      titleForUploading="Upload a file"
+      handleSubmit={handleSubmit}
+    />,
+  );
+
+  // Toggle to file upload mode
+  await user.click(screen.getByTestId("upload-file-button"));
+
+  // Upload file
+  const input = screen.getByTestId("upload-input");
+  await user.upload(input, file);
+  expect(mockedPost).toHaveBeenCalled();
+
+  await user.click(screen.getByTestId("continue-button"));
+  const submitted = handleSubmit.mock.calls[0][0];
+
+  // DrawBoundary passport variable set
+  expect(submitted.data).toHaveProperty(PASSPORT_UPLOAD_KEY);
+  expect(submitted.data.locationPlan).toHaveLength(1);
+  expect(submitted.data.locationPlan[0].url).toEqual(mockFileURL);
+  expect(submitted.data.locationPlan[0].file.path).toEqual(mockFileName);
+
+  // DrawBoundary action captured
+  expect(submitted.data[PASSPORT_COMPONENT_ACTION_KEY]).toEqual(
+    DrawBoundaryUserAction.Upload,
+  );
+
+  // File added to requested files
+  expect(submitted.data).toHaveProperty(PASSPORT_REQUESTED_FILES_KEY);
+  expect(submitted.data[PASSPORT_REQUESTED_FILES_KEY]).toMatchObject(
+    expect.objectContaining({
+      required: [PASSPORT_UPLOAD_KEY],
+      recommended: [],
+      optional: [],
+    }),
+  );
+});
+
+test("appends to existing '_requestedFiles' value", async () => {
+  // Setup file mock
+  const mockFileName = "test.png";
+  const mockFileURL =
+    "https://api.editor.planx.dev/file/private/gws7l5d1/test.png";
+
+  const file = new File(["test"], mockFileName, { type: "image/png" });
+
+  mockedAxios.post.mockResolvedValueOnce({
+    data: {
+      fileType: "image/png",
+      fileUrl: mockFileURL,
+    },
+  });
+
+  const handleSubmit = jest.fn();
+
+  // Mimic having passed file upload / file upload and label component
+  const breadcrumbs: Breadcrumbs = {
+    previousFileUploadComponent: {
+      auto: false,
+      data: {
+        floorPlan: [
+          {
+            url: "http://test.com/file1.jpg",
+            filename: "file1.jpg",
+          },
+        ],
+        utilityBill: [
+          {
+            url: "http://test.com/file2.jpg",
+            filename: "file2.jpg",
+          },
+        ],
+        "elevations.existing": [
+          {
+            url: "http://test.com/file3.jpg",
+            filename: "file3.jpg",
+          },
+        ],
+        [PASSPORT_REQUESTED_FILES_KEY]: {
+          required: ["floorPlan", "utilityBill"],
+          recommended: ["elevations.existing"],
+          optional: [],
+        },
+      },
+    },
+  };
+
+  const flow = {
+    _root: {
+      edges: ["previousFileUploadComponent", "DrawBoundary"],
+    },
+    previousFileUploadComponent: {
+      type: 145,
+      data: {
+        title: "Upload and label",
+        fileTypes: [
+          {
+            name: "Floor Plan",
+            fn: "floorPlan",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+          },
+          {
+            name: "Utility Bill",
+            fn: "utilityBill",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+          },
+          {
+            name: "Existing elevations",
+            fn: "elevations.existing",
+            rule: {
+              condition: "AlwaysRecommended",
+            },
+          },
+        ],
+        hideDropZone: false,
+      },
+    },
+    DrawBoundary: {
+      type: 10,
+      data: {
+        howMeasured: "",
+        policyRef: "",
+        info: "",
+        title: "Confirm your location plan",
+        description: "",
+        titleForUploading: "Upload a location plan",
+        descriptionForUploading: "",
+        hideFileUpload: false,
+        dataFieldBoundary: "property.boundary.site",
+        dataFieldArea: "property.boundary.area",
+      },
+    },
+  };
+
+  act(() => setState({ flow, breadcrumbs }));
+
+  const { user } = setup(
+    <DrawBoundary
+      dataFieldBoundary="property.boundary.site"
+      dataFieldArea="property.area.site"
+      description=""
+      descriptionForUploading=""
+      title="Draw a boundary"
+      titleForUploading="Upload a file"
+      handleSubmit={handleSubmit}
+    />,
+  );
+
+  // Check current passport setup
+  const passport = getState().computePassport();
+  const existingRequestedFiles = passport.data?.[PASSPORT_REQUESTED_FILES_KEY];
+  expect(existingRequestedFiles).toBeDefined();
+  expect(existingRequestedFiles).toMatchObject({
+    required: ["floorPlan", "utilityBill"],
+    recommended: ["elevations.existing"],
+    optional: [],
+  });
+
+  // Toggle to file upload mode
+  await user.click(screen.getByTestId("upload-file-button"));
+
+  // Upload file and continue
+  const input = screen.getByTestId("upload-input");
+  await user.upload(input, file);
+  await user.click(screen.getByTestId("continue-button"));
+
+  const { required, recommended, optional } =
+    handleSubmit.mock.calls[0][0].data[PASSPORT_REQUESTED_FILES_KEY];
+
+  // Current file key has been added to required
+  expect(required).toContain(PASSPORT_UPLOAD_KEY);
+
+  // Previous file keys have not been overwritten
+  expect(required).toContain("floorPlan");
+  expect(required).toContain("utilityBill");
+
+  // Recommended and optional keys untouched
+  expect(recommended).toEqual(["elevations.existing"]);
+  expect(optional).toHaveLength(0);
 });
