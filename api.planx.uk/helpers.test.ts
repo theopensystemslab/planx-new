@@ -38,7 +38,7 @@ describe("getEnvironment function", () => {
 
   test("Development env", () => {
     process.env.NODE_ENV = "development";
-    expect(getFormattedEnvironment()).toBe("Development");
+    expect(getFormattedEnvironment()).toBe("Local");
   });
 });
 

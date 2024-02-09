@@ -80,12 +80,21 @@ describe("feedback", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query feedback", () => {
-      expect(i.queries).not.toContain("feedback");
+    test("can query feedback", () => {
+      expect(i.queries).toContain("feedback");
     });
 
-    test("cannot create, update, or delete teams", () => {
-      expect(i).toHaveNoMutationsFor("feedback");
+    test("cannot update feedback", () => {
+      expect(i.mutations).not.toContain("update_feedback");
+      expect(i.mutations).not.toContain("update_feedback_by_pk");
+    });
+
+    test("can delete feedback", async () => {
+      expect(i.mutations).toContain("delete_feedback");
+    });
+    
+    test("cannot insert feedback", async () => {
+      expect(i.mutations).not.toContain("insert_feedback");
     });
   });
 });

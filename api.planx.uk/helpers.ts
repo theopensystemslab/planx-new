@@ -247,6 +247,10 @@ const getFormattedEnvironment = (): string => {
     const pizzaNumber = new URL(process.env.API_URL_EXT!).href.split(".")[1];
     environment += ` ${pizzaNumber}`;
   }
+  // For readability redefine development as local for slack warnings
+  if (environment === "development") {
+    environment = "local";
+  }
   return capitalize(environment);
 };
 
