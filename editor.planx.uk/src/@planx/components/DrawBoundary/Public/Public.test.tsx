@@ -2,7 +2,7 @@ import { Breadcrumbs } from "@opensystemslab/planx-core/types";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { screen } from "@testing-library/react";
 import axios from "axios";
-import { useStore, vanillaStore } from "pages/FlowEditor/lib/store";
+import { vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { axe, setup } from "testUtils";
@@ -341,9 +341,7 @@ test("appends to existing '_requestedFiles' value", async () => {
   );
 
   // Check current passport setup
-  const passport = getState().computePassport();
-  const existingRequestedFiles = passport.data?.[PASSPORT_REQUESTED_FILES_KEY];
-  expect(existingRequestedFiles).toBeDefined();
+  const existingRequestedFiles = getState().requestedFiles();
   expect(existingRequestedFiles).toMatchObject({
     required: ["floorPlan", "utilityBill"],
     recommended: ["elevations.existing"],
