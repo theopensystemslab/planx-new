@@ -33,15 +33,20 @@ export type Props = PublicProps<Confirmation>;
 export default function ConfirmationComponent(props: Props) {
   const [data, setData] = useState<QuestionAndResponses[]>([]);
 
-  const [sessionId, $public] = useStore((state) => [
+  const [sessionId, saveToEmail, $public] = useStore((state) => [
     state.sessionId,
+    state.saveToEmail,
     state.$public,
   ]);
 
   useEffect(() => {
     const makeCsvData = async () => {
-      const csvData = await $public.export.csvData(sessionId);
-      setData(csvData);
+      if (sessionId && saveToEmail) {
+        const csvData = await $public({
+          session: { sessionId: sessionId, email: saveToEmail },
+        }).export.csvData(sessionId);
+        setData(csvData);
+      }
     };
 
     if (data?.length < 1) {

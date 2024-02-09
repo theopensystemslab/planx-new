@@ -658,6 +658,7 @@
         columns:
           - created_at
           - data
+          - flow_id
           - has_user_saved
           - id
           - submitted_at
