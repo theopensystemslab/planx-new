@@ -114,8 +114,6 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     state.getSortedBreadcrumbsBySection,
   ]);
 
-  const { trackBackwardsNavigation } = useAnalyticsTracking();
-
   const isValidComponent = ([nodeId, userData]: BreadcrumbEntry) => {
     const node = props.flow[nodeId];
     const doesNodeExist = Boolean(props.flow[nodeId]);
@@ -160,11 +158,6 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
       .map(removeNonPresentationalNodes)
       .map((section) => section.map(makeSummaryBreadcrumb));
 
-    const handleChangeAnswer = (id: string) => {
-      trackBackwardsNavigation("change", id);
-      props.changeAnswer(id);
-    };
-
     return (
       <>
         {sectionsWithFilteredBreadcrumbs.map(
@@ -184,25 +177,13 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   >
                     {props.flow[`${Object.keys(sections[i])[0]}`]?.data?.title}
                   </Typography>
-                  <Link
-                    onClick={() =>
-                      handleChangeAnswer(filteredBreadcrumbs[0].nodeId)
-                    }
-                    component="button"
-                    fontSize="body1.fontSize"
-                  >
-                    Change
-                    <span style={visuallyHidden}>
-                      the answers in this section
-                    </span>
-                  </Link>
                 </Box>
                 <SummaryList
                   summaryBreadcrumbs={filteredBreadcrumbs}
                   flow={props.flow}
                   passport={props.passport}
                   changeAnswer={props.changeAnswer}
-                  showChangeButton={false}
+                  showChangeButton={props.showChangeButton}
                 />
               </React.Fragment>
             ),
