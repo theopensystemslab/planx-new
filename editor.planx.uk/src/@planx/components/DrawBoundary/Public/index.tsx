@@ -137,9 +137,9 @@ export default function Component(props: Props) {
             DrawBoundaryUserAction.Upload;
 
           // Track as requested file
-          const { required, recommended, optional } = passport.data?.[
-            PASSPORT_REQUESTED_FILES_KEY
-          ] || { required: [], recommended: [], optional: [] };
+          const { required, recommended, optional } = useStore
+            .getState()
+            .requestedFiles();
 
           newPassportData[PASSPORT_REQUESTED_FILES_KEY] = {
             required: [...required, PASSPORT_UPLOAD_KEY],
