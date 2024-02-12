@@ -42,6 +42,7 @@ import Reset from "ui/icons/Reset";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath, rootTeamPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 import FeatureFlagBanner from "./FeatureFlagBanner";
 import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
@@ -323,12 +324,12 @@ const PublicToolbar: React.FC<{
 
   const { trackFlowDirectionChange } = useAnalyticsTracking();
 
-  const handleRestart = async () => {
-    if (
-      confirm(
-        "Are you sure you want to restart? This will delete your previous answers",
-      )
-    ) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const openConfirmationDialog = () => setIsDialogOpen(true);
+
+  const handleRestart = (isConfirmed: boolean) => {
+    setIsDialogOpen(false);
+    if (isConfirmed) {
       trackFlowDirectionChange("reset");
       if (path === ApplicationPath.SingleSession) {
         clearLocalFlow(id);
@@ -358,7 +359,7 @@ const PublicToolbar: React.FC<{
               {showResetButton && (
                 <IconButton
                   color="secondary"
-                  onClick={handleRestart}
+                  onClick={openConfirmationDialog}
                   aria-label="Restart Application"
                   size="large"
                 >
@@ -378,6 +379,18 @@ const PublicToolbar: React.FC<{
       <AnalyticsDisabledBanner />
       <TestEnvironmentBanner />
       <FeatureFlagBanner />
+      <ConfirmationDialog
+        open={isDialogOpen}
+        onClose={handleRestart}
+        title="Confirm"
+        confirmText="Yes"
+        cancelText="No"
+      >
+        <Typography>
+          Are you sure you want to restart? This will delete your previous
+          answers
+        </Typography>
+      </ConfirmationDialog>
     </>
   );
 };
@@ -415,14 +428,12 @@ const EditorToolbar: React.FC<{
     setOpen(!open);
   };
 
-  const isFlowSettingsVisible =
-    route.data.flow && canUserEditTeam(team.slug);
+  const isFlowSettingsVisible = route.data.flow && canUserEditTeam(team.slug);
 
   const isTeamSettingsVisible =
     route.data.team && !route.data.flow && canUserEditTeam(team.slug);
 
-  const isGlobalSettingsVisible =
-    !route.data.team && user?.isPlatformAdmin;
+  const isGlobalSettingsVisible = !route.data.team && user?.isPlatformAdmin;
 
   return (
     <>
