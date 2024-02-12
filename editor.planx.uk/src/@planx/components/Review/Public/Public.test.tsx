@@ -1,4 +1,4 @@
-import { act, screen } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { axe, setup } from "testUtils";
@@ -34,6 +34,7 @@ beforeAll(() => (initialState = getState()));
 describe("Simple flow", () => {
   it("renders correctly", async () => {
     const handleSubmit = jest.fn();
+    const changeAnswer = jest.fn();
 
     const { user } = setup(
       <Review
@@ -42,7 +43,7 @@ describe("Simple flow", () => {
         flow={{}}
         breadcrumbs={{}}
         passport={{}}
-        changeAnswer={() => {}}
+        changeAnswer={changeAnswer}
         handleSubmit={handleSubmit}
         showChangeButton={true}
       />,
@@ -57,6 +58,7 @@ describe("Simple flow", () => {
 
   it("doesn't return undefined when multiple nodes are filled", async () => {
     const handleSubmit = jest.fn();
+    const changeAnswer = jest.fn();
 
     setup(
       <Review
@@ -65,7 +67,7 @@ describe("Simple flow", () => {
         flow={mockedFlow}
         breadcrumbs={mockedBreadcrumbs}
         passport={mockedPassport}
-        changeAnswer={() => {}}
+        changeAnswer={changeAnswer}
         handleSubmit={handleSubmit}
         showChangeButton={true}
       />,
@@ -78,6 +80,8 @@ describe("Simple flow", () => {
   });
 
   it("should not have any accessibility violations", async () => {
+    const changeAnswer = jest.fn();
+
     const { container } = setup(
       <Review
         title="Review"
@@ -85,12 +89,117 @@ describe("Simple flow", () => {
         flow={mockedFlow}
         breadcrumbs={mockedBreadcrumbs}
         passport={mockedPassport}
-        changeAnswer={() => {}}
+        changeAnswer={changeAnswer}
         showChangeButton={true}
       />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it("opens a 'confirm' dialog on change", async () => {
+    const handleSubmit = jest.fn();
+    const changeAnswer = jest.fn();
+
+    setup(
+      <Review
+        title="Review"
+        description="Check your answers before submitting"
+        flow={mockedFlow}
+        breadcrumbs={mockedBreadcrumbs}
+        passport={mockedPassport}
+        changeAnswer={changeAnswer}
+        handleSubmit={handleSubmit}
+        showChangeButton={true}
+      />,
+    );
+
+    // Dialog not shown
+    expect(
+      within(document.body).queryByTestId("confirmation-dialog"),
+    ).not.toBeInTheDocument();
+
+    // Click "change"
+    act(() =>
+      screen
+        .getAllByRole("button", { name: "Change Input a number" })[0]
+        .click(),
+    );
+
+    // Dialog shown to user
+    expect(
+      within(document.body).queryByTestId("confirmation-dialog"),
+    ).toBeVisible();
+  });
+
+  it("selecting 'no' closes the dialog and does not make a change", async () => {
+    const handleSubmit = jest.fn();
+    const changeAnswer = jest.fn();
+
+    setup(
+      <Review
+        title="Review"
+        description="Check your answers before submitting"
+        flow={mockedFlow}
+        breadcrumbs={mockedBreadcrumbs}
+        passport={mockedPassport}
+        changeAnswer={changeAnswer}
+        handleSubmit={handleSubmit}
+        showChangeButton={true}
+      />,
+    );
+
+    act(() =>
+      screen
+        .getAllByRole("button", { name: "Change Input a number" })[0]
+        .click(),
+    );
+    act(() => screen.getAllByRole("button", { name: "No" })[0].click());
+
+    // Modal closed
+    await waitFor(() =>
+      expect(
+        within(document.body).queryByTestId("confirmation-dialog"),
+      ).not.toBeInTheDocument(),
+    );
+
+    // Change not made
+    expect(changeAnswer).not.toHaveBeenCalled();
+  });
+
+  it("selecting 'yes' closes the dialog and does make change", async () => {
+    const handleSubmit = jest.fn();
+    const changeAnswer = jest.fn();
+
+    setup(
+      <Review
+        title="Review"
+        description="Check your answers before submitting"
+        flow={mockedFlow}
+        breadcrumbs={mockedBreadcrumbs}
+        passport={mockedPassport}
+        changeAnswer={changeAnswer}
+        handleSubmit={handleSubmit}
+        showChangeButton={true}
+      />,
+    );
+
+    act(() =>
+      screen
+        .getAllByRole("button", { name: "Change Input a number" })[0]
+        .click(),
+    );
+    act(() => screen.getAllByRole("button", { name: "Yes" })[0].click());
+
+    // Modal closed
+    await waitFor(() =>
+      expect(
+        within(document.body).queryByTestId("confirmation-dialog"),
+      ).not.toBeInTheDocument(),
+    );
+
+    // Change made
+    expect(changeAnswer).toHaveBeenCalled();
   });
 });
 
