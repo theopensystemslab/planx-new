@@ -3,6 +3,16 @@ import { axe, setup } from "testUtils";
 
 import ConfirmationComponent from "./Public";
 
+jest.mock("@opensystemslab/planx-core", () => {
+  return {
+    CoreDomainClient: jest.fn().mockImplementation(() => ({
+      export: {
+        csvData: () => jest.fn(),
+      },
+    })),
+  };
+});
+
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <ConfirmationComponent

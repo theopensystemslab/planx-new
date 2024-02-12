@@ -3,14 +3,15 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import Card from "@planx/components/shared/Preview/Card";
-import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
+import { QuestionAndResponses } from "@opensystemslab/planx-core/types";
+import Card, {
+  contentFlowSpacing,
+} from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "ui/public/Banner";
 import { removeSessionIdSearchParam } from "utils";
 
-import { makeCsvData } from "../../@planx/components/Send/uniform";
 import FileDownload from "../../ui/public/FileDownload";
 
 interface Props {
@@ -32,26 +33,29 @@ const StatusPage: React.FC<Props> = ({
   additionalOption,
   children,
 }) => {
-  const [breadcrumbs, flow, passport, sessionId, flowName] = useStore(
-    (state) => [
-      state.breadcrumbs,
-      state.flow,
-      state.computePassport(),
-      state.sessionId,
-      state.flowName,
-    ],
-  );
-
-  // make a CSV data structure based on the payloads we Send to BOPs/Uniform
-  const data = makeCsvData({
-    breadcrumbs,
-    flow,
-    flowName,
-    passport,
-    sessionId,
-  });
-
   const theme = useTheme();
+  const [data, setData] = useState<QuestionAndResponses[]>([]);
+
+  const [sessionId, saveToEmail, $public] = useStore((state) => [
+    state.sessionId,
+    state.saveToEmail,
+    state.$public,
+  ]);
+
+  useEffect(() => {
+    const makeCsvData = async () => {
+      if (sessionId && saveToEmail) {
+        const csvData = await $public({
+          session: { sessionId: sessionId, email: saveToEmail },
+        }).export.csvData(sessionId);
+        setData(csvData);
+      }
+    };
+
+    if (data?.length < 1) {
+      makeCsvData();
+    }
+  });
 
   return (
     <>
