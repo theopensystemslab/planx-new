@@ -7,18 +7,10 @@ import { getHTMLExport, getRedactedHTMLExport } from "./session/html";
 import { generateZip } from "./session/zip";
 import { getSessionSummary } from "./session/summary";
 import { getDigitalPlanningApplicationPayload } from "./session/digitalPlanningData";
-import { validate } from "../../shared/middleware/validate";
-import { downloadFeedbackCSVSchema } from "./service/feedback/types";
-import { downloadFeedbackCSV } from "./controller";
 
 const router = Router();
 
 router.use("/admin/", usePlatformAdminAuth);
-router.get(
-  "/admin/feedback",
-  validate(downloadFeedbackCSVSchema),
-  downloadFeedbackCSV,
-);
 
 // TODO: Split the routes below into controller and service components
 router.get("/admin/session/:sessionId/xml", getOneAppXML);
