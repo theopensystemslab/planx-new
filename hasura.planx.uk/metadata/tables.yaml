@@ -1360,6 +1360,7 @@
     - role: api
       permission:
         columns:
+          - has_planning_data
           - id
           - production_bops_secret
           - production_bops_submission_url
@@ -1367,6 +1368,14 @@
           - staging_bops_submission_url
           - team_id
         filter: {}
+    - role: public
+      permission:
+        columns:
+          - has_planning_data
+          - id
+          - team_id
+        filter: {}
+      comment: ""
 - table:
     name: team_members
     schema: public
