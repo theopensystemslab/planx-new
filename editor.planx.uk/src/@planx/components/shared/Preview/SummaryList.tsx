@@ -268,9 +268,9 @@ function SummaryList(props: SummaryListProps) {
         cancelText="No"
       >
         <Typography>
-          If you change this answer, you’ll need confirm all the other answers
-          after it. This is because a changed answer might mean we have new or
-          different questions to ask.
+          If you change this answer, you’ll need to confirm all the other
+          answers after it. This is because a changed answer might mean we have
+          new or different questions to ask.
           <br />
           <br />
           Are you sure you want to change your answer?
