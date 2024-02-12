@@ -8,8 +8,6 @@ import {
 import Typography from "@mui/material/Typography";
 import ErrorFallback from "components/ErrorFallback";
 import Feedback from "components/Feedback";
-import PhaseBanner from "components/PhaseBanner";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -44,6 +42,13 @@ const PublicFooter: React.FC = () => {
     const setting = flowSettings?.elements && flowSettings?.elements[key];
 
     if (setting?.show) {
+      if (key == "privacy") {
+        return {
+          title: setting.heading,
+          href: "https://www.planx.uk/privacy",
+          newTab: true,
+        };
+      }
       return {
         title: setting.heading,
         href: makeHref(key),
@@ -65,11 +70,9 @@ const PublicFooter: React.FC = () => {
       Boolean(item),
   );
 
-  const isUsingFeatureFlag = hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
-
   return (
     <Box>
-      {isUsingFeatureFlag ? <Feedback /> : <PhaseBanner />}
+      <Feedback />
       <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
           <Box pr={2} display="flex">

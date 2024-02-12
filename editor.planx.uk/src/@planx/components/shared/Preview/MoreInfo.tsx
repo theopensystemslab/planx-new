@@ -5,7 +5,6 @@ import Drawer, { DrawerProps } from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import MoreInfoFeedbackComponent from "components/Feedback/MoreInfoFeedback";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 
 const PREFIX = "MoreInfo";
@@ -62,8 +61,6 @@ const CloseButton = styled(Box)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const isUsingFeatureFlag = hasFeatureFlag("SHOW_INTERNAL_FEEDBACK");
-
 interface IMoreInfo {
   open: boolean;
   children: (JSX.Element | string | undefined)[] | JSX.Element;
@@ -98,7 +95,7 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
     <Container maxWidth={false} role="main" sx={{ bgcolor: "white" }}>
       <DrawerContent>{children}</DrawerContent>
     </Container>
-    {isUsingFeatureFlag && <MoreInfoFeedbackComponent />}
+    <MoreInfoFeedbackComponent />
   </Root>
 );
 
