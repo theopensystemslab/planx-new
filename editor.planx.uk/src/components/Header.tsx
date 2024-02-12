@@ -415,14 +415,12 @@ const EditorToolbar: React.FC<{
     setOpen(!open);
   };
 
-  const isFlowSettingsVisible =
-    route.data.flow && canUserEditTeam(team.slug);
+  const isFlowSettingsVisible = route.data.flow && canUserEditTeam(team.slug);
 
   const isTeamSettingsVisible =
     route.data.team && !route.data.flow && canUserEditTeam(team.slug);
 
-  const isGlobalSettingsVisible =
-    !route.data.team && user?.isPlatformAdmin;
+  const isGlobalSettingsVisible = !route.data.team && user?.isPlatformAdmin;
 
   return (
     <>
