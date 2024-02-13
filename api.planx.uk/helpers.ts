@@ -13,6 +13,12 @@ const getFlowData = async (id: string): Promise<Flow> => {
           slug
           data
           team_id
+          publishedFlows: published_flows(
+            limit: 1
+            order_by: { created_at: desc }
+          ) {
+            data
+          }
         }
       }
     `,
@@ -142,9 +148,13 @@ const getMostRecentPublishedFlow = async (
 const dataMerged = async (
   id: string,
   ob: { [key: string]: Node } = {},
-): Promise<FlowGraph> => {
-  // get the primary flow data
-  const { slug, data } = await getFlowData(id);
+  isPortal: boolean = false,
+): Promise<FlowGraph> => {  
+  // get the primary flow data, checking for the latest published version of external portals
+  let { slug, data, publishedFlows } = await getFlowData(id);
+  if (isPortal && publishedFlows?.[0]?.data) {
+    data = publishedFlows[0].data;
+  }
 
   // recursively get and flatten internal portals & external portals
   for (const [nodeId, node] of Object.entries(data)) {
@@ -171,7 +181,7 @@ const dataMerged = async (
 
       // Recursively merge flow
       if (!isMerged) {
-        await dataMerged(node.data?.flowId, ob);
+        await dataMerged(node.data?.flowId, ob, true);
       }
     }
 
