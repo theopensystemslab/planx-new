@@ -58,7 +58,7 @@ function Component(props: Props) {
   // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly
   //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
   const hasPlanningData = useStore(
-    (state) => state.teamSettings?.hasPlanningData,
+    (state) => state.teamIntegrations?.hasPlanningData,
   );
 
   const digitalLandParams: Record<string, string> = {

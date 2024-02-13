@@ -71,6 +71,9 @@ const fetchDataForUnpublishedView = async (
               }
               name
               settings
+              integrations {
+                hasPlanningData: has_planning_data
+              }
               slug
               notifyPersonalisation: notify_personalisation
               boundaryBBox: boundary_bbox

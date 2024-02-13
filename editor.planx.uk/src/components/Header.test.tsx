@@ -16,6 +16,9 @@ const mockTeam1: Team = {
   id: 123,
   name: "Open Systems Lab",
   slug: "opensystemslab",
+  integrations: {
+    hasPlanningData: false,
+  },
   theme: {
     logo: "logo.jpg",
     primaryColour: "#0010A4",
@@ -29,6 +32,9 @@ const mockTeam2: Team = {
   id: 456,
   name: "Closed Systems Lab",
   slug: "closedsystemslab",
+  integrations: {
+    hasPlanningData: false,
+  },
   theme: {
     logo: null,
     primaryColour: "#0010A4",

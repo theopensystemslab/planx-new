@@ -46,8 +46,8 @@ dependencies:
     specifier: ^0.8.0
     version: 0.8.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#1959a5d
-    version: github.com/theopensystemslab/planx-core/1959a5d(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#b184ea9
+    version: github.com/theopensystemslab/planx-core/b184ea9(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -16966,8 +16966,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier@3.2.4:
-    resolution: {integrity: sha512-FWu1oLHKCrtpO1ypU6J0SbK2d9Ckwysq6bHj/uaCP26DxrPpppCLQRGVuqAxSTvhF00AcvDRyYrLNW7ocBhFFQ==}
+  /prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
     engines: {node: '>=14'}
     hasBin: true
     dev: false
@@ -19915,6 +19915,11 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
+  /type-fest@4.10.2:
+    resolution: {integrity: sha512-anpAG63wSpdEbLwOqH8L84urkL6PiVIov3EMmgIhhThevh9aiMQov+6Btx0wldNcvm4wV+e2/Rt1QdDwKHFbHw==}
+    engines: {node: '>=16'}
+    dev: false
+
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -21074,9 +21079,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/1959a5d(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/1959a5d}
-    id: github.com/theopensystemslab/planx-core/1959a5d
+  github.com/theopensystemslab/planx-core/b184ea9(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b184ea9}
+    id: github.com/theopensystemslab/planx-core/b184ea9
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -21098,10 +21103,10 @@ packages:
       json-schema-to-typescript: 13.1.2
       lodash: 4.17.21
       marked: 11.2.0
-      prettier: 3.2.4
+      prettier: 3.2.5
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      type-fest: 4.10.0
+      type-fest: 4.10.2
       uuid: 9.0.1
       zod: 3.22.4
     transitivePeerDependencies:

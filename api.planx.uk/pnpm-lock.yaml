@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#1959a5d
-    version: github.com/theopensystemslab/planx-core/1959a5d
+    specifier: git+https://github.com/theopensystemslab/planx-core#b184ea9
+    version: github.com/theopensystemslab/planx-core/b184ea9
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -6655,6 +6655,13 @@ packages:
     resolution: {integrity: sha512-FWu1oLHKCrtpO1ypU6J0SbK2d9Ckwysq6bHj/uaCP26DxrPpppCLQRGVuqAxSTvhF00AcvDRyYrLNW7ocBhFFQ==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: true
+
+  /prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: false
 
   /pretty-format@23.6.0:
     resolution: {integrity: sha512-zf9NV1NSlDLDjycnwm6hpFATCGl/K1lt0R/GdkAK2O5LN/rwJoB+Mh93gGJjut4YbmecbfgLWVGSTCr0Ewvvbw==}
@@ -7855,13 +7862,13 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest@4.6.0:
-    resolution: {integrity: sha512-rLjWJzQFOq4xw7MgJrCZ6T1jIOvvYElXT12r+y0CC6u67hegDHaxcPqb2fZHOGlqxugGQPNB1EnTezjBetkwkw==}
+  /type-fest@4.10.2:
+    resolution: {integrity: sha512-anpAG63wSpdEbLwOqH8L84urkL6PiVIov3EMmgIhhThevh9aiMQov+6Btx0wldNcvm4wV+e2/Rt1QdDwKHFbHw==}
     engines: {node: '>=16'}
     dev: false
 
-  /type-fest@4.9.0:
-    resolution: {integrity: sha512-KS/6lh/ynPGiHD/LnAobrEFq3Ad4pBzOlJ1wAnJx9N4EYoqFhMfLIBjUT2UEx4wg5ZE+cC1ob6DCSpppVo+rtg==}
+  /type-fest@4.6.0:
+    resolution: {integrity: sha512-rLjWJzQFOq4xw7MgJrCZ6T1jIOvvYElXT12r+y0CC6u67hegDHaxcPqb2fZHOGlqxugGQPNB1EnTezjBetkwkw==}
     engines: {node: '>=16'}
     dev: false
 
@@ -8285,8 +8292,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/1959a5d:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/1959a5d}
+  github.com/theopensystemslab/planx-core/b184ea9:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b184ea9}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -8308,10 +8315,10 @@ packages:
       json-schema-to-typescript: 13.1.2
       lodash: 4.17.21
       marked: 11.2.0
-      prettier: 3.2.4
+      prettier: 3.2.5
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      type-fest: 4.9.0
+      type-fest: 4.10.2
       uuid: 9.0.1
       zod: 3.22.4
     transitivePeerDependencies:

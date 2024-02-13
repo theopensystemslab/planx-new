@@ -1,6 +1,7 @@
 import {
   NotifyPersonalisation,
   Team,
+  TeamIntegrations,
   TeamSettings,
   TeamTheme,
 } from "@opensystemslab/planx-core/types";
@@ -11,13 +12,14 @@ import type { StateCreator } from "zustand";
 import { SharedStore } from "./shared";
 
 export interface TeamStore {
+  boundaryBBox?: Team["boundaryBBox"];
+  notifyPersonalisation?: NotifyPersonalisation;
   teamId: number;
-  teamTheme: TeamTheme;
+  teamIntegrations: TeamIntegrations;
   teamName: string;
   teamSettings?: TeamSettings;
   teamSlug: string;
-  notifyPersonalisation?: NotifyPersonalisation;
-  boundaryBBox?: Team["boundaryBBox"];
+  teamTheme: TeamTheme;
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
@@ -33,23 +35,25 @@ export const teamStore: StateCreator<
   [],
   TeamStore
 > = (set, get) => ({
+  boundaryBBox: undefined,
+  notifyPersonalisation: undefined,
   teamId: 0,
-  teamTheme: {} as TeamTheme,
+  teamIntegrations: {} as TeamIntegrations,
   teamName: "",
   teamSettings: undefined,
   teamSlug: "",
-  notifyPersonalisation: undefined,
-  boundaryBBox: undefined,
+  teamTheme: {} as TeamTheme,
 
   setTeam: (team) => {
     set({
+      boundaryBBox: team.boundaryBBox,
+      notifyPersonalisation: team.notifyPersonalisation,
       teamId: team.id,
-      teamTheme: team.theme,
+      teamIntegrations: team.integrations,
       teamName: team.name,
       teamSettings: team.settings,
       teamSlug: team.slug,
-      notifyPersonalisation: team.notifyPersonalisation,
-      boundaryBBox: team.boundaryBBox,
+      teamTheme: team.theme,
     });
 
     if (team.theme?.favicon) {
@@ -59,13 +63,14 @@ export const teamStore: StateCreator<
   },
 
   getTeam: () => ({
-    id: get().teamId,
-    name: get().teamName,
-    slug: get().teamSlug,
-    settings: get().teamSettings,
-    theme: get().teamTheme,
-    notifyPersonalisation: get().notifyPersonalisation,
     boundaryBBox: get().boundaryBBox,
+    id: get().teamId,
+    integrations: get().teamIntegrations,
+    name: get().teamName,
+    notifyPersonalisation: get().notifyPersonalisation,
+    settings: get().teamSettings,
+    slug: get().teamSlug,
+    theme: get().teamTheme,
   }),
 
   initTeamStore: async (slug) => {
@@ -104,13 +109,14 @@ export const teamStore: StateCreator<
 
   clearTeamStore: () =>
     set({
+      boundaryBBox: undefined,
+      notifyPersonalisation: undefined,
       teamId: 0,
-      teamTheme: undefined,
+      teamIntegrations: undefined,
       teamName: "",
       teamSettings: undefined,
       teamSlug: "",
-      notifyPersonalisation: undefined,
-      boundaryBBox: undefined,
+      teamTheme: undefined,
     }),
 
   /**

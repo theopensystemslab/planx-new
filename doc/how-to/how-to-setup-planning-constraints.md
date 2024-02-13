@@ -8,7 +8,7 @@ Our /gis API sets the passport variable `article4` by default for _any_ entities
 ## Process ⚙️
 1. **Council** - Shares & publishes their data on planning.data.gov.uk
 
-2. **Planx** - Updates `teams.settings` jsonb database record on production with `{ "hasPlanningData": true }` to enable queries. This will automatically sync to staging on the next scheduled Github Action run, or you can kick it off manually.
+2. **Planx** - Updates `team_integrations.has_planning_data` record on production with `true` to enable queries. This will automatically sync to staging on the next scheduled Github Action run, or you can kick it off manually.
 
 (Note that it's common for councils to be ready to complete steps 1 & 2 well before steps 3-5; that's completely okay for testing, but all steps should be completed before a service "goes live".)
 
