@@ -4,19 +4,21 @@ CREATE TEMPORARY TABLE sync_team_integrations (
   team_id integer,
   staging_bops_submission_url text,
   staging_bops_secret text,
-  has_planning_data boolean
+  has_planning_data boolean,
+  staging_govpay_secret text
 );
 
 \COPY sync_team_integrations FROM '/tmp/team_integrations.csv' WITH (FORMAT csv, DELIMITER ';');
 
 INSERT INTO
-  team_integrations (id, team_id, staging_bops_submission_url, staging_bops_secret, has_planning_data)
+  team_integrations (id, team_id, staging_bops_submission_url, staging_bops_secret, has_planning_data, staging_govpay_secret)
 SELECT
   id,
   team_id,
   staging_bops_submission_url,
   staging_bops_secret,
-  has_planning_data
+  has_planning_data,
+  staging_govpay_secret
 FROM
   sync_team_integrations ON CONFLICT (id) DO
 UPDATE
@@ -24,7 +26,8 @@ SET
   team_id = EXCLUDED.team_id,
   staging_bops_submission_url = EXCLUDED.staging_bops_submission_url,
   staging_bops_secret = EXCLUDED.staging_bops_secret,
-  has_planning_data = EXCLUDED.has_planning_data;
+  has_planning_data = EXCLUDED.has_planning_data,
+  staging_govpay_secret = EXCLUDED.staging_govpay_secret;
 SELECT
   setval('team_integrations_id_seq', max(id))
 FROM
