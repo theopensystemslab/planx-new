@@ -24,7 +24,7 @@ import Send from "@mui/icons-material/Send";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
 import ViewAgenda from "@mui/icons-material/ViewAgenda";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { ChangeEvent } from "react";
@@ -78,13 +78,13 @@ export const ICONS: {
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
   [TYPES.PropertyInformation]: LocationOnOutlined,
-  [TYPES.Response]: undefined,
+  [TYPES.Answer]: undefined,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,
   [TYPES.Section]: ViewAgenda,
   [TYPES.Send]: Send,
   [TYPES.SetValue]: PlaylistAdd,
-  [TYPES.Statement]: CallSplit,
+  [TYPES.Question]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
 } as const;

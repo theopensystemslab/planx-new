@@ -18,7 +18,7 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";

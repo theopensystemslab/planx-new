@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import { vanillaStore } from "../../store";
 
@@ -12,17 +12,17 @@ test("hasPaid is updated if a Pay component has been recorded", () => {
         edges: ["a", "b"],
       },
       a: {
-        type: TYPES.Statement,
+        type: TYPES.Question,
         edges: ["c"],
       },
       b: {
-        type: TYPES.Statement,
+        type: TYPES.Question,
       },
       c: {
         type: TYPES.Pay,
       },
 
-      d: { type: TYPES.Response },
+      d: { type: TYPES.Answer },
       e: { type: TYPES.Review },
     },
   });

@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
   DateInput,
   editorValidationSchema,
   paddedDate,
 } from "@planx/components/DateInput/model";
 import { parseDateInput } from "@planx/components/DateInput/model";
-import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
   ICONS,

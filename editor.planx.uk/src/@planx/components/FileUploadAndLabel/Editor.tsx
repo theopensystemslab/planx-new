@@ -4,7 +4,7 @@ import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
   EditorProps,
   ICONS,

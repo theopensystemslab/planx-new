@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";

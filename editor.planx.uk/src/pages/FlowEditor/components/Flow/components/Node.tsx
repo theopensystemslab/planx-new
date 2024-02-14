@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -122,9 +122,9 @@ const Node: React.FC<any> = (props) => {
         <Question {...allProps} text={node?.data?.title ?? "Text input"} />
       );
 
-    case TYPES.Response:
+    case TYPES.Answer:
       return <Option {...allProps} />;
-    case TYPES.Statement:
+    case TYPES.Question:
     case TYPES.Checklist:
       return (
         <Checklist

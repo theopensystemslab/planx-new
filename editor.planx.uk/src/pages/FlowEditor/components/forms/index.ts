@@ -1,3 +1,4 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import AddressInput from "@planx/components/AddressInput/Editor";
 import Calculate from "@planx/components/Calculate/Editor";
 import Checklist from "@planx/components/Checklist/Editor";
@@ -26,7 +27,6 @@ import Send from "@planx/components/Send/Editor";
 import SetValue from "@planx/components/SetValue/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
-import { TYPES } from "@planx/components/types";
 import React from "react";
 
 import { SLUGS } from "../../data/types";

@@ -2,6 +2,7 @@ import Warning from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { getIn, useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
@@ -12,7 +13,6 @@ import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import { array, object } from "yup";
 
-import { TYPES } from "../types";
 import { EditorProps, ICONS } from "../ui";
 import { Destination, Send } from "./model";
 import { parseContent } from "./model";

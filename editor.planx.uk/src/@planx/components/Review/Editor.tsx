@@ -1,3 +1,4 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
@@ -6,7 +7,6 @@ import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { TYPES } from "../types";
 import { EditorProps, ICONS, InternalNotes } from "../ui";
 import { parseContent, Review } from "./model";
 

@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import { vanillaStore } from "../store";
 
@@ -14,44 +14,44 @@ describe("in a flow with no collected flags, the user", () => {
           edges: ["question", "filter"],
         },
         question: {
-          type: TYPES.Statement,
+          type: TYPES.Question,
           edges: ["missing_info_answer", "immune_answer", "noflag_answer"],
         },
         missing_info_answer: {
-          type: TYPES.Response,
+          type: TYPES.Answer,
           data: {
             flag: "MISSING_INFO",
           },
         },
         immune_answer: {
-          type: TYPES.Response,
+          type: TYPES.Answer,
           data: {
             flag: "IMMUNE",
           },
         },
         noflag_answer: {
-          type: TYPES.Response,
+          type: TYPES.Answer,
         },
         filter: {
           type: TYPES.Filter,
           edges: ["missing_info_flag", "immune_flag", "no_flag"],
         },
         missing_info_flag: {
-          type: TYPES.Response,
+          type: TYPES.Answer,
           data: {
             val: "MISSING_INFO",
           },
           edges: ["missing_info_followup"],
         },
         immune_flag: {
-          type: TYPES.Response,
+          type: TYPES.Answer,
           data: {
             val: "IMMUNE",
           },
           edges: ["immune_followup"],
         },
         no_flag: {
-          type: TYPES.Response,
+          type: TYPES.Answer,
           edges: ["noflag_followup"],
         },
         missing_info_followup: { type: TYPES.Content },
@@ -94,14 +94,14 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
             val: "MISSING_INFO",
             text: "Missing information",
           },
-          type: TYPES.Response,
+          type: TYPES.Answer,
           edges: ["missing_info_content"],
         },
         q2: {
           data: {
             text: "another",
           },
-          type: TYPES.Statement,
+          type: TYPES.Question,
           edges: ["missing_2", "nothing_2"],
         },
         missing_info_content: {
@@ -114,13 +114,13 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
           data: {
             text: "nothing",
           },
-          type: TYPES.Response,
+          type: TYPES.Answer,
         },
         no_result: {
           data: {
             text: "(No Result)",
           },
-          type: TYPES.Response,
+          type: TYPES.Answer,
           edges: ["q2"],
         },
         missing_2: {
@@ -128,14 +128,14 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
             flag: "MISSING_INFO",
             text: "missing",
           },
-          type: TYPES.Response,
+          type: TYPES.Answer,
         },
         immune: {
           data: {
             val: "IMMUNE",
             text: "Immune",
           },
-          type: TYPES.Response,
+          type: TYPES.Answer,
         },
         filter: {
           data: {
@@ -145,21 +145,21 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
           edges: ["missing_info", "immune", "no_result"],
         },
         q1: {
-          type: TYPES.Statement,
+          type: TYPES.Question,
           data: {
             text: "q",
           },
           edges: ["missing_1", "nothing_1"],
         },
         missing_1: {
-          type: TYPES.Response,
+          type: TYPES.Answer,
           data: {
             text: "missing",
             flag: "MISSING_INFO",
           },
         },
         nothing_1: {
-          type: TYPES.Response,
+          type: TYPES.Answer,
           data: {
             text: "nothing",
           },

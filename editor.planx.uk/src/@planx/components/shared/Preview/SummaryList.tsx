@@ -3,9 +3,9 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
-import { TYPES } from "@planx/components/types";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -73,13 +73,13 @@ const presentationalComponents: {
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
   [TYPES.PropertyInformation]: undefined,
-  [TYPES.Response]: Debug,
+  [TYPES.Answer]: Debug,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
   [TYPES.Section]: undefined,
   [TYPES.Send]: undefined,
   [TYPES.SetValue]: undefined,
-  [TYPES.Statement]: Question,
+  [TYPES.Question]: Question,
   [TYPES.TaskList]: undefined,
   [TYPES.TextInput]: TextInput,
 } as const;

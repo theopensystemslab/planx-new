@@ -1,8 +1,8 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store, vanillaStore } from "pages/FlowEditor/lib/store";
 
 const { getState, setState } = vanillaStore;
-const { upcomingCardIds, resetPreview, record, currentCard } = getState();
+const { upcomingCardIds, resetPreview, record } = getState();
 
 // Helper method
 const visitedNodes = () => Object.keys(getState().breadcrumbs);
@@ -74,7 +74,7 @@ const flowWithAutomation: Store.flow = {
       val: "1",
       text: "1",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["Group1Notice"],
   },
   Question: {
@@ -82,7 +82,7 @@ const flowWithAutomation: Store.flow = {
       fn: "testGroup",
       text: "Which test group? ",
     },
-    type: TYPES.Statement,
+    type: TYPES.Question,
     edges: ["Group1Response", "Group2Response"],
   },
   Group2Response: {
@@ -90,7 +90,7 @@ const flowWithAutomation: Store.flow = {
       val: "2",
       text: "2",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["Group2Notice"],
   },
 };
@@ -128,7 +128,7 @@ const flowWithoutAutomation: Store.flow = {
       val: "1",
       text: "1",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["Group1Notice"],
   },
   Question: {
@@ -136,7 +136,7 @@ const flowWithoutAutomation: Store.flow = {
       fn: "testGroup",
       text: "Which test group? ",
     },
-    type: TYPES.Statement,
+    type: TYPES.Question,
     edges: ["Group1Response", "Group2Response"],
   },
   Group2Response: {
@@ -144,7 +144,7 @@ const flowWithoutAutomation: Store.flow = {
       val: "2",
       text: "2",
     },
-    type: TYPES.Response,
+    type: TYPES.Answer,
     edges: ["Group2Notice"],
   },
 };

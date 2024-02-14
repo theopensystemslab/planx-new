@@ -4,7 +4,7 @@ import {
   Flag,
   FlagSet,
 } from "@opensystemslab/planx-core/types";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
 import { publicClient } from "lib/graphql";
 import React, { createContext, useContext, useEffect } from "react";

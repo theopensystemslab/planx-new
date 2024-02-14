@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import shuffle from "lodash/shuffle";
 
 import { vanillaStore } from "../store";
@@ -23,20 +23,20 @@ describe("(basic) if the passport contains", () => {
           },
           _setter: {},
           item: {
-            type: TYPES.Statement,
+            type: TYPES.Question,
             data: { fn: "item" },
             edges: ["food", "hardware", "other"],
           },
           food: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
             data: { val: "food" },
           },
           hardware: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
             data: { val: "hardware" },
           },
           other: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
           },
         },
       });
@@ -76,20 +76,20 @@ describe("(more advanced) if the passport contains", () => {
           },
           _setter: {},
           item: {
-            type: TYPES.Statement,
+            type: TYPES.Question,
             data: { fn: "item" },
             edges: ["food.fruit", "food", "other"],
           },
           "food.fruit": {
-            type: TYPES.Response,
+            type: TYPES.Answer,
             data: { val: "food.fruit" },
           },
           food: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
             data: { val: "food" },
           },
           other: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
           },
         },
       });
@@ -144,7 +144,7 @@ describe("(advanced) if the passport contains", () => {
           },
           _setter: {},
           contains: {
-            type: TYPES.Statement,
+            type: TYPES.Question,
             data: { fn: "item" },
             edges: shuffle([
               "apples",
@@ -154,19 +154,19 @@ describe("(advanced) if the passport contains", () => {
             ]),
           },
           apples: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
             data: { val: "food.fruit.apple" },
           },
           bread: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
             data: { val: "food.bread" },
           },
           apples_and_bread: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
             data: { val: "food.fruit.apple,food.bread" },
           },
           neither_apples_nor_bread: {
-            type: TYPES.Response,
+            type: TYPES.Answer,
           },
         },
       });
