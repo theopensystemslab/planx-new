@@ -17,10 +17,6 @@
     "tldjs": "^2.3.1"
   },
   "scripts": {
-    "setup-sandbox-env": "REACT_APP_GOOGLE_OAUTH_OVERRIDE=https://api.editor.planx.dev REACT_APP_API_URL=https://api.planx.in REACT_APP_HASURA_URL=https://hasura.planx.in/v1/graphql REACT_APP_SHAREDB_URL=wss://sharedb.planx.in",
-    "build-editor": "cd ../../editor.planx.uk && pnpm build",
-    "sandbox:up": "pnpm setup-sandbox-env pnpm build-editor && DOCKER_DEFAULT_PLATFORM=linux/amd64 pulumi up --stack sandbox",
-    "sandbox:down": "pulumi down --stack sandbox",
-    "sandbox:refresh": "pnpm setup-sandbox-env pnpm build-editor && DOCKER_DEFAULT_PLATFORM=linux/amd64 pulumi up --refresh --stack sandbox"
+    "build-editor": "cd ../../editor.planx.uk && pnpm build"
   }
 }

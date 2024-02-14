@@ -20,18 +20,15 @@ The stacks are:
 
 - `production`
 - `staging`
-- `sandbox`
 
 Steps:
 
 1. Install [Docker](https://docs.docker.com/get-docker/)
-1. Install the [Pulumi CLI](https://www.pulumi.com/docs/reference/cli/)
-1. Setup AWS credentials for Pulumi IAM role. Profile names should have the format `planx-<STACK>-pulumi`.
-1. Log in to the Pulumi CLI using your PAT (`pulumi login`)
-1. Install project dependencies at root (`pnpm i`), this will install dependencies for all layers
-1. Provision layers manually (`cd <LAYER_DIR> && pulumi up --stack <STACK>`)
-
-We use the `sandbox` environment to test IaC changes. The `application` layer is also manually deployed from the local developer's machine, and not via CI.
+2. Install the [Pulumi CLI](https://www.pulumi.com/docs/reference/cli/)
+3. Setup AWS credentials for Pulumi IAM role. Profile names should have the format `planx-<STACK>-pulumi`.
+4. Log in to the Pulumi CLI using your PAT (`pulumi login`)
+5. Install project dependencies at root (`pnpm i`), this will install dependencies for all layers
+6. Provision layers manually (`cd <LAYER_DIR> && pulumi up --stack <STACK>`)
 
 ### What about the secrets?
 

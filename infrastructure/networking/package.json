@@ -6,10 +6,5 @@
     "@pulumi/aws": "^4.0.0",
     "@pulumi/awsx": "^0.30.0",
     "@pulumi/pulumi": "^3.74.0"
-  },
-  "scripts": {
-    "sandbox:up": "pulumi up --stack sandbox",
-    "sandbox:down": "pulumi down --stack sandbox",
-    "sandbox:refresh": "pulumi up --refresh --stack sandbox"
   }
 }
