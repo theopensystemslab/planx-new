@@ -1365,8 +1365,10 @@
           - id
           - production_bops_secret
           - production_bops_submission_url
+          - production_govpay_secret
           - staging_bops_secret
           - staging_bops_submission_url
+          - staging_govpay_secret
           - team_id
         filter: {}
     - role: public
