@@ -129,7 +129,7 @@ Our public-facing live services were last audited by the [Digital Accessibility 
 
 ### Security
 
-Our whole stack was last assessed by [Jumpsec](https://www.jumpsec.com/) on 27th July 2022. Their penetration test concluded that our infrastructure and application environments are securely configured to follow best practices. We have since additionally resolved a handful of low- and informational-risk issues uncovered during the assessment to maintain a high standard of security.
+Our whole stack was last assessed by [Jumpsec](https://www.jumpsec.com/) between the 21st and 30th November 2023. JUMPSEC then performed a retest of the issues identified in the initial test on the 8th of February 2024. This included verifying that fixes had been successfully applied and that no further risks were introduced as a result of the remediation work carried out. Their penetration test concluded that - "the security posture of PlanX was strong, and following industry best practices. JUMPSEC commend the PlanX team on their dedication to security and ability to both maintain and mitigate issues in a responsible and timely manner".
 
 
 ## Related packages
