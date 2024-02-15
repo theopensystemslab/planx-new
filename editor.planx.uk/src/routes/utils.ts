@@ -1,8 +1,9 @@
-import { TYPES as NodeTypes } from "@planx/components/types";
+import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { Store } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
 import { publicClient } from "../lib/graphql";
@@ -18,14 +19,10 @@ export const rootFlowPath = (includePortals = false) => {
 export const rootTeamPath = () =>
   window.location.pathname.split("/").slice(0, 2).join("/");
 
-export const isSaveReturnFlow = (flowData: Record<string, any>): boolean =>
-  Boolean(
-    Object.values(flowData).find(
-      (node: Record<string, any>) => node.type === NodeTypes.Send,
-    ),
-  );
+export const isSaveReturnFlow = (flowData: Store.flow): boolean =>
+  Boolean(Object.values(flowData).find((node) => node.type === NodeTypes.Send));
 
-export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
+export const setPath = (flowData: Store.flow, req: NaviRequest) => {
   // XXX: store.path is SingleSession by default
   if (!isSaveReturnFlow(flowData)) return;
   if (hasFeatureFlag("DISABLE_SAVE_AND_RETURN")) return;

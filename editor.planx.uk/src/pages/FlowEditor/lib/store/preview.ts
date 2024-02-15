@@ -8,11 +8,11 @@ import {
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
   FileList,
   PASSPORT_REQUESTED_FILES_KEY,
 } from "@planx/components/FileUploadAndLabel/model";
-import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
@@ -32,7 +32,7 @@ import type { Store } from ".";
 import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 
-const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
+const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 let memoizedPreviousCardId: string | undefined = undefined;
 let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
 export interface PreviewStore extends Store.Store {

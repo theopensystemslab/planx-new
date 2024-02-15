@@ -1,8 +1,8 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/react";
 import { ComponentProps } from "react";
 import { SectionNode } from "types";
 
-import { TYPES } from "../types";
 import { Root as Public } from "./Public";
 
 const meta = {

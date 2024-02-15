@@ -1,6 +1,6 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Content } from "@planx/components/Content/model";
 import { parseContent } from "@planx/components/Content/model";
-import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
   ICONS,

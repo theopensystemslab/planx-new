@@ -2,7 +2,7 @@ import {
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
 
@@ -29,7 +29,7 @@ const Filter: React.FC<Props> = (props) => {
             ]
               .filter((f) => f.category === DEFAULT_FLAG_CATEGORY)
               .map((f) => ({
-                type: TYPES.Response,
+                type: TYPES.Answer,
                 data: {
                   text: f.text,
                   val: f.value,

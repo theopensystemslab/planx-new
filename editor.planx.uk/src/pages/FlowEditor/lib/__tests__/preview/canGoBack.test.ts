@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
 import { Store, vanillaStore } from "../../store";
 
@@ -10,20 +10,20 @@ const flow: Store.flow = {
     edges: ["Question", "Pay", "Content", "Confirmation"],
   },
   Question: {
-    type: TYPES.Statement,
+    type: TYPES.Question,
     data: {
       text: "first question",
     },
     edges: ["NoFeeAnswerPath", "FeeAnswerPath"],
   },
   NoFeeAnswerPath: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "no fee",
     },
   },
   FeeAnswerPath: {
-    type: TYPES.Response,
+    type: TYPES.Answer,
     data: {
       text: "fee",
     },

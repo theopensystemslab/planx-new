@@ -1,4 +1,4 @@
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
   EditorProps,
   ICONS,
@@ -35,7 +35,7 @@ function PropertyInformationComponent(props: Props) {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Propery information"
+          title="Property information"
           Icon={ICONS[TYPES.PropertyInformation]}
         >
           <InputRow>

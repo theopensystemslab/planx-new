@@ -13,12 +13,12 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Input from "ui/shared/Input";
 
-import { TYPES } from "../../../@planx/components/types";
 import Questions from "../../Preview/Questions";
 import { useStore } from "../lib/store";
 
@@ -103,6 +103,7 @@ const PreviewBrowser: React.FC<{
     lastPublished,
     lastPublisher,
     validateAndDiffFlow,
+    isFlowPublished,
   ] = useStore((state) => [
     state.id,
     state.flowAnalyticsLink,
@@ -111,6 +112,7 @@ const PreviewBrowser: React.FC<{
     state.lastPublished,
     state.lastPublisher,
     state.validateAndDiffFlow,
+    state.isFlowPublished,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -189,17 +191,26 @@ const PreviewBrowser: React.FC<{
               <OpenInNewIcon />
             </Link>
           </Tooltip>
-
-          <Tooltip arrow title="Open published service">
-            <Link
-              href={props.url + "?analytics=false"}
-              target="_blank"
-              rel="noopener noreferrer"
-              color="inherit"
-            >
-              <LanguageIcon />
-            </Link>
-          </Tooltip>
+          {isFlowPublished ? (
+            <Tooltip arrow title="Open published service">
+              <Link
+                href={props.url + "?analytics=false"}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <LanguageIcon />
+              </Link>
+            </Tooltip>
+          ) : (
+            <Tooltip arrow title="Flow not yet published">
+              <Box>
+                <Link component={"button"} disabled aria-disabled={true}>
+                  <LanguageIcon />
+                </Link>
+              </Box>
+            </Tooltip>
+          )}
         </Box>
         <Box width="100%" mt={2}>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
@@ -283,12 +294,14 @@ const PreviewBrowser: React.FC<{
                     try {
                       setDialogOpen(false);
                       setLastPublishedTitle("Publishing changes...");
-                      const publishedFlow = await publishFlow(flowId, summary);
+                      const { alteredNodes, message } = await publishFlow(
+                        flowId,
+                        summary,
+                      );
                       setLastPublishedTitle(
-                        publishedFlow?.data.alteredNodes
-                          ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
-                          : `${publishedFlow?.data?.message}` ||
-                              "No new changes to publish",
+                        alteredNodes
+                          ? `Successfully published changes to ${alteredNodes.length} node(s)`
+                          : `${message}` || "No new changes to publish",
                       );
                     } catch (error) {
                       setLastPublishedTitle("Error trying to publish");

@@ -1,5 +1,5 @@
 import ErrorIcon from "@mui/icons-material/Error";
-import { TYPES } from "@planx/components/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";

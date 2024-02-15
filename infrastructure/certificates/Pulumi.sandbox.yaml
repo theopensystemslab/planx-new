@@ -1,5 +1,0 @@
-config:
-  certificates:cloudflare-zone-id: 9cdfc35484748e96b0ed2b1d303a694f
-  certificates:domain: planx.in
-  cloudflare:apiToken:
-    secure: AAABAJvec9KuduaV6QFFc0sCCw1EMLs8ws6ggyxXOdPW8Dlp9XVCeMvB9XS6yMZyOfskANJaKPXx3QR7cAHi8G2FhpFZBAxt

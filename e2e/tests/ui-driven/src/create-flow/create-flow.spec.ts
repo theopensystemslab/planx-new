@@ -145,7 +145,45 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
   });
 
-  test("Preview a created flow", async ({ browser }: { browser: Browser }) => {
+  test("Cannot preview an unpublished flow", async ({
+    browser,
+  }: {
+    browser: Browser;
+  }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    await page.goto(
+      `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`,
+    );
+
+    await expect(page.getByText("Not Found")).toBeVisible();
+  });
+
+  test("Publish a flow", async ({ browser }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
+
+    page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
+    page.getByRole("button", { name: "PUBLISH", exact: true }).click();
+
+    const previewLink = page.getByRole("link", {
+      name: "Open published service",
+    });
+    await expect(previewLink).toBeVisible();
+  });
+
+  test("Can preview a published flow", async ({
+    browser,
+  }: {
+    browser: Browser;
+  }) => {
     const page = await createAuthenticatedSession({
       browser,
       userId: context.user!.id!,

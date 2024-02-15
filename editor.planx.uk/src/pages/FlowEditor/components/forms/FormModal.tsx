@@ -7,8 +7,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
-import { TYPES } from "@planx/components/types";
 import ErrorFallback from "components/ErrorFallback";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -48,7 +48,7 @@ const NodeTypeSelect: React.FC<{
       }}
     >
       <optgroup label="Question">
-        <option value={TYPES.Statement}>Question</option>
+        <option value={TYPES.Question}>Question</option>
         <option value={TYPES.Checklist}>Checklist</option>
         <option value={TYPES.NextSteps}>Next steps</option>
       </optgroup>

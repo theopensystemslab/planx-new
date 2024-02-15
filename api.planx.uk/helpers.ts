@@ -244,9 +244,7 @@ const makeUniqueFlow = (
 };
 
 const isLiveEnv = () =>
-  ["production", "staging", "pizza", "sandbox"].includes(
-    process.env.NODE_ENV || "",
-  );
+  ["production", "staging", "pizza"].includes(process.env.NODE_ENV || "");
 
 /**
  * Get current environment, formatted for display

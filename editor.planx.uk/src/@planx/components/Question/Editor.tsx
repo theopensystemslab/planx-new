@@ -1,3 +1,4 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import ImgInput from "ui/editor/ImgInput";
@@ -12,7 +13,6 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option, parseMoreInformation } from "../shared";
 import PermissionSelect from "../shared/PermissionSelect";
-import { TYPES } from "../types";
 import { ICONS, InternalNotes, MoreInformation } from "../ui";
 
 interface Props {
@@ -126,7 +126,7 @@ const OptionEditor: React.FC<{
 );
 
 export const Question: React.FC<Props> = (props) => {
-  const type = TYPES.Statement;
+  const type = TYPES.Question;
 
   const formik = useFormik({
     initialValues: {
@@ -142,7 +142,7 @@ export const Question: React.FC<Props> = (props) => {
         .filter((o) => o.data.text)
         .map((o) => ({
           id: o.id || undefined,
-          type: TYPES.Response,
+          type: TYPES.Answer,
           data: o.data,
         }));
 

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NextSteps, Step } from "@planx/components/NextSteps/model";
 import { parseNextSteps } from "@planx/components/NextSteps/model";
-import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
   ICONS,

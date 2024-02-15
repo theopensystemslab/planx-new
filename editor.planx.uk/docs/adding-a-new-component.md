@@ -4,8 +4,9 @@ Let's add a `SetValue` component
 
 ## Core directory & files 
 
-1. `src/@planx/components/types.ts`
+1. `planx-core/src/types/component.ts`
 
+Add type to enum in `planx-core` repository
 ```typescript
 SetValue = 380,
 ```
