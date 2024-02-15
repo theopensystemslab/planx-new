@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import multer from "multer";
-import { useFilePermission, useTeamEditorAuth } from "../auth/middleware";
+import { useNoCache, useFilePermission, useTeamEditorAuth } from "../auth/middleware";
 import {
   downloadFileSchema,
   privateDownloadController,
@@ -37,6 +37,7 @@ router.get(
 
 router.get(
   "/file/private/:fileKey/:fileName",
+  useNoCache,
   useFilePermission,
   validate(downloadFileSchema),
   privateDownloadController,
