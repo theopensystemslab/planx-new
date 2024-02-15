@@ -1,9 +1,9 @@
 import gql from "graphql-tag";
-import { dataMerged } from "lib/dataMergedHotfix";
 import { publicClient } from "lib/graphql";
 import { NaviRequest } from "navi";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { Store } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
@@ -17,7 +17,7 @@ interface PublishedViewData {
 }
 
 interface PreviewFlow extends Flow {
-  publishedFlows: Record<"data", Flow>[];
+  publishedFlows: Record<"data", Store.flow>[];
 }
 
 /**
@@ -31,16 +31,19 @@ export const publishedView = async (req: NaviRequest) => {
   const data = await fetchDataForPublishedView(flowSlug, teamSlug);
 
   const flow = data.flows[0];
-  if (!flow) throw new NotFoundError(req.originalUrl);
+  if (!flow)
+    throw new NotFoundError(`Flow ${flowSlug} not found for ${teamSlug}`);
 
   const publishedFlow = flow.publishedFlows[0]?.data;
-  const flowData = publishedFlow ? publishedFlow : await dataMerged(flow.id);
-  setPath(flowData, req);
+  if (!publishedFlow)
+    throw new NotFoundError(`Flow ${flowSlug} not published for ${teamSlug}`);
+
+  setPath(publishedFlow, req);
 
   const state = useStore.getState();
   // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
   // load pre-flattened published flow if exists, else load & flatten flow
-  state.setFlow({ id: flow.id, flow: flowData, flowSlug });
+  state.setFlow({ id: flow.id, flow: publishedFlow, flowSlug });
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
