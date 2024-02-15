@@ -1,5 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
+import { Store } from "pages/FlowEditor/lib/store";
 
 import { publicClient } from "../lib/graphql";
 
@@ -23,10 +24,14 @@ const getFlowData = async (id: string) => {
 // Flatten a flow's data to include main content & portals in a single JSON representation
 // XXX: getFlowData & dataMerged are currently repeated in api.planx.uk/helpers.ts
 //        in order to load frontend /preview routes for flows that are not published
-export const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
+export const dataMerged = async (
+  id: string,
+  ob: Store.flow = {},
+): Promise<Store.flow> => {
   // get the primary flow data
-  const { slug, data }: { slug: string; data: Record<string, any> } =
-    await getFlowData(id);
+  const { slug, data }: { slug: string; data: Store.flow } = await getFlowData(
+    id,
+  );
 
   // recursively get and flatten internal portals & external portals
   for (const [nodeId, node] of Object.entries(data)) {
