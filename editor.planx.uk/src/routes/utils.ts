@@ -25,7 +25,7 @@ export const isSaveReturnFlow = (flowData: Store.flow): boolean =>
 export const setPath = (flowData: Store.flow, req: NaviRequest) => {
   // XXX: store.path is SingleSession by default
   if (!isSaveReturnFlow(flowData)) return;
-  if (hasFeatureFlag("DISABLE_SAVE_AND_RETURN")) return;
+
   const isEmailCaptured = Boolean(useStore.getState().saveToEmail);
   const path =
     req.params.sessionId && !isEmailCaptured

@@ -19,7 +19,6 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
@@ -43,7 +42,6 @@ import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath, rootTeamPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "./ConfirmationDialog";
-import FeatureFlagBanner from "./FeatureFlagBanner";
 import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
 export const HEADER_HEIGHT = 74;
@@ -274,8 +272,7 @@ const NavBar: React.FC = () => {
   );
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession &&
-    !saveToEmail &&
-    !hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
+    !saveToEmail;
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
   const { node } = useAnalyticsTracking();
   const isSectionCard = node?.type == TYPES.Section;
@@ -378,7 +375,6 @@ const PublicToolbar: React.FC<{
       <NavBar />
       <AnalyticsDisabledBanner />
       <TestEnvironmentBanner />
-      <FeatureFlagBanner />
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleRestart}

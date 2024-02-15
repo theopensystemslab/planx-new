@@ -1,6 +1,5 @@
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useAsync } from "react-use";
@@ -18,33 +17,6 @@ import {
 export type Props = PublicProps<Send>;
 
 const SendComponent: React.FC<Props> = ({
-  destinations = [DEFAULT_DESTINATION],
-  ...props
-}) => {
-  // If testing with the feature flag, skip scheduled event creation because no stored lowcal_session to generate payloads
-  const testSession = hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
-
-  useEffect(() => {
-    if (testSession) {
-      props.handleSubmit?.({
-        ...makeData(props, true, "skippedEvents"),
-        auto: true,
-      });
-    }
-  }, []);
-
-  if (testSession) {
-    return (
-      <Card>
-        <DelayedLoadingIndicator text={`Skipping test submission...`} />
-      </Card>
-    );
-  } else {
-    return <SendEvents destinations={destinations} {...props} />;
-  }
-};
-
-const SendEvents: React.FC<Props> = ({
   destinations = [DEFAULT_DESTINATION],
   ...props
 }) => {
