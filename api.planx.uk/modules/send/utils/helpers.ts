@@ -21,8 +21,7 @@ export async function logPaymentStatus({
 }): Promise<void> {
   if (!flowId || !sessionId) {
     reportError({
-      message:
-        "Could not log the payment status due to missing context value(s)",
+      error: "Could not log the payment status due to missing context value(s)",
       context: { sessionId, flowId, teamSlug },
     });
   } else {
@@ -38,21 +37,20 @@ export async function logPaymentStatus({
       });
     } catch (e) {
       reportError({
-        message: "Failed to insert a payment status",
-        error: e,
-        govUkResponse,
+        error: `Failed to insert a payment status: ${e}`,
+        context: { govUkResponse },
       });
     }
   }
 }
 
 // tmp explicit error handling
-export function reportError(obj: object) {
+export function reportError(report: { error: any; context: object }) {
   if (airbrake) {
-    airbrake.notify(obj);
+    airbrake.notify(report);
     return;
   }
-  log(obj);
+  log(report);
 }
 
 // tmp logger

@@ -59,8 +59,10 @@ export const isCleanHTML = (input: unknown): boolean => {
  */
 const logUncleanHTMLError = (input: string, cleanHTML: string) => {
   reportError({
-    message: `Warning: Unclean HTML submitted!`,
-    input,
-    cleanHTML,
+    error: `Warning: Unclean HTML submitted!`,
+    context: {
+      input,
+      cleanHTML,
+    },
   });
 };
