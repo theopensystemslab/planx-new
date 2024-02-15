@@ -54,6 +54,11 @@ export const editorUIStore: StateCreator<
   },
 });
 
+interface PublishFlowResponse {
+  alteredNodes: Store.node[];
+  message: string;
+}
+
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
   connect: (src: Store.nodeId, tgt: Store.nodeId, object?: any) => void;
@@ -67,6 +72,7 @@ export interface EditorStore extends Store.Store {
   isClone: (id: Store.nodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
+  isFlowPublished: boolean;
   makeUnique: (id: Store.nodeId, parent?: Store.nodeId) => void;
   moveFlow: (flowId: string, teamSlug: string) => Promise<any>;
   moveNode: (
@@ -76,7 +82,10 @@ export interface EditorStore extends Store.Store {
     toParent?: Store.nodeId,
   ) => void;
   pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
-  publishFlow: (flowId: string, summary?: string) => Promise<any>;
+  publishFlow: (
+    flowId: string,
+    summary?: string,
+  ) => Promise<PublishFlowResponse>;
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
 }
@@ -325,6 +334,8 @@ export const editorStore: StateCreator<
     return first_name.concat(" ", last_name);
   },
 
+  isFlowPublished: false,
+
   makeUnique: (id, parent) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
     send(ops);
@@ -388,7 +399,7 @@ export const editorStore: StateCreator<
     }
   },
 
-  publishFlow(flowId: string, summary?: string) {
+  async publishFlow(flowId: string, summary?: string) {
     const token = get().jwt;
 
     const urlWithParams = (url: string, params: any) =>
@@ -396,7 +407,7 @@ export const editorStore: StateCreator<
         .filter(Boolean)
         .join("?");
 
-    return axios.post(
+    const { data } = await axios.post<PublishFlowResponse>(
       urlWithParams(
         `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
         { summary },
@@ -408,6 +419,10 @@ export const editorStore: StateCreator<
         },
       },
     );
+
+    set({ isFlowPublished: true });
+
+    return data;
   },
 
   removeNode: (id, parent) => {

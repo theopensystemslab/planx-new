@@ -9,6 +9,7 @@ import {
   map,
   Matcher,
   mount,
+  NotFoundError,
   redirect,
   route,
   withData,
@@ -173,11 +174,31 @@ const nodeRoutes = mount({
   "/:parent/nodes/:id/edit": editNode,
 });
 
+interface FlowMetadata {
+  flowSettings: FlowSettings;
+  flowAnalyticsLink: string;
+  isFlowPublished: boolean;
+}
+
+interface GetFlowMetadata {
+  flows: {
+    flowSettings: FlowSettings;
+    flowAnalyticsLink: string;
+    publishedFlowsAggregate: {
+      aggregate: {
+        count: number;
+      };
+    };
+  }[];
+}
+
 const getFlowMetadata = async (
-  flow: string,
+  flowSlug: string,
   team: string,
-): Promise<{ flowSettings: FlowSettings; flowAnalyticsLink: string }> => {
-  const { data } = await client.query({
+): Promise<FlowMetadata> => {
+  const {
+    data: { flows },
+  } = await client.query<GetFlowMetadata>({
     query: gql`
       query GetFlow($slug: String!, $team_slug: String!) {
         flows(
@@ -187,17 +208,27 @@ const getFlowMetadata = async (
           id
           flowSettings: settings
           flowAnalyticsLink: analytics_link
+          publishedFlowsAggregate: published_flows_aggregate {
+            aggregate {
+              count
+            }
+          }
         }
       }
     `,
     variables: {
-      slug: flow,
+      slug: flowSlug,
       team_slug: team,
     },
   });
+
+  const flow = flows[0];
+  if (!flows) throw new NotFoundError(`Flow ${flowSlug} not found for ${team}`);
+
   const metadata = {
-    flowSettings: data.flows[0]?.flowSettings,
-    flowAnalyticsLink: data.flows[0]?.flowAnalyticsLink,
+    flowSettings: flow.flowSettings,
+    flowAnalyticsLink: flow.flowAnalyticsLink,
+    isFlowPublished: flow.publishedFlowsAggregate?.aggregate.count > 0,
   };
   return metadata;
 };
@@ -209,11 +240,9 @@ const routes = compose(
 
   withView(async (req) => {
     const [flow, ...breadcrumbs] = req.params.flow.split(",");
-    const { flowSettings, flowAnalyticsLink } = await getFlowMetadata(
-      flow,
-      req.params.team,
-    );
-    useStore.setState({ flowSettings, flowAnalyticsLink });
+    const { flowSettings, flowAnalyticsLink, isFlowPublished } =
+      await getFlowMetadata(flow, req.params.team);
+    useStore.setState({ flowSettings, flowAnalyticsLink, isFlowPublished });
 
     return (
       <>
