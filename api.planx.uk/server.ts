@@ -157,7 +157,7 @@ const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
       airbrake &&
       (errorObject instanceof Error || errorObject instanceof ServerError)
     ) {
-      airbrake.notify(JSON.stringify(errorObject, null, 2));
+      airbrake.notify(errorObject);
       return {
         ...errorObject,
         message: errorObject.message.concat(", this error has been logged"),
