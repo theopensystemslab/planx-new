@@ -149,11 +149,18 @@ const dataMerged = async (
   id: string,
   ob: { [key: string]: Node } = {},
   isPortal: boolean = false,
+  draftDataOnly: boolean = false,
 ): Promise<FlowGraph> => {  
-  // get the primary flow data, checking for the latest published version of external portals
+  // get the primary draft flow data, checking for the latest published version of external portals
   let { slug, data, publishedFlows } = await getFlowData(id);
-  if (isPortal && publishedFlows?.[0]?.data) {
-    data = publishedFlows[0].data;
+
+  // only flatten portals that are published, unless we're loading all draft data on an /unpublished route
+  if (isPortal && !draftDataOnly) {
+    if (publishedFlows?.[0]?.data) {
+      data = publishedFlows[0].data;
+    } else {
+      throw new Error(`Publish flow ${slug} before proceeding`);
+    }
   }
 
   // recursively get and flatten internal portals & external portals
@@ -181,7 +188,7 @@ const dataMerged = async (
 
       // Recursively merge flow
       if (!isMerged) {
-        await dataMerged(node.data?.flowId, ob, true);
+        await dataMerged(node.data?.flowId, ob, true, draftDataOnly);
       }
     }
 
