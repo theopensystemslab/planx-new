@@ -10,7 +10,6 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
-import { submitFeedback } from "lib/feedback";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
@@ -218,13 +217,6 @@ export function PlanningConstraintsContent(
       feedback: previousFeedback || "",
     },
     onSubmit: (values) => {
-      if (values.feedback) {
-        submitFeedback(
-          values.feedback,
-          "Inaccurate planning constraints",
-          constraints,
-        );
-      }
       handleSubmit?.(values);
     },
   });

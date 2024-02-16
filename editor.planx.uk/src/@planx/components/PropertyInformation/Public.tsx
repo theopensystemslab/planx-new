@@ -9,7 +9,6 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import { Feature } from "@turf/helpers";
 import { useFormik } from "formik";
-import { submitFeedback } from "lib/feedback";
 import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -115,13 +114,6 @@ export function Presentational(props: PresentationalProps) {
       feedback: previousFeedback || "",
     },
     onSubmit: (values) => {
-      if (values.feedback) {
-        submitFeedback(
-          values.feedback,
-          "Inaccurate property details",
-          propertyDetails,
-        );
-      }
       handleSubmit?.(values);
     },
   });
