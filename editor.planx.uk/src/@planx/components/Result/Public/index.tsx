@@ -2,7 +2,6 @@ import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
@@ -178,11 +177,6 @@ const Result: React.FC<Props> = ({
             </Box>
           </WarningContainer>
         )}
-        <FeedbackInput
-          text="Is this information inaccurate? **Tell us why.**"
-          handleChange={formik.handleChange}
-          value={formik.values.feedback}
-        />
       </Card>
     </Box>
   );

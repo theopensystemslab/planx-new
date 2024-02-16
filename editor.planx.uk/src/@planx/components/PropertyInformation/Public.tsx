@@ -19,7 +19,6 @@ import React from "react";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
-import FeedbackInput from "../shared/FeedbackInput";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import type { PropertyInformation } from "./model";
 
@@ -178,15 +177,6 @@ export function Presentational(props: PresentationalProps) {
           showPropertyTypeOverride={showPropertyTypeOverride}
           overrideAnswer={overrideAnswer}
         />
-      )}
-      {!showPropertyTypeOverride && (
-        <Box textAlign="right">
-          <FeedbackInput
-            text="Report an inaccuracy"
-            handleChange={formik.handleChange}
-            value={formik.values.feedback}
-          />
-        </Box>
       )}
     </Card>
   );
