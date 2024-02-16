@@ -9,7 +9,6 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/ui";
 import { Feature } from "@turf/helpers";
-import { useFormik } from "formik";
 import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -45,7 +44,6 @@ function Component(props: PublicProps<PropertyInformation>) {
       }
       titleBoundary={passport.data?.["property.boundary.title"]}
       blpuCodes={blpuCodes}
-      previousFeedback={props.previouslySubmittedData?.feedback}
       overrideAnswer={overrideAnswer}
       handleSubmit={props.handleSubmit}
     />
@@ -77,7 +75,6 @@ export interface PresentationalProps {
   localAuthorityDistrict?: string[];
   titleBoundary?: Feature;
   blpuCodes?: any;
-  previousFeedback?: string;
   overrideAnswer: (fn: string) => void;
   handleSubmit?: handleSubmit;
 }
@@ -103,20 +100,10 @@ export function Presentational(props: PresentationalProps) {
     localAuthorityDistrict,
     titleBoundary,
     blpuCodes,
-    previousFeedback,
     overrideAnswer,
     handleSubmit,
   } = props;
   const teamName = useStore((state) => state.teamName);
-  const formik = useFormik({
-    initialValues: {
-      feedback: previousFeedback || "",
-    },
-    onSubmit: (values) => {
-      handleSubmit?.(values);
-    },
-  });
-
   const propertyDetails: PropertyDetail[] = [
     {
       heading: "Address",
@@ -142,7 +129,7 @@ export function Presentational(props: PresentationalProps) {
   ];
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={handleSubmit}>
       <QuestionHeader title={title} description={description} />
       <MapContainer>
         <p style={visuallyHidden}>

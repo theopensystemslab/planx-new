@@ -5,10 +5,9 @@ import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
-import { useFormik } from "formik";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import type { Node, TextContent } from "types";
 
@@ -87,38 +86,15 @@ const Responses = ({
 
 const Result: React.FC<Props> = ({
   allowChanges = false,
-  handleSubmit,
   headingColor,
   headingTitle = "",
   description = "",
   reasonsTitle = "",
   responses,
   disclaimer,
-  previouslySubmittedData,
 }) => {
-  const formik = useFormik({
-    initialValues: {
-      feedback: previouslySubmittedData?.feedback || "",
-    },
-    onSubmit: (values, { resetForm }) => {
-      if (values.feedback) {
-        resetForm();
-      }
-      handleSubmit?.({ feedback: values.feedback });
-    },
-  });
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
-
-  const [showSubmitButton, setShowSubmitButton] = useState<boolean>(
-    Boolean(handleSubmit),
-  );
-
-  useEffect(() => {
-    if (handleSubmit) return;
-
-    setShowSubmitButton(formik.values.feedback.length > 0);
-  }, [formik.values.feedback]);
 
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
@@ -127,10 +103,7 @@ const Result: React.FC<Props> = ({
         description={description}
         color={headingColor}
       />
-      <Card
-        handleSubmit={showSubmitButton ? formik.handleSubmit : undefined}
-        isValid
-      >
+      <Card>
         <Box mt={4} mb={3}>
           <Typography variant="h2" gutterBottom>
             {reasonsTitle}
