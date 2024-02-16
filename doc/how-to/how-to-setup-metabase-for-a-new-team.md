@@ -55,5 +55,7 @@ query GetFlowIDsForTeam {
 ![Screenshot - Share Dashboard link with team](./images/setup-metabase/share_with_team.png)
 
 8. Update "ODP Useful Links" document on Notion
-* Link: https://www.notion.so/opensystemslab/Open-Digital-Planning-Useful-links-176e31a4d1274c82959d83fe503d274f
-* Dashboards are listed under PlanX > BETA services & analytics > {Council})
+* Link: [https://www.notion.so/opensystemslab/Open-Digital-Planning-Useful-links-176e31a4d1274c82959d83fe503d274f](https://www.notion.so/opensystemslab/Plan-Service-Content-d579ddc3f4f3472b8fe167865ede2e93?pvs=4#e637abed931d4697a2707455d81e4620)https://www.notion.so/opensystemslab/Plan-Service-Content-d579ddc3f4f3472b8fe167865ede2e93?pvs=4#e637abed931d4697a2707455d81e4620
+* Dashboards are listed under PlanX Service Content > BETA services & analytics > {Council})
+
+9. Update the `flows.analytics_link` column in Hasura with the public URL (generated in step 6), for each flow a dashboard has been generated for
