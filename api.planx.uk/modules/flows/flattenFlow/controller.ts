@@ -4,9 +4,7 @@ import { ServerError } from "../../../errors";
 import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
 import { getFlattenedFlowData } from "./service";
 
-interface FlattenFlowDataResponse { 
-  data: FlowGraph 
-}
+type FlattenFlowDataResponse = FlowGraph;
 
 export const flattenFlowData = z.object({
   params: z.object({
@@ -29,14 +27,10 @@ export const flattenFlowDataController: FlattenFlowDataController =
 
       if (req.query?.unpublished) { 
         const unpublishedFlattenedFlowData = await getFlattenedFlowData(flowId, true);
-        res.status(200).send({
-          data: unpublishedFlattenedFlowData,
-        });
+        res.status(200).send(unpublishedFlattenedFlowData);
       } else {
         const flattenedFlowData = await getFlattenedFlowData(flowId);
-        res.status(200).send({
-          data: flattenedFlowData,
-        });
+        res.status(200).send(flattenedFlowData);
       }
     } catch (error) {
       return next(

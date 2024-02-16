@@ -1,8 +1,8 @@
+import { FlowGraph } from "@opensystemslab/planx-core/types";
+import axios from "axios";
 import gql from "graphql-tag";
-import { dataMerged } from "lib/dataMergedHotfix";
 import { publicClient } from "lib/graphql";
-import { NaviRequest } from "navi";
-import { NotFoundError } from "navi";
+import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
 import React from "react";
@@ -29,7 +29,7 @@ export const unpublishedView = async (req: NaviRequest) => {
   const flow = data.flows[0];
   if (!flow) throw new NotFoundError();
 
-  const flowData = await dataMerged(flow.id);
+  const flowData = await fetchUnpublishedFlattenedFlowData(flow.id);
 
   const state = useStore.getState();
   state.setFlow({ id: flow.id, flow: flowData, flowSlug });
@@ -95,6 +95,19 @@ const fetchDataForUnpublishedView = async (
     return result.data;
   } catch (error) {
     console.error(error);
+    throw new NotFoundError();
+  }
+};
+
+const fetchUnpublishedFlattenedFlowData = async (
+  flowId: string,
+): Promise<FlowGraph> => {
+  const url = `${process.env.REACT_APP_API_URL}/flows/${flowId}/flatten-data?unpublished=true`;
+  try {
+    const { data } = await axios.get<FlowGraph>(url);
+    return data;
+  } catch (error) {
+    console.log(error);
     throw new NotFoundError();
   }
 };
