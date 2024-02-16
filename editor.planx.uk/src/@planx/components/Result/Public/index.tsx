@@ -86,6 +86,7 @@ const Responses = ({
 
 const Result: React.FC<Props> = ({
   allowChanges = false,
+  handleSubmit,
   headingColor,
   headingTitle = "",
   description = "",
@@ -103,7 +104,7 @@ const Result: React.FC<Props> = ({
         description={description}
         color={headingColor}
       />
-      <Card>
+      <Card handleSubmit={handleSubmit}>
         <Box mt={4} mb={3}>
           <Typography variant="h2" gutterBottom>
             {reasonsTitle}
