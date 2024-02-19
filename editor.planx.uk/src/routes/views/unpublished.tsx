@@ -24,11 +24,12 @@ export const unpublishedView = async (req: NaviRequest) => {
   const flowSlug = req.params.flow.split(",")[0];
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
-  const data = await fetchDataForUnpublishedView(flowSlug, teamSlug);
 
+  const data = await fetchDataForUnpublishedView(flowSlug, teamSlug);
   const flow = data.flows[0];
   if (!flow) throw new NotFoundError();
 
+  // /unpublished fetches draft data (aka unpublished) of this flow and each external portal
   const flowData = await fetchUnpublishedFlattenedFlowData(flow.id);
 
   const state = useStore.getState();

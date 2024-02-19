@@ -1,6 +1,7 @@
 import LanguageIcon from "@mui/icons-material/Language";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import Box from "@mui/material/Box";
@@ -14,6 +15,7 @@ import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { AxiosError } from "axios";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
@@ -181,9 +183,19 @@ const PreviewBrowser: React.FC<{
             </Tooltip>
           )}
 
-          <Tooltip arrow title="Open editor preview">
+          <Tooltip arrow title="Open unpublished service">
             <Link
               href={props.url.replace("/preview", "/unpublished")}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="inherit"
+            >
+              <OpenInNewOffIcon />
+            </Link>
+          </Tooltip>
+          <Tooltip arrow title="Open preview of published service">
+            <Link
+              href={props.url.replace("/preview", "/publish-preview")}
               target="_blank"
               rel="noopener noreferrer"
               color="inherit"
@@ -223,6 +235,7 @@ const PreviewBrowser: React.FC<{
                 try {
                   setLastPublishedTitle("Checking for changes...");
                   const alteredFlow = await validateAndDiffFlow(flowId);
+                  console.log("here", alteredFlow);
                   setAlteredNodes(
                     alteredFlow?.data.alteredNodes
                       ? alteredFlow.data.alteredNodes
@@ -239,10 +252,14 @@ const PreviewBrowser: React.FC<{
                   setLastPublishedTitle(
                     "Error checking for changes to publish",
                   );
-                  alert(
-                    `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
-                  );
-                  console.log(error);
+
+                  if (error instanceof AxiosError) {
+                    alert(error.response?.data?.error);
+                  } else {
+                    alert(
+                      `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
+                    );
+                  }
                 }
               }}
             >

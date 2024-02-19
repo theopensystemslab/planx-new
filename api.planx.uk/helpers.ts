@@ -4,15 +4,24 @@ import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
 import { $public, getClient } from "./client";
 
+interface FlowData { 
+  slug: string;
+  data: Flow["data"];
+  team: { "slug": string; };
+  publishedFlows: { "data": Flow["data"]; }[] | [];
+}
+
 // Get a flow's data (unflattened, without external portal nodes)
-const getFlowData = async (id: string): Promise<Flow> => {
-  const { flow } = await $public.client.request<{ flow: Flow | null }>(
+const getFlowData = async (id: string): Promise<FlowData> => {
+  const { flow } = await $public.client.request<{ flow: FlowData | null }>(
     gql`
       query GetFlowData($id: uuid!) {
         flow: flows_by_pk(id: $id) {
           slug
           data
-          team_id
+          team {
+            slug
+          }
           publishedFlows: published_flows(
             limit: 1
             order_by: { created_at: desc }
@@ -152,14 +161,14 @@ const dataMerged = async (
   draftDataOnly: boolean = false,
 ): Promise<FlowGraph> => {  
   // get the primary draft flow data, checking for the latest published version of external portals
-  let { slug, data, publishedFlows } = await getFlowData(id);
+  let { slug, data, team, publishedFlows } = await getFlowData(id);
 
   // only flatten portals that are published, unless we're loading all draft data on an /unpublished route
   if (isPortal && !draftDataOnly) {
     if (publishedFlows?.[0]?.data) {
       data = publishedFlows[0].data;
     } else {
-      throw new Error(`Publish flow ${slug} before proceeding`);
+      throw new Error(`Publish flow ${team.slug}/${slug} before proceeding. All flows used as external portals must be published.`);
     }
   }
 
