@@ -4,9 +4,10 @@ import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
 import { $public, getClient } from "./client";
 
-interface FlowData { 
+export interface FlowData { 
   slug: string;
   data: Flow["data"];
+  team_id: number;
   team: { "slug": string; };
   publishedFlows: { "data": Flow["data"]; }[] | [];
 }
@@ -19,6 +20,7 @@ const getFlowData = async (id: string): Promise<FlowData> => {
         flow: flows_by_pk(id: $id) {
           slug
           data
+          team_id
           team {
             slug
           }
