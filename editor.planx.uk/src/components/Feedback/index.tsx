@@ -355,11 +355,11 @@ const Feedback: React.FC = () => {
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
           <FeedbackRow>
-            <TitleAndCloseFeedbackHeader title="Thank you for sharing feedback" />
+            <TitleAndCloseFeedbackHeader title="Thank you for your feedback." />
             <FeedbackBody>
               <Typography variant="body1">
-                Your insights are invaluable and help us improve our services.
-                We appreciate your time and input.
+                We value the time you’ve taken to share. We’ll use your insights
+                to improve our services.
               </Typography>
             </FeedbackBody>
           </FeedbackRow>

@@ -126,13 +126,12 @@ const MoreInfoFeedbackComponent: React.FC = () => {
       <MoreInfoFeedback>
         <Container maxWidth={false}>
           <Typography variant="h4" component="h3" gutterBottom>
-            Thank you for sharing feedback
+            Thank you for your feedback.
           </Typography>
           <FeedbackBody>
             <Typography variant="body2">
-              Your input on the helpfulness of the provided assistance is
-              crucial for us to refine and improve. We appreciate your time in
-              helping us enhance our services.
+              We value the time you’ve taken to share. We’ll use your insights
+              to improve our services.
             </Typography>
           </FeedbackBody>
         </Container>

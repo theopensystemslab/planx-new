@@ -42,13 +42,6 @@ const PublicFooter: React.FC = () => {
     const setting = flowSettings?.elements && flowSettings?.elements[key];
 
     if (setting?.show) {
-      if (key == "privacy") {
-        return {
-          title: setting.heading,
-          href: "https://www.planx.uk/privacy",
-          newTab: true,
-        };
-      }
       return {
         title: setting.heading,
         href: makeHref(key),
