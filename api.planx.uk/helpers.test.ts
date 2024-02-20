@@ -131,6 +131,59 @@ describe("dataMerged() function", () => {
       },
     };
 
+    const invalidUnflattenedParent = {
+      _root: {
+        edges: ["Zj0ZKa0PwT", "Rur8iS88x3"],
+      },
+      "5yElH96W7I": {
+        data: {
+          text: "Option 2",
+        },
+        type: 200,
+        edges: ["aMlxwR7ONH"],
+      },
+      Rur8iS88x3: {
+        data: {
+          color: "#EFEFEF",
+          title: "End of the line",
+          resetButton: false,
+        },
+        type: 8,
+      },
+      SShTHaRo2k: {
+        data: {
+          flowId: "unpublished-child-id",
+        },
+        type: 310,
+      },
+      Zj0ZKa0PwT: {
+        data: {
+          text: "This is a question with many options",
+        },
+        type: 100,
+        edges: ["c8hZwm0a9c", "5yElH96W7I", "UMsI68BuAy"],
+      },
+      c8hZwm0a9c: {
+        data: {
+          text: "Option 1",
+        },
+        type: 200,
+        edges: ["SShTHaRo2k"],
+      },
+      aMlxwR7ONH: {
+        type: 310,
+        data: {
+          flowId: "unpublished-child-id",
+        },
+      },
+      UMsI68BuAy: {
+        type: 200,
+        data: {
+          text: "Option 3",
+        },
+      },
+    };
+
     const unflattenedChild = {
       _root: {
         edges: ["sbDyJVsyXg"],
@@ -154,6 +207,12 @@ describe("dataMerged() function", () => {
           slug: "child-flow",
           data: unflattenedChild,
           team_id: 123,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{
+            data: unflattenedChild,
+          }],
         },
       },
     });
@@ -168,6 +227,44 @@ describe("dataMerged() function", () => {
           slug: "parent-flow",
           data: unflattenedParent,
           team_id: 123,
+          team: {
+            slug: "testing",
+          },
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      variables: {
+        id: "unpublished-child-id",
+      },
+      data: {
+        flow: {
+          slug: "unpublished-child-flow",
+          data: unflattenedChild,
+          team_id: 123,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      variables: {
+        id: "invalid-parent-id",
+      },
+      data: {
+        flow: {
+          slug: "invalid-parent-flow",
+          data: invalidUnflattenedParent,
+          team_id: 123,
+          team: {
+            slug: "testing",
+          },
         },
       },
     });
@@ -184,6 +281,10 @@ describe("dataMerged() function", () => {
 
     // All external portals have been flattened / replaced
     expect(areAllPortalsFlattened).toBe(true);
+  });
+
+  it("throws an error when an external portal is not published", async () => {
+    await expect(dataMerged("invalid-parent-id")).rejects.toThrow();
   });
 });
 

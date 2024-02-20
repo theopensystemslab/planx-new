@@ -159,11 +159,13 @@ const getMostRecentPublishedFlow = async (
 const dataMerged = async (
   id: string,
   ob: { [key: string]: Node } = {},
-  isPortal: boolean = false,
-  draftDataOnly: boolean = false,
+  isPortal = false,
+  draftDataOnly = false,
 ): Promise<FlowGraph> => {  
   // get the primary draft flow data, checking for the latest published version of external portals
-  let { slug, data, team, publishedFlows } = await getFlowData(id);
+  const response = await getFlowData(id);
+  const { slug, team, publishedFlows } = response;
+  let { data } = response;
 
   // only flatten portals that are published, unless we're loading all draft data on an /unpublished route
   if (isPortal && !draftDataOnly) {
