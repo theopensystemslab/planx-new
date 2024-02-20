@@ -20,23 +20,29 @@ export type FlattenFlowDataController = ValidatedRequestHandler<
   FlattenFlowDataResponse
 >;
 
-export const flattenFlowDataController: FlattenFlowDataController =
-  async (req, res, next) => {
-    try {
-      const { flowId } = res.locals.parsedReq.params;
+export const flattenFlowDataController: FlattenFlowDataController = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const { flowId } = res.locals.parsedReq.params;
 
-      if (req.query?.unpublished) { 
-        const unpublishedFlattenedFlowData = await getFlattenedFlowData(flowId, true);
-        res.status(200).send(unpublishedFlattenedFlowData);
-      } else {
-        const flattenedFlowData = await getFlattenedFlowData(flowId);
-        res.status(200).send(flattenedFlowData);
-      }
-    } catch (error) {
-      return next(
-        new ServerError({
-          message: `Failed to flatten flow ${res.locals.parsedReq.params?.flowId}: ${error}`,
-        }),
+    if (req.query?.unpublished) {
+      const unpublishedFlattenedFlowData = await getFlattenedFlowData(
+        flowId,
+        true,
       );
+      res.status(200).send(unpublishedFlattenedFlowData);
+    } else {
+      const flattenedFlowData = await getFlattenedFlowData(flowId);
+      res.status(200).send(flattenedFlowData);
     }
-  };
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to flatten flow ${res.locals.parsedReq.params?.flowId}: ${error}`,
+      }),
+    );
+  }
+};

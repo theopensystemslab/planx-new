@@ -4,12 +4,12 @@ import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
 import { $public, getClient } from "./client";
 
-export interface FlowData { 
+export interface FlowData {
   slug: string;
   data: Flow["data"];
   team_id: number;
-  team: { "slug": string; };
-  publishedFlows: { "data": Flow["data"]; }[] | [];
+  team: { slug: string };
+  publishedFlows: { data: Flow["data"] }[] | [];
 }
 
 // Get a flow's data (unflattened, without external portal nodes)
@@ -161,7 +161,7 @@ const dataMerged = async (
   ob: { [key: string]: Node } = {},
   isPortal = false,
   draftDataOnly = false,
-): Promise<FlowGraph> => {  
+): Promise<FlowGraph> => {
   // get the primary draft flow data, checking for the latest published version of external portals
   const response = await getFlowData(id);
   const { slug, team, publishedFlows } = response;
@@ -172,7 +172,9 @@ const dataMerged = async (
     if (publishedFlows?.[0]?.data) {
       data = publishedFlows[0].data;
     } else {
-      throw new Error(`Publish flow ${team.slug}/${slug} before proceeding. All flows used as external portals must be published.`);
+      throw new Error(
+        `Publish flow ${team.slug}/${slug} before proceeding. All flows used as external portals must be published.`,
+      );
     }
   }
 

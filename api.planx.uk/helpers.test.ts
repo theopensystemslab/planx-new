@@ -210,9 +210,11 @@ describe("dataMerged() function", () => {
           team: {
             slug: "testing",
           },
-          publishedFlows: [{
-            data: unflattenedChild,
-          }],
+          publishedFlows: [
+            {
+              data: unflattenedChild,
+            },
+          ],
         },
       },
     });

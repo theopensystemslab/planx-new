@@ -138,11 +138,11 @@ components:
                 $ref: "#/components/schemas/FlowData"
                 required: false
     FlattenFlow:
-      content: 
+      content:
         application/json:
-          schema: 
+          schema:
             type: object
-            properties: 
+            properties:
               $ref: "#/components/schemas/FlowData"
 paths:
   /flows/{flowId}/copy:
@@ -264,7 +264,7 @@ paths:
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/flatten-flow:
-    get: 
+    get:
       summary: Flatten a flow and its' external portals into a single graph
       description: Flatten a flow and its' external portals into a single graph. The external portals must be published.
       tags: ["flows"]
