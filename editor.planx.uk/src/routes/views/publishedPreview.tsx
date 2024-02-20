@@ -1,5 +1,5 @@
 import { FlowGraph } from "@opensystemslab/planx-core/types";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
@@ -51,6 +51,13 @@ const fetchFlattenedFlowData = async (flowId: string): Promise<FlowGraph> => {
     return data;
   } catch (error) {
     console.log(error);
-    throw new NotFoundError();
+    if (error instanceof AxiosError) {
+      alert(
+        `Cannot open /publish-preview, navigate back to the graph to keep editing. \n\n${error.response?.data?.error}`,
+      );
+      throw new NotFoundError();
+    } else {
+      throw new NotFoundError();
+    }
   }
 };
