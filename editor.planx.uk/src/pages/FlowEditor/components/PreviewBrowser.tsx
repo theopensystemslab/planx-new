@@ -235,7 +235,6 @@ const PreviewBrowser: React.FC<{
                 try {
                   setLastPublishedTitle("Checking for changes...");
                   const alteredFlow = await validateAndDiffFlow(flowId);
-                  console.log("here", alteredFlow);
                   setAlteredNodes(
                     alteredFlow?.data.alteredNodes
                       ? alteredFlow.data.alteredNodes

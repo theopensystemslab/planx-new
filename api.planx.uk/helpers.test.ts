@@ -6,10 +6,13 @@ import {
   isLiveEnv,
 } from "./helpers";
 import { queryMock } from "./tests/graphqlQueryMock";
-import { userContext } from "./modules/auth/middleware";
-import { getJWT } from "./tests/mockJWT";
+import {
+  childFlow,
+  draftParentFlow,
+  flattenedParentFlow,
+} from "./tests/mocks/validateAndPublishMocks";
 
-describe("getEnvironment function", () => {
+describe("getFormattedEnvironment() function", () => {
   const OLD_ENV = process.env;
 
   beforeEach(() => {
@@ -69,183 +72,67 @@ describe("isLiveEnv() function", () => {
 });
 
 describe("dataMerged() function", () => {
-  const getStoreMock = jest.spyOn(userContext, "getStore");
-  getStoreMock.mockReturnValue({
-    user: {
-      sub: "123",
-      jwt: getJWT({ role: "teamEditor" }),
-    },
+  beforeEach(() => {
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: true,
+      variables: {
+        id: "parent-flow-with-external-portal",
+      },
+      data: {
+        flow: {
+          data: draftParentFlow,
+          slug: "parent-flow",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: flattenedParentFlow }],
+        },
+      },
+    });
   });
 
-  beforeEach(() => {
-    const unflattenedParent = {
-      _root: {
-        edges: ["Zj0ZKa0PwT", "Rur8iS88x3"],
-      },
-      "5yElH96W7I": {
-        data: {
-          text: "Option 2",
-        },
-        type: 200,
-        edges: ["aMlxwR7ONH"],
-      },
-      Rur8iS88x3: {
-        data: {
-          color: "#EFEFEF",
-          title: "End of the line",
-          resetButton: false,
-        },
-        type: 8,
-      },
-      SShTHaRo2k: {
-        data: {
-          flowId: "child-id",
-        },
-        type: 310,
-      },
-      Zj0ZKa0PwT: {
-        data: {
-          text: "This is a question with many options",
-        },
-        type: 100,
-        edges: ["c8hZwm0a9c", "5yElH96W7I", "UMsI68BuAy"],
-      },
-      c8hZwm0a9c: {
-        data: {
-          text: "Option 1",
-        },
-        type: 200,
-        edges: ["SShTHaRo2k"],
-      },
-      aMlxwR7ONH: {
-        type: 310,
-        data: {
-          flowId: "child-id",
-        },
-      },
-      UMsI68BuAy: {
-        type: 200,
-        data: {
-          text: "Option 3",
-        },
-      },
-    };
-
-    const invalidUnflattenedParent = {
-      _root: {
-        edges: ["Zj0ZKa0PwT", "Rur8iS88x3"],
-      },
-      "5yElH96W7I": {
-        data: {
-          text: "Option 2",
-        },
-        type: 200,
-        edges: ["aMlxwR7ONH"],
-      },
-      Rur8iS88x3: {
-        data: {
-          color: "#EFEFEF",
-          title: "End of the line",
-          resetButton: false,
-        },
-        type: 8,
-      },
-      SShTHaRo2k: {
-        data: {
-          flowId: "unpublished-child-id",
-        },
-        type: 310,
-      },
-      Zj0ZKa0PwT: {
-        data: {
-          text: "This is a question with many options",
-        },
-        type: 100,
-        edges: ["c8hZwm0a9c", "5yElH96W7I", "UMsI68BuAy"],
-      },
-      c8hZwm0a9c: {
-        data: {
-          text: "Option 1",
-        },
-        type: 200,
-        edges: ["SShTHaRo2k"],
-      },
-      aMlxwR7ONH: {
-        type: 310,
-        data: {
-          flowId: "unpublished-child-id",
-        },
-      },
-      UMsI68BuAy: {
-        type: 200,
-        data: {
-          text: "Option 3",
-        },
-      },
-    };
-
-    const unflattenedChild = {
-      _root: {
-        edges: ["sbDyJVsyXg"],
-      },
-      sbDyJVsyXg: {
-        type: 100,
-        data: {
-          description: "<p>Hello there 👋</p>",
-          text: "This is within the portal",
-        },
-      },
-    };
-
+  it("flattens published external portal nodes by overwriting their type", async () => {
     queryMock.mockQuery({
       name: "GetFlowData",
+      matchOnVariables: true,
       variables: {
-        id: "child-id",
+        id: "child-flow-id",
       },
       data: {
         flow: {
+          data: childFlow,
           slug: "child-flow",
-          data: unflattenedChild,
-          team_id: 123,
+          team_id: 1,
           team: {
             slug: "testing",
           },
-          publishedFlows: [
-            {
-              data: unflattenedChild,
-            },
-          ],
+          publishedFlows: [{ data: childFlow }],
         },
       },
     });
 
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      variables: {
-        id: "parent-id",
-      },
-      data: {
-        flow: {
-          slug: "parent-flow",
-          data: unflattenedParent,
-          team_id: 123,
-          team: {
-            slug: "testing",
-          },
-        },
-      },
-    });
+    const result = await dataMerged("parent-flow-with-external-portal");
+    const nodeTypes = Object.values(result).map((node) =>
+      "type" in node ? node.type : undefined,
+    );
 
+    expect(nodeTypes.includes(ComponentType.ExternalPortal)).toBe(false);
+  });
+
+  it("throws an error when an external portal is not published", async () => {
     queryMock.mockQuery({
       name: "GetFlowData",
+      matchOnVariables: true,
       variables: {
-        id: "unpublished-child-id",
+        id: "child-flow-id",
       },
       data: {
         flow: {
-          slug: "unpublished-child-flow",
-          data: unflattenedChild,
-          team_id: 123,
+          data: childFlow,
+          slug: "child-flow",
+          team_id: 1,
           team: {
             slug: "testing",
           },
@@ -254,39 +141,38 @@ describe("dataMerged() function", () => {
       },
     });
 
+    await expect(
+      dataMerged("parent-flow-with-external-portal"),
+    ).rejects.toThrow();
+  });
+
+  it("flattens any published or unpublished external portal nodes when isDraftData only is set to true", async () => {
     queryMock.mockQuery({
       name: "GetFlowData",
+      matchOnVariables: true,
       variables: {
-        id: "invalid-parent-id",
+        id: "child-flow-id",
       },
       data: {
         flow: {
-          slug: "invalid-parent-flow",
-          data: invalidUnflattenedParent,
-          team_id: 123,
+          data: childFlow,
+          slug: "child-flow",
+          team_id: 1,
           team: {
             slug: "testing",
           },
+          publishedFlows: [],
         },
       },
     });
-  });
 
-  it("handles multiple external portal nodes", async () => {
-    const result = await dataMerged("parent-id");
-    const nodeTypes = Object.values(result).map((node) =>
-      "type" in node ? node.type : undefined,
+    const result = await dataMerged(
+      "parent-flow-with-external-portal",
+      {},
+      false,
+      true,
     );
-    const areAllPortalsFlattened = !nodeTypes.includes(
-      ComponentType.ExternalPortal,
-    );
-
-    // All external portals have been flattened / replaced
-    expect(areAllPortalsFlattened).toBe(true);
-  });
-
-  it("throws an error when an external portal is not published", async () => {
-    await expect(dataMerged("invalid-parent-id")).rejects.toThrow();
+    expect(result).toEqual(flattenedParentFlow);
   });
 });
 

@@ -153,21 +153,23 @@ const getMostRecentPublishedFlow = async (
   return mostRecent;
 };
 
-// Flatten a flow's data to include main content & portals in a single JSON representation
-// XXX: getFlowData & dataMerged are currently repeated in ../editor.planx.uk/src/lib/dataMergedHotfix.ts
-//        in order to load frontend /preview routes for flows that are not published
+/**
+ * Flatten a flow to create a single JSON representation of the main flow data and any external portals
+ *   By default, requires that any external portals are published and flattens their latest published version
+ *   When draftDataOnly = true, flattens the draft data of the main flow and the draft data of any external portals published or otherwise
+ */
 const dataMerged = async (
   id: string,
   ob: { [key: string]: Node } = {},
   isPortal = false,
   draftDataOnly = false,
 ): Promise<FlowGraph> => {
-  // get the primary draft flow data, checking for the latest published version of external portals
+  // get the primary draft flow data, including its' latest published version
   const response = await getFlowData(id);
   const { slug, team, publishedFlows } = response;
   let { data } = response;
 
-  // only flatten portals that are published, unless we're loading all draft data on an /unpublished route
+  // only flatten external portals that are published, unless we're loading draftDataOnly on an /unpublished route
   if (isPortal && !draftDataOnly) {
     if (publishedFlows?.[0]?.data) {
       data = publishedFlows[0].data;
@@ -185,7 +187,7 @@ const dataMerged = async (
     const isExternalPortal = node.type === ComponentType.ExternalPortal;
     const isMerged = ob[node.data?.flowId];
 
-    // Merge portal root as a new node in the graph
+    // merge external portal _root as a new node in the graph
     if (isExternalPortalRoot) {
       ob[id] = {
         ...node,
@@ -194,7 +196,7 @@ const dataMerged = async (
       };
     }
 
-    // Merge as internal portal, with reference to flowId
+    // merge external portal as an internal portal type node, with reference to flowId
     else if (isExternalPortal) {
       ob[nodeId] = {
         type: ComponentType.InternalPortal,
@@ -207,11 +209,10 @@ const dataMerged = async (
       }
     }
 
-    // Merge all other nodes
+    // merge all other nodes
     else ob[nodeId] = node;
   }
 
-  // TODO: Don't cast here once types updated across API
   return ob as FlowGraph;
 };
 
