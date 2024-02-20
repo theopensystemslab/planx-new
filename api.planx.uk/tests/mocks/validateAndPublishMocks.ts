@@ -109,3 +109,116 @@ export const mockFlowData: FlowGraph = {
     type: 650,
   },
 };
+
+export const draftParentFlow: FlowGraph = {
+  _root: {
+    edges: ["ContentNode", "ExternalPortalNode", "NoticeNode"],
+  },
+  ContentNode: {
+    type: 250,
+    data: {
+      content: "<p>This is a test flow with external portal content</p>",
+    },
+  },
+  NoticeNode: {
+    type: 8,
+    data: {
+      title: "End of test",
+      color: "#EFEFEF",
+      resetButton: true,
+    },
+  },
+  ExternalPortalNode: {
+    type: 310,
+    data: {
+      flowId: "child-flow-id",
+    },
+  },
+};
+
+export const flattenedParentFlow: FlowGraph = {
+  _root: {
+    edges: ["ContentNode", "ExternalPortalNode", "NoticeNode"],
+  },
+  ContentNode: {
+    data: {
+      content: "<p>This is a test flow with external portal content</p>",
+    },
+    type: 250,
+  },
+  NoticeNode: {
+    data: {
+      color: "#EFEFEF",
+      title: "End of test",
+      resetButton: true,
+    },
+    type: 8,
+  },
+  ExternalPortalNode: {
+    type: 300,
+    edges: ["child-flow-id"],
+  },
+  "child-flow-id": {
+    edges: ["QuestionInsidePortal"],
+    type: 300,
+    data: {
+      text: "child-flow",
+    },
+  },
+  OptionB: {
+    data: {
+      text: "B",
+    },
+    type: 200,
+  },
+  OptionC: {
+    data: {
+      text: "C",
+    },
+    type: 200,
+  },
+  QuestionInsidePortal: {
+    data: {
+      text: "This is a question in a flow referenced as an external portal",
+    },
+    type: 100,
+    edges: ["OptionA", "OptionB", "OptionC"],
+  },
+  OptionA: {
+    data: {
+      text: "A",
+    },
+    type: 200,
+  },
+};
+
+export const childFlow: FlowGraph = {
+  _root: {
+    edges: ["QuestionInsidePortal"],
+  },
+  OptionB: {
+    data: {
+      text: "B",
+    },
+    type: 200,
+  },
+  OptionC: {
+    data: {
+      text: "C",
+    },
+    type: 200,
+  },
+  QuestionInsidePortal: {
+    data: {
+      text: "This is a question in a flow referenced as an external portal",
+    },
+    type: 100,
+    edges: ["OptionA", "OptionB", "OptionC"],
+  },
+  OptionA: {
+    data: {
+      text: "A",
+    },
+    type: 200,
+  },
+};
