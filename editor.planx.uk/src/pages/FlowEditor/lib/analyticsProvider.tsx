@@ -44,6 +44,15 @@ type NodeMetadata = {
   isAutoAnswered?: boolean;
 };
 
+/**
+ * Describes the value held in analytics_logs.metadata
+ */
+type Metadata =
+  | Record<"change", NodeMetadata>
+  | Record<"back", NodeMetadata>
+  | SelectedUrlsMetadata
+  | HelpClickMetadata;
+
 let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
@@ -368,12 +377,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldSkipTracking()) return;
 
     const targetNodeMetadata = nodeId ? getTargetNodeDataFromFlow(nodeId) : {};
-    const metadata: Record<string, NodeMetadata> = {};
-    metadata[`${initiator}`] = targetNodeMetadata;
+    const metadata: Metadata =
+      initiator === "change"
+        ? { change: targetNodeMetadata }
+        : { back: targetNodeMetadata };
 
     await publicClient.mutate({
       mutation: gql`
-        mutation UpdateHaInitiatedBackwardsNavigation(
+        mutation UpdateHasInitiatedBackwardsNavigation(
           $id: bigint!
           $metadata: jsonb = {}
         ) {
