@@ -9,8 +9,8 @@ dependencies:
     specifier: ^9.3.0
     version: 9.3.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#b184ea9
-    version: github.com/theopensystemslab/planx-core/b184ea9
+    specifier: git+https://github.com/theopensystemslab/planx-core#a68d840
+    version: github.com/theopensystemslab/planx-core/a68d840
   axios:
     specifier: ^1.6.0
     version: 1.6.5
@@ -694,8 +694,8 @@ packages:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
     dev: true
 
-  /@types/geojson@7946.0.13:
-    resolution: {integrity: sha512-bmrNrgKMOhM3WsafmbGmC+6dsF2Z308vLFsQ3a/bT8X8Sv5clVYpPars/UPq+sAaJP+5OoLAYgwbkS5QEJdLUQ==}
+  /@types/geojson@7946.0.14:
+    resolution: {integrity: sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==}
     dev: false
 
   /@types/glob@7.2.0:
@@ -1931,8 +1931,8 @@ packages:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
     dev: true
 
-  /marked@11.2.0:
-    resolution: {integrity: sha512-HR0m3bvu0jAPYiIvLUUQtdg1g6D247//lvcekpHO1WMvbwDlwSkZAX9Lw4F4YHE1T0HaaNve0tuAWuV1UJ6vtw==}
+  /marked@12.0.0:
+    resolution: {integrity: sha512-Vkwtq9rLqXryZnWaQc86+FHLC6tr/fycMfYAhiOIXkrNmeGAyhSxjqu0Rs1i0bBqw5u0S7+lV9fdH2ZSVaoa0w==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
@@ -2781,8 +2781,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/b184ea9:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b184ea9}
+  github.com/theopensystemslab/planx-core/a68d840:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a68d840}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2791,7 +2791,7 @@ packages:
       '@emotion/react': 11.11.3(react@18.2.0)
       '@emotion/styled': 11.11.0(@emotion/react@11.11.3)(react@18.2.0)
       '@mui/material': 5.15.2(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(react-dom@18.2.0)(react@18.2.0)
-      '@types/geojson': 7946.0.13
+      '@types/geojson': 7946.0.14
       ajv: 8.12.0
       ajv-formats: 2.1.1(ajv@8.12.0)
       cheerio: 1.0.0-rc.12
@@ -2803,7 +2803,7 @@ packages:
       graphql-request: 6.1.0(graphql@16.8.1)
       json-schema-to-typescript: 13.1.2
       lodash: 4.17.21
-      marked: 11.2.0
+      marked: 12.0.0
       prettier: 3.2.5
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
