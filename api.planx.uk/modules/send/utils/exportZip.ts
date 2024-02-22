@@ -46,13 +46,19 @@ export async function buildSubmissionExportZip({
         stream: xmlStream,
       });
     } catch (error) {
-      throw new Error(`Failed to generate OneApp XML for ${sessionId}. Error - ${error}`);
+      throw new Error(
+        `Failed to generate OneApp XML for ${sessionId}. Error - ${error}`,
+      );
     }
   }
 
   // add ODP Schema JSON to the zip for supported application types
   const supportedApplicationPrefixes = ["ldc", "pa", "pp"];
-  if (supportedApplicationPrefixes.includes(passport.data?.["application.type"]?.[0])) {
+  const applicationType = passport.data?.["application.type"]?.[0];
+  if (
+    applicationType &&
+    supportedApplicationPrefixes.includes(applicationType.split(".")?.[0])
+  ) {
     try {
       const schema = await $api.export.digitalPlanningDataPayload(sessionId);
       const schemaBuff = Buffer.from(JSON.stringify(schema, null, 2));
@@ -61,7 +67,9 @@ export async function buildSubmissionExportZip({
         buffer: schemaBuff,
       });
     } catch (error) {
-      throw new Error (`Failed to generate ODP Schema JSON for ${sessionId} zip. Error - ${error}`);
+      throw new Error(
+        `Failed to generate ODP Schema JSON for ${sessionId} zip. Error - ${error}`,
+      );
     }
   }
 
@@ -94,7 +102,9 @@ export async function buildSubmissionExportZip({
       stream: csvStream,
     });
   } catch (error) {
-    throw new Error(`Failed to generate CSV for ${sessionId} zip. Error - ${error}`);
+    throw new Error(
+      `Failed to generate CSV for ${sessionId} zip. Error - ${error}`,
+    );
   }
 
   // add template files to zip

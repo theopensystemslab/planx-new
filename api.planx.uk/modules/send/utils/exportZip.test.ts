@@ -77,7 +77,8 @@ jest.mock("../../../client", () => {
         ]),
         csvDataRedacted: jest.fn().mockResolvedValue([]),
         oneAppPayload: () => mockGenerateOneAppXML(),
-        digitalPlanningDataPayload: () => mockGenerateDigitalPlanningDataPayload(),
+        digitalPlanningDataPayload: () =>
+          mockGenerateDigitalPlanningDataPayload(),
       },
     },
   };
@@ -104,7 +105,10 @@ describe("buildSubmissionExportZip", () => {
     const expectedBuffer = Buffer.from(JSON.stringify(schema, null, 2));
 
     await buildSubmissionExportZip({ sessionId: "1234" });
-    expect(mockAddFile).toHaveBeenCalledWith("application.json", expectedBuffer);
+    expect(mockAddFile).toHaveBeenCalledWith(
+      "application.json",
+      expectedBuffer,
+    );
   });
 
   test("boundary GeoJSON is added to zip", async () => {
@@ -198,6 +202,32 @@ describe("buildSubmissionExportZip", () => {
     );
   });
 
+  test("ODP schema json is excluded if no application type", async () => {
+    // set-up mock session passport overwriting "application.type"
+    const lowcalSessionUnsupportedAppType: Partial<LowCalSession> = {
+      ...mockLowcalSession,
+      id: "1234",
+      data: {
+        ...mockLowcalSession.data,
+        id: "1234",
+        passport: {
+          data: {
+            ...mockLowcalSession.data!.passport.data,
+            "application.type": undefined,
+          },
+        },
+      },
+    };
+    mockGetSessionById.mockResolvedValueOnce(lowcalSessionUnsupportedAppType);
+
+    await buildSubmissionExportZip({ sessionId: "1234" });
+
+    expect(mockAddFile).not.toHaveBeenCalledWith(
+      "application.json",
+      expect.anything(),
+    );
+  });
+
   test("a document template is added when the template is supported", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddLocalFile).toHaveBeenCalledWith(
@@ -249,7 +279,7 @@ describe("buildSubmissionExportZip", () => {
         new Error("validation test error"),
       );
       await expect(
-        buildSubmissionExportZip({ sessionId: "1234" })
+        buildSubmissionExportZip({ sessionId: "1234" }),
       ).rejects.toThrow(/Failed to generate ODP Schema JSON/);
     });
   });
