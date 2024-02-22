@@ -65,7 +65,12 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
       <StyledForm>
         <FormInputs inputs={inputs} />
         <FeedbackDisclaimer />
-        <Button type="submit" variant="contained" sx={{ marginTop: 2.5 }}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="prompt"
+          sx={{ marginTop: 2.5 }}
+        >
           Send feedback
         </Button>
       </StyledForm>

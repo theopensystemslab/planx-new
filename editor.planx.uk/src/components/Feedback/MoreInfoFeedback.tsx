@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -21,11 +20,6 @@ const MoreInfoFeedback = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
     padding: theme.spacing(3, 4, 8, 1),
   },
-}));
-
-const FeedbackBody = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
-  "& form > * + *": contentFlowSpacing(theme),
 }));
 
 const MoreInfoFeedbackComponent: React.FC = () => {
@@ -77,7 +71,7 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           <Typography variant="h4" component="h3" gutterBottom>
             Did this help to answer your question?
           </Typography>
-          <FeedbackBody>
+          <Box>
             <FeedbackOption
               onClick={() => handleFeedbackOptionClick("helpful")}
               Icon={CheckCircleIcon}
@@ -90,7 +84,7 @@ const MoreInfoFeedbackComponent: React.FC = () => {
               label="No"
               format="negative"
             />
-          </FeedbackBody>
+          </Box>
         </Container>
       </MoreInfoFeedback>
     );
@@ -110,12 +104,10 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           <Typography variant="h4" component="h3" gutterBottom>
             Please help us to improve this service by sharing feedback
           </Typography>
-          <FeedbackBody>
-            <FeedbackForm
-              inputs={commentFormInputs}
-              handleSubmit={handleFeedbackFormSubmit}
-            />
-          </FeedbackBody>
+          <FeedbackForm
+            inputs={commentFormInputs}
+            handleSubmit={handleFeedbackFormSubmit}
+          />
         </Container>
       </MoreInfoFeedback>
     );
@@ -128,12 +120,10 @@ const MoreInfoFeedbackComponent: React.FC = () => {
           <Typography variant="h4" component="h3" gutterBottom>
             Thank you for your feedback.
           </Typography>
-          <FeedbackBody>
-            <Typography variant="body2">
-              We value the time you’ve taken to share. We’ll use your insights
-              to improve our services.
-            </Typography>
-          </FeedbackBody>
+          <Typography variant="body2" pt={1}>
+            We value the time you’ve taken to share. We’ll use your insights to
+            improve our services.
+          </Typography>
         </Container>
       </MoreInfoFeedback>
     );
