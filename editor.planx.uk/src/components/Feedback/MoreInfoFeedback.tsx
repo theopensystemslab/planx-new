@@ -107,7 +107,12 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     return (
       <MoreInfoFeedback>
         <Container maxWidth={false}>
-          <Typography variant="h4" component="h3" gutterBottom>
+          <Typography
+            variant="h4"
+            component="h3"
+            gutterBottom
+            id="comment-title"
+          >
             Please help us to improve this service by sharing feedback
           </Typography>
           <FeedbackBody>
