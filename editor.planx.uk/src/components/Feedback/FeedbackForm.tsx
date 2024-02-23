@@ -44,6 +44,7 @@ function FormInputs({ inputs }: { inputs: FeedbackFormInput[] }): FCReturn {
               required
               multiline
               bordered
+              aria-label={"Leave your feedback"}
               aria-describedby={input.ariaDescribedBy}
               value={values?.[input.name]}
               onChange={handleChange}
