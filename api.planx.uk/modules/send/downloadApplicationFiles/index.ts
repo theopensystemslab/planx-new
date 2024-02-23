@@ -38,7 +38,7 @@ export async function downloadApplicationFiles(
     }
 
     // create the submission zip
-    const zip = await buildSubmissionExportZip({ sessionId });
+    const zip = await buildSubmissionExportZip({ sessionId, includeDigitalPlanningJSON: true });
 
     // Send it to the client
     const zipData = zip.toBuffer();

@@ -12,10 +12,15 @@ import { buildSubmissionExportZip } from "../../send/utils/exportZip";
  *    parameters:
  *      - $ref: '#/components/parameters/sessionId'
  *      - in: query
- *        name: includeXML
+ *        name: includeOneAppXML
  *        type: boolean
  *        required: false
  *        description: If the OneApp XML file should be included in the zip
+ *      - in: query
+ *        name: includeDigitalPlanningJSON
+ *        type: boolean
+ *        required: false
+ *        description: If the Digital Planning JSON file should be included in the zip (only generated for supported application types)
  *    security:
  *      - bearerAuth: []
  */
@@ -28,6 +33,7 @@ export async function generateZip(
     const zip = await buildSubmissionExportZip({
       sessionId: req.params.sessionId,
       includeOneAppXML: req.query.includeXML === "true",
+      includeDigitalPlanningJSON: req.query.includeJSON === "false",
     });
     res.download(zip.filename, () => {
       zip.remove();
