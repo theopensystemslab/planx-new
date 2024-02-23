@@ -35,6 +35,7 @@ function FormInputs({ inputs }: { inputs: FeedbackFormInput[] }): FCReturn {
                 name={input.name}
                 value={values?.[input.name]}
                 onChange={handleChange}
+                data-testid={`${input.name}Textarea`}
               />
             </InputLabel>
           ) : (
@@ -46,6 +47,7 @@ function FormInputs({ inputs }: { inputs: FeedbackFormInput[] }): FCReturn {
               aria-describedby={input.ariaDescribedBy}
               value={values?.[input.name]}
               onChange={handleChange}
+              data-testid={`${input.name}Textarea`}
             />
           )}
         </ErrorWrapper>
