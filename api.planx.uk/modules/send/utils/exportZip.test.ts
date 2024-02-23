@@ -1,6 +1,7 @@
 import { mockLowcalSession } from "../../../tests/mocks/saveAndReturnMocks";
 import { buildSubmissionExportZip } from "./exportZip";
 import type { LowCalSession } from "../../../types";
+import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks";
 
 jest.mock("fs", () => ({
   mkdtempSync: () => "tmpdir",
@@ -53,6 +54,9 @@ jest.mock("@opensystemslab/planx-core", () => {
 const mockGenerateOneAppXML = jest
   .fn()
   .mockResolvedValue({ trim: () => "<dummy:xml></dummy:xml>" });
+const mockGenerateDigitalPlanningDataPayload = jest
+  .fn()
+  .mockResolvedValue(expectedPlanningPermissionPayload);
 
 jest.mock("../../../client", () => {
   return {
@@ -73,6 +77,8 @@ jest.mock("../../../client", () => {
         ]),
         csvDataRedacted: jest.fn().mockResolvedValue([]),
         oneAppPayload: () => mockGenerateOneAppXML(),
+        digitalPlanningDataPayload: () =>
+          mockGenerateDigitalPlanningDataPayload(),
       },
     },
   };
@@ -92,6 +98,17 @@ describe("buildSubmissionExportZip", () => {
   test("the document viewer is added to zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddFile).toHaveBeenCalledWith("Overview.htm", expect.anything());
+  });
+
+  test("ODP schema json is added to the zip", async () => {
+    const schema = expectedPlanningPermissionPayload;
+    const expectedBuffer = Buffer.from(JSON.stringify(schema, null, 2));
+
+    await buildSubmissionExportZip({ sessionId: "1234" });
+    expect(mockAddFile).toHaveBeenCalledWith(
+      "application.json",
+      expectedBuffer,
+    );
   });
 
   test("boundary GeoJSON is added to zip", async () => {
@@ -159,6 +176,58 @@ describe("buildSubmissionExportZip", () => {
     );
   });
 
+  test("ODP schema json is excluded if unsupported application type", async () => {
+    // set-up mock session passport overwriting "application.type"
+    const lowcalSessionUnsupportedAppType: Partial<LowCalSession> = {
+      ...mockLowcalSession,
+      id: "1234",
+      data: {
+        ...mockLowcalSession.data,
+        id: "1234",
+        passport: {
+          data: {
+            ...mockLowcalSession.data!.passport.data,
+            "application.type": ["listedBuildingConsent"],
+          },
+        },
+      },
+    };
+    mockGetSessionById.mockResolvedValueOnce(lowcalSessionUnsupportedAppType);
+
+    await buildSubmissionExportZip({ sessionId: "1234" });
+
+    expect(mockAddFile).not.toHaveBeenCalledWith(
+      "application.json",
+      expect.anything(),
+    );
+  });
+
+  test("ODP schema json is excluded if no application type", async () => {
+    // set-up mock session passport overwriting "application.type"
+    const lowcalSessionUnsupportedAppType: Partial<LowCalSession> = {
+      ...mockLowcalSession,
+      id: "1234",
+      data: {
+        ...mockLowcalSession.data,
+        id: "1234",
+        passport: {
+          data: {
+            ...mockLowcalSession.data!.passport.data,
+            "application.type": undefined,
+          },
+        },
+      },
+    };
+    mockGetSessionById.mockResolvedValueOnce(lowcalSessionUnsupportedAppType);
+
+    await buildSubmissionExportZip({ sessionId: "1234" });
+
+    expect(mockAddFile).not.toHaveBeenCalledWith(
+      "application.json",
+      expect.anything(),
+    );
+  });
+
   test("a document template is added when the template is supported", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });
     expect(mockAddLocalFile).toHaveBeenCalledWith(
@@ -203,6 +272,15 @@ describe("buildSubmissionExportZip", () => {
           includeOneAppXML: true,
         }),
       ).rejects.toThrow(/Failed to generate OneApp XML/);
+    });
+
+    it("throws an error when ODP schema generation fails", async () => {
+      mockGenerateDigitalPlanningDataPayload.mockRejectedValueOnce(
+        new Error("validation test error"),
+      );
+      await expect(
+        buildSubmissionExportZip({ sessionId: "1234" }),
+      ).rejects.toThrow(/Failed to generate ODP Schema JSON/);
     });
   });
 });

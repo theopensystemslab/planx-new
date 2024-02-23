@@ -34,6 +34,7 @@ export const mockLowcalSession: LowCalSession = {
   data: {
     passport: {
       data: {
+        "application.type": ["ldc.proposed"],
         _address: {
           single_line_address: "1 High Street",
         },
