@@ -162,7 +162,7 @@ export const flattenedParentFlow: FlowGraph = {
     edges: ["QuestionInsidePortal"],
     type: 300,
     data: {
-      text: "child-flow",
+      text: "testing/child-flow",
     },
   },
   OptionB: {

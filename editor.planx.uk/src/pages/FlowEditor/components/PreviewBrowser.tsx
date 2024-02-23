@@ -4,6 +4,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -68,28 +69,71 @@ const DebugConsole = () => {
   );
 };
 
-function PublishChangeItem(props: any) {
-  const { node } = props;
-  let text, data;
+interface AlteredNodesSummary {
+  title: string;
+  portals: string[];
+  updated: number;
+  deleted: number;
+}
 
-  if (node.id === "_root") {
-    text = "Changed _root service by adding, deleting or re-ordering nodes";
-  } else if (node.id === "0") {
-    text = `The entire _root service will be published for the first time`;
-  } else if (node.id && Object.keys(node).length === 1) {
-    text = `Deleted node ${node.id}`;
-  } else if (node.type && node.data) {
-    text = `Added/edited ${TYPES[node.type]}`;
-    data = JSON.stringify(node.data, null, 2);
-  } else {
-    text = `Added/edited ${TYPES[node.type]}`;
-  }
+function AlteredNodesSummaryContent(props: any) {
+  const { alteredNodes, url } = props;
+  const changeSummary: AlteredNodesSummary = {
+    title: "",
+    portals: [],
+    updated: 0,
+    deleted: 0,
+  };
+
+  alteredNodes.map((node: any) => {
+    if (node.id === "0") {
+      changeSummary["title"] =
+        "You are publishing the main service for the first time.";
+    } else if (node.id && Object.keys(node).length === 1) {
+      changeSummary["deleted"] += 1;
+    } else if (node.type === TYPES.InternalPortal) {
+      if (node.data?.text?.includes("/")) {
+        changeSummary["portals"].push(node.data?.text);
+      }
+    } else if (node.type) {
+      changeSummary["updated"] += 1;
+    }
+
+    return changeSummary;
+  });
 
   return (
-    <>
-      <Typography variant="body2">{text}</Typography>
-      {data && <pre style={{ fontSize: ".8em" }}>{data}</pre>}
-    </>
+    <Box pb={2}>
+      {changeSummary["title"] && (
+        <Typography variant="body2">{changeSummary["title"]}</Typography>
+      )}
+      {(changeSummary["updated"] > 0 || changeSummary["deleted"] > 0) && (
+        <ul>
+          <li key={"updated"}>
+            <Typography variant="body2">{`${changeSummary["updated"]} nodes have been updated or added`}</Typography>
+          </li>
+          <li key={"deleted"}>
+            <Typography variant="body2">{`${changeSummary["deleted"]} nodes have been deleted`}</Typography>
+          </li>
+        </ul>
+      )}
+      {changeSummary["portals"].length > 0 && (
+        <>
+          <Typography variant="body2">{`This includes recently published changes in the following nested services:`}</Typography>
+          <ul>
+            {changeSummary["portals"].map((portal, i) => (
+              <li key={i}>
+                <Typography variant="body2">{portal}</Typography>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      <Typography variant="body2">{`You can review these changes before publishing at ${url.replace(
+        "/preview",
+        "/publish-preview",
+      )}`}</Typography>
+    </Box>
   );
 }
 
@@ -106,6 +150,7 @@ const PreviewBrowser: React.FC<{
     lastPublisher,
     validateAndDiffFlow,
     isFlowPublished,
+    isPlatformAdmin,
   ] = useStore((state) => [
     state.id,
     state.flowAnalyticsLink,
@@ -115,6 +160,7 @@ const PreviewBrowser: React.FC<{
     state.lastPublisher,
     state.validateAndDiffFlow,
     state.isFlowPublished,
+    state.user?.isPlatformAdmin,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -135,6 +181,13 @@ const PreviewBrowser: React.FC<{
     setLastPublishedTitle(formatLastPublish(date, user));
   });
 
+  const _validateAndDiffRequest = useAsync(async () => {
+    const newChanges = await validateAndDiffFlow(flowId);
+    setAlteredNodes(
+      newChanges?.data.alteredNodes ? newChanges.data.alteredNodes : [],
+    );
+  });
+
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
@@ -145,8 +198,9 @@ const PreviewBrowser: React.FC<{
           <input
             type="text"
             disabled
-            value={props.url.replace("/preview", "/unpublished")}
+            value={props.url.replace("/preview", "/publish-preview")}
           />
+
           <Tooltip arrow title="Refresh preview">
             <RefreshIcon
               onClick={() => {
@@ -183,16 +237,19 @@ const PreviewBrowser: React.FC<{
             </Tooltip>
           )}
 
-          <Tooltip arrow title="Open unpublished service">
-            <Link
-              href={props.url.replace("/preview", "/unpublished")}
-              target="_blank"
-              rel="noopener noreferrer"
-              color="inherit"
-            >
-              <OpenInNewOffIcon />
-            </Link>
-          </Tooltip>
+          {isPlatformAdmin && (
+            <Tooltip arrow title="Open unpublished service">
+              <Link
+                href={props.url.replace("/preview", "/unpublished")}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <OpenInNewOffIcon />
+              </Link>
+            </Tooltip>
+          )}
+
           <Tooltip arrow title="Open preview of published service">
             <Link
               href={props.url.replace("/preview", "/publish-preview")}
@@ -203,6 +260,7 @@ const PreviewBrowser: React.FC<{
               <OpenInNewIcon />
             </Link>
           </Tooltip>
+
           {isFlowPublished ? (
             <Tooltip arrow title="Open published service">
               <Link
@@ -225,45 +283,57 @@ const PreviewBrowser: React.FC<{
           )}
         </Box>
         <Box width="100%" mt={2}>
-          <Box display="flex" flexDirection="column" alignItems="flex-end">
-            <Button
-              sx={{ width: "100% " }}
-              variant="contained"
-              color="primary"
-              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
-              onClick={async () => {
-                try {
-                  setLastPublishedTitle("Checking for changes...");
-                  const alteredFlow = await validateAndDiffFlow(flowId);
-                  setAlteredNodes(
-                    alteredFlow?.data.alteredNodes
-                      ? alteredFlow.data.alteredNodes
-                      : [],
-                  );
-                  setLastPublishedTitle(
-                    alteredFlow?.data.alteredNodes
-                      ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
-                      : alteredFlow?.data.message,
-                  );
-                  setValidationMessage(alteredFlow?.data.description);
-                  setDialogOpen(true);
-                } catch (error) {
-                  setLastPublishedTitle(
-                    "Error checking for changes to publish",
-                  );
-
-                  if (error instanceof AxiosError) {
-                    alert(error.response?.data?.error);
-                  } else {
-                    alert(
-                      `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
-                    );
-                  }
-                }
-              }}
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="flex-end"
+            marginRight={1}
+          >
+            <Badge
+              sx={{ width: "100%" }}
+              badgeContent={alteredNodes && alteredNodes.length}
+              max={999}
+              color="warning"
             >
-              CHECK FOR CHANGES TO PUBLISH
-            </Button>
+              <Button
+                sx={{ width: "100%" }}
+                variant="contained"
+                color="primary"
+                disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+                onClick={async () => {
+                  try {
+                    setLastPublishedTitle("Checking for changes...");
+                    const alteredFlow = await validateAndDiffFlow(flowId);
+                    setAlteredNodes(
+                      alteredFlow?.data.alteredNodes
+                        ? alteredFlow.data.alteredNodes
+                        : [],
+                    );
+                    setLastPublishedTitle(
+                      alteredFlow?.data.alteredNodes
+                        ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
+                        : alteredFlow?.data.message,
+                    );
+                    setValidationMessage(alteredFlow?.data.description);
+                    setDialogOpen(true);
+                  } catch (error) {
+                    setLastPublishedTitle(
+                      "Error checking for changes to publish",
+                    );
+
+                    if (error instanceof AxiosError) {
+                      alert(error.response?.data?.error);
+                    } else {
+                      alert(
+                        `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
+                      );
+                    }
+                  }
+                }}
+              >
+                CHECK FOR CHANGES TO PUBLISH
+              </Button>
+            </Badge>
             <Dialog
               open={dialogOpen}
               onClose={() => setDialogOpen(false)}
@@ -276,15 +346,10 @@ const PreviewBrowser: React.FC<{
               <DialogContent>
                 {alteredNodes?.length ? (
                   <>
-                    <Box pb={1}>
-                      <ul>
-                        {alteredNodes.map((a: any) => (
-                          <li key={a.id}>
-                            <PublishChangeItem node={a} />
-                          </li>
-                        ))}
-                      </ul>
-                    </Box>
+                    <AlteredNodesSummaryContent
+                      alteredNodes={alteredNodes}
+                      url={props.url}
+                    />
                     <Input
                       bordered
                       type="text"
