@@ -28,28 +28,41 @@ const ALLOW_LIST = [
 ] as const;
 
 export type HelpClickMetadata = Record<string, string>;
-export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
-export type BackwardsNavigationInitiatorType = "change" | "back";
+type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
+type BackwardsNavigationInitiatorType = "change" | "back";
 
-type NodeMetadata = {
+type ResultNodeMetadata = {
+  flag?: Flag;
   flagSet?: FlagSet;
   displayText?: {
     heading?: string;
     description?: string;
   };
-  flag?: Flag;
-  title?: string;
-  type?: string | null;
-  id?: string;
+};
+
+type AutoAnswerMetadata = {
   isAutoAnswered?: boolean;
 };
 
+type NodeMetadata = ResultNodeMetadata & AutoAnswerMetadata;
+
+type BackwardsTargetMetadata = {
+  id?: string;
+  type?: string | null;
+  title?: string;
+};
+
+type BackwardsNavigationMetadata =
+  | Record<"change", BackwardsTargetMetadata>
+  | Record<"back", BackwardsTargetMetadata>;
+
 /**
- * Describes the value held in analytics_logs.metadata
+ * Describes the possible values that can be written to analytics_logs.metadata
+ * by any one of the specific tracking event functions
  */
 type Metadata =
-  | Record<"change", NodeMetadata>
-  | Record<"back", NodeMetadata>
+  | NodeMetadata
+  | BackwardsNavigationMetadata
   | SelectedUrlsMetadata
   | HelpClickMetadata;
 
@@ -377,7 +390,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldSkipTracking()) return;
 
     const targetNodeMetadata = nodeId ? getTargetNodeDataFromFlow(nodeId) : {};
-    const metadata: Metadata =
+    const metadata: BackwardsNavigationMetadata =
       initiator === "change"
         ? { change: targetNodeMetadata }
         : { back: targetNodeMetadata };
@@ -509,7 +522,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   function getTargetNodeDataFromFlow(nodeId: string) {
     const node = flow[nodeId];
     const nodeType = node?.type ? TYPES[node.type] : null;
-    const nodeMetadata: NodeMetadata = {
+    const nodeMetadata: BackwardsTargetMetadata = {
       title: extractNodeTitle(node),
       type: nodeType,
       id: nodeId,

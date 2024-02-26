@@ -268,6 +268,7 @@ describe(`downloading application data received by email`, () => {
       .then((_res) => {
         expect(mockBuildSubmissionExportZip).toHaveBeenCalledWith({
           sessionId: "123",
+          includeDigitalPlanningJSON: true,
         });
       });
   });
