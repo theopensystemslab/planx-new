@@ -1,4 +1,3 @@
-import { waitFor } from "@testing-library/react";
 import React from "react";
 import { axe, setup } from "testUtils";
 
@@ -75,14 +74,12 @@ describe("FeedbackForm functionality", () => {
     );
     await user.click(getByText("Send feedback"));
 
-    await waitFor(() => {
-      expect(mockHandleSubmit).toHaveBeenCalledWith(
-        expect.objectContaining({
-          userComment: "This is a test comment",
-        }),
-        expect.any(Object),
-      );
-    });
+    expect(mockHandleSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userComment: "This is a test comment",
+      }),
+      expect.any(Object),
+    );
   });
 
   test("can submit labelled inputs", async () => {
@@ -95,18 +92,15 @@ describe("FeedbackForm functionality", () => {
 
     await user.type(getByLabelText("User Context"), "This is test context");
     await user.type(getByLabelText("User Comment"), "This is a test comment");
-
     await user.click(getByText("Send feedback"));
 
-    await waitFor(() => {
-      expect(mockHandleSubmit).toHaveBeenCalledWith(
-        expect.objectContaining({
-          userContext: "This is test context",
-          userComment: "This is a test comment",
-        }),
-        expect.any(Object),
-      );
-    });
+    expect(mockHandleSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userContext: "This is test context",
+        userComment: "This is a test comment",
+      }),
+      expect.any(Object),
+    );
   });
 });
 
