@@ -1,8 +1,4 @@
-import "@testing-library/jest-dom/extend-expect";
-
 import { fireEvent, waitFor } from "@testing-library/react";
-// eslint-disable-next-line no-restricted-imports
-import userEvent from "@testing-library/user-event";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -64,17 +60,16 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
 
   // Form submission
   test("Submitting feedback changes view to thank you message", async () => {
-    const { getByText, getByTestId } = setup(<MoreInfoFeedbackComponent />);
+    const { getByText, getByTestId, user } = setup(
+      <MoreInfoFeedbackComponent />,
+    );
 
     fireEvent.click(getByText("Yes"));
     await waitFor(() => {
       expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
     });
 
-    await userEvent.type(
-      getByTestId("userCommentTextarea"),
-      "Great help, thanks!",
-    );
+    await user.type(getByTestId("userCommentTextarea"), "Great help, thanks!");
 
     fireEvent.click(getByText("Send feedback"));
     await waitFor(() => {
@@ -129,7 +124,7 @@ describe("MoreInfoFeedbackComponent accessibility", () => {
   });
 
   test("Thank you view should have no accessibility violations", async () => {
-    const { container, getByText, getByTestId } = setup(
+    const { container, getByText, getByTestId, user } = setup(
       <MoreInfoFeedbackComponent />,
     );
 
@@ -138,10 +133,7 @@ describe("MoreInfoFeedbackComponent accessibility", () => {
       expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
     });
 
-    await userEvent.type(
-      getByTestId("userCommentTextarea"),
-      "Great help, thanks!",
-    );
+    await user.type(getByTestId("userCommentTextarea"), "Great help, thanks!");
 
     fireEvent.click(getByText("Send feedback"));
 
