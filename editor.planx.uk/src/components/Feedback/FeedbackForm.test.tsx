@@ -9,14 +9,14 @@ import FeedbackForm from "./FeedbackForm";
 
 const mockHandleSubmit = jest.fn();
 
-const mockUnlabeledInput: FeedbackFormInput[] = [
+const mockUnlabelledInput: FeedbackFormInput[] = [
   {
     name: "userComment",
     ariaDescribedBy: "comment-title",
   },
 ];
 
-const mockLabeledInputs: FeedbackFormInput[] = [
+const mockLabelledInputs: FeedbackFormInput[] = [
   { name: "userContext", id: "userContext", label: "User Context" },
   { name: "userComment", id: "userComment", label: "User Comment" },
 ];
@@ -29,7 +29,7 @@ describe("FeedbackForm functionality", () => {
   test("renders unlabelled input correctly", () => {
     const { getByLabelText } = setup(
       <FeedbackForm
-        inputs={mockUnlabeledInput}
+        inputs={mockUnlabelledInput}
         handleSubmit={mockHandleSubmit}
       />,
     );
@@ -40,7 +40,7 @@ describe("FeedbackForm functionality", () => {
   test("renders labelled inputs correctly", () => {
     const { getByLabelText } = setup(
       <FeedbackForm
-        inputs={mockLabeledInputs}
+        inputs={mockLabelledInputs}
         handleSubmit={mockHandleSubmit}
       />,
     );
@@ -53,7 +53,7 @@ describe("FeedbackForm functionality", () => {
   test("renders the feedback disclaimer with the input", () => {
     const { getByText } = setup(
       <FeedbackForm
-        inputs={mockUnlabeledInput}
+        inputs={mockUnlabelledInput}
         handleSubmit={mockHandleSubmit}
       />,
     );
@@ -67,7 +67,7 @@ describe("FeedbackForm functionality", () => {
   test("can submit an unlabelled input", async () => {
     const { getByLabelText, getByText } = setup(
       <FeedbackForm
-        inputs={mockUnlabeledInput}
+        inputs={mockUnlabelledInput}
         handleSubmit={mockHandleSubmit}
       />,
     );
@@ -90,7 +90,7 @@ describe("FeedbackForm functionality", () => {
   test("can submit labelled inputs", async () => {
     const { getByLabelText, getByText } = setup(
       <FeedbackForm
-        inputs={mockLabeledInputs}
+        inputs={mockLabelledInputs}
         handleSubmit={mockHandleSubmit}
       />,
     );
@@ -126,7 +126,7 @@ describe("FeedbackForm accessibility tests", () => {
   test("renders unlabelled inputs with no accessibility violations", async () => {
     const { container } = setup(
       <FeedbackForm
-        inputs={mockUnlabeledInput}
+        inputs={mockUnlabelledInput}
         handleSubmit={mockHandleSubmit}
       />,
     );
@@ -137,7 +137,7 @@ describe("FeedbackForm accessibility tests", () => {
   test("renders labelled inputs with no accessibility violations", async () => {
     const { container } = setup(
       <FeedbackForm
-        inputs={mockLabeledInputs}
+        inputs={mockLabelledInputs}
         handleSubmit={mockHandleSubmit}
       />,
     );
