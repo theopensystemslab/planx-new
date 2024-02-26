@@ -55,9 +55,7 @@ const fetchFlattenedFlowData = async (flowId: string): Promise<FlowGraph> => {
       alert(
         `Cannot open /publish-preview, navigate back to the graph to keep editing. \n\n${error.response?.data?.error}`,
       );
-      throw new NotFoundError();
-    } else {
-      throw new NotFoundError();
     }
+    throw new NotFoundError();
   }
 };

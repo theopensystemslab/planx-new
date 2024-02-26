@@ -2,7 +2,7 @@ import { FlowGraph } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
 import { ServerError } from "../../../errors";
 import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
-import { getFlattenedFlowData } from "./service";
+import { dataMerged } from "../../../helpers";
 
 type FlattenFlowDataResponse = FlowGraph;
 
@@ -11,7 +11,10 @@ export const flattenFlowData = z.object({
     flowId: z.string(),
   }),
   query: z.object({
-    unpublished: z.string().optional(), // TODO make boolean
+    unpublished: z
+      .string()
+      .optional()
+      .transform((val) => val?.toLowerCase() === "true"), // proxy for z.boolean()
   }),
 });
 
@@ -28,14 +31,11 @@ export const flattenFlowDataController: FlattenFlowDataController = async (
   try {
     const { flowId } = res.locals.parsedReq.params;
 
-    if (req.query?.unpublished) {
-      const unpublishedFlattenedFlowData = await getFlattenedFlowData(
-        flowId,
-        true,
-      );
-      res.status(200).send(unpublishedFlattenedFlowData);
+    if (req.query?.unpublished?.toString().toLowerCase() === "true") {
+      const draftFlattenedFlowData = await dataMerged(flowId, {}, false, true);
+      res.status(200).send(draftFlattenedFlowData);
     } else {
-      const flattenedFlowData = await getFlattenedFlowData(flowId);
+      const flattenedFlowData = await dataMerged(flowId);
       res.status(200).send(flattenedFlowData);
     }
   } catch (error) {
