@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -37,8 +37,8 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
 
   // Sentiment selection
   test("Clicking Yes input form scrolls into view", async () => {
-    const { getByText } = setup(<MoreInfoFeedbackComponent />);
-    fireEvent.click(getByText("Yes"));
+    const { getByText, user } = setup(<MoreInfoFeedbackComponent />);
+    await user.click(getByText("Yes"));
     expect(scrollIntoView).toBeCalled();
     await waitFor(() => {
       expect(
@@ -48,8 +48,9 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
   });
 
   test("Clicking No input form scrolls into view", async () => {
-    const { getByText } = setup(<MoreInfoFeedbackComponent />);
-    fireEvent.click(getByText("No"));
+    const { getByText, user } = setup(<MoreInfoFeedbackComponent />);
+
+    await user.click(getByText("No"));
     expect(scrollIntoView).toBeCalled();
     await waitFor(() => {
       expect(
@@ -64,14 +65,14 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
       <MoreInfoFeedbackComponent />,
     );
 
-    fireEvent.click(getByText("Yes"));
+    user.click(getByText("Yes"));
     await waitFor(() => {
       expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
     });
 
     await user.type(getByTestId("userCommentTextarea"), "Great help, thanks!");
 
-    fireEvent.click(getByText("Send feedback"));
+    user.click(getByText("Send feedback"));
     await waitFor(() => {
       expect(getInternalFeedbackMetadata).toBeCalled();
       expect(insertFeedbackMutation).toBeCalled();
@@ -93,9 +94,11 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
     validation.
   */
   test("Feedback form requires a comment before submitting", async () => {
-    const { getByTestId, getByText } = setup(<MoreInfoFeedbackComponent />);
+    const { getByTestId, getByText, user } = setup(
+      <MoreInfoFeedbackComponent />,
+    );
 
-    fireEvent.click(getByText("Yes"));
+    user.click(getByText("Yes"));
     await waitFor(() => {
       expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
     });
@@ -116,8 +119,8 @@ describe("MoreInfoFeedbackComponent accessibility", () => {
   });
 
   test("Form view should have no accessability violations", async () => {
-    const { container, getByText } = setup(<MoreInfoFeedbackComponent />);
-    fireEvent.click(getByText("Yes"));
+    const { container, getByText, user } = setup(<MoreInfoFeedbackComponent />);
+    user.click(getByText("Yes"));
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -128,14 +131,14 @@ describe("MoreInfoFeedbackComponent accessibility", () => {
       <MoreInfoFeedbackComponent />,
     );
 
-    fireEvent.click(getByText("Yes"));
+    user.click(getByText("Yes"));
     await waitFor(() => {
       expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
     });
 
     await user.type(getByTestId("userCommentTextarea"), "Great help, thanks!");
 
-    fireEvent.click(getByText("Send feedback"));
+    user.click(getByText("Send feedback"));
 
     await waitFor(() => {
       expect(getByText("Thank you for your feedback.")).toBeInTheDocument();
