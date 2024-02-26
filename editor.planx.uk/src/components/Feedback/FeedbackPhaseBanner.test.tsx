@@ -1,6 +1,3 @@
-import "@testing-library/jest-dom/extend-expect";
-
-import { fireEvent } from "@testing-library/react";
 import React from "react";
 import { axe, setup } from "testUtils";
 
@@ -27,27 +24,27 @@ describe("FeedbackPhaseBanner presentation and functionality", () => {
     expect(getByText("feedback")).toBeInTheDocument();
   });
 
-  test("clicking on feedback link calls handleFeedbackClick", () => {
-    const { getByText } = setup(
+  test("clicking on feedback link calls handleFeedbackClick", async () => {
+    const { getByText, user } = setup(
       <FeedbackPhaseBanner
         handleFeedbackClick={handleFeedbackClick}
         handleReportAnIssueClick={handleReportAnIssueClick}
       />,
     );
 
-    fireEvent.click(getByText("feedback"));
+    await user.click(getByText("feedback"));
     expect(handleFeedbackClick).toHaveBeenCalledTimes(1);
   });
 
-  test("clicking on 'Report an issue with this page' button calls handleReportAnIssueClick", () => {
-    const { getByText } = setup(
+  test("clicking on 'Report an issue with this page' button calls handleReportAnIssueClick", async () => {
+    const { getByText, user } = setup(
       <FeedbackPhaseBanner
         handleFeedbackClick={handleFeedbackClick}
         handleReportAnIssueClick={handleReportAnIssueClick}
       />,
     );
 
-    fireEvent.click(getByText("Report an issue with this page"));
+    await user.click(getByText("Report an issue with this page"));
     expect(handleReportAnIssueClick).toHaveBeenCalledTimes(1);
   });
 });
