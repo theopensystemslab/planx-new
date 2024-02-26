@@ -1,6 +1,4 @@
 import { waitFor } from "@testing-library/react";
-// eslint-disable-next-line no-restricted-imports
-import userEvent from "@testing-library/user-event";
 import React from "react";
 import { axe, setup } from "testUtils";
 
@@ -65,17 +63,17 @@ describe("FeedbackForm functionality", () => {
   });
 
   test("can submit an unlabelled input", async () => {
-    const { getByLabelText, getByText } = setup(
+    const { getByLabelText, getByText, user } = setup(
       <FeedbackForm
         inputs={mockUnlabelledInput}
         handleSubmit={mockHandleSubmit}
       />,
     );
-    await userEvent.type(
+    await user.type(
       getByLabelText("Leave your feedback"),
       "This is a test comment",
     );
-    await userEvent.click(getByText("Send feedback"));
+    await user.click(getByText("Send feedback"));
 
     await waitFor(() => {
       expect(mockHandleSubmit).toHaveBeenCalledWith(
@@ -88,23 +86,17 @@ describe("FeedbackForm functionality", () => {
   });
 
   test("can submit labelled inputs", async () => {
-    const { getByLabelText, getByText } = setup(
+    const { getByLabelText, getByText, user } = setup(
       <FeedbackForm
         inputs={mockLabelledInputs}
         handleSubmit={mockHandleSubmit}
       />,
     );
 
-    await userEvent.type(
-      getByLabelText("User Context"),
-      "This is test context",
-    );
-    await userEvent.type(
-      getByLabelText("User Comment"),
-      "This is a test comment",
-    );
+    await user.type(getByLabelText("User Context"), "This is test context");
+    await user.type(getByLabelText("User Comment"), "This is a test comment");
 
-    await userEvent.click(getByText("Send feedback"));
+    await user.click(getByText("Send feedback"));
 
     await waitFor(() => {
       expect(mockHandleSubmit).toHaveBeenCalledWith(
