@@ -85,8 +85,8 @@ describe("Feedback component triage journey", () => {
     await user.click(getByText("Send feedback"));
 
     await waitFor(() => {
-      expect(getInternalFeedbackMetadata).toBeCalled();
-      expect(insertFeedbackMutation).toBeCalled();
+      expect(getInternalFeedbackMetadata).toBeCalledTimes(1);
+      expect(insertFeedbackMutation).toBeCalledTimes(1);
       expect(getByText("Thank you for your feedback.")).toBeInTheDocument();
     });
   });
@@ -118,8 +118,8 @@ describe("Feedback component triage journey", () => {
     await user.click(getByText("Send feedback"));
 
     await waitFor(() => {
-      expect(getInternalFeedbackMetadata).toBeCalled();
-      expect(insertFeedbackMutation).toBeCalled();
+      expect(getInternalFeedbackMetadata).toBeCalledTimes(1);
+      expect(insertFeedbackMutation).toBeCalledTimes(1);
       expect(getByText("Thank you for your feedback.")).toBeInTheDocument();
     });
   });
@@ -152,8 +152,8 @@ describe("Feedback component triage journey", () => {
     await user.click(getByText("Send feedback"));
 
     await waitFor(() => {
-      expect(getInternalFeedbackMetadata).toBeCalled();
-      expect(insertFeedbackMutation).toBeCalled();
+      expect(getInternalFeedbackMetadata).toBeCalledTimes(1);
+      expect(insertFeedbackMutation).toBeCalledTimes(1);
       expect(getByText("Thank you for your feedback.")).toBeInTheDocument();
     });
   });
@@ -195,8 +195,8 @@ describe("Feedback component 'Report an issue with this page journey'", () => {
     await user.click(getByText("Send feedback"));
 
     await waitFor(() => {
-      expect(getInternalFeedbackMetadata).toBeCalled();
-      expect(insertFeedbackMutation).toBeCalled();
+      expect(getInternalFeedbackMetadata).toBeCalledTimes(1);
+      expect(insertFeedbackMutation).toBeCalledTimes(1);
       expect(getByText("Thank you for your feedback.")).toBeInTheDocument();
     });
   });
