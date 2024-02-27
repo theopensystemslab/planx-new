@@ -15,7 +15,7 @@ import type {
   Node,
 } from "../../../types";
 import { $api } from "../../../client";
-import { ValidationResponse } from "../controller";
+import { ValidationResponse } from "../types";
 
 export type ReconciledSession = {
   alteredSectionIds: Array<string>;
