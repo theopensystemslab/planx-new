@@ -35,6 +35,7 @@ function FormInputs({ inputs }: { inputs: FeedbackFormInput[] }): FCReturn {
                 name={input.name}
                 value={values?.[input.name]}
                 onChange={handleChange}
+                data-testid={`${input.name}Textarea`}
               />
             </InputLabel>
           ) : (
@@ -43,9 +44,11 @@ function FormInputs({ inputs }: { inputs: FeedbackFormInput[] }): FCReturn {
               required
               multiline
               bordered
+              aria-label={"Leave your feedback"}
               aria-describedby={input.ariaDescribedBy}
               value={values?.[input.name]}
               onChange={handleChange}
+              data-testid={`${input.name}Textarea`}
             />
           )}
         </ErrorWrapper>

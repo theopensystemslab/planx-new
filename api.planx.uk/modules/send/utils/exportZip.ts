@@ -20,9 +20,11 @@ import type { PlanXExportData } from "@opensystemslab/planx-core/types";
 export async function buildSubmissionExportZip({
   sessionId,
   includeOneAppXML = false,
+  includeDigitalPlanningJSON = false,
 }: {
   sessionId: string;
   includeOneAppXML?: boolean;
+  includeDigitalPlanningJSON?: boolean;
 }): Promise<ExportZip> {
   // create zip
   const zip = new ExportZip(sessionId);
@@ -56,6 +58,7 @@ export async function buildSubmissionExportZip({
   const supportedApplicationPrefixes = ["ldc", "pa", "pp"];
   const applicationType = passport.data?.["application.type"]?.[0];
   if (
+    includeDigitalPlanningJSON &&
     applicationType &&
     supportedApplicationPrefixes.includes(applicationType.split(".")?.[0])
   ) {
