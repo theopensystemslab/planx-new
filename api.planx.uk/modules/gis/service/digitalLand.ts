@@ -30,6 +30,7 @@ const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   medway: require("./local_authorities/metadata/medway"),
   newcastle: require("./local_authorities/metadata/newcastle"),
   southwark: require("./local_authorities/metadata/southwark"),
+  tewkesbury: require("./local_authorities/metadata/tewkesbury"),
 };
 
 /**
