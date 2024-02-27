@@ -137,14 +137,14 @@ function AlteredNodesSummaryContent(props: any) {
         </>
       )}
       <Typography variant="body2">
-        {`Review changes before publishing `}
+        {`Review these content changes in-service before publishing `}
         <Link
           href={url.replace("/preview", "/publish-preview")}
           target="_blank"
         >
           {`here`}
         </Link>
-        {` (opens in a new tab)`}
+        {` (opens in a new tab).`}
       </Typography>
     </Box>
   );
