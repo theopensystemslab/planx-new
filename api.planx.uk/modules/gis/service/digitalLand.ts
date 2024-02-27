@@ -26,6 +26,7 @@ const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   camden: require("./local_authorities/metadata/camden"),
   canterbury: require("./local_authorities/metadata/canterbury"),
   doncaster: require("./local_authorities/metadata/doncaster"),
+  gateshead: require("./local_authorities/metadata/gateshead"),
   lambeth: require("./local_authorities/metadata/lambeth"),
   medway: require("./local_authorities/metadata/medway"),
   newcastle: require("./local_authorities/metadata/newcastle"),
