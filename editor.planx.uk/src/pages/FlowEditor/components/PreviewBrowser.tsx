@@ -78,6 +78,7 @@ interface AlteredNodesSummary {
 
 function AlteredNodesSummaryContent(props: any) {
   const { alteredNodes, url } = props;
+
   const changeSummary: AlteredNodesSummary = {
     title: "",
     portals: [],
@@ -123,16 +124,28 @@ function AlteredNodesSummaryContent(props: any) {
           <ul>
             {changeSummary["portals"].map((portal, i) => (
               <li key={i}>
-                <Typography variant="body2">{portal}</Typography>
+                {useStore.getState().canUserEditTeam(portal.split("/")[0]) ? (
+                  <Link href={`../${portal}`} target="_blank">
+                    <Typography variant="body2">{portal}</Typography>
+                  </Link>
+                ) : (
+                  <Typography variant="body2">{portal}</Typography>
+                )}
               </li>
             ))}
           </ul>
         </>
       )}
-      <Typography variant="body2">{`You can review these changes before publishing at ${url.replace(
-        "/preview",
-        "/publish-preview",
-      )}`}</Typography>
+      <Typography variant="body2">
+        {`Review changes before publishing `}
+        <Link
+          href={url.replace("/preview", "/publish-preview")}
+          target="_blank"
+        >
+          {`here`}
+        </Link>
+        {` (opens in a new tab)`}
+      </Typography>
     </Box>
   );
 }
