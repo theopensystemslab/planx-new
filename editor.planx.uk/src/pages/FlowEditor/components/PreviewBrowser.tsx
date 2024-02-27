@@ -7,10 +7,12 @@ import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
@@ -20,6 +22,7 @@ import { AxiosError } from "axios";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
+import Caret from "ui/icons/Caret";
 import Input from "ui/shared/Input";
 
 import Questions from "../../Preview/Questions";
@@ -69,6 +72,31 @@ const DebugConsole = () => {
   );
 };
 
+function PublishChangeItem(props: any) {
+  const { node } = props;
+  let text, data;
+
+  if (node.id === "_root") {
+    text = "Changed _root service by adding, deleting or re-ordering nodes";
+  } else if (node.id === "0") {
+    text = `The entire _root service will be published for the first time`;
+  } else if (node.id && Object.keys(node).length === 1) {
+    text = `Deleted node ${node.id}`;
+  } else if (node.type && node.data) {
+    text = `Added/edited ${TYPES[node.type]}`;
+    data = JSON.stringify(node.data, null, 2);
+  } else {
+    text = `Added/edited ${TYPES[node.type]}`;
+  }
+
+  return (
+    <>
+      <Typography variant="body2">{text}</Typography>
+      {data && <pre style={{ fontSize: ".8em" }}>{data}</pre>}
+    </>
+  );
+}
+
 interface AlteredNodesSummary {
   title: string;
   portals: string[];
@@ -78,6 +106,7 @@ interface AlteredNodesSummary {
 
 function AlteredNodesSummaryContent(props: any) {
   const { alteredNodes, url } = props;
+  const [expandNodes, setExpandNodes] = useState<boolean>(false);
 
   const changeSummary: AlteredNodesSummary = {
     title: "",
@@ -109,17 +138,61 @@ function AlteredNodesSummaryContent(props: any) {
         <Typography variant="body2">{changeSummary["title"]}</Typography>
       )}
       {(changeSummary["updated"] > 0 || changeSummary["deleted"] > 0) && (
-        <ul>
-          <li key={"updated"}>
-            <Typography variant="body2">{`${changeSummary["updated"]} nodes have been updated or added`}</Typography>
-          </li>
-          <li key={"deleted"}>
-            <Typography variant="body2">{`${changeSummary["deleted"]} nodes have been deleted`}</Typography>
-          </li>
-        </ul>
+        <Box pb={2}>
+          <ul>
+            <li key={"updated"}>
+              <Typography variant="body2">{`${changeSummary["updated"]} nodes have been updated or added`}</Typography>
+            </li>
+            <li key={"deleted"}>
+              <Typography variant="body2">{`${changeSummary["deleted"]} nodes have been deleted`}</Typography>
+            </li>
+          </ul>
+          <Box
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginBottom: 2,
+            }}
+          >
+            <Box
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="body2">{`See detailed change log`}</Typography>
+              <Button
+                onClick={() => setExpandNodes((expandNodes) => !expandNodes)}
+                size="small"
+                disableRipple
+              >
+                <Caret
+                  expanded={expandNodes}
+                  color="primary"
+                  titleAccess={
+                    expandNodes ? "Less information" : "More information"
+                  }
+                />
+              </Button>
+            </Box>
+            <Collapse in={expandNodes}>
+              <Box pb={1}>
+                <ul>
+                  {alteredNodes.map((node: any) => (
+                    <li key={node.id}>
+                      <PublishChangeItem node={node} />
+                    </li>
+                  ))}
+                </ul>
+              </Box>
+            </Collapse>
+          </Box>
+        </Box>
       )}
+      <Divider />
       {changeSummary["portals"].length > 0 && (
-        <>
+        <Box pt={2}>
           <Typography variant="body2">{`This includes recently published changes in the following nested services:`}</Typography>
           <ul>
             {changeSummary["portals"].map((portal, i) => (
@@ -134,18 +207,21 @@ function AlteredNodesSummaryContent(props: any) {
               </li>
             ))}
           </ul>
-        </>
+        </Box>
       )}
-      <Typography variant="body2">
-        {`Review these content changes in-service before publishing `}
-        <Link
-          href={url.replace("/preview", "/publish-preview")}
-          target="_blank"
-        >
-          {`here`}
-        </Link>
-        {` (opens in a new tab).`}
-      </Typography>
+      <Divider />
+      <Box pt={2}>
+        <Typography variant="body2">
+          {`Review these content changes in-service before publishing `}
+          <Link
+            href={url.replace("/preview", "/publish-preview")}
+            target="_blank"
+          >
+            {`here`}
+          </Link>
+          {` (opens in a new tab).`}
+        </Typography>
+      </Box>
     </Box>
   );
 }
