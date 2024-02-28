@@ -145,9 +145,7 @@ it("returns the expected draft result for a flow with unpublished external porta
   });
 
   await supertest(app)
-    .get(
-      "/flows/parent-flow-with-external-portal/flatten-data?draft=true",
-    )
+    .get("/flows/parent-flow-with-external-portal/flatten-data?draft=true")
     .expect(200)
     .then((res) => expect(res.body).toEqual(flattenedParentFlow));
 });
