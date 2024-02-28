@@ -62,7 +62,14 @@ const StyledInputBase = styled(InputBase, {
     border: `2px solid ${theme.palette.text.primary}`,
   }),
   ...(format === "data" && {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.grey[800],
+    borderColor: theme.palette.border.input,
+    color: "white",
+    fontFamily: `"Source Code Pro", monospace;`,
+    "& ::placeholder": {
+      color: theme.palette.common.white,
+      opacity: "0.5",
+    },
   }),
   ...(format === "bold" && {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
