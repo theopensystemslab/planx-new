@@ -52,7 +52,7 @@ const fetchSettingsForDraftView = async (
   try {
     const result = await publicClient.query({
       query: gql`
-        query GetUnpublishedData($flowSlug: String!, $teamSlug: String!) {
+        query GetSettingsForDraftView($flowSlug: String!, $teamSlug: String!) {
           flows(
             limit: 1
             where: {
@@ -101,7 +101,7 @@ const fetchSettingsForDraftView = async (
 const fetchDraftFlattenedFlowData = async (
   flowId: string,
 ): Promise<FlowGraph> => {
-  const url = `${process.env.REACT_APP_API_URL}/flows/${flowId}/flatten-data?unpublished=true`;
+  const url = `${process.env.REACT_APP_API_URL}/flows/${flowId}/flatten-data?draft=true`;
   try {
     const { data } = await axios.get<FlowGraph>(url);
     return data;

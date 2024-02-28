@@ -271,8 +271,7 @@ const NavBar: React.FC = () => {
     ],
   );
   const isSaveAndReturnLandingPage =
-    path !== ApplicationPath.SingleSession &&
-    !saveToEmail;
+    path !== ApplicationPath.SingleSession && !saveToEmail;
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
   const { node } = useAnalyticsTracking();
   const isSectionCard = node?.type == TYPES.Section;
@@ -558,14 +557,15 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   ]);
 
   // Editor and custom domains share a path, so we need to rely on previewEnvironment
-  if (previewEnvironment === "editor" && path !== "unpublished") {
+  if (previewEnvironment === "editor" && path !== "draft" && path !== "amber") {
     return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
   }
 
   switch (path) {
     case flowSlug: // Custom domains
     case "preview":
-    case "unpublished":
+    case "amber":
+    case "draft":
     case "pay":
       return <PublicToolbar />;
     default:

@@ -64,9 +64,9 @@ it("returns the expected result for a simple flow without external portals", asy
     });
 });
 
-it("returns the expected result for a simple flow without external portals when the ?unpublished=true query param is set", async () => {
+it("returns the expected result for a simple flow without external portals when the ?draft=true query param is set", async () => {
   await supertest(app)
-    .get("/flows/basic-flow-no-external-portals/flatten-data?unpublished=true")
+    .get("/flows/basic-flow-no-external-portals/flatten-data?draft=true")
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual(mockFlowData);
@@ -124,7 +124,7 @@ it("throws an error for a flow with unpublished external portals", async () => {
     .expect(500);
 });
 
-it("returns the expected draft result for a flow with unpublished external portals when ?unpublished=true query param is set", async () => {
+it("returns the expected draft result for a flow with unpublished external portals when ?draft=true query param is set", async () => {
   queryMock.mockQuery({
     name: "GetFlowData",
     matchOnVariables: true,
@@ -146,7 +146,7 @@ it("returns the expected draft result for a flow with unpublished external porta
 
   await supertest(app)
     .get(
-      "/flows/parent-flow-with-external-portal/flatten-data?unpublished=true",
+      "/flows/parent-flow-with-external-portal/flatten-data?draft=true",
     )
     .expect(200)
     .then((res) => expect(res.body).toEqual(flattenedParentFlow));

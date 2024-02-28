@@ -146,7 +146,7 @@ describe("dataMerged() function", () => {
     ).rejects.toThrow();
   });
 
-  it("flattens any published or unpublished external portal nodes when isDraftData only is set to true", async () => {
+  it("flattens any published or draft external portal nodes when isDraftData only is set to true", async () => {
     queryMock.mockQuery({
       name: "GetFlowData",
       matchOnVariables: true,

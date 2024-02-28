@@ -11,7 +11,7 @@ export const flattenFlowData = z.object({
     flowId: z.string(),
   }),
   query: z.object({
-    unpublished: z
+    draft: z
       .string()
       .optional()
       .transform((val) => val?.toLowerCase() === "true"), // proxy for z.boolean()
@@ -31,7 +31,7 @@ export const flattenFlowDataController: FlattenFlowDataController = async (
   try {
     const { flowId } = res.locals.parsedReq.params;
 
-    if (req.query?.unpublished?.toString().toLowerCase() === "true") {
+    if (req.query?.draft?.toString().toLowerCase() === "true") {
       const draftFlattenedFlowData = await dataMerged(flowId, {}, false, true);
       res.status(200).send(draftFlattenedFlowData);
     } else {

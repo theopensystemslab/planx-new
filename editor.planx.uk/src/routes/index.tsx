@@ -70,8 +70,8 @@ export default isPreviewOnlyDomain
       // "/": redirect("somewhere?"),
     })
   : mount({
-      "/:team/:flow/preview": lazy(() => import("./published")), // loads published flow if exists, or throws Not Found if unpublished
-      "/:team/:flow/amber": lazy(() => import("./preview")), // loads current draft flow and published external portals, or throws Not Found if any external portal is unpublished
+      "/:team/:flow/preview": lazy(() => import("./published")), // loads current published flow if exists, or throws Not Found if unpublished
+      "/:team/:flow/amber": lazy(() => import("./preview")), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
       "/:team/:flow/draft": lazy(() => import("./draft")), // loads current draft flow and draft external portals
       "/:team/:flow/pay": mountPayRoutes(),
       "*": editorRoutes,

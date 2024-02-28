@@ -64,7 +64,10 @@ export const fetchSettingsForPublishedView = async (
   try {
     const result = await publicClient.query({
       query: gql`
-        query GetPreviewData($flowSlug: String!, $teamSlug: String!) {
+        query GetSettingsForPublishedView(
+          $flowSlug: String!
+          $teamSlug: String!
+        ) {
           flows(
             limit: 1
             where: {
@@ -98,7 +101,6 @@ export const fetchSettingsForPublishedView = async (
               data
             }
           }
-
           globalSettings: global_settings {
             footerContent: footer_content
           }
