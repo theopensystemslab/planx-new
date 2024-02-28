@@ -3,10 +3,9 @@ import axios, { AxiosError } from "axios";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
-import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
 import { View } from "react-navi";
-import { getTeamFromDomain, setPath } from "routes/utils";
+import { getTeamFromDomain } from "routes/utils";
 
 import { fetchDataForPublishedView } from "./published";
 
@@ -37,9 +36,7 @@ export const publishedPreviewView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <SaveAndReturnLayout>
-        <View />
-      </SaveAndReturnLayout>
+      <View />
     </PublicLayout>
   );
 };
