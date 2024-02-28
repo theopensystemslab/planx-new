@@ -169,7 +169,7 @@ const dataMerged = async (
   const { slug, team, publishedFlows } = response;
   let { data } = response;
 
-  // only flatten external portals that are published, unless we're loading draftDataOnly on an /unpublished route
+  // only flatten external portals that are published, unless we're loading draftDataOnly
   if (isPortal && !draftDataOnly) {
     if (publishedFlows?.[0]?.data) {
       data = publishedFlows[0].data;
@@ -192,7 +192,7 @@ const dataMerged = async (
       ob[id] = {
         ...node,
         type: ComponentType.InternalPortal,
-        data: { text: slug },
+        data: { text: `${team.slug}/${slug}` },
       };
     }
 
@@ -203,7 +203,7 @@ const dataMerged = async (
         edges: [node.data?.flowId],
       };
 
-      // Recursively merge flow
+      // recursively merge flow
       if (!isMerged) {
         await dataMerged(node.data?.flowId, ob, true, draftDataOnly);
       }
