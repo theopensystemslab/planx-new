@@ -1,6 +1,7 @@
 import { gql } from "graphql-request";
-import airbrake from "../../../airbrake";
 import { $api } from "../../../client";
+import { ServerError } from "../../../errors";
+import { reportError } from "../../../errors/airbrake";
 
 export async function logPaymentStatus({
   sessionId,
@@ -41,22 +42,6 @@ export async function logPaymentStatus({
         context: { govUkResponse },
       });
     }
-  }
-}
-
-// tmp explicit error handling
-export function reportError(report: { error: any; context: object }) {
-  if (airbrake) {
-    airbrake.notify(report);
-    return;
-  }
-  log(report);
-}
-
-// tmp logger
-function log(event: object | string) {
-  if (!process.env.SUPPRESS_LOGS) {
-    console.log(event);
   }
 }
 

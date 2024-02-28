@@ -12,7 +12,7 @@ import { Server } from "http";
 import passport from "passport";
 import helmet from "helmet";
 import { ServerError } from "./errors";
-import airbrake from "./airbrake";
+import { airbrake } from "./errors/airbrake";
 import { apiLimiter } from "./rateLimit";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
