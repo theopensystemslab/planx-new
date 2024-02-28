@@ -5,14 +5,12 @@ import assert from "assert";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors, { CorsOptions } from "cors";
-import express, { ErrorRequestHandler } from "express";
+import express from "express";
 import noir from "pino-noir";
 import pinoLogger from "express-pino-logger";
 import { Server } from "http";
 import passport from "passport";
 import helmet from "helmet";
-import { ServerError } from "./errors";
-import { airbrake } from "./errors/airbrake";
 import { apiLimiter } from "./rateLimit";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
@@ -32,6 +30,12 @@ import payRoutes from "./modules/pay/routes";
 import sendRoutes from "./modules/send/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
+import { ServerError } from "./errors";
+import {
+  airbrakeMiddleware,
+  errorResponder,
+  errorLogger,
+} from "./errors/middleware";
 
 const app = express();
 
@@ -134,6 +138,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: true }));
 
+// Setup Airbrake
+// Must be before all routes
+app.use(airbrakeMiddleware);
+
 // Setup API routes
 app.use(adminRoutes);
 app.use(analyticsRoutes);
@@ -151,31 +159,38 @@ app.use(teamRoutes);
 app.use(userRoutes);
 app.use(webhookRoutes);
 
-const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
-  const { status = 500, message = "Something went wrong" } = (() => {
-    if (
-      airbrake &&
-      (errorObject instanceof Error || errorObject instanceof ServerError)
-    ) {
-      airbrake.notify(errorObject);
-      return {
-        ...errorObject,
-        message: errorObject.message.concat(", this error has been logged"),
-      };
-    } else {
-      console.log(errorObject);
-      return errorObject;
-    }
-  })();
+app.get("/next-error", (_req, _res, next) => {
+  const error = new Error("Error passed to next() in /next-error");
+  next(error);
+});
 
-  res.status(status).send({
-    error: message,
+app.get("/next-server-error", (_req, _res, next) => {
+  const serverError = new ServerError({
+    message: "ServerError passed to next() in /next-server-error",
+    context: {
+      someNextData: "someNextValue",
+    },
   });
-};
+  next(serverError);
+});
+
+app.get("/throw-next-error", (_req, _res, _next) => {
+  throw new Error("Error passed to next() in /next-error");
+});
+
+app.get("/throw-server-error", (_req, _res, _next) => {
+  throw new ServerError({
+    message: "ServerError thrown in /next-server-error",
+    context: {
+      someThrownData: "someThrownValue",
+    },
+  });
+});
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()
-app.use(errorHandler);
+app.use(errorLogger);
+app.use(errorResponder);
 
 const server = new Server(app);
 
