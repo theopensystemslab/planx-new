@@ -127,13 +127,7 @@ const addDesignatedVariable = (responseObject) => {
     designated: { value: false },
   };
 
-  const subVariables = [
-    "conservationArea",
-    "AONB",
-    "nationalPark",
-    "WHS",
-    "SPA",
-  ];
+  const subVariables = ["conservationArea", "AONB", "nationalPark", "WHS"];
 
   // If any of the subvariables are true, then set "designated" to true
   subVariables.forEach((s) => {

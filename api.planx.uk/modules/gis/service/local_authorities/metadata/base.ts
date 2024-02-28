@@ -48,12 +48,12 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     "digital-land-datasets": ["conservation-area"],
     category: "Heritage and conservation",
   },
-  "designated.greenBelt": {
+  greenBelt: {
     active: true,
     neg: "is not in a Green Belt",
     pos: "is in a Green Belt",
     "digital-land-datasets": ["green-belt"],
-    category: "Heritage and conservation",
+    category: "General policy",
   },
   "designated.nationalPark": {
     active: true,
@@ -68,13 +68,6 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     pos: "is in a Broad",
     "digital-land-datasets": ["national-park"],
     "digital-land-entities": [520007], // https://www.planning.data.gov.uk/entity/520007
-    category: "Heritage and conservation",
-  },
-  "designated.SPA": {
-    active: true,
-    neg: "is not in a Special Protection Area (SPA)",
-    pos: "is in a Special Protection Area (SPA)",
-    "digital-land-datasets": ["special-protection-area"],
     category: "Heritage and conservation",
   },
   "designated.WHS": {
@@ -134,6 +127,13 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     neg: "is not in a Special Area of Conservation (SAC)",
     pos: "is in a Special Area of Conservation (SAC)",
     "digital-land-datasets": ["special-area-of-conservation"],
+    category: "Ecology",
+  },
+  "nature.SPA": {
+    active: true,
+    neg: "is not in a Special Protection Area (SPA)",
+    pos: "is in a Special Protection Area (SPA)",
+    "digital-land-datasets": ["special-protection-area"],
     category: "Ecology",
   },
   "nature.SSSI": {
