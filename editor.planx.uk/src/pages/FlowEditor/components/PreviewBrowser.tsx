@@ -72,7 +72,7 @@ const DebugConsole = () => {
   );
 };
 
-function PublishChangeItem(props: any) {
+function AlteredNodeItem(props: any) {
   const { node } = props;
   let text, data;
 
@@ -183,7 +183,7 @@ function AlteredNodesSummaryContent(props: any) {
                 <ul>
                   {alteredNodes.map((node: any) => (
                     <li key={node.id}>
-                      <PublishChangeItem node={node} />
+                      <AlteredNodeItem node={node} />
                     </li>
                   ))}
                 </ul>
