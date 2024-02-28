@@ -329,9 +329,9 @@ const PreviewBrowser: React.FC<{
           )}
 
           {isPlatformAdmin && (
-            <Tooltip arrow title="Open unpublished service">
+            <Tooltip arrow title="Open draft service">
               <Link
-                href={props.url.replace("/preview", "/unpublished")}
+                href={props.url.replace("/preview", "/draft")}
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"
@@ -341,9 +341,9 @@ const PreviewBrowser: React.FC<{
             </Tooltip>
           )}
 
-          <Tooltip arrow title="Open preview of published service">
+          <Tooltip arrow title="Open preview of changes to publish">
             <Link
-              href={props.url.replace("/preview", "/publish-preview")}
+              href={props.url.replace("/preview", "/amber")}
               target="_blank"
               rel="noopener noreferrer"
               color="inherit"

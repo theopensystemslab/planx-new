@@ -7,24 +7,24 @@ import React from "react";
 import { View } from "react-navi";
 import { getTeamFromDomain } from "routes/utils";
 
-import { fetchDataForPublishedView } from "./published";
+import { fetchSettingsForPublishedView } from "./published";
 
 /**
- * View wrapper for /publish-preview
- * Fetches all necessary data, and sets up Save & Return layout
+ * View wrapper for /amber (in future /preview)
+ * Does not display Save & Return layout as progress is not persisted on this route
  */
-export const publishedPreviewView = async (req: NaviRequest) => {
+export const previewView = async (req: NaviRequest) => {
   const flowSlug = req.params.flow.split(",")[0];
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
 
-  // /publish-preview uses the same theme & global settings as /preview
-  const data = await fetchDataForPublishedView(flowSlug, teamSlug);
+  // /amber uses the same theme & global settings as /published
+  const data = await fetchSettingsForPublishedView(flowSlug, teamSlug);
   const flow = data.flows[0];
   if (!flow)
     throw new NotFoundError(`Flow ${flowSlug} not found for ${teamSlug}`);
 
-  // /publish-preview fetches draft data of this flow and the latest published version of each external portal
+  // /amber fetches draft data of this flow and the latest published version of each external portal
   const flowData = await fetchFlattenedFlowData(flow.id);
 
   const state = useStore.getState();
@@ -50,7 +50,7 @@ const fetchFlattenedFlowData = async (flowId: string): Promise<FlowGraph> => {
     console.log(error);
     if (error instanceof AxiosError) {
       alert(
-        `Cannot open /publish-preview, navigate back to the graph to keep editing. \n\n${error.response?.data?.error}`,
+        `Cannot open this view, navigate back to the graph to keep editing. \n\n${error.response?.data?.error}`,
       );
     }
     throw new NotFoundError();

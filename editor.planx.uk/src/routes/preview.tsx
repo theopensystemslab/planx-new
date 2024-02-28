@@ -3,29 +3,18 @@ import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 
-import { getTeamFromDomain, validateTeamRoute } from "./utils";
-import { publishedView } from "./views/published";
+import { previewView } from "./views/preview";
 
 const routes = compose(
-  withData(async (req) => {
-    const externalDomainTeam = await getTeamFromDomain(
-      window.location.hostname,
-    );
+  withData(async (req) => ({
+    mountpath: req.mountpath,
+  })),
 
-    return {
-      mountpath: req.mountpath,
-      isPreviewOnlyDomain: Boolean(externalDomainTeam),
-    };
-  }),
-
-  withView(async (req) => {
-    await validateTeamRoute(req);
-    return await publishedView(req);
-  }),
+  withView(async (req) => await previewView(req)),
 
   mount({
     "/": route({
-      view: <Questions previewEnvironment="standalone" />,
+      view: <Questions previewEnvironment="editor" />,
     }),
     "/pages/:page": map((req) => {
       return route({

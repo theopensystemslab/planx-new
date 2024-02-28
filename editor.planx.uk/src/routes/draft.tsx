@@ -3,14 +3,14 @@ import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 
-import { publishedPreviewView } from "./views/publishedPreview";
+import { draftView } from "./views/draft";
 
 const routes = compose(
   withData(async (req) => ({
     mountpath: req.mountpath,
   })),
 
-  withView(async (req) => await publishedPreviewView(req)),
+  withView(async (req) => await draftView(req)),
 
   mount({
     "/": route({

@@ -11,26 +11,25 @@ import { Flow, GlobalSettings } from "types";
 
 import { getTeamFromDomain } from "../utils";
 
-interface UnpublishedViewData {
+interface DraftSettings {
   flows: Flow[];
   globalSettings: GlobalSettings[];
 }
 
 /**
- * View wrapper for /unpublished routes
+ * View wrapper for /draft route
  * Does not display Save & Return layout as progress is not persisted on this route
  */
-export const unpublishedView = async (req: NaviRequest) => {
+export const draftView = async (req: NaviRequest) => {
   const flowSlug = req.params.flow.split(",")[0];
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
 
-  const data = await fetchDataForUnpublishedView(flowSlug, teamSlug);
+  const data = await fetchSettingsForDraftView(flowSlug, teamSlug);
   const flow = data.flows[0];
   if (!flow) throw new NotFoundError();
 
-  // /unpublished fetches draft data (aka unpublished) of this flow and each external portal
-  const flowData = await fetchUnpublishedFlattenedFlowData(flow.id);
+  const flowData = await fetchDraftFlattenedFlowData(flow.id);
 
   const state = useStore.getState();
   state.setFlow({ id: flow.id, flow: flowData, flowSlug });
@@ -46,10 +45,10 @@ export const unpublishedView = async (req: NaviRequest) => {
   );
 };
 
-const fetchDataForUnpublishedView = async (
+const fetchSettingsForDraftView = async (
   flowSlug: string,
   teamSlug: string,
-): Promise<UnpublishedViewData> => {
+): Promise<DraftSettings> => {
   try {
     const result = await publicClient.query({
       query: gql`
@@ -82,7 +81,6 @@ const fetchDataForUnpublishedView = async (
             settings
             slug
           }
-
           globalSettings: global_settings {
             footerContent: footer_content
           }
@@ -100,7 +98,7 @@ const fetchDataForUnpublishedView = async (
   }
 };
 
-const fetchUnpublishedFlattenedFlowData = async (
+const fetchDraftFlattenedFlowData = async (
   flowId: string,
 ): Promise<FlowGraph> => {
   const url = `${process.env.REACT_APP_API_URL}/flows/${flowId}/flatten-data?unpublished=true`;
