@@ -18,6 +18,7 @@ function getEnvForAllowedHosts(host: string) {
     case "planningservices.stalbans.gov.uk":
     case "planningservices.barnet.gov.uk":
     case "planningservices.tewkesbury.gov.uk":
+    case "planningservices.westberks.gov.uk":
     case "editor.planx.uk":
       return "production";
 
