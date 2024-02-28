@@ -135,7 +135,9 @@ function AlteredNodesSummaryContent(props: any) {
   return (
     <Box pb={2}>
       {changeSummary["title"] && (
-        <Typography variant="body2">{changeSummary["title"]}</Typography>
+        <Typography variant="body2" pb={2}>
+          {changeSummary["title"]}
+        </Typography>
       )}
       {(changeSummary["updated"] > 0 || changeSummary["deleted"] > 0) && (
         <Box pb={2}>
@@ -161,7 +163,7 @@ function AlteredNodesSummaryContent(props: any) {
                 alignItems: "center",
               }}
             >
-              <Typography variant="body2">{`See detailed change log`}</Typography>
+              <Typography variant="body2">{`See detailed changelog `}</Typography>
               <Button
                 onClick={() => setExpandNodes((expandNodes) => !expandNodes)}
                 size="small"
