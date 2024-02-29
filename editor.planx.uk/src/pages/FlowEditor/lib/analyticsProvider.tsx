@@ -27,7 +27,7 @@ const ALLOW_LIST = [
   "drawBoundary.action",
   "user.role",
   "property.constraints.planning",
-] as const;
+];
 
 export type HelpClickMetadata = Record<string, string>;
 type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
@@ -456,10 +456,13 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (currentNodeId) track(currentNodeId, type, id);
   }
 
-  async function updateLastVisibleNodeLogWithAllowListAnswers(nodeId: string) {
+  async function updateLastVisibleNodeLogWithAllowListAnswers(
+    nodeId: string,
+    breadcrumb: Store.userData,
+  ) {
     if (shouldSkipTracking()) return;
 
-    const allowListAnswers = getAllowListAnswers(nodeId);
+    const allowListAnswers = getAllowListAnswers(breadcrumb);
     if (!allowListAnswers) return;
 
     await publicClient.mutate({
@@ -487,17 +490,19 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }
 
-  function getAllowListAnswers(nodeId: string) {
-    const { data } = flow[nodeId];
-    const nodeFn = data?.fn || data?.val;
-    if (nodeFn && ALLOW_LIST.includes(nodeFn)) {
-      const answerIds = breadcrumbs[nodeId]?.answers;
-      const answerValues = answerIds?.map((answerId) => {
-        return flow[answerId]?.data?.val;
-      });
-      const filteredAnswers = answerValues?.filter(Boolean);
-      return filteredAnswers;
-    }
+  function getAllowListAnswers(
+    breadcrumb: Store.userData,
+  ): Record<string, any>[] | undefined {
+    const dataSetByNode = breadcrumb.data;
+    if (!dataSetByNode) return;
+
+    const answerValues = Object.entries(dataSetByNode)
+      .filter(([key, value]) => ALLOW_LIST.includes(key) && Boolean(value))
+      .map(([key, value]) => ({ [key]: value }));
+
+    if (!answerValues.length) return;
+
+    return answerValues;
   }
 
   function getNodeMetadata(node: Store.node, nodeId: string) {
@@ -593,7 +598,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       if (breadcrumb.auto) {
         track(breadcrumbKey);
       } else {
-        updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey);
+        updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey, breadcrumb);
       }
     });
   }
