@@ -17,6 +17,10 @@ select
 	metadata ->> 'change' as change_metadata,
 	metadata ->> 'back' as back_metadata,
 	metadata ->> 'selectedUrls' as selected_urls,
+	metadata ->> 'flag' as result_flag,
+	metadata -> 'flagSet' as result_flagset,
+	metadata -> 'displayText' ->> 'heading' as result_heading,
+	metadata -> 'result' ->> 'description' as result_description,
 	case
 		when has_clicked_help then metadata
 		else null
