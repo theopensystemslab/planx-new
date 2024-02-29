@@ -9,7 +9,7 @@ export interface FlowData {
   data: Flow["data"];
   team_id: number;
   team: { slug: string };
-  publishedFlows: { data: Flow["data"] }[] | [];
+  publishedFlows: { data: Flow["data"]; id: number }[] | [];
 }
 
 // Get a flow's data (unflattened, without external portal nodes)
@@ -29,6 +29,7 @@ const getFlowData = async (id: string): Promise<FlowData> => {
             order_by: { created_at: desc }
           ) {
             data
+            id
           }
         }
       }
@@ -125,6 +126,7 @@ interface PublishedFlows {
     publishedFlows: {
       // TODO: use FlowGraph from planx-core here
       data: Flow["data"];
+      id: number;
     }[];
   } | null;
 }
@@ -153,6 +155,29 @@ const getMostRecentPublishedFlow = async (
   return mostRecent;
 };
 
+const getMostRecentPublishedFlowVersion = async (
+  id: string,
+): Promise<number | undefined> => {
+  const { flow } = await $public.client.request<PublishedFlows>(
+    gql`
+      query GetMostRecentPublishedFlowVersion($id: uuid!) {
+        flow: flows_by_pk(id: $id) {
+          publishedFlows: published_flows(
+            limit: 1
+            order_by: { created_at: desc }
+          ) {
+            id
+          }
+        }
+      }
+    `,
+    { id },
+  );
+
+  const mostRecent = flow?.publishedFlows?.[0]?.id;
+  return mostRecent;
+};
+
 /**
  * Flatten a flow to create a single JSON representation of the main flow data and any external portals
  *   By default, requires that any external portals are published and flattens their latest published version
@@ -170,9 +195,11 @@ const dataMerged = async (
   let { data } = response;
 
   // only flatten external portals that are published, unless we're loading draftDataOnly
+  let publishedFlowId;
   if (isPortal && !draftDataOnly) {
     if (publishedFlows?.[0]?.data) {
       data = publishedFlows[0].data;
+      publishedFlowId = publishedFlows[0].id;
     } else {
       throw new Error(
         `Publish flow ${team.slug}/${slug} before proceeding. All flows used as external portals must be published.`,
@@ -192,7 +219,10 @@ const dataMerged = async (
       ob[id] = {
         ...node,
         type: ComponentType.InternalPortal,
-        data: { text: `${team.slug}/${slug}` },
+        data: {
+          text: `${team.slug}/${slug}`,
+          publishedFlowId: publishedFlowId,
+        },
       };
     }
 
@@ -211,6 +241,19 @@ const dataMerged = async (
 
     // merge all other nodes
     else ob[nodeId] = node;
+  }
+
+  // for every external portal that has been merged, confirm its' latest version was merged. If not, overwrite older snapshot with newest version
+  if (!draftDataOnly) {
+    for (const [nodeId, node] of Object.entries(ob)) {
+      if (node.data?.publishedFlowId) {
+        const mostRecentPublishedFlowId =
+          await getMostRecentPublishedFlowVersion(nodeId);
+        if (mostRecentPublishedFlowId !== node.data?.publishedFlowId) {
+          await dataMerged(nodeId, ob, true, draftDataOnly);
+        }
+      }
+    }
   }
 
   return ob as FlowGraph;
@@ -288,6 +331,7 @@ const getFormattedEnvironment = (): string => {
 export {
   getFlowData,
   getMostRecentPublishedFlow,
+  getMostRecentPublishedFlowVersion,
   dataMerged,
   getChildren,
   makeUniqueFlow,
