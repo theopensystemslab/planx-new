@@ -11,6 +11,8 @@ const ALLOW_LIST = [
   "application.declaration.connection",
   "property.type",
   "drawBoundary.action",
+  "user.role",
+  "property.constraints.planning",
 ];
 
 export const getAnalyzeSessionOperations = (): Operation[] => [

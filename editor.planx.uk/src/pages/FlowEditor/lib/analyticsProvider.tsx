@@ -25,6 +25,8 @@ const ALLOW_LIST = [
   "application.declaration.connection",
   "property.type",
   "drawBoundary.action",
+  "user.role",
+  "property.constraints.planning",
 ] as const;
 
 export type HelpClickMetadata = Record<string, string>;
