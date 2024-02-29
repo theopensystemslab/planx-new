@@ -74,5 +74,8 @@ export default isPreviewOnlyDomain
       "/:team/:flow/amber": lazy(() => import("./preview")), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
       "/:team/:flow/draft": lazy(() => import("./draft")), // loads current draft flow and draft external portals
       "/:team/:flow/pay": mountPayRoutes(),
+      "/:team/:flow/unpublished": map(async (req) =>
+        redirect(`/${req.params.team}/${req.params.flow}/amber`),
+      ),
       "*": editorRoutes,
     });
