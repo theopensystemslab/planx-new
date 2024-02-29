@@ -4,7 +4,7 @@ import { userEvent, within } from "@storybook/testing-library";
 import FeedbackForm from "./FeedbackForm";
 
 const meta: Meta<typeof FeedbackForm> = {
-  title: "Components/FeedbackForm",
+  title: "Design System/Molecules/FeedbackForm",
   component: FeedbackForm,
 };
 
