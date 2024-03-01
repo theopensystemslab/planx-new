@@ -114,8 +114,8 @@ dependencies:
     specifier: ^8.0.0
     version: 8.0.0
   passport:
-    specifier: ^0.5.3
-    version: 0.5.3
+    specifier: ^0.7.0
+    version: 0.7.0
   passport-google-oauth20:
     specifier: ^2.0.0
     version: 2.0.0
@@ -6563,12 +6563,13 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: false
 
-  /passport@0.5.3:
-    resolution: {integrity: sha512-gGc+70h4gGdBWNsR3FuV3byLDY6KBTJAIExGFXTpQaYfbbcHCBlRRKx7RBQSpqEqc5Hh2qVzRs7ssvSfOpkUEA==}
+  /passport@0.7.0:
+    resolution: {integrity: sha512-cPLl+qZpSc+ireUvt+IzqbED1cHHkDoVYMo30jbJIdOOjQ1MQYZBPiNvmi8UM6lJuOpTPXJGZQk0DtC4y61MYQ==}
     engines: {node: '>= 0.4.0'}
     dependencies:
       passport-strategy: 1.0.0
       pause: 0.0.1
+      utils-merge: 1.0.1
     dev: false
 
   /path-exists@4.0.0:
@@ -8378,7 +8379,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/296592c}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.3(react@18.2.0)
