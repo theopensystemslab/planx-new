@@ -61,7 +61,7 @@
     "navi": "^0.15.0",
     "postcode": "^5.1.0",
     "prop-types": "^15.8.1",
-    "ramda": "^0.28.0",
+    "ramda": "^0.29.1",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-color": "^2.19.3",
