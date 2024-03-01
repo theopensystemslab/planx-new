@@ -12,12 +12,14 @@ export interface FindProperty extends MoreInformation {
 export const parseFindProperty = (
   data: Record<string, any> | undefined,
 ): FindProperty => ({
-  title: data?.title || "",
+  title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
   allowNewAddresses: data?.allowNewAddresses || false,
-  newAddressTitle: data?.newAddressTitle || "",
-  newAddressDescription: data?.newAddressDescription || "",
-  newAddressDescriptionLabel: data?.newAddressDescriptionLabel || "",
+  newAddressTitle: data?.newAddressTitle || DEFAULT_NEW_ADDRESS_TITLE,
+  newAddressDescription:
+    data?.newAddressDescription || DEFAULT_NEW_ADDRESS_DESCRIPTION,
+  newAddressDescriptionLabel:
+    data?.newAddressDescriptionLabel || DEFAULT_NEW_ADDRESS_LABEL,
   ...parseMoreInformation(data),
 });
 
@@ -54,5 +56,8 @@ export interface SiteAddress extends MinimumSiteAddress {
 }
 
 export const DEFAULT_TITLE = "Find the property" as const;
-export const DEFAULT_NEW_ADDRESS_TITLE = "Propose a new address" as const;
+export const DEFAULT_NEW_ADDRESS_TITLE =
+  "Click or tap at where the property is on the map and name it below" as const;
+export const DEFAULT_NEW_ADDRESS_DESCRIPTION =
+  "You will need to select a location and provide a name to continue" as const;
 export const DEFAULT_NEW_ADDRESS_LABEL = "Name the site" as const;
