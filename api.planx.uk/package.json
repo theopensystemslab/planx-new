@@ -11,7 +11,7 @@
     "axios": "^1.6.5",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
-    "cookie-session": "^1.4.0",
+    "cookie-session": "^2.1.0",
     "copyfiles": "^2.4.1",
     "cors": "^2.8.5",
     "csv-stringify": "^6.4.5",
