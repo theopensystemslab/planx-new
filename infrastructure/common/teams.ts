@@ -37,6 +37,10 @@ export const teams: Team[] = [
   {
     name: "Gloucester",
     govPayStagingOnly: true
+  },
+  {
+    name: "Camden",
+    govPayStagingOnly: true
   }
 ];
 
