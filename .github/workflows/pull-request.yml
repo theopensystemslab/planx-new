@@ -79,7 +79,7 @@ jobs:
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v2.4.0
+      - uses: pnpm/action-setup@v3.0.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -122,7 +122,7 @@ jobs:
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
-      - uses: pnpm/action-setup@v2.4.0
+      - uses: pnpm/action-setup@v3.0.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -158,7 +158,7 @@ jobs:
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
           fail: true
-      - uses: pnpm/action-setup@v2.4.0
+      - uses: pnpm/action-setup@v3.0.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -188,7 +188,7 @@ jobs:
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
-      - uses: pnpm/action-setup@v2.4.0
+      - uses: pnpm/action-setup@v3.0.0
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
           version: ${{ vars.PNPM_VERSION }}
@@ -241,7 +241,7 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - uses: pnpm/action-setup@v2.4.0
+      - uses: pnpm/action-setup@v3.0.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
@@ -441,7 +441,7 @@ jobs:
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
         run: ./scripts/pull-secrets.sh
       - name: Setup PNPM
-        uses: pnpm/action-setup@v2.4.0
+        uses: pnpm/action-setup@v3.0.0
         with:
           version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node
