@@ -18,7 +18,7 @@
     "@tiptap/extension-bold": "^2.0.3",
     "@tiptap/extension-bubble-menu": "^2.1.13",
     "@tiptap/extension-bullet-list": "^2.2.1",
-    "@tiptap/extension-document": "^2.0.3",
+    "@tiptap/extension-document": "^2.2.4",
     "@tiptap/extension-hard-break": "^2.1.13",
     "@tiptap/extension-heading": "^2.0.3",
     "@tiptap/extension-history": "^2.0.3",
