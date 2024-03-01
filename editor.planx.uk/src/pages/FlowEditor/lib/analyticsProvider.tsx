@@ -515,11 +515,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const answerIds = breadcrumbs[nodeId]?.answers;
     if (!answerIds) return [];
 
-    const answerValues = answerIds.map((answerId) => ({
-      [nodeFn]: flow[answerId]?.data?.val,
-    }));
+    const answerValues = answerIds.map((answerId) => flow[answerId]?.data?.val);
 
-    return answerValues;
+    // Match data structure of `allow_list_answers` column
+    const answers = [ {[nodeFn]: answerValues } ];
+
+    return answers;
   }
 
   /**
