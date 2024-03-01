@@ -259,6 +259,7 @@ const dataMerged = async (
   }
 
   // for every external portal that has been merged, confirm its' latest version was merged. If not, overwrite older snapshot with newest version
+  //   ** this is a final/separate step because older snapshots can be nested in _already_ flattened data (eg not picked up as ComponentType.ExternalPortal above)
   if (!draftDataOnly) {
     for (const [nodeId, node] of Object.entries(ob).filter(
       ([_nodeId, node]) => node.data?.publishedFlowId,
