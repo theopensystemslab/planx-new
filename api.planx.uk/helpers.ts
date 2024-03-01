@@ -9,7 +9,15 @@ export interface FlowData {
   data: Flow["data"];
   team_id: number;
   team: { slug: string };
-  publishedFlows: { data: Flow["data"] }[] | [];
+  publishedFlows:
+    | {
+        data: Flow["data"];
+        id: number;
+        created_at: string;
+        summary: string;
+        publisher_id: number;
+      }[]
+    | [];
 }
 
 // Get a flow's data (unflattened, without external portal nodes)
@@ -29,6 +37,10 @@ const getFlowData = async (id: string): Promise<FlowData> => {
             order_by: { created_at: desc }
           ) {
             data
+            id
+            created_at
+            summary
+            publisher_id
           }
         }
       }
@@ -125,6 +137,7 @@ interface PublishedFlows {
     publishedFlows: {
       // TODO: use FlowGraph from planx-core here
       data: Flow["data"];
+      id: number;
     }[];
   } | null;
 }
@@ -150,6 +163,29 @@ const getMostRecentPublishedFlow = async (
   );
 
   const mostRecent = flow?.publishedFlows?.[0]?.data;
+  return mostRecent;
+};
+
+const getMostRecentPublishedFlowVersion = async (
+  id: string,
+): Promise<number | undefined> => {
+  const { flow } = await $public.client.request<PublishedFlows>(
+    gql`
+      query GetMostRecentPublishedFlowVersion($id: uuid!) {
+        flow: flows_by_pk(id: $id) {
+          publishedFlows: published_flows(
+            limit: 1
+            order_by: { created_at: desc }
+          ) {
+            id
+          }
+        }
+      }
+    `,
+    { id },
+  );
+
+  const mostRecent = flow?.publishedFlows?.[0]?.id;
   return mostRecent;
 };
 
@@ -180,23 +216,32 @@ const dataMerged = async (
     }
   }
 
-  // recursively get and flatten internal portals & external portals
+  // recursively get and flatten external portals
   for (const [nodeId, node] of Object.entries(data)) {
     const isExternalPortalRoot =
       nodeId === "_root" && Object.keys(ob).length > 0;
     const isExternalPortal = node.type === ComponentType.ExternalPortal;
     const isMerged = ob[node.data?.flowId];
 
-    // merge external portal _root as a new node in the graph
+    // merge external portal _root node as a new node in the graph using its' flowId as nodeId
     if (isExternalPortalRoot) {
       ob[id] = {
-        ...node,
+        ...node, // includes _root edges for navigation to all child nodes in this portal
         type: ComponentType.InternalPortal,
-        data: { text: `${team.slug}/${slug}` },
+        data: {
+          text: `${team.slug}/${slug}`,
+          // add extra metadata about latest published version when applicable
+          ...(!draftDataOnly && {
+            publishedFlowId: publishedFlows?.[0]?.id,
+            publishedAt: publishedFlows?.[0]?.created_at,
+            publishedBy: publishedFlows?.[0]?.publisher_id,
+            summary: publishedFlows?.[0]?.summary,
+          }),
+        },
       };
     }
 
-    // merge external portal as an internal portal type node, with reference to flowId
+    // merge external portal type node as an internal portal type node, with an edge pointing to flowId (to navigate to the externalPortalRoot set above)
     else if (isExternalPortal) {
       ob[nodeId] = {
         type: ComponentType.InternalPortal,
@@ -211,6 +256,20 @@ const dataMerged = async (
 
     // merge all other nodes
     else ob[nodeId] = node;
+  }
+
+  // for every external portal that has been merged, confirm its' latest version was merged. If not, overwrite older snapshot with newest version
+  //   ** this is a final/separate step because older snapshots can be nested in _already_ flattened data (eg not picked up as ComponentType.ExternalPortal above)
+  if (!draftDataOnly) {
+    for (const [nodeId, node] of Object.entries(ob).filter(
+      ([_nodeId, node]) => node.data?.publishedFlowId,
+    )) {
+      const mostRecentPublishedFlowId =
+        await getMostRecentPublishedFlowVersion(nodeId);
+      if (mostRecentPublishedFlowId !== node.data?.publishedFlowId) {
+        await dataMerged(nodeId, ob, true, draftDataOnly);
+      }
+    }
   }
 
   return ob as FlowGraph;
@@ -288,6 +347,7 @@ const getFormattedEnvironment = (): string => {
 export {
   getFlowData,
   getMostRecentPublishedFlow,
+  getMostRecentPublishedFlowVersion,
   dataMerged,
   getChildren,
   makeUniqueFlow,

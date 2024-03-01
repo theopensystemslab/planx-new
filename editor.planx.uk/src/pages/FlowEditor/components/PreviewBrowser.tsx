@@ -14,6 +14,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -99,7 +102,12 @@ function AlteredNodeItem(props: any) {
 
 interface AlteredNodesSummary {
   title: string;
-  portals: string[];
+  portals: {
+    text: string;
+    summary: string;
+    publishedBy: number;
+    publishedAt: string;
+  }[];
   updated: number;
   deleted: number;
 }
@@ -123,7 +131,7 @@ function AlteredNodesSummaryContent(props: any) {
       changeSummary["deleted"] += 1;
     } else if (node.type === TYPES.InternalPortal) {
       if (node.data?.text?.includes("/")) {
-        changeSummary["portals"].push(node.data?.text);
+        changeSummary["portals"].push(node.data);
       }
     } else if (node.type) {
       changeSummary["updated"] += 1;
@@ -196,19 +204,39 @@ function AlteredNodesSummaryContent(props: any) {
       {changeSummary["portals"].length > 0 && (
         <Box pt={2}>
           <Typography variant="body2">{`This includes recently published changes in the following nested services:`}</Typography>
-          <ul>
+          <List sx={{ listStyleType: "disc", marginLeft: 4 }}>
             {changeSummary["portals"].map((portal, i) => (
-              <li key={i}>
-                {useStore.getState().canUserEditTeam(portal.split("/")[0]) ? (
-                  <Link href={`../${portal}`} target="_blank">
-                    <Typography variant="body2">{portal}</Typography>
-                  </Link>
-                ) : (
-                  <Typography variant="body2">{portal}</Typography>
-                )}
-              </li>
+              <ListItem key={i} disablePadding sx={{ display: "list-item" }}>
+                <ListItemText
+                  primary={
+                    useStore
+                      .getState()
+                      .canUserEditTeam(portal.text.split("/")[0]) ? (
+                      <Link href={`../${portal.text}`} target="_blank">
+                        <Typography variant="body2">{portal.text}</Typography>
+                      </Link>
+                    ) : (
+                      <Typography variant="body2">{portal.text}</Typography>
+                    )
+                  }
+                  secondary={
+                    <>
+                      <Typography variant="body2" fontSize="small">
+                        {`Last published ${formatDistanceToNow(
+                          new Date(portal.publishedAt),
+                        )} ago by ${portal.publishedBy}`}
+                      </Typography>
+                      {portal.summary && (
+                        <Typography variant="body2" fontSize="small">
+                          {portal.summary}
+                        </Typography>
+                      )}
+                    </>
+                  }
+                />
+              </ListItem>
             ))}
-          </ul>
+          </List>
         </Box>
       )}
       <Divider />
