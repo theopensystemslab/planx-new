@@ -17,12 +17,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import type { FindProperty } from "./model";
-import {
-  DEFAULT_NEW_ADDRESS_LABEL,
-  DEFAULT_NEW_ADDRESS_TITLE,
-  DEFAULT_TITLE,
-  parseFindProperty,
-} from "./model";
+import { parseFindProperty } from "./model";
 
 export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 
@@ -48,7 +43,7 @@ function FindPropertyComponent(props: Props) {
           <InputRow>
             <Input
               format="large"
-              placeholder={DEFAULT_TITLE}
+              placeholder="Title"
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
@@ -82,7 +77,7 @@ function FindPropertyComponent(props: Props) {
               <InputRow>
                 <Input
                   format="large"
-                  placeholder={DEFAULT_NEW_ADDRESS_TITLE}
+                  placeholder="Title"
                   name="newAddressTitle"
                   value={formik.values.newAddressTitle}
                   onChange={formik.handleChange}
@@ -101,7 +96,7 @@ function FindPropertyComponent(props: Props) {
                   <InputRowItem width="100%">
                     <Input
                       id="new-address-description-label"
-                      placeholder={DEFAULT_NEW_ADDRESS_LABEL}
+                      placeholder="Label"
                       name="newAddressDescriptionLabel"
                       value={formik.values.newAddressDescriptionLabel}
                       onChange={formik.handleChange}

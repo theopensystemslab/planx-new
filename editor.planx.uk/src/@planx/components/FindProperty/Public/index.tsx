@@ -16,12 +16,7 @@ import ExternalPlanningSiteDialog, {
   DialogPurpose,
 } from "ui/public/ExternalPlanningSiteDialog";
 
-import {
-  DEFAULT_NEW_ADDRESS_TITLE,
-  DEFAULT_TITLE,
-  FindProperty,
-  SiteAddress,
-} from "../model";
+import { FindProperty, SiteAddress } from "../model";
 import PickOSAddress from "./Autocomplete";
 import PlotNewAddress from "./Map";
 
@@ -133,7 +128,7 @@ function Component(props: Props) {
       return (
         <>
           <QuestionHeader
-            title={props.newAddressTitle || DEFAULT_NEW_ADDRESS_TITLE}
+            title={props.newAddressTitle}
             description={props.newAddressDescription || ""}
           />
           <PlotNewAddress
@@ -155,7 +150,7 @@ function Component(props: Props) {
       return (
         <>
           <QuestionHeader
-            title={props.title || DEFAULT_TITLE}
+            title={props.title}
             description={props.description || ""}
           />
           <PickOSAddress
