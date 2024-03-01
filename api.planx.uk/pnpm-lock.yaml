@@ -135,8 +135,8 @@ dependencies:
     specifier: ^5.0.0
     version: 5.0.0(express@4.18.2)
   type-fest:
-    specifier: ^4.6.0
-    version: 4.6.0
+    specifier: ^4.10.3
+    version: 4.10.3
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -7949,11 +7949,6 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /type-fest@4.6.0:
-    resolution: {integrity: sha512-rLjWJzQFOq4xw7MgJrCZ6T1jIOvvYElXT12r+y0CC6u67hegDHaxcPqb2fZHOGlqxugGQPNB1EnTezjBetkwkw==}
-    engines: {node: '>=16'}
-    dev: false
-
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -8378,7 +8373,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/296592c}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.3(react@18.2.0)
