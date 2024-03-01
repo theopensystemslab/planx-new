@@ -94,7 +94,7 @@
   "devDependencies": {
     "@babel/core": "^7.22.5",
     "@babel/plugin-proposal-logical-assignment-operators": "^7.20.7",
-    "@babel/plugin-syntax-flow": "^7.22.5",
+    "@babel/plugin-syntax-flow": "^7.23.3",
     "@babel/plugin-transform-react-jsx": "^7.22.5",
     "@babel/preset-env": "^7.22.6",
     "@babel/preset-react": "^7.22.5",
