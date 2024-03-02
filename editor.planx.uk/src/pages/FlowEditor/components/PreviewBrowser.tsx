@@ -242,11 +242,8 @@ function AlteredNodesSummaryContent(props: any) {
       <Divider />
       <Box pt={2}>
         <Typography variant="body2">
-          {`Review these content changes in-service before publishing `}
-          <Link
-            href={url.replace("/preview", "/publish-preview")}
-            target="_blank"
-          >
+          {`Preview these content changes in-service before publishing `}
+          <Link href={url.replace("/published", "/amber")} target="_blank">
             {`here`}
           </Link>
           {` (opens in a new tab).`}
@@ -317,7 +314,7 @@ const PreviewBrowser: React.FC<{
           <input
             type="text"
             disabled
-            value={props.url.replace("/preview", "/publish-preview")}
+            value={props.url.replace("/published", "/amber")}
           />
 
           <Tooltip arrow title="Refresh preview">
@@ -359,7 +356,7 @@ const PreviewBrowser: React.FC<{
           {isPlatformAdmin && (
             <Tooltip arrow title="Open draft service">
               <Link
-                href={props.url.replace("/preview", "/draft")}
+                href={props.url.replace("/published", "/draft")}
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"
@@ -371,7 +368,7 @@ const PreviewBrowser: React.FC<{
 
           <Tooltip arrow title="Open preview of changes to publish">
             <Link
-              href={props.url.replace("/preview", "/amber")}
+              href={props.url.replace("/published", "/amber")}
               target="_blank"
               rel="noopener noreferrer"
               color="inherit"

@@ -102,7 +102,7 @@ export async function returnToSession({
   sessionId: string;
   shouldContinue?: boolean;
 }) {
-  const returnURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false&sessionId=${sessionId}`;
+  const returnURL = `/${context.team?.slug}/${context.flow?.slug}/published?analytics=false&sessionId=${sessionId}`;
   log(`returning to http://localhost:3000/${returnURL}`);
   await page.goto(returnURL, { waitUntil: "load" });
   await page.locator("#email").fill(context.user?.email);

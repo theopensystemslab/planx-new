@@ -102,7 +102,7 @@ test.describe("Agent journey @regression", async () => {
 
     // Resume session
     const resumeLink = `/${context.team!.slug!}/${context.flow!
-      .slug!}/preview?analytics=false&sessionId=${sessionId}`;
+      .slug!}/published?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
@@ -132,7 +132,7 @@ test.describe("Agent journey @regression", async () => {
 
     // Navigate to resume session link
     const resumeLink = `/${context.team!.slug!}/${context.flow!
-      .slug!}/preview?analytics=false&sessionId=${sessionId}`;
+      .slug!}/published?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
