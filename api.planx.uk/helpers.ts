@@ -232,6 +232,7 @@ const dataMerged = async (
           text: `${team.slug}/${slug}`,
           // add extra metadata about latest published version when applicable
           ...(!draftDataOnly && {
+            flowId: id,
             publishedFlowId: publishedFlows?.[0]?.id,
             publishedAt: publishedFlows?.[0]?.created_at,
             publishedBy: publishedFlows?.[0]?.publisher_id,
