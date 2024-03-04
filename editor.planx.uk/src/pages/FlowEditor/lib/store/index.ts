@@ -93,7 +93,7 @@ const createFullStore = (): StoreApi<FullStore> => {
 };
 
 const isPublic =
-  isPreviewOnlyDomain || window?.location?.href?.includes("/preview");
+  isPreviewOnlyDomain || window?.location?.href?.includes("/published");
 
 export const { vanillaStore, useStore }: PlanXStores = (() => {
   const vanillaStore: StoreApi<FullStore> = (() =>

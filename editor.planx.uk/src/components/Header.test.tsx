@@ -106,7 +106,7 @@ describe("Header Component - Editor Route", () => {
   });
 });
 
-for (const route of ["/preview", "/amber", "/draft", "/pay", "/invite"]) {
+for (const route of ["/published", "/amber", "/draft", "/pay", "/invite"]) {
   describe(`Header Component - ${route} Routes`, () => {
     beforeAll(() => {
       jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
@@ -165,7 +165,7 @@ describe("Section navigation bar", () => {
         ({
           url: {
             href: "test",
-            pathname: "/team-name/flow-name/preview",
+            pathname: "/team-name/flow-name/published",
           },
           data: {
             flow: "test-flow",
