@@ -48,6 +48,9 @@ const Header = styled("header")(() => ({
   flexDirection: "column",
 }));
 
+const formatLastPublish = (date: string, user: string) =>
+  `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
+
 const DebugConsole = () => {
   const [passport, breadcrumbs, flowId, cachedBreadcrumbs] = useStore(
     (state) => [
@@ -75,7 +78,13 @@ const DebugConsole = () => {
   );
 };
 
-function AlteredNodeItem(props: any) {
+interface AlteredNode {
+  id: string;
+  type: TYPES;
+  data?: any;
+}
+
+const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   const { node } = props;
   let text, data;
 
@@ -93,26 +102,78 @@ function AlteredNodeItem(props: any) {
   }
 
   return (
-    <>
+    <li key={node.id}>
       <Typography variant="body2">{text}</Typography>
       {data && <pre style={{ fontSize: ".8em" }}>{data}</pre>}
-    </>
+    </li>
   );
+};
+
+interface Portal {
+  text: string;
+  flowId: string;
+  publishedFlowId: number;
+  summary: string;
+  publishedBy: number;
+  publishedAt: string;
 }
+
+const AlteredNestedFlowListItem = (props: Portal) => {
+  const { text, flowId, publishedFlowId, summary, publishedAt } = props;
+
+  const [nestedFlowLastPublishedTitle, setNestedFlowLastPublishedTitle] =
+    useState<string>();
+  const lastPublisher = useStore((state) => state.lastPublisher);
+
+  const _nestedFlowLastPublishedRequest = useAsync(async () => {
+    const user = await lastPublisher(flowId);
+    setNestedFlowLastPublishedTitle(formatLastPublish(publishedAt, user));
+  });
+
+  return (
+    <ListItem
+      key={publishedFlowId}
+      disablePadding
+      sx={{ display: "list-item" }}
+    >
+      <ListItemText
+        primary={
+          useStore.getState().canUserEditTeam(text.split("/")[0]) ? (
+            <Link href={`../${text}`} target="_blank">
+              <Typography variant="body2">{text}</Typography>
+            </Link>
+          ) : (
+            <Typography variant="body2">{text}</Typography>
+          )
+        }
+        secondary={
+          <>
+            <Typography variant="body2" fontSize="small">
+              {nestedFlowLastPublishedTitle}
+            </Typography>
+            {summary && (
+              <Typography variant="body2" fontSize="small">
+                {summary}
+              </Typography>
+            )}
+          </>
+        }
+      />
+    </ListItem>
+  );
+};
 
 interface AlteredNodesSummary {
   title: string;
-  portals: {
-    text: string;
-    summary: string;
-    publishedBy: number;
-    publishedAt: string;
-  }[];
+  portals: Portal[];
   updated: number;
   deleted: number;
 }
 
-function AlteredNodesSummaryContent(props: any) {
+const AlteredNodesSummaryContent = (props: {
+  alteredNodes: AlteredNode[];
+  url: string;
+}) => {
   const { alteredNodes, url } = props;
   const [expandNodes, setExpandNodes] = useState<boolean>(false);
 
@@ -123,7 +184,7 @@ function AlteredNodesSummaryContent(props: any) {
     deleted: 0,
   };
 
-  alteredNodes.map((node: any) => {
+  alteredNodes.map((node) => {
     if (node.id === "0") {
       changeSummary["title"] =
         "You are publishing the main service for the first time.";
@@ -131,7 +192,7 @@ function AlteredNodesSummaryContent(props: any) {
       changeSummary["deleted"] += 1;
     } else if (node.type === TYPES.InternalPortal) {
       if (node.data?.text?.includes("/")) {
-        changeSummary["portals"].push(node.data);
+        changeSummary["portals"].push({ ...node.data, flowId: node.id });
       }
     } else if (node.type) {
       changeSummary["updated"] += 1;
@@ -189,10 +250,8 @@ function AlteredNodesSummaryContent(props: any) {
             <Collapse in={expandNodes}>
               <Box pb={1}>
                 <ul>
-                  {alteredNodes.map((node: any) => (
-                    <li key={node.id}>
-                      <AlteredNodeItem node={node} />
-                    </li>
+                  {alteredNodes.map((node) => (
+                    <AlteredNodeListItem node={node} />
                   ))}
                 </ul>
               </Box>
@@ -205,36 +264,8 @@ function AlteredNodesSummaryContent(props: any) {
         <Box pt={2}>
           <Typography variant="body2">{`This includes recently published changes in the following nested services:`}</Typography>
           <List sx={{ listStyleType: "disc", marginLeft: 4 }}>
-            {changeSummary["portals"].map((portal, i) => (
-              <ListItem key={i} disablePadding sx={{ display: "list-item" }}>
-                <ListItemText
-                  primary={
-                    useStore
-                      .getState()
-                      .canUserEditTeam(portal.text.split("/")[0]) ? (
-                      <Link href={`../${portal.text}`} target="_blank">
-                        <Typography variant="body2">{portal.text}</Typography>
-                      </Link>
-                    ) : (
-                      <Typography variant="body2">{portal.text}</Typography>
-                    )
-                  }
-                  secondary={
-                    <>
-                      <Typography variant="body2" fontSize="small">
-                        {`Last published ${formatDistanceToNow(
-                          new Date(portal.publishedAt),
-                        )} ago by ${portal.publishedBy}`}
-                      </Typography>
-                      {portal.summary && (
-                        <Typography variant="body2" fontSize="small">
-                          {portal.summary}
-                        </Typography>
-                      )}
-                    </>
-                  }
-                />
-              </ListItem>
+            {changeSummary["portals"].map((portal) => (
+              <AlteredNestedFlowListItem {...portal} />
             ))}
           </List>
         </Box>
@@ -254,7 +285,7 @@ function AlteredNodesSummaryContent(props: any) {
       </Box>
     </Box>
   );
-}
+};
 
 const PreviewBrowser: React.FC<{
   url: string;
@@ -286,12 +317,9 @@ const PreviewBrowser: React.FC<{
     "This flow is not published yet",
   );
   const [validationMessage, setValidationMessage] = useState<string>();
-  const [alteredNodes, setAlteredNodes] = useState<object[]>();
+  const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
-
-  const formatLastPublish = (date: string, user: string) =>
-    `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
 
   const _lastPublishedRequest = useAsync(async () => {
     const date = await lastPublished(flowId);
