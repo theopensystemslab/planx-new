@@ -192,7 +192,7 @@ const AlteredNodesSummaryContent = (props: {
       changeSummary["deleted"] += 1;
     } else if (node.type === TYPES.InternalPortal) {
       if (node.data?.text?.includes("/")) {
-        changeSummary["portals"].push(node.data);
+        changeSummary["portals"].push({ ...node.data, flowId: node.id });
       }
     } else if (node.type) {
       changeSummary["updated"] += 1;
