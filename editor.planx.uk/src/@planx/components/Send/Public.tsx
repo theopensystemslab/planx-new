@@ -47,17 +47,9 @@ const SendComponent: React.FC<Props> = ({
       isReady &&
       props.handleSubmit
     ) {
-      const v1 = makeData(
-        props,
-        request.value.bops?.event_id,
-        "bopsSendEventId",
+      props.handleSubmit(
+        makeData(props, request.value.bops?.event_id, "bopsSendEventId"),
       );
-      const v2 = makeData(
-        props,
-        request.value.bops_v2?.event_id,
-        "bopsV2SendEventId",
-      );
-      props.handleSubmit({ ...v1, ...v2 });
     }
 
     if (
