@@ -24,6 +24,8 @@ The password for Staging and Production databases can be found the OSL 1Password
 
 The username and password for Metabase are not controlled via IaC - they are manually entered via the Metabase "Admin" dashboard (`Admin Setting > Databases > "staging" | "production" > Username / Password fields`).
 
+Please note - this is separate to the role used to read/write Metabase internal application data (such as dashboard and queries). This role is setup in IaC [here](https://github.com/theopensystemslab/planx-new/blob/main/infrastructure/application/index.ts#L100). For more information, please see [the Metabase docs](https://www.metabase.com/docs/latest/installation-and-operation/configuring-application-database).
+
 ### Locally & Pizzas
 If you wish to run Metabase locally using the "analytics" Docker profile (`pnpm analytics` from project root), you will need to manually run the above SQL on your local database with a password of your choice. Alternatively, you can use the root DB username/password.
 
