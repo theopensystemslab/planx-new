@@ -15,6 +15,10 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export default SummaryListsBySections;
 
+/** These component types don't use their node title as the descriptive list title */
+const FIND_PROPERTY_DT = "Property address";
+const DRAW_BOUNDARY_DT = "Location plan";
+
 const Grid = styled("dl", {
   shouldForwardProp: (prop) => prop !== "showChangeButton",
 })<{ showChangeButton?: boolean }>(({ theme, showChangeButton }) => ({
@@ -251,9 +255,9 @@ function SummaryList(props: SummaryListProps) {
                   >
                     Change
                     <span style={visuallyHidden}>
-                      {(node.type === TYPES.FindProperty &&
-                        "property address") ||
-                        (node.type === TYPES.DrawBoundary && "location plan") ||
+                      {(node.type === TYPES.FindProperty && FIND_PROPERTY_DT) ||
+                        (node.type === TYPES.DrawBoundary &&
+                          DRAW_BOUNDARY_DT) ||
                         node.data?.title ||
                         node.data?.text ||
                         "this answer"}
@@ -319,7 +323,7 @@ function FindProperty(props: ComponentProps) {
       props.passport.data?._address;
     return (
       <>
-        <dt>Property address</dt>
+        <dt>{FIND_PROPERTY_DT}</dt>
         <dd>
           {`${single_line_address.split(`, ${town}`)[0]}`}
           <br />
@@ -333,7 +337,7 @@ function FindProperty(props: ComponentProps) {
     const { x, y, title } = props.passport.data?._address;
     return (
       <>
-        <dt>Property address</dt>
+        <dt>{FIND_PROPERTY_DT}</dt>
         <dd>
           {`${title}`}
           <br />
@@ -409,7 +413,7 @@ function DrawBoundary(props: ComponentProps) {
 
   return (
     <>
-      <dt>Location plan</dt>
+      <dt>{DRAW_BOUNDARY_DT}</dt>
       <dd>
         {fileName && (
           <span data-testid="uploaded-plan-name">
