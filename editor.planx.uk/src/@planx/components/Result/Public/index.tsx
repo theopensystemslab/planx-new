@@ -136,6 +136,9 @@ const Result: React.FC<Props> = ({
           <Typography variant="h2" gutterBottom>
             {reasonsTitle}
           </Typography>
+          <Typography variant="h3" gutterBottom>
+            These are the responses that suggest this result
+          </Typography>
         </Box>
         <Box mb={3}>
           <Responses
