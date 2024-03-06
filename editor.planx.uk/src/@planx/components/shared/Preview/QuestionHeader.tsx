@@ -124,9 +124,9 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             <MoreInfoSection title="How is it defined?">
               <>
                 {definitionImg && (
-                  <Image src={definitionImg} alt="definition" />
+                  <Image src={definitionImg} alt="" aria-describedby="howMeasured" />
                 )}
-                <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab />
+                <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab id="howMeasured" />
               </>
             </MoreInfoSection>
           ) : undefined}
