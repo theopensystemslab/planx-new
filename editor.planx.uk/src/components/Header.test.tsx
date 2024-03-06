@@ -95,7 +95,7 @@ describe("Header Component - Editor Route", () => {
 
   it("displays avatar and settings", () => {
     setup(<Header />);
-    expect(screen.getByText("T")).toBeInTheDocument();
+    expect(screen.getByText("TU")).toBeInTheDocument();
     expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
   });
 
