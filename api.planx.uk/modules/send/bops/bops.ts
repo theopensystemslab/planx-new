@@ -142,7 +142,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
           payload?.sessionId,
         ]
           .filter(Boolean)
-          .join(" - ")}). Error: ${err}`,
+          .join(" - ")}):\n${err}`,
         cause: err,
       }),
     );

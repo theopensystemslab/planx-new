@@ -2,7 +2,6 @@ import nock from "nock";
 import supertest from "supertest";
 import { queryMock } from "../../../tests/graphqlQueryMock";
 import app from "../../../server";
-import { expectedPayload } from "../../../tests/mocks/bopsMocks";
 import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks";
 
 jest.mock("../../saveAndReturn/service/utils", () => ({
@@ -18,11 +17,6 @@ jest.mock("@opensystemslab/planx-core", () => {
     CoreDomainClient: class extends actualCoreDomainClient {
       constructor() {
         super();
-        this.export.bopsPayload = () =>
-          jest.fn().mockResolvedValue({
-            exportData: expectedPayload,
-            redactedExportData: expectedPayload,
-          });
         this.export.digitalPlanningDataPayload = () =>
           jest.fn().mockResolvedValue({
             exportData: expectedPlanningPermissionPayload,

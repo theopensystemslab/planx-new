@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { usePlatformAdminAuth } from "../auth/middleware";
 import { getOneAppXML } from "./session/oneAppXML";
-import { getBOPSPayload } from "./session/bops";
 import { getCSVData, getRedactedCSVData } from "./session/csv";
 import { getHTMLExport, getRedactedHTMLExport } from "./session/html";
 import { generateZip } from "./session/zip";
@@ -14,7 +13,6 @@ router.use("/admin/", usePlatformAdminAuth);
 
 // TODO: Split the routes below into controller and service components
 router.get("/admin/session/:sessionId/xml", getOneAppXML);
-router.get("/admin/session/:sessionId/bops", getBOPSPayload);
 router.get("/admin/session/:sessionId/csv", getCSVData);
 router.get("/admin/session/:sessionId/csv-redacted", getRedactedCSVData);
 router.get("/admin/session/:sessionId/html", getHTMLExport);
