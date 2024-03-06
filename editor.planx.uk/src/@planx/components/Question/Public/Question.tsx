@@ -1,11 +1,9 @@
 import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import { useTheme } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
-import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
@@ -95,9 +93,6 @@ const Question: React.FC<IQuestion> = (props) => {
       />
       <FullWidthWrapper>
         <FormControl sx={{ width: "100%" }}>
-          <FormHelperText style={visuallyHidden}>
-            {props.description ? DESCRIPTION_TEXT : ""}
-          </FormHelperText>
           <FormLabel
             style={visuallyHidden}
             id={`radio-buttons-group-label-${props.id}`}
