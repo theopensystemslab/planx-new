@@ -121,8 +121,7 @@ const TextLabel = (props: Props): FCReturn => {
 };
 
 const ImageLabel = (props: Props): FCReturn => {
-  const { img, title, description } = props;
-  const altText = description ? `${title} - ${description}` : title;
+  const { img } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
   const onError = () => {
     if (!imgError) {
@@ -141,7 +140,7 @@ const ImageLabel = (props: Props): FCReturn => {
           src={img}
           onError={onError}
           // Use a null alt to indicate that this image can be ignored by screen readers
-          alt={altText || ""}
+          alt=""
         />
       )}
     </ImageLabelRoot>
