@@ -251,7 +251,12 @@ function SummaryList(props: SummaryListProps) {
                   >
                     Change
                     <span style={visuallyHidden}>
-                      {node.data?.title || node.data?.text || "this answer"}
+                      {(node.type === TYPES.FindProperty &&
+                        "property address") ||
+                        (node.type === TYPES.DrawBoundary && "location plan") ||
+                        node.data?.title ||
+                        node.data?.text ||
+                        "this answer"}
                     </span>
                   </Link>
                 </dd>
@@ -314,7 +319,7 @@ function FindProperty(props: ComponentProps) {
       props.passport.data?._address;
     return (
       <>
-        <dt>Property</dt>
+        <dt>Property address</dt>
         <dd>
           {`${single_line_address.split(`, ${town}`)[0]}`}
           <br />
@@ -328,7 +333,7 @@ function FindProperty(props: ComponentProps) {
     const { x, y, title } = props.passport.data?._address;
     return (
       <>
-        <dt>Proposed address</dt>
+        <dt>Property address</dt>
         <dd>
           {`${title}`}
           <br />
@@ -366,7 +371,7 @@ function TextInput(props: ComponentProps) {
 function FileUpload(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "File upload"}</dt>
+      <dt>{props.node.data.title ?? "Documents"}</dt>
       <dd>
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
@@ -399,24 +404,22 @@ function DrawBoundary(props: ComponentProps) {
   if (!geodata && !locationPlan && !props.node.data?.hideFileUpload) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
-    throw Error(
-      "Site boundary geojson or location plan file expected, but not found",
-    );
+    throw Error("Location plan geojson or file expected, but not found");
   }
 
   return (
     <>
-      <dt>Site boundary</dt>
+      <dt>Location plan</dt>
       <dd>
         {fileName && (
           <span data-testid="uploaded-plan-name">
-            Your uploaded location plan: <b>{fileName}</b>
+            Your uploaded file: <b>{fileName}</b>
           </span>
         )}
         {geodata && (
           <>
             <p style={visuallyHidden}>
-              A static map displaying the site boundary that you drew.
+              A static map displaying your location plan.
             </p>
             {/* @ts-ignore */}
             <my-map
@@ -513,7 +516,7 @@ function FileUploadAndLabel(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title ?? "Upload and label"}</dt>
+      <dt>{props.node.data.title ?? "Documents"}</dt>
       <dd>
         <ul>
           {uniqueFilenames.length
