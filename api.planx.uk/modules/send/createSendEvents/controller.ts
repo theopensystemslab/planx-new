@@ -30,25 +30,17 @@ const createSendEvents: CreateSendEventsController = async (
     if (bops) {
       const bopsEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/bops/${bops.localAuthority}`,
-        schedule_at: new Date(now.getTime() + 25 * 1000),
+        schedule_at: new Date(now.getTime() + 20 * 1000),
         payload: bops.body,
         comment: `bops_submission_${sessionId}`,
       });
       combinedResponse["bops"] = bopsEvent;
-
-      const bopsV2Event = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/bops-v2/${bops.localAuthority}`,
-        schedule_at: new Date(now.getTime() + 50 * 1000),
-        payload: bops.body,
-        comment: `bops_v2_submission_${sessionId}`,
-      });
-      combinedResponse["bops_v2"] = bopsV2Event;
     }
 
     if (uniform) {
       const uniformEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/uniform/${uniform.localAuthority}`,
-        schedule_at: new Date(now.getTime() + 75 * 1000),
+        schedule_at: new Date(now.getTime() + 40 * 1000),
         payload: uniform.body,
         comment: `uniform_submission_${sessionId}`,
       });
