@@ -322,8 +322,8 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         {howMeasured && howMeasured !== emptyContent ? (
           <MoreInfoSection title="How is it defined?">
             <>
-              {definitionImg && <Image src={definitionImg} alt="definition" />}
-              <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab />
+              {definitionImg && <Image src={definitionImg} alt="" aria-describedby="howMeasured" />}
+              <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab id="howMeasured"/>
             </>
           </MoreInfoSection>
         ) : undefined}
