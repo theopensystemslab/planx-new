@@ -6,9 +6,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { ApplicationData } from "lib/applications";
 import React from "react";
-
-import { ApplicationData } from "./model";
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
