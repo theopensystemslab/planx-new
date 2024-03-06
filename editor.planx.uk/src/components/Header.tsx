@@ -6,6 +6,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import { grey } from '@mui/material/colors';
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
@@ -453,7 +454,16 @@ const EditorToolbar: React.FC<{
                     </IconButton>
                   )}
                   <Box mr={1}>
-                    <Avatar>{user.firstName[0]}</Avatar>
+                    <Avatar 
+                      sx={{ 
+                        bgcolor: grey[200], 
+                        color: "text.primary",
+                        fontSize: "1em",
+                        fontWeight: "600",
+                      }}
+                    >
+                      {user.firstName[0]}{user.lastName[0]}
+                    </Avatar>
                   </Box>
                   <IconButton
                     edge="end"
