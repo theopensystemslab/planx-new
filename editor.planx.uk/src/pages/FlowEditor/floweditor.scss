@@ -7,9 +7,6 @@ $lineWidth: 1px;
 $padding: 7px;
 $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNc8B8AAkUBofXwZpQAAAAASUVORK5CYII=);
 
-// Import custom typeface for data inputs
-@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap");
-
 @mixin circle($radius) {
   user-select: none;
   border-radius: $radius;
