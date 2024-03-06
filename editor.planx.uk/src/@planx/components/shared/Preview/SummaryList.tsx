@@ -351,7 +351,7 @@ function FindProperty(props: ComponentProps) {
 function Checklist(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.text ?? "Checklist"}</dt>
+      <dt>{props.node.data.text}</dt>
       <dd>
         <ul>
           {getAnswers(props).map((nodeId, i: number) => (
@@ -366,7 +366,7 @@ function Checklist(props: ComponentProps) {
 function TextInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "Text"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>{getAnswersByNode(props)}</dd>
     </>
   );
@@ -375,7 +375,7 @@ function TextInput(props: ComponentProps) {
 function FileUpload(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "Documents"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
@@ -392,7 +392,7 @@ function FileUpload(props: ComponentProps) {
 function DateInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "Date"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>{format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}</dd>
     </>
   );
@@ -451,7 +451,7 @@ function DrawBoundary(props: ComponentProps) {
 function NumberInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "Number"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>{`${getAnswersByNode(props)} ${props.node.data.units ?? ""}`}</dd>
     </>
   );
@@ -463,7 +463,7 @@ function AddressInput(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title ?? "Address"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>
         {line1}
         <br />
@@ -492,7 +492,7 @@ function ContactInput(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title ?? "Contact"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>
         {[title, firstName, lastName].filter(Boolean).join(" ").trim()}
         <br />
@@ -520,7 +520,7 @@ function FileUploadAndLabel(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title ?? "Documents"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>
         <ul>
           {uniqueFilenames.length
