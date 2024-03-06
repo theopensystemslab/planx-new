@@ -308,6 +308,7 @@ const Feedback: React.FC = () => {
       <FeedbackWrapper>
         <Container maxWidth="contentWrap">
           <FeedbackRow>
+            <BackAndCloseFeedbackHeader />
             <FeedbackTitle>
               <RuleIcon />
               <Typography variant="h3" component="h2" id="idea-title">
