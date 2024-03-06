@@ -1,0 +1,1 @@
+DROP VIEW public.applications_summary CASCADE;

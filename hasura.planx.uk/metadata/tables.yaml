@@ -72,6 +72,42 @@
     name: analytics_summary
     schema: public
 - table:
+    name: applications_summary
+    schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - sent_to_bops
+          - sent_to_email
+          - sent_to_uniform
+          - user_invited_to_pay
+          - amount
+          - payment_date
+          - payment_status
+          - service_slug
+          - team_slug
+          - submitted_at
+          - session_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - sent_to_bops
+          - sent_to_email
+          - sent_to_uniform
+          - user_invited_to_pay
+          - amount
+          - payment_date
+          - payment_status
+          - service_slug
+          - team_slug
+          - submitted_at
+          - session_id
+        filter: {}
+      comment: ""
+- table:
     name: blpu_codes
     schema: public
   select_permissions:
