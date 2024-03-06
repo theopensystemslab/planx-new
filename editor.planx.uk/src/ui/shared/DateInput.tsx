@@ -47,7 +47,7 @@ export default function DateInput(props: Props): FCReturn {
           </Typography>
         )}
         <Box sx={{ width: INPUT_DATE_WIDTH }}>
-          <Label variant="body1" htmlFor="day" component={"label"}>
+          <Label variant="body1" htmlFor={`${props.id}-day`} component={"label"}>
             Day
           </Label>
           <Input
@@ -71,7 +71,7 @@ export default function DateInput(props: Props): FCReturn {
           />
         </Box>
         <Box sx={{ width: INPUT_DATE_WIDTH }}>
-          <Label variant="body1" htmlFor="month" component={"label"}>
+          <Label variant="body1" htmlFor={`${props.id}-month`} component={"label"}>
             Month
           </Label>
           <Input
@@ -95,7 +95,7 @@ export default function DateInput(props: Props): FCReturn {
           />
         </Box>
         <Box sx={{ width: INPUT_YEAR_WIDTH }}>
-          <Label variant="body1" htmlFor="year" component={"label"}>
+          <Label variant="body1" htmlFor={`${props.id}-year`} component={"label"}>
             Year
           </Label>
           <Input
