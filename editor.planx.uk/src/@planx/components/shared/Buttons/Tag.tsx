@@ -1,5 +1,7 @@
+import Box from "@mui/material/Box";
 import MuiButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import { darken, styled } from "@mui/material/styles";
+import { visuallyHidden } from "@mui/utils";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -65,6 +67,7 @@ export default function Tag(props: Props): FCReturn {
       id={id}
       tagType={tagType}
     >
+      <Box sx={visuallyHidden} component="span">The status of this section of the application is:</Box>
       {children}
     </Root>
   );

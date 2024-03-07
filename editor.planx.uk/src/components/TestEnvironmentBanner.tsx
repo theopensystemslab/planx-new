@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { visuallyHidden } from "@mui/utils";
 import React, { useState } from "react";
 
 const TestEnvironmentWarning = styled(Box)(({ theme }) => ({
@@ -41,6 +42,7 @@ const TestEnvironmentBanner: React.FC = () => {
             </Box>
             <Button size="small" onClick={() => setShowWarning(false)}>
               Hide
+              <Box sx={visuallyHidden} component="span">the test environment banner</Box>
             </Button>
           </Container>
         </TestEnvironmentWarning>

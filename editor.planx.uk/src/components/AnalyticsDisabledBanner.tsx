@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { visuallyHidden } from "@mui/utils";
 import React, { useState } from "react";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
@@ -56,6 +57,7 @@ const AnalyticsDisabledBanner: React.FC = () => {
             </Box>
             <Button size="small" onClick={() => setShowAnalyticsWarning(false)}>
               Hide
+              <Box sx={visuallyHidden} component="span">the analytics banner</Box>
             </Button>
           </Container>
         </AnalyticsWarning>
