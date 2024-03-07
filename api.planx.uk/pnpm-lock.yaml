@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#296592c
-    version: github.com/theopensystemslab/planx-core/296592c
+    specifier: git+https://github.com/theopensystemslab/planx-core#dab9c39
+    version: github.com/theopensystemslab/planx-core/dab9c39
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -7984,6 +7984,11 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
+  /type-fest@4.11.1:
+    resolution: {integrity: sha512-MFMf6VkEVZAETidGGSYW2B1MjXbGX+sWIywn2QPEaJ3j08V+MwVRHMXtf2noB8ENJaD0LIun9wh5Z6OPNf1QzQ==}
+    engines: {node: '>=16'}
+    dev: false
+
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -8404,8 +8409,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/296592c:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/296592c}
+  github.com/theopensystemslab/planx-core/dab9c39:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dab9c39}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -8430,7 +8435,7 @@ packages:
       prettier: 3.2.5
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      type-fest: 4.10.3
+      type-fest: 4.11.1
       uuid: 9.0.1
       zod: 3.22.4
     transitivePeerDependencies:
