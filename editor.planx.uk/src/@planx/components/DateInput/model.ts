@@ -70,7 +70,6 @@ export const dateSchema = () => {
       "missing day",
       "Date must include a day",
       (date?: string) => {
-        console.log({date})
         const { day } = parseDate(date);
         return day !== undefined;
       })
