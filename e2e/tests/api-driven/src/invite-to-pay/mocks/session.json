@@ -54,9 +54,7 @@
         "user.role": ["applicant"],
         "project.type": ["alter.equipment.solar.pv"],
         "property.EPC": ["unknown"],
-        "property.type": [
-          "commercial.medical.dentist"
-        ],
+        "property.type": ["commercial.medical.dentist"],
         "proposal.time": ["future"],
         "proposal.type": ["proposed"],
         "applicant.type": ["individual"],
