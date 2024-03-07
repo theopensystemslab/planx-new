@@ -15,6 +15,10 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export default SummaryListsBySections;
 
+/** These component types don't use their node title as the descriptive list title */
+const FIND_PROPERTY_DT = "Property address";
+const DRAW_BOUNDARY_DT = "Location plan";
+
 const Grid = styled("dl", {
   shouldForwardProp: (prop) => prop !== "showChangeButton",
 })<{ showChangeButton?: boolean }>(({ theme, showChangeButton }) => ({
@@ -251,7 +255,12 @@ function SummaryList(props: SummaryListProps) {
                   >
                     Change
                     <span style={visuallyHidden}>
-                      {node.data?.title || node.data?.text || "this answer"}
+                      {(node.type === TYPES.FindProperty && FIND_PROPERTY_DT) ||
+                        (node.type === TYPES.DrawBoundary &&
+                          DRAW_BOUNDARY_DT) ||
+                        node.data?.title ||
+                        node.data?.text ||
+                        "this answer"}
                     </span>
                   </Link>
                 </dd>
@@ -314,7 +323,7 @@ function FindProperty(props: ComponentProps) {
       props.passport.data?._address;
     return (
       <>
-        <dt>Property</dt>
+        <dt>{FIND_PROPERTY_DT}</dt>
         <dd>
           {`${single_line_address.split(`, ${town}`)[0]}`}
           <br />
@@ -328,7 +337,7 @@ function FindProperty(props: ComponentProps) {
     const { x, y, title } = props.passport.data?._address;
     return (
       <>
-        <dt>Proposed address</dt>
+        <dt>{FIND_PROPERTY_DT}</dt>
         <dd>
           {`${title}`}
           <br />
@@ -342,7 +351,7 @@ function FindProperty(props: ComponentProps) {
 function Checklist(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.text ?? "Checklist"}</dt>
+      <dt>{props.node.data.text}</dt>
       <dd>
         <ul>
           {getAnswers(props).map((nodeId, i: number) => (
@@ -357,7 +366,7 @@ function Checklist(props: ComponentProps) {
 function TextInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "Text"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>{getAnswersByNode(props)}</dd>
     </>
   );
@@ -366,7 +375,7 @@ function TextInput(props: ComponentProps) {
 function FileUpload(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "File upload"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
@@ -383,7 +392,7 @@ function FileUpload(props: ComponentProps) {
 function DateInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "Date"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>{format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}</dd>
     </>
   );
@@ -399,24 +408,22 @@ function DrawBoundary(props: ComponentProps) {
   if (!geodata && !locationPlan && !props.node.data?.hideFileUpload) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
-    throw Error(
-      "Site boundary geojson or location plan file expected, but not found",
-    );
+    throw Error("Location plan geojson or file expected, but not found");
   }
 
   return (
     <>
-      <dt>Site boundary</dt>
+      <dt>{DRAW_BOUNDARY_DT}</dt>
       <dd>
         {fileName && (
           <span data-testid="uploaded-plan-name">
-            Your uploaded location plan: <b>{fileName}</b>
+            Your uploaded file: <b>{fileName}</b>
           </span>
         )}
         {geodata && (
           <>
             <p style={visuallyHidden}>
-              A static map displaying the site boundary that you drew.
+              A static map displaying your location plan.
             </p>
             {/* @ts-ignore */}
             <my-map
@@ -444,7 +451,7 @@ function DrawBoundary(props: ComponentProps) {
 function NumberInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title ?? "Number"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>{`${getAnswersByNode(props)} ${props.node.data.units ?? ""}`}</dd>
     </>
   );
@@ -456,7 +463,7 @@ function AddressInput(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title ?? "Address"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>
         {line1}
         <br />
@@ -485,7 +492,7 @@ function ContactInput(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title ?? "Contact"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>
         {[title, firstName, lastName].filter(Boolean).join(" ").trim()}
         <br />
@@ -513,7 +520,7 @@ function FileUploadAndLabel(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title ?? "Upload and label"}</dt>
+      <dt>{props.node.data.title}</dt>
       <dd>
         <ul>
           {uniqueFilenames.length
