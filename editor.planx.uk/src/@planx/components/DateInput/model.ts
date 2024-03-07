@@ -14,12 +14,7 @@ export interface DateInput extends MoreInformation {
   max?: string;
 }
 
-export const isDateValid = (date: string) => {
-  // make sure we've got DD, MM, & YYYY
-  const isComplete = date.split("-").filter((n) => n.length > 0).length === 3;
-
-  return isComplete && isValid(parseISO(date));
-};
+const isDateValid = (date: string) => isValid(parseISO(date));
 
 export const paddedDate = (
   date: string,
@@ -64,41 +59,80 @@ const displayDate = (date: string): string | undefined => {
   return `${day}.${month}.${year}`;
 };
 
+export const parseDate = (date?: string) => {
+  const [year, month, day] = date?.split("-").map((val) => parseInt(val) || undefined) || [];
+  return { year, month, day };
+}
+
 export const dateSchema = () => {
-  return string().test(
-    "valid",
-    "Enter a valid date in DD.MM.YYYY format",
-    (date: string | undefined) => {
-      // test runs regardless of required status, so don't fail it if it's undefined
-      return Boolean(!date || isDateValid(date));
-    },
-  );
+  return string()
+    .test(
+      "missing day",
+      "Date must include a day",
+      (date?: string) => {
+        const { day } = parseDate(date);
+        return day !== undefined;
+      })
+    .test(
+      "missing month",
+      "Date must include a month",
+      (date?: string) => {
+        const { month } = parseDate(date);
+        return month !== undefined;
+      })
+    .test(
+      "missing year",
+      "Date must include a year",
+      (date?: string) => {
+        const { year } = parseDate(date);
+        return year !== undefined;
+      })
+    .test(
+      "invalid day",
+      "Day must be valid",
+      (date?: string) => {
+        const { day } = parseDate(date);
+        return Boolean(day && day <= 31)
+      })
+    .test(
+      "invalid month",
+      "Month must be valid",
+      (date?: string) => {
+        const { month } = parseDate(date);
+        return Boolean(month && month <= 12);
+      })
+    .test(
+      "valid",
+      "Enter a valid date in DD.MM.YYYY format",
+      (date: string | undefined) => {
+        // test runs regardless of required status, so don't fail it if it's undefined
+        return Boolean(!date || isDateValid(date));
+      },
+    );
 };
 
 export const dateRangeSchema: (params: {
   min?: string;
   max?: string;
 }) => SchemaOf<string> = (params) =>
-  dateSchema()
-    .required("Enter a valid date in DD.MM.YYYY format")
-    .test({
-      name: "too soon",
-      message: `Enter a date later than ${
-        params.min && displayDate(params.min)
-      }`,
-      test: (date: string | undefined) => {
-        return Boolean(date && !(params.min && date < params.min));
-      },
-    })
-    .test({
-      name: "too late",
-      message: `Enter a date earlier than ${
-        params.max && displayDate(params.max)
-      }`,
-      test: (date: string | undefined) => {
-        return Boolean(date && !(params.max && date > params.max));
-      },
-    });
+    dateSchema()
+      .required("Enter a valid date in DD.MM.YYYY format")
+      .test({
+        name: "too soon",
+        message: `Enter a date later than ${params.min && displayDate(params.min)
+          }`,
+        test: (date: string | undefined) => {
+          return Boolean(date && !(params.min && date < params.min));
+        },
+      })
+      .test({
+        name: "too late",
+        message: `Enter a date earlier than ${params.max && displayDate(params.max)
+          }`,
+        test: (date: string | undefined) => {
+          return Boolean(date && !(params.max && date > params.max));
+        },
+      });
 
 export const parseDateInput = (
   data: Record<string, any> | undefined,
