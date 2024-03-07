@@ -6,6 +6,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import {
+  formattedPriceWithCurrencySymbol,
+  toDecimal,
+} from "@planx/components/Pay/model";
 import { ApplicationData } from "lib/applications";
 import React from "react";
 
@@ -33,10 +37,6 @@ function formatDate(date: Date | string) {
 
 function formatBoolean(state: boolean) {
   return state ? "Yes" : "No";
-}
-
-function formatAmount(amount: number) {
-  return "£" + (amount / 100).toFixed(2);
 }
 
 export default function ApplicationStatusTable(props: Props): JSX.Element {
@@ -76,7 +76,9 @@ export default function ApplicationStatusTable(props: Props): JSX.Element {
                   {formatBoolean(row.user_invited_to_pay)}
                 </StyledTableCell>
                 <StyledTableCell>{row.payment_status}</StyledTableCell>
-                <StyledTableCell>{formatAmount(row.amount)}</StyledTableCell>
+                <StyledTableCell>
+                  {formattedPriceWithCurrencySymbol(toDecimal(row.amount))}
+                </StyledTableCell>
                 <StyledTableCell>
                   {formatDate(row.payment_date)}
                 </StyledTableCell>
