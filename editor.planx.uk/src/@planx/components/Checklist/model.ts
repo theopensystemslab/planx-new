@@ -5,9 +5,9 @@ export interface Group<T> {
 }
 
 export interface Checklist extends MoreInformation {
-  fn?: string;
+  text: string;
   description?: string;
-  text?: string;
+  fn?: string;
   options?: Array<Option>;
   groupedOptions?: Array<Group<Option>>;
   img?: string;

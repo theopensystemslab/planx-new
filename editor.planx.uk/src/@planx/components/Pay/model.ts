@@ -5,11 +5,11 @@ import { boolean, object, string } from "yup";
 import type { MoreInformation } from "../shared";
 
 export interface Pay extends MoreInformation {
-  title?: string;
+  title: string;
   bannerTitle?: string;
   description?: string;
   color?: string;
-  fn?: string;
+  fn: string;
   instructionsTitle?: string;
   instructionsDescription?: string;
   hidePay?: boolean;
