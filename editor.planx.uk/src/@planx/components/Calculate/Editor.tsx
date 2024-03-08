@@ -72,7 +72,16 @@ export default function Component(props: Props) {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Calculate" Icon={ICONS[TYPES.Calculate]}>
-          <Typography variant="body2">
+          <InputRow>
+            <Input
+              format="large"
+              placeholder="Title"
+              name="title"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <Typography variant="body2" sx={{mt: 2}}>
             This component does math! Write formulas using{" "}
             <a href="https://mathjs.org/index.html" target="_blank">
               Math.js
