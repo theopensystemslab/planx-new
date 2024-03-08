@@ -8,6 +8,7 @@ export default function Fixture() {
       handleSubmit={console.log}
       title="Pay"
       description=""
+      fn="fee"
       color="#efefef"
     />
   );

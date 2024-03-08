@@ -28,6 +28,7 @@ import type { Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
 
 interface ChecklistProps extends Checklist {
+  text: string;
   handleSubmit?: Function;
   node?: {
     data?: {
@@ -41,7 +42,7 @@ interface ChecklistProps extends Checklist {
       info?: string;
       notes?: string;
       policyRef?: string;
-      text?: string;
+      text: string;
     };
   };
 }
@@ -362,6 +363,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 placeholder="Text"
                 onChange={formik.handleChange}
                 inputRef={focusRef}
+                required
               />
 
               <ImgInput
@@ -383,7 +385,6 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
 
             <InputRow>
               <Input
-                // required
                 format="data"
                 name="fn"
                 value={formik.values.fn}
