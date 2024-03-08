@@ -85,7 +85,13 @@ describe("Pay component when fee is undefined or £0", () => {
       data: { "application.fee.payable": ["0"] },
     });
 
-    setup(<Pay fn="application.fee.typo" handleSubmit={handleSubmit} />);
+    setup(
+      <Pay
+        title="Pay for your application"
+        fn="application.fee.typo"
+        handleSubmit={handleSubmit}
+      />,
+    );
 
     // handleSubmit has NOT been called (not skipped), Pay shows error instead
     expect(handleSubmit).not.toHaveBeenCalled();
@@ -103,7 +109,13 @@ describe("Pay component when fee is undefined or £0", () => {
       data: { "application.fee.payable": ["0"] },
     });
 
-    setup(<Pay fn="application.fee.payable" handleSubmit={handleSubmit} />);
+    setup(
+      <Pay
+        title="Pay for your application"
+        fn="application.fee.payable"
+        handleSubmit={handleSubmit}
+      />,
+    );
 
     // handleSubmit is called to auto-answer Pay (aka "skip" in card sequence)
     expect(handleSubmit).toHaveBeenCalled();

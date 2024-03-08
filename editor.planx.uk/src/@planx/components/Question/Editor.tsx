@@ -26,7 +26,7 @@ interface Props {
       info?: string;
       notes?: string;
       policyRef?: string;
-      text?: string;
+      text: string;
       type?: string;
     };
   };
