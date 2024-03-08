@@ -1,13 +1,14 @@
 import { MoreInformation, Option } from "../shared";
+
 export interface Group<T> {
   title: string;
   children: Array<T>;
 }
 
 export interface Checklist extends MoreInformation {
-  text: string;
-  description?: string;
   fn?: string;
+  description?: string;
+  text?: string;
   options?: Array<Option>;
   groupedOptions?: Array<Group<Option>>;
   img?: string;

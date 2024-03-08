@@ -20,7 +20,6 @@ import Confirm from "./Confirm";
 export default Component;
 interface Props extends Pay {
   handleSubmit: handleSubmit;
-  fn?: string;
 }
 
 type ComponentState =

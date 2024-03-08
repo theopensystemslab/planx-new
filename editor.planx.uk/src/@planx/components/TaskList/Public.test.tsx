@@ -9,6 +9,7 @@ test("renders correctly", async () => {
 
   const { user } = setup(
     <TaskList
+      title="to do"
       tasks={[
         { title: "buy land", description: "" },
         { title: "build house", description: "" },
@@ -24,6 +25,7 @@ test("renders correctly", async () => {
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <TaskList
+      title="to do"
       tasks={[
         { title: "buy land", description: "" },
         { title: "build house", description: "" },
