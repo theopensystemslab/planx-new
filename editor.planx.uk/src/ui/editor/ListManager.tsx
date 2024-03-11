@@ -32,6 +32,7 @@ export interface Props<T, EditorExtraProps = {}> {
   Editor: React.FC<EditorProps<T> & (EditorExtraProps | {})>;
   editorExtraProps?: EditorExtraProps;
   disableDragAndDrop?: boolean;
+  isFieldDisabled?: (item: T) => boolean;
 }
 
 const Item = styled(Box)(({ theme }) => ({
@@ -81,7 +82,7 @@ export default function ListManager<T, EditorExtraProps>(
                   }}
                   aria-label="Delete"
                   size="large"
-                  disabled={isViewOnly}
+                  disabled={isViewOnly || (props?.isFieldDisabled && props.isFieldDisabled(item))}
                 >
                   <Delete />
                 </IconButton>
