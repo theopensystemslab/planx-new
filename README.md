@@ -25,6 +25,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 ## Running locally
 
 1. Download and install the following dependencies if you don't have them already:
+
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@8.6.6`
@@ -58,10 +59,11 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 2. Copy all `.example` env files into their respective directories and replace 👻 with a string like "SECRET" or longer where noted
 
 3. Setup free OAuth Client ID credentails in the [Google Cloud APIs console](https://console.cloud.google.com/apis/credentials)
-  - Application type = "Web application"
-  - Authorised JavaScript origins = "http://localhost:3000"
-  - Authorised redirect URIs = "http://localhost:7002/auth/google/callback"
-  - Update the `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` env vars with your new credentials
+
+- Application type = "Web application"
+- Authorised JavaScript origins = "http://localhost:3000"
+- Authorised redirect URIs = "http://localhost:7002/auth/google/callback"
+- Update the `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` env vars with your new credentials
 
 4. Run `pnpm start` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes). Please note you will not be able to run commands that sync seed data from production.
 
@@ -71,7 +73,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 7. Follow steps 7-9 above to start the editor and login !
 
-At this point you'll be running the full Planx application locally in a docker container. See our Github Actions pull request workflow as an example of how to deploy via docker to a virtual linux server, or explore the `infrastructure` directory for how to deploy via Pulumi infrastructure-as-code to AWS. 
+At this point you'll be running the full Planx application locally in a docker container. See our Github Actions pull request workflow as an example of how to deploy via docker to a virtual linux server, or explore the `infrastructure` directory for how to deploy via Pulumi infrastructure-as-code to AWS.
 
 We'd love to hear what you're building on Planx, don't hesitate to get in touch with questions.
 
@@ -115,6 +117,7 @@ Once a deployment is completed, a Slack notification will be sent to the #planx-
 ### Troubleshooting
 
 If the commit history of `main` and `production` diverge and `production` contains commit hashes that are NOT on main, try running this command from `production` to reset and then follow the original deploy steps above:
+
 ```bash
 git reset --hard <most recent commit hash **matching** main> && git push --force
 ```
@@ -131,11 +134,10 @@ Our public-facing live services were last audited by the [Digital Accessibility 
 
 Our whole stack was last assessed by [Jumpsec](https://www.jumpsec.com/) between the 21st and 30th November 2023. JUMPSEC then performed a retest of the issues identified in the initial test on the 8th of February 2024. This included verifying that fixes had been successfully applied and that no further risks were introduced as a result of the remediation work carried out. Their penetration test concluded that - "the security posture of PlanX was strong, and following industry best practices. JUMPSEC commend the PlanX team on their dedication to security and ability to both maintain and mitigate issues in a responsible and timely manner". You can [review our report here](https://file.notion.so/f/f/d2306134-7ae0-417c-8db3-cdd87c524efa/ab940248-ca60-49a3-bfae-0b6faa916b1e/2024-02-13_JUMPSEC_Lambeth_PlanX_Web_Application_Assessment_Report_v2.0.pdf?id=aa4ed144-4b48-4a88-9693-6a3644bfd6cf&table=block&spaceId=d2306134-7ae0-417c-8db3-cdd87c524efa&expirationTimestamp=1707998400000&signature=76AfnXjSTzw8O5TEW9Ao0mOmWTG4WzE8rm-Rfa54wGU&downloadName=Penetration+test+%28Jumpsec%29+13%2F02%2F24.pdf).
 
-
 ## Related packages
 
 There are a few dependent packages that are closely related to this project:
 
- - https://github.com/theopensystemslab/planx-core
- - https://github.com/theopensystemslab/map
- - https://github.com/theopensystemslab/digital-planning-data-schemas
+- https://github.com/theopensystemslab/planx-core
+- https://github.com/theopensystemslab/map
+- https://github.com/theopensystemslab/digital-planning-data-schemas
