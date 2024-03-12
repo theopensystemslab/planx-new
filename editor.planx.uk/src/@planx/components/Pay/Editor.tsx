@@ -52,11 +52,19 @@ const parseError = (
   return errors[index].key || errors[index].value;
 };
 
+/**
+ * Disable required fields so they cannot be edited
+ * Only disable first instance, otherwise any field beginning with a required field will be disabled, and user will not be able to fix their mistake as the delete icon is also disabled
+ */
+const isFieldDisabled = (key: string, index: number) =>
+  REQUIRED_GOVPAY_METADATA.includes(key) &&
+  index === REQUIRED_GOVPAY_METADATA.indexOf(key);
+
 function GovPayMetadataEditor(
   props: ListManagerEditorProps<GovPayMetadata> & { index: number },
 ) {
   const { key: currKey, value: currVal } = props.value;
-  const isDisabled = REQUIRED_GOVPAY_METADATA.includes(currKey);
+  const isDisabled = isFieldDisabled(currKey, props.index);
   const formik = useFormikContext<Pay>();
   const error = parseError(
     formik.errors.govPayMetadata as string | undefined | GovPayMetadata[],
@@ -275,8 +283,8 @@ const Component: React.FC<Props> = (props: Props) => {
                     }}
                     Editor={GovPayMetadataEditor}
                     newValue={() => ({ key: "", value: "" })}
-                    isFieldDisabled={({ key }) =>
-                      REQUIRED_GOVPAY_METADATA.includes(key)
+                    isFieldDisabled={({ key }, index) =>
+                      isFieldDisabled(key, index)
                     }
                   />
                 </>

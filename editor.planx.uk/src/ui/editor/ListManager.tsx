@@ -32,7 +32,7 @@ export interface Props<T, EditorExtraProps = {}> {
   Editor: React.FC<EditorProps<T> & (EditorExtraProps | {})>;
   editorExtraProps?: EditorExtraProps;
   disableDragAndDrop?: boolean;
-  isFieldDisabled?: (item: T) => boolean;
+  isFieldDisabled?: (item: T, index: number) => boolean;
 }
 
 const Item = styled(Box)(({ theme }) => ({
@@ -84,7 +84,8 @@ export default function ListManager<T, EditorExtraProps>(
                   size="large"
                   disabled={
                     isViewOnly ||
-                    (props?.isFieldDisabled && props.isFieldDisabled(item))
+                    (props?.isFieldDisabled &&
+                      props.isFieldDisabled(item, index))
                   }
                 >
                   <Delete />

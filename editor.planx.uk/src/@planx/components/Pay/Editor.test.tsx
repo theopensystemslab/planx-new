@@ -267,5 +267,52 @@ describe("Pay component - Editor Modal", () => {
         expect(getByText("Keys must be unique")).toBeVisible(),
       );
     });
+
+    it("only disables the first instance of a required filed", async () => {
+      act(() => setState({ user: mockUser, flowName: "test flow" }));
+
+      const handleSubmit = jest.fn();
+
+      const {
+        getAllByPlaceholderText,
+        getAllByLabelText,
+        user,
+        getByRole,
+        getByText,
+      } = setup(
+        <DndProvider backend={HTML5Backend}>
+          <PayComponent
+            id="test"
+            handleSubmit={handleSubmit}
+            node={{ data: { fn: "fee" } }}
+          />
+        </DndProvider>,
+      );
+
+      await user.click(getByRole("button", { name: "add new" }));
+
+      const keyInput = getAllByPlaceholderText("key")[3];
+      const valueInput = getAllByPlaceholderText("value")[3];
+
+      await user.type(keyInput, "flow");
+
+      expect(valueInput).not.toBeDisabled();
+      await user.type(valueInput, "myNewValue");
+
+      // Required to trigger submission outside the context of FormModal component
+      fireEvent.submit(getByRole("form"));
+
+      expect(handleSubmit).not.toHaveBeenCalled();
+
+      // Test that validation schema is wired up to UI
+      await waitFor(() =>
+        expect(getByText("Keys must be unique")).toBeVisible(),
+      );
+
+      const duplicateKeyDeleteIcon = getAllByLabelText("Delete")[3];
+
+      // This tests that the user is able to fix their mistake
+      expect(duplicateKeyDeleteIcon).not.toBeDisabled();
+    });
   });
 });
