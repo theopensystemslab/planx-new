@@ -209,8 +209,63 @@ describe("Pay component - Editor Modal", () => {
       ]);
     });
 
-    it.todo(
-      "displays errors and applies the govUkPayMetadata schema validation rules",
-    );
+    it("displays field-level errors", async () => {
+      act(() => setState({ user: mockUser, flowName: "test flow" }));
+
+      const handleSubmit = jest.fn();
+
+      const { getByText, user, getByRole } = setup(
+        <DndProvider backend={HTML5Backend}>
+          <PayComponent id="test" handleSubmit={handleSubmit} />
+        </DndProvider>,
+      );
+
+      await user.click(getByRole("button", { name: "add new" }));
+      fireEvent.submit(getByRole("form"));
+
+      expect(handleSubmit).not.toHaveBeenCalled();
+
+      // Test that validation schema is wired up to UI
+      // model.test.ts tests validation schema behaviour in-depth
+      await waitFor(() =>
+        expect(getByText("Key is a required field")).toBeVisible(),
+      );
+    });
+
+    it("displays array-level errors", async () => {
+      act(() => setState({ user: mockUser, flowName: "test flow" }));
+
+      const handleSubmit = jest.fn();
+
+      const { getByText, user, getByRole, getAllByPlaceholderText } = setup(
+        <DndProvider backend={HTML5Backend}>
+          <PayComponent id="test" handleSubmit={handleSubmit} />
+        </DndProvider>,
+      );
+
+      // Add first duplicate key
+      await user.click(getByRole("button", { name: "add new" }));
+      const keyInput4 = getAllByPlaceholderText("key")[3];
+      const valueInput4 = getAllByPlaceholderText("value")[3];
+      await user.type(keyInput4, "duplicatedKey");
+      await user.type(valueInput4, "myNewValue");
+
+      // Add second duplicate key
+      await user.click(getByRole("button", { name: "add new" }));
+      const keyInput5 = getAllByPlaceholderText("key")[4];
+      const valueInput5 = getAllByPlaceholderText("value")[4];
+      await user.type(keyInput5, "duplicatedKey");
+      await user.type(valueInput5, "myNewValue");
+
+      fireEvent.submit(getByRole("form"));
+
+      expect(handleSubmit).not.toHaveBeenCalled();
+
+      // Test that validation schema is wired up to UI
+      // model.test.ts tests validation schema behaviour in-depth
+      await waitFor(() =>
+        expect(getByText("Keys must be unique")).toBeVisible(),
+      );
+    });
   });
 });

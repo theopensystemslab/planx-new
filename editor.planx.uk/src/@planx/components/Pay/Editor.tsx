@@ -30,38 +30,63 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
-function GovPayMetadataEditor(props: ListManagerEditorProps<GovPayMetadata>) {
+/**
+ * Helper method to handle Formik errors in arrays
+ * Required as errors can be at array-level or field-level and the useFormikContext hook cannot correctly type infer this from the validation schema
+ * Docs: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
+ */
+const parseError = (
+  errors: string | undefined | GovPayMetadata[],
+  index: number,
+): string | undefined => {
+  // No errors
+  if (!errors) return;
+
+  // Array-level error - handled at a higher level
+  if (typeof errors === "string") return;
+
+  // No error for this field
+  if (!errors[index]) return;
+
+  // Specific field-level error
+  return errors[index].key || errors[index].value;
+};
+
+function GovPayMetadataEditor(
+  props: ListManagerEditorProps<GovPayMetadata> & { index: number },
+) {
   const { key: currKey, value: currVal } = props.value;
   const isDisabled = REQUIRED_GOVPAY_METADATA.includes(currKey);
-  const formik = useFormikContext<GovPayMetadata>();
-  console.log({ formik });
+  const formik = useFormikContext<Pay>();
+  const error = parseError(
+    formik.errors.govPayMetadata as string | undefined | GovPayMetadata[],
+    props.index,
+  );
 
   return (
     <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
-      {/* <ErrorWrapper error={props.index && errors[props.index]}> */}
-      <InputRow>
-        <Input
-          required
-          aria-labelledby="key-label"
-          disabled={isDisabled}
-          value={currKey}
-          onChange={({ target: { value: newKey } }) =>
-            props.onChange({ key: newKey, value: currVal })
-          }
-          placeholder="key"
-        />
-        <Input
-          required
-          aria-labelledby="value-label"
-          disabled={isDisabled}
-          value={currVal}
-          onChange={({ target: { value: newVal } }) =>
-            props.onChange({ key: currKey, value: newVal })
-          }
-          placeholder="value"
-        />
-      </InputRow>
-      {/* </ErrorWrapper> */}
+      <ErrorWrapper error={error}>
+        <InputRow>
+          <Input
+            aria-labelledby="key-label"
+            disabled={isDisabled}
+            value={currKey}
+            onChange={({ target: { value: newKey } }) =>
+              props.onChange({ key: newKey, value: currVal })
+            }
+            placeholder="key"
+          />
+          <Input
+            aria-labelledby="value-label"
+            disabled={isDisabled}
+            value={currVal}
+            onChange={({ target: { value: newVal } }) =>
+              props.onChange({ key: currKey, value: newVal })
+            }
+            placeholder="value"
+          />
+        </InputRow>
+      </ErrorWrapper>
     </Box>
   );
 }
@@ -130,7 +155,7 @@ const Component: React.FC<Props> = (props: Props) => {
       validateOnChange={false}
       validateOnBlur={false}
     >
-      {({ values, handleChange, setFieldValue }) => (
+      {({ values, handleChange, setFieldValue, errors }) => (
         <Form id="modal" name="modal">
           <ModalSection>
             <ModalSectionContent title="Payment" Icon={ICONS[TYPES.Pay]}>
@@ -209,43 +234,53 @@ const Component: React.FC<Props> = (props: Props) => {
                 centers, or ledger codes. See{" "}
                 <Link href="#TODO">our guide</Link> for more details.
               </Typography>
-              <Box
-                sx={{
-                  width: "100%",
-                  mb: 1,
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <Typography
-                  sx={{ width: "100%", ml: 5 }}
-                  variant="subtitle2"
-                  component="label"
-                  id="key-label"
-                >
-                  Key
-                </Typography>
-                <Typography
-                  sx={{ width: "100%", ml: -5 }}
-                  variant="subtitle2"
-                  component="label"
-                  id="value-label"
-                >
-                  Value
-                </Typography>
-              </Box>
-              <ListManager
-                disableDragAndDrop
-                values={values.govPayMetadata || []}
-                onChange={(metadata) => {
-                  setFieldValue("govPayMetadata", metadata);
-                }}
-                Editor={GovPayMetadataEditor}
-                newValue={() => ({ key: "", value: "" })}
-                isFieldDisabled={({ key }) =>
-                  REQUIRED_GOVPAY_METADATA.includes(key)
+              <ErrorWrapper
+                error={
+                  typeof errors.govPayMetadata === "string"
+                    ? errors.govPayMetadata
+                    : undefined
                 }
-              />
+              >
+                <>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      mb: 1,
+                      display: "flex",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    <Typography
+                      sx={{ width: "100%", ml: 5 }}
+                      variant="subtitle2"
+                      component="label"
+                      id="key-label"
+                    >
+                      Key
+                    </Typography>
+                    <Typography
+                      sx={{ width: "100%", ml: -5 }}
+                      variant="subtitle2"
+                      component="label"
+                      id="value-label"
+                    >
+                      Value
+                    </Typography>
+                  </Box>
+                  <ListManager
+                    disableDragAndDrop
+                    values={values.govPayMetadata || []}
+                    onChange={(metadata) => {
+                      setFieldValue("govPayMetadata", metadata);
+                    }}
+                    Editor={GovPayMetadataEditor}
+                    newValue={() => ({ key: "", value: "" })}
+                    isFieldDisabled={({ key }) =>
+                      REQUIRED_GOVPAY_METADATA.includes(key)
+                    }
+                  />
+                </>
+              </ErrorWrapper>
             </ModalSectionContent>
           </ModalSection>
           <ModalSection>
