@@ -60,9 +60,7 @@ const isFieldDisabled = (key: string, index: number) =>
   REQUIRED_GOVPAY_METADATA.includes(key) &&
   index === REQUIRED_GOVPAY_METADATA.indexOf(key);
 
-function GovPayMetadataEditor(
-  props: ListManagerEditorProps<GovPayMetadata> & { index: number },
-) {
+function GovPayMetadataEditor(props: ListManagerEditorProps<GovPayMetadata>) {
   const { key: currKey, value: currVal } = props.value;
   const isDisabled = isFieldDisabled(currKey, props.index);
   const formik = useFormikContext<Pay>();
@@ -276,6 +274,7 @@ const Component: React.FC<Props> = (props: Props) => {
                     </Typography>
                   </Box>
                   <ListManager
+                    maxItems={10}
                     disableDragAndDrop
                     values={values.govPayMetadata || []}
                     onChange={(metadata) => {
