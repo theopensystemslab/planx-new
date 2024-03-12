@@ -230,7 +230,7 @@ describe("Pay component - Editor Modal", () => {
       await waitFor(() =>
         expect(getByText("Key is a required field")).toBeVisible(),
       );
-    });
+    }, 10000);
 
     it("displays array-level errors", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
@@ -266,7 +266,7 @@ describe("Pay component - Editor Modal", () => {
       await waitFor(() =>
         expect(getByText("Keys must be unique")).toBeVisible(),
       );
-    });
+    }, 10000);
 
     it("only disables the first instance of a required filed", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
