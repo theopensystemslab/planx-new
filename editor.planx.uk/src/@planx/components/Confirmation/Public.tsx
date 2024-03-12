@@ -1,9 +1,9 @@
 import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { QuestionAndResponses } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
+import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -13,20 +13,6 @@ import NumberedList from "ui/public/NumberedList";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import type { Confirmation } from "./model";
-
-const Table = styled("table")(({ theme }) => ({
-  width: "100%",
-  borderCollapse: "collapse",
-  "& tr": {
-    borderBottom: `1px solid ${theme.palette.grey[400]}`,
-    "&:last-of-type": {
-      border: "none",
-    },
-    "& td": {
-      padding: theme.spacing(1.5, 1),
-    },
-  },
-}));
 
 export type Props = PublicProps<Confirmation>;
 
@@ -70,18 +56,14 @@ export default function ConfirmationComponent(props: Props) {
       </Banner>
       <Card>
         {props.details && (
-          <Table>
-            <tbody>
-              {Object.entries(props.details).map((item, i) => (
-                <tr key={i}>
-                  <td>{item[0]}</td>
-                  <td>
-                    <b>{item[1]}</b>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <SummaryListTable>
+            {Object.entries(props.details).map((item) => (
+              <>
+                <dt>{item[0]}</dt>
+                <dd>{item[1]}</dd>
+              </>
+            ))}
+          </SummaryListTable>
         )}
 
         {<FileDownload data={data} filename={sessionId || "application"} />}

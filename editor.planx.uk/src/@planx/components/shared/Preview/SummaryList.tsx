@@ -19,7 +19,7 @@ export default SummaryListsBySections;
 const FIND_PROPERTY_DT = "Property address";
 const DRAW_BOUNDARY_DT = "Location plan";
 
-const Grid = styled("dl", {
+export const SummaryListTable = styled("dl", {
   shouldForwardProp: (prop) => prop !== "showChangeButton",
 })<{ showChangeButton?: boolean }>(({ theme, showChangeButton }) => ({
   display: "grid",
@@ -49,7 +49,7 @@ const Grid = styled("dl", {
   },
   "& dd:nth-of-type(2n)": {
     // right column
-    textAlign: "right",
+    textAlign: showChangeButton ? "right" : "left",
   },
 }));
 
@@ -235,7 +235,7 @@ function SummaryList(props: SummaryListProps) {
 
   return (
     <>
-      <Grid showChangeButton={props.showChangeButton}>
+      <SummaryListTable showChangeButton={props.showChangeButton}>
         {props.summaryBreadcrumbs.map(
           ({ component: Component, nodeId, node, userData }, i) => (
             <React.Fragment key={i}>
@@ -268,7 +268,7 @@ function SummaryList(props: SummaryListProps) {
             </React.Fragment>
           ),
         )}
-      </Grid>
+      </SummaryListTable>
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
