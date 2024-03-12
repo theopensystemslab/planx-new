@@ -19,7 +19,7 @@ import {
 import { removeAt, setAt } from "../../utils";
 
 export interface EditorProps<T> {
-  index?: number;
+  index: number;
   value: T;
   onChange: (newValue: T) => void;
 }
@@ -82,7 +82,10 @@ export default function ListManager<T, EditorExtraProps>(
                   }}
                   aria-label="Delete"
                   size="large"
-                  disabled={isViewOnly || (props?.isFieldDisabled && props.isFieldDisabled(item))}
+                  disabled={
+                    isViewOnly ||
+                    (props?.isFieldDisabled && props.isFieldDisabled(item))
+                  }
                 >
                   <Delete />
                 </IconButton>
