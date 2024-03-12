@@ -101,6 +101,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
     errorMessage,
     "aria-label": ariaLabel,
     "aria-describedby": ariaDescribedBy,
+    "aria-labelledby": ariaLabelledBy,
     id,
     ...restProps
   } = props;
@@ -127,6 +128,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
         inputProps={{
           "aria-label": ariaLabel,
           "aria-describedby": ariaDescribedBy,
+          "aria-labelledby": ariaLabelledBy,
         }}
         id={id}
         ref={container}
