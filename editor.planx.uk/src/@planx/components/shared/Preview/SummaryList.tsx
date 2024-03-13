@@ -19,7 +19,7 @@ export default SummaryListsBySections;
 const FIND_PROPERTY_DT = "Property address";
 const DRAW_BOUNDARY_DT = "Location plan";
 
-const Grid = styled("dl", {
+export const SummaryListTable = styled("dl", {
   shouldForwardProp: (prop) => prop !== "showChangeButton",
 })<{ showChangeButton?: boolean }>(({ theme, showChangeButton }) => ({
   display: "grid",
@@ -49,7 +49,7 @@ const Grid = styled("dl", {
   },
   "& dd:nth-of-type(2n)": {
     // right column
-    textAlign: "right",
+    textAlign: showChangeButton ? "right" : "left",
   },
 }));
 
@@ -235,7 +235,7 @@ function SummaryList(props: SummaryListProps) {
 
   return (
     <>
-      <Grid showChangeButton={props.showChangeButton}>
+      <SummaryListTable showChangeButton={props.showChangeButton}>
         {props.summaryBreadcrumbs.map(
           ({ component: Component, nodeId, node, userData }, i) => (
             <React.Fragment key={i}>
@@ -247,7 +247,7 @@ function SummaryList(props: SummaryListProps) {
                 passport={props.passport}
               />
               {props.showChangeButton && (
-                <dd>
+                <Box component="dd">
                   <Link
                     onClick={() => handleChange(nodeId)}
                     component="button"
@@ -263,12 +263,12 @@ function SummaryList(props: SummaryListProps) {
                         "this answer"}
                     </span>
                   </Link>
-                </dd>
+                </Box>
               )}
             </React.Fragment>
           ),
         )}
-      </Grid>
+      </SummaryListTable>
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
@@ -300,8 +300,8 @@ interface ComponentProps {
 function Question(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.text}</dt>
-      <dd>{getNodeText()}</dd>
+      <Box component="dt">{props.node.data.text}</Box>
+      <Box component="dd">{getNodeText()}</Box>
     </>
   );
 
@@ -323,26 +323,26 @@ function FindProperty(props: ComponentProps) {
       props.passport.data?._address;
     return (
       <>
-        <dt>{FIND_PROPERTY_DT}</dt>
-        <dd>
+        <Box component="dt">{FIND_PROPERTY_DT}</Box>
+        <Box component="dd">
           {`${single_line_address.split(`, ${town}`)[0]}`}
           <br />
           {town}
           <br />
           {postcode}
-        </dd>
+        </Box>
       </>
     );
   } else {
     const { x, y, title } = props.passport.data?._address;
     return (
       <>
-        <dt>{FIND_PROPERTY_DT}</dt>
-        <dd>
+        <Box component="dt">{FIND_PROPERTY_DT}</Box>
+        <Box component="dd">
           {`${title}`}
           <br />
           {`${Math.round(x)} Easting (X), ${Math.round(y)} Northing (Y)`}
-        </dd>
+        </Box>
       </>
     );
   }
@@ -351,14 +351,14 @@ function FindProperty(props: ComponentProps) {
 function Checklist(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.text}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.text}</Box>
+      <Box component="dd">
         <ul>
           {getAnswers(props).map((nodeId, i: number) => (
             <li key={i}>{props.flow[nodeId].data.text}</li>
           ))}
         </ul>
-      </dd>
+      </Box>
     </>
   );
 }
@@ -366,8 +366,8 @@ function Checklist(props: ComponentProps) {
 function TextInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>{getAnswersByNode(props)}</dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">{getAnswersByNode(props)}</Box>
     </>
   );
 }
@@ -375,8 +375,8 @@ function TextInput(props: ComponentProps) {
 function FileUpload(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
             <li key={i}>
@@ -384,7 +384,7 @@ function FileUpload(props: ComponentProps) {
             </li>
           ))}
         </ul>
-      </dd>
+      </Box>
     </>
   );
 }
@@ -392,8 +392,10 @@ function FileUpload(props: ComponentProps) {
 function DateInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>{format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}</dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
+        {format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}
+      </Box>
     </>
   );
 }
@@ -413,8 +415,8 @@ function DrawBoundary(props: ComponentProps) {
 
   return (
     <>
-      <dt>{DRAW_BOUNDARY_DT}</dt>
-      <dd>
+      <Box component="dt">{DRAW_BOUNDARY_DT}</Box>
+      <Box component="dd">
         {fileName && (
           <span data-testid="uploaded-plan-name">
             Your uploaded file: <b>{fileName}</b>
@@ -443,7 +445,7 @@ function DrawBoundary(props: ComponentProps) {
           !geodata &&
           props.node.data?.hideFileUpload &&
           "Not provided"}
-      </dd>
+      </Box>
     </>
   );
 }
@@ -451,8 +453,10 @@ function DrawBoundary(props: ComponentProps) {
 function NumberInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>{`${getAnswersByNode(props)} ${props.node.data.units ?? ""}`}</dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">{`${getAnswersByNode(props)} ${
+        props.node.data.units ?? ""
+      }`}</Box>
     </>
   );
 }
@@ -463,8 +467,8 @@ function AddressInput(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
         {line1}
         <br />
         {line2}
@@ -480,7 +484,7 @@ function AddressInput(props: ComponentProps) {
             {country}
           </>
         ) : null}
-      </dd>
+      </Box>
     </>
   );
 }
@@ -492,8 +496,8 @@ function ContactInput(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
         {[title, firstName, lastName].filter(Boolean).join(" ").trim()}
         <br />
         {organisation ? (
@@ -505,7 +509,7 @@ function ContactInput(props: ComponentProps) {
         {phone}
         <br />
         {email}
-      </dd>
+      </Box>
     </>
   );
 }
@@ -520,8 +524,8 @@ function FileUploadAndLabel(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
         <ul>
           {uniqueFilenames.length
             ? uniqueFilenames.map((filename, index) => (
@@ -529,7 +533,7 @@ function FileUploadAndLabel(props: ComponentProps) {
               ))
             : "No files uploaded"}
         </ul>
-      </dd>
+      </Box>
     </>
   );
 }
@@ -537,8 +541,8 @@ function FileUploadAndLabel(props: ComponentProps) {
 function Debug(props: ComponentProps) {
   return (
     <>
-      <dt>{JSON.stringify(props.node.data)}</dt>
-      <dd>{JSON.stringify(props.userData?.answers)}</dd>
+      <Box component="dt">{JSON.stringify(props.node.data)}</Box>
+      <Box component="dd">{JSON.stringify(props.userData?.answers)}</Box>
     </>
   );
 }
