@@ -1359,6 +1359,54 @@
                 _is_null: true
         check: null
 - table:
+    name: submission_services_summary
+    schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - number_times_resumed
+          - sent_to_bops
+          - sent_to_email
+          - sent_to_uniform
+          - user_clicked_save
+          - user_invited_to_pay
+          - session_length_days
+          - bops_applications
+          - email_applications
+          - payment_requests
+          - payment_status
+          - uniform_applications
+          - service_slug
+          - session_id
+          - team_slug
+          - created_at
+          - submitted_at
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - number_times_resumed
+          - sent_to_bops
+          - sent_to_email
+          - sent_to_uniform
+          - user_clicked_save
+          - user_invited_to_pay
+          - session_length_days
+          - bops_applications
+          - email_applications
+          - payment_requests
+          - payment_status
+          - uniform_applications
+          - service_slug
+          - session_id
+          - team_slug
+          - created_at
+          - submitted_at
+        filter: {}
+      comment: ""
+- table:
     name: team_integrations
     schema: public
   object_relationships:
