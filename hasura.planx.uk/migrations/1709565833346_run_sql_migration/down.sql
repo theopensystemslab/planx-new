@@ -1,3 +1,7 @@
+-- Revoke select permissions from tables used by Metabase
+REVOKE SELECT ON public.analytics FROM metabase_read_only;
+REVOKE SELECT ON public.analytics_logs FROM metabase_read_only;
+
 -- Revoke select permissions from views used by Metabase
 REVOKE SELECT ON public.analytics_summary FROM metabase_read_only;
 REVOKE SELECT ON public.feedback_summary FROM metabase_read_only;
