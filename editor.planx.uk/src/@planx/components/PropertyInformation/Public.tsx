@@ -220,9 +220,9 @@ function PropertyDetails(props: PropertyDetailsProps) {
     <SummaryListTable showChangeButton={true}>
       {filteredData.map(({ heading, detail, fn }: PropertyDetail) => (
         <React.Fragment key={heading}>
-          <dt>{heading}</dt>
-          <dd>{detail}</dd>
-          <dd>
+          <Box component="dt">{heading}</Box>
+          <Box component="dd">{detail}</Box>
+          <Box component="dd">
             {showPropertyTypeOverride && fn ? (
               <Link
                 component="button"
@@ -241,7 +241,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
             ) : (
               ``
             )}
-          </dd>
+          </Box>
         </React.Fragment>
       ))}
     </SummaryListTable>

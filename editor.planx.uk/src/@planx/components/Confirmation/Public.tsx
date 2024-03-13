@@ -59,8 +59,8 @@ export default function ConfirmationComponent(props: Props) {
           <SummaryListTable>
             {Object.entries(props.details).map((item) => (
               <>
-                <dt>{item[0]}</dt>
-                <dd>{item[1]}</dd>
+                <Box component="dt">{item[0]}</Box>
+                <Box component="dd">{item[1]}</Box>
               </>
             ))}
           </SummaryListTable>

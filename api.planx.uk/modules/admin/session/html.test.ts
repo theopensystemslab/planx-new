@@ -53,7 +53,7 @@ describe("HTML data admin endpoint", () => {
       .expect(200)
       .expect("content-type", "text/html; charset=utf-8")
       .then((res) =>
-        expect(res.text).toContain("<dt>Is this a test?</dt><dd>Yes</dd>"),
+        expect(res.text).toContain("<Box component="dt">Is this a test?</Box><Box component="dd">Yes</Box>"),
       );
   });
 });
