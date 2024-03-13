@@ -3,14 +3,14 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 
-const DataManagerSettings: React.FC = () => {
+const Submissions: React.FC = () => {
   return (
     <Box>
       <Typography variant="h2" component="h3" gutterBottom>
-        Data Manager
+        Submissions
       </Typography>
       <Typography variant="body1">
-        Manage the data that your service uses and makes available via its API
+        View data on the user submitted applications for this service.
       </Typography>
       <Box py={5}>
         <FeaturePlaceholder title="Feature in development" />
@@ -18,4 +18,5 @@ const DataManagerSettings: React.FC = () => {
     </Box>
   );
 };
-export default DataManagerSettings;
+
+export default Submissions;
