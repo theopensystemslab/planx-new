@@ -53,6 +53,27 @@ const parseError = (
 };
 
 /**
+ * Helper method to handle Formik "touched" in arrays
+ * Please see parseError() for additional context
+ */
+const parseTouched = (
+  touched: string | undefined | GovPayMetadata[],
+  index: number,
+): string | undefined => {
+  // No errors
+  if (!touched) return;
+
+  // Array-level error - handled at a higher level
+  if (typeof touched === "string") return;
+
+  // No error for this field
+  if (!touched[index]) return;
+
+  // Specific field-level error
+  return touched[index].key && touched[index].value;
+};
+
+/**
  * Disable required fields so they cannot be edited
  * Only disable first instance, otherwise any field beginning with a required field will be disabled, and user will not be able to fix their mistake as the delete icon is also disabled
  */
@@ -63,15 +84,19 @@ const isFieldDisabled = (key: string, index: number) =>
 function GovPayMetadataEditor(props: ListManagerEditorProps<GovPayMetadata>) {
   const { key: currKey, value: currVal } = props.value;
   const isDisabled = isFieldDisabled(currKey, props.index);
-  const formik = useFormikContext<Pay>();
+  const { errors, touched } = useFormikContext<Pay>();
   const error = parseError(
-    formik.errors.govPayMetadata as string | undefined | GovPayMetadata[],
+    errors.govPayMetadata as string | undefined | GovPayMetadata[],
+    props.index,
+  );
+  const isTouched = parseTouched(
+    touched.govPayMetadata as string | undefined | GovPayMetadata[],
     props.index,
   );
 
   return (
     <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
-      <ErrorWrapper error={error}>
+      <ErrorWrapper error={isTouched ? error : undefined}>
         <InputRow>
           <Input
             aria-labelledby="key-label"
@@ -158,10 +183,17 @@ const Component: React.FC<Props> = (props: Props) => {
       initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
-      validateOnChange={false}
-      validateOnBlur={false}
+      validateOnChange={true}
+      validateOnBlur={true}
     >
-      {({ values, handleChange, setFieldValue, errors }) => (
+      {({
+        values,
+        handleChange,
+        setFieldValue,
+        errors,
+        touched,
+        setTouched,
+      }) => (
         <Form id="modal" name="modal">
           <ModalSection>
             <ModalSectionContent title="Payment" Icon={ICONS[TYPES.Pay]}>
@@ -242,7 +274,8 @@ const Component: React.FC<Props> = (props: Props) => {
               </Typography>
               <ErrorWrapper
                 error={
-                  typeof errors.govPayMetadata === "string"
+                  typeof errors.govPayMetadata === "string" &&
+                  touched.govPayMetadata
                     ? errors.govPayMetadata
                     : undefined
                 }
@@ -281,7 +314,10 @@ const Component: React.FC<Props> = (props: Props) => {
                       setFieldValue("govPayMetadata", metadata);
                     }}
                     Editor={GovPayMetadataEditor}
-                    newValue={() => ({ key: "", value: "" })}
+                    newValue={() => {
+                      setTouched({});
+                      return { key: "", value: "" };
+                    }}
                     isFieldDisabled={({ key }, index) =>
                       isFieldDisabled(key, index)
                     }
