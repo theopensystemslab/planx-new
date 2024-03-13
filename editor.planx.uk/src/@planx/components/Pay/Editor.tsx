@@ -30,6 +30,9 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
+const GOVPAY_DOCS_URL =
+  "https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39";
+
 /**
  * Helper method to handle Formik errors in arrays
  * Required as errors can be at array-level or field-level and the useFormikContext hook cannot correctly type infer this from the validation schema
@@ -270,7 +273,14 @@ const Component: React.FC<Props> = (props: Props) => {
               <Typography variant="subtitle2" sx={{ mb: 2 }}>
                 Include metadata alongside payments, such as VAT codes, cost
                 centers, or ledger codes. See{" "}
-                <Link href="#TODO">our guide</Link> for more details.
+                <Link
+                  href={GOVPAY_DOCS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GOV.UK Pay documentation
+                </Link>{" "}
+                for more details.
               </Typography>
               <ErrorWrapper
                 error={
