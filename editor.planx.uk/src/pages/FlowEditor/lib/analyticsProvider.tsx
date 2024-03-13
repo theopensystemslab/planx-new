@@ -462,7 +462,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   ) {
     if (shouldSkipTracking()) return;
 
-    const allowListAnswers = getAllowListAnswers(breadcrumb);
+    const allowListAnswers = getAllowListAnswers(nodeId, breadcrumb);
     if (!allowListAnswers) return;
 
     await publicClient.mutate({
@@ -491,16 +491,49 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   function getAllowListAnswers(
+    nodeId: string,
     breadcrumb: Store.userData,
-  ): Record<string, any>[] | undefined {
+  ): Record<string, unknown>[] | undefined {
+    const answers = getAnswers(nodeId);
+    const data = getData(breadcrumb);
+
+    const allowListAnswers = [...answers, ...data];
+    if (!allowListAnswers.length) return;
+
+    return allowListAnswers;
+  }
+
+  /**
+   * Extract allowlist answers from user answers
+   * e.g. from Checklist or Question components
+   */
+  function getAnswers(nodeId: string) {
+    const { data } = flow[nodeId];
+    const nodeFn: string = data?.fn || data?.val;
+    if (!nodeFn || !ALLOW_LIST.includes(nodeFn)) return [];
+
+    const answerIds = breadcrumbs[nodeId]?.answers;
+    if (!answerIds) return [];
+
+    const answerValues = answerIds.map((answerId) => flow[answerId]?.data?.val);
+
+    // Match data structure of `allow_list_answers` column
+    const answers = [ {[nodeFn]: answerValues } ];
+
+    return answers;
+  }
+
+  /**
+   * Extract allowlist answers from breadcrumb data
+   * e.g. data set automatically by components such as DrawBoundary
+   */
+  function getData(breadcrumb: Store.userData) {
     const dataSetByNode = breadcrumb.data;
-    if (!dataSetByNode) return;
+    if (!dataSetByNode) return [];
 
     const answerValues = Object.entries(dataSetByNode)
       .filter(([key, value]) => ALLOW_LIST.includes(key) && Boolean(value))
       .map(([key, value]) => ({ [key]: value }));
-
-    if (!answerValues.length) return;
 
     return answerValues;
   }
