@@ -20,7 +20,7 @@ const Submissions: React.FC = () => {
   useEffect(() => {
     if (flowSlug && teamSlug) {
       fetchSubmittedApplications(flowSlug, teamSlug)
-        .then((result) => setApplications(result.submission_services_summary))
+        .then((result) => setApplications(result))
         .catch((error) => {
           setError(error);
         });

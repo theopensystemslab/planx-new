@@ -44,11 +44,11 @@ export type SubmissionData = {
 export async function fetchSubmittedApplications(
   flowSlug: string,
   teamSlug: string,
-) {
+): Promise<SubmissionData[]> {
   const { data } = await client.query({
     query: gql`
       query SubmittedApplications($service_slug: String!, $team_slug: String!) {
-        submission_services_summary(
+        submissionServicesSummary: submission_services_summary(
           where: {
             service_slug: { _eq: $service_slug }
             team_slug: { _eq: $team_slug }
@@ -71,5 +71,5 @@ export async function fetchSubmittedApplications(
       team_slug: teamSlug,
     },
   });
-  return data;
+  return data.submissionServicesSummary;
 }
