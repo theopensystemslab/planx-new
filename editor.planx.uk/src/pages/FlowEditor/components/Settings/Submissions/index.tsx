@@ -10,8 +10,10 @@ import {
 } from "./submissionDataTypesAndQueries";
 
 const Submissions: React.FC = () => {
-  const flowSlug = useStore.getState().flowSlug;
-  const teamSlug = useStore.getState().teamSlug;
+  const [flowSlug, teamSlug] = useStore((state) => [
+    state.flowSlug,
+    state.teamSlug,
+  ]);
   const [applications, setApplications] = useState<SubmissionData[]>();
   const [error, setError] = useState(null);
 
