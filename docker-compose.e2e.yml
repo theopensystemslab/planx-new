@@ -29,4 +29,3 @@ services:
       UNIFORM_SUBMISSION_URL: http://mock-server:8080
       UNIFORM_TOKEN_URL: http://mock-server:8080
       UNIFORM_CLIENT_E2E: e2e:123
-      GOV_UK_PAY_TOKEN_E2E: ${GOV_UK_PAY_TOKEN_E2E}
