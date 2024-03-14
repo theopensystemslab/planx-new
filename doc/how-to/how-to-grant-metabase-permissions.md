@@ -52,3 +52,5 @@ When adding a new view, you will need to grant the `metabase_read_only` role `SE
 ```sql
 GRANT SELECT ON public.YOUR_NEW_VIEW TO metabase_read_only;
 ```
+
+⚠️ Please note - when views are dropped and re-created, associated privileges are revoked. Be sure to re-grant `SELECT` permissions when updating views via Hasura migrations.
