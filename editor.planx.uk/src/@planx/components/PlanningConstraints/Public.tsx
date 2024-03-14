@@ -15,7 +15,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import useSWR, { Fetcher } from "swr";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";
@@ -23,7 +22,11 @@ import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import ConstraintsList from "./List";
-import type { IntersectingConstraints, PlanningConstraints } from "./model";
+import {
+  DEFAULT_PLANNING_CONDITIONS_DISCLAIMER,
+  type IntersectingConstraints,
+  type PlanningConstraints,
+} from "./model";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -129,6 +132,7 @@ function Component(props: Props) {
           title={props.title}
           description={props.description || ""}
           fn={props.fn}
+          disclaimer={props.disclaimer}
           constraints={constraints}
           metadata={metadata}
           previousFeedback={props.previouslySubmittedData?.feedback}
@@ -193,6 +197,7 @@ export type PlanningConstraintsContentProps = {
   title: string;
   description: string;
   fn: string;
+  disclaimer: string;
   constraints: GISResponse["constraints"];
   metadata: GISResponse["metadata"];
   handleSubmit: (values: { feedback: string }) => void;
@@ -206,6 +211,7 @@ export function PlanningConstraintsContent(
   const {
     title,
     description,
+    disclaimer,
     constraints,
     metadata,
     handleSubmit,
@@ -257,7 +263,7 @@ export function PlanningConstraintsContent(
               <ConstraintsList data={negativeConstraints} metadata={metadata} />
             </SimpleExpand>
           )}
-          <PlanningConditionsInfo />
+          <Disclaimer text={disclaimer} />
         </>
       )}
       {!showError &&
@@ -284,19 +290,18 @@ export function PlanningConstraintsContent(
             >
               <ConstraintsList data={negativeConstraints} metadata={metadata} />
             </SimpleExpand>
-            <PlanningConditionsInfo />
+            <Disclaimer text={disclaimer} />
           </>
         )}
     </Card>
   );
 }
 
-const PlanningConditionsInfo = () => (
+const Disclaimer = (props: { text: string }) => (
   <WarningContainer>
     <ErrorOutline />
-    <Typography variant="body1" ml={2} fontWeight={FONT_WEIGHT_SEMI_BOLD}>
-      This page does not include information about historic planning conditions
-      that may apply to this property.
+    <Typography variant="body1" ml={2}>
+      {props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
     </Typography>
   </WarningContainer>
 );

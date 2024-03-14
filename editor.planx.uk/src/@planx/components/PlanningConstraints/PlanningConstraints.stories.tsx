@@ -32,6 +32,8 @@ const propsWithIntersections: PlanningConstraintsContentProps = {
   description:
     "Planning constraints might limit how you can develop or use the property",
   fn: "property.constraints.planning",
+  disclaimer:
+    "This page does not include information about historic planning conditions that may apply to this property.",
   constraints: {
     ...digitalLandResponseMock["constraints"],
     ...classifiedRoadsResponseMock["constraints"],
@@ -49,6 +51,8 @@ const propsWithoutIntersections: PlanningConstraintsContentProps = {
   description:
     "Planning constraints might limit how you can develop or use the property",
   fn: "property.constraints.planning",
+  disclaimer:
+    "This page does not include information about historic planning conditions that may apply to this property.",
   constraints: {
     ...digitalLandNegativeResponseMock["constraints"],
     ...classifiedRoadsNegativeResponseMock["constraints"],
