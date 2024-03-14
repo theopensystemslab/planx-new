@@ -53,14 +53,13 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       encryptionKey: process.env.ENCRYPTION_KEY!,
       env,
     });
-    const target = `${bopsSubmissionURL}/api/v2/planning_applications`;
     const exportData = await $api.export.digitalPlanningDataPayload(
       payload?.sessionId,
     );
 
     const bopsResponse = await axios({
       method: "POST",
-      url: target,
+      url: bopsSubmissionURL,
       adapter: "http",
       headers: {
         "Content-Type": "application/json",
