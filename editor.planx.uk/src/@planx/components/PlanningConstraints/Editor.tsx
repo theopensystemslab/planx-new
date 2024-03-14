@@ -63,7 +63,7 @@ function PlanningConstraintsComponent(props: Props) {
           </InputGroup>
           <InputGroup label="Planning conditions disclaimer">
             <InputRow>
-              <RichTextInput
+              <Input
                 name="disclaimer"
                 placeholder="Planning conditions disclaimer"
                 value={formik.values.disclaimer}

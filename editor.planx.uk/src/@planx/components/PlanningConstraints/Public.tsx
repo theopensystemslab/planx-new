@@ -15,6 +15,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import useSWR, { Fetcher } from "swr";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";
@@ -300,7 +301,7 @@ export function PlanningConstraintsContent(
 const Disclaimer = (props: { text: string }) => (
   <WarningContainer>
     <ErrorOutline />
-    <Typography variant="body1" ml={2}>
+    <Typography variant="body1" ml={2} fontWeight={FONT_WEIGHT_SEMI_BOLD}>
       {props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
     </Typography>
   </WarningContainer>
