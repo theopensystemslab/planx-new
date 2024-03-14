@@ -5,18 +5,25 @@ import { ServerError } from "../../errors";
 
 /**
  * Confirm that this local authority (aka team) has a pay token
- * TODO: Check this against a DB value instead of env vars?
  */
-export const isTeamUsingGovPay: RequestHandler = (req, _res, next) => {
-  const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
+export const isTeamUsingGovPay: RequestHandler = async (req, res, next) => {
+  const env =
+    process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
-  if (!isSupported) {
+  const { govPayToken } = await $api.team.getIntegrations({
+    env,
+    slug: req.params.localAuthority,
+    encryptionKey: process.env.ENCRYPTION_KEY!,
+  });
+
+  if (!govPayToken) {
     return next({
       status: 400,
       message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
     });
   }
+
+  res.locals.govPayToken = govPayToken;
 
   next();
 };
