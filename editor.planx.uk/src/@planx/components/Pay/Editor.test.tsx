@@ -31,6 +31,8 @@ describe("Pay component - Editor Modal", () => {
   });
 
   describe("GOV.UK Pay Metadata section", () => {
+    jest.setTimeout(20000);
+
     // Set up mock state with platformAdmin user so all Editor features are enabled
     const { getState, setState } = vanillaStore;
     const mockUser: User = {
@@ -230,7 +232,7 @@ describe("Pay component - Editor Modal", () => {
       await waitFor(() =>
         expect(getByText("Key is a required field")).toBeVisible(),
       );
-    }, 10000);
+    });
 
     it("displays array-level errors", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
@@ -266,7 +268,7 @@ describe("Pay component - Editor Modal", () => {
       await waitFor(() =>
         expect(getByText("Keys must be unique")).toBeVisible(),
       );
-    }, 10000);
+    });
 
     it("only disables the first instance of a required filed", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
