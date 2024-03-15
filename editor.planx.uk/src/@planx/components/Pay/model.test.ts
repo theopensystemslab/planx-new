@@ -1,4 +1,4 @@
-import { govPayMetadataSchema } from "./model";
+import { formatMetadata, govPayMetadataSchema } from "./model";
 
 describe("GovPayMetadata Schema", () => {
   const validate = async (payload: unknown) =>
@@ -106,5 +106,24 @@ describe("GovPayMetadata Schema", () => {
     ]);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(/A maximum of 10 fields can be set as metadata/);
+  });
+});
+
+describe("formatMetadata() helper", () => {
+  it("handles empty metadata", () => {
+    const result = formatMetadata([]);
+    expect(result).toMatchObject({});
+  });
+
+  it("converts metadata from the format generated in the form, to the format required by GovPay", () => {
+    const result = formatMetadata([
+      { key: "firstKey", value: "firstValue" },
+      { key: "secondKey", value: "secondValue" },
+    ]);
+
+    expect(result).toMatchObject({
+      firstKey: "firstValue",
+      secondKey: "secondValue",
+    });
   });
 });

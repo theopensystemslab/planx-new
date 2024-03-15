@@ -6,7 +6,7 @@ import type { MoreInformation } from "../shared";
 
 export interface GovPayMetadata {
   key: string;
-  value: string;
+  value: string | boolean;
 }
 
 export interface Pay extends MoreInformation {
@@ -25,7 +25,7 @@ export interface Pay extends MoreInformation {
   yourDetailsTitle?: string;
   yourDetailsDescription?: string;
   yourDetailsLabel?: string;
-  govPayMetadata?: GovPayMetadata[];
+  govPayMetadata: GovPayMetadata[];
 }
 
 // https://docs.payments.service.gov.uk/making_payments/#creating-a-payment
@@ -46,11 +46,7 @@ export interface GovUKCreatePaymentPayload {
     };
   };
   language?: string;
-  metadata?: {
-    source: "PlanX";
-    flow: string;
-    inviteToPay: boolean;
-  };
+  metadata?: Record<string, string | boolean>;
 }
 
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
@@ -68,17 +64,19 @@ export const formattedPriceWithCurrencySymbol = (
 export const createPayload = (
   fee: number,
   reference: string,
+  metadata: GovPayMetadata[],
 ): GovUKCreatePaymentPayload => ({
   amount: toPence(fee),
   reference,
   description: "New application",
   return_url: getReturnURL(reference),
-  metadata: {
-    source: "PlanX",
-    flow: useStore.getState().flowSlug,
-    inviteToPay: false,
-  },
+  metadata: formatMetadata(metadata),
 });
+
+export const formatMetadata = (
+  metadata: GovPayMetadata[],
+): GovUKCreatePaymentPayload["metadata"] =>
+  Object.fromEntries(metadata.map(({ key, value }) => [key, value]));
 
 /**
  * For Save & Return, include sessionId and email as query params so the session can be picked up
