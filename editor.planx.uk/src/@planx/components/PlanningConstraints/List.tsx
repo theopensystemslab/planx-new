@@ -100,6 +100,7 @@ export default function ConstraintsList({
                   data={con.value ? con.data : null}
                   metadata={metadata?.[con.fn]}
                   category={category}
+                  id={con.fn}
                 >
                   {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
                 </ConstraintListItem>
@@ -119,9 +120,14 @@ interface ConstraintListItemProps {
   metadata?: Metadata;
   category: string;
   children: ReactNode;
+  id: string;
 }
 
-function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
+function ConstraintListItem({
+  children,
+  id,
+  ...props
+}: ConstraintListItemProps) {
   const [showConstraintData, setShowConstraintData] = useState<boolean>(false);
 
   return (
@@ -139,6 +145,8 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             onClick={() =>
               setShowConstraintData((showConstraintData) => !showConstraintData)
             }
+            aria-expanded={showConstraintData}
+            aria-controls={id}
             style={{
               display: "flex",
               flexDirection: "row",
@@ -161,7 +169,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             />
           </Button>
         </Box>
-        <Collapse in={showConstraintData}>
+        <Collapse id={id} in={showConstraintData}>
           <Box py={1.5} px={2}>
             <>
               <Typography variant="h3" component="h4" gutterBottom>
