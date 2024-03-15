@@ -1,3 +1,5 @@
+import { SUBMITTED_APPLICATIONS_QUERY } from "./submissionData";
+
 export const mockApplications = [
   {
     sessionId: "test-session-3",
@@ -110,6 +112,34 @@ export const mockApplications = [
   },
 ];
 
-export const mockQueryResult = {
-  submissionServicesSummary: mockApplications,
-};
+export const mockRequests = [
+  {
+    request: {
+      query: SUBMITTED_APPLICATIONS_QUERY,
+      variables: { service_slug: "test-service", team_slug: "test-team" },
+    },
+    result: {
+      data: {
+        submissionServicesSummary: mockApplications,
+      },
+    },
+  },
+  {
+    request: {
+      query: SUBMITTED_APPLICATIONS_QUERY,
+      variables: { service_slug: "no-results-service", team_slug: "test-team" },
+    },
+    result: {
+      data: {
+        submissionServicesSummary: [],
+      },
+    },
+  },
+  {
+    request: {
+      query: SUBMITTED_APPLICATIONS_QUERY,
+      variables: { service_slug: "error-service", team_slug: "test-team" },
+    },
+    error: new Error("An error occurred"),
+  },
+];
