@@ -61,6 +61,16 @@ function PlanningConstraintsComponent(props: Props) {
               />
             </InputRow>
           </InputGroup>
+          <InputGroup label="Planning conditions disclaimer">
+            <InputRow>
+              <Input
+                name="disclaimer"
+                placeholder="Planning conditions disclaimer"
+                value={formik.values.disclaimer}
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+          </InputGroup>
         </ModalSectionContent>
       </ModalSection>
       <InternalNotes
