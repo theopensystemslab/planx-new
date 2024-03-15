@@ -272,17 +272,22 @@ function SummaryList(props: SummaryListProps) {
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
-        title="Confirm"
+        title="Do you want to continue?"
         confirmText="Yes"
         cancelText="No"
       >
         <Typography>
-          If you change this answer, you’ll need to confirm all the other
-          answers after it. This is because a changed answer might mean we have
-          new or different questions to ask.
-          <br />
-          <br />
-          Are you sure you want to change your answer?
+          Changing this answer means you will need to confirm any other answers
+          after it. This is because:
+          <ul>
+            <li>
+              a different answer might mean the service asks new questions
+            </li>
+            <li>
+              your planning officer needs the right information to assess your
+              application
+            </li>
+          </ul>
         </Typography>
       </ConfirmationDialog>
     </>
