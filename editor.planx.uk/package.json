@@ -166,6 +166,7 @@
     "start": "craco start",
     "build": "CI=false && craco build",
     "test": "react-scripts test",
+    "test:silent": "react-scripts test --silent",
     "eject": "react-scripts eject",
     "classic:start": "react-app-rewired start",
     "classic:build": "react-scripts build",

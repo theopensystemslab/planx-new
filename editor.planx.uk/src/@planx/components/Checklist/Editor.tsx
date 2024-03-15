@@ -48,7 +48,7 @@ interface ChecklistProps extends Checklist {
 }
 
 const OptionEditor: React.FC<{
-  index?: number;
+  index: number;
   value: Option;
   onChange: (newVal: Option) => void;
   groupIndex?: number;
