@@ -29,6 +29,11 @@ describe("Create payment send events webhook", () => {
           data: {
             passport: { data: {} },
             breadcrumbs: {},
+            id: "flow-123",
+          },
+          flow: {
+            id: "flow-123",
+            slug: "apply-for-something",
           },
         },
       },
