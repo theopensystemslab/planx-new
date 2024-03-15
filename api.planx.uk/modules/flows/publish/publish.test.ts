@@ -23,6 +23,12 @@ beforeEach(() => {
     data: {
       flow: {
         data: mockFlowData,
+        slug: "mock-flow-name",
+        team_id: 1,
+        team: {
+          slug: "testing",
+        },
+        publishedFlows: [{ data: mockFlowData }],
       },
     },
   });
@@ -115,6 +121,12 @@ describe("publish", () => {
       data: {
         flow: {
           data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
         },
       },
     });

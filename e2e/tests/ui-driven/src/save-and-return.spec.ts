@@ -27,7 +27,7 @@ test.describe("Save and return", () => {
       data: simpleSendFlow,
     },
   };
-  const previewURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false`;
+  const previewURL = `/${context.team?.slug}/${context.flow?.slug}/published?analytics=false`;
 
   test.beforeAll(async () => {
     try {

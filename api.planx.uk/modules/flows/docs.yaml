@@ -137,6 +137,13 @@ components:
               updatedFlow:
                 $ref: "#/components/schemas/FlowData"
                 required: false
+    FlattenFlow:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              $ref: "#/components/schemas/FlowData"
 paths:
   /flows/{flowId}/copy:
     post:
@@ -242,12 +249,10 @@ paths:
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/download-schema:
-    post:
+    get:
       summary: Download flow schema
       description: Download a CSV file representing the flow's schema
       tags: ["flows"]
-      security:
-        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/flowId"
       responses:
@@ -256,5 +261,22 @@ paths:
             text/csv:
               schema:
                 type: string
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{flowId}/flatten-flow:
+    get:
+      summary: Flatten a flow and its' external portals into a single graph
+      description: Flatten a flow and its' external portals into a single graph. The external portals must be published unless ?draft=true is set
+      tags: ["flows"]
+      parameters:
+        - $ref: "#/components/parameters/flowId"
+        - in: query
+          name: draft
+          type: boolean
+          required: false
+          description: Optional param to flatten a flow and its' external portals in their draft state.
+      responses:
+        "200":
+          $ref: "#/components/responses/FlattenFlow"
         "500":
           $ref: "#/components/responses/ErrorMessage"
