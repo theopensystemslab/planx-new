@@ -22,7 +22,7 @@ type BopsApplication = {
 };
 
 type EmailApplication = {
-  id: string;
+  id: number;
   recipient: string;
   submittedAt: string;
 };
