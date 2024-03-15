@@ -15,12 +15,6 @@ config:
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAN5E+De3A3HtpLVaSNTDwk9Uz4r2d5g8SIRVbNOd2fj3eU+lGJXjVbEAnxezr14hwabbfwW2ptjcFzqkhG7OmQ==
-  application:gov-uk-pay-token-buckinghamshire:
-    secure: AAABAA0ya8JhmFcgwuuf5i+XiJZ/uDp4SEGplUiiojyZzDtbjlZZfd8tNw8PjqKHzMBIhgyB2gHSsx9D/FV+cxxBa1AfIFtcj/l3rIrkK9jeG+yXtHnsLKr7MsZUqi6SdFft
-  application:gov-uk-pay-token-lambeth:
-    secure: AAABAK7qJXCA9mN96DeDWHqRDY7xe5glU9NZ2oTWVxYHR0NhkA83JOnI6dhknhUh8m7IMyy59lFIzeFCG3gOoWvkoTeQNiok7T91ek2f8UQqSSzgfUzgftbRm2sCkS5Yn0bW
-  application:gov-uk-pay-token-southwark:
-    secure: AAABAEosPvNevt9G7xLgTJIgyPDe9ZmXZnQa2BIsk7glewLz+EFzCvMVFq+9RkiEzkg9GdV2S7ttZ+6fCb5gByNbM7n2JcVG6a+LH9nHv6NwcoZ6U8ORArwiL4uO8xvGQQzD
   application:govuk-notify-api-key:
     secure: AAABADo05EPv/HWj7Rkf19nBeTcPJd4pEcRi2/uhyB3agraFODpLvNMx2bXfISf5pZ4HA41GYCE4f7OLcJN6hIV6ZMWUlEriPzvkoUAixbLlz1LIERiyk73R8E4F2bV65/9aFqi4l7caLS5c8iDJrE+JAvu2i7oS
   application:hasura-admin-secret:

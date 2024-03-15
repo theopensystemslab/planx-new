@@ -7,9 +7,7 @@ settings:
 overrides:
   nth-check@<2.0.1: '>=2.0.1'
   postcss@<8.4.31: '>=8.4.31'
-  semver@>=7.0.0 <7.5.2: '>=7.5.2'
-  '@adobe/css-tools@<4.3.2': '>=4.3.2'
-  follow-redirects@<1.15.4: '>=1.15.4'
+  follow-redirects@<=1.15.5: '>=1.15.6'
 
 dependencies:
   '@airbrake/browser':
@@ -43,8 +41,8 @@ dependencies:
     specifier: ^0.8.0
     version: 0.8.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#f187295
-    version: github.com/theopensystemslab/planx-core/f187295(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#eda1e67
+    version: github.com/theopensystemslab/planx-core/eda1e67(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -76,8 +74,8 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
   '@tiptap/extension-link':
-    specifier: ^2.1.13
-    version: 2.1.13(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+    specifier: 2.0.0-beta.36
+    version: 2.0.0-beta.36(@tiptap/core@2.0.3)
   '@tiptap/extension-list-item':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)
@@ -335,9 +333,6 @@ devDependencies:
   '@storybook/theming':
     specifier: ^7.6.7
     version: 7.6.7(react-dom@18.2.0)(react@18.2.0)
-  '@testing-library/dom':
-    specifier: ^8.20.1
-    version: 8.20.1
   '@testing-library/jest-dom':
     specifier: ^5.16.5
     version: 5.16.5
@@ -7273,15 +7268,15 @@ packages:
       '@tiptap/core': 2.0.3(@tiptap/pm@2.0.3)
     dev: false
 
-  /@tiptap/extension-link@2.1.13(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3):
-    resolution: {integrity: sha512-wuGMf3zRtMHhMrKm9l6Tft5M2N21Z0UP1dZ5t1IlOAvOeYV2QZ5UynwFryxGKLO0NslCBLF/4b/HAdNXbfXWUA==}
+  /@tiptap/extension-link@2.0.0-beta.36(@tiptap/core@2.0.3):
+    resolution: {integrity: sha512-jV0EBM/QPfR4e5FG5OPHZARnYS+CL8yhCzHO4J1Nb1i/+vRY9QpPVBruZABBwt+J+PMdq6t/6vvIXejCR3wyAg==}
     peerDependencies:
-      '@tiptap/core': ^2.0.0
-      '@tiptap/pm': ^2.0.0
+      '@tiptap/core': ^2.0.0-beta.1
     dependencies:
       '@tiptap/core': 2.0.3(@tiptap/pm@2.0.3)
-      '@tiptap/pm': 2.0.3(@tiptap/core@2.0.3)
-      linkifyjs: 4.1.3
+      linkifyjs: 3.0.5
+      prosemirror-model: 1.19.4
+      prosemirror-state: 1.4.3
     dev: false
 
   /@tiptap/extension-list-item@2.0.3(@tiptap/core@2.0.3):
@@ -14695,8 +14690,8 @@ packages:
       uc.micro: 2.0.0
     dev: false
 
-  /linkifyjs@4.1.3:
-    resolution: {integrity: sha512-auMesunaJ8yfkHvK4gfg1K0SaKX/6Wn9g2Aac/NwX+l5VdmFZzo/hdPGxEOETj+ryRa4/fiOPjeeKURSAJx1sg==}
+  /linkifyjs@3.0.5:
+    resolution: {integrity: sha512-1Y9XQH65eQKA9p2xtk+zxvnTeQBG7rdAXSkUG97DmuI/Xhji9uaUzaWxRj6rf9YC0v8KKHkxav7tnLX82Sz5Fg==}
     dev: false
 
   /lint-staged@13.2.3:
@@ -21120,9 +21115,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/f187295(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f187295}
-    id: github.com/theopensystemslab/planx-core/f187295
+  github.com/theopensystemslab/planx-core/eda1e67(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eda1e67}
+    id: github.com/theopensystemslab/planx-core/eda1e67
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

@@ -1,5 +1,4 @@
 import { makeUniqueFlow, getFlowData, insertFlow } from "../../../helpers";
-import { Flow } from "../../../types";
 import { userContext } from "../../auth/middleware";
 
 const copyFlow = async (
@@ -8,7 +7,7 @@ const copyFlow = async (
   insert: boolean,
 ) => {
   // Fetch the original flow
-  const flow: Flow = await getFlowData(flowId);
+  const flow = await getFlowData(flowId);
 
   // Generate new flow data which is an exact "content" copy of the original but with unique nodeIds
   const uniqueFlowData = makeUniqueFlow(flow.data, replaceValue);

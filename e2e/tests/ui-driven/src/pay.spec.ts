@@ -27,7 +27,7 @@ let context: Context = {
   sessionIds: [], // used to collect and clean up sessions
 };
 const previewURL = `/${context.team!.slug!}/${context.flow!
-  .slug!}/preview?analytics=false`;
+  .slug!}/published?analytics=false`;
 
 const payButtonText = "Pay now using GOV.UK Pay";
 

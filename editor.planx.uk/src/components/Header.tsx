@@ -6,7 +6,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import { grey } from '@mui/material/colors';
+import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
@@ -272,8 +272,7 @@ const NavBar: React.FC = () => {
     ],
   );
   const isSaveAndReturnLandingPage =
-    path !== ApplicationPath.SingleSession &&
-    !saveToEmail;
+    path !== ApplicationPath.SingleSession && !saveToEmail;
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
   const { node } = useAnalyticsTracking();
   const isSectionCard = node?.type == TYPES.Section;
@@ -454,15 +453,16 @@ const EditorToolbar: React.FC<{
                     </IconButton>
                   )}
                   <Box mr={1}>
-                    <Avatar 
-                      sx={{ 
-                        bgcolor: grey[200], 
+                    <Avatar
+                      sx={{
+                        bgcolor: grey[200],
                         color: "text.primary",
                         fontSize: "1em",
                         fontWeight: "600",
                       }}
                     >
-                      {user.firstName[0]}{user.lastName[0]}
+                      {user.firstName[0]}
+                      {user.lastName[0]}
                     </Avatar>
                   </Box>
                   <IconButton
@@ -568,14 +568,15 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   ]);
 
   // Editor and custom domains share a path, so we need to rely on previewEnvironment
-  if (previewEnvironment === "editor" && path !== "unpublished") {
+  if (previewEnvironment === "editor" && path !== "draft" && path !== "amber") {
     return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
   }
 
   switch (path) {
     case flowSlug: // Custom domains
     case "preview":
-    case "unpublished":
+    case "amber":
+    case "draft":
     case "pay":
       return <PublicToolbar />;
     default:

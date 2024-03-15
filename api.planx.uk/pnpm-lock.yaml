@@ -5,15 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  follow-redirects@<1.15.4: '>=1.15.4'
+  follow-redirects@<=1.15.5: '>=1.15.6'
 
 dependencies:
   '@airbrake/node':
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#3cc46b7
-    version: github.com/theopensystemslab/planx-core/3cc46b7
+    specifier: git+https://github.com/theopensystemslab/planx-core#eda1e67
+    version: github.com/theopensystemslab/planx-core/eda1e67
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -24,8 +24,8 @@ dependencies:
     specifier: ^2.1467.0
     version: 2.1467.0
   axios:
-    specifier: ^1.6.5
-    version: 1.6.5
+    specifier: ^1.6.8
+    version: 1.6.8
   body-parser:
     specifier: ^1.20.2
     version: 1.20.2
@@ -2555,10 +2555,10 @@ packages:
       xml2js: 0.5.0
     dev: false
 
-  /axios@1.6.5:
-    resolution: {integrity: sha512-Ii012v05KEVuUoFWmMW/UQv9aRIc3ZwkWDcM+h5Il8izZCtRVpDUfwpoFf7eOtajT3QiGR4yDUx7lPqHJULgbg==}
+  /axios@1.6.8:
+    resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}
     dependencies:
-      follow-redirects: 1.15.5
+      follow-redirects: 1.15.6
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -4306,6 +4306,16 @@ packages:
 
   /follow-redirects@1.15.5:
     resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
+  /follow-redirects@1.15.6:
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -6342,7 +6352,7 @@ packages:
     resolution: {integrity: sha512-65BxorFYVFOpJ9c2lud/4Ju+Bfn3L/vkih+FuzMhBw1wcOPjwgu4doVH6xO91fHYiAi/0uIx0Mc+NorXeANMHw==}
     engines: {node: '>=14.17.3', npm: '>=6.14.13'}
     dependencies:
-      axios: 1.6.5
+      axios: 1.6.8
       jsonwebtoken: 9.0.2
     transitivePeerDependencies:
       - debug
@@ -8409,8 +8419,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/3cc46b7:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3cc46b7}
+  github.com/theopensystemslab/planx-core/eda1e67:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/eda1e67}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
