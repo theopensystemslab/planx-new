@@ -1,36 +1,20 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useEffect, useState } from "react";
-import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
+import React from "react";
 
 import { useStore } from "../../../lib/store";
-import {
-  fetchSubmittedApplications,
-  SubmissionData,
-} from "./submissionDataTypesAndQueries";
+import { useSubmittedApplications } from "./submissionData";
+import SubmissionsView from "./SubmissionsView";
 
 const Submissions: React.FC = () => {
   const [flowSlug, teamSlug] = useStore((state) => [
     state.flowSlug,
     state.teamSlug,
   ]);
-  const [applications, setApplications] = useState<SubmissionData[]>();
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (flowSlug && teamSlug) {
-      fetchSubmittedApplications(flowSlug, teamSlug)
-        .then((result) => setApplications(result))
-        .catch((error) => {
-          setError(error);
-        });
-    }
-  }, [flowSlug, teamSlug]);
-
-  useEffect(() => {
-    console.log(applications);
-    console.log(error);
-  }, [applications, error]);
+  const { applications, loading, error } = useSubmittedApplications({
+    flowSlug,
+    teamSlug,
+  });
 
   return (
     <Box>
@@ -41,7 +25,11 @@ const Submissions: React.FC = () => {
         View data on the user submitted applications for this service.
       </Typography>
       <Box py={5}>
-        <FeaturePlaceholder title="Feature in development" />
+        <SubmissionsView
+          applications={applications}
+          loading={loading}
+          error={error}
+        />
       </Box>
     </Box>
   );
