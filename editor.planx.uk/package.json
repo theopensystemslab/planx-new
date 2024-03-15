@@ -222,9 +222,7 @@
     "overrides": {
       "nth-check@<2.0.1": ">=2.0.1",
       "postcss@<8.4.31": ">=8.4.31",
-      "semver@>=7.0.0 <7.5.2": ">=7.5.2",
-      "@adobe/css-tools@<4.3.2": ">=4.3.2",
-      "follow-redirects@<1.15.4": ">=1.15.4"
+      "follow-redirects@<=1.15.5": ">=1.15.6"
     }
   }
 }
