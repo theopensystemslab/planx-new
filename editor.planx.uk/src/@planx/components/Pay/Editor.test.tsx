@@ -1,5 +1,6 @@
 import { User } from "@opensystemslab/planx-core/types";
 import { fireEvent, waitFor } from "@testing-library/react";
+import { toggleFeatureFlag } from "lib/featureFlags";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
@@ -32,6 +33,9 @@ describe("Pay component - Editor Modal", () => {
 
   describe("GOV.UK Pay Metadata section", () => {
     jest.setTimeout(20000);
+
+    beforeAll(() => toggleFeatureFlag("GOVPAY_METADATA"));
+    afterAll(() => toggleFeatureFlag("GOVPAY_METADATA"));
 
     // Set up mock state with platformAdmin user so all Editor features are enabled
     const { getState, setState } = vanillaStore;

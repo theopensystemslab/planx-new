@@ -17,6 +17,7 @@ import {
   MoreInformation,
 } from "@planx/components/ui";
 import { Form, Formik, useFormikContext } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ListManager, {
@@ -129,6 +130,7 @@ export type Props = EditorProps<TYPES.Pay, Pay>;
 
 const Component: React.FC<Props> = (props: Props) => {
   const [flowName] = useStore((store) => [store.flowName]);
+  const displayGovPayMetadataSection = hasFeatureFlag("GOVPAY_METADATA");
 
   const initialValues: Pay = {
     title: props.node?.data?.title || "Pay for your application",
@@ -265,77 +267,79 @@ const Component: React.FC<Props> = (props: Props) => {
               Hide the pay buttons and show fee for information only
             </OptionButton>
           </ModalSection>
-          <ModalSection>
-            <ModalSectionContent
-              title="GOV.UK Pay Metadata"
-              Icon={DataObjectIcon}
-            >
-              <Typography variant="subtitle2" sx={{ mb: 2 }}>
-                Include metadata alongside payments, such as VAT codes, cost
-                centers, or ledger codes. See{" "}
-                <Link
-                  href={GOVPAY_DOCS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GOV.UK Pay documentation
-                </Link>{" "}
-                for more details.
-              </Typography>
-              <ErrorWrapper
-                error={
-                  typeof errors.govPayMetadata === "string" &&
-                  touched.govPayMetadata
-                    ? errors.govPayMetadata
-                    : undefined
-                }
+          {displayGovPayMetadataSection && (
+            <ModalSection>
+              <ModalSectionContent
+                title="GOV.UK Pay Metadata"
+                Icon={DataObjectIcon}
               >
-                <>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      mb: 1,
-                      display: "flex",
-                      justifyContent: "space-evenly",
-                    }}
+                <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                  Include metadata alongside payments, such as VAT codes, cost
+                  centers, or ledger codes. See{" "}
+                  <Link
+                    href={GOVPAY_DOCS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <Typography
-                      sx={{ width: "100%", ml: 5 }}
-                      variant="subtitle2"
-                      component="label"
-                      id="key-label"
+                    GOV.UK Pay documentation
+                  </Link>{" "}
+                  for more details.
+                </Typography>
+                <ErrorWrapper
+                  error={
+                    typeof errors.govPayMetadata === "string" &&
+                    touched.govPayMetadata
+                      ? errors.govPayMetadata
+                      : undefined
+                  }
+                >
+                  <>
+                    <Box
+                      sx={{
+                        width: "100%",
+                        mb: 1,
+                        display: "flex",
+                        justifyContent: "space-evenly",
+                      }}
                     >
-                      Key
-                    </Typography>
-                    <Typography
-                      sx={{ width: "100%", ml: -5 }}
-                      variant="subtitle2"
-                      component="label"
-                      id="value-label"
-                    >
-                      Value
-                    </Typography>
-                  </Box>
-                  <ListManager
-                    maxItems={10}
-                    disableDragAndDrop
-                    values={values.govPayMetadata || []}
-                    onChange={(metadata) => {
-                      setFieldValue("govPayMetadata", metadata);
-                    }}
-                    Editor={GovPayMetadataEditor}
-                    newValue={() => {
-                      setTouched({});
-                      return { key: "", value: "" };
-                    }}
-                    isFieldDisabled={({ key }, index) =>
-                      isFieldDisabled(key, index)
-                    }
-                  />
-                </>
-              </ErrorWrapper>
-            </ModalSectionContent>
-          </ModalSection>
+                      <Typography
+                        sx={{ width: "100%", ml: 5 }}
+                        variant="subtitle2"
+                        component="label"
+                        id="key-label"
+                      >
+                        Key
+                      </Typography>
+                      <Typography
+                        sx={{ width: "100%", ml: -5 }}
+                        variant="subtitle2"
+                        component="label"
+                        id="value-label"
+                      >
+                        Value
+                      </Typography>
+                    </Box>
+                    <ListManager
+                      maxItems={10}
+                      disableDragAndDrop
+                      values={values.govPayMetadata || []}
+                      onChange={(metadata) => {
+                        setFieldValue("govPayMetadata", metadata);
+                      }}
+                      Editor={GovPayMetadataEditor}
+                      newValue={() => {
+                        setTouched({});
+                        return { key: "", value: "" };
+                      }}
+                      isFieldDisabled={({ key }, index) =>
+                        isFieldDisabled(key, index)
+                      }
+                    />
+                  </>
+                </ErrorWrapper>
+              </ModalSectionContent>
+            </ModalSection>
+          )}
           <ModalSection>
             <ModalSectionContent title="Invite to Pay" Icon={ICONS[TYPES.Pay]}>
               <OptionButton
