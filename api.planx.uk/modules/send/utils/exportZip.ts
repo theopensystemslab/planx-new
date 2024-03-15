@@ -112,9 +112,8 @@ export async function buildSubmissionExportZip({
   }
 
   // add template files to zip
-  const templateNames = await $api.getDocumentTemplateNamesForSession(
-    sessionId,
-  );
+  const templateNames =
+    await $api.getDocumentTemplateNamesForSession(sessionId);
   for (const templateName of templateNames || []) {
     try {
       const isTemplateSupported = hasRequiredDataForTemplate({

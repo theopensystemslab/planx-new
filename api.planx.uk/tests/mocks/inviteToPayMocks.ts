@@ -19,7 +19,7 @@ export const validSessionQueryMock = {
       flow: {
         id: validSession.flow.id,
         slug: validSession.flow.slug,
-      }
+      },
     },
   },
   variables: {
