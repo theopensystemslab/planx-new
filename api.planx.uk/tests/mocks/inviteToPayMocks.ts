@@ -32,9 +32,12 @@ export const detailedValidSessionQueryMock = {
   data: {
     lowcal_sessions_by_pk: {
       id: validSession.id,
-      flowId: validSession.flow.id,
       lockedAt: new Date("28 May 2023 12:00 UTC+1").toISOString(),
       data: validSession.data,
+      flow: {
+        id: validSession.flow.id,
+        slug: validSession.flow.slug,
+      },
     },
   },
   variables: {
