@@ -26,9 +26,6 @@ export async function buildSubmissionExportZip({
   includeOneAppXML?: boolean;
   includeDigitalPlanningJSON?: boolean;
 }): Promise<ExportZip> {
-  // create zip
-  const zip = new ExportZip(sessionId);
-
   // fetch session data
   const sessionData = await $api.session.find(sessionId);
   if (!sessionData) {
@@ -37,6 +34,10 @@ export async function buildSubmissionExportZip({
     );
   }
   const passport = sessionData.data?.passport as IPassport;
+  const flowSlug = sessionData?.flow.slug;
+
+  // create zip
+  const zip = new ExportZip(sessionId, flowSlug);
 
   // add OneApp XML to the zip
   if (includeOneAppXML) {
@@ -199,11 +200,11 @@ export class ExportZip {
   filename: string;
   private tmpDir: string;
 
-  constructor(sessionId: string) {
+  constructor(sessionId: string, flowSlug: string) {
     this.zip = new AdmZip();
     // make a tmp directory to avoid file name collisions if simultaneous applications
     this.tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), sessionId));
-    this.filename = path.join(__dirname, `ripa-test-${sessionId}.zip`);
+    this.filename = path.join(__dirname, `${flowSlug}-${sessionId}.zip`);
   }
 
   addFile({ name, buffer }: { name: string; buffer: Buffer }) {

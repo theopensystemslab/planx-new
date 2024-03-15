@@ -15,8 +15,11 @@ export const validSessionQueryMock = {
   data: {
     lowcal_sessions_by_pk: {
       id: validSession.id,
-      flowId: validSession.flowId,
       data: validSession.data,
+      flow: {
+        id: validSession.flow.id,
+        slug: validSession.flow.slug,
+      },
     },
   },
   variables: {
@@ -29,9 +32,12 @@ export const detailedValidSessionQueryMock = {
   data: {
     lowcal_sessions_by_pk: {
       id: validSession.id,
-      flowId: validSession.flowId,
       lockedAt: new Date("28 May 2023 12:00 UTC+1").toISOString(),
       data: validSession.data,
+      flow: {
+        id: validSession.flow.id,
+        slug: validSession.flow.slug,
+      },
     },
   },
   variables: {
@@ -103,7 +109,7 @@ export const getPublishedFlowDataQueryMock = {
     ],
   },
   variables: {
-    flowId: validSession.flowId,
+    flowId: validSession.flow.id,
   },
 };
 

@@ -32,9 +32,8 @@ export const sessionPreviewData = {
 
 export const validSession: Session = {
   id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
-  flowId: "741a2372-b0b4-4f30-98a8-7c98c6464954",
   data: {
-    id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
+    id: "741a2372-b0b4-4f30-98a8-7c98c6464954",
     passport: {
       data: {
         "application.fee.payable": paymentAmountPounds,
@@ -47,6 +46,10 @@ export const validSession: Session = {
         auto: false,
       },
     },
+  },
+  flow: {
+    id: "741a2372-b0b4-4f30-98a8-7c98c6464954",
+    slug: "apply-for-a-lawful-development-certificate",
   },
 };
 
