@@ -16,10 +16,15 @@ const CollapsibleInput: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Link component="button" onClick={() => setExpanded((x) => !x)}>
+      <Link
+        component="button"
+        aria-expanded={expanded}
+        aria-controls={props.name}
+        onClick={() => setExpanded((x) => !x)}
+      >
         {props.children}
       </Link>
-      <Collapse in={expanded}>
+      <Collapse in={expanded} id={props.name + `-collapse`}>
         <Input
           multiline
           bordered
