@@ -107,7 +107,7 @@ interface GovPayCreatePayment {
 
 export async function buildPaymentPayload(
   req: Request,
-  res: Response<object, { govPayMetadata: GovPayMetadata[] }>,
+  res: Response,
   next: NextFunction,
 ) {
   if (!req.query.returnURL) {
@@ -129,7 +129,12 @@ export async function buildPaymentPayload(
   }
 
   // Convert metadata to format required by GovPay
-  const govPayMetadata = Object.fromEntries(res.locals.govPayMetadata.map(({ key, value }) => [key, value]));
+  const govPayMetadata = Object.fromEntries(
+    res.locals.govPayMetadata.map(({ key, value }: GovPayMetadata) => [
+      key,
+      value,
+    ]),
+  );
 
   const createPaymentBody: GovPayCreatePayment = {
     amount: parseInt(req.params.paymentAmount),

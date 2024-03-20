@@ -53,4 +53,4 @@ export type PaymentRequestProxyController = ValidatedRequestHandler<
 export interface GovPayMetadata {
   key: string;
   value: string | boolean;
-};
+}
