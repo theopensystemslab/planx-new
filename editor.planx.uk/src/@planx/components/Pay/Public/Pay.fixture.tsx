@@ -10,6 +10,7 @@ export default function Fixture() {
       description=""
       fn="fee"
       color="#efefef"
+      govPayMetadata={[]}
     />
   );
 }

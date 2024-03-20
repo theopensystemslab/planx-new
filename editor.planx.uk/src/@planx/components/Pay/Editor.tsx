@@ -31,6 +31,8 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
+type FormikGovPayMetadataError = Record<keyof GovPayMetadata, string>[]
+
 const GOVPAY_DOCS_URL =
   "https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39";
 
@@ -40,7 +42,7 @@ const GOVPAY_DOCS_URL =
  * Docs: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
  */
 const parseError = (
-  errors: string | undefined | GovPayMetadata[],
+  errors: string | undefined | FormikGovPayMetadataError,
   index: number,
 ): string | undefined => {
   // No errors
@@ -61,7 +63,7 @@ const parseError = (
  * Please see parseError() for additional context
  */
 const parseTouched = (
-  touched: string | undefined | GovPayMetadata[],
+  touched: string | undefined | FormikGovPayMetadataError,
   index: number,
 ): string | undefined => {
   // No errors
@@ -90,11 +92,11 @@ function GovPayMetadataEditor(props: ListManagerEditorProps<GovPayMetadata>) {
   const isDisabled = isFieldDisabled(currKey, props.index);
   const { errors, touched } = useFormikContext<Pay>();
   const error = parseError(
-    errors.govPayMetadata as string | undefined | GovPayMetadata[],
+    errors.govPayMetadata as string | undefined | FormikGovPayMetadataError,
     props.index,
   );
   const isTouched = parseTouched(
-    touched.govPayMetadata as string | undefined | GovPayMetadata[],
+    touched.govPayMetadata as string | undefined | FormikGovPayMetadataError,
     props.index,
   );
 

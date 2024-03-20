@@ -90,6 +90,7 @@ describe("Pay component when fee is undefined or £0", () => {
         title="Pay for your application"
         fn="application.fee.typo"
         handleSubmit={handleSubmit}
+        govPayMetadata={[]}
       />,
     );
 
@@ -114,6 +115,7 @@ describe("Pay component when fee is undefined or £0", () => {
         title="Pay for your application"
         fn="application.fee.payable"
         handleSubmit={handleSubmit}
+        govPayMetadata={[]}
       />,
     );
 
