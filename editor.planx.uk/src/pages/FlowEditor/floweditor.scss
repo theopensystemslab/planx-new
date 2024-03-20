@@ -1,11 +1,16 @@
 $background: #f2f2f2;
-$black: #2c2c2c;
-$endpointRadius: 45px;
-$hangerRadius: 14px;
+$black: #0b0c0c;
 $lineColor: #cacaca;
-$lineWidth: 1px;
-$padding: 7px;
-$pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNc8B8AAkUBofXwZpQAAAAASUVORK5CYII=);
+$nodeBorder: #0b0c0c;
+$optionBorder: #b1b4b6;
+$focus: #ffdd00;
+
+$endpointWidth: 50px;
+$hangerWidth: 16px;
+$lineWidth: 2px;
+$padding: 10px;
+$editorPadding: 30px;
+$pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
 
 // Import custom typeface for data inputs
 @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap");
@@ -72,13 +77,19 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 #editor {
   flex: 1;
   overflow: auto;
-  padding: 20px;
+  padding: $editorPadding;
 
   ol,
   li {
     list-style: none;
     padding: 0;
     margin: 0;
+
+    > a:focus,
+    > a:active {
+      outline: 4px solid $focus;
+      outline-offset: 0;
+    }
   }
 
   ol:empty {
@@ -115,6 +126,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 // ------------------------------------------------
 
 .card {
+  position: relative;
+  width: 100%;
+
   &.isDragging {
     opacity: 0.3;
     & + .hanger {
@@ -135,7 +149,8 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     span {
       opacity: 1;
     }
-    border: 2px solid limegreen;
+    outline: 4px solid #8cc485;
+    outline-offset: 0;
   }
 
   &.isClone > a {
@@ -153,7 +168,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     text-decoration: none;
     cursor: pointer;
     color: $black;
-    border: 1px solid $lineColor;
+    border: 1px solid $nodeBorder;
     background: white;
     user-select: none;
     padding: 6px 12px;
@@ -169,13 +184,47 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 
     > svg {
       margin-left: -6px;
+      margin-top: 0.5px;
       width: 16px;
       height: 16px;
-      opacity: 0.3;
+      opacity: 0.6;
     }
 
     > span:not(:nth-child(1)) {
       margin-left: 6px;
+    }
+  }
+
+  &.type360::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    width: calc(100% + ($editorPadding * 2));
+    z-index: -1;
+    background-image: linear-gradient(
+      90deg,
+      $optionBorder,
+      $optionBorder 50%,
+      transparent 50%,
+      transparent 100%
+    );
+    background-size: 12px 2px;
+    border: none;
+    [data-layout="left-right"] & {
+      top: unset;
+      width: 2px;
+      height: 100vh;
+      left: 50%;
+      background-image: linear-gradient(
+        0deg,
+        $optionBorder,
+        $optionBorder 50%,
+        transparent 50%,
+        transparent 100%
+      );
+      background-size: 2px 12px;
     }
   }
 }
@@ -193,9 +242,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 }
 
 .endpoint > a {
-  @include circle($endpointRadius);
+  @include circle($endpointWidth);
   display: block;
-  line-height: $endpointRadius;
+  line-height: $endpointWidth;
   color: white;
   background: $black;
   text-align: center;
@@ -203,10 +252,28 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   cursor: pointer;
 }
 
+.option {
+  > a {
+    border-color: $optionBorder;
+    flex-direction: column;
+    padding: 0;
+  }
+  .band {
+    width: 100%;
+    height: 12px;
+    border-bottom: 1px solid $optionBorder;
+  }
+  .text {
+    margin: 0;
+    padding: 6px 12px;
+  }
+}
+
 .hanger {
   align-self: center;
   background-image: $pixel;
   background-size: $lineWidth;
+  line-height: 0;
 
   [data-layout="left-right"] & {
     background-position: left center;
@@ -231,11 +298,11 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   }
 
   > a {
-    $size: 14px;
+    $size: $hangerWidth;
     display: inline-block;
     // width: $size;
     text-decoration: none;
-    border: 1px solid #a0a0a0;
+    border: 1px solid $nodeBorder;
     min-width: $size;
     max-width: 200px;
     min-height: $size;
@@ -243,6 +310,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     color: $black;
     padding: 5px;
     background: $background;
+    line-height: 1.5;
 
     margin: $padding;
 
@@ -252,7 +320,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     transition: transform 0.2s;
 
     &:empty:hover {
-      background-color: yellow;
+      background-color: $focus;
       transform: scale(1.7);
     }
 
@@ -274,6 +342,19 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     > a {
       background: #666;
       margin: 5px 0;
+    }
+  }
+  .portalMenu {
+    border-left: 1px solid #aaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 6px;
+    svg {
+      opacity: 1;
+      margin: 0;
+      width: 16px;
+      height: 16px;
     }
   }
 }
@@ -306,9 +387,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   }
   align-items: center;
 
-  &.isNote {
+  &.question.isNote {
     > a {
-      background: yellow !important;
+      background: #fffdb0 !important;
     }
   }
 
@@ -321,10 +402,10 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 
     [data-layout="top-down"] & {
       flex-direction: row;
-      padding-top: 5px !important;
+      padding-top: $padding !important;
 
       background-position: center top;
-      background-size: $lineWidth 5px;
+      background-size: $lineWidth $padding;
     }
 
     [data-layout="left-right"] & {
@@ -342,7 +423,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     > li {
       background-image: $pixel, $pixel, $pixel;
       [data-layout="top-down"] & {
-        padding: 5px 5px 0 5px !important;
+        padding: $padding 5px 0 5px !important;
         flex-direction: column;
 
         background-position:
@@ -350,7 +431,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
           top center,
           bottom center;
         background-size:
-          $lineWidth 5px,
+          $lineWidth $padding,
           $lineWidth,
           $lineWidth;
         background-repeat: no-repeat, repeat-x, repeat-x;
@@ -361,7 +442,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
             top right,
             bottom right;
           background-size:
-            $lineWidth 5px,
+            $lineWidth $padding,
             50% $lineWidth,
             50% $lineWidth;
           background-repeat: no-repeat, no-repeat, no-repeat;
@@ -373,7 +454,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
             top left,
             bottom left;
           background-size:
-            $lineWidth 5px,
+            $lineWidth $padding,
             50% $lineWidth,
             50% $lineWidth;
           background-repeat: no-repeat, no-repeat, no-repeat;

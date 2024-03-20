@@ -57,7 +57,7 @@ const Question: React.FC<Props> = React.memo((props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li
-        className={classNames("card", "decision", {
+        className={classNames("card", "decision", "type" + props.type, {
           isDragging,
           isClone: isClone(props.id),
           isNote: childNodes.length === 0,
