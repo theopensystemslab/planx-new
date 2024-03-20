@@ -12,7 +12,7 @@ const Option: React.FC<any> = (props) => {
 
   const href = "";
 
-  let background = "#AEAEAE"; // no flag color
+  let background = "#F9F8F8"; // no flag color
   let color = "#000";
   try {
     const flag = flatFlags.find(({ value }) =>
@@ -26,13 +26,9 @@ const Option: React.FC<any> = (props) => {
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
     >
-      <Link
-        href={href}
-        prefetch={false}
-        onClick={(e) => e.preventDefault()}
-        style={{ background, color }}
-      >
-        <span>{props.data.text}</span>
+      <Link href={href} prefetch={false} onClick={(e) => e.preventDefault()}>
+        <div className="band" style={{ background, color }}></div>
+        <div className="text">{props.data.text}</div>
       </Link>
       <ol className="decisions">
         {childNodes.map((child: any) => (

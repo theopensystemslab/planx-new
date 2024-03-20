@@ -84,7 +84,7 @@ const ExternalPortal: React.FC<any> = (props) => {
         <Link href={`/${href}`} prefetch={false} ref={drag}>
           <span>{href}</span>
         </Link>
-        <Link href={editHref} prefetch={false}>
+        <Link href={editHref} prefetch={false} className="portalMenu">
           <MoreVert titleAccess="Edit Portal" />
         </Link>
       </li>
@@ -134,7 +134,7 @@ const InternalPortal: React.FC<any> = (props) => {
         >
           <span>{props.data.text}</span>
         </Link>
-        <Link href={editHref} prefetch={false}>
+        <Link href={editHref} prefetch={false} className="portalMenu">
           <MoreVert titleAccess="Edit Portal" />
         </Link>
       </li>
