@@ -7,6 +7,7 @@ import ContactPage from "@mui/icons-material/ContactPage";
 import CopyAll from "@mui/icons-material/CopyAll";
 import Create from "@mui/icons-material/Create";
 import Event from "@mui/icons-material/Event";
+import FilterAltOutlined from "@mui/icons-material/FilterAltOutlined";
 import FunctionsIcon from "@mui/icons-material/Functions";
 import Home from "@mui/icons-material/Home";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
@@ -17,13 +18,12 @@ import PaymentOutlined from "@mui/icons-material/PaymentOutlined";
 import Pin from "@mui/icons-material/Pin";
 import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 import PlaylistAddCheck from "@mui/icons-material/PlaylistAddCheck";
-import RateReview from "@mui/icons-material/RateReview";
+import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 import ReportProblemOutlined from "@mui/icons-material/ReportProblemOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import Send from "@mui/icons-material/Send";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
-import ViewAgenda from "@mui/icons-material/ViewAgenda";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
@@ -68,7 +68,7 @@ export const ICONS: {
   [TYPES.ExternalPortal]: CopyAll,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.FileUploadAndLabel]: CloudUpload,
-  [TYPES.Filter]: undefined,
+  [TYPES.Filter]: FilterAltOutlined,
   [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
@@ -80,8 +80,8 @@ export const ICONS: {
   [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Answer]: undefined,
   [TYPES.Result]: PlaylistAddCheck,
-  [TYPES.Review]: RateReview,
-  [TYPES.Section]: ViewAgenda,
+  [TYPES.Review]: RateReviewOutlined,
+  [TYPES.Section]: List,
   [TYPES.Send]: Send,
   [TYPES.SetValue]: PlaylistAdd,
   [TYPES.Question]: CallSplit,
