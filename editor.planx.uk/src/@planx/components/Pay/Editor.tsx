@@ -42,7 +42,7 @@ const GOVPAY_DOCS_URL =
  * Docs: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
  */
 const parseError = (
-  errors: string | undefined | FormikGovPayMetadataError,
+  errors: string | undefined | Record<keyof GovPayMetadata, string>[],
   index: number,
 ): string | undefined => {
   // No errors
@@ -63,7 +63,7 @@ const parseError = (
  * Please see parseError() for additional context
  */
 const parseTouched = (
-  touched: string | undefined | FormikGovPayMetadataError,
+  touched: string | undefined | Record<keyof GovPayMetadata, string>[],
   index: number,
 ): string | undefined => {
   // No errors
