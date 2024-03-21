@@ -6,6 +6,7 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
+import Radio from "ui/shared/Radio";
 
 import { parseSetValue, SetValue } from "./model";
 
@@ -58,6 +59,28 @@ function SetValueComponent(props: Props) {
               )}
             </div>
           </InputRow>
+        </ModalSectionContent>
+        <ModalSectionContent title="Operation">
+          <Radio
+            options={[
+              {
+                value: "replace",
+                label: "Replace",
+              },
+              {
+                value: "append",
+                label: "Append",
+              },
+              {
+                value: "remove",
+                label: "Remove",
+              },
+            ]}
+            value={formik.values.operation}
+            onChange={(newOperation) => {
+              formik.setFieldValue("operation", newOperation);
+            }}
+          />
         </ModalSectionContent>
       </ModalSection>
       <InternalNotes
