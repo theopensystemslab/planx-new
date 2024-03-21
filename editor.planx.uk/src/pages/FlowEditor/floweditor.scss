@@ -127,7 +127,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
 
 .card {
   position: relative;
-  width: 100%;
+  [data-layout="top-down"] & {
+    width: 100%;
+  }
 
   &.isDragging {
     opacity: 0.3;
@@ -267,8 +269,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     border-bottom: 1px solid $optionBorder;
   }
   .text {
-    width: 100%;
-    text-align: center;
+    align-self: center;
     margin: 0;
     padding: 6px 12px;
   }
@@ -343,10 +344,25 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     border: none;
   }
   &.breadcrumb {
-    background: none;
+    background-image: $pixel;
+    background-repeat: no-repeat;
+    [data-layout="top-down"] & {
+      background-position: center top;
+      background-size: $lineWidth $padding;
+      > a {
+        margin: $padding 0 0;
+      }
+    }
+    [data-layout="left-right"] & {
+      background-position: left center;
+      background-size: $padding $lineWidth;
+      > a {
+        margin: 0 0 0 $padding;
+      }
+    }
     > a {
       background: #666;
-      margin: 5px 0;
+      text-align: center;
     }
   }
   .portalMenu {
@@ -415,10 +431,10 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
 
     [data-layout="left-right"] & {
       flex-direction: column;
-      padding-left: 5px !important;
+      padding-left: $padding !important;
 
       background-position: left center;
-      background-size: 5px $lineWidth;
+      background-size: $padding $lineWidth;
     }
 
     &:empty {
@@ -428,7 +444,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     > li {
       background-image: $pixel, $pixel, $pixel;
       [data-layout="top-down"] & {
-        padding: $padding 5px 0 5px !important;
+        padding: $padding $padding 0 $padding !important;
         flex-direction: column;
 
         background-position:
@@ -466,7 +482,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
         }
       }
       [data-layout="left-right"] & {
-        padding: 5px 0 5px 5px !important;
+        padding: $padding 0 $padding $padding !important;
         flex-direction: row;
 
         background-position:
@@ -477,9 +493,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
 
         // BUG: 1px NOT VISIBLE IN CHROME
         background-size:
-          5px $lineWidth,
+          $padding $lineWidth,
           $lineWidth 100%,
-          1px 100%;
+          2px 100%;
 
         &:nth-child(1) {
           background-position:
@@ -487,7 +503,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
             left bottom,
             right bottom;
           background-size:
-            5px $lineWidth,
+            $padding $lineWidth,
             $lineWidth 50%,
             $lineWidth 50%;
         }
@@ -498,7 +514,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
             left top,
             right top;
           background-size:
-            5px $lineWidth,
+            $padding $lineWidth,
             $lineWidth 50%,
             $lineWidth 50%;
         }
