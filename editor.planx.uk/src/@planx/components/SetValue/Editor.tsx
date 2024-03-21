@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps, InternalNotes } from "@planx/components/ui";
 import { useFormik } from "formik";
@@ -13,6 +14,33 @@ import { parseSetValue, SetValue } from "./model";
 type Props = EditorProps<TYPES.SetValue, SetValue>;
 
 export default SetValueComponent;
+
+const DescriptionText: React.FC<SetValue> = ({ fn, val, operation }) => {
+  if (!fn || !val) return null;
+
+  switch (operation) {
+    case "replace":
+      return (
+        <Typography mt={2}>
+          any existing value for <strong>{fn}</strong> will be replaced by{" "}
+          <strong>{val}</strong>
+        </Typography>
+      );
+    case "append":
+      return (
+        <Typography mt={2}>
+          any existing value for <strong>{fn}</strong> will have{" "}
+          <strong>{val}</strong> appended to it
+        </Typography>
+      );
+    case "remove":
+      return (
+        <Typography mt={2}>
+          any existing value for <strong>{fn}</strong> will be removed
+        </Typography>
+      );
+  }
+};
 
 function SetValueComponent(props: Props) {
   const formik = useFormik({
@@ -51,12 +79,7 @@ function SetValueComponent(props: Props) {
                 placeholder="value"
                 onChange={formik.handleChange}
               />
-              {formik.values.fn && formik.values.val && (
-                <p>
-                  any existing value for <strong>{formik.values.fn}</strong>{" "}
-                  will be replaced by <strong>{formik.values.val}</strong>
-                </p>
-              )}
+              <DescriptionText {...formik.values} />
             </div>
           </InputRow>
         </ModalSectionContent>
