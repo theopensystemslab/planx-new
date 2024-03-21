@@ -178,7 +178,8 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     }
 
     > span {
-      max-width: 170px;
+      min-width: 80px;
+      max-width: 200px;
       overflow-wrap: break-word;
     }
 
@@ -257,6 +258,8 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     border-color: $optionBorder;
     flex-direction: column;
     padding: 0;
+    min-width: 60px;
+    max-width: 200px;
   }
   .band {
     width: 100%;
@@ -264,6 +267,8 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     border-bottom: 1px solid $optionBorder;
   }
   .text {
+    width: 100%;
+    text-align: center;
     margin: 0;
     padding: 6px 12px;
   }
