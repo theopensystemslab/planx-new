@@ -57,13 +57,18 @@ const Question: React.FC<Props> = React.memo((props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li
-        className={classNames("card", "decision", "type" + props.type, {
-          isDragging,
-          isClone: isClone(props.id),
-          isNote: childNodes.length === 0,
-          wasVisited: props.wasVisited,
-          hasFailed: props.hasFailed,
-        })}
+        className={classNames(
+          "card",
+          "decision",
+          "type-" + TYPES[props.type as TYPES],
+          {
+            isDragging,
+            isClone: isClone(props.id),
+            isNote: childNodes.length === 0,
+            wasVisited: props.wasVisited,
+            hasFailed: props.hasFailed,
+          },
+        )}
       >
         <Link
           href={href}
