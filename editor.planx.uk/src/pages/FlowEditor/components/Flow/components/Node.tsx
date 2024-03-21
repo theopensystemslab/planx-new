@@ -142,12 +142,12 @@ const Node: React.FC<any> = (props) => {
 
 const getSetValueText = ({ operation, fn, val }: Store.node["data"]) => {
   switch (operation) {
-    case "replace":
-      return `Replace ${fn} with ${val}`;
     case "append":
       return `Append ${val} to ${fn}`;
     case "remove":
       return `Remove ${fn}`;
+    default:
+      return `Replace ${fn} with ${val}`;
   }
 };
 
