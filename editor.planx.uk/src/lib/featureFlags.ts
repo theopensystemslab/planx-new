@@ -1,5 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["GOVPAY_METADATA"] as const;
+const AVAILABLE_FEATURE_FLAGS = [] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
@@ -25,7 +25,7 @@ const activeFeatureFlags = (() => {
  */
 export const toggleFeatureFlag = (
   featureFlag: FeatureFlag,
-  autoReload = true,
+  autoReload = true
 ) => {
   const supportedFlag = AVAILABLE_FEATURE_FLAGS.includes(featureFlag);
 
@@ -35,13 +35,13 @@ export const toggleFeatureFlag = (
     activeFeatureFlags.add(featureFlag);
   } else {
     throw new Error(
-      `${featureFlag} is not a supported feature flag, try again. Available flags are: ${AVAILABLE_FEATURE_FLAGS}`,
+      `${featureFlag} is not a supported feature flag, try again. Available flags are: ${AVAILABLE_FEATURE_FLAGS}`
     );
   }
 
   localStorage.setItem(
     "FEATURE_FLAGS",
-    JSON.stringify(Array.from(activeFeatureFlags)),
+    JSON.stringify(Array.from(activeFeatureFlags))
   );
 
   if (autoReload) window.location.reload();
@@ -71,6 +71,6 @@ if (process.env.REACT_APP_ENV !== "test") {
         ]
           .sort()
           .join(", ")}`
-      : `🎏 no active feature flags`,
+      : `🎏 no active feature flags`
   );
 }
