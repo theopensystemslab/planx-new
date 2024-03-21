@@ -1,3 +1,5 @@
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
@@ -16,6 +18,15 @@ type Props = {
   [key: string]: any;
   wasVisited?: boolean;
 };
+
+const HiddenStuff = styled(Box)(() => ({
+  color: "transparent",
+  position: "absolute",
+  "&::selection": {
+    background: "pink",
+    color: "black",
+  },
+}));
 
 const Checklist: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes, copyNode] = useStore((state) => [
@@ -89,6 +100,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           {Icon && <Icon />}
           <span>{props.text}</span>
         </Link>
+        <HiddenStuff>hidden-data</HiddenStuff>
         {groupedOptions ? (
           <ol className="categories">
             {groupedOptions.map(({ title, children }, i) => (
