@@ -276,7 +276,7 @@ export const previewStore: StateCreator<
       updateSectionData,
     } = get();
 
-    if (!flow[id]) throw new Error("id not found");
+    if (!flow[id]) throw new Error(`id "${id}" not found`);
 
     if (userData) {
       // add breadcrumb
