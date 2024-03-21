@@ -246,7 +246,7 @@ export const previewStore: StateCreator<
           {} as Store.passport["data"],
         );
 
-        return {
+        const passport: Store.passport = {
           ...acc,
           data: {
             ...acc.data,
@@ -254,6 +254,27 @@ export const previewStore: StateCreator<
             ...passportData,
           },
         };
+
+        const isSetValue = flow[id].type === TYPES.SetValue;
+
+        if (isSetValue) {
+          const { operation, fn }: { operation: string; fn: string } =
+            flow[id]?.data || {};
+
+          if (operation === "remove") {
+            delete passport.data?.[fn];
+          }
+
+          if (operation === "append") {
+            const previousValue = acc.data?.[fn] || [];
+            const currentValue = responseData?.[fn] || [];
+            const combined = [...previousValue, ...currentValue];
+
+            passport.data![fn] = combined;
+          }
+        }
+
+        return passport;
       },
       {
         data: {},
