@@ -21,22 +21,22 @@ const DescriptionText: React.FC<SetValue> = ({ fn, val, operation }) => {
   switch (operation) {
     case "replace":
       return (
-        <Typography mt={2}>
-          any existing value for <strong>{fn}</strong> will be replaced by{" "}
+        <Typography mb={2}>
+          Any existing value for <strong>{fn}</strong> will be replaced by{" "}
           <strong>{val}</strong>
         </Typography>
       );
     case "append":
       return (
-        <Typography mt={2}>
-          any existing value for <strong>{fn}</strong> will have{" "}
+        <Typography mb={2}>
+          Any existing value for <strong>{fn}</strong> will have{" "}
           <strong>{val}</strong> appended to it
         </Typography>
       );
     case "remove":
       return (
-        <Typography mt={2}>
-          any existing value for <strong>{fn}</strong> will be removed
+        <Typography mb={2}>
+          Any existing value for <strong>{fn}</strong> will be removed
         </Typography>
       );
   }
@@ -68,9 +68,9 @@ function SetValueComponent(props: Props) {
             />
           </InputRow>
         </ModalSectionContent>
-        <ModalSectionContent title="Field value">
-          <InputRow>
-            <div>
+        {formik.values.operation !== "remove" && (
+          <ModalSectionContent title="Field value">
+            <InputRow>
               <Input
                 required
                 format="data"
@@ -79,11 +79,11 @@ function SetValueComponent(props: Props) {
                 placeholder="value"
                 onChange={formik.handleChange}
               />
-              <DescriptionText {...formik.values} />
-            </div>
-          </InputRow>
-        </ModalSectionContent>
+            </InputRow>
+          </ModalSectionContent>
+        )}
         <ModalSectionContent title="Operation">
+          <DescriptionText {...formik.values} />
           <Radio
             options={[
               {
