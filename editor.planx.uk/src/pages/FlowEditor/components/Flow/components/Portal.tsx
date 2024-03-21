@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import DoorFrontOutlined from "@mui/icons-material/DoorFrontOutlined";
 import MoreVert from "@mui/icons-material/MoreVert";
 import classNames from "classnames";
 import gql from "graphql-tag";
@@ -132,6 +133,7 @@ const InternalPortal: React.FC<any> = (props) => {
           ref={drag}
           onContextMenu={handleContext}
         >
+          <DoorFrontOutlined />
           <span>{props.data.text}</span>
         </Link>
         <Link href={editHref} prefetch={false} className="portalMenu">
