@@ -11,6 +11,6 @@ export const parseSetValue = (
 ): SetValue => ({
   fn: data?.fn || "",
   val: data?.val || "",
-  operation: "replace",
+  operation: data?.operation || "replace",
   ...parseMoreInformation(data),
 });

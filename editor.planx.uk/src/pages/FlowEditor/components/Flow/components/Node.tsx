@@ -2,7 +2,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { useStore } from "../../../lib/store";
+import { Store, useStore } from "../../../lib/store";
 import { stripTagsAndLimitLength } from "../lib/utils";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
@@ -102,12 +102,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Send:
       return <Question {...allProps} text={node?.data?.title ?? "Send"} />;
     case TYPES.SetValue:
-      return (
-        <Question
-          {...allProps}
-          text={`${node?.data?.fn} = ${node?.data?.val}`}
-        />
-      );
+      return <Question {...allProps} text={getSetValueText(node.data)} />;
     case TYPES.TaskList:
       return (
         <Question
@@ -142,6 +137,17 @@ const Node: React.FC<any> = (props) => {
     default:
       console.error({ nodeNotFound: props });
       return exhaustiveCheck(type);
+  }
+};
+
+const getSetValueText = ({ operation, fn, val }: Store.node["data"]) => {
+  switch (operation) {
+    case "replace":
+      return `Replace ${fn} with ${val}`;
+    case "append":
+      return `Append ${val} to ${fn}`;
+    case "remove":
+      return `Remove ${fn}`;
   }
 };
 
