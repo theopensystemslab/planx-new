@@ -1,8 +1,8 @@
-$background: #f2f2f2;
 $black: #0b0c0c;
-$lineColor: #cacaca;
-$nodeBorder: #0b0c0c;
+$lineColor: #d0d0d0;
+$nodeBorder: $black;
 $optionBorder: #b1b4b6;
+$hangerBackground: #f2f2f2;
 $focus: #ffdd00;
 
 $endpointWidth: 50px;
@@ -127,9 +127,6 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
 
 .card {
   position: relative;
-  [data-layout="top-down"] & {
-    width: 100%;
-  }
 
   &.isDragging {
     opacity: 0.3;
@@ -195,6 +192,15 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
 
     > span:not(:nth-child(1)) {
       margin-left: 6px;
+    }
+  }
+
+  &.type-Section {
+    [data-layout="top-down"] & {
+      width: 100%;
+    }
+    [data-layout="left-right"] & {
+      height: 100%;
     }
   }
 
@@ -315,7 +321,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     border-radius: $size;
     color: $black;
     padding: 5px;
-    background: $background;
+    background: $hangerBackground;
     line-height: 1.5;
 
     margin: $padding;
@@ -391,6 +397,11 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
 
 .decision > ol.options > li.option:only-child .hanger {
   display: none;
+}
+
+.category > span {
+  padding: 6px 12px;
+  background: #d0d0d0;
 }
 
 .decision,
