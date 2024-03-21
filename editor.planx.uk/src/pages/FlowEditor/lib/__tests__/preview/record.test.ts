@@ -26,7 +26,7 @@ describe("error handling", () => {
       },
     });
 
-    expect(() => record("x", {})).toThrow("id not found");
+    expect(() => record("x", {})).toThrow('id "x" not found');
   });
 });
 

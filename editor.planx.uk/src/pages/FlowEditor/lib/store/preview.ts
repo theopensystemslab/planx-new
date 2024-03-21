@@ -9,10 +9,7 @@ import {
   flatFlags,
 } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import {
-  FileList,
-  PASSPORT_REQUESTED_FILES_KEY,
-} from "@planx/components/FileUploadAndLabel/model";
+import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
@@ -249,7 +246,7 @@ export const previewStore: StateCreator<
           {} as Store.passport["data"],
         );
 
-        return {
+        const passport: Store.passport = {
           ...acc,
           data: {
             ...acc.data,
@@ -257,6 +254,27 @@ export const previewStore: StateCreator<
             ...passportData,
           },
         };
+
+        const isSetValue = flow[id].type === TYPES.SetValue;
+
+        if (isSetValue) {
+          const { operation, fn }: { operation: string; fn: string } =
+            flow[id]?.data || {};
+
+          if (operation === "remove") {
+            delete passport.data?.[fn];
+          }
+
+          if (operation === "append") {
+            const previousValue = acc.data?.[fn] || [];
+            const currentValue = responseData?.[fn] || [];
+            const combined = [...previousValue, ...currentValue];
+
+            passport.data![fn] = combined;
+          }
+        }
+
+        return passport;
       },
       {
         data: {},
