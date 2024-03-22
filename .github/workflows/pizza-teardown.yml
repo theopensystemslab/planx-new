@@ -18,6 +18,10 @@ jobs:
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
           pullrequest_id: ${{ env.PULLREQUEST_ID }}
+          os_id: 1743
+          plan: vc2-1c-1gb
+          region: lhr
+          tag: teardown
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
