@@ -10,6 +10,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
+import { SetValue } from "@planx/components/SetValue/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
@@ -258,17 +259,19 @@ export const previewStore: StateCreator<
         const isSetValue = flow[id].type === TYPES.SetValue;
 
         if (isSetValue) {
-          const { operation, fn }: { operation: string; fn: string } =
-            flow[id]?.data || {};
+          const { operation, fn } = flow[id]?.data as SetValue;
+          const previousValues = acc.data?.[fn] || [];
+          const currentValue = responseData?.[fn] || [];
 
           if (operation === "remove") {
-            delete passport.data?.[fn];
+            const removeCurrentValue = (val: string) => val !== currentValue[0];
+            const filtered = previousValues.filter(removeCurrentValue);
+
+            passport.data![fn] = filtered.length ? filtered : undefined;
           }
 
           if (operation === "append") {
-            const previousValue = acc.data?.[fn] || [];
-            const currentValue = responseData?.[fn] || [];
-            const combined = [...previousValue, ...currentValue];
+            const combined = [...previousValues, ...currentValue];
 
             passport.data![fn] = combined;
           }
