@@ -1,11 +1,10 @@
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import ErrorFallback from "components/ErrorFallback";
 import React from "react";
 
 import { SubmissionData } from "./submissionData";
+import SubmissionsTable from "./SubmissionsTable";
 
 interface SubmissionsViewProps {
   applications: SubmissionData[];
@@ -26,13 +25,7 @@ const SubmissionsView: React.FC<SubmissionsViewProps> = ({
         No submitted applications found for this service.
       </Typography>
     );
-  return (
-    <List>
-      {applications.map((application, index) => (
-        <ListItem key={index}>{application.sessionId}</ListItem>
-      ))}
-    </List>
-  );
+  return <SubmissionsTable applications={applications} />;
 };
 
 export default SubmissionsView;
