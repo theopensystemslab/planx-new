@@ -61,6 +61,7 @@ export async function setUpTestContext(
       name: context.team.name,
       homepage: context.team.homepage,
       submissionEmail: context.team.submissionEmail,
+      referenceCode: "ABCD",
     });
   }
   if (
