@@ -49,3 +49,8 @@ export type PaymentRequestProxyController = ValidatedRequestHandler<
   typeof paymentRequestProxySchema,
   Buffer
 >;
+
+export interface GovPayMetadata {
+  key: string;
+  value: string | boolean;
+}

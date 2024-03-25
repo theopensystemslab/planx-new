@@ -236,7 +236,7 @@ function Component(props: Props) {
     await axios
       .post(
         getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
-        createPayload(fee, sessionId),
+        createPayload(fee, sessionId, props.govPayMetadata),
       )
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);
