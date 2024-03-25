@@ -39,7 +39,7 @@
     "@turf/buffer": "^6.5.0",
     "@turf/helpers": "^6.5.0",
     "array-move": "^4.0.0",
-    "axios": "^1.6.5",
+    "axios": "^1.6.8",
     "bowser": "^2.11.0",
     "camelcase-keys": "^9.0.0",
     "classnames": "^2.3.2",
@@ -222,7 +222,7 @@
     "overrides": {
       "nth-check@<2.0.1": ">=2.0.1",
       "postcss@<8.4.31": ">=8.4.31",
-      "follow-redirects@<=1.15.5": ">=1.15.6"
+      "follow-redirects@<1.15.4": ">=1.15.4"
     }
   }
 }
