@@ -14,7 +14,7 @@ export const mockPassport = session.data?.passport as Passport;
 
 export const inviteToPayFlowGraph = flow.data as FlowGraph;
 
-export function sendNodeWithDestination(destination): Node {
+export function sendNodeWithDestination(destination: string): Node {
   return {
     type: ComponentType.Send,
     data: {
