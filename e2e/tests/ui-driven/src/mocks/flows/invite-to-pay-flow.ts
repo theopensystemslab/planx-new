@@ -84,6 +84,11 @@ const flow: FlowGraph = {
       nomineeTitle: "Details of the person paying",
       yourDetailsTitle: "Your details",
       yourDetailsLabel: "Your name or organisation name",
+      govPayMetadata: [
+        { value: "flow-name", key: "flow" },
+        { value: "PlanX", key: "source" },
+        { value: true, key: "isInviteToPay" },
+      ],
     },
     type: ComponentType.Pay,
   },
