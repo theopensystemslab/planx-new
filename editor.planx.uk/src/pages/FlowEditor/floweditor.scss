@@ -8,6 +8,7 @@ $focus: #ffdd00;
 $endpointWidth: 50px;
 $hangerWidth: 16px;
 $lineWidth: 2px;
+$nodeBorderWidth: 1px;
 $padding: 10px;
 $editorPadding: 30px;
 $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
@@ -157,7 +158,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
   }
 
   &.hasFailed {
-    border: 1px dashed red;
+    border: $nodeBorderWidth dashed red;
   }
 
   & > a {
@@ -167,7 +168,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     text-decoration: none;
     cursor: pointer;
     color: $black;
-    border: 1px solid $nodeBorder;
+    border: $nodeBorderWidth solid $nodeBorder;
     background: white;
     user-select: none;
     padding: 6px 12px;
@@ -272,7 +273,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
   .band {
     width: 100%;
     height: 12px;
-    border-bottom: 1px solid $optionBorder;
+    border-bottom: $nodeBorderWidth solid $optionBorder;
   }
   .text {
     align-self: center;
@@ -314,7 +315,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     display: inline-block;
     // width: $size;
     text-decoration: none;
-    border: 1px solid $nodeBorder;
+    border: $nodeBorderWidth solid $nodeBorder;
     min-width: $size;
     max-width: 200px;
     min-height: $size;
@@ -372,7 +373,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     }
   }
   .portalMenu {
-    border-left: 1px solid #aaa;
+    border-left: $nodeBorderWidth solid #aaa;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -422,6 +423,29 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
   &.question.isNote {
     > a {
       background: #fffdb0 !important;
+      position: relative;
+      padding-right: 20px;
+      // Triangle shapes to simulate paper fold on sticky note
+      &::before {
+        content: "";
+        position: absolute;
+        right: -$nodeBorderWidth;
+        bottom: -$nodeBorderWidth;
+        width: 0;
+        height: 0;
+        border-bottom: 12px solid #fff;
+        border-left: 12px solid transparent;
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        right: -$nodeBorderWidth;
+        bottom: -$nodeBorderWidth;
+        width: 0;
+        height: 0;
+        border-top: 12px solid $nodeBorder;
+        border-right: 12px solid transparent;
+      }
     }
   }
 
