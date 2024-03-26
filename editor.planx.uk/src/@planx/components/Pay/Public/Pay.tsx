@@ -56,6 +56,7 @@ function Component(props: Props) {
     passport,
     environment,
     teamSlug,
+    flowSlug,
   ] = useStore((state) => [
     state.id,
     state.sessionId,
@@ -65,8 +66,17 @@ function Component(props: Props) {
     state.computePassport(),
     state.previewEnvironment,
     state.teamSlug,
+    state.flowSlug,
   ]);
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
+  const defaultMetadata = [
+    { key: "source", value: "PlanX" },
+    { key: "flow", value: flowSlug },
+    { key: "isInviteToPay", value: false },
+  ];
+  const metadata = props.govPayMetadata.length
+    ? props.govPayMetadata
+    : defaultMetadata;
 
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {
@@ -236,7 +246,7 @@ function Component(props: Props) {
     await axios
       .post(
         getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
-        createPayload(fee, sessionId, props.govPayMetadata),
+        createPayload(fee, sessionId, metadata),
       )
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);

@@ -136,12 +136,27 @@ export async function buildPaymentPayload(
     ]),
   );
 
+  const defaultGovPayMetadata = {
+    source: "PlanX",
+    // Payment requests have /pay path suffix, so get flow-slug from second-to-last position
+    flow:
+      (req.query.returnURL as string)
+        .split("?")?.[0]
+        ?.split("/")
+        ?.slice(-2, -1)?.[0] || "Could not parse service name",
+    inviteToPay: true,
+  };
+
+  const metadata = govPayMetadata.length
+    ? govPayMetadata
+    : defaultGovPayMetadata;
+
   const createPaymentBody: GovPayCreatePayment = {
     amount: parseInt(req.params.paymentAmount),
     reference: req.query.sessionId as string,
     description: "New application (nominated payee)",
     return_url: req.query.returnURL as string,
-    metadata: govPayMetadata,
+    metadata,
   };
 
   req.body = createPaymentBody;
