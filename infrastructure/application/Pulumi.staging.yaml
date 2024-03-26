@@ -16,18 +16,6 @@ config:
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAGQuqQDU4S+vR+cQaFoa6xAeWU9clVaNonQ/dq0R8Dke+o0y7ALOmYMy4fOX4Pa6HiZl85npU/cbwy8HdMYaiA==
-  application:gov-uk-pay-token-buckinghamshire:
-    secure: AAABADroqKJ1/CanxoghKyCutFA8bmiPBuafrNYGNMn1H16jXiHuytHUUByTbXZZHtANciv7rkQEJosUmyay5j/ZFKu9TeS2WaIGBD913EVlv4iXDw3Y5OU2bSocROlYQm7/
-  application:gov-uk-pay-token-camden:
-    secure: AAABAA2gkhNBs2hOfIkhHiA50MF3X8xnaGvLVzWdg0OOTl9qOKgtCjS76/XBIpGsGEyFbtHwuOgWhPw1qgql7MBO+pTnfLzDc8WcbxQFMbIjKUAgqF4yUMu75jcOiJ9XadNq
-  application:gov-uk-pay-token-gloucester:
-    secure: AAABANCvH7gf+3Bs9vZxg1QkkFUDnDnn0dn9n0UlDo3rJdF5ThFzqg4dc+mSxAyQ4OXZLPxvFmVmMY9QZNSZKGqXYSY2CJjed2GeGmQ5zHAOzSjkomxQqtpaRANAb3s7NQkn
-  application:gov-uk-pay-token-lambeth:
-    secure: AAABAPy5USkd8/hwq6vFXP45BXsYFUltR6gj8PoiZkOLRPUd1wgQ3Yhgc1Cyn+lb5cZrXBoVPjuVhm/UvBN82DNzRTl2TxAakCQQIrBU5xil+m9UnbY82CNSMDuEaWwMpR3C
-  application:gov-uk-pay-token-medway:
-    secure: AAABAOf9pQgmUkPWbyBQpkd2eZDtzx8WhHfPMD+V8lDLP/hqo24ZZyCrDfq6VBrcEeZVL89dvJ/PIVng9V5xFDKwpRcChTsOsen6epWGE/I0zwDdwrONmxgbPXnGgxLDtiEp
-  application:gov-uk-pay-token-southwark:
-    secure: AAABALGCrA9ZqRLql+ZHRQD/q6GiGNihtdgPL/7k5d37vgjqW115YR30HG9ofE00qP2Hkr2ZkYkJhVCIr9G5l1wSGXBNI+ldXxTCU8PWLGWv+Xa+Sv5Ltgd9egmwBBqUgvwe
   application:govuk-notify-api-key:
     secure: AAABACgwjEmlLmE19ofRO8e/JpD8sHDV2lcDmSXbU/Mw8ZRh5gTgll8DZ3BVjpDWfQfIecBAIf2TFgeo9CsBSLjfaRJ7eJyKDSWm7i8LlMC2JN/PN+Ig8oeI0H0oLkqJIziNKKjx+e97zDiXO9LZ1CVzrywR
   application:hasura-admin-secret:

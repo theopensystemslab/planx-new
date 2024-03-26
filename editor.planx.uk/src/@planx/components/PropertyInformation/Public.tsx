@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/ui";
 import { Feature } from "@turf/helpers";
 import { useFormik } from "formik";
@@ -15,7 +16,6 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
@@ -201,40 +201,9 @@ interface PropertyDetail {
 interface PropertyDetailsProps {
   data: PropertyDetail[];
   showPropertyTypeOverride?: boolean;
+  showChangeButton?: boolean;
   overrideAnswer: (fn: string) => void;
 }
-
-// Borrows and tweaks grid style from Review page's `SummaryList`
-const PropertyDetailsList = styled(Box)(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "1fr 2fr 100px",
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
-  "& > *": {
-    borderBottom: `1px solid ${theme.palette.border.main}`,
-    paddingBottom: theme.spacing(1.5),
-    paddingTop: theme.spacing(1.5),
-    verticalAlign: "top",
-    margin: 0,
-  },
-  "& ul": {
-    listStylePosition: "inside",
-    padding: 0,
-    margin: 0,
-  },
-  "& dt": {
-    // left column
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  },
-  "& dd:nth-of-type(n)": {
-    // middle column
-    paddingLeft: "10px",
-  },
-  "& dd:nth-of-type(2n)": {
-    // right column
-    textAlign: "right",
-  },
-}));
 
 function PropertyDetails(props: PropertyDetailsProps) {
   const { data, showPropertyTypeOverride, overrideAnswer } = props;
@@ -248,7 +217,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
   };
 
   return (
-    <PropertyDetailsList component="dl">
+    <SummaryListTable showChangeButton={true}>
       {filteredData.map(({ heading, detail, fn }: PropertyDetail) => (
         <React.Fragment key={heading}>
           <Box component="dt">{heading}</Box>
@@ -275,6 +244,6 @@ function PropertyDetails(props: PropertyDetailsProps) {
           </Box>
         </React.Fragment>
       ))}
-    </PropertyDetailsList>
+    </SummaryListTable>
   );
 }

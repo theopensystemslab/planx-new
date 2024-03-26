@@ -3,6 +3,7 @@ import * as math from "mathjs";
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface Calculate extends MoreInformation {
+  title?: string;
   output: string;
   defaults: Record<string, number>;
   formula: string;
@@ -24,6 +25,7 @@ export const parseCalculate = (
   formula: data?.formula || "",
   samples: data?.samples || {},
   formatOutputForAutomations: data?.formatOutputForAutomations || false,
+  title: data?.title || "",
 });
 
 export function getVariables(input: string): Set<string> {

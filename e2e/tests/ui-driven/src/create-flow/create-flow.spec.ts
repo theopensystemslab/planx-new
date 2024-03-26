@@ -156,7 +156,7 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`,
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
     await expect(page.getByText("Not Found")).toBeVisible();
@@ -190,7 +190,7 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`,
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });

@@ -2,21 +2,29 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import { gql } from "graphql-request";
 import { $api } from "../../client";
 import { ServerError } from "../../errors";
+import { GovPayMetadata } from "./types";
 
 /**
  * Confirm that this local authority (aka team) has a pay token
- * TODO: Check this against a DB value instead of env vars?
  */
-export const isTeamUsingGovPay: RequestHandler = (req, _res, next) => {
-  const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
+export const isTeamUsingGovPay: RequestHandler = async (req, res, next) => {
+  const env =
+    process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
-  if (!isSupported) {
+  const { govPayToken } = await $api.team.getIntegrations({
+    env,
+    slug: req.params.localAuthority,
+    encryptionKey: process.env.ENCRYPTION_KEY!,
+  });
+
+  if (!govPayToken) {
     return next({
       status: 400,
       message: `GOV.UK Pay is not enabled for this local authority (${req.params.localAuthority})`,
     });
   }
+
+  res.locals.govPayToken = govPayToken;
 
   next();
 };
@@ -25,6 +33,7 @@ interface GetPaymentRequestDetails {
   paymentRequest: {
     sessionId: string;
     paymentAmount: number;
+    govPayMetadata: GovPayMetadata[];
     session: {
       flowId: string;
       flow: {
@@ -38,7 +47,7 @@ interface GetPaymentRequestDetails {
 
 export async function fetchPaymentRequestDetails(
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction,
 ) {
   const query = gql`
@@ -46,6 +55,7 @@ export async function fetchPaymentRequestDetails(
       paymentRequest: payment_requests_by_pk(id: $paymentRequestId) {
         sessionId: session_id
         paymentAmount: payment_amount
+        govPayMetadata: govpay_metadata
         session {
           flowId: flow_id
           flow {
@@ -81,6 +91,8 @@ export async function fetchPaymentRequestDetails(
   const paymentAmount = paymentRequest.paymentAmount.toString();
   if (paymentAmount) req.params.paymentAmount = paymentAmount;
 
+  res.locals.govPayMetadata = paymentRequest.govPayMetadata;
+
   next();
 }
 
@@ -90,16 +102,12 @@ interface GovPayCreatePayment {
   reference: string;
   description: string;
   return_url: string;
-  metadata?: {
-    source: "PlanX";
-    flow: string;
-    inviteToPay: boolean;
-  };
+  metadata: Record<string, string | boolean>;
 }
 
 export async function buildPaymentPayload(
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction,
 ) {
   if (!req.query.returnURL) {
@@ -120,21 +128,20 @@ export async function buildPaymentPayload(
     );
   }
 
+  // Convert metadata to format required by GovPay
+  const govPayMetadata = Object.fromEntries(
+    res.locals.govPayMetadata.map(({ key, value }: GovPayMetadata) => [
+      key,
+      value,
+    ]),
+  );
+
   const createPaymentBody: GovPayCreatePayment = {
     amount: parseInt(req.params.paymentAmount),
     reference: req.query.sessionId as string,
     description: "New application (nominated payee)",
     return_url: req.query.returnURL as string,
-    metadata: {
-      source: "PlanX",
-      // Payment requests have /pay path suffix, so get flow-slug from second-to-last position
-      flow:
-        (req.query.returnURL as string)
-          .split("?")?.[0]
-          ?.split("/")
-          ?.slice(-2, -1)?.[0] || "Could not parse service name",
-      inviteToPay: true,
-    },
+    metadata: govPayMetadata,
   };
 
   req.body = createPaymentBody;

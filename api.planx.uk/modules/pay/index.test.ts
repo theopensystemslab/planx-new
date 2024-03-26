@@ -10,6 +10,11 @@ jest.mock("@opensystemslab/planx-core", () => {
       session: {
         findDetails: jest.fn().mockImplementation(() => ({ lockedAt: null })),
       },
+      team: {
+        getIntegrations: jest
+          .fn()
+          .mockImplementation(() => ({ govPayToken: "abc123" })),
+      },
     })),
   };
 });

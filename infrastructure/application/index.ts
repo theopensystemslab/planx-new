@@ -97,6 +97,10 @@ export = async () => {
     superuser: false,
   });
   const metabasePgPassword = config.requireSecret("metabasePgPassword");
+
+  // Setup role and database for internal Metabase application data, such as dashboards and queries
+  // This is separate to the postgres/public one used to hold PlanX application data
+  // Docs: https://www.metabase.com/docs/latest/installation-and-operation/configuring-application-database
   const role = new postgres.Role(
     "metabase",
     {

@@ -21,6 +21,11 @@ export interface Flow {
     [key: string]: Node;
   };
   team_id: number;
+  publishedFlows?:
+    | {
+        data: { [key: string]: Node };
+      }[]
+    | [];
 }
 
 export interface PublishedFlow {

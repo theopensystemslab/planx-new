@@ -92,7 +92,7 @@ export const getTeamFromDomain = async (domain: string) => {
 /**
  * Prevents accessing a different team than the one associated with the custom domain.
  * e.g. Custom domain is for Southwark but URL is looking for Lambeth
- * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow/preview
+ * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow
  */
 export const validateTeamRoute = async (req: NaviRequest) => {
   const externalTeamName = await getTeamFromDomain(window.location.hostname);

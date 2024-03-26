@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.8",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#dab9c39",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#10f239a",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "aws-sdk": "^2.1467.0",
-    "axios": "^1.6.5",
+    "axios": "^1.6.8",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.1.0",
@@ -125,7 +125,7 @@
       ]
     },
     "overrides": {
-      "follow-redirects@<1.15.4": ">=1.15.4"
+      "follow-redirects@<=1.15.5": ">=1.15.6"
     }
   }
 }

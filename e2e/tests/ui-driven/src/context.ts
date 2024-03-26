@@ -61,6 +61,7 @@ export async function setUpTestContext(
       name: context.team.name,
       homepage: context.team.homepage,
       submissionEmail: context.team.submissionEmail,
+      referenceCode: "ABCD",
     });
   }
   if (
@@ -82,6 +83,8 @@ export async function setUpTestContext(
       publisherId: context.user!.id!,
     });
   }
+  await setupGovPaySecret($admin, context);
+
   return context;
 }
 
@@ -325,5 +328,31 @@ async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
         { teamId: response.teams[0].id },
       );
     }
+  }
+}
+
+async function setupGovPaySecret($admin: CoreDomainClient, context: Context) {
+  try {
+    await $admin.client.request(
+      gql`
+        mutation SetupGovPaySecret(
+          $team_id: Int
+          $staging_govpay_secret: String
+        ) {
+          update_team_integrations(
+            where: { team_id: { _eq: $team_id } }
+            _set: { staging_govpay_secret: $staging_govpay_secret }
+          ) {
+            affected_rows
+          }
+        }
+      `,
+      {
+        team_id: context.team.id,
+        staging_govpay_secret: process.env.GOV_UK_PAY_SECRET_E2E,
+      },
+    );
+  } catch (error) {
+    throw Error("Failed to setup GovPay secret for E2E team");
   }
 }

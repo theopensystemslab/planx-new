@@ -25,6 +25,12 @@ beforeEach(() => {
     data: {
       flow: {
         data: mockFlowData,
+        slug: "flow-name",
+        team_id: 1,
+        team: {
+          slug: "testing",
+        },
+        publishedFlows: [{ data: mockFlowData }],
       },
     },
   });
@@ -86,6 +92,12 @@ describe("sections validation on diff", () => {
       data: {
         flow: {
           data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
         },
       },
     });
@@ -121,6 +133,12 @@ describe("sections validation on diff", () => {
       data: {
         flow: {
           data: flowWithSections,
+          slug: "sections-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: flowWithSections }],
         },
       },
     });
@@ -186,6 +204,12 @@ describe("invite to pay validation on diff", () => {
       data: {
         flow: {
           data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
         },
       },
     });
@@ -215,6 +239,12 @@ describe("invite to pay validation on diff", () => {
       data: {
         flow: {
           data: invalidatedFlow,
+          slug: "invalidated-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: invalidatedFlow }],
         },
       },
     });
@@ -246,6 +276,12 @@ describe("invite to pay validation on diff", () => {
       data: {
         flow: {
           data: invalidFlow,
+          slug: "invalid-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: invalidFlow }],
         },
       },
     });
@@ -279,6 +315,12 @@ describe("invite to pay validation on diff", () => {
       data: {
         flow: {
           data: invalidatedFlow,
+          slug: "invalidated-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: invalidatedFlow }],
         },
       },
     });

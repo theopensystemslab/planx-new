@@ -57,7 +57,7 @@ describe("buildContentFromSessions function", () => {
       Address: 1 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`;
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
       await buildContentFromSessions(
         sessions as LowCalSession[],
@@ -124,15 +124,15 @@ describe("buildContentFromSessions function", () => {
       Address: 1 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123\n\nService: Apply for a lawful development certificate
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123\n\nService: Apply for a lawful development certificate
       Address: 2 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=456\n\nService: Apply for a lawful development certificate
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=456\n\nService: Apply for a lawful development certificate
       Address: 3 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`;
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=789`;
     expect(
       await buildContentFromSessions(
         sessions as LowCalSession[],
@@ -182,7 +182,7 @@ describe("buildContentFromSessions function", () => {
       Address: 1 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`;
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
       await buildContentFromSessions(
         sessions as LowCalSession[],
@@ -214,7 +214,7 @@ describe("buildContentFromSessions function", () => {
       Address: Address not submitted
       Project type: New office premises
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`;
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
       await buildContentFromSessions(
         sessions as LowCalSession[],
@@ -248,7 +248,7 @@ describe("buildContentFromSessions function", () => {
       Address: 1 High Street
       Project type: Project type not submitted
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`;
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
       await buildContentFromSessions(
         sessions as LowCalSession[],
