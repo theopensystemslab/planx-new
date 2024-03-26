@@ -36,7 +36,8 @@ const DescriptionText: React.FC<SetValue> = ({ fn, val, operation }) => {
     case "remove":
       return (
         <Typography mb={2}>
-          Any existing value for <strong>{fn}</strong> will be removed
+          Any existing value for <strong>{fn}</strong> set to{" "}
+          <strong>{val}</strong> will be removed
         </Typography>
       );
   }
