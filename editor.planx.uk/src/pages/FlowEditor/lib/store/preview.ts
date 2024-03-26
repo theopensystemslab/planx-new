@@ -247,7 +247,7 @@ export const previewStore: StateCreator<
           {} as Store.passport["data"],
         );
 
-        const passport: Store.passport = {
+        let passport: Store.passport = {
           ...acc,
           data: {
             ...acc.data,
@@ -257,24 +257,8 @@ export const previewStore: StateCreator<
         };
 
         const isSetValue = flow[id].type === TYPES.SetValue;
-
         if (isSetValue) {
-          const { operation, fn } = flow[id]?.data as SetValue;
-          const previousValues = acc.data?.[fn] || [];
-          const currentValue = responseData?.[fn] || [];
-
-          if (operation === "remove") {
-            const removeCurrentValue = (val: string) => val !== currentValue[0];
-            const filtered = previousValues.filter(removeCurrentValue);
-
-            passport.data![fn] = filtered.length ? filtered : undefined;
-          }
-
-          if (operation === "append") {
-            const combined = [...previousValues, ...currentValue];
-
-            passport.data![fn] = combined;
-          }
+          passport = handleSetValue(flow, id, acc, responseData, passport);
         }
 
         return passport;
@@ -837,6 +821,45 @@ export const sortBreadcrumbs = (
       );
 };
 
+const handleSetValue = (
+  flow: Store.flow,
+  id: string,
+  acc: Record<string, any>,
+  responseData: Record<string, any> | undefined,
+  passport: Store.passport,
+): Store.passport => {
+  const { operation, fn } = flow[id]?.data as SetValue;
+  let previousValues = acc.data?.[fn];
+
+  // We do not amend values set at objects
+  // These are internal exceptions we do not want to allow users to edit
+  // e.g. property.boundary.title
+  const isObject =
+    typeof previousValues === "object" &&
+    !Array.isArray(previousValues) &&
+    previousValues !== null;
+  if (isObject) return passport;
+
+  previousValues = formatPreviousValues(previousValues);
+  const currentValue = responseData?.[fn] || [];
+
+  if (operation === "remove") {
+    const removeCurrentValue = (val: string | number | boolean) =>
+      val !== currentValue[0];
+    const filtered = previousValues.filter(removeCurrentValue);
+
+    passport.data![fn] = filtered.length ? filtered : undefined;
+  }
+
+  if (operation === "append") {
+    const combined = [...previousValues, ...currentValue];
+
+    passport.data![fn] = combined;
+  }
+
+  return passport;
+};
+
 function handleNodesWithPassport({
   flow,
   id,
@@ -913,4 +936,12 @@ export const removeNodesDependentOnPassport = (
     return acc;
   }, [] as string[]);
   return { removedNodeIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
+};
+
+const formatPreviousValues = (
+  value: string | number | boolean,
+): Array<string | number | boolean> => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return [value];
 };
