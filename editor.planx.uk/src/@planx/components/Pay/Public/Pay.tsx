@@ -74,7 +74,7 @@ function Component(props: Props) {
     { key: "flow", value: flowSlug },
     { key: "isInviteToPay", value: false },
   ];
-  const metadata = props.govPayMetadata.length
+  const metadata = props.govPayMetadata?.length
     ? props.govPayMetadata
     : defaultMetadata;
 

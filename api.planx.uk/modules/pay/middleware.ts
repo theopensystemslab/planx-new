@@ -147,7 +147,7 @@ export async function buildPaymentPayload(
     inviteToPay: true,
   };
 
-  const metadata = govPayMetadata.length
+  const metadata = Object.keys(govPayMetadata).length
     ? govPayMetadata
     : defaultGovPayMetadata;
 
