@@ -34,9 +34,6 @@ describe("Pay component - Editor Modal", () => {
   describe("GOV.UK Pay Metadata section", () => {
     jest.setTimeout(20000);
 
-    beforeAll(() => toggleFeatureFlag("GOVPAY_METADATA"));
-    afterAll(() => toggleFeatureFlag("GOVPAY_METADATA"));
-
     // Set up mock state with platformAdmin user so all Editor features are enabled
     const { getState, setState } = vanillaStore;
     const mockUser: User = {
