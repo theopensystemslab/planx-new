@@ -9,10 +9,8 @@ import {
   flatFlags,
 } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import {
-  FileList,
-  PASSPORT_REQUESTED_FILES_KEY,
-} from "@planx/components/FileUploadAndLabel/model";
+import { FileList } from "@planx/components/FileUploadAndLabel/model";
+import { SetValue } from "@planx/components/SetValue/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
@@ -249,7 +247,7 @@ export const previewStore: StateCreator<
           {} as Store.passport["data"],
         );
 
-        return {
+        let passport: Store.passport = {
           ...acc,
           data: {
             ...acc.data,
@@ -257,6 +255,13 @@ export const previewStore: StateCreator<
             ...passportData,
           },
         };
+
+        const isSetValue = flow[id].type === TYPES.SetValue;
+        if (isSetValue) {
+          passport = handleSetValue(flow, id, acc, responseData, passport);
+        }
+
+        return passport;
       },
       {
         data: {},
@@ -279,7 +284,7 @@ export const previewStore: StateCreator<
       updateSectionData,
     } = get();
 
-    if (!flow[id]) throw new Error("id not found");
+    if (!flow[id]) throw new Error(`id "${id}" not found`);
 
     if (userData) {
       // add breadcrumb
@@ -816,6 +821,45 @@ export const sortBreadcrumbs = (
       );
 };
 
+const handleSetValue = (
+  flow: Store.flow,
+  id: string,
+  acc: Record<string, any>,
+  responseData: Record<string, any> | undefined,
+  passport: Store.passport,
+): Store.passport => {
+  const { operation, fn } = flow[id]?.data as SetValue;
+  let previousValues = acc.data?.[fn];
+
+  // We do not amend values set at objects
+  // These are internal exceptions we do not want to allow users to edit
+  // e.g. property.boundary.title
+  const isObject =
+    typeof previousValues === "object" &&
+    !Array.isArray(previousValues) &&
+    previousValues !== null;
+  if (isObject) return passport;
+
+  previousValues = formatPreviousValues(previousValues);
+  const currentValue = responseData?.[fn] || [];
+
+  if (operation === "remove") {
+    const removeCurrentValue = (val: string | number | boolean) =>
+      val !== currentValue[0];
+    const filtered = previousValues.filter(removeCurrentValue);
+
+    passport.data![fn] = filtered.length ? filtered : undefined;
+  }
+
+  if (operation === "append") {
+    const combined = [...previousValues, ...currentValue];
+
+    passport.data![fn] = combined;
+  }
+
+  return passport;
+};
+
 function handleNodesWithPassport({
   flow,
   id,
@@ -892,4 +936,12 @@ export const removeNodesDependentOnPassport = (
     return acc;
   }, [] as string[]);
   return { removedNodeIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
+};
+
+const formatPreviousValues = (
+  value: string | number | boolean,
+): Array<string | number | boolean> => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return [value];
 };
