@@ -143,11 +143,46 @@ describe("Feedback component triage journey", () => {
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Comment" }));
 
-    await waitFor(() => {
-      expect(getByText("Share a comment")).toBeInTheDocument();
-    });
+    await waitFor(() => {});
+    expect(getByText("Share a comment")).toBeInTheDocument();
 
-    await user.type(getByTestId("userCommentTextarea"), "This page is great");
+    await user.type(getByTestId("userCommentTextarea"), "What about 3D maps");
+
+    await user.click(getByText("Send feedback"));
+
+    await waitFor(() => {
+      expect(getInternalFeedbackMetadata).toBeCalledTimes(1);
+      expect(insertFeedbackMutation).toBeCalledTimes(1);
+      expect(getByText("Thank you for your feedback.")).toBeInTheDocument();
+    });
+  });
+
+  test("Selecting 'Inaccuracy' from triage scrolls the comment form into view", async () => {
+    const { getByText, getByRole, user } = setup(<Feedback />);
+
+    await user.click(getByText("feedback"));
+    await user.click(getByRole("button", { name: "Inaccuracy" }));
+
+    expect(scrollIntoViewMock).toBeCalledTimes(2);
+
+    await waitFor(() => {
+      expect(getByText("Report an inaccuracy")).toBeInTheDocument();
+    });
+  });
+
+  test("Submitting 'Inaccuracy' form changes view to thank you message", async () => {
+    const { getByText, getByTestId, getByRole, user } = setup(<Feedback />);
+
+    await user.click(getByText("feedback"));
+    await user.click(getByRole("button", { name: "Inaccuracy" }));
+
+    await waitFor(() => {});
+    expect(getByText("Report an inaccuracy")).toBeInTheDocument();
+
+    await user.type(
+      getByTestId("userCommentTextarea"),
+      "This information is wrong",
+    );
 
     await user.click(getByText("Send feedback"));
 
