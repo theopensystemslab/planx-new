@@ -1,7 +1,7 @@
 # BOPS submissions
 - request:
     method: POST
-    path: /api/v2/planning_applications
+    path: /
   response:
     headers:
       Content-Type: application/json
