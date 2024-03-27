@@ -20,6 +20,10 @@ type AnalyticsLogDirection =
   | "reset"
   | "save";
 
+/**
+ * If appending to ALLOW_LIST please also update the `analytics_summary` view to
+ * extract it into it's own column.
+ */
 const ALLOW_LIST = [
   "proposal.projectType",
   "application.declaration.connection",
@@ -518,7 +522,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const answerValues = answerIds.map((answerId) => flow[answerId]?.data?.val);
 
     // Match data structure of `allow_list_answers` column
-    const answers = [ {[nodeFn]: answerValues } ];
+    const answers = [{ [nodeFn]: answerValues }];
 
     return answers;
   }
