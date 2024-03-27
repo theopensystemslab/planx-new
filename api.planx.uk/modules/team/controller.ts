@@ -46,7 +46,7 @@ export const addMember: UpsertMember = async (_req, res, next) => {
   } catch (error) {
     return next(
       new ServerError({
-        message: "Failed to add member to team",
+        message: `Failed to add member ${userEmail} to team ${teamSlug}. Error: ${error}`,
         cause: error,
       }),
     );
