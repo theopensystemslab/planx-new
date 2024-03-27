@@ -8,7 +8,7 @@
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#d643a8f",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#59d280b",
     "axios": "^1.6.8",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
