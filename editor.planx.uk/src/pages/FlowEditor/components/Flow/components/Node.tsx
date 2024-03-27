@@ -145,7 +145,7 @@ const getSetValueText = ({ operation, fn, val }: Store.node["data"]) => {
     case "append":
       return `Append ${val} to ${fn}`;
     case "remove":
-      return `Remove ${fn}`;
+      return `Remove ${val} from ${fn}`;
     default:
       return `Replace ${fn} with ${val}`;
   }
