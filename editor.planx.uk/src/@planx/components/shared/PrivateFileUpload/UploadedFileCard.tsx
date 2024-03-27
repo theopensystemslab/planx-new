@@ -98,6 +98,7 @@ export const UploadedFileCard: React.FC<Props> = ({
         width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
         role="progressbar"
         aria-valuenow={progress * 100 || 0}
+        aria-label={file.path}
       />
       <FilePreview>
         {file instanceof File && file?.type?.includes("image") ? (
@@ -148,7 +149,9 @@ export const UploadedFileCard: React.FC<Props> = ({
           variant="body2"
         >
           Change
-          <Box sx={visuallyHidden} component="span">the list of what file {file.path} shows</Box>
+          <Box sx={visuallyHidden} component="span">
+            the list of what file {file.path} shows
+          </Box>
         </Link>
       </TagRoot>
     )}
