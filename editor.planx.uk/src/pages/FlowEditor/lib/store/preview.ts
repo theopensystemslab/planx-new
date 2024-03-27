@@ -283,17 +283,10 @@ export const previewStore: StateCreator<
 
     if (userData) {
       // add breadcrumb
-      const {
-        answers = [],
-        data = {},
-        auto = false,
-        override,
-        feedback,
-      } = userData;
+      const { answers = [], data = {}, auto = false, override } = userData;
 
       const breadcrumb: Store.userData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
-      if (feedback) breadcrumb.feedback = feedback;
 
       const filteredData = objectWithoutNullishValues(data);
       if (Object.keys(filteredData).length > 0) breadcrumb.data = filteredData;

@@ -44,7 +44,6 @@ export interface UserData {
   data?: Record<string, any>;
   auto?: boolean;
   override?: Record<string, any>;
-  feedback?: string;
 }
 
 export type Breadcrumb = Record<string, UserData>;
