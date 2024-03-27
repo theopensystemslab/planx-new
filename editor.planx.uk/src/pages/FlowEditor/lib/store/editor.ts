@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import {
   add,
   clone,
@@ -29,8 +30,65 @@ let doc: any;
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
     console.log({ ops });
+    console.log(formattedOps(ops));
     doc.submitOp(ops);
   }
+};
+
+const formattedOps = (ops: Array<any>) => {
+  const formattedLogs: string[] = [];
+  ops.map((op) => {
+    if (Object.keys(op).includes("oi") && Object.keys(op).includes("od")) {
+      if (op.od.type && op.oi.type) {
+        formattedLogs.push(
+          `Replaced ${ComponentType[op.od.type]} (${op.p?.[0]}) "${
+            op.od.data?.title || op.od.data?.text
+          }" with ${ComponentType[op.oi.type]} (${op.p?.[0]}) "${
+            op.oi.data?.title || op.oi.data?.text
+          }"`,
+        );
+      } else if (op.p.includes("data")) {
+        formattedLogs.push(
+          `Updated node ${op.p?.[2]} from "${op.od}" to "${op.oi}"`,
+        );
+      } else if (op.p.includes("edges")) {
+        formattedLogs.push(`Re-ordered nodes`);
+      }
+    } else if (Object.keys(op).includes("oi")) {
+      if (op.oi.type) {
+        formattedLogs.push(
+          `Inserted ${ComponentType[op.oi.type]} (${op.p?.[0]}) "${
+            op.oi.data?.title || op.oi.data?.text
+          }"`,
+        );
+      } else if (op.p.includes("data")) {
+        formattedLogs.push(`Added node ${op.p?.[2]} "${op.oi}"`);
+      } else if (op.p.includes("edges")) {
+        formattedLogs.push(`Added node to branch`);
+      }
+    } else if (Object.keys(op).includes("od")) {
+      if (op.od.type) {
+        formattedLogs.push(
+          `Deleted ${ComponentType[op.od.type]} (${op.p?.[0]}) "${
+            op.od.data?.title || op.od.data?.text
+          }"`,
+        );
+      } else if (op.p.includes("data")) {
+        formattedLogs.push(`Deleted node ${op.p?.[2]} "${op.od}"`);
+      } else if (op.p.includes("edges")) {
+        formattedLogs.push(`Deleted node from branch`);
+      }
+    } else if (
+      Object.keys(op).includes("li") &&
+      Object.keys(op).includes("ld")
+    ) {
+      if (op.p.includes("edges") && op.p.includes("_root")) {
+        formattedLogs.push(`Re-ordered _root nodes`);
+      }
+    }
+  });
+
+  return formattedLogs;
 };
 
 export interface EditorUIStore {
