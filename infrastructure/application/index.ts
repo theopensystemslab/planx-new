@@ -68,6 +68,10 @@ const CUSTOM_DOMAINS: CustomDomains =
           domain: "planningservices.westberks.gov.uk",
           name: "westberks",
         },
+        {
+          domain: "planningservices.gateshead.gov.uk",
+          name: "gateshead",
+        },
       ]
     : [];
 
