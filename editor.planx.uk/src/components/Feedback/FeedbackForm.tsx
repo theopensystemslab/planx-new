@@ -23,34 +23,20 @@ function FormInputs({ inputs }: { inputs: FeedbackFormInput[] }): FCReturn {
         <ErrorWrapper
           key={input.name}
           error={errors?.[input.name]}
-          id={`${input.label || input.ariaDescribedBy}-error`}
+          id={`${input.label}-error`}
         >
-          {input.label ? (
-            <InputLabel label={input.label} htmlFor={input.id}>
-              <Input
-                required
-                multiline
-                bordered
-                id={input.id}
-                name={input.name}
-                value={values?.[input.name]}
-                onChange={handleChange}
-                data-testid={`${input.name}Textarea`}
-              />
-            </InputLabel>
-          ) : (
+          <InputLabel label={input.label} htmlFor={input.id}>
             <Input
-              name={input.name}
               required
               multiline
               bordered
-              aria-label={"Leave your feedback"}
-              aria-describedby={input.ariaDescribedBy}
+              id={input.id}
+              name={input.name}
               value={values?.[input.name]}
               onChange={handleChange}
               data-testid={`${input.name}Textarea`}
             />
-          )}
+          </InputLabel>
         </ErrorWrapper>
       ))}
     </>

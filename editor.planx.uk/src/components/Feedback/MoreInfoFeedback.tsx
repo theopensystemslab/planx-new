@@ -94,7 +94,8 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     const commentFormInputs: FeedbackFormInput[] = [
       {
         name: "userComment",
-        ariaDescribedBy: "comment-title",
+        label: "What's your feedback?",
+        id: "feedback-input",
       },
     ];
 

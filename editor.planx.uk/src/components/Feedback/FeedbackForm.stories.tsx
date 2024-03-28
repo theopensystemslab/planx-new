@@ -26,7 +26,9 @@ export const EmptyLabelledForm: Story = {
 
 export const EmptyUnlabelledForm: Story = {
   args: {
-    inputs: [{ id: "userComment", name: "userComment" }],
+    inputs: [
+      { id: "userComment", name: "userComment", label: "What's your comment?" },
+    ],
     handleSubmit: async (values) => {
       console.log(values);
     },
