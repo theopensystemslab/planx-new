@@ -64,35 +64,36 @@ export default function ConstraintsList({
 
   return (
     <Box mb={3}>
-      <List dense disablePadding>
-        {Object.keys(groupedConstraints).map(
-          (category: string, index: number) => (
-            <React.Fragment key={index}>
-              <ListSubheader
-                disableGutters
-                disableSticky
-                color="primary"
-                key={category}
+      {Object.keys(groupedConstraints).map(
+        (category: string, index: number) => (
+          <>
+            <ListSubheader
+              component="div"
+              disableGutters
+              disableSticky
+              color="primary"
+              key={category}
+              style={{
+                padding: 0,
+                backgroundColor: CATEGORY_COLORS[category],
+                marginTop: index > 0 ? "2em" : 0,
+              }}
+            >
+              <Typography
+                variant="body1"
+                component="h3"
+                py={1}
+                px={2}
+                pl={2.5}
                 style={{
-                  padding: 0,
-                  backgroundColor: CATEGORY_COLORS[category],
-                  marginTop: index > 0 ? "2em" : 0,
+                  fontWeight: 700,
+                  color: "black",
                 }}
               >
-                <Typography
-                  variant="body1"
-                  component="h3"
-                  py={1}
-                  px={2}
-                  pl={2.5}
-                  style={{
-                    fontWeight: 700,
-                    color: "black",
-                  }}
-                >
-                  {category}
-                </Typography>
-              </ListSubheader>
+                {category}
+              </Typography>
+            </ListSubheader>
+            <List dense disablePadding>
               {groupedConstraints[category].map((con: any) => (
                 <ConstraintListItem
                   key={con.text}
@@ -104,10 +105,10 @@ export default function ConstraintsList({
                   {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
                 </ConstraintListItem>
               ))}
-            </React.Fragment>
-          ),
-        )}
-      </List>
+            </List>
+          </>
+        ),
+      )}
     </Box>
   );
 }
