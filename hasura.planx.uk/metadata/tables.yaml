@@ -40,7 +40,6 @@
           - id
           - input_errors
           - metadata
-          - node_fn
           - node_id
           - node_title
           - node_type
