@@ -50,7 +50,7 @@ This guide will walk through the process of setting a custom domain for a new te
     openssl pkcs7 -print_certs -in <FILENAME> -out council.cert
     ```
     
-    The `council.cert` file output above might contain the certificate chain inside it, so please separate the first certificate in the file (the certificate body as `council.cert`) from the rest of the certificates in the file (the certificate chain as `chain.cert`) before proceeding with step 6.2.
+    The `council.cert` file output above might contain the certificate chain inside it, so please separate the first certificate in the file (the certificate body as `council.cert`) from the rest of the certificates in the file (the certificate chain as `chain.cert`) before proceeding with step 6.2. If multiple certificate formats are returned by the council, it's possible not all will include chain (or root) certificates. If provided, we should include the chain certificates.
 
 5. **PlanX** - Validate certificates manually in AWS Console (optional but recommended)
   
