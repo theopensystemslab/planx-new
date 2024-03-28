@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
@@ -127,6 +127,15 @@ const ResultReason: React.FC<IResultReason> = ({
 }) => {
   const changeAnswer = useStore((state) => state.changeAnswer);
   const accordionSummaryRef = useRef<HTMLDivElement | null>(null);
+  const [accordionSummaryHeight, setAccordionSummaryHeight] = useState(0);
+
+  // Match height of closed accordion to ChangeLink
+  useLayoutEffect(() => {
+    if (accordionSummaryRef.current) {
+      const height = accordionSummaryRef.current.clientHeight;
+      setAccordionSummaryHeight(height);
+    }
+  }, [accordionSummaryRef]);
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
 
@@ -192,13 +201,7 @@ const ResultReason: React.FC<IResultReason> = ({
           </AccordionDetails>
         )}
       </StyledAccordion>
-      <ChangeLink
-        sx={{
-          height: accordionSummaryRef.current?.clientHeight
-            ? accordionSummaryRef.current?.clientHeight
-            : "100%",
-        }}
-      >
+      <ChangeLink sx={{ height: accordionSummaryHeight }}>
         {showChangeButton && (
           <Link
             component="button"
