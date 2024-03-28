@@ -126,11 +126,9 @@ const ResultReason: React.FC<IResultReason> = ({
   flagColor,
 }) => {
   const changeAnswer = useStore((state) => state.changeAnswer);
-  const [expanded, setExpanded] = React.useState(false);
   const accordionSummaryRef = useRef<HTMLDivElement | null>(null);
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
-  const toggleAdditionalInfo = () => setExpanded(!expanded);
 
   const ariaLabel = `${question.data.text}: Your answer was: ${response}. ${
     hasMoreInfo
@@ -149,8 +147,6 @@ const ResultReason: React.FC<IResultReason> = ({
     <Root>
       <StyledAccordion
         classes={{ root: classes.removeTopBorder }}
-        onChange={() => hasMoreInfo && toggleAdditionalInfo()}
-        expanded={expanded}
         elevation={0}
         square
       >
