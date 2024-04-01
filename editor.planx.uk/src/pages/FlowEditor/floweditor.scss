@@ -277,7 +277,6 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
   }
   .text {
     align-self: center;
-    text-align: center;
     margin: 0;
     padding: 6px 12px;
     width: 100%;
@@ -287,7 +286,6 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     background-color: #f0f0f0;
     font-family: "Source Code Pro", monospace;
     align-self: center;
-    text-align: center;
     margin: 0;
     padding: 6px 12px;
     width: 100%;
@@ -296,6 +294,53 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
   .thumbnail {
     max-width: 220px;
     align-self: center;
+  }
+}
+
+.question {
+  > a {
+    border-color: $nodeBorder;
+    flex-direction: column;
+    padding: 0;
+    min-width: 60px;
+    max-width: 300px;
+  }
+  .question-icon-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 6px;
+    width: 100%;
+    border-bottom: $nodeBorderWidth solid $nodeBorder;
+  }
+  .question-text {
+    align-self: center;
+    margin: 0;
+    padding: 6px 12px;
+    width: 100%;
+  }
+  .question-schema {
+    background-color: #f0f0f0;
+    font-family: "Source Code Pro", monospace;
+    align-self: center;
+    margin: 0;
+    padding: 6px 12px;
+    width: 100%;
+    border-bottom: $nodeBorderWidth solid $nodeBorder;
+  }
+  .question-thumbnail {
+    max-width: 220px;
+    border-bottom: $nodeBorderWidth solid $nodeBorder;
+  }
+  .question-policy {
+    margin: 0;
+    padding: 0px 12px;
+    width: 100%;
+    li {
+      list-style-type: circle;
+    }
+    :last-of-type {
+      padding-bottom: 6px;
+    }
   }
 }
 

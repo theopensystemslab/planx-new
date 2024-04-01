@@ -5,6 +5,7 @@ import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -86,8 +87,33 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           onContextMenu={handleContext}
           ref={drag}
         >
-          {Icon && <Icon />}
-          <span>{props.text}</span>
+          <div className="question-icon-wrapper">
+            {Icon && <Icon />}
+            <div className="question-text">{props.text}</div>
+          </div>
+          {props.data?.fn && (
+            <div className="question-schema">{props.data.fn}</div>
+          )}
+          {props.data?.img && (
+            <img
+              className="question-thumbnail"
+              src={props.data.img}
+              alt={props.data.text}
+            />
+          )}
+          {props.data?.info && (
+            <div className="question-policy">
+              <ReactMarkdownOrHtml source={props.data.info} />
+            </div>
+          )}
+          {props.data?.policyRef && (
+            <div className="question-policy">
+              <ReactMarkdownOrHtml
+                source={props.data.policyRef}
+                openLinksOnNewTab={true}
+              />
+            </div>
+          )}
         </Link>
         {groupedOptions ? (
           <ol className="categories">
