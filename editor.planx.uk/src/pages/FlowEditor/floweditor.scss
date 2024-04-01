@@ -268,7 +268,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     flex-direction: column;
     padding: 0;
     min-width: 60px;
-    max-width: 200px;
+    max-width: fit-content;
   }
   .band {
     width: 100%;
@@ -277,8 +277,25 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
   }
   .text {
     align-self: center;
+    text-align: center;
     margin: 0;
     padding: 6px 12px;
+    width: 100%;
+    border-bottom: $nodeBorderWidth solid $optionBorder;
+  }
+  .schema {
+    background-color: #f0f0f0;
+    font-family: "Source Code Pro", monospace;
+    align-self: center;
+    text-align: center;
+    margin: 0;
+    padding: 6px 12px;
+    width: 100%;
+    border-bottom: $nodeBorderWidth solid $optionBorder;
+  }
+  .thumbnail {
+    max-width: 220px;
+    align-self: center;
   }
 }
 
