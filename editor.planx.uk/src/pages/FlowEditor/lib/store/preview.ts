@@ -9,10 +9,7 @@ import {
   flatFlags,
 } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import {
-  FileList,
-  PASSPORT_REQUESTED_FILES_KEY,
-} from "@planx/components/FileUploadAndLabel/model";
+import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
