@@ -19,6 +19,7 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { visuallyHidden } from "@mui/utils";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
@@ -359,7 +360,9 @@ const PublicToolbar: React.FC<{
                   onClick={openConfirmationDialog}
                   aria-label="Restart Application"
                   size="large"
+                  aria-describedby="restart-application-description"
                 >
+                  <Typography id="restart-application-description" style={visuallyHidden}>Open a dialog with the option to restart your application. If you chose to restart your application, this will delete your previous answers</Typography>
                   <Reset color="secondary" />
                 </IconButton>
               )}
