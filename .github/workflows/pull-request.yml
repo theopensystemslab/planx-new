@@ -322,28 +322,28 @@ jobs:
           password: ${{ steps.create.outputs.default_password }}
           command_timeout: 20m
           script: |
-            apk update
-            apk add docker
-            addgroup root docker
-            rc-update add docker default
-            service docker start
-            apk add docker-cli-compose
+            time apk update
+            time apk add docker
+            time addgroup root docker
+            time rc-update add docker default
+            time service docker start
+            time apk add docker-cli-compose
 
-            git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
-            cd planx-new
-            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+            time git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
+            time cd planx-new
+            time git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            apk add aws-cli
-            export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-            export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-            export AWS_REGION=eu-west-2
+            time apk add aws-cli
+            time export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+            time export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+            time export AWS_REGION=eu-west-2
 
-            CI=true ./scripts/pull-secrets.sh
+            time CI=true ./scripts/pull-secrets.sh
 
-            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
-            cat .env .env.temp .env.staging > .env.pizza
+            time echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            time cat .env .env.temp .env.staging > .env.pizza
 
-            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
+            time SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
