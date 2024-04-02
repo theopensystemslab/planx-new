@@ -185,8 +185,8 @@ devDependencies:
     specifier: ^9.0.5
     version: 9.0.5
   '@types/lodash':
-    specifier: ^4.14.202
-    version: 4.14.202
+    specifier: ^4.17.0
+    version: 4.17.0
   '@types/mime':
     specifier: ^3.0.4
     version: 3.0.4
@@ -1997,8 +1997,8 @@ packages:
     resolution: {integrity: sha512-lZuNAY9xeJt7Bx4t4dx0rYCDqGPW8RXhQZK1td7d4H6E9zYbLoOtjBvfwdTKpsyxQI/2jv+armjX/RW+ZNpXOQ==}
     dev: true
 
-  /@types/lodash@4.14.202:
-    resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
+  /@types/lodash@4.17.0:
+    resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
 
   /@types/methods@1.1.4:
     resolution: {integrity: sha512-ymXWVrDiCxTBE3+RIrrP533E70eA+9qu7zdWoHuOmGujkYtzf4HQF96b8nwHLqhuf4ykX61IGRIB38CC6/sImQ==}
@@ -5730,7 +5730,7 @@ packages:
     dependencies:
       '@bcherny/json-schema-ref-parser': 10.0.5-fork
       '@types/json-schema': 7.0.15
-      '@types/lodash': 4.14.202
+      '@types/lodash': 4.17.0
       '@types/prettier': 2.7.3
       cli-color: 2.0.3
       get-stdin: 8.0.0
