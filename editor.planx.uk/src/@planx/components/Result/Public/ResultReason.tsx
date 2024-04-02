@@ -135,11 +135,10 @@ const ResultReason: React.FC<IResultReason> = ({
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
   const toggleAdditionalInfo = () => setExpanded(!expanded);
 
-  const ariaLabel = `${question.data.text}: Your answer was: ${response}. ${
-    hasMoreInfo
+  const ariaLabel = `${question.data.text}: Your answer was: ${response}. ${hasMoreInfo
       ? "Click to expand for more information about this question."
       : ""
-  }`;
+    }`;
 
   const { trackBackwardsNavigation } = useAnalyticsTracking();
 
@@ -155,7 +154,6 @@ const ResultReason: React.FC<IResultReason> = ({
         onChange={() => hasMoreInfo && toggleAdditionalInfo()}
         expanded={expanded}
         elevation={0}
-        square
       >
         <Box sx={{ position: "relative" }}>
           <StyledAccordionSummary
