@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
@@ -40,12 +40,8 @@ const ChangeLink = styled(Box)(({ theme }) => ({
   position: "absolute",
   right: theme.spacing(-8),
   top: 0,
-  height: "100%",
-  minWidth: theme.spacing(8),
   display: "flex",
-  justifyContent: "flex-end",
-  alignItems: "center",
-  flexShrink: "0",
+  alignContent: "center",
   "& button": {
     padding: "1em 0.25em",
     fontSize: "inherit",
@@ -130,10 +126,18 @@ const ResultReason: React.FC<IResultReason> = ({
   flagColor,
 }) => {
   const changeAnswer = useStore((state) => state.changeAnswer);
-  const [expanded, setExpanded] = React.useState(false);
+  const accordionSummaryRef = useRef<HTMLDivElement | null>(null);
+  const [accordionSummaryHeight, setAccordionSummaryHeight] = useState(0);
+
+  // Match height of closed accordion to ChangeLink
+  useLayoutEffect(() => {
+    if (accordionSummaryRef.current) {
+      const height = accordionSummaryRef.current.clientHeight;
+      setAccordionSummaryHeight(height);
+    }
+  }, [accordionSummaryRef]);
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
-  const toggleAdditionalInfo = () => setExpanded(!expanded);
 
   const ariaLabel = `${question.data.text}: Your answer was: ${response}. ${
     hasMoreInfo
@@ -152,53 +156,32 @@ const ResultReason: React.FC<IResultReason> = ({
     <Root>
       <StyledAccordion
         classes={{ root: classes.removeTopBorder }}
-        onChange={() => hasMoreInfo && toggleAdditionalInfo()}
-        expanded={expanded}
         elevation={0}
         square
       >
-        <Box sx={{ position: "relative" }}>
-          <StyledAccordionSummary
-            expandIcon={hasMoreInfo ? <Caret /> : null}
-            aria-label={ariaLabel}
-            aria-controls={`group-${id}-content`}
-            id={`group-${id}-header`}
+        <StyledAccordionSummary
+          expandIcon={hasMoreInfo ? <Caret /> : null}
+          aria-label={ariaLabel}
+          aria-controls={`group-${id}-content`}
+          id={`group-${id}-header`}
+          ref={accordionSummaryRef}
+        >
+          <SummaryWrap
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
           >
-            <SummaryWrap
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              width="100%"
+            <Typography
+              variant="body1"
+              color="textPrimary"
+              id={`questionText-${id}`}
             >
-              <Typography
-                variant="body1"
-                color="textPrimary"
-                id={`questionText-${id}`}
-              >
-                {question.data.text} <br />
-                <strong>{response}</strong>
-              </Typography>
-            </SummaryWrap>
-          </StyledAccordionSummary>
-          <ChangeLink>
-            <Box>
-              {showChangeButton && (
-                <Link
-                  component="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleChangeAnswer(id);
-                  }}
-                >
-                  Change
-                  <span style={visuallyHidden}>
-                    your response to {question.data.text || "this question"}
-                  </span>
-                </Link>
-              )}
-            </Box>
-          </ChangeLink>
-        </Box>
+              {question.data.text} <br />
+              <strong>{response}</strong>
+            </Typography>
+          </SummaryWrap>
+        </StyledAccordionSummary>
         {hasMoreInfo && (
           <AccordionDetails sx={{ py: 1, px: 0 }}>
             <MoreInfo>
@@ -218,6 +201,22 @@ const ResultReason: React.FC<IResultReason> = ({
           </AccordionDetails>
         )}
       </StyledAccordion>
+      <ChangeLink sx={{ height: accordionSummaryHeight }}>
+        {showChangeButton && (
+          <Link
+            component="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              handleChangeAnswer(id);
+            }}
+          >
+            Change
+            <span style={visuallyHidden}>
+              your response to {question.data.text || "this question"}
+            </span>
+          </Link>
+        )}
+      </ChangeLink>
       <AccordionFlag flagColor={flagColor} />
     </Root>
   );
