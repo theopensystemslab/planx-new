@@ -17,8 +17,6 @@ import logger from './logger';
 import { getDurationSeconds, sleep } from './utils'
 import type { VultrOsIdMapping } from './vultr'
 
-// TODO: linting!
-
 // define constants
 const VULTR_OS_ID_BY_OS: VultrOsIdMapping = {
   // get full list of options by running `vultr-cli os list`
@@ -34,8 +32,6 @@ const main = async (): Promise<number> => {
   logger.info("🚀 running vultr script")
   logger.info("🔑 initializing vultr client with API key from env")
   const vultr = VultrNode.initialize({
-    // TODO: remove hardcoded apiKey before committing
-    // apiKey: '5EGXXGAQGLDQUV7SDSMYQFBQ6SDSMNUTJIKA',
     // API key should be baked into environment before running script
     apiKey: process.env.VULTR_API_KEY,
   })
@@ -94,7 +90,6 @@ const main = async (): Promise<number> => {
     checkIfInstanceExists(vultr, domain, pullRequestId),
   ])
 
-  console.log(`ACTION: ${action}`)
   switch (action) {
     case 'create':
       if (existingRecordIds.length > 0 || existingInstanceIds.length > 0) {
@@ -157,11 +152,8 @@ const create = async (
   const t0 = performance.now()
   try {
     const instance = await createInstance(vultr, domain, id, osId)
-    // vultr-node doesn't necessarily throw an error if instance creation fails
 
     const instanceId = instance.id
-    // TODO: do we need this password for SSH? if so, how do we return it to the workflow?
-    // const instancePassword = instance.default_password
     logger.info(`🌐 instance created with ID: ${instanceId}`)
     
     // get IP when available
@@ -179,7 +171,7 @@ const create = async (
     // wait for server to fully spin up
     await confirmInstanceIsReady(vultr, instanceId);
     // sometimes the server isn't immediately ready for an ssh session
-    logger.debug("✅ instance active - waiting another 20s to ensure it's accessible");
+    logger.info("✅ instance active - waiting another 20s to ensure it's accessible");
     await sleep(20_000);
     logger.debug(`⌛ all resources created and made ready in ${getDurationSeconds(t0, performance.now())}s`)
     

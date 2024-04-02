@@ -28,7 +28,7 @@ export interface Instance {
   firewall_group_id: string;
   features: any[];
   default_password: string;
-};
+}
 
 export interface Record {
   id: string;
