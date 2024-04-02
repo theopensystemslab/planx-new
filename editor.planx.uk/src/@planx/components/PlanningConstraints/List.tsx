@@ -132,17 +132,19 @@ interface ConstraintListItemProps {
 }
 
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
+  const item = props.metadata?.name.replaceAll(" ", "-");
 
   return (
     <ListItem disablePadding sx={{ backgroundColor: "white" }}>
       <StyledAccordion {...props} disableGutters>
         <AccordionSummary
-          id={`${props.content}-header`}
-          aria-controls={`${props.content}-panel`}
+          id={`${item}-header`}
+          aria-controls={`${item}-panel`}
           classes={{ content: classes.content }}
           expandIcon={<Caret />}
+          sx={{ pr: 1.5 }}
         >
-          {children}
+          <Typography variant="body2" pr={1.5}>{children}</Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ px: 1.5, py: 2 }}>
           <>
