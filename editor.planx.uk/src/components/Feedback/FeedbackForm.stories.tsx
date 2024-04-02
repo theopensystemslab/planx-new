@@ -12,7 +12,7 @@ type Story = StoryObj<typeof meta>;
 
 export default meta;
 
-export const EmptyLabelledForm: Story = {
+export const EmptyForm: Story = {
   args: {
     inputs: [
       { id: "userContext", name: "userContext", label: "What were you doing?" },
@@ -24,19 +24,8 @@ export const EmptyLabelledForm: Story = {
   },
 };
 
-export const EmptyUnlabelledForm: Story = {
-  args: {
-    inputs: [
-      { id: "userComment", name: "userComment", label: "What's your comment?" },
-    ],
-    handleSubmit: async (values) => {
-      console.log(values);
-    },
-  },
-};
-
-export const SuccessfulLabelledFormSubmit: Story = {
-  ...EmptyLabelledForm,
+export const SuccessfulFormSubmit: Story = {
+  ...EmptyForm,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
@@ -57,8 +46,8 @@ export const SuccessfulLabelledFormSubmit: Story = {
   },
 };
 
-export const MissingInputLabelledForm: Story = {
-  ...EmptyLabelledForm,
+export const MissingInputForm: Story = {
+  ...EmptyForm,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
@@ -66,33 +55,6 @@ export const MissingInputLabelledForm: Story = {
     await userEvent.type(contextInput, "Trying to find my property", {
       delay: 100,
     });
-
-    const submitButton = canvas.getByRole("button", { name: "Send feedback" });
-    await userEvent.click(submitButton);
-  },
-};
-
-export const SuccessfulUnlabelledFormSubmit: Story = {
-  ...EmptyUnlabelledForm,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    const commentInput = canvas.getByLabelText("Leave your feedback");
-    await userEvent.type(
-      commentInput,
-      "It said I own a house but it's actually a flat.",
-      { delay: 100 },
-    );
-
-    const submitButton = canvas.getByRole("button", { name: "Send feedback" });
-    await userEvent.click(submitButton);
-  },
-};
-
-export const MissingInputUnlabelledFormSubmit: Story = {
-  ...EmptyUnlabelledForm,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
 
     const submitButton = canvas.getByRole("button", { name: "Send feedback" });
     await userEvent.click(submitButton);
