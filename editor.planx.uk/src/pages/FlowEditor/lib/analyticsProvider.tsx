@@ -545,7 +545,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   function getNodeMetadata(node: Store.node, nodeId: string) {
     const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
     switch (node?.type) {
-      case TYPES.Result:
+      case TYPES.Result: {
         const flagSet = node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
         const data = resultData(flagSet, node?.data?.overrides);
         const { displayText, flag } = data[flagSet];
@@ -555,7 +555,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
           flag,
           isAutoAnswered,
         };
-
+      }
       default:
         return {
           isAutoAnswered,
