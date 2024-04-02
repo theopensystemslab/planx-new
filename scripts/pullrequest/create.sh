@@ -17,7 +17,7 @@ DOCKER_BUILDKIT=1
 set +o allexport
 
 # start services
-docker compose \
+time docker compose \
   -f docker-compose.yml \
   -f docker-compose.pizza.yml \
   -f docker-compose.seed.yml \
