@@ -43,8 +43,6 @@ const StyledAccordion = styled(Accordion, {
   borderLeft: `5px solid ${CATEGORY_COLORS[category]}`,
   paddingRight: 0,
   width: "100%",
-  color: theme.palette.text.primary,
-  backgroundColor: theme.palette.background.default,
   position: "relative",
   "&::after": {
     content: "''",
@@ -137,18 +135,12 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
 
   return (
     <ListItem disablePadding sx={{ backgroundColor: "white" }}>
-      <StyledAccordion {...props} square disableGutters>
+      <StyledAccordion {...props} disableGutters>
         <AccordionSummary
           id={`${props.content}-header`}
           aria-controls={`${props.content}-panel`}
           classes={{ content: classes.content }}
           expandIcon={<Caret />}
-          sx={(theme) => ({
-            fontSize: "1rem",
-            "&:hover": {
-              backgroundColor: theme.palette.background.paper
-            }
-          })}
         >
           {children}
         </AccordionSummary>

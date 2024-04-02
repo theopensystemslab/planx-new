@@ -202,6 +202,27 @@ const getThemeOptions = ({
       },
     },
     components: {
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            color: palette.text.primary,
+            backgroundColor: palette.background.default,
+            fontSize: "1rem",
+          },
+        },
+        defaultProps: {
+          square: true,
+        },
+      },
+      MuiAccordionSummary: {
+        styleOverrides: {
+          root: {
+            "&:hover": {
+              backgroundColor: palette.background.paper,
+            },
+          },
+        },
+      },
       MuiContainer: {
         styleOverrides: {
           root: {
@@ -463,7 +484,7 @@ const generateTeamTheme = (
     linkColour: DEFAULT_PRIMARY_COLOR,
     logo: null,
     favicon: null,
-  },
+  }
 ): MUITheme => {
   const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
