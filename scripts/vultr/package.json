@@ -1,0 +1,21 @@
+{
+  "name": "vultr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "create": "ts-node src/main.ts --action=create",
+    "destroy": "ts-node src/main.ts --action=destroy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pino": "^8.19.0",
+    "pino-pretty": "^11.0.0",
+    "ts-node": "^10.9.2",
+    "@tsconfig/node18": "^18.2.4",
+    "typescript": "^5.4.3",
+    "@vultr/vultr-node": "^2.8.0"
+  }
+}
