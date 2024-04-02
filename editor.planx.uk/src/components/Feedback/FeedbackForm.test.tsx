@@ -6,13 +6,6 @@ import FeedbackForm from "./FeedbackForm";
 
 const mockHandleSubmit = jest.fn();
 
-const mockUnlabelledInput: FeedbackFormInput[] = [
-  {
-    name: "userComment",
-    ariaDescribedBy: "comment-title",
-  },
-];
-
 const mockLabelledInputs: FeedbackFormInput[] = [
   { name: "userContext", id: "userContext", label: "User Context" },
   { name: "userComment", id: "userComment", label: "User Comment" },
@@ -23,18 +16,7 @@ describe("FeedbackForm functionality", () => {
     jest.clearAllMocks();
   });
 
-  test("renders unlabelled input correctly", () => {
-    const { getByLabelText } = setup(
-      <FeedbackForm
-        inputs={mockUnlabelledInput}
-        handleSubmit={mockHandleSubmit}
-      />,
-    );
-    const renderedInput = getByLabelText("Leave your feedback");
-    expect(renderedInput).toBeInTheDocument();
-  });
-
-  test("renders labelled inputs correctly", () => {
+  test("renders inputs correctly", () => {
     const { getByLabelText } = setup(
       <FeedbackForm
         inputs={mockLabelledInputs}
@@ -47,42 +29,7 @@ describe("FeedbackForm functionality", () => {
     expect(commentInput).toBeInTheDocument();
   });
 
-  test("renders the feedback disclaimer with the input", () => {
-    const { getByText } = setup(
-      <FeedbackForm
-        inputs={mockUnlabelledInput}
-        handleSubmit={mockHandleSubmit}
-      />,
-    );
-    expect(
-      getByText(
-        /Do not share personal or financial information in your feedback./i,
-      ),
-    ).toBeInTheDocument();
-  });
-
-  test("can submit an unlabelled input", async () => {
-    const { getByLabelText, getByText, user } = setup(
-      <FeedbackForm
-        inputs={mockUnlabelledInput}
-        handleSubmit={mockHandleSubmit}
-      />,
-    );
-    await user.type(
-      getByLabelText("Leave your feedback"),
-      "This is a test comment",
-    );
-    await user.click(getByText("Send feedback"));
-
-    expect(mockHandleSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        userComment: "This is a test comment",
-      }),
-      expect.any(Object),
-    );
-  });
-
-  test("can submit labelled inputs", async () => {
+  test("can submit inputs", async () => {
     const { getByLabelText, getByText, user } = setup(
       <FeedbackForm
         inputs={mockLabelledInputs}
@@ -109,18 +56,7 @@ describe("FeedbackForm accessibility tests", () => {
     jest.clearAllMocks();
   });
 
-  test("renders unlabelled inputs with no accessibility violations", async () => {
-    const { container } = setup(
-      <FeedbackForm
-        inputs={mockUnlabelledInput}
-        handleSubmit={mockHandleSubmit}
-      />,
-    );
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-
-  test("renders labelled inputs with no accessibility violations", async () => {
+  test("renders inputs with no accessibility violations", async () => {
     const { container } = setup(
       <FeedbackForm
         inputs={mockLabelledInputs}

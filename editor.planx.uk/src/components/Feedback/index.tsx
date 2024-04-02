@@ -76,9 +76,8 @@ export interface FormProps {
 
 export type FeedbackFormInput = {
   name: keyof UserFeedback;
-  label?: string;
-  id?: string;
-  ariaDescribedBy?: string;
+  label: string;
+  id: string;
 };
 
 const Feedback: React.FC = () => {
@@ -331,7 +330,8 @@ const Feedback: React.FC = () => {
     const shareFormInputs: FeedbackFormInput[] = [
       {
         name: "userComment",
-        ariaDescribedBy: "idea-title",
+        label: "What's your idea?",
+        id: "share-idea-input",
       },
     ];
 
@@ -362,7 +362,8 @@ const Feedback: React.FC = () => {
     const commentFormInputs: FeedbackFormInput[] = [
       {
         name: "userComment",
-        ariaDescribedBy: "comment-title",
+        label: "What's you comment?",
+        id: "comment-input",
       },
     ];
 
