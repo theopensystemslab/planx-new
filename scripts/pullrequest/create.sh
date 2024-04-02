@@ -11,13 +11,13 @@ echo "root:$SSH_PASSWORD" | chpasswd
 swapon --show
 
 # install docker
-apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --batch --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo \
+time apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
+time curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --batch --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+time echo \
   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-apt-get update -y
-apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+time apt-get update -y
+time apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 
 # set env for this shell
 set -o allexport
@@ -26,7 +26,7 @@ DOCKER_BUILDKIT=1
 set +o allexport
 
 # start services
-docker compose \
+time docker compose \
   -f docker-compose.yml \
   -f docker-compose.pizza.yml \
   -f docker-compose.seed.yml \
