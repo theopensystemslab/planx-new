@@ -326,6 +326,7 @@ jobs:
             time service docker start
             time apk add docker-cli-compose
 
+            time apk add git
             time git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             time cd planx-new
             time git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
