@@ -132,6 +132,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           showNorthArrow
           osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
           clipGeojsonData={JSON.stringify(boundaryBBox)}
+          collapseAttributions={window.innerWidth < 500 ? true : undefined}
         />
         <MapFooter>
           <Typography variant="body2">
