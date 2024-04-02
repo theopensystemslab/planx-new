@@ -51,6 +51,31 @@ export const SummaryListTable = styled("dl", {
     // right column
     textAlign: showChangeButton ? "right" : "left",
   },
+  [theme.breakpoints.down("sm")]: {
+    display: "flex",
+    flexDirection: "column",
+    "& dt": {
+      // top row
+      paddingLeft: theme.spacing(1),
+      paddingTop: theme.spacing(2),
+      marginTop: theme.spacing(1),
+      borderTop: `1px solid ${theme.palette.border.main}`,
+      borderBottom: "none",
+      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+    },
+    "& dd:nth-of-type(n)": {
+      // middle row
+      textAlign: "left",
+      paddingTop: 0,
+      paddingBottom: 0,
+      margin: 0,
+      borderBottom: "none",
+    },
+    "& dd:nth-of-type(2n)": {
+      // bottom row
+      textAlign: "left",
+    },
+  },
 }));
 
 const presentationalComponents: {
@@ -443,6 +468,7 @@ function DrawBoundary(props: ComponentProps) {
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
+              collapseAttributions
             />
           </>
         )}
