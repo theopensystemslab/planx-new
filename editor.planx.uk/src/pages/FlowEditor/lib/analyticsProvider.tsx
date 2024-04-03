@@ -504,6 +504,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   /**
+   * Check whether the key is in the ALLOW_LIST and ensure it's of the correct
+   * type to avoid repeated casting.
+   */
+  function isAllowListKey(key: any): key is AllowListKey {
+    return (ALLOW_LIST as readonly string[]).includes(key);
+  }
+
+  /**
    * Extract allowlist answers from user answers
    * e.g., from Checklist or Question components
    */
@@ -513,7 +521,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const { data } = flow[nodeId];
     const nodeFn: string | undefined = data?.fn || data?.val;
 
-    if (!nodeFn || !ALLOW_LIST.includes(nodeFn as AllowListKey)) return;
+    if (!nodeFn || !isAllowListKey(nodeFn)) return;
 
     const answerIds = breadcrumbs[nodeId]?.answers;
     if (!answerIds) return;
@@ -523,7 +531,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!filteredAnswerValues.length) return;
 
     const answers: Partial<Record<AllowListKey, string[]>> = {
-      [nodeFn as AllowListKey]: filteredAnswerValues,
+      [nodeFn]: filteredAnswerValues,
     };
 
     return answers;
@@ -540,11 +548,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!dataSetByNode) return;
 
     const filteredEntries = Object.entries(dataSetByNode)
-      .filter(
-        ([key, value]) =>
-          ALLOW_LIST.includes(key as AllowListKey) && Boolean(value),
-      )
-      .map(([key, value]) => ({ [key as AllowListKey]: value }));
+      .filter(([key, value]) => isAllowListKey(key) && Boolean(value))
+      .map(([key, value]) => ({ [key]: value }));
 
     if (!filteredEntries.length) return;
     const answerValues = Object.assign({}, ...filteredEntries);
