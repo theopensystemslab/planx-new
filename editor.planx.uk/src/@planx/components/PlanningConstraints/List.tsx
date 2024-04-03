@@ -1,6 +1,7 @@
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import Box, { BoxProps } from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -13,7 +14,7 @@ import type {
   Metadata,
 } from "@opensystemslab/planx-core/types";
 import groupBy from "lodash/groupBy";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import ReactHtmlParser from "react-html-parser";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
@@ -26,17 +27,22 @@ const CATEGORY_COLORS: Record<string, string> = {
   Flooding: "#ECECEC",
 };
 
-interface StyledConstraintProps extends BoxProps {
+const PREFIX = "ConstraintsList";
+
+const classes = {
+  content: `${PREFIX}-content`
+}
+
+interface StyledAccordionProps extends BoxProps {
   category: string;
 }
 
-const StyledConstraint = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "category",
-})<StyledConstraintProps>(({ theme, category }) => ({
+const StyledAccordion = styled(Accordion, {
+  shouldForwardProp: (prop) => !["category", "metadata", "content", "data"].includes(prop as string),
+})<StyledAccordionProps>(({ theme, category }) => ({
   borderLeft: `5px solid ${CATEGORY_COLORS[category]}`,
   paddingRight: 0,
   width: "100%",
-  color: theme.palette.text.primary,
   position: "relative",
   "&::after": {
     content: "''",
@@ -46,6 +52,9 @@ const StyledConstraint = styled(Box, {
     width: "100%",
     height: "1px",
     background: theme.palette.border.main,
+  },
+  [`&.${classes.content}`]: {
+    margin: [1.5, 0]
   },
 }));
 
@@ -64,35 +73,36 @@ export default function ConstraintsList({
 
   return (
     <Box mb={3}>
-      <List dense disablePadding>
-        {Object.keys(groupedConstraints).map(
-          (category: string, index: number) => (
-            <React.Fragment key={index}>
-              <ListSubheader
-                disableGutters
-                disableSticky
-                color="primary"
-                key={category}
+      {Object.keys(groupedConstraints).map(
+        (category: string, index: number) => (
+          <>
+            <ListSubheader
+              component="div"
+              disableGutters
+              disableSticky
+              color="primary"
+              key={category}
+              style={{
+                padding: 0,
+                backgroundColor: CATEGORY_COLORS[category],
+                marginTop: index > 0 ? "2em" : 0,
+              }}
+            >
+              <Typography
+                variant="body1"
+                component="h3"
+                py={1}
+                px={2}
+                pl={2.5}
                 style={{
-                  padding: 0,
-                  backgroundColor: CATEGORY_COLORS[category],
-                  marginTop: index > 0 ? "2em" : 0,
+                  fontWeight: 700,
+                  color: "black",
                 }}
               >
-                <Typography
-                  variant="body1"
-                  component="h3"
-                  py={1}
-                  px={2}
-                  pl={2.5}
-                  style={{
-                    fontWeight: 700,
-                    color: "black",
-                  }}
-                >
-                  {category}
-                </Typography>
-              </ListSubheader>
+                {category}
+              </Typography>
+            </ListSubheader>
+            <List dense disablePadding>
               {groupedConstraints[category].map((con: any) => (
                 <ConstraintListItem
                   key={con.text}
@@ -104,10 +114,10 @@ export default function ConstraintsList({
                   {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
                 </ConstraintListItem>
               ))}
-            </React.Fragment>
-          ),
-        )}
-      </List>
+            </List>
+          </>
+        ),
+      )}
     </Box>
   );
 }
@@ -122,100 +132,73 @@ interface ConstraintListItemProps {
 }
 
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
-  const [showConstraintData, setShowConstraintData] = useState<boolean>(false);
+  const item = props.metadata?.name.replaceAll(" ", "-");
 
   return (
     <ListItem disablePadding sx={{ backgroundColor: "white" }}>
-      <StyledConstraint {...props}>
-        <Box
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+      <StyledAccordion {...props} disableGutters>
+        <AccordionSummary
+          id={`${item}-header`}
+          aria-controls={`${item}-panel`}
+          classes={{ content: classes.content }}
+          expandIcon={<Caret />}
+          sx={{ pr: 1.5 }}
         >
-          <Button
-            disableRipple
-            onClick={() =>
-              setShowConstraintData((showConstraintData) => !showConstraintData)
-            }
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-              boxShadow: "none",
-              color: "#0B0C0C",
-              fontWeight: "400",
-              padding: 15,
-              paddingLeft: 20,
-            }}
-          >
-            <Box>{children}</Box>
-            <Caret
-              expanded={showConstraintData}
-              color="primary"
-              titleAccess={
-                showConstraintData ? "Less Information" : "More Information"
-              }
-            />
-          </Button>
-        </Box>
-        <Collapse in={showConstraintData}>
-          <Box py={1.5} px={2}>
-            <>
-              <Typography variant="h3" component="h4" gutterBottom>
-                {`This property ${props?.content}`}
-              </Typography>
-              {Boolean(props.data?.length) && (
-                <List
-                  dense
-                  disablePadding
-                  sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
-                >
-                  {props.data &&
-                    props.data.map(
-                      (record: any) =>
-                        record.name && (
-                          <ListItem
-                            key={record.entity}
-                            dense
-                            disableGutters
-                            sx={{ display: "list-item" }}
-                          >
-                            <Typography variant="body2">
-                              {record.name}{" "}
-                              {record.name && record["documentation-url"] && (
-                                <span>
-                                  (
-                                  <Link
-                                    href={record["documentation-url"]}
-                                    target="_blank"
-                                  >
-                                    source
-                                  </Link>
-                                  )
-                                </span>
-                              )}
-                            </Typography>
-                          </ListItem>
-                        ),
-                    )}
-                </List>
-              )}
-            </>
-            <Typography variant="body2">
-              <ReactMarkdownOrHtml
-                source={props.metadata?.text?.replaceAll(
-                  "(/",
-                  "(https://www.planning.data.gov.uk/",
-                )}
-                openLinksOnNewTab
-              />
+          <Typography variant="body2" pr={1.5}>{children}</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ px: 1.5, py: 2 }}>
+          <>
+            <Typography variant="h3" component="h4" gutterBottom>
+              {`This property ${props?.content}`}
             </Typography>
-          </Box>
-        </Collapse>
-      </StyledConstraint>
+            {Boolean(props.data?.length) && (
+              <List
+                dense
+                disablePadding
+                sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
+              >
+                {props.data &&
+                  props.data.map(
+                    (record: any) =>
+                      record.name && (
+                        <ListItem
+                          key={record.entity}
+                          dense
+                          disableGutters
+                          sx={{ display: "list-item" }}
+                        >
+                          <Typography variant="body2">
+                            {record.name}{" "}
+                            {record.name && record["documentation-url"] && (
+                              <span>
+                                (
+                                <Link
+                                  href={record["documentation-url"]}
+                                  target="_blank"
+                                >
+                                  source
+                                </Link>
+                                )
+                              </span>
+                            )}
+                          </Typography>
+                        </ListItem>
+                      ),
+                  )}
+              </List>
+            )}
+          </>
+          <Typography variant="body2">
+            <ReactMarkdownOrHtml
+              source={props.metadata?.text?.replaceAll(
+                "(/",
+                "(https://www.planning.data.gov.uk/",
+              )}
+              openLinksOnNewTab
+            />
+          </Typography>
+        </AccordionDetails>
+      </StyledAccordion>
     </ListItem>
   );
 }

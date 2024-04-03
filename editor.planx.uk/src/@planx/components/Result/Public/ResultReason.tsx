@@ -139,11 +139,10 @@ const ResultReason: React.FC<IResultReason> = ({
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
 
-  const ariaLabel = `${question.data.text}: Your answer was: ${response}. ${
-    hasMoreInfo
+  const ariaLabel = `${question.data.text}: Your answer was: ${response}. ${hasMoreInfo
       ? "Click to expand for more information about this question."
       : ""
-  }`;
+    }`;
 
   const { trackBackwardsNavigation } = useAnalyticsTracking();
 
@@ -157,7 +156,6 @@ const ResultReason: React.FC<IResultReason> = ({
       <StyledAccordion
         classes={{ root: classes.removeTopBorder }}
         elevation={0}
-        square
       >
         <StyledAccordionSummary
           expandIcon={hasMoreInfo ? <Caret /> : null}
