@@ -8,7 +8,7 @@ const Team: React.FC = () => {
   return (
     <Box maxWidth="formWrap" mx="auto">
       <EditorRow>
-        <Typography variant="h2" component="h3">
+        <Typography variant="h2" component="h3" gutterBottom>
           Team
         </Typography>
         <Typography variant="body1">
@@ -20,7 +20,7 @@ const Team: React.FC = () => {
       </EditorRow>
       <hr />
       <EditorRow>
-        <Typography variant="h2" component="h3">
+        <Typography variant="h2" component="h3" gutterBottom>
           Sharing
         </Typography>
         <Typography variant="body1">

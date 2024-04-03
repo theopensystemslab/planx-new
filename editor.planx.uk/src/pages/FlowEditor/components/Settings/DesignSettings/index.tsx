@@ -135,7 +135,7 @@ const DesignSettings: React.FC = () => {
   return (
     <Box maxWidth="formWrap" mx="auto">
       <EditorRow>
-        <Typography variant="h2" component="h3">
+        <Typography variant="h2" component="h3" gutterBottom>
           Design
         </Typography>
         <Typography variant="body1">

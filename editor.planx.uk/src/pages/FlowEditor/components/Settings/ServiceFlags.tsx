@@ -8,7 +8,7 @@ const ServiceFlags: React.FC = () => {
   return (
     <Box maxWidth="formWrap" mx="auto">
       <EditorRow>
-        <Typography variant="h2" component="h3">
+        <Typography variant="h2" component="h3" gutterBottom>
           Service flags
         </Typography>
         <Typography variant="body1">

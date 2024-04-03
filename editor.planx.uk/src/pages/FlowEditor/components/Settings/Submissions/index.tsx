@@ -20,7 +20,7 @@ const Submissions: React.FC = () => {
   return (
     <Box>
       <EditorRow>
-        <Typography variant="h2" component="h3">
+        <Typography variant="h2" component="h3" gutterBottom>
           Submissions
         </Typography>
         <Typography variant="body1">

@@ -118,7 +118,7 @@ const ServiceSettings: React.FC = () => {
     <Box maxWidth="formWrap" mx="auto">
       <form onSubmit={formik.handleSubmit}>
         <EditorRow>
-          <Typography variant="h2" component="h3">
+          <Typography variant="h2" component="h3" gutterBottom>
             Elements
           </Typography>
           <Typography variant="body1">
