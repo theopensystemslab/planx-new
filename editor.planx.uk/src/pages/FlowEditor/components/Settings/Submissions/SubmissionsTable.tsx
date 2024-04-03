@@ -12,18 +12,31 @@ import { SubmissionData } from "./submissionData";
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
-  overflow: "auto",
+  maxHeight: "70vh",
   "&:focus": {
     outline: `2px solid ${theme.palette.primary.main}`,
   },
 }));
 
-const StyledTable = styled(Table)({
+const StyledTable = styled(Table)(({ theme }) => ({
   borderCollapse: "collapse",
-});
+  "& th": {
+    background: theme.palette.text.primary,
+    color: theme.palette.common.white,
+    fontWeight: 600,
+  },
+  "& td": {
+    borderBottomColor: theme.palette.border.main,
+    borderBottomWidth: "2px",
+  },
+  "& tr:nth-child(odd) td": {
+    background: theme.palette.background.paper,
+  },
+}));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
+  lineHeight: "1.35",
 }));
 
 const DividerStyled = styled(Box)({
@@ -51,7 +64,7 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
 }) => {
   return (
     <StyledTableContainer>
-      <StyledTable stickyHeader aria-label="sticky table">
+      <StyledTable stickyHeader>
         <TableHead>
           <TableRow>
             {[
@@ -70,9 +83,7 @@ const SubmissionsTable: React.FC<SubmissionsTableProps> = ({
         <TableBody>
           {applications.map((row) => (
             <TableRow key={row.sessionId}>
-              <StyledTableCell component="th" scope="row">
-                {row.sessionId}
-              </StyledTableCell>
+              <StyledTableCell scope="row">{row.sessionId}</StyledTableCell>
               <StyledTableCell>{formatDate(row.submittedAt)}</StyledTableCell>
               <StyledTableCell>
                 {row.paymentRequests && row.paymentRequests.length > 0
