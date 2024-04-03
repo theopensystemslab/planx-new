@@ -67,8 +67,12 @@ const MoreInfoFeedbackComponent: React.FC = () => {
   function FeedbackYesNo(): FCReturn {
     return (
       <MoreInfoFeedback>
-        <Container maxWidth={false}>
-          <Typography variant="h4" component="h3" gutterBottom>
+        <Container
+          maxWidth={false}
+          component="fieldset"
+          sx={{ border: "none" }}
+        >
+          <Typography variant="h4" component="legend" gutterBottom>
             Did this help to answer your question?
           </Typography>
           <Box>
