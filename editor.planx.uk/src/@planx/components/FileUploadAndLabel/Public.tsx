@@ -39,7 +39,12 @@ import {
   getTagsForSlot,
   removeSlots,
 } from "./model";
-import { fileLabelSchema, fileListSchema, slotsSchema } from "./schema";
+import {
+  fileLabelSchema,
+  fileListSchema,
+  formatFileLabelSchemaErrors,
+  slotsSchema,
+} from "./schema";
 
 type Props = PublicProps<FileUploadAndLabel>;
 
@@ -106,6 +111,7 @@ function Component(props: Props) {
     if (isUserReturningToNode) return setIsUserReturningToNode(false);
     if (slots.length && dropzoneError) setDropzoneError(undefined);
     if (!slots.length && fileListError) setFileListError(undefined);
+    if (!slots.length && fileLabelErrors) setFileLabelErrors(undefined);
     if (slots.length > previousSlotCount) setShowModal(true);
   }, [slots.length]);
 
@@ -114,6 +120,9 @@ function Component(props: Props) {
   );
 
   const [dropzoneError, setDropzoneError] = useState<string | undefined>();
+  const [fileLabelErrors, setFileLabelErrors] = useState<
+    Record<string, string> | undefined
+  >();
   const [fileListError, setFileListError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isUserReturningToNode, setIsUserReturningToNode] =
@@ -129,15 +138,27 @@ function Component(props: Props) {
         const payload = generatePayload(fileList);
         props.handleSubmit?.(payload);
       })
-      .catch((err) =>
-        err?.type === "minFileUploaded"
-          ? setDropzoneError(err?.message)
-          : setFileListError(err?.message),
-      );
+      .catch((err) => {
+        switch (err?.type) {
+          case "minFileUploaded":
+          case "nonUploading":
+            setDropzoneError(err?.message);
+            break;
+          case "allFilesTagged": {
+            const formattedErrors = formatFileLabelSchemaErrors(err);
+            setFileLabelErrors(formattedErrors);
+            break;
+          }
+          case "allRequiredFilesUploaded":
+            setFileListError(err?.message);
+            break;
+        }
+      });
   };
 
   const onUploadedFileCardChange = () => {
     setFileListError(undefined);
+    setFileLabelErrors(undefined);
     setShowModal(true);
   };
 
@@ -238,13 +259,15 @@ function Component(props: Props) {
             )}
             {slots.map((slot) => {
               return (
-                <UploadedFileCard
-                  {...slot}
-                  key={slot.id}
-                  tags={getTagsForSlot(slot.id, fileList)}
-                  onChange={onUploadedFileCardChange}
-                  removeFile={() => removeFile(slot)}
-                />
+                <ErrorWrapper error={fileLabelErrors?.[slot.id]} id={slot.id}>
+                  <UploadedFileCard
+                    {...slot}
+                    key={slot.id}
+                    tags={getTagsForSlot(slot.id, fileList)}
+                    onChange={onUploadedFileCardChange}
+                    removeFile={() => removeFile(slot)}
+                  />
+                </ErrorWrapper>
               );
             })}
           </Box>
@@ -322,8 +345,18 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         {howMeasured && howMeasured !== emptyContent ? (
           <MoreInfoSection title="How is it defined?">
             <>
-              {definitionImg && <Image src={definitionImg} alt="" aria-describedby="howMeasured" />}
-              <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab id="howMeasured"/>
+              {definitionImg && (
+                <Image
+                  src={definitionImg}
+                  alt=""
+                  aria-describedby="howMeasured"
+                />
+              )}
+              <ReactMarkdownOrHtml
+                source={howMeasured}
+                openLinksOnNewTab
+                id="howMeasured"
+              />
             </>
           </MoreInfoSection>
         ) : undefined}
