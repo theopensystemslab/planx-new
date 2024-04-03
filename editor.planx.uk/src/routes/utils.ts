@@ -1,6 +1,5 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
