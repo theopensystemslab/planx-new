@@ -179,7 +179,7 @@ it("should not have any accessibility violations whilst in the error state", asy
   // Main ErrorWrapper does display, and is in error state
   await waitFor(() => expect(mainErrorMessage).not.toBeEmptyDOMElement());
   const [mainErrorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
-  expect(mainErrorWrapper).toHaveAttribute("role", "status");
+  expect(mainErrorWrapper).toHaveAttribute("role", "alert");
 
   const results = await axe(container);
   expect(results).toHaveNoViolations();
