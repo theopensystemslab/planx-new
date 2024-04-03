@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import EditorRow from "ui/editor/EditorRow";
 
 import { useStore } from "../../../lib/store";
 import { useSubmittedApplications } from "./submissionData";
@@ -18,19 +19,21 @@ const Submissions: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h2" component="h3" gutterBottom>
-        Submissions
-      </Typography>
-      <Typography variant="body1">
-        View data on the user submitted applications for this service.
-      </Typography>
-      <Box py={5}>
+      <EditorRow>
+        <Typography variant="h2" component="h3">
+          Submissions
+        </Typography>
+        <Typography variant="body1">
+          View data on the user submitted applications for this service.
+        </Typography>
+      </EditorRow>
+      <EditorRow>
         <SubmissionsView
           applications={applications}
           loading={loading}
           error={error}
         />
-      </Box>
+      </EditorRow>
     </Box>
   );
 };

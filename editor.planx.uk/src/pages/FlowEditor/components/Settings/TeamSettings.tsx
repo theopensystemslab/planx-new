@@ -1,34 +1,36 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import EditorRow from "ui/editor/EditorRow";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 
 const Team: React.FC = () => {
   return (
-    <>
-      <Box borderBottom={1}>
-        <Typography variant="h2" component="h3" gutterBottom>
+    <Box maxWidth="formWrap" mx="auto">
+      <EditorRow>
+        <Typography variant="h2" component="h3">
           Team
         </Typography>
         <Typography variant="body1">
-          Manage who has permission to edit this service
+          Manage who has permission to edit this service.
         </Typography>
-        <Box py={5}>
-          <FeaturePlaceholder title="Feature in development" />
-        </Box>
-      </Box>
-      <Box pt={3}>
-        <Typography variant="h2" component="h3" gutterBottom>
+      </EditorRow>
+      <EditorRow>
+        <FeaturePlaceholder title="Feature in development" />
+      </EditorRow>
+      <hr />
+      <EditorRow>
+        <Typography variant="h2" component="h3">
           Sharing
         </Typography>
         <Typography variant="body1">
-          Allow other teams on Plan✕ to find and use your service pattern
+          Allow other teams on Plan✕ to find and use your service pattern.
         </Typography>
-        <Box py={5}>
-          <FeaturePlaceholder title="Feature in development" />
-        </Box>
-      </Box>
-    </>
+      </EditorRow>
+      <EditorRow>
+        <FeaturePlaceholder title="Feature in development" />
+      </EditorRow>
+    </Box>
   );
 };
 export default Team;

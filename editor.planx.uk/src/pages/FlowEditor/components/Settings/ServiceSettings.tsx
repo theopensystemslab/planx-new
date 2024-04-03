@@ -115,105 +115,111 @@ const ServiceSettings: React.FC = () => {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <EditorRow>
-        <Typography variant="h2" component="h3" gutterBottom>
-          Elements
-        </Typography>
-        <Typography variant="body1">
-          Manage the features that users will be able to see
-        </Typography>
-      </EditorRow>
-      <EditorRow background>
-        <TextInput
-          title="Legal Disclaimer"
-          description="Displayed before a user submits their application"
-          switchProps={{
-            name: "elements.legalDisclaimer.show",
-            checked: formik.values.elements?.legalDisclaimer?.show,
-            onChange: formik.handleChange,
-          }}
-          headingInputProps={{
-            name: "elements.legalDisclaimer.heading",
-            value: formik.values.elements?.legalDisclaimer?.heading,
-            onChange: formik.handleChange,
-          }}
-          contentInputProps={{
-            name: "elements.legalDisclaimer.content",
-            value: formik.values.elements?.legalDisclaimer?.content,
-            onChange: formik.handleChange,
-          }}
-        />
-      </EditorRow>
-      <EditorRow background>
-        <InputGroup flowSpacing>
-          <InputLegend>Footer Links</InputLegend>
-          <InputRow>
-            <TextInput
-              title="Help Page"
-              richText
-              description="A place to communicate FAQs, useful tips, or contact information"
-              switchProps={{
-                name: "elements.help.show",
-                checked: formik.values.elements?.help?.show,
-                onChange: formik.handleChange,
-              }}
-              headingInputProps={{
-                name: "elements.help.heading",
-                value: formik.values.elements?.help?.heading,
-                onChange: formik.handleChange,
-              }}
-              contentInputProps={{
-                name: "elements.help.content",
-                value: formik.values.elements?.help?.content,
-                onChange: formik.handleChange,
-              }}
-            />
-          </InputRow>
-          <InputRow>
-            <TextInput
-              title="Privacy Page"
-              richText
-              description="Your privacy policy"
-              switchProps={{
-                name: "elements.privacy.show",
-                checked: formik.values.elements?.privacy?.show,
-                onChange: formik.handleChange,
-              }}
-              headingInputProps={{
-                name: "elements.privacy.heading",
-                value: formik.values.elements?.privacy?.heading,
-                onChange: formik.handleChange,
-              }}
-              contentInputProps={{
-                name: "elements.privacy.content",
-                value: formik.values.elements?.privacy?.content,
-                onChange: formik.handleChange,
-              }}
-            />
-          </InputRow>
-        </InputGroup>
-      </EditorRow>
-      <EditorRow>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={!formik.dirty}
+    <Box maxWidth="formWrap" mx="auto">
+      <form onSubmit={formik.handleSubmit}>
+        <EditorRow>
+          <Typography variant="h2" component="h3">
+            Elements
+          </Typography>
+          <Typography variant="body1">
+            Manage the features that users will be able to see.
+          </Typography>
+        </EditorRow>
+        <EditorRow background>
+          <TextInput
+            title="Legal Disclaimer"
+            description="Displayed before a user submits their application"
+            switchProps={{
+              name: "elements.legalDisclaimer.show",
+              checked: formik.values.elements?.legalDisclaimer?.show,
+              onChange: formik.handleChange,
+            }}
+            headingInputProps={{
+              name: "elements.legalDisclaimer.heading",
+              value: formik.values.elements?.legalDisclaimer?.heading,
+              onChange: formik.handleChange,
+            }}
+            contentInputProps={{
+              name: "elements.legalDisclaimer.content",
+              value: formik.values.elements?.legalDisclaimer?.content,
+              onChange: formik.handleChange,
+            }}
+          />
+        </EditorRow>
+        <EditorRow background>
+          <InputGroup flowSpacing>
+            <InputLegend>Footer Links</InputLegend>
+            <InputRow>
+              <TextInput
+                title="Help Page"
+                richText
+                description="A place to communicate FAQs, useful tips, or contact information"
+                switchProps={{
+                  name: "elements.help.show",
+                  checked: formik.values.elements?.help?.show,
+                  onChange: formik.handleChange,
+                }}
+                headingInputProps={{
+                  name: "elements.help.heading",
+                  value: formik.values.elements?.help?.heading,
+                  onChange: formik.handleChange,
+                }}
+                contentInputProps={{
+                  name: "elements.help.content",
+                  value: formik.values.elements?.help?.content,
+                  onChange: formik.handleChange,
+                }}
+              />
+            </InputRow>
+            <InputRow>
+              <TextInput
+                title="Privacy Page"
+                richText
+                description="Your privacy policy"
+                switchProps={{
+                  name: "elements.privacy.show",
+                  checked: formik.values.elements?.privacy?.show,
+                  onChange: formik.handleChange,
+                }}
+                headingInputProps={{
+                  name: "elements.privacy.heading",
+                  value: formik.values.elements?.privacy?.heading,
+                  onChange: formik.handleChange,
+                }}
+                contentInputProps={{
+                  name: "elements.privacy.content",
+                  value: formik.values.elements?.privacy?.content,
+                  onChange: formik.handleChange,
+                }}
+              />
+            </InputRow>
+          </InputGroup>
+        </EditorRow>
+        <EditorRow>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={!formik.dirty}
+          >
+            Update elements
+          </Button>
+        </EditorRow>
+        <Snackbar
+          open={isAlertOpen}
+          autoHideDuration={6000}
+          onClose={handleClose}
         >
-          Update elements
-        </Button>
-      </EditorRow>
-      <Snackbar
-        open={isAlertOpen}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Service settings updated successfully
-        </Alert>
-      </Snackbar>
-    </form>
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Service settings updated successfully
+          </Alert>
+        </Snackbar>
+      </form>
+    </Box>
   );
 };
 
