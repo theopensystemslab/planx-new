@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import {
   DEFAULT_FLAG_CATEGORY,
   Flag,
@@ -10,6 +9,16 @@ import { publicClient } from "lib/graphql";
 import React, { createContext, useContext, useEffect } from "react";
 import { usePrevious } from "react-use";
 
+import {
+  INSERT_NEW_ANALYTICS,
+  INSERT_NEW_ANALYTICS_LOG,
+  TRACK_INPUT_ERRORS,
+  UPDATE_ALLOW_LIST_ANSWERS,
+  UPDATE_ANALYTICS_LOG_METADATA,
+  UPDATE_FLOW_DIRECTION,
+  UPDATE_HAS_CLICKED_HELP,
+  UPDATE_NEXT_LOG_CREATED_AT,
+} from "./analyticsMutations";
 import { Store, useStore } from "./store";
 
 export type AnalyticsType = "init" | "resume";
@@ -250,31 +259,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     nodeId: string | null,
   ) {
     const result = await publicClient.mutate({
-      mutation: gql`
-        mutation InsertNewAnalyticsLog(
-          $flow_direction: String
-          $analytics_id: bigint
-          $metadata: jsonb
-          $node_type: String
-          $node_title: String
-          $node_id: String
-        ) {
-          insert_analytics_logs_one(
-            object: {
-              flow_direction: $flow_direction
-              analytics_id: $analytics_id
-              user_exit: false
-              metadata: $metadata
-              node_type: $node_type
-              node_title: $node_title
-              node_id: $node_id
-            }
-          ) {
-            id
-            created_at
-          }
-        }
-      `,
+      mutation: INSERT_NEW_ANALYTICS_LOG,
       variables: {
         flow_direction: direction,
         analytics_id: analyticsId,
@@ -292,19 +277,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     newLogCreatedAt: Date,
   ) {
     await publicClient.mutate({
-      mutation: gql`
-        mutation UpdateNextLogCreatedAt(
-          $id: bigint!
-          $next_log_created_at: timestamptz
-        ) {
-          update_analytics_logs_by_pk(
-            pk_columns: { id: $id }
-            _set: { next_log_created_at: $next_log_created_at }
-          ) {
-            id
-          }
-        }
-      `,
+      mutation: UPDATE_NEXT_LOG_CREATED_AT,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         next_log_created_at: newLogCreatedAt,
@@ -320,17 +293,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldSkipTracking()) return;
 
     await publicClient.mutate({
-      mutation: gql`
-        mutation UpdateHasClickedHelp($id: bigint!, $metadata: jsonb = {}) {
-          update_analytics_logs_by_pk(
-            pk_columns: { id: $id }
-            _set: { has_clicked_help: true }
-            _append: { metadata: $metadata }
-          ) {
-            id
-          }
-        }
-      `,
+      mutation: UPDATE_HAS_CLICKED_HELP,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         metadata,
@@ -342,19 +305,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldSkipTracking()) return;
 
     await publicClient.mutate({
-      mutation: gql`
-        mutation UpdateHasClickNextStepsLink(
-          $id: bigint!
-          $metadata: jsonb = {}
-        ) {
-          update_analytics_logs_by_pk(
-            pk_columns: { id: $id }
-            _append: { metadata: $metadata }
-          ) {
-            id
-          }
-        }
-      `,
+      mutation: UPDATE_ANALYTICS_LOG_METADATA,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         metadata,
@@ -368,16 +319,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldSkipTracking()) return;
 
     await publicClient.mutate({
-      mutation: gql`
-        mutation UpdateFlowDirection($id: bigint!, $flow_direction: String) {
-          update_analytics_logs_by_pk(
-            pk_columns: { id: $id }
-            _set: { flow_direction: $flow_direction }
-          ) {
-            id
-          }
-        }
-      `,
+      mutation: UPDATE_FLOW_DIRECTION,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         flow_direction: flowDirection,
@@ -398,19 +340,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         : { back: targetNodeMetadata };
 
     await publicClient.mutate({
-      mutation: gql`
-        mutation UpdateHasInitiatedBackwardsNavigation(
-          $id: bigint!
-          $metadata: jsonb = {}
-        ) {
-          update_analytics_logs_by_pk(
-            pk_columns: { id: $id }
-            _append: { metadata: $metadata }
-          ) {
-            id
-          }
-        }
-      `,
+      mutation: UPDATE_ANALYTICS_LOG_METADATA,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         metadata,
@@ -424,25 +354,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const referrer = document.referrer || null;
 
     const response = await publicClient.mutate({
-      mutation: gql`
-        mutation InsertNewAnalytics(
-          $type: String
-          $flow_id: uuid
-          $user_agent: jsonb
-          $referrer: String
-        ) {
-          insert_analytics_one(
-            object: {
-              type: $type
-              flow_id: $flow_id
-              user_agent: $user_agent
-              referrer: $referrer
-            }
-          ) {
-            id
-          }
-        }
-      `,
+      mutation: INSERT_NEW_ANALYTICS,
       variables: {
         type,
         flow_id: flowId,
@@ -466,22 +378,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!allowListAnswers) return;
 
     await publicClient.mutate({
-      mutation: gql`
-        mutation UpdateAllowListAnswers(
-          $id: bigint!
-          $allow_list_answers: jsonb
-          $node_id: String!
-        ) {
-          update_analytics_logs(
-            where: { id: { _eq: $id }, node_id: { _eq: $node_id } }
-            _set: { allow_list_answers: $allow_list_answers }
-          ) {
-            returning {
-              id
-            }
-          }
-        }
-      `,
+      mutation: UPDATE_ALLOW_LIST_ANSWERS,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         allow_list_answers: allowListAnswers,
@@ -596,16 +493,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (shouldSkipTracking()) return;
 
     await publicClient.mutate({
-      mutation: gql`
-        mutation TrackInputErrors($id: bigint!, $error: jsonb) {
-          update_analytics_logs_by_pk(
-            pk_columns: { id: $id }
-            _append: { input_errors: $error }
-          ) {
-            id
-          }
-        }
-      `,
+      mutation: TRACK_INPUT_ERRORS,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         error,
