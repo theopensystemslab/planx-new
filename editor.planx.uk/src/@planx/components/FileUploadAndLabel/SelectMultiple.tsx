@@ -40,6 +40,37 @@ const ListHeader = styled(Box)(({ theme }) => ({
   margin: "-8px 0 8px",
 }));
 
+const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
+  top: "16%",
+  textDecoration: "underline",
+  color: theme.palette.link.main,
+  "&[data-shrink=true]": {
+    textDecoration: "none",
+    color: theme.palette.text.primary,
+    top: "0",
+    transform: "translate(14px, -5px) scale(0.85)",
+  },
+}));
+
+const StyledSelect = styled(Select<string[]>)(({ theme }) => ({
+  border: `1px solid ${theme.palette.border.main}`,
+  background: theme.palette.background.paper,
+  "& > div": {
+    minHeight: "50px",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+  },
+  "& > div:focus": {
+    background: theme.palette.action.focus,
+  },
+  "& > svg": {
+    color: theme.palette.primary.main,
+    width: "1.25em",
+    height: "1.25em",
+    top: "unset",
+  },
+}));
+
 export const SelectMultiple = (props: SelectMultipleProps) => {
   const { uploadedFile, fileList, setFileList } = props;
 
@@ -57,12 +88,8 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
       typeof value === "string" ? value.split(",") : value,
     );
   };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
   const updateFileListWithTags = (
     previousTags: string[] | undefined,
@@ -95,23 +122,12 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
       key={`form-${uploadedFile.id}`}
       sx={{ display: "flex", flexDirection: "column" }}
     >
-      <InputLabel
+      <StyledInputLabel
         id={`select-multiple-file-tags-label-${uploadedFile.id}`}
-        sx={{
-          top: "16%",
-          textDecoration: "underline",
-          color: (theme) => theme.palette.link.main,
-          "&[data-shrink=true]": {
-            textDecoration: "none",
-            color: (theme) => theme.palette.text.primary,
-            top: "0",
-            transform: "translate(14px, -5px) scale(0.85)",
-          },
-        }}
       >
         What does this file show?
-      </InputLabel>
-      <Select
+      </StyledInputLabel>
+      <StyledSelect
         native={false}
         key={`select-${uploadedFile.id}`}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
@@ -128,24 +144,6 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
           name: uploadedFile.id,
           "data-testid": "select",
           "aria-labelledby": `select-multiple-file-tags-label-${uploadedFile.id}`,
-        }}
-        sx={{
-          border: (theme) => `1px solid ${theme.palette.border.main}`,
-          background: (theme) => theme.palette.background.paper,
-          "& > div": {
-            minHeight: "50px",
-            paddingTop: (theme) => theme.spacing(1),
-            paddingBottom: (theme) => theme.spacing(1),
-          },
-          "& > div:focus": {
-            background: (theme) => theme.palette.action.focus,
-          },
-          "& > svg": {
-            color: (theme) => theme.palette.primary.main,
-            width: "1.25em",
-            height: "1.25em",
-            top: "unset",
-          },
         }}
         renderValue={(selected) => (
           <Box
@@ -229,7 +227,7 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
               }),
             ];
           })}
-      </Select>
+      </StyledSelect>
     </FormControl>
   );
 };
