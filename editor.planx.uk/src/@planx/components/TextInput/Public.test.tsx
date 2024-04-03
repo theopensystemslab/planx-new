@@ -160,5 +160,5 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
   user.click(screen.getByTestId("continue-button"));
 
   expect(errorWrapper).not.toBeEmptyDOMElement();
-  expect(errorWrapper).toHaveAttribute("role", "status");
+  expect(errorWrapper).toHaveAttribute("role", "alert");
 });
