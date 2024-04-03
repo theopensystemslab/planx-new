@@ -557,7 +557,7 @@ describe("Error handling", () => {
     await user.click(submitModalButton);
     expect(true).toBeTruthy();
     const modalError = await within(fileTaggingModal).findByText(
-      "Please label all files",
+      /File test.jpg is not labeled/,
     );
     expect(modalError).toBeVisible();
   });
@@ -594,7 +594,9 @@ describe("Error handling", () => {
     // User cannot submit without uploading a file
     await user.click(screen.getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
-    const fileListError = await screen.findByText("Please label all files");
+    const fileListError = await screen.findByText(
+      /File test.jpg is not labeled/,
+    );
     expect(fileListError).toBeVisible();
 
     // Re-open modal and tag file
