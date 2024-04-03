@@ -19,6 +19,7 @@ import capitalize from "lodash/capitalize";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { ValidationError } from "yup";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -28,7 +29,7 @@ import {
   getTagsForSlot,
   removeSlots,
 } from "./model";
-import { fileLabelSchema } from "./schema";
+import { fileLabelSchema, formatFileLabelSchemaErrors } from "./schema";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -55,9 +56,9 @@ export const FileTaggingModal = ({
   setShowModal,
   removeFile,
 }: FileTaggingModalProps) => {
-  const [error, setError] = useState<string | undefined>();
+  const [errors, setErrors] = useState<Record<string, string> | undefined>();
 
-  const closeModal = (event: any, reason?: string) => {
+  const closeModal = (_event: any, reason?: string) => {
     if (reason && reason == "backdropClick") {
       return;
     }
@@ -68,7 +69,12 @@ export const FileTaggingModal = ({
     fileLabelSchema
       .validate(fileList, { context: { slots: uploadedFiles } })
       .then(closeModal)
-      .catch((err) => setError(err.message));
+      .catch((err) => {
+        if (err instanceof ValidationError) {
+          const formattedErrors = formatFileLabelSchemaErrors(err);
+          setErrors(formattedErrors);
+        }
+      });
   };
 
   return (
@@ -97,16 +103,20 @@ export const FileTaggingModal = ({
         </Box>
         {uploadedFiles.map((slot) => (
           <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
-            <UploadedFileCard
-              {...slot}
-              key={slot.id}
-              removeFile={() => removeFile(slot)}
-            />
-            <SelectMultiple
-              uploadedFile={slot}
-              fileList={fileList}
-              setFileList={setFileList}
-            />
+            <ErrorWrapper error={errors?.[slot.id]}>
+              <>
+                <UploadedFileCard
+                  {...slot}
+                  key={slot.id}
+                  removeFile={() => removeFile(slot)}
+                />
+                <SelectMultiple
+                  uploadedFile={slot}
+                  fileList={fileList}
+                  setFileList={setFileList}
+                />
+              </>
+            </ErrorWrapper>
           </Box>
         ))}
       </DialogContent>
@@ -117,27 +127,25 @@ export const FileTaggingModal = ({
           padding: 2,
         }}
       >
-        <ErrorWrapper error={error}>
-          <Box>
-            <Button
-              variant="contained"
-              color="prompt"
-              onClick={handleValidation}
-              data-testid="modal-done-button"
-            >
-              Done
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ ml: 1.5 }}
-              onClick={closeModal}
-              data-testid="modal-cancel-button"
-            >
-              Cancel
-            </Button>
-          </Box>
-        </ErrorWrapper>
+        <Box>
+          <Button
+            variant="contained"
+            color="prompt"
+            onClick={handleValidation}
+            data-testid="modal-done-button"
+          >
+            Done
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ ml: 1.5 }}
+            onClick={closeModal}
+            data-testid="modal-cancel-button"
+          >
+            Cancel
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );
