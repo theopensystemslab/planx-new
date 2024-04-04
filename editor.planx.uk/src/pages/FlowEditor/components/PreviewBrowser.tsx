@@ -275,9 +275,8 @@ const AlteredNodesSummaryContent = (props: {
         <Typography variant="body2">
           {`Preview these content changes in-service before publishing `}
           <Link href={url.replace("/published", "/amber")} target="_blank">
-            {`here`}
+            {`here (opens in a new tab).`}
           </Link>
-          {` (opens in a new tab).`}
         </Typography>
       </Box>
     </Box>
