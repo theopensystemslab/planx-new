@@ -40,7 +40,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   text: {
     primary: "#0B0C0C",
     secondary: "#505A5F",
-    placeholder: "#617075",
+    placeholder: "#68787D",
   },
   link: {
     main: DEFAULT_PRIMARY_COLOR,

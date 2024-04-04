@@ -54,7 +54,7 @@ const StyledInputBase = styled(InputBase, {
   "& input": {
     fontWeight: "inherit",
   },
-  "& input::placeholder": {
+  "& input::placeholder, & textarea::placeholder": {
     color: theme.palette.text.placeholder,
     opacity: 1,
   },
