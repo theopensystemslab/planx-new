@@ -187,10 +187,14 @@ function PropertyDetails(props: PropertyDetailsProps) {
   const { data, showPropertyTypeOverride, overrideAnswer } = props;
   const filteredData = data.filter((d) => Boolean(d.detail));
 
-  const { trackBackwardsNavigation } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleOverrideAnswer = (fn: string) => {
-    trackBackwardsNavigation("change");
+    trackEvent({
+      event: "backwardsNavigation",
+      metadata: null,
+      initiator: "change",
+    });
     overrideAnswer(fn);
   };
 

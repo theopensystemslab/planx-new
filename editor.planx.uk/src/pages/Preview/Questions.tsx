@@ -77,8 +77,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.getType,
   ]);
   const isStandalone = previewEnvironment === "standalone";
-  const { createAnalytics, node, trackBackwardsNavigation } =
-    useAnalyticsTracking();
+  const { createAnalytics, node, trackEvent } = useAnalyticsTracking();
   const [gotFlow, setGotFlow] = useState(false);
   const isUsingLocalStorage =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
@@ -150,7 +149,12 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const goBack = useCallback(() => {
     const previous = previousCard(node);
     if (previous) {
-      trackBackwardsNavigation("back", previous);
+      trackEvent({
+        event: "backwardsNavigation",
+        metadata: null,
+        initiator: "back",
+        nodeId: previous,
+      });
       record(previous);
     }
   }, [node?.id]);

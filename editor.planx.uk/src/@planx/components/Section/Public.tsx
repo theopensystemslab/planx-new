@@ -135,14 +135,19 @@ export function SectionsOverviewList({
     alteredSectionIds,
   });
 
-  const { trackBackwardsNavigation } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const changeFirstAnswerInSection = (sectionId: string) => {
     const sectionIndex = flow._root.edges?.indexOf(sectionId);
     if (sectionIndex !== undefined) {
       const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
       if (firstNodeInSection) {
-        trackBackwardsNavigation("change", firstNodeInSection);
+        trackEvent({
+          event: "backwardsNavigation",
+          metadata: null,
+          initiator: "change",
+          nodeId: firstNodeInSection,
+        });
         changeAnswer(firstNodeInSection);
       }
     }

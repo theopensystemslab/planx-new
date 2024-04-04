@@ -124,11 +124,14 @@ const Step = ({ title, description, url }: ListItemProps) => (
 
 function NextStepsList(props: NextStepsListProps) {
   const [selectedUrls, setSelectedUrls] = useState<string[]>([]);
-  const { trackNextStepsLinkClick } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleSelectingUrl = (newUrl: string) => {
     setSelectedUrls((prevSelectedUrls) => [...prevSelectedUrls, newUrl]);
-    trackNextStepsLinkClick({ selectedUrls: [...selectedUrls, newUrl] });
+    trackEvent({
+      event: "nextStepsClick",
+      metadata: { selectedUrls: [...selectedUrls, newUrl] },
+    });
   };
 
   return (
