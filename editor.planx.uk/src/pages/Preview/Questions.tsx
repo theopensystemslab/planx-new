@@ -130,22 +130,22 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   const handleSubmit =
     (id: string): handleSubmit =>
-      (userData) => {
-        const {
-          data = undefined,
-          answers = [],
-          auto = false,
-        } = (() => {
-          try {
-            const { answers = [], data, auto } = userData as any;
-            return { answers: answers.filter(Boolean), data, auto };
-          } catch (err) {
-            return {};
-          }
-        })();
+    (userData) => {
+      const {
+        data = undefined,
+        answers = [],
+        auto = false,
+      } = (() => {
+        try {
+          const { answers = [], data, auto } = userData as any;
+          return { answers: answers.filter(Boolean), data, auto };
+        } catch (err) {
+          return {};
+        }
+      })();
 
-        record(id, { answers, data, auto });
-      };
+      record(id, { answers, data, auto });
+    };
 
   const goBack = useCallback(() => {
     const previous = previousCard(node);
@@ -166,7 +166,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   );
 
   return (
-    <Box width="100%" >
+    <Box width="100%">
       <BackBar hidden={!showBackBar}>
         <Container maxWidth={false}>
           <BackButton
@@ -181,15 +181,15 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       </BackBar>
 
       {node && (
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Node
-            id="main-content"
-            role="main"
-            node={node}
-            key={node.id}
-            handleSubmit={handleSubmit(node.id!)}
-          />
-        </ErrorBoundary>
+        <Box component="main" id="main-content">
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Node
+              node={node}
+              key={node.id}
+              handleSubmit={handleSubmit(node.id!)}
+            />
+          </ErrorBoundary>
+        </Box>
       )}
     </Box>
   );
