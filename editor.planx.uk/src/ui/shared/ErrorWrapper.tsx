@@ -45,11 +45,11 @@ export default function ErrorWrapper({
   role = "alert",
 }: Props): FCReturn {
   const inputId = id ? `${ERROR_MESSAGE}-${id}` : undefined;
-  const { trackInputErrors } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   useEffect(() => {
-    error && trackInputErrors(error);
-  }, [error, trackInputErrors]);
+    error && trackEvent({ event: "inputErrors", metadata: null, error });
+  }, [error, trackEvent]);
 
   return (
     <Root error={error} role={role} data-testid="error-wrapper">
