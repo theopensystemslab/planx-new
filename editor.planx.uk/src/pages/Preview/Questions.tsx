@@ -166,7 +166,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   );
 
   return (
-    <Box width="100%" role="main">
+    <Box width="100%">
       <BackBar hidden={!showBackBar}>
         <Container maxWidth={false}>
           <BackButton
@@ -181,13 +181,15 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       </BackBar>
 
       {node && (
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Node
-            node={node}
-            key={node.id}
-            handleSubmit={handleSubmit(node.id!)}
-          />
-        </ErrorBoundary>
+        <Box component="main" id="main-content">
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Node
+              node={node}
+              key={node.id}
+              handleSubmit={handleSubmit(node.id!)}
+            />
+          </ErrorBoundary>
+        </Box>
       )}
     </Box>
   );
