@@ -11,6 +11,7 @@ import { useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import OptionButton from "ui/editor/OptionButton";
 import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
@@ -73,6 +74,19 @@ export default function NumberInputComponent(props: Props): FCReturn {
                 onChange={formik.handleChange}
               />
             </InputRowItem>
+          </InputRow>
+          <InputRow>
+            <OptionButton
+              selected={formik.values.allowNegatives}
+              onClick={() => {
+                formik.setFieldValue(
+                  "allowNegatives",
+                  !formik.values.allowNegatives,
+                );
+              }}
+            >
+              Allow negative numbers to be input
+            </OptionButton>
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
