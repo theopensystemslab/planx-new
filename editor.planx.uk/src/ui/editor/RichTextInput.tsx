@@ -98,8 +98,8 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     },
     // Styles for placeholder text, to match ui/Input.tsx
     "& p.is-editor-empty:nth-child(1)::before": {
-      color: theme.palette.text.secondary,
-      opacity: "0.5",
+      color: theme.palette.text.placeholder,
+      opacity: 1,
       content: `attr(data-placeholder)`,
       float: "left",
       height: 0,

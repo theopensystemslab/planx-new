@@ -40,6 +40,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   text: {
     primary: "#0B0C0C",
     secondary: "#505A5F",
+    placeholder: "#68787D",
   },
   link: {
     main: DEFAULT_PRIMARY_COLOR,
@@ -60,6 +61,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   success: {
     main: "#4CAF50",
+    dark: "#265A26",
   },
   info: {
     main: "#2196F3",
@@ -484,7 +486,7 @@ const generateTeamTheme = (
     linkColour: DEFAULT_PRIMARY_COLOR,
     logo: null,
     favicon: null,
-  }
+  },
 ): MUITheme => {
   const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });

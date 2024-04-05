@@ -39,6 +39,20 @@ declare module "@mui/material/styles/createPalette" {
       dark: string;
     };
   }
+
+  interface TypeText {
+    primary: string;
+    secondary: string;
+    disabled: string;
+    placeholder: string;
+  }
+
+  interface TypeTextOptions {
+    primary: string;
+    secondary: string;
+    disabled: string;
+    placeholder: string;
+  }
 }
 
 // Append our custom variants to MUI Button
