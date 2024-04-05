@@ -3,15 +3,18 @@ import Autocomplete, {
   AutocompleteChangeReason,
 } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
+import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React from "react";
+import React, { forwardRef, PropsWithChildren, useState } from "react";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import {
@@ -32,8 +35,21 @@ interface Option extends UserFile {
   category: keyof FileList;
 }
 
+const ListHeader = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: theme.spacing(1, 1.5),
+  background: theme.palette.grey[200],
+  // Offset default padding of MuiList
+  margin: "-8px 0 8px",
+}));
+
 export const SelectMultiple = (props: SelectMultipleProps) => {
   const { uploadedFile, fileList, setFileList } = props;
+  const [open, setOpen] = useState(false);
+  const closePopper = () => setOpen(false);
+  const openPopper = () => setOpen(true);
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
 
@@ -91,6 +107,35 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
     options.filter(({ name }) => name === tag),
   );
 
+  /**
+   * Custom listbox component
+   * Used to wrap options within the autocomplete and append a custom element above the option list
+   */
+  const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
+    ({ children, ...props }, ref) => {
+      return (
+        <Box ref={ref} {...props} role="listbox">
+          <ListHeader>
+            <ListSubheader disableGutters>
+              <Typography variant="h4" component="h3" pr={3}>
+                Select all that apply
+              </Typography>
+              <Button
+                variant="contained"
+                color="prompt"
+                onClick={closePopper}
+                aria-label="Close list"
+              >
+                Done
+              </Button>
+            </ListSubheader>
+          </ListHeader>
+          {children}
+        </Box>
+      );
+    },
+  );
+
   return (
     <FormControl
       key={`form-${uploadedFile.id}`}
@@ -99,6 +144,9 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
       <Autocomplete
         onChange={handleChange}
         value={value}
+        open={open}
+        onOpen={openPopper}
+        onClose={closePopper}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
         options={options}
         groupBy={(option) => option.category}
@@ -120,7 +168,7 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
         disableCloseOnSelect
         disableClearable
         popupIcon={<ArrowIcon />}
-        ListboxComponent={Box}
+        ListboxComponent={ListboxComponent}
         ChipProps={{
           variant: "uploadedFileTag",
           size: "small",
@@ -149,21 +197,6 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
         )}
       />
       {/*
-        <ListSubheader disableGutters>
-          <ListHeader>
-            <Typography variant="h4" component="h3" pr={3}>
-              Select all that apply
-            </Typography>
-            <Button
-              variant="contained"
-              color="prompt"
-              onClick={handleClose}
-              aria-label="Close list"
-            >
-              Done
-            </Button>
-          </ListHeader>
-        </ListSubheader>
         {(Object.keys(fileList) as Array<keyof typeof fileList>)
           .filter((fileListCategory) => fileList[fileListCategory].length > 0)
           .map((fileListCategory) => {
