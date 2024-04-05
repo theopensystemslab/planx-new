@@ -8,6 +8,7 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { useEffect, useRef, useState } from "react";
 import FeedbackOption from "ui/public/FeedbackOption";
 
@@ -41,14 +42,24 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     }
   }, [currentFeedbackView]);
 
+  const { trackEvent } = useAnalyticsTracking();
+
   const handleFeedbackOptionClick = (event: Sentiment) => {
     switch (event) {
       case "helpful":
+        trackEvent({
+          event: "helpTextFeedback",
+          metadata: { helpTextUseful: true },
+        });
         setCurrentFeedbackView("input");
         setFeedbackOption("helpful");
         break;
 
       case "unhelpful":
+        trackEvent({
+          event: "helpTextFeedback",
+          metadata: { helpTextUseful: false },
+        });
         setCurrentFeedbackView("input");
         setFeedbackOption("unhelpful");
         break;
