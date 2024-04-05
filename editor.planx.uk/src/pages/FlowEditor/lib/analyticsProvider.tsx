@@ -1,3 +1,4 @@
+import { DocumentNode } from "@apollo/client";
 import {
   DEFAULT_FLAG_CATEGORY,
   Flag,
@@ -337,7 +338,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     return !shouldTrackAnalytics || !lastVisibleNodeAnalyticsLogId;
   }
 
-  async function updateMetadata(mutation: any, metadata: Metadata) {
+  async function updateMetadata(mutation: DocumentNode, metadata: Metadata) {
     await publicClient.mutate({
       mutation: mutation,
       variables: {
