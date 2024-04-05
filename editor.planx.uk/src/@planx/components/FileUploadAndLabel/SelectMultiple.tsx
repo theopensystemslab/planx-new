@@ -1,7 +1,10 @@
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete, {
+  AutocompleteChangeReason,
+  AutocompleteProps,
+} from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -28,12 +31,17 @@ import {
   FileList,
   getTagsForSlot,
   removeSlots,
+  UserFile,
 } from "./model";
 
 interface SelectMultipleProps extends SelectProps {
   uploadedFile: FileUploadSlot;
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
+}
+
+interface Option extends UserFile {
+  category: keyof FileList;
 }
 
 const ListHeader = styled(Box)(({ theme }) => ({
@@ -81,56 +89,60 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
   const { uploadedFile, fileList, setFileList } = props;
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
-  const [tags, setTags] = useState<string[]>(initialTags);
-  const previousTags = usePrevious(tags) || initialTags;
-  const [open, setOpen] = React.useState(false);
 
-  const handleChange = (event: SelectChangeEvent<typeof tags>) => {
-    const {
-      target: { value },
-    } = event;
-    setTags(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value,
-    );
-  };
-  const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
-
-  const updateFileListWithTags = (
-    previousTags: string[] | undefined,
-    tags: string[],
+  const handleChange = (
+    _event: React.SyntheticEvent,
+    value: Option[],
+    reason: AutocompleteChangeReason,
   ) => {
-    const updatedTags = tags.filter((tag) => !previousTags?.includes(tag));
-    const removedTags = previousTags?.filter((tag) => !tags?.includes(tag));
+    const selectedTags = value.map(({ name }) => name);
 
-    if (updatedTags.length > 0) {
-      const updatedFileList = addOrAppendSlots(
-        updatedTags,
-        uploadedFile,
-        fileList,
-      );
-      setFileList(updatedFileList);
-    }
-
-    if (removedTags && removedTags.length > 0) {
-      const updatedFileList = removeSlots(removedTags, uploadedFile, fileList);
-      setFileList(updatedFileList);
+    switch (reason) {
+      case "selectOption": {
+        const updatedTags = selectedTags.filter(
+          (tag) => !initialTags?.includes(tag),
+        );
+        const updatedFileList = addOrAppendSlots(
+          updatedTags,
+          uploadedFile,
+          fileList,
+        );
+        setFileList(updatedFileList);
+        break;
+      }
+      case "removeOption": {
+        const removedTags = initialTags?.filter(
+          (tag) => !selectedTags?.includes(tag),
+        );
+        const updatedFileList = removeSlots(
+          removedTags,
+          uploadedFile,
+          fileList,
+        );
+        setFileList(updatedFileList);
+        break;
+      }
     }
   };
 
-  useEffect(() => {
-    updateFileListWithTags(previousTags, tags);
-  }, [tags]);
-
-  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-  const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-  const options = (Object.keys(fileList) as Array<keyof typeof fileList>)
+  /**
+   * Options for autocomplete
+   * FileList with appended "category" property for grouping
+   */
+  const options: Option[] = (
+    Object.keys(fileList) as Array<keyof typeof fileList>
+  )
     .filter((fileListCategory) => fileList[fileListCategory].length > 0)
     .flatMap((category) =>
       fileList[category].map((fileType) => ({ category, ...fileType })),
     );
+
+  /**
+   * Previous values to pre-populate autocomplete
+   */
+  const value: Option[] = initialTags.flatMap((tag) =>
+    options.filter(({ name }) => name === tag),
+  );
 
   return (
     <FormControl
@@ -138,6 +150,8 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
       sx={{ display: "flex", flexDirection: "column" }}
     >
       <Autocomplete
+        onChange={handleChange}
+        value={value}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
         options={options}
         groupBy={(option) => option.category}
@@ -145,6 +159,7 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
         renderInput={(params) => (
           <TextField {...params} label="What does this file show?" />
         )}
+        isOptionEqualToValue={(option, value) => option.name === value.name}
         multiple
         disableCloseOnSelect
         disableClearable
@@ -157,7 +172,7 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
           onDelete: undefined,
         }}
         renderGroup={({ group, key, children }) => (
-          <List key={key} role="group">
+          <List key={`group-${key}`} role="group">
             <ListSubheader role="presentation">
               {capitalize(group)}
             </ListSubheader>
@@ -167,9 +182,10 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
         renderOption={(props, option, { selected }) => (
           <ListItem {...props}>
             <Checkbox
-              icon={icon}
-              checkedIcon={checkedIcon}
-              style={{ marginRight: 8 }}
+              data-testid="select-checkbox"
+              inputProps={{
+                "aria-label": `${option.name}`,
+              }}
               checked={selected}
             />
             <ListItemText>{option.name}</ListItemText>
