@@ -72,6 +72,8 @@ export type BackwardsNavigationMetadata =
   | Record<"change", BackwardsTargetMetadata>
   | Record<"back", BackwardsTargetMetadata>;
 
+type HelpTextFeedbackMetadata = Record<"helpTextUseful", boolean>;
+
 /**
  * Describes the possible values that can be written to analytics_logs.metadata
  * by any one of the specific tracking event functions
@@ -80,7 +82,8 @@ export type Metadata =
   | NodeMetadata
   | BackwardsNavigationMetadata
   | SelectedUrlsMetadata
-  | HelpClickMetadata;
+  | HelpClickMetadata
+  | HelpTextFeedbackMetadata;
 
 /**
  * Discriminated union to describe the potential data required for tracking
@@ -91,7 +94,8 @@ export type EventData =
   | NextStepsClick
   | BackwardsNavigation
   | FlowDirectionChange
-  | InputErrors;
+  | InputErrors
+  | HelpTextFeedback;
 
 /**
  * Capture when a user clicks on the `More Information` i.e. the help on a
@@ -145,4 +149,13 @@ type InputErrors = {
   event: "inputErrors";
   metadata: null;
   error: string;
+};
+
+/**
+ * Captures when a user opens the help text and then gives feedback by selecting
+ * either "yes" or "no" to whether it helped answer their question.
+ */
+type HelpTextFeedback = {
+  event: "helpTextFeedback";
+  metadata: HelpTextFeedbackMetadata;
 };

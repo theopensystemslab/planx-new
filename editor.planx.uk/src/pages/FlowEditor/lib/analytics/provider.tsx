@@ -259,6 +259,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         updateMetadata(UPDATE_HAS_CLICKED_HELP, metadata);
         return;
       case "nextStepsClick":
+      case "helpTextFeedback":
         updateMetadata(UPDATE_ANALYTICS_LOG_METADATA, metadata);
         return;
       case "backwardsNavigation": {
