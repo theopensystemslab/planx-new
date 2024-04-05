@@ -5,6 +5,7 @@ import { add } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { SendEmailPayload } from "types";
+import { removeSessionIdSearchParam } from "utils";
 
 import StatusPage from "./StatusPage";
 
@@ -21,9 +22,8 @@ export const SaveSuccess: React.FC<{
   <StatusPage
     bannerHeading="Application saved"
     showDownloadLink
-    buttonText="Close tab"
-    onButtonClick={() => window.close()}
-    additionalOption="startNewApplication"
+    buttonText="Start a new application"
+    onButtonClick={removeSessionIdSearchParam}
   >
     <Typography variant="body2">
       We have sent a link to {saveToEmail}. Use the link to continue your
@@ -34,6 +34,9 @@ export const SaveSuccess: React.FC<{
       <br />
       <br />
       Your application will be deleted if you do not complete it by this date.
+      <br />
+      <br />
+      You may now close this tab.
     </Typography>
   </StatusPage>
 );

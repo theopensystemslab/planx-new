@@ -109,14 +109,13 @@ export const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
 
 export const EmailSuccess: React.FC = () => {
   return (
-    <StatusPage
-      bannerHeading="Check your email"
-      buttonText="Close Tab"
-      onButtonClick={() => window.close()}
-    >
+    <StatusPage bannerHeading="Check your email">
       <Typography variant="body1">
         If you have any draft applications we have sent you an email that
         contains a link. Use this link to access your applications.
+        <br />
+        <br />
+        You may now close this tab.
       </Typography>
     </StatusPage>
   );
