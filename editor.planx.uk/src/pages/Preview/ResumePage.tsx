@@ -60,7 +60,7 @@ export const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
   });
 
   return (
-    <Box width="100%" component="main">
+    <Box width="100%" component="main" id="main-content">
       <Card handleSubmit={formik.handleSubmit}>
         <QuestionHeader
           title="Resume your application"
