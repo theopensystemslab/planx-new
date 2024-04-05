@@ -1,4 +1,7 @@
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
+import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -6,11 +9,14 @@ import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import React, { useEffect, useState } from "react";
@@ -117,17 +123,60 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
     updateFileListWithTags(previousTags, tags);
   }, [tags]);
 
+  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+  const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+  const options = (Object.keys(fileList) as Array<keyof typeof fileList>)
+    .filter((fileListCategory) => fileList[fileListCategory].length > 0)
+    .flatMap((category) =>
+      fileList[category].map((fileType) => ({ category, ...fileType })),
+    );
+
   return (
     <FormControl
       key={`form-${uploadedFile.id}`}
       sx={{ display: "flex", flexDirection: "column" }}
     >
-      <StyledInputLabel
-        id={`select-multiple-file-tags-label-${uploadedFile.id}`}
-      >
-        What does this file show?
-      </StyledInputLabel>
-      <StyledSelect
+      <Autocomplete
+        id={`select-multiple-file-tags-${uploadedFile.id}`}
+        options={options}
+        groupBy={(option) => option.category}
+        getOptionLabel={(option) => option.name}
+        renderInput={(params) => (
+          <TextField {...params} label="What does this file show?" />
+        )}
+        multiple
+        disableCloseOnSelect
+        disableClearable
+        popupIcon={<ArrowIcon />}
+        ListboxComponent={Box}
+        ChipProps={{
+          variant: "uploadedFileTag",
+          size: "small",
+          sx: { pointerEvents: "none" },
+          onDelete: undefined,
+        }}
+        renderGroup={({ group, key, children }) => (
+          <List key={key} role="group">
+            <ListSubheader role="presentation">
+              {capitalize(group)}
+            </ListSubheader>
+            {children}
+          </List>
+        )}
+        renderOption={(props, option, { selected }) => (
+          <ListItem {...props}>
+            <Checkbox
+              icon={icon}
+              checkedIcon={checkedIcon}
+              style={{ marginRight: 8 }}
+              checked={selected}
+            />
+            <ListItemText>{option.name}</ListItemText>
+          </ListItem>
+        )}
+      />
+      {/* <StyledSelect
         native={false}
         key={`select-${uploadedFile.id}`}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
@@ -227,7 +276,7 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
               }),
             ];
           })}
-      </StyledSelect>
+      </StyledSelect> */}
     </FormControl>
   );
 };
