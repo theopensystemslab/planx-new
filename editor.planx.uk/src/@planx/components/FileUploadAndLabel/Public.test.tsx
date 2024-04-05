@@ -1,5 +1,6 @@
 import {
   act,
+  findByRole,
   fireEvent,
   screen,
   waitFor,
@@ -342,7 +343,15 @@ describe("Modal trigger", () => {
 describe("Adding tags and syncing state", () => {
   test("Can continue when all required file types are uploaded and tagged", async () => {
     const handleSubmit = jest.fn();
-    const { user } = setup(
+    const {
+      getAllByRole,
+      getAllByTestId,
+      getByRole,
+      getByTestId,
+      getByText,
+      queryByRole,
+      user,
+    } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -351,7 +360,7 @@ describe("Adding tags and syncing state", () => {
     );
 
     // No file requirements have been satisfied yet
-    let incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    let incompleteIcons = getAllByTestId("incomplete-icon");
     expect(incompleteIcons).toHaveLength(2);
 
     // Upload one file
@@ -363,7 +372,7 @@ describe("Adding tags and syncing state", () => {
     });
 
     const file1 = new File(["test1"], "test1.png", { type: "image/png" });
-    const input = screen.getByTestId("upload-input");
+    const input = getByTestId("upload-input");
     await user.upload(input, [file1]);
 
     // Modal opened automatically
@@ -371,41 +380,59 @@ describe("Adding tags and syncing state", () => {
       "file-tagging-dialog",
     );
 
-    // The number of selects in the modal matches the number of uploaded files
-    const selects = await within(document.body).findAllByTestId("select");
-    expect(selects).toHaveLength(1);
+    // The number of autocompletes in the modal matches the number of uploaded files
+    const autocompleteInputs = getAllByRole("combobox", {
+      name: /What does this file show/,
+    });
+    expect(autocompleteInputs).toHaveLength(1);
 
-    const submitModalButton = await within(fileTaggingModal).findByText("Done");
+    const submitModalButton = getByRole("button", { name: /Done/ });
     expect(submitModalButton).toBeVisible();
 
-    // Apply multiple tags to this file
-    fireEvent.change(selects[0], { target: { value: "Roof plan" } });
+    // Autocomplete is close, option unavailable
+    let roofPlanOption = queryByRole("option", { name: /Roof plan/ });
+    expect(roofPlanOption).toBeNull();
 
-    // Close modal successfully
-    user.click(submitModalButton);
-    await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
+    // Open dropdown
+    await user.click(autocompleteInputs[0]);
+    roofPlanOption = getByRole("option", { name: /Roof plan/ });
+    expect(roofPlanOption).toBeVisible();
+
+    // Apply tag to this file
+    await user.click(roofPlanOption);
+
+    // Close modal
+    await user.click(submitModalButton);
+    expect(fileTaggingModal).not.toBeVisible();
 
     // Uploaded file displayed as card with chip tags
-    expect(screen.getByText("test1.png")).toBeVisible();
-    const chips = screen.getAllByTestId("uploaded-file-chip");
+    expect(getByText("test1.png")).toBeVisible();
+    const chips = getAllByTestId("uploaded-file-chip");
     expect(chips).toHaveLength(1);
     expect(chips[0]).toHaveTextContent("Roof plan");
 
     // Requirements list reflects successfully tagged uploads
-    const completeIcons = screen.getAllByTestId("complete-icon");
+    const completeIcons = getAllByTestId("complete-icon");
     expect(completeIcons).toHaveLength(1);
-    incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    incompleteIcons = getAllByTestId("incomplete-icon");
     expect(incompleteIcons).toHaveLength(1);
 
     // "Continue" onto to the next node
-    expect(screen.getByText("Continue")).toBeEnabled();
-    await user.click(screen.getByText("Continue"));
+    expect(getByText("Continue")).toBeEnabled();
+    await user.click(getByText("Continue"));
     expect(handleSubmit).toHaveBeenCalledTimes(1);
   });
 
   test("Cannot continue when only an optional file type is uploaded and tagged", async () => {
     const handleSubmit = jest.fn();
-    const { user } = setup(
+    const {
+      getAllByRole,
+      getAllByTestId,
+      getByTestId,
+      getByRole,
+      getByText,
+      user,
+    } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -414,7 +441,7 @@ describe("Adding tags and syncing state", () => {
     );
 
     // No file requirements have been satisfied yet
-    let incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    let incompleteIcons = getAllByTestId("incomplete-icon");
     expect(incompleteIcons).toHaveLength(2);
 
     // Upload one file
@@ -426,7 +453,7 @@ describe("Adding tags and syncing state", () => {
     });
 
     const file1 = new File(["test1"], "test1.png", { type: "image/png" });
-    const input = screen.getByTestId("upload-input");
+    const input = getByTestId("upload-input");
     await user.upload(input, [file1]);
 
     // Modal opened automatically
@@ -434,32 +461,42 @@ describe("Adding tags and syncing state", () => {
       "file-tagging-dialog",
     );
 
-    // The number of selects in the modal matches the number of uploaded files
-    const selects = await within(document.body).findAllByTestId("select");
-    expect(selects).toHaveLength(1);
+    // The number of autocompletes in the modal matches the number of uploaded files
+    const autocompleteInputs = getAllByRole("combobox", {
+      name: /What does this file show/,
+    });
+    expect(autocompleteInputs).toHaveLength(1);
 
     // Apply multiple tags to this file
-    fireEvent.change(selects[0], { target: { value: "Heritage statement" } });
+    await user.click(autocompleteInputs[0]);
+    const heritageStatementOption = getByRole("option", {
+      name: /Heritage statement/,
+    });
+    expect(heritageStatementOption).toBeVisible();
+
+    // Apply tag to this file, and close autocomplete dropdown
+    await user.click(heritageStatementOption);
+    await user.keyboard("{Esc}");
 
     // Close modal
     await user.keyboard("{Esc}");
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
     // Uploaded file displayed as card with chip tags
-    expect(screen.getByText("test1.png")).toBeVisible();
-    const chips = screen.getAllByTestId("uploaded-file-chip");
+    expect(getByText("test1.png")).toBeVisible();
+    const chips = getAllByTestId("uploaded-file-chip");
     expect(chips).toHaveLength(1);
     expect(chips[0]).toHaveTextContent("Heritage statement");
 
     // Requirements list reflects successfully tagged uploads
-    const completeIcons = screen.getAllByTestId("complete-icon");
+    const completeIcons = getAllByTestId("complete-icon");
     expect(completeIcons).toHaveLength(1);
-    incompleteIcons = screen.getAllByTestId("incomplete-icon");
+    incompleteIcons = getAllByTestId("incomplete-icon");
     expect(incompleteIcons).toHaveLength(1);
 
     // Show error when attempting to "Continue" onto to the next node
-    expect(screen.getByText("Continue")).toBeEnabled();
-    await user.click(screen.getByText("Continue"));
+    expect(getByText("Continue")).toBeEnabled();
+    await user.click(getByText("Continue"));
     expect(handleSubmit).toHaveBeenCalledTimes(0);
     const error = await within(document.body).findByText(
       "Please upload and label all required files",
@@ -565,15 +602,11 @@ describe("Error handling", () => {
   test("An error is thrown in the main component if a user does not tag all files", async () => {
     const handleSubmit = jest.fn();
 
-    const { user } = setup(
+    const { getAllByRole, getByTestId, getByRole, findByText, user } = setup(
       <FileUploadAndLabelComponent
         handleSubmit={handleSubmit}
         title="Test title"
-        fileTypes={[
-          mockFileTypes.AlwaysRequired,
-          mockFileTypes.AlwaysRecommended,
-          mockFileTypes.NotRequired,
-        ]}
+        fileTypes={mockFileTypesUniqueKeys}
       />,
     );
 
@@ -585,29 +618,38 @@ describe("Error handling", () => {
     });
 
     const file = new File(["test"], "test.jpg", { type: "image/jpg" });
-    const input = screen.getByTestId("upload-input");
+    const input = getByTestId("upload-input");
     await user.upload(input, file);
 
     // Exit modal without tagging
     await user.keyboard("{Esc}");
 
     // User cannot submit without uploading a file
-    await user.click(screen.getByTestId("continue-button"));
+    await user.click(getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
-    const fileListError = await screen.findByText(
-      /File test.jpg is not labeled/,
-    );
+    const fileListError = await findByText(/File test.jpg is not labeled/);
     expect(fileListError).toBeVisible();
 
     // Re-open modal and tag file
-    await user.click(screen.getByRole("button", { name: /Change/ }));
-    const select = within(document.body).getByTestId("select");
-    fireEvent.change(select, { target: { value: "Utility bill" } });
-    await user.click(screen.getByRole("button", { name: /Done/ }));
+    await user.click(getByRole("button", { name: /Change/ }));
+    const autocompleteInputs = getAllByRole("combobox", {
+      name: /What does this file show/,
+    });
+    expect(autocompleteInputs).toHaveLength(1);
+    await user.click(autocompleteInputs[0]);
+
+    const utilityBillOption = getByRole("option", { name: /Utility bill/ });
+    expect(utilityBillOption).toBeVisible();
+
+    // Apply tag to this file, and close autocomplete dropdown
+    await user.click(utilityBillOption);
+    await user.keyboard("{Esc}");
+
+    await user.click(getByRole("button", { name: /Done/ }));
 
     // Error message is cleared, user can submit
     expect(fileListError).toBeEmptyDOMElement();
-    await user.click(screen.getByTestId("continue-button"));
+    await user.click(getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 });
@@ -619,7 +661,7 @@ describe("Submitting data", () => {
 
   it("records the user uploaded files", async () => {
     const handleSubmit = jest.fn();
-    const { user } = setup(
+    const { getByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -629,7 +671,7 @@ describe("Submitting data", () => {
 
     await uploadAndTagSingleFile(user);
 
-    await user.click(screen.getByText("Continue"));
+    await user.click(getByText("Continue"));
     expect(handleSubmit).toHaveBeenCalledTimes(1);
 
     const submitted = handleSubmit.mock.calls[0][0];
@@ -647,7 +689,7 @@ describe("Submitting data", () => {
 
   it("records the full file type list presented to the user", async () => {
     const handleSubmit = jest.fn();
-    const { user } = setup(
+    const { getByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -656,7 +698,7 @@ describe("Submitting data", () => {
     );
 
     await uploadAndTagSingleFile(user);
-    await user.click(screen.getByText("Continue"));
+    await user.click(getByText("Continue"));
 
     const submitted = handleSubmit.mock.calls[0][0];
     const requestedFiles = submitted?.data?._requestedFiles;
@@ -720,7 +762,7 @@ describe("Submitting data", () => {
     act(() => setState({ flow, breadcrumbs }));
 
     const handleSubmit = jest.fn();
-    const { user } = setup(
+    const { getByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -729,7 +771,7 @@ describe("Submitting data", () => {
     );
 
     await uploadAndTagSingleFile(user);
-    await user.click(screen.getByText("Continue"));
+    await user.click(getByText("Continue"));
 
     const submitted = handleSubmit.mock.calls[0][0];
     const requestedFiles = submitted?.data?._requestedFiles;
@@ -764,8 +806,14 @@ const uploadAndTagSingleFile = async (user: UserEvent) => {
     "file-tagging-dialog",
   );
 
-  const selects = await within(document.body).findAllByTestId("select");
-  fireEvent.change(selects[0], { target: { value: "Roof plan" } });
+  const autocompleteInputs = screen.getAllByRole("combobox", {
+    name: /What does this file show/,
+  });
+
+  await user.click(autocompleteInputs[0]);
+  const roofPlanOption = screen.getByRole("option", { name: /Roof plan/ });
+  expect(roofPlanOption).toBeVisible();
+  await user.click(roofPlanOption);
 
   const submitModalButton = await within(fileTaggingModal).findByText("Done");
   user.click(submitModalButton);
