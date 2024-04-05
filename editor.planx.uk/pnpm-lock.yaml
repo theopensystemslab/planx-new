@@ -35,8 +35,8 @@ dependencies:
     specifier: ^5.15.2
     version: 5.15.2(@types/react@18.2.45)(react@18.2.0)
   '@opensystemslab/map':
-    specifier: ^0.8.0
-    version: 0.8.0
+    specifier: ^0.8.1
+    version: 0.8.1
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#03a39b2
     version: github.com/theopensystemslab/planx-core/03a39b2(@types/react@18.2.45)
@@ -3438,7 +3438,7 @@ packages:
       '@babel/runtime': 7.24.1
       '@emotion/hash': 0.9.1
       '@emotion/memoize': 0.8.1
-      '@emotion/serialize': 1.1.3
+      '@emotion/serialize': 1.1.4
       babel-plugin-macros: 3.1.0
       convert-source-map: 1.9.0
       escape-string-regexp: 4.0.0
@@ -3549,7 +3549,7 @@ packages:
       '@babel/runtime': 7.24.1
       '@emotion/babel-plugin': 11.11.0
       '@emotion/cache': 11.11.0
-      '@emotion/serialize': 1.1.3
+      '@emotion/serialize': 1.1.4
       '@emotion/use-insertion-effect-with-fallbacks': 1.0.1(react@18.2.0)
       '@emotion/utils': 1.2.1
       '@emotion/weak-memoize': 0.3.1
@@ -5090,8 +5090,8 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@0.8.0:
-    resolution: {integrity: sha512-R8Z9X9uLAOvkiXcdhyVccPA0qOKr460qb2EawPZD7LQBkaLX+sjJVItjCGG4NHbZ2tlG0laiOKw1mtzBwhNi9A==}
+  /@opensystemslab/map@0.8.1:
+    resolution: {integrity: sha512-AMEkKN7uEzGN20gGmNbV+mpZDa7F8XY74Ttj7LgGwEAJ3ZeGRwx1d4ffjObjf4QY/bXTdOOCab1c4viaxfbozw==}
     dependencies:
       '@turf/union': 6.5.0
       accessible-autocomplete: 2.0.4
