@@ -1,3 +1,4 @@
+import { DocumentNode } from "@apollo/client";
 import {
   DEFAULT_FLAG_CATEGORY,
   Flag,
@@ -85,19 +86,75 @@ type Metadata =
 
 let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;
 
+type EventData =
+  | HelpClick
+  | NextStepsClick
+  | BackwardsNavigation
+  | FlowDirectionChange
+  | InputErrors;
+
+/**
+ * Capture when a user clicks on the `More Information` i.e. the help on a
+ * question. The mutation directly applies "has_clicked_help: true" although
+ * this can accept metadata as a currently if a user select `info` on a file
+ * requirement that data can be stored in this field.
+ */
+type HelpClick = {
+  event: "helpClick";
+  metadata: HelpClickMetadata;
+};
+
+/**
+ * A user gets to a `NextSteps` component. Track every time a user selects a
+ * link and appends it to the array.
+ */
+type NextStepsClick = {
+  event: "nextStepsClick";
+  metadata: SelectedUrlsMetadata;
+};
+
+/**
+ * A user selects either `Back` of `Change` this event it triggered which if
+ * the `nodeId` is available the `metadata` will be updated with the type of
+ * backwards navigation i.e. `back` or `change` and the value is data about
+ * the node which will be navigated to.
+ */
+type BackwardsNavigation = {
+  event: "backwardsNavigation";
+  metadata: null;
+  initiator: BackwardsNavigationInitiatorType;
+  nodeId?: string;
+};
+
+/**
+ * The flow direction when a new analytics session is created is
+ * - 'init': for the flow no longerStorage data is found
+ * - 'resume': for the flow localStorage data is found
+ * - 'forwards': breadcrumbs are being appended to i.e. forwards through flow
+ * - 'backwards': breadcrumbs are bing removed i.e. backwards through flow
+ * - 'reset': a user restarts by clicking the 'reset' button
+ * - 'save': a user ends a session by saving
+ */
+type FlowDirectionChange = {
+  event: "flowDirectionChange";
+  metadata: null;
+  flowDirection: AnalyticsLogDirection;
+};
+
+/**
+ * Captures when a user encounters an error as caught by the ErrorWrapper
+ * appends the error message to an array of errors
+ */
+type InputErrors = {
+  event: "inputErrors";
+  metadata: null;
+  error: string;
+};
+
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
-  trackHelpClick: (metadata?: HelpClickMetadata) => Promise<void>;
-  trackNextStepsLinkClick: (metadata?: SelectedUrlsMetadata) => Promise<void>;
-  trackFlowDirectionChange: (
-    flowDirection: AnalyticsLogDirection,
-  ) => Promise<void>;
-  trackBackwardsNavigation: (
-    backwardsNavigationType: BackwardsNavigationInitiatorType,
-    nodeId?: string,
-  ) => Promise<void>;
+  trackEvent: (eventData: EventData) => Promise<void>;
   node: Store.node | null;
-  trackInputErrors: (error: string) => Promise<void>;
   track: (
     nodeId: string,
     direction?: AnalyticsLogDirection,
@@ -105,12 +162,8 @@ const analyticsContext = createContext<{
   ) => Promise<void>;
 }>({
   createAnalytics: () => Promise.resolve(),
-  trackHelpClick: () => Promise.resolve(),
-  trackNextStepsLinkClick: () => Promise.resolve(),
-  trackFlowDirectionChange: () => Promise.resolve(),
-  trackBackwardsNavigation: () => Promise.resolve(),
+  trackEvent: () => Promise.resolve(),
   node: null,
-  trackInputErrors: () => Promise.resolve(),
   track: () => Promise.resolve(),
 });
 const { Provider } = analyticsContext;
@@ -188,12 +241,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     <Provider
       value={{
         createAnalytics,
-        trackHelpClick,
-        trackNextStepsLinkClick,
-        trackFlowDirectionChange,
-        trackBackwardsNavigation,
         node,
-        trackInputErrors,
+        trackEvent,
         track,
       }}
     >
@@ -289,11 +338,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     return !shouldTrackAnalytics || !lastVisibleNodeAnalyticsLogId;
   }
 
-  async function trackHelpClick(metadata?: HelpClickMetadata) {
-    if (shouldSkipTracking()) return;
-
+  async function updateMetadata(mutation: DocumentNode, metadata: Metadata) {
     await publicClient.mutate({
-      mutation: UPDATE_HAS_CLICKED_HELP,
+      mutation: mutation,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
         metadata,
@@ -301,49 +348,55 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }
 
-  async function trackNextStepsLinkClick(metadata?: SelectedUrlsMetadata) {
+  async function trackEvent(eventData: EventData) {
     if (shouldSkipTracking()) return;
-
-    await publicClient.mutate({
-      mutation: UPDATE_ANALYTICS_LOG_METADATA,
-      variables: {
-        id: lastVisibleNodeAnalyticsLogId,
-        metadata,
-      },
-    });
+    const { event, metadata } = eventData;
+    switch (event) {
+      case "helpClick":
+        updateMetadata(UPDATE_HAS_CLICKED_HELP, metadata);
+        return;
+      case "nextStepsClick":
+        updateMetadata(UPDATE_ANALYTICS_LOG_METADATA, metadata);
+        return;
+      case "backwardsNavigation": {
+        const { initiator, nodeId } = eventData;
+        const metadata = generateBackwardsNavigationMetadata(initiator, nodeId);
+        updateMetadata(UPDATE_ANALYTICS_LOG_METADATA, metadata);
+        return;
+      }
+      case "flowDirectionChange": {
+        const { flowDirection } = eventData;
+        handleFlowDirectionChange(flowDirection);
+        return;
+      }
+      case "inputErrors": {
+        const { error } = eventData;
+        handleInputErrors(error);
+        return;
+      }
+    }
   }
 
-  async function trackFlowDirectionChange(
-    flowDirection: AnalyticsLogDirection,
-  ) {
-    if (shouldSkipTracking()) return;
-
-    await publicClient.mutate({
-      mutation: UPDATE_FLOW_DIRECTION,
-      variables: {
-        id: lastVisibleNodeAnalyticsLogId,
-        flow_direction: flowDirection,
-      },
-    });
-  }
-
-  async function trackBackwardsNavigation(
+  function generateBackwardsNavigationMetadata(
     initiator: BackwardsNavigationInitiatorType,
     nodeId?: string,
   ) {
-    if (shouldSkipTracking()) return;
-
     const targetNodeMetadata = nodeId ? getTargetNodeDataFromFlow(nodeId) : {};
     const metadata: BackwardsNavigationMetadata =
       initiator === "change"
         ? { change: targetNodeMetadata }
         : { back: targetNodeMetadata };
+    return metadata;
+  }
 
+  async function handleFlowDirectionChange(
+    flowDirection: AnalyticsLogDirection,
+  ) {
     await publicClient.mutate({
-      mutation: UPDATE_ANALYTICS_LOG_METADATA,
+      mutation: UPDATE_FLOW_DIRECTION,
       variables: {
         id: lastVisibleNodeAnalyticsLogId,
-        metadata,
+        flow_direction: flowDirection,
       },
     });
   }
@@ -489,7 +542,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
   /**
    * Capture user input errors caught by ErrorWrapper component
    */
-  async function trackInputErrors(error: string) {
+  async function handleInputErrors(error: string) {
     if (shouldSkipTracking()) return;
 
     await publicClient.mutate({

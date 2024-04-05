@@ -320,7 +320,7 @@ const PublicToolbar: React.FC<{
     theme.breakpoints.up("md"),
   );
 
-  const { trackFlowDirectionChange } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openConfirmationDialog = () => setIsDialogOpen(true);
@@ -328,7 +328,11 @@ const PublicToolbar: React.FC<{
   const handleRestart = (isConfirmed: boolean) => {
     setIsDialogOpen(false);
     if (isConfirmed) {
-      trackFlowDirectionChange("reset");
+      trackEvent({
+        event: "flowDirectionChange",
+        metadata: null,
+        flowDirection: "reset",
+      });
       if (path === ApplicationPath.SingleSession) {
         clearLocalFlow(id);
         window.location.reload();
@@ -362,7 +366,14 @@ const PublicToolbar: React.FC<{
                   size="large"
                   aria-describedby="restart-application-description"
                 >
-                  <Typography id="restart-application-description" style={visuallyHidden}>Open a dialog with the option to restart your application. If you chose to restart your application, this will delete your previous answers</Typography>
+                  <Typography
+                    id="restart-application-description"
+                    style={visuallyHidden}
+                  >
+                    Open a dialog with the option to restart your application.
+                    If you chose to restart your application, this will delete
+                    your previous answers
+                  </Typography>
                   <Reset color="secondary" />
                 </IconButton>
               )}

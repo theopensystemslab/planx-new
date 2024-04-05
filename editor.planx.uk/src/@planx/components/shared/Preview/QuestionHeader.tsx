@@ -61,11 +61,11 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   img,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const { trackHelpClick } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleHelpClick = () => {
     setOpen(true);
-    trackHelpClick(); // This returns a promise but we don't need to await for it
+    trackEvent({ event: "helpClick", metadata: {} }); // This returns a promise but we don't need to await for it
   };
 
   return (
@@ -124,9 +124,17 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             <MoreInfoSection title="How is it defined?">
               <>
                 {definitionImg && (
-                  <Image src={definitionImg} alt="" aria-describedby="howMeasured" />
+                  <Image
+                    src={definitionImg}
+                    alt=""
+                    aria-describedby="howMeasured"
+                  />
                 )}
-                <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab id="howMeasured" />
+                <ReactMarkdownOrHtml
+                  source={howMeasured}
+                  openLinksOnNewTab
+                  id="howMeasured"
+                />
               </>
             </MoreInfoSection>
           ) : undefined}

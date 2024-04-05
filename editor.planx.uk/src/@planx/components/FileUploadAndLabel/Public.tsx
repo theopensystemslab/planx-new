@@ -286,13 +286,13 @@ interface FileListItemProps {
 
 const InteractiveFileListItem = (props: FileListItemProps) => {
   const [open, setOpen] = React.useState(false);
-  const { trackHelpClick } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
   const { info, policyRef, howMeasured, definitionImg } =
     props.moreInformation || {};
 
   const handleHelpClick = (metadata: HelpClickMetadata) => {
     setOpen(true);
-    trackHelpClick(metadata); // This returns a promise but we don't need to await for it
+    trackEvent({ event: "helpClick", metadata }); // This returns a promise but we don't need to await for it
   };
 
   return (

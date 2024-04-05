@@ -239,7 +239,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 // For applicable component types, display a list of their question & answers with a "change" link
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
-  const { trackBackwardsNavigation } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [nodeToChange, setNodeToChange] = useState<Store.nodeId | undefined>(
     undefined,
@@ -248,7 +248,12 @@ function SummaryList(props: SummaryListProps) {
   const handleCloseDialog = (isConfirmed: boolean) => {
     setIsDialogOpen(false);
     if (isConfirmed && nodeToChange) {
-      trackBackwardsNavigation("change", nodeToChange);
+      trackEvent({
+        event: "backwardsNavigation",
+        metadata: null,
+        initiator: "change",
+        nodeId: nodeToChange,
+      });
       props.changeAnswer(nodeToChange);
     }
   };
