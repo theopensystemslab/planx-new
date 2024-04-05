@@ -24,7 +24,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,

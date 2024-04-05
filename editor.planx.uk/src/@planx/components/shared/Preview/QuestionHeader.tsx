@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { emptyContent } from "ui/editor/RichTextInput";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";

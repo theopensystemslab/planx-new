@@ -8,7 +8,7 @@ import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";

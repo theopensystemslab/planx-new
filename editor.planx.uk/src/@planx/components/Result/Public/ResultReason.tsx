@@ -6,7 +6,7 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Caret from "ui/icons/Caret";

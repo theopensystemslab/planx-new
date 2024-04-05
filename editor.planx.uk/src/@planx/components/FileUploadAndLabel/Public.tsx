@@ -8,10 +8,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
-import {
-  HelpClickMetadata,
-  useAnalyticsTracking,
-} from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
+import { HelpClickMetadata } from "pages/FlowEditor/lib/analytics/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";

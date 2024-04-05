@@ -11,7 +11,7 @@ import type { PublicProps } from "@planx/components/ui";
 import { Feature } from "@turf/helpers";
 import { publicClient } from "lib/graphql";
 import find from "lodash/find";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";

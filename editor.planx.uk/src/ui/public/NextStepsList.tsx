@@ -5,7 +5,7 @@ import Link from "@mui/material/Link";
 import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Step as StyledListItem } from "@planx/components/NextSteps/model";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 
