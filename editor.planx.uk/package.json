@@ -11,7 +11,7 @@
     "@mui/icons-material": "^5.15.2",
     "@mui/material": "^5.15.2",
     "@mui/utils": "^5.15.2",
-    "@opensystemslab/map": "^0.8.0",
+    "@opensystemslab/map": "^0.8.1",
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#03a39b2",
     "@tiptap/core": "^2.0.3",
     "@tiptap/extension-bold": "^2.0.3",
