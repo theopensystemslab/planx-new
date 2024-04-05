@@ -127,7 +127,7 @@ type BackwardsNavigation = {
 };
 
 /**
- * The flow direction when a new analytics session is create is
+ * The flow direction when a new analytics session is created is
  * - 'init': for the flow no longerStorage data is found
  * - 'resume': for the flow localStorage data is found
  * - 'forwards': breadcrumbs are being appended to i.e. forwards through flow
