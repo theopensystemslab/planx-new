@@ -11,7 +11,7 @@ import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import { getCookie, setCookie } from "lib/cookie";
 import ErrorPage from "pages/ErrorPage";
-import { AnalyticsProvider } from "pages/FlowEditor/lib/analyticsProvider";
+import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";

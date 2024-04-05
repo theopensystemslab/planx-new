@@ -1,14 +1,14 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
 
-import { ALLOW_LIST } from "./analyticsProvider";
+import { Store } from "../store";
+import { ALLOW_LIST } from "./provider";
 import {
   AllowListKey,
   BackwardsNavigationInitiatorType,
   BackwardsNavigationMetadata,
   BackwardsTargetMetadata,
-} from "./analyticsTypes";
-import { Store } from "./store";
+} from "./types";
 
 /**
  * Generate meaningful title for content analytic log

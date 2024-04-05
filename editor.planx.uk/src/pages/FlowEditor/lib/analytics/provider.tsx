@@ -5,6 +5,7 @@ import { publicClient } from "lib/graphql";
 import React, { createContext, useContext, useEffect } from "react";
 import { usePrevious } from "react-use";
 
+import { Store, useStore } from "../store";
 import {
   INSERT_NEW_ANALYTICS,
   INSERT_NEW_ANALYTICS_LOG,
@@ -14,14 +15,14 @@ import {
   UPDATE_FLOW_DIRECTION,
   UPDATE_HAS_CLICKED_HELP,
   UPDATE_NEXT_LOG_CREATED_AT,
-} from "./analyticsMutations";
+} from "./mutations";
 import {
   AnalyticsLogDirection,
   AnalyticsType,
   EventData,
   Metadata,
   NodeMetadata,
-} from "./analyticsTypes";
+} from "./types";
 import {
   determineLogDirection,
   extractNodeTitle,
@@ -29,8 +30,7 @@ import {
   generateBackwardsNavigationMetadata,
   getAllowListAnswers,
   getNodeMetadata,
-} from "./analyticsUtils";
-import { Store, useStore } from "./store";
+} from "./utils";
 
 /**
  * If appending to ALLOW_LIST please also update the `analytics_summary` view to

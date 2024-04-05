@@ -2,7 +2,7 @@ import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ERROR_MESSAGE } from "@planx/components/shared/constants";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { ReactElement, useEffect } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
