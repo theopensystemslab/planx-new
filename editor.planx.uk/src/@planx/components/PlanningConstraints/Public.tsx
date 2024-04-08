@@ -27,6 +27,7 @@ import {
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "./model";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -281,8 +282,8 @@ export function PlanningConstraintsContent(
 const Disclaimer = (props: { text: string }) => (
   <WarningContainer>
     <ErrorOutline />
-    <Typography variant="body1" ml={2} fontWeight={FONT_WEIGHT_SEMI_BOLD}>
-      {props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+    <Typography variant="body1" component="div" ml={2} mb={1}>
+      <ReactMarkdownOrHtml source={props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER} openLinksOnNewTab />
     </Typography>
   </WarningContainer>
 );
