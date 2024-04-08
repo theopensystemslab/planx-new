@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import gql from "graphql-tag";
 import { publicClient } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
@@ -37,7 +38,9 @@ const standaloneView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <View />
+      <Box component="main" id="main-content">
+        <View />
+      </Box>
     </PublicLayout>
   );
 };
