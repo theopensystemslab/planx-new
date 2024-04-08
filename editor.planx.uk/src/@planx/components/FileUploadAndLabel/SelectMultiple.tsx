@@ -15,6 +15,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useState } from "react";
+import { focusStyle } from "theme";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import {
@@ -41,8 +42,6 @@ const ListHeader = styled(Box)(({ theme }) => ({
   alignItems: "center",
   padding: theme.spacing(1, 1.5),
   background: theme.palette.grey[200],
-  // Offset default padding of MuiList
-  margin: "-8px 0 8px",
 }));
 
 export const SelectMultiple = (props: SelectMultipleProps) => {
@@ -114,9 +113,9 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
   const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
     ({ children, ...props }, ref) => {
       return (
-        <Box ref={ref} {...props} role="listbox">
-          <ListHeader>
-            <ListSubheader disableGutters>
+        <>
+          <Box>
+            <ListHeader>
               <Typography variant="h4" component="h3" pr={3}>
                 Select all that apply
               </Typography>
@@ -128,10 +127,17 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
               >
                 Done
               </Button>
-            </ListSubheader>
-          </ListHeader>
-          {children}
-        </Box>
+            </ListHeader>
+          </Box>
+          <Box
+            ref={ref}
+            {...props}
+            role="listbox"
+            sx={{ paddingY: "0px !important" }}
+          >
+            {children}
+          </Box>
+        </>
       );
     },
   );
@@ -143,6 +149,18 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
     >
       <Autocomplete
         onChange={handleChange}
+        sx={(theme) => ({
+          // Vertically center "large" caret
+          "& .MuiAutocomplete-endAdornment": {
+            top: "unset",
+          },
+          marginTop: theme.spacing(2),
+          "&:focus-within": {
+            "& svg": {
+              color: "black",
+            },
+          },
+        })}
         value={value}
         open={open}
         onOpen={openPopper}
@@ -154,10 +172,49 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
         renderInput={(params) => (
           <TextField
             {...params}
+            inputProps={{
+              sx: {
+                cursor: "pointer",
+              },
+              ...params.inputProps,
+            }}
+            InputProps={{
+              notched: false,
+              sx: (theme) => ({
+                cursor: "pointer",
+                "&:focus-within": {
+                  ...focusStyle,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid transparent !important",
+                  },
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: `1px solid${theme.palette.border.main} !important`,
+                },
+                "& fieldset": {
+                  borderColor: theme.palette.border.main,
+                },
+                backgroundColor: theme.palette.background.paper,
+                borderRadius: 0,
+              }),
+              ...params.InputProps,
+            }}
+            InputLabelProps={{
+              sx: (theme) => ({
+                textDecoration: "underline",
+                color: theme.palette.primary.main,
+                "&[data-shrink=true]": {
+                  textDecoration: "none",
+                  color: theme.palette.text.primary,
+                  paddingY: 0,
+                  transform: "translate(14px, -22px) scale(0.85)",
+                },
+              }),
+            }}
             label="What does this file show?"
-            // Disable text input
             onKeyDown={(e) => {
-              e.preventDefault();
+              // Disable text input but allow keyboard navigation
+              if (e.key !== "Tab") e.preventDefault();
             }}
             // Hide text input caret
             sx={{ caretColor: "transparent" }}
@@ -167,7 +224,19 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
         multiple
         disableCloseOnSelect
         disableClearable
-        popupIcon={<ArrowIcon />}
+        componentsProps={{
+          popupIndicator: {
+            disableRipple: true,
+          },
+          popper: {
+            sx: {
+              boxShadow: 10,
+            },
+          },
+        }}
+        popupIcon={
+          <ArrowIcon sx={{ color: "primary.main" }} fontSize="large" />
+        }
         ListboxComponent={ListboxComponent}
         ChipProps={{
           variant: "uploadedFileTag",
@@ -176,9 +245,11 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
           onDelete: undefined,
         }}
         renderGroup={({ group, key, children }) => (
-          <List key={`group-${key}`} role="group">
+          <List key={`group-${key}`} role="group" sx={{ paddingY: 0 }}>
             <ListSubheader role="presentation">
-              {capitalize(group)}
+              <Typography py={1} variant="subtitle2" component="h4">
+                {`${capitalize(group)} files`}
+              </Typography>
             </ListSubheader>
             {children}
           </List>
@@ -196,25 +267,6 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
           </ListItem>
         )}
       />
-      {/*
-        {(Object.keys(fileList) as Array<keyof typeof fileList>)
-          .filter((fileListCategory) => fileList[fileListCategory].length > 0)
-          .map((fileListCategory) => {
-            return [
-
-              ...fileList[fileListCategory].map((fileType) => {
-                return [
-                  <MenuItem
-                    disableRipple
-                    disableTouchRipple
-                  >
-                    <Checkbox
-                      inputProps={{
-                        "aria-label": `${fileType.name}`,
-                      }}
-                    />
-                  </MenuItem> 
-                    */}
     </FormControl>
   );
 };
