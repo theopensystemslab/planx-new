@@ -111,6 +111,10 @@ const renderInput: AutocompleteProps<
       ...params.InputProps,
       notched: false,
     }}
+    inputProps={{
+      ...params.inputProps,
+      "aria-disabled": true,
+    }}
     label="What does this file show?"
     onKeyDown={(e) => {
       // Disable text input but allow keyboard navigation
