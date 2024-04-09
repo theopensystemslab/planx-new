@@ -1,6 +1,8 @@
-import Accordion from "@mui/material/Accordion";
+import Accordion, { accordionClasses } from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionSummary, {
+  accordionSummaryClasses,
+} from "@mui/material/AccordionSummary";
 import Box, { BoxProps } from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
@@ -58,7 +60,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
   padding: "0",
   margin: "0",
   minHeight: "0",
-  "&.Mui-expanded": {
+  [`&.${accordionClasses.root}.Mui-expanded`]: {
     minHeight: "0",
   },
   "& > div": {
@@ -108,7 +110,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     backgroundColor: theme.palette.border.main,
     zIndex: "2",
   },
-  "&.Mui-expanded": {
+  [`&.${accordionSummaryClasses.root}.Mui-expanded`]: {
     margin: "0",
   },
   [`&.${classes.removeTopBorder}`]: {
