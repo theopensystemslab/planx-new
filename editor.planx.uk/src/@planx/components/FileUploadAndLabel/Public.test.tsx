@@ -1,11 +1,4 @@
-import {
-  act,
-  findByRole,
-  fireEvent,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import axios from "axios";
 import { vanillaStore } from "pages/FlowEditor/lib/store";
@@ -28,7 +21,7 @@ window.URL.createObjectURL = jest.fn();
 
 describe("Basic state and setup", () => {
   test("renders correctly", async () => {
-    setup(
+    const { getAllByRole, getByTestId, getByText } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -39,13 +32,13 @@ describe("Basic state and setup", () => {
       />,
     );
 
-    expect(screen.getAllByRole("heading")[0]).toHaveTextContent("Test title");
+    expect(getAllByRole("heading")[0]).toHaveTextContent("Test title");
 
     // Required file is listed
-    expect(screen.getByText("testKey")).toBeVisible();
+    expect(getByText("testKey")).toBeVisible();
 
     // Drop zone is available
-    expect(screen.getByTestId("upload-input")).toBeInTheDocument();
+    expect(getByTestId("upload-input")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
@@ -66,7 +59,7 @@ describe("Basic state and setup", () => {
   });
 
   test("shows help buttons for header and applicable file", async () => {
-    setup(
+    const { getAllByTestId } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={mockFileTypesUniqueKeys}
@@ -74,12 +67,12 @@ describe("Basic state and setup", () => {
       />,
     );
 
-    const helpButtons = screen.getAllByTestId("more-info-button");
+    const helpButtons = getAllByTestId("more-info-button");
     expect(helpButtons).toHaveLength(1);
   });
 
   it("does not show optional files if there are other types", () => {
-    setup(
+    const { queryByRole } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -90,28 +83,24 @@ describe("Basic state and setup", () => {
       />,
     );
 
-    expect(
-      screen.queryByRole("heading", { name: /Optional files/ }),
-    ).toBeNull();
+    expect(queryByRole("heading", { name: /Optional files/ })).toBeNull();
   });
 
   it("shows optional files if there are no other types", () => {
-    setup(
+    const { getByRole } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[mockFileTypes.NotRequired]}
       />,
     );
 
-    expect(
-      screen.getByRole("heading", { name: /Optional files/ }),
-    ).toBeVisible();
+    expect(getByRole("heading", { name: /Optional files/ })).toBeVisible();
   });
 });
 
 describe("Info-only mode with hidden drop zone", () => {
   test("renders correctly", async () => {
-    setup(
+    const { getAllByRole, queryByTestId, getByText } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -123,13 +112,13 @@ describe("Info-only mode with hidden drop zone", () => {
       />,
     );
 
-    expect(screen.getAllByRole("heading")[0]).toHaveTextContent("Test title");
+    expect(getAllByRole("heading")[0]).toHaveTextContent("Test title");
 
     // Required file is listed
-    expect(screen.getByText("testKey")).toBeVisible();
+    expect(getByText("testKey")).toBeVisible();
 
     // Drop zone is not available
-    expect(screen.queryByTestId("upload-input")).not.toBeInTheDocument();
+    expect(queryByTestId("upload-input")).not.toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
@@ -151,7 +140,7 @@ describe("Info-only mode with hidden drop zone", () => {
   });
 
   test("shows help buttons for header and applicable file", async () => {
-    setup(
+    const { getAllByTestId } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={mockFileTypesUniqueKeys}
@@ -160,12 +149,12 @@ describe("Info-only mode with hidden drop zone", () => {
       />,
     );
 
-    const helpButtons = screen.getAllByTestId("more-info-button");
+    const helpButtons = getAllByTestId("more-info-button");
     expect(helpButtons).toHaveLength(1);
   });
 
   it("shows optional files by default", () => {
-    setup(
+    const { queryByRole } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -177,9 +166,7 @@ describe("Info-only mode with hidden drop zone", () => {
       />,
     );
 
-    expect(
-      screen.queryByRole("heading", { name: /Optional files/ }),
-    ).toBeVisible();
+    expect(queryByRole("heading", { name: /Optional files/ })).toBeVisible();
   });
 });
 
@@ -206,7 +193,7 @@ describe("Modal trigger", () => {
   });
 
   test("Modal opens when a single file is uploaded", async () => {
-    const { user } = setup(
+    const { getByTestId, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -224,7 +211,7 @@ describe("Modal trigger", () => {
     });
 
     const file = new File(["test"], "test.png", { type: "image/png" });
-    const input = screen.getByTestId("upload-input");
+    const input = getByTestId("upload-input");
     await user.upload(input, file);
     expect(mockedPost).toHaveBeenCalled();
 
@@ -237,7 +224,7 @@ describe("Modal trigger", () => {
   });
 
   test("Modal opens when multiple files are uploaded", async () => {
-    const { user } = setup(
+    const { getByTestId, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -266,7 +253,7 @@ describe("Modal trigger", () => {
 
     const file1 = new File(["test1"], "test1.png", { type: "image/png" });
     const file2 = new File(["test2"], "test2.png", { type: "image/png" });
-    const input = screen.getByTestId("upload-input");
+    const input = getByTestId("upload-input");
     await user.upload(input, [file1, file2]);
     expect(mockedPost).toHaveBeenCalledTimes(2);
 
@@ -282,7 +269,7 @@ describe("Modal trigger", () => {
   });
 
   test("Modal does not open when a file is deleted", async () => {
-    const { user } = setup(
+    const { getByTestId, getByLabelText, queryByText, getByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -312,7 +299,7 @@ describe("Modal trigger", () => {
 
     const file1 = new File(["test1"], "test1.png", { type: "image/png" });
     const file2 = new File(["test2"], "test2.png", { type: "image/png" });
-    const input = screen.getByTestId("upload-input");
+    const input = getByTestId("upload-input");
     await user.upload(input, [file1, file2]);
 
     const fileTaggingModal = await within(document.body).findByTestId(
@@ -324,15 +311,15 @@ describe("Modal trigger", () => {
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
     // Uploaded files displayed as cards
-    expect(screen.getByText("test1.png")).toBeVisible();
-    expect(screen.getByText("test2.png")).toBeVisible();
+    expect(getByText("test1.png")).toBeVisible();
+    expect(getByText("test2.png")).toBeVisible();
 
     // Delete the second file
-    user.click(screen.getByLabelText("Delete test2.png"));
+    user.click(getByLabelText("Delete test2.png"));
 
     // Card removed from screen
     await waitFor(() =>
-      expect(screen.queryByText("test2.png")).not.toBeInTheDocument(),
+      expect(queryByText("test2.png")).not.toBeInTheDocument(),
     );
 
     // Modal not open
@@ -509,7 +496,7 @@ describe("Error handling", () => {
   test("An error is thrown if a user does not upload any files", async () => {
     const handleSubmit = jest.fn();
 
-    const { user } = setup(
+    const { getByTestId, getByRole, findByText, user } = setup(
       <FileUploadAndLabelComponent
         handleSubmit={handleSubmit}
         title="Test title"
@@ -529,14 +516,14 @@ describe("Error handling", () => {
     });
 
     const file = new File(["test"], "test.png", { type: "image/png" });
-    const input = screen.getByTestId("upload-input");
+    const input = getByTestId("upload-input");
 
     // User cannot submit without uploading a file
-    await user.click(screen.getByTestId("continue-button"));
+    await user.click(getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
 
     // Error warns user of this
-    const dropzoneError = await screen.findByText("Upload at least one file");
+    const dropzoneError = await findByText("Upload at least one file");
     expect(dropzoneError).toBeVisible();
 
     await user.upload(input, file);
@@ -549,20 +536,20 @@ describe("Error handling", () => {
     // Error message is cleared
     expect(dropzoneError).toBeEmptyDOMElement();
 
-    const deleteButton = screen.getByRole("button", { name: /Delete/ });
+    const deleteButton = getByRole("button", { name: /Delete/ });
     await user.click(deleteButton);
 
     // Error message does not immediately re-appear
     expect(dropzoneError).toBeEmptyDOMElement();
 
     // Error appears again after user attempt to submit without files
-    await user.click(screen.getByTestId("continue-button"));
+    await user.click(getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
     expect(dropzoneError).toBeVisible();
   });
 
   test("An error is thrown in the modal if a user does not tag all files", async () => {
-    const { user } = setup(
+    const { getByTestId, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         fileTypes={[
@@ -581,7 +568,7 @@ describe("Error handling", () => {
     });
 
     const file = new File(["test"], "test.jpg", { type: "image/jpg" });
-    const input = screen.getByTestId("upload-input");
+    const input = getByTestId("upload-input");
     await user.upload(input, file);
 
     const fileTaggingModal = await within(document.body).findByTestId(
