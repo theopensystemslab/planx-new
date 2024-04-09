@@ -71,6 +71,16 @@ const SendComponent: React.FC<Props> = ({
         makeData(props, request.value.email?.event_id, "emailSendEventId"),
       );
     }
+
+    if (
+      destinations.includes(Destination.S3) &&
+      isReady &&
+      props.handleSubmit
+    ) {
+      props.handleSubmit(
+        makeData(props, request.value.s3?.event_id, "s3SendEventId"),
+      );
+    }
   }, [request.loading, request.error, request.value]);
 
   if (request.loading) {

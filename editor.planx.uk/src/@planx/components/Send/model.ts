@@ -5,6 +5,7 @@ export enum Destination {
   BOPS = "bops",
   Uniform = "uniform",
   Email = "email",
+  S3 = "s3",
 }
 
 export interface Send extends MoreInformation {
@@ -67,6 +68,13 @@ export function getCombinedEventsPayload({
 
     combinedEventsPayload[Destination.Uniform] = {
       localAuthority: uniformTeamSlug,
+      body: { sessionId },
+    };
+  }
+
+  if (destinations.includes(Destination.S3)) {
+    combinedEventsPayload[Destination.S3] = {
+      localAuthority: teamSlug,
       body: { sessionId },
     };
   }
