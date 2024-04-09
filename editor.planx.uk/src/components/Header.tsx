@@ -14,7 +14,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
-import Popover from "@mui/material/Popover";
+import Popover, { popoverClasses } from "@mui/material/Popover";
 import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -94,7 +94,7 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
 }));
 
 const StyledPopover = styled(Popover)(() => ({
-  ["& .MuiPopover-paper"]: {
+  [`& .${popoverClasses.paper}`]: {
     boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
     backgroundColor: "#2c2c2c",
     borderRadius: 0,
