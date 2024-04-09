@@ -1,20 +1,24 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import Autocomplete, {
   AutocompleteChangeReason,
+  autocompleteClasses,
+  AutocompleteProps,
 } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
+import { inputLabelClasses } from "@mui/material/InputLabel";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
+import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React, { forwardRef, PropsWithChildren, useState } from "react";
+import React, { forwardRef, PropsWithChildren, useMemo, useState } from "react";
 import { focusStyle } from "theme";
 
 import { FileUploadSlot } from "../FileUpload/Public";
@@ -44,6 +48,128 @@ const ListHeader = styled(Box)(({ theme }) => ({
   background: theme.palette.grey[200],
 }));
 
+const StyledAutocomplete = styled(
+  Autocomplete<Option, true, true, false, "div">,
+)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  // Vertically center "large" size caret icon
+  [`& .${autocompleteClasses.endAdornment}`]: {
+    top: "unset",
+  },
+  "&:focus-within": {
+    "& svg": {
+      color: "black",
+    },
+  },
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  // Hide text input caret
+  caretColor: "transparent",
+  "&:focus-within": {
+    ...focusStyle,
+    [`& .${outlinedInputClasses.notchedOutline}`]: {
+      border: "1px solid transparent !important",
+    },
+  },
+  [`& .${outlinedInputClasses.notchedOutline}`]: {
+    borderRadius: 0,
+    border: `1px solid${theme.palette.border.main} !important`,
+  },
+  "& fieldset": {
+    borderColor: theme.palette.border.main,
+  },
+  backgroundColor: theme.palette.background.paper,
+  [`& .${outlinedInputClasses.root}, input`]: {
+    cursor: "pointer",
+  },
+  [`& .${inputLabelClasses.root}`]: {
+    textDecoration: "underline",
+    color: theme.palette.primary.main,
+    "&[data-shrink=true]": {
+      textDecoration: "none",
+      color: theme.palette.text.primary,
+      paddingY: 0,
+      transform: "translate(14px, -22px) scale(0.85)",
+    },
+  },
+}));
+
+/**
+ * Function which returns the Input component used by Autocomplete
+ */
+const renderInput: AutocompleteProps<
+  Option,
+  true,
+  true,
+  false,
+  "div"
+>["renderInput"] = (params) => (
+  <StyledTextField
+    {...params}
+    InputProps={{
+      ...params.InputProps,
+      notched: false,
+    }}
+    label="What does this file show?"
+    onKeyDown={(e) => {
+      // Disable text input but allow keyboard navigation
+      if (e.key !== "Tab") e.preventDefault();
+    }}
+  />
+);
+
+/**
+ * Function which returns the groups (ul elements) used by Autocomplete
+ */
+const renderGroup: AutocompleteProps<
+  Option,
+  true,
+  true,
+  false,
+  "div"
+>["renderGroup"] = ({ group, key, children }) => (
+  <List key={`group-${key}`} role="group" sx={{ paddingY: 0 }}>
+    <ListSubheader
+      role="presentation"
+      sx={(theme) => ({
+        borderTop: 1,
+        borderBottom: 1,
+        borderColor: theme.palette.border.main,
+      })}
+    >
+      <Typography py={1} variant="subtitle2" component="h4">
+        {`${capitalize(group)} files`}
+      </Typography>
+    </ListSubheader>
+    {children}
+  </List>
+);
+
+/**
+ * Function which returns the options (li elements) used by Autocomplete
+ */
+const renderOption: AutocompleteProps<
+  Option,
+  true,
+  true,
+  false,
+  "div"
+>["renderOption"] = (props, option, { selected }) => (
+  <ListItem {...props}>
+    <Checkbox
+      data-testid="select-checkbox"
+      inputProps={{
+        "aria-label": `${option.name}`,
+      }}
+      checked={selected}
+    />
+    <ListItemText>{option.name}</ListItemText>
+  </ListItem>
+);
+
+const PopupIcon = <ArrowIcon sx={{ color: "primary.main" }} fontSize="large" />;
+
 export const SelectMultiple = (props: SelectMultipleProps) => {
   const { uploadedFile, fileList, setFileList } = props;
   const [open, setOpen] = useState(false);
@@ -52,6 +178,32 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
 
+  /**
+   * Options for autocomplete
+   * FileList with appended "category" property for grouping
+   */
+  const options: Option[] = useMemo(
+    () =>
+      (Object.keys(fileList) as Array<keyof typeof fileList>)
+        .filter((fileListCategory) => fileList[fileListCategory].length > 0)
+        .flatMap((category) =>
+          fileList[category].map((fileType) => ({ category, ...fileType })),
+        ),
+    [fileList],
+  );
+
+  /**
+   * Previous values to pre-populate autocomplete
+   */
+  const value: Option[] = useMemo(
+    () =>
+      initialTags.flatMap((tag) => options.filter(({ name }) => name === tag)),
+    [initialTags],
+  );
+
+  /**
+   * Update FileList (from main Public.tsx component) when values are added or removed from Autocomplete
+   */
   const handleChange = (
     _event: React.SyntheticEvent,
     value: Option[],
@@ -88,26 +240,7 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
   };
 
   /**
-   * Options for autocomplete
-   * FileList with appended "category" property for grouping
-   */
-  const options: Option[] = (
-    Object.keys(fileList) as Array<keyof typeof fileList>
-  )
-    .filter((fileListCategory) => fileList[fileListCategory].length > 0)
-    .flatMap((category) =>
-      fileList[category].map((fileType) => ({ category, ...fileType })),
-    );
-
-  /**
-   * Previous values to pre-populate autocomplete
-   */
-  const value: Option[] = initialTags.flatMap((tag) =>
-    options.filter(({ name }) => name === tag),
-  );
-
-  /**
-   * Custom listbox component
+   * Custom Listbox component
    * Used to wrap options within the autocomplete and append a custom element above the option list
    */
   const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
@@ -147,83 +280,31 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
       key={`form-${uploadedFile.id}`}
       sx={{ display: "flex", flexDirection: "column" }}
     >
-      <Autocomplete
-        onChange={handleChange}
-        sx={(theme) => ({
-          // Vertically center "large" caret
-          "& .MuiAutocomplete-endAdornment": {
-            top: "unset",
-          },
-          marginTop: theme.spacing(2),
-          "&:focus-within": {
-            "& svg": {
-              color: "black",
-            },
-          },
-        })}
-        value={value}
-        open={open}
-        onOpen={openPopper}
-        onClose={closePopper}
-        id={`select-multiple-file-tags-${uploadedFile.id}`}
-        options={options}
-        groupBy={(option) => option.category}
-        getOptionLabel={(option) => option.name}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            inputProps={{
-              sx: {
-                cursor: "pointer",
-              },
-              ...params.inputProps,
-            }}
-            InputProps={{
-              notched: false,
-              sx: (theme) => ({
-                cursor: "pointer",
-                "&:focus-within": {
-                  ...focusStyle,
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    border: "1px solid transparent !important",
-                  },
-                },
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: `1px solid${theme.palette.border.main} !important`,
-                },
-                "& fieldset": {
-                  borderColor: theme.palette.border.main,
-                },
-                backgroundColor: theme.palette.background.paper,
-                borderRadius: 0,
-              }),
-              ...params.InputProps,
-            }}
-            InputLabelProps={{
-              sx: (theme) => ({
-                textDecoration: "underline",
-                color: theme.palette.primary.main,
-                "&[data-shrink=true]": {
-                  textDecoration: "none",
-                  color: theme.palette.text.primary,
-                  paddingY: 0,
-                  transform: "translate(14px, -22px) scale(0.85)",
-                },
-              }),
-            }}
-            label="What does this file show?"
-            onKeyDown={(e) => {
-              // Disable text input but allow keyboard navigation
-              if (e.key !== "Tab") e.preventDefault();
-            }}
-            // Hide text input caret
-            sx={{ caretColor: "transparent" }}
-          />
-        )}
-        isOptionEqualToValue={(option, value) => option.name === value.name}
-        multiple
-        disableCloseOnSelect
+      <StyledAutocomplete
         disableClearable
+        disableCloseOnSelect
+        getOptionLabel={(option) => option.name}
+        groupBy={(option) => option.category}
+        id={`select-multiple-file-tags-${uploadedFile.id}`}
+        isOptionEqualToValue={(option, value) => option.name === value.name}
+        ListboxComponent={ListboxComponent}
+        multiple
+        onChange={handleChange}
+        onClose={closePopper}
+        onOpen={openPopper}
+        open={open}
+        options={options}
+        popupIcon={PopupIcon}
+        renderGroup={renderGroup}
+        renderInput={renderInput}
+        renderOption={renderOption}
+        value={value}
+        ChipProps={{
+          variant: "uploadedFileTag",
+          size: "small",
+          sx: { pointerEvents: "none" },
+          onDelete: undefined,
+        }}
         componentsProps={{
           popupIndicator: {
             disableRipple: true,
@@ -234,38 +315,6 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
             },
           },
         }}
-        popupIcon={
-          <ArrowIcon sx={{ color: "primary.main" }} fontSize="large" />
-        }
-        ListboxComponent={ListboxComponent}
-        ChipProps={{
-          variant: "uploadedFileTag",
-          size: "small",
-          sx: { pointerEvents: "none" },
-          onDelete: undefined,
-        }}
-        renderGroup={({ group, key, children }) => (
-          <List key={`group-${key}`} role="group" sx={{ paddingY: 0 }}>
-            <ListSubheader role="presentation">
-              <Typography py={1} variant="subtitle2" component="h4">
-                {`${capitalize(group)} files`}
-              </Typography>
-            </ListSubheader>
-            {children}
-          </List>
-        )}
-        renderOption={(props, option, { selected }) => (
-          <ListItem {...props}>
-            <Checkbox
-              data-testid="select-checkbox"
-              inputProps={{
-                "aria-label": `${option.name}`,
-              }}
-              checked={selected}
-            />
-            <ListItemText>{option.name}</ListItemText>
-          </ListItem>
-        )}
       />
     </FormControl>
   );
