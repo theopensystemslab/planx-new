@@ -285,6 +285,9 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
       sx={{ display: "flex", flexDirection: "column" }}
     >
       <StyledAutocomplete
+        role="status"
+        aria-atomic={true}
+        aria-live="polite"
         disableClearable
         disableCloseOnSelect
         getOptionLabel={(option) => option.name}
