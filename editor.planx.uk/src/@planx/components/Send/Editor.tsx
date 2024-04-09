@@ -57,6 +57,14 @@ const SendComponent: React.FC<Props> = (props) => {
     },
   ];
 
+  // Show S3 option on staging only
+  if (process.env.REACT_APP_ENV !== "production") {
+    options.push({
+      value: Destination.S3,
+      label: "Upload to AWS S3 bucket",
+    });
+  }
+
   const changeCheckbox = (value: Destination) => (_checked: any) => {
     let newCheckedValues: Destination[];
 
@@ -76,7 +84,8 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // Show warnings on selection of BOPS or Uniform for likely unsupported services
     //   Don't actually restrict selection because flowSlug matching is imperfect for some valid test cases
-    const flowSlug = window.location.pathname?.split("/")?.[1];
+    const teamSlug = window.location.pathname?.split("/")?.[1];
+    const flowSlug = window.location.pathname?.split("/")?.[2];
     if (
       value === Destination.BOPS &&
       newCheckedValues.includes(value) &&
@@ -94,10 +103,21 @@ const SendComponent: React.FC<Props> = (props) => {
     if (
       value === Destination.Uniform &&
       newCheckedValues.includes(value) &&
-      flowSlug !== "apply-for-a-lawful-development-certificate"
+      flowSlug !== "apply-for-a-lawful-development-certificate" &&
+      !["buckinghamshire", "lambeth", "southwark"].includes(teamSlug)
     ) {
       alert(
-        "Uniform only accepts Lawful Development Certificate submissions. Please do not select if you're building another type of submission service!",
+        "Uniform is only enabled for Bucks, Lambeth and Southwark to accept Lawful Development Certificate submissions. Please do not select if you're building another type of submission service!",
+      );
+    }
+
+    if (
+      value === Destination.S3 &&
+      newCheckedValues.includes(value) &&
+      teamSlug !== "barnet"
+    ) {
+      alert(
+        "AWS S3 uploads are currently being prototyped with Barnet only. Please do not select this option for other councils yet.",
       );
     }
   };
