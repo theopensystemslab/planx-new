@@ -35,7 +35,11 @@ export async function sendToS3(
     const exportData = await $api.export.digitalPlanningDataPayload(sessionId);
 
     // Create and upload the data as an S3 file
-    const { fileUrl } = await uploadPrivateFile(exportData, `${sessionId}.json`, "barnet-prototype");
+    const { fileUrl } = await uploadPrivateFile(
+      exportData,
+      `${sessionId}.json`,
+      "barnet-prototype",
+    );
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(sessionId);
