@@ -64,8 +64,6 @@ const StyledAutocomplete = styled(
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
-  // Hide text input caret
-  caretColor: "transparent",
   "&:focus-within": {
     ...focusStyle,
     [`& .${outlinedInputClasses.notchedOutline}`]: {
@@ -111,15 +109,7 @@ const renderInput: AutocompleteProps<
       ...params.InputProps,
       notched: false,
     }}
-    inputProps={{
-      ...params.inputProps,
-      "aria-disabled": true,
-    }}
     label="What does this file show?"
-    onKeyDown={(e) => {
-      // Disable text input but allow keyboard navigation
-      if (e.key !== "Tab") e.preventDefault();
-    }}
   />
 );
 
