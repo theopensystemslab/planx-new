@@ -8,7 +8,7 @@ import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -19,7 +19,7 @@ export default SummaryListsBySections;
 const FIND_PROPERTY_DT = "Property address";
 const DRAW_BOUNDARY_DT = "Location plan";
 
-const Grid = styled("dl", {
+export const SummaryListTable = styled("dl", {
   shouldForwardProp: (prop) => prop !== "showChangeButton",
 })<{ showChangeButton?: boolean }>(({ theme, showChangeButton }) => ({
   display: "grid",
@@ -49,7 +49,32 @@ const Grid = styled("dl", {
   },
   "& dd:nth-of-type(2n)": {
     // right column
-    textAlign: "right",
+    textAlign: showChangeButton ? "right" : "left",
+  },
+  [theme.breakpoints.down("sm")]: {
+    display: "flex",
+    flexDirection: "column",
+    "& dt": {
+      // top row
+      paddingLeft: theme.spacing(1),
+      paddingTop: theme.spacing(2),
+      marginTop: theme.spacing(1),
+      borderTop: `1px solid ${theme.palette.border.main}`,
+      borderBottom: "none",
+      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+    },
+    "& dd:nth-of-type(n)": {
+      // middle row
+      textAlign: "left",
+      paddingTop: 0,
+      paddingBottom: 0,
+      margin: 0,
+      borderBottom: "none",
+    },
+    "& dd:nth-of-type(2n)": {
+      // bottom row
+      textAlign: "left",
+    },
   },
 }));
 
@@ -214,7 +239,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 // For applicable component types, display a list of their question & answers with a "change" link
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
-  const { trackBackwardsNavigation } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [nodeToChange, setNodeToChange] = useState<Store.nodeId | undefined>(
     undefined,
@@ -223,7 +248,12 @@ function SummaryList(props: SummaryListProps) {
   const handleCloseDialog = (isConfirmed: boolean) => {
     setIsDialogOpen(false);
     if (isConfirmed && nodeToChange) {
-      trackBackwardsNavigation("change", nodeToChange);
+      trackEvent({
+        event: "backwardsNavigation",
+        metadata: null,
+        initiator: "change",
+        nodeId: nodeToChange,
+      });
       props.changeAnswer(nodeToChange);
     }
   };
@@ -235,7 +265,7 @@ function SummaryList(props: SummaryListProps) {
 
   return (
     <>
-      <Grid showChangeButton={props.showChangeButton}>
+      <SummaryListTable showChangeButton={props.showChangeButton}>
         {props.summaryBreadcrumbs.map(
           ({ component: Component, nodeId, node, userData }, i) => (
             <React.Fragment key={i}>
@@ -247,7 +277,7 @@ function SummaryList(props: SummaryListProps) {
                 passport={props.passport}
               />
               {props.showChangeButton && (
-                <dd>
+                <Box component="dd">
                   <Link
                     onClick={() => handleChange(nodeId)}
                     component="button"
@@ -263,26 +293,31 @@ function SummaryList(props: SummaryListProps) {
                         "this answer"}
                     </span>
                   </Link>
-                </dd>
+                </Box>
               )}
             </React.Fragment>
           ),
         )}
-      </Grid>
+      </SummaryListTable>
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
-        title="Confirm"
+        title="Do you want to continue?"
         confirmText="Yes"
         cancelText="No"
       >
         <Typography>
-          If you change this answer, you’ll need to confirm all the other
-          answers after it. This is because a changed answer might mean we have
-          new or different questions to ask.
-          <br />
-          <br />
-          Are you sure you want to change your answer?
+          Changing this answer means you will need to confirm any other answers
+          after it. This is because:
+          <ul>
+            <li>
+              a different answer might mean the service asks new questions
+            </li>
+            <li>
+              your planning officer needs the right information to assess your
+              application
+            </li>
+          </ul>
         </Typography>
       </ConfirmationDialog>
     </>
@@ -300,8 +335,8 @@ interface ComponentProps {
 function Question(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.text}</dt>
-      <dd>{getNodeText()}</dd>
+      <Box component="dt">{props.node.data.text}</Box>
+      <Box component="dd">{getNodeText()}</Box>
     </>
   );
 
@@ -323,26 +358,26 @@ function FindProperty(props: ComponentProps) {
       props.passport.data?._address;
     return (
       <>
-        <dt>{FIND_PROPERTY_DT}</dt>
-        <dd>
+        <Box component="dt">{FIND_PROPERTY_DT}</Box>
+        <Box component="dd">
           {`${single_line_address.split(`, ${town}`)[0]}`}
           <br />
           {town}
           <br />
           {postcode}
-        </dd>
+        </Box>
       </>
     );
   } else {
     const { x, y, title } = props.passport.data?._address;
     return (
       <>
-        <dt>{FIND_PROPERTY_DT}</dt>
-        <dd>
+        <Box component="dt">{FIND_PROPERTY_DT}</Box>
+        <Box component="dd">
           {`${title}`}
           <br />
           {`${Math.round(x)} Easting (X), ${Math.round(y)} Northing (Y)`}
-        </dd>
+        </Box>
       </>
     );
   }
@@ -351,14 +386,14 @@ function FindProperty(props: ComponentProps) {
 function Checklist(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.text}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.text}</Box>
+      <Box component="dd">
         <ul>
           {getAnswers(props).map((nodeId, i: number) => (
             <li key={i}>{props.flow[nodeId].data.text}</li>
           ))}
         </ul>
-      </dd>
+      </Box>
     </>
   );
 }
@@ -366,8 +401,8 @@ function Checklist(props: ComponentProps) {
 function TextInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>{getAnswersByNode(props)}</dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">{getAnswersByNode(props)}</Box>
     </>
   );
 }
@@ -375,8 +410,8 @@ function TextInput(props: ComponentProps) {
 function FileUpload(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
             <li key={i}>
@@ -384,7 +419,7 @@ function FileUpload(props: ComponentProps) {
             </li>
           ))}
         </ul>
-      </dd>
+      </Box>
     </>
   );
 }
@@ -392,8 +427,10 @@ function FileUpload(props: ComponentProps) {
 function DateInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>{format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}</dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
+        {format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}
+      </Box>
     </>
   );
 }
@@ -413,8 +450,8 @@ function DrawBoundary(props: ComponentProps) {
 
   return (
     <>
-      <dt>{DRAW_BOUNDARY_DT}</dt>
-      <dd>
+      <Box component="dt">{DRAW_BOUNDARY_DT}</Box>
+      <Box component="dd">
         {fileName && (
           <span data-testid="uploaded-plan-name">
             Your uploaded file: <b>{fileName}</b>
@@ -436,6 +473,7 @@ function DrawBoundary(props: ComponentProps) {
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
+              collapseAttributions
             />
           </>
         )}
@@ -443,7 +481,7 @@ function DrawBoundary(props: ComponentProps) {
           !geodata &&
           props.node.data?.hideFileUpload &&
           "Not provided"}
-      </dd>
+      </Box>
     </>
   );
 }
@@ -451,8 +489,10 @@ function DrawBoundary(props: ComponentProps) {
 function NumberInput(props: ComponentProps) {
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>{`${getAnswersByNode(props)} ${props.node.data.units ?? ""}`}</dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">{`${getAnswersByNode(props)} ${
+        props.node.data.units ?? ""
+      }`}</Box>
     </>
   );
 }
@@ -463,8 +503,8 @@ function AddressInput(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
         {line1}
         <br />
         {line2}
@@ -480,7 +520,7 @@ function AddressInput(props: ComponentProps) {
             {country}
           </>
         ) : null}
-      </dd>
+      </Box>
     </>
   );
 }
@@ -492,8 +532,8 @@ function ContactInput(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
         {[title, firstName, lastName].filter(Boolean).join(" ").trim()}
         <br />
         {organisation ? (
@@ -505,7 +545,7 @@ function ContactInput(props: ComponentProps) {
         {phone}
         <br />
         {email}
-      </dd>
+      </Box>
     </>
   );
 }
@@ -520,8 +560,8 @@ function FileUploadAndLabel(props: ComponentProps) {
 
   return (
     <>
-      <dt>{props.node.data.title}</dt>
-      <dd>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">
         <ul>
           {uniqueFilenames.length
             ? uniqueFilenames.map((filename, index) => (
@@ -529,7 +569,7 @@ function FileUploadAndLabel(props: ComponentProps) {
               ))
             : "No files uploaded"}
         </ul>
-      </dd>
+      </Box>
     </>
   );
 }
@@ -537,8 +577,8 @@ function FileUploadAndLabel(props: ComponentProps) {
 function Debug(props: ComponentProps) {
   return (
     <>
-      <dt>{JSON.stringify(props.node.data)}</dt>
-      <dd>{JSON.stringify(props.userData?.answers)}</dd>
+      <Box component="dt">{JSON.stringify(props.node.data)}</Box>
+      <Box component="dd">{JSON.stringify(props.userData?.answers)}</Box>
     </>
   );
 }

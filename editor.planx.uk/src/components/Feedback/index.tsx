@@ -2,6 +2,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import RuleIcon from "@mui/icons-material/Rule";
 import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -75,13 +76,12 @@ export interface FormProps {
 
 export type FeedbackFormInput = {
   name: keyof UserFeedback;
-  label?: string;
-  id?: string;
-  ariaDescribedBy?: string;
+  label: string;
+  id: string;
 };
 
 const Feedback: React.FC = () => {
-  type FeedbackCategory = "issue" | "idea" | "comment";
+  type FeedbackCategory = "issue" | "idea" | "comment" | "inaccuracy";
 
   type View = "banner" | "triage" | FeedbackCategory | "thanks";
 
@@ -250,6 +250,12 @@ const Feedback: React.FC = () => {
                 label="Comment"
                 showArrow
               />
+              <FeedbackOption
+                onClick={() => handleFeedbackViewClick("inaccuracy")}
+                Icon={RuleIcon}
+                label="Inaccuracy"
+                showArrow
+              />
             </FeedbackBody>
           </FeedbackRow>
         </Container>
@@ -288,11 +294,44 @@ const Feedback: React.FC = () => {
     );
   }
 
+  function ReportAnInaccuracy(): FCReturn {
+    const issueFormInputs: FeedbackFormInput[] = [
+      {
+        name: "userComment",
+        label: "What data is inaccurate?",
+        id: "inaccuracy-input",
+      },
+    ];
+
+    return (
+      <FeedbackWrapper>
+        <Container maxWidth="contentWrap">
+          <FeedbackRow>
+            <BackAndCloseFeedbackHeader />
+            <FeedbackTitle>
+              <RuleIcon />
+              <Typography variant="h3" component="h2" id="idea-title">
+                Report an inaccuracy
+              </Typography>
+            </FeedbackTitle>
+            <FeedbackBody>
+              <FeedbackForm
+                inputs={issueFormInputs}
+                handleSubmit={handleFeedbackFormSubmit}
+              />
+            </FeedbackBody>
+          </FeedbackRow>
+        </Container>
+      </FeedbackWrapper>
+    );
+  }
+
   function ShareAnIdea(): FCReturn {
     const shareFormInputs: FeedbackFormInput[] = [
       {
         name: "userComment",
-        ariaDescribedBy: "idea-title",
+        label: "What's your idea?",
+        id: "share-idea-input",
       },
     ];
 
@@ -323,7 +362,8 @@ const Feedback: React.FC = () => {
     const commentFormInputs: FeedbackFormInput[] = [
       {
         name: "userComment",
-        ariaDescribedBy: "comment-title",
+        label: "What's you comment?",
+        id: "comment-input",
       },
     ];
 
@@ -380,6 +420,8 @@ const Feedback: React.FC = () => {
         return <ShareAnIdea />;
       case "comment":
         return <ShareAComment />;
+      case "inaccuracy":
+        return <ReportAnInaccuracy />;
       case "thanks":
         return <ThanksForFeedback />;
     }

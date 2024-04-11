@@ -60,6 +60,7 @@ export const makePaymentViaProxy: PaymentProxyController = async (
       ),
     },
     req,
+    res,
   )(req, res, next);
 };
 
@@ -101,6 +102,7 @@ export const makeInviteToPayPaymentViaProxy: PaymentRequestProxyController = (
       }),
     },
     req,
+    res,
   )(req, res, next);
 };
 
@@ -151,6 +153,7 @@ export function fetchPaymentViaProxyWithCallback(
         }),
       },
       req,
+      res,
     )(req, res, next);
   };
 }

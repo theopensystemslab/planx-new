@@ -17,7 +17,7 @@ import { Context } from "../context";
  */
 export async function navigateToPayComponent(page: Page, context: Context) {
   const previewURL = `/${context.team!.slug!}/${context.flow!
-    .slug!}/preview?analytics=false`;
+    .slug!}/published?analytics=false`;
   await page.goto(previewURL);
 
   await fillInEmail({ page, context });

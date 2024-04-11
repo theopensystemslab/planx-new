@@ -54,9 +54,9 @@ const StyledInputBase = styled(InputBase, {
   "& input": {
     fontWeight: "inherit",
   },
-  "& ::placeholder": {
-    color: theme.palette.text.secondary,
-    opacity: "0.5",
+  "& input::placeholder, & textarea::placeholder": {
+    color: theme.palette.text.placeholder,
+    opacity: 1,
   },
   ...(bordered && {
     border: `2px solid ${theme.palette.text.primary}`,
@@ -101,6 +101,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
     errorMessage,
     "aria-label": ariaLabel,
     "aria-describedby": ariaDescribedBy,
+    "aria-labelledby": ariaLabelledBy,
     id,
     ...restProps
   } = props;
@@ -127,6 +128,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
         inputProps={{
           "aria-label": ariaLabel,
           "aria-describedby": ariaDescribedBy,
+          "aria-labelledby": ariaLabelledBy,
         }}
         id={id}
         ref={container}

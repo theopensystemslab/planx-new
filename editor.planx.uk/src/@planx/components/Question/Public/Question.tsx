@@ -92,8 +92,9 @@ const Question: React.FC<IQuestion> = (props) => {
         img={props.img}
       />
       <FullWidthWrapper>
-        <FormControl sx={{ width: "100%" }}>
+        <FormControl sx={{ width: "100%" }} component="fieldset">
           <FormLabel
+            component="legend"
             style={visuallyHidden}
             id={`radio-buttons-group-label-${props.id}`}
           >

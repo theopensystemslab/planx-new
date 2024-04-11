@@ -102,7 +102,7 @@ test.describe("Agent journey @regression", async () => {
 
     // Resume session
     const resumeLink = `/${context.team!.slug!}/${context.flow!
-      .slug!}/preview?analytics=false&sessionId=${sessionId}`;
+      .slug!}/published?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
@@ -132,7 +132,7 @@ test.describe("Agent journey @regression", async () => {
 
     // Navigate to resume session link
     const resumeLink = `/${context.team!.slug!}/${context.flow!
-      .slug!}/preview?analytics=false&sessionId=${sessionId}`;
+      .slug!}/published?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
@@ -200,7 +200,9 @@ test.describe("Agent journey @regression", async () => {
 
     // Start to make payment in tab 1
     await tab1.getByText("Pay now using GOV.UK Pay").click();
-    const govPayHeader = tab1.getByText("Enter card details");
+    const govPayHeader = tab1.getByRole("heading", {
+      name: "Enter card details",
+    });
     await expect(govPayHeader).toBeVisible();
 
     // Attempt to generate payment request in tab 2...

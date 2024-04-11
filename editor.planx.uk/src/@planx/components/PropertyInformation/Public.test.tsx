@@ -43,9 +43,6 @@ test("renders correctly when property override is enabled", async () => {
   expect(screen.getByText("About the property")).toBeInTheDocument();
   expect(screen.getByText("Property type")).toBeInTheDocument();
 
-  expect(screen.getByText("Change")).toBeInTheDocument();
-  expect(screen.queryByText("Report an inaccuracy")).not.toBeInTheDocument();
-
   await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
@@ -67,26 +64,7 @@ test("renders correctly when property override is toggled off", async () => {
   expect(screen.getByText("Property type")).toBeInTheDocument();
 
   expect(screen.queryByText("Change")).not.toBeInTheDocument();
-  expect(screen.getByText("Report an inaccuracy")).toBeInTheDocument();
 
   await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
-});
-
-test("retains previously submitted feedback when going back", async () => {
-  const { user } = setup(
-    <MockedProvider>
-      <Presentational
-        {...defaultPresentationalProps}
-        showPropertyTypeOverride={false}
-        previousFeedback="My property type is wrong"
-      />
-    </MockedProvider>,
-  );
-
-  expect(screen.getByText("Report an inaccuracy")).toBeInTheDocument();
-
-  // expand the feedback input
-  await user.click(screen.getByText("Report an inaccuracy"));
-  expect(screen.getByText("My property type is wrong")).toBeInTheDocument();
 });

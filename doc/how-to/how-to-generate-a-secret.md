@@ -1,4 +1,4 @@
-# How to generating a secret
+# How to generate a secret
 
 ## Process
 1. Generate a new secret using a random password generator, such as 1Password

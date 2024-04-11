@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { emptyContent } from "ui/editor/RichTextInput";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
@@ -61,11 +61,11 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   img,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const { trackHelpClick } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleHelpClick = () => {
     setOpen(true);
-    trackHelpClick(); // This returns a promise but we don't need to await for it
+    trackEvent({ event: "helpClick", metadata: {} }); // This returns a promise but we don't need to await for it
   };
 
   return (
@@ -124,9 +124,17 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             <MoreInfoSection title="How is it defined?">
               <>
                 {definitionImg && (
-                  <Image src={definitionImg} alt="" aria-describedby="howMeasured" />
+                  <Image
+                    src={definitionImg}
+                    alt=""
+                    aria-describedby="howMeasured"
+                  />
                 )}
-                <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab id="howMeasured" />
+                <ReactMarkdownOrHtml
+                  source={howMeasured}
+                  openLinksOnNewTab
+                  id="howMeasured"
+                />
               </>
             </MoreInfoSection>
           ) : undefined}

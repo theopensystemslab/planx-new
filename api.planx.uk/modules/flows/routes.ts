@@ -1,26 +1,29 @@
 import { Router } from "express";
-import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
-import { publishFlowController } from "./publish/controller";
-import { copyFlowController, copyFlowSchema } from "./copyFlow/controller";
 import { validate } from "../../shared/middleware/validate";
+import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
+import { copyFlowController, copyFlowSchema } from "./copyFlow/controller";
 import {
   copyFlowAsPortalSchema,
   copyPortalAsFlowController,
 } from "./copyFlowAsPortal/controller";
 import {
+  downloadFlowSchema,
+  downloadFlowSchemaController,
+} from "./downloadSchema/controller";
+import {
   findAndReplaceController,
   findAndReplaceSchema,
 } from "./findReplace/controller";
+import {
+  flattenFlowData,
+  flattenFlowDataController,
+} from "./flattenFlow/controller";
 import { moveFlowController, moveFlowSchema } from "./moveFlow/controller";
+import { publishFlowController, publishFlowSchema } from "./publish/controller";
 import {
   validateAndDiffFlowController,
   validateAndDiffSchema,
 } from "./validate/controller";
-import { publishFlowSchema } from "./publish/controller";
-import {
-  downloadFlowSchema,
-  downloadFlowSchemaController,
-} from "./downloadSchema/controller";
 const router = Router();
 
 router.post(
@@ -69,6 +72,12 @@ router.get(
   "/flows/:flowId/download-schema",
   validate(downloadFlowSchema),
   downloadFlowSchemaController,
+);
+
+router.get(
+  "/flows/:flowId/flatten-data",
+  validate(flattenFlowData),
+  flattenFlowDataController,
 );
 
 export default router;

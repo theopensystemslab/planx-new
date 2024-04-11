@@ -15,7 +15,7 @@ export const MapContainer = styled(Box)<MapContainerProps>(
     maxWidth: "none",
     "& my-map": {
       width: "100%",
-      // Only increase map size in Preview & Unpublished routes
+      // Only increase map size in Published, Preview, and Draft routes
       height:
         size === "large" && environment === "standalone" ? "70vh" : "50vh",
     },

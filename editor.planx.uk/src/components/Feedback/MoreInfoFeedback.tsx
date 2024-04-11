@@ -8,6 +8,7 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { useEffect, useRef, useState } from "react";
 import FeedbackOption from "ui/public/FeedbackOption";
 
@@ -41,14 +42,24 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     }
   }, [currentFeedbackView]);
 
+  const { trackEvent } = useAnalyticsTracking();
+
   const handleFeedbackOptionClick = (event: Sentiment) => {
     switch (event) {
       case "helpful":
+        trackEvent({
+          event: "helpTextFeedback",
+          metadata: { helpTextUseful: true },
+        });
         setCurrentFeedbackView("input");
         setFeedbackOption("helpful");
         break;
 
       case "unhelpful":
+        trackEvent({
+          event: "helpTextFeedback",
+          metadata: { helpTextUseful: false },
+        });
         setCurrentFeedbackView("input");
         setFeedbackOption("unhelpful");
         break;
@@ -67,8 +78,12 @@ const MoreInfoFeedbackComponent: React.FC = () => {
   function FeedbackYesNo(): FCReturn {
     return (
       <MoreInfoFeedback>
-        <Container maxWidth={false}>
-          <Typography variant="h4" component="h3" gutterBottom>
+        <Container
+          maxWidth={false}
+          component="fieldset"
+          sx={{ border: "none" }}
+        >
+          <Typography variant="h4" component="legend" gutterBottom>
             Did this help to answer your question?
           </Typography>
           <Box>
@@ -94,7 +109,8 @@ const MoreInfoFeedbackComponent: React.FC = () => {
     const commentFormInputs: FeedbackFormInput[] = [
       {
         name: "userComment",
-        ariaDescribedBy: "comment-title",
+        label: "What's your feedback?",
+        id: "feedback-input",
       },
     ];
 

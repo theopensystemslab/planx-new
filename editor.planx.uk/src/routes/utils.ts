@@ -1,6 +1,5 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
@@ -60,6 +59,7 @@ const PREVIEW_ONLY_DOMAINS = [
   "planningservices.barnet.gov.uk",
   "planningservices.tewkesbury.gov.uk",
   "planningservices.westberks.gov.uk",
+  "planningservices.gateshead.gov.uk",
   // XXX: un-comment the next line to test custom domains locally
   // "localhost",
 ];
@@ -92,7 +92,7 @@ export const getTeamFromDomain = async (domain: string) => {
 /**
  * Prevents accessing a different team than the one associated with the custom domain.
  * e.g. Custom domain is for Southwark but URL is looking for Lambeth
- * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow/preview
+ * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow
  */
 export const validateTeamRoute = async (req: NaviRequest) => {
   const externalTeamName = await getTeamFromDomain(window.location.hostname);

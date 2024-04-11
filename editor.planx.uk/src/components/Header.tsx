@@ -6,7 +6,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import { grey } from '@mui/material/colors';
+import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
@@ -14,16 +14,17 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
-import Popover from "@mui/material/Popover";
+import Popover, { popoverClasses } from "@mui/material/Popover";
 import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { visuallyHidden } from "@mui/utils";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
@@ -93,7 +94,7 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
 }));
 
 const StyledPopover = styled(Popover)(() => ({
-  ["& .MuiPopover-paper"]: {
+  [`& .${popoverClasses.paper}`]: {
     boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
     backgroundColor: "#2c2c2c",
     borderRadius: 0,
@@ -272,8 +273,7 @@ const NavBar: React.FC = () => {
     ],
   );
   const isSaveAndReturnLandingPage =
-    path !== ApplicationPath.SingleSession &&
-    !saveToEmail;
+    path !== ApplicationPath.SingleSession && !saveToEmail;
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
   const { node } = useAnalyticsTracking();
   const isSectionCard = node?.type == TYPES.Section;
@@ -320,7 +320,7 @@ const PublicToolbar: React.FC<{
     theme.breakpoints.up("md"),
   );
 
-  const { trackFlowDirectionChange } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openConfirmationDialog = () => setIsDialogOpen(true);
@@ -328,7 +328,11 @@ const PublicToolbar: React.FC<{
   const handleRestart = (isConfirmed: boolean) => {
     setIsDialogOpen(false);
     if (isConfirmed) {
-      trackFlowDirectionChange("reset");
+      trackEvent({
+        event: "flowDirectionChange",
+        metadata: null,
+        flowDirection: "reset",
+      });
       if (path === ApplicationPath.SingleSession) {
         clearLocalFlow(id);
         window.location.reload();
@@ -360,7 +364,16 @@ const PublicToolbar: React.FC<{
                   onClick={openConfirmationDialog}
                   aria-label="Restart Application"
                   size="large"
+                  aria-describedby="restart-application-description"
                 >
+                  <Typography
+                    id="restart-application-description"
+                    style={visuallyHidden}
+                  >
+                    Open a dialog with the option to restart your application.
+                    If you chose to restart your application, this will delete
+                    your previous answers
+                  </Typography>
                   <Reset color="secondary" />
                 </IconButton>
               )}
@@ -454,15 +467,16 @@ const EditorToolbar: React.FC<{
                     </IconButton>
                   )}
                   <Box mr={1}>
-                    <Avatar 
-                      sx={{ 
-                        bgcolor: grey[200], 
+                    <Avatar
+                      sx={{
+                        bgcolor: grey[200],
                         color: "text.primary",
                         fontSize: "1em",
                         fontWeight: "600",
                       }}
                     >
-                      {user.firstName[0]}{user.lastName[0]}
+                      {user.firstName[0]}
+                      {user.lastName[0]}
                     </Avatar>
                   </Box>
                   <IconButton
@@ -568,14 +582,15 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   ]);
 
   // Editor and custom domains share a path, so we need to rely on previewEnvironment
-  if (previewEnvironment === "editor" && path !== "unpublished") {
+  if (previewEnvironment === "editor" && path !== "draft" && path !== "amber") {
     return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
   }
 
   switch (path) {
     case flowSlug: // Custom domains
     case "preview":
-    case "unpublished":
+    case "amber":
+    case "draft":
     case "pay":
       return <PublicToolbar />;
     default:

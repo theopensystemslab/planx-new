@@ -68,6 +68,10 @@ const CUSTOM_DOMAINS: CustomDomains =
           domain: "planningservices.westberks.gov.uk",
           name: "westberks",
         },
+        {
+          domain: "planningservices.gateshead.gov.uk",
+          name: "gateshead",
+        },
       ]
     : [];
 
@@ -97,6 +101,10 @@ export = async () => {
     superuser: false,
   });
   const metabasePgPassword = config.requireSecret("metabasePgPassword");
+
+  // Setup role and database for internal Metabase application data, such as dashboards and queries
+  // This is separate to the postgres/public one used to hold PlanX application data
+  // Docs: https://www.metabase.com/docs/latest/installation-and-operation/configuring-application-database
   const role = new postgres.Role(
     "metabase",
     {
@@ -323,6 +331,10 @@ export = async () => {
           {
             name: "FILE_API_KEY_NEXUS",
             value: config.requireSecret("file-api-key-nexus"),
+          },
+          {
+            name: "FILE_API_KEY_BARNET",
+            value: config.requireSecret("file-api-key-barnet"),
           },
           {
             name: "GOOGLE_CLIENT_ID",

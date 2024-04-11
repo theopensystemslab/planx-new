@@ -93,7 +93,7 @@ describe("Adding a user to a team", () => {
       .then((res) => {
         expect(mockAddMember).toHaveBeenCalled();
         expect(res.body).toHaveProperty("error");
-        expect(res.body.error).toMatch(/Failed to add member to team/);
+        expect(res.body.error).toMatch(/Failed to add member/);
       });
   });
 

@@ -43,11 +43,15 @@ export const ConfirmationDialog: React.FC<
       maxWidth="xl"
       open={open}
     >
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle variant="h4">{title}</DialogTitle>
       <DialogContent dividers>{children}</DialogContent>
       <DialogActions>
-        <Button onClick={onCancel}>{cancelText}</Button>
-        <Button onClick={onConfirm}>{confirmText}</Button>
+        <Button onClick={onCancel} variant="contained" color="secondary">
+          {cancelText}
+        </Button>
+        <Button onClick={onConfirm} variant="contained" color="prompt">
+          {confirmText}
+        </Button>
       </DialogActions>
     </Dialog>
   );

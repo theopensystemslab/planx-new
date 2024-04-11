@@ -6,20 +6,18 @@ import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/ui";
 import { Feature } from "@turf/helpers";
-import { useFormik } from "formik";
 import { publicClient } from "lib/graphql";
 import find from "lodash/find";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
-import FeedbackInput from "../shared/FeedbackInput";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import type { PropertyInformation } from "./model";
 
@@ -46,7 +44,6 @@ function Component(props: PublicProps<PropertyInformation>) {
       }
       titleBoundary={passport.data?.["property.boundary.title"]}
       blpuCodes={blpuCodes}
-      previousFeedback={props.previouslySubmittedData?.feedback}
       overrideAnswer={overrideAnswer}
       handleSubmit={props.handleSubmit}
     />
@@ -78,7 +75,6 @@ export interface PresentationalProps {
   localAuthorityDistrict?: string[];
   titleBoundary?: Feature;
   blpuCodes?: any;
-  previousFeedback?: string;
   overrideAnswer: (fn: string) => void;
   handleSubmit?: handleSubmit;
 }
@@ -104,20 +100,10 @@ export function Presentational(props: PresentationalProps) {
     localAuthorityDistrict,
     titleBoundary,
     blpuCodes,
-    previousFeedback,
     overrideAnswer,
     handleSubmit,
   } = props;
   const teamName = useStore((state) => state.teamName);
-  const formik = useFormik({
-    initialValues: {
-      feedback: previousFeedback || "",
-    },
-    onSubmit: (values) => {
-      handleSubmit?.(values);
-    },
-  });
-
   const propertyDetails: PropertyDetail[] = [
     {
       heading: "Address",
@@ -143,7 +129,7 @@ export function Presentational(props: PresentationalProps) {
   ];
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={handleSubmit}>
       <QuestionHeader title={title} description={description} />
       <MapContainer>
         <p style={visuallyHidden}>
@@ -170,6 +156,7 @@ export function Presentational(props: PresentationalProps) {
           geojsonBuffer={30}
           osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
           geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
+          collapseAttributions={window.innerWidth < 500 ? true : undefined}
         />
       </MapContainer>
       {propertyDetails && (
@@ -178,15 +165,6 @@ export function Presentational(props: PresentationalProps) {
           showPropertyTypeOverride={showPropertyTypeOverride}
           overrideAnswer={overrideAnswer}
         />
-      )}
-      {!showPropertyTypeOverride && (
-        <Box textAlign="right">
-          <FeedbackInput
-            text="Report an inaccuracy"
-            handleChange={formik.handleChange}
-            value={formik.values.feedback}
-          />
-        </Box>
       )}
     </Card>
   );
@@ -201,54 +179,27 @@ interface PropertyDetail {
 interface PropertyDetailsProps {
   data: PropertyDetail[];
   showPropertyTypeOverride?: boolean;
+  showChangeButton?: boolean;
   overrideAnswer: (fn: string) => void;
 }
-
-// Borrows and tweaks grid style from Review page's `SummaryList`
-const PropertyDetailsList = styled(Box)(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "1fr 2fr 100px",
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
-  "& > *": {
-    borderBottom: `1px solid ${theme.palette.border.main}`,
-    paddingBottom: theme.spacing(1.5),
-    paddingTop: theme.spacing(1.5),
-    verticalAlign: "top",
-    margin: 0,
-  },
-  "& ul": {
-    listStylePosition: "inside",
-    padding: 0,
-    margin: 0,
-  },
-  "& dt": {
-    // left column
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  },
-  "& dd:nth-of-type(n)": {
-    // middle column
-    paddingLeft: "10px",
-  },
-  "& dd:nth-of-type(2n)": {
-    // right column
-    textAlign: "right",
-  },
-}));
 
 function PropertyDetails(props: PropertyDetailsProps) {
   const { data, showPropertyTypeOverride, overrideAnswer } = props;
   const filteredData = data.filter((d) => Boolean(d.detail));
 
-  const { trackBackwardsNavigation } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleOverrideAnswer = (fn: string) => {
-    trackBackwardsNavigation("change");
+    trackEvent({
+      event: "backwardsNavigation",
+      metadata: null,
+      initiator: "change",
+    });
     overrideAnswer(fn);
   };
 
   return (
-    <PropertyDetailsList component="dl">
+    <SummaryListTable showChangeButton={true}>
       {filteredData.map(({ heading, detail, fn }: PropertyDetail) => (
         <React.Fragment key={heading}>
           <Box component="dt">{heading}</Box>
@@ -275,6 +226,6 @@ function PropertyDetails(props: PropertyDetailsProps) {
           </Box>
         </React.Fragment>
       ))}
-    </PropertyDetailsList>
+    </SummaryListTable>
   );
 }

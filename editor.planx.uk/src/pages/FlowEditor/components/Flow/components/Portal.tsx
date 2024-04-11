@@ -51,7 +51,7 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   // If the flow referenced by an external portal has been deleted (eg !data),
   //   still show a "Corrupted" node so that editors have a visual cue to "delete".
-  //   Until deleted, the flow schema will still contain a node reference to this portal causing dataMerged to fail
+  //   Until deleted, the flow schema will still contain a node reference to this portal causing publishing to fail
   if (!loading && !data?.flows_by_pk) {
     return (
       <Question

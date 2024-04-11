@@ -32,22 +32,42 @@ export const addGovPayPaymentIdToPaymentRequest = async (
   }
 };
 
+/**
+ * Identify if a payment is using dummy card details for testing
+ * Docs: https://docs.payments.service.gov.uk/testing_govuk_pay/#mock-card-numbers-and-email-addresses
+ */
+export const isTestPayment = ({
+  payment_provider: paymentProvider,
+}: GovUKPayment) => {
+  // Payment using "sandbox" account
+  const isSandbox = paymentProvider === "sandbox";
+  const isProduction = process.env.APP_ENVIRONMENT === "production";
+
+  // Payment using Stripe in non-production environment
+  // Stripe test accounts do not have a specific test code
+  const isStripeTest = paymentProvider === "stripe" && !isProduction;
+
+  return isSandbox || isStripeTest;
+};
+
+/**
+ * Notify #planx-notifications so we can monitor for subsequent submissions
+ */
 export async function postPaymentNotificationToSlack(
   req: Request,
   govUkResponse: GovUKPayment,
   label = "",
 ) {
-  // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
-  if (govUkResponse?.payment_provider !== "sandbox") {
-    const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-    const getStatus = (state: GovUKPayment["state"]) =>
-      state.status + (state.message ? ` (${state.message})` : "");
-    const payMessage = `:coin: New GOV Pay payment ${label} *${
-      govUkResponse.payment_id
-    }* with status *${getStatus(govUkResponse.state)}* [${
-      req.params.localAuthority
-    }]`;
-    await slack.send(payMessage);
-    console.log("Payment notification posted to Slack");
-  }
+  if (isTestPayment(govUkResponse)) return;
+
+  const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
+  const getStatus = (state: GovUKPayment["state"]) =>
+    state.status + (state.message ? ` (${state.message})` : "");
+  const payMessage = `:coin: New GOV Pay payment ${label} *${
+    govUkResponse.payment_id
+  }* with status *${getStatus(govUkResponse.state)}* [${
+    req.params.localAuthority
+  }]`;
+  await slack.send(payMessage);
+  console.log("Payment notification posted to Slack");
 }

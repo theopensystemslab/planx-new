@@ -95,7 +95,7 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     category: "Heritage and conservation",
   },
   locallyListed: {
-    active: true,
+    active: false,
     neg: "is not, or is not within, a Locally Listed Building",
     pos: "is, or is within, a Locally Listed Building",
     "digital-land-datasets": ["locally-listed-building"],

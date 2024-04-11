@@ -52,7 +52,7 @@ test.describe("Section statuses", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    const previewURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false`;
+    const previewURL = `/${context.team?.slug}/${context.flow?.slug}/published?analytics=false`;
     await page.goto(previewURL);
   });
 

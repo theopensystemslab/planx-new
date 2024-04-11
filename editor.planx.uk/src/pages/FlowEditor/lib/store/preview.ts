@@ -9,10 +9,7 @@ import {
   flatFlags,
 } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import {
-  FileList,
-  PASSPORT_REQUESTED_FILES_KEY,
-} from "@planx/components/FileUploadAndLabel/model";
+import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
@@ -283,17 +280,10 @@ export const previewStore: StateCreator<
 
     if (userData) {
       // add breadcrumb
-      const {
-        answers = [],
-        data = {},
-        auto = false,
-        override,
-        feedback,
-      } = userData;
+      const { answers = [], data = {}, auto = false, override } = userData;
 
       const breadcrumb: Store.userData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
-      if (feedback) breadcrumb.feedback = feedback;
 
       const filteredData = objectWithoutNullishValues(data);
       if (Object.keys(filteredData).length > 0) breadcrumb.data = filteredData;

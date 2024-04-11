@@ -37,9 +37,18 @@ export default function NumberInputComponent(props: Props): FCReturn {
         .required("Enter your answer before continuing")
         .test({
           name: "not a number",
-          message: "Enter a number",
+          message: (() => {
+            if (!props.allowNegatives) {
+              return "Enter a positive number";
+            }
+
+            return "Enter a number";
+          })(),
           test: (value: string | undefined) => {
             if (!value) {
+              return false;
+            }
+            if (!props.allowNegatives && value.startsWith("-")) {
               return false;
             }
             return value === "0" ? true : Boolean(parseNumber(value));

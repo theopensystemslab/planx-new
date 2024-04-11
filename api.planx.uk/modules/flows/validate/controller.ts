@@ -30,7 +30,7 @@ export const validateAndDiffFlowController: ValidateAndDiffFlowController =
     } catch (error) {
       return next(
         new ServerError({
-          message: `Failed to validate and diff flow: ${error}`,
+          message: `Failed to validate and diff flow for publishing. \n${error}`,
         }),
       );
     }

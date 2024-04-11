@@ -89,7 +89,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
           </Box>
           <Divider sx={{ mt: 4 }} />
           <Box>
-            <Link href="../preview" variant="body2">
+            <Link href="../published" variant="body2">
               Start a new application
             </Link>
           </Box>

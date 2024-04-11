@@ -9,7 +9,6 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import { useFormik } from "formik";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
@@ -23,7 +22,12 @@ import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import ConstraintsList from "./List";
-import type { IntersectingConstraints, PlanningConstraints } from "./model";
+import {
+  DEFAULT_PLANNING_CONDITIONS_DISCLAIMER,
+  type IntersectingConstraints,
+  type PlanningConstraints,
+} from "./model";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -129,10 +133,10 @@ function Component(props: Props) {
           title={props.title}
           description={props.description || ""}
           fn={props.fn}
+          disclaimer={props.disclaimer}
           constraints={constraints}
           metadata={metadata}
-          previousFeedback={props.previouslySubmittedData?.feedback}
-          handleSubmit={(values: { feedback?: string }) => {
+          handleSubmit={() => {
             const _constraints: Array<
               EnhancedGISResponse | GISResponse["constraints"]
             > = [];
@@ -170,7 +174,6 @@ function Component(props: Props) {
             };
 
             props.handleSubmit?.({
-              ...values,
               data: passportData,
             });
           }}
@@ -193,33 +196,18 @@ export type PlanningConstraintsContentProps = {
   title: string;
   description: string;
   fn: string;
+  disclaimer: string;
   constraints: GISResponse["constraints"];
   metadata: GISResponse["metadata"];
-  handleSubmit: (values: { feedback: string }) => void;
+  handleSubmit: () => void;
   refreshConstraints: () => void;
-  previousFeedback?: string;
 };
 
 export function PlanningConstraintsContent(
   props: PlanningConstraintsContentProps,
 ) {
-  const {
-    title,
-    description,
-    constraints,
-    metadata,
-    handleSubmit,
-    refreshConstraints,
-    previousFeedback,
-  } = props;
-  const formik = useFormik({
-    initialValues: {
-      feedback: previousFeedback || "",
-    },
-    onSubmit: (values) => {
-      handleSubmit?.(values);
-    },
-  });
+  const { title, description, constraints, metadata, refreshConstraints, disclaimer } =
+    props;
   const error = constraints.error || undefined;
   const showError = error || !Object.values(constraints)?.length;
 
@@ -232,7 +220,7 @@ export function PlanningConstraintsContent(
   );
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={props.handleSubmit}>
       <QuestionHeader title={title} description={description} />
       {showError && (
         <ConstraintsFetchError
@@ -257,7 +245,7 @@ export function PlanningConstraintsContent(
               <ConstraintsList data={negativeConstraints} metadata={metadata} />
             </SimpleExpand>
           )}
-          <PlanningConditionsInfo />
+          <Disclaimer text={disclaimer} />
         </>
       )}
       {!showError &&
@@ -284,19 +272,18 @@ export function PlanningConstraintsContent(
             >
               <ConstraintsList data={negativeConstraints} metadata={metadata} />
             </SimpleExpand>
-            <PlanningConditionsInfo />
+            <Disclaimer text={disclaimer} />
           </>
         )}
     </Card>
   );
 }
 
-const PlanningConditionsInfo = () => (
+const Disclaimer = (props: { text: string }) => (
   <WarningContainer>
     <ErrorOutline />
-    <Typography variant="body1" ml={2} fontWeight={FONT_WEIGHT_SEMI_BOLD}>
-      This page does not include information about historic planning conditions
-      that may apply to this property.
+    <Typography variant="body1" component="div" ml={2} mb={1}>
+      <ReactMarkdownOrHtml source={props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER} openLinksOnNewTab />
     </Typography>
   </WarningContainer>
 );

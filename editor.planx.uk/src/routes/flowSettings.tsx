@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { publicClient } from "lib/graphql";
 import {
   compose,
@@ -12,12 +13,36 @@ import {
 import DataManagerSettings from "pages/FlowEditor/components/Settings/DataManagerSettings";
 import ServiceFlags from "pages/FlowEditor/components/Settings/ServiceFlags";
 import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
+import Submissions from "pages/FlowEditor/components/Settings/Submissions";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import Settings from "../pages/FlowEditor/components/Settings";
+import Settings, { SettingsTab } from "../pages/FlowEditor/components/Settings";
 import type { FlowSettings } from "../types";
 import { makeTitle } from "./utils";
+
+const tabs: SettingsTab[] = [
+  {
+    name: "Service",
+    route: "service",
+    Component: ServiceSettings,
+  },
+  {
+    name: "Service Flags",
+    route: "flags",
+    Component: ServiceFlags,
+  },
+  {
+    name: "Data",
+    route: "data-manager",
+    Component: DataManagerSettings,
+  },
+  {
+    name: "Submissions",
+    route: "submissions",
+    Component: Submissions,
+  },
+];
 
 const flowSettingsRoutes = compose(
   withData((req) => ({
@@ -62,28 +87,7 @@ const flowSettingsRoutes = compose(
           title: makeTitle(
             [req.params.team, req.params.flow, "Flow Settings"].join("/"),
           ),
-          view: (
-            <Settings
-              currentTab={req.params.tab}
-              tabs={[
-                {
-                  name: "Service",
-                  route: "service",
-                  Component: ServiceSettings,
-                },
-                {
-                  name: "Service Flags",
-                  route: "flags",
-                  Component: ServiceFlags,
-                },
-                {
-                  name: "Data",
-                  route: "data-manager",
-                  Component: DataManagerSettings,
-                },
-              ]}
-            />
-          ),
+          view: <Settings currentTab={req.params.tab} tabs={tabs} />,
         };
       });
     }),

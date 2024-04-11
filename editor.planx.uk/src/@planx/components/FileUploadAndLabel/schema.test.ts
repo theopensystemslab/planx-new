@@ -212,12 +212,18 @@ describe("fileLabelSchema", () => {
   });
 
   it("rejects if any slots are untagged", async () => {
-    const mockSlots = [{ id: "123" }, { id: "456" }] as FileUploadSlot[];
+    const mockSlots = [
+      { id: "123", file: { path: "first.jpg" } },
+      { id: "456", file: { path: "second.jpg" } },
+    ] as FileUploadSlot[];
 
     const mockFileList = {
       required: [
         // Second slot is not assigned to any fileTypes
-        { ...mockFileTypes.AlwaysRequired, slots: [{ id: "123" }] },
+        {
+          ...mockFileTypes.AlwaysRequired,
+          slots: [{ id: "123", file: { path: "abc.jpg" } }],
+        },
       ],
       recommended: [],
       optional: [],
@@ -225,7 +231,7 @@ describe("fileLabelSchema", () => {
 
     await expect(() =>
       fileLabelSchema.validate(mockFileList, { context: { slots: mockSlots } }),
-    ).rejects.toThrow(/Please label all files/);
+    ).rejects.toThrow(/File second.jpg is not labeled/);
   });
 
   it("allows fileLists where all files are tagged, but requirements are not satisfied yet", async () => {

@@ -5,6 +5,7 @@ export interface NumberInput extends MoreInformation {
   description?: string;
   fn?: string;
   units?: string;
+  allowNegatives?: boolean;
 }
 
 export type UserData = number;
@@ -24,5 +25,6 @@ export const parseNumberInput = (
   description: data?.description,
   fn: data?.fn || "",
   units: data?.units,
+  allowNegatives: data?.allowNegatives || false,
   ...parseMoreInformation(data),
 });

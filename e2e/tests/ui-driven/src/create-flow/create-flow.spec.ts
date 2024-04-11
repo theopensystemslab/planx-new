@@ -156,7 +156,7 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`,
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
     await expect(page.getByText("Not Found")).toBeVisible();
@@ -190,7 +190,7 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`,
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
@@ -199,10 +199,7 @@ test.describe("Navigation", () => {
       page.locator("h3", { hasText: "Yes! this is a test" }),
     ).toBeVisible();
 
-    await page
-      .locator("#main-content")
-      .getByRole("button", { name: "Back" })
-      .click();
+    await page.getByTestId("backButton").click();
 
     await answerQuestion({ page, title: "Is this a test?", answer: "No" });
     await clickContinue({ page });

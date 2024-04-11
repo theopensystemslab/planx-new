@@ -263,7 +263,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       <Button
         variant="contained"
         color="secondary"
-        sx={{ mt: 2, borderBottom: "solid 2px lightgrey" }}
+        sx={{ mt: 2 }}
         size="large"
         onClick={changePage}
         disabled={Boolean(paymentStatus)}

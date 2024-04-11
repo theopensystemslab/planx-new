@@ -25,6 +25,7 @@ it("renders correctly", async () => {
       title="Planning constraints"
       description="Things that might affect your project"
       fn="property.constraints.planning"
+      disclaimer="This page does not include information about historic planning conditions that may apply to this property."
       handleSubmit={handleSubmit}
     />,
   );
@@ -44,6 +45,7 @@ it("should not have any accessibility violations", async () => {
       title="Planning constraints"
       description="Things that might affect your project"
       fn="property.constraints.planning"
+      disclaimer="This page does not include information about historic planning conditions that may apply to this property."
     />,
   );
   const results = await axe(container);

@@ -11,24 +11,24 @@ import { View } from "react-navi";
 import { getTeamFromDomain, setPath } from "routes/utils";
 import { Flow, GlobalSettings } from "types";
 
-interface PublishedViewData {
-  flows: PreviewFlow[];
+interface PublishedViewSettings {
+  flows: PublishedFlow[];
   globalSettings: GlobalSettings[];
 }
 
-interface PreviewFlow extends Flow {
+interface PublishedFlow extends Flow {
   publishedFlows: Record<"data", Store.flow>[];
 }
 
 /**
- * View wrapper for /preview and /:flowSlug (on custom domains)
+ * View wrapper for /published and /:flowSlug (on custom domains)
  * Fetches all necessary data, and sets up Save & Return layout
  */
 export const publishedView = async (req: NaviRequest) => {
   const flowSlug = req.params.flow.split(",")[0];
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
-  const data = await fetchDataForPublishedView(flowSlug, teamSlug);
+  const data = await fetchSettingsForPublishedView(flowSlug, teamSlug);
 
   const flow = data.flows[0];
   if (!flow)
@@ -57,14 +57,17 @@ export const publishedView = async (req: NaviRequest) => {
   );
 };
 
-const fetchDataForPublishedView = async (
+export const fetchSettingsForPublishedView = async (
   flowSlug: string,
   teamSlug: string,
-): Promise<PublishedViewData> => {
+): Promise<PublishedViewSettings> => {
   try {
     const result = await publicClient.query({
       query: gql`
-        query GetPreviewData($flowSlug: String!, $teamSlug: String!) {
+        query GetSettingsForPublishedView(
+          $flowSlug: String!
+          $teamSlug: String!
+        ) {
           flows(
             limit: 1
             where: {
@@ -98,7 +101,6 @@ const fetchDataForPublishedView = async (
               data
             }
           }
-
           globalSettings: global_settings {
             footerContent: footer_content
           }

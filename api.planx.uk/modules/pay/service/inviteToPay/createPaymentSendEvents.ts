@@ -41,7 +41,7 @@ const createPaymentSendEvents = async (
       });
     }
 
-    const publishedFlowData = await getMostRecentPublishedFlow(session.flowId);
+    const publishedFlowData = await getMostRecentPublishedFlow(session.flow.id);
     if (!publishedFlowData) {
       return next({
         status: 400,
@@ -55,7 +55,7 @@ const createPaymentSendEvents = async (
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
     const destinations: Destination[] = sendNode?.[1]?.data?.destinations;
 
-    let teamSlug = await getTeamSlugByFlowId(session.flowId);
+    let teamSlug = await getTeamSlugByFlowId(session.flow.id);
     const eventPayload = { sessionId: payload.sessionId };
 
     if (destinations.includes(Destination.BOPS)) {

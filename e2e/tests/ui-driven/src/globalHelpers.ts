@@ -102,7 +102,7 @@ export async function returnToSession({
   sessionId: string;
   shouldContinue?: boolean;
 }) {
-  const returnURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false&sessionId=${sessionId}`;
+  const returnURL = `/${context.team?.slug}/${context.flow?.slug}/published?analytics=false&sessionId=${sessionId}`;
   log(`returning to http://localhost:3000/${returnURL}`);
   await page.goto(returnURL, { waitUntil: "load" });
   await page.locator("#email").fill(context.user?.email);
@@ -255,6 +255,10 @@ export async function fillGovUkCardDetails({
   await page.getByLabel("Postcode").fill("HP111BB");
   await page.getByLabel("Email").fill(TEST_EMAIL);
   await page.locator("button#submit-card-details").click();
+}
+
+export async function submitCardDetails(page: Page) {
+  await page.locator("#confirm").click();
 }
 
 export async function answerFindProperty(page: Page) {

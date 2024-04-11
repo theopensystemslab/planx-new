@@ -26,7 +26,6 @@ export declare namespace Store {
     data?: Record<string, any>;
     auto?: boolean;
     override?: Record<string, any>;
-    feedback?: string;
   };
   export type breadcrumbs = Record<nodeId, userData>;
   export type cachedBreadcrumbs = Record<nodeId, userData> | undefined;
@@ -93,7 +92,7 @@ const createFullStore = (): StoreApi<FullStore> => {
 };
 
 const isPublic =
-  isPreviewOnlyDomain || window?.location?.href?.includes("/preview");
+  isPreviewOnlyDomain || window?.location?.href?.includes("/published");
 
 export const { vanillaStore, useStore }: PlanXStores = (() => {
   const vanillaStore: StoreApi<FullStore> = (() =>

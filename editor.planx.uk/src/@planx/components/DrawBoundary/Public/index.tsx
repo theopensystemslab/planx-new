@@ -31,10 +31,6 @@ export type Props = PublicProps<DrawBoundary>;
 
 export type Boundary = Feature | undefined;
 
-// Buffer applied to the address point to clip this map extent
-//   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
-const BUFFER_IN_METERS = 100;
-
 export default function Component(props: Props) {
   const isMounted = useRef(false);
   const passport = useStore((state) => state.computePassport());
@@ -47,6 +43,10 @@ export default function Component(props: Props) {
     passport.data?.["property.boundary.title.area"];
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [area, setArea] = useState<number | undefined>(previousArea);
+  
+  // Buffer applied to the address point to clip this map extent
+  //   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
+  const bufferInMeters = area && area > 15000 ? 300 : 120;
 
   const previousFile =
     props.previouslySubmittedData?.data?.[PASSPORT_UPLOAD_KEY];
@@ -104,7 +104,7 @@ export default function Component(props: Props) {
           newPassportData[props.dataFieldBoundary] = boundary;
           newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
             boundary,
-            BUFFER_IN_METERS,
+            bufferInMeters,
             { units: "meters" },
           );
 
@@ -152,11 +152,11 @@ export default function Component(props: Props) {
       }}
       isValid={props.hideFileUpload ? true : Boolean(boundary || slots[0]?.url)}
     >
-      {getBody()}
+      {getBody(bufferInMeters)}
     </Card>
   );
 
-  function getBody() {
+  function getBody(bufferInMeters: number) {
     if (page === "draw") {
       return (
         <>
@@ -197,7 +197,7 @@ export default function Component(props: Props) {
                 clipGeojsonData={
                   addressPoint &&
                   JSON.stringify(
-                    buffer(addressPoint, BUFFER_IN_METERS, { units: "meters" }),
+                    buffer(addressPoint, bufferInMeters, { units: "meters" }),
                   )
                 }
                 zoom={20}
@@ -211,6 +211,7 @@ export default function Component(props: Props) {
                 osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
                 osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
                 drawGeojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
+                collapseAttributions={self.innerWidth < 500 ? true : undefined}
               />
             </MapContainer>
             <MapFooter>

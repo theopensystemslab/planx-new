@@ -36,7 +36,7 @@ export const getServiceLink = (team: Team, flowSlug: string): string => {
   // Link to custom domain
   if (team.domain) return `https://${team.domain}/${flowSlug}`;
   // Fallback to PlanX domain
-  return `${process.env.EDITOR_URL_EXT}/${team.slug}/${flowSlug}/preview`;
+  return `${process.env.EDITOR_URL_EXT}/${team.slug}/${flowSlug}/published`;
 };
 
 /**

@@ -21,6 +21,11 @@ export interface Flow {
     [key: string]: Node;
   };
   team_id: number;
+  publishedFlows?:
+    | {
+        data: { [key: string]: Node };
+      }[]
+    | [];
 }
 
 export interface PublishedFlow {
@@ -39,7 +44,6 @@ export interface UserData {
   data?: Record<string, any>;
   auto?: boolean;
   override?: Record<string, any>;
-  feedback?: string;
 }
 
 export type Breadcrumb = Record<string, UserData>;

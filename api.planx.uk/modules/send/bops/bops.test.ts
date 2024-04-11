@@ -27,7 +27,8 @@ jest.mock("@opensystemslab/planx-core", () => {
 });
 
 describe(`sending an application to BOPS (v2)`, () => {
-  const submissionURL = "https://test.bops-test.com";
+  const submissionURL =
+    "https://test.bops-test.com/api/v2/planning_applications";
 
   beforeEach(() => {
     queryMock.mockQuery({
@@ -81,7 +82,7 @@ describe(`sending an application to BOPS (v2)`, () => {
 
   it("successfully proxies request and returns hasura id", async () => {
     const expectedHeaders = { authorization: "Bearer abc123" };
-    const nockScope = nock(`${submissionURL}/api/v2/planning_applications`, {
+    const nockScope = nock(submissionURL, {
       reqheaders: expectedHeaders,
     })
       .post("")

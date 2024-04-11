@@ -23,7 +23,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
       </Box>
       {showPreview && (
         <PreviewBrowser
-          url={`${window.location.origin}${rootFlowPath(false)}/preview`}
+          url={`${window.location.origin}${rootFlowPath(false)}/published`}
         />
       )}
     </Box>

@@ -19,7 +19,7 @@ import {
 import { removeAt, setAt } from "../../utils";
 
 export interface EditorProps<T> {
-  index?: number;
+  index: number;
   value: T;
   onChange: (newValue: T) => void;
 }
@@ -32,6 +32,8 @@ export interface Props<T, EditorExtraProps = {}> {
   Editor: React.FC<EditorProps<T> & (EditorExtraProps | {})>;
   editorExtraProps?: EditorExtraProps;
   disableDragAndDrop?: boolean;
+  isFieldDisabled?: (item: T, index: number) => boolean;
+  maxItems?: number;
 }
 
 const Item = styled(Box)(({ theme }) => ({
@@ -42,13 +44,14 @@ const Item = styled(Box)(({ theme }) => ({
 export default function ListManager<T, EditorExtraProps>(
   props: Props<T, EditorExtraProps>,
 ) {
-  const { Editor } = props;
+  const { Editor, maxItems = Infinity } = props;
   // Initialize a random ID when the component mounts
   const randomId = useRef(String(Math.random()));
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
   const isViewOnly = !useStore.getState().canUserEditTeam(teamSlug);
+  const isMaxLength = props.values.length >= maxItems;
 
   return props.disableDragAndDrop ? (
     <>
@@ -74,14 +77,18 @@ export default function ListManager<T, EditorExtraProps>(
                 }}
                 {...(props.editorExtraProps || {})}
               />
-              <Box>
+              <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                 <IconButton
                   onClick={() => {
                     props.onChange(removeAt(index, props.values));
                   }}
                   aria-label="Delete"
                   size="large"
-                  disabled={isViewOnly}
+                  disabled={
+                    isViewOnly ||
+                    (props?.isFieldDisabled &&
+                      props.isFieldDisabled(item, index))
+                  }
                 >
                   <Delete />
                 </IconButton>
@@ -95,7 +102,7 @@ export default function ListManager<T, EditorExtraProps>(
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
-        disabled={isViewOnly}
+        disabled={isViewOnly || isMaxLength}
       >
         {props.newValueLabel || "add new"}
       </Button>
@@ -155,7 +162,11 @@ export default function ListManager<T, EditorExtraProps>(
                           }}
                           aria-label="Delete"
                           size="large"
-                          disabled={isViewOnly}
+                          disabled={
+                            isViewOnly ||
+                            (props?.isFieldDisabled &&
+                              props.isFieldDisabled(item, index))
+                          }
                         >
                           <Delete />
                         </IconButton>
@@ -174,7 +185,7 @@ export default function ListManager<T, EditorExtraProps>(
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
-        disabled={isViewOnly}
+        disabled={isViewOnly || isMaxLength}
       >
         {props.newValueLabel || "add new"}
       </Button>

@@ -20,7 +20,7 @@ export type DownloadFlowSchemaController = ValidatedRequestHandler<
 >;
 
 export const downloadFlowSchemaController: DownloadFlowSchemaController =
-  async (_res, res, next) => {
+  async (_req, res, next) => {
     try {
       const { flowId } = res.locals.parsedReq.params;
       const flowSchema = await getFlowSchema(flowId);

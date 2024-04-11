@@ -73,10 +73,10 @@ const payRoutes = compose(
       view: <ErrorPage title={"Failed to generate payment request"} />,
     }),
     "/pages/:page": redirect(
-      (req) => `../../../preview/pages/${req.params.page}`,
+      (req) => `../../../published/pages/${req.params.page}`,
     ),
     "/invite/pages/:page": redirect(
-      (req) => `../../../../preview/pages/${req.params.page}`,
+      (req) => `../../../../published/pages/${req.params.page}`,
     ),
   }),
 );

@@ -9,7 +9,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -80,10 +80,14 @@ const NoticeComponent: React.FC<Props> = (props) => {
     ? () => props.handleSubmit?.()
     : undefined;
 
-  const { trackFlowDirectionChange } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleNoticeResetClick = () => {
-    trackFlowDirectionChange("reset");
+    trackEvent({
+      event: "flowDirectionChange",
+      metadata: null,
+      flowDirection: "reset",
+    });
     props.resetPreview && props.resetPreview();
   };
 

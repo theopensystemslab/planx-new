@@ -1,5 +1,5 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
-import Select, { SelectProps } from "@mui/material/Select";
+import Select, { selectClasses,SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 
@@ -25,7 +25,7 @@ const Root = styled(Select)(({ theme }) => ({
   padding: 0,
   height: 50,
   backgroundColor: "#fff",
-  "& .MuiSelect-select": {
+  [`& .${selectClasses.select}`]: {
     width: "100%",
     padding: theme.spacing(1, 1.5),
   },

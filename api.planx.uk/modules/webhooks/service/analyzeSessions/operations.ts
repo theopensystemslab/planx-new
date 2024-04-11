@@ -4,8 +4,13 @@ import { Passport } from "@opensystemslab/planx-core";
 import { $api } from "../../../../client";
 import { Operation } from "../sanitiseApplicationData/types";
 
-// ALLOW_LIST should stay in sync with
-//   editor.planx.uk/src/pages/FlowEditor/lib/analyticsProvider
+/**
+ * ALLOW_LIST should stay in sync with
+ * editor.planx.uk/src/pages/FlowEditor/lib/analyticsProvider
+ * If appending to ALLOW_LIST please also update the
+ * `submission_services_summary` view to extract it into it's own column.
+ */
+
 const ALLOW_LIST = [
   "proposal.projectType",
   "application.declaration.connection",
