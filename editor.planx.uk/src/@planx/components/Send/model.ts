@@ -8,6 +8,13 @@ export enum Destination {
   S3 = "s3",
 }
 
+interface EventPayload {
+  localAuthority: string;
+  body: {
+    sessionId: string;
+  };
+}
+
 export interface Send extends MoreInformation {
   title: string;
   destinations: Destination[];
@@ -33,7 +40,7 @@ export function getCombinedEventsPayload({
   passport: Store.passport;
   sessionId: string;
 }) {
-  const combinedEventsPayload: any = {};
+  const combinedEventsPayload: Record<string, EventPayload> = {};
 
   // Format application user data as required by BOPS
   if (destinations.includes(Destination.BOPS)) {
