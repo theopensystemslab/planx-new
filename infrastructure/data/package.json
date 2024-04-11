@@ -6,5 +6,10 @@
     "@pulumi/aws": "^4.0.0",
     "@pulumi/awsx": "^0.30.0",
     "@pulumi/pulumi": "^3.74.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "protobufjs@>=7.0.0 <7.2.5": ">=7.2.5"
+    }
   }
 }
