@@ -4,6 +4,7 @@ import {
   fillGovUkCardDetails,
   getSessionId,
   log,
+  submitCardDetails,
   waitForPaymentResponse,
 } from "./globalHelpers";
 import type { Page } from "@playwright/test";
@@ -57,7 +58,7 @@ test.describe("Gov Pay integration @regression", async () => {
       page,
       cardNumber: cards.successful_card_number,
     });
-    await page.locator("#confirm").click();
+    await submitCardDetails(page);
     const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
@@ -116,7 +117,7 @@ test.describe("Gov Pay integration @regression", async () => {
       page,
       cardNumber: cards.successful_card_number,
     });
-    await page.locator("#confirm").click();
+    await submitCardDetails(page);
     const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
@@ -167,7 +168,7 @@ test.describe("Gov Pay integration @regression", async () => {
       page,
       cardNumber: cards.successful_card_number,
     });
-    await page.locator("#confirm").click();
+    await submitCardDetails(page);
     const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
 
@@ -224,7 +225,12 @@ test.describe("Gov Pay integration @regression", async () => {
     // retry the payment
     await page.getByText("Retry payment").click();
     await page.getByText("Continue with your payment").click();
-    await page.locator("#confirm").click();
+    // Re-enter card details
+    await fillGovUkCardDetails({
+      page,
+      cardNumber: cards.successful_card_number,
+    });
+    await submitCardDetails(page);
 
     const { paymentId } = await waitForPaymentResponse(page, context);
     expect(paymentId).toBeTruthy();
@@ -275,7 +281,7 @@ test.describe("Gov Pay integration @regression", async () => {
       page,
       cardNumber: cards.successful_card_number,
     });
-    await page.locator("#confirm").click();
+    await submitCardDetails(page);
     const { paymentId: actualPaymentId } = await waitForPaymentResponse(
       page,
       context,
@@ -303,7 +309,7 @@ test.describe("Gov Pay integration @regression", async () => {
       page,
       cardNumber: cards.successful_card_number,
     });
-    await page.locator("#confirm").click();
+    await submitCardDetails(page);
     const { paymentId: actualPaymentId } = await waitForPaymentResponse(
       page,
       context,
