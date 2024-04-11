@@ -257,6 +257,10 @@ export async function fillGovUkCardDetails({
   await page.locator("button#submit-card-details").click();
 }
 
+export async function submitCardDetails(page: Page) {
+  await page.locator("#confirm").click();
+}
+
 export async function answerFindProperty(page: Page) {
   await setupOSMockResponse(page);
   await page.getByLabel("Postcode").fill("SW1 1AA");
