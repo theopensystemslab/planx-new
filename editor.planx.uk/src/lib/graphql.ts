@@ -62,7 +62,7 @@ const authHttpLink = authMiddleware.concat(httpLink);
  * Authenticated web socket connection - used for GraphQL subscriptions
  */
 const authWsLink = new WebSocketLink({
-  uri: `ws://localhost:7100/v1/graphql`,
+  uri: process.env.REACT_APP_HASURA_WEBSOCKET!,
   options: {
     reconnect: true,
     connectionParams: async () => {
