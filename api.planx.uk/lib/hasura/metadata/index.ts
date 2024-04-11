@@ -13,6 +13,7 @@ export interface CombinedResponse {
   bops?: ScheduledEventResponse;
   uniform?: ScheduledEventResponse;
   email?: ScheduledEventResponse;
+  s3?: ScheduledEventResponse;
 }
 
 interface ScheduledEventArgs {

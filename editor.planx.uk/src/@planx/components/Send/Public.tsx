@@ -81,7 +81,7 @@ const SendComponent: React.FC<Props> = ({
         makeData(props, request.value.s3?.event_id, "s3SendEventId"),
       );
     }
-  }, [request.loading, request.error, request.value]);
+  }, [request.loading, request.error, request.value, destinations, props]);
 
   if (request.loading) {
     return (
