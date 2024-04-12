@@ -115,6 +115,7 @@ function GovPayMetadataEditor(props: ListManagerEditorProps<GovPayMetadata>) {
             placeholder="key"
           />
           <Input
+            format={currVal.toString().startsWith("@") ? "data" : undefined}
             aria-labelledby="value-label"
             disabled={isDisabled}
             value={currVal}
