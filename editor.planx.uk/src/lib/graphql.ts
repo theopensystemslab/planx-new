@@ -5,11 +5,14 @@ import {
   from,
   InMemoryCache,
   Operation,
+  split,
 } from "@apollo/client";
 import { GraphQLErrors } from "@apollo/client/errors";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 import { logger } from "airbrake";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
@@ -34,10 +37,61 @@ const customFetch = async (
   return fetchResult;
 };
 
-const authHttpLink = createHttpLink({
+const httpLink = createHttpLink({
   uri: process.env.REACT_APP_HASURA_URL,
   fetch: customFetch,
 });
+
+/**
+ * Set auth header in Apollo client
+ * Must be done post-authentication once we have a value for JWT
+ */
+export const authMiddleware = setContext(async () => {
+  const jwt = await getJWT();
+
+  return {
+    headers: {
+      authorization: jwt ? `Bearer ${jwt}` : undefined,
+    },
+  };
+});
+
+const authHttpLink = authMiddleware.concat(httpLink);
+
+/**
+ * Authenticated web socket connection - used for GraphQL subscriptions
+ */
+const authWsLink = new WebSocketLink({
+  uri: process.env.REACT_APP_HASURA_WEBSOCKET!,
+  options: {
+    reconnect: true,
+    connectionParams: async () => {
+      const jwt = await getJWT();
+      return {
+        headers: {
+          authorization: jwt ? `Bearer ${jwt}` : undefined,
+        },
+      };
+    },
+  },
+});
+
+/**
+ * Split requests between HTTPS and WS, based on operation types
+ *  - Queries and mutations -> HTTPS
+ *  - Subscriptions -> WS
+ */
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  authWsLink,
+  authHttpLink,
+);
 
 const publicHttpLink = createHttpLink({
   uri: process.env.REACT_APP_HASURA_URL,
@@ -128,20 +182,6 @@ const retryLink = new RetryLink({
 });
 
 /**
- * Set auth header in Apollo client
- * Must be done post-authentication once we have a value for JWT
- */
-export const authMiddleware = setContext(async () => {
-  const jwt = await getJWT();
-
-  return {
-    headers: {
-      authorization: jwt ? `Bearer ${jwt}` : undefined,
-    },
-  };
-});
-
-/**
  * Get the JWT from the store, and wait if not available
  */
 const getJWT = async () => {
@@ -168,7 +208,7 @@ const waitForAuthentication = async () =>
  * Client used to make all requests by authorised users
  */
 export const client = new ApolloClient({
-  link: from([retryLink, errorLink, authMiddleware, authHttpLink]),
+  link: from([retryLink, errorLink, splitLink]),
   cache: new InMemoryCache(),
 });
 
