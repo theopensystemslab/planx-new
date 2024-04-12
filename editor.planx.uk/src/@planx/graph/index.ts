@@ -6,6 +6,7 @@ import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
+import { TYPE } from "react-toastify/dist/utils";
 
 import { ImmerJSONPatch, OT } from "./types";
 
@@ -499,3 +500,90 @@ export const sortIdsDepthFirst =
       (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b),
     );
   };
+
+/**
+ * Translates a list of ShareDB operations into a human-readable change summary.
+ *   See https://github.com/ottypes/json0?tab=readme-ov-file#summary-of-operations
+ */
+export const formatOps = (graph: Graph, ops: any[]): string[] => {
+  const output: string[] = [];
+  ops.map((op) => {
+    const node = graph[op.p?.[0]];
+    // Updating an object or its properties (update = delete + insert)
+    if (Object.keys(op).includes("od") && Object.keys(op).includes("oi")) {
+      if (op.od.type && op.oi.type) {
+        output.push(
+          `Replaced ${TYPES[op.od.type]} "${
+            op.od.data?.title || op.od.data?.text
+          }" with ${TYPES[op.oi.type]} "${
+            op.oi.data?.title || op.oi.data?.text
+          }"`,
+        );
+      } else if (op.p.includes("data")) {
+        if (node.type) {
+          output.push(
+            `Updated ${TYPES[node.type]} ${op.p?.[2]} from "${op.od}" to "${
+              op.oi
+            }"`,
+          );
+        } else {
+          output.push(
+            `Updated node ${op.p?.[2]} from "${op.od}" to "${op.oi}"`,
+          );
+        }
+      } else if (op.p.includes("edges")) {
+        output.push(`Updated order of nodes`);
+      }
+      // Adding (inserting) an object or its properties
+    } else if (Object.keys(op).includes("oi")) {
+      if (op.oi.type) {
+        output.push(
+          `Added ${TYPES[op.oi.type]} "${
+            op.oi.data?.title || op.oi.data?.text
+          }"`,
+        );
+      } else if (op.p.includes("data")) {
+        if (node.type) {
+          output.push(`Added ${TYPES[node.type]} ${op.p?.[2]} "${op.oi}"`);
+        } else {
+          output.push(`Added node ${op.p?.[2]} "${op.oi}"`);
+        }
+      } else if (op.p.includes("edges")) {
+        if (node.type) {
+          output.push(`Added ${TYPES[node.type]} to branch`);
+        } else {
+          output.push(`Added node to branch`);
+        }
+      }
+      // Deleting an object or its properties
+    } else if (Object.keys(op).includes("od")) {
+      if (op.od.type) {
+        output.push(
+          `Deleted ${TYPES} "${op.od.data?.title || op.od.data?.text}"`,
+        );
+      } else if (op.p.includes("data")) {
+        if (node.type) {
+          output.push(`Deleted ${TYPES[node.type]} ${op.p?.[2]} "${op.od}"`);
+        } else {
+          output.push(`Deleted node ${op.p?.[2]} "${op.od}"`);
+        }
+      } else if (op.p.includes("edges")) {
+        if (node.type) {
+          output.push(`Deleted ${TYPES[node.type]} from branch`);
+        } else {
+          output.push(`Deleted node from branch`);
+        }
+      }
+      // Updating the _root list (update = list insert + list delete)
+    } else if (
+      Object.keys(op).includes("li") &&
+      Object.keys(op).includes("ld")
+    ) {
+      if (op.p.includes("edges") && op.p.includes("_root")) {
+        output.push(`Re-ordered _root nodes`);
+      }
+    }
+  });
+
+  return output;
+};
