@@ -210,6 +210,7 @@ jobs:
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          REACT_APP_HASURA_WEBSOCKET: wss://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
@@ -224,6 +225,7 @@ jobs:
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          REACT_APP_HASURA_WEBSOCKET: wss://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           REACT_APP_ENV: pizza

@@ -1,3 +1,5 @@
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -5,6 +7,7 @@ import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
 import Card from "../shared/Preview/Card";
+import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { makeData } from "../shared/utils";
 import { PublicProps } from "../ui";
 import {
@@ -17,6 +20,37 @@ import {
 export type Props = PublicProps<Send>;
 
 const SendComponent: React.FC<Props> = ({
+  destinations = [DEFAULT_DESTINATION],
+  ...props
+}) => {
+  const fullProps = { destinations: destinations, ...props };
+  if (
+    window.location.pathname.endsWith("/draft") ||
+    window.location.pathname.endsWith("/amber")
+  ) {
+    return <SkipSendWarning {...fullProps} />;
+  } else {
+    return <CreateSendEvents {...fullProps} />;
+  }
+};
+
+/**
+ * Skip queuing up Send events on non-Save&Return layout routes because they don't record lowcal_session data
+ */
+const SkipSendWarning: React.FC<Props> = (props) => (
+  <Card handleSubmit={props.handleSubmit}>
+    <WarningContainer>
+      <ErrorOutline />
+      <Typography variant="body1" ml={2}>
+        You can only test submissions on <strong>published routes</strong> where
+        Save & Return is enabled. Click "Continue" to finish reviewing content
+        and skip submission.
+      </Typography>
+    </WarningContainer>
+  </Card>
+);
+
+const CreateSendEvents: React.FC<Props> = ({
   destinations = [DEFAULT_DESTINATION],
   ...props
 }) => {
@@ -81,7 +115,7 @@ const SendComponent: React.FC<Props> = ({
         makeData(props, request.value.s3?.event_id, "s3SendEventId"),
       );
     }
-  }, [request.loading, request.error, request.value]);
+  }, [request.loading, request.error, request.value, destinations, props]);
 
   if (request.loading) {
     return (

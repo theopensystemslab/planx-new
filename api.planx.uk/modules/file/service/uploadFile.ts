@@ -8,10 +8,11 @@ const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 export const uploadPublicFile = async (
   file: Express.Multer.File,
   filename: string,
+  filekey?: string,
 ) => {
   const s3 = s3Factory();
 
-  const { params, key, fileType } = generateFileParams(file, filename);
+  const { params, key, fileType } = generateFileParams(file, filename, filekey);
 
   await s3.putObject(params).promise();
   const fileUrl = buildFileUrl(key, "public");
@@ -25,10 +26,11 @@ export const uploadPublicFile = async (
 export const uploadPrivateFile = async (
   file: Express.Multer.File,
   filename: string,
+  filekey?: string,
 ) => {
   const s3 = s3Factory();
 
-  const { params, key, fileType } = generateFileParams(file, filename);
+  const { params, key, fileType } = generateFileParams(file, filename, filekey);
 
   params.Metadata = {
     is_private: "true",
@@ -59,20 +61,21 @@ const buildFileUrl = (key: string, path: "public" | "private") => {
 export function generateFileParams(
   file: Express.Multer.File,
   filename: string,
+  filekey?: string,
 ): {
   params: S3.PutObjectRequest;
   fileType: string | null;
   key: string;
 } {
   const fileType = getType(filename);
-  const key = `${nanoid()}/${filename}`;
+  const key = `${filekey || nanoid()}/${filename}`;
 
   const params = {
     ACL: process.env.AWS_S3_ACL,
     Key: key,
-    Body: file.buffer,
+    Body: file?.buffer || JSON.stringify(file),
     ContentDisposition: `inline;filename="${filename}"`,
-    ContentType: file.mimetype,
+    ContentType: file?.mimetype || "application/json",
   } as S3.PutObjectRequest;
 
   return {
