@@ -88,8 +88,8 @@ export default function ConfirmationComponent(props: Props) {
 
         {props.contactInfo && (
           <>
-            <Box py={1} color="primary.main">
-              <Typography variant="h2" component="h3">
+            <Box py={1}>
+              <Typography variant="h2" component="h3" gutterBottom>
                 Contact us
               </Typography>
               <ReactMarkdownOrHtml source={props.contactInfo} />
