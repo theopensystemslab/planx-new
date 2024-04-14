@@ -554,11 +554,16 @@ const EditorToolbar: React.FC<{
               </MenuItem>
             )}
 
-            {/* Only show global settings link from top-level admin view */}
+            {/* Only show global settings & admin panel links from top-level view */}
             {isGlobalSettingsVisible && (
-              <MenuItem onClick={() => navigate("/global-settings")}>
-                Global Settings
-              </MenuItem>
+              <>
+                <MenuItem onClick={() => navigate("/global-settings")}>
+                  Global Settings
+                </MenuItem>
+                <MenuItem onClick={() => navigate("/admin-panel")}>
+                  Admin Panel
+                </MenuItem>
+              </>
             )}
 
             <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
