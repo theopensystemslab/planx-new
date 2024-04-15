@@ -225,11 +225,6 @@ test.describe("Gov Pay integration @regression", async () => {
     // retry the payment
     await page.getByText("Retry payment").click();
     await page.getByText("Continue with your payment").click();
-    // Re-enter card details
-    await fillGovUkCardDetails({
-      page,
-      cardNumber: cards.successful_card_number,
-    });
     await submitCardDetails(page);
 
     const { paymentId } = await waitForPaymentResponse(page, context);
