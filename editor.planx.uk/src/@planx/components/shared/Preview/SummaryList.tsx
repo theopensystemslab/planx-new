@@ -20,7 +20,8 @@ const FIND_PROPERTY_DT = "Property address";
 const DRAW_BOUNDARY_DT = "Location plan";
 
 export const SummaryListTable = styled("dl", {
-  shouldForwardProp: (prop) => prop !== "showChangeButton" && prop !== "dense",
+  shouldForwardProp: (prop) =>
+    !["showChangeButton", "dense"].includes(prop as string),
 })<{ showChangeButton?: boolean; dense?: boolean }>(
   ({ theme, showChangeButton, dense }) => ({
     display: "grid",
