@@ -66,4 +66,15 @@ describe("Digital Planning Application payload admin endpoint", () => {
         expect(res.body).toEqual(expectedPlanningPermissionPayload),
       );
   });
+
+  it("returns an invalid JSON payload if the skipValidation query param is set", async () => {
+    await supertest(app)
+      .get(endpoint`123`.concat("?skipValidation=true"))
+      .set(authHeader({ role: "platformAdmin" }))
+      .expect(200)
+      .expect("content-type", "application/json; charset=utf-8")
+      .then((res) =>
+        expect(res.body).toEqual(expectedPlanningPermissionPayload),
+      );
+  });
 });
