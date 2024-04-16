@@ -97,6 +97,8 @@ const Root = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   minHeight: `calc(100% - ${HEADER_HEIGHT}px)`,
+  // Ensure settings panels sit above editor content with explicit z-index set, will be redundent when we move to side-tabbed settings
+  zIndex: "100",
   [`& .${classes.tabs}`]: {
     backgroundColor: theme.palette.border.main,
   },
