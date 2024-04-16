@@ -13,6 +13,7 @@ import React from "react";
 
 import { client } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
+import AdminPanelView from "../pages/PlatformAdminPanel";
 import Teams from "../pages/Teams";
 import { makeTitle } from "./utils";
 import { authenticatedView } from "./views/authenticated";
@@ -64,6 +65,48 @@ const editorRoutes = compose(
         return {
           title: makeTitle("Global Settings"),
           view: <GlobalSettingsView />,
+        };
+      });
+    }),
+
+    "/admin-panel": map(async (req) => {
+      const isAuthorised = useStore.getState().user?.isPlatformAdmin;
+      if (!isAuthorised)
+        throw new NotFoundError(
+          `User does not have access to ${req.originalUrl}`,
+        );
+
+      return route(async () => {
+        const { data } = await client.query({
+          query: gql`
+            query {
+              adminPanel: teams_summary {
+                id
+                name
+                slug
+                referenceCode: reference_code
+                homepage
+                subdomain
+                planningDataEnabled: planning_data_enabled
+                article4sEnabled: article_4s_enabled
+                govnotifyPersonalisation: govnotify_personalisation
+                govpayEnabled: govpay_enabled
+                sendToEmailAddress: send_to_email_address
+                bopsSubmissionURL: bops_submission_url
+                logo
+                favicon
+                primaryColour: primary_colour
+                linkColour: link_colour
+                actionColour: action_colour
+              }
+            }
+          `,
+        });
+        useStore.getState().setAdminPanelData(data.adminPanel);
+
+        return {
+          title: makeTitle("Platform Admin Panel"),
+          view: <AdminPanelView />,
         };
       });
     }),
