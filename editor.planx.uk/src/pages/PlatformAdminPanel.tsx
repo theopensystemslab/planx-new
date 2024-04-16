@@ -16,6 +16,7 @@ import Caret from "ui/icons/Caret";
 const StyledTeamAccordion = styled(Accordion, {
   shouldForwardProp: (prop) => prop !== "primaryColour",
 })<{ primaryColour?: string }>(({ theme, primaryColour }) => ({
+  borderTop: "none", // TODO figure out how to remove top border (box shadow?) when collapsed
   borderLeft: `10px solid ${primaryColour}`,
   backgroundColor: theme.palette.background.paper,
   width: "100%",
@@ -36,7 +37,7 @@ function Component() {
       <Typography variant="h1">Platform Admin Panel</Typography>
       <Typography variant="body1" mb={3}>
         {`This is an overview of each team's integrations and settings for the `}
-        <strong>{process.env.NODE_ENV}</strong>
+        <strong>{process.env.REACT_APP_ENV}</strong>
         {` environment`}
       </Typography>
       {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
@@ -54,7 +55,7 @@ const Configured: React.FC = () => <Done color="success" fontSize="small" />;
 
 const TeamData: React.FC<TeamData> = ({ data }) => {
   return (
-    <StyledTeamAccordion primaryColour={data.primaryColour}>
+    <StyledTeamAccordion primaryColour={data.primaryColour} elevation={0}>
       <AccordionSummary
         id={`${data.name}-header`}
         aria-controls={`${data.name}-panel`}
