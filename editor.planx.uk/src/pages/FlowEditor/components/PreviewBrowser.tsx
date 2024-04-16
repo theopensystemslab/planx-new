@@ -46,6 +46,7 @@ const EmbeddedBrowser = styled(Box)(({ theme }) => ({
   bottom: "0",
   width: "500px",
   display: "flex",
+  flexShrink: 0,
   flexDirection: "column",
   borderLeft: `1px solid ${theme.palette.border.main}`,
   background: theme.palette.background.paper,
