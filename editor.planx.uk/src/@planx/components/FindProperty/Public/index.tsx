@@ -56,6 +56,12 @@ function Component(props: Props) {
   const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
   const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
 
+  const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
+  const [showAddressSelectError, setShowAddressSelectError] = useState<boolean>(false);
+  const [showDataFetchingError, setShowDataFetchingError] = useState<boolean>(false);
+  const [showMapError, setShowMapError] = useState<boolean>(false);
+  const [showSiteDescriptionError, setShowSiteDescriptionError] = useState<boolean>(false);
+
   const teamSettings = useStore((state) => state.teamSettings);
 
   // Use the address point to fetch the Local Authority District(s) & region via Digital Land
@@ -142,6 +148,8 @@ function Component(props: Props) {
             id={props.id}
             description={props.newAddressDescription || ""}
             descriptionLabel={props.newAddressDescriptionLabel || ""}
+            showSiteDescriptionError={showSiteDescriptionError}
+            setShowSiteDescriptionError={setShowSiteDescriptionError}
           />
         </>
       );
@@ -159,10 +167,14 @@ function Component(props: Props) {
               previouslySubmittedData?._address?.source === "os" &&
               previouslySubmittedData?._address.postcode
             }
+            showPostcodeError={showPostcodeError}
+            setShowPostcodeError={setShowPostcodeError}
             initialSelectedAddress={
               previouslySubmittedData?._address?.source === "os" &&
               previouslySubmittedData?._address
             }
+            showAddressSelectError={showAddressSelectError}
+            setShowAddressSelectError={setShowAddressSelectError}
             id={props.id}
             description={props.description || ""}
           />
@@ -198,8 +210,31 @@ function Component(props: Props) {
 
   return (
     <Card
-      isValid={Boolean(address) && !isValidating}
+      isValid
       handleSubmit={() => {
+        // Handle validation (eventually formalise with yup schema?)
+        if (page === "os-address") {
+          if (!address?.postcode) {
+            setShowPostcodeError(true);
+            return;
+          } else if (!address?.title) {
+            setShowAddressSelectError(true);
+            return;
+          } else if (!localAuthorityDistricts) {
+            setShowDataFetchingError(true);
+            return;
+          }
+        } else if (page === "new-address") {
+          if (!address?.x || !address.y) {
+            setShowMapError(true);
+            return;
+          } else if (!address?.title) {
+            setShowSiteDescriptionError(true);
+            return;
+          }
+        }
+
+        // Format passport data
         if (address) {
           const newPassportData: Store.userData["data"] = {};
           newPassportData["_address"] = address;

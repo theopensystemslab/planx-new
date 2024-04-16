@@ -15,7 +15,7 @@ export interface Props {
   role?: "alert" | "status";
 }
 
-const Root = styled(Box, {
+export const ErrorWrapperRoot = styled(Box, {
   shouldForwardProp: (prop) => prop !== "error",
 })<BoxProps & { error: Props["error"] }>(({ theme, error }) => ({
   ...(error && {
@@ -52,11 +52,11 @@ export default function ErrorWrapper({
   }, [error, trackEvent]);
 
   return (
-    <Root error={error} role={role} data-testid="error-wrapper">
+    <ErrorWrapperRoot error={error} role={role} data-testid="error-wrapper">
       <ErrorText id={inputId} data-testid={inputId} variant="body1">
         {error && error}
       </ErrorText>
       {children || null}
-    </Root>
+    </ErrorWrapperRoot>
   );
 }

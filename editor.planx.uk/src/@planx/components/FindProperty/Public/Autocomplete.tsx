@@ -10,6 +10,7 @@ import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
 import InputLabel from "ui/public/InputLabel";
+import { ErrorWrapperRoot } from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 
 import type { SiteAddress } from "../model";
@@ -22,7 +23,11 @@ interface Option extends SiteAddress {
 interface PickOSAddressProps {
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
   initialPostcode?: string;
+  showPostcodeError: boolean;
+  setShowPostcodeError: React.Dispatch<React.SetStateAction<boolean>>;
   initialSelectedAddress?: Option;
+  showAddressSelectError: boolean;
+  setShowAddressSelectError: React.Dispatch<React.SetStateAction<boolean>>;
   id?: string;
   description?: string;
 }
@@ -50,12 +55,11 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   );
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>(
     (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
-      null,
+    null,
   );
   const [selectedOption, setSelectedOption] = useState<Option | undefined>(
     props.initialSelectedAddress ?? undefined,
   );
-  const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
@@ -123,7 +127,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   }, [sanitizedPostcode, selectedOption]);
 
   const handleCheckPostcode = () => {
-    if (!sanitizedPostcode) setShowPostcodeError(true);
+    if (!sanitizedPostcode) props.setShowPostcodeError(true);
   };
 
   // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
@@ -159,7 +163,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           id="postcode-input"
           value={postcode || ""}
           errorMessage={
-            showPostcodeError && !sanitizedPostcode
+            props.showPostcodeError && !sanitizedPostcode
               ? "Enter a valid UK postcode"
               : ""
           }
@@ -173,7 +177,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
             maxLength: 8,
             "aria-describedby": [
               props.description ? DESCRIPTION_TEXT : "",
-              showPostcodeError && !sanitizedPostcode
+              props.showPostcodeError && !sanitizedPostcode
                 ? `${ERROR_MESSAGE}-${props.id}`
                 : "",
             ]
@@ -183,16 +187,18 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
         />
       </InputLabel>
       {sanitizedPostcode && (
-        /* @ts-ignore */
-        <address-autocomplete
-          id="address-autocomplete"
-          data-testid="address-autocomplete-web-component"
-          postcode={sanitizedPostcode}
-          initialAddress={selectedOption?.title || ""}
-          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-          arrowStyle="light"
-          labelStyle="static"
-        />
+        <ErrorWrapperRoot error={props.showAddressSelectError ? "Select an address to continue" : undefined} role="alert" data-testid="autocomplete-error-wrapper">
+          {/* @ts-ignore */
+            <address-autocomplete
+              id="address-autocomplete"
+              data-testid="address-autocomplete-web-component"
+              postcode={sanitizedPostcode}
+              initialAddress={selectedOption?.title || ""}
+              osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+              arrowStyle="light"
+              labelStyle="static"
+            />}
+        </ErrorWrapperRoot>
       )}
     </AutocompleteWrapper>
   );

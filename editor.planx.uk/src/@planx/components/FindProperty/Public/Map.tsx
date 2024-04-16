@@ -27,6 +27,8 @@ interface PlotNewAddressProps {
   id?: string;
   description?: string;
   descriptionLabel?: string;
+  showSiteDescriptionError: boolean;
+  setShowSiteDescriptionError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type Coordinates = {
@@ -55,8 +57,6 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   const [siteDescription, setSiteDescription] = useState<string | null>(
     props.initialProposedAddress?.title ?? null,
   );
-  const [showSiteDescriptionError, setShowSiteDescriptionError] =
-    useState<boolean>(false);
 
   const [environment, boundaryBBox] = useStore((state) => [
     state.previewEnvironment,
@@ -99,7 +99,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   }, [coordinates, siteDescription]);
 
   const handleSiteDescriptionCheck = () => {
-    if (!siteDescription) setShowSiteDescriptionError(true);
+    if (!siteDescription) props.setShowSiteDescriptionError(true);
   };
 
   const handleSiteDescriptionInputChange = (
@@ -170,7 +170,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
             id={`${props.id}-siteDescription`}
             value={siteDescription || ""}
             errorMessage={
-              showSiteDescriptionError && !siteDescription
+              props.showSiteDescriptionError && !siteDescription
                 ? `Enter a site description such as "Land at..."`
                 : ""
             }
@@ -182,7 +182,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
             inputProps={{
               "aria-describedby": [
                 props.description ? DESCRIPTION_TEXT : "",
-                showSiteDescriptionError && !siteDescription
+                props.showSiteDescriptionError && !siteDescription
                   ? `${ERROR_MESSAGE}-${props.id}`
                   : "",
               ]
