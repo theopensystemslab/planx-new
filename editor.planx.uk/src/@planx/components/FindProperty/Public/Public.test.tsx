@@ -310,6 +310,10 @@ describe("picking an OS address", () => {
 
     await user.type(await screen.findByLabelText("Postcode"), "SE5{enter}");
     expect(screen.getByText("Enter a valid UK postcode")).toBeInTheDocument();
+    expect(screen.getByTestId("error-wrapper")).toHaveAttribute(
+      "role",
+      "alert",
+    );
   });
 
   it("updates the address-autocomplete props when the postcode is changed", async () => {
@@ -413,6 +417,10 @@ describe("plotting a new address that does not have a uprn yet", () => {
     expect(
       screen.getByText(`Enter a site description such as "Land at..."`),
     ).toBeInTheDocument();
+    expect(screen.getByTestId("error-wrapper")).toHaveAttribute(
+      "role",
+      "alert",
+    );
 
     // expect continue to be disabled because we have incomplete address details
     expect(screen.getByTestId("continue-button")).toBeDisabled();
