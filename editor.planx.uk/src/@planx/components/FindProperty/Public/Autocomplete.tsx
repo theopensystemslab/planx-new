@@ -27,7 +27,6 @@ interface PickOSAddressProps {
   setShowPostcodeError: React.Dispatch<React.SetStateAction<boolean>>;
   initialSelectedAddress?: Option;
   showAddressSelectError: boolean;
-  setShowAddressSelectError: React.Dispatch<React.SetStateAction<boolean>>;
   id?: string;
   description?: string;
 }
@@ -55,7 +54,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   );
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>(
     (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
-    null,
+      null,
   );
   const [selectedOption, setSelectedOption] = useState<Option | undefined>(
     props.initialSelectedAddress ?? undefined,
@@ -187,7 +186,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
         />
       </InputLabel>
       {sanitizedPostcode && (
-        <ErrorWrapperRoot error={props.showAddressSelectError ? "Select an address to continue" : undefined} role="alert" data-testid="autocomplete-error-wrapper">
+        <ErrorWrapperRoot error={!selectedOption && props.showAddressSelectError ? "Select an address to continue" : undefined} role="alert" data-testid="autocomplete-error-wrapper">
           {/* @ts-ignore */
             <address-autocomplete
               id="address-autocomplete"
