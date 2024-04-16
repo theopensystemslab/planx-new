@@ -99,7 +99,14 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
 
   return (
     <Box id="editor-container">
-      <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          overflowX: "auto",
+        }}
+      >
         <LastEdited />
         <Box id="editor" ref={scrollContainerRef} sx={{ position: "relative" }}>
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
