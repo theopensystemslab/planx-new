@@ -105,6 +105,7 @@ const Root = styled(Box)(({ theme }) => ({
     backgroundColor: "#f2f2f2",
     zIndex: 0,
   },
+  zIndex: theme.zIndex.appBar,
 }));
 
 const Settings: React.FC<SettingsProps> = ({ currentTab, tabs }) => {
