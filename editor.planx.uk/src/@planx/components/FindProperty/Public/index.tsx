@@ -213,11 +213,9 @@ function Component(props: Props) {
       handleSubmit={() => {
         // Handle validation (eventually formalise with yup schema?)
         if (page === "os-address") {
-          if (showPostcodeError && !address) {
-            setShowAddressSelectError(true);
-            return;
-          } else if (!address) {
+          if (!address) {
             setShowPostcodeError(true);
+            setShowAddressSelectError(true);
             return;
           } else if (!localAuthorityDistricts) {
             setShowDataFetchingError(true);
