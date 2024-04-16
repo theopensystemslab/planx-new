@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "encrypt": "ts-node index.ts"
+    "encrypt": "ts-node encrypt.ts",
+    "decrypt": "ts-node decrypt.ts"
   },
   "keywords": [],
   "dependencies": {
