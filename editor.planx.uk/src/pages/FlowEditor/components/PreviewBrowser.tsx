@@ -18,6 +18,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -37,16 +39,85 @@ const Console = styled(Box)(() => ({
   maxHeight: "50%",
 }));
 
+const EmbeddedBrowser = styled(Box)(({ theme }) => ({
+  position: "relative",
+  top: "0",
+  right: "0",
+  bottom: "0",
+  width: "500px",
+  display: "flex",
+  flexDirection: "column",
+  borderLeft: `1px solid ${theme.palette.border.main}`,
+  background: theme.palette.background.paper,
+  "& iframe": {
+    flex: "1",
+  },
+}));
+
 const PreviewContainer = styled(Box)(() => ({
   overflow: "auto",
   flex: 1,
   background: "#fff",
 }));
 
-const Header = styled("header")(() => ({
-  display: "flex",
-  flexDirection: "column",
+const Header = styled("header")(({ theme }) => ({
+  padding: theme.spacing(1),
+  "& input": {
+    flex: "1",
+    padding: "5px",
+    marginRight: "5px",
+    background: theme.palette.common.white,
+    border: "1px solid rgba(0, 0, 0, 0.2)",
+  },
+  "& svg": {
+    cursor: "pointer",
+    opacity: "0.7",
+    margin: "6px 4px 1px 4px",
+    fontSize: "1.2rem",
+  },
 }));
+
+const TabList = styled(Box)(({ theme }) => ({
+  position: "relative",
+  // Use a pseudo element as border to allow for tab border overlap without excessive MUI overrides
+  "&::after": {
+    content: "''",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    height: "1px",
+    backgroundColor: theme.palette.border.main,
+  },
+  "& .MuiTabs-root": {
+    minHeight: "0",
+  },
+}));
+
+
+const StyledTab = styled(Tab)(({ theme }) => ({
+  position: "relative",
+  zIndex: 1,
+  textTransform: "none",
+  background: "transparent",
+  border: `1px solid transparent`,
+  borderBottomColor: theme.palette.border.main,
+  color: theme.palette.primary.main,
+  fontWeight: "600",
+  minHeight: "36px",
+  margin: theme.spacing(0, 0.5),
+  marginBottom: "-1px",
+  padding: "0.5em",
+  // Using as placeholder stying for active/current tab
+  "&[data-state='active']": {
+    background: theme.palette.background.default,
+    borderColor: theme.palette.border.main,
+    borderBottomColor: theme.palette.common.white,
+    color: theme.palette.text.primary,
+    },
+})) as typeof Tab;
+
+
 
 const formatLastPublish = (date: string, user: string) =>
   `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
@@ -335,7 +406,7 @@ const PreviewBrowser: React.FC<{
   const teamSlug = window.location.pathname.split("/")[1];
 
   return (
-    <Box id="embedded-browser">
+    <EmbeddedBrowser id="embedded-browser">
       <Header>
         <Box width="100%" display="flex">
           <input
@@ -545,11 +616,17 @@ const PreviewBrowser: React.FC<{
           </Box>
         </Box>
       </Header>
+      <TabList>
+        <Tabs centered aria-label="">
+          <StyledTab disableRipple data-state="active" label="Preview" />
+          <StyledTab disableRipple label="History" />
+        </Tabs>
+      </TabList>
       <PreviewContainer>
         <Questions previewEnvironment="editor" key={String(key)} />
       </PreviewContainer>
       {showDebugConsole && <DebugConsole />}
-    </Box>
+    </EmbeddedBrowser>
   );
 });
 
