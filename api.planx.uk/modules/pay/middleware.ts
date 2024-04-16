@@ -46,8 +46,8 @@ interface GetPaymentRequestDetails {
           slug: string;
         };
       };
+      passport: Passport;
     };
-    passport: Passport;
   } | null;
 }
 
@@ -99,7 +99,7 @@ export async function fetchPaymentRequestDetails(
   if (paymentAmount) req.params.paymentAmount = paymentAmount;
 
   res.locals.govPayMetadata = paymentRequest.govPayMetadata;
-  res.locals.passport = paymentRequest.passport;
+  res.locals.passport = paymentRequest.session.passport;
 
   next();
 }
