@@ -98,7 +98,7 @@ const Root = styled(Box)(({ theme }) => ({
   right: 0,
   minHeight: `calc(100% - ${HEADER_HEIGHT}px)`,
   // Ensure settings panels sit above editor content with explicit z-index set, will be redundent when we move to side-tabbed settings
-  zIndex: "100",
+  zIndex: theme.zIndex.appBar,
   [`& .${classes.tabs}`]: {
     backgroundColor: theme.palette.border.main,
   },
@@ -107,7 +107,6 @@ const Root = styled(Box)(({ theme }) => ({
     backgroundColor: "#f2f2f2",
     zIndex: 0,
   },
-  zIndex: theme.zIndex.appBar,
 }));
 
 const Settings: React.FC<SettingsProps> = ({ currentTab, tabs }) => {
