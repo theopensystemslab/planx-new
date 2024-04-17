@@ -6,7 +6,6 @@ import Autocomplete, {
 } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import List from "@mui/material/List";
@@ -29,6 +28,7 @@ import {
   removeSlots,
   UserFile,
 } from "./model";
+import Checkbox from "ui/shared/Checkbox";
 
 interface SelectMultipleProps {
   uploadedFile: FileUploadSlot;
@@ -153,12 +153,12 @@ const renderOption: AutocompleteProps<
   <ListItem {...props}>
     <Checkbox
       data-testid="select-checkbox"
-      inputProps={{
-        "aria-label": `${option.name}`,
-      }}
       checked={selected}
+      inputProps={{
+        "aria-label": option.name
+      }}
     />
-    <ListItemText>{option.name}</ListItemText>
+    <ListItemText sx={{ ml: 2 }}>{option.name}</ListItemText>
   </ListItem>
 );
 
