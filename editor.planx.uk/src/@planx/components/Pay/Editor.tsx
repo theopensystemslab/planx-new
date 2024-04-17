@@ -287,7 +287,7 @@ const Component: React.FC<Props> = (props: Props) => {
                 </Link>{" "}
                 for more details.
               </Typography>
-              <Typography variant="subtitle2" sx={{ mb: 2 }}>Any values beginning with @ will be dynamically read from the applicant's passport.</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 2 }}>Any values beginning with @ will be dynamically read from data values set throughout the flow.</Typography>
               <ErrorWrapper
                 error={
                   typeof errors.govPayMetadata === "string" &&
