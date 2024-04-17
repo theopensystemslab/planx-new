@@ -6,7 +6,6 @@ import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
-import { TYPE } from "react-toastify/dist/utils";
 
 import { ImmerJSONPatch, OT } from "./types";
 
@@ -532,7 +531,9 @@ export const formatOps = (graph: Graph, ops: any[]): string[] => {
           );
         }
       } else if (op.p.includes("edges")) {
-        output.push(`Updated order of nodes`);
+        output.push(
+          `Updated order of ${node.type ? TYPES[node.type] : "graph"} edges`,
+        );
       }
       // Adding (inserting) an object or its properties
     } else if (Object.keys(op).includes("oi")) {
@@ -559,7 +560,9 @@ export const formatOps = (graph: Graph, ops: any[]): string[] => {
     } else if (Object.keys(op).includes("od")) {
       if (op.od.type) {
         output.push(
-          `Deleted ${TYPES} "${op.od.data?.title || op.od.data?.text}"`,
+          `Deleted ${TYPES[op.od.type]} "${
+            op.od.data?.title || op.od.data?.text
+          }"`,
         );
       } else if (op.p.includes("data")) {
         if (node.type) {
@@ -574,13 +577,13 @@ export const formatOps = (graph: Graph, ops: any[]): string[] => {
           output.push(`Deleted node from branch`);
         }
       }
-      // Updating the _root list (update = list insert + list delete)
+      // Updating the _root list (update = list insert or list delete)
     } else if (
       Object.keys(op).includes("li") &&
       Object.keys(op).includes("ld")
     ) {
       if (op.p.includes("edges") && op.p.includes("_root")) {
-        output.push(`Re-ordered _root nodes`);
+        output.push(`Re-ordered the graph`);
       }
     }
   });
