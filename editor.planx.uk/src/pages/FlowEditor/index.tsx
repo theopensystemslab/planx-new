@@ -3,15 +3,19 @@ import "./floweditor.scss";
 
 import { gql, useSubscription } from "@apollo/client";
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import React, { useRef } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
+import EditorMenu from "./components/EditorMenu";
 import Flow from "./components/Flow";
 import PreviewBrowser from "./components/PreviewBrowser";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 interface Operation {
   createdAt: string;
@@ -20,6 +24,13 @@ interface Operation {
     lastName: string;
   };
 }
+
+const EditorContainer = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "stretch",
+  overflow: "hidden",
+  flexGrow: 1,
+}));
 
 export const LastEdited = () => {
   const [flowId] = useStore((state) => [state.id]);
@@ -70,24 +81,27 @@ export const LastEdited = () => {
       operations: [operation],
     } = data;
     message = `Last edit by ${operation?.actor?.firstName} ${operation?.actor
-      ?.lastName} ${formattedDate(operation?.createdAt)}`;
+      ?.lastName} • ${formattedDate(operation?.createdAt)}`;
   }
 
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.grey[200],
         borderBottom: `1px solid ${theme.palette.border.main}`,
-        padding: theme.spacing(1),
+        padding: theme.spacing(0.5, 1),
         paddingLeft: theme.spacing(2),
+        display: "flex",
+        alignItems: "center",
         [theme.breakpoints.up("md")]: {
-          paddingLeft: theme.spacing(3),
+          paddingLeft: theme.spacing(2),
         },
       })}
     >
-      <Typography variant="body2" fontSize="small">
+      <Typography variant="body2" fontSize="small" fontWeight="600">
         {message}
       </Typography>
+      <Link variant="body2" fontSize="small" fontWeight="600" ml={2} sx={{ display: "flex", alignItems: "center", }}><EditNoteIcon /> View edit history</Link>
     </Box>
   );
 };
@@ -98,7 +112,10 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
   const showPreview = useStore((state) => state.showPreview);
 
   return (
-    <Box id="editor-container">
+    <EditorContainer id="editor-container">
+      <EditorMenu>
+
+      </EditorMenu>
       <Box
         sx={{
           display: "flex",
@@ -117,7 +134,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
           url={`${window.location.origin}${rootFlowPath(false)}/published`}
         />
       )}
-    </Box>
+    </EditorContainer>
   );
 };
 

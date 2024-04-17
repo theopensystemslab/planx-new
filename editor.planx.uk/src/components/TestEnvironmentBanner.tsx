@@ -8,7 +8,8 @@ import { visuallyHidden } from "@mui/utils";
 import React, { useState } from "react";
 
 const TestEnvironmentWarning = styled(Box)(({ theme }) => ({
-  display: "flex",
+  // Temporarily hide
+  display: "none",
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
   justifyContent: "space-between",
