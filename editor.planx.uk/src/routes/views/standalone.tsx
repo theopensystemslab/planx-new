@@ -38,7 +38,7 @@ const standaloneView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <Box component="main" id="main-content">
+      <Box component="main" id="main-content" sx={{ width: "100%" }}>
         <View />
       </Box>
     </PublicLayout>
