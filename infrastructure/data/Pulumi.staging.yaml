@@ -1,3 +1,4 @@
 config:
+  aws:profile: planx-staging
   data:db-password:
-    secure: AAABAB8n9YndCWHacrUqhkHcPPKh4iWGyB2MT8xYq55zcyp2hCSANG69CWR+6JiehY73+W/eBqA=
+    secure: AAABANyYBkbNfKWlHJPgQchQUyXbkh/jFGevy7r9Mqsx6mAxtE9ff01Z4T0nCJJ30N0GFwfd6TyvdGcdvuNuXg==
