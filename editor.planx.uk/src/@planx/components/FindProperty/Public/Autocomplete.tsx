@@ -27,6 +27,7 @@ interface PickOSAddressProps {
   setShowPostcodeError: React.Dispatch<React.SetStateAction<boolean>>;
   initialSelectedAddress?: Option;
   showAddressSelectError: boolean;
+  setShowAddressSelectError: React.Dispatch<React.SetStateAction<boolean>>;
   id?: string;
   description?: string;
 }
@@ -186,8 +187,17 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
         />
       </InputLabel>
       {sanitizedPostcode && (
-        <ErrorWrapperRoot error={!selectedOption && props.showAddressSelectError ? "Select an address to continue" : undefined} role="alert" data-testid="autocomplete-error-wrapper">
-          {/* @ts-ignore */
+        <ErrorWrapperRoot
+          error={
+            !selectedOption && props.showAddressSelectError
+              ? "Select an address to continue"
+              : undefined
+          }
+          role="alert"
+          data-testid="autocomplete-error-wrapper"
+        >
+          {
+            /* @ts-ignore */
             <address-autocomplete
               id="address-autocomplete"
               data-testid="address-autocomplete-web-component"
@@ -196,7 +206,8 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
               osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
               arrowStyle="light"
               labelStyle="static"
-            />}
+            />
+          }
         </ErrorWrapperRoot>
       )}
     </AutocompleteWrapper>

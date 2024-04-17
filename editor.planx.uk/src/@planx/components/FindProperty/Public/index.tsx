@@ -57,10 +57,13 @@ function Component(props: Props) {
   const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
 
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
-  const [showAddressSelectError, setShowAddressSelectError] = useState<boolean>(false);
-  const [showDataFetchingError, setShowDataFetchingError] = useState<boolean>(false);
+  const [showAddressSelectError, setShowAddressSelectError] =
+    useState<boolean>(false);
+  const [showDataFetchingError, setShowDataFetchingError] =
+    useState<boolean>(false);
   const [showMapError, setShowMapError] = useState<boolean>(false);
-  const [showSiteDescriptionError, setShowSiteDescriptionError] = useState<boolean>(false);
+  const [showSiteDescriptionError, setShowSiteDescriptionError] =
+    useState<boolean>(false);
 
   const teamSettings = useStore((state) => state.teamSettings);
 
@@ -174,6 +177,7 @@ function Component(props: Props) {
               previouslySubmittedData?._address
             }
             showAddressSelectError={showAddressSelectError}
+            setShowAddressSelectError={setShowAddressSelectError}
             id={props.id}
             description={props.description || ""}
           />
