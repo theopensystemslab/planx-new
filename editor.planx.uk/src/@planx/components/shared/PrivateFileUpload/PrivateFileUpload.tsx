@@ -23,6 +23,14 @@ export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
 
   return (
     <>
+      {hasEmptySlots && (
+        <Dropzone
+          slots={slots}
+          setSlots={setSlots}
+          setFileUploadStatus={setFileUploadStatus}
+          maxFiles={maxFiles}
+        />
+      )}
       {slots.map((slot) => {
         return (
           <UploadedFileCard
@@ -38,14 +46,6 @@ export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
         );
       })}
       <FileStatus status={fileUploadStatus} />
-      {hasEmptySlots && (
-        <Dropzone
-          slots={slots}
-          setSlots={setSlots}
-          setFileUploadStatus={setFileUploadStatus}
-          maxFiles={maxFiles}
-        />
-      )}
     </>
   );
 };

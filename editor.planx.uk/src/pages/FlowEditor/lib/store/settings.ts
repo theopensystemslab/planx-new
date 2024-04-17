@@ -1,7 +1,12 @@
 import { gql } from "@apollo/client";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
-import { FlowSettings, GlobalSettings, TextContent } from "types";
+import {
+  AdminPanelData,
+  FlowSettings,
+  GlobalSettings,
+  TextContent,
+} from "types";
 import type { StateCreator } from "zustand";
 
 import { SharedStore } from "./shared";
@@ -14,6 +19,8 @@ export interface SettingsStore {
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
+  adminPanelData?: AdminPanelData[];
+  setAdminPanelData: (adminPanelData: AdminPanelData[]) => void;
 }
 
 export const settingsStore: StateCreator<
@@ -91,4 +98,8 @@ export const settingsStore: StateCreator<
       },
     });
   },
+
+  adminPanelData: undefined,
+
+  setAdminPanelData: (adminPanelData) => set({ adminPanelData }),
 });
