@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { formatOps } from "@planx/graph";
 import { format } from "date-fns";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useRef } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
@@ -97,7 +98,7 @@ export const LastEdited = () => {
       <Typography variant="body2" fontSize="small">
         {message}
       </Typography>
-      {formattedOps && (
+      {hasFeatureFlag("UNDO") && formattedOps && (
         <Typography component="ul" pl={2}>
           {[...new Set(formattedOps)].map((op, i) => (
             <Typography variant="body2" fontSize="small" component="li" key={i}>
