@@ -223,6 +223,14 @@ const getThemeOptions = ({
           },
         },
       },
+      MuiPopper: {
+        styleOverrides: {
+          root: {
+            // Override default popover box-shadow to increase visual separation
+            boxShadow: "0 0 10px 4px rgba(0, 0, 0, 0.5) !important",
+          },
+        },
+      },
       MuiContainer: {
         styleOverrides: {
           root: {
