@@ -185,7 +185,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       </BackBar>
 
       {node && (
-        <Box component="main" id="main-content">
+        <Box component="main" id="main-content" sx={{ width: "100%" }}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Node
               node={node}

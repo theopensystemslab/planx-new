@@ -24,12 +24,12 @@ const SaveAndReturnLayout = ({ children }: PropsWithChildren) => {
         {
           [AppPath.SingleSession]: children,
           [AppPath.Save]: (
-            <Box component="main" id="main-content">
+            <Box component="main" id="main-content" sx={{ width: "100%" }}>
               <SavePage />
             </Box>
           ),
           [AppPath.Resume]: (
-            <Box component="main" id="main-content">
+            <Box component="main" id="main-content" sx={{ width: "100%" }}>
               <ResumePage />
             </Box>
           ),
