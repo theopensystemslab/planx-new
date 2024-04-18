@@ -1,13 +1,14 @@
 import { useStore } from "pages/FlowEditor/lib/store";
-import { ApplicationPath } from "types";
+import { ApplicationPath, Passport } from "types";
 import { array, boolean, object, string } from "yup";
 
 import type { MoreInformation } from "../shared";
-
-export interface GovPayMetadata {
-  key: string;
-  value: string | boolean;
-}
+import {
+  GovPayMetadata,
+  GovUKCreatePaymentPayload,
+  Passport as IPassport,
+} from "@opensystemslab/planx-core/types";
+import { formatGovPayMetadata } from "@opensystemslab/planx-core";
 
 export interface Pay extends MoreInformation {
   title: string;
@@ -28,33 +29,12 @@ export interface Pay extends MoreInformation {
   govPayMetadata: GovPayMetadata[];
 }
 
-// https://docs.payments.service.gov.uk/making_payments/#creating-a-payment
-export interface GovUKCreatePaymentPayload {
-  amount: number;
-  reference: string;
-  description: string;
-  return_url: string;
-  email?: string;
-  prefilled_cardholder_details?: {
-    cardholder_name?: string;
-    billing_address?: {
-      line1: string;
-      line2: string;
-      postcode: string;
-      city: string;
-      country: string;
-    };
-  };
-  language?: string;
-  metadata?: Record<string, string | boolean>;
-}
-
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
 export const toDecimal = (pence: number) => pence / 100;
 
 export const formattedPriceWithCurrencySymbol = (
   amount: number,
-  currency = "GBP",
+  currency = "GBP"
 ) =>
   new Intl.NumberFormat("en-GB", {
     style: "currency",
@@ -65,18 +45,14 @@ export const createPayload = (
   fee: number,
   reference: string,
   metadata: GovPayMetadata[],
+  passport: Passport
 ): GovUKCreatePaymentPayload => ({
   amount: toPence(fee),
   reference,
   description: "New application",
   return_url: getReturnURL(reference),
-  metadata: formatMetadata(metadata),
+  metadata: formatGovPayMetadata(metadata, passport as IPassport),
 });
-
-export const formatMetadata = (
-  metadata: GovPayMetadata[],
-): GovUKCreatePaymentPayload["metadata"] =>
-  Object.fromEntries(metadata.map(({ key, value }) => [key, value]));
 
 /**
  * For Save & Return, include sessionId and email as query params so the session can be picked up
@@ -106,7 +82,7 @@ export const govPayMetadataSchema = array(
     value: string()
       .required("Value is a required field")
       .max(100, "Value length cannot exceed 100 characters"),
-  }),
+  })
 )
   .max(10, "A maximum of 10 fields can be set as metadata")
   .test({
@@ -133,7 +109,7 @@ export const govPayMetadataSchema = array(
 
       const keys = metadata.map((item) => item.key);
       const allRequiredKeysPresent = REQUIRED_GOVPAY_METADATA.every(
-        (requiredKey) => keys.includes(requiredKey),
+        (requiredKey) => keys.includes(requiredKey)
       );
       return allRequiredKeysPresent;
     },

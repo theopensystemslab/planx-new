@@ -3,6 +3,11 @@ import { gql } from "graphql-request";
 import { $api } from "../../client";
 import { ServerError } from "../../errors";
 import { GovPayMetadata } from "./types";
+import { formatGovPayMetadata } from "@opensystemslab/planx-core";
+import {
+  GovPayMetadataValue,
+  Passport,
+} from "@opensystemslab/planx-core/types";
 
 /**
  * Confirm that this local authority (aka team) has a pay token
@@ -41,6 +46,7 @@ interface GetPaymentRequestDetails {
           slug: string;
         };
       };
+      passport: Passport;
     };
   } | null;
 }
@@ -63,6 +69,7 @@ export async function fetchPaymentRequestDetails(
               slug
             }
           }
+          passport: data(path: "$.passport")
         }
       }
     }
@@ -92,6 +99,7 @@ export async function fetchPaymentRequestDetails(
   if (paymentAmount) req.params.paymentAmount = paymentAmount;
 
   res.locals.govPayMetadata = paymentRequest.govPayMetadata;
+  res.locals.passport = paymentRequest.session.passport;
 
   next();
 }
@@ -102,7 +110,7 @@ interface GovPayCreatePayment {
   reference: string;
   description: string;
   return_url: string;
-  metadata: Record<string, string | boolean>;
+  metadata: Record<string, GovPayMetadataValue>;
 }
 
 export async function buildPaymentPayload(
@@ -129,27 +137,10 @@ export async function buildPaymentPayload(
   }
 
   // Convert metadata to format required by GovPay
-  const govPayMetadata = Object.fromEntries(
-    res.locals.govPayMetadata.map(({ key, value }: GovPayMetadata) => [
-      key,
-      value,
-    ]),
+  const metadata = formatGovPayMetadata(
+    res.locals.govPayMetadata,
+    res.locals.passport,
   );
-
-  const defaultGovPayMetadata = {
-    source: "PlanX",
-    // Payment requests have /pay path suffix, so get flow-slug from second-to-last position
-    flow:
-      (req.query.returnURL as string)
-        .split("?")?.[0]
-        ?.split("/")
-        ?.slice(-2, -1)?.[0] || "Could not parse service name",
-    inviteToPay: true,
-  };
-
-  const metadata = Object.keys(govPayMetadata).length
-    ? govPayMetadata
-    : defaultGovPayMetadata;
 
   const createPaymentBody: GovPayCreatePayment = {
     amount: parseInt(req.params.paymentAmount),

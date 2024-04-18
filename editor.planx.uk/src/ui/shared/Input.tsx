@@ -65,7 +65,6 @@ const StyledInputBase = styled(InputBase, {
     backgroundColor: "#f0f0f0",
     borderColor: "#d3d3d3",
     fontFamily: `"Source Code Pro", monospace;`,
-    height: "44px",
     "& input": {
       fontSize: theme.typography.body2.fontSize,
     },

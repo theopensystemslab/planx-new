@@ -2,9 +2,8 @@ import DataObjectIcon from "@mui/icons-material/DataObject";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { GovPayMetadata, ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
-  GovPayMetadata,
   Pay,
   REQUIRED_GOVPAY_METADATA,
   validationSchema,
@@ -30,7 +29,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
-type FormikGovPayMetadata = Record<keyof GovPayMetadata, string>[] | string | undefined;
+type FormikGovPayMetadata =
+  | Record<keyof GovPayMetadata, string>[]
+  | string
+  | undefined;
 
 const GOVPAY_DOCS_URL =
   "https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39";
@@ -113,6 +115,7 @@ function GovPayMetadataEditor(props: ListManagerEditorProps<GovPayMetadata>) {
             placeholder="key"
           />
           <Input
+            format={currVal.toString().startsWith("@") ? "data" : undefined}
             aria-labelledby="value-label"
             disabled={isDisabled}
             value={currVal}
@@ -284,10 +287,11 @@ const Component: React.FC<Props> = (props: Props) => {
                 </Link>{" "}
                 for more details.
               </Typography>
+              <Typography variant="subtitle2" sx={{ mb: 2 }}>Any values beginning with @ will be dynamically read from data values set throughout the flow.</Typography>
               <ErrorWrapper
                 error={
                   typeof errors.govPayMetadata === "string" &&
-                  touched.govPayMetadata
+                    touched.govPayMetadata
                     ? errors.govPayMetadata
                     : undefined
                 }
