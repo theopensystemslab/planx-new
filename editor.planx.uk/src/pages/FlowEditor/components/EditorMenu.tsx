@@ -85,7 +85,7 @@ function EditorMenu() {
           </TooltipWrap>
         </MenuItem>
         <MenuItem>
-          <TooltipWrap title="Analtyics">
+          <TooltipWrap title="Analytics">
             <MenuButton disableRipple>
               <EqualizerIcon />
             </MenuButton>
