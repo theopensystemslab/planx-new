@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses,TooltipProps } from '@mui/material/Tooltip';
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from 'theme';
 
 const MENU_WIDTH = "46px";
 
@@ -23,7 +24,7 @@ const Root = styled(Box)(({ theme }) => ({
 const MenuWrap = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(6, 0, 0, 0),
+  padding: theme.spacing(5, 0, 0, 0),
 }));
 
 const MenuItem = styled("li")(({ theme }) => ({
@@ -33,14 +34,16 @@ const MenuItem = styled("li")(({ theme }) => ({
 
 const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow placement="right" classes={{ popper: className }} />
-))(({ theme }) => ({
+))(() => ({
   [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.common.black,
+    color: "#2c2c2c",
   },
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: "#2c2c2c",
     left: "-5px",
-    fontSize: "0.875em",
+    fontSize: "0.8em",
+    borderRadius: 0,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
 }));
 
@@ -48,11 +51,18 @@ const MenuButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.main,
   width: MENU_WIDTH,
   height: MENU_WIDTH,
+  border: "1px solid transparent",
+  borderRightColor: theme.palette.border.main,
+  "&:hover": {
+    background: "white",
+    borderTopColor: theme.palette.border.light,
+    borderBottomColor: theme.palette.border.light,
+  },
   "&[data-state='active']": {
     background: theme.palette.common.white,
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.main}`,
-    borderRight: "none",
+    borderRightColor: "transparent",
   },
 }));
 
