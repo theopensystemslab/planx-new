@@ -18,7 +18,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useMemo, useState } from "react";
-import { focusStyle } from "theme";
+import { borderedFocusStyle } from "theme";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import {
@@ -65,7 +65,7 @@ const StyledAutocomplete = styled(
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "&:focus-within": {
-    ...focusStyle,
+    ...borderedFocusStyle,
     [`& .${outlinedInputClasses.notchedOutline}`]: {
       border: "1px solid transparent !important",
     },
@@ -126,9 +126,9 @@ const renderGroup: AutocompleteProps<
   <List key={`group-${key}`} role="group" sx={{ paddingY: 0 }}>
     <ListSubheader
       role="presentation"
+      disableSticky
       sx={(theme) => ({
         borderTop: 1,
-        borderBottom: 1,
         borderColor: theme.palette.border.main,
       })}
     >
