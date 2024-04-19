@@ -5,6 +5,7 @@ import { gql, useSubscription } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { formatOps } from "@planx/graph";
+import { OT } from "@planx/graph/types";
 import { format } from "date-fns";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useRef } from "react";
@@ -21,7 +22,7 @@ interface Operation {
     firstName: string;
     lastName: string;
   };
-  data: Record<string, any>[]; // consider OT types via src/@planx/graph in future
+  data: Array<OT.Op>;
 }
 
 export const LastEdited = () => {

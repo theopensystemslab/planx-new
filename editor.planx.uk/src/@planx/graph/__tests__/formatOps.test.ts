@@ -148,8 +148,8 @@ describe("Insert operations", () => {
   });
 });
 
-describe("Delete operations", () => {
-  test("Deleting a node from the graph", () => {
+describe("Remove operations", () => {
+  test("Removing a node from the graph", () => {
     const ops = [
       {
         p: ["_root", "edges", 1],
@@ -196,14 +196,14 @@ describe("Delete operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      'Deleted Answer "Blueberry"',
-      'Deleted Answer "Orange"',
-      'Deleted Answer "Banana"',
-      'Deleted Checklist "Which fruits?"',
+      'Removed Answer "Blueberry"',
+      'Removed Answer "Orange"',
+      'Removed Answer "Banana"',
+      'Removed Checklist "Which fruits?"',
     ]);
   });
 
-  test("Deleting a child of a node", () => {
+  test("Removing a child of a node", () => {
     const ops = [
       {
         p: ["FW5G3EMBI3", "edges"],
@@ -223,11 +223,11 @@ describe("Delete operations", () => {
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
       "Updated order of Checklist edges",
-      'Deleted Answer "Orange"',
+      'Removed Answer "Orange"',
     ]);
   });
 
-  test.todo("Deleting a data property of an existing node");
+  test.todo("Removing a data property of an existing node");
 });
 
 const emptyFlow: Graph = {
