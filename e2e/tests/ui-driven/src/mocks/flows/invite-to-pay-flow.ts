@@ -85,7 +85,7 @@ const flow: FlowGraph = {
       yourDetailsTitle: "Your details",
       yourDetailsLabel: "Your name or organisation name",
       govPayMetadata: [
-        { key: "flow",  value: "flow-name" },
+        { key: "flow", value: "flow-name" },
         { key: "source", value: "PlanX" },
         { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
       ],

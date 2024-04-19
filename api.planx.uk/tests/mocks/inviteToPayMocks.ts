@@ -129,7 +129,7 @@ export const createPaymentRequestQueryMock = {
     sessionPreviewData: sessionPreviewData,
     govPayMetadata: [
       { key: "source", value: "PlanX" },
-      { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
+      { key: "paidViaInviteToPay", value: true },
       { key: "flow", value: validSession.flow.slug },
     ],
   },
