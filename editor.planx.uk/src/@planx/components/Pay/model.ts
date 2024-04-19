@@ -89,7 +89,17 @@ export const govPayMetadataSchema = array(
       .max(30, "Key length cannot exceed 30 characters"),
     value: string()
       .required("Value is a required field")
-      .max(100, "Value length cannot exceed 100 characters"),
+      .test({
+        name: "max-length",
+        message: "Value length cannot exceed 100 characters",
+        test: (value) => {
+          if (!value) return true;
+          // No limit to dynamic passport variable length, this is checked and truncated at runtime
+          if (value.startsWith("@")) return true;
+          // Static strings must be 100 characters or less
+          return value.length <= 100;
+        },
+      }),
   }),
 )
   .max(10, "A maximum of 10 fields can be set as metadata")
