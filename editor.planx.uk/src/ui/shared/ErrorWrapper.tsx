@@ -18,8 +18,8 @@ export interface Props {
 const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "error",
 })<BoxProps & { error: Props["error"] }>(({ theme, error }) => ({
+  width: "100%",
   ...(error && {
-    width: "100%",
     paddingLeft: theme.spacing(1.5),
     borderLeft: `5px solid ${theme.palette.error.main}`,
     display: "flex",

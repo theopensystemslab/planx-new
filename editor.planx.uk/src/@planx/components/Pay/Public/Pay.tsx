@@ -246,7 +246,7 @@ function Component(props: Props) {
     await axios
       .post(
         getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
-        createPayload(fee, sessionId, metadata),
+        createPayload(fee, sessionId, metadata, passport),
       )
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);
@@ -273,9 +273,9 @@ function Component(props: Props) {
   return (
     <>
       {state.status === "init" ||
-      state.status === "retry" ||
-      state.status === "unsupported_team" ||
-      state.status === "undefined_fee" ? (
+        state.status === "retry" ||
+        state.status === "unsupported_team" ||
+        state.status === "undefined_fee" ? (
         <Confirm
           {...props}
           fee={fee}
