@@ -2,7 +2,10 @@ import DataObjectIcon from "@mui/icons-material/DataObject";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { GovPayMetadata, ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  GovPayMetadata,
+} from "@opensystemslab/planx-core/types";
 import {
   Pay,
   REQUIRED_GOVPAY_METADATA,
@@ -173,8 +176,8 @@ const Component: React.FC<Props> = (props: Props) => {
         value: "PlanX",
       },
       {
-        key: "isInviteToPay",
-        value: props.node?.data?.allowInviteToPay ?? true,
+        key: "paidViaInviteToPay",
+        value: "@paidViaInviteToPay",
       },
     ],
     ...parseMoreInformation(props.node?.data),
@@ -287,11 +290,14 @@ const Component: React.FC<Props> = (props: Props) => {
                 </Link>{" "}
                 for more details.
               </Typography>
-              <Typography variant="subtitle2" sx={{ mb: 2 }}>Any values beginning with @ will be dynamically read from data values set throughout the flow.</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                Any values beginning with @ will be dynamically read from data
+                values set throughout the flow.
+              </Typography>
               <ErrorWrapper
                 error={
                   typeof errors.govPayMetadata === "string" &&
-                    touched.govPayMetadata
+                  touched.govPayMetadata
                     ? errors.govPayMetadata
                     : undefined
                 }
@@ -348,14 +354,6 @@ const Component: React.FC<Props> = (props: Props) => {
                 selected={values.allowInviteToPay}
                 onClick={() => {
                   setFieldValue("allowInviteToPay", !values.allowInviteToPay);
-                  // Update GovUKMetadata
-                  const inviteToPayIndex = values.govPayMetadata?.findIndex(
-                    ({ key }) => key === "isInviteToPay",
-                  );
-                  setFieldValue(
-                    `govPayMetadata[${inviteToPayIndex}].value`,
-                    !values.allowInviteToPay,
-                  );
                 }}
                 style={{ width: "100%" }}
               >
