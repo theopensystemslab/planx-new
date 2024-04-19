@@ -45,6 +45,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   width: 500px;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   border-left: 1px solid #ccc;
   header {
     input {
