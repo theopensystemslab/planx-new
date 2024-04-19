@@ -52,10 +52,10 @@ export const createPayload = (
   description: "New application",
   return_url: getReturnURL(reference),
   metadata: formatGovPayMetadata({
-    metadata, 
-    userPassport: passport as IPassport, 
+    metadata,
+    userPassport: passport as IPassport,
     paidViaInviteToPay: false,
-  })
+  }),
 });
 
 /**
@@ -74,7 +74,11 @@ const getReturnURL = (sessionId: string): string => {
 
 export const GOV_UK_PAY_URL = `${process.env.REACT_APP_API_URL}/pay`;
 
-export const REQUIRED_GOVPAY_METADATA = ["flow", "source", "isInviteToPay"];
+export const REQUIRED_GOVPAY_METADATA = [
+  "flow",
+  "source",
+  "paidViaInviteToPay",
+];
 
 // Validation must match requirements set out here -
 // https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39

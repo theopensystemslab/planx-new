@@ -67,7 +67,7 @@ describe("Pay component - Editor Modal", () => {
       );
       expect(getByDisplayValue("flow")).toBeInTheDocument();
       expect(getByDisplayValue("source")).toBeInTheDocument();
-      expect(getByDisplayValue("isInviteToPay")).toBeInTheDocument();
+      expect(getByDisplayValue("paidViaInviteToPay")).toBeInTheDocument();
     });
 
     it("does not allow default sections to be deleted", () => {
@@ -83,32 +83,6 @@ describe("Pay component - Editor Modal", () => {
       expect(deleteIcons[0]).toBeDisabled();
       expect(deleteIcons[1]).toBeDisabled();
       expect(deleteIcons[2]).toBeDisabled();
-    });
-
-    it("updates the 'isInviteToPay' metadata value inline with the 'isInviteToPay' form value", async () => {
-      const node = {
-        data: {
-          allowInviteToPay: false,
-        },
-      };
-
-      const { user, getAllByLabelText, getByText } = setup(
-        <DndProvider backend={HTML5Backend}>
-          <PayComponent id="test" node={node} />
-        </DndProvider>,
-      );
-
-      const keyInputs = getAllByLabelText("Key");
-      const valueInputs = getAllByLabelText("Value");
-
-      expect(keyInputs[2]).toHaveDisplayValue("isInviteToPay");
-      expect(valueInputs[2]).toHaveDisplayValue("false");
-
-      await user.click(
-        getByText("Allow applicants to invite someone else to pay"),
-      );
-
-      expect(valueInputs[2]).toHaveValue("true");
     });
 
     it("pre-populates existing values", () => {
@@ -177,7 +151,7 @@ describe("Pay component - Editor Modal", () => {
           govPayMetadata: [
             { key: "flow", value: "flowName" },
             { key: "source", value: "PlanX" },
-            { key: "isInviteToPay", value: "true" },
+            { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
             { key: "deleteMe", value: "abc123" },
           ],
         },
@@ -208,7 +182,7 @@ describe("Pay component - Editor Modal", () => {
       expect(handleSubmit.mock.lastCall[0].data.govPayMetadata).toEqual([
         { key: "flow", value: "flowName" },
         { key: "source", value: "PlanX" },
-        { key: "isInviteToPay", value: "true" },
+        { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
       ]);
     });
 

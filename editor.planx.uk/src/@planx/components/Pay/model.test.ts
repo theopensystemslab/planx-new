@@ -7,14 +7,14 @@ describe("GovPayMetadata Schema", () => {
   const defaults = [
     { key: "flow", value: "flowName" },
     { key: "source", value: "PlanX" },
-    { key: "isInviteToPay", value: "true" },
+    { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
   ];
 
   test("it requires all default values", async () => {
     const errors = await validate([]);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(
-      /Keys flow, source and isInviteToPay must be present/
+      /Keys flow, source and paidViaInviteToPay must be present/,
     );
   });
 

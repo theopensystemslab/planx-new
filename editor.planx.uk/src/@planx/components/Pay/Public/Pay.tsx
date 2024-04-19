@@ -72,7 +72,7 @@ function Component(props: Props) {
   const defaultMetadata = [
     { key: "source", value: "PlanX" },
     { key: "flow", value: flowSlug },
-    { key: "isInviteToPay", value: false },
+    { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
   ];
   const metadata = props.govPayMetadata?.length
     ? props.govPayMetadata
@@ -273,9 +273,9 @@ function Component(props: Props) {
   return (
     <>
       {state.status === "init" ||
-        state.status === "retry" ||
-        state.status === "unsupported_team" ||
-        state.status === "undefined_fee" ? (
+      state.status === "retry" ||
+      state.status === "unsupported_team" ||
+      state.status === "undefined_fee" ? (
         <Confirm
           {...props}
           fee={fee}
