@@ -4,7 +4,10 @@ import "./floweditor.scss";
 import { gql, useSubscription } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { formatOps } from "@planx/graph";
+import { OT } from "@planx/graph/types";
 import { format } from "date-fns";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useRef } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
@@ -19,10 +22,11 @@ interface Operation {
     firstName: string;
     lastName: string;
   };
+  data: Array<OT.Op>;
 }
 
 export const LastEdited = () => {
-  const [flowId] = useStore((state) => [state.id]);
+  const [flowId, flow] = useStore((state) => [state.id, state.flow]);
 
   const formattedDate = (dateString?: string) => {
     if (!dateString) return "";
@@ -43,6 +47,7 @@ export const LastEdited = () => {
             firstName: first_name
             lastName: last_name
           }
+          data(path: "op")
         }
       }
     `,
@@ -62,22 +67,28 @@ export const LastEdited = () => {
   if (data && !data.operations[0].actor) return null;
 
   let message: string;
+  let ops: Operation["data"] | undefined;
+  let formattedOps: string[] | undefined;
 
   if (loading || !data) {
     message = "Loading...";
+    ops = undefined;
+    formattedOps = undefined;
   } else {
     const {
       operations: [operation],
     } = data;
     message = `Last edit by ${operation?.actor?.firstName} ${operation?.actor
       ?.lastName} ${formattedDate(operation?.createdAt)}`;
+    ops = operation?.data;
+    formattedOps = formatOps(flow, ops);
   }
 
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor: theme.palette.background.paper,
-        borderBottom: `1px solid ${theme.palette.border.main}`,
+        // backgroundColor: theme.palette.background.paper,
+        // borderBottom: `1px solid ${theme.palette.border.main}`,
         padding: theme.spacing(1),
         paddingLeft: theme.spacing(2),
         [theme.breakpoints.up("md")]: {
@@ -88,6 +99,15 @@ export const LastEdited = () => {
       <Typography variant="body2" fontSize="small">
         {message}
       </Typography>
+      {hasFeatureFlag("UNDO") && formattedOps && (
+        <Typography component="ul" pl={2}>
+          {[...new Set(formattedOps)].map((op, i) => (
+            <Typography variant="body2" fontSize="small" component="li" key={i}>
+              {op}
+            </Typography>
+          ))}
+        </Typography>
+      )}
     </Box>
   );
 };
