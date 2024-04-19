@@ -2,12 +2,16 @@ import "./components/Settings";
 import "./floweditor.scss";
 
 import { gql, useSubscription } from "@apollo/client";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import React, { useRef } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { rootFlowPath } from "../../routes/utils";
 import EditorMenu from "./components/EditorMenu";
@@ -15,7 +19,6 @@ import Flow from "./components/Flow";
 import PreviewBrowser from "./components/PreviewBrowser";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
-import EditNoteIcon from '@mui/icons-material/EditNote';
 
 interface Operation {
   createdAt: string;
@@ -32,13 +35,32 @@ const EditorContainer = styled(Box)(() => ({
   flexGrow: 1,
 }));
 
+const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip
+    {...props}
+    arrow
+    placement="bottom"
+    classes={{ popper: className }}
+  />
+))(() => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: "#2c2c2c",
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#2c2c2c",
+    fontSize: "0.8em",
+    borderRadius: 0,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  },
+}));
+
 export const LastEdited = () => {
   const [flowId] = useStore((state) => [state.id]);
 
   const formattedDate = (dateString?: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return format(date, "HH:mm:ss, dd LLL yy");
+    return format(date, "HH:mm:ss, dd LLL yyyy");
   };
 
   const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
@@ -89,19 +111,125 @@ export const LastEdited = () => {
       sx={(theme) => ({
         backgroundColor: theme.palette.grey[200],
         borderBottom: `1px solid ${theme.palette.border.main}`,
-        padding: theme.spacing(0.5, 1),
-        paddingLeft: theme.spacing(2),
+        padding: theme.spacing(0.5, 2),
         display: "flex",
         alignItems: "center",
-        [theme.breakpoints.up("md")]: {
-          paddingLeft: theme.spacing(2),
-        },
+        justifyContent: "space-between",
       })}
     >
-      <Typography variant="body2" fontSize="small" fontWeight="600">
-        {message}
-      </Typography>
-      <Link variant="body2" fontSize="small" fontWeight="600" ml={2} sx={{ display: "flex", alignItems: "center", }}><EditNoteIcon /> View edit history</Link>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Link
+          href={`#`}
+          variant="body2"
+          fontSize="small"
+          fontWeight="600"
+          mr={2}
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          <EditNoteIcon /> View edit history
+        </Link>
+        <Typography variant="body2" fontSize="small" fontWeight="600">
+          {message}
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "3px",
+          }}
+        >
+          <TooltipWrap title="Georgina Murray">
+            <Avatar
+              sx={{
+                bgcolor: "#1446A0",
+                color: "#FFF",
+                fontSize: "0.6em",
+                fontWeight: "600",
+                width: 24,
+                height: 24,
+              }}
+            >
+              GM
+            </Avatar>
+          </TooltipWrap>
+          <TooltipWrap title="August Lindemer">
+            <Avatar
+              sx={{
+                bgcolor: "#8C001A",
+                color: "#FFF",
+                fontSize: "0.6em",
+                fontWeight: "600",
+                width: 24,
+                height: 24,
+              }}
+            >
+              AL
+            </Avatar>
+          </TooltipWrap>
+          <TooltipWrap title="Jessica McInchak">
+            <Avatar
+              sx={{
+                bgcolor: "#5149C1",
+                color: "#FFF",
+                fontSize: "0.6em",
+                fontWeight: "600",
+                width: 24,
+                height: 24,
+              }}
+            >
+              JM
+            </Avatar>
+          </TooltipWrap>
+          <TooltipWrap title="Ollie Zhang">
+            <Avatar
+              sx={{
+                bgcolor: "#2A7F62",
+                color: "#FFF",
+                fontSize: "0.6em",
+                fontWeight: "600",
+                width: 24,
+                height: 24,
+              }}
+            >
+              OZ
+            </Avatar>
+          </TooltipWrap>
+          <TooltipWrap title="Dafydd Pearson">
+            <Avatar
+              sx={{
+                bgcolor: "#8B6004",
+                color: "#FFF",
+                fontSize: "0.6em",
+                fontWeight: "600",
+                width: 24,
+                height: 24,
+              }}
+            >
+              DP
+            </Avatar>
+          </TooltipWrap>
+          <Typography variant="body2" fontSize="small" fontWeight="600">
+            +4
+          </Typography>
+        </Box>
+
+        <Link href={`#`} variant="body2" fontSize="small" fontWeight="600">
+          View team members
+        </Link>
+      </Box>
     </Box>
   );
 };
@@ -113,9 +241,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
 
   return (
     <EditorContainer id="editor-container">
-      <EditorMenu>
-
-      </EditorMenu>
+      <EditorMenu></EditorMenu>
       <Box
         sx={{
           display: "flex",

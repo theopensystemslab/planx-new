@@ -46,7 +46,7 @@ import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
-export const HEADER_HEIGHT = 74;
+export const HEADER_HEIGHT = 56;
 
 const Root = styled(AppBar)(() => ({
   color: "#fff",
@@ -62,6 +62,7 @@ const BreadcrumbsRoot = styled(Box)(() => ({
 
 const StyledToolbar = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT,
+  minHeight: "0 !important",
 }));
 
 const InnerContainer = styled(Box)(() => ({
