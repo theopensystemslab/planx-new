@@ -247,7 +247,7 @@ const routes = compose(
     return (
       <>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <TestEnvironmentBanner />
+          {/* <TestEnvironmentBanner /> */}
           <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
         </ErrorBoundary>
         <View />

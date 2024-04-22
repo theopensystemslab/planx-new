@@ -6,15 +6,16 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
-import { format } from "date-fns";
-import { hasFeatureFlag } from "lib/featureFlags";
+import { formatDistanceToNow } from "date-fns";
 import React, { useRef } from "react";
 
-import { rootFlowPath } from "../../routes/utils";
+import UndoOutlined from "@mui/icons-material/UndoOutlined";
+import Divider from "@mui/material/Divider";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import Flow from "./components/Flow";
-import PreviewBrowser from "./components/PreviewBrowser";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
+import { themeObject } from "themes/frontend";
 
 interface Operation {
   createdAt: string;
@@ -27,12 +28,6 @@ interface Operation {
 
 export const LastEdited = () => {
   const [flowId, flow] = useStore((state) => [state.id, state.flow]);
-
-  const formattedDate = (dateString?: string) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return format(date, "HH:mm:ss, dd LLL yy");
-  };
 
   const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
     gql`
@@ -78,8 +73,7 @@ export const LastEdited = () => {
     const {
       operations: [operation],
     } = data;
-    message = `Last edit by ${operation?.actor?.firstName} ${operation?.actor
-      ?.lastName} ${formattedDate(operation?.createdAt)}`;
+    message = `Last edited ${formatDistanceToNow(new Date(operation?.createdAt))} ago by ${operation?.actor?.firstName} ${operation?.actor?.lastName}`;
     ops = operation?.data;
     formattedOps = formatOps(flow, ops);
   }
@@ -99,7 +93,7 @@ export const LastEdited = () => {
       <Typography variant="body2" fontSize="small">
         {message}
       </Typography>
-      {hasFeatureFlag("UNDO") && formattedOps && (
+      {/* {hasFeatureFlag("UNDO") && formattedOps && (
         <Typography component="ul" pl={2}>
           {[...new Set(formattedOps)].map((op, i) => (
             <Typography variant="body2" fontSize="small" component="li" key={i}>
@@ -107,6 +101,75 @@ export const LastEdited = () => {
             </Typography>
           ))}
         </Typography>
+      )} */}
+    </Box>
+  );
+};
+
+export const EditHistory = () => {
+  const [flowId, flow] = useStore((state) => [state.id, state.flow]);
+
+  const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
+    gql`
+      subscription GetMostRecentOperation($flow_id: uuid = "") {
+        operations(
+          limit: 5
+          where: { flow_id: { _eq: $flow_id } }
+          order_by: { updated_at: desc }
+        ) {
+          createdAt: created_at
+          actor {
+            firstName: first_name
+            lastName: last_name
+          }
+          data(path: "op")
+        }
+      }
+    `,
+    {
+      variables: {
+        flow_id: flowId,
+      },
+    },
+  );
+
+  if (error) {
+    console.log(error.message);
+    return null;
+  }
+
+  return (
+    <Box
+      sx={(theme) => ({
+        borderLeft: `1px solid ${theme.palette.border.main}`,
+        padding: theme.spacing(2),
+        width: "600px",
+      })}
+    >
+      {loading && !data ? <DelayedLoadingIndicator /> : (
+        data?.operations?.map((op: Operation, i: number) => (
+          <Box sx={{ marginBottom: 2 }} key={`container-${i}`}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+              <Box>
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                {`Edited ${formatDistanceToNow(new Date(op.createdAt))} ago`}
+                </Typography>
+                {op.actor && (
+                  <Typography variant="body2">
+                    {`by ${op.actor?.firstName} ${op.actor?.lastName}`}
+                  </Typography>
+                )}
+              </Box>
+              <UndoOutlined titleAccess="Undo this edit" />
+            </Box>
+            <Typography variant="body2" component="ul" sx={{ padding: 2 }}>
+              {op.data && [...new Set(formatOps(flow, op.data))].map((formattedOp, i) => (
+                <li key={i}>{formattedOp}</li>
+              ))}
+            </Typography>
+            <Divider />
+          </Box>
+        ))
       )}
     </Box>
   );
@@ -132,11 +195,12 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
         </Box>
       </Box>
-      {showPreview && (
+      <EditHistory />
+      {/* {showPreview && (
         <PreviewBrowser
-          url={`${window.location.origin}${rootFlowPath(false)}/published`}
+          url={`${window.location.origin}${rootFlowPath(false)}/draft`}
         />
-      )}
+      )} */}
     </Box>
   );
 };
