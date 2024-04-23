@@ -1421,11 +1421,14 @@
         columns:
           - has_planning_data
           - id
+          - power_automate_webhook_url
           - production_bops_secret
           - production_bops_submission_url
+          - production_file_api_key
           - production_govpay_secret
           - staging_bops_secret
           - staging_bops_submission_url
+          - staging_file_api_key
           - staging_govpay_secret
           - team_id
         filter: {}
