@@ -1,14 +1,14 @@
-import { useStore } from "pages/FlowEditor/lib/store";
-import { ApplicationPath, Passport } from "types";
-import { array, boolean, object, string } from "yup";
-
-import type { MoreInformation } from "../shared";
+import { formatGovPayMetadata } from "@opensystemslab/planx-core";
 import {
   GovPayMetadata,
   GovUKCreatePaymentPayload,
   Passport as IPassport,
 } from "@opensystemslab/planx-core/types";
-import { formatGovPayMetadata } from "@opensystemslab/planx-core";
+import { useStore } from "pages/FlowEditor/lib/store";
+import { ApplicationPath, Passport } from "types";
+import { array, boolean, object, string } from "yup";
+
+import type { MoreInformation } from "../shared";
 
 export interface Pay extends MoreInformation {
   title: string;
@@ -34,7 +34,7 @@ export const toDecimal = (pence: number) => pence / 100;
 
 export const formattedPriceWithCurrencySymbol = (
   amount: number,
-  currency = "GBP"
+  currency = "GBP",
 ) =>
   new Intl.NumberFormat("en-GB", {
     style: "currency",
@@ -45,13 +45,17 @@ export const createPayload = (
   fee: number,
   reference: string,
   metadata: GovPayMetadata[],
-  passport: Passport
+  passport: Passport,
 ): GovUKCreatePaymentPayload => ({
   amount: toPence(fee),
   reference,
   description: "New application",
   return_url: getReturnURL(reference),
-  metadata: formatGovPayMetadata(metadata, passport as IPassport),
+  metadata: formatGovPayMetadata({
+    metadata,
+    userPassport: passport as IPassport,
+    paidViaInviteToPay: false,
+  }),
 });
 
 /**
@@ -70,7 +74,11 @@ const getReturnURL = (sessionId: string): string => {
 
 export const GOV_UK_PAY_URL = `${process.env.REACT_APP_API_URL}/pay`;
 
-export const REQUIRED_GOVPAY_METADATA = ["flow", "source", "isInviteToPay"];
+export const REQUIRED_GOVPAY_METADATA = [
+  "flow",
+  "source",
+  "paidViaInviteToPay",
+];
 
 // Validation must match requirements set out here -
 // https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39
@@ -81,8 +89,18 @@ export const govPayMetadataSchema = array(
       .max(30, "Key length cannot exceed 30 characters"),
     value: string()
       .required("Value is a required field")
-      .max(100, "Value length cannot exceed 100 characters"),
-  })
+      .test({
+        name: "max-length",
+        message: "Value length cannot exceed 100 characters",
+        test: (value) => {
+          if (!value) return true;
+          // No limit to dynamic passport variable length, this is checked and truncated at runtime
+          if (value.startsWith("@")) return true;
+          // Static strings must be 100 characters or less
+          return value.length <= 100;
+        },
+      }),
+  }),
 )
   .max(10, "A maximum of 10 fields can be set as metadata")
   .test({
@@ -109,7 +127,7 @@ export const govPayMetadataSchema = array(
 
       const keys = metadata.map((item) => item.key);
       const allRequiredKeysPresent = REQUIRED_GOVPAY_METADATA.every(
-        (requiredKey) => keys.includes(requiredKey)
+        (requiredKey) => keys.includes(requiredKey),
       );
       return allRequiredKeysPresent;
     },

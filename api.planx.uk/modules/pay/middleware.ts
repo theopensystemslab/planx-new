@@ -137,10 +137,11 @@ export async function buildPaymentPayload(
   }
 
   // Convert metadata to format required by GovPay
-  const metadata = formatGovPayMetadata(
-    res.locals.govPayMetadata,
-    res.locals.passport,
-  );
+  const metadata = formatGovPayMetadata({
+    metadata: res.locals.govPayMetadata,
+    userPassport: res.locals.passport,
+    paidViaInviteToPay: true,
+  });
 
   const createPaymentBody: GovPayCreatePayment = {
     amount: parseInt(req.params.paymentAmount),

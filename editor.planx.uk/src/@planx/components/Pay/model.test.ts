@@ -7,14 +7,14 @@ describe("GovPayMetadata Schema", () => {
   const defaults = [
     { key: "flow", value: "flowName" },
     { key: "source", value: "PlanX" },
-    { key: "isInviteToPay", value: "true" },
+    { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
   ];
 
   test("it requires all default values", async () => {
     const errors = await validate([]);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(
-      /Keys flow, source and isInviteToPay must be present/
+      /Keys flow, source and paidViaInviteToPay must be present/,
     );
   });
 
@@ -57,7 +57,7 @@ describe("GovPayMetadata Schema", () => {
     expect(errors[0]).toMatch(/Value is a required field/);
   });
 
-  test("value cannot be greater than 100 characters", async () => {
+  test("static values cannot be greater than 100 characters", async () => {
     const input = [
       ...defaults,
       {
@@ -69,6 +69,21 @@ describe("GovPayMetadata Schema", () => {
     const errors = await validate(input);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(/Value length cannot exceed 100 characters/);
+  });
+
+  test("dynamic passport value can be greater than 100 characters", async () => {
+    const input = [
+      ...defaults,
+      {
+        key: "myPassportVariable",
+        value:
+          "@thisIsAVeryLongPassportVariable.itsUnlikelyToHappenButWeDontNeedToRestrict.theDynamicValueThisReadsWillBeTruncatedAtTimeOfSubmission",
+      },
+    ];
+    const result = await validate(input);
+
+    // No errors, input returned from validation
+    expect(result).toEqual(input);
   });
 
   test("keys must be unique", async () => {
