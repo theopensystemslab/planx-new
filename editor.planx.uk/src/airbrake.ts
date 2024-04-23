@@ -9,17 +9,18 @@ export const logger = getErrorLogger();
  */
 function getEnvForAllowedHosts(host: string) {
   switch (host) {
-    case "planningservices.medway.gov.uk":
-    case "planningservices.doncaster.gov.uk":
-    case "planningservices.lambeth.gov.uk":
-    case "planningservices.southwark.gov.uk":
+    case "planningservices.barnet.gov.uk":
     case "planningservices.buckinghamshire.gov.uk":
     case "planningservices.camden.gov.uk":
+    case "planningservices.doncaster.gov.uk":
+    case "planningservices.gateshead.gov.uk":
+    case "planningservices.gloucester.gov.uk":
+    case "planningservices.lambeth.gov.uk":
+    case "planningservices.medway.gov.uk":
+    case "planningservices.southwark.gov.uk":
     case "planningservices.stalbans.gov.uk":
-    case "planningservices.barnet.gov.uk":
     case "planningservices.tewkesbury.gov.uk":
     case "planningservices.westberks.gov.uk":
-    case "planningservices.gateshead.gov.uk":
     case "editor.planx.uk":
       return "production";
 
