@@ -44,7 +44,7 @@ const OptionEditor: React.FC<{
       {props.value.id && (
         <input type="hidden" value={props.value.id} readOnly />
       )}
-      <InputRowItem width="100%">
+      <InputRowItem width="200%">
         <Input
           required
           format="bold"
