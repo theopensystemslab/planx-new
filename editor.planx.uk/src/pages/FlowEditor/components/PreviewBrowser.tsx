@@ -8,6 +8,7 @@ import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
+import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -18,7 +19,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
-import Tab from '@mui/material/Tab';
+import Tab, { tabClasses } from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -55,7 +56,7 @@ const EmbeddedBrowser = styled(Box)(({ theme }) => ({
   },
 }));
 
-const PreviewContainer = styled(Box)(() => ({
+const SidebarContainer = styled(Box)(() => ({
   overflow: "auto",
   flex: 1,
   background: "#fff",
@@ -93,6 +94,10 @@ const TabList = styled(Box)(({ theme }) => ({
   "& .MuiTabs-root": {
     minHeight: "0",
   },
+  // Hide default MUI indicator as we're using custom styling
+  "& .MuiTabs-indicator": {
+    display: "none",
+  },
 }));
 
 
@@ -109,13 +114,12 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   margin: theme.spacing(0, 0.5),
   marginBottom: "-1px",
   padding: "0.5em",
-  // Using as placeholder stying for active/current tab
-  "&[data-state='active']": {
+  [`&.${tabClasses.selected}`]: {
     background: theme.palette.background.default,
     borderColor: theme.palette.border.main,
     borderBottomColor: theme.palette.common.white,
     color: theme.palette.text.primary,
-    },
+  },
 })) as typeof Tab;
 
 
@@ -155,6 +159,8 @@ interface AlteredNode {
   type: TYPES;
   data?: any;
 }
+
+type SideBarTabs = "PreviewBrowser" | "History"
 
 const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   const { node } = props;
@@ -388,6 +394,11 @@ const PreviewBrowser: React.FC<{
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
+  const [activeTab, setActiveTab] = useState<SideBarTabs>("PreviewBrowser");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: SideBarTabs) => {
+    setActiveTab(newValue);
+  };
 
   const _lastPublishedRequest = useAsync(async () => {
     const date = await lastPublished(flowId);
@@ -618,14 +629,23 @@ const PreviewBrowser: React.FC<{
         </Box>
       </Header>
       <TabList>
-        <Tabs centered aria-label="">
-          <StyledTab disableRipple data-state="active" label="Preview" />
-          <StyledTab disableRipple label="History" />
+        <Tabs centered onChange={handleChange} value={activeTab} aria-label="">
+          <StyledTab disableFocusRipple disableTouchRipple disableRipple value="PreviewBrowser" label="Preview" />
+          <StyledTab disableFocusRipple disableTouchRipple disableRipple value="History" label="History" />
         </Tabs>
       </TabList>
-      <PreviewContainer>
-        <Questions previewEnvironment="editor" key={String(key)} />
-      </PreviewContainer>
+      {activeTab === "PreviewBrowser" &&
+        <SidebarContainer>
+          <Questions previewEnvironment="editor" key={String(key)} />
+        </SidebarContainer>
+      }
+      {activeTab === "History" &&
+        <SidebarContainer py={3}>
+          <Container>
+            <p>History</p>
+          </Container>
+        </SidebarContainer>
+      }
       {showDebugConsole && <DebugConsole />}
     </EmbeddedBrowser>
   );
