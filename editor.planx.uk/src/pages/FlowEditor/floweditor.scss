@@ -37,39 +37,6 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   overflow: hidden;
 }
 
-#embedded-browser {
-  position: relative;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 500px;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  border-left: 1px solid #ccc;
-  header {
-    input {
-      flex: 1;
-      padding: 5px;
-      margin-right: 5px;
-      background: white;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-    }
-    svg {
-      cursor: pointer;
-      opacity: 0.7;
-      margin: 6px 4px 1px 4px;
-      font-size: 1.2rem;
-    }
-    display: flex;
-    background: #ddd;
-    padding: 10px;
-  }
-  iframe {
-    flex: 1;
-  }
-}
-
 #editor {
   flex: 1;
   overflow: auto;

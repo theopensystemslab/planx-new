@@ -8,6 +8,7 @@ import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
+import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -18,6 +19,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
+import Tab, { tabClasses } from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -37,16 +40,89 @@ const Console = styled(Box)(() => ({
   maxHeight: "50%",
 }));
 
-const PreviewContainer = styled(Box)(() => ({
+const EmbeddedBrowser = styled(Box)(({ theme }) => ({
+  position: "relative",
+  top: "0",
+  right: "0",
+  bottom: "0",
+  width: "500px",
+  display: "flex",
+  flexShrink: 0,
+  flexDirection: "column",
+  borderLeft: `1px solid ${theme.palette.border.main}`,
+  background: theme.palette.background.paper,
+  "& iframe": {
+    flex: "1",
+  },
+}));
+
+const SidebarContainer = styled(Box)(() => ({
   overflow: "auto",
   flex: 1,
   background: "#fff",
 }));
 
-const Header = styled("header")(() => ({
-  display: "flex",
-  flexDirection: "column",
+const Header = styled("header")(({ theme }) => ({
+  padding: theme.spacing(1),
+  "& input": {
+    flex: "1",
+    padding: "5px",
+    marginRight: "5px",
+    background: theme.palette.common.white,
+    border: "1px solid rgba(0, 0, 0, 0.2)",
+  },
+  "& svg": {
+    cursor: "pointer",
+    opacity: "0.7",
+    margin: "6px 4px 1px 4px",
+    fontSize: "1.2rem",
+  },
 }));
+
+const TabList = styled(Box)(({ theme }) => ({
+  position: "relative",
+  // Use a pseudo element as border to allow for tab border overlap without excessive MUI overrides
+  "&::after": {
+    content: "''",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    height: "1px",
+    backgroundColor: theme.palette.border.main,
+  },
+  "& .MuiTabs-root": {
+    minHeight: "0",
+  },
+  // Hide default MUI indicator as we're using custom styling
+  "& .MuiTabs-indicator": {
+    display: "none",
+  },
+}));
+
+
+const StyledTab = styled(Tab)(({ theme }) => ({
+  position: "relative",
+  zIndex: 1,
+  textTransform: "none",
+  background: "transparent",
+  border: `1px solid transparent`,
+  borderBottomColor: theme.palette.border.main,
+  color: theme.palette.primary.main,
+  fontWeight: "600",
+  minHeight: "36px",
+  margin: theme.spacing(0, 0.5),
+  marginBottom: "-1px",
+  padding: "0.5em",
+  [`&.${tabClasses.selected}`]: {
+    background: theme.palette.background.default,
+    borderColor: theme.palette.border.main,
+    borderBottomColor: theme.palette.common.white,
+    color: theme.palette.text.primary,
+  },
+})) as typeof Tab;
+
+
 
 const formatLastPublish = (date: string, user: string) =>
   `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
@@ -83,6 +159,8 @@ interface AlteredNode {
   type: TYPES;
   data?: any;
 }
+
+type SideBarTabs = "PreviewBrowser" | "History"
 
 const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   const { node } = props;
@@ -316,6 +394,11 @@ const PreviewBrowser: React.FC<{
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
+  const [activeTab, setActiveTab] = useState<SideBarTabs>("PreviewBrowser");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: SideBarTabs) => {
+    setActiveTab(newValue);
+  };
 
   const _lastPublishedRequest = useAsync(async () => {
     const date = await lastPublished(flowId);
@@ -335,7 +418,7 @@ const PreviewBrowser: React.FC<{
   const teamSlug = window.location.pathname.split("/")[1];
 
   return (
-    <Box id="embedded-browser">
+    <EmbeddedBrowser id="embedded-browser">
       <Header>
         <Box width="100%" display="flex">
           <input
@@ -545,11 +628,26 @@ const PreviewBrowser: React.FC<{
           </Box>
         </Box>
       </Header>
-      <PreviewContainer>
-        <Questions previewEnvironment="editor" key={String(key)} />
-      </PreviewContainer>
+      <TabList>
+        <Tabs centered onChange={handleChange} value={activeTab} aria-label="">
+          <StyledTab disableFocusRipple disableTouchRipple disableRipple value="PreviewBrowser" label="Preview" />
+          <StyledTab disableFocusRipple disableTouchRipple disableRipple value="History" label="History" />
+        </Tabs>
+      </TabList>
+      {activeTab === "PreviewBrowser" &&
+        <SidebarContainer>
+          <Questions previewEnvironment="editor" key={String(key)} />
+        </SidebarContainer>
+      }
+      {activeTab === "History" &&
+        <SidebarContainer py={3}>
+          <Container>
+            <p>History</p>
+          </Container>
+        </SidebarContainer>
+      }
       {showDebugConsole && <DebugConsole />}
-    </Box>
+    </EmbeddedBrowser>
   );
 });
 
