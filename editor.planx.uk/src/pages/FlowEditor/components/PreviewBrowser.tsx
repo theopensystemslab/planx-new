@@ -19,8 +19,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
-import Tab, { tabClasses } from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+import Tab, { tabClasses } from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -28,6 +28,7 @@ import { AxiosError } from "axios";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
+import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 import Caret from "ui/icons/Caret";
 import Input from "ui/shared/Input";
 
@@ -100,7 +101,6 @@ const TabList = styled(Box)(({ theme }) => ({
   },
 }));
 
-
 const StyledTab = styled(Tab)(({ theme }) => ({
   position: "relative",
   zIndex: 1,
@@ -121,8 +121,6 @@ const StyledTab = styled(Tab)(({ theme }) => ({
     color: theme.palette.text.primary,
   },
 })) as typeof Tab;
-
-
 
 const formatLastPublish = (date: string, user: string) =>
   `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
@@ -160,7 +158,7 @@ interface AlteredNode {
   data?: any;
 }
 
-type SideBarTabs = "PreviewBrowser" | "History"
+type SideBarTabs = "PreviewBrowser" | "History";
 
 const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   const { node } = props;
@@ -630,22 +628,34 @@ const PreviewBrowser: React.FC<{
       </Header>
       <TabList>
         <Tabs centered onChange={handleChange} value={activeTab} aria-label="">
-          <StyledTab disableFocusRipple disableTouchRipple disableRipple value="PreviewBrowser" label="Preview" />
-          <StyledTab disableFocusRipple disableTouchRipple disableRipple value="History" label="History" />
+          <StyledTab
+            disableFocusRipple
+            disableTouchRipple
+            disableRipple
+            value="PreviewBrowser"
+            label="Preview"
+          />
+          <StyledTab
+            disableFocusRipple
+            disableTouchRipple
+            disableRipple
+            value="History"
+            label="History"
+          />
         </Tabs>
       </TabList>
-      {activeTab === "PreviewBrowser" &&
+      {activeTab === "PreviewBrowser" && (
         <SidebarContainer>
           <Questions previewEnvironment="editor" key={String(key)} />
         </SidebarContainer>
-      }
-      {activeTab === "History" &&
+      )}
+      {activeTab === "History" && (
         <SidebarContainer py={3}>
           <Container>
-            <p>History</p>
+            <FeaturePlaceholder title="Coming soon" />
           </Container>
         </SidebarContainer>
-      }
+      )}
       {showDebugConsole && <DebugConsole />}
     </EmbeddedBrowser>
   );
