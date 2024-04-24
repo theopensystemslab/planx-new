@@ -26,6 +26,7 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { AxiosError } from "axios";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
@@ -33,6 +34,7 @@ import Caret from "ui/icons/Caret";
 import Input from "ui/shared/Input";
 
 import Questions from "../../Preview/Questions";
+import { EditHistory } from "..";
 import { useStore } from "../lib/store";
 
 const Console = styled(Box)(() => ({
@@ -392,7 +394,9 @@ const PreviewBrowser: React.FC<{
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
-  const [activeTab, setActiveTab] = useState<SideBarTabs>("PreviewBrowser");
+  const [activeTab, setActiveTab] = useState<SideBarTabs>(
+    hasFeatureFlag("UNDO") ? "History" : "PreviewBrowser",
+  ); // temp hack to keep History panel in view while editing/re-rendering
 
   const handleChange = (event: React.SyntheticEvent, newValue: SideBarTabs) => {
     setActiveTab(newValue);
@@ -652,7 +656,11 @@ const PreviewBrowser: React.FC<{
       {activeTab === "History" && (
         <SidebarContainer py={3}>
           <Container>
-            <FeaturePlaceholder title="Coming soon" />
+            {hasFeatureFlag("UNDO") ? (
+              <EditHistory />
+            ) : (
+              <FeaturePlaceholder title="Coming soon" />
+            )}
           </Container>
         </SidebarContainer>
       )}
