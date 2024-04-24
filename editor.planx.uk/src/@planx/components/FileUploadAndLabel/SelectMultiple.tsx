@@ -123,8 +123,9 @@ const renderGroup: AutocompleteProps<
   false,
   "div"
 >["renderGroup"] = ({ group, key, children }) => (
-  <List key={`group-${key}`} role="group" sx={{ paddingY: 0 }}>
+  <List key={`group-${key}`} role="group" sx={{ paddingY: 0 }} aria-labelledby={`${group}-label`}>
     <ListSubheader
+      id={`${group}-label`}
       role="presentation"
       disableSticky
       sx={(theme) => ({
