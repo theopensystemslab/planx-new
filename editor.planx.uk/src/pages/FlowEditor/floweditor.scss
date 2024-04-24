@@ -1,5 +1,4 @@
 $black: #0b0c0c;
-$lineColor: #d0d0d0;
 $nodeBorder: $black;
 $optionBorder: #b1b4b6;
 $hangerBackground: #f2f2f2;
@@ -184,8 +183,8 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     background-image: linear-gradient(
       90deg,
       $optionBorder,
-      $optionBorder 50%,
-      transparent 50%,
+      $optionBorder 40%,
+      transparent 40%,
       transparent 100%
     );
     background-size: 12px 2px;
@@ -411,7 +410,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
         bottom: -$nodeBorderWidth;
         width: 0;
         height: 0;
-        border-top: 12px solid $nodeBorder;
+        border-top: 12px solid #555;
         border-right: 12px solid transparent;
       }
     }
