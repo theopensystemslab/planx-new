@@ -394,7 +394,9 @@ const PreviewBrowser: React.FC<{
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
-  const [activeTab, setActiveTab] = useState<SideBarTabs>("PreviewBrowser");
+  const [activeTab, setActiveTab] = useState<SideBarTabs>(
+    hasFeatureFlag("UNDO") ? "History" : "PreviewBrowser",
+  ); // temp hack to keep History panel in view while editing/re-rendering
 
   const handleChange = (event: React.SyntheticEvent, newValue: SideBarTabs) => {
     setActiveTab(newValue);
