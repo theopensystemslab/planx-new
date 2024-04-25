@@ -112,7 +112,7 @@ export const LastEdited = () => {
 const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
-  const showPreview = useStore((state) => state.showPreview);
+  const showSidebar = useStore((state) => state.showSidebar);
 
   return (
     <EditorContainer id="editor-container">
@@ -129,7 +129,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
         </Box>
       </Box>
-      {showPreview && (
+      {showSidebar && (
         <Sidebar
           url={`${window.location.origin}${rootFlowPath(false)}/published`}
         />
