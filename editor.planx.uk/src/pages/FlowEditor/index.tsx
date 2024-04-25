@@ -150,7 +150,7 @@ export const EditHistory = () => {
   }
 
   // Handle missing operations (e.g. non-production data)
-  if (!loading && !data?.operations[0].actor) return null;
+  if (!loading && !data?.operations[0]?.actor) return null;
 
   return (
     <Box>
