@@ -9,7 +9,7 @@ import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { formatDistanceToNow } from "date-fns";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
@@ -110,6 +110,13 @@ export const LastEdited = () => {
 
 export const EditHistory = () => {
   const [flowId, flow] = useStore((state) => [state.id, state.flow]);
+
+  const [, forceUpdate] = useState<object>({});
+
+  useEffect(() => {
+    const interval = setInterval(() => forceUpdate({}), 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
     gql`
