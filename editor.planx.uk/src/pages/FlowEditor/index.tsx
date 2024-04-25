@@ -14,7 +14,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
-import PreviewBrowser from "./components/PreviewBrowser";
+import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 import { formatLastEditMessage } from "./utils";
@@ -130,7 +130,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
         </Box>
       </Box>
       {showPreview && (
-        <PreviewBrowser
+        <Sidebar
           url={`${window.location.origin}${rootFlowPath(false)}/published`}
         />
       )}
