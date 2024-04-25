@@ -14,8 +14,8 @@ interface Props {
   teams: Array<Team>;
 }
 
-const Root = styled(Box)(() => ({
-  backgroundColor: "#2C2C2C",
+const Root = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.dark,
   color: "#fff",
   width: "100%",
   flex: 1,
@@ -24,7 +24,7 @@ const Root = styled(Box)(() => ({
 }));
 
 const Dashboard = styled(Box)(({ theme }) => ({
-  backgroundColor: "#2C2C2C",
+  backgroundColor: theme.palette.background.dark,
   color: "#fff",
   width: "100%",
   maxWidth: 600,
