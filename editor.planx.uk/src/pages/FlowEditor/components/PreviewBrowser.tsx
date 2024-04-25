@@ -32,8 +32,8 @@ import Caret from "ui/icons/Caret";
 import Input from "ui/shared/Input";
 
 import Questions from "../../Preview/Questions";
-import { useStore } from "../lib/store";
 import EditHistory from "./EditHistory";
+import { useStore } from "../lib/store";
 
 const Console = styled(Box)(() => ({
   overflow: "auto",

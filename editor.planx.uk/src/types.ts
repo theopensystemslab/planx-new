@@ -125,9 +125,10 @@ export interface AdminPanelData {
 }
 
 export interface Operation {
-  id: string;
+  id: number;
   createdAt: string;
   actor?: {
+    id: number;
     firstName: string;
     lastName: string;
   };

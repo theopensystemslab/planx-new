@@ -17,17 +17,8 @@ import Flow from "./components/Flow";
 import PreviewBrowser from "./components/PreviewBrowser";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
+import { formatLastEditMessage } from "./utils";
 
-export interface Operation {
-  id: number;
-  createdAt: string;
-  actor?: {
-    id: number;
-    firstName: string;
-    lastName: string;
-  };
-  data: Array<OT.Op>;
-}
 
 export const formatLastEditDate = (date: string): string => {
   return formatDistanceToNow(new Date(date), {
@@ -42,18 +33,6 @@ const EditorContainer = styled(Box)(() => ({
   overflow: "hidden",
   flexGrow: 1,
 }));
-
-const formatLastEditMessage = (
-  date: string,
-  actor?: { firstName: string; lastName: string },
-): string => {
-  if (!actor) {
-    return `Last edited ${formatLastEditDate(date)}`;
-  }
-
-  const name = `${actor.firstName} ${actor.lastName}`;
-  return `Last edited ${formatLastEditDate(date)} by ${name}`;
-};
 
 export const LastEdited = () => {
   const [flowId] = useStore((state) => [state.id]);
