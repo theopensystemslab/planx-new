@@ -512,9 +512,15 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
     if (op.od?.type && op.oi?.type) {
       output.push(
         `Replaced ${TYPES[op.od.type]} "${
-          op.od.data?.title || op.od.data?.text || op.od.data?.content
+          op.od.data?.title ||
+          op.od.data?.text ||
+          op.od.data?.content ||
+          op.od.data?.fn
         }" with ${TYPES[op.oi.type]} "${
-          op.oi.data?.title || op.oi.data?.text || op.oi.data?.content
+          op.oi.data?.title ||
+          op.oi.data?.text ||
+          op.oi.data?.content ||
+          op.oi.data?.fn
         }"`,
       );
     } else if (op.p.includes("data")) {
@@ -542,7 +548,10 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
     if (op.oi?.type) {
       output.push(
         `Added ${TYPES[op.oi.type]} "${
-          op.oi.data?.title || op.oi.data?.text || op.oi.data?.content
+          op.oi.data?.title ||
+          op.oi.data?.text ||
+          op.oi.data?.content ||
+          op.oi.data?.fn
         }"`,
       );
     } else if (op.p.includes("data")) {
@@ -561,7 +570,10 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
     if (op.od?.type) {
       output.push(
         `Removed ${TYPES[op.od.type]} "${
-          op.od.data?.title || op.od.data?.text || op.od.data?.content
+          op.od.data?.title ||
+          op.od.data?.text ||
+          op.od.data?.content ||
+          op.od.data?.fn
         }"`,
       );
     } else if (op.p.includes("data")) {

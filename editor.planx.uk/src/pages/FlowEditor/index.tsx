@@ -173,15 +173,15 @@ export const EditHistory = () => {
             >
               <Box>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                  {`${op.actor ? `Edited` : `Created`} ${formatLastEditDate(
-                    op.createdAt,
-                  )}`}
+                  {`${
+                    op.actor
+                      ? `Edited by ${op.actor?.firstName} ${op.actor?.lastName}`
+                      : `Created flow`
+                  }`}
                 </Typography>
-                {op.actor && (
-                  <Typography variant="body2">
-                    {`by ${op.actor?.firstName} ${op.actor?.lastName}`}
-                  </Typography>
-                )}
+                <Typography variant="body2">
+                  {formatLastEditDate(op.createdAt)}
+                </Typography>
               </Box>
               {i === 0 && (
                 <IconButton
