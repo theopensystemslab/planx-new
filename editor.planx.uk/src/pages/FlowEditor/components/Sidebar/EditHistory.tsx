@@ -19,9 +19,9 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import { formatLastEditDate } from "..";
-import { useStore } from "../lib/store";
+import { useStore } from "../../lib/store";
 import { Operation } from "types";
+import { formatLastEditDate } from "../../utils";
 
 const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} placement="left-start" classes={{ popper: className }} />

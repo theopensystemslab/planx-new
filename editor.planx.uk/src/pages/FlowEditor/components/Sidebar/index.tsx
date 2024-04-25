@@ -32,8 +32,8 @@ import Caret from "ui/icons/Caret";
 import Input from "ui/shared/Input";
 
 import Questions from "../../../Preview/Questions";
-import EditHistory from "./../EditHistory";
 import { useStore } from "../../lib/store";
+import EditHistory from "./EditHistory";
 
 type SidebarTabs = "PreviewBrowser" | "History";
 
