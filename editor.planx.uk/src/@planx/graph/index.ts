@@ -509,16 +509,19 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
 
   // Updating a node or its properties (update = delete + insert)
   const handleUpdate = (node: Node, op: OT.Object.Replace) => {
-    if (op.od.type && op.oi.type) {
+    if (op.od?.type && op.oi?.type) {
       output.push(
-        `Replaced ${TYPES[op.od.type]} "${op.od.data?.title || op.od.data?.text
-        }" with ${TYPES[op.oi.type]} "${op.oi.data?.title || op.oi.data?.text
+        `Replaced ${TYPES[op.od.type]} "${
+          op.od.data?.title || op.od.data?.text || op.od.data?.content
+        }" with ${TYPES[op.oi.type]} "${
+          op.oi.data?.title || op.oi.data?.text || op.oi.data?.content
         }"`,
       );
     } else if (op.p.includes("data")) {
       output.push(
-        `Updated ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} from "${op.od}" to "${op.oi
-        }"`,
+        `Updated ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} from "${
+          op.od
+        }" to "${op.oi}"`,
       );
     } else if (op.p.includes("edges")) {
       output.push(
@@ -536,13 +539,18 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
 
   // Adding (inserting) a node or its properties
   const handleAdd = (node: Node, op: OT.Object.Add) => {
-    if (op.oi.type) {
+    if (op.oi?.type) {
       output.push(
-        `Added ${TYPES[op.oi.type]} "${op.oi.data?.title || op.oi.data?.text
+        `Added ${TYPES[op.oi.type]} "${
+          op.oi.data?.title || op.oi.data?.text || op.oi.data?.content
         }"`,
       );
     } else if (op.p.includes("data")) {
-      output.push(`Added ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} "${op.oi}"`);
+      output.push(
+        `Added ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} "${
+          op.oi
+        }"`,
+      );
     } else if (op.p.includes("edges")) {
       output.push(`Added ${node.type ? TYPES[node.type] : "node"} to branch`);
     }
@@ -550,15 +558,22 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
 
   // Removing (deleting) a node or its properties
   const handleRemove = (node: Node, op: OT.Object.Remove) => {
-    if (op.od.type) {
+    if (op.od?.type) {
       output.push(
-        `Removed ${TYPES[op.od.type]} "${op.od.data?.title || op.od.data?.text
+        `Removed ${TYPES[op.od.type]} "${
+          op.od.data?.title || op.od.data?.text || op.od.data?.content
         }"`,
       );
     } else if (op.p.includes("data")) {
-      output.push(`Removed ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} "${op.od}"`);
+      output.push(
+        `Removed ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} "${
+          op.od
+        }"`,
+      );
     } else if (op.p.includes("edges")) {
-      output.push(`Removed ${node.type ? TYPES[node.type] : "node"} from branch`);
+      output.push(
+        `Removed ${node.type ? TYPES[node.type] : "node"} from branch`,
+      );
     }
   };
 

@@ -4,6 +4,7 @@ import "./floweditor.scss";
 import { gql, useSubscription } from "@apollo/client";
 import UndoOutlined from "@mui/icons-material/UndoOutlined";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
@@ -17,10 +18,11 @@ import PreviewBrowser from "./components/PreviewBrowser";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
-interface Operation {
-  id: string;
+export interface Operation {
+  id: number;
   createdAt: string;
   actor?: {
+    id: number;
     firstName: string;
     lastName: string;
   };
@@ -109,7 +111,12 @@ export const LastEdited = () => {
 };
 
 export const EditHistory = () => {
-  const [flowId, flow] = useStore((state) => [state.id, state.flow]);
+  const [flowId, flow, canUserEditTeam, undoOperation] = useStore((state) => [
+    state.id,
+    state.flow,
+    state.canUserEditTeam,
+    state.undoOperation,
+  ]);
 
   const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
     gql`
@@ -122,6 +129,7 @@ export const EditHistory = () => {
           id
           createdAt: created_at
           actor {
+            id
             firstName: first_name
             lastName: last_name
           }
@@ -142,14 +150,14 @@ export const EditHistory = () => {
   }
 
   // Handle missing operations (e.g. non-production data)
-  if (!loading && !data?.operations) return null;
+  if (!loading && !data?.operations[0].actor) return null;
 
   return (
     <Box>
       {loading && !data ? (
         <DelayedLoadingIndicator />
       ) : (
-        data?.operations?.map((op: Operation) => (
+        data?.operations?.map((op: Operation, i: number) => (
           <Box
             key={`container-${op.id}`}
             marginBottom={2}
@@ -165,7 +173,9 @@ export const EditHistory = () => {
             >
               <Box>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                  {`Edited ${formatLastEditDate(op.createdAt)}`}
+                  {`${op.actor ? `Edited` : `Created`} ${formatLastEditDate(
+                    op.createdAt,
+                  )}`}
                 </Typography>
                 {op.actor && (
                   <Typography variant="body2">
@@ -173,7 +183,17 @@ export const EditHistory = () => {
                   </Typography>
                 )}
               </Box>
-              <UndoOutlined titleAccess="Undo this edit" />
+              {i === 0 && (
+                <IconButton
+                  title="Undo"
+                  aria-label="Undo"
+                  onClick={() => undoOperation(op)}
+                  disabled={!canUserEditTeam}
+                  color="primary"
+                >
+                  <UndoOutlined />
+                </IconButton>
+              )}
             </Box>
             {op.data && (
               <Typography variant="body2" component="ul" padding={2}>
