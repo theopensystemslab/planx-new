@@ -13,7 +13,7 @@ import {
   withView,
 } from "navi";
 import mapAccum from "ramda/src/mapAccum";
-import React, { PropsWithChildren } from "react";
+import React from "react";
 
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";

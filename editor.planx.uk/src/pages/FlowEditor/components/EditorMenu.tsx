@@ -74,6 +74,7 @@ function EditorMenu() {
   const rootPath = rootFlowPath();
 
   const isActive = (route: string) => lastChunk.url.pathname.endsWith(route);
+  const handleClick = (route: string) => !isActive(route) && navigate(rootPath + route);
 
   const routes = [
     { 
@@ -107,7 +108,7 @@ function EditorMenu() {
     <Root>
       <MenuWrap>
         {routes.map(({ title, Icon, route }) => (
-          <MenuItem onClick={() => navigate(rootPath + route)} key={title}>
+          <MenuItem onClick={() => handleClick(route)} key={title}>
             <TooltipWrap title={title}>
               <MenuButton isActive={isActive(route)} disableRipple>
                 <Icon/>
