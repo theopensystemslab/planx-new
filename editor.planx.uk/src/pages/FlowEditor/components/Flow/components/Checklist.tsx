@@ -5,6 +5,7 @@ import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
+import HiddenData from "ui/editor/HiddenData";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -88,6 +89,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
         >
           {Icon && <Icon />}
           <span>{props.text}</span>
+          {props.data?.fn && <HiddenData>{props.data.fn}</HiddenData>}
         </Link>
         {groupedOptions ? (
           <ol className="categories">
