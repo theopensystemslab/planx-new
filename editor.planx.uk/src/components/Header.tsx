@@ -93,16 +93,16 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
-const StyledPopover = styled(Popover)(() => ({
+const StyledPopover = styled(Popover)(({ theme }) => ({
   [`& .${popoverClasses.paper}`]: {
     boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
-    backgroundColor: "#2c2c2c",
+    backgroundColor: theme.palette.background.dark,
     borderRadius: 0,
   },
 }));
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#2c2c2c",
+  backgroundColor: theme.palette.background.dark,
   color: "#fff",
   borderRadius: 0,
   boxShadow: "none",
@@ -130,7 +130,7 @@ const SkipLink = styled("a")(({ theme }) => ({
   tabIndex: 0,
   width: "100vw",
   height: HEADER_HEIGHT / 2,
-  backgroundColor: "#2c2c2c",
+  backgroundColor: theme.palette.background.dark,
   color: "#fff",
   textDecoration: "underline",
   padding: theme.spacing(1),
