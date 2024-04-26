@@ -1,7 +1,5 @@
 import { gql } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import ErrorFallback from "components/ErrorFallback";
-import TestEnvironmentBanner from "components/TestEnvironmentBanner";
 import natsort from "natsort";
 import {
   compose,
@@ -9,7 +7,6 @@ import {
   map,
   Matcher,
   mount,
-  NotFoundError,
   redirect,
   route,
   withData,
@@ -17,8 +14,6 @@ import {
 } from "navi";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { View } from "react-navi";
 
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
@@ -26,8 +21,12 @@ import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "../pages/FlowEditor/data/types";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import type { Flow, FlowSettings } from "../types";
+import type { Flow } from "../types";
 import { makeTitle } from "./utils";
+import { flowEditorView } from "./views/flowEditor";
+import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
+import { View } from "react-navi";
+import Box from "@mui/material/Box";
 
 const sorter = natsort({ insensitive: true });
 const sortFlows = (a: { text: string }, b: { text: string }) =>
@@ -174,98 +173,66 @@ const nodeRoutes = mount({
   "/:parent/nodes/:id/edit": editNode,
 });
 
-interface FlowMetadata {
-  flowSettings: FlowSettings;
-  flowAnalyticsLink: string;
-  isFlowPublished: boolean;
-}
-
-interface GetFlowMetadata {
-  flows: {
-    flowSettings: FlowSettings;
-    flowAnalyticsLink: string;
-    publishedFlowsAggregate: {
-      aggregate: {
-        count: number;
-      };
-    };
-  }[];
-}
-
-const getFlowMetadata = async (
-  flowSlug: string,
-  team: string,
-): Promise<FlowMetadata> => {
-  const {
-    data: { flows },
-  } = await client.query<GetFlowMetadata>({
-    query: gql`
-      query GetFlow($slug: String!, $team_slug: String!) {
-        flows(
-          limit: 1
-          where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
-        ) {
-          id
-          flowSettings: settings
-          flowAnalyticsLink: analytics_link
-          publishedFlowsAggregate: published_flows_aggregate {
-            aggregate {
-              count
-            }
-          }
-        }
-      }
-    `,
-    variables: {
-      slug: flowSlug,
-      team_slug: team,
-    },
-  });
-
-  const flow = flows[0];
-  if (!flows) throw new NotFoundError(`Flow ${flowSlug} not found for ${team}`);
-
-  const metadata = {
-    flowSettings: flow.flowSettings,
-    flowAnalyticsLink: flow.flowAnalyticsLink,
-    isFlowPublished: flow.publishedFlowsAggregate?.aggregate.count > 0,
-  };
-  return metadata;
-};
+const RoutePlaceholder = () => (
+  <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <FeaturePlaceholder title="Feature in development" />
+  </Box>
+)
 
 const routes = compose(
   withData((req) => ({
     flow: req.params.flow.split(",")[0],
   })),
 
-  withView(async (req) => {
-    const [flow, ...breadcrumbs] = req.params.flow.split(",");
-    const { flowSettings, flowAnalyticsLink, isFlowPublished } =
-      await getFlowMetadata(flow, req.params.team);
-    useStore.setState({ flowSettings, flowAnalyticsLink, isFlowPublished });
-
-    return (
-      <>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <TestEnvironmentBanner />
-          <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
-        </ErrorBoundary>
-        <View />
-      </>
-    );
-  }),
+  withView(flowEditorView),
 
   mount({
     "/": route(async (req) => {
       return {
         title: makeTitle([req.params.team, req.params.flow].join("/")),
-        view: <span />,
-      };
+        view: () => {
+          const [flow, ...breadcrumbs] = req.params.flow.split(",");
+          return (
+            <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
+          )
+        }
+      }
     }),
 
-    "/nodes": nodeRoutes,
+    "/nodes": compose(
+      withView((req) => {
+        const [flow, ...breadcrumbs] = req.params.flow.split(","); 
+        return (
+          <>
+            <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
+            <View/>
+          </>
+        );
+      }),
+      nodeRoutes,
+    ),
 
     "/settings": lazy(() => import("./flowSettings")),
+
+    "/service": route(async (req) => ({
+      title: makeTitle([req.params.team, req.params.flow, "service"].join("/")),
+      view: RoutePlaceholder,
+    })),
+
+    "/service-flags": route(async (req) => ({
+      title: makeTitle([req.params.team, req.params.flow, "service-flags"].join("/")),
+      view: RoutePlaceholder,
+    })),
+
+    "/data": route(async (req) => ({
+      title: makeTitle([req.params.team, req.params.flow, "data"].join("/")),
+      view: RoutePlaceholder,
+    })),
+
+    "/submissions-log": route(async (req) => ({
+      title: makeTitle([req.params.team, req.params.flow, "submissions-log"].join("/")),
+      view: RoutePlaceholder,
+    })),
   }),
 );
 
