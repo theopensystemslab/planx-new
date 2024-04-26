@@ -107,7 +107,7 @@ function EditorMenu() {
     <Root>
       <MenuWrap>
         {routes.map(({ title, icon, route }) => (
-          <MenuItem onClick={() => navigate(rootPath + route)}>
+          <MenuItem onClick={() => navigate(rootPath + route)} key={title}>
             <TooltipWrap title={title}>
               <MenuButton isActive={isActive(route)} disableRipple>
                 {icon}

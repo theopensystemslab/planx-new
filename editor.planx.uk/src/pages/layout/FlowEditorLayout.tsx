@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "components/ErrorFallback";
+import { hasFeatureFlag } from "lib/featureFlags";
 
 const Root = styled(Box)(() => ({
   display: "flex",
@@ -14,7 +15,7 @@ const Root = styled(Box)(() => ({
 
 const FlowEditorLayout: React.FC<PropsWithChildren> = ({ children }) => (
   <Root>
-    <EditorMenu />
+    { hasFeatureFlag("EDITOR_NAVIGATION") && <EditorMenu /> }
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       {children}
     </ErrorBoundary>
