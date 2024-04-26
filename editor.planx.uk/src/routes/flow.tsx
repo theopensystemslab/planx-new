@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import natsort from "natsort";
 import {
@@ -12,8 +13,13 @@ import {
   withData,
   withView,
 } from "navi";
+import DataManagerSettings from "pages/FlowEditor/components/Settings/DataManagerSettings";
+import ServiceFlags from "pages/FlowEditor/components/Settings/ServiceFlags";
+import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
+import Submissions from "pages/FlowEditor/components/Settings/Submissions";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
+import { View } from "react-navi";
 
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
@@ -24,12 +30,6 @@ import { useStore } from "../pages/FlowEditor/lib/store";
 import type { Flow } from "../types";
 import { makeTitle } from "./utils";
 import { flowEditorView } from "./views/flowEditor";
-import { View } from "react-navi";
-import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
-import Submissions from "pages/FlowEditor/components/Settings/Submissions";
-import DataManagerSettings from "pages/FlowEditor/components/Settings/DataManagerSettings";
-import ServiceFlags from "pages/FlowEditor/components/Settings/ServiceFlags";
-import Box from "@mui/material/Box";
 
 const sorter = natsort({ insensitive: true });
 const sortFlows = (a: { text: string }, b: { text: string }) =>
@@ -177,10 +177,10 @@ const nodeRoutes = mount({
 });
 
 const SettingsContainer = () => (
-  <Box sx={{ width: "100%", p: 2, overflowY: "auto" }}>
+  <Box sx={{ width: "100%", p: 4, overflowY: "auto" }}>
     <View />
   </Box>
-)
+);
 
 const routes = compose(
   withData((req) => ({
@@ -197,9 +197,9 @@ const routes = compose(
           const [flow, ...breadcrumbs] = req.params.flow.split(",");
           return (
             <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
-          )
-        }
-      }
+          );
+        },
+      };
     }),
 
     "/nodes": compose(
@@ -221,8 +221,10 @@ const routes = compose(
       withView(SettingsContainer),
 
       route(async (req) => ({
-        title: makeTitle([req.params.team, req.params.flow, "service"].join("/")),
-        view: ServiceSettings
+        title: makeTitle(
+          [req.params.team, req.params.flow, "service"].join("/"),
+        ),
+        view: ServiceSettings,
       })),
     ),
 
@@ -230,10 +232,11 @@ const routes = compose(
       withView(SettingsContainer),
 
       route(async (req) => ({
-        title: makeTitle([req.params.team, req.params.flow, "service-flags"].join("/")),
-        view: ServiceFlags
+        title: makeTitle(
+          [req.params.team, req.params.flow, "service-flags"].join("/"),
+        ),
+        view: ServiceFlags,
       })),
-
     ),
 
     "/data": compose(
@@ -241,7 +244,7 @@ const routes = compose(
 
       route(async (req) => ({
         title: makeTitle([req.params.team, req.params.flow, "data"].join("/")),
-        view: DataManagerSettings
+        view: DataManagerSettings,
       })),
     ),
 
@@ -249,10 +252,12 @@ const routes = compose(
       withView(SettingsContainer),
 
       route(async (req) => ({
-        title: makeTitle([req.params.team, req.params.flow, "submissions-log"].join("/")),
-        view: Submissions
+        title: makeTitle(
+          [req.params.team, req.params.flow, "submissions-log"].join("/"),
+        ),
+        view: Submissions,
       })),
-    )
+    ),
   }),
 );
 
