@@ -1,15 +1,15 @@
-import EqualizerIcon from '@mui/icons-material/Equalizer';
 import FlagIcon from '@mui/icons-material/Flag';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import IosShareIcon from '@mui/icons-material/IosShare';
-import PeopleIcon from '@mui/icons-material/People';
+import DataObject from '@mui/icons-material/DataObject';
+import Article from '@mui/icons-material/Article';
 import RuleFolderIcon from '@mui/icons-material/RuleFolder';
-import ShareIcon from '@mui/icons-material/Share';
 import Box from "@mui/material/Box";
 import IconButton from '@mui/material/IconButton';
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses,TooltipProps } from '@mui/material/Tooltip';
 import React from "react";
+import { useCurrentRoute, useNavigation } from 'react-navi';
+import { rootFlowPath } from 'routes/utils';
 import { FONT_WEIGHT_SEMI_BOLD } from 'theme';
 
 const MENU_WIDTH = "46px";
@@ -47,7 +47,9 @@ const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-const MenuButton = styled(IconButton)(({ theme }) => ({
+const MenuButton = styled(IconButton, {
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive: boolean }>(({ theme, isActive }) => ({
   color: theme.palette.primary.main,
   width: MENU_WIDTH,
   height: MENU_WIDTH,
@@ -58,67 +60,61 @@ const MenuButton = styled(IconButton)(({ theme }) => ({
     borderTopColor: theme.palette.border.light,
     borderBottomColor: theme.palette.border.light,
   },
-  "&[data-state='active']": {
+  ...(isActive && {
     background: theme.palette.common.white,
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.main}`,
     borderRightColor: "transparent",
-  },
+  }),
 }));
 
 function EditorMenu() {
+  const { navigate } = useNavigation();
+  const { lastChunk } = useCurrentRoute();
+  const rootPath = rootFlowPath();
+
+  const isActive = (route: string) => lastChunk.url.pathname.endsWith(route);
+
+  const routes = [
+    { 
+      title: "Editor",
+      icon: <FormatListBulletedIcon />,
+      route: "/",
+    },
+    { 
+      title: "Service",
+      icon: <Article />,
+      route: "/service",
+    },
+    { 
+      title: "Service Flags",
+      icon: <FlagIcon />,
+      route: "/service-flags",
+    },
+    { 
+      title: "Data",
+      icon: <DataObject />,
+      route: "/data",
+    },
+    { 
+      title: "Submissions log",
+      icon: <RuleFolderIcon />,
+      route: "/submissions-log",
+    },
+  ];
+
   return (
     <Root>
       <MenuWrap>
-        <MenuItem>
-          <TooltipWrap title="Editor">
-            <MenuButton data-state="active" disableRipple>
-              <FormatListBulletedIcon />
-            </MenuButton>
-          </TooltipWrap>
-        </MenuItem>
-        <MenuItem>
-          <TooltipWrap title="Versions">
-            <MenuButton disableRipple>
-              <ShareIcon />
-            </MenuButton>
-          </TooltipWrap>
-        </MenuItem>
-        <MenuItem>
-          <TooltipWrap title="Analytics">
-            <MenuButton disableRipple>
-              <EqualizerIcon />
-            </MenuButton>
-          </TooltipWrap>
-        </MenuItem>
-        <MenuItem>
-          <TooltipWrap title="Team settings">
-            <MenuButton disableRipple>
-              <PeopleIcon />
-            </MenuButton>
-          </TooltipWrap>
-        </MenuItem>
-        <MenuItem>
-          <TooltipWrap title="Sharing">
-            <MenuButton disableRipple>
-              <IosShareIcon />
-            </MenuButton>
-          </TooltipWrap>
-        </MenuItem>
-        <MenuItem>
-          <TooltipWrap title="Service flags">
-            <MenuButton disableRipple>
-              <FlagIcon />
-            </MenuButton>
-          </TooltipWrap>
-        </MenuItem>
-        <MenuItem>
-          <TooltipWrap title="Submissions log">
-            <MenuButton disableRipple>
-              <RuleFolderIcon />
-            </MenuButton>
-          </TooltipWrap>
-        </MenuItem>
+        {routes.map(({ title, icon, route }) => (
+          <MenuItem onClick={() => navigate(rootPath + route)}>
+            <TooltipWrap title={title}>
+              <MenuButton isActive={isActive(route)} disableRipple>
+                {icon}
+              </MenuButton>
+            </TooltipWrap>
+          </MenuItem>
+        ))}
       </MenuWrap>
     </Root>
   );

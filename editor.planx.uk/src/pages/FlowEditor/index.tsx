@@ -14,7 +14,6 @@ import { formatDistanceToNow } from "date-fns";
 import React, { useRef } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
-import EditorMenu from "./components/EditorMenu";
 import Flow from "./components/Flow";
 import PreviewBrowser from "./components/PreviewBrowser";
 import { useStore } from "./lib/store";
