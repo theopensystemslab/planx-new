@@ -35,6 +35,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   background: {
     default: "#FFFFFF",
     paper: "#F9F8F8",
+    dark: "#2c2c2c",
   },
   secondary: {
     main: "#F3F2F1",
