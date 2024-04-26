@@ -1421,9 +1421,10 @@
         columns:
           - id
           - team_id
-          - power_automate_api_key
           - production_bops_submission_url
           - staging_bops_submission_url
+          - production_power_automate_api_key
+          - staging_power_automate_api_key
           - has_planning_data
           - production_file_api_key
           - staging_file_api_key
