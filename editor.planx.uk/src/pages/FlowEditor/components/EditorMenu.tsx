@@ -78,27 +78,27 @@ function EditorMenu() {
   const routes = [
     { 
       title: "Editor",
-      icon: <FormatListBulletedIcon />,
+      Icon: FormatListBulletedIcon,
       route: "/",
     },
     { 
       title: "Service",
-      icon: <Article />,
+      Icon: Article,
       route: "/service",
     },
     { 
       title: "Service Flags",
-      icon: <FlagIcon />,
+      Icon: FlagIcon,
       route: "/service-flags",
     },
     { 
       title: "Data",
-      icon: <DataObject />,
+      Icon: DataObject,
       route: "/data",
     },
     { 
       title: "Submissions log",
-      icon: <RuleFolderIcon />,
+      Icon: RuleFolderIcon,
       route: "/submissions-log",
     },
   ];
@@ -106,11 +106,11 @@ function EditorMenu() {
   return (
     <Root>
       <MenuWrap>
-        {routes.map(({ title, icon, route }) => (
+        {routes.map(({ title, Icon, route }) => (
           <MenuItem onClick={() => navigate(rootPath + route)} key={title}>
             <TooltipWrap title={title}>
               <MenuButton isActive={isActive(route)} disableRipple>
-                {icon}
+                <Icon/>
               </MenuButton>
             </TooltipWrap>
           </MenuItem>
