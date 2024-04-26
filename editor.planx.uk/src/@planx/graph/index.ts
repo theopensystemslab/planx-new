@@ -515,23 +515,25 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
           op.od.data?.title ||
           op.od.data?.text ||
           op.od.data?.content ||
-          op.od.data?.fn
+          op.od.data?.fn ||
+          op.od.data?.flowId
         }" with ${TYPES[op.oi.type]} "${
           op.oi.data?.title ||
           op.oi.data?.text ||
           op.oi.data?.content ||
-          op.oi.data?.fn
+          op.oi.data?.fn ||
+          op.od.data?.flowId
         }"`,
       );
     } else if (op.p.includes("data")) {
       output.push(
-        `Updated ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} from "${
+        `Updated ${node?.type ? TYPES[node.type] : "node"} ${op.p?.[2]} from "${
           op.od
         }" to "${op.oi}"`,
       );
     } else if (op.p.includes("edges")) {
       output.push(
-        `Updated order of ${node.type ? TYPES[node.type] : "graph"} edges`,
+        `Updated order of ${node?.type ? TYPES[node.type] : "graph"} edges`,
       );
     }
   };
@@ -539,7 +541,9 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
   // Updating the _root list (update = list insert or list delete)
   const handleRootUpdate = (op: OT.Array.Replace) => {
     if (op.p.includes("edges") && op.p.includes("_root")) {
-      output.push(`Re-ordered the graph`);
+      output.push(`Re-ordered the root graph`);
+    } else if (op.p.includes("edges")) {
+      output.push(`Moved node`);
     }
   };
 
@@ -551,17 +555,19 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
           op.oi.data?.title ||
           op.oi.data?.text ||
           op.oi.data?.content ||
-          op.oi.data?.fn
+          op.oi.data?.fn ||
+          op.oi.data?.flowId
         }"`,
       );
     } else if (op.p.includes("data")) {
       output.push(
-        `Added ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} "${
+        `Added ${node?.type ? TYPES[node?.type] : "node"} ${op.p?.[2]} "${
           op.oi
         }"`,
       );
     } else if (op.p.includes("edges")) {
-      output.push(`Added ${node.type ? TYPES[node.type] : "node"} to branch`);
+      const node = graph[op.oi?.[0]];
+      output.push(`Added ${node?.type ? TYPES[node.type] : "node"} to branch`);
     }
   };
 
@@ -573,18 +579,20 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
           op.od.data?.title ||
           op.od.data?.text ||
           op.od.data?.content ||
-          op.od.data?.fn
+          op.od.data?.fn ||
+          op.od.data?.flowId
         }"`,
       );
     } else if (op.p.includes("data")) {
       output.push(
-        `Removed ${node.type ? TYPES[node.type] : "node"} ${op.p?.[2]} "${
+        `Removed ${node?.type ? TYPES[node.type] : "node"} ${op.p?.[2]} "${
           op.od
         }"`,
       );
     } else if (op.p.includes("edges")) {
+      const node = graph[op.od?.[0]];
       output.push(
-        `Removed ${node.type ? TYPES[node.type] : "node"} from branch`,
+        `Removed ${node?.type ? TYPES[node.type] : "node"} from branch`,
       );
     }
   };

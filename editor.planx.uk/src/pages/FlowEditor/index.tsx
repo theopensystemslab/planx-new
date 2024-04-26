@@ -150,7 +150,7 @@ export const EditHistory = () => {
   }
 
   // Handle missing operations (e.g. non-production data)
-  if (!loading && !data?.operations[0]?.actor) return null;
+  if (!loading && !data?.operations) return null;
 
   return (
     <Box>
@@ -187,7 +187,7 @@ export const EditHistory = () => {
                 <IconButton
                   title="Undo"
                   aria-label="Undo"
-                  onClick={() => undoOperation(op)}
+                  onClick={() => undoOperation(op.data)}
                   disabled={!canUserEditTeam}
                   color="primary"
                 >

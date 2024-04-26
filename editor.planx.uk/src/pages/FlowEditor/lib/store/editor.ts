@@ -18,7 +18,6 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
-import { Operation } from "pages/FlowEditor";
 import type { StateCreator } from "zustand";
 
 import { FlowLayout } from "../../components/Flow";
@@ -91,7 +90,7 @@ export interface EditorStore extends Store.Store {
   ) => Promise<PublishFlowResponse>;
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
-  undoOperation: (operation: Operation) => void;
+  undoOperation: (ops: OT.Op[]) => void;
 }
 
 export const editorStore: StateCreator<
@@ -442,8 +441,8 @@ export const editorStore: StateCreator<
     send(ops);
   },
 
-  undoOperation: (op: Operation) => {
-    const inverseOps: OT.Op[] = type.invert(op.data);
+  undoOperation: (ops: OT.Op[]) => {
+    const inverseOps: OT.Op[] = type.invert(ops);
     send(inverseOps);
   },
 });
