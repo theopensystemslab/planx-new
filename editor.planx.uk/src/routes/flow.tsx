@@ -24,9 +24,11 @@ import { useStore } from "../pages/FlowEditor/lib/store";
 import type { Flow } from "../types";
 import { makeTitle } from "./utils";
 import { flowEditorView } from "./views/flowEditor";
-import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 import { View } from "react-navi";
-import Box from "@mui/material/Box";
+import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
+import Submissions from "pages/FlowEditor/components/Settings/Submissions";
+import DataManagerSettings from "pages/FlowEditor/components/Settings/DataManagerSettings";
+import ServiceFlags from "pages/FlowEditor/components/Settings/ServiceFlags";
 
 const sorter = natsort({ insensitive: true });
 const sortFlows = (a: { text: string }, b: { text: string }) =>
@@ -173,12 +175,6 @@ const nodeRoutes = mount({
   "/:parent/nodes/:id/edit": editNode,
 });
 
-const RoutePlaceholder = () => (
-  <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-    <FeaturePlaceholder title="Feature in development" />
-  </Box>
-)
-
 const routes = compose(
   withData((req) => ({
     flow: req.params.flow.split(",")[0],
@@ -216,22 +212,22 @@ const routes = compose(
 
     "/service": route(async (req) => ({
       title: makeTitle([req.params.team, req.params.flow, "service"].join("/")),
-      view: RoutePlaceholder,
+      view: ServiceSettings,
     })),
 
     "/service-flags": route(async (req) => ({
       title: makeTitle([req.params.team, req.params.flow, "service-flags"].join("/")),
-      view: RoutePlaceholder,
+      view: ServiceFlags,
     })),
 
     "/data": route(async (req) => ({
       title: makeTitle([req.params.team, req.params.flow, "data"].join("/")),
-      view: RoutePlaceholder,
+      view: DataManagerSettings,
     })),
 
     "/submissions-log": route(async (req) => ({
       title: makeTitle([req.params.team, req.params.flow, "submissions-log"].join("/")),
-      view: RoutePlaceholder,
+      view: Submissions,
     })),
   }),
 );
