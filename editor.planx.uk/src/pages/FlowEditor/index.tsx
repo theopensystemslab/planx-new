@@ -10,7 +10,7 @@ import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { formatDistanceToNow } from "date-fns";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
@@ -111,6 +111,8 @@ export const LastEdited = () => {
 };
 
 export const EditHistory = () => {
+  const [focusedOpIndex, setFocusedOpIndex] = useState<number | undefined>();
+
   const [flowId, flow, canUserEditTeam, undoOperation] = useStore((state) => [
     state.id,
     state.flow,
@@ -152,6 +154,19 @@ export const EditHistory = () => {
   // Handle missing operations (e.g. non-production data)
   if (!loading && !data?.operations) return null;
 
+  const handleUndo = (i: number) => {
+    // Get all operations _since_ & including the selected one
+    const operationsToUndo = data?.operations?.slice(0, i + 1);
+
+    // Make a flattened list, with the latest operations first
+    const operationsData: Array<OT.Op[]> = [];
+    operationsToUndo?.map((op) => operationsData.unshift(op?.data));
+    const flattenedOperationsData: OT.Op[] = operationsData?.flat(1);
+
+    // Undo all
+    undoOperation(flattenedOperationsData);
+  };
+
   return (
     <Box>
       {loading && !data ? (
@@ -162,7 +177,13 @@ export const EditHistory = () => {
             key={`container-${op.id}`}
             marginBottom={2}
             padding={2}
-            sx={{ background: (theme) => theme.palette.grey[200] }}
+            sx={{
+              background: (theme) => theme.palette.grey[200],
+              borderLeft: (theme) =>
+                focusedOpIndex && i <= focusedOpIndex
+                  ? `5px solid ${theme.palette.primary.main}`
+                  : `none`,
+            }}
           >
             <Box
               sx={{
@@ -183,17 +204,19 @@ export const EditHistory = () => {
                   {formatLastEditDate(op.createdAt)}
                 </Typography>
               </Box>
-              {i === 0 && (
+              {
                 <IconButton
                   title="Undo"
                   aria-label="Undo"
-                  onClick={() => undoOperation(op.data)}
+                  onClick={() => handleUndo(i)}
+                  onMouseEnter={() => setFocusedOpIndex(i)}
+                  onMouseLeave={() => setFocusedOpIndex(undefined)}
                   disabled={!canUserEditTeam}
                   color="primary"
                 >
                   <UndoOutlined />
                 </IconButton>
-              )}
+              }
             </Box>
             {op.data && (
               <Typography variant="body2" component="ul" padding={2}>
