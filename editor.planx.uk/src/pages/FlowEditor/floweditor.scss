@@ -1,11 +1,16 @@
-$background: #f2f2f2;
-$black: #2c2c2c;
-$endpointRadius: 45px;
-$hangerRadius: 14px;
-$lineColor: #cacaca;
-$lineWidth: 1px;
-$padding: 7px;
-$pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNc8B8AAkUBofXwZpQAAAAASUVORK5CYII=);
+$black: #0b0c0c;
+$nodeBorder: $black;
+$optionBorder: #b1b4b6;
+$hangerBackground: #f2f2f2;
+$focus: #ffdd00;
+
+$endpointWidth: 50px;
+$hangerWidth: 16px;
+$lineWidth: 2px;
+$nodeBorderWidth: 1px;
+$padding: 10px;
+$editorPadding: 30px;
+$pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
 
 // Import custom typeface for data inputs
 @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap");
@@ -40,13 +45,19 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 #editor {
   flex: 1;
   overflow: auto;
-  padding: 20px;
+  padding: $editorPadding;
 
   ol,
   li {
     list-style: none;
     padding: 0;
     margin: 0;
+
+    > a:focus,
+    > a:active {
+      outline: 4px solid $focus;
+      outline-offset: 0;
+    }
   }
 
   ol:empty {
@@ -83,6 +94,8 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 // ------------------------------------------------
 
 .card {
+  position: relative;
+
   &.isDragging {
     opacity: 0.3;
     & + .hanger {
@@ -103,7 +116,8 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     span {
       opacity: 1;
     }
-    border: 2px solid limegreen;
+    outline: 4px solid #8cc485;
+    outline-offset: 0;
   }
 
   &.isClone > a {
@@ -111,7 +125,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   }
 
   &.hasFailed {
-    border: 1px dashed red;
+    border: $nodeBorderWidth dashed red;
   }
 
   & > a {
@@ -121,7 +135,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     text-decoration: none;
     cursor: pointer;
     color: $black;
-    border: 1px solid $lineColor;
+    border: $nodeBorderWidth solid $nodeBorder;
     background: white;
     user-select: none;
     padding: 6px 12px;
@@ -131,19 +145,63 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     }
 
     > span {
-      max-width: 170px;
+      min-width: 80px;
+      max-width: 200px;
       overflow-wrap: break-word;
     }
 
     > svg {
       margin-left: -6px;
+      margin-top: 0.5px;
       width: 16px;
       height: 16px;
-      opacity: 0.3;
+      opacity: 0.6;
     }
 
     > span:not(:nth-child(1)) {
       margin-left: 6px;
+    }
+  }
+
+  &.type-Section {
+    [data-layout="top-down"] & {
+      width: 100%;
+    }
+    [data-layout="left-right"] & {
+      height: 100%;
+    }
+  }
+
+  &.type-Section::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    width: calc(100% + ($editorPadding * 2));
+    z-index: -1;
+    background-image: linear-gradient(
+      90deg,
+      $optionBorder,
+      $optionBorder 40%,
+      transparent 40%,
+      transparent 100%
+    );
+    background-size: 12px 2px;
+    border: none;
+    [data-layout="left-right"] & {
+      top: unset;
+      width: 2px;
+      height: 100vh;
+      left: 50%;
+      background-image: linear-gradient(
+        0deg,
+        $optionBorder,
+        $optionBorder 50%,
+        transparent 50%,
+        transparent 100%
+      );
+      background-size: 2px 12px;
     }
   }
 }
@@ -161,9 +219,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 }
 
 .endpoint > a {
-  @include circle($endpointRadius);
+  @include circle($endpointWidth);
   display: block;
-  line-height: $endpointRadius;
+  line-height: $endpointWidth;
   color: white;
   background: $black;
   text-align: center;
@@ -171,10 +229,31 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   cursor: pointer;
 }
 
+.option {
+  > a {
+    border-color: $optionBorder;
+    flex-direction: column;
+    padding: 0;
+    min-width: 60px;
+    max-width: 200px;
+  }
+  .band {
+    width: 100%;
+    height: 12px;
+    border-bottom: $nodeBorderWidth solid $optionBorder;
+  }
+  .text {
+    align-self: center;
+    margin: 0;
+    padding: 6px 12px;
+  }
+}
+
 .hanger {
   align-self: center;
   background-image: $pixel;
   background-size: $lineWidth;
+  line-height: 0;
 
   [data-layout="left-right"] & {
     background-position: left center;
@@ -199,18 +278,19 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   }
 
   > a {
-    $size: 14px;
+    $size: $hangerWidth;
     display: inline-block;
     // width: $size;
     text-decoration: none;
-    border: 1px solid #a0a0a0;
+    border: $nodeBorderWidth solid $nodeBorder;
     min-width: $size;
     max-width: 200px;
     min-height: $size;
     border-radius: $size;
     color: $black;
     padding: 5px;
-    background: $background;
+    background: $hangerBackground;
+    line-height: 1.5;
 
     margin: $padding;
 
@@ -220,7 +300,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     transition: transform 0.2s;
 
     &:empty:hover {
-      background-color: yellow;
+      background-color: $focus;
       transform: scale(1.7);
     }
 
@@ -238,10 +318,38 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     border: none;
   }
   &.breadcrumb {
-    background: none;
+    background-image: $pixel;
+    background-repeat: no-repeat;
+    [data-layout="top-down"] & {
+      background-position: center top;
+      background-size: $lineWidth $padding;
+      > a {
+        margin: $padding 0 0;
+      }
+    }
+    [data-layout="left-right"] & {
+      background-position: left center;
+      background-size: $padding $lineWidth;
+      > a {
+        margin: 0 0 0 $padding;
+      }
+    }
     > a {
       background: #666;
-      margin: 5px 0;
+      text-align: center;
+    }
+  }
+  .portalMenu {
+    border-left: $nodeBorderWidth solid #aaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 6px;
+    svg {
+      opacity: 1;
+      margin: 0;
+      width: 16px;
+      height: 16px;
     }
   }
 }
@@ -259,6 +367,11 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   display: none;
 }
 
+.category > span {
+  padding: 6px 12px;
+  background: #d0d0d0;
+}
+
 .decision,
 .category {
   [data-layout="top-down"] & {
@@ -274,9 +387,32 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   }
   align-items: center;
 
-  &.isNote {
+  &.question.isNote {
     > a {
-      background: yellow !important;
+      background: #fffdb0 !important;
+      position: relative;
+      padding-right: 20px;
+      // Triangle shapes to simulate paper fold on sticky note
+      &::before {
+        content: "";
+        position: absolute;
+        right: -$nodeBorderWidth;
+        bottom: -$nodeBorderWidth;
+        width: 0;
+        height: 0;
+        border-bottom: 12px solid #fff;
+        border-left: 12px solid transparent;
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        right: -$nodeBorderWidth;
+        bottom: -$nodeBorderWidth;
+        width: 0;
+        height: 0;
+        border-top: 12px solid #555;
+        border-right: 12px solid transparent;
+      }
     }
   }
 
@@ -289,18 +425,18 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 
     [data-layout="top-down"] & {
       flex-direction: row;
-      padding-top: 5px !important;
+      padding-top: $padding !important;
 
       background-position: center top;
-      background-size: $lineWidth 5px;
+      background-size: $lineWidth $padding;
     }
 
     [data-layout="left-right"] & {
       flex-direction: column;
-      padding-left: 5px !important;
+      padding-left: $padding !important;
 
       background-position: left center;
-      background-size: 5px $lineWidth;
+      background-size: $padding $lineWidth;
     }
 
     &:empty {
@@ -310,7 +446,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     > li {
       background-image: $pixel, $pixel, $pixel;
       [data-layout="top-down"] & {
-        padding: 5px 5px 0 5px !important;
+        padding: $padding $padding 0 $padding !important;
         flex-direction: column;
 
         background-position:
@@ -318,7 +454,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
           top center,
           bottom center;
         background-size:
-          $lineWidth 5px,
+          $lineWidth $padding,
           $lineWidth,
           $lineWidth;
         background-repeat: no-repeat, repeat-x, repeat-x;
@@ -329,7 +465,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
             top right,
             bottom right;
           background-size:
-            $lineWidth 5px,
+            $lineWidth $padding,
             50% $lineWidth,
             50% $lineWidth;
           background-repeat: no-repeat, no-repeat, no-repeat;
@@ -341,14 +477,14 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
             top left,
             bottom left;
           background-size:
-            $lineWidth 5px,
+            $lineWidth $padding,
             50% $lineWidth,
             50% $lineWidth;
           background-repeat: no-repeat, no-repeat, no-repeat;
         }
       }
       [data-layout="left-right"] & {
-        padding: 5px 0 5px 5px !important;
+        padding: $padding 0 $padding $padding !important;
         flex-direction: row;
 
         background-position:
@@ -359,9 +495,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 
         // BUG: 1px NOT VISIBLE IN CHROME
         background-size:
-          5px $lineWidth,
+          $padding $lineWidth,
           $lineWidth 100%,
-          1px 100%;
+          2px 100%;
 
         &:nth-child(1) {
           background-position:
@@ -369,7 +505,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
             left bottom,
             right bottom;
           background-size:
-            5px $lineWidth,
+            $padding $lineWidth,
             $lineWidth 50%,
             $lineWidth 50%;
         }
@@ -380,7 +516,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
             left top,
             right top;
           background-size:
-            5px $lineWidth,
+            $padding $lineWidth,
             $lineWidth 50%,
             $lineWidth 50%;
         }
