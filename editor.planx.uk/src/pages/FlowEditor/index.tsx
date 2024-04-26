@@ -111,7 +111,9 @@ export const LastEdited = () => {
 };
 
 export const EditHistory = () => {
-  const [focusedOpIndex, setFocusedOpIndex] = useState<number | undefined>();
+  const [focusedOpIndex, setFocusedOpIndex] = useState<number | undefined>(
+    undefined,
+  );
 
   const [flowId, flow, canUserEditTeam, undoOperation] = useStore((state) => [
     state.id,
@@ -180,7 +182,7 @@ export const EditHistory = () => {
             sx={{
               background: (theme) => theme.palette.grey[200],
               borderLeft: (theme) =>
-                focusedOpIndex && i <= focusedOpIndex
+                focusedOpIndex !== undefined && i <= focusedOpIndex
                   ? `5px solid ${theme.palette.primary.main}`
                   : `none`,
             }}
