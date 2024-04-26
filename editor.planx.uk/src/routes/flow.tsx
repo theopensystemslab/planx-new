@@ -13,7 +13,7 @@ import {
   withView,
 } from "navi";
 import mapAccum from "ramda/src/mapAccum";
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
@@ -29,6 +29,7 @@ import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSetting
 import Submissions from "pages/FlowEditor/components/Settings/Submissions";
 import DataManagerSettings from "pages/FlowEditor/components/Settings/DataManagerSettings";
 import ServiceFlags from "pages/FlowEditor/components/Settings/ServiceFlags";
+import Box from "@mui/material/Box";
 
 const sorter = natsort({ insensitive: true });
 const sortFlows = (a: { text: string }, b: { text: string }) =>
@@ -175,6 +176,12 @@ const nodeRoutes = mount({
   "/:parent/nodes/:id/edit": editNode,
 });
 
+const SettingsContainer = () => (
+  <Box sx={{ width: "100%", p: 2, overflowY: "auto" }}>
+    <View />
+  </Box>
+)
+
 const routes = compose(
   withData((req) => ({
     flow: req.params.flow.split(",")[0],
@@ -197,11 +204,11 @@ const routes = compose(
 
     "/nodes": compose(
       withView((req) => {
-        const [flow, ...breadcrumbs] = req.params.flow.split(","); 
+        const [flow, ...breadcrumbs] = req.params.flow.split(",");
         return (
           <>
             <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
-            <View/>
+            <View />
           </>
         );
       }),
@@ -210,25 +217,42 @@ const routes = compose(
 
     "/settings": lazy(() => import("./flowSettings")),
 
-    "/service": route(async (req) => ({
-      title: makeTitle([req.params.team, req.params.flow, "service"].join("/")),
-      view: ServiceSettings,
-    })),
+    "/service": compose(
+      withView(SettingsContainer),
 
-    "/service-flags": route(async (req) => ({
-      title: makeTitle([req.params.team, req.params.flow, "service-flags"].join("/")),
-      view: ServiceFlags,
-    })),
+      route(async (req) => ({
+        title: makeTitle([req.params.team, req.params.flow, "service"].join("/")),
+        view: ServiceSettings
+      })),
+    ),
 
-    "/data": route(async (req) => ({
-      title: makeTitle([req.params.team, req.params.flow, "data"].join("/")),
-      view: DataManagerSettings,
-    })),
+    "/service-flags": compose(
+      withView(SettingsContainer),
 
-    "/submissions-log": route(async (req) => ({
-      title: makeTitle([req.params.team, req.params.flow, "submissions-log"].join("/")),
-      view: Submissions,
-    })),
+      route(async (req) => ({
+        title: makeTitle([req.params.team, req.params.flow, "service-flags"].join("/")),
+        view: ServiceFlags
+      })),
+
+    ),
+
+    "/data": compose(
+      withView(SettingsContainer),
+
+      route(async (req) => ({
+        title: makeTitle([req.params.team, req.params.flow, "data"].join("/")),
+        view: DataManagerSettings
+      })),
+    ),
+
+    "/submissions-log": compose(
+      withView(SettingsContainer),
+
+      route(async (req) => ({
+        title: makeTitle([req.params.team, req.params.flow, "submissions-log"].join("/")),
+        view: Submissions
+      })),
+    )
   }),
 );
 
