@@ -312,7 +312,8 @@ async function attachArchive(
 
   // Temp additional logging to debug failures
   console.log("*** Uniform attachArchive response ***");
-  console.log(JSON.stringify(response, null, 2));
+  console.log({ status: response.status });
+  console.log(JSON.stringify(response.data, null, 2));
   console.log("******");
 
   return isSuccess;
