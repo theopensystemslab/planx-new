@@ -19,6 +19,7 @@ import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useMemo, useState } from "react";
 import { borderedFocusStyle } from "theme";
+import Checkbox from "ui/shared/Checkbox";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import {
@@ -28,7 +29,6 @@ import {
   removeSlots,
   UserFile,
 } from "./model";
-import Checkbox from "ui/shared/Checkbox";
 
 interface SelectMultipleProps {
   uploadedFile: FileUploadSlot;
@@ -123,7 +123,12 @@ const renderGroup: AutocompleteProps<
   false,
   "div"
 >["renderGroup"] = ({ group, key, children }) => (
-  <List key={`group-${key}`} role="group" sx={{ paddingY: 0 }} aria-labelledby={`${group}-label`}>
+  <List
+    key={`group-${key}`}
+    role="group"
+    sx={{ paddingY: 0 }}
+    aria-labelledby={`${group}-label`}
+  >
     <ListSubheader
       id={`${group}-label`}
       role="presentation"
@@ -156,7 +161,7 @@ const renderOption: AutocompleteProps<
       data-testid="select-checkbox"
       checked={selected}
       inputProps={{
-        "aria-label": option.name
+        "aria-label": option.name,
       }}
     />
     <ListItemText sx={{ ml: 2 }}>{option.name}</ListItemText>
@@ -165,11 +170,37 @@ const renderOption: AutocompleteProps<
 
 const PopupIcon = <ArrowIcon sx={{ color: "primary.main" }} fontSize="large" />;
 
+/**
+ * Custom Listbox component
+ * Used to wrap options within the autocomplete and append a custom element above the option list
+ */
+const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
+  ({ children, ...props }, ref) => (
+    <>
+      <Box>
+        <ListHeader>
+          <Typography variant="h4" component="h3" pr={3}>
+            Select all that apply
+          </Typography>
+          <Button variant="contained" color="prompt" aria-label="Close list">
+            Done
+          </Button>
+        </ListHeader>
+      </Box>
+      <Box
+        ref={ref}
+        {...props}
+        role="listbox"
+        sx={{ paddingY: "0px !important" }}
+      >
+        {children}
+      </Box>
+    </>
+  ),
+);
+
 export const SelectMultiple = (props: SelectMultipleProps) => {
   const { uploadedFile, fileList, setFileList } = props;
-  const [open, setOpen] = useState(false);
-  const closePopper = () => setOpen(false);
-  const openPopper = () => setOpen(true);
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
 
@@ -234,42 +265,6 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
     }
   };
 
-  /**
-   * Custom Listbox component
-   * Used to wrap options within the autocomplete and append a custom element above the option list
-   */
-  const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
-    ({ children, ...props }, ref) => {
-      return (
-        <>
-          <Box>
-            <ListHeader>
-              <Typography variant="h4" component="h3" pr={3}>
-                Select all that apply
-              </Typography>
-              <Button
-                variant="contained"
-                color="prompt"
-                onClick={closePopper}
-                aria-label="Close list"
-              >
-                Done
-              </Button>
-            </ListHeader>
-          </Box>
-          <Box
-            ref={ref}
-            {...props}
-            role="listbox"
-            sx={{ paddingY: "0px !important" }}
-          >
-            {children}
-          </Box>
-        </>
-      );
-    },
-  );
-
   return (
     <FormControl
       key={`form-${uploadedFile.id}`}
@@ -288,9 +283,6 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
         ListboxComponent={ListboxComponent}
         multiple
         onChange={handleChange}
-        onClose={closePopper}
-        onOpen={openPopper}
-        open={open}
         options={options}
         popupIcon={PopupIcon}
         renderGroup={renderGroup}
