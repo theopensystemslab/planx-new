@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
+import ListItem, { listItemClasses } from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
@@ -17,7 +17,14 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React, { forwardRef, PropsWithChildren, useMemo, useState } from "react";
+import React, {
+  forwardRef,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { borderedFocusStyle } from "theme";
 import Checkbox from "ui/shared/Checkbox";
 
@@ -148,6 +155,8 @@ const renderGroup: AutocompleteProps<
 
 /**
  * Function which returns the options (li elements) used by Autocomplete
+ * This is not a React.FC so cannot contain hooks
+ * Therefore this has to be handled in OptionComponent directly
  */
 const renderOption: AutocompleteProps<
   Option,
@@ -156,17 +165,61 @@ const renderOption: AutocompleteProps<
   false,
   "div"
 >["renderOption"] = (props, option, { selected }) => (
-  <ListItem {...props}>
-    <Checkbox
-      data-testid="select-checkbox"
-      checked={selected}
-      inputProps={{
-        "aria-label": option.name,
-      }}
-    />
-    <ListItemText sx={{ ml: 2 }}>{option.name}</ListItemText>
-  </ListItem>
+  <OptionComponent option={option} selected={selected} {...props} />
 );
+
+interface OptionComponentProps extends React.HTMLAttributes<HTMLLIElement> {
+  option: Option;
+  selected: boolean;
+}
+
+const OptionComponent: React.FC<OptionComponentProps> = ({
+  option,
+  selected,
+  ...props
+}) => {
+  const ref = useRef<HTMLLIElement>(null);
+
+  // Using a custom listbox has a breaking effect on the native scroll used by MUI's Autocomplete
+  // Using a MutationObserver we can listen for MUI applying the focusVisible class
+  // We then use this to indicate that we need to scroll the focused element into view
+  useEffect(() => {
+    const targetElement = ref.current;
+    if (!targetElement) return;
+
+    const observer = new MutationObserver((mutationsList) => {
+      mutationsList.forEach(({ type, attributeName }) => {
+        const isClassMutation =
+          type === "attributes" && attributeName === "class";
+        if (!isClassMutation) return;
+
+        const isFocused = targetElement.classList.contains(
+          listItemClasses.focusVisible,
+        );
+        if (!isFocused) return;
+
+        targetElement.scrollIntoView(false);
+      });
+    });
+
+    observer.observe(targetElement, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <ListItem {...props} ref={ref}>
+      <Checkbox
+        data-testid="select-checkbox"
+        checked={selected}
+        inputProps={{
+          "aria-label": option.name,
+        }}
+      />
+      <ListItemText sx={{ ml: 2 }}>{option.name}</ListItemText>
+    </ListItem>
+  );
+};
 
 const PopupIcon = <ArrowIcon sx={{ color: "primary.main" }} fontSize="large" />;
 
@@ -276,6 +329,7 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
         aria-live="polite"
         disableClearable
         disableCloseOnSelect
+        disableListWrap
         getOptionLabel={(option) => option.name}
         groupBy={(option) => option.category}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
