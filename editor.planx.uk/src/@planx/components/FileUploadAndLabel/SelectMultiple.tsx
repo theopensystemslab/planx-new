@@ -19,6 +19,7 @@ import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useMemo, useState } from "react";
 import { borderedFocusStyle } from "theme";
+import Checkbox from "ui/shared/Checkbox";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import {
@@ -28,7 +29,6 @@ import {
   removeSlots,
   UserFile,
 } from "./model";
-import Checkbox from "ui/shared/Checkbox";
 
 interface SelectMultipleProps {
   uploadedFile: FileUploadSlot;
@@ -108,6 +108,7 @@ const renderInput: AutocompleteProps<
     InputProps={{
       ...params.InputProps,
       notched: false,
+      inputMode: "none",
     }}
     label="What does this file show?"
   />
@@ -123,7 +124,12 @@ const renderGroup: AutocompleteProps<
   false,
   "div"
 >["renderGroup"] = ({ group, key, children }) => (
-  <List key={`group-${key}`} role="group" sx={{ paddingY: 0 }} aria-labelledby={`${group}-label`}>
+  <List
+    key={`group-${key}`}
+    role="group"
+    sx={{ paddingY: 0 }}
+    aria-labelledby={`${group}-label`}
+  >
     <ListSubheader
       id={`${group}-label`}
       role="presentation"
@@ -156,7 +162,7 @@ const renderOption: AutocompleteProps<
       data-testid="select-checkbox"
       checked={selected}
       inputProps={{
-        "aria-label": option.name
+        "aria-label": option.name,
       }}
     />
     <ListItemText sx={{ ml: 2 }}>{option.name}</ListItemText>
