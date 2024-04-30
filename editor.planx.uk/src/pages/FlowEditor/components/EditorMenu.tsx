@@ -1,16 +1,14 @@
-import FlagIcon from '@mui/icons-material/Flag';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import DataObject from '@mui/icons-material/DataObject';
-import Article from '@mui/icons-material/Article';
-import RuleFolderIcon from '@mui/icons-material/RuleFolder';
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
-import IconButton from '@mui/material/IconButton';
+import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Tooltip, { tooltipClasses,TooltipProps } from '@mui/material/Tooltip';
+import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import React from "react";
-import { useCurrentRoute, useNavigation } from 'react-navi';
-import { rootFlowPath } from 'routes/utils';
-import { FONT_WEIGHT_SEMI_BOLD } from 'theme';
+import { useCurrentRoute, useNavigation } from "react-navi";
+import { rootFlowPath } from "routes/utils";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 const MENU_WIDTH = "46px";
 
@@ -18,13 +16,13 @@ const Root = styled(Box)(({ theme }) => ({
   width: MENU_WIDTH,
   flexShrink: 0,
   background: theme.palette.background.paper,
-  borderRight:`1px solid ${theme.palette.border.main}`,
+  borderRight: `1px solid ${theme.palette.border.main}`,
 }));
 
 const MenuWrap = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(5, 0, 0, 0),
+  padding: theme.spacing(4, 0, 0, 0),
 }));
 
 const MenuItem = styled("li")(({ theme }) => ({
@@ -74,32 +72,23 @@ function EditorMenu() {
   const rootPath = rootFlowPath();
 
   const isActive = (route: string) => lastChunk.url.pathname.endsWith(route);
-  const handleClick = (route: string) => !isActive(route) && navigate(rootPath + route);
+  const handleClick = (route: string) =>
+    !isActive(route) && navigate(rootPath + route);
 
   const routes = [
-    { 
+    {
       title: "Editor",
-      Icon: FormatListBulletedIcon,
+      Icon: AccountTreeIcon,
       route: "/",
     },
-    { 
-      title: "Service",
-      Icon: Article,
+    {
+      title: "Service settings",
+      Icon: TuneIcon,
       route: "/service",
     },
-    { 
-      title: "Service Flags",
-      Icon: FlagIcon,
-      route: "/service-flags",
-    },
-    { 
-      title: "Data",
-      Icon: DataObject,
-      route: "/data",
-    },
-    { 
+    {
       title: "Submissions log",
-      Icon: RuleFolderIcon,
+      Icon: FactCheckIcon,
       route: "/submissions-log",
     },
   ];
@@ -111,7 +100,7 @@ function EditorMenu() {
           <MenuItem onClick={() => handleClick(route)} key={title}>
             <TooltipWrap title={title}>
               <MenuButton isActive={isActive(route)} disableRipple>
-                <Icon/>
+                <Icon />
               </MenuButton>
             </TooltipWrap>
           </MenuItem>

@@ -177,7 +177,7 @@ const nodeRoutes = mount({
 });
 
 const SettingsContainer = () => (
-  <Box sx={{ width: "100%", p: 4, overflowY: "auto" }}>
+  <Box sx={{ width: "100%", px: 4, py: 5, overflowY: "auto" }}>
     <View />
   </Box>
 );
