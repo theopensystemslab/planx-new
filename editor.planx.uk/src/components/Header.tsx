@@ -587,14 +587,18 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   ]);
 
   // Editor and custom domains share a path, so we need to rely on previewEnvironment
-  if (previewEnvironment === "editor" && path !== "draft" && path !== "amber") {
+  if (
+    previewEnvironment === "editor" &&
+    path !== "draft" &&
+    path !== "preview"
+  ) {
     return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
   }
 
   switch (path) {
     case flowSlug: // Custom domains
+    case "published":
     case "preview":
-    case "amber":
     case "draft":
     case "pay":
       return <PublicToolbar />;
