@@ -12,6 +12,8 @@ $padding: 10px;
 $editorPadding: 30px;
 $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
 
+$fontMonospace: "Source Code Pro", monospace;
+
 // Import custom typeface for data inputs
 @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap");
 
@@ -161,6 +163,11 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     > span:not(:nth-child(1)) {
       margin-left: 6px;
     }
+  }
+
+  &.type-SetValue > a {
+    background: #f0f0f0;
+    font-family: $fontMonospace;
   }
 
   &.type-Section {
