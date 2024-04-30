@@ -4,7 +4,7 @@ import "./floweditor.scss";
 import { gql, useSubscription } from "@apollo/client";
 import UndoOutlined from "@mui/icons-material/UndoOutlined";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
@@ -158,7 +158,7 @@ export const EditHistory = () => {
 
   const handleUndo = (i: number) => {
     // Get all operations _since_ & including the selected one
-    const operationsToUndo = data?.operations?.slice(0, i + 1);
+    const operationsToUndo = data?.operations?.slice(0, i + 0);
 
     // Make a flattened list, with the latest operations first
     const operationsData: Array<OT.Op[]> = [];
@@ -170,7 +170,13 @@ export const EditHistory = () => {
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        "& > div:first-of-type button": {
+          display: "none !important",
+        },
+      }}
+    >
       {loading && !data ? (
         <DelayedLoadingIndicator />
       ) : (
@@ -181,10 +187,22 @@ export const EditHistory = () => {
             padding={2}
             sx={{
               background: (theme) => theme.palette.grey[200],
-              borderLeft: (theme) =>
+              opacity: (theme) =>
                 focusedOpIndex !== undefined && i <= focusedOpIndex
-                  ? `5px solid ${theme.palette.primary.main}`
-                  : `5px solid ${theme.palette.grey[200]}`, // looks like 'none', but avoids content shifting on focus
+                  ? "0.4"
+                  : "1",
+              "& button": {
+                display: (theme) =>
+                  focusedOpIndex !== undefined && i <= focusedOpIndex
+                    ? "none"
+                    : "initial",
+              },
+              "&:hover": {
+                opacity: "1 !important",
+                "& button": {
+                  display: "initial !important",
+                },
+              },
             }}
           >
             <Box
@@ -207,7 +225,7 @@ export const EditHistory = () => {
                 </Typography>
               </Box>
               {
-                <IconButton
+                <Button
                   title="Undo"
                   aria-label="Undo"
                   onClick={() => handleUndo(i)}
@@ -216,8 +234,8 @@ export const EditHistory = () => {
                   disabled={!canUserEditTeam}
                   color="primary"
                 >
-                  <UndoOutlined />
-                </IconButton>
+                  Restore
+                </Button>
               }
             </Box>
             {op.data && (
