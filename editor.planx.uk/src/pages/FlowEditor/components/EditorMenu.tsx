@@ -8,7 +8,7 @@ import React from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import EditorCustomIcon from "ui/images/CustomIcons";
+import EditorIcon from "ui/icons/Editor";
 
 const MENU_WIDTH = "46px";
 
@@ -78,7 +78,7 @@ function EditorMenu() {
   const routes = [
     {
       title: "Editor",
-      Icon: EditorCustomIcon,
+      Icon: EditorIcon,
       route: "/",
     },
     {
