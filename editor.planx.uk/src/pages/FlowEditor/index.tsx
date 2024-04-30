@@ -184,7 +184,7 @@ export const EditHistory = () => {
               borderLeft: (theme) =>
                 focusedOpIndex !== undefined && i <= focusedOpIndex
                   ? `5px solid ${theme.palette.primary.main}`
-                  : `none`,
+                  : `5px solid ${theme.palette.grey[200]}`, // looks like 'none', but avoids content shifting on focus
             }}
           >
             <Box
