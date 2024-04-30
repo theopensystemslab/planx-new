@@ -90,15 +90,7 @@ const SendComponent: React.FC<Props> = (props) => {
       //   Don't actually restrict selection because flowSlug matching is imperfect for some valid test cases
       const teamSlug = window.location.pathname?.split("/")?.[1];
       const flowSlug = window.location.pathname?.split("/")?.[2];
-      if (
-        value === Destination.BOPS &&
-        newCheckedValues.includes(value) &&
-        ![
-          "apply-for-a-lawful-development-certificate",
-          "apply-for-prior-approval",
-          "apply-for-planning-permission",
-        ].includes(flowSlug)
-      ) {
+      if (value === Destination.BOPS && newCheckedValues.includes(value)) {
         alert(
           "BOPS only accepts Lawful Development Certificate, Prior Approval, and Planning Permission submissions. Please do not select if you're building another type of submission service!",
         );
@@ -118,10 +110,10 @@ const SendComponent: React.FC<Props> = (props) => {
       if (
         value === Destination.S3 &&
         newCheckedValues.includes(value) &&
-        teamSlug !== "barnet"
+        !["barnet", "lambeth"].includes(teamSlug)
       ) {
         alert(
-          "AWS S3 uploads are currently being prototyped with Barnet only. Please do not select this option for other councils yet.",
+          "AWS S3 uploads are currently being prototyped with Barnet and Lambeth only. Please do not select this option for other councils yet.",
         );
       }
     };

@@ -26,13 +26,13 @@ export async function sendToS3(
     const { sessionId } = payload;
 
     // Fetch integration credentials for this team
-    const { powerAutomateWebhookURL } = await $api.team.getIntegrations({
+    const { powerAutomateWebhookURL, powerAutomateAPIKey } = await $api.team.getIntegrations({
       slug: localAuthority,
       encryptionKey: process.env.ENCRYPTION_KEY!,
       env,
     });
 
-    if (!powerAutomateWebhookURL) {
+    if (!powerAutomateWebhookURL || !powerAutomateAPIKey) {
       return next({
         status: 400,
         message: `Send to S3 is not enabled for this local authority (${localAuthority})`,
@@ -49,18 +49,23 @@ export async function sendToS3(
     );
 
     // Send a notification with the file URL to the Power Automate webook
-    const webhookResponse = await axios({
+    let webhookResponseStatus: number | undefined; 
+    await axios({
       method: "POST",
       url: powerAutomateWebhookURL,
       adapter: "http",
       headers: {
         "Content-Type": "application/json",
+        "apiKey": powerAutomateAPIKey,
       },
       data: {
         message: "New submission from PlanX",
         environment: env,
         file: fileUrl,
       },
+    }).then((res) => {
+      // TODO Create & update audit table entry here
+      webhookResponseStatus = res.status;
     }).catch((error) => {
       throw new Error(
         `Failed to send submission notification to ${localAuthority}'s Power Automate Webhook (${sessionId}): ${error}`,
@@ -70,11 +75,9 @@ export async function sendToS3(
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(sessionId);
 
-    // TODO Create and update an audit table entry
-
     return res.status(200).send({
       message: `Successfully uploaded submission to S3: ${fileUrl}`,
-      webhookResponse: webhookResponse,
+      webhookResponse: webhookResponseStatus,
     });
   } catch (error) {
     return next({
