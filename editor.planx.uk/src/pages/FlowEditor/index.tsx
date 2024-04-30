@@ -3,6 +3,12 @@ import "./floweditor.scss";
 
 import { gql, useSubscription } from "@apollo/client";
 import UndoOutlined from "@mui/icons-material/UndoOutlined";
+import Timeline from "@mui/lab/Timeline";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineDot from "@mui/lab/TimelineDot";
+import TimelineItem, { timelineItemClasses } from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -174,63 +180,82 @@ export const EditHistory = () => {
       {loading && !data ? (
         <DelayedLoadingIndicator />
       ) : (
-        data?.operations?.map((op: Operation, i: number) => (
-          <Box
-            key={`container-${op.id}`}
-            marginBottom={2}
-            padding={2}
-            sx={{
-              background: (theme) => theme.palette.grey[200],
-              borderLeft: (theme) =>
-                focusedOpIndex !== undefined && i <= focusedOpIndex
-                  ? `5px solid ${theme.palette.primary.main}`
-                  : `5px solid ${theme.palette.grey[200]}`, // looks like 'none', but avoids content shifting on focus
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Box>
-                <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                  {`${
-                    op.actor
-                      ? `Edited by ${op.actor?.firstName} ${op.actor?.lastName}`
-                      : `Created flow`
-                  }`}
-                </Typography>
-                <Typography variant="body2">
-                  {formatLastEditDate(op.createdAt)}
-                </Typography>
-              </Box>
-              {
-                <IconButton
-                  title="Undo"
-                  aria-label="Undo"
-                  onClick={() => handleUndo(i)}
-                  onMouseEnter={() => setFocusedOpIndex(i)}
-                  onMouseLeave={() => setFocusedOpIndex(undefined)}
-                  disabled={!canUserEditTeam}
-                  color="primary"
-                >
-                  <UndoOutlined />
-                </IconButton>
-              }
-            </Box>
-            {op.data && (
-              <Typography variant="body2" component="ul" padding={2}>
-                {[...new Set(formatOps(flow, op.data))].map(
-                  (formattedOp, i) => (
-                    <li key={i}>{formattedOp}</li>
-                  ),
+        <Timeline
+          sx={{
+            [`& .${timelineItemClasses.root}:before`]: {
+              flex: 0,
+              padding: 0,
+            },
+          }}
+        >
+          {data?.operations?.map((op: Operation, i: number) => (
+            <TimelineItem key={op.id}>
+              <TimelineSeparator>
+                <TimelineDot
+                  color={
+                    focusedOpIndex !== undefined && i <= focusedOpIndex
+                      ? "primary"
+                      : undefined
+                  }
+                />
+                {i < data.operations.length - 1 && (
+                  <TimelineConnector
+                    sx={{
+                      bgcolor: (theme) =>
+                        focusedOpIndex !== undefined && i <= focusedOpIndex
+                          ? theme.palette.primary.main
+                          : undefined,
+                    }}
+                  />
                 )}
-              </Typography>
-            )}
-          </Box>
-        ))
+              </TimelineSeparator>
+              <TimelineContent>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box>
+                    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                      {`${
+                        op.actor
+                          ? `Edited by ${op.actor?.firstName} ${op.actor?.lastName}`
+                          : `Created flow`
+                      }`}
+                    </Typography>
+                    <Typography variant="body2">
+                      {formatLastEditDate(op.createdAt)}
+                    </Typography>
+                  </Box>
+                  {
+                    <IconButton
+                      title="Undo"
+                      aria-label="Undo"
+                      onClick={() => handleUndo(i)}
+                      onMouseEnter={() => setFocusedOpIndex(i)}
+                      onMouseLeave={() => setFocusedOpIndex(undefined)}
+                      disabled={!canUserEditTeam}
+                      color="primary"
+                    >
+                      <UndoOutlined />
+                    </IconButton>
+                  }
+                </Box>
+                {op.data && (
+                  <Typography variant="body2" component="ul" padding={2}>
+                    {[...new Set(formatOps(flow, op.data))].map(
+                      (formattedOp, i) => (
+                        <li key={i}>{formattedOp}</li>
+                      ),
+                    )}
+                  </Typography>
+                )}
+              </TimelineContent>
+            </TimelineItem>
+          ))}
+        </Timeline>
       )}
     </Box>
   );
