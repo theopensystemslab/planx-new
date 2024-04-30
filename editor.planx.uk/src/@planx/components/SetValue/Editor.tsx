@@ -15,6 +15,30 @@ type Props = EditorProps<TYPES.SetValue, SetValue>;
 
 export default SetValueComponent;
 
+interface Option {
+  value: SetValue["operation"];
+  label: string;
+}
+
+const options: Option[] = [
+  {
+    value: "replace",
+    label: "Replace",
+  },
+  {
+    value: "append",
+    label: "Append",
+  },
+  {
+    value: "removeOne",
+    label: "Remove single value",
+  },
+  {
+    value: "removeAll",
+    label: "Remove all values",
+  },
+];
+
 const DescriptionText: React.FC<SetValue> = ({ fn, val, operation }) => {
   if (!fn || !val) return null;
 
@@ -33,11 +57,17 @@ const DescriptionText: React.FC<SetValue> = ({ fn, val, operation }) => {
           <strong>{val}</strong> appended to it
         </Typography>
       );
-    case "remove":
+    case "removeOne":
       return (
         <Typography mb={2}>
           Any existing value for <strong>{fn}</strong> set to{" "}
           <strong>{val}</strong> will be removed
+        </Typography>
+      );
+    case "removeAll":
+      return (
+        <Typography mb={2}>
+          All existing values for <strong>{fn}</strong> will be removed
         </Typography>
       );
   }
@@ -84,20 +114,7 @@ function SetValueComponent(props: Props) {
         <ModalSectionContent title="Operation">
           <DescriptionText {...formik.values} />
           <Radio
-            options={[
-              {
-                value: "replace",
-                label: "Replace",
-              },
-              {
-                value: "append",
-                label: "Append",
-              },
-              {
-                value: "remove",
-                label: "Remove",
-              },
-            ]}
+            options={options}
             value={formik.values.operation}
             onChange={(newOperation) => {
               formik.setFieldValue("operation", newOperation);

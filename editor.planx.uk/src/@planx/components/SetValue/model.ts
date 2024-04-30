@@ -3,7 +3,7 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 export interface SetValue extends MoreInformation {
   fn: string;
   val: string;
-  operation: "replace" | "append" | "remove";
+  operation: "replace" | "append" | "removeOne" | "removeAll";
 }
 
 export const parseSetValue = (

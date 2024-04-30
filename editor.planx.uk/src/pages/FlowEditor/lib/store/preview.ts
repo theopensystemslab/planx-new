@@ -843,12 +843,16 @@ const handleSetValue = (
   previousValues = formatPreviousValues(previousValues);
   const currentValue = responseData?.[fn] || [];
 
-  if (operation === "remove") {
+  if (operation === "removeOne") {
     const removeCurrentValue = (val: string | number | boolean) =>
       val !== currentValue[0];
     const filtered = previousValues.filter(removeCurrentValue);
 
     passport.data![fn] = filtered.length ? filtered : undefined;
+  }
+
+  if (operation === "removeAll") {
+    delete passport.data![fn];
   }
 
   if (operation === "append") {

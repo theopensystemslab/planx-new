@@ -164,8 +164,8 @@ describe("SetValue component", () => {
     });
   });
 
-  describe("remove operation", () => {
-    const removeFlow = merge(cloneDeep(baseFlow), {
+  describe("removeOne operation", () => {
+    const removeOneFlow = merge(cloneDeep(baseFlow), {
       _root: {
         edges: [
           "setValue1",
@@ -177,7 +177,7 @@ describe("SetValue component", () => {
       },
       setValue1: {
         data: {
-          operation: "remove",
+          operation: "removeOne",
         },
       },
       setValue2: {
@@ -189,7 +189,7 @@ describe("SetValue component", () => {
         data: {
           fn: "myKey",
           val: "mySecondValue",
-          operation: "remove",
+          operation: "removeOne",
         },
         type: TYPES.SetValue,
       },
@@ -197,7 +197,7 @@ describe("SetValue component", () => {
 
     beforeEach(() => {
       resetPreview();
-      setState({ flow: removeFlow });
+      setState({ flow: removeOneFlow });
     });
 
     it("does nothing if a value is not previously set", () => {
@@ -243,13 +243,13 @@ describe("SetValue component", () => {
     });
 
     it("does not remove a passport variable when the value does not match", () => {
-      const flowWithMismatchedValue = merge(cloneDeep(removeFlow), {
+      const flowWithMismatchedValue = merge(cloneDeep(removeOneFlow), {
         setValue3: {
           data: {
             fn: "myKey",
             // Value not present, will not be removed
             val: "myUnsetValue",
-            operation: "remove",
+            operation: "removeOne",
           },
           type: TYPES.SetValue,
         },
@@ -270,6 +270,85 @@ describe("SetValue component", () => {
       // Passport correctly populated - passport variable not removed as values do not match
       expect(computePassport()?.data?.myKey).toHaveLength(1);
       expect(computePassport()?.data?.myKey[0]).toEqual("mySecondValue");
+    });
+  });
+
+  describe("removeAll operation", () => {
+    const removeAllFlow = merge(cloneDeep(baseFlow), {
+      _root: {
+        edges: [
+          "setValue1",
+          "middleOfService",
+          "setValue2",
+          "setValue3",
+          "endOfService",
+        ],
+      },
+      setValue1: {
+        data: {
+          operation: "removeAll",
+        },
+      },
+      setValue2: {
+        data: {
+          operation: "replace",
+        },
+      },
+      setValue3: {
+        data: {
+          fn: "myKey",
+          val: "mySecondValue",
+          operation: "removeAll",
+        },
+        type: TYPES.SetValue,
+      },
+    });
+
+    beforeEach(() => {
+      resetPreview();
+      setState({ flow: removeAllFlow });
+    });
+
+    it("does nothing if a value is not previously set", () => {
+      // Value not set
+      expect(computePassport()?.data?.myKey).not.toBeDefined();
+
+      // Step through first SetValue
+      record("setValue1", { data: { myKey: ["myFirstValue"] } });
+
+      // SetValue is visited
+      const breadcrumbKeys = Object.keys(getState().breadcrumbs);
+      expect(breadcrumbKeys).toContain("setValue1");
+
+      // Middle of flow reached
+      expect(currentCard()?.id).toEqual("middleOfService");
+
+      // Passport correctly populated - value not present
+      expect(computePassport()?.data?.myKey).toBeUndefined();
+    });
+
+    it("removes a passport variable", () => {
+      // Step through second SetValue
+      record("setValue1", { data: { myKey: ["myFirstValue"] } });
+      record("middleOfService", {});
+      record("setValue2", { data: { myKey: ["mySecondValue"] } });
+
+      // Second SetValue is visited
+      const breadcrumbKeys = Object.keys(getState().breadcrumbs);
+      expect(breadcrumbKeys).toContain("setValue2");
+
+      // Value is set by "replace" operation
+      expect(computePassport()?.data?.myKey).toHaveLength(1);
+      expect(computePassport()?.data?.myKey).toContain("mySecondValue");
+
+      // Step through final SetValue component
+      record("setValue3", { data: { myKey: ["mySecondValue"] } });
+
+      // End of flow reached
+      expect(currentCard()?.id).toEqual("endOfService");
+
+      // Passport correctly populated - key:value pair removed
+      expect(computePassport()?.data).not.toHaveProperty("myKey");
     });
   });
 });
