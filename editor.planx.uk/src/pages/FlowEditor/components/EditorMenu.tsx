@@ -1,4 +1,3 @@
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
@@ -9,6 +8,7 @@ import React from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import EditorCustomIcon from "ui/images/CustomIcons";
 
 const MENU_WIDTH = "46px";
 
@@ -78,7 +78,7 @@ function EditorMenu() {
   const routes = [
     {
       title: "Editor",
-      Icon: AccountTreeIcon,
+      Icon: EditorCustomIcon,
       route: "/",
     },
     {
