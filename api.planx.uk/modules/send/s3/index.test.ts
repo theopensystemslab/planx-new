@@ -34,6 +34,7 @@ describe(`uploading an application to S3`, () => {
           {
             integrations: {
               powerAutomateWebhookURL: "test.azure.com/whatever",
+              powerAutomateAPIKey: "secret",
             },
           },
         ],
