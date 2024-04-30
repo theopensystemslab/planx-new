@@ -10,7 +10,7 @@ import { getTeamFromDomain } from "routes/utils";
 import { fetchSettingsForPublishedView } from "./published";
 
 /**
- * View wrapper for /amber (in future /preview)
+ * View wrapper for /preview
  * Does not display Save & Return layout as progress is not persisted on this route
  */
 export const previewView = async (req: NaviRequest) => {
@@ -18,13 +18,13 @@ export const previewView = async (req: NaviRequest) => {
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
 
-  // /amber uses the same theme & global settings as /published
+  // /preview uses the same theme & global settings as /published
   const data = await fetchSettingsForPublishedView(flowSlug, teamSlug);
   const flow = data.flows[0];
   if (!flow)
     throw new NotFoundError(`Flow ${flowSlug} not found for ${teamSlug}`);
 
-  // /amber fetches draft data of this flow and the latest published version of each external portal
+  // /preview fetches draft data of this flow and the latest published version of each external portal
   const flowData = await fetchFlattenedFlowData(flow.id);
 
   const state = useStore.getState();

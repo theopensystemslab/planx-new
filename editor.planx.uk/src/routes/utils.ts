@@ -49,17 +49,18 @@ export const setPath = (flowData: Store.flow, req: NaviRequest) => {
 //      So I've hard-coded these domain names until a better solution comes along.
 //
 const PREVIEW_ONLY_DOMAINS = [
-  "planningservices.buckinghamshire.gov.uk",
-  "planningservices.lambeth.gov.uk",
-  "planningservices.southwark.gov.uk",
-  "planningservices.doncaster.gov.uk",
-  "planningservices.medway.gov.uk",
-  "planningservices.camden.gov.uk",
-  "planningservices.stalbans.gov.uk",
   "planningservices.barnet.gov.uk",
+  "planningservices.buckinghamshire.gov.uk",
+  "planningservices.camden.gov.uk",
+  "planningservices.doncaster.gov.uk",
+  "planningservices.gateshead.gov.uk",
+  "planningservices.gloucester.gov.uk",
+  "planningservices.lambeth.gov.uk",
+  "planningservices.medway.gov.uk",
+  "planningservices.southwark.gov.uk",
+  "planningservices.stalbans.gov.uk",
   "planningservices.tewkesbury.gov.uk",
   "planningservices.westberks.gov.uk",
-  "planningservices.gateshead.gov.uk",
   // XXX: un-comment the next line to test custom domains locally
   // "localhost",
 ];

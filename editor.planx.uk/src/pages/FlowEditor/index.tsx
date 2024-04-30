@@ -2,12 +2,13 @@ import "./components/Settings";
 import "./floweditor.scss";
 
 import { gql, useSubscription } from "@apollo/client";
+import UndoOutlined from "@mui/icons-material/UndoOutlined";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
-import { format } from "date-fns";
-import { hasFeatureFlag } from "lib/featureFlags";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { formatDistanceToNow } from "date-fns";
 import React, { useRef } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
@@ -17,6 +18,7 @@ import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
 interface Operation {
+  id: string;
   createdAt: string;
   actor?: {
     firstName: string;
@@ -25,14 +27,27 @@ interface Operation {
   data: Array<OT.Op>;
 }
 
-export const LastEdited = () => {
-  const [flowId, flow] = useStore((state) => [state.id, state.flow]);
+const formatLastEditDate = (date: string): string => {
+  return formatDistanceToNow(new Date(date), {
+    includeSeconds: true,
+    addSuffix: true,
+  });
+};
 
-  const formattedDate = (dateString?: string) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return format(date, "HH:mm:ss, dd LLL yy");
-  };
+const formatLastEditMessage = (
+  date: string,
+  actor?: { firstName: string; lastName: string },
+): string => {
+  if (!actor) {
+    return `Last edited ${formatLastEditDate(date)}`;
+  }
+
+  const name = `${actor.firstName} ${actor.lastName}`;
+  return `Last edited ${formatLastEditDate(date)} by ${name}`;
+};
+
+export const LastEdited = () => {
+  const [flowId] = useStore((state) => [state.id]);
 
   const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
     gql`
@@ -40,8 +55,71 @@ export const LastEdited = () => {
         operations(
           limit: 1
           where: { flow_id: { _eq: $flow_id } }
-          order_by: { updated_at: desc }
+          order_by: { created_at: desc }
         ) {
+          id
+          createdAt: created_at
+          actor {
+            firstName: first_name
+            lastName: last_name
+          }
+        }
+      }
+    `,
+    {
+      variables: {
+        flow_id: flowId,
+      },
+    },
+  );
+
+  if (error) {
+    console.log(error.message);
+    return null;
+  }
+
+  // Handle missing operations (e.g. non-production data)
+  if (data && !data.operations[0].actor) return null;
+
+  let message: string;
+  if (loading || !data) {
+    message = "Loading...";
+  } else {
+    const {
+      operations: [operation],
+    } = data;
+    message = formatLastEditMessage(operation?.createdAt, operation?.actor);
+  }
+
+  return (
+    <Box
+      sx={(theme) => ({
+        padding: theme.spacing(1),
+        paddingLeft: theme.spacing(2),
+        [theme.breakpoints.up("md")]: {
+          paddingLeft: theme.spacing(3),
+        },
+      })}
+    >
+      <Typography variant="body2" fontSize="small">
+        {message}
+      </Typography>
+    </Box>
+  );
+};
+
+export const EditHistory = () => {
+  const [flowId, flow] = useStore((state) => [state.id, state.flow]);
+
+  const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
+    gql`
+      subscription GetRecentOperations($flow_id: uuid = "") {
+        operations(
+          limit: 15
+          where: { flow_id: { _eq: $flow_id } }
+          order_by: { created_at: desc }
+        ) {
+          id
           createdAt: created_at
           actor {
             firstName: first_name
@@ -64,49 +142,50 @@ export const LastEdited = () => {
   }
 
   // Handle missing operations (e.g. non-production data)
-  if (data && !data.operations[0].actor) return null;
-
-  let message: string;
-  let ops: Operation["data"] | undefined;
-  let formattedOps: string[] | undefined;
-
-  if (loading || !data) {
-    message = "Loading...";
-    ops = undefined;
-    formattedOps = undefined;
-  } else {
-    const {
-      operations: [operation],
-    } = data;
-    message = `Last edit by ${operation?.actor?.firstName} ${operation?.actor
-      ?.lastName} ${formattedDate(operation?.createdAt)}`;
-    ops = operation?.data;
-    formattedOps = formatOps(flow, ops);
-  }
+  if (!loading && !data?.operations) return null;
 
   return (
-    <Box
-      sx={(theme) => ({
-        // backgroundColor: theme.palette.background.paper,
-        // borderBottom: `1px solid ${theme.palette.border.main}`,
-        padding: theme.spacing(1),
-        paddingLeft: theme.spacing(2),
-        [theme.breakpoints.up("md")]: {
-          paddingLeft: theme.spacing(3),
-        },
-      })}
-    >
-      <Typography variant="body2" fontSize="small">
-        {message}
-      </Typography>
-      {hasFeatureFlag("UNDO") && formattedOps && (
-        <Typography component="ul" pl={2}>
-          {[...new Set(formattedOps)].map((op, i) => (
-            <Typography variant="body2" fontSize="small" component="li" key={i}>
-              {op}
-            </Typography>
-          ))}
-        </Typography>
+    <Box>
+      {loading && !data ? (
+        <DelayedLoadingIndicator />
+      ) : (
+        data?.operations?.map((op: Operation) => (
+          <Box
+            key={`container-${op.id}`}
+            marginBottom={2}
+            padding={2}
+            sx={{ background: (theme) => theme.palette.grey[200] }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box>
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                  {`Edited ${formatLastEditDate(op.createdAt)}`}
+                </Typography>
+                {op.actor && (
+                  <Typography variant="body2">
+                    {`by ${op.actor?.firstName} ${op.actor?.lastName}`}
+                  </Typography>
+                )}
+              </Box>
+              <UndoOutlined titleAccess="Undo this edit" />
+            </Box>
+            {op.data && (
+              <Typography variant="body2" component="ul" padding={2}>
+                {[...new Set(formatOps(flow, op.data))].map(
+                  (formattedOp, i) => (
+                    <li key={i}>{formattedOp}</li>
+                  ),
+                )}
+              </Typography>
+            )}
+          </Box>
+        ))
       )}
     </Box>
   );

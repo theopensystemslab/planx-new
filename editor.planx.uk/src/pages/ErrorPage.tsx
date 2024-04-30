@@ -3,9 +3,9 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { PropsWithChildren } from "react";
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   backgroundColor: "#fff",
-  color: "#2C2C2C",
+  color: theme.palette.background.dark,
   width: "100%",
   flex: 1,
   justifyContent: "flex-start",
@@ -14,7 +14,7 @@ const Root = styled(Box)(() => ({
 
 const Dashboard = styled(Box)(({ theme }) => ({
   backgroundColor: "#fff",
-  color: "#2C2C2C",
+  color: theme.palette.background.dark,
   width: "100%",
   maxWidth: 600,
   margin: "auto",

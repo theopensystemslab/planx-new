@@ -214,7 +214,7 @@ export const client = new ApolloClient({
 
 /**
  * Client used to make requests in all public interface
- * e.g. /published, /amber, /draft, /pay
+ * e.g. /published, /preview, /draft, /pay
  */
 export const publicClient = new ApolloClient({
   link: from([retryLink, errorLink, publicHttpLink]),

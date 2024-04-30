@@ -73,7 +73,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li
-        className={classNames("card", "decision", {
+        className={classNames("card", "decision", "question", {
           isDragging,
           isClone: isClone(props.id),
           isNote: childNodes.length === 0,

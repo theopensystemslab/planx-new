@@ -62,7 +62,7 @@ const OptionEditor: React.FC<{
         {props.value.id ? (
           <input type="hidden" value={props.value.id} readOnly />
         ) : null}
-        <InputRowItem width="50%">
+        <InputRowItem width="200%">
           <Input
             required
             format="bold"
@@ -104,6 +104,7 @@ const OptionEditor: React.FC<{
               },
             });
           }}
+          sx={{ width: { md: "160px" }, maxWidth: "160px" }}
         />
 
         {typeof props.index !== "undefined" &&

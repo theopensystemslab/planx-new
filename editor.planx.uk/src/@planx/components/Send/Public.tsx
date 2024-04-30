@@ -26,7 +26,7 @@ const SendComponent: React.FC<Props> = ({
   const fullProps = { destinations: destinations, ...props };
   if (
     window.location.pathname.endsWith("/draft") ||
-    window.location.pathname.endsWith("/amber")
+    window.location.pathname.endsWith("/preview")
   ) {
     return <SkipSendWarning {...fullProps} />;
   } else {
