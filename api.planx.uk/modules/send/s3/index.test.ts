@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import app from "../../../server";
 import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks";
+import { queryMock } from "../../../tests/graphqlQueryMock";
 
 jest.mock("../../saveAndReturn/service/utils", () => ({
   markSessionAsSubmitted: jest.fn(),
@@ -25,6 +26,35 @@ jest.mock("@opensystemslab/planx-core", () => {
 });
 
 describe(`uploading an application to S3`, () => {
+  beforeEach(() => {
+    queryMock.mockQuery({
+      name: "GetStagingIntegrations",
+      data: {
+        teams: [
+          {
+            integrations: {
+              powerAutomateWebhookURL: "test.azure.com/whatever",
+              powerAutomateAPIKey: "secret",
+            },
+          },
+        ],
+      },
+      variables: {
+        slug: "barnet",
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetStagingIntegrations",
+      data: {
+        teams: [],
+      },
+      variables: {
+        slug: "unsupported-team",
+      },
+    });
+  });
+
   it("requires auth", async () => {
     await supertest(app)
       .post("/upload-submission/barnet")
@@ -48,10 +78,10 @@ describe(`uploading an application to S3`, () => {
       .post("/upload-submission/unsupported-team")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
       .send({ payload: { sessionId: "123" } })
-      .expect(400)
+      .expect(500)
       .then((res) => {
         expect(res.body.error).toMatch(
-          "Send to S3 is not enabled for this local authority (unsupported-team)",
+          /No team matching "unsupported-team" found/,
         );
       });
   });
