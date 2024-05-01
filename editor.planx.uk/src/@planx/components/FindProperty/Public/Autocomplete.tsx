@@ -142,9 +142,13 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
     // Validate and set postcode
     const input = e.target.value;
     if (parse(input.trim()).valid) {
+      console.log("Postcode valid");
+      console.log({ sanitised: toNormalised(input.trim()) });
+
       setSanitizedPostcode(toNormalised(input.trim()));
       setPostcode(toNormalised(input.trim()));
     } else {
+      console.log("Postcode invalid");
       setSanitizedPostcode(null);
       setPostcode(input.toUpperCase());
     }
