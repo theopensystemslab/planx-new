@@ -53,8 +53,8 @@ dependencies:
     specifier: ^2.2.1
     version: 2.2.1(@tiptap/core@2.0.3)
   '@tiptap/extension-document':
-    specifier: ^2.2.4
-    version: 2.2.4(@tiptap/core@2.0.3)
+    specifier: ^2.3.1
+    version: 2.3.1(@tiptap/core@2.0.3)
   '@tiptap/extension-hard-break':
     specifier: ^2.1.13
     version: 2.1.13(@tiptap/core@2.0.3)
@@ -7229,8 +7229,8 @@ packages:
       '@tiptap/core': 2.0.3(@tiptap/pm@2.0.3)
     dev: false
 
-  /@tiptap/extension-document@2.2.4(@tiptap/core@2.0.3):
-    resolution: {integrity: sha512-z+05xGK0OFoXV1GL+/8bzcZuWMdMA3+EKwk5c+iziG60VZcvGTF7jBRsZidlu9Oaj0cDwWHCeeo6L9SgSh6i2A==}
+  /@tiptap/extension-document@2.3.1(@tiptap/core@2.0.3):
+    resolution: {integrity: sha512-uWYbzAV95JnetFBduWRI9n2QbQfmznQ7I6XzfZxuTAO2KcWGvHPBS7F00COO9Y67FZAPMbuQ1njtCJK0nClOPw==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:
