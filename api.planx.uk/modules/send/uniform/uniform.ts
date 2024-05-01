@@ -136,7 +136,7 @@ export async function sendToUniform(
     });
   } catch (error) {
     const errorMessage = isAxiosError(error)
-      ? JSON.stringify(error.toJSON())
+      ? JSON.stringify(error.response?.data)
       : (error as Error).message;
     return next({
       error,
