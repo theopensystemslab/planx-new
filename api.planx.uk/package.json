@@ -27,7 +27,7 @@
     "graphql-request": "^4.3.0",
     "he": "^1.2.0",
     "helmet": "^7.1.0",
-    "http-proxy-middleware": "^2.0.6",
+    "http-proxy-middleware": "^3.0.0",
     "husky": "^8.0.3",
     "isomorphic-fetch": "^3.0.0",
     "jsdom": "^23.0.1",
