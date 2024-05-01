@@ -135,8 +135,8 @@ dependencies:
     specifier: ^5.0.0
     version: 5.0.0(express@4.19.2)
   type-fest:
-    specifier: ^4.10.3
-    version: 4.10.3
+    specifier: ^4.18.1
+    version: 4.18.1
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -7995,13 +7995,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest@4.10.3:
-    resolution: {integrity: sha512-JLXyjizi072smKGGcZiAJDCNweT8J+AuRxmPZ1aG7TERg4ijx9REl8CNhbr36RV4qXqL1gO1FF9HL8OkVmmrsA==}
-    engines: {node: '>=16'}
-    dev: false
-
-  /type-fest@4.18.0:
-    resolution: {integrity: sha512-+dbmiyliDY/2TTcjCS7NpI9yV2iEFlUDk5TKnsbkN7ZoRu5s7bT+zvYtNFhFXC2oLwURGT2frACAZvbbyNBI+w==}
+  /type-fest@4.18.1:
+    resolution: {integrity: sha512-qXhgeNsX15bM63h5aapNFcQid9jRF/l3ojDoDFmekDQEUufZ9U4ErVt6SjDxnHp48Ltrw616R8yNc3giJ3KvVQ==}
     engines: {node: '>=16'}
     dev: false
 
@@ -8437,7 +8432,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/28110eb}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.4(react@18.3.1)
@@ -8459,7 +8453,7 @@ packages:
       prettier: 3.2.5
       react: 18.3.1
       react-dom: 18.2.0(react@18.3.1)
-      type-fest: 4.18.0
+      type-fest: 4.18.1
       uuid: 9.0.1
       zod: 3.23.5
     transitivePeerDependencies:
