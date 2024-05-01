@@ -161,8 +161,8 @@ dependencies:
     specifier: ^11.8.2
     version: 11.8.2
   nanoid:
-    specifier: ^4.0.2
-    version: 4.0.2
+    specifier: ^5.0.7
+    version: 5.0.7
   nanoid-good:
     specifier: ^3.1.0
     version: 3.1.0
@@ -10696,7 +10696,7 @@ packages:
     dependencies:
       '@types/node': 20.11.30
       jszip: 3.10.1
-      nanoid: 5.0.6
+      nanoid: 5.0.7
       xml: 1.0.1
       xml-js: 1.6.11
     dev: false
@@ -15618,14 +15618,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /nanoid@4.0.2:
-    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
-    engines: {node: ^14 || ^16 || >=18}
-    hasBin: true
-    dev: false
-
-  /nanoid@5.0.6:
-    resolution: {integrity: sha512-rRq0eMHoGZxlvaFOUdK1Ev83Bd1IgzzR+WJ3IbDJ7QOSdAxYjlurSPqFs9s4lJg29RT6nPwizFtJhQS6V5xgiA==}
+  /nanoid@5.0.7:
+    resolution: {integrity: sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==}
     engines: {node: ^18 || >=20}
     hasBin: true
     dev: false
