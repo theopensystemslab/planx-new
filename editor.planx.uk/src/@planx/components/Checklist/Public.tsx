@@ -146,7 +146,6 @@ const ChecklistComponent: React.FC<Props> = ({
             container
             spacing={layout === ChecklistLayout.Images ? 2 : 0}
             component="fieldset"
-            sx={{ border: "none", padding: 0 }}
           >
             <legend style={visuallyHidden}>{text}</legend>
             {options ? (

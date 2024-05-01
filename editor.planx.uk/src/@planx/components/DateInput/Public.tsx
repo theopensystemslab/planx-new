@@ -35,7 +35,6 @@ const DateInputPublic: React.FC<Props> = (props) => {
     <Card handleSubmit={formik.handleSubmit}>
       <Box
         component="fieldset"
-        sx={{ p: 0, border: 0 }}
         role="group"
         aria-describedby={[
           props.description ? DESCRIPTION_TEXT : "",
