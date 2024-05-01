@@ -2,7 +2,7 @@ import "./components/Settings";
 import "./floweditor.scss";
 
 import { gql, useSubscription } from "@apollo/client";
-import UndoOutlined from "@mui/icons-material/UndoOutlined";
+import RestoreOutlined from "@mui/icons-material/RestoreOutlined";
 import Timeline from "@mui/lab/Timeline";
 import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
@@ -175,6 +175,10 @@ export const EditHistory = () => {
     undoOperation(flattenedOperationsData);
   };
 
+  const inFocus = (i: number): boolean => {
+    return focusedOpIndex !== undefined && i < focusedOpIndex;
+  };
+
   return (
     <Box>
       {loading && !data ? (
@@ -191,20 +195,12 @@ export const EditHistory = () => {
           {data?.operations?.map((op: Operation, i: number) => (
             <TimelineItem key={op.id}>
               <TimelineSeparator>
-                <TimelineDot
-                  color={
-                    focusedOpIndex !== undefined && i <= focusedOpIndex
-                      ? "primary"
-                      : undefined
-                  }
-                />
+                <TimelineDot color={inFocus(i) ? undefined : "primary"} />
                 {i < data.operations.length - 1 && (
                   <TimelineConnector
                     sx={{
                       bgcolor: (theme) =>
-                        focusedOpIndex !== undefined && i <= focusedOpIndex
-                          ? theme.palette.primary.main
-                          : undefined,
+                        inFocus(i) ? undefined : theme.palette.primary.main,
                     }}
                   />
                 )}
@@ -218,33 +214,46 @@ export const EditHistory = () => {
                   }}
                 >
                   <Box>
-                    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 600 }}
+                      color={inFocus(i) ? "GrayText" : "inherit"}
+                    >
                       {`${
                         op.actor
                           ? `Edited by ${op.actor?.firstName} ${op.actor?.lastName}`
                           : `Created flow`
                       }`}
                     </Typography>
-                    <Typography variant="body2">
+                    <Typography
+                      variant="body2"
+                      color={inFocus(i) ? "GrayText" : "inherit"}
+                    >
                       {formatLastEditDate(op.createdAt)}
                     </Typography>
                   </Box>
-                  {
+                  {i > 0 && op.actor && (
                     <IconButton
-                      title="Undo"
-                      aria-label="Undo"
+                      title="Restore to this point"
+                      aria-label="Restore to this point"
                       onClick={() => handleUndo(i)}
                       onMouseEnter={() => setFocusedOpIndex(i)}
                       onMouseLeave={() => setFocusedOpIndex(undefined)}
-                      disabled={!canUserEditTeam}
-                      color="primary"
                     >
-                      <UndoOutlined />
+                      <RestoreOutlined
+                        fontSize="large"
+                        color={inFocus(i) ? "inherit" : "primary"}
+                      />
                     </IconButton>
-                  }
+                  )}
                 </Box>
                 {op.data && (
-                  <Typography variant="body2" component="ul" padding={2}>
+                  <Typography
+                    variant="body2"
+                    component="ul"
+                    padding={2}
+                    color={inFocus(i) ? "GrayText" : "inherit"}
+                  >
                     {[...new Set(formatOps(flow, op.data))].map(
                       (formattedOp, i) => (
                         <li key={i}>{formattedOp}</li>
