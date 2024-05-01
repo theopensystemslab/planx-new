@@ -48,8 +48,8 @@ dependencies:
     specifier: ^3.3.1
     version: 3.3.1
   dompurify:
-    specifier: ^3.0.6
-    version: 3.0.6
+    specifier: ^3.1.2
+    version: 3.1.2
   express:
     specifier: ^4.19.2
     version: 4.19.2
@@ -3557,8 +3557,8 @@ packages:
       domelementtype: 2.3.0
     dev: false
 
-  /dompurify@3.0.6:
-    resolution: {integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==}
+  /dompurify@3.1.2:
+    resolution: {integrity: sha512-hLGGBI1tw5N8qTELr3blKjAML/LY4ANxksbS612UiJyDfyf/2D092Pvm+S7pmeTGJRqvlJkFzBoHBQKgQlOQVg==}
     dev: false
 
   /domutils@3.1.0:
@@ -8437,7 +8437,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/28110eb}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.4(react@18.3.1)
