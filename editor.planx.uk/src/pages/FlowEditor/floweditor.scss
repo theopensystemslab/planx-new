@@ -123,10 +123,6 @@ $fontMonospace: "Source Code Pro", monospace;
     outline-offset: 0;
   }
 
-  &.isClone > a {
-    border-style: dashed;
-  }
-
   &.isClone > a::before {
     content: "";
     position: absolute;
