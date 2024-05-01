@@ -14,6 +14,7 @@ import { SetValue } from "@planx/components/SetValue/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
+import { castArray } from "lodash";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import isEqual from "lodash/isEqual";
@@ -843,22 +844,36 @@ const handleSetValue = (
   previousValues = formatPreviousValues(previousValues);
   const currentValue = responseData?.[fn] || [];
 
-  if (operation === "removeOne") {
-    const removeCurrentValue = (val: string | number | boolean) =>
-      val !== currentValue[0];
-    const filtered = previousValues.filter(removeCurrentValue);
+  switch (operation) {
+    case "replace":
+      // Default behaviour when assigning passport variables
+      // No custom logic needed
+      break;
 
-    passport.data![fn] = filtered.length ? filtered : undefined;
-  }
+    case "removeOne": {
+      if (previousValues === currentValue) {
+        delete passport.data![fn];
+      }
 
-  if (operation === "removeAll") {
-    delete passport.data![fn];
-  }
+      if (Array.isArray(previousValues)) {
+        const removeCurrentValue = (val: string | number | boolean) =>
+          val !== currentValue[0];
+        const filtered = previousValues.filter(removeCurrentValue);
+        passport.data![fn] = filtered.length ? filtered : undefined;
+      }
 
-  if (operation === "append") {
-    const combined = [...previousValues, ...currentValue];
+      break;
+    }
 
-    passport.data![fn] = combined;
+    case "removeAll":
+      delete passport.data![fn];
+      break;
+
+    case "append": {
+      const combined = [...previousValues, ...currentValue];
+      passport.data![fn] = combined;
+      break;
+    }
   }
 
   return passport;
@@ -942,9 +957,9 @@ export const removeNodesDependentOnPassport = (
   return { removedNodeIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
 };
 
-const formatPreviousValues = (
-  value: string | number | boolean,
-): Array<string | number | boolean> => {
+const formatPreviousValues = <T extends string | number | boolean>(
+  value: T | T[],
+): T[] => {
   if (!value) return [];
   if (Array.isArray(value)) return value;
   return [value];
