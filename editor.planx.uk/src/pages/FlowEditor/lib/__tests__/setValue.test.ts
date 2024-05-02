@@ -66,10 +66,10 @@ describe("SetValue component", () => {
 
     it("sets a value if not previously set", () => {
       // Value not set
-      expect(computePassport()?.data?.myKey1).not.toBeDefined();
+      expect(computePassport()?.data?.myKey).not.toBeDefined();
 
       // Step through first SetValue
-      record("setValue1", { data: { myKey1: ["myFirstValue"] } });
+      record("setValue1", { data: { myKey: ["myFirstValue"] } });
 
       // SetValue is visited
       const breadcrumbKeys = Object.keys(getState().breadcrumbs);
@@ -79,15 +79,15 @@ describe("SetValue component", () => {
       expect(currentCard()?.id).toEqual("middleOfService");
 
       // Passport correctly populated
-      expect(computePassport()?.data?.myKey1).toHaveLength(1);
-      expect(computePassport()?.data?.myKey1).toContain("myFirstValue");
+      expect(computePassport()?.data?.myKey).toHaveLength(1);
+      expect(computePassport()?.data?.myKey).toContain("myFirstValue");
     });
 
     it("replaces an existing value", () => {
       // Step through second SetValue
-      record("setValue1", { data: { myKey1: ["myFirstValue"] } });
+      record("setValue1", { data: { myKey: ["myFirstValue"] } });
       record("middleOfService", {});
-      record("setValue2", { data: { myKey1: ["mySecondValue"] } });
+      record("setValue2", { data: { myKey: ["mySecondValue"] } });
 
       // Second SetValue is visited
       const breadcrumbKeys = Object.keys(getState().breadcrumbs);
@@ -97,8 +97,8 @@ describe("SetValue component", () => {
       expect(currentCard()?.id).toEqual("endOfService");
 
       // Passport correctly populated
-      expect(computePassport()?.data?.myKey1).toHaveLength(1);
-      expect(computePassport()?.data?.myKey1).toContain("mySecondValue");
+      expect(computePassport()?.data?.myKey).toHaveLength(1);
+      expect(computePassport()?.data?.myKey).toContain("mySecondValue");
     });
   });
 
@@ -123,10 +123,10 @@ describe("SetValue component", () => {
 
     it("sets a value if not previously set", () => {
       // Value not set
-      expect(computePassport()?.data?.myKey1).not.toBeDefined();
+      expect(computePassport()?.data?.myKey).not.toBeDefined();
 
       // Step through first SetValue
-      record("setValue1", { data: { myKey1: ["myFirstValue"] } });
+      record("setValue1", { data: { myKey: ["myFirstValue"] } });
 
       // SetValue is visited
       const breadcrumbKeys = Object.keys(getState().breadcrumbs);
@@ -136,8 +136,8 @@ describe("SetValue component", () => {
       expect(currentCard()?.id).toEqual("middleOfService");
 
       // Passport correctly populated
-      expect(computePassport()?.data?.myKey1).toHaveLength(1);
-      expect(computePassport()?.data?.myKey1).toContain("myFirstValue");
+      expect(computePassport()?.data?.myKey).toHaveLength(1);
+      expect(computePassport()?.data?.myKey).toContain("myFirstValue");
     });
 
     it("appends to an existing value", () => {

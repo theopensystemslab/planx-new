@@ -14,7 +14,6 @@ import { SetValue } from "@planx/components/SetValue/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
-import { castArray } from "lodash";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import isEqual from "lodash/isEqual";
@@ -30,6 +29,7 @@ import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
+import { handleSetValue } from "@planx/components/SetValue/utils";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 let memoizedPreviousCardId: string | undefined = undefined;
@@ -259,7 +259,11 @@ export const previewStore: StateCreator<
 
         const isSetValue = flow[id].type === TYPES.SetValue;
         if (isSetValue) {
-          passport = handleSetValue(flow, id, acc, responseData, passport);
+          passport = handleSetValue({
+            nodeData: flow[id].data as SetValue,
+            previousValues: acc.data?.[key],
+            passport,
+          });
         }
 
         return passport;
@@ -822,64 +826,6 @@ export const sortBreadcrumbs = (
       );
 };
 
-const handleSetValue = (
-  flow: Store.flow,
-  id: string,
-  acc: Record<string, any>,
-  responseData: Record<string, any> | undefined,
-  passport: Store.passport,
-): Store.passport => {
-  const { operation, fn } = flow[id]?.data as SetValue;
-  let previousValues = acc.data?.[fn];
-
-  // We do not amend values set at objects
-  // These are internal exceptions we do not want to allow users to edit
-  // e.g. property.boundary.title
-  const isObject =
-    typeof previousValues === "object" &&
-    !Array.isArray(previousValues) &&
-    previousValues !== null;
-  if (isObject) return passport;
-
-  previousValues = formatPreviousValues(previousValues);
-  const currentValue = responseData?.[fn] || [];
-
-  switch (operation) {
-    case "replace":
-      // Default behaviour when assigning passport variables
-      // No custom logic needed
-      break;
-
-    case "removeOne": {
-      if (previousValues === currentValue) {
-        delete passport.data![fn];
-      }
-
-      if (Array.isArray(previousValues)) {
-        const removeCurrentValue = (val: string | number | boolean) =>
-          val !== currentValue[0];
-        const filtered = previousValues.filter(removeCurrentValue);
-        passport.data![fn] = filtered.length ? filtered : undefined;
-      }
-
-      break;
-    }
-
-    case "removeAll":
-      delete passport.data![fn];
-      break;
-
-    case "append": {
-      const combined = [...previousValues, ...currentValue];
-      const uniqueValuesOnly = [...new Set(combined)];
-      passport.data![fn] = uniqueValuesOnly;
-      break;
-    }
-  }
-
-  return passport;
-};
-
 function handleNodesWithPassport({
   flow,
   id,
@@ -956,12 +902,4 @@ export const removeNodesDependentOnPassport = (
     return acc;
   }, [] as string[]);
   return { removedNodeIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
-};
-
-const formatPreviousValues = <T extends string | number | boolean>(
-  value: T | T[],
-): T[] => {
-  if (!value) return [];
-  if (Array.isArray(value)) return value;
-  return [value];
 };
