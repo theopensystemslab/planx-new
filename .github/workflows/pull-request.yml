@@ -184,7 +184,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Cache build assets
         id: cache-react-build-assets
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
@@ -255,7 +255,7 @@ jobs:
         working-directory: infrastructure/application
       - name: Download React build assets
         id: cache-react-build-assets
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
@@ -377,7 +377,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Download React build assets
         id: cache-react-build-assets
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
