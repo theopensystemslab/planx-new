@@ -91,7 +91,7 @@ jobs:
         with:
           name: build
           path: ./editor.planx.uk/build
-      - uses: pulumi/actions@v4
+      - uses: pulumi/actions@v5
         with:
           command: up
           stack-name: staging
