@@ -223,6 +223,15 @@ const getThemeOptions = ({
           },
         },
       },
+      MuiBackdrop: {
+        defaultProps: {
+          // Prevent backdrop from being scrollable - required for iOS
+          // See https://github.com/mui/material-ui/issues/5750#issuecomment-351982758
+          onTouchMove: (event: React.TouchEvent<HTMLDivElement>): void => {
+            event.preventDefault();
+          },
+        },
+      },
       MuiPopper: {
         styleOverrides: {
           root: {
