@@ -871,7 +871,8 @@ const handleSetValue = (
 
     case "append": {
       const combined = [...previousValues, ...currentValue];
-      passport.data![fn] = combined;
+      const uniqueValuesOnly = [...new Set(combined)];
+      passport.data![fn] = uniqueValuesOnly;
       break;
     }
   }
