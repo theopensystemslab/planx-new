@@ -58,7 +58,7 @@ export const FileTaggingModal = ({
       maxWidth="xl"
       aria-labelledby="dialog-heading"
       PaperProps={{
-        sx: {
+        sx: (theme) => ({
           width: "100%",
           maxWidth: (theme) => theme.breakpoints.values.md,
           borderRadius: 0,
@@ -66,11 +66,11 @@ export const FileTaggingModal = ({
           background: "#FFF",
           margin: (theme) => theme.spacing(2),
           height: "100%",
-          "@media screen and (max-width: 500px)": {
+          [theme.breakpoints.down("sm")]: {
             margin: 0,
             maxHeight: "none",
           },
-        },
+        }),
       }}
     >
       <DialogContent>

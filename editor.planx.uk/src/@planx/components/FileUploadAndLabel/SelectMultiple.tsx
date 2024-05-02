@@ -355,7 +355,7 @@ export const SelectMultiple = (props: SelectMultipleProps) => {
           },
           popper: {
             sx: {
-              boxShadow: 10,
+              boxShadow: "0 0 10px 4px rgba(0, 0, 0, 0.5)",
             },
           },
         }}
