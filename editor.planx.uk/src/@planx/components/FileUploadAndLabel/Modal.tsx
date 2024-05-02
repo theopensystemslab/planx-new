@@ -65,6 +65,11 @@ export const FileTaggingModal = ({
           borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
           background: "#FFF",
           margin: (theme) => theme.spacing(2),
+          height: "100%",
+          "@media screen and (max-width: 500px)": {
+            margin: 0,
+            maxHeight: "none",
+          },
         },
       }}
     >
