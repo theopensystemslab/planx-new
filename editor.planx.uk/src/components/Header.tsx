@@ -539,9 +539,16 @@ const EditorToolbar: React.FC<{
 
             {/* Only show team settings link if inside a team route  */}
             {isTeamSettingsVisible && (
-              <MenuItem onClick={() => navigate(`${rootTeamPath()}/settings`)}>
-                Team Settings
-              </MenuItem>
+              <>
+                <MenuItem
+                  onClick={() => navigate(`${rootTeamPath()}/settings`)}
+                >
+                  Team Settings
+                </MenuItem>
+                <MenuItem onClick={() => navigate(`${rootTeamPath()}/members`)}>
+                  Team Members
+                </MenuItem>
+              </>
             )}
 
             {/* Only show flow settings link if inside a flow route  */}
