@@ -494,6 +494,7 @@ const EditorToolbar: React.FC<{
           </InnerContainer>
         </Container>
       </StyledToolbar>
+      <TestEnvironmentBanner />
       {user && (
         <StyledPopover
           open={open}

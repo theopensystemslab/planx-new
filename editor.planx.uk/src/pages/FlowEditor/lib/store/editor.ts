@@ -37,6 +37,8 @@ export interface EditorUIStore {
   flowLayout: FlowLayout;
   showPreview: boolean;
   togglePreview: () => void;
+  isTestEnvBannerVisible: boolean;
+  hideTestEnvBanner: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -52,6 +54,10 @@ export const editorUIStore: StateCreator<
   togglePreview: () => {
     set({ showPreview: !get().showPreview });
   },
+
+  isTestEnvBannerVisible: true,
+
+  hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
 });
 
 interface PublishFlowResponse {

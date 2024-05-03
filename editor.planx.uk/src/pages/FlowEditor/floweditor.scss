@@ -38,12 +38,6 @@ $fontMonospace: "Source Code Pro", monospace;
 
 // ------------------------------------------------
 
-#editor-container {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
-
 #editor {
   flex: 1;
   overflow: auto;
