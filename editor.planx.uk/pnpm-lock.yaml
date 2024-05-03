@@ -41,8 +41,8 @@ dependencies:
     specifier: ^0.8.2
     version: 0.8.2
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#2732b6e
-    version: github.com/theopensystemslab/planx-core/2732b6e(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#b49f0ae
+    version: github.com/theopensystemslab/planx-core/b49f0ae(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -12216,8 +12216,8 @@ packages:
     resolution: {integrity: sha512-HPtaa38cPgWvaCFmRNhlc6NG7pv6NUHqjPgVAkWGoB9mQMwYB27/K0CvOM5Czy+qpT3e8XJ6Q4aPAnzpNpzNaw==}
     dev: false
 
-  /fast-xml-parser@4.3.6:
-    resolution: {integrity: sha512-M2SovcRxD4+vC493Uc2GZVcZaj66CCJhWurC4viynVSTvrpErCShNcDz1lAho6n9REQKvL/ll4A4/fw6Y9z8nw==}
+  /fast-xml-parser@4.4.0:
+    resolution: {integrity: sha512-kLY3jFlwIYwBNDojclKsNAC12sfD6NwW74QB2CoNGPvtVxjliYehVunB3HYyNi+n4Tt1dAcgwYvmKF/Z18flqg==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
@@ -21420,11 +21420,12 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/2732b6e(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2732b6e}
-    id: github.com/theopensystemslab/planx-core/2732b6e
+  github.com/theopensystemslab/planx-core/b49f0ae(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b49f0ae}
+    id: github.com/theopensystemslab/planx-core/b49f0ae
     name: '@opensystemslab/planx-core'
     version: 1.0.0
+    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.4(@types/react@18.2.45)(react@18.3.1)
@@ -21437,7 +21438,7 @@ packages:
       copyfiles: 2.4.1
       docx: 8.5.0
       eslint: 8.57.0
-      fast-xml-parser: 4.3.6
+      fast-xml-parser: 4.4.0
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-schema-to-typescript: 14.0.4

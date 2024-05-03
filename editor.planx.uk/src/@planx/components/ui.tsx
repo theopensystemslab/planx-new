@@ -12,6 +12,7 @@ import FunctionsIcon from "@mui/icons-material/Functions";
 import Home from "@mui/icons-material/Home";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import List from "@mui/icons-material/List";
+import ListAlt from "@mui/icons-material/ListAlt";
 import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
 import Map from "@mui/icons-material/Map";
 import PaymentOutlined from "@mui/icons-material/PaymentOutlined";
@@ -72,6 +73,7 @@ export const ICONS: {
   [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
+  [TYPES.List]: ListAlt,
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NextSteps]: ArrowForwardIcon,
   [TYPES.NumberInput]: Pin,

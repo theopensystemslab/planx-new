@@ -100,6 +100,7 @@ const presentationalComponents: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
+  [TYPES.List]: undefined,
   [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
