@@ -545,9 +545,10 @@ const EditorToolbar: React.FC<{
                 >
                   Team Settings
                 </MenuItem>
-                <MenuItem onClick={() => navigate(`${rootTeamPath()}/members`)}>
+                {/* Hidden until feature complete */}
+                {/* <MenuItem onClick={() => navigate(`${rootTeamPath()}/members`)}>
                   Team Members
-                </MenuItem>
+                </MenuItem> */}
               </>
             )}
 

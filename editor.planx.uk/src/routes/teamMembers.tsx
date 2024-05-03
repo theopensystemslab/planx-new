@@ -37,6 +37,7 @@ const teamMembersRoutes = compose(
                   { teams: { team: { slug: { _eq: $teamSlug } } } }
                 ]
               }
+              order_by: { first_name: asc }
             ) {
               id
               firstName: first_name
