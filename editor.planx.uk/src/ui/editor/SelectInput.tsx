@@ -1,5 +1,5 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
-import Select, { selectClasses,SelectProps } from "@mui/material/Select";
+import Select, { selectClasses, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 
