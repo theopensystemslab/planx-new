@@ -268,8 +268,7 @@ describe("SetValue component", () => {
       expect(currentCard()?.id).toEqual("endOfService");
 
       // Passport correctly populated - passport variable not removed as values do not match
-      expect(computePassport()?.data?.myKey).toHaveLength(1);
-      expect(computePassport()?.data?.myKey[0]).toEqual("mySecondValue");
+      expect(computePassport()?.data?.myKey).toEqual("mySecondValue");
     });
   });
 

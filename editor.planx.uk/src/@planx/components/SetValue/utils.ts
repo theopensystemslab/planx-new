@@ -47,9 +47,9 @@ export const handleSetValue: HandleSetValue = ({
 
 type CalculateNewValues = (params: {
   operation: SetValue["operation"];
-  previous: string | string[];
+  previous: string[];
   current: string;
-}) => string[] | undefined;
+}) => string | string[] | undefined;
 
 const calculateNewValues: CalculateNewValues = ({
   operation,
@@ -58,22 +58,17 @@ const calculateNewValues: CalculateNewValues = ({
 }) => {
   switch (operation) {
     case "replace":
-      // Default behaviour when assigning passport variables
-      // No custom logic needed
-      break;
+      return [current];
 
     case "removeOne": {
-      if (Array.isArray(previous)) {
-        const removeCurrent = (val: string) => val !== current;
-        const filtered = previous.filter(removeCurrent);
-        return filtered;
+      // Do not convert output from string to string[] if operation not possible
+      if (previous.length === 1 && previous[0] !== current) {
+        return previous[0];
       }
 
-      if (previous === current) {
-        return [];
-      }
-
-      break;
+      const removeCurrent = (val: string) => val !== current;
+      const filtered = previous.filter(removeCurrent);
+      return filtered;
     }
 
     case "removeAll":
