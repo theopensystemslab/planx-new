@@ -55,7 +55,7 @@ export const editorUIStore: StateCreator<
     set({ showPreview: !get().showPreview });
   },
 
-  isTestEnvBannerVisible: true,
+  isTestEnvBannerVisible: !window.location.href.includes(".uk"),
 
   hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
 });
