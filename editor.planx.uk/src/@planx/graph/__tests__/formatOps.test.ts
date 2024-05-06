@@ -1,7 +1,7 @@
 import { formatOps, Graph } from "../index";
 
 describe("Update operations", () => {
-  test("Updating a single property of a node", () => {
+  test("Updating a single property of a node that is in `allowProps`", () => {
     const ops = [
       {
         p: ["FW5G3EMBI3", "data", "text"],
@@ -11,7 +11,21 @@ describe("Update operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      'Updated Checklist text from "Which fruits?" to "Which vegetables?"',
+      'Updated Checklist text from "Which fruits?" to "Which vegetables?"', // shows prop name "fn" and content "from x to y"
+    ]);
+  });
+
+  test("Updating a single property of a node that is not in `allowProps`", () => {
+    const ops = [
+      {
+        p: ["FW5G3EMBI3", "data", "info"],
+        oi: "New help text",
+        od: "Old help text",
+      },
+    ];
+
+    expect(formatOps(flowWithChecklist, ops)).toEqual([
+      "Updated Checklist info", // shows prop name "info", without content
     ]);
   });
 
@@ -142,6 +156,19 @@ describe("Insert operations", () => {
     ]);
   });
 
+  test("Adding a data property to an existing node that is in `allowProps`", () => {
+    const ops = [
+      {
+        p: ["FW5G3EMBI3", "data", "fn"],
+        oi: "food.fruit",
+      },
+    ];
+
+    expect(formatOps(flowWithChecklist, ops)).toEqual([
+      `Added Checklist fn "food.fruit"`, // shows prop name "fn" and content
+    ]);
+  });
+
   test("Adding a data property to an existing node that is not in `allowProps`", () => {
     const ops = [
       {
@@ -151,7 +178,7 @@ describe("Insert operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      "Added Checklist description", // only shows "description", not content
+      "Added Checklist description", // only shows prop name "description", not content
     ]);
   });
 });

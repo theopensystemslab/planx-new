@@ -15,7 +15,7 @@ import { OT } from "@planx/graph/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import React, { useState } from "react";
 
-import { formatLastEditDate,Operation } from "..";
+import { formatLastEditDate, Operation } from "..";
 import { useStore } from "../lib/store";
 
 const EditHistory = () => {
@@ -82,7 +82,8 @@ const EditHistory = () => {
     undoOperation(flattenedOperationsData);
   };
 
-  const inFocus = (i: number): boolean => {
+  const inUndoScope = (i: number): boolean => {
+    // Is a given operation in the list in scope of also being "undone" if the currently focused button is clicked?
     return focusedOpIndex !== undefined && i < focusedOpIndex;
   };
 
@@ -105,14 +106,18 @@ const EditHistory = () => {
                 <TimelineDot
                   sx={{
                     bgcolor: (theme) =>
-                      inFocus(i) ? undefined : theme.palette.grey[900],
+                      inUndoScope(i)
+                        ? theme.palette.grey[400]
+                        : theme.palette.grey[900],
                   }}
                 />
                 {i < data.operations.length - 1 && (
                   <TimelineConnector
                     sx={{
                       bgcolor: (theme) =>
-                        inFocus(i) ? undefined : theme.palette.grey[900],
+                        inUndoScope(i)
+                          ? theme.palette.grey[400]
+                          : theme.palette.grey[900],
                     }}
                   />
                 )}
@@ -129,7 +134,7 @@ const EditHistory = () => {
                     <Typography
                       variant="body1"
                       sx={{ fontWeight: 600 }}
-                      color={inFocus(i) ? "GrayText" : "inherit"}
+                      color={inUndoScope(i) ? "GrayText" : "inherit"}
                     >
                       {`${
                         op.actor
@@ -139,7 +144,7 @@ const EditHistory = () => {
                     </Typography>
                     <Typography
                       variant="body2"
-                      color={inFocus(i) ? "GrayText" : "inherit"}
+                      color={inUndoScope(i) ? "GrayText" : "inherit"}
                     >
                       {formatLastEditDate(op.createdAt)}
                     </Typography>
@@ -154,7 +159,7 @@ const EditHistory = () => {
                     >
                       <RestoreOutlined
                         fontSize="large"
-                        color={inFocus(i) ? "inherit" : "primary"}
+                        color={inUndoScope(i) ? "inherit" : "primary"}
                       />
                     </IconButton>
                   )}
@@ -165,12 +170,14 @@ const EditHistory = () => {
                       variant="body2"
                       component="ul"
                       padding={2}
-                      color={inFocus(i) ? "GrayText" : "inherit"}
+                      color={inUndoScope(i) ? "GrayText" : "inherit"}
                     >
                       {[...new Set(formatOps(flow, op.data))]
                         .slice(0, OPS_TO_DISPLAY)
                         .map((formattedOp, i) => (
-                          <li key={i}>{formattedOp}</li>
+                          <li key={i} style={{ listStyleType: "disc" }}>
+                            {formattedOp}
+                          </li>
                         ))}
                     </Typography>
                     {[...new Set(formatOps(flow, op.data))].length >
@@ -190,12 +197,14 @@ const EditHistory = () => {
                           variant="body2"
                           component="ul"
                           padding={2}
-                          color={inFocus(i) ? "GrayText" : "inherit"}
+                          color={inUndoScope(i) ? "GrayText" : "inherit"}
                         >
                           {[...new Set(formatOps(flow, op.data))]
                             .slice(OPS_TO_DISPLAY)
                             .map((formattedOp, i) => (
-                              <li key={i}>{formattedOp}</li>
+                              <li key={i} style={{ listStyleType: "disc" }}>
+                                {formattedOp}
+                              </li>
                             ))}
                         </Typography>
                       </SimpleExpand>
