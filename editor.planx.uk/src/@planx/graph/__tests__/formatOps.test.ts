@@ -1,4 +1,4 @@
-import { formatOps,Graph } from "../index";
+import { formatOps, Graph } from "../index";
 
 describe("Update operations", () => {
   test("Updating a single property of a node", () => {
@@ -118,12 +118,8 @@ describe("Insert operations", () => {
     ]);
   });
 
-  test("Adding a new child and data property to an existing node", () => {
+  test("Adding a new child to an existing node", () => {
     const ops = [
-      {
-        p: ["FW5G3EMBI3", "data", "description"],
-        oi: "<p>Fruits contain seeds and come from the flower of a plant</p>",
-      },
       {
         p: ["FW5G3EMBI3", "edges"],
         oi: ["WDwUTbF7Gq", "SO5XbLwSYp", "xTBfSd1Tjy", "zzQAMXexRj"],
@@ -141,9 +137,21 @@ describe("Insert operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      'Added Checklist description "<p>Fruits contain seeds and come from the flower of a plant</p>"',
       "Updated order of Checklist edges",
       'Added Answer "Strawberry"',
+    ]);
+  });
+
+  test("Adding a data property to an existing node that is not in `allowProps`", () => {
+    const ops = [
+      {
+        p: ["FW5G3EMBI3", "data", "description"],
+        oi: "<p>Fruits contain seeds and come from the flower of a plant</p>",
+      },
+    ];
+
+    expect(formatOps(flowWithChecklist, ops)).toEqual([
+      "Added Checklist description", // only shows "description", not content
     ]);
   });
 });

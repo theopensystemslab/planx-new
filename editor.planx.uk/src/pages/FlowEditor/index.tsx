@@ -15,6 +15,7 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
@@ -139,6 +140,8 @@ export const LastEdited = () => {
 };
 
 export const EditHistory = () => {
+  const OPS_TO_DISPLAY = 5;
+
   const [focusedOpIndex, setFocusedOpIndex] = useState<number | undefined>(
     undefined,
   );
@@ -278,18 +281,47 @@ export const EditHistory = () => {
                   )}
                 </Box>
                 {op.data && (
-                  <Typography
-                    variant="body2"
-                    component="ul"
-                    padding={2}
-                    color={inFocus(i) ? "GrayText" : "inherit"}
-                  >
-                    {[...new Set(formatOps(flow, op.data))].map(
-                      (formattedOp, i) => (
-                        <li key={i}>{formattedOp}</li>
-                      ),
+                  <>
+                    <Typography
+                      variant="body2"
+                      component="ul"
+                      padding={2}
+                      color={inFocus(i) ? "GrayText" : "inherit"}
+                    >
+                      {[...new Set(formatOps(flow, op.data))]
+                        .slice(0, OPS_TO_DISPLAY)
+                        .map((formattedOp, i) => (
+                          <li key={i}>{formattedOp}</li>
+                        ))}
+                    </Typography>
+                    {[...new Set(formatOps(flow, op.data))].length >
+                      OPS_TO_DISPLAY && (
+                      <SimpleExpand
+                        id="edits-overflow"
+                        buttonText={{
+                          open: `Show ${
+                            [...new Set(formatOps(flow, op.data))].length -
+                            OPS_TO_DISPLAY
+                          } more`,
+                          closed: "Show less",
+                        }}
+                        lightFontStyle={true}
+                      >
+                        <Typography
+                          variant="body2"
+                          component="ul"
+                          padding={2}
+                          color={inFocus(i) ? "GrayText" : "inherit"}
+                        >
+                          {[...new Set(formatOps(flow, op.data))]
+                            .slice(OPS_TO_DISPLAY)
+                            .map((formattedOp, i) => (
+                              <li key={i}>{formattedOp}</li>
+                            ))}
+                        </Typography>
+                      </SimpleExpand>
                     )}
-                  </Typography>
+                  </>
                 )}
               </TimelineContent>
             </TimelineItem>
