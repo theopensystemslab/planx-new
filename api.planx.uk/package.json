@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.8",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#4e67b2e",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#722e1c7",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "aws-sdk": "^2.1467.0",
@@ -16,7 +16,7 @@
     "cors": "^2.8.5",
     "csv-stringify": "^6.4.5",
     "date-fns": "^3.3.1",
-    "dompurify": "^3.0.6",
+    "dompurify": "^3.1.2",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
     "express-jwt": "^8.4.1",
@@ -45,8 +45,8 @@
     "string-to-stream": "^3.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
-    "type-fest": "^4.10.3",
-    "zod": "^3.22.4"
+    "type-fest": "^4.18.1",
+    "zod": "^3.23.5"
   },
   "scripts": {
     "dev": "ts-node-dev --files index.ts",

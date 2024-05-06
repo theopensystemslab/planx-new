@@ -352,7 +352,7 @@ const AlteredNodesSummaryContent = (props: {
       <Box pt={2}>
         <Typography variant="body2">
           {`Preview these content changes in-service before publishing `}
-          <Link href={url.replace("/published", "/amber")} target="_blank">
+          <Link href={url.replace("/published", "/preview")} target="_blank">
             {`here (opens in a new tab).`}
           </Link>
         </Typography>
@@ -426,7 +426,7 @@ const PreviewBrowser: React.FC<{
           <input
             type="text"
             disabled
-            value={props.url.replace("/published", "/amber")}
+            value={props.url.replace("/published", "/preview")}
           />
 
           <Tooltip arrow title="Refresh preview">
@@ -480,7 +480,7 @@ const PreviewBrowser: React.FC<{
 
           <Tooltip arrow title="Open preview of changes to publish">
             <Link
-              href={props.url.replace("/published", "/amber")}
+              href={props.url.replace("/published", "/preview")}
               target="_blank"
               rel="noopener noreferrer"
               color="inherit"

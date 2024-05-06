@@ -111,7 +111,11 @@ export const UploadedFileCard: React.FC<Props> = ({
         sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}
       >
         <Box mr={2}>
-          <Typography variant="body1" pb="0.25em">
+          <Typography
+            variant="body1"
+            pb="0.25em"
+            sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}
+          >
             {file.path}
           </Typography>
           <FileSize variant="body2">{formatBytes(file.size)}</FileSize>

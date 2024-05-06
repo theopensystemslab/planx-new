@@ -494,6 +494,7 @@ const EditorToolbar: React.FC<{
           </InnerContainer>
         </Container>
       </StyledToolbar>
+      <TestEnvironmentBanner />
       {user && (
         <StyledPopover
           open={open}
@@ -538,9 +539,17 @@ const EditorToolbar: React.FC<{
 
             {/* Only show team settings link if inside a team route  */}
             {isTeamSettingsVisible && (
-              <MenuItem onClick={() => navigate(`${rootTeamPath()}/settings`)}>
-                Team Settings
-              </MenuItem>
+              <>
+                <MenuItem
+                  onClick={() => navigate(`${rootTeamPath()}/settings`)}
+                >
+                  Team Settings
+                </MenuItem>
+                {/* Hidden until feature complete */}
+                {/* <MenuItem onClick={() => navigate(`${rootTeamPath()}/members`)}>
+                  Team Members
+                </MenuItem> */}
+              </>
             )}
 
             {/* Only show flow settings link if inside a flow route  */}
@@ -587,14 +596,18 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   ]);
 
   // Editor and custom domains share a path, so we need to rely on previewEnvironment
-  if (previewEnvironment === "editor" && path !== "draft" && path !== "amber") {
+  if (
+    previewEnvironment === "editor" &&
+    path !== "draft" &&
+    path !== "preview"
+  ) {
     return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
   }
 
   switch (path) {
     case flowSlug: // Custom domains
+    case "published":
     case "preview":
-    case "amber":
     case "draft":
     case "pay":
       return <PublicToolbar />;

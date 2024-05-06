@@ -255,6 +255,11 @@ const getThemeOptions = ({
           hr: {
             marginLeft: 0,
           },
+          fieldset: {
+            minInlineSize: "unset",
+            padding: 0,
+            border: 0,
+          },
         },
       },
       MuiButtonBase: {

@@ -1,5 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["UNDO"] as const;
+const AVAILABLE_FEATURE_FLAGS = ["UNDO", "EDITOR_NAVIGATION"] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 

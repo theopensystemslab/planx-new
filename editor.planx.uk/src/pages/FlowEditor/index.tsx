@@ -2,6 +2,7 @@ import "./components/Settings";
 import "./floweditor.scss";
 
 import { gql, useSubscription } from "@apollo/client";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import RestoreOutlined from "@mui/icons-material/RestoreOutlined";
 import Timeline from "@mui/lab/Timeline";
 import TimelineConnector from "@mui/lab/TimelineConnector";
@@ -11,6 +12,8 @@ import TimelineItem, { timelineItemClasses } from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
@@ -41,6 +44,12 @@ const formatLastEditDate = (date: string): string => {
     addSuffix: true,
   });
 };
+const EditorContainer = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "stretch",
+  overflow: "hidden",
+  flexGrow: 1,
+}));
 
 const formatLastEditMessage = (
   date: string,
@@ -102,16 +111,29 @@ export const LastEdited = () => {
   return (
     <Box
       sx={(theme) => ({
-        padding: theme.spacing(1),
+        backgroundColor: theme.palette.grey[200],
+        borderBottom: `1px solid ${theme.palette.border.main}`,
+        padding: theme.spacing(0.5, 1),
         paddingLeft: theme.spacing(2),
+        display: "flex",
+        alignItems: "center",
         [theme.breakpoints.up("md")]: {
-          paddingLeft: theme.spacing(3),
+          paddingLeft: theme.spacing(2),
         },
       })}
     >
       <Typography variant="body2" fontSize="small">
         {message}
       </Typography>
+      <Link
+        variant="body2"
+        fontSize="small"
+        fontWeight="600"
+        ml={2}
+        sx={{ display: "flex", alignItems: "center" }}
+      >
+        <EditNoteIcon /> View edit history
+      </Link>
     </Box>
   );
 };
@@ -121,12 +143,15 @@ export const EditHistory = () => {
     undefined,
   );
 
-  const [flowId, flow, canUserEditTeam, undoOperation] = useStore((state) => [
-    state.id,
-    state.flow,
-    state.canUserEditTeam,
-    state.undoOperation,
-  ]);
+  const [flowId, flow, canUserEditTeam, teamSlug, undoOperation] = useStore(
+    (state) => [
+      state.id,
+      state.flow,
+      state.canUserEditTeam,
+      state.teamSlug,
+      state.undoOperation,
+    ],
+  );
 
   const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
     gql`
@@ -195,12 +220,17 @@ export const EditHistory = () => {
           {data?.operations?.map((op: Operation, i: number) => (
             <TimelineItem key={op.id}>
               <TimelineSeparator>
-                <TimelineDot color={inFocus(i) ? undefined : "primary"} />
+                <TimelineDot
+                  sx={{
+                    bgcolor: (theme) =>
+                      inFocus(i) ? undefined : theme.palette.grey[900],
+                  }}
+                />
                 {i < data.operations.length - 1 && (
                   <TimelineConnector
                     sx={{
                       bgcolor: (theme) =>
-                        inFocus(i) ? undefined : theme.palette.primary.main,
+                        inFocus(i) ? undefined : theme.palette.grey[900],
                     }}
                   />
                 )}
@@ -232,7 +262,7 @@ export const EditHistory = () => {
                       {formatLastEditDate(op.createdAt)}
                     </Typography>
                   </Box>
-                  {i > 0 && op.actor && (
+                  {i > 0 && op.actor && canUserEditTeam(teamSlug) && (
                     <IconButton
                       title="Restore to this point"
                       aria-label="Restore to this point"
@@ -276,7 +306,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
   const showPreview = useStore((state) => state.showPreview);
 
   return (
-    <Box id="editor-container">
+    <EditorContainer id="editor-container">
       <Box
         sx={{
           display: "flex",
@@ -295,7 +325,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
           url={`${window.location.origin}${rootFlowPath(false)}/published`}
         />
       )}
-    </Box>
+    </EditorContainer>
   );
 };
 
