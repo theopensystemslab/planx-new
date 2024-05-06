@@ -507,7 +507,7 @@ export const sortIdsDepthFirst =
 export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
   const output: string[] = [];
 
-  // Only show full change description for simple props, omit complex or long ones like `moreInfo` etc
+  // Only show full change description for simple props, omit complex or long ones like `moreInfo`, `fileTypes`, etc
   const allowProps = ["title", "text", "fn", "val"];
 
   // Updating a node or its properties (update = delete + insert)
