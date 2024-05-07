@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#722e1c7
-    version: github.com/theopensystemslab/planx-core/722e1c7
+    specifier: git+https://github.com/theopensystemslab/planx-core#04b0f0b
+    version: github.com/theopensystemslab/planx-core/04b0f0b
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -5717,6 +5717,7 @@ packages:
       chalk: 3.0.0
       diff-match-patch: 1.0.5
     dev: false
+    bundledDependencies: []
 
   /jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
@@ -7931,6 +7932,11 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
+  /type-fest@4.18.2:
+    resolution: {integrity: sha512-+suCYpfJLAe4OXS6+PPXjW3urOS4IoP9waSiLuXfLgqZODKw/aWwASvzqE886wA0kQgGy0mIWyhd87VpqIy6Xg==}
+    engines: {node: '>=16'}
+    dev: false
+
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -8355,8 +8361,12 @@ packages:
     resolution: {integrity: sha512-fkwiq0VIQTksNNA131rDOsVJcns0pfVUjHzLrNBiF/O/Xxb5lQyEXkhZWcJ7npWsYlvs+h0jFWXXy4X46Em1JA==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/722e1c7:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/722e1c7}
+  /zod@3.23.6:
+    resolution: {integrity: sha512-RTHJlZhsRbuA8Hmp/iNL7jnfc4nZishjsanDAfEY1QpDQZCahUp3xDzl+zfweE9BklxMUcgBgS1b7Lvie/ZVwA==}
+    dev: false
+
+  github.com/theopensystemslab/planx-core/04b0f0b:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/04b0f0b}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -8381,9 +8391,9 @@ packages:
       prettier: 3.2.5
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.18.1
+      type-fest: 4.18.2
       uuid: 9.0.1
-      zod: 3.23.5
+      zod: 3.23.6
     transitivePeerDependencies:
       - '@types/react'
       - encoding

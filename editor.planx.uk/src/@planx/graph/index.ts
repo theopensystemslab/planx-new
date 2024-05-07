@@ -508,7 +508,17 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
   const output: string[] = [];
 
   // Only show full change description for simple props, omit complex or long ones like `moreInfo`, `fileTypes`, etc
-  const allowProps = ["title", "text", "fn", "val"];
+  const allowProps: string[] = ["title", "text", "fn", "val"];
+
+  // Create a simple lookup to overwrite most common component props to a more human-readable name
+  const propsMap: Record<string, string> = {
+    fn: "data field",
+    val: "data field",
+    info: `help text ("Why it matters")`,
+    howMeasured: `help text ("How is it defined?")`,
+    policyRef: `help text source links`,
+    definitionImg: `help text image`,
+  };
 
   // Updating a node or its properties (update = delete + insert)
   const handleUpdate = (node: Node, op: OT.Object.Replace) => {
@@ -531,14 +541,18 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
         }"`,
       );
     } else if (op.p.includes("data")) {
-      if (allowProps.includes(`${op.p?.[2]}`)) {
+      const prop = op.p?.[2] as string;
+      if (allowProps.includes(prop)) {
         output.push(
-          `Updated ${node?.type ? TYPES[node.type] : "node"} ${op
-            .p?.[2]} from "${op.od}" to "${op.oi}"`,
+          `Updated ${node?.type ? TYPES[node.type] : "node"} ${
+            propsMap[prop] || prop
+          } from "${op.od}" to "${op.oi}"`,
         );
       } else {
         output.push(
-          `Updated ${node?.type ? TYPES[node.type] : "node"} ${op.p?.[2]}`,
+          `Updated ${node?.type ? TYPES[node.type] : "node"} ${
+            propsMap[prop] || prop
+          }`,
         );
       }
     } else if (op.p.includes("edges")) {
@@ -570,15 +584,18 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
         }"`,
       );
     } else if (op.p.includes("data")) {
-      if (allowProps.includes(`${op.p?.[2]}`)) {
+      const prop = op.p?.[2] as string;
+      if (allowProps.includes(prop)) {
         output.push(
-          `Added ${node?.type ? TYPES[node?.type] : "node"} ${op.p?.[2]} "${
-            op.oi
-          }"`,
+          `Added ${node?.type ? TYPES[node?.type] : "node"} ${
+            propsMap[prop] || prop
+          } "${op.oi}"`,
         );
       } else {
         output.push(
-          `Added ${node?.type ? TYPES[node?.type] : "node"} ${op.p?.[2]}`,
+          `Added ${node?.type ? TYPES[node?.type] : "node"} ${
+            propsMap[prop] || prop
+          }`,
         );
       }
     } else if (op.p.includes("edges")) {
@@ -600,15 +617,18 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
         }"`,
       );
     } else if (op.p.includes("data")) {
-      if (allowProps.includes(`${op.p?.[2]}`)) {
+      const prop = op.p?.[2] as string;
+      if (allowProps.includes(prop)) {
         output.push(
-          `Removed ${node?.type ? TYPES[node.type] : "node"} ${op.p?.[2]} "${
-            op.od
-          }"`,
+          `Removed ${node?.type ? TYPES[node.type] : "node"} ${
+            propsMap[prop] || prop
+          } "${op.od}"`,
         );
       } else {
         output.push(
-          `Removed ${node?.type ? TYPES[node.type] : "node"} ${op.p?.[2]}`,
+          `Removed ${node?.type ? TYPES[node.type] : "node"} ${
+            propsMap[prop] || prop
+          }`,
         );
       }
     } else if (op.p.includes("edges")) {

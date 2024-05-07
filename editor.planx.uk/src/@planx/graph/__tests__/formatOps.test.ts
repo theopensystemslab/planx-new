@@ -25,7 +25,7 @@ describe("Update operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      "Updated Checklist info", // shows prop name "info", without content
+      `Updated Checklist help text ("Why it matters")`, // shows prop name "info", without content
     ]);
   });
 
@@ -46,9 +46,9 @@ describe("Update operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      'Added Checklist fn "fruit"',
-      'Added Answer val "berry.blue"',
-      'Added Answer val "banana"',
+      'Added Checklist data field "fruit"',
+      'Added Answer data field "berry.blue"',
+      'Added Answer data field "banana"',
     ]);
   });
 });
@@ -165,7 +165,7 @@ describe("Insert operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      `Added Checklist fn "food.fruit"`, // shows prop name "fn" and content
+      `Added Checklist data field "food.fruit"`, // shows prop name "fn" and content
     ]);
   });
 
