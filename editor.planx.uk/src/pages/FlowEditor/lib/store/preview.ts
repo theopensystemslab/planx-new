@@ -222,17 +222,16 @@ export const previewStore: StateCreator<
           if (passportValue.length > 0) {
             const existingValue = acc.data?.[key] ?? [];
 
-            const combined = existingValue
-              .concat(passportValue)
-              .reduce(
-                (acc: string[], curr: string, _i: number, arr: string[]) => {
-                  if (!arr.some((x) => x !== curr && x.startsWith(curr))) {
-                    acc.push(curr);
-                  }
-                  return acc;
-                },
-                [],
-              );
+            const combined = existingValue.concat(passportValue);
+            // .reduce(
+            //   (acc: string[], curr: string, _i: number, arr: string[]) => {
+            //     if (!arr.some((x) => x !== curr && x.startsWith(curr))) {
+            //       acc.push(curr);
+            //     }
+            //     return acc;
+            //   },
+            //   [],
+            // );
 
             passportData[key] = uniq(combined);
           }
