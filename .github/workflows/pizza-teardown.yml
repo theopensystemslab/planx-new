@@ -17,7 +17,11 @@ jobs:
           action: destroy
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
+          os_type: ubuntu
+          plan: vc2-1c-1gb
           pull_request_id: ${{ env.PULLREQUEST_ID }}
+          region: lhr
+          tag: pullrequest
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
