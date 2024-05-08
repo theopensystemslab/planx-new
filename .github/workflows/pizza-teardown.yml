@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Remove vultr resources
-        uses: theopensystemslab/vultr-action@v1.15
+        uses: theopensystemslab/vultr-action@v2.0
         with:
           action: destroy
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
-          pullrequest_id: ${{ env.PULLREQUEST_ID }}
+          pull_request_id: ${{ env.PULLREQUEST_ID }}
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
