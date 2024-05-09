@@ -23,6 +23,7 @@ const Inner = styled(Box)(({ theme }) => ({
   justifyContent: "space-between",
   alignItems: "center",
   flexWrap: "wrap",
+  gap: theme.spacing(1),
   padding: theme.spacing(0.75, 0),
 }));
 
@@ -30,7 +31,14 @@ const PhaseWrap = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "start",
   alignItems: "start",
+  flexDirection: "column",
+  textWrap: "balance",
   padding: theme.spacing(0.5, 1, 0.5, 0),
+  gap: theme.spacing(0.5),
+  [theme.breakpoints.up("sm")]: {
+    flexDirection: "row",
+    gap: theme.spacing(1),
+  },
 }));
 
 const BetaFlag = styled(Box)(({ theme }) => ({
@@ -49,6 +57,11 @@ interface Props {
 }
 
 export default function PhaseBanner(props: Props): FCReturn {
+  const handleFeedbackClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    props.handleFeedbackClick();
+  };
+
   return (
     <Root>
       <Container maxWidth="contentWrap">
@@ -61,7 +74,6 @@ export default function PhaseBanner(props: Props): FCReturn {
               alignItems="flex-start"
               flexBasis={0}
               px={1}
-              mr={1}
               py={0.5}
               fontSize={14}
               textAlign="center"
@@ -78,9 +90,9 @@ export default function PhaseBanner(props: Props): FCReturn {
             >
               This is a new service. Your{" "}
               <Link
-                component={"button"}
+                href="#"
                 sx={{ verticalAlign: "top" }}
-                onClick={() => props.handleFeedbackClick()}
+                onClick={handleFeedbackClick}
               >
                 feedback
               </Link>{" "}
