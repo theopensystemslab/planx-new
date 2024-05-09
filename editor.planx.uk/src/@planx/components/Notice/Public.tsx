@@ -103,12 +103,15 @@ const NoticeComponent: React.FC<Props> = (props) => {
           <Content>
             <TitleWrap>
               <ErrorOutline sx={{ width: 34, height: 34 }} />
-              <Title variant="h3">{props.title}</Title>
+              <Title variant="h3" component="h1">
+                {props.title}
+              </Title>
             </TitleWrap>
             <Box mt={2}>
               <ReactMarkdownOrHtml
                 textColor={textColor}
                 source={props.description}
+                openLinksOnNewTab
               />
             </Box>
           </Content>
