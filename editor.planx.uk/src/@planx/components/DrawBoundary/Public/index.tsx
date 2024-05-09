@@ -187,11 +187,9 @@ export default function Component(props: Props) {
               </p>
               {!props.hideFileUpload && (
                 <p style={visuallyHidden}>
-                  If you prefer to upload a location plan file instead of using
-                  the map, please reset the map view first to erase the
-                  pre-populated boundary. Then click the "Upload a location plan
-                  instead" link below. A location plan can only be submitted as
-                  a digital boundary or file, not both.
+                  If you prefer to upload a file instead of using the
+                  interactive map, please click "Upload a location plan instead"
+                  below to navigate to the file upload.
                 </p>
               )}
               {/* @ts-ignore */}
