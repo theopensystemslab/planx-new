@@ -204,7 +204,7 @@ export async function expectNotice({
   page: Page;
   text: string;
 }) {
-  const notice = page.locator("h3", { hasText: text });
+  const notice = page.locator("h1", { hasText: text });
   await expect(notice).toBeVisible();
 }
 

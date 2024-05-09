@@ -111,6 +111,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
               <ReactMarkdownOrHtml
                 textColor={textColor}
                 source={props.description}
+                openLinksOnNewTab
               />
             </Box>
           </Content>
