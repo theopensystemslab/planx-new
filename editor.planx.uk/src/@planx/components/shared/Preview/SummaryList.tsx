@@ -469,6 +469,7 @@ function DrawBoundary(props: ComponentProps) {
             {/* @ts-ignore */}
             <my-map
               id="review-boundary-map"
+              ariaLabelOlFixedOverlay="A static map of your location plan"
               geojsonData={JSON.stringify(geodata)}
               geojsonColor="#ff0000"
               geojsonFill

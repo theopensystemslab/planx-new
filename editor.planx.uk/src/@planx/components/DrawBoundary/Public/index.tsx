@@ -195,6 +195,7 @@ export default function Component(props: Props) {
               {/* @ts-ignore */}
               <my-map
                 id="draw-boundary-map"
+                ariaLabelOlFixedOverlay="An interactive map for providing your location plan boundary"
                 drawMode
                 drawPointer="crosshair"
                 drawGeojsonData={JSON.stringify(boundary)}

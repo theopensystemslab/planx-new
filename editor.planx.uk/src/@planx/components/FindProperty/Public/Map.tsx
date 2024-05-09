@@ -120,6 +120,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
         {/* @ts-ignore */}
         <my-map
           id="plot-new-address-map"
+          ariaLabelOlFixedOverlay="An interactive map for providing your site location"
           data-testid="map-web-component"
           zoom={14}
           drawMode

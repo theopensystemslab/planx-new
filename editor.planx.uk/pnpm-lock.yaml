@@ -35,11 +35,11 @@ dependencies:
     specifier: ^5.15.2
     version: 5.15.2(@types/react@18.2.45)(react@18.2.0)
   '@opensystemslab/map':
-    specifier: ^0.8.1
-    version: 0.8.1
+    specifier: ^0.8.2
+    version: 0.8.2
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#f2f918d
-    version: github.com/theopensystemslab/planx-core/f2f918d(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#d8acbea
+    version: github.com/theopensystemslab/planx-core/d8acbea(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/pm@2.0.3)
@@ -5186,8 +5186,8 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@0.8.1:
-    resolution: {integrity: sha512-AMEkKN7uEzGN20gGmNbV+mpZDa7F8XY74Ttj7LgGwEAJ3ZeGRwx1d4ffjObjf4QY/bXTdOOCab1c4viaxfbozw==}
+  /@opensystemslab/map@0.8.2:
+    resolution: {integrity: sha512-bNWGX4AlJCTVvMymubrEmkBcZIdB5nXLw4ALJlEtZvAnsSJVYlhjG6OiN4GXqRuZTBDpI/l4gu/6giaidEjdwQ==}
     dependencies:
       '@turf/union': 6.5.0
       accessible-autocomplete: 2.0.4
@@ -5195,9 +5195,9 @@ packages:
       govuk-frontend: 5.3.1
       jspdf: 2.5.1
       lit: 3.1.3
-      ol: 7.5.2
-      ol-ext: 4.0.18(ol@7.5.2)
-      ol-mapbox-style: 12.3.2(ol@7.5.2)
+      ol: 9.1.0
+      ol-ext: 4.0.18(ol@9.1.0)
+      ol-mapbox-style: 12.3.2(ol@9.1.0)
       postcode: 5.1.0
       proj4: 2.11.0
       rambda: 8.6.0
@@ -9763,11 +9763,22 @@ packages:
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
+  /color-name@2.0.0:
+    resolution: {integrity: sha512-SbtvAMWvASO5TE2QP07jHBMXKafgdZz8Vrsrn96fiL+O92/FN/PLARzUW5sKt013fjAprK2d2iCn2hk2Xb5oow==}
+    engines: {node: '>=12.20'}
+    dev: false
+
   /color-parse@1.4.3:
     resolution: {integrity: sha512-BADfVl/FHkQkyo8sRBwMYBqemqsgnu7JZAwUgvBvuwwuNUZAhSvLTbsEErS5bQXzOjDR0dWzJ4vXN2Q+QoPx0A==}
     dependencies:
       color-name: 1.1.4
     dev: true
+
+  /color-parse@2.0.2:
+    resolution: {integrity: sha512-eCtOz5w5ttWIUcaKLiktF+DxZO1R9KLNY/xhbV6CkhM7sR3GhVghmt6X6yOnzeaM24po+Z9/S1apbXMwA3Iepw==}
+    dependencies:
+      color-name: 2.0.0
+    dev: false
 
   /color-rgba@2.4.0:
     resolution: {integrity: sha512-Nti4qbzr/z2LbUWySr7H9dk3Rl7gZt7ihHAxlgT4Ho90EXWkjtkL1avTleu9yeGuqrt/chxTB6GKK8nZZ6V0+Q==}
@@ -9776,9 +9787,15 @@ packages:
       color-space: 2.0.1
     dev: true
 
+  /color-rgba@3.0.0:
+    resolution: {integrity: sha512-PPwZYkEY3M2THEHHV6Y95sGUie77S7X8v+h1r6LSAPF3/LL2xJ8duUXSrkic31Nzc4odPwHgUbiX/XuTYzQHQg==}
+    dependencies:
+      color-parse: 2.0.2
+      color-space: 2.0.1
+    dev: false
+
   /color-space@2.0.1:
     resolution: {integrity: sha512-nKqUYlo0vZATVOFHY810BSYjmCARrG7e5R3UE3CQlyjJTvv5kSSmPG1kzm/oDyyqjehM+lW1RnEt9It9GNa5JA==}
-    dev: true
 
   /color-string@1.9.1:
     resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
@@ -15932,38 +15949,31 @@ packages:
     resolution: {integrity: sha512-zuHHiGTYTA1sYJ/wZN+t5HKZaH23i4yI1HMwbuXm24Nid7Dv0KcuRlKoNKS9UNfAVSBlnGLcuQrnOKWOZoEGaw==}
     dev: true
 
-  /ol-ext@4.0.18(ol@7.5.2):
+  /ol-ext@4.0.18(ol@9.1.0):
     resolution: {integrity: sha512-zzeTAoCg9IocaM7LlXiLNnVCgVmfxxLzlDTWvYn3Y2gFxtICHSfRrIQl/8vumgBjftBksVl1Fds8P5uFReTmew==}
     peerDependencies:
       ol: '>= 5.3.0'
     dependencies:
-      ol: 7.5.2
+      ol: 9.1.0
     dev: false
 
-  /ol-mapbox-style@10.7.0:
-    resolution: {integrity: sha512-S/UdYBuOjrotcR95Iq9AejGYbifKeZE85D9VtH11ryJLQPTZXZSW1J5bIXcr4AlAH6tyjPPHTK34AdkwB32Myw==}
-    dependencies:
-      '@mapbox/mapbox-gl-style-spec': 13.28.0
-      mapbox-to-css-font: 2.4.4
-      ol: 7.5.2
-    dev: false
-
-  /ol-mapbox-style@12.3.2(ol@7.5.2):
+  /ol-mapbox-style@12.3.2(ol@9.1.0):
     resolution: {integrity: sha512-Qw9I6+WHz9zBsLNm8zWWb707Y/hXrQP1fcwK86pxcX/FklwyDxAhfJAdTkINHncZ331CBEWcqvi2tzoN23dgwg==}
     peerDependencies:
       ol: '*'
     dependencies:
       '@mapbox/mapbox-gl-style-spec': 13.28.0
       mapbox-to-css-font: 2.4.4
-      ol: 7.5.2
+      ol: 9.1.0
     dev: false
 
-  /ol@7.5.2:
-    resolution: {integrity: sha512-HJbb3CxXrksM6ct367LsP3N+uh+iBBMdP3DeGGipdV9YAYTP0vTJzqGnoqQ6C2IW4qf8krw9yuyQbc9fjOIaOQ==}
+  /ol@9.1.0:
+    resolution: {integrity: sha512-nDrkJ2tzZNpo/wzN/PpHV5zdxbnXZaFktoMaD2cFLEc6gCwlgLY21Yd8wnt/4FjaVYwLBnbN9USXSwIBGcyksQ==}
     dependencies:
+      color-rgba: 3.0.0
+      color-space: 2.0.1
       earcut: 2.2.4
       geotiff: 2.1.3
-      ol-mapbox-style: 10.7.0
       pbf: 3.2.1
       rbush: 3.0.1
     dev: false
@@ -21295,9 +21305,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/f2f918d(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f2f918d}
-    id: github.com/theopensystemslab/planx-core/f2f918d
+  github.com/theopensystemslab/planx-core/d8acbea(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d8acbea}
+    id: github.com/theopensystemslab/planx-core/d8acbea
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

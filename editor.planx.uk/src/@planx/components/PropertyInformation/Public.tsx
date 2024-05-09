@@ -141,6 +141,7 @@ export function Presentational(props: PresentationalProps) {
         {/* @ts-ignore */}
         <my-map
           id="property-information-map"
+          ariaLabelOlFixedOverlay="A static map of the property address"
           zoom={19.5}
           latitude={address?.latitude}
           longitude={address?.longitude}
