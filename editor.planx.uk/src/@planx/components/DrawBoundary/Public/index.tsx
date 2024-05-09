@@ -43,7 +43,7 @@ export default function Component(props: Props) {
     passport.data?.["property.boundary.title.area"];
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [area, setArea] = useState<number | undefined>(previousArea);
-  
+
   // Buffer applied to the address point to clip this map extent
   //   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
   const bufferInMeters = area && area > 15000 ? 300 : 120;
@@ -100,7 +100,7 @@ export default function Component(props: Props) {
         const newPassportData: Store.userData["data"] = {};
 
         // Used the map
-        if (boundary && props.dataFieldBoundary) {
+        if (page === "draw" && boundary && props.dataFieldBoundary) {
           newPassportData[props.dataFieldBoundary] = boundary;
           newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
             boundary,
@@ -131,7 +131,7 @@ export default function Component(props: Props) {
         }
 
         // Uploaded a file
-        if (slots.length) {
+        if (page === "upload" && slots.length) {
           newPassportData[PASSPORT_UPLOAD_KEY] = slots;
           newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
             DrawBoundaryUserAction.Upload;
@@ -150,7 +150,14 @@ export default function Component(props: Props) {
 
         props.handleSubmit?.({ data: { ...newPassportData } });
       }}
-      isValid={props.hideFileUpload ? true : Boolean(boundary || slots[0]?.url)}
+      isValid={
+        props.hideFileUpload
+          ? true
+          : Boolean(
+              (page === "draw" && boundary) ||
+                (page === "upload" && slots[0]?.url),
+            )
+      }
     >
       {getBody(bufferInMeters)}
     </Card>
@@ -180,11 +187,9 @@ export default function Component(props: Props) {
               </p>
               {!props.hideFileUpload && (
                 <p style={visuallyHidden}>
-                  If you prefer to upload a location plan file instead of using
-                  the map, please reset the map view first to erase the
-                  pre-populated boundary. Then click the "Upload a location plan
-                  instead" link below. A location plan can only be submitted as
-                  a digital boundary or file, not both.
+                  If you prefer to upload a file instead of using the
+                  interactive map, please click "Upload a location plan instead"
+                  below to navigate to the file upload.
                 </p>
               )}
               {/* @ts-ignore */}
@@ -229,7 +234,6 @@ export default function Component(props: Props) {
                 <Link
                   component="button"
                   onClick={() => setPage("upload")}
-                  disabled={Boolean(boundary)}
                   data-testid="upload-file-button"
                 >
                   <Typography variant="body1">
@@ -257,7 +261,7 @@ export default function Component(props: Props) {
             <Link
               component="button"
               onClick={() => setPage("draw")}
-              disabled={Boolean(slots[0]?.url)}
+              data-testid="use-map-button"
             >
               <Typography variant="body2">
                 Draw the boundary on a map instead
