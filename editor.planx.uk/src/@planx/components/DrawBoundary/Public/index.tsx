@@ -260,7 +260,11 @@ export default function Component(props: Props) {
           />
           <PrivateFileUpload slots={slots} setSlots={setSlots} maxFiles={1} />
           <Box sx={{ textAlign: "right" }}>
-            <Link component="button" onClick={() => setPage("draw")}>
+            <Link
+              component="button"
+              onClick={() => setPage("draw")}
+              data-testid="use-map-button"
+            >
               <Typography variant="body2">
                 Draw the boundary on a map instead
               </Typography>
