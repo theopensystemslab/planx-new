@@ -139,7 +139,13 @@ test("shows the file upload option by default and requires user data to continue
   // Navigate to upload a file screen
   await user.click(screen.getByTestId("upload-file-button"));
   expect(screen.getByText("Upload a file")).toBeInTheDocument();
-  expect(screen.getByTestId("continue-button")).toBeDisabled();
+
+  // Continue is enabled by default, but requires data to proceed
+  expect(screen.getByTestId("continue-button")).toBeEnabled();
+  await user.click(screen.getByTestId("continue-button"));
+  expect(
+    screen.getByTestId("error-message-upload-location-plan"),
+  ).toBeInTheDocument();
 });
 
 test("hides the upload option and allows user to continue without drawing if editor specifies", async () => {
