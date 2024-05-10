@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -37,6 +38,18 @@ export const FETCH_BLPU_CODES = gql`
 `;
 
 type Props = PublicProps<FindProperty>;
+
+const AddressLoadingWrap = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(-2.5),
+  minHeight: theme.spacing(3),
+  pointerEvents: "none",
+  [theme.breakpoints.up("md")]: {
+    position: "absolute",
+    bottom: theme.spacing(1),
+    margin: 0,
+    paddingRight: theme.spacing(14),
+  },
+}));
 
 export default Component;
 
@@ -236,12 +249,15 @@ function Component(props: Props) {
               </Link>
             </Box>
           )}
-          {Boolean(address) && isValidating && (
-            <DelayedLoadingIndicator
-              msDelayBeforeVisible={50}
-              text="Fetching data..."
-            />
-          )}
+          <AddressLoadingWrap>
+            {Boolean(address) && isValidating && (
+              <DelayedLoadingIndicator
+                msDelayBeforeVisible={50}
+                text="Fetching address data..."
+                inline
+              />
+            )}
+          </AddressLoadingWrap>
         </>
       );
     }
