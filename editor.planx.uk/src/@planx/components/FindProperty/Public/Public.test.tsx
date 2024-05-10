@@ -69,6 +69,7 @@ const osAddressProps = {
       "organisation-entity": "13",
     },
   },
+  "findProperty.action": "Selected an existing address",
 };
 
 const proposedAddressProps = {
