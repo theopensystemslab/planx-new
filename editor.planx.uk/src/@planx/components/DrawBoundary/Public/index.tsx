@@ -14,11 +14,13 @@ import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/Pr
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
 import buffer from "@turf/buffer";
-import { type Feature, point } from "@turf/helpers";
+import { type Feature,point } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { array } from "yup";
 
 import {
   DrawBoundary,
@@ -30,6 +32,21 @@ import {
 export type Props = PublicProps<DrawBoundary>;
 
 export type Boundary = Feature | undefined;
+
+const slotsSchema = array()
+  .required()
+  .test({
+    name: "nonUploading",
+    message: "Upload a location plan.",
+    test: (slots?: Array<FileUploadSlot>) => {
+      return Boolean(
+        slots &&
+          slots.length === 1 &&
+          !slots.some((slot) => slot.status === "uploading") &&
+          slots.every((slot) => slot.url && slot.status === "success"),
+      );
+    },
+  });
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
@@ -52,7 +69,9 @@ export default function Component(props: Props) {
     props.previouslySubmittedData?.data?.[PASSPORT_UPLOAD_KEY];
   const startPage = previousFile ? "upload" : "draw";
   const [page, setPage] = useState<"draw" | "upload">(startPage);
+
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
+  const [fileValidationError, setFileValidationError] = useState<string>();
 
   const addressPoint =
     passport?.data?._address?.longitude &&
@@ -94,44 +113,69 @@ export default function Component(props: Props) {
     };
   }, [page, setArea, setBoundary, setSlots]);
 
-  return (
-    <Card
-      handleSubmit={() => {
-        const newPassportData: Store.userData["data"] = {};
+  /**
+   * Declare a ref to hold a mutable copy the up-to-date validation error.
+   * The intention is to prevent frequent unnecessary update loops that clears the
+   * validation error state if it is already empty.
+   */
+  const validationErrorRef = useRef(fileValidationError);
+  useEffect(() => {
+    validationErrorRef.current = fileValidationError;
+  }, [fileValidationError]);
 
-        // Used the map
-        if (page === "draw" && boundary && props.dataFieldBoundary) {
-          newPassportData[props.dataFieldBoundary] = boundary;
-          newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
-            boundary,
-            bufferInMeters,
-            { units: "meters" },
-          );
+  useEffect(() => {
+    if (validationErrorRef.current) {
+      setFileValidationError(undefined);
+    }
+  }, [slots]);
 
-          if (area && props.dataFieldArea) {
-            newPassportData[props.dataFieldArea] = area;
-            newPassportData[`${props.dataFieldArea}.hectares`] =
-              squareMetresToHectares(area);
-          }
+  const validateAndSubmit = () => {
+    const newPassportData: Store.userData["data"] = {};
 
-          // Track the type of map interaction
-          if (
-            boundary?.geometry ===
-            passport.data?.["property.boundary.title"]?.geometry
-          ) {
-            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
-              DrawBoundaryUserAction.Accept;
-          } else if (boundary?.properties?.dataset === "title-boundary") {
-            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
-              DrawBoundaryUserAction.Amend;
-          } else {
-            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
-              DrawBoundaryUserAction.Draw;
-          }
+    // Used the map
+    if (page === "draw") {
+      if (boundary && props.dataFieldBoundary) {
+        newPassportData[props.dataFieldBoundary] = boundary;
+        newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
+          boundary,
+          bufferInMeters,
+          { units: "meters" },
+        );
+
+        if (area && props.dataFieldArea) {
+          newPassportData[props.dataFieldArea] = area;
+          newPassportData[`${props.dataFieldArea}.hectares`] =
+            squareMetresToHectares(area);
         }
 
-        // Uploaded a file
-        if (page === "upload" && slots.length) {
+        // Track the type of map interaction
+        if (
+          boundary?.geometry ===
+          passport.data?.["property.boundary.title"]?.geometry
+        ) {
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            DrawBoundaryUserAction.Accept;
+        } else if (boundary?.properties?.dataset === "title-boundary") {
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            DrawBoundaryUserAction.Amend;
+        } else {
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            DrawBoundaryUserAction.Draw;
+        }
+
+        props.handleSubmit?.({ data: { ...newPassportData } });
+      }
+
+      if (props.hideFileUpload && !boundary) {
+        props.handleSubmit?.({ data: { ...newPassportData } });
+      }
+    }
+
+    // Uploaded a file
+    if (page === "upload") {
+      slotsSchema
+        .validate(slots, { context: { slots } })
+        .then(() => {
           newPassportData[PASSPORT_UPLOAD_KEY] = slots;
           newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
             DrawBoundaryUserAction.Upload;
@@ -146,24 +190,27 @@ export default function Component(props: Props) {
             recommended,
             optional,
           };
-        }
 
-        props.handleSubmit?.({ data: { ...newPassportData } });
-      }}
+          props.handleSubmit?.({ data: { ...newPassportData } });
+        })
+        .catch((err) => setFileValidationError(err?.message));
+    }
+  };
+
+  return (
+    <Card
+      handleSubmit={validateAndSubmit}
       isValid={
         props.hideFileUpload
           ? true
-          : Boolean(
-              (page === "draw" && boundary) ||
-                (page === "upload" && slots[0]?.url),
-            )
+          : Boolean((page === "draw" && boundary) || page === "upload")
       }
     >
-      {getBody(bufferInMeters)}
+      {getBody(bufferInMeters, fileValidationError)}
     </Card>
   );
 
-  function getBody(bufferInMeters: number) {
+  function getBody(bufferInMeters: number, fileValidationError?: string) {
     if (page === "draw") {
       return (
         <>
@@ -257,7 +304,9 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <PrivateFileUpload slots={slots} setSlots={setSlots} maxFiles={1} />
+          <ErrorWrapper error={fileValidationError} id="upload-location-plan">
+            <PrivateFileUpload slots={slots} setSlots={setSlots} maxFiles={1} />
+          </ErrorWrapper>
           <Box sx={{ textAlign: "right" }}>
             <Link
               component="button"
