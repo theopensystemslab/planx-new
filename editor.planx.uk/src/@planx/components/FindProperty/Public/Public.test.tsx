@@ -118,6 +118,7 @@ const proposedAddressProps = {
       "organisation-entity": "13",
     },
   },
+  "findProperty.action": "Proposed a new address",
 };
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
