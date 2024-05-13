@@ -117,7 +117,7 @@ it("should not have any accessibility violations", async () => {
   expect(results).toHaveNoViolations();
 });
 
-test("shows the file upload option by default and requires user data to continue", async () => {
+test("shows the file upload option by default and requires user data to continue from either page", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
@@ -134,7 +134,12 @@ test("shows the file upload option by default and requires user data to continue
 
   // Draw a boundary screen
   expect(screen.getByTestId("upload-file-button")).toBeInTheDocument();
-  expect(screen.getByTestId("continue-button")).toBeDisabled();
+  expect(screen.getByTestId("continue-button")).toBeEnabled();
+
+  await user.click(screen.getByTestId("continue-button"));
+  expect(
+    screen.getByTestId("error-message-draw-boundary-map"),
+  ).toBeInTheDocument();
 
   // Navigate to upload a file screen
   await user.click(screen.getByTestId("upload-file-button"));
