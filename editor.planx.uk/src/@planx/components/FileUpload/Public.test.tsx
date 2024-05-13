@@ -24,7 +24,7 @@ test("shows error if user tries to continue before adding files", async () => {
   );
 
   await user.click(screen.getByTestId("continue-button"));
-  expect(screen.getByText("Upload at least one file.")).toBeInTheDocument();
+  expect(screen.getByText("Upload at least one file")).toBeInTheDocument();
 
   // Blocked by validation error
   expect(handleSubmit).toHaveBeenCalledTimes(0);
