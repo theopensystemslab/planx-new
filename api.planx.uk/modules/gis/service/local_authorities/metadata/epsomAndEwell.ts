@@ -20,7 +20,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
       "article4.epsomAndEwell.downs": "11/00006/ART4",
       "article4.epsomAndEwell.ewellvillage": "11/00002/ART4",
       "article4.epsomAndEwell.highergreenlongdown": "05/00002/ART4",
-      "article4.epsomAndEwell.lintons": "	11/00007/ART4",
+      "article4.epsomAndEwell.lintons": "11/00007/ART4",
       "article4.epsomAndEwell.pikes": "12/00002/ART4",
       "article4.epsomAndEwell.pikesPart": "11/00008/ART4",
       "article4.epsomAndEwell.stamfordgreen": "05/00001/ART4",
