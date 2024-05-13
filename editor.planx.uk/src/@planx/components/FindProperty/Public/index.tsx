@@ -57,8 +57,7 @@ function Component(props: Props) {
   const [mapValidationError, setMapValidationError] = useState<string>();
   const [showSiteDescriptionError, setShowSiteDescriptionError] =
     useState<boolean>(false);
-  const [dataFetchError, setDataFetchError] =
-    useState<string>("This is a test");
+  const [dataFetchError, setDataFetchError] = useState<string>();
 
   const [address, setAddress] = useState<SiteAddress | undefined>(
     previouslySubmittedData?._address,
