@@ -51,9 +51,14 @@ function Component(props: Props) {
       : "os-address";
   const [page, setPage] = useState<"os-address" | "new-address">(startPage);
 
+  const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
+  const [addressAutocompleteError, setAddressAutocompleteError] =
+    useState<string>();
   const [mapValidationError, setMapValidationError] = useState<string>();
   const [showSiteDescriptionError, setShowSiteDescriptionError] =
     useState<boolean>(false);
+  const [dataFetchError, setDataFetchError] =
+    useState<string>("This is a test");
 
   const [address, setAddress] = useState<SiteAddress | undefined>(
     previouslySubmittedData?._address,
@@ -111,7 +116,16 @@ function Component(props: Props) {
   }, [data, address]);
 
   const validateAndSubmit = () => {
-    // TODO `if (isValidating)` on either page, wrap Continue button in error mesage?
+    if (isValidating) {
+      setDataFetchError("Please wait for data fetching to complete");
+    }
+
+    if (page === "os-address") {
+      if (address?.postcode === undefined) setShowPostcodeError(true);
+
+      if (address?.title === undefined)
+        setAddressAutocompleteError("Select an address");
+    }
 
     if (page === "new-address") {
       if (address?.x === undefined && address?.y === undefined)
@@ -155,11 +169,8 @@ function Component(props: Props) {
   return (
     <Card
       handleSubmit={validateAndSubmit}
-      isValid={
-        page === "new-address" && !isValidating
-          ? true
-          : Boolean(address) && !isValidating
-      }
+      isValid={true}
+      error={dataFetchError}
     >
       {getBody()}
     </Card>
@@ -190,7 +201,7 @@ function Component(props: Props) {
           />
           {Boolean(address) && isValidating && (
             <DelayedLoadingIndicator
-              msDelayBeforeVisible={50}
+              msDelayBeforeVisible={0}
               text="Fetching data..."
             />
           )}
@@ -216,6 +227,10 @@ function Component(props: Props) {
             }
             id={props.id}
             description={props.description || ""}
+            showPostcodeError={showPostcodeError}
+            setShowPostcodeError={setShowPostcodeError}
+            addressAutocompleteError={addressAutocompleteError}
+            setAddressAutocompleteError={setAddressAutocompleteError}
           />
           {!props.allowNewAddresses ? (
             <ExternalPlanningSiteDialog
@@ -238,7 +253,7 @@ function Component(props: Props) {
           )}
           {Boolean(address) && isValidating && (
             <DelayedLoadingIndicator
-              msDelayBeforeVisible={50}
+              msDelayBeforeVisible={0}
               text="Fetching data..."
             />
           )}

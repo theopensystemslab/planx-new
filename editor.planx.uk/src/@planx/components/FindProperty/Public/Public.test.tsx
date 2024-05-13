@@ -159,8 +159,14 @@ describe("render states", () => {
     expect(autocomplete.getAttribute("postcode")).toEqual("SE5 0HU");
     expect(autocomplete.getAttribute("initialAddress")).toBeFalsy();
 
-    // expect continue to be disabled because an address has not been selected
-    expect(screen.getByTestId("continue-button")).toBeDisabled();
+    // user is unable to continue and to submit incomplete data
+    const continueButton = screen.getByTestId("continue-button");
+    expect(continueButton).toBeEnabled();
+    await user.click(continueButton);
+
+    expect(
+      screen.getByTestId("error-message-address-autocomplete"),
+    ).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 
@@ -233,7 +239,11 @@ describe("render states", () => {
       await screen.findByText("Type your postal code"),
     ).toBeInTheDocument();
 
-    expect(screen.getByTestId("continue-button")).toBeDisabled();
+    // user is unable to continue and submit incomplete data
+    expect(screen.getByTestId("continue-button")).toBeEnabled();
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(screen.getByText("Enter a valid UK postcode")).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 
@@ -316,11 +326,14 @@ describe("picking an OS address", () => {
   });
 
   it("updates the address-autocomplete props when the postcode is changed", async () => {
+    const handleSubmit = jest.fn();
+
     const { user } = setup(
       <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
         <FindProperty
           description="Find your property"
           title="Type your postal code"
+          handleSubmit={handleSubmit}
         />
       </MockedProvider>,
     );
@@ -351,7 +364,13 @@ describe("picking an OS address", () => {
 
     // User is unable to continue and to submit incomplete data
     const continueButton = screen.getByTestId("continue-button");
-    expect(continueButton).toBeDisabled();
+    expect(continueButton).toBeEnabled();
+    await user.click(continueButton);
+
+    expect(
+      screen.getByTestId("error-message-address-autocomplete"),
+    ).toBeInTheDocument();
+    expect(handleSubmit).not.toHaveBeenCalled();
   });
 
   it("recovers previously submitted address when clicking the back button", async () => {

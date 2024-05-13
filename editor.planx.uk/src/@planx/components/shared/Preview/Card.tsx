@@ -7,6 +7,7 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { ApplicationPath } from "types";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import SaveResumeButton from "./SaveResumeButton";
 
@@ -14,6 +15,7 @@ interface Props {
   children: React.ReactNode;
   isValid?: boolean;
   handleSubmit?: (data?: any) => void;
+  error?: string;
 }
 
 export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
@@ -78,20 +80,21 @@ const Card: React.FC<Props> = ({
           {...props}
         >
           {children}
-
           <Box pt={2}>
             {handleSubmit && (
-              <Button
-                variant="contained"
-                color="prompt"
-                size="large"
-                type="submit"
-                disabled={!isValid}
-                onClick={async () => await handleSubmit()}
-                data-testid="continue-button"
-              >
-                Continue
-              </Button>
+              <ErrorWrapper error={props.error} id="continue-button">
+                <Button
+                  variant="contained"
+                  color="prompt"
+                  size="large"
+                  type="submit"
+                  disabled={!isValid}
+                  onClick={async () => await handleSubmit()}
+                  data-testid="continue-button"
+                >
+                  Continue
+                </Button>
+              </ErrorWrapper>
             )}
             {showSaveResumeButton && <SaveResumeButton />}
           </Box>

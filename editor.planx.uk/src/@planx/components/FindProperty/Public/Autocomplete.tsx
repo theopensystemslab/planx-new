@@ -10,6 +10,7 @@ import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
 import InputLabel from "ui/public/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 
 import type { SiteAddress } from "../model";
@@ -25,6 +26,12 @@ interface PickOSAddressProps {
   initialSelectedAddress?: Option;
   id?: string;
   description?: string;
+  showPostcodeError: boolean;
+  setShowPostcodeError: React.Dispatch<React.SetStateAction<boolean>>;
+  addressAutocompleteError?: string;
+  setAddressAutocompleteError: React.Dispatch<
+    React.SetStateAction<string | undefined>
+  >;
 }
 
 const AutocompleteWrapper = styled(Box)(({ theme }) => ({
@@ -55,7 +62,6 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   const [selectedOption, setSelectedOption] = useState<Option | undefined>(
     props.initialSelectedAddress ?? undefined,
   );
-  const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES, {
@@ -109,6 +115,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           ), // display value shown on PropertyInformation, should match <address-autocomplete /> options formatting
           source: "os",
         });
+        props.setAddressAutocompleteError(undefined);
       }
     };
 
@@ -124,7 +131,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
   }, [sanitizedPostcode, selectedOption]);
 
   const handleCheckPostcode = () => {
-    if (!sanitizedPostcode) setShowPostcodeError(true);
+    if (!sanitizedPostcode) props.setShowPostcodeError(true);
   };
 
   // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
@@ -135,7 +142,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
     if (selectedOption) {
       // Reset the selected address on change of postcode to ensures no visual mismatch between address and postcode
       setSelectedOption(undefined);
-      // Disable the "Continue" button if changing postcode before selecting new address after having come "back"
+      // Invalidate the "Continue" button if changing postcode before selecting new address after having come "back"
       props.setAddress(undefined);
     }
 
@@ -160,7 +167,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           id="postcode-input"
           value={postcode || ""}
           errorMessage={
-            showPostcodeError && !sanitizedPostcode
+            props.showPostcodeError && !sanitizedPostcode
               ? "Enter a valid UK postcode"
               : ""
           }
@@ -174,7 +181,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
             maxLength: 8,
             "aria-describedby": [
               props.description ? DESCRIPTION_TEXT : "",
-              showPostcodeError && !sanitizedPostcode
+              props.showPostcodeError && !sanitizedPostcode
                 ? `${ERROR_MESSAGE}-${props.id}`
                 : "",
             ]
@@ -184,16 +191,21 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
         />
       </InputLabel>
       {sanitizedPostcode && (
-        /* @ts-ignore */
-        <address-autocomplete
-          id="address-autocomplete"
-          data-testid="address-autocomplete-web-component"
-          postcode={sanitizedPostcode}
-          initialAddress={selectedOption?.title || ""}
-          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-          arrowStyle="light"
-          labelStyle="static"
-        />
+        <ErrorWrapper
+          error={props.addressAutocompleteError}
+          id={"address-autocomplete"}
+        >
+          {/* @ts-ignore */}
+          <address-autocomplete
+            id="address-autocomplete"
+            data-testid="address-autocomplete-web-component"
+            postcode={sanitizedPostcode}
+            initialAddress={selectedOption?.title || ""}
+            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+            arrowStyle="light"
+            labelStyle="static"
+          />
+        </ErrorWrapper>
       )}
     </AutocompleteWrapper>
   );
