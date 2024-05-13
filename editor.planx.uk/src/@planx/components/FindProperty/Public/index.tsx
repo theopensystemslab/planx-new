@@ -16,7 +16,12 @@ import ExternalPlanningSiteDialog, {
   DialogPurpose,
 } from "ui/public/ExternalPlanningSiteDialog";
 
-import { FindProperty, SiteAddress } from "../model";
+import {
+  FindProperty,
+  FindPropertyUserAction,
+  PASSPORT_COMPONENT_ACTION_KEY,
+  SiteAddress,
+} from "../model";
 import PickOSAddress from "./Autocomplete";
 import PlotNewAddress from "./Map";
 
@@ -222,6 +227,11 @@ function Component(props: Props) {
             newPassportData["property.boundary.title.area.hectares"] =
               squareMetresToHectares(areaSquareMetres);
           }
+
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            address?.source === "os"
+              ? FindPropertyUserAction.Existing
+              : FindPropertyUserAction.New;
 
           props.handleSubmit?.({ data: { ...newPassportData } });
         }

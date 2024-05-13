@@ -12,12 +12,13 @@ import { Operation } from "../sanitiseApplicationData/types";
  */
 
 const ALLOW_LIST = [
-  "proposal.projectType",
   "application.declaration.connection",
-  "property.type",
   "drawBoundary.action",
-  "user.role",
+  "findProperty.action",
   "property.constraints.planning",
+  "property.type",
+  "proposal.projectType",
+  "user.role",
 ];
 
 export const getAnalyzeSessionOperations = (): Operation[] => [
