@@ -11,10 +11,10 @@ import {
   MapContainer,
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
-import { GeoJSONObject } from "@turf/helpers";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import InputLabel from "ui/public/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 
 import { DEFAULT_NEW_ADDRESS_LABEL, SiteAddress } from "../model";
@@ -23,10 +23,15 @@ interface PlotNewAddressProps {
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
   setPage: React.Dispatch<React.SetStateAction<"os-address" | "new-address">>;
   initialProposedAddress?: SiteAddress;
-  boundary?: GeoJSONObject | undefined;
   id?: string;
   description?: string;
   descriptionLabel?: string;
+  mapValidationError?: string;
+  setMapValidationError: React.Dispatch<
+    React.SetStateAction<string | undefined>
+  >;
+  showSiteDescriptionError: boolean;
+  setShowSiteDescriptionError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type Coordinates = {
@@ -55,8 +60,6 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   const [siteDescription, setSiteDescription] = useState<string | null>(
     props.initialProposedAddress?.title ?? null,
   );
-  const [showSiteDescriptionError, setShowSiteDescriptionError] =
-    useState<boolean>(false);
 
   const [environment, boundaryBBox] = useStore((state) => [
     state.previewEnvironment,
@@ -85,6 +88,17 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
     };
   }, [setCoordinates]);
 
+  const mapValidationErrorRef = useRef(props.mapValidationError);
+  useEffect(() => {
+    mapValidationErrorRef.current = props.mapValidationError;
+  }, [props.mapValidationError]);
+
+  useEffect(() => {
+    if (mapValidationErrorRef.current) {
+      props.setMapValidationError(undefined);
+    }
+  }, [coordinates]);
+
   useEffect(() => {
     // when we have all required address parts, call setAddress to enable the "Continue" button
     if (siteDescription && coordinates) {
@@ -99,7 +113,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   }, [coordinates, siteDescription]);
 
   const handleSiteDescriptionCheck = () => {
-    if (!siteDescription) setShowSiteDescriptionError(true);
+    if (!siteDescription) props.setShowSiteDescriptionError(true);
   };
 
   const handleSiteDescriptionInputChange = (
@@ -111,54 +125,65 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
 
   return (
     <>
-      <MapContainer environment={environment} size="large">
-        <p style={visuallyHidden}>
-          An interactive map centred on the local authority district, showing
-          the Ordnance Survey basemap. Click to place a point representing your
-          proposed site location.
-        </p>
-        {/* @ts-ignore */}
-        <my-map
-          id="plot-new-address-map"
-          ariaLabelOlFixedOverlay="An interactive map for providing your site location"
-          data-testid="map-web-component"
-          zoom={14}
-          drawMode
-          drawType="Point"
-          geojsonData={JSON.stringify(props?.boundary)}
-          geojsonColor="#efefef"
-          geojsonBuffer={10}
-          resetControlImage="trash"
-          showScale
-          showNorthArrow
-          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-          clipGeojsonData={JSON.stringify(boundaryBBox)}
-          collapseAttributions={window.innerWidth < 500 ? true : undefined}
-        />
-        <MapFooter>
+      <ErrorWrapper error={props.mapValidationError} id="plot-new-address-map">
+        <MapContainer environment={environment} size="large">
+          <p style={visuallyHidden}>
+            An interactive map centred on the local authority district, showing
+            the Ordnance Survey basemap. Click to place a point representing
+            your proposed site location.
+          </p>
+          {/* @ts-ignore */}
+          <my-map
+            id="plot-new-address-map"
+            ariaLabelOlFixedOverlay="An interactive map for providing your site location"
+            data-testid="map-web-component"
+            zoom={14}
+            drawMode
+            drawType="Point"
+            drawGeojsonData={
+              coordinates &&
+              JSON.stringify({
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [coordinates?.longitude, coordinates?.latitude],
+                },
+                properties: {},
+              })
+            }
+            drawGeojsonDataBuffer={20}
+            resetControlImage="trash"
+            showScale
+            showNorthArrow
+            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+            clipGeojsonData={JSON.stringify(boundaryBBox)}
+            collapseAttributions={window.innerWidth < 500 ? true : undefined}
+          />
+        </MapContainer>
+      </ErrorWrapper>
+      <MapFooter>
+        <Typography variant="body2">
+          The coordinate location of your address point is:{" "}
+          <strong>
+            {`${
+              (coordinates?.x && Math.round(coordinates.x)) || 0
+            } Easting (X), ${
+              (coordinates?.y && Math.round(coordinates.y)) || 0
+            } Northing (Y)`}
+          </strong>
+        </Typography>
+        <Link
+          component="button"
+          onClick={() => {
+            props.setPage("os-address");
+            props.setAddress(undefined);
+          }}
+        >
           <Typography variant="body2">
-            The coordinate location of your address point is:{" "}
-            <strong>
-              {`${
-                (coordinates?.x && Math.round(coordinates.x)) || 0
-              } Easting (X), ${
-                (coordinates?.y && Math.round(coordinates.y)) || 0
-              } Northing (Y)`}
-            </strong>
+            I want to select an existing address
           </Typography>
-          <Link
-            component="button"
-            onClick={() => {
-              props.setPage("os-address");
-              props.setAddress(undefined);
-            }}
-          >
-            <Typography variant="body2">
-              I want to select an existing address
-            </Typography>
-          </Link>
-        </MapFooter>
-      </MapContainer>
+        </Link>
+      </MapFooter>
       <DescriptionInput data-testid="new-address-input" mt={2}>
         <InputLabel
           label={props.descriptionLabel || DEFAULT_NEW_ADDRESS_LABEL}
@@ -171,7 +196,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
             id={`${props.id}-siteDescription`}
             value={siteDescription || ""}
             errorMessage={
-              showSiteDescriptionError && !siteDescription
+              props.showSiteDescriptionError && !siteDescription
                 ? `Enter a site description such as "Land at..."`
                 : ""
             }
@@ -183,7 +208,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
             inputProps={{
               "aria-describedby": [
                 props.description ? DESCRIPTION_TEXT : "",
-                showSiteDescriptionError && !siteDescription
+                props.showSiteDescriptionError && !siteDescription
                   ? `${ERROR_MESSAGE}-${props.id}`
                   : "",
               ]

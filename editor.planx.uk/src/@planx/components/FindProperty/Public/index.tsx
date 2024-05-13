@@ -7,9 +7,9 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";
-import { Feature, GeoJSONObject } from "@turf/helpers";
+import { Feature } from "@turf/helpers";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import { Store } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import ExternalPlanningSiteDialog, {
@@ -51,6 +51,10 @@ function Component(props: Props) {
       : "os-address";
   const [page, setPage] = useState<"os-address" | "new-address">(startPage);
 
+  const [mapValidationError, setMapValidationError] = useState<string>();
+  const [showSiteDescriptionError, setShowSiteDescriptionError] =
+    useState<boolean>(false);
+
   const [address, setAddress] = useState<SiteAddress | undefined>(
     previouslySubmittedData?._address,
   );
@@ -59,9 +63,6 @@ function Component(props: Props) {
   >();
   const [regions, setRegions] = useState<string[] | undefined>();
   const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
-  const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
-
-  const teamSettings = useStore((state) => state.teamSettings);
 
   // Use the address point to fetch the Local Authority District(s) & region via Digital Land
   const options = new URLSearchParams({
@@ -81,21 +82,6 @@ function Component(props: Props) {
   const { data, isValidating } = useSWR(
     () =>
       address?.latitude && address?.longitude ? digitalLandEndpoint : null,
-    fetcher,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 1,
-    },
-  );
-
-  // if allowNewAddresses is on, fetch the boundary geojson for this team to position the map view or default to London
-  //   example value for team.settings.boundary is https://www.planning.data.gov.uk/entity/8600093.geojson
-  const { data: geojson } = useSWR(
-    () =>
-      props.allowNewAddresses && teamSettings?.boundary
-        ? teamSettings.boundary
-        : null,
     fetcher,
     {
       shouldRetryOnError: true,
@@ -124,11 +110,62 @@ function Component(props: Props) {
     }
   }, [data, address]);
 
-  useEffect(() => {
-    if (geojson) setBoundary(geojson);
-  }, [geojson]);
+  const validateAndSubmit = () => {
+    // TODO `if (isValidating)` on either page, wrap Continue button in error mesage?
 
-  function getPageBody() {
+    if (page === "new-address") {
+      if (address?.x === undefined && address?.y === undefined)
+        setMapValidationError("Click or tap to place a point on the map");
+
+      if (address?.title === undefined) setShowSiteDescriptionError(true);
+    }
+
+    if (address) {
+      const newPassportData: Store.userData["data"] = {};
+      newPassportData["_address"] = address;
+      if (address?.planx_value) {
+        newPassportData["property.type"] = [address.planx_value];
+      }
+
+      if (localAuthorityDistricts) {
+        newPassportData["property.localAuthorityDistrict"] =
+          localAuthorityDistricts;
+      }
+      if (regions) {
+        newPassportData["property.region"] = regions;
+      }
+      if (titleBoundary) {
+        const areaSquareMetres =
+          Math.round(area(titleBoundary as Feature) * 100) / 100;
+        newPassportData["property.boundary.title"] = titleBoundary;
+        newPassportData["property.boundary.title.area"] = areaSquareMetres;
+        newPassportData["property.boundary.title.area.hectares"] =
+          squareMetresToHectares(areaSquareMetres);
+      }
+
+      newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+        address?.source === "os"
+          ? FindPropertyUserAction.Existing
+          : FindPropertyUserAction.New;
+
+      props.handleSubmit?.({ data: { ...newPassportData } });
+    }
+  };
+
+  return (
+    <Card
+      handleSubmit={validateAndSubmit}
+      isValid={
+        page === "new-address" && !isValidating
+          ? true
+          : Boolean(address) && !isValidating
+      }
+    >
+      {getBody()}
+    </Card>
+  );
+
+  function getBody() {
     if (props.allowNewAddresses && page === "new-address") {
       return (
         <>
@@ -143,11 +180,20 @@ function Component(props: Props) {
               previouslySubmittedData?._address?.source === "proposed" &&
               previouslySubmittedData?._address
             }
-            boundary={boundary}
             id={props.id}
             description={props.newAddressDescription || ""}
             descriptionLabel={props.newAddressDescriptionLabel || ""}
+            mapValidationError={mapValidationError}
+            setMapValidationError={setMapValidationError}
+            showSiteDescriptionError={showSiteDescriptionError}
+            setShowSiteDescriptionError={setShowSiteDescriptionError}
           />
+          {Boolean(address) && isValidating && (
+            <DelayedLoadingIndicator
+              msDelayBeforeVisible={50}
+              text="Fetching data..."
+            />
+          )}
         </>
       );
     } else {
@@ -200,44 +246,4 @@ function Component(props: Props) {
       );
     }
   }
-
-  return (
-    <Card
-      isValid={Boolean(address) && !isValidating}
-      handleSubmit={() => {
-        if (address) {
-          const newPassportData: Store.userData["data"] = {};
-          newPassportData["_address"] = address;
-          if (address?.planx_value) {
-            newPassportData["property.type"] = [address.planx_value];
-          }
-
-          if (localAuthorityDistricts) {
-            newPassportData["property.localAuthorityDistrict"] =
-              localAuthorityDistricts;
-          }
-          if (regions) {
-            newPassportData["property.region"] = regions;
-          }
-          if (titleBoundary) {
-            const areaSquareMetres =
-              Math.round(area(titleBoundary as Feature) * 100) / 100;
-            newPassportData["property.boundary.title"] = titleBoundary;
-            newPassportData["property.boundary.title.area"] = areaSquareMetres;
-            newPassportData["property.boundary.title.area.hectares"] =
-              squareMetresToHectares(areaSquareMetres);
-          }
-
-          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
-            address?.source === "os"
-              ? FindPropertyUserAction.Existing
-              : FindPropertyUserAction.New;
-
-          props.handleSubmit?.({ data: { ...newPassportData } });
-        }
-      }}
-    >
-      {getPageBody()}
-    </Card>
-  );
 }
