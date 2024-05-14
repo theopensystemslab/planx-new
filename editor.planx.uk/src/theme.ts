@@ -260,6 +260,13 @@ const getThemeOptions = ({
             padding: 0,
             border: 0,
           },
+          img: {
+            // a11y: Ensure images are visible in Windows high contrast mode
+            "@media (forced-colors: active)": {
+              forcedColorAdjust: "none",
+              backgroundColor: "white",
+            },
+          },
         },
       },
       MuiButtonBase: {
