@@ -1361,6 +1361,9 @@
                 _is_null: true
         check: null
 - table:
+    name: submission_services_log
+    schema: public
+- table:
     name: submission_services_summary
     schema: public
   select_permissions:
