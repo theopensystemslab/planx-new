@@ -61,17 +61,15 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
   const renderMemberTable = (members: TeamMember[]) => {
     if (members.length === 0) {
       return (
-        <>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <strong>No members found</strong>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-          </Table>
-        </>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <strong>No members found</strong>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
       );
     }
     return (
