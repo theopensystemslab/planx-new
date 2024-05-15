@@ -16,7 +16,7 @@ import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import { number, object, string } from "yup";
+import { mixed, object, string } from "yup";
 
 export interface IQuestion {
   id?: string;
@@ -65,7 +65,9 @@ const Question: React.FC<IQuestion> = (props) => {
     validationSchema: object({
       selected: object({
         id: string().required("Select your answer before continuing"),
-        a: number().required(),
+        a: mixed().required().test(value => 
+          typeof value === "number" || 
+          typeof value === "string")
       })
     }),
   });
