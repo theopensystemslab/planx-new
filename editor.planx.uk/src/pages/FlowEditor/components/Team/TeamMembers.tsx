@@ -2,7 +2,6 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,18 +12,19 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { Role, User } from "@opensystemslab/planx-core/types";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import EditorRow from "ui/editor/EditorRow";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   background: theme.palette.background.dark,
   color: theme.palette.common.white,
   fontSize: "1em",
-  fontWeight: "600",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
   marginRight: theme.spacing(1),
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-child(even)": {
+  "&:nth-of-type(even)": {
     background: theme.palette.background.paper,
   },
 }));
