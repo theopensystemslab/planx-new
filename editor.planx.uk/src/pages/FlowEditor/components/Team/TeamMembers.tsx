@@ -36,6 +36,7 @@ export type TeamMember = Omit<User, "teams" | "isPlatformAdmin"> & {
 const roleLabels: Record<string, string> = {
   platformAdmin: "Admin",
   teamEditor: "Editor",
+  teamViewer: "Viewer",
 };
 
 interface Props {
@@ -130,7 +131,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
             Team editors
           </Typography>
           <Typography variant="body1">
-            Editors have access to edit your flows and services.
+            Editors have access to edit your services.
           </Typography>
           {renderMemberTable(otherRoles)}
         </EditorRow>
@@ -143,15 +144,18 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
           </Typography>
           {renderMemberTable(platformAdmins)}
         </EditorRow>
-        <EditorRow>
-          <Typography variant="h2" component="h3" gutterBottom>
-            Archived team editors
-          </Typography>
-          <Typography variant="body1">
-            Past members who no longer have access to edit your team.
-          </Typography>
-          {renderMemberTable(archivedMembers)}
-        </EditorRow>
+        {archivedMembers.length > 0 && (
+          <EditorRow>
+            <Typography variant="h2" component="h3" gutterBottom>
+              Archived team editors
+            </Typography>
+            <Typography variant="body1">
+              Past team members who no longer have access to the Editor, but may
+              be part of the edit history of your services.
+            </Typography>
+            {renderMemberTable(archivedMembers)}
+          </EditorRow>
+        )}
       </Box>
     </Container>
   );
