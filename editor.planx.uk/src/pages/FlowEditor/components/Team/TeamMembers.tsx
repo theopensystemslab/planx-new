@@ -43,7 +43,9 @@ interface Props {
 }
 
 export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
-  const platformAdmins = teamMembersByRole.platformAdmin || [];
+  const platformAdmins = (teamMembersByRole.platformAdmin || []).filter(
+    (member) => member.email,
+  );
   const otherRoles = Object.keys(teamMembersByRole)
     .filter((role) => role !== "platformAdmin")
     .reduce((acc: TeamMember[], role) => {
