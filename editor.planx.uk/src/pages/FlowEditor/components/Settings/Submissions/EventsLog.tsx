@@ -1,3 +1,4 @@
+import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
@@ -64,10 +65,10 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
             <TableCell sx={{ width: 200 }}>
               <strong>Date</strong>
             </TableCell>
-            <TableCell>
+            <TableCell sx={{ width: 380 }}>
               <strong>Session ID</strong>
             </TableCell>
-            <TableCell></TableCell>
+            <TableCell sx={{ width: 70 }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -97,20 +98,20 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
             <Avatar
               sx={{
                 background: "none",
-                marginRight: (theme) => theme.spacing(1),
+                marginRight: (theme) => theme.spacing(1.5),
               }}
             >
-              {submission.eventType === "Pay" ? (
-                <Payment
-                  color={submission.status === "Success" ? "success" : "error"}
-                />
+              {submission.status === "Success" ? (
+                <CheckCircleIcon color="success" />
               ) : (
-                <Send
-                  color={submission.status === "Success" ? "success" : "error"}
-                />
+                <CancelIcon color="error" />
               )}
             </Avatar>
-            {submission.eventType}
+
+            {submission.eventType === "Pay" ? <Payment /> : <Send />}
+            <Typography variant="body2" ml={0.5}>
+              {submission.eventType}
+            </Typography>
           </Box>
         </TableCell>
         <TableCell>
