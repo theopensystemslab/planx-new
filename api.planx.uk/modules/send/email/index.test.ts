@@ -118,7 +118,9 @@ describe(`sending an application by email to a planning office`, () => {
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          message: 'Successfully sent "Submit" email',
+          message: `Successfully sent to email`,
+          inbox: "planners@southwark.gov.uk",
+          govuk_notify_template: "Submit",
         });
       });
   });

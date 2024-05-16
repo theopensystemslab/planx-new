@@ -69,7 +69,9 @@ export async function sendToEmail(
     );
 
     return res.status(200).send({
-      message: `Successfully sent "Submit" email`,
+      message: `Successfully sent to email`,
+      inbox: sendToEmail,
+      govuk_notify_template: "Submit",
     });
   } catch (error) {
     return next({

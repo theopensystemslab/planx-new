@@ -65,13 +65,13 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
       <Table sx={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 240 }}>
+            <TableCell sx={{ width: 250 }}>
               <strong>Event</strong>
             </TableCell>
             <TableCell sx={{ width: 130 }}>
               <strong>Status</strong>
             </TableCell>
-            <TableCell sx={{ width: 130 }}>
+            <TableCell sx={{ width: 120 }}>
               <strong>Date</strong>
             </TableCell>
             <TableCell sx={{ width: 350 }}>
@@ -81,8 +81,8 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {submissions.map((submission) => (
-            <CollapsibleRow {...submission} />
+          {submissions.map((submission, i) => (
+            <CollapsibleRow {...submission} key={i} />
           ))}
         </TableBody>
       </Table>
@@ -94,7 +94,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <React.Fragment key={submission.eventId}>
+    <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <Box
@@ -106,7 +106,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
           >
             {submission.eventType === "Pay" ? <Payment /> : <Send />}
             <Typography variant="body2" ml={1}>
-              {submission.eventType}
+              {submission.eventType} {submission.retry && ` [Retry]`}
             </Typography>
           </Box>
         </TableCell>
@@ -115,13 +115,6 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
             <Chip label="Success" size="small" color="success" />
           ) : (
             <Chip label={submission.status} size="small" color="error" />
-          )}
-          {submission.retry && (
-            <Chip
-              label="Retry"
-              size="small"
-              sx={{ marginTop: 0.5, background: "#ddd" }}
-            />
           )}
         </TableCell>
         <TableCell>
