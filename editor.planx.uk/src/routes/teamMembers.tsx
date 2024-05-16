@@ -1,7 +1,7 @@
 import { Role, User } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { groupBy } from "lodash";
-import { NotFoundError, compose, mount, route, withData } from "navi";
+import { compose, mount, NotFoundError, route, withData } from "navi";
 import {
   TeamMember,
   TeamMembers,

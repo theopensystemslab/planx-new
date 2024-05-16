@@ -1,7 +1,7 @@
-import { formatOps,Graph } from "../index";
+import { formatOps, Graph } from "../index";
 
 describe("Update operations", () => {
-  test("Updating a single property of a node", () => {
+  test("Updating a single property of a node that is in `allowProps`", () => {
     const ops = [
       {
         p: ["FW5G3EMBI3", "data", "text"],
@@ -11,7 +11,21 @@ describe("Update operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      'Updated Checklist text from "Which fruits?" to "Which vegetables?"',
+      'Updated Checklist text from "Which fruits?" to "Which vegetables?"', // shows prop name "fn" and content "from x to y"
+    ]);
+  });
+
+  test("Updating a single property of a node that is not in `allowProps`", () => {
+    const ops = [
+      {
+        p: ["FW5G3EMBI3", "data", "info"],
+        oi: "New help text",
+        od: "Old help text",
+      },
+    ];
+
+    expect(formatOps(flowWithChecklist, ops)).toEqual([
+      `Updated Checklist help text ("Why it matters")`, // shows prop name "info", without content
     ]);
   });
 
@@ -32,9 +46,9 @@ describe("Update operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      'Added Checklist fn "fruit"',
-      'Added Answer val "berry.blue"',
-      'Added Answer val "banana"',
+      'Added Checklist data field "fruit"',
+      'Added Answer data field "berry.blue"',
+      'Added Answer data field "banana"',
     ]);
   });
 });
@@ -118,12 +132,8 @@ describe("Insert operations", () => {
     ]);
   });
 
-  test("Adding a new child and data property to an existing node", () => {
+  test("Adding a new child to an existing node", () => {
     const ops = [
-      {
-        p: ["FW5G3EMBI3", "data", "description"],
-        oi: "<p>Fruits contain seeds and come from the flower of a plant</p>",
-      },
       {
         p: ["FW5G3EMBI3", "edges"],
         oi: ["WDwUTbF7Gq", "SO5XbLwSYp", "xTBfSd1Tjy", "zzQAMXexRj"],
@@ -141,9 +151,34 @@ describe("Insert operations", () => {
     ];
 
     expect(formatOps(flowWithChecklist, ops)).toEqual([
-      'Added Checklist description "<p>Fruits contain seeds and come from the flower of a plant</p>"',
       "Updated order of Checklist edges",
       'Added Answer "Strawberry"',
+    ]);
+  });
+
+  test("Adding a data property to an existing node that is in `allowProps`", () => {
+    const ops = [
+      {
+        p: ["FW5G3EMBI3", "data", "fn"],
+        oi: "food.fruit",
+      },
+    ];
+
+    expect(formatOps(flowWithChecklist, ops)).toEqual([
+      `Added Checklist data field "food.fruit"`, // shows prop name "fn" and content
+    ]);
+  });
+
+  test("Adding a data property to an existing node that is not in `allowProps`", () => {
+    const ops = [
+      {
+        p: ["FW5G3EMBI3", "data", "description"],
+        oi: "<p>Fruits contain seeds and come from the flower of a plant</p>",
+      },
+    ];
+
+    expect(formatOps(flowWithChecklist, ops)).toEqual([
+      "Added Checklist description", // only shows prop name "description", not content
     ]);
   });
 });

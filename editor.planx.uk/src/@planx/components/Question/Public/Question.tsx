@@ -65,10 +65,12 @@ const Question: React.FC<IQuestion> = (props) => {
     validationSchema: object({
       selected: object({
         id: string().required("Select your answer before continuing"),
-        a: mixed().required().test(value => 
-          typeof value === "number" || 
-          typeof value === "string")
-      })
+        a: mixed()
+          .required()
+          .test(
+            (value) => typeof value === "number" || typeof value === "string",
+          ),
+      }),
     }),
   });
 
@@ -82,9 +84,7 @@ const Question: React.FC<IQuestion> = (props) => {
   }
 
   return (
-    <Card
-      handleSubmit={formik.handleSubmit}
-    >
+    <Card handleSubmit={formik.handleSubmit}>
       <QuestionHeader
         title={props.text}
         description={props.description}

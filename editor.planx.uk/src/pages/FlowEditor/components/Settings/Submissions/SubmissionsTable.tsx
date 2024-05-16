@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { SubmissionData } from "./submissionData";
 
@@ -23,7 +24,7 @@ const StyledTable = styled(Table)(({ theme }) => ({
   "& th": {
     background: theme.palette.text.primary,
     color: theme.palette.common.white,
-    fontWeight: 600,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },
   "& td": {
     borderBottomColor: theme.palette.border.main,
