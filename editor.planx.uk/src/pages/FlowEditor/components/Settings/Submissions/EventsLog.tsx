@@ -1,11 +1,9 @@
-import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import Payment from "@mui/icons-material/Payment";
 import Send from "@mui/icons-material/Send";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
@@ -59,16 +57,19 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
       <Table sx={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 300 }}>
+            <TableCell sx={{ width: 240 }}>
               <strong>Event</strong>
             </TableCell>
-            <TableCell sx={{ width: 200 }}>
+            <TableCell sx={{ width: 110 }}>
+              <strong>Status</strong>
+            </TableCell>
+            <TableCell sx={{ width: 120 }}>
               <strong>Date</strong>
             </TableCell>
             <TableCell sx={{ width: 380 }}>
               <strong>Session ID</strong>
             </TableCell>
-            <TableCell sx={{ width: 70 }}></TableCell>
+            <TableCell sx={{ width: 60 }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -95,24 +96,18 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
               alignItems: "center",
             }}
           >
-            <Avatar
-              sx={{
-                background: "none",
-                marginRight: (theme) => theme.spacing(1.5),
-              }}
-            >
-              {submission.status === "Success" ? (
-                <CheckCircleIcon color="success" />
-              ) : (
-                <CancelIcon color="error" />
-              )}
-            </Avatar>
-
             {submission.eventType === "Pay" ? <Payment /> : <Send />}
-            <Typography variant="body2" ml={0.5}>
+            <Typography variant="body2" ml={1}>
               {submission.eventType}
             </Typography>
           </Box>
+        </TableCell>
+        <TableCell>
+          {submission.status === "Success" ? (
+            <Chip label="Success" size="small" color="success" />
+          ) : (
+            <Chip label="Error" size="small" color="error" />
+          )}
         </TableCell>
         <TableCell>
           {format(new Date(submission.createdAt), "dd/MM/yy hh:mm:ss")}
@@ -129,7 +124,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         </TableCell>
       </TableRow>
       <TableRow sx={{ background: (theme) => theme.palette.background.paper }}>
-        <TableCell sx={{ padding: 0, border: "none" }} colSpan={4}>
+        <TableCell sx={{ padding: 0, border: "none" }} colSpan={5}>
           <Collapse
             in={open}
             timeout="auto"
