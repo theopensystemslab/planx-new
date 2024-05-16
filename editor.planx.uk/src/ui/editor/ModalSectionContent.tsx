@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 interface Props {
   title?: string;
@@ -47,7 +48,7 @@ const Title = styled(Typography)(({ theme }) => ({
 const Subtitle = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.primary,
   paddingBottom: theme.spacing(2),
-  fontWeight: 600,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
 })) as typeof Typography;
 
 const Author = styled("span")(({ theme }) => ({

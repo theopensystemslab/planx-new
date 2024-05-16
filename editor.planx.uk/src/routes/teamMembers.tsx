@@ -1,7 +1,7 @@
 import { Role, User } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { groupBy } from "lodash";
-import { compose, mount, route, withData } from "navi";
+import { compose, mount, NotFoundError, route, withData } from "navi";
 import {
   TeamMember,
   TeamMembers,
@@ -22,7 +22,13 @@ const teamMembersRoutes = compose(
   })),
 
   mount({
-    "/": route(async () => {
+    "/": route(async (req) => {
+      const isAuthorised = useStore.getState().canUserEditTeam(req.params.team);
+      if (!isAuthorised)
+        throw new NotFoundError(
+          `User does not have access to ${req.originalUrl}`,
+        );
+
       const teamSlug = useStore.getState().teamSlug;
 
       const {

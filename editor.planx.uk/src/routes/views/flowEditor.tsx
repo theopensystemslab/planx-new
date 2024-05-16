@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
 import { NaviRequest, NotFoundError } from "navi";
+import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
 import { View } from "react-navi";
 
 import { client } from "../../lib/graphql";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import type { FlowSettings } from "../../types";
-import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 
 interface FlowMetadata {
   flowSettings: FlowSettings;
@@ -67,12 +67,11 @@ const getFlowMetadata = async (
   return metadata;
 };
 
-
 /**
  * View wrapper for all flowEditor routes
  */
 export const flowEditorView = async (req: NaviRequest) => {
-  const [ flow ] = req.params.flow.split(",");
+  const [flow] = req.params.flow.split(",");
   const { flowSettings, flowAnalyticsLink, isFlowPublished } =
     await getFlowMetadata(flow, req.params.team);
   useStore.setState({ flowSettings, flowAnalyticsLink, isFlowPublished });

@@ -15,6 +15,8 @@ import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { mixed, object, string } from "yup";
 
 export interface IQuestion {
   id?: string;
@@ -57,15 +59,19 @@ const Question: React.FC<IQuestion> = (props) => {
         a: previousResponseKey ?? undefined,
       },
     },
-    onSubmit: (values) => {
-      setTimeout(
-        () => props.handleSubmit({ answers: [values.selected.id] }),
-        theme.transitions.duration.standard,
-      );
-    },
-    validate: () => {
-      // do nothing
-    },
+    onSubmit: (values) => props.handleSubmit({ answers: [values.selected.id] }),
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: object({
+      selected: object({
+        id: string().required("Select your answer before continuing"),
+        a: mixed()
+          .required()
+          .test(
+            (value) => typeof value === "number" || typeof value === "string",
+          ),
+      }),
+    }),
   });
 
   let layout = QuestionLayout.Basic;
@@ -78,10 +84,7 @@ const Question: React.FC<IQuestion> = (props) => {
   }
 
   return (
-    <Card
-      handleSubmit={formik.handleSubmit}
-      isValid={Boolean(formik.values.selected.id)}
-    >
+    <Card handleSubmit={formik.handleSubmit}>
       <QuestionHeader
         title={props.text}
         description={props.description}
@@ -100,68 +103,70 @@ const Question: React.FC<IQuestion> = (props) => {
           >
             {props.text}
           </FormLabel>
-          <RadioGroup
-            aria-labelledby={`radio-buttons-group-label-${props.id}`}
-            name={`radio-buttons-group-${props.id}`}
-            value={formik.values.selected.id}
-          >
-            <Grid
-              container
-              spacing={layout === QuestionLayout.Basic ? 0 : 2}
-              alignItems="stretch"
+          <ErrorWrapper id={props.id} error={formik.errors.selected?.id}>
+            <RadioGroup
+              aria-labelledby={`radio-buttons-group-label-${props.id}`}
+              name={`radio-buttons-group-${props.id}`}
+              value={formik.values.selected.id}
             >
-              {props.responses?.map((response) => {
-                const onChange = () => {
-                  formik.setFieldValue("selected.id", response.id);
-                  formik.setFieldValue("selected.a", response.responseKey);
-                };
-                const buttonProps = {
-                  onChange,
-                };
+              <Grid
+                container
+                spacing={layout === QuestionLayout.Basic ? 0 : 2}
+                alignItems="stretch"
+              >
+                {props.responses?.map((response) => {
+                  const onChange = () => {
+                    formik.setFieldValue("selected.id", response.id);
+                    formik.setFieldValue("selected.a", response.responseKey);
+                  };
+                  const buttonProps = {
+                    onChange,
+                  };
 
-                switch (layout) {
-                  case QuestionLayout.Basic:
-                    return (
-                      <FormWrapper key={`wrapper-${response.id}`}>
-                        <Grid item xs={12} ml={1} key={`grid-${response.id}`}>
-                          <BasicRadio
-                            {...buttonProps}
-                            {...response}
-                            data-testid="basic-radio"
-                            key={`basic-radio-${response.id}`}
-                          />
+                  switch (layout) {
+                    case QuestionLayout.Basic:
+                      return (
+                        <FormWrapper key={`wrapper-${response.id}`}>
+                          <Grid item xs={12} ml={1} key={`grid-${response.id}`}>
+                            <BasicRadio
+                              {...buttonProps}
+                              {...response}
+                              data-testid="basic-radio"
+                              key={`basic-radio-${response.id}`}
+                            />
+                          </Grid>
+                        </FormWrapper>
+                      );
+                    case QuestionLayout.Descriptions:
+                      return (
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          contentWrap={4}
+                          key={response.id}
+                          data-testid="description-radio"
+                        >
+                          <DescriptionRadio {...buttonProps} {...response} />
                         </Grid>
-                      </FormWrapper>
-                    );
-                  case QuestionLayout.Descriptions:
-                    return (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        contentWrap={4}
-                        key={response.id}
-                        data-testid="description-radio"
-                      >
-                        <DescriptionRadio {...buttonProps} {...response} />
-                      </Grid>
-                    );
-                  case QuestionLayout.Images:
-                    return (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        contentWrap={4}
-                        key={response.id}
-                      >
-                        <ImageRadio {...buttonProps} {...response} />
-                      </Grid>
-                    );
-                }
-              })}
-            </Grid>
-          </RadioGroup>
+                      );
+                    case QuestionLayout.Images:
+                      return (
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          contentWrap={4}
+                          key={response.id}
+                        >
+                          <ImageRadio {...buttonProps} {...response} />
+                        </Grid>
+                      );
+                  }
+                })}
+              </Grid>
+            </RadioGroup>
+          </ErrorWrapper>
         </FormControl>
       </FullWidthWrapper>
     </Card>
