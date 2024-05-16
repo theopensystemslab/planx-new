@@ -129,8 +129,17 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         </TableCell>
       </TableRow>
       <TableRow sx={{ background: (theme) => theme.palette.background.paper }}>
-        <TableCell sx={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+        <TableCell sx={{ padding: 0, border: "none" }} colSpan={4}>
+          <Collapse
+            in={open}
+            timeout="auto"
+            unmountOnExit
+            sx={{
+              borderBottom: (theme) =>
+                `1px solid ${theme.palette.border.light}`,
+              padding: (theme) => theme.spacing(0, 1.5),
+            }}
+          >
             <FormattedResponse {...submission} />
           </Collapse>
         </TableCell>
