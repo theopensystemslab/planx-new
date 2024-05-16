@@ -103,7 +103,7 @@ const Question: React.FC<IQuestion> = (props) => {
           >
             {props.text}
           </FormLabel>
-          <ErrorWrapper id={`${props.id}-error`} error={formik.errors.selected?.id}>
+          <ErrorWrapper id={props.id} error={formik.errors.selected?.id}>
             <RadioGroup
               aria-labelledby={`radio-buttons-group-label-${props.id}`}
               name={`radio-buttons-group-${props.id}`}
