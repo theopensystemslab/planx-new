@@ -239,6 +239,7 @@
           - feedback_type
           - flow_id
           - id
+          - node_data
           - node_id
           - node_type
           - status
