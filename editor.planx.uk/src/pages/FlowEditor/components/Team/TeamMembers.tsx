@@ -61,7 +61,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
     return roleLabels[role] || role;
   };
 
-  const renderMemberTable = (members: TeamMember[]) => {
+  const MembersTable: React.FC<{ members: TeamMember[] }> = ({ members }) => {
     if (members.length === 0) {
       return (
         <Table>
@@ -133,7 +133,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
           <Typography variant="body1">
             Editors have access to edit your services.
           </Typography>
-          {renderMemberTable(otherRoles)}
+          <MembersTable members={otherRoles} />
         </EditorRow>
         <EditorRow>
           <Typography variant="h2" component="h3" gutterBottom>
@@ -142,7 +142,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
           <Typography variant="body1">
             Admins have editor access across all teams.
           </Typography>
-          {renderMemberTable(platformAdmins)}
+          <MembersTable members={platformAdmins} />
         </EditorRow>
         {archivedMembers.length > 0 && (
           <EditorRow>
@@ -153,7 +153,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
               Past team members who no longer have access to the Editor, but may
               be part of the edit history of your services.
             </Typography>
-            {renderMemberTable(archivedMembers)}
+            <MembersTable members={archivedMembers} />
           </EditorRow>
         )}
       </Box>
