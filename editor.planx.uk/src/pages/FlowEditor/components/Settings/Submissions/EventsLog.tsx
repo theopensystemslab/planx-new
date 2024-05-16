@@ -1,3 +1,4 @@
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import Payment from "@mui/icons-material/Payment";
@@ -54,7 +55,7 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
 
   return (
     <TableContainer>
-      <Table>
+      <Table sx={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
             <TableCell sx={{ width: 300 }}>
@@ -85,30 +86,32 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   return (
     <React.Fragment key={submission.eventId}>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Avatar
+        <TableCell>
+          <Box
             sx={{
-              background: "none",
-              marginRight: (theme) => theme.spacing(1),
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
-            {submission.eventType === "Pay" ? (
-              <Payment
-                color={submission.status === "Success" ? "success" : "error"}
-              />
-            ) : (
-              <Send
-                color={submission.status === "Success" ? "success" : "error"}
-              />
-            )}
-          </Avatar>
-          {submission.eventType}
+            <Avatar
+              sx={{
+                background: "none",
+                marginRight: (theme) => theme.spacing(1),
+              }}
+            >
+              {submission.eventType === "Pay" ? (
+                <Payment
+                  color={submission.status === "Success" ? "success" : "error"}
+                />
+              ) : (
+                <Send
+                  color={submission.status === "Success" ? "success" : "error"}
+                />
+              )}
+            </Avatar>
+            {submission.eventType}
+          </Box>
         </TableCell>
         <TableCell>
           {format(new Date(submission.createdAt), "dd/MM/yy hh:mm:ss")}
@@ -153,6 +156,7 @@ const FormattedResponse: React.FC<Submission> = (submission) => {
           margin: 1,
           maxWidth: "contentWrap",
           overflowWrap: "break-word",
+          whiteSpace: "pre-wrap",
         }}
       >
         {submission.status === "Success"
