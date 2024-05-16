@@ -19,12 +19,20 @@ export interface Submission {
     | "Upload to AWS S3";
   status?:
     | "Success"
-    | "Failed (500)"
+    | "Failed (500)" // Hasura scheduled event status codes
     | "Failed (502)"
     | "Failed (503)"
     | "Failed (504)"
     | "Failed (400)"
-    | "Failed (401)";
+    | "Failed (401)"
+    | "Started" // Payment status enum codes (excluding "Created")
+    | "Submitted"
+    | "Capturable"
+    | "Failed"
+    | "Cancelled"
+    | "Error"
+    | "Unknown";
+  retry: boolean;
   response: Record<string, any>;
   createdAt: string;
 }
@@ -49,6 +57,7 @@ const Submissions: React.FC = () => {
           eventId: event_id
           eventType: event_type
           status: status
+          retry: retry
           response: response
           createdAt: created_at
         }

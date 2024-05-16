@@ -27,6 +27,14 @@ const ErrorSummary = styled(Box)(({ theme }) => ({
   border: `5px solid ${theme.palette.error.main}`,
 }));
 
+const Response = styled(Box)(({ theme }) => ({
+  fontSize: "1em",
+  margin: 1,
+  maxWidth: "contentWrap",
+  overflowWrap: "break-word",
+  whiteSpace: "pre-wrap",
+}));
+
 const EventsLog: React.FC<GetSubmissionsResponse> = ({
   submissions,
   loading,
@@ -60,13 +68,13 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
             <TableCell sx={{ width: 240 }}>
               <strong>Event</strong>
             </TableCell>
-            <TableCell sx={{ width: 120 }}>
+            <TableCell sx={{ width: 130 }}>
               <strong>Status</strong>
             </TableCell>
-            <TableCell sx={{ width: 120 }}>
+            <TableCell sx={{ width: 130 }}>
               <strong>Date</strong>
             </TableCell>
-            <TableCell sx={{ width: 370 }}>
+            <TableCell sx={{ width: 350 }}>
               <strong>Session ID</strong>
             </TableCell>
             <TableCell sx={{ width: 60 }}></TableCell>
@@ -108,6 +116,13 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
           ) : (
             <Chip label={submission.status} size="small" color="error" />
           )}
+          {submission.retry && (
+            <Chip
+              label="Retry"
+              size="small"
+              sx={{ marginTop: 0.5, background: "#ddd" }}
+            />
+          )}
         </TableCell>
         <TableCell>
           {format(new Date(submission.createdAt), "dd/MM/yy hh:mm:ss")}
@@ -146,24 +161,13 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
 const FormattedResponse: React.FC<Submission> = (submission) => {
   if (submission.eventType === "Pay") {
     return (
-      <Box sx={{ margin: 1 }}>
-        <Typography variant="body2">
-          {`GOV.UK Pay reference: ${submission.eventId}`}
-        </Typography>
-      </Box>
+      <Response component="pre">
+        {JSON.stringify(submission.response, null, 2)}
+      </Response>
     );
   } else {
     return (
-      <Box
-        component="pre"
-        sx={{
-          fontSize: "1em",
-          margin: 1,
-          maxWidth: "contentWrap",
-          overflowWrap: "break-word",
-          whiteSpace: "pre-wrap",
-        }}
-      >
+      <Response component="pre">
         {submission.status === "Success"
           ? JSON.stringify(JSON.parse(submission.response?.data?.body), null, 2)
           : JSON.stringify(
@@ -171,7 +175,7 @@ const FormattedResponse: React.FC<Submission> = (submission) => {
               null,
               2,
             )}
-      </Box>
+      </Response>
     );
   }
 };
