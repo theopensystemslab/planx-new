@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { OT } from "@planx/graph/types";
 import { formatDistanceToNow } from "date-fns";
 import React, { useRef } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
@@ -119,7 +120,7 @@ export const LastEdited = () => {
       <Link
         variant="body2"
         fontSize="small"
-        fontWeight="600"
+        fontWeight={FONT_WEIGHT_SEMI_BOLD}
         ml={2}
         sx={{ display: "flex", alignItems: "center" }}
       >

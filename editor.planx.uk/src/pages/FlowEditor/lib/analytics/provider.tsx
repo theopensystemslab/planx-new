@@ -37,12 +37,13 @@ import {
  * extract it into it's own column.
  */
 export const ALLOW_LIST = [
-  "proposal.projectType",
   "application.declaration.connection",
-  "property.type",
   "drawBoundary.action",
-  "user.role",
+  "findProperty.action",
   "property.constraints.planning",
+  "property.type",
+  "proposal.projectType",
+  "user.role",
 ] as const;
 
 let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;

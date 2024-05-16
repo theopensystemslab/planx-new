@@ -117,7 +117,7 @@ it("should not have any accessibility violations", async () => {
   expect(results).toHaveNoViolations();
 });
 
-test("shows the file upload option by default and requires user data to continue", async () => {
+test("shows the file upload option by default and requires user data to continue from either page", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
@@ -134,12 +134,23 @@ test("shows the file upload option by default and requires user data to continue
 
   // Draw a boundary screen
   expect(screen.getByTestId("upload-file-button")).toBeInTheDocument();
-  expect(screen.getByTestId("continue-button")).toBeDisabled();
+  expect(screen.getByTestId("continue-button")).toBeEnabled();
+
+  await user.click(screen.getByTestId("continue-button"));
+  expect(
+    screen.getByTestId("error-message-draw-boundary-map"),
+  ).toBeInTheDocument();
 
   // Navigate to upload a file screen
   await user.click(screen.getByTestId("upload-file-button"));
   expect(screen.getByText("Upload a file")).toBeInTheDocument();
-  expect(screen.getByTestId("continue-button")).toBeDisabled();
+
+  // Continue is enabled by default, but requires data to proceed
+  expect(screen.getByTestId("continue-button")).toBeEnabled();
+  await user.click(screen.getByTestId("continue-button"));
+  expect(
+    screen.getByTestId("error-message-upload-location-plan"),
+  ).toBeInTheDocument();
 });
 
 test("hides the upload option and allows user to continue without drawing if editor specifies", async () => {
@@ -369,4 +380,87 @@ test("appends to existing '_requestedFiles' value", async () => {
   // Recommended and optional keys untouched
   expect(recommended).toEqual(["elevations.existing"]);
   expect(optional).toHaveLength(0);
+});
+
+test("submits data based on the page you continue onwards from", async () => {
+  // Context - Planning Officers don't want to receive both geojson and an uploaded locationPlan, only one or the other
+  //   But accessibility auditing says a user should always be able to toggle between draw & upload pages with their previous inputs retained
+
+  const handleSubmit = jest.fn();
+
+  // Setup file mock
+  const mockFileName = "test.png";
+  const mockFileURL =
+    "https://api.editor.planx.dev/file/private/gws7l5d1/test.png";
+
+  const file = new File(["test"], mockFileName, { type: "image/png" });
+
+  const mockedPost = mockedAxios.post.mockResolvedValueOnce({
+    data: {
+      fileType: "image/png",
+      fileUrl: mockFileURL,
+    },
+  });
+
+  // Previously submitted data is a good proxy for having previously fetched a title boundary and arriving to Draw with geojson in passport !
+  const previouslySubmittedData = {
+    "property.boundary.site": {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-0.07643975531307334, 51.485847769536015],
+            [-0.0764006164494183, 51.4855918619739],
+            [-0.07587615567891393, 51.48561867140494],
+            [-0.0759899845402056, 51.48584045791162],
+            [-0.07643975531307334, 51.485847769536015],
+          ],
+        ],
+      },
+    },
+  };
+
+  const { user } = setup(
+    <DrawBoundary
+      dataFieldBoundary="property.boundary.site"
+      dataFieldArea="property.area.site"
+      description=""
+      descriptionForUploading=""
+      title="Draw a boundary"
+      titleForUploading="Upload a file"
+      handleSubmit={handleSubmit}
+      previouslySubmittedData={{
+        data: previouslySubmittedData,
+      }}
+    />,
+  );
+
+  // Toggle to file upload mode
+  await user.click(screen.getByTestId("upload-file-button"));
+
+  // Upload file
+  const input = screen.getByTestId("upload-input");
+  await user.upload(input, file);
+  expect(mockedPost).toHaveBeenCalled();
+
+  // Toggle back to map view after uploading
+  await user.click(screen.getByTestId("use-map-button"));
+
+  // Click "continue" from map page
+  await user.click(screen.getByTestId("continue-button"));
+  expect(handleSubmit).toHaveBeenCalledTimes(1);
+
+  // Confirm that file is NOT saved to passport, but geojson is
+  const submitted = handleSubmit.mock.calls[0][0];
+  expect(submitted.data).not.toHaveProperty(PASSPORT_UPLOAD_KEY);
+  expect(submitted.data["property.boundary.site"]).toEqual(
+    previouslySubmittedData["property.boundary.site"],
+  );
+
+  // DrawBoundary action captured correctly based on page
+  expect(submitted.data[PASSPORT_COMPONENT_ACTION_KEY]).toEqual(
+    DrawBoundaryUserAction.Draw,
+  );
 });

@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -56,7 +57,7 @@ const DashboardLink = styled(Link)(({ theme }) => ({
   fontSize: theme.typography.h4.fontSize,
   textDecoration: "none",
   color: "currentColor",
-  fontWeight: 600,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
   marginBottom: theme.spacing(1.5),
   marginTop: 0,
 }));

@@ -34,7 +34,7 @@ const slotsSchema = array()
   .required()
   .test({
     name: "nonUploading",
-    message: "Upload at least one file.",
+    message: "Upload at least one file",
     test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
@@ -115,13 +115,7 @@ const FileUpload: React.FC<Props> = (props) => {
   }, [slots]);
 
   return (
-    <Card
-      isValid={
-        slots.length > 0 &&
-        slots.every((slot) => slot.url && slot.status === "success")
-      }
-      handleSubmit={handleSubmit}
-    >
+    <Card isValid={true} handleSubmit={handleSubmit}>
       <QuestionHeader
         title={props.title}
         description={props.description}

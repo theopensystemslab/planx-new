@@ -1,5 +1,12 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
+export enum FindPropertyUserAction {
+  Existing = "Selected an existing address",
+  New = "Proposed a new address",
+}
+
+export const PASSPORT_COMPONENT_ACTION_KEY = "findProperty.action";
+
 export interface FindProperty extends MoreInformation {
   title: string;
   description: string;
