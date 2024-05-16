@@ -60,13 +60,13 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
             <TableCell sx={{ width: 240 }}>
               <strong>Event</strong>
             </TableCell>
-            <TableCell sx={{ width: 110 }}>
+            <TableCell sx={{ width: 120 }}>
               <strong>Status</strong>
             </TableCell>
             <TableCell sx={{ width: 120 }}>
               <strong>Date</strong>
             </TableCell>
-            <TableCell sx={{ width: 380 }}>
+            <TableCell sx={{ width: 370 }}>
               <strong>Session ID</strong>
             </TableCell>
             <TableCell sx={{ width: 60 }}></TableCell>
@@ -106,7 +106,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
           {submission.status === "Success" ? (
             <Chip label="Success" size="small" color="success" />
           ) : (
-            <Chip label="Error" size="small" color="error" />
+            <Chip label={submission.status} size="small" color="error" />
           )}
         </TableCell>
         <TableCell>
