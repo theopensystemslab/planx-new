@@ -120,6 +120,8 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
       return acc.concat(teamMembersByRole[role]);
     }, []);
 
+  const activeMembers = otherRoles.filter((member) => member.email);
+
   const archivedMembers = otherRoles.filter(
     (member) => member.role !== "platformAdmin" && !member.email,
   );
@@ -134,7 +136,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
           <Typography variant="body1">
             Editors have access to edit your services.
           </Typography>
-          <MembersTable members={otherRoles} />
+          <MembersTable members={activeMembers} />
         </EditorRow>
         <EditorRow>
           <Typography variant="h2" component="h3" gutterBottom>
