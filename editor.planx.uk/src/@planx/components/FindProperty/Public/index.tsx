@@ -47,6 +47,10 @@ const AddressLoadingWrap = styled(Box)(({ theme }) => ({
     position: "absolute",
     bottom: theme.spacing(1),
     margin: 0,
+    "& > div": {
+      justifyContent: "flex-start",
+      paddingLeft: theme.spacing(16),
+    },
   },
 }));
 

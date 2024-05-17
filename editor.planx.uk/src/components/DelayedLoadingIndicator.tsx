@@ -17,10 +17,6 @@ const Root = styled(Box, {
   justifyContent: "center",
   ...(inline && {
     padding: 0,
-    [theme.breakpoints.up("md")]: {
-      justifyContent: "flex-start",
-      paddingLeft: theme.spacing(16),
-    },
   }),
 }));
 
