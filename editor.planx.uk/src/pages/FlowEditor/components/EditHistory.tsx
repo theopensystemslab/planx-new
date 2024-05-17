@@ -7,6 +7,7 @@ import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineItem, { timelineItemClasses } from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
@@ -110,30 +111,25 @@ const EditHistory = () => {
   return (
     <Box>
       {loading && !data ? (
-        <DelayedLoadingIndicator />
+        <DelayedLoadingIndicator
+          msDelayBeforeVisible={0}
+          text="Fetching edit history..."
+        />
       ) : (
-        <Timeline
-          sx={{
-            padding: 0,
-            [`& .${timelineItemClasses.root}:before`]: {
-              flex: 0,
+        <>
+          <Timeline
+            sx={{
               padding: 0,
-            },
-          }}
-        >
-          {data?.operations?.map((op: Operation, i: number) => (
-            <TimelineItem key={op.id}>
-              <TimelineSeparator>
-                <TimelineDot
-                  sx={{
-                    bgcolor: (theme) =>
-                      inUndoScope(i)
-                        ? theme.palette.grey[400]
-                        : theme.palette.grey[900],
-                  }}
-                />
-                {i < data.operations.length - 1 && (
-                  <TimelineConnector
+              [`& .${timelineItemClasses.root}:before`]: {
+                flex: 0,
+                padding: 0,
+              },
+            }}
+          >
+            {data?.operations?.map((op: Operation, i: number) => (
+              <TimelineItem key={op.id}>
+                <TimelineSeparator>
+                  <TimelineDot
                     sx={{
                       bgcolor: (theme) =>
                         inUndoScope(i)
@@ -141,111 +137,129 @@ const EditHistory = () => {
                           : theme.palette.grey[900],
                     }}
                   />
-                )}
-              </TimelineSeparator>
-              <TimelineContent
-                sx={{
-                  paddingRight: 0,
-                  minWidth: "100%",
-                  maxWidth: "100%",
-                }}
-              >
-                <Box
+                  {i < data.operations.length - 1 && (
+                    <TimelineConnector
+                      sx={{
+                        bgcolor: (theme) =>
+                          inUndoScope(i)
+                            ? theme.palette.grey[400]
+                            : theme.palette.grey[900],
+                      }}
+                    />
+                  )}
+                </TimelineSeparator>
+                <TimelineContent
                   sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    paddingRight: 0,
+                    minWidth: "100%",
+                    maxWidth: "100%",
                   }}
                 >
-                  <Box>
-                    <Typography
-                      variant="body1"
-                      sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                      color={inUndoScope(i) ? "GrayText" : "inherit"}
-                    >
-                      {`${
-                        op.actor
-                          ? `Edited by ${op.actor?.firstName} ${op.actor?.lastName}`
-                          : `Created flow`
-                      }`}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color={inUndoScope(i) ? "GrayText" : "inherit"}
-                    >
-                      {formatLastEditDate(op.createdAt)}
-                    </Typography>
-                  </Box>
-                  {i > 0 && op.actor && canUserEditTeam(teamSlug) && (
-                    <TooltipWrap title="Restore to this point">
-                      <IconButton
-                        aria-label="Restore to this point"
-                        onClick={() => handleUndo(i)}
-                        onMouseEnter={() => setFocusedOpIndex(i)}
-                        onMouseLeave={() => setFocusedOpIndex(undefined)}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        variant="body1"
+                        sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                        color={inUndoScope(i) ? "GrayText" : "inherit"}
                       >
-                        <RestoreOutlined
-                          fontSize="large"
-                          color={inUndoScope(i) ? "inherit" : "primary"}
-                        />
-                      </IconButton>
-                    </TooltipWrap>
-                  )}
-                </Box>
-                {op.data && (
-                  <>
-                    <Typography
-                      variant="body2"
-                      component="ul"
-                      padding={2}
-                      color={inUndoScope(i) ? "GrayText" : "inherit"}
-                      style={{ paddingRight: "50px" }}
-                    >
-                      {[...new Set(formatOps(flow, op.data))]
-                        .slice(0, OPS_TO_DISPLAY)
-                        .map((formattedOp, i) => (
-                          <HistoryListItem key={i}>
-                            {formattedOp}
-                          </HistoryListItem>
-                        ))}
-                    </Typography>
-                    {[...new Set(formatOps(flow, op.data))].length >
-                      OPS_TO_DISPLAY && (
-                      <SimpleExpand
-                        id="edits-overflow"
-                        buttonText={{
-                          open: `Show ${
-                            [...new Set(formatOps(flow, op.data))].length -
-                            OPS_TO_DISPLAY
-                          } more`,
-                          closed: "Show less",
-                        }}
-                        lightFontStyle={true}
+                        {`${
+                          op.actor
+                            ? `Edited by ${op.actor?.firstName} ${op.actor?.lastName}`
+                            : `Created flow`
+                        }`}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color={inUndoScope(i) ? "GrayText" : "inherit"}
                       >
-                        <Typography
-                          variant="body2"
-                          component="ul"
-                          padding={2}
-                          color={inUndoScope(i) ? "GrayText" : "inherit"}
-                          style={{ paddingRight: "50px" }}
+                        {formatLastEditDate(op.createdAt)}
+                      </Typography>
+                    </Box>
+                    {i > 0 && op.actor && canUserEditTeam(teamSlug) && (
+                      <TooltipWrap title="Restore to this point">
+                        <IconButton
+                          aria-label="Restore to this point"
+                          onClick={() => handleUndo(i)}
+                          onMouseEnter={() => setFocusedOpIndex(i)}
+                          onMouseLeave={() => setFocusedOpIndex(undefined)}
                         >
-                          {[...new Set(formatOps(flow, op.data))]
-                            .slice(OPS_TO_DISPLAY)
-                            .map((formattedOp, i) => (
-                              <HistoryListItem key={i}>
-                                {formattedOp}
-                              </HistoryListItem>
-                            ))}
-                        </Typography>
-                      </SimpleExpand>
+                          <RestoreOutlined
+                            fontSize="large"
+                            color={inUndoScope(i) ? "inherit" : "primary"}
+                          />
+                        </IconButton>
+                      </TooltipWrap>
                     )}
-                  </>
-                )}
-              </TimelineContent>
-            </TimelineItem>
-          ))}
-        </Timeline>
+                  </Box>
+                  {op.data && (
+                    <>
+                      <Typography
+                        variant="body2"
+                        component="ul"
+                        padding={2}
+                        color={inUndoScope(i) ? "GrayText" : "inherit"}
+                        style={{ paddingRight: "50px" }}
+                      >
+                        {[...new Set(formatOps(flow, op.data))]
+                          .slice(0, OPS_TO_DISPLAY)
+                          .map((formattedOp, i) => (
+                            <HistoryListItem key={i}>
+                              {formattedOp}
+                            </HistoryListItem>
+                          ))}
+                      </Typography>
+                      {[...new Set(formatOps(flow, op.data))].length >
+                        OPS_TO_DISPLAY && (
+                        <SimpleExpand
+                          id="edits-overflow"
+                          buttonText={{
+                            open: `Show ${
+                              [...new Set(formatOps(flow, op.data))].length -
+                              OPS_TO_DISPLAY
+                            } more`,
+                            closed: "Show less",
+                          }}
+                          lightFontStyle={true}
+                        >
+                          <Typography
+                            variant="body2"
+                            component="ul"
+                            padding={2}
+                            color={inUndoScope(i) ? "GrayText" : "inherit"}
+                            style={{ paddingRight: "50px" }}
+                          >
+                            {[...new Set(formatOps(flow, op.data))]
+                              .slice(OPS_TO_DISPLAY)
+                              .map((formattedOp, i) => (
+                                <HistoryListItem key={i}>
+                                  {formattedOp}
+                                </HistoryListItem>
+                              ))}
+                          </Typography>
+                        </SimpleExpand>
+                      )}
+                    </>
+                  )}
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
+          {data?.operations.length === 15 && (
+            <>
+              <Divider />
+              <Typography variant="body2" mt={2} color="GrayText">
+                {`History shows the last 15 edits made to this service. If you have questions about restoring to an earlier point in time, please contact a PlanX developer.`}
+              </Typography>
+            </>
+          )}
+        </>
       )}
     </Box>
   );
