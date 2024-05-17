@@ -27,12 +27,21 @@ const ErrorSummary = styled(Box)(({ theme }) => ({
   border: `5px solid ${theme.palette.error.main}`,
 }));
 
-const Response = styled(Box)(({ theme }) => ({
+const Response = styled(Box)(() => ({
   fontSize: "1em",
   margin: 1,
   maxWidth: "contentWrap",
   overflowWrap: "break-word",
   whiteSpace: "pre-wrap",
+}));
+
+// Style the table container like an event feed with bottom-anchored scroll
+const Feed = styled(TableContainer)(() => ({
+  maxHeight: "60vh",
+  overflow: "auto",
+  display: "flex",
+  flexDirection: "column-reverse",
+  readingOrder: "flex-visual",
 }));
 
 const EventsLog: React.FC<GetSubmissionsResponse> = ({
@@ -61,10 +70,10 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
     );
 
   return (
-    <TableContainer>
-      <Table sx={{ tableLayout: "fixed" }}>
+    <Feed>
+      <Table stickyHeader sx={{ tableLayout: "fixed" }}>
         <TableHead>
-          <TableRow>
+          <TableRow sx={{ "& > *": { borderBottomColor: "black !important" } }}>
             <TableCell sx={{ width: 250 }}>
               <strong>Event</strong>
             </TableCell>
@@ -86,7 +95,7 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </Feed>
   );
 };
 

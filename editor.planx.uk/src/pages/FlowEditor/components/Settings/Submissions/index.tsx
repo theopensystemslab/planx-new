@@ -46,12 +46,13 @@ export interface GetSubmissionsResponse {
 const Submissions: React.FC = () => {
   const flowId = useStore((state) => state.id);
 
+  // submission_services_log view is already filtered for events >= Jan 1 2024
   const { data, loading, error } = useQuery<{ submissions: Submission[] }>(
     gql`
       query GetSubmissions($flow_id: uuid!) {
         submissions: submission_services_log(
           where: { flow_id: { _eq: $flow_id } }
-          order_by: { created_at: desc }
+          order_by: { created_at: asc }
         ) {
           sessionId: session_id
           eventId: event_id
@@ -79,7 +80,7 @@ const Submissions: React.FC = () => {
             Submissions
           </Typography>
           <Typography variant="body1">
-            Events log of payments and submissions for this service
+            Feed of payment and submission events for this service
           </Typography>
         </EditorRow>
         <EditorRow>
