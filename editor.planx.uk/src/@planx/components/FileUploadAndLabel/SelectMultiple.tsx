@@ -50,6 +50,10 @@ const StyledAutocomplete = styled(
   Autocomplete<Option, true, true, false, "div">,
 )(({ theme }) => ({
   marginTop: theme.spacing(2),
+  // Prevent label from overlapping expand icon
+  "& > div > label": {
+    paddingRight: theme.spacing(3),
+  },
   // Vertically center "large" size caret icon
   [`& .${autocompleteClasses.endAdornment}`]: {
     top: "unset",
@@ -86,7 +90,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       textDecoration: "none",
       color: theme.palette.text.primary,
       paddingY: 0,
-      transform: "translate(14px, -22px) scale(0.85)",
+      transform: "translate(0px, -22px) scale(0.85)",
     },
   },
 }));
