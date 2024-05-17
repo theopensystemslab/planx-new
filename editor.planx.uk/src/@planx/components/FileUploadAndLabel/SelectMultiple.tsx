@@ -19,7 +19,6 @@ import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useMemo } from "react";
 import { borderedFocusStyle } from "theme";
-import Checkbox from "ui/shared/Checkbox";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import {
