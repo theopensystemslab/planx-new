@@ -44,10 +44,13 @@ const AddressLoadingWrap = styled(Box)(({ theme }) => ({
   minHeight: theme.spacing(3),
   pointerEvents: "none",
   [theme.breakpoints.up("md")]: {
-    position: "absolute",
-    bottom: theme.spacing(1),
+    position: "relative",
     margin: 0,
+    height: 0,
+    minHeight: 0,
     "& > div": {
+      position: "absolute",
+      top: theme.spacing(5.5),
       justifyContent: "flex-start",
       paddingLeft: theme.spacing(16),
     },
