@@ -9,6 +9,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Operation } from "types";
 
 import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
