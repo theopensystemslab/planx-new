@@ -10,16 +10,14 @@ import FormControl from "@mui/material/FormControl";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React, { forwardRef, PropsWithChildren, useMemo, useState } from "react";
+import React, { forwardRef, PropsWithChildren, useMemo } from "react";
 import { borderedFocusStyle } from "theme";
-import Checkbox from "ui/shared/Checkbox";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import {
@@ -52,6 +50,10 @@ const StyledAutocomplete = styled(
   Autocomplete<Option, true, true, false, "div">,
 )(({ theme }) => ({
   marginTop: theme.spacing(2),
+  // Prevent label from overlapping expand icon
+  "& > div > label": {
+    paddingRight: theme.spacing(3),
+  },
   // Vertically center "large" size caret icon
   [`& .${autocompleteClasses.endAdornment}`]: {
     top: "unset",
@@ -88,8 +90,33 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       textDecoration: "none",
       color: theme.palette.text.primary,
       paddingY: 0,
-      transform: "translate(14px, -22px) scale(0.85)",
+      transform: "translate(0px, -22px) scale(0.85)",
     },
+  },
+}));
+
+const CustomCheckbox = styled("span")(({ theme }) => ({
+  display: "inline-flex",
+  flexShrink: 0,
+  position: "relative",
+  width: 40,
+  height: 40,
+  borderColor: theme.palette.text.primary,
+  border: "2px solid",
+  background: "transparent",
+  marginRight: theme.spacing(1.5),
+  "&.selected::after": {
+    content: "''",
+    position: "absolute",
+    height: 24,
+    width: 12,
+    borderColor: theme.palette.text.primary,
+    borderBottom: "5px solid",
+    borderRight: "5px solid",
+    left: "50%",
+    top: "42%",
+    transform: "translate(-50%, -50%) rotate(45deg)",
+    cursor: "pointer",
   },
 }));
 
@@ -109,7 +136,7 @@ const renderInput: AutocompleteProps<
       ...params.InputProps,
       notched: false,
     }}
-    label="What does this file show?"
+    label="What does this file show? (select all that apply)"
   />
 );
 
@@ -157,14 +184,8 @@ const renderOption: AutocompleteProps<
   "div"
 >["renderOption"] = (props, option, { selected }) => (
   <ListItem {...props}>
-    <Checkbox
-      data-testid="select-checkbox"
-      checked={selected}
-      inputProps={{
-        "aria-label": option.name,
-      }}
-    />
-    <ListItemText sx={{ ml: 2 }}>{option.name}</ListItemText>
+    <CustomCheckbox aria-hidden="true" className={selected ? "selected" : ""} />
+    {option.name}
   </ListItem>
 );
 
