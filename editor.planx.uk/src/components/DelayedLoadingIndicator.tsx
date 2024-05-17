@@ -10,7 +10,7 @@ export interface Props {
 
 const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "inline",
-})<Props>(({ inline, theme }) => ({
+})<Props>(({ inline }) => ({
   padding: 60,
   display: "flex",
   alignItems: "center",
