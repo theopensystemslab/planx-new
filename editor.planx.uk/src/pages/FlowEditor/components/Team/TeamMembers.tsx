@@ -43,6 +43,73 @@ interface Props {
   teamMembersByRole: Record<string, TeamMember[]>;
 }
 
+const MembersTable: React.FC<{ members: TeamMember[] }> = ({ members }) => {
+  const getRoleLabel = (role: string) => {
+    return roleLabels[role] || role;
+  };
+
+  if (members.length === 0) {
+    return (
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <strong>No members found</strong>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+      </Table>
+    );
+  }
+
+  return (
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <StyledTableRow>
+            <TableCell sx={{ width: 300 }}>
+              <strong>User</strong>
+            </TableCell>
+            <TableCell sx={{ width: 200 }}>
+              <strong>Role</strong>
+            </TableCell>
+            <TableCell>
+              <strong>Email</strong>
+            </TableCell>
+          </StyledTableRow>
+        </TableHead>
+        <TableBody>
+          {members.map((member) => (
+            <StyledTableRow key={member.id}>
+              <TableCell
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <StyledAvatar>
+                  {member.firstName[0]}
+                  {member.lastName[0]}
+                </StyledAvatar>
+                {member.firstName} {member.lastName}
+              </TableCell>
+              <TableCell>
+                <Chip
+                  label={getRoleLabel(member.role)}
+                  size="small"
+                  sx={{ background: "#ddd" }}
+                />
+              </TableCell>
+              <TableCell>{member.email}</TableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
 export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
   const platformAdmins = (teamMembersByRole.platformAdmin || []).filter(
     (member) => member.email,
@@ -56,72 +123,6 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
   const archivedMembers = otherRoles.filter(
     (member) => member.role !== "platformAdmin" && !member.email,
   );
-
-  const getRoleLabel = (role: string) => {
-    return roleLabels[role] || role;
-  };
-
-  const MembersTable: React.FC<{ members: TeamMember[] }> = ({ members }) => {
-    if (members.length === 0) {
-      return (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <strong>No members found</strong>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-        </Table>
-      );
-    }
-    return (
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <StyledTableRow>
-              <TableCell sx={{ width: 300 }}>
-                <strong>User</strong>
-              </TableCell>
-              <TableCell sx={{ width: 200 }}>
-                <strong>Role</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Email</strong>
-              </TableCell>
-            </StyledTableRow>
-          </TableHead>
-          <TableBody>
-            {members.map((member) => (
-              <StyledTableRow key={member.id}>
-                <TableCell
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <StyledAvatar>
-                    {member.firstName[0]}
-                    {member.lastName[0]}
-                  </StyledAvatar>
-                  {member.firstName} {member.lastName}
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    label={getRoleLabel(member.role)}
-                    size="small"
-                    sx={{ background: "#ddd" }}
-                  />
-                </TableCell>
-                <TableCell>{member.email}</TableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
 
   return (
     <Container maxWidth="contentWrap">
