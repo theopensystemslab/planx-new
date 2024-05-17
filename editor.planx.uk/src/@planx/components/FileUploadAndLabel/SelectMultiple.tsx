@@ -1,20 +1,25 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
+import Autocomplete, {
+  AutocompleteChangeReason,
+  autocompleteClasses,
+  AutocompleteProps,
+} from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
+import { inputLabelClasses } from "@mui/material/InputLabel";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent, SelectProps } from "@mui/material/Select";
+import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React, { useEffect, useState } from "react";
-import { usePrevious } from "react-use";
+import React, { forwardRef, PropsWithChildren, useMemo, useState } from "react";
+import { borderedFocusStyle } from "theme";
+import Checkbox from "ui/shared/Checkbox";
 
 import { FileUploadSlot } from "../FileUpload/Public";
 import {
@@ -22,12 +27,17 @@ import {
   FileList,
   getTagsForSlot,
   removeSlots,
+  UserFile,
 } from "./model";
 
-interface SelectMultipleProps extends SelectProps {
+interface SelectMultipleProps {
   uploadedFile: FileUploadSlot;
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
+}
+
+interface Option extends UserFile {
+  category: keyof FileList;
 }
 
 const ListHeader = styled(Box)(({ theme }) => ({
@@ -36,198 +46,266 @@ const ListHeader = styled(Box)(({ theme }) => ({
   alignItems: "center",
   padding: theme.spacing(1, 1.5),
   background: theme.palette.grey[200],
-  // Offset default padding of MuiList
-  margin: "-8px 0 8px",
 }));
 
-const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
-  top: "16%",
-  textDecoration: "underline",
-  color: theme.palette.link.main,
-  "&[data-shrink=true]": {
-    textDecoration: "none",
-    color: theme.palette.text.primary,
-    top: "0",
-    transform: "translate(14px, -5px) scale(0.85)",
-  },
-}));
-
-const StyledSelect = styled(Select<string[]>)(({ theme }) => ({
-  border: `1px solid ${theme.palette.border.main}`,
-  background: theme.palette.background.paper,
-  "& > div": {
-    minHeight: "50px",
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-  "& > div:focus": {
-    background: theme.palette.action.focus,
-  },
-  "& > svg": {
-    color: theme.palette.primary.main,
-    width: "1.25em",
-    height: "1.25em",
+const StyledAutocomplete = styled(
+  Autocomplete<Option, true, true, false, "div">,
+)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  // Vertically center "large" size caret icon
+  [`& .${autocompleteClasses.endAdornment}`]: {
     top: "unset",
   },
+  "&:focus-within": {
+    "& svg": {
+      color: "black",
+    },
+  },
 }));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  "&:focus-within": {
+    ...borderedFocusStyle,
+    [`& .${outlinedInputClasses.notchedOutline}`]: {
+      border: "1px solid transparent !important",
+    },
+  },
+  [`& .${outlinedInputClasses.notchedOutline}`]: {
+    borderRadius: 0,
+    border: `1px solid${theme.palette.border.main} !important`,
+  },
+  "& fieldset": {
+    borderColor: theme.palette.border.main,
+  },
+  backgroundColor: theme.palette.background.paper,
+  [`& .${outlinedInputClasses.root}, input`]: {
+    cursor: "pointer",
+  },
+  [`& .${inputLabelClasses.root}`]: {
+    textDecoration: "underline",
+    color: theme.palette.primary.main,
+    "&[data-shrink=true]": {
+      textDecoration: "none",
+      color: theme.palette.text.primary,
+      paddingY: 0,
+      transform: "translate(14px, -22px) scale(0.85)",
+    },
+  },
+}));
+
+/**
+ * Function which returns the Input component used by Autocomplete
+ */
+const renderInput: AutocompleteProps<
+  Option,
+  true,
+  true,
+  false,
+  "div"
+>["renderInput"] = (params) => (
+  <StyledTextField
+    {...params}
+    InputProps={{
+      ...params.InputProps,
+      notched: false,
+    }}
+    label="What does this file show?"
+  />
+);
+
+/**
+ * Function which returns the groups (ul elements) used by Autocomplete
+ */
+const renderGroup: AutocompleteProps<
+  Option,
+  true,
+  true,
+  false,
+  "div"
+>["renderGroup"] = ({ group, key, children }) => (
+  <List
+    key={`group-${key}`}
+    role="group"
+    sx={{ paddingY: 0 }}
+    aria-labelledby={`${group}-label`}
+  >
+    <ListSubheader
+      id={`${group}-label`}
+      role="presentation"
+      disableSticky
+      sx={(theme) => ({
+        borderTop: 1,
+        borderColor: theme.palette.border.main,
+      })}
+    >
+      <Typography py={1} variant="subtitle2" component="h4">
+        {`${capitalize(group)} files`}
+      </Typography>
+    </ListSubheader>
+    {children}
+  </List>
+);
+
+/**
+ * Function which returns the options (li elements) used by Autocomplete
+ */
+const renderOption: AutocompleteProps<
+  Option,
+  true,
+  true,
+  false,
+  "div"
+>["renderOption"] = (props, option, { selected }) => (
+  <ListItem {...props}>
+    <Checkbox
+      data-testid="select-checkbox"
+      checked={selected}
+      inputProps={{
+        "aria-label": option.name,
+      }}
+    />
+    <ListItemText sx={{ ml: 2 }}>{option.name}</ListItemText>
+  </ListItem>
+);
+
+const PopupIcon = <ArrowIcon sx={{ color: "primary.main" }} fontSize="large" />;
+
+/**
+ * Custom Listbox component
+ * Used to wrap options within the autocomplete and append a custom element above the option list
+ */
+const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
+  ({ children, ...props }, ref) => (
+    <>
+      <Box>
+        <ListHeader>
+          <Typography variant="h4" component="h3" pr={3}>
+            Select all that apply
+          </Typography>
+          <Button variant="contained" color="prompt" aria-label="Close list">
+            Done
+          </Button>
+        </ListHeader>
+      </Box>
+      <Box
+        ref={ref}
+        {...props}
+        role="listbox"
+        sx={{ paddingY: "0px !important" }}
+      >
+        {children}
+      </Box>
+    </>
+  ),
+);
 
 export const SelectMultiple = (props: SelectMultipleProps) => {
   const { uploadedFile, fileList, setFileList } = props;
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
-  const [tags, setTags] = useState<string[]>(initialTags);
-  const previousTags = usePrevious(tags) || initialTags;
-  const [open, setOpen] = React.useState(false);
 
-  const handleChange = (event: SelectChangeEvent<typeof tags>) => {
-    const {
-      target: { value },
-    } = event;
-    setTags(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value,
-    );
-  };
-  const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
+  /**
+   * Options for autocomplete
+   * FileList with appended "category" property for grouping
+   */
+  const options: Option[] = useMemo(
+    () =>
+      (Object.keys(fileList) as Array<keyof typeof fileList>)
+        .filter((fileListCategory) => fileList[fileListCategory].length > 0)
+        .flatMap((category) =>
+          fileList[category].map((fileType) => ({ category, ...fileType })),
+        ),
+    [fileList],
+  );
 
-  const updateFileListWithTags = (
-    previousTags: string[] | undefined,
-    tags: string[],
+  /**
+   * Previous values to pre-populate autocomplete
+   */
+  const value: Option[] = useMemo(
+    () =>
+      initialTags.flatMap((tag) => options.filter(({ name }) => name === tag)),
+    [initialTags],
+  );
+
+  /**
+   * Update FileList (from main Public.tsx component) when values are added or removed from Autocomplete
+   */
+  const handleChange = (
+    _event: React.SyntheticEvent,
+    value: Option[],
+    reason: AutocompleteChangeReason,
   ) => {
-    const updatedTags = tags.filter((tag) => !previousTags?.includes(tag));
-    const removedTags = previousTags?.filter((tag) => !tags?.includes(tag));
+    const selectedTags = value.map(({ name }) => name);
 
-    if (updatedTags.length > 0) {
-      const updatedFileList = addOrAppendSlots(
-        updatedTags,
-        uploadedFile,
-        fileList,
-      );
-      setFileList(updatedFileList);
-    }
-
-    if (removedTags && removedTags.length > 0) {
-      const updatedFileList = removeSlots(removedTags, uploadedFile, fileList);
-      setFileList(updatedFileList);
+    switch (reason) {
+      case "selectOption": {
+        const updatedTags = selectedTags.filter(
+          (tag) => !initialTags?.includes(tag),
+        );
+        const updatedFileList = addOrAppendSlots(
+          updatedTags,
+          uploadedFile,
+          fileList,
+        );
+        setFileList(updatedFileList);
+        break;
+      }
+      case "removeOption": {
+        const removedTags = initialTags?.filter(
+          (tag) => !selectedTags?.includes(tag),
+        );
+        const updatedFileList = removeSlots(
+          removedTags,
+          uploadedFile,
+          fileList,
+        );
+        setFileList(updatedFileList);
+        break;
+      }
     }
   };
-
-  useEffect(() => {
-    updateFileListWithTags(previousTags, tags);
-  }, [tags]);
 
   return (
     <FormControl
       key={`form-${uploadedFile.id}`}
       sx={{ display: "flex", flexDirection: "column" }}
     >
-      <StyledInputLabel
-        id={`select-multiple-file-tags-label-${uploadedFile.id}`}
-      >
-        What does this file show?
-      </StyledInputLabel>
-      <StyledSelect
-        native={false}
-        key={`select-${uploadedFile.id}`}
+      <StyledAutocomplete
+        role="status"
+        aria-atomic={true}
+        aria-live="polite"
+        disableClearable
+        disableCloseOnSelect
+        getOptionLabel={(option) => option.name}
+        groupBy={(option) => option.category}
         id={`select-multiple-file-tags-${uploadedFile.id}`}
-        variant="standard"
+        isOptionEqualToValue={(option, value) => option.name === value.name}
+        ListboxComponent={ListboxComponent}
         multiple
-        value={tags}
         onChange={handleChange}
-        open={open}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        IconComponent={ArrowIcon}
-        input={<Input key={`select-input-${uploadedFile.id}`} />}
-        inputProps={{
-          name: uploadedFile.id,
-          "data-testid": "select",
-          "aria-labelledby": `select-multiple-file-tags-label-${uploadedFile.id}`,
+        options={options}
+        popupIcon={PopupIcon}
+        renderGroup={renderGroup}
+        renderInput={renderInput}
+        renderOption={renderOption}
+        value={value}
+        ChipProps={{
+          variant: "uploadedFileTag",
+          size: "small",
+          sx: { pointerEvents: "none" },
+          onDelete: undefined,
         }}
-        renderValue={(selected) => (
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              gap: 0.5,
-              padding: "0 0.5em",
-            }}
-          >
-            {selected.map((value) => (
-              <Chip
-                key={`chip-${value}-${uploadedFile.id}`}
-                label={value}
-                variant="uploadedFileTag"
-                size="small"
-                sx={{ pointerEvents: "none" }}
-              />
-            ))}
-          </Box>
-        )}
-        MenuProps={{
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
+        componentsProps={{
+          popupIndicator: {
+            disableRipple: true,
+          },
+          popper: {
+            sx: {
+              boxShadow: 10,
+            },
           },
         }}
-      >
-        <ListSubheader disableGutters>
-          <ListHeader>
-            <Typography variant="h4" component="h3" pr={3}>
-              Select all that apply
-            </Typography>
-            <Button
-              variant="contained"
-              color="prompt"
-              onClick={handleClose}
-              aria-label="Close list"
-            >
-              Done
-            </Button>
-          </ListHeader>
-        </ListSubheader>
-        {(Object.keys(fileList) as Array<keyof typeof fileList>)
-          .filter((fileListCategory) => fileList[fileListCategory].length > 0)
-          .map((fileListCategory) => {
-            return [
-              <ListSubheader
-                key={`subheader-${fileListCategory}-${uploadedFile.id}`}
-                disableSticky
-              >
-                <Typography py={1} variant="subtitle2" component="h4">
-                  {`${capitalize(fileListCategory)} files`}
-                </Typography>
-              </ListSubheader>,
-              ...fileList[fileListCategory].map((fileType) => {
-                return [
-                  <MenuItem
-                    key={`menuitem-${fileType.name}-${uploadedFile.id}`}
-                    value={fileType.name}
-                    data-testid="select-menuitem"
-                    disableRipple
-                    disableTouchRipple
-                  >
-                    <Checkbox
-                      key={`checkbox-${fileType.name}-${uploadedFile.id}`}
-                      checked={tags.indexOf(fileType.name) > -1}
-                      data-testid="select-checkbox"
-                      inputProps={{
-                        "aria-label": `${fileType.name}`,
-                      }}
-                    />
-                    <ListItemText
-                      key={`listitemtext-${fileType.name}-${uploadedFile.id}`}
-                      primary={fileType.name}
-                      id={fileType.name}
-                    />
-                  </MenuItem>,
-                ];
-              }),
-            ];
-          })}
-      </StyledSelect>
+      />
     </FormControl>
   );
 };

@@ -257,10 +257,13 @@ function Component(props: Props) {
             )}
             {slots.map((slot) => {
               return (
-                <ErrorWrapper error={fileLabelErrors?.[slot.id]} id={slot.id}>
+                <ErrorWrapper
+                  error={fileLabelErrors?.[slot.id]}
+                  id={slot.id}
+                  key={slot.id}
+                >
                   <UploadedFileCard
                     {...slot}
-                    key={slot.id}
                     tags={getTagsForSlot(slot.id, fileList)}
                     onChange={onUploadedFileCardChange}
                     removeFile={() => removeFile(slot)}
