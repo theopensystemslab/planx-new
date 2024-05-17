@@ -47,7 +47,6 @@ const AddressLoadingWrap = styled(Box)(({ theme }) => ({
     position: "absolute",
     bottom: theme.spacing(1),
     margin: 0,
-    paddingRight: theme.spacing(14),
   },
 }));
 
