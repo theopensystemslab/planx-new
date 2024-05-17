@@ -36,6 +36,9 @@ const Root = styled(Box)(({ theme }) => ({
   margin: "0",
   marginRight: theme.spacing(8),
   position: "relative",
+  [`& > div.${accordionClasses.root}.Mui-expanded`]: {
+    margin: "0",
+  },
 }));
 
 const ChangeLink = styled(Box)(({ theme }) => ({
@@ -120,6 +123,15 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
   },
 }));
 
+const NonExpandingSummary = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(2, 0, 2, 3),
+  borderBottom: `1px solid ${theme.palette.border.main}`,
+  width: "100%",
+  zIndex: 2,
+}));
+
 const ResultReason: React.FC<IResultReason> = ({
   id,
   question,
@@ -128,16 +140,16 @@ const ResultReason: React.FC<IResultReason> = ({
   flagColor,
 }) => {
   const changeAnswer = useStore((state) => state.changeAnswer);
-  const accordionSummaryRef = useRef<HTMLDivElement | null>(null);
-  const [accordionSummaryHeight, setAccordionSummaryHeight] = useState(0);
+  const summaryRef = useRef<HTMLDivElement | null>(null);
+  const [summaryHeight, setSummaryHeight] = useState(0);
 
   // Match height of closed accordion to ChangeLink
   useLayoutEffect(() => {
-    if (accordionSummaryRef.current) {
-      const height = accordionSummaryRef.current.clientHeight;
-      setAccordionSummaryHeight(height);
+    if (summaryRef.current) {
+      const height = summaryRef.current.clientHeight;
+      setSummaryHeight(height);
     }
-  }, [accordionSummaryRef]);
+  }, [summaryRef]);
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
 
@@ -161,34 +173,34 @@ const ResultReason: React.FC<IResultReason> = ({
 
   return (
     <Root>
-      <StyledAccordion
-        classes={{ root: classes.removeTopBorder }}
-        elevation={0}
-      >
-        <StyledAccordionSummary
-          expandIcon={hasMoreInfo ? <Caret /> : null}
-          aria-label={ariaLabel}
-          aria-controls={`group-${id}-content`}
-          id={`group-${id}-header`}
-          ref={accordionSummaryRef}
+      {hasMoreInfo ? (
+        <StyledAccordion
+          classes={{ root: classes.removeTopBorder }}
+          elevation={0}
         >
-          <SummaryWrap
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
+          <StyledAccordionSummary
+            expandIcon={<Caret />}
+            aria-label={ariaLabel}
+            aria-controls={`group-${id}-content`}
+            id={`group-${id}-header`}
+            ref={summaryRef}
           >
-            <Typography
-              variant="body1"
-              color="textPrimary"
-              id={`questionText-${id}`}
+            <SummaryWrap
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              width="100%"
             >
-              {question.data.text} <br />
-              <strong>{response}</strong>
-            </Typography>
-          </SummaryWrap>
-        </StyledAccordionSummary>
-        {hasMoreInfo && (
+              <Typography
+                variant="body1"
+                color="textPrimary"
+                id={`questionText-${id}`}
+              >
+                {question.data.text} <br />
+                <strong>{response}</strong>
+              </Typography>
+            </SummaryWrap>
+          </StyledAccordionSummary>
           <AccordionDetails sx={{ py: 1, px: 0 }}>
             <MoreInfo>
               {question.data.info && (
@@ -205,9 +217,20 @@ const ResultReason: React.FC<IResultReason> = ({
               )}
             </MoreInfo>
           </AccordionDetails>
-        )}
-      </StyledAccordion>
-      <ChangeLink sx={{ height: accordionSummaryHeight }}>
+        </StyledAccordion>
+      ) : (
+        <NonExpandingSummary ref={summaryRef}>
+          <Typography
+            variant="body1"
+            color="textPrimary"
+            id={`questionText-${id}`}
+          >
+            {question.data.text} <br />
+            <strong>{response}</strong>
+          </Typography>
+        </NonExpandingSummary>
+      )}
+      <ChangeLink sx={{ height: summaryHeight }}>
         {showChangeButton && (
           <Link
             component="button"
