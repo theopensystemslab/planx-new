@@ -18,7 +18,19 @@ mkdir -p /tmp
 # Create sync.sql file for all our comnands which will be executed in a single transaction
 touch '/tmp/sync.sql'
 
-tables=(flows users teams flow_document_templates team_members team_themes)
+tables=(
+  # Mandatory tables
+  flows 
+  users 
+  teams 
+  flow_document_templates 
+  team_members 
+  team_themes
+  # Optional tables
+  # Please comment in if working on a feature and you require example data locally
+  # You will need to manually grant select permissions to the github_actions on production, and update main.sql
+  # feedback
+)
 
 # run copy commands on remote  db
 for table in "${tables[@]}"; do
