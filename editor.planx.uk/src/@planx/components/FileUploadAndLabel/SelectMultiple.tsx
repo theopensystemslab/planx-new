@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
-import React, { forwardRef, PropsWithChildren, useMemo, useState } from "react";
+import React, { forwardRef, PropsWithChildren, useMemo } from "react";
 import { borderedFocusStyle } from "theme";
 import Checkbox from "ui/shared/Checkbox";
 
@@ -157,13 +157,9 @@ const renderOption: AutocompleteProps<
   "div"
 >["renderOption"] = (props, option, { selected }) => (
   <ListItem {...props}>
-    <Checkbox
-      data-testid="select-checkbox"
-      checked={selected}
-      inputProps={{
-        "aria-label": option.name,
-      }}
-    />
+    <Box component="span" aria-hidden="true">
+      {selected ? "✅" : "❎"}
+    </Box>
     <ListItemText sx={{ ml: 2 }}>{option.name}</ListItemText>
   </ListItem>
 );
