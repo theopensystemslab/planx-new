@@ -31,9 +31,11 @@ import { useAsync } from "react-use";
 import Caret from "ui/icons/Caret";
 import Input from "ui/shared/Input";
 
-import Questions from "../../Preview/Questions";
-import { useStore } from "../lib/store";
+import Questions from "../../../Preview/Questions";
+import { useStore } from "../../lib/store";
 import EditHistory from "./EditHistory";
+
+type SidebarTabs = "PreviewBrowser" | "History";
 
 const Console = styled(Box)(() => ({
   overflow: "auto",
@@ -41,7 +43,7 @@ const Console = styled(Box)(() => ({
   maxHeight: "50%",
 }));
 
-const EmbeddedBrowser = styled(Box)(({ theme }) => ({
+const Root = styled(Box)(({ theme }) => ({
   position: "relative",
   top: "0",
   right: "0",
@@ -157,8 +159,6 @@ interface AlteredNode {
   type: TYPES;
   data?: any;
 }
-
-type SideBarTabs = "PreviewBrowser" | "History";
 
 const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   const { node } = props;
@@ -359,7 +359,7 @@ const AlteredNodesSummaryContent = (props: {
   );
 };
 
-const PreviewBrowser: React.FC<{
+const Sidebar: React.FC<{
   url: string;
 }> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
@@ -392,9 +392,9 @@ const PreviewBrowser: React.FC<{
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
-  const [activeTab, setActiveTab] = useState<SideBarTabs>("PreviewBrowser");
+  const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: SideBarTabs) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
   };
 
@@ -416,7 +416,7 @@ const PreviewBrowser: React.FC<{
   const teamSlug = window.location.pathname.split("/")[1];
 
   return (
-    <EmbeddedBrowser id="embedded-browser">
+    <Root>
       <Header>
         <Box width="100%" display="flex">
           <input
@@ -657,8 +657,8 @@ const PreviewBrowser: React.FC<{
         </SidebarContainer>
       )}
       {showDebugConsole && <DebugConsole />}
-    </EmbeddedBrowser>
+    </Root>
   );
 });
 
-export default PreviewBrowser;
+export default Sidebar;

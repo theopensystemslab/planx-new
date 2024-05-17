@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
 import { SharedStore } from "./pages/FlowEditor/lib/store/shared";
+import { OT } from "@planx/graph/types";
 
 export type Maybe<T> = T | undefined;
 
@@ -121,4 +122,15 @@ export interface AdminPanelData {
   primaryColour?: string;
   linkColour?: string;
   actionColour?: string;
+}
+
+export interface Operation {
+  id: number;
+  createdAt: string;
+  actor?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  };
+  data: Array<OT.Op>;
 }

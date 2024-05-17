@@ -7,34 +7,16 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { OT } from "@planx/graph/types";
-import { formatDistanceToNow } from "date-fns";
 import React, { useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Operation } from "types";
 
 import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
-import PreviewBrowser from "./components/PreviewBrowser";
+import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
-
-export interface Operation {
-  id: number;
-  createdAt: string;
-  actor?: {
-    id: number;
-    firstName: string;
-    lastName: string;
-  };
-  data: Array<OT.Op>;
-}
-
-export const formatLastEditDate = (date: string): string => {
-  return formatDistanceToNow(new Date(date), {
-    includeSeconds: true,
-    addSuffix: true,
-  });
-};
+import { formatLastEditMessage } from "./utils";
 
 const EditorContainer = styled(Box)(() => ({
   display: "flex",
@@ -42,18 +24,6 @@ const EditorContainer = styled(Box)(() => ({
   overflow: "hidden",
   flexGrow: 1,
 }));
-
-const formatLastEditMessage = (
-  date: string,
-  actor?: { firstName: string; lastName: string },
-): string => {
-  if (!actor) {
-    return `Last edited ${formatLastEditDate(date)}`;
-  }
-
-  const name = `${actor.firstName} ${actor.lastName}`;
-  return `Last edited ${formatLastEditDate(date)} by ${name}`;
-};
 
 export const LastEdited = () => {
   const [flowId] = useStore((state) => [state.id]);
@@ -133,7 +103,7 @@ export const LastEdited = () => {
 const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
-  const showPreview = useStore((state) => state.showPreview);
+  const showSidebar = useStore((state) => state.showSidebar);
 
   return (
     <EditorContainer id="editor-container">
@@ -150,8 +120,8 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
         </Box>
       </Box>
-      {showPreview && (
-        <PreviewBrowser
+      {showSidebar && (
+        <Sidebar
           url={`${window.location.origin}${rootFlowPath(false)}/published`}
         />
       )}
