@@ -36,7 +36,7 @@ export async function sendToS3(
     if (!powerAutomateWebhookURL || !powerAutomateAPIKey) {
       return next({
         status: 400,
-        message: `Send to S3 is not enabled for this local authority (${localAuthority})`,
+        message: `Upload to S3 is not enabled for this local authority (${localAuthority})`,
       });
     }
 
