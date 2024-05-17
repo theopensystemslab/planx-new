@@ -1,4 +1,5 @@
 import FactCheckIcon from "@mui/icons-material/FactCheck";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -68,10 +69,10 @@ const MenuButton = styled(IconButton, {
 
 function EditorMenu() {
   const { navigate } = useNavigation();
-  const { lastChunk } = useCurrentRoute();
+  const { url } = useCurrentRoute();
   const rootPath = rootFlowPath();
 
-  const isActive = (route: string) => lastChunk.url.pathname.endsWith(route);
+  const isActive = (route: string) => url.pathname.endsWith(route);
   const handleClick = (route: string) =>
     !isActive(route) && navigate(rootPath + route);
 
@@ -90,6 +91,11 @@ function EditorMenu() {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: "/submissions-log",
+    },
+    {
+      title: "Feedback",
+      Icon: RateReviewIcon,
+      route: "/feedback",
     },
   ];
 
