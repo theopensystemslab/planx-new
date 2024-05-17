@@ -176,26 +176,14 @@ const PopupIcon = <ArrowIcon sx={{ color: "primary.main" }} fontSize="large" />;
  */
 const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
   ({ children, ...props }, ref) => (
-    <>
-      <Box>
-        <ListHeader>
-          <Typography variant="h4" component="h3" pr={3}>
-            Select all that apply
-          </Typography>
-          <Button variant="contained" color="prompt" aria-label="Close list">
-            Done
-          </Button>
-        </ListHeader>
-      </Box>
-      <Box
-        ref={ref}
-        {...props}
-        role="listbox"
-        sx={{ paddingY: "0px !important" }}
-      >
-        {children}
-      </Box>
-    </>
+    <Box
+      ref={ref}
+      {...props}
+      role="listbox"
+      sx={{ paddingY: "0px !important" }}
+    >
+      {children}
+    </Box>
   ),
 );
 
