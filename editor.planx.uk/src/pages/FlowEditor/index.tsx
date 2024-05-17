@@ -7,8 +7,6 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { OT } from "@planx/graph/types";
-import { formatDistanceToNow } from "date-fns";
 import React, { useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -18,14 +16,6 @@ import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 import { formatLastEditMessage } from "./utils";
-
-
-export const formatLastEditDate = (date: string): string => {
-  return formatDistanceToNow(new Date(date), {
-    includeSeconds: true,
-    addSuffix: true,
-  });
-};
 
 const EditorContainer = styled(Box)(() => ({
   display: "flex",
