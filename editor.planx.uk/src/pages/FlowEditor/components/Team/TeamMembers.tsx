@@ -115,7 +115,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
     (member) => member.email,
   );
   const otherRoles = Object.keys(teamMembersByRole)
-    .filter((role) => role !== "platformAdmin")
+    .filter((role) => role !== "platformAdmin" && member.email)
     .reduce((acc: TeamMember[], role) => {
       return acc.concat(teamMembersByRole[role]);
     }, []);
