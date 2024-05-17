@@ -202,6 +202,8 @@ const routes = compose(
       };
     }),
 
+    "/feedback": lazy(() => import("./feedback")),
+
     "/nodes": compose(
       withView((req) => {
         const [flow, ...breadcrumbs] = req.params.flow.split(",");

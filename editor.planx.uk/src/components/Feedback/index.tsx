@@ -80,9 +80,9 @@ export type FeedbackFormInput = {
   id: string;
 };
 
-const Feedback: React.FC = () => {
-  type FeedbackCategory = "issue" | "idea" | "comment" | "inaccuracy";
+export type FeedbackCategory = "issue" | "idea" | "comment" | "inaccuracy";
 
+const Feedback: React.FC = () => {
   type View = "banner" | "triage" | FeedbackCategory | "thanks";
 
   type ClickEvents = "close" | "back" | "triage" | FeedbackCategory;

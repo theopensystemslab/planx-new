@@ -23,10 +23,10 @@ const MoreInfoFeedback = styled(Box)(({ theme }) => ({
   },
 }));
 
+export type Sentiment = "helpful" | "unhelpful";
+
 const MoreInfoFeedbackComponent: React.FC = () => {
   type View = "yes/no" | "input" | "thanks";
-
-  type Sentiment = "helpful" | "unhelpful";
 
   const [currentFeedbackView, setCurrentFeedbackView] =
     useState<View>("yes/no");

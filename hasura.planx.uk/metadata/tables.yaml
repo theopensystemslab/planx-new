@@ -268,6 +268,76 @@
 - table:
     name: feedback_summary
     schema: public
+  object_relationships:
+    - name: team
+      using:
+        manual_configuration:
+          column_mapping:
+            team_slug: slug
+          insertion_order: null
+          remote_table:
+            name: teams
+            schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - feedback_id
+          - device
+          - node_data
+          - address
+          - feedback_type
+          - help_definition
+          - help_sources
+          - help_text
+          - intersecting_constraints
+          - node_id
+          - node_text
+          - node_title
+          - node_type
+          - project_type
+          - service_slug
+          - status
+          - team_slug
+          - uprn
+          - user_comment
+          - user_context
+          - created_at
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - feedback_id
+          - device
+          - node_data
+          - address
+          - feedback_type
+          - help_definition
+          - help_sources
+          - help_text
+          - intersecting_constraints
+          - node_id
+          - node_text
+          - node_title
+          - node_type
+          - project_type
+          - service_slug
+          - status
+          - team_slug
+          - uprn
+          - user_comment
+          - user_context
+          - created_at
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      comment: ""
 - table:
     name: feedback_type_enum
     schema: public
