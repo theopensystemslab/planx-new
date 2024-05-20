@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import useSWR from "swr";
 import { AdminPanelData } from "types";
 import Caret from "ui/icons/Caret";
 
@@ -54,6 +55,13 @@ const NotConfigured: React.FC = () => <Close color="error" fontSize="small" />;
 const Configured: React.FC = () => <Done color="success" fontSize="small" />;
 
 const TeamData: React.FC<TeamData> = ({ data }) => {
+  const a4Endpoint = `${process.env.REACT_APP_API_URL}/gis/${data.slug}/article4-schema`;
+  const fetcher = (url: string) => fetch(url).then((r) => r.json());
+  const { data: a4Check, isValidating } = useSWR(
+    () => data.slug ? a4Endpoint : null,
+    fetcher,
+  );
+
   return (
     <StyledTeamAccordion primaryColour={data.primaryColour} elevation={0}>
       <AccordionSummary
@@ -114,8 +122,8 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
                 </Box>
               </>
               <>
-                <Box component="dt">{"Article 4s"}</Box>
-                <Box component="dd">{"?"}</Box>
+                <Box component="dt">{"Article 4s (API)"}</Box>
+                <Box component="dd">{!isValidating && a4Check?.status ? <Configured /> : <NotConfigured />}</Box>
               </>
               <>
                 <Box component="dt">{"Reference code"}</Box>

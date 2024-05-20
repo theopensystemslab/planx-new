@@ -18,7 +18,7 @@ export interface LocalAuthorityMetadata {
 }
 
 /** When a team publishes their granular Article 4 data, add them to this list. Key must match team slug */
-const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
+export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "barking-and-dagenham": require("./local_authorities/metadata/barkingAndDagenham"),
   barnet: require("./local_authorities/metadata/barnet"),
   birmingham: require("./local_authorities/metadata/birmingham"),
