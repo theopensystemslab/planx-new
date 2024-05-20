@@ -363,6 +363,13 @@
           - flow_id
         filter: {}
 - table:
+    name: flow_status_enum
+    schema: public
+  is_enum: true
+- table:
+    name: flow_status_history
+    schema: public
+- table:
     name: flows
     schema: public
   object_relationships:
@@ -527,7 +534,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          status:
+            _eq: online
         allow_aggregations: true
     - role: teamEditor
       permission:
@@ -550,16 +559,17 @@
     - role: api
       permission:
         columns:
+          - copied_from
+          - created_at
           - creator_id
-          - team_id
+          - data
+          - id
           - settings
           - slug
-          - created_at
+          - status
+          - team_id
           - updated_at
-          - copied_from
-          - id
           - version
-          - data
         filter: {}
         check: {}
         validate_input:
@@ -577,6 +587,7 @@
           - data
           - settings
           - slug
+          - status
           - team_id
         filter: {}
         check: null
@@ -595,6 +606,7 @@
           - data
           - settings
           - slug
+          - status
           - team_id
         filter:
           team:
@@ -1434,33 +1446,6 @@
 - table:
     name: submission_services_log
     schema: public
-  select_permissions:
-    - role: platformAdmin
-      permission:
-        columns:
-          - retry
-          - response
-          - event_id
-          - event_type
-          - status
-          - created_at
-          - flow_id
-          - session_id
-        filter: {}
-      comment: ""
-    - role: teamEditor
-      permission:
-        columns:
-          - retry
-          - response
-          - event_id
-          - event_type
-          - status
-          - created_at
-          - flow_id
-          - session_id
-        filter: {}
-      comment: ""
 - table:
     name: submission_services_summary
     schema: public
