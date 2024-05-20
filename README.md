@@ -57,7 +57,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 2. Copy all `.example` env files into their respective directories and replace 👻 with a string like "SECRET" or longer where noted
 
-3. Setup free OAuth Client ID credentails in the [Google Cloud APIs console](https://console.cloud.google.com/apis/credentials)
+3. Setup free OAuth Client ID credentials in the [Google Cloud APIs console](https://console.cloud.google.com/apis/credentials)
   - Application type = "Web application"
   - Authorised JavaScript origins = "http://localhost:3000"
   - Authorised redirect URIs = "http://localhost:7002/auth/google/callback"
@@ -102,7 +102,7 @@ For maximum visibility and discoverability, we recommend using the [GitHub discu
 
 Our `main` branch is deployed to AWS staging (editor.planx.dev) and `production` is deployed to our AWS production environment (i.e. editor.planx.uk and the custom subdomain like planningservices.{council}.gov.uk) using Github Actions.
 
-We work in feature branches and open pull requests against `main`. Pull requests will spin up a Vultr server running Docker to test the whole stack (eg database migrations, API changes, frontend changes, Storybook, etc) and generate unique links that can be shared for user-acceptance tesing. Pull request environments use the domain pattern `<service>.<PR#>.planx.pizza` and are often simply referred to as "pizzas". The only changes which cannot be fully tested on a pizza are changes related to Pulumi infrastructure-as-code because this is only deployed in AWS environments, not via Docker.
+We work in feature branches and open pull requests against `main`. Pull requests will spin up a Vultr server running Docker to test the whole stack (eg database migrations, API changes, frontend changes, Storybook, etc) and generate unique links that can be shared for user-acceptance testing. Pull request environments use the domain pattern `<service>.<PR#>.planx.pizza` and are often simply referred to as "pizzas". The only changes which cannot be fully tested on a pizza are changes related to Pulumi infrastructure-as-code because this is only deployed in AWS environments, not via Docker.
 
 Pull requests will automatically deploy to a new pizza. To skip pizza deployments, include `[skip pizza]` anywhere in your commit message.
 
