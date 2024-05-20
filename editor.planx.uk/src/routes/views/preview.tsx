@@ -2,7 +2,7 @@ import { FlowGraph } from "@opensystemslab/planx-core/types";
 import axios, { AxiosError } from "axios";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
-import PublicLayout from "pages/layout/PublicLayout";
+import TestLayout from "pages/layout/TestLayout";
 import React from "react";
 import { View } from "react-navi";
 import { getTeamFromDomain } from "routes/utils";
@@ -35,9 +35,9 @@ export const previewView = async (req: NaviRequest) => {
   state.setTeam(flow.team);
 
   return (
-    <PublicLayout>
+    <TestLayout>
       <View />
-    </PublicLayout>
+    </TestLayout>
   );
 };
 

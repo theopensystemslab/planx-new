@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 import { publicClient } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
-import PublicLayout from "pages/layout/PublicLayout";
+import TestLayout from "pages/layout/TestLayout";
 import React from "react";
 import { View } from "react-navi";
 import { Flow, GlobalSettings } from "types";
@@ -39,9 +39,9 @@ export const draftView = async (req: NaviRequest) => {
   state.setTeam(flow.team);
 
   return (
-    <PublicLayout>
+    <TestLayout>
       <View />
-    </PublicLayout>
+    </TestLayout>
   );
 };
 

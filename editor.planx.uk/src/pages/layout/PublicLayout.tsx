@@ -19,7 +19,7 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { FOOTER_ITEMS } from "../../types";
 
-const MainContainer = styled(Box)(({ theme }) => ({
+export const MainContainer = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.border.light}`,
   display: "flex",
   flex: "1 0 auto",
@@ -29,7 +29,7 @@ const MainContainer = styled(Box)(({ theme }) => ({
   position: "relative",
 }));
 
-const PublicFooter: React.FC = () => {
+export const PublicFooter: React.FC = () => {
   const { data } = useCurrentRoute();
   const [flowSettings, globalSettings] = useStore((state) => [
     state.flowSettings,
@@ -52,10 +52,10 @@ const PublicFooter: React.FC = () => {
 
   const globalFooterItems = globalSettings?.footerContent
     ? Object.entries(globalSettings?.footerContent).map(([slug, item]) => ({
-      title: item.heading,
-      content: item.content,
-      href: makeHref(slug),
-    }))
+        title: item.heading,
+        content: item.content,
+        href: makeHref(slug),
+      }))
     : [];
 
   const footerItems = [...flowSettingsContent, ...globalFooterItems].filter(
