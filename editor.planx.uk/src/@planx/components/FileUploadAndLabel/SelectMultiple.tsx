@@ -5,7 +5,6 @@ import Autocomplete, {
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import List from "@mui/material/List";
@@ -37,14 +36,6 @@ interface SelectMultipleProps {
 interface Option extends UserFile {
   category: keyof FileList;
 }
-
-const ListHeader = styled(Box)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: theme.spacing(1, 1.5),
-  background: theme.palette.grey[200],
-}));
 
 const StyledAutocomplete = styled(
   Autocomplete<Option, true, true, false, "div">,
