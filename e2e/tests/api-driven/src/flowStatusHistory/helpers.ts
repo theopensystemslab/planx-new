@@ -20,16 +20,16 @@ export const cleanup = async () => {
 interface GetFlowStatus {
   flows: {
     status: FlowStatus;
-  }[];
+  };
 }
 
 export const getFlowStatus = async (flowId: string) => {
   const {
-    flows: [{ status }],
+    flows: { status },
   } = await $admin.client.request<GetFlowStatus>(
     gql`
       query GetFlowStatus($flowId: uuid!) {
-        flows(where: { id: { _eq: $flowId } }) {
+        flows: flows_by_pk(id: $flowId) {
           status
         }
       }
