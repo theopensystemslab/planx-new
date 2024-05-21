@@ -12,7 +12,7 @@ INSERT INTO "public"."flow_status_enum"("value", "comment") VALUES (E'offline', 
 
 -- Add flow.status column
 alter table "public"."flows" add column "status" text
- not null default 'online';
+ not null default 'offline';
 
 alter table "public"."flows"
   add constraint "flows_status_fkey"
@@ -37,7 +37,7 @@ CREATE TABLE "public"."flow_status_history" (
 COMMENT ON TABLE "public"."flow_status_history" IS E'Temporal table to track the status of a flow over time';
 
 -- Populate initial table values
--- All flows have had status "online" since they were created
+-- All existing flows have had status "online" since they were created
 INSERT INTO flow_status_history (flow_id, status, event_start)
 SELECT id, 'online', created_at
 FROM flows;

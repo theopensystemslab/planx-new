@@ -1,4 +1,4 @@
-import { When, Then, World, After, Before } from "@cucumber/cucumber";
+import { When, Then, World, After, Before, Given } from "@cucumber/cucumber";
 import assert from "assert";
 import { cleanup, getFlowStatus, getFlowStatusHistory, setup } from "./helpers";
 import { createFlow } from "../globalHelpers";
@@ -18,7 +18,7 @@ Before<CustomWorld>("@flow-status-history", async function () {
   this.teamId = teamId;
 });
 
-When<CustomWorld>("a new flow is added", async function () {
+Given<CustomWorld>("a flow exists", async function () {
   const flowId = await createFlow({ teamId: this.teamId, slug: "test-flow" });
 
   assert.ok(flowId, "flowId is not defined");
@@ -26,13 +26,13 @@ When<CustomWorld>("a new flow is added", async function () {
   this.flowId = flowId;
 });
 
-Then("the status of the flow is online by default", async function () {
+Then("the status of the flow is offline by default", async function () {
   const status = await getFlowStatus(this.flowId);
 
   assert.equal(
     status,
-    "online",
-    `Flow status is ${status} - it should be "online"`,
+    "offline",
+    `Flow status is ${status} - it should be "offline"`,
   );
 });
 
@@ -52,8 +52,8 @@ Then("a flow_status_history record is created", async function () {
   assert.ok(flowStatusHistory[0], "flow_status_history record not created");
   assert.equal(
     flowStatusHistory[0].status,
-    "online",
-    `Flow status is ${flowStatusHistory[0].status} - it should be "online"`,
+    "offline",
+    `Flow status is ${flowStatusHistory[0].status} - it should be "offline"`,
   );
   assert.notEqual(
     flowStatusHistory[0].eventStart,
@@ -67,16 +67,16 @@ Then("a flow_status_history record is created", async function () {
   );
 });
 
-When("the flow status is changed to offline", async function () {
+When("the flow status is changed to online", async function () {
   const flow = await $admin.flow.setStatus({
     flow: { id: this.flowId },
-    status: "offline",
+    status: "online",
   });
   assert.ok(flow, "Flow not defined after setStatus()");
   assert.equal(
     flow.status,
-    "offline",
-    `Flow status is ${flow.status} - it should be "offline`,
+    "online",
+    `Flow status is ${flow.status} - it should be "online`,
   );
 });
 
@@ -94,8 +94,8 @@ Then("a new flow_status_history record is created", async function () {
   assert.ok(flowStatusHistory[1], "flow_status_history record not created");
   assert.equal(
     flowStatusHistory[1].status,
-    "online",
-    `Flow status is ${flowStatusHistory[1].status} - it should be "online"`,
+    "offline",
+    `Flow status is ${flowStatusHistory[1].status} - it should be "offline"`,
   );
   assert.notEqual(
     flowStatusHistory[1].eventStart,
