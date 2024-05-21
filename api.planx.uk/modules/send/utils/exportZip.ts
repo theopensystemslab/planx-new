@@ -60,7 +60,7 @@ export async function buildSubmissionExportZip({
   if (includeDigitalPlanningJSON) {
     try {
       const doValidation = isApplicationTypeSupported(passport);
-      const schema = doValidation 
+      const schema = doValidation
         ? await $api.export.digitalPlanningDataPayload(sessionId)
         : await $api.export.digitalPlanningDataPayload(sessionId, true);
       const schemaBuff = Buffer.from(JSON.stringify(schema, null, 2));
