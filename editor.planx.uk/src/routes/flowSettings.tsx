@@ -1,10 +1,10 @@
 import gql from "graphql-tag";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { publicClient } from "lib/graphql";
 import {
   compose,
   map,
   mount,
+  NaviRequest,
   NotFoundError,
   redirect,
   route,
@@ -20,6 +20,39 @@ import React from "react";
 import Settings, { SettingsTab } from "../pages/FlowEditor/components/Settings";
 import type { FlowSettings } from "../types";
 import { makeTitle } from "./utils";
+
+interface GetFlowSettings {
+  flows: {
+    id: string;
+    settings: FlowSettings;
+  }[];
+}
+
+export const getFlowSettings = async (req: NaviRequest) => {
+  const {
+    data: {
+      flows: [{ settings }],
+    },
+  } = await publicClient.query<GetFlowSettings>({
+    query: gql`
+      query GetFlow($slug: String!, $team_slug: String!) {
+        flows(
+          limit: 1
+          where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
+        ) {
+          id
+          settings
+        }
+      }
+    `,
+    variables: {
+      slug: req.params.flow,
+      team_slug: req.params.team,
+    },
+  });
+
+  useStore.getState().setFlowSettings(settings);
+};
 
 const tabs: SettingsTab[] = [
   {
@@ -58,37 +91,12 @@ const flowSettingsRoutes = compose(
           `User does not have access to ${req.originalUrl}`,
         );
 
-      return route(async (req) => {
-        const { data } = await publicClient.query({
-          query: gql`
-            query GetFlow($slug: String!, $team_slug: String!) {
-              flows(
-                limit: 1
-                where: {
-                  slug: { _eq: $slug }
-                  team: { slug: { _eq: $team_slug } }
-                }
-              ) {
-                id
-                settings
-              }
-            }
-          `,
-          variables: {
-            slug: req.params.flow,
-            team_slug: req.params.team,
-          },
-        });
-
-        const settings: FlowSettings = data.flows[0].settings;
-        useStore.getState().setFlowSettings(settings);
-
-        return {
-          title: makeTitle(
-            [req.params.team, req.params.flow, "Flow Settings"].join("/"),
-          ),
-          view: <Settings currentTab={req.params.tab} tabs={tabs} />,
-        };
+      return route({
+        getData: getFlowSettings,
+        title: makeTitle(
+          [req.params.team, req.params.flow, "Flow Settings"].join("/"),
+        ),
+        view: <Settings currentTab={req.params.tab} tabs={tabs} />,
       });
     }),
   }),

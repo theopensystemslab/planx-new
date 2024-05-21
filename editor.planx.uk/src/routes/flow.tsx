@@ -28,6 +28,7 @@ import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "../pages/FlowEditor/data/types";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import type { Flow } from "../types";
+import { getFlowSettings } from "./flowSettings";
 import { makeTitle } from "./utils";
 import { flowEditorView } from "./views/flowEditor";
 
@@ -223,6 +224,7 @@ const routes = compose(
       withView(SettingsContainer),
 
       route(async (req) => ({
+        getData: getFlowSettings,
         title: makeTitle(
           [req.params.team, req.params.flow, "service"].join("/"),
         ),
@@ -234,6 +236,7 @@ const routes = compose(
       withView(SettingsContainer),
 
       route(async (req) => ({
+        getData: getFlowSettings,
         title: makeTitle(
           [req.params.team, req.params.flow, "service-flags"].join("/"),
         ),
