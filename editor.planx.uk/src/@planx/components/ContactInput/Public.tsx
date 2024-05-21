@@ -1,5 +1,5 @@
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
@@ -57,7 +57,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <QuestionHeader
+      <CardHeader
         title={props.title}
         description={props.description}
         info={props.info}

@@ -1,6 +1,6 @@
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
@@ -116,7 +116,7 @@ const FileUpload: React.FC<Props> = (props) => {
 
   return (
     <Card isValid={true} handleSubmit={handleSubmit}>
-      <QuestionHeader
+      <CardHeader
         title={props.title}
         description={props.description}
         info={props.info}

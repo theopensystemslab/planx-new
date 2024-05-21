@@ -12,7 +12,7 @@ import { SectionNode, SectionStatus } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import Card from "../shared/Preview/Card";
-import QuestionHeader from "../shared/Preview/QuestionHeader";
+import CardHeader from "../shared/Preview/CardHeader";
 import type { Section } from "./model";
 import { computeSectionStatuses } from "./model";
 
@@ -78,7 +78,7 @@ export const Root = ({
   ...props
 }: RootProps) => (
   <Card isValid handleSubmit={handleSubmit}>
-    <QuestionHeader title={flowName} />
+    <CardHeader title={flowName} />
     <Box>
       <Typography variant="h3" component="h2" pb="0.25em">
         Application incomplete.

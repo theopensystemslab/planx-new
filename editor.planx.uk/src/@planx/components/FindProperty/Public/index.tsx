@@ -4,7 +4,7 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";
@@ -188,7 +188,7 @@ function Component(props: Props) {
     if (props.allowNewAddresses && page === "new-address") {
       return (
         <>
-          <QuestionHeader
+          <CardHeader
             title={props.newAddressTitle}
             description={props.newAddressDescription || ""}
           />
@@ -219,7 +219,7 @@ function Component(props: Props) {
       // default to page === "os-address"
       return (
         <>
-          <QuestionHeader
+          <CardHeader
             title={props.title}
             description={props.description || ""}
           />

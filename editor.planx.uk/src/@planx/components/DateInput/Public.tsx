@@ -3,7 +3,7 @@ import { visuallyHidden } from "@mui/utils";
 import { DateInput, paddedDate } from "@planx/components/DateInput/model";
 import { dateRangeSchema } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
@@ -44,7 +44,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
           .join(" ")}
       >
         <legend style={visuallyHidden}>{props.title}</legend>
-        <QuestionHeader
+        <CardHeader
           title={props.title}
           description={props.description}
           info={props.info}

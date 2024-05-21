@@ -1,5 +1,5 @@
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { TaskList } from "@planx/components/TaskList/model";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
@@ -10,7 +10,7 @@ export type Props = PublicProps<TaskList>;
 const TaskListComponent: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
-      <QuestionHeader
+      <CardHeader
         title={props.title}
         description={props.description}
         info={props.info}

@@ -21,9 +21,9 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
 import Card from "../shared/Preview/Card";
+import CardHeader, { Image } from "../shared/Preview/CardHeader";
 import MoreInfo from "../shared/Preview/MoreInfo";
 import MoreInfoSection from "../shared/Preview/MoreInfoSection";
-import QuestionHeader, { Image } from "../shared/Preview/QuestionHeader";
 import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -194,7 +194,7 @@ function Component(props: Props) {
       }
     >
       <FullWidthWrapper>
-        <QuestionHeader {...props} />
+        <CardHeader {...props} />
         <DropzoneContainer>
           {!props.hideDropZone && (
             <>

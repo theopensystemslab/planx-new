@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/ui";
 import { Feature } from "@turf/helpers";
@@ -130,7 +130,7 @@ export function Presentational(props: PresentationalProps) {
 
   return (
     <Card handleSubmit={handleSubmit}>
-      <QuestionHeader title={title} description={description} />
+      <CardHeader title={title} description={description} />
       <MapContainer>
         <p style={visuallyHidden}>
           A static map centred on the property address, showing the title

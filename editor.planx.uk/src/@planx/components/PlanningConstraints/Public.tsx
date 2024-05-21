@@ -6,7 +6,7 @@ import type {
   GISResponse,
 } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
@@ -15,6 +15,7 @@ import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import useSWR, { Fetcher } from "swr";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";
@@ -27,7 +28,6 @@ import {
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "./model";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -181,7 +181,7 @@ function Component(props: Props) {
         />
       ) : (
         <Card handleSubmit={props.handleSubmit} isValid>
-          <QuestionHeader
+          <CardHeader
             title={props.title}
             description={props.description || ""}
           />
@@ -206,8 +206,14 @@ export type PlanningConstraintsContentProps = {
 export function PlanningConstraintsContent(
   props: PlanningConstraintsContentProps,
 ) {
-  const { title, description, constraints, metadata, refreshConstraints, disclaimer } =
-    props;
+  const {
+    title,
+    description,
+    constraints,
+    metadata,
+    refreshConstraints,
+    disclaimer,
+  } = props;
   const error = constraints.error || undefined;
   const showError = error || !Object.values(constraints)?.length;
 
@@ -221,7 +227,7 @@ export function PlanningConstraintsContent(
 
   return (
     <Card handleSubmit={props.handleSubmit}>
-      <QuestionHeader title={title} description={description} />
+      <CardHeader title={title} description={description} />
       {showError && (
         <ConstraintsFetchError
           error={error}
@@ -283,7 +289,10 @@ const Disclaimer = (props: { text: string }) => (
   <WarningContainer>
     <ErrorOutline />
     <Typography variant="body1" component="div" ml={2} mb={1}>
-      <ReactMarkdownOrHtml source={props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER} openLinksOnNewTab />
+      <ReactMarkdownOrHtml
+        source={props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+        openLinksOnNewTab
+      />
     </Typography>
   </WarningContainer>
 );
@@ -324,7 +333,7 @@ interface ConstraintsGraphErrorProps {
 
 const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (
   <Card handleSubmit={props.handleSubmit} isValid>
-    <QuestionHeader title={props.title} description={props.description || ""} />
+    <CardHeader title={props.title} description={props.description || ""} />
     <ErrorSummaryContainer
       role="status"
       data-testid="error-summary-invalid-graph"
