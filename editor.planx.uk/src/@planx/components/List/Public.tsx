@@ -4,7 +4,7 @@ import React from "react";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 
 import Card from "../shared/Preview/Card";
-import QuestionHeader from "../shared/Preview/QuestionHeader";
+import CardHeader from "../shared/Preview/CardHeader";
 import { List } from "./model";
 
 type Props = PublicProps<List>;
@@ -14,7 +14,7 @@ function ListComponent(props: Props) {
 
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
-      <QuestionHeader
+      <CardHeader
         info={props.info}
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
