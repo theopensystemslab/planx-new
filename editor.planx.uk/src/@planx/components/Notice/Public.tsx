@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
@@ -94,7 +94,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={handleSubmit} isValid>
       <>
-        <QuestionHeader
+        <CardHeader
           info={props.info}
           policyRef={props.policyRef}
           howMeasured={props.howMeasured}

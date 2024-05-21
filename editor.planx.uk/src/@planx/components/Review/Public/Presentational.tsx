@@ -1,5 +1,5 @@
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
 import { Store } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
@@ -28,7 +28,7 @@ function Component(props: Props) {
 
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
-      <QuestionHeader title={props.title} description={props.description} />
+      <CardHeader title={props.title} description={props.description} />
       <SummaryListsBySections
         breadcrumbs={sortedBreadcrumbs}
         flow={props.flow}

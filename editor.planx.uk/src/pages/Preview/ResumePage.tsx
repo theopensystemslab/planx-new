@@ -3,7 +3,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
@@ -62,10 +62,10 @@ export const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
   return (
     <Box width="100%">
       <Card handleSubmit={formik.handleSubmit}>
-        <QuestionHeader
+        <CardHeader
           title="Resume your application"
           description="Enter your email to resume your application."
-        ></QuestionHeader>
+        ></CardHeader>
         <InputRow>
           <InputLabel label={"Email address"} htmlFor={"email"}>
             <Input

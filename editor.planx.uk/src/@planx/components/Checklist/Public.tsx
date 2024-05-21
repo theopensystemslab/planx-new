@@ -4,7 +4,7 @@ import { visuallyHidden } from "@mui/utils";
 import type { Checklist, Group } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { getIn, useFormik } from "formik";
 import React, { useState } from "react";
 import InputLegend from "ui/editor/InputLegend";
@@ -132,7 +132,7 @@ const ChecklistComponent: React.FC<Props> = ({
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
-      <QuestionHeader
+      <CardHeader
         title={text}
         description={description}
         info={info}

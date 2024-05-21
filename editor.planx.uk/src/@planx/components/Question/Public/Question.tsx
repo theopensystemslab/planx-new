@@ -5,7 +5,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import { useTheme } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio";
@@ -85,7 +85,7 @@ const Question: React.FC<IQuestion> = (props) => {
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <QuestionHeader
+      <CardHeader
         title={props.text}
         description={props.description}
         info={props.info}

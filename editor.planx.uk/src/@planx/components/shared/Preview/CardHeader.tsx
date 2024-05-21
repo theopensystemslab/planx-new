@@ -12,7 +12,7 @@ import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
-interface IQuestionHeader {
+interface ICardHeader {
   title?: string;
   description?: string;
   info?: string;
@@ -27,7 +27,7 @@ const Description = styled(Box)(({ theme }) => ({
   },
 }));
 
-const QuestionHeaderWrapper = styled(Box)(({ theme }) => ({
+const CardHeaderWrapper = styled(Box)(({ theme }) => ({
   maxWidth: theme.breakpoints.values.formWrap,
   marginBottom: theme.spacing(1),
 }));
@@ -51,7 +51,7 @@ export const Image = styled("img")(() => ({
   maxWidth: "100%",
 }));
 
-const QuestionHeader: React.FC<IQuestionHeader> = ({
+const CardHeader: React.FC<ICardHeader> = ({
   title,
   description,
   info,
@@ -70,7 +70,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 
   return (
     <>
-      <QuestionHeaderWrapper>
+      <CardHeaderWrapper>
         {title && (
           <TitleWrapper mr={1} pt={0.5}>
             <Typography
@@ -140,8 +140,8 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           ) : undefined}
         </MoreInfo>
         {img && <Image src={img} alt="question" />}
-      </QuestionHeaderWrapper>
+      </CardHeaderWrapper>
     </>
   );
 };
-export default QuestionHeader;
+export default CardHeader;

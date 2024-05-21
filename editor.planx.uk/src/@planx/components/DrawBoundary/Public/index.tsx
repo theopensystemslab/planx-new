@@ -5,11 +5,11 @@ import { visuallyHidden } from "@mui/utils";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import Card from "@planx/components/shared/Preview/Card";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import {
   MapContainer,
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
@@ -227,7 +227,7 @@ export default function Component(props: Props) {
     if (page === "draw") {
       return (
         <>
-          <QuestionHeader
+          <CardHeader
             title={props.title}
             description={props.description}
             info={props.info}
@@ -313,7 +313,7 @@ export default function Component(props: Props) {
     } else if (page === "upload") {
       return (
         <>
-          <QuestionHeader
+          <CardHeader
             title={props.titleForUploading}
             description={props.descriptionForUploading}
             info={props.info}

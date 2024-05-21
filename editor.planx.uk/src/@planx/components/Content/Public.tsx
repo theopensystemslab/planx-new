@@ -12,9 +12,9 @@ import { getContrastTextColor } from "styleUtils";
 import { emptyContent } from "ui/editor/RichTextInput";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
+import { HelpButton, Image } from "../shared/Preview/CardHeader";
 import MoreInfo from "../shared/Preview/MoreInfo";
 import MoreInfoSection from "../shared/Preview/MoreInfoSection";
-import { HelpButton, Image } from "../shared/Preview/QuestionHeader";
 
 export type Props = PublicProps<Content>;
 
