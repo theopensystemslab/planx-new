@@ -1,112 +1,17 @@
-import { gql } from "graphql-request";
-import airbrake from "../../../airbrake";
-import { $api } from "../../../client";
+import { Passport } from "../../../types";
 
-export async function logPaymentStatus({
-  sessionId,
-  flowId,
-  teamSlug,
-  govUkResponse,
-}: {
-  sessionId: string | undefined;
-  flowId: string | undefined;
-  teamSlug: string;
-  govUkResponse: {
-    amount: number;
-    payment_id: string;
-    state: {
-      status: string;
-    };
-  };
-}): Promise<void> {
-  if (!flowId || !sessionId) {
-    reportError({
-      error: "Could not log the payment status due to missing context value(s)",
-      context: { sessionId, flowId, teamSlug },
-    });
-  } else {
-    // log payment status response
-    try {
-      await insertPaymentStatus({
-        sessionId,
-        flowId,
-        teamSlug,
-        paymentId: govUkResponse.payment_id,
-        status: govUkResponse.state?.status || "unknown",
-        amount: govUkResponse.amount,
-      });
-    } catch (e) {
-      reportError({
-        error: `Failed to insert a payment status: ${e}`,
-        context: { govUkResponse },
-      });
-    }
-  }
-}
+/**
+ * Checks whether a session's passport data includes an application type supported by the ODP Schema
+ * @param passport
+ * @returns boolean
+ */
+export function isApplicationTypeSupported(passport: Passport): boolean {
+  // Prefixes of application types that are supported by the ODP Schema
+  //   TODO in future look up via schema type definitions
+  const supportedAppTypes = ["ldc", "listed", "pa", "pp"];
+    
+  const appType = passport.data?.["application.type"]?.[0];
+  const appTypePrefix = appType?.split(".")?.[0];
 
-// tmp explicit error handling
-export function reportError(report: { error: any; context: object }) {
-  if (airbrake) {
-    airbrake.notify(report);
-    return;
-  }
-  log(report);
-}
-
-// tmp logger
-function log(event: object | string) {
-  if (!process.env.SUPPRESS_LOGS) {
-    console.log(event);
-  }
-}
-
-// TODO: this would ideally live in planx-client
-async function insertPaymentStatus({
-  flowId,
-  sessionId,
-  paymentId,
-  teamSlug,
-  status,
-  amount,
-}: {
-  flowId: string;
-  sessionId: string;
-  paymentId: string;
-  teamSlug: string;
-  status: string;
-  amount: number;
-}): Promise<void> {
-  const _response = await $api.client.request(
-    gql`
-      mutation InsertPaymentStatus(
-        $flowId: uuid!
-        $sessionId: uuid!
-        $paymentId: String!
-        $teamSlug: String!
-        $status: payment_status_enum_enum
-        $amount: Int!
-      ) {
-        insert_payment_status(
-          objects: {
-            flow_id: $flowId
-            session_id: $sessionId
-            payment_id: $paymentId
-            team_slug: $teamSlug
-            status: $status
-            amount: $amount
-          }
-        ) {
-          affected_rows
-        }
-      }
-    `,
-    {
-      flowId,
-      sessionId,
-      teamSlug,
-      paymentId,
-      status,
-      amount,
-    },
-  );
+  return supportedAppTypes.includes(appTypePrefix);
 }
