@@ -413,16 +413,16 @@
       permission:
         check: {}
         columns:
+          - copied_from
+          - created_at
           - creator_id
-          - team_id
+          - data
+          - id
           - settings
           - slug
-          - created_at
+          - team_id
           - updated_at
-          - copied_from
-          - id
           - version
-          - data
         validate_input:
           definition:
             forward_client_headers: false
@@ -489,16 +489,17 @@
     - role: api
       permission:
         columns:
+          - copied_from
+          - created_at
           - creator_id
-          - team_id
+          - data
+          - id
           - settings
           - slug
-          - created_at
+          - status
+          - team_id
           - updated_at
-          - copied_from
-          - id
           - version
-          - data
         computed_fields:
           - data_merged
         filter: {}
@@ -506,13 +507,14 @@
     - role: platformAdmin
       permission:
         columns:
+          - analytics_link
           - created_at
           - creator_id
           - data
           - id
-          - analytics_link
           - settings
           - slug
+          - status
           - team_id
           - updated_at
           - version
@@ -529,6 +531,7 @@
           - id
           - settings
           - slug
+          - status
           - team_id
           - updated_at
           - version
@@ -541,13 +544,14 @@
     - role: teamEditor
       permission:
         columns:
+          - analytics_link
           - created_at
           - creator_id
           - data
           - id
-          - analytics_link
           - settings
           - slug
+          - status
           - team_id
           - updated_at
           - version
