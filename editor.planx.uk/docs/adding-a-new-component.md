@@ -66,7 +66,7 @@ type Props = PublicProps<SetValue>;
 function SetValueComponent(props: Props) {
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
-      <QuestionHeader
+      <CardHeader
         info={props.info}
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}

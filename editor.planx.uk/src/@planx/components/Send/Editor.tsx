@@ -57,50 +57,66 @@ const SendComponent: React.FC<Props> = (props) => {
     },
   ];
 
-  const changeCheckbox = (value: Destination) => (_checked: any) => {
-    let newCheckedValues: Destination[];
+  // Show S3 option on staging only
+  if (process.env.REACT_APP_ENV !== "production") {
+    options.push({
+      value: Destination.S3,
+      label: "Upload to AWS S3 bucket",
+    });
+  }
 
-    if (formik.values.destinations.includes(value)) {
-      newCheckedValues = formik.values.destinations.filter((x) => x !== value);
-    } else {
-      newCheckedValues = [...formik.values.destinations, value];
-    }
+  const changeCheckbox =
+    (value: Destination) =>
+    (_checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined) => {
+      let newCheckedValues: Destination[];
 
-    formik.setFieldValue(
-      "destinations",
-      newCheckedValues.sort((a, b) => {
-        const originalValues = options.map((cb) => cb.value);
-        return originalValues.indexOf(a) - originalValues.indexOf(b);
-      }),
-    );
+      if (formik.values.destinations.includes(value)) {
+        newCheckedValues = formik.values.destinations.filter(
+          (x) => x !== value,
+        );
+      } else {
+        newCheckedValues = [...formik.values.destinations, value];
+      }
 
-    // Show warnings on selection of BOPS or Uniform for likely unsupported services
-    //   Don't actually restrict selection because flowSlug matching is imperfect for some valid test cases
-    const flowSlug = window.location.pathname?.split("/")?.[1];
-    if (
-      value === Destination.BOPS &&
-      newCheckedValues.includes(value) &&
-      ![
-        "apply-for-a-lawful-development-certificate",
-        "apply-for-prior-approval",
-        "apply-for-planning-permission",
-      ].includes(flowSlug)
-    ) {
-      alert(
-        "BOPS only accepts Lawful Development Certificate, Prior Approval, and Planning Permission submissions. Please do not select if you're building another type of submission service!",
+      formik.setFieldValue(
+        "destinations",
+        newCheckedValues.sort((a, b) => {
+          const originalValues = options.map((cb) => cb.value);
+          return originalValues.indexOf(a) - originalValues.indexOf(b);
+        }),
       );
-    }
 
-    if (
-      value === Destination.Uniform &&
-      newCheckedValues.includes(value) &&
-      flowSlug !== "apply-for-a-lawful-development-certificate"
-    ) {
-      alert(
-        "Uniform only accepts Lawful Development Certificate submissions. Please do not select if you're building another type of submission service!",
-      );
-    }
-  };
+      // Show warnings on selection of BOPS or Uniform for likely unsupported services
+      //   Don't actually restrict selection because flowSlug matching is imperfect for some valid test cases
+      const teamSlug = window.location.pathname?.split("/")?.[1];
+      const flowSlug = window.location.pathname?.split("/")?.[2];
+      if (value === Destination.BOPS && newCheckedValues.includes(value)) {
+        alert(
+          "BOPS only accepts Lawful Development Certificate, Prior Approval, and Planning Permission submissions. Please do not select if you're building another type of submission service!",
+        );
+      }
+
+      if (
+        value === Destination.Uniform &&
+        newCheckedValues.includes(value) &&
+        flowSlug !== "apply-for-a-lawful-development-certificate" &&
+        !["buckinghamshire", "lambeth", "southwark"].includes(teamSlug)
+      ) {
+        alert(
+          "Uniform is only enabled for Bucks, Lambeth and Southwark to accept Lawful Development Certificate submissions. Please do not select if you're building another type of submission service!",
+        );
+      }
+
+      if (
+        value === Destination.S3 &&
+        newCheckedValues.includes(value) &&
+        !["barnet", "lambeth"].includes(teamSlug)
+      ) {
+        alert(
+          "AWS S3 uploads are currently being prototyped with Barnet and Lambeth only. Please do not select this option for other councils yet.",
+        );
+      }
+    };
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

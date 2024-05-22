@@ -8,7 +8,7 @@ import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -20,38 +20,67 @@ const FIND_PROPERTY_DT = "Property address";
 const DRAW_BOUNDARY_DT = "Location plan";
 
 export const SummaryListTable = styled("dl", {
-  shouldForwardProp: (prop) => prop !== "showChangeButton",
-})<{ showChangeButton?: boolean }>(({ theme, showChangeButton }) => ({
-  display: "grid",
-  gridTemplateColumns: showChangeButton ? "1fr 2fr 100px" : "1fr 2fr",
-  gridRowGap: "10px",
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(4),
-  "& > *": {
-    borderBottom: `1px solid ${theme.palette.border.main}`,
-    paddingBottom: theme.spacing(2),
-    paddingTop: theme.spacing(2),
-    verticalAlign: "top",
-    margin: 0,
-  },
-  "& ul": {
-    listStylePosition: "inside",
-    padding: 0,
-    margin: 0,
-  },
-  "& dt": {
-    // left column
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  },
-  "& dd:nth-of-type(n)": {
-    // middle column
-    paddingLeft: "10px",
-  },
-  "& dd:nth-of-type(2n)": {
-    // right column
-    textAlign: showChangeButton ? "right" : "left",
-  },
-}));
+  shouldForwardProp: (prop) =>
+    !["showChangeButton", "dense"].includes(prop as string),
+})<{ showChangeButton?: boolean; dense?: boolean }>(
+  ({ theme, showChangeButton, dense }) => ({
+    display: "grid",
+    gridTemplateColumns: showChangeButton ? "1fr 2fr 100px" : "1fr 2fr",
+    gridRowGap: "10px",
+    marginTop: dense ? theme.spacing(1) : theme.spacing(2),
+    marginBottom: dense ? theme.spacing(2) : theme.spacing(4),
+    fontSize: dense ? theme.typography.body2.fontSize : "inherit",
+    "& > *": {
+      borderBottom: `1px solid ${theme.palette.border.main}`,
+      paddingBottom: dense ? theme.spacing(1) : theme.spacing(2),
+      paddingTop: dense ? theme.spacing(1) : theme.spacing(2),
+      verticalAlign: "top",
+      margin: 0,
+    },
+    "& ul": {
+      listStylePosition: "inside",
+      padding: 0,
+      margin: 0,
+    },
+    "& dt": {
+      // left column
+      fontWeight: FONT_WEIGHT_SEMI_BOLD,
+    },
+    "& dd:nth-of-type(n)": {
+      // middle column
+      paddingLeft: "10px",
+    },
+    "& dd:nth-of-type(2n)": {
+      // right column
+      textAlign: showChangeButton ? "right" : "left",
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+      "& dt": {
+        // top row
+        paddingLeft: theme.spacing(1),
+        paddingTop: dense ? theme.spacing(1) : theme.spacing(2),
+        marginTop: theme.spacing(1),
+        borderTop: `1px solid ${theme.palette.border.main}`,
+        borderBottom: "none",
+        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+      },
+      "& dd:nth-of-type(n)": {
+        // middle row
+        textAlign: "left",
+        paddingTop: 0,
+        paddingBottom: 0,
+        margin: 0,
+        borderBottom: "none",
+      },
+      "& dd:nth-of-type(2n)": {
+        // bottom row
+        textAlign: "left",
+      },
+    },
+  }),
+);
 
 const presentationalComponents: {
   [key in TYPES]: React.FC<ComponentProps> | undefined;
@@ -214,7 +243,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 // For applicable component types, display a list of their question & answers with a "change" link
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
-  const { trackBackwardsNavigation } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [nodeToChange, setNodeToChange] = useState<Store.nodeId | undefined>(
     undefined,
@@ -223,7 +252,12 @@ function SummaryList(props: SummaryListProps) {
   const handleCloseDialog = (isConfirmed: boolean) => {
     setIsDialogOpen(false);
     if (isConfirmed && nodeToChange) {
-      trackBackwardsNavigation("change", nodeToChange);
+      trackEvent({
+        event: "backwardsNavigation",
+        metadata: null,
+        initiator: "change",
+        nodeId: nodeToChange,
+      });
       props.changeAnswer(nodeToChange);
     }
   };
@@ -435,6 +469,7 @@ function DrawBoundary(props: ComponentProps) {
             {/* @ts-ignore */}
             <my-map
               id="review-boundary-map"
+              ariaLabelOlFixedOverlay="A static map of your location plan"
               geojsonData={JSON.stringify(geodata)}
               geojsonColor="#ff0000"
               geojsonFill
@@ -443,6 +478,7 @@ function DrawBoundary(props: ComponentProps) {
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
+              collapseAttributions
             />
           </>
         )}

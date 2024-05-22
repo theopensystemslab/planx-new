@@ -3,7 +3,7 @@ import React from "react";
 import NextStepsList from "ui/public/NextStepsList";
 
 import Card from "../shared/Preview/Card";
-import QuestionHeader from "../shared/Preview/QuestionHeader";
+import CardHeader from "../shared/Preview/CardHeader";
 import { NextSteps } from "./model";
 
 export type Props = PublicProps<NextSteps>;
@@ -11,7 +11,7 @@ export type Props = PublicProps<NextSteps>;
 const NextStepsComponent: React.FC<Props> = (props) => {
   return (
     <Card>
-      <QuestionHeader
+      <CardHeader
         title={props.title}
         description={props.description}
         info={props.info}

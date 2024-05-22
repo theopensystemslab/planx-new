@@ -5,11 +5,11 @@ import { visuallyHidden } from "@mui/utils";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import Card from "@planx/components/shared/Preview/Card";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import {
   MapContainer,
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
@@ -19,6 +19,8 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { array } from "yup";
 
 import {
   DrawBoundary,
@@ -31,9 +33,20 @@ export type Props = PublicProps<DrawBoundary>;
 
 export type Boundary = Feature | undefined;
 
-// Buffer applied to the address point to clip this map extent
-//   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
-const BUFFER_IN_METERS = 100;
+const slotsSchema = array()
+  .required()
+  .test({
+    name: "nonUploading",
+    message: "Upload a location plan",
+    test: (slots?: Array<FileUploadSlot>) => {
+      return Boolean(
+        slots &&
+          slots.length === 1 &&
+          !slots.some((slot) => slot.status === "uploading") &&
+          slots.every((slot) => slot.url && slot.status === "success"),
+      );
+    },
+  });
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
@@ -47,12 +60,19 @@ export default function Component(props: Props) {
     passport.data?.["property.boundary.title.area"];
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [area, setArea] = useState<number | undefined>(previousArea);
+  const [mapValidationError, setMapValidationError] = useState<string>();
+
+  // Buffer applied to the address point to clip this map extent
+  //   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
+  const bufferInMeters = area && area > 15000 ? 300 : 120;
 
   const previousFile =
     props.previouslySubmittedData?.data?.[PASSPORT_UPLOAD_KEY];
   const startPage = previousFile ? "upload" : "draw";
   const [page, setPage] = useState<"draw" | "upload">(startPage);
+
   const [slots, setSlots] = useState<FileUploadSlot[]>(previousFile ?? []);
+  const [fileValidationError, setFileValidationError] = useState<string>();
 
   const addressPoint =
     passport?.data?._address?.longitude &&
@@ -94,44 +114,84 @@ export default function Component(props: Props) {
     };
   }, [page, setArea, setBoundary, setSlots]);
 
-  return (
-    <Card
-      handleSubmit={() => {
-        const newPassportData: Store.userData["data"] = {};
+  /**
+   * Declare refs to hold a mutable copy the up-to-date validation errors
+   * The intention is to prevent frequent unnecessary update loops that clears the
+   * validation error state if it is already empty.
+   */
+  const fileValidationErrorRef = useRef(fileValidationError);
+  useEffect(() => {
+    fileValidationErrorRef.current = fileValidationError;
+  }, [fileValidationError]);
 
-        // Used the map
-        if (boundary && props.dataFieldBoundary) {
-          newPassportData[props.dataFieldBoundary] = boundary;
-          newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
-            boundary,
-            BUFFER_IN_METERS,
-            { units: "meters" },
-          );
+  useEffect(() => {
+    if (fileValidationErrorRef.current) {
+      setFileValidationError(undefined);
+    }
+  }, [slots]);
 
-          if (area && props.dataFieldArea) {
-            newPassportData[props.dataFieldArea] = area;
-            newPassportData[`${props.dataFieldArea}.hectares`] =
-              squareMetresToHectares(area);
-          }
+  const mapValidationErrorRef = useRef(mapValidationError);
+  useEffect(() => {
+    mapValidationErrorRef.current = mapValidationError;
+  }, [mapValidationError]);
 
-          // Track the type of map interaction
-          if (
-            boundary?.geometry ===
-            passport.data?.["property.boundary.title"]?.geometry
-          ) {
-            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
-              DrawBoundaryUserAction.Accept;
-          } else if (boundary?.properties?.dataset === "title-boundary") {
-            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
-              DrawBoundaryUserAction.Amend;
-          } else {
-            newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
-              DrawBoundaryUserAction.Draw;
-          }
+  useEffect(() => {
+    if (mapValidationErrorRef.current) {
+      setMapValidationError(undefined);
+    }
+  }, [boundary]);
+
+  const validateAndSubmit = () => {
+    const newPassportData: Store.userData["data"] = {};
+
+    // Used the map
+    if (page === "draw") {
+      if (!props.hideFileUpload && !boundary) {
+        setMapValidationError("Draw a boundary");
+      }
+
+      if (props.hideFileUpload && !boundary) {
+        props.handleSubmit?.({ data: { ...newPassportData } });
+      }
+
+      if (boundary && props.dataFieldBoundary) {
+        newPassportData[props.dataFieldBoundary] = boundary;
+        newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
+          boundary,
+          bufferInMeters,
+          { units: "meters" },
+        );
+
+        if (area && props.dataFieldArea) {
+          newPassportData[props.dataFieldArea] = area;
+          newPassportData[`${props.dataFieldArea}.hectares`] =
+            squareMetresToHectares(area);
         }
 
-        // Uploaded a file
-        if (slots.length) {
+        // Track the type of map interaction
+        if (
+          boundary?.geometry ===
+          passport.data?.["property.boundary.title"]?.geometry
+        ) {
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            DrawBoundaryUserAction.Accept;
+        } else if (boundary?.properties?.dataset === "title-boundary") {
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            DrawBoundaryUserAction.Amend;
+        } else {
+          newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
+            DrawBoundaryUserAction.Draw;
+        }
+
+        props.handleSubmit?.({ data: { ...newPassportData } });
+      }
+    }
+
+    // Uploaded a file
+    if (page === "upload") {
+      slotsSchema
+        .validate(slots, { context: { slots } })
+        .then(() => {
           newPassportData[PASSPORT_UPLOAD_KEY] = slots;
           newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
             DrawBoundaryUserAction.Upload;
@@ -146,21 +206,28 @@ export default function Component(props: Props) {
             recommended,
             optional,
           };
-        }
 
-        props.handleSubmit?.({ data: { ...newPassportData } });
-      }}
-      isValid={props.hideFileUpload ? true : Boolean(boundary || slots[0]?.url)}
-    >
-      {getBody()}
+          props.handleSubmit?.({ data: { ...newPassportData } });
+        })
+        .catch((err) => setFileValidationError(err?.message));
+    }
+  };
+
+  return (
+    <Card handleSubmit={validateAndSubmit} isValid={true}>
+      {getBody(bufferInMeters, mapValidationError, fileValidationError)}
     </Card>
   );
 
-  function getBody() {
+  function getBody(
+    bufferInMeters: number,
+    mapValidationError?: string,
+    fileValidationError?: string,
+  ) {
     if (page === "draw") {
       return (
         <>
-          <QuestionHeader
+          <CardHeader
             title={props.title}
             description={props.description}
             info={props.info}
@@ -169,50 +236,54 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <FullWidthWrapper>
-            <MapContainer environment={environment} size="large">
-              <p style={visuallyHidden}>
-                An interactive map centred on your address, pre-populated with a
-                red boundary that includes the entire property, using
-                information from the Land Registry. You can accept this boundary
-                as your location plan by continuing, you can amend it by
-                clicking and dragging the points, or you can erase it by
-                clicking the reset button and draw a new custom boundary.
-              </p>
-              {!props.hideFileUpload && (
+            <ErrorWrapper error={mapValidationError} id="draw-boundary-map">
+              <MapContainer environment={environment} size="large">
                 <p style={visuallyHidden}>
-                  If you prefer to upload a location plan file instead of using
-                  the map, please reset the map view first to erase the
-                  pre-populated boundary. Then click the "Upload a location plan
-                  instead" link below. A location plan can only be submitted as
-                  a digital boundary or file, not both.
+                  An interactive map centred on your address, pre-populated with
+                  a red boundary that includes the entire property, using
+                  information from the Land Registry. You can accept this
+                  boundary as your location plan by continuing, you can amend it
+                  by clicking and dragging the points, or you can erase it by
+                  clicking the reset button and draw a new custom boundary.
                 </p>
-              )}
-              {/* @ts-ignore */}
-              <my-map
-                id="draw-boundary-map"
-                drawMode
-                drawPointer="crosshair"
-                drawGeojsonData={JSON.stringify(boundary)}
-                drawGeojsonDataBuffer={10}
-                clipGeojsonData={
-                  addressPoint &&
-                  JSON.stringify(
-                    buffer(addressPoint, BUFFER_IN_METERS, { units: "meters" }),
-                  )
-                }
-                zoom={20}
-                maxZoom={23}
-                latitude={Number(passport?.data?._address?.latitude)}
-                longitude={Number(passport?.data?._address?.longitude)}
-                showCentreMarker
-                markerLatitude={Number(passport?.data?._address?.latitude)}
-                markerLongitude={Number(passport?.data?._address?.longitude)}
-                resetControlImage="trash"
-                osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-                osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
-                drawGeojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
-              />
-            </MapContainer>
+                {!props.hideFileUpload && (
+                  <p style={visuallyHidden}>
+                    If you prefer to upload a file instead of using the
+                    interactive map, please click "Upload a location plan
+                    instead" below to navigate to the file upload.
+                  </p>
+                )}
+                {/* @ts-ignore */}
+                <my-map
+                  id="draw-boundary-map"
+                  ariaLabelOlFixedOverlay="An interactive map for providing your location plan boundary"
+                  drawMode
+                  drawPointer="crosshair"
+                  drawGeojsonData={JSON.stringify(boundary)}
+                  drawGeojsonDataBuffer={10}
+                  clipGeojsonData={
+                    addressPoint &&
+                    JSON.stringify(
+                      buffer(addressPoint, bufferInMeters, { units: "meters" }),
+                    )
+                  }
+                  zoom={20}
+                  maxZoom={23}
+                  latitude={Number(passport?.data?._address?.latitude)}
+                  longitude={Number(passport?.data?._address?.longitude)}
+                  showCentreMarker
+                  markerLatitude={Number(passport?.data?._address?.latitude)}
+                  markerLongitude={Number(passport?.data?._address?.longitude)}
+                  resetControlImage="trash"
+                  osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+                  osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+                  drawGeojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
+                  collapseAttributions={
+                    self.innerWidth < 500 ? true : undefined
+                  }
+                />
+              </MapContainer>
+            </ErrorWrapper>
             <MapFooter>
               <Typography variant="body1">
                 The property boundary you have drawn is{" "}
@@ -228,7 +299,6 @@ export default function Component(props: Props) {
                 <Link
                   component="button"
                   onClick={() => setPage("upload")}
-                  disabled={Boolean(boundary)}
                   data-testid="upload-file-button"
                 >
                   <Typography variant="body1">
@@ -243,7 +313,7 @@ export default function Component(props: Props) {
     } else if (page === "upload") {
       return (
         <>
-          <QuestionHeader
+          <CardHeader
             title={props.titleForUploading}
             description={props.descriptionForUploading}
             info={props.info}
@@ -251,12 +321,14 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <PrivateFileUpload slots={slots} setSlots={setSlots} maxFiles={1} />
+          <ErrorWrapper error={fileValidationError} id="upload-location-plan">
+            <PrivateFileUpload slots={slots} setSlots={setSlots} maxFiles={1} />
+          </ErrorWrapper>
           <Box sx={{ textAlign: "right" }}>
             <Link
               component="button"
               onClick={() => setPage("draw")}
-              disabled={Boolean(slots[0]?.url)}
+              data-testid="use-map-button"
             >
               <Typography variant="body2">
                 Draw the boundary on a map instead

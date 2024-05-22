@@ -18,7 +18,7 @@ export interface LocalAuthorityMetadata {
 }
 
 /** When a team publishes their granular Article 4 data, add them to this list. Key must match team slug */
-const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
+export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "barking-and-dagenham": require("./local_authorities/metadata/barkingAndDagenham"),
   barnet: require("./local_authorities/metadata/barnet"),
   birmingham: require("./local_authorities/metadata/birmingham"),
@@ -26,12 +26,15 @@ const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   camden: require("./local_authorities/metadata/camden"),
   canterbury: require("./local_authorities/metadata/canterbury"),
   doncaster: require("./local_authorities/metadata/doncaster"),
+  "epsom-and-ewell": require("./local_authorities/metadata/epsomAndEwell"),
   gateshead: require("./local_authorities/metadata/gateshead"),
   lambeth: require("./local_authorities/metadata/lambeth"),
   medway: require("./local_authorities/metadata/medway"),
   newcastle: require("./local_authorities/metadata/newcastle"),
   southwark: require("./local_authorities/metadata/southwark"),
+  "st-albans": require("./local_authorities/metadata/stAlbans"),
   tewkesbury: require("./local_authorities/metadata/tewkesbury"),
+  "west-berkshire": require("./local_authorities/metadata/westBerkshire"),
 };
 
 /**

@@ -204,7 +204,7 @@ export async function expectNotice({
   page: Page;
   text: string;
 }) {
-  const notice = page.locator("h3", { hasText: text });
+  const notice = page.locator("h1", { hasText: text });
   await expect(notice).toBeVisible();
 }
 
@@ -255,6 +255,10 @@ export async function fillGovUkCardDetails({
   await page.getByLabel("Postcode").fill("HP111BB");
   await page.getByLabel("Email").fill(TEST_EMAIL);
   await page.locator("button#submit-card-details").click();
+}
+
+export async function submitCardDetails(page: Page) {
+  await page.locator("#confirm").click();
 }
 
 export async function answerFindProperty(page: Page) {

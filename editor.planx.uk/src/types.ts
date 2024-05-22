@@ -1,4 +1,9 @@
-import { GovUKPayment, Team } from "@opensystemslab/planx-core/types";
+import {
+  GovUKPayment,
+  NotifyPersonalisation,
+  Team,
+} from "@opensystemslab/planx-core/types";
+import { OT } from "@planx/graph/types";
 import { useFormik } from "formik";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
@@ -97,4 +102,35 @@ export interface SectionNode extends Store.node {
     title: string;
     description?: string;
   };
+}
+
+export interface AdminPanelData {
+  id: string;
+  name: string;
+  slug: string;
+  referenceCode?: string;
+  homepage?: string;
+  subdomain?: string;
+  planningDataEnabled: boolean;
+  article4sEnabled: string;
+  govnotifyPersonalisation?: NotifyPersonalisation;
+  govpayEnabled: boolean;
+  sendToEmailAddress?: string;
+  bopsSubmissionURL?: string;
+  logo?: string;
+  favicon?: string;
+  primaryColour?: string;
+  linkColour?: string;
+  actionColour?: string;
+}
+
+export interface Operation {
+  id: number;
+  createdAt: string;
+  actor?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  };
+  data: Array<OT.Op>;
 }

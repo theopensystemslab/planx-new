@@ -18,6 +18,7 @@ test("const { user } = setups correctly", async () => {
     background: "#fff",
     color: "#0B0C0C",
   });
+  expect(screen.queryByTestId("more-info-button")).not.toBeInTheDocument();
 
   await user.click(screen.getByTestId("continue-button"));
 
@@ -36,4 +37,21 @@ it("should not have any accessibility violations", async () => {
   const { container } = setup(<Content content="dark" color="#000" />);
   const results = await axe(container);
   expect(results).toHaveNoViolations();
+});
+
+test("should display and open more information link if help text is provided", async () => {
+  const handleSubmit = jest.fn();
+
+  const { user } = setup(
+    <Content
+      content="This is a warning about doors"
+      handleSubmit={handleSubmit}
+      info="The number of doors impact your project fee."
+    />,
+  );
+
+  expect(screen.getByTestId("more-info-button")).toBeInTheDocument();
+
+  await user.click(screen.getByTestId("more-info-button"));
+  expect(screen.findByText("Why does it matter?")).toBeTruthy();
 });

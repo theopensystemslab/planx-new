@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ApplicationPath } from "types";
@@ -17,11 +17,15 @@ const InnerContainer = styled(Box)(({ theme }) => ({
 
 const SaveResumeButton: React.FC = () => {
   const saveToEmail = useStore((state) => state.saveToEmail);
-  const { trackFlowDirectionChange } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleClick = () => {
     if (saveToEmail) {
-      trackFlowDirectionChange("save");
+      trackEvent({
+        event: "flowDirectionChange",
+        metadata: null,
+        flowDirection: "save",
+      });
       useStore.setState({ path: ApplicationPath.Save });
     } else {
       useStore.setState({ path: ApplicationPath.Resume });

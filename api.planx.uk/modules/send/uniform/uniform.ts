@@ -136,7 +136,7 @@ export async function sendToUniform(
     });
   } catch (error) {
     const errorMessage = isAxiosError(error)
-      ? JSON.stringify(error.toJSON())
+      ? JSON.stringify(error.response?.data)
       : (error as Error).message;
     return next({
       error,
@@ -309,6 +309,13 @@ async function attachArchive(
   const response = await axios.request(attachArchiveConfig);
   // successful upload returns 204 No Content without body
   const isSuccess = response.status === 204;
+
+  // Temp additional logging to debug failures
+  console.log("*** Uniform attachArchive response ***");
+  console.log({ status: response.status });
+  console.log(JSON.stringify(response.data, null, 2));
+  console.log("******");
+
   return isSuccess;
 }
 

@@ -17,6 +17,7 @@ export type FeedbackMetadata = {
   nodeType?: string | null;
   device: Bowser.Parser.ParsedResult;
   userData: UserData;
+  nodeData: Store.node["data"];
 };
 
 export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
@@ -40,6 +41,7 @@ export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
     nodeType: node?.type ? TYPES[node.type] : null,
     device: Bowser.parse(window.navigator.userAgent),
     userData: userData,
+    nodeData: node?.data,
   };
 
   return metadata;
@@ -55,6 +57,7 @@ export async function insertFeedbackMutation(data: {
   userContext?: string;
   userComment: string;
   feedbackType: string;
+  nodeData?: Store.node["data"];
 }) {
   const result = await publicClient.mutate({
     mutation: gql`
@@ -68,6 +71,7 @@ export async function insertFeedbackMutation(data: {
         $userContext: String
         $userComment: String!
         $feedbackType: feedback_type_enum_enum!
+        $nodeData: jsonb
       ) {
         insert_feedback(
           objects: {
@@ -80,6 +84,7 @@ export async function insertFeedbackMutation(data: {
             user_context: $userContext
             user_comment: $userComment
             feedback_type: $feedbackType
+            node_data: $nodeData
           }
         ) {
           affected_rows

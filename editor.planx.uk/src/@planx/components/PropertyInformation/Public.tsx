@@ -5,13 +5,13 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/ui";
 import { Feature } from "@turf/helpers";
 import { publicClient } from "lib/graphql";
 import find from "lodash/find";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
@@ -130,7 +130,7 @@ export function Presentational(props: PresentationalProps) {
 
   return (
     <Card handleSubmit={handleSubmit}>
-      <QuestionHeader title={title} description={description} />
+      <CardHeader title={title} description={description} />
       <MapContainer>
         <p style={visuallyHidden}>
           A static map centred on the property address, showing the title
@@ -141,6 +141,7 @@ export function Presentational(props: PresentationalProps) {
         {/* @ts-ignore */}
         <my-map
           id="property-information-map"
+          ariaLabelOlFixedOverlay="A static map of the property address"
           zoom={19.5}
           latitude={address?.latitude}
           longitude={address?.longitude}
@@ -156,6 +157,7 @@ export function Presentational(props: PresentationalProps) {
           geojsonBuffer={30}
           osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
           geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
+          collapseAttributions={window.innerWidth < 500 ? true : undefined}
         />
       </MapContainer>
       {propertyDetails && (
@@ -186,10 +188,14 @@ function PropertyDetails(props: PropertyDetailsProps) {
   const { data, showPropertyTypeOverride, overrideAnswer } = props;
   const filteredData = data.filter((d) => Boolean(d.detail));
 
-  const { trackBackwardsNavigation } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleOverrideAnswer = (fn: string) => {
-    trackBackwardsNavigation("change");
+    trackEvent({
+      event: "backwardsNavigation",
+      metadata: null,
+      initiator: "change",
+    });
     overrideAnswer(fn);
   };
 

@@ -499,3 +499,160 @@ export const sortIdsDepthFirst =
       (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b),
     );
   };
+
+/**
+ * Translates a list of ShareDB operations into a human-readable change summary.
+ *   See https://github.com/ottypes/json0?tab=readme-ov-file#summary-of-operations
+ */
+export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
+  const output: string[] = [];
+
+  // Only show full change description for simple props, omit complex or long ones like `moreInfo`, `fileTypes`, etc
+  const allowProps: string[] = ["title", "text", "fn", "val"];
+
+  // Create a simple lookup to overwrite most common component props to a more human-readable name
+  const propsMap: Record<string, string> = {
+    fn: "data field",
+    val: "data field",
+    info: `help text ("Why it matters")`,
+    howMeasured: `help text ("How is it defined?")`,
+    policyRef: `help text source links`,
+    definitionImg: `help text image`,
+  };
+
+  // Updating a node or its properties (update = delete + insert)
+  const handleUpdate = (node: Node, op: OT.Object.Replace) => {
+    if (op.od?.type && op.oi?.type) {
+      output.push(
+        `Replaced ${TYPES[op.od.type]} "${
+          op.od.data?.title ||
+          op.od.data?.text ||
+          op.od.data?.content ||
+          op.od.data?.fn ||
+          op.od.data?.val ||
+          op.od.data?.flowId
+        }" with ${TYPES[op.oi.type]} "${
+          op.oi.data?.title ||
+          op.oi.data?.text ||
+          op.oi.data?.content ||
+          op.oi.data?.fn ||
+          op.oi.data?.val ||
+          op.od.data?.flowId
+        }"`,
+      );
+    } else if (op.p.includes("data")) {
+      const prop = op.p?.[2] as string;
+      if (allowProps.includes(prop)) {
+        output.push(
+          `Updated ${node?.type ? TYPES[node.type] : "node"} ${
+            propsMap[prop] || prop
+          } from "${op.od}" to "${op.oi}"`,
+        );
+      } else {
+        output.push(
+          `Updated ${node?.type ? TYPES[node.type] : "node"} ${
+            propsMap[prop] || prop
+          }`,
+        );
+      }
+    } else if (op.p.includes("edges")) {
+      output.push(
+        `Updated order of ${node?.type ? TYPES[node.type] : "graph"} edges`,
+      );
+    }
+  };
+
+  // Updating the _root list (update = list insert or list delete)
+  const handleRootUpdate = (op: OT.Array.Replace) => {
+    if (op.p.includes("edges") && op.p.includes("_root")) {
+      output.push(`Re-ordered the root graph`);
+    } else if (op.p.includes("edges")) {
+      output.push(`Moved node`);
+    }
+  };
+
+  // Adding (inserting) a node or its properties
+  const handleAdd = (node: Node, op: OT.Object.Add) => {
+    if (op.oi?.type) {
+      output.push(
+        `Added ${TYPES[op.oi.type]} "${
+          op.oi.data?.title ||
+          op.oi.data?.text ||
+          op.oi.data?.content ||
+          op.oi.data?.fn ||
+          op.oi.data?.flowId
+        }"`,
+      );
+    } else if (op.p.includes("data")) {
+      const prop = op.p?.[2] as string;
+      if (allowProps.includes(prop)) {
+        output.push(
+          `Added ${node?.type ? TYPES[node?.type] : "node"} ${
+            propsMap[prop] || prop
+          } "${op.oi}"`,
+        );
+      } else {
+        output.push(
+          `Added ${node?.type ? TYPES[node?.type] : "node"} ${
+            propsMap[prop] || prop
+          }`,
+        );
+      }
+    } else if (op.p.includes("edges")) {
+      const node = graph[op.oi?.[0]];
+      output.push(`Added ${node?.type ? TYPES[node.type] : "node"} to branch`);
+    }
+  };
+
+  // Removing (deleting) a node or its properties
+  const handleRemove = (node: Node, op: OT.Object.Remove) => {
+    if (op.od?.type) {
+      output.push(
+        `Removed ${TYPES[op.od.type]} "${
+          op.od.data?.title ||
+          op.od.data?.text ||
+          op.od.data?.content ||
+          op.od.data?.fn ||
+          op.od.data?.flowId
+        }"`,
+      );
+    } else if (op.p.includes("data")) {
+      const prop = op.p?.[2] as string;
+      if (allowProps.includes(prop)) {
+        output.push(
+          `Removed ${node?.type ? TYPES[node.type] : "node"} ${
+            propsMap[prop] || prop
+          } "${op.od}"`,
+        );
+      } else {
+        output.push(
+          `Removed ${node?.type ? TYPES[node.type] : "node"} ${
+            propsMap[prop] || prop
+          }`,
+        );
+      }
+    } else if (op.p.includes("edges")) {
+      const node = graph[op.od?.[0]];
+      output.push(
+        `Removed ${node?.type ? TYPES[node.type] : "node"} from branch`,
+      );
+    }
+  };
+
+  ops.map((op) => {
+    const node = graph[op.p?.[0]];
+    const operationTypes = Object.keys(op);
+
+    if (operationTypes.includes("od") && operationTypes.includes("oi")) {
+      handleUpdate(node, op as OT.Object.Replace);
+    } else if (operationTypes.includes("oi")) {
+      handleAdd(node, op as OT.Object.Add);
+    } else if (operationTypes.includes("od")) {
+      handleRemove(node, op as OT.Object.Remove);
+    } else if (operationTypes.includes("li") && operationTypes.includes("ld")) {
+      handleRootUpdate(op as OT.Array.Replace);
+    }
+  });
+
+  return output;
+};

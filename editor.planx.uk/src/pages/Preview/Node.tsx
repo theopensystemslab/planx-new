@@ -85,7 +85,7 @@ const Node: React.FC<any> = (props: Props) => {
   switch (props.node.type) {
     case TYPES.Calculate:
       return <Calculate {...allProps} />;
-    case TYPES.Checklist:
+    case TYPES.Checklist: {
       const childNodes = childNodesOf(props.node.id);
       return (
         <Checklist
@@ -111,7 +111,8 @@ const Node: React.FC<any> = (props: Props) => {
           }
         />
       );
-    case TYPES.Confirmation:
+    }
+    case TYPES.Confirmation: {
       const payment: GovUKPayment | undefined =
         passport.data?.[GOV_PAY_PASSPORT_KEY];
 
@@ -147,6 +148,7 @@ const Node: React.FC<any> = (props: Props) => {
           color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
         />
       );
+    }
     case TYPES.Content:
       return <Content {...allProps} />;
 
@@ -177,7 +179,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Pay:
       return <Pay {...allProps} />;
 
-    case TYPES.Result:
+    case TYPES.Result: {
       const flagSet = props.node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
       const data = resultData(flagSet, props.node?.data?.overrides);
 
@@ -198,7 +200,7 @@ const Node: React.FC<any> = (props: Props) => {
           disclaimer={flowSettings?.elements?.legalDisclaimer}
         />
       );
-
+    }
     case TYPES.Review:
       return <Review {...allProps} />;
 

@@ -54,9 +54,9 @@ const StyledInputBase = styled(InputBase, {
   "& input": {
     fontWeight: "inherit",
   },
-  "& ::placeholder": {
-    color: theme.palette.text.secondary,
-    opacity: "0.5",
+  "& input::placeholder, & textarea::placeholder": {
+    color: theme.palette.text.placeholder,
+    opacity: 1,
   },
   ...(bordered && {
     border: `2px solid ${theme.palette.text.primary}`,
@@ -65,7 +65,6 @@ const StyledInputBase = styled(InputBase, {
     backgroundColor: "#f0f0f0",
     borderColor: "#d3d3d3",
     fontFamily: `"Source Code Pro", monospace;`,
-    height: "44px",
     "& input": {
       fontSize: theme.typography.body2.fontSize,
     },

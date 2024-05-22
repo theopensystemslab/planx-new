@@ -7,9 +7,9 @@ import Typography from "@mui/material/Typography";
 import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { PublicProps } from "@planx/components/ui";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -80,17 +80,21 @@ const NoticeComponent: React.FC<Props> = (props) => {
     ? () => props.handleSubmit?.()
     : undefined;
 
-  const { trackFlowDirectionChange } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
 
   const handleNoticeResetClick = () => {
-    trackFlowDirectionChange("reset");
+    trackEvent({
+      event: "flowDirectionChange",
+      metadata: null,
+      flowDirection: "reset",
+    });
     props.resetPreview && props.resetPreview();
   };
 
   return (
     <Card handleSubmit={handleSubmit} isValid>
       <>
-        <QuestionHeader
+        <CardHeader
           info={props.info}
           policyRef={props.policyRef}
           howMeasured={props.howMeasured}
@@ -99,12 +103,15 @@ const NoticeComponent: React.FC<Props> = (props) => {
           <Content>
             <TitleWrap>
               <ErrorOutline sx={{ width: 34, height: 34 }} />
-              <Title variant="h3">{props.title}</Title>
+              <Title variant="h3" component="h1">
+                {props.title}
+              </Title>
             </TitleWrap>
             <Box mt={2}>
               <ReactMarkdownOrHtml
                 textColor={textColor}
                 source={props.description}
+                openLinksOnNewTab
               />
             </Box>
           </Content>

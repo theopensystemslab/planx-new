@@ -72,7 +72,7 @@ function Component(props: Props) {
   const defaultMetadata = [
     { key: "source", value: "PlanX" },
     { key: "flow", value: flowSlug },
-    { key: "isInviteToPay", value: false },
+    { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
   ];
   const metadata = props.govPayMetadata?.length
     ? props.govPayMetadata
@@ -246,7 +246,7 @@ function Component(props: Props) {
     await axios
       .post(
         getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug }),
-        createPayload(fee, sessionId, metadata),
+        createPayload(fee, sessionId, metadata, passport),
       )
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);

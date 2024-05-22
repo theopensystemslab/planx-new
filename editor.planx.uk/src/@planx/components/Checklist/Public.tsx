@@ -1,11 +1,13 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import { visuallyHidden } from "@mui/utils";
 import type { Checklist, Group } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { getIn, useFormik } from "formik";
 import React, { useState } from "react";
+import InputLegend from "ui/editor/InputLegend";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -130,7 +132,7 @@ const ChecklistComponent: React.FC<Props> = ({
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
-      <QuestionHeader
+      <CardHeader
         title={text}
         description={description}
         info={info}
@@ -140,7 +142,12 @@ const ChecklistComponent: React.FC<Props> = ({
       />
       <FullWidthWrapper>
         <ErrorWrapper error={getIn(formik.errors, "checked")} id={id}>
-          <Grid container spacing={layout === ChecklistLayout.Images ? 2 : 0}>
+          <Grid
+            container
+            spacing={layout === ChecklistLayout.Images ? 2 : 0}
+            component="fieldset"
+          >
+            <legend style={visuallyHidden}>{text}</legend>
             {options ? (
               options.map((option) =>
                 layout === ChecklistLayout.Basic ? (

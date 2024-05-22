@@ -98,8 +98,8 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     },
     // Styles for placeholder text, to match ui/Input.tsx
     "& p.is-editor-empty:nth-child(1)::before": {
-      color: theme.palette.text.secondary,
-      opacity: "0.5",
+      color: theme.palette.text.placeholder,
+      opacity: 1,
       content: `attr(data-placeholder)`,
       float: "left",
       height: 0,
@@ -325,6 +325,28 @@ const getContentHierarchyError = (doc: JSONContent): string | null => {
   return error;
 };
 
+const getLinkNewTabError = (
+  content: JSONContent | undefined = [],
+): string | undefined => {
+  let error: string | undefined;
+  if (!content) return;
+
+  content.forEach((child: JSONContent) => {
+    if (!child.content) return;
+
+    child.content.forEach(({ marks, text }) => {
+      const isLink = marks?.map(({ type }) => type).includes("link");
+      const hasOpenTabText = text?.includes("(opens in a new tab)");
+
+      if (hasOpenTabText && !isLink) {
+        error = 'Links must wrap the text "(opens in a new tab)"';
+      }
+    });
+  });
+
+  return error;
+};
+
 const PopupError: FC<{ id: string; error: string }> = (props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -400,6 +422,10 @@ const RichTextInput: FC<Props> = (props) => {
     string | null
   >(getContentHierarchyError(fromHtml(stringValue)));
 
+  const [linkNewTabError, setLinkNewTabError] = useState<string | undefined>(
+    getLinkNewTabError(fromHtml(stringValue).content),
+  );
+
   // Handle update events
   const handleUpdate = useCallback(
     (transaction: { editor: Editor }) => {
@@ -409,6 +435,7 @@ const RichTextInput: FC<Props> = (props) => {
       const doc = transaction.editor.getJSON();
 
       setContentHierarchyError(getContentHierarchyError(doc));
+      setLinkNewTabError(getLinkNewTabError(doc.content));
 
       const html = toHtml(doc);
       internalValue.current = html;
@@ -672,7 +699,15 @@ const RichTextInput: FC<Props> = (props) => {
       <EditorContent editor={editor} />
       {contentHierarchyError && (
         <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-          <PopupError id="content-error" error={contentHierarchyError} />
+          <PopupError
+            id="content-error-hierarchy"
+            error={contentHierarchyError}
+          />
+        </Box>
+      )}
+      {linkNewTabError && (
+        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+          <PopupError id="content-error-link-tab" error={linkNewTabError} />
         </Box>
       )}
     </RichContentContainer>

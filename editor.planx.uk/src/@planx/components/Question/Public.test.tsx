@@ -52,75 +52,98 @@ describe("Question component", () => {
     QuestionLayout.Images,
     QuestionLayout.Descriptions,
   ].forEach((type) => {
-    it(`renders the ${QuestionLayout[type]} layout correctly`, async () => {
-      const handleSubmit = jest.fn();
+    describe(`${QuestionLayout[type]} layout`, () => {
+      it(`renders the layout correctly`, async () => {
+        const handleSubmit = jest.fn();
 
-      const { user } = setup(
-        <Question
-          text="Best food"
-          responses={responses[type]}
-          handleSubmit={handleSubmit}
-        />,
-      );
+        const { user, getByTestId, getByRole, getByText } = setup(
+          <Question
+            text="Best food"
+            responses={responses[type]}
+            handleSubmit={handleSubmit}
+          />,
+        );
 
-      const continueButton = screen.getByTestId("continue-button");
+        const continueButton = getByTestId("continue-button");
 
-      expect(screen.getByRole("heading")).toHaveTextContent("Best food");
+        expect(getByRole("heading")).toHaveTextContent("Best food");
 
-      expect(continueButton).toBeDisabled();
+        await user.click(getByText("Pizza"));
 
-      await user.click(screen.getByText("Pizza"));
+        await user.click(continueButton);
 
-      expect(continueButton).not.toBeDisabled();
+        await waitFor(() =>
+          expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] }),
+        );
+      });
 
-      await user.click(continueButton);
+      it(`should display previously selected answer on back or change`, async () => {
+        const handleSubmit = jest.fn();
+        const { user, getByRole, getByTestId } = setup(
+          <Question
+            text="Best food"
+            responses={responses[type]}
+            previouslySubmittedData={{
+              answers: ["celery_id"],
+              auto: false,
+            }}
+            handleSubmit={handleSubmit}
+          />,
+        );
 
-      await waitFor(() =>
-        expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] }),
-      );
-    });
+        expect(getByRole("heading")).toHaveTextContent("Best food");
 
-    it(`should display previously selected answer on back or change in the ${QuestionLayout[type]} layout`, async () => {
-      const handleSubmit = jest.fn();
-      const { user } = setup(
-        <Question
-          text="Best food"
-          responses={responses[type]}
-          previouslySubmittedData={{
-            answers: ["celery_id"],
-            auto: false,
-          }}
-          handleSubmit={handleSubmit}
-        />,
-      );
+        const celeryRadio = getByRole("radio", { name: /Celery/ });
+        const pizzaRadio = getByRole("radio", { name: /Pizza/ });
 
-      expect(screen.getByRole("heading")).toHaveTextContent("Best food");
+        // State is preserved...
+        expect(celeryRadio).toBeChecked();
 
-      const celeryRadio = screen.getByRole("radio", { name: /Celery/ });
-      const pizzaRadio = screen.getByRole("radio", { name: /Pizza/ });
+        // ...and can be updated
+        await user.click(pizzaRadio);
+        expect(pizzaRadio).toBeChecked();
 
-      // State is preserved...
-      expect(celeryRadio).toBeChecked();
+        const continueButton = getByTestId("continue-button");
+        expect(continueButton).toBeEnabled();
+      });
 
-      // ...and can be updated
-      await user.click(pizzaRadio);
-      expect(pizzaRadio).toBeChecked();
+      it(`should not have any accessibility violations`, async () => {
+        const handleSubmit = jest.fn();
+        const { container } = setup(
+          <Question
+            text="Best food"
+            responses={responses[type]}
+            handleSubmit={handleSubmit}
+          />,
+        );
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      });
 
-      const continueButton = screen.getByTestId("continue-button");
-      expect(continueButton).toBeEnabled();
-    });
+      it(`should display an error message if no option is selected`, async () => {
+        const handleSubmit = jest.fn();
+        const errorMessage = /Select your answer before continuing/;
 
-    it(`should not have any accessibility violations in the ${QuestionLayout[type]} layout`, async () => {
-      const handleSubmit = jest.fn();
-      const { container } = setup(
-        <Question
-          text="Best food"
-          responses={responses[type]}
-          handleSubmit={handleSubmit}
-        />,
-      );
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
+        const { user, getByTestId, getByText, queryByText } = setup(
+          <Question
+            text="Best food"
+            responses={responses[type]}
+            handleSubmit={handleSubmit}
+          />,
+        );
+
+        const continueButton = getByTestId("continue-button");
+
+        expect(continueButton).not.toBeDisabled();
+        expect(queryByText(errorMessage)).not.toBeInTheDocument();
+
+        await user.click(continueButton);
+
+        await waitFor(() => {
+          expect(handleSubmit).not.toHaveBeenCalled();
+          expect(getByText(errorMessage)).toBeVisible();
+        });
+      });
     });
   });
 });

@@ -8,10 +8,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import capitalize from "lodash/capitalize";
-import {
-  HelpClickMetadata,
-  useAnalyticsTracking,
-} from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
+import { HelpClickMetadata } from "pages/FlowEditor/lib/analytics/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
@@ -23,9 +21,9 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { FileUploadSlot } from "../FileUpload/Public";
 import { MoreInformation } from "../shared";
 import Card from "../shared/Preview/Card";
+import CardHeader, { Image } from "../shared/Preview/CardHeader";
 import MoreInfo from "../shared/Preview/MoreInfo";
 import MoreInfoSection from "../shared/Preview/MoreInfoSection";
-import QuestionHeader, { Image } from "../shared/Preview/QuestionHeader";
 import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
 import { FileStatus } from "../shared/PrivateFileUpload/FileStatus";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
@@ -39,7 +37,12 @@ import {
   getTagsForSlot,
   removeSlots,
 } from "./model";
-import { fileLabelSchema, fileListSchema, slotsSchema } from "./schema";
+import {
+  fileLabelSchema,
+  fileListSchema,
+  formatFileLabelSchemaErrors,
+  slotsSchema,
+} from "./schema";
 
 type Props = PublicProps<FileUploadAndLabel>;
 
@@ -106,6 +109,7 @@ function Component(props: Props) {
     if (isUserReturningToNode) return setIsUserReturningToNode(false);
     if (slots.length && dropzoneError) setDropzoneError(undefined);
     if (!slots.length && fileListError) setFileListError(undefined);
+    if (!slots.length && fileLabelErrors) setFileLabelErrors(undefined);
     if (slots.length > previousSlotCount) setShowModal(true);
   }, [slots.length]);
 
@@ -114,6 +118,9 @@ function Component(props: Props) {
   );
 
   const [dropzoneError, setDropzoneError] = useState<string | undefined>();
+  const [fileLabelErrors, setFileLabelErrors] = useState<
+    Record<string, string> | undefined
+  >();
   const [fileListError, setFileListError] = useState<string | undefined>();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isUserReturningToNode, setIsUserReturningToNode] =
@@ -129,15 +136,27 @@ function Component(props: Props) {
         const payload = generatePayload(fileList);
         props.handleSubmit?.(payload);
       })
-      .catch((err) =>
-        err?.type === "minFileUploaded"
-          ? setDropzoneError(err?.message)
-          : setFileListError(err?.message),
-      );
+      .catch((err) => {
+        switch (err?.type) {
+          case "minFileUploaded":
+          case "nonUploading":
+            setDropzoneError(err?.message);
+            break;
+          case "allFilesTagged": {
+            const formattedErrors = formatFileLabelSchemaErrors(err);
+            setFileLabelErrors(formattedErrors);
+            break;
+          }
+          case "allRequiredFilesUploaded":
+            setFileListError(err?.message);
+            break;
+        }
+      });
   };
 
   const onUploadedFileCardChange = () => {
     setFileListError(undefined);
+    setFileLabelErrors(undefined);
     setShowModal(true);
   };
 
@@ -175,7 +194,7 @@ function Component(props: Props) {
       }
     >
       <FullWidthWrapper>
-        <QuestionHeader {...props} />
+        <CardHeader {...props} />
         <DropzoneContainer>
           {!props.hideDropZone && (
             <>
@@ -238,13 +257,18 @@ function Component(props: Props) {
             )}
             {slots.map((slot) => {
               return (
-                <UploadedFileCard
-                  {...slot}
+                <ErrorWrapper
+                  error={fileLabelErrors?.[slot.id]}
+                  id={slot.id}
                   key={slot.id}
-                  tags={getTagsForSlot(slot.id, fileList)}
-                  onChange={onUploadedFileCardChange}
-                  removeFile={() => removeFile(slot)}
-                />
+                >
+                  <UploadedFileCard
+                    {...slot}
+                    tags={getTagsForSlot(slot.id, fileList)}
+                    onChange={onUploadedFileCardChange}
+                    removeFile={() => removeFile(slot)}
+                  />
+                </ErrorWrapper>
               );
             })}
           </Box>
@@ -263,13 +287,13 @@ interface FileListItemProps {
 
 const InteractiveFileListItem = (props: FileListItemProps) => {
   const [open, setOpen] = React.useState(false);
-  const { trackHelpClick } = useAnalyticsTracking();
+  const { trackEvent } = useAnalyticsTracking();
   const { info, policyRef, howMeasured, definitionImg } =
     props.moreInformation || {};
 
   const handleHelpClick = (metadata: HelpClickMetadata) => {
     setOpen(true);
-    trackHelpClick(metadata); // This returns a promise but we don't need to await for it
+    trackEvent({ event: "helpClick", metadata }); // This returns a promise but we don't need to await for it
   };
 
   return (
@@ -322,8 +346,18 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
         {howMeasured && howMeasured !== emptyContent ? (
           <MoreInfoSection title="How is it defined?">
             <>
-              {definitionImg && <Image src={definitionImg} alt="" aria-describedby="howMeasured" />}
-              <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab id="howMeasured"/>
+              {definitionImg && (
+                <Image
+                  src={definitionImg}
+                  alt=""
+                  aria-describedby="howMeasured"
+                />
+              )}
+              <ReactMarkdownOrHtml
+                source={howMeasured}
+                openLinksOnNewTab
+                id="howMeasured"
+              />
             </>
           </MoreInfoSection>
         ) : undefined}

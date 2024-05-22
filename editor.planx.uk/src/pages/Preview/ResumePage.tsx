@@ -3,7 +3,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
@@ -60,12 +60,12 @@ export const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
   });
 
   return (
-    <Box width="100%" role="main">
+    <Box width="100%">
       <Card handleSubmit={formik.handleSubmit}>
-        <QuestionHeader
+        <CardHeader
           title="Resume your application"
           description="Enter your email to resume your application."
-        ></QuestionHeader>
+        ></CardHeader>
         <InputRow>
           <InputLabel label={"Email address"} htmlFor={"email"}>
             <Input
@@ -109,14 +109,13 @@ export const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
 
 export const EmailSuccess: React.FC = () => {
   return (
-    <StatusPage
-      bannerHeading="Check your email"
-      buttonText="Close Tab"
-      onButtonClick={() => window.close()}
-    >
+    <StatusPage bannerHeading="Check your email">
       <Typography variant="body1">
         If you have any draft applications we have sent you an email that
         contains a link. Use this link to access your applications.
+        <br />
+        <br />
+        You may now close this tab.
       </Typography>
     </StatusPage>
   );

@@ -5,10 +5,10 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import React, { useState } from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React from "react";
 
 const TestEnvironmentWarning = styled(Box)(({ theme }) => ({
-  display: "flex",
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
   justifyContent: "space-between",
@@ -17,37 +17,38 @@ const TestEnvironmentWarning = styled(Box)(({ theme }) => ({
 }));
 
 const TestEnvironmentBanner: React.FC = () => {
-  const [showWarning, setShowWarning] = useState(true);
+  const [isTestEnvBannerVisible, hideTestEnvBanner] = useStore((state) => [
+    state.isTestEnvBannerVisible,
+    state.hideTestEnvBanner,
+  ]);
 
-  const isTestEnvironment = () => !window.location.href.includes(".uk");
+  if (!isTestEnvBannerVisible) return null;
 
   return (
-    <>
-      {isTestEnvironment() && showWarning && (
-        <TestEnvironmentWarning>
-          <Container
-            maxWidth={false}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box display="flex" alignItems="center">
-              <ReportIcon color="error" />
-              <Typography variant="body2" ml={1}>
-                This is a <strong>testing environment</strong> for new features.
-                Do not use it to make permanent content changes.
-              </Typography>
-            </Box>
-            <Button size="small" onClick={() => setShowWarning(false)}>
-              Hide
-              <Box sx={visuallyHidden} component="span">the test environment banner</Box>
-            </Button>
-          </Container>
-        </TestEnvironmentWarning>
-      )}
-    </>
+    <TestEnvironmentWarning>
+      <Container
+        maxWidth={false}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box display="flex" alignItems="center">
+          <ReportIcon color="error" />
+          <Typography variant="body2" ml={1}>
+            This is a <strong>testing environment</strong> for new features. Do
+            not use it to make permanent content changes.
+          </Typography>
+        </Box>
+        <Button size="small" onClick={hideTestEnvBanner}>
+          Hide
+          <Box sx={visuallyHidden} component="span">
+            the test environment banner
+          </Box>
+        </Button>
+      </Container>
+    </TestEnvironmentWarning>
   );
 };
 

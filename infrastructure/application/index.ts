@@ -72,6 +72,10 @@ const CUSTOM_DOMAINS: CustomDomains =
           domain: "planningservices.gateshead.gov.uk",
           name: "gateshead",
         },
+        {
+          domain: "planningservices.gloucester.gov.uk",
+          name: "gloucester",
+        },
       ]
     : [];
 
@@ -331,6 +335,10 @@ export = async () => {
           {
             name: "FILE_API_KEY_NEXUS",
             value: config.requireSecret("file-api-key-nexus"),
+          },
+          {
+            name: "FILE_API_KEY_BARNET",
+            value: config.requireSecret("file-api-key-barnet"),
           },
           {
             name: "GOOGLE_CLIENT_ID",

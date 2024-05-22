@@ -196,18 +196,15 @@ test.describe("Navigation", () => {
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
     await clickContinue({ page });
     await expect(
-      page.locator("h3", { hasText: "Yes! this is a test" }),
+      page.locator("h1", { hasText: "Yes! this is a test" }),
     ).toBeVisible();
 
-    await page
-      .locator("#main-content")
-      .getByRole("button", { name: "Back" })
-      .click();
+    await page.getByTestId("backButton").click();
 
     await answerQuestion({ page, title: "Is this a test?", answer: "No" });
     await clickContinue({ page });
     await expect(
-      page.locator("h3", { hasText: "Sorry, this is a test" }),
+      page.locator("h1", { hasText: "Sorry, this is a test" }),
     ).toBeVisible();
   });
 });

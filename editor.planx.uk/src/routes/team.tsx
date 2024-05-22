@@ -71,6 +71,8 @@ const routes = compose(
 
       return import("./flow");
     }),
+
+    "/members": lazy(() => import("./teamMembers")),
   }),
 );
 

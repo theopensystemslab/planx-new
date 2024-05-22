@@ -5,6 +5,14 @@ export enum Destination {
   BOPS = "bops",
   Uniform = "uniform",
   Email = "email",
+  S3 = "s3",
+}
+
+interface EventPayload {
+  localAuthority: string;
+  body: {
+    sessionId: string;
+  };
 }
 
 export interface Send extends MoreInformation {
@@ -32,7 +40,7 @@ export function getCombinedEventsPayload({
   passport: Store.passport;
   sessionId: string;
 }) {
-  const combinedEventsPayload: any = {};
+  const combinedEventsPayload: Record<string, EventPayload> = {};
 
   // Format application user data as required by BOPS
   if (destinations.includes(Destination.BOPS)) {
@@ -67,6 +75,13 @@ export function getCombinedEventsPayload({
 
     combinedEventsPayload[Destination.Uniform] = {
       localAuthority: uniformTeamSlug,
+      body: { sessionId },
+    };
+  }
+
+  if (destinations.includes(Destination.S3)) {
+    combinedEventsPayload[Destination.S3] = {
+      localAuthority: teamSlug,
       body: { sessionId },
     };
   }

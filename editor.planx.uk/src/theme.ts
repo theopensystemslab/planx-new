@@ -1,5 +1,6 @@
 import "themeOverrides.d.ts";
 
+import { radioClasses } from "@mui/material/Radio";
 import {
   createTheme,
   darken,
@@ -12,6 +13,7 @@ import {
 import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
+import { svgIconClasses } from "@mui/material/SvgIcon";
 import { deepmerge } from "@mui/utils";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
@@ -33,6 +35,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   background: {
     default: "#FFFFFF",
     paper: "#F9F8F8",
+    dark: "#2c2c2c",
   },
   secondary: {
     main: "#F3F2F1",
@@ -40,6 +43,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   text: {
     primary: "#0B0C0C",
     secondary: "#505A5F",
+    placeholder: "#68787D",
   },
   link: {
     main: DEFAULT_PRIMARY_COLOR,
@@ -60,6 +64,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   success: {
     main: "#4CAF50",
+    dark: "#265A26",
   },
   info: {
     main: "#2196F3",
@@ -202,6 +207,27 @@ const getThemeOptions = ({
       },
     },
     components: {
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            color: palette.text.primary,
+            backgroundColor: palette.background.default,
+            fontSize: "1rem",
+          },
+        },
+        defaultProps: {
+          square: true,
+        },
+      },
+      MuiAccordionSummary: {
+        styleOverrides: {
+          root: {
+            "&:hover": {
+              backgroundColor: palette.background.paper,
+            },
+          },
+        },
+      },
       MuiContainer: {
         styleOverrides: {
           root: {
@@ -228,6 +254,18 @@ const getThemeOptions = ({
           },
           hr: {
             marginLeft: 0,
+          },
+          fieldset: {
+            minInlineSize: "unset",
+            padding: 0,
+            border: 0,
+          },
+          img: {
+            // a11y: Ensure images are visible in Windows high contrast mode
+            "@media (forced-colors: active)": {
+              forcedColorAdjust: "none",
+              backgroundColor: "white",
+            },
           },
         },
       },
@@ -404,7 +442,7 @@ const getThemeOptions = ({
             padding: 0,
             margin: "0 0.75em 0 0",
             color: palette.text.primary,
-            "& .MuiSvgIcon-root": {
+            [`& .${svgIconClasses.root}`]: {
               // Hide default MUI SVG, we'll use pseudo elements as Gov.uk
               visibility: "hidden",
             },
@@ -437,10 +475,10 @@ const getThemeOptions = ({
               // Hide by default, show if checked
               opacity: 0,
             },
-            "&.Mui-checked::after": {
+            [`&.${radioClasses.checked}.Mui-checked::after`]: {
               opacity: 1,
             },
-            "&.Mui-focusVisible::before": {
+            [`&.${radioClasses.root}.Mui-focusVisible::before`]: {
               borderWidth: "4px",
               outline: "3px solid rgba(0,0,0,0)",
               outlineOffset: "1px",

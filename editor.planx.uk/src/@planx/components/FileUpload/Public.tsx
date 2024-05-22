@@ -1,6 +1,6 @@
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
@@ -34,7 +34,7 @@ const slotsSchema = array()
   .required()
   .test({
     name: "nonUploading",
-    message: "Upload at least one file.",
+    message: "Upload at least one file",
     test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
@@ -115,14 +115,8 @@ const FileUpload: React.FC<Props> = (props) => {
   }, [slots]);
 
   return (
-    <Card
-      isValid={
-        slots.length > 0 &&
-        slots.every((slot) => slot.url && slot.status === "success")
-      }
-      handleSubmit={handleSubmit}
-    >
-      <QuestionHeader
+    <Card isValid={true} handleSubmit={handleSubmit}>
+      <CardHeader
         title={props.title}
         description={props.description}
         info={props.info}

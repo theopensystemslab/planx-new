@@ -184,7 +184,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Cache build assets
         id: cache-react-build-assets
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
@@ -210,6 +210,7 @@ jobs:
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          REACT_APP_HASURA_WEBSOCKET: wss://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
@@ -224,6 +225,7 @@ jobs:
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          REACT_APP_HASURA_WEBSOCKET: wss://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           REACT_APP_ENV: pizza
@@ -253,11 +255,11 @@ jobs:
         working-directory: infrastructure/application
       - name: Download React build assets
         id: cache-react-build-assets
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
-      - uses: pulumi/actions@v4
+      - uses: pulumi/actions@v5
         with:
           command: preview
           stack-name: staging
@@ -300,14 +302,14 @@ jobs:
     steps:
       - name: Create Pizza (if it doesn't exist)
         id: create
-        uses: theopensystemslab/vultr-action@v1.15
+        uses: theopensystemslab/vultr-action@v2.0
         with:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
-          os_id: 1743
+          os_type: alpine
           plan: vc2-1c-1gb
-          pullrequest_id: ${{ env.PULLREQUEST_ID }}
+          pull_request_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
           tag: pullrequest
 
@@ -322,13 +324,19 @@ jobs:
           password: ${{ steps.create.outputs.default_password }}
           command_timeout: 20m
           script: |
-            apt-get update -y
+            apk update
+            apk add docker
+            addgroup root docker
+            rc-update add docker default
+            service docker start
+            apk add docker-cli-compose
 
+            apk add git
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            apt-get install awscli -y
+            apk add aws-cli
             export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
@@ -350,15 +358,21 @@ jobs:
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
           command_timeout: 10m
+          # TODO: some of below script might be superfluous for server update (rather than create)
           script: |
-            apt-get update -y
+            apk update
+            apk add docker
+            addgroup root docker
+            rc-update add docker default
+            service docker start
+            apk add docker-cli-compose
 
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git add . && git stash
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            apt-get install awscli -y
+            apk add aws-cli
             export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
@@ -375,7 +389,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Download React build assets
         id: cache-react-build-assets
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}

@@ -22,4 +22,4 @@ export const parseContent = (
 export type IntersectingConstraints = Record<string, string[]>;
 
 export const DEFAULT_PLANNING_CONDITIONS_DISCLAIMER =
-  "This page does not include information about historic planning conditions that may apply to this property.";
+  "<p><strong>This page does not include information about historic planning conditions that may apply to this property.</strong></p>";

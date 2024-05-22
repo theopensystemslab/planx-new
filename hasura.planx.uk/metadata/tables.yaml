@@ -40,7 +40,6 @@
           - id
           - input_errors
           - metadata
-          - node_fn
           - node_id
           - node_title
           - node_type
@@ -240,6 +239,7 @@
           - feedback_type
           - flow_id
           - id
+          - node_data
           - node_id
           - node_type
           - status
@@ -268,6 +268,76 @@
 - table:
     name: feedback_summary
     schema: public
+  object_relationships:
+    - name: team
+      using:
+        manual_configuration:
+          column_mapping:
+            team_slug: slug
+          insertion_order: null
+          remote_table:
+            name: teams
+            schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - feedback_id
+          - device
+          - node_data
+          - address
+          - feedback_type
+          - help_definition
+          - help_sources
+          - help_text
+          - intersecting_constraints
+          - node_id
+          - node_text
+          - node_title
+          - node_type
+          - project_type
+          - service_slug
+          - status
+          - team_slug
+          - uprn
+          - user_comment
+          - user_context
+          - created_at
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - feedback_id
+          - device
+          - node_data
+          - address
+          - feedback_type
+          - help_definition
+          - help_sources
+          - help_text
+          - intersecting_constraints
+          - node_id
+          - node_text
+          - node_title
+          - node_type
+          - project_type
+          - service_slug
+          - status
+          - team_slug
+          - uprn
+          - user_comment
+          - user_context
+          - created_at
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      comment: ""
 - table:
     name: feedback_type_enum
     schema: public
@@ -1362,6 +1432,36 @@
                 _is_null: true
         check: null
 - table:
+    name: submission_services_log
+    schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - retry
+          - response
+          - event_id
+          - event_type
+          - status
+          - created_at
+          - flow_id
+          - session_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - retry
+          - response
+          - event_id
+          - event_type
+          - status
+          - created_at
+          - flow_id
+          - session_id
+        filter: {}
+      comment: ""
+- table:
     name: submission_services_summary
     schema: public
   select_permissions:
@@ -1420,15 +1520,20 @@
     - role: api
       permission:
         columns:
-          - has_planning_data
           - id
-          - production_bops_secret
-          - production_bops_submission_url
-          - production_govpay_secret
-          - staging_bops_secret
-          - staging_bops_submission_url
-          - staging_govpay_secret
           - team_id
+          - production_bops_submission_url
+          - staging_bops_submission_url
+          - production_power_automate_api_key
+          - staging_power_automate_api_key
+          - has_planning_data
+          - production_file_api_key
+          - staging_file_api_key
+          - production_bops_secret
+          - staging_bops_secret
+          - production_govpay_secret
+          - staging_govpay_secret
+          - power_automate_webhook_url
         filter: {}
     - role: public
       permission:
@@ -1715,6 +1820,32 @@
           - submission_email
         filter: {}
         check: null
+- table:
+    name: teams_summary
+    schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - govpay_enabled
+          - planning_data_enabled
+          - id
+          - govnotify_personalisation
+          - action_colour
+          - article_4s_enabled
+          - bops_submission_url
+          - favicon
+          - homepage
+          - link_colour
+          - logo
+          - name
+          - primary_colour
+          - reference_code
+          - send_to_email_address
+          - slug
+          - subdomain
+        filter: {}
+      comment: ""
 - table:
     name: uniform_applications
     schema: public

@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -33,12 +33,12 @@ export const ConfirmEmail: React.FC<{
   });
 
   return (
-    <Box width="100%" role="main">
+    <Box width="100%">
       <Card handleSubmit={formik.handleSubmit}>
-        <QuestionHeader
+        <CardHeader
           title="Enter your email address"
           description="We will use this to save your application so you can come back to it later. We will also email you updates about your application."
-        ></QuestionHeader>
+        ></CardHeader>
         <InputRow>
           <InputLabel label={"Email address"} htmlFor={"email"}>
             <Input

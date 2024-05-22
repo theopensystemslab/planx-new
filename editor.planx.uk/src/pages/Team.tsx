@@ -15,14 +15,15 @@ import Typography from "@mui/material/Typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
 
-const Root = styled(Box)(() => ({
-  backgroundColor: "#2C2C2C",
+const Root = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.dark,
   color: "#fff",
   width: "100%",
   flex: 1,
@@ -31,7 +32,7 @@ const Root = styled(Box)(() => ({
 }));
 
 const Dashboard = styled(Box)(({ theme }) => ({
-  backgroundColor: "#2C2C2C",
+  backgroundColor: theme.palette.background.dark,
   color: "#fff",
   width: "100%",
   maxWidth: 600,
@@ -56,7 +57,7 @@ const DashboardLink = styled(Link)(({ theme }) => ({
   fontSize: theme.typography.h4.fontSize,
   textDecoration: "none",
   color: "currentColor",
-  fontWeight: 600,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
   marginBottom: theme.spacing(1.5),
   marginTop: 0,
 }));

@@ -12,7 +12,7 @@ const Option: React.FC<any> = (props) => {
 
   const href = "";
 
-  let background = "#F9F8F8"; // no flag color
+  let background = "#666"; // no flag color
   let color = "#000";
   try {
     const flag = flatFlags.find(({ value }) =>

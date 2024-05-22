@@ -92,7 +92,7 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
         <CloseIcon />
       </IconButton>
     </CloseButton>
-    <Container maxWidth={false} role="main" sx={{ bgcolor: "white" }}>
+    <Container maxWidth={false} sx={{ bgcolor: "white" }}>
       <DrawerContent>{children}</DrawerContent>
     </Container>
     <MoreInfoFeedbackComponent />

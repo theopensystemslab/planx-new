@@ -1,5 +1,4 @@
 $black: #0b0c0c;
-$lineColor: #d0d0d0;
 $nodeBorder: $black;
 $optionBorder: #b1b4b6;
 $hangerBackground: #f2f2f2;
@@ -12,6 +11,8 @@ $nodeBorderWidth: 1px;
 $padding: 10px;
 $editorPadding: 30px;
 $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
+
+$fontMonospace: "Source Code Pro", monospace;
 
 // Import custom typeface for data inputs
 @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap");
@@ -36,44 +37,6 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
 }
 
 // ------------------------------------------------
-
-#editor-container {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
-
-#embedded-browser {
-  position: relative;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 500px;
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid #ccc;
-  header {
-    input {
-      flex: 1;
-      padding: 5px;
-      margin-right: 5px;
-      background: white;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-    }
-    svg {
-      cursor: pointer;
-      opacity: 0.7;
-      margin: 6px 4px 1px 4px;
-      font-size: 1.2rem;
-    }
-    display: flex;
-    background: #ddd;
-    padding: 10px;
-  }
-  iframe {
-    flex: 1;
-  }
-}
 
 #editor {
   flex: 1;
@@ -128,6 +91,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
 
 .card {
   position: relative;
+  z-index: 1;
 
   &.isDragging {
     opacity: 0.3;
@@ -154,7 +118,18 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
   }
 
   &.isClone > a {
-    opacity: 0.5;
+    margin-top: 3px;
+    ::before {
+      content: "";
+      position: absolute;
+      left: -4px;
+      top: -4px;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border: $nodeBorderWidth dashed $nodeBorder;
+      z-index: -1;
+    }
   }
 
   &.hasFailed {
@@ -162,6 +137,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
   }
 
   & > a {
+    position: relative;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -196,6 +172,11 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     }
   }
 
+  &.type-SetValue > a {
+    background: #f0f0f0;
+    font-family: $fontMonospace;
+  }
+
   &.type-Section {
     [data-layout="top-down"] & {
       width: 100%;
@@ -216,8 +197,8 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
     background-image: linear-gradient(
       90deg,
       $optionBorder,
-      $optionBorder 50%,
-      transparent 50%,
+      $optionBorder 40%,
+      transparent 40%,
       transparent 100%
     );
     background-size: 12px 2px;
@@ -487,7 +468,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
       background: #fffdb0 !important;
       position: relative;
       padding-right: 20px;
-      // Triangle shapes to simulate paper fold on sticky note
+    }
+    // Triangle shapes to simulate paper fold on sticky note
+    &:not(.isClone) > a {
       &::before {
         content: "";
         position: absolute;
@@ -505,7 +488,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAA
         bottom: -$nodeBorderWidth;
         width: 0;
         height: 0;
-        border-top: 12px solid $nodeBorder;
+        border-top: 12px solid #555;
         border-right: 12px solid transparent;
       }
     }

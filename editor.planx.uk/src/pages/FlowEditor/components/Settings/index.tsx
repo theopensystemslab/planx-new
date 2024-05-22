@@ -11,13 +11,15 @@ import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
 import { Link, useNavigation } from "react-navi";
 
+export interface SettingsTab {
+  route: string;
+  name: string;
+  Component: React.FC;
+}
+
 interface SettingsProps {
   currentTab: string;
-  tabs: {
-    route: string;
-    name: string;
-    Component: React.FC;
-  }[];
+  tabs: SettingsTab[];
 }
 
 interface TabPanelProps {
@@ -38,7 +40,7 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Container maxWidth="formWrap" disableGutters>
+        <Container maxWidth={false} disableGutters>
           <Box py={7}>{children}</Box>
         </Container>
       )}
@@ -95,6 +97,8 @@ const Root = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   minHeight: `calc(100% - ${HEADER_HEIGHT}px)`,
+  // Ensure settings panels sit above editor content with explicit z-index set, will be redundent when we move to side-tabbed settings
+  zIndex: theme.zIndex.appBar,
   [`& .${classes.tabs}`]: {
     backgroundColor: theme.palette.border.main,
   },

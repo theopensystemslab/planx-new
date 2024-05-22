@@ -127,6 +127,11 @@ export const createPaymentRequestQueryMock = {
     payeeName: payee.name,
     payeeEmail: payee.email,
     sessionPreviewData: sessionPreviewData,
+    govPayMetadata: [
+      { key: "source", value: "PlanX" },
+      { key: "paidViaInviteToPay", value: true },
+      { key: "flow", value: validSession.flow.slug },
+    ],
   },
 };
 

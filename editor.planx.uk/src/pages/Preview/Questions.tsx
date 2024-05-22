@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
-import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -77,8 +77,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.getType,
   ]);
   const isStandalone = previewEnvironment === "standalone";
-  const { createAnalytics, node, trackBackwardsNavigation } =
-    useAnalyticsTracking();
+  const { createAnalytics, node, trackEvent } = useAnalyticsTracking();
   const [gotFlow, setGotFlow] = useState(false);
   const isUsingLocalStorage =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
@@ -150,7 +149,12 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const goBack = useCallback(() => {
     const previous = previousCard(node);
     if (previous) {
-      trackBackwardsNavigation("back", previous);
+      trackEvent({
+        event: "backwardsNavigation",
+        metadata: null,
+        initiator: "back",
+        nodeId: previous,
+      });
       record(previous);
     }
   }, [node?.id]);
@@ -166,7 +170,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   );
 
   return (
-    <Box width="100%" role="main">
+    <Box width="100%">
       <BackBar hidden={!showBackBar}>
         <Container maxWidth={false}>
           <BackButton
@@ -181,13 +185,15 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       </BackBar>
 
       {node && (
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Node
-            node={node}
-            key={node.id}
-            handleSubmit={handleSubmit(node.id!)}
-          />
-        </ErrorBoundary>
+        <Box component="main" id="main-content" sx={{ width: "100%" }}>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Node
+              node={node}
+              key={node.id}
+              handleSubmit={handleSubmit(node.id!)}
+            />
+          </ErrorBoundary>
+        </Box>
       )}
     </Box>
   );

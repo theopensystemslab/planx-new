@@ -18,7 +18,19 @@ mkdir -p /tmp
 # Create sync.sql file for all our comnands which will be executed in a single transaction
 touch '/tmp/sync.sql'
 
-tables=(flows users teams flow_document_templates team_members team_themes)
+tables=(
+  # Mandatory tables
+  flows 
+  users 
+  teams 
+  flow_document_templates 
+  team_members 
+  team_themes
+  # Optional tables
+  # Please comment in if working on a feature and you require example data locally
+  # You will need to manually grant select permissions to the github_actions on production, and update main.sql
+  # feedback
+)
 
 # run copy commands on remote  db
 for table in "${tables[@]}"; do
@@ -35,7 +47,7 @@ done
 
 # Copy subset of team_integrations columns
 # Do not copy production values
-psql --quiet ${REMOTE_PG} --command="\\copy (SELECT id, team_id, staging_bops_submission_url, staging_bops_secret, has_planning_data, staging_govpay_secret FROM team_integrations) TO '/tmp/team_integrations.csv' (FORMAT csv, DELIMITER ';');"
+psql --quiet ${REMOTE_PG} --command="\\copy (SELECT id, team_id, staging_bops_submission_url, staging_bops_secret, has_planning_data, staging_govpay_secret, staging_file_api_key, power_automate_webhook_url, staging_power_automate_api_key FROM team_integrations) TO '/tmp/team_integrations.csv' (FORMAT csv, DELIMITER ';');"
 echo team_integrations downloaded
 
 psql --quiet ${REMOTE_PG} --command="\\copy (SELECT DISTINCT ON (flow_id) id, data, flow_id, summary, publisher_id, created_at FROM published_flows ORDER BY flow_id, created_at DESC) TO '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');"

@@ -6,11 +6,13 @@ import React, { PropsWithChildren } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 
-const StyledButton = styled(Button)(() => ({
+const StyledButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== "lightFontStyle",
+})<{ lightFontStyle: boolean }>(({ theme, lightFontStyle }) => ({
   boxShadow: "none",
-  color: "black",
-  fontSize: "1.125rem",
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  color: lightFontStyle ? theme.palette.grey[600] : "black",
+  fontSize: lightFontStyle ? "1rem" : "1.125rem",
+  fontWeight: lightFontStyle ? "inherit" : FONT_WEIGHT_SEMI_BOLD,
   width: "100%",
 }));
 
@@ -20,12 +22,14 @@ interface Props {
     closed: string;
   };
   id: string;
+  lightFontStyle?: boolean;
 }
 
 const SimpleExpand: React.FC<PropsWithChildren<Props>> = ({
   children,
   buttonText,
   id,
+  lightFontStyle,
 }) => {
   const [show, setShow] = React.useState(false);
   return (
@@ -35,6 +39,7 @@ const SimpleExpand: React.FC<PropsWithChildren<Props>> = ({
           onClick={() => setShow(!show)}
           aria-expanded={show}
           aria-controls={id}
+          lightFontStyle={lightFontStyle || false}
         >
           {show ? buttonText.closed : buttonText.open}
           <Caret

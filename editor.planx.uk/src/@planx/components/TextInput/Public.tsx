@@ -1,5 +1,5 @@
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
@@ -33,7 +33,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
-      <QuestionHeader
+      <CardHeader
         title={props.title}
         description={props.description}
         info={props.info}

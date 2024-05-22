@@ -46,20 +46,27 @@ const Icon = styled("span", {
 export interface Props {
   id?: string;
   checked: boolean;
-  onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onChange?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-export default function Checkbox(props: Props): FCReturn {
+export default function Checkbox({
+  id,
+  checked,
+  onChange,
+  inputProps,
+}: Props): FCReturn {
   return (
-    <Root onClick={() => props.onChange()}>
+    <Root onClick={() => onChange && onChange()}>
       <Input
-        defaultChecked={props.checked}
+        defaultChecked={checked}
         type="checkbox"
-        id={props.id}
-        data-testid={props.id}
-        onChange={() => props.onChange()}
+        id={id}
+        data-testid={id}
+        onChange={() => onChange && onChange()}
+        {...inputProps}
       />
-      <Icon checked={props.checked} />
+      <Icon checked={checked} />
     </Root>
   );
 }

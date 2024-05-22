@@ -1,5 +1,5 @@
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import isNil from "lodash/isNil";
@@ -37,9 +37,18 @@ export default function NumberInputComponent(props: Props): FCReturn {
         .required("Enter your answer before continuing")
         .test({
           name: "not a number",
-          message: "Enter a number",
+          message: (() => {
+            if (!props.allowNegatives) {
+              return "Enter a positive number";
+            }
+
+            return "Enter a number";
+          })(),
           test: (value: string | undefined) => {
             if (!value) {
+              return false;
+            }
+            if (!props.allowNegatives && value.startsWith("-")) {
               return false;
             }
             return value === "0" ? true : Boolean(parseNumber(value));
@@ -56,7 +65,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
-      <QuestionHeader
+      <CardHeader
         title={props.title}
         description={props.description}
         info={props.info}

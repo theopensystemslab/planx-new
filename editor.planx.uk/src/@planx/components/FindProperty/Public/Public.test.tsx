@@ -69,6 +69,7 @@ const osAddressProps = {
       "organisation-entity": "13",
     },
   },
+  "findProperty.action": "Selected an existing address",
 };
 
 const proposedAddressProps = {
@@ -117,6 +118,7 @@ const proposedAddressProps = {
       "organisation-entity": "13",
     },
   },
+  "findProperty.action": "Proposed a new address",
 };
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
@@ -196,8 +198,9 @@ describe("render states", () => {
     const descriptionInput = screen.getByTestId("new-address-input");
     expect(descriptionInput).toBeInTheDocument();
 
-    // expect continue to be disabled because an address has not been selected
-    expect(screen.getByTestId("continue-button")).toBeDisabled();
+    // Continue button is always enabled, but validation prevents submit until we have complete address details
+    expect(screen.getByTestId("continue-button")).toBeEnabled();
+    await user.click(screen.getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 
@@ -414,9 +417,15 @@ describe("plotting a new address that does not have a uprn yet", () => {
       screen.getByText(`Enter a site description such as "Land at..."`),
     ).toBeInTheDocument();
 
-    // expect continue to be disabled because we have incomplete address details
-    expect(screen.getByTestId("continue-button")).toBeDisabled();
+    // Continue button is always enabled, but validation prevents submit until we have complete address details
+    expect(screen.getByTestId("continue-button")).toBeEnabled();
+    await user.click(screen.getByTestId("continue-button"));
     expect(handleSubmit).not.toHaveBeenCalled();
+
+    // continue should trigger map error wrapper too
+    expect(
+      screen.getByTestId("error-message-plot-new-address-map"),
+    ).toBeInTheDocument();
   });
 
   it("recovers previously submitted address when clicking the back button and lands on the map page", async () => {

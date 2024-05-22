@@ -2,9 +2,11 @@ import DataObjectIcon from "@mui/icons-material/DataObject";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
+  ComponentType as TYPES,
   GovPayMetadata,
+} from "@opensystemslab/planx-core/types";
+import {
   Pay,
   REQUIRED_GOVPAY_METADATA,
   validationSchema,
@@ -17,7 +19,6 @@ import {
   MoreInformation,
 } from "@planx/components/ui";
 import { Form, Formik, useFormikContext } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ListManager, {
@@ -31,7 +32,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
-type FormikGovPayMetadata = Record<keyof GovPayMetadata, string>[] | string | undefined;
+type FormikGovPayMetadata =
+  | Record<keyof GovPayMetadata, string>[]
+  | string
+  | undefined;
 
 const GOVPAY_DOCS_URL =
   "https://docs.payments.service.gov.uk/reporting/#add-more-information-to-a-payment-39-custom-metadata-39-or-39-reporting-columns-39";
@@ -114,6 +118,7 @@ function GovPayMetadataEditor(props: ListManagerEditorProps<GovPayMetadata>) {
             placeholder="key"
           />
           <Input
+            format={currVal.toString().startsWith("@") ? "data" : undefined}
             aria-labelledby="value-label"
             disabled={isDisabled}
             value={currVal}
@@ -132,7 +137,6 @@ export type Props = EditorProps<TYPES.Pay, Pay>;
 
 const Component: React.FC<Props> = (props: Props) => {
   const [flowName] = useStore((store) => [store.flowName]);
-  const displayGovPayMetadataSection = hasFeatureFlag("GOVPAY_METADATA");
 
   const initialValues: Pay = {
     title: props.node?.data?.title || "Pay for your application",
@@ -172,8 +176,8 @@ const Component: React.FC<Props> = (props: Props) => {
         value: "PlanX",
       },
       {
-        key: "isInviteToPay",
-        value: props.node?.data?.allowInviteToPay ?? true,
+        key: "paidViaInviteToPay",
+        value: "@paidViaInviteToPay",
       },
     ],
     ...parseMoreInformation(props.node?.data),
@@ -269,93 +273,87 @@ const Component: React.FC<Props> = (props: Props) => {
               Hide the pay buttons and show fee for information only
             </OptionButton>
           </ModalSection>
-          {displayGovPayMetadataSection && (
-            <ModalSection>
-              <ModalSectionContent
-                title="GOV.UK Pay Metadata"
-                Icon={DataObjectIcon}
-              >
-                <Typography variant="subtitle2" sx={{ mb: 2 }}>
-                  Include metadata alongside payments, such as VAT codes, cost
-                  centers, or ledger codes. See{" "}
-                  <Link
-                    href={GOVPAY_DOCS_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    GOV.UK Pay documentation
-                  </Link>{" "}
-                  for more details.
-                </Typography>
-                <ErrorWrapper
-                  error={
-                    typeof errors.govPayMetadata === "string" &&
-                    touched.govPayMetadata
-                      ? errors.govPayMetadata
-                      : undefined
-                  }
+          <ModalSection>
+            <ModalSectionContent
+              title="GOV.UK Pay Metadata"
+              Icon={DataObjectIcon}
+            >
+              <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                Include metadata alongside payments, such as VAT codes, cost
+                centers, or ledger codes. See{" "}
+                <Link
+                  href={GOVPAY_DOCS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <>
-                    <Box
-                      sx={{
-                        width: "100%",
-                        mb: 1,
-                        display: "flex",
-                        justifyContent: "space-evenly",
-                      }}
+                  GOV.UK Pay documentation
+                </Link>{" "}
+                for more details.
+              </Typography>
+              <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                Any values beginning with @ will be dynamically read from data
+                values set throughout the flow.
+              </Typography>
+              <ErrorWrapper
+                error={
+                  typeof errors.govPayMetadata === "string" &&
+                  touched.govPayMetadata
+                    ? errors.govPayMetadata
+                    : undefined
+                }
+              >
+                <>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      mb: 1,
+                      display: "flex",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    <Typography
+                      sx={{ width: "100%", ml: 5 }}
+                      variant="subtitle2"
+                      component="label"
+                      id="key-label"
                     >
-                      <Typography
-                        sx={{ width: "100%", ml: 5 }}
-                        variant="subtitle2"
-                        component="label"
-                        id="key-label"
-                      >
-                        Key
-                      </Typography>
-                      <Typography
-                        sx={{ width: "100%", ml: -5 }}
-                        variant="subtitle2"
-                        component="label"
-                        id="value-label"
-                      >
-                        Value
-                      </Typography>
-                    </Box>
-                    <ListManager
-                      maxItems={10}
-                      disableDragAndDrop
-                      values={values.govPayMetadata || []}
-                      onChange={(metadata) => {
-                        setFieldValue("govPayMetadata", metadata);
-                      }}
-                      Editor={GovPayMetadataEditor}
-                      newValue={() => {
-                        setTouched({});
-                        return { key: "", value: "" };
-                      }}
-                      isFieldDisabled={({ key }, index) =>
-                        isFieldDisabled(key, index)
-                      }
-                    />
-                  </>
-                </ErrorWrapper>
-              </ModalSectionContent>
-            </ModalSection>
-          )}
+                      Key
+                    </Typography>
+                    <Typography
+                      sx={{ width: "100%", ml: -5 }}
+                      variant="subtitle2"
+                      component="label"
+                      id="value-label"
+                    >
+                      Value
+                    </Typography>
+                  </Box>
+                  <ListManager
+                    maxItems={10}
+                    disableDragAndDrop
+                    values={values.govPayMetadata || []}
+                    onChange={(metadata) => {
+                      setFieldValue("govPayMetadata", metadata);
+                    }}
+                    Editor={GovPayMetadataEditor}
+                    newValue={() => {
+                      setTouched({});
+                      return { key: "", value: "" };
+                    }}
+                    isFieldDisabled={({ key }, index) =>
+                      isFieldDisabled(key, index)
+                    }
+                  />
+                </>
+              </ErrorWrapper>
+            </ModalSectionContent>
+          </ModalSection>
           <ModalSection>
             <ModalSectionContent title="Invite to Pay" Icon={ICONS[TYPES.Pay]}>
               <OptionButton
                 selected={values.allowInviteToPay}
                 onClick={() => {
                   setFieldValue("allowInviteToPay", !values.allowInviteToPay);
-                  // Update GovUKMetadata
-                  const inviteToPayIndex = values.govPayMetadata?.findIndex(
-                    ({ key }) => key === "isInviteToPay",
-                  );
-                  setFieldValue(
-                    `govPayMetadata[${inviteToPayIndex}].value`,
-                    !values.allowInviteToPay,
-                  );
                 }}
                 style={{ width: "100%" }}
               >
