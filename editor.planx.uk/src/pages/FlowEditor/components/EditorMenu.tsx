@@ -23,7 +23,7 @@ const Root = styled(Box)(({ theme }) => ({
 const MenuWrap = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(4, 0, 0, 0),
+  padding: theme.spacing(2, 0, 0, 0),
 }));
 
 const MenuItem = styled("li")(({ theme }) => ({

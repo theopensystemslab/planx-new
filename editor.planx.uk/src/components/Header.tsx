@@ -40,6 +40,7 @@ import {
 import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
 
+import { LastEdited } from "../pages/FlowEditor/components/LastEdited";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath, rootTeamPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
@@ -53,7 +54,6 @@ const Root = styled(AppBar)(() => ({
 }));
 
 const BreadcrumbsRoot = styled(Box)(() => ({
-  cursor: "pointer",
   fontSize: 20,
   display: "flex",
   columnGap: 10,
@@ -257,6 +257,7 @@ const Breadcrumbs: React.FC = () => {
           )}
         </>
       )}
+      <LastEdited />
     </BreadcrumbsRoot>
   );
 };
