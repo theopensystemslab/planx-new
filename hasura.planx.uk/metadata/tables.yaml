@@ -1448,6 +1448,33 @@
 - table:
     name: submission_services_log
     schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - retry
+          - response
+          - event_id
+          - event_type
+          - status
+          - created_at
+          - flow_id
+          - session_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - retry
+          - response
+          - event_id
+          - event_type
+          - status
+          - created_at
+          - flow_id
+          - session_id
+        filter: {}
+      comment: ""
 - table:
     name: submission_services_summary
     schema: public
