@@ -114,6 +114,7 @@ const presentationalComponents: {
   [TYPES.SetValue]: undefined,
   [TYPES.Question]: Question,
   [TYPES.TaskList]: undefined,
+  [TYPES.List]: undefined,
   [TYPES.TextInput]: TextInput,
 } as const;
 

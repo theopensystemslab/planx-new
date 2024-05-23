@@ -257,6 +257,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Flow:
     case TYPES.InternalPortal:
     case TYPES.Answer:
+    case TYPES.List:
     case undefined:
       return null;
     default:

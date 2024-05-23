@@ -33,6 +33,7 @@ export const SLUGS: {
   [TYPES.Question]: "question",
   [TYPES.TaskList]: "task-list",
   [TYPES.TextInput]: "text-input",
+  [TYPES.List]: "list",
 } as const;
 
 export const fromSlug = (slug: string): TYPES | undefined => {

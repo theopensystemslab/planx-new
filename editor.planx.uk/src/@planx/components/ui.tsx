@@ -87,6 +87,7 @@ export const ICONS: {
   [TYPES.Question]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
+  [TYPES.List]: undefined,
 } as const;
 
 interface MoreInformationProps {

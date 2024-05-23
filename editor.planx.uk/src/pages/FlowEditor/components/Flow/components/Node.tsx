@@ -134,6 +134,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...allProps} text={node?.data?.title ?? "Contact"} />;
     case TYPES.Flow:
       return null;
+    case TYPES.List:
+      return null;
     default:
       console.error({ nodeNotFound: props });
       return exhaustiveCheck(type);
