@@ -71,9 +71,9 @@ const DashboardLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "currentColor",
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  marginBottom: theme.spacing(1.5),
   padding: theme.spacing(2),
   margin: 0,
+  width: "100%",
 }));
 
 const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
