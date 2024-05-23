@@ -31,6 +31,11 @@ const editorRoutes = compose(
               name
               slug
             }
+            teamThemes: teams_summary {
+              slug
+              primaryColour: primary_colour
+              logo
+            }
           }
         `,
       });
@@ -39,7 +44,7 @@ const editorRoutes = compose(
 
       return {
         title: makeTitle("Teams"),
-        view: <Teams teams={data.teams} />,
+        view: <Teams teams={data.teams} teamTheme={data.teamThemes} />,
       };
     }),
 

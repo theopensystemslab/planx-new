@@ -467,19 +467,7 @@ const EditorToolbar: React.FC<{
                       <MenuOpenIcon />
                     </IconButton>
                   )}
-                  <Box mr={1}>
-                    <Avatar
-                      sx={{
-                        bgcolor: grey[200],
-                        color: "text.primary",
-                        fontSize: "1em",
-                        fontWeight: "600",
-                      }}
-                    >
-                      {user.firstName[0]}
-                      {user.lastName[0]}
-                    </Avatar>
-                  </Box>
+                  <Box mr={1}></Box>
                   <IconButton
                     edge="end"
                     color="inherit"
@@ -487,6 +475,24 @@ const EditorToolbar: React.FC<{
                     onClick={handleMenuToggle}
                     size="large"
                   >
+                    <Avatar
+                      component="span"
+                      sx={{
+                        bgcolor: grey[200],
+                        color: "text.primary",
+                        fontSize: "1rem",
+                        fontWeight: "600",
+                        width: 33,
+                        height: 33,
+                        marginRight: "0.5rem",
+                      }}
+                    >
+                      {user.firstName[0]}
+                      {user.lastName[0]}
+                    </Avatar>
+                    <Typography variant="body2" fontSize="small">
+                      Account
+                    </Typography>
                     <KeyboardArrowDown />
                   </IconButton>
                 </ProfileSection>
