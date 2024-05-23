@@ -10,6 +10,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
+import { SetValue } from "@planx/components/SetValue/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
@@ -28,6 +29,7 @@ import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
+import { handleSetValue } from "@planx/components/SetValue/utils";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 let memoizedPreviousCardId: string | undefined = undefined;
@@ -246,7 +248,7 @@ export const previewStore: StateCreator<
           {} as Store.passport["data"],
         );
 
-        return {
+        let passport: Store.passport = {
           ...acc,
           data: {
             ...acc.data,
@@ -254,6 +256,17 @@ export const previewStore: StateCreator<
             ...passportData,
           },
         };
+
+        const isSetValue = flow[id].type === TYPES.SetValue;
+        if (isSetValue) {
+          passport = handleSetValue({
+            nodeData: flow[id].data as SetValue,
+            previousValues: acc.data?.[key],
+            passport,
+          });
+        }
+
+        return passport;
       },
       {
         data: {},
@@ -276,7 +289,7 @@ export const previewStore: StateCreator<
       updateSectionData,
     } = get();
 
-    if (!flow[id]) throw new Error("id not found");
+    if (!flow[id]) throw new Error(`id "${id}" not found`);
 
     if (userData) {
       // add breadcrumb
