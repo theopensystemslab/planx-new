@@ -77,12 +77,12 @@ function GlobalMenu() {
     {
       title: "Admin panel",
       Icon: AdminPanelSettingsIcon,
-      route: "/admin-panel",
+      route: "admin-panel",
     },
     {
       title: "Global settings",
       Icon: TuneIcon,
-      route: "/global-settings",
+      route: "global-settings",
     },
   ];
 

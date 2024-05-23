@@ -22,15 +22,16 @@ interface Props {
   teamTheme: Array<TeamTheme>;
 }
 
-const Root = styled(Box)(({ theme }) => ({
+export const DashboardWrap = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   width: "100%",
-  flex: 1,
+  display: "flex",
   justifyContent: "flex-start",
-  alignItems: "center",
+  alignItems: "flex-start",
 }));
 
-const Dashboard = styled(Box)(() => ({
+export const Dashboard = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
   width: "100%",
   display: "flex",
   flexDirection: "row",
@@ -94,7 +95,7 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
     });
 
   return (
-    <Root>
+    <DashboardWrap>
       <Dashboard>
         <GlobalMenu />
         <Container maxWidth="formWrap">
@@ -122,7 +123,7 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
           </Box>
         </Container>
       </Dashboard>
-    </Root>
+    </DashboardWrap>
   );
 };
 

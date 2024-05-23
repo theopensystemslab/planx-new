@@ -4,11 +4,14 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
+import GlobalMenu from "pages/FlowEditor/components/GlobalMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { Dashboard, DashboardWrap } from "pages/Teams";
 import React from "react";
 import useSWR from "swr";
 import { AdminPanelData } from "types";
@@ -34,15 +37,24 @@ function Component() {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
   return (
-    <Box p={3}>
-      <Typography variant="h1">Platform Admin Panel</Typography>
-      <Typography variant="body1" mb={3}>
-        {`This is an overview of each team's integrations and settings for the `}
-        <strong>{process.env.REACT_APP_ENV}</strong>
-        {` environment`}
-      </Typography>
-      {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
-    </Box>
+    <DashboardWrap>
+      <Dashboard>
+        <GlobalMenu />
+        <Container maxWidth={false}>
+          <Box py={3}>
+            <Typography variant="h1">Platform Admin Panel</Typography>
+            <Typography variant="body1" mb={3}>
+              {`This is an overview of each team's integrations and settings for the `}
+              <strong>{process.env.REACT_APP_ENV}</strong>
+              {` environment`}
+            </Typography>
+            {adminPanelData?.map((team) => (
+              <TeamData key={team.id} data={team} />
+            ))}
+          </Box>
+        </Container>
+      </Dashboard>
+    </DashboardWrap>
   );
 }
 
@@ -58,7 +70,7 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
   const a4Endpoint = `${process.env.REACT_APP_API_URL}/gis/${data.slug}/article4-schema`;
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data: a4Check, isValidating } = useSWR(
-    () => data.slug ? a4Endpoint : null,
+    () => (data.slug ? a4Endpoint : null),
     fetcher,
   );
 
@@ -123,7 +135,13 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
               </>
               <>
                 <Box component="dt">{"Article 4s (API)"}</Box>
-                <Box component="dd">{!isValidating && a4Check?.status ? <Configured /> : <NotConfigured />}</Box>
+                <Box component="dd">
+                  {!isValidating && a4Check?.status ? (
+                    <Configured />
+                  ) : (
+                    <NotConfigured />
+                  )}
+                </Box>
               </>
               <>
                 <Box component="dt">{"Reference code"}</Box>

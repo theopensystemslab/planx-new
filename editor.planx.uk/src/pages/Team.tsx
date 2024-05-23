@@ -27,11 +27,6 @@ import TeamMenu from "./FlowEditor/components/TeamMenu";
 import { useStore } from "./FlowEditor/lib/store";
 import { formatLastEditMessage } from "./FlowEditor/utils";
 
-interface TeamTheme {
-  slug: string;
-  primaryColour: string;
-}
-
 const Root = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   width: "100%",
