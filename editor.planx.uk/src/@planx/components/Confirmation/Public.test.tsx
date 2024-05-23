@@ -3,11 +3,11 @@ import { axe, setup } from "testUtils";
 
 import ConfirmationComponent from "./Public";
 
-jest.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", () => {
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+    CoreDomainClient: vi.fn().mockImplementation(() => ({
       export: {
-        csvData: () => jest.fn(),
+        csvData: () => vi.fn(),
       },
     })),
   };

@@ -64,7 +64,7 @@ const SavePage: React.FC = () => {
   const [expiryDate, setExpiryDate] = useState<string>(placeholderExpiryDate);
 
   const sendNotifyEmail = async () => {
-    const url = `${process.env.REACT_APP_API_URL}/send-email/save`;
+    const url = `${import.meta.env.VITE_APP_API_URL}/send-email/save`;
     const { sessionId } = useStore.getState();
     const data: SendEmailPayload = {
       payload: { email: saveToEmail, sessionId },

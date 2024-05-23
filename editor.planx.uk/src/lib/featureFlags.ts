@@ -66,7 +66,7 @@ export const hasFeatureFlag = (featureFlag: FeatureFlag) =>
   has: hasFeatureFlag,
 };
 
-if (process.env.REACT_APP_ENV !== "test") {
+if (import.meta.env.VITE_APP_ENV !== "test") {
   // log current flag status on page load
   console.debug(
     activeFeatureFlags.size > 0

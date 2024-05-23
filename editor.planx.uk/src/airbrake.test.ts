@@ -1,20 +1,20 @@
 import { Notifier } from "@airbrake/browser";
 
-jest.mock("@airbrake/browser");
+vi.mock("@airbrake/browser");
 
 describe("logger", () => {
-  const originalEnv = process.env;
-  let logSpy: jest.SpyInstance;
-  let windowSpy: jest.SpyInstance;
+  const originalEnv = import.meta.env;
+  let logSpy: vi.SpyInstance;
+  let windowSpy: vi.SpyInstance;
 
   beforeEach(() => {
     process.env = originalEnv;
-    logSpy = jest.spyOn(console, "log").mockImplementation();
-    windowSpy = jest.spyOn(window, "window", "get");
+    logSpy = vi.spyOn(console, "log").mockImplementation();
+    windowSpy = vi.spyOn(window, "window", "get");
   });
 
   afterEach(() => {
-    jest.resetModules();
+    vi.resetModules();
     (Notifier as any).mockRestore();
     logSpy.mockRestore();
     windowSpy.mockRestore();
@@ -29,9 +29,9 @@ describe("logger", () => {
       location: { host: "editor.planx.uk" },
     }));
     process.env = Object.assign({
-      REACT_APP_ENV: "production",
-      REACT_APP_AIRBRAKE_PROJECT_ID: "1",
-      REACT_APP_AIRBRAKE_PROJECT_KEY: "a",
+      VITE_APP_ENV: "production",
+      VITE_APP_AIRBRAKE_PROJECT_ID: "1",
+      VITE_APP_AIRBRAKE_PROJECT_KEY: "a",
     });
     // instantiate the logger after mocks and env variables set
     const { logger } = require("./airbrake");

@@ -8,8 +8,8 @@ import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
 import PlanningConstraints from "./Public";
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
-  const isGISRequest = url()?.startsWith(`${process.env.REACT_APP_API_URL}/gis/`);
-  const isRoadsRequest = url()?.startsWith(`${process.env.REACT_APP_API_URL}/roads/`);
+  const isGISRequest = url()?.startsWith(`${import.meta.env.VITE_APP_API_URL}/gis/`);
+  const isRoadsRequest = url()?.startsWith(`${import.meta.env.VITE_APP_API_URL}/roads/`);
 
   if (isGISRequest) return { data: digitalLandResponseMock } as any;
   if (isRoadsRequest) return { data: classifiedRoadsResponseMock } as any;
@@ -18,7 +18,7 @@ jest.spyOn(SWR, "default").mockImplementation((url: any) => {
 });
 
 it("renders correctly", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <PlanningConstraints

@@ -121,7 +121,7 @@ const proposedAddressProps = {
   "findProperty.action": "Proposed a new address",
 };
 
-jest.spyOn(SWR, "default").mockImplementation((url: any) => {
+vi.spyOn(SWR, "default").mockImplementation((url: any) => {
   return {
     data: url()?.startsWith("https://www.planning.data.gov.uk")
       ? localAuthorityMock
@@ -131,7 +131,7 @@ jest.spyOn(SWR, "default").mockImplementation((url: any) => {
 
 describe("render states", () => {
   it("renders correctly and defaults to the address autocomplete page", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -165,7 +165,7 @@ describe("render states", () => {
   });
 
   it("renders correctly when allowing non-UPRN addresses", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -205,7 +205,7 @@ describe("render states", () => {
   });
 
   it("opens the external planning site dialog by default if allowNewAddresses is toggled off", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -238,7 +238,7 @@ describe("render states", () => {
   });
 
   it("clears address data when switching between pages", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const previousData = osAddressProps;
 
     const { user } = setup(
@@ -274,7 +274,7 @@ describe("render states", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const { container, user } = setup(
       <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
         <FindProperty
@@ -299,7 +299,7 @@ describe("render states", () => {
 
 describe("picking an OS address", () => {
   it("displays an error if you submit an invalid postcode", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -355,7 +355,7 @@ describe("picking an OS address", () => {
   });
 
   it("recovers previously submitted address when clicking the back button", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const previousData = osAddressProps;
 
     const { user } = setup(
@@ -384,7 +384,7 @@ describe("picking an OS address", () => {
 
 describe("plotting a new address that does not have a uprn yet", () => {
   it("displays an error if you haven't entered a site address", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -429,7 +429,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
   });
 
   it("recovers previously submitted address when clicking the back button and lands on the map page", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const previousData = proposedAddressProps;
 
     const { user } = setup(

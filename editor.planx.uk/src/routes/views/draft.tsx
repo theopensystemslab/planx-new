@@ -107,7 +107,7 @@ const fetchSettingsForDraftView = async (
 const fetchDraftFlattenedFlowData = async (
   flowId: string,
 ): Promise<FlowGraph> => {
-  const url = `${process.env.REACT_APP_API_URL}/flows/${flowId}/flatten-data?draft=true`;
+  const url = `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/flatten-data?draft=true`;
   try {
     const { data } = await axios.get<FlowGraph>(url);
     return data;

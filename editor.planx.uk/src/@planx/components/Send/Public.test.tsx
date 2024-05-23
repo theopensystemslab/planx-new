@@ -6,13 +6,13 @@ import hasuraEventsResponseMock from "./mocks/hasuraEventsResponseMock";
 import { Destination } from "./model";
 import SendComponent from "./Public";
 
-jest.mock("axios");
-const mockAxios = Axios as jest.Mocked<typeof Axios>;
+vi.mock("axios");
+const mockAxios = Axios as vi.Mocked<typeof Axios>;
 
 mockAxios.post.mockImplementation((url: any) => {
   return {
     value: url()?.startsWith(
-      `${process.env.REACT_APP_API_URL}/create-send-events/`,
+      `${import.meta.env.VITE_APP_API_URL}/create-send-events/`,
     )
       ? hasuraEventsResponseMock
       : null,

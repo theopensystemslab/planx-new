@@ -37,7 +37,7 @@ export default function FileDownload({
       <Link
         component="button"
         onClick={async () => {
-          await fetch(`${process.env.REACT_APP_API_URL}/download-application`, {
+          await fetch(`${import.meta.env.VITE_APP_API_URL}/download-application`, {
             method: "POST",
             headers: {
               Accept: "application/json",

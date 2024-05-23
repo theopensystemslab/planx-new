@@ -3,6 +3,7 @@ import { isPreviewOnlyDomain } from "routes/utils";
 import { create, StoreApi, UseBoundStore } from "zustand";
 
 import type { EditorStore, EditorUIStore } from "./editor";
+import { editorStore, editorUIStore } from "./editor";
 import type { NavigationStore } from "./navigation";
 import { navigationStore } from "./navigation";
 import type { PreviewStore } from "./preview";

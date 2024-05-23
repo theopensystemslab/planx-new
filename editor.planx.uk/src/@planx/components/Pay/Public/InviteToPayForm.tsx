@@ -102,7 +102,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
 
   const postRequest = async (createPaymentRequest: CreatePaymentRequest) => {
     setIsLoading(true);
-    const url = `${process.env.REACT_APP_API_URL}/invite-to-pay/${sessionId}`;
+    const url = `${import.meta.env.VITE_APP_API_URL}/invite-to-pay/${sessionId}`;
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify(createPaymentRequest),

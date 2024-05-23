@@ -7,15 +7,16 @@ import { configureAxe } from "jest-axe";
 import React from "react";
 
 import { defaultTheme } from "./theme";
+import { vi } from "vitest";
 
-export const axe = configureAxe({
-  rules: {
-    // Currently, jest-axe does not correctly evaluate this rule due to an issue with jsdom
-    // https://github.com/dequelabs/axe-core/issues/2587
-    // To pass this test, non-decorative MUI icons should always use the 'titleAccess' prop
-    "svg-img-alt": { enabled: false },
-  },
-});
+// export const axe = configureAxe({
+//   rules: {
+//     // Currently, jest-axe does not correctly evaluate this rule due to an issue with jsdom
+//     // https://github.com/dequelabs/axe-core/issues/2587
+//     // To pass this test, non-decorative MUI icons should always use the 'titleAccess' prop
+//     "svg-img-alt": { enabled: false },
+//   },
+// });
 
 /**
  * Setup @testing-library/react environment with userEvent
@@ -34,6 +35,6 @@ export const setup = (
  * leading to multiple "an update was not wrapped in act(...)" warnings
  * Docs: https://testing-library.com/docs/example-react-transition-group/
  */
-export const mockFade = jest.mock("@mui/material/Fade", () =>
-  jest.fn(({ children }: FadeProps) => <div>{children}</div>),
-);
+// export const mockFade = vi.mock("@mui/material/Fade", () =>
+//   vi.fn(({ children }: FadeProps) => <div>{children}</div>),
+// );
