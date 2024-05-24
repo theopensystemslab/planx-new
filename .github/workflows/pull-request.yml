@@ -307,7 +307,7 @@ jobs:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
-          os_type: alpine
+          os_type: ubuntu
           plan: vc2-1c-1gb
           pull_request_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
