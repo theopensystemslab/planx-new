@@ -48,8 +48,8 @@ import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
 export const HEADER_HEIGHT = 74;
 
-const Root = styled(AppBar)(() => ({
-  color: "#fff",
+const Root = styled(AppBar)(({ theme }) => ({
+  color: theme.palette.common.white,
 }));
 
 const BreadcrumbsRoot = styled(Box)(() => ({
@@ -59,6 +59,12 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   columnGap: 10,
   alignItems: "center",
 }));
+
+const BreadcrumbsLink = styled(Link)(({ theme }) => ({
+  color: theme.palette.common.white,
+  textDecoration: "none",
+  borderBottom: "1px solid currentColor",
+})) as typeof Link;
 
 const StyledToolbar = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT,
@@ -103,7 +109,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.background.dark,
-  color: "#fff",
+  color: theme.palette.common.white,
   borderRadius: 0,
   boxShadow: "none",
   minWidth: 180,
@@ -131,7 +137,7 @@ const SkipLink = styled("a")(({ theme }) => ({
   width: "100vw",
   height: HEADER_HEIGHT / 2,
   backgroundColor: theme.palette.background.dark,
-  color: "#fff",
+  color: theme.palette.common.white,
   textDecoration: "underline",
   padding: theme.spacing(1),
   paddingLeft: theme.spacing(3),
@@ -203,33 +209,25 @@ const Breadcrumbs: React.FC = () => {
 
   return (
     <BreadcrumbsRoot>
-      <Link
-        style={{
-          color: "#fff",
-          textDecoration: "none",
-        }}
+      <BreadcrumbsLink
         component={ReactNaviLink}
         href={"/"}
         prefetch={false}
         {...(isStandalone && { target: "_blank" })}
       >
         Plan✕
-      </Link>
+      </BreadcrumbsLink>
       {team.slug && (
         <>
           {" / "}
-          <Link
-            style={{
-              color: "#fff",
-              textDecoration: "none",
-            }}
+          <BreadcrumbsLink
             component={ReactNaviLink}
             href={`/${team.slug}`}
             prefetch={false}
             {...(isStandalone && { target: "_blank" })}
           >
             {team.slug}
-          </Link>
+          </BreadcrumbsLink>
         </>
       )}
       {route.data.flow && (
