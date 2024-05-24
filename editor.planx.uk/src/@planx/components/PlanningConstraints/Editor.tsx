@@ -43,6 +43,16 @@ function PlanningConstraintsComponent(props: Props) {
           title="Planning constraints"
           Icon={ICONS[TYPES.PlanningConstraints]}
         >
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Find documentation about{" "}
+            <a
+              href="https://opensystemslab.notion.site/How-Planning-constraints-work-06b64035fe6b40279387375ef3de49e4?pvs=4"
+              target="_blank"
+            >
+              how constraints work in Plan✕ here
+            </a>
+            .
+          </Typography>
           <InputGroup>
             <InputRow>
               <Input
