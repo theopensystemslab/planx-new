@@ -119,14 +119,14 @@ async function go(
       );
       // because there can be many digital land datasets per planx variable, check if this key is already in our result
       if (key && Object.keys(formattedResult).includes(key)) {
-        formattedResult[key]["data"]?.push(omitGeometry(entity));
+        formattedResult[key]["data"]?.push(entity);
       } else {
         if (key) {
           formattedResult[key] = {
             fn: key,
             value: true,
             text: baseSchema[key].pos,
-            data: [omitGeometry(entity)],
+            data: [entity],
             category: baseSchema[key].category,
           };
         }
