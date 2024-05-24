@@ -1,5 +1,5 @@
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
-import { publicClient } from "lib/graphql";
 import {
   compose,
   map,
@@ -17,6 +17,7 @@ import Submissions from "pages/FlowEditor/components/Settings/Submissions";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
+import { client } from "../lib/graphql";
 import Settings, { SettingsTab } from "../pages/FlowEditor/components/Settings";
 import type { FlowSettings } from "../types";
 import { makeTitle } from "./utils";
@@ -25,15 +26,16 @@ interface GetFlowSettings {
   flows: {
     id: string;
     settings: FlowSettings;
+    status: FlowStatus;
   }[];
 }
 
 export const getFlowSettings = async (req: NaviRequest) => {
   const {
     data: {
-      flows: [{ settings }],
+      flows: [{ settings, status }],
     },
-  } = await publicClient.query<GetFlowSettings>({
+  } = await client.query<GetFlowSettings>({
     query: gql`
       query GetFlow($slug: String!, $team_slug: String!) {
         flows(
@@ -42,6 +44,7 @@ export const getFlowSettings = async (req: NaviRequest) => {
         ) {
           id
           settings
+          status
         }
       }
     `,
@@ -52,6 +55,7 @@ export const getFlowSettings = async (req: NaviRequest) => {
   });
 
   useStore.getState().setFlowSettings(settings);
+  useStore.getState().setFlowStatus(status);
 };
 
 const tabs: SettingsTab[] = [
