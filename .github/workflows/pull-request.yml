@@ -307,7 +307,7 @@ jobs:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
-          os_type: alpine
+          os_type: ubuntu
           plan: vc2-1c-1gb
           pull_request_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
@@ -324,19 +324,13 @@ jobs:
           password: ${{ steps.create.outputs.default_password }}
           command_timeout: 20m
           script: |
-            apk update
-            apk add docker
-            addgroup root docker
-            rc-update add docker default
-            service docker start
-            apk add docker-cli-compose
+            apt-get update -y
 
-            apk add git
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            apk add aws-cli
+            apt-get install awscli -y
             export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
@@ -358,21 +352,15 @@ jobs:
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
           command_timeout: 10m
-          # TODO: some of below script might be superfluous for server update (rather than create)
           script: |
-            apk update
-            apk add docker
-            addgroup root docker
-            rc-update add docker default
-            service docker start
-            apk add docker-cli-compose
+            apt-get update -y
 
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git add . && git stash
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            apk add aws-cli
+            apt-get install awscli -y
             export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
