@@ -11,6 +11,8 @@ services:
     restart: always
     volumes:
       - "./api.planx.uk:/api"
+      - "/api/node_modules"
+
     environment:
       NODE_ENV: "development"
 
