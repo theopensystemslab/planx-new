@@ -1,8 +1,8 @@
 import { isObject } from "lodash";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
-import { reportError } from "../../../send/utils/helpers";
 import { decode } from "he";
+import { reportError } from "../../../pay/helpers";
 
 // Setup JSDOM and DOMPurify
 const window = new JSDOM("").window;

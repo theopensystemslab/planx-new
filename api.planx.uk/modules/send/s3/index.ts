@@ -3,6 +3,8 @@ import { $api } from "../../../client";
 import { uploadPrivateFile } from "../../file/service/uploadFile";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
 import axios from "axios";
+import { isApplicationTypeSupported } from "../utils/helpers";
+import { Passport } from "../../../types";
 
 export async function sendToS3(
   req: Request,
@@ -40,8 +42,14 @@ export async function sendToS3(
       });
     }
 
-    // Generate the ODP Schema JSON
-    const exportData = await $api.export.digitalPlanningDataPayload(sessionId);
+    const session = await $api.session.find(sessionId);
+    const passport = session?.data?.passport as Passport;
+
+    // Generate the ODP Schema JSON, skipping validation if not a supported application type
+    const doValidation = isApplicationTypeSupported(passport);
+    const exportData = doValidation
+      ? await $api.export.digitalPlanningDataPayload(sessionId)
+      : await $api.export.digitalPlanningDataPayload(sessionId, true);
 
     // Create and upload the data as an S3 file
     const { fileUrl } = await uploadPrivateFile(
@@ -63,6 +71,7 @@ export async function sendToS3(
         message: "New submission from PlanX",
         environment: env,
         file: fileUrl,
+        payload: doValidation ? "Validated ODP Schema" : "Discretionary",
       },
     })
       .then((res) => {
@@ -80,6 +89,7 @@ export async function sendToS3(
 
     return res.status(200).send({
       message: `Successfully uploaded submission to S3: ${fileUrl}`,
+      payload: doValidation ? "Validated ODP Schema" : "Discretionary",
       webhookResponse: webhookResponseStatus,
     });
   } catch (error) {

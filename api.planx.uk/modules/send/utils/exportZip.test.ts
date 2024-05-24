@@ -232,7 +232,7 @@ describe("buildSubmissionExportZip", () => {
       );
     });
 
-    test("ODP schema json is excluded if unsupported application type", async () => {
+    test("ODP schema json is included, but not validated, if unsupported application type", async () => {
       // set-up mock session passport overwriting "application.type"
       const lowcalSessionUnsupportedAppType: Partial<LowCalSession> = {
         ...mockLowcalSession,
@@ -243,7 +243,7 @@ describe("buildSubmissionExportZip", () => {
           passport: {
             data: {
               ...mockLowcalSession.data!.passport.data,
-              "application.type": ["listedBuildingConsent"],
+              "application.type": ["reportAPlanningBreach"],
             },
           },
         },
@@ -255,13 +255,13 @@ describe("buildSubmissionExportZip", () => {
         includeDigitalPlanningJSON: true,
       });
 
-      expect(mockAddFile).not.toHaveBeenCalledWith(
+      expect(mockAddFile).toHaveBeenCalledWith(
         "application.json",
         expect.anything(),
       );
     });
 
-    test("ODP schema json is excluded if no application type", async () => {
+    test("ODP schema json is included, but not validated, if no application type", async () => {
       // set-up mock session passport overwriting "application.type"
       const lowcalSessionUnsupportedAppType: Partial<LowCalSession> = {
         ...mockLowcalSession,
@@ -284,7 +284,7 @@ describe("buildSubmissionExportZip", () => {
         includeDigitalPlanningJSON: true,
       });
 
-      expect(mockAddFile).not.toHaveBeenCalledWith(
+      expect(mockAddFile).toHaveBeenCalledWith(
         "application.json",
         expect.anything(),
       );

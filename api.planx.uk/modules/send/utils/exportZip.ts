@@ -16,6 +16,7 @@ import { Passport } from "@opensystemslab/planx-core";
 import type { Passport as IPassport } from "../../../types";
 import type { Stream } from "node:stream";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
+import { isApplicationTypeSupported } from "./helpers";
 
 export async function buildSubmissionExportZip({
   sessionId,
@@ -30,7 +31,7 @@ export async function buildSubmissionExportZip({
   const sessionData = await $api.session.find(sessionId);
   if (!sessionData) {
     throw new Error(
-      `session ${sessionId} not found so could not create Uniform submission zip`,
+      `session ${sessionId} not found so could not create submission zip`,
     );
   }
   const passport = sessionData.data?.passport as IPassport;
@@ -50,21 +51,18 @@ export async function buildSubmissionExportZip({
       });
     } catch (error) {
       throw new Error(
-        `Failed to generate OneApp XML for ${sessionId}. Error - ${error}`,
+        `Failed to generate OneApp XML for ${sessionId} zip. Error - ${error}`,
       );
     }
   }
 
-  // add ODP Schema JSON to the zip for supported application types
-  const supportedApplicationPrefixes = ["ldc", "pa", "pp"];
-  const applicationType = passport.data?.["application.type"]?.[0];
-  if (
-    includeDigitalPlanningJSON &&
-    applicationType &&
-    supportedApplicationPrefixes.includes(applicationType.split(".")?.[0])
-  ) {
+  // add ODP Schema JSON to the zip, skipping validation if an unsupported application type
+  if (includeDigitalPlanningJSON) {
     try {
-      const schema = await $api.export.digitalPlanningDataPayload(sessionId);
+      const doValidation = isApplicationTypeSupported(passport);
+      const schema = doValidation
+        ? await $api.export.digitalPlanningDataPayload(sessionId)
+        : await $api.export.digitalPlanningDataPayload(sessionId, true);
       const schemaBuff = Buffer.from(JSON.stringify(schema, null, 2));
       zip.addFile({
         name: "application.json",
