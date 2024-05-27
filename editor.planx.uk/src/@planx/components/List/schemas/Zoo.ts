@@ -13,7 +13,7 @@ export const Zoo: Schema = {
     {
       type: "text",
       data: {
-        title: "Name your animal",
+        title: "What's their name?",
         description: "Please make it cute",
         fn: "name",
         type: TextInputType.Short,

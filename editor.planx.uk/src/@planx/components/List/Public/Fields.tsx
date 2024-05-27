@@ -104,6 +104,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
     >
       {data.options.map(({ id, data }) => (
         <BasicRadio
+          key={id}
           id={id}
           title={data.text}
           onChange={() => console.log("change radio")}
@@ -127,10 +128,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = ({
       labelId={`select-label-${id}`}
     >
       {data.options.map((option) => (
-        <MenuItem
-          key={option.id}
-          // value={option.data.text}
-        >
+        <MenuItem key={option.id} value={option.data.text}>
           {option.data.text}
         </MenuItem>
       ))}
