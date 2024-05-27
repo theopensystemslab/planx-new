@@ -16,7 +16,7 @@ import {
   TextFieldInput,
 } from "./Fields";
 
-type Props = PublicProps<List>;
+export type Props = PublicProps<List>;
 
 const ListCard = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -72,7 +72,7 @@ function ListComponent({
         howMeasured={howMeasured}
       />
       <ListCard>
-        <Typography component="h3" variant="h3">
+        <Typography component="h2" variant="h3">
           {schema.type} index
         </Typography>
         {schema.fields.map((field, i) => (

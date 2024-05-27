@@ -13,9 +13,10 @@ export default function InputLabel(props: {
   children: ReactNode;
   hidden?: boolean;
   htmlFor?: string;
+  id?: string;
 }) {
   return (
-    <Root htmlFor={props.htmlFor}>
+    <Root htmlFor={props.htmlFor} id={props.id}>
       <Typography
         sx={{ pb: 1 }}
         variant="body1"

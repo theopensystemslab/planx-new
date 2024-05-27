@@ -119,8 +119,13 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = ({
   data,
   required,
 }) => (
-  <InputLabel label={data.title} htmlFor={id}>
-    <SelectInput id={id} bordered required={required}>
+  <InputLabel label={data.title} id={`select-label-${id}`}>
+    <SelectInput
+      bordered
+      required={required}
+      title={data.title}
+      labelId={`select-label-${id}`}
+    >
       {data.options.map((option) => (
         <MenuItem
           key={option.id}
