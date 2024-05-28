@@ -42,6 +42,7 @@ const propsWithIntersections: PlanningConstraintsContentProps = {
     ...digitalLandResponseMock["metadata"],
     ...classifiedRoadsResponseMock["metadata"],
   },
+  site: "WKT(test)",
   handleSubmit: () => {},
   refreshConstraints: () => {},
 };
@@ -61,6 +62,7 @@ const propsWithoutIntersections: PlanningConstraintsContentProps = {
     ...digitalLandNegativeResponseMock["metadata"],
     ...classifiedRoadsNegativeResponseMock["metadata"],
   },
+  site: "WKT(test)",
   handleSubmit: () => {},
   refreshConstraints: () => {},
 };

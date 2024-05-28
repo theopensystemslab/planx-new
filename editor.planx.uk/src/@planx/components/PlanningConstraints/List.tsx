@@ -66,11 +66,13 @@ const StyledAccordion = styled(Accordion, {
 interface ConstraintsListProps {
   data: Constraint[];
   metadata: GISResponse["metadata"];
+  site: string;
 }
 
 export default function ConstraintsList({
   data,
   metadata,
+  site,
 }: ConstraintsListProps) {
   const groupedConstraints = groupBy(data, (constraint: Constraint) => {
     return constraint.category;
@@ -114,6 +116,7 @@ export default function ConstraintsList({
                   content={con.text}
                   data={con.value ? con.data : null}
                   metadata={metadata?.[con.fn]}
+                  site={site}
                   category={category}
                 >
                   {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
@@ -132,6 +135,7 @@ interface ConstraintListItemProps {
   content: string;
   data: Constraint["data"] | null;
   metadata?: Metadata;
+  site: string;
   category: string;
   children: ReactNode;
 }
@@ -169,7 +173,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                 <List
                   dense
                   disablePadding
-                  sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
+                  sx={{ listStyleType: "disc", pl: 4, pt: 1, mb: 1 }}
                 >
                   {props.data &&
                     props.data.map(
@@ -200,7 +204,11 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                         ),
                     )}
                 </List>
-                <ConstraintMap data={props.data} category={props.category} />
+                <ConstraintMap
+                  data={props.data}
+                  site={props.site}
+                  category={props.category}
+                />
               </>
             )}
           </>
@@ -221,21 +229,33 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
 
 interface ConstraintMapProps {
   data: Constraint["data"] | null;
+  site: string;
   category: string;
 }
 
 function ConstraintMap({ ...props }: ConstraintMapProps) {
   const geojson = { type: "FeatureCollection", features: [] };
 
-  // Add property.site.boundary or address point as initial geojson feature with color = red
-
+  // Add constraints as features (can be > 1 per dataset)
   props.data?.map((record: any) => {
     if (record?.geometry) {
-      const wktToGeojson = parse(record.geometry);
-      geojson.features.push(wktToGeojson as never); // specify properties.color at this level - what happens if more than one intersecting constraint of same type?
+      const constraintsGeojson = parse(record.geometry);
+      geojson.features.push({
+        type: "Feature",
+        properties: { color: "#2c2c2c" }, // TODO category color (very pale)? team theme color?
+        geometry: constraintsGeojson,
+      } as never);
     }
-    // `geometry` is a Planning Data thing, what about classified roads??
+    // TODO `record.geometry` is a Planning Data thing, what about classified roads??
   });
+
+  // Add site boundary or point as top-most feature in red
+  const siteGeojson = parse(props.site);
+  geojson.features.push({
+    type: "Feature",
+    properties: { color: "#ff0000" },
+    geometry: siteGeojson,
+  } as never);
 
   return (
     <>
@@ -247,9 +267,7 @@ function ConstraintMap({ ...props }: ConstraintMapProps) {
         id="review-boundary-map"
         ariaLabelOlFixedOverlay="A static map displaying this constraint in relation to your site"
         geojsonData={JSON.stringify(geojson)}
-        geojsonColor={CATEGORY_COLORS[props.category]} // team color may have better contrast?
         geojsonFill
-        geojsonBuffer={20}
         osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
         hideResetControl
         staticMode

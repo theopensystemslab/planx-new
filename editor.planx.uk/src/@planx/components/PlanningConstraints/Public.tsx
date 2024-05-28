@@ -135,6 +135,7 @@ function Component(props: Props) {
           disclaimer={props.disclaimer}
           constraints={constraints}
           metadata={metadata}
+          site={wktPolygon || wktPoint}
           handleSubmit={() => {
             const _constraints: Array<
               EnhancedGISResponse | GISResponse["constraints"]
@@ -198,6 +199,7 @@ export type PlanningConstraintsContentProps = {
   disclaimer: string;
   constraints: GISResponse["constraints"];
   metadata: GISResponse["metadata"];
+  site: string;
   handleSubmit: () => void;
   refreshConstraints: () => void;
 };
@@ -210,6 +212,7 @@ export function PlanningConstraintsContent(
     description,
     constraints,
     metadata,
+    site,
     refreshConstraints,
     disclaimer,
   } = props;
@@ -238,7 +241,11 @@ export function PlanningConstraintsContent(
           <Typography variant="h3" component="h2" mt={3}>
             These are the planning constraints we think apply to this property
           </Typography>
-          <ConstraintsList data={positiveConstraints} metadata={metadata} />
+          <ConstraintsList
+            data={positiveConstraints}
+            metadata={metadata}
+            site={site}
+          />
           {negativeConstraints.length > 0 && (
             <SimpleExpand
               id="negative-constraints-list"
@@ -247,7 +254,11 @@ export function PlanningConstraintsContent(
                 closed: "Hide constraints that don't apply",
               }}
             >
-              <ConstraintsList data={negativeConstraints} metadata={metadata} />
+              <ConstraintsList
+                data={negativeConstraints}
+                metadata={metadata}
+                site={site}
+              />
             </SimpleExpand>
           )}
           <Disclaimer text={disclaimer} />
@@ -275,7 +286,11 @@ export function PlanningConstraintsContent(
                 closed: "Hide constraints that don't apply",
               }}
             >
-              <ConstraintsList data={negativeConstraints} metadata={metadata} />
+              <ConstraintsList
+                data={negativeConstraints}
+                metadata={metadata}
+                site={site}
+              />
             </SimpleExpand>
             <Disclaimer text={disclaimer} />
           </>
