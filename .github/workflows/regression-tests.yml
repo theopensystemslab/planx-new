@@ -119,7 +119,7 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm test
+      - run: pnpm test:silent
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
   end_to_end_tests:
