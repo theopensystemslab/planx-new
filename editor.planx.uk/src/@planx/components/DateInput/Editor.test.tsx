@@ -29,9 +29,9 @@ describe("DateInputComponent - Editor Modal", () => {
       </DndProvider>,
     );
 
-    const [minDay, maxDay] = screen.getAllByPlaceholderText("DD");
-    const [minMonth, maxMonth] = screen.getAllByPlaceholderText("MM");
-    const [minYear, maxYear] = screen.getAllByPlaceholderText("YYYY");
+    const [minDay, maxDay] = screen.getAllByLabelText("Day");
+    const [minMonth, maxMonth] = screen.getAllByLabelText("Month");
+    const [minYear, maxYear] = screen.getAllByLabelText("Year");
 
     expect(screen.queryByText(minError)).toBeNull();
     expect(screen.queryByText(maxError)).toBeNull();
@@ -59,9 +59,9 @@ describe("DateInputComponent - Editor Modal", () => {
       </DndProvider>,
     );
 
-    const [minDay, maxDay] = screen.getAllByPlaceholderText("DD");
-    const [minMonth, maxMonth] = screen.getAllByPlaceholderText("MM");
-    const [minYear, maxYear] = screen.getAllByPlaceholderText("YYYY");
+    const [minDay, maxDay] = screen.getAllByLabelText("Day");
+    const [minMonth, maxMonth] = screen.getAllByLabelText("Month");
+    const [minYear, maxYear] = screen.getAllByLabelText("Year");
 
     expect(screen.queryByText(minError)).toBeNull();
     expect(screen.queryByText(maxError)).toBeNull();
@@ -91,9 +91,9 @@ describe("DateInputComponent - Editor Modal", () => {
       </DndProvider>,
     );
 
-    const [minDay, maxDay] = screen.getAllByPlaceholderText("DD");
-    const [minMonth, maxMonth] = screen.getAllByPlaceholderText("MM");
-    const [minYear, maxYear] = screen.getAllByPlaceholderText("YYYY");
+    const [minDay, maxDay] = screen.getAllByLabelText("Day");
+    const [minMonth, maxMonth] = screen.getAllByLabelText("Month");
+    const [minYear, maxYear] = screen.getAllByLabelText("Year");
 
     expect(screen.queryAllByText(invalidError)).toHaveLength(0);
 
