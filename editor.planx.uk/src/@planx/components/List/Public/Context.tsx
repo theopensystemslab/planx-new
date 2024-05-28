@@ -43,13 +43,12 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   const editItem = (index: number) => setActiveIndex(index);
 
   const removeItem = (index: number) => {
-    // If item is currently in Edit mode, exit Edit mode
-    if (index === activeIndex || index === 0) {
-      cancelEditItem();
-    }
-    // If item is before currently active card, retain active card
     if (activeIndex && index < activeIndex) {
+      // If item is before currently active card, retain active card
       setActiveIndex((prev) => (prev === undefined ? 0 : prev - 1));
+    } else if (index === activeIndex || index === 0) {
+      // If item is currently in Edit mode, exit Edit mode
+      cancelEditItem();
     }
 
     // Remove item from userData
