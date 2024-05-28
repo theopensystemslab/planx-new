@@ -1,11 +1,16 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import FormControlLabel, {
+  formControlLabelClasses,
+} from "@mui/material/FormControlLabel";
 import Snackbar from "@mui/material/Snackbar";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React, { useState } from "react";
+import { FONT_WEIGHT_BOLD } from "theme";
 import EditorRow from "ui/editor/EditorRow";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
@@ -72,7 +77,13 @@ const TextInput: React.FC<{
 };
 
 const ServiceSettings: React.FC = () => {
-  const flowSettings = useStore((state) => state.flowSettings);
+  const [flowSettings, updateFlowSettings, flowStatus, updateFlowStatus] =
+    useStore((state) => [
+      state.flowSettings,
+      state.updateFlowSettings,
+      state.flowStatus,
+      state.updateFlowStatus,
+    ]);
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
@@ -87,7 +98,7 @@ const ServiceSettings: React.FC = () => {
     setIsAlertOpen(false);
   };
 
-  const formik = useFormik<FlowSettings>({
+  const elementsForm = useFormik<FlowSettings>({
     initialValues: {
       elements: {
         legalDisclaimer: {
@@ -108,15 +119,25 @@ const ServiceSettings: React.FC = () => {
       },
     },
     onSubmit: async (values) => {
-      await useStore.getState().updateFlowSettings(values);
+      await updateFlowSettings(values);
       setIsAlertOpen(true);
     },
     validate: () => {},
   });
 
+  const statusForm = useFormik<{ status: FlowStatus }>({
+    initialValues: {
+      status: flowStatus || "online",
+    },
+    onSubmit: async ({ status }) => {
+      await updateFlowStatus(status);
+      setIsAlertOpen(true);
+    },
+  });
+
   return (
     <Box maxWidth="formWrap" mx="auto">
-      <form onSubmit={formik.handleSubmit}>
+      <Box component="form" onSubmit={elementsForm.handleSubmit} mb={2}>
         <EditorRow>
           <Typography variant="h2" component="h3" gutterBottom>
             Elements
@@ -131,18 +152,18 @@ const ServiceSettings: React.FC = () => {
             description="Displayed before a user submits their application"
             switchProps={{
               name: "elements.legalDisclaimer.show",
-              checked: formik.values.elements?.legalDisclaimer?.show,
-              onChange: formik.handleChange,
+              checked: elementsForm.values.elements?.legalDisclaimer?.show,
+              onChange: elementsForm.handleChange,
             }}
             headingInputProps={{
               name: "elements.legalDisclaimer.heading",
-              value: formik.values.elements?.legalDisclaimer?.heading,
-              onChange: formik.handleChange,
+              value: elementsForm.values.elements?.legalDisclaimer?.heading,
+              onChange: elementsForm.handleChange,
             }}
             contentInputProps={{
               name: "elements.legalDisclaimer.content",
-              value: formik.values.elements?.legalDisclaimer?.content,
-              onChange: formik.handleChange,
+              value: elementsForm.values.elements?.legalDisclaimer?.content,
+              onChange: elementsForm.handleChange,
             }}
           />
         </EditorRow>
@@ -156,18 +177,18 @@ const ServiceSettings: React.FC = () => {
                 description="A place to communicate FAQs, useful tips, or contact information"
                 switchProps={{
                   name: "elements.help.show",
-                  checked: formik.values.elements?.help?.show,
-                  onChange: formik.handleChange,
+                  checked: elementsForm.values.elements?.help?.show,
+                  onChange: elementsForm.handleChange,
                 }}
                 headingInputProps={{
                   name: "elements.help.heading",
-                  value: formik.values.elements?.help?.heading,
-                  onChange: formik.handleChange,
+                  value: elementsForm.values.elements?.help?.heading,
+                  onChange: elementsForm.handleChange,
                 }}
                 contentInputProps={{
                   name: "elements.help.content",
-                  value: formik.values.elements?.help?.content,
-                  onChange: formik.handleChange,
+                  value: elementsForm.values.elements?.help?.content,
+                  onChange: elementsForm.handleChange,
                 }}
               />
             </InputRow>
@@ -178,18 +199,18 @@ const ServiceSettings: React.FC = () => {
                 description="Your privacy policy"
                 switchProps={{
                   name: "elements.privacy.show",
-                  checked: formik.values.elements?.privacy?.show,
-                  onChange: formik.handleChange,
+                  checked: elementsForm.values.elements?.privacy?.show,
+                  onChange: elementsForm.handleChange,
                 }}
                 headingInputProps={{
                   name: "elements.privacy.heading",
-                  value: formik.values.elements?.privacy?.heading,
-                  onChange: formik.handleChange,
+                  value: elementsForm.values.elements?.privacy?.heading,
+                  onChange: elementsForm.handleChange,
                 }}
                 contentInputProps={{
                   name: "elements.privacy.content",
-                  value: formik.values.elements?.privacy?.content,
-                  onChange: formik.handleChange,
+                  value: elementsForm.values.elements?.privacy?.content,
+                  onChange: elementsForm.handleChange,
                 }}
               />
             </InputRow>
@@ -200,25 +221,87 @@ const ServiceSettings: React.FC = () => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!formik.dirty}
+            disabled={!elementsForm.dirty}
           >
             Update elements
           </Button>
         </EditorRow>
-        <Snackbar
-          open={isAlertOpen}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert
-            onClose={handleClose}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            Service settings updated successfully
-          </Alert>
-        </Snackbar>
-      </form>
+      </Box>
+      <Box component="form" onSubmit={statusForm.handleSubmit}>
+        <EditorRow>
+          <Typography variant="h2" component="h3" gutterBottom>
+            Status
+          </Typography>
+          <Typography variant="body1">
+            Manage the status of your service.
+          </Typography>
+        </EditorRow>
+        <EditorRow background>
+          <FormControlLabel
+            label={statusForm.values.status}
+            sx={{
+              [`& .${formControlLabelClasses.label}`]: {
+                fontWeight: FONT_WEIGHT_BOLD,
+                textTransform: "capitalize",
+                fontSize: 19,
+              },
+            }}
+            control={
+              <Switch
+                name="service.status"
+                color="primary"
+                checked={statusForm.values.status === "online"}
+                onChange={() =>
+                  statusForm.setFieldValue(
+                    "status",
+                    statusForm.values.status === "online"
+                      ? "offline"
+                      : "online",
+                  )
+                }
+              />
+            }
+          />
+          <Typography variant="body1">
+            Toggle your service between "offline" and "online".
+          </Typography>
+          <Typography variant="body1">
+            A service must be online to be accessed by the public, and to enable
+            analytics gathering.
+          </Typography>
+          <Typography variant="body1">
+            Offline services can still be edited and published as normal.
+          </Typography>
+          <Box>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={!statusForm.dirty}
+            >
+              Save
+            </Button>
+            <Button
+              onClick={() => statusForm.resetForm()}
+              type="reset"
+              variant="contained"
+              disabled={!statusForm.dirty}
+              color="secondary"
+              sx={{ ml: 1.5 }}
+            >
+              Reset changes
+            </Button>
+          </Box>
+        </EditorRow>
+      </Box>
+      <Snackbar
+        open={isAlertOpen}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Service settings updated successfully
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
 import {
@@ -15,6 +16,9 @@ import { TeamStore } from "./team";
 export interface SettingsStore {
   flowSettings?: FlowSettings;
   setFlowSettings: (flowSettings?: FlowSettings) => void;
+  flowStatus?: FlowStatus;
+  setFlowStatus: (flowStatus: FlowStatus) => void;
+  updateFlowStatus: (newStatus: FlowStatus) => Promise<boolean>;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
@@ -32,6 +36,19 @@ export const settingsStore: StateCreator<
   flowSettings: undefined,
 
   setFlowSettings: (flowSettings) => set({ flowSettings }),
+
+  flowStatus: undefined,
+
+  setFlowStatus: (flowStatus) => set({ flowStatus }),
+
+  updateFlowStatus: async (newStatus) => {
+    const { id, $client } = get();
+    const result = await $client.flow.setStatus({
+      flow: { id },
+      status: newStatus,
+    });
+    return Boolean(result?.id);
+  },
 
   globalSettings: undefined,
 
