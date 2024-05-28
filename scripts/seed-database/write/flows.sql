@@ -11,7 +11,8 @@ CREATE TEMPORARY TABLE sync_flows (
   settings jsonb,
   copied_from uuid,
   analytics_link text,
-  status text
+  status text,
+  name text
 );
 
 \copy sync_flows FROM '/tmp/flows.csv' WITH (FORMAT csv, DELIMITER ';');
@@ -26,7 +27,8 @@ INSERT INTO flows (
   settings,
   copied_from,
   analytics_link,
-  status
+  status,
+  name
 )
 SELECT
   id,
@@ -38,7 +40,8 @@ SELECT
   settings,
   copied_from,
   NULL,
-  status
+  status,
+  name
 FROM sync_flows
 ON CONFLICT (id) DO UPDATE
 SET
@@ -51,6 +54,7 @@ SET
   copied_from = EXCLUDED.copied_from,
   analytics_link = NULL,
   status = EXCLUDED.status;
+  name = EXCLUDED.name;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
 UPDATE flows SET version = 1;
