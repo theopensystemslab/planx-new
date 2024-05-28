@@ -9,6 +9,7 @@ export interface Props extends SelectProps {
   name?: string;
   children?: ReactNode;
   onChange?: SelectProps["onChange"];
+  bordered?: boolean;
 }
 
 const PREFIX = "SelectInput";
@@ -77,6 +78,7 @@ export default function SelectInput({
   value,
   name,
   onChange,
+  bordered,
   ...props
 }: Props): FCReturn {
   return (
@@ -89,7 +91,7 @@ export default function SelectInput({
       }}
       onChange={onChange}
       IconComponent={ArrowIcon}
-      input={<Input />}
+      input={<Input bordered={bordered} />}
       inputProps={{
         name,
         classes: {
