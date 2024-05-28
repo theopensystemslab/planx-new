@@ -8,6 +8,7 @@ import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import visuallyHidden from "@mui/utils/visuallyHidden";
 import type {
   Constraint,
   GISResponse,
@@ -19,6 +20,7 @@ import ReactHtmlParser from "react-html-parser";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import { parse } from "wkt";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",
@@ -163,40 +165,43 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               {`This property ${props?.content}`}
             </Typography>
             {Boolean(props.data?.length) && (
-              <List
-                dense
-                disablePadding
-                sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
-              >
-                {props.data &&
-                  props.data.map(
-                    (record: any) =>
-                      record.name && (
-                        <ListItem
-                          key={record.entity}
-                          dense
-                          disableGutters
-                          sx={{ display: "list-item" }}
-                        >
-                          <Typography variant="body2">
-                            {record.name}{" "}
-                            {record.name && record["documentation-url"] && (
-                              <span>
-                                (
-                                <Link
-                                  href={record["documentation-url"]}
-                                  target="_blank"
-                                >
-                                  source
-                                </Link>
-                                )
-                              </span>
-                            )}
-                          </Typography>
-                        </ListItem>
-                      ),
-                  )}
-              </List>
+              <>
+                <List
+                  dense
+                  disablePadding
+                  sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
+                >
+                  {props.data &&
+                    props.data.map(
+                      (record: any) =>
+                        record.name && (
+                          <ListItem
+                            key={record.entity}
+                            dense
+                            disableGutters
+                            sx={{ display: "list-item" }}
+                          >
+                            <Typography variant="body2">
+                              {record.name}{" "}
+                              {record.name && record["documentation-url"] && (
+                                <span>
+                                  (
+                                  <Link
+                                    href={record["documentation-url"]}
+                                    target="_blank"
+                                  >
+                                    source
+                                  </Link>
+                                  )
+                                </span>
+                              )}
+                            </Typography>
+                          </ListItem>
+                        ),
+                    )}
+                </List>
+                <ConstraintMap data={props.data} category={props.category} />
+              </>
             )}
           </>
           <Typography variant="body2">
@@ -211,5 +216,46 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
         </AccordionDetails>
       </StyledAccordion>
     </ListItem>
+  );
+}
+
+interface ConstraintMapProps {
+  data: Constraint["data"] | null;
+  category: string;
+}
+
+function ConstraintMap({ ...props }: ConstraintMapProps) {
+  const geojson = { type: "FeatureCollection", features: [] };
+
+  // Add property.site.boundary or address point as initial geojson feature with color = red
+
+  props.data?.map((record: any) => {
+    if (record?.geometry) {
+      const wktToGeojson = parse(record.geometry);
+      geojson.features.push(wktToGeojson as never); // specify properties.color at this level - what happens if more than one intersecting constraint of same type?
+    }
+    // `geometry` is a Planning Data thing, what about classified roads??
+  });
+
+  return (
+    <>
+      <p style={visuallyHidden}>
+        A static map displaying this constraint in relation to your site.
+      </p>
+      {/* @ts-ignore */}
+      <my-map
+        id="review-boundary-map"
+        ariaLabelOlFixedOverlay="A static map displaying this constraint in relation to your site"
+        geojsonData={JSON.stringify(geojson)}
+        geojsonColor={CATEGORY_COLORS[props.category]} // team color may have better contrast?
+        geojsonFill
+        geojsonBuffer={20}
+        osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+        hideResetControl
+        staticMode
+        style={{ width: "100%", height: "30vh" }}
+        collapseAttributions
+      />
+    </>
   );
 }
