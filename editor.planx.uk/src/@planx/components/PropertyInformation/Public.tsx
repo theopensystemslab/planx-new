@@ -19,6 +19,7 @@ import React from "react";
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
+import { MapContainer } from "../shared/Preview/MapContainer";
 import type { PropertyInformation } from "./model";
 
 export default Component;
@@ -79,16 +80,6 @@ export interface PresentationalProps {
   handleSubmit?: handleSubmit;
 }
 
-const MapContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
-  width: "100%",
-  maxWidth: "none",
-  "& my-map": {
-    width: "100%",
-    height: "60vh",
-  },
-}));
-
 // Export this component for testing visual presentation with mocked props
 export function Presentational(props: PresentationalProps) {
   const {
@@ -103,7 +94,11 @@ export function Presentational(props: PresentationalProps) {
     overrideAnswer,
     handleSubmit,
   } = props;
-  const teamName = useStore((state) => state.teamName);
+  const [teamName, environment] = useStore((state) => [
+    state.teamName,
+    state.previewEnvironment,
+  ]);
+
   const propertyDetails: PropertyDetail[] = [
     {
       heading: "Address",
@@ -131,7 +126,7 @@ export function Presentational(props: PresentationalProps) {
   return (
     <Card handleSubmit={handleSubmit}>
       <CardHeader title={title} description={description} />
-      <MapContainer>
+      <MapContainer environment={environment}>
         <p style={visuallyHidden}>
           A static map centred on the property address, showing the title
           boundary, often called the "blue-line" boundary in planning, of your
