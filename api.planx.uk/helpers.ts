@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 import { capitalize } from "lodash";
 import { Flow, Node } from "./types";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
-import { $api, $public, getClient } from "./client";
+import { $public, getClient } from "./client";
 
 export interface FlowData {
   slug: string;
@@ -22,7 +22,7 @@ export interface FlowData {
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<FlowData> => {
-  const { flow } = await $api.client.request<{ flow: FlowData | null }>(
+  const { flow } = await $public.client.request<{ flow: FlowData | null }>(
     gql`
       query GetFlowData($id: uuid!) {
         flow: flows_by_pk(id: $id) {
@@ -146,7 +146,7 @@ interface PublishedFlows {
 const getMostRecentPublishedFlow = async (
   id: string,
 ): Promise<Flow["data"] | undefined> => {
-  const { flow } = await $api.client.request<PublishedFlows>(
+  const { flow } = await $public.client.request<PublishedFlows>(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
         flow: flows_by_pk(id: $id) {

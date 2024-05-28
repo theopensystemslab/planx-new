@@ -565,9 +565,7 @@
           - version
         computed_fields:
           - data_merged
-        filter:
-          status:
-            _eq: online
+        filter: {}
         allow_aggregations: true
     - role: teamEditor
       permission:
