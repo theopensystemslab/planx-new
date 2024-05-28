@@ -14,6 +14,9 @@ INSERT INTO "public"."flow_status_enum"("value", "comment") VALUES (E'offline', 
 alter table "public"."flows" add column "status" text
  not null default 'offline';
 
+ -- Populate flows.status for all existing flows
+UPDATE "public"."flows" SET status = 'online';
+
 alter table "public"."flows"
   add constraint "flows_status_fkey"
   foreign key ("status")
