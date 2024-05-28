@@ -10,20 +10,24 @@ import { SCHEMAS } from "./Editor";
 interface QuestionInput {
   title: string;
   description?: string;
-  fn?: string;
   options: Option[];
 }
 
-export type TextField = { type: "text"; required?: boolean; data: TextInput };
+// TODO: Add summary fields for inactive view?
+export type TextField = {
+  type: "text";
+  required?: boolean;
+  data: TextInput & { fn: string };
+};
 export type NumberField = {
   type: "number";
   required?: boolean;
-  data: NumberInput;
+  data: NumberInput & { fn: string };
 };
 export type QuestionField = {
   type: "question";
   required?: boolean;
-  data: QuestionInput;
+  data: QuestionInput & { fn: string };
 };
 
 /**
@@ -38,7 +42,7 @@ export type Field = TextField | NumberField | QuestionField;
 export interface Schema {
   type: string;
   fields: Field[];
-  min?: number;
+  min: number;
   max?: number;
 }
 
@@ -58,3 +62,21 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   schema: data?.schema || SCHEMAS[0].schema,
   ...parseMoreInformation(data),
 });
+
+interface Response {
+  type: Field["type"];
+  val: string;
+  fn: string;
+}
+
+export type UserData = Response[][];
+
+export const generateNewItem = (schema: Schema): Response[] => {
+  const item = schema.fields.map((field) => ({
+    type: field.type,
+    val: "",
+    fn: field.data.fn,
+  }));
+
+  return item;
+};
