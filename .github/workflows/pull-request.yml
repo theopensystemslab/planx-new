@@ -172,7 +172,7 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm test
+      - run: pnpm test:silent
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
   build_react_app:
