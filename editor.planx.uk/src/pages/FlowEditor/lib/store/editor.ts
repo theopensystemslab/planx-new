@@ -73,7 +73,7 @@ export interface EditorStore extends Store.Store {
   connectTo: (id: Store.nodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
   copyNode: (id: Store.nodeId) => void;
-  createFlow: (teamId: any, newSlug: any) => Promise<string>;
+  createFlow: (teamId: any, newSlug: any, newName: string) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<any>;
@@ -186,12 +186,17 @@ export const editorStore: StateCreator<
     localStorage.setItem("clipboard", id);
   },
 
-  createFlow: async (teamId, newSlug) => {
+  createFlow: async (teamId, newSlug, newName) => {
     let response = (await client.mutate({
       mutation: gql`
-        mutation CreateFlow($data: jsonb, $slug: String, $teamId: Int) {
+        mutation CreateFlow(
+          $data: jsonb
+          $slug: String
+          $name: String
+          $teamId: Int
+        ) {
           insert_flows_one(
-            object: { slug: $slug, team_id: $teamId, version: 1 }
+            object: { slug: $slug, name: $name, team_id: $teamId, version: 1 }
           ) {
             id
             data
@@ -201,6 +206,7 @@ export const editorStore: StateCreator<
       variables: {
         slug: newSlug,
         teamId,
+        name: newName,
       },
     })) as any;
 
@@ -277,6 +283,7 @@ export const editorStore: StateCreator<
             where: { team: { id: { _eq: $teamId } } }
           ) {
             id
+            name
             slug
             updated_at
             operations(limit: 1, order_by: { id: desc }) {
