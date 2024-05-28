@@ -3,4 +3,5 @@ alter table "public"."flows" add column "name" text
  comment on column "public"."feedback"."node_data" is 'The name of the flow, entered by the user and used to generate the "slug"';
 
 UPDATE flows
-SET name = slug;
+SET name = slug
+WHERE name IS NULL;
