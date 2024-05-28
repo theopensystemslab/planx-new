@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
@@ -100,23 +101,25 @@ const InactiveListCard: React.FC<{
         {schema.type} {index + 1}
       </Typography>
       <Table>
-        {schema.fields.map((field, i) => (
-          <TableRow>
-            <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
-              {field.data.title}
-            </TableCell>
-            <TableCell>{userData[index][i]?.val}</TableCell>
-          </TableRow>
-        ))}
+        <TableBody>
+          {schema.fields.map((field, i) => (
+            <TableRow key={`tableRow-${i}`}>
+              <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+                {field.data.title}
+              </TableCell>
+              <TableCell>{userData[index][i]?.val}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
       <Box display="flex" gap={2}>
         <CardButton onClick={() => removeItem(index)}>
-          <DeleteIcon titleAccess="Remove" color="warning" fontSize="medium" />
+          <DeleteIcon color="warning" fontSize="medium" />
           Remove
         </CardButton>
         <CardButton onClick={() => editItem(index)}>
           {/* TODO: Is primary colour really right here? */}
-          <EditIcon titleAccess="Edit" color="primary" fontSize="medium" />
+          <EditIcon color="primary" fontSize="medium" />
           Edit
         </CardButton>
       </Box>

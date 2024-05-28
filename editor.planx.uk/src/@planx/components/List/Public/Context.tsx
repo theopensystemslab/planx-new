@@ -1,6 +1,6 @@
-import React, { createContext, ReactNode,useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 
-import { generateNewItem,Schema, UserData } from "../model";
+import { generateNewItem, Schema, UserData } from "../model";
 
 interface ListContextValue {
   schema: Schema;
@@ -43,7 +43,16 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   const editItem = (index: number) => setActiveIndex(index);
 
   const removeItem = (index: number) => {
-    if (index === activeIndex || index === 0) cancelEditItem();
+    // If item is currently in Edit mode, exit Edit mode
+    if (index === activeIndex || index === 0) {
+      cancelEditItem();
+    }
+    // If item is before currently active card, retain active card
+    if (activeIndex && index < activeIndex) {
+      setActiveIndex((prev) => (prev === undefined ? 0 : prev - 1));
+    }
+
+    // Remove item from userData
     setUserData((prev) => prev.filter((_, i) => i !== index));
   };
 
