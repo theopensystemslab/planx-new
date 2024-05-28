@@ -250,11 +250,13 @@ const ServiceSettings: React.FC = () => {
               <Switch
                 name="service.status"
                 color="primary"
-                checked={statusForm.values.status == "online"}
+                checked={statusForm.values.status === "online"}
                 onChange={() =>
                   statusForm.setFieldValue(
                     "status",
-                    statusForm.values.status == "online" ? "offline" : "online",
+                    statusForm.values.status === "online"
+                      ? "offline"
+                      : "online",
                   )
                 }
               />
@@ -266,6 +268,9 @@ const ServiceSettings: React.FC = () => {
           <Typography variant="body1">
             A service must be online to be accessed by the public, and to enable
             analytics gathering.
+          </Typography>
+          <Typography variant="body1">
+            Offline services can still be edited and published as normal.
           </Typography>
           <Box>
             <Button
