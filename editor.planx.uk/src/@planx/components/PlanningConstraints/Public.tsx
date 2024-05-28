@@ -14,7 +14,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import useSWR, { Fetcher } from "swr";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { stringify } from "wkt";
 
@@ -236,7 +235,7 @@ export function PlanningConstraintsContent(
       )}
       {!showError && positiveConstraints.length > 0 && (
         <>
-          <Typography variant="h3" component="h2" gutterBottom>
+          <Typography variant="h3" component="h2" mt={3}>
             These are the planning constraints we think apply to this property
           </Typography>
           <ConstraintsList data={positiveConstraints} metadata={metadata} />
@@ -258,15 +257,15 @@ export function PlanningConstraintsContent(
         positiveConstraints.length === 0 &&
         negativeConstraints.length > 0 && (
           <>
-            <Typography variant="h3" component="h2">
+            <Typography variant="h3" component="h2" gutterBottom mt={3}>
               It looks like there are no constraints on this property
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body1" gutterBottom>
               Based on the information you've given it looks like there are no
               planning constraints on your property that might limit what you
               can do.
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body1" gutterBottom>
               Continue with your application to tell us more about your project.
             </Typography>
             <SimpleExpand

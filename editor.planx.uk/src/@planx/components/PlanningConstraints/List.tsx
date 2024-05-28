@@ -16,6 +16,7 @@ import type {
 import groupBy from "lodash/groupBy";
 import React, { ReactNode } from "react";
 import ReactHtmlParser from "react-html-parser";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
@@ -30,20 +31,22 @@ const CATEGORY_COLORS: Record<string, string> = {
 const PREFIX = "ConstraintsList";
 
 const classes = {
-  content: `${PREFIX}-content`
-}
+  content: `${PREFIX}-content`,
+};
 
 interface StyledAccordionProps extends BoxProps {
   category: string;
 }
 
 const StyledAccordion = styled(Accordion, {
-  shouldForwardProp: (prop) => !["category", "metadata", "content", "data"].includes(prop as string),
+  shouldForwardProp: (prop) =>
+    !["category", "metadata", "content", "data"].includes(prop as string),
 })<StyledAccordionProps>(({ theme, category }) => ({
   borderLeft: `5px solid ${CATEGORY_COLORS[category]}`,
   paddingRight: 0,
   width: "100%",
   position: "relative",
+  background: CATEGORY_COLORS[category],
   "&::after": {
     content: "''",
     position: "absolute",
@@ -54,7 +57,7 @@ const StyledAccordion = styled(Accordion, {
     background: theme.palette.border.main,
   },
   [`&.${classes.content}`]: {
-    margin: [1.5, 0]
+    margin: [1.5, 0],
   },
 }));
 
@@ -94,9 +97,9 @@ export default function ConstraintsList({
                 py={1}
                 px={2}
                 pl={2.5}
-                style={{
-                  fontWeight: 700,
-                  color: "black",
+                sx={{
+                  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                  color: (theme) => theme.palette.text.primary,
                 }}
               >
                 {category}
@@ -142,13 +145,21 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           aria-controls={`${item}-panel`}
           classes={{ content: classes.content }}
           expandIcon={<Caret />}
-          sx={{ pr: 1.5 }}
+          sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-          <Typography variant="body2" pr={1.5}>{children}</Typography>
+          <Typography variant="body2" pr={1.5}>
+            {children}
+          </Typography>
         </AccordionSummary>
-        <AccordionDetails sx={{ px: 1.5, py: 2 }}>
+        <AccordionDetails
+          sx={{
+            px: 1.5,
+            py: 2,
+            background: (theme) => theme.palette.background.default,
+          }}
+        >
           <>
-            <Typography variant="h3" component="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom>
               {`This property ${props?.content}`}
             </Typography>
             {Boolean(props.data?.length) && (
