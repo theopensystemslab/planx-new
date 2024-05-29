@@ -366,16 +366,16 @@ const PublicToolbar: React.FC<{
                   size="large"
                   aria-describedby="restart-application-description"
                 >
+                  <Reset color="secondary" />
                   <Typography
                     id="restart-application-description"
                     variant="body2"
                     fontSize="small"
                     fontWeight={FONT_WEIGHT_SEMI_BOLD}
-                    pr={0.5}
+                    pl={0.5}
                   >
                     Restart
                   </Typography>
-                  <Reset color="secondary" />
                 </IconButton>
               )}
             </RightBox>
