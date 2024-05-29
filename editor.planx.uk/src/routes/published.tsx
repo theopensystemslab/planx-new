@@ -1,4 +1,6 @@
 import { compose, map, mount, route, withData, withView } from "navi";
+import { useStore } from "pages/FlowEditor/lib/store";
+import { OfflinePage } from "pages/OfflinePage";
 import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
 import React from "react";
@@ -25,7 +27,15 @@ const routes = compose(
 
   mount({
     "/": route({
-      view: <Questions previewEnvironment="standalone" />,
+      view: () => {
+        const isOnline = useStore.getState().flowStatus === "online";
+
+        return isOnline ? (
+          <Questions previewEnvironment="standalone" />
+        ) : (
+          <OfflinePage />
+        );
+      },
     }),
     "/pages/:page": map((req) => {
       return route({

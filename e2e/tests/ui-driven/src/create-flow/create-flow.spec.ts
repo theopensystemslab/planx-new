@@ -193,7 +193,9 @@ test.describe("Navigation", () => {
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
-    await expect(page.getByText("Not Found")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Offline" }),
+    ).toBeVisible();
   });
 
   test("Turn a flow online", async ({ browser }) => {

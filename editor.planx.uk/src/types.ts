@@ -1,13 +1,14 @@
 import {
+  FlowStatus,
   GovUKPayment,
   NotifyPersonalisation,
   Team,
 } from "@opensystemslab/planx-core/types";
+import { OT } from "@planx/graph/types";
 import { useFormik } from "formik";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
 import { SharedStore } from "./pages/FlowEditor/lib/store/shared";
-import { OT } from "@planx/graph/types";
 
 export type Maybe<T> = T | undefined;
 
@@ -18,6 +19,7 @@ export interface Flow {
   slug: string;
   team: Team;
   settings?: FlowSettings;
+  status?: FlowStatus;
 }
 export interface GlobalSettings {
   footerContent?: { [key: string]: TextContent };
