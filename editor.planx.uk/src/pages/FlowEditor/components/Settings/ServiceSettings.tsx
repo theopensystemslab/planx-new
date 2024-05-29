@@ -129,9 +129,13 @@ const ServiceSettings: React.FC = () => {
     initialValues: {
       status: flowStatus || "online",
     },
-    onSubmit: async ({ status }) => {
-      await updateFlowStatus(status);
-      setIsAlertOpen(true);
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await updateFlowStatus(values.status);
+      if (isSuccess) {
+        setIsAlertOpen(true);
+        // Reset "dirty" status to disable Save & Reset buttons
+        resetForm({ values });
+      }
     },
   });
 
