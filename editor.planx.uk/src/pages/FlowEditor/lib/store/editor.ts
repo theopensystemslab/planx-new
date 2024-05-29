@@ -277,7 +277,6 @@ export const editorStore: StateCreator<
             where: { team: { id: { _eq: $teamId } } }
           ) {
             id
-
             slug
             updated_at
             operations(limit: 1, order_by: { id: desc }) {
