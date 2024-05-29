@@ -203,7 +203,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
       <DashboardListItem>
         <Box pr={4}>
           <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-            {flow.slug}
+            {flow.name}
           </DashboardLink>
           <LinkSubText>
             {flowInfoHelper(flow.updated_at, flow.operations)}
@@ -326,7 +326,7 @@ const Team: React.FC = () => {
                 const newFlowSlug = slugify(newFlowName);
                 useStore
                   .getState()
-                  .createFlow(teamId, newFlowSlug)
+                  .createFlow(teamId, newFlowSlug, newFlowName)
                   .then((newId: string) => {
                     navigation.navigate(`/${slug}/${newId}`);
                   });
