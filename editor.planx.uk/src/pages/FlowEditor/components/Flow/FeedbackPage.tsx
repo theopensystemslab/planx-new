@@ -7,7 +7,6 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import RuleIcon from "@mui/icons-material/Rule";
 import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
@@ -83,7 +82,7 @@ const getDetailedFeedback = async (feedbackId: number) => {
     query: GET_FEEDBACK_BY_ID_QUERY,
     variables: { feedbackId },
   });
-  console.log(detailedFeedback);
+  return detailedFeedback;
 };
 
 type FeedbackType =
@@ -118,6 +117,14 @@ const feedbackTypeIcon = (type: FeedbackType) => {
 };
 
 export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
+  const displayFeedbackItems = [
+    "address",
+    "projectType",
+    "nodeTitle",
+    "nodeType",
+    "helpText",
+  ];
+
   return (
     <Container maxWidth="contentWrap">
       <Box py={4}>
@@ -150,7 +157,11 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
               </TableHead>
               <TableBody>
                 {feedback.map((item) => (
-                  <CollapsibleRow {...item} />
+                  <CollapsibleRow
+                    key={item.id}
+                    {...item}
+                    displayFeedbackItems={displayFeedbackItems}
+                  />
                 ))}
               </TableBody>
             </Table>
@@ -161,16 +172,24 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
   );
 };
 
-const CollapsibleRow: React.FC<Feedback> = (item) => {
+interface CollapsibleRowProps extends Feedback {
+  displayFeedbackItems: string[];
+}
+
+const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [detailedFeedback, setDetailedFeedback] = useState<
+    Record<string, any> | undefined
+  >(undefined);
   const { icon, title } = feedbackTypeIcon(item.type);
 
-  const details = [
-    { label: "Project address", value: item.address },
-    { label: "Page title", value: item.nodeTitle },
-    { label: "Component type", value: item.nodeType },
-    { label: "Feedback ID", value: item.id },
-  ];
+  const toggleDetailedFeedback = async () => {
+    setOpen(!open);
+    if (!open && !detailedFeedback) {
+      const fetchedData = await getDetailedFeedback(item.id);
+      setDetailedFeedback(fetchedData);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -188,7 +207,7 @@ const CollapsibleRow: React.FC<Feedback> = (item) => {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={toggleDetailedFeedback}
           >
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
@@ -208,21 +227,19 @@ const CollapsibleRow: React.FC<Feedback> = (item) => {
           >
             <DetailedFeedback>
               <SummaryListTable sx={{ margin: "0" }}>
-                {details.map((detail, index) => (
-                  <>
-                    <Box component="dt">{detail.label}</Box>
-                    <Box component="dd">{detail.value}</Box>
-                  </>
-                ))}
+                {detailedFeedback &&
+                  item.displayFeedbackItems.map(
+                    (key, index) =>
+                      detailedFeedback[key] !== undefined && (
+                        <React.Fragment key={index}>
+                          <Box component="dt">{key}</Box>
+                          <Box component="dd">
+                            {String(detailedFeedback[key])}
+                          </Box>
+                        </React.Fragment>
+                      ),
+                  )}
               </SummaryListTable>
-              <Button
-                variant="contained"
-                color="secondary"
-                sx={{ mt: "1.5em" }}
-                onClick={() => getDetailedFeedback(item.id)}
-              >
-                Log detailed feedback info to console
-              </Button>
             </DetailedFeedback>
           </Collapse>
         </TableCell>
