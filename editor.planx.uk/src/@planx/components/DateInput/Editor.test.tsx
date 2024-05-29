@@ -29,9 +29,11 @@ describe("DateInputComponent - Editor Modal", () => {
       </DndProvider>,
     );
 
-    const [minDay, maxDay] = screen.getAllByLabelText("Day");
-    const [minMonth, maxMonth] = screen.getAllByLabelText("Month");
-    const [minYear, maxYear] = screen.getAllByLabelText("Year");
+    const [minDay, maxDay] = screen.getAllByRole("textbox", { name: "Day" });
+    const [minMonth, maxMonth] = screen.getAllByRole("textbox", {
+      name: "Month",
+    });
+    const [minYear, maxYear] = screen.getAllByRole("textbox", { name: "Year" });
 
     expect(screen.queryByText(minError)).toBeNull();
     expect(screen.queryByText(maxError)).toBeNull();
