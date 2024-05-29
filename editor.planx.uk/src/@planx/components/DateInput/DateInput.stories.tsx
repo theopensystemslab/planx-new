@@ -32,17 +32,17 @@ export const FilledForm: StoryObj = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const dayInput = canvas.getByPlaceholderText("DD");
+    const dayInput = canvas.getByLabelText("Day");
     await userEvent.type(dayInput, "01", {
       delay: 100,
     });
 
-    const monthInput = canvas.getByPlaceholderText("MM");
+    const monthInput = canvas.getByLabelText("Month");
     await userEvent.type(monthInput, "03", {
       delay: 100,
     });
 
-    const yearInput = canvas.getByPlaceholderText("YYYY");
+    const yearInput = canvas.getByLabelText("Year");
     await userEvent.type(yearInput, "2030", {
       delay: 100,
     });

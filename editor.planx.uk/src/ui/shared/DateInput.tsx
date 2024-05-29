@@ -47,13 +47,16 @@ export default function DateInput(props: Props): FCReturn {
           </Typography>
         )}
         <Box sx={{ width: INPUT_DATE_WIDTH }}>
-          <Label variant="body1" htmlFor={`${props.id}-day`} component={"label"}>
+          <Label
+            variant="body1"
+            htmlFor={`${props.id}-day`}
+            component={"label"}
+          >
             Day
           </Label>
           <Input
             value={day || ""}
             inputProps={{ maxLength: "2" }}
-            placeholder="DD"
             bordered={props.bordered}
             id={`${props.id}-day`}
             onInput={(ev: ChangeEvent<HTMLInputElement>) => {
@@ -71,12 +74,15 @@ export default function DateInput(props: Props): FCReturn {
           />
         </Box>
         <Box sx={{ width: INPUT_DATE_WIDTH }}>
-          <Label variant="body1" htmlFor={`${props.id}-month`} component={"label"}>
+          <Label
+            variant="body1"
+            htmlFor={`${props.id}-month`}
+            component={"label"}
+          >
             Month
           </Label>
           <Input
             value={month || ""}
-            placeholder="MM"
             inputProps={{ maxLength: "2" }}
             bordered={props.bordered}
             id={`${props.id}-month`}
@@ -95,12 +101,15 @@ export default function DateInput(props: Props): FCReturn {
           />
         </Box>
         <Box sx={{ width: INPUT_YEAR_WIDTH }}>
-          <Label variant="body1" htmlFor={`${props.id}-year`} component={"label"}>
+          <Label
+            variant="body1"
+            htmlFor={`${props.id}-year`}
+            component={"label"}
+          >
             Year
           </Label>
           <Input
             value={year || ""}
-            placeholder="YYYY"
             inputProps={{ maxLength: "4" }}
             bordered={props.bordered}
             id={`${props.id}-year`}
