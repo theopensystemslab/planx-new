@@ -57,13 +57,13 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   action: {
     selected: "#F8F8F8",
     focus: "#FFDD00",
-    disabled: "#B4B4B4",
+    disabled: "#949494",
   },
   error: {
     main: "#D4351C",
   },
   success: {
-    main: "#4CAF50",
+    main: "#49A74C",
     dark: "#265A26",
   },
   info: {
