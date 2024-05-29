@@ -60,7 +60,7 @@ BEGIN
 
         -- Start new event
         INSERT INTO flow_status_history (flow_id, status, event_start)
-        VALUES (NEW.id, OLD.status, NOW());
+        VALUES (NEW.id, NEW.status, NOW());
 
     ELSIF (TG_OP = 'INSERT') THEN
         -- Start new event
