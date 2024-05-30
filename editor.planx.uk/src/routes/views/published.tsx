@@ -50,6 +50,7 @@ export const publishedView = async (req: NaviRequest) => {
     flow: publishedFlow,
 
     flowSlug,
+    flowName: flow.name,
     flowStatus: flow.status,
     flowName: flow.name,
   });

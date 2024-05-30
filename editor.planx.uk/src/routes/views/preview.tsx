@@ -49,7 +49,7 @@ const fetchFlattenedFlowData = async (flowId: string): Promise<FlowGraph> => {
     console.log(error);
     if (error instanceof AxiosError) {
       alert(
-        `Cannot open this view, navigate back to the graph to keep editing. \n\n${error.response?.data?.error}`,
+        `Cannot open this view, navigate back to the graph to keep editing. \n\n${error.response?.data?.error}`
       );
     }
     throw new NotFoundError();

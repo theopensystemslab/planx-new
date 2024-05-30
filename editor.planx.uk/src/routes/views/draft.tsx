@@ -37,6 +37,8 @@ export const draftView = async (req: NaviRequest) => {
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
 
+  console.log(flow.name);
+
   return (
     <PublicLayout>
       <View />
@@ -46,7 +48,7 @@ export const draftView = async (req: NaviRequest) => {
 
 const fetchSettingsForDraftView = async (
   flowSlug: string,
-  teamSlug: string,
+  teamSlug: string
 ): Promise<DraftSettings> => {
   try {
     const result = await publicClient.query({
@@ -99,7 +101,7 @@ const fetchSettingsForDraftView = async (
 };
 
 const fetchDraftFlattenedFlowData = async (
-  flowId: string,
+  flowId: string
 ): Promise<FlowGraph> => {
   const url = `${process.env.REACT_APP_API_URL}/flows/${flowId}/flatten-data?draft=true`;
   try {
