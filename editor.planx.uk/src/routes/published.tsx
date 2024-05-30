@@ -26,17 +26,21 @@ const routes = compose(
   }),
 
   mount({
-    "/": route({
+    "/": route((req) => ({
       view: () => {
-        const isOnline = useStore.getState().flowStatus === "online";
+        const isFlowOnline = useStore.getState().flowStatus === "online";
+        const isUserResuming = Boolean(req.params.sessionId);
 
-        return isOnline ? (
+        // Allow users to complete Save & Return journeys, even if a flow is offline
+        const isFlowAccessible = isFlowOnline || isUserResuming;
+
+        return isFlowAccessible ? (
           <Questions previewEnvironment="standalone" />
         ) : (
           <OfflinePage />
         );
       },
-    }),
+    })),
     "/pages/:page": map((req) => {
       return route({
         view: () => <ContentPage page={req.params.page} />,
