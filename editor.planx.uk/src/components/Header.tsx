@@ -366,15 +366,16 @@ const PublicToolbar: React.FC<{
                   size="large"
                   aria-describedby="restart-application-description"
                 >
+                  <Reset color="secondary" />
                   <Typography
                     id="restart-application-description"
-                    style={visuallyHidden}
+                    variant="body2"
+                    fontSize="small"
+                    fontWeight={FONT_WEIGHT_SEMI_BOLD}
+                    pl={0.5}
                   >
-                    Open a dialog with the option to restart your application.
-                    If you chose to restart your application, this will delete
-                    your previous answers
+                    Restart
                   </Typography>
-                  <Reset color="secondary" />
                 </IconButton>
               )}
             </RightBox>
