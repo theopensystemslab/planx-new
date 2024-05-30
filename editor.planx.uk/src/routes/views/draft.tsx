@@ -32,11 +32,13 @@ export const draftView = async (req: NaviRequest) => {
   const flowData = await fetchDraftFlattenedFlowData(flow.id);
 
   const state = useStore.getState();
-  state.setFlow({ id: flow.id, flow: flowData, flowSlug });
-  state.setFlowNameFromSlug(flowSlug);
+  state.setFlow({ id: flow.id, flow: flowData, flowSlug, flowName: flow.name });
+  state.setFlowName(flow.name);
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
+
+  console.log(flow.name);
 
   return (
     <PublicLayout>
@@ -80,6 +82,7 @@ const fetchSettingsForDraftView = async (
             }
             settings
             slug
+            name
           }
           globalSettings: global_settings {
             footerContent: footer_content
