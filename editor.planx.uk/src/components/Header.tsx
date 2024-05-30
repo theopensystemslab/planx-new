@@ -3,6 +3,7 @@ import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import Person from "@mui/icons-material/Person";
 import Visibility from "@mui/icons-material/Visibility";
+import Alert from "@mui/material/Alert";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -15,6 +16,7 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover, { popoverClasses } from "@mui/material/Popover";
+import Snackbar from "@mui/material/Snackbar";
 import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -389,6 +391,11 @@ const PublicToolbar: React.FC<{
       <NavBar />
       <AnalyticsDisabledBanner />
       <TestEnvironmentBanner />
+      <Snackbar autoHideDuration={null}>
+        <Alert sx={{ width: "100%" }}>
+          Service settings updated successfully
+        </Alert>
+      </Snackbar>
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleRestart}
