@@ -8,12 +8,11 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
-import { object, string } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { NumberInput } from "./model";
-import { parseNumber } from "./model";
+import { parseNumber, validationSchema } from "./model";
 
 export type Props = PublicProps<NumberInput>;
 
@@ -32,29 +31,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: object({
-      value: string()
-        .required("Enter your answer before continuing")
-        .test({
-          name: "not a number",
-          message: (() => {
-            if (!props.allowNegatives) {
-              return "Enter a positive number";
-            }
-
-            return "Enter a number";
-          })(),
-          test: (value: string | undefined) => {
-            if (!value) {
-              return false;
-            }
-            if (!props.allowNegatives && value.startsWith("-")) {
-              return false;
-            }
-            return value === "0" ? true : Boolean(parseNumber(value));
-          },
-        }),
-    }),
+    validationSchema: validationSchema(props),
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
