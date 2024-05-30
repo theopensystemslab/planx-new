@@ -10,19 +10,19 @@ import { useCurrentRoute, useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-const MENU_WIDTH = "180px";
+const MENU_WIDTH = "185px";
 
 const Root = styled(Box)(({ theme }) => ({
   width: MENU_WIDTH,
   flexShrink: 0,
   background: theme.palette.background.paper,
-  borderRight: `1px solid ${theme.palette.border.main}`,
+  borderRight: `1px solid ${theme.palette.border.light}`,
 }));
 
 const MenuWrap = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(2.5, 0, 0, 0),
+  padding: theme.spacing(2.5, 0.5, 0, 0.5),
   position: "sticky",
   top: 0,
 }));
@@ -41,21 +41,19 @@ const MenuTitle = styled(Typography)(({ theme }) => ({
 const MenuButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "isActive",
 })<{ isActive: boolean }>(({ theme, isActive }) => ({
-  color: theme.palette.primary.main,
-  width: MENU_WIDTH,
+  color: theme.palette.text.primary,
+  width: "100%",
   border: "1px solid transparent",
-  borderRightColor: theme.palette.border.main,
   justifyContent: "flex-start",
+  borderRadius: "3px",
   "&:hover": {
     background: "white",
-    borderTopColor: theme.palette.border.light,
-    borderBottomColor: theme.palette.border.light,
+    borderColor: theme.palette.border.light,
   },
   ...(isActive && {
     background: theme.palette.common.white,
     color: theme.palette.text.primary,
-    border: `1px solid ${theme.palette.border.main}`,
-    borderRightColor: "transparent",
+    border: `1px solid ${theme.palette.border.light}`,
   }),
 }));
 
