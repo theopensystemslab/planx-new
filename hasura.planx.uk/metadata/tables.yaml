@@ -418,6 +418,7 @@
           - creator_id
           - data
           - id
+          - name
           - settings
           - slug
           - team_id
@@ -441,6 +442,7 @@
           - creator_id
           - data
           - id
+          - name
           - settings
           - slug
           - team_id
@@ -471,6 +473,7 @@
           - creator_id
           - data
           - id
+          - name
           - settings
           - slug
           - team_id
@@ -494,6 +497,7 @@
           - creator_id
           - data
           - id
+          - name
           - settings
           - slug
           - status
@@ -512,6 +516,7 @@
           - creator_id
           - data
           - id
+          - name
           - settings
           - slug
           - status
@@ -529,6 +534,7 @@
           - creator_id
           - data
           - id
+          - name
           - settings
           - slug
           - status
@@ -547,6 +553,7 @@
           - creator_id
           - data
           - id
+          - name
           - settings
           - slug
           - status
@@ -566,6 +573,7 @@
           - creator_id
           - data
           - id
+          - name
           - settings
           - slug
           - status
@@ -587,6 +595,7 @@
       permission:
         columns:
           - data
+          - name
           - settings
           - slug
           - status
@@ -606,6 +615,7 @@
       permission:
         columns:
           - data
+          - name
           - settings
           - slug
           - status
