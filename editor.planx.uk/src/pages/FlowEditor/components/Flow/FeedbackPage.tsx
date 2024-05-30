@@ -124,7 +124,6 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
     "projectType",
     "nodeTitle",
     "nodeType",
-    "helpText",
     "browser",
     "platform",
   ];
@@ -200,10 +199,18 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
       ? `${item.userComment.slice(0, 50)}...`
       : item.userComment
     : "No comment";
-  const filteredFeedbackItems =
-    item.type === "issue"
-      ? ["userContext", ...item.displayFeedbackItems]
-      : item.displayFeedbackItems;
+
+  const filteredFeedbackItems = (() => {
+    switch (item.type) {
+      case "issue":
+        return ["userContext", ...item.displayFeedbackItems];
+      case "helpful":
+      case "unhelpful":
+        return ["helpText", ...item.displayFeedbackItems];
+      default:
+        return item.displayFeedbackItems;
+    }
+  })();
 
   return (
     <React.Fragment>
