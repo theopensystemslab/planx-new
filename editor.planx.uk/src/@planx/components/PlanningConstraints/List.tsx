@@ -1,3 +1,4 @@
+import HelpIcon from "@mui/icons-material/Help";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -14,11 +15,20 @@ import type {
   Metadata,
 } from "@opensystemslab/planx-core/types";
 import groupBy from "lodash/groupBy";
-import React, { ReactNode } from "react";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
+import { HelpClickMetadata } from "pages/FlowEditor/lib/analytics/types";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { ReactNode, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { emptyContent } from "ui/editor/RichTextInput";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+
+import { SiteAddress } from "../FindProperty/model";
+import { HelpButton } from "../shared/Preview/CardHeader";
+import MoreInfo from "../shared/Preview/MoreInfo";
+import MoreInfoSection from "../shared/Preview/MoreInfoSection";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",
@@ -75,7 +85,7 @@ export default function ConstraintsList({
   });
 
   return (
-    <Box mb={3}>
+    <Box key={Object.keys(groupedConstraints).join("-")} mb={3}>
       {Object.keys(groupedConstraints).map(
         (category: string, index: number) => (
           <>
@@ -105,11 +115,11 @@ export default function ConstraintsList({
                 {category}
               </Typography>
             </ListSubheader>
-            <List dense disablePadding>
-              {groupedConstraints[category].map((con: any) => (
+            <List key={`${category}-${index}`} dense disablePadding>
+              {groupedConstraints[category].map((con: Constraint) => (
                 <ConstraintListItem
-                  key={con.text}
-                  content={con.text}
+                  key={con.fn}
+                  value={con.value}
                   data={con.value ? con.data : null}
                   metadata={metadata?.[con.fn]}
                   category={category}
@@ -126,8 +136,8 @@ export default function ConstraintsList({
 }
 
 interface ConstraintListItemProps {
-  key: string;
-  content: string;
+  key: Constraint["fn"];
+  value: Constraint["value"];
   data: Constraint["data"] | null;
   metadata?: Metadata;
   category: string;
@@ -135,10 +145,23 @@ interface ConstraintListItemProps {
 }
 
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
+  const [open, setOpen] = useState(false);
+  const { trackEvent } = useAnalyticsTracking();
+
+  const { longitude, latitude } =
+    (useStore(
+      (state) => state.computePassport().data?._address,
+    ) as SiteAddress) || {};
+
+  const handleHelpClick = (metadata: HelpClickMetadata) => {
+    setOpen(true);
+    trackEvent({ event: "helpClick", metadata }); // This returns a promise but we don't need to await for it
+  };
+
   const item = props.metadata?.name.replaceAll(" ", "-");
 
   return (
-    <ListItem disablePadding sx={{ backgroundColor: "white" }}>
+    <ListItem key={props.key} disablePadding sx={{ backgroundColor: "white" }}>
       <StyledAccordion {...props} disableGutters>
         <AccordionSummary
           id={`${item}-header`}
@@ -159,55 +182,82 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           }}
         >
           <>
-            <Typography variant="h4" gutterBottom>
-              {`This property ${props?.content}`}
+            <Typography variant="h4">
+              {props.value
+                ? `${
+                    props.metadata?.plural || "Entities"
+                  } that intersect with your site:`
+                : `We did not find any ${
+                    props.metadata?.plural?.toLowerCase() || "entities"
+                  } that apply to your site.`}
             </Typography>
-            {Boolean(props.data?.length) && (
-              <List
-                dense
-                disablePadding
-                sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
-              >
-                {props.data &&
-                  props.data.map(
-                    (record: any) =>
-                      record.name && (
-                        <ListItem
-                          key={record.entity}
-                          dense
-                          disableGutters
-                          sx={{ display: "list-item" }}
-                        >
-                          <Typography variant="body2">
-                            {record.name}{" "}
-                            {record.name && record["documentation-url"] && (
-                              <span>
-                                (
-                                <Link
-                                  href={record["documentation-url"]}
-                                  target="_blank"
-                                >
-                                  source
-                                </Link>
-                                )
-                              </span>
-                            )}
-                          </Typography>
-                        </ListItem>
-                      ),
-                  )}
+            {props.value && (
+              <List>
+                {props.data?.map((record: any) => (
+                  <ListItem
+                    key={record.entity}
+                    disableGutters
+                    divider
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">
+                      {record.name ||
+                        (record["flood-risk-level"] &&
+                          `${props.metadata?.name} - Level ${record["flood-risk-level"]}`) ||
+                        `Entity #${record.entity}`}
+                    </Typography>
+                    <Typography variant="body2">
+                      <Link>Report an inaccuracy</Link>
+                    </Typography>
+                  </ListItem>
+                ))}
               </List>
             )}
+            {props.metadata?.text && props.metadata.text !== emptyContent && (
+              <Typography variant="body2" component="div">
+                <HelpButton
+                  variant="help"
+                  title={`More information`}
+                  aria-label={`See more information about "${props.metadata?.name}"`}
+                  onClick={() =>
+                    handleHelpClick({
+                      [props.key]: props.metadata?.name || "Constraint",
+                    })
+                  }
+                  aria-haspopup="dialog"
+                  data-testid="more-info-button"
+                >
+                  <HelpIcon /> More information
+                </HelpButton>
+              </Typography>
+            )}
+            <MoreInfo open={open} handleClose={() => setOpen(false)}>
+              <MoreInfoSection title="Source">
+                <Typography variant="body2" mb={2}>
+                  {props.key === "road.classified" ? (
+                    `Ordnance Survey MasterMap Highways`
+                  ) : (
+                    <Link
+                      href={`https://www.planning.data.gov.uk/map/?dataset=${props.metadata?.dataset}#${latitude},${longitude},17.5z`}
+                      target="_blank"
+                    >
+                      Planning Data map
+                    </Link>
+                  )}
+                </Typography>
+              </MoreInfoSection>
+              <MoreInfoSection title="How is it defined?">
+                <ReactMarkdownOrHtml
+                  source={props.metadata?.text?.replaceAll(
+                    "(/",
+                    "(https://www.planning.data.gov.uk/",
+                  )}
+                  openLinksOnNewTab
+                  id="howMeasured"
+                />
+              </MoreInfoSection>
+            </MoreInfo>
           </>
-          <Typography variant="body2">
-            <ReactMarkdownOrHtml
-              source={props.metadata?.text?.replaceAll(
-                "(/",
-                "(https://www.planning.data.gov.uk/",
-              )}
-              openLinksOnNewTab
-            />
-          </Typography>
         </AccordionDetails>
       </StyledAccordion>
     </ListItem>
