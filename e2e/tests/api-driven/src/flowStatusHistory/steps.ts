@@ -94,8 +94,8 @@ Then("a new flow_status_history record is created", async function () {
   assert.ok(flowStatusHistory[1], "flow_status_history record not created");
   assert.equal(
     flowStatusHistory[1].status,
-    "offline",
-    `Flow status is ${flowStatusHistory[1].status} - it should be "offline"`,
+    "online",
+    `Flow status is ${flowStatusHistory[1].status} - it should be "online"`,
   );
   assert.notEqual(
     flowStatusHistory[1].eventStart,
