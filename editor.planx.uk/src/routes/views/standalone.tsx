@@ -24,14 +24,14 @@ const standaloneView = async (req: NaviRequest) => {
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
   const data = await fetchDataForStandaloneView(flowSlug, teamSlug);
-
+  console.log(data);
   const {
     flows: [{ team, settings: flowSettings }],
     globalSettings,
   } = data;
 
   const state = useStore.getState();
-  state.setFlowNameFromSlug(flowSlug);
+  state.setFlowName(flowSlug);
   state.setGlobalSettings(globalSettings[0]);
   state.setFlowSettings(flowSettings);
   state.setTeam(team);
@@ -61,6 +61,7 @@ const fetchDataForStandaloneView = async (
             }
           ) {
             id
+            name
             team {
               theme {
                 primaryColour: primary_colour

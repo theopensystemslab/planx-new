@@ -139,7 +139,12 @@ export const editorStore: StateCreator<
 
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
-      get().setFlow({ id, flow, flowSlug: get().flowSlug });
+      get().setFlow({
+        id,
+        flow,
+        flowSlug: get().flowSlug,
+        flowName: get().flowName,
+      });
     };
 
     // set state from initial load

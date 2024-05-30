@@ -3,11 +3,11 @@ import {
   NotifyPersonalisation,
   Team,
 } from "@opensystemslab/planx-core/types";
+import { OT } from "@planx/graph/types";
 import { useFormik } from "formik";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
 import { SharedStore } from "./pages/FlowEditor/lib/store/shared";
-import { OT } from "@planx/graph/types";
 
 export type Maybe<T> = T | undefined;
 
@@ -16,6 +16,7 @@ export type FormikHookReturn = ReturnType<typeof useFormik>;
 export interface Flow {
   id: string;
   slug: string;
+  name: string;
   team: Team;
   settings?: FlowSettings;
 }

@@ -43,7 +43,12 @@ export const publishedView = async (req: NaviRequest) => {
   const state = useStore.getState();
   // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
   // load pre-flattened published flow if exists, else load & flatten flow
-  state.setFlow({ id: flow.id, flow: publishedFlow, flowSlug });
+  state.setFlow({
+    id: flow.id,
+    flow: publishedFlow,
+    flowSlug,
+    flowName: flow.name,
+  });
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
@@ -76,6 +81,7 @@ export const fetchSettingsForPublishedView = async (
             }
           ) {
             id
+            name
             team {
               theme {
                 primaryColour: primary_colour
