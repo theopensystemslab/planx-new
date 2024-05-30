@@ -50,7 +50,8 @@ const GET_FEEDBACK_BY_ID_QUERY = gql`
     feedback: feedback_summary(where: { feedback_id: { _eq: $feedbackId } }) {
       address
       createdAt: created_at
-      device
+      platform: device(path: "platform.type")
+      browser: device(path: "browser.name")
       feedbackId: feedback_id
       type: feedback_type
       helpDefinition: help_definition
@@ -118,11 +119,14 @@ const feedbackTypeIcon = (type: FeedbackType) => {
 
 export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
   const displayFeedbackItems = [
+    "userComment",
     "address",
     "projectType",
     "nodeTitle",
     "nodeType",
     "helpText",
+    "browser",
+    "platform",
   ];
 
   return (
@@ -133,7 +137,7 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
             Feedback log
           </Typography>
           <Typography variant="body1">
-            User-sumbitted feedback gathered for this service.
+            Feedback from users about this service.
           </Typography>
         </EditorRow>
         <EditorRow>
@@ -191,6 +195,16 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
     }
   };
 
+  const commentSummary = item.userComment
+    ? item.userComment.length > 50
+      ? `${item.userComment.slice(0, 50)}...`
+      : item.userComment
+    : "No comment";
+  const filteredFeedbackItems =
+    item.type === "issue"
+      ? ["userContext", ...item.displayFeedbackItems]
+      : item.displayFeedbackItems;
+
   return (
     <React.Fragment>
       <TableRow key={item.id}>
@@ -202,7 +216,7 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
         <TableCell>
           {format(new Date(item.createdAt), "dd/MM/yy hh:mm:ss")}
         </TableCell>
-        <TableCell>{item.userComment}</TableCell>
+        <TableCell>{commentSummary}</TableCell>
         <TableCell sx={{ textAlign: "right" }}>
           <IconButton
             aria-label="expand row"
@@ -228,7 +242,7 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
             <DetailedFeedback>
               <SummaryListTable sx={{ margin: "0" }}>
                 {detailedFeedback &&
-                  item.displayFeedbackItems.map(
+                  filteredFeedbackItems.map(
                     (key, index) =>
                       detailedFeedback[key] !== undefined && (
                         <React.Fragment key={index}>
