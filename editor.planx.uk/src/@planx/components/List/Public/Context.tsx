@@ -18,6 +18,12 @@ interface ListContextValue {
   cancelEditItem: () => void;
   formik: FormikProps<UserData>;
   handleSubmit: () => void;
+  errors: {
+    addItem: boolean;
+    unsavedItem: boolean;
+    min: boolean;
+    max: boolean;
+  };
 }
 
 interface ListProviderProps {
@@ -33,34 +39,52 @@ export const ListProvider: React.FC<ListProviderProps> = ({
 }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  const setAllFieldsTouched = () => {
-    Object.keys(formik.values.userData[activeIndex]).forEach((key) => {
-      formik.setFieldTouched(formik.values.userData[activeIndex][key], true);
-    });
+  const [addItemError, setAddItemError] = useState<boolean>(false);
+  const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
+  const [minError, setMinError] = useState<boolean>(false);
+  const [maxError, setMaxError] = useState<boolean>(false);
+
+  const resetErrors = () => {
+    setMinError(false);
+    setMaxError(false);
+    setUnsavedItemError(false);
   };
 
+  // const setAllFieldsTouched = () => {
+  //   Object.keys(formik.values.userData[activeIndex]).forEach((key) => {
+  //     formik.setFieldTouched(formik.values.userData[activeIndex][key], true);
+  //   });
+  // };
+
   const addNewItem = async () => {
+    resetErrors();
+
     // Do not allow a new item to be added if there's still an active item
-    // TODO: show error to explain this
-    if (activeIndex !== -1) return;
-    await formik.validateForm();
-    if (!formik.isValid) {
-      console.log({ errors: formik.errors });
-    }
+    if (activeIndex !== -1) return setAddItemError(true);
+
+    // await formik.validateForm();
+    // if (!formik.isValid) return;
+
     // Add new item, and set to active
+    setAddItemError(false);
     formik.values.userData.push(generateInitialValues(schema));
     setActiveIndex(formik.values.userData.length - 1);
   };
 
   const saveItem = async () => {
+    resetErrors();
+
     // setAllFieldsTouched(activeIndex);
     await formik.validateForm();
     if (formik.isValid) {
       setActiveIndex(-1);
+      setAddItemError(false);
     }
   };
 
   const removeItem = (index: number) => {
+    resetErrors();
+
     if (activeIndex && index < activeIndex) {
       // If item is before currently active card, retain active card
       setActiveIndex((prev) => (prev === -1 ? 0 : prev - 1));
@@ -77,12 +101,17 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   };
 
   const handleSubmit = () => {
-    if (activeIndex !== -1) {
-      // TODO: Display error for this
-      console.log("Please save all list items to proceed");
-      return;
-    }
+    // Do not allow submissions with an unsaved item
+    if (activeIndex !== -1) return setUnsavedItemError(true);
 
+    // Manually validate min/max
+    if (formik.values.userData.length < schema.min) {
+      return setMinError(true);
+    }
+    if (schema.max && formik.values.userData.length > schema.max) {
+      console.log("setting max error");
+      return setMaxError(true);
+    }
     formik.handleSubmit();
   };
 
@@ -112,6 +141,12 @@ export const ListProvider: React.FC<ListProviderProps> = ({
         cancelEditItem,
         formik,
         handleSubmit,
+        errors: {
+          addItem: addItemError,
+          unsavedItem: unsavedItemError,
+          min: minError,
+          max: maxError,
+        },
       }}
     >
       {children}
