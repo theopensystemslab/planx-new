@@ -71,12 +71,6 @@ export default isPreviewOnlyDomain
     })
   : mount({
       "/:team/:flow/published": lazy(() => import("./published")), // loads current published flow if exists, or throws Not Found if unpublished
-      "buckinghamshire/apply-for-building-regulations-applications/preview":
-        map(async (req) =>
-          redirect(
-            `/buckinghamshire/apply-for-building-regulations-applications/published${req?.search}`,
-          ),
-        ), // temporary redirect while Bucks works with internal IT to update advertised service links
       "/:team/:flow/preview": lazy(() => import("./preview")), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
       "/:team/:flow/draft": lazy(() => import("./draft")), // loads current draft flow and draft external portals
       "/:team/:flow/pay": mountPayRoutes(),
