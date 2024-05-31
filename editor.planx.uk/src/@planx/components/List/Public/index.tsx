@@ -44,8 +44,8 @@ const CardButton = styled(Button)(({ theme }) => ({
 /**
  * Controller to return correct user input for field in schema
  */
-const InputField: React.FC<Field & { index: number }> = (props) => {
-  const inputFieldId = `input-${props.type}-${props.index}`;
+const InputField: React.FC<Field> = (props) => {
+  const inputFieldId = `input-${props.type}-${props.data.fn}`;
 
   switch (props.type) {
     case "text":
@@ -66,21 +66,20 @@ const ActiveListCard: React.FC<{
   const { schema, saveItem, cancelEditItem } = useListContext();
 
   return (
-    // TODO: This should be a HTML form
     <ListCard>
       <Typography component="h2" variant="h3">
         {schema.type} {index + 1}
       </Typography>
       {schema.fields.map((field, i) => (
         <InputRow key={i}>
-          <InputField {...field} index={i} />
+          <InputField {...field} />
         </InputRow>
       ))}
       <Box display="flex" gap={2}>
         <Button
           variant="contained"
           color="primary"
-          onClick={() => saveItem(index, [])}
+          onClick={async () => await saveItem()}
         >
           Save
         </Button>
@@ -92,32 +91,32 @@ const ActiveListCard: React.FC<{
 
 const InactiveListCard: React.FC<{
   index: number;
-}> = ({ index }) => {
-  const { schema, userData, removeItem, editItem } = useListContext();
+}> = ({ index: i }) => {
+  const { schema, formik, removeItem, editItem } = useListContext();
 
   return (
     <ListCard>
       <Typography component="h2" variant="h3">
-        {schema.type} {index + 1}
+        {schema.type} {i + 1}
       </Typography>
       <Table>
         <TableBody>
-          {schema.fields.map((field, i) => (
-            <TableRow key={`tableRow-${i}`}>
+          {schema.fields.map((field, j) => (
+            <TableRow key={`tableRow-${j}`}>
               <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
                 {field.data.title}
               </TableCell>
-              <TableCell>{userData[index][i]?.val}</TableCell>
+              <TableCell>{formik.values.userData[i][field.data.fn]}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
       <Box display="flex" gap={2}>
-        <CardButton onClick={() => removeItem(index)}>
+        <CardButton onClick={() => removeItem(i)}>
           <DeleteIcon color="warning" fontSize="medium" />
           Remove
         </CardButton>
-        <CardButton onClick={() => editItem(index)}>
+        <CardButton onClick={() => editItem(i)}>
           {/* TODO: Is primary colour really right here? */}
           <EditIcon color="primary" fontSize="medium" />
           Edit
@@ -128,10 +127,10 @@ const InactiveListCard: React.FC<{
 };
 
 const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
-  const { userData, activeIndex, schema, addNewItem } = useListContext();
+  const { formik, activeIndex, schema, addNewItem } = useListContext();
 
   return (
-    <Card handleSubmit={() => console.log({ userData })} isValid>
+    <Card handleSubmit={formik.handleSubmit} isValid>
       <CardHeader
         title={title}
         description={description}
@@ -139,7 +138,7 @@ const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
         policyRef={policyRef}
         howMeasured={howMeasured}
       />
-      {userData.map((_, i) =>
+      {formik.values.userData.map((_, i) =>
         i === activeIndex ? (
           <ActiveListCard key={`card-${i}`} index={i} />
         ) : (
