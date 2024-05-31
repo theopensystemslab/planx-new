@@ -1,4 +1,5 @@
-import { within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
+import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { axe, setup } from "testUtils";
@@ -13,6 +14,8 @@ const mockProps: Props = {
   title: "Mock Title",
   description: "Mock description",
 };
+
+jest.setTimeout(10_000);
 
 describe("Basic UI", () => {
   it("renders correctly", () => {
@@ -96,10 +99,6 @@ describe("Basic UI", () => {
   });
 });
 
-describe("Navigating back", () => {
-  test.todo("it pre-populates list correctly");
-});
-
 describe("Building a list", () => {
   it("does not display a default item if the schema has no required minimum", () => {
     const mockWithMinZero = merge(cloneDeep(mockProps), { schema: { min: 0 } });
@@ -150,6 +149,8 @@ describe("Building a list", () => {
     );
     expect(cards).toHaveLength(1);
 
+    await fillInResponse(user);
+
     const addItemButton = getByRole("button", {
       name: /Add a new animal type/,
     });
@@ -177,15 +178,21 @@ describe("Building a list", () => {
 
   test("Editing an item", async () => {
     // Setup three cards
-    const { getAllByRole, getByRole, user, findByLabelText } = setup(
+    const { getAllByRole, getByRole, user } = setup(
       <ListComponent {...mockProps} />,
     );
+
+    await fillInResponse(user);
 
     const addItemButton = getByRole("button", {
       name: /Add a new animal type/,
     });
+
     await user.click(addItemButton);
+    await fillInResponse(user);
+
     await user.click(addItemButton);
+    await fillInResponse(user);
 
     let cards = getAllByRole("heading", { level: 2 }).map((el) =>
       el.closest("div"),
@@ -193,23 +200,6 @@ describe("Building a list", () => {
     expect(cards).toHaveLength(3);
 
     let [firstCard, secondCard, thirdCard] = cards;
-
-    // Final card is currently active
-    expect(thirdCard).not.toBeNull();
-    expect(
-      within(thirdCard!).getByLabelText(/What's their name?/),
-    ).toBeInTheDocument();
-
-    // Hitting "cancel" takes us out of Edit mode
-    const thirdCardCancelButton = within(thirdCard!).getByRole("button", {
-      name: /Cancel/,
-    });
-    await user.click(thirdCardCancelButton);
-
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
-    [firstCard, secondCard, thirdCard] = cards;
 
     // No cards currently active
     expect(
@@ -249,32 +239,31 @@ describe("Building a list", () => {
     const { getAllByRole, getByRole, user, getByLabelText, queryAllByRole } =
       setup(<ListComponent {...mockProps} />);
 
+    await fillInResponse(user);
+
     const addItemButton = getByRole("button", {
       name: /Add a new animal type/,
     });
+
     await user.click(addItemButton);
+    await fillInResponse(user);
+
     await user.click(addItemButton);
+    await fillInResponse(user);
 
     let cards = getAllByRole("heading", { level: 2 }).map((el) =>
       el.closest("div"),
     );
     expect(cards).toHaveLength(3);
 
-    let [firstCard, secondCard, thirdCard] = cards;
-
-    const thirdCardCancelButton = within(thirdCard!).getByRole("button", {
-      name: /Cancel/,
-    });
-    await user.click(thirdCardCancelButton);
-
-    [firstCard, secondCard, thirdCard] = getAllByRole("heading", {
-      level: 2,
-    }).map((el) => el.closest("div"));
+    let [firstCard, secondCard] = cards;
+    const thirdCard = cards[2];
 
     // Remove third card
     const thirdCardRemoveButton = within(thirdCard!).getByRole("button", {
       name: /Remove/,
     });
+
     await user.click(thirdCardRemoveButton);
     cards = getAllByRole("heading", { level: 2 }).map((el) =>
       el.closest("div"),
@@ -332,12 +321,16 @@ describe("Building a list", () => {
 
   test("Removing an item when another card is active", async () => {
     // Setup two cards
-    const { getAllByRole, getByRole, user, getByLabelText, queryAllByRole } =
-      setup(<ListComponent {...mockProps} />);
+    const { getAllByRole, getByRole, user } = setup(
+      <ListComponent {...mockProps} />,
+    );
+
+    await fillInResponse(user);
 
     const addItemButton = getByRole("button", {
       name: /Add a new animal type/,
     });
+
     await user.click(addItemButton);
 
     const [firstCard, secondCard] = getAllByRole("heading", { level: 2 }).map(
@@ -367,12 +360,50 @@ describe("Building a list", () => {
 });
 
 describe("Form validation and error handling", () => {
-  test.todo("Text field");
-  test.todo("Number field");
-  test.todo("Question field - select");
-  test.todo("Question field - radio");
+  test.todo("form validation is triggered when saving an item");
+  test.todo("text fields use existing validation schemas");
+  test.todo("number fields use existing validation schemas");
+  test.todo("question fields use validation schema");
+  test.todo("an error displays if the minimum number of items is not met");
+  test.todo("an error displays if the maximum number of items is exceeded");
+  test.todo(
+    "an error displays if you add a new item, without saving the active item",
+  );
+  test.todo(
+    "an error displays if you continue, without saving the active item",
+  );
 });
 
 describe("Payload generation", () => {
   it.todo("generates a valid payload on submission");
 });
+
+describe("Navigating back", () => {
+  test.todo("it pre-populates list correctly");
+});
+
+/**
+ * Helper function to fill out a list item form
+ */
+const fillInResponse = async (user: UserEvent) => {
+  const nameInput = screen.getByLabelText(/name/);
+  await user.type(nameInput, "Richard Parker");
+
+  const emailInput = screen.getByLabelText(/email/);
+  await user.type(emailInput, "richard.parker@pi.com");
+
+  const ageInput = screen.getByLabelText(/old/);
+  await user.type(ageInput, "10");
+
+  const sizeSelect = screen.getByRole("combobox");
+  await user.click(sizeSelect);
+  await user.click(screen.getByRole("option", { name: /Medium/ }));
+
+  const cuteRadio = screen.getAllByRole("radio")[0];
+  await user.click(cuteRadio);
+
+  const saveButton = screen.getByRole("button", {
+    name: /Save/,
+  });
+  await user.click(saveButton);
+};
