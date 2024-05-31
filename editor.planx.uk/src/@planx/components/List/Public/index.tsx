@@ -131,9 +131,18 @@ const InactiveListCard: React.FC<{
   );
 };
 
-const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
-  const { formik, handleSubmit, activeIndex, schema, addNewItem, errors } =
-    useListContext();
+const Root = () => {
+  const {
+    formik,
+    validateAndSubmitForm,
+    activeIndex,
+    schema,
+    addNewItem,
+    errors,
+    listProps,
+  } = useListContext();
+
+  const { title, description, info, policyRef, howMeasured } = listProps;
 
   const rootError: string =
     (errors.min && `You must provide at least ${schema.min} response(s)`) ||
@@ -141,7 +150,7 @@ const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
     "";
 
   return (
-    <Card handleSubmit={handleSubmit} isValid>
+    <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
         title={title}
         description={description}
@@ -181,11 +190,9 @@ const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
 };
 
 function ListComponent(props: Props) {
-  // TODO: On submit generate a payload
-
   return (
-    <ListProvider schema={props.schema}>
-      <Root {...props} />
+    <ListProvider {...props}>
+      <Root />
     </ListProvider>
   );
 }

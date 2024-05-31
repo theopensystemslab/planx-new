@@ -8,7 +8,7 @@ import ListComponent, { Props } from "../Public";
 import { Zoo } from "../schemas/Zoo";
 
 const mockProps: Props = {
-  fn: "mock",
+  fn: "mockFn",
   schema: Zoo,
   schemaName: "Zoo",
   title: "Mock Title",
@@ -376,7 +376,44 @@ describe("Form validation and error handling", () => {
 });
 
 describe("Payload generation", () => {
-  it.todo("generates a valid payload on submission");
+  it("generates a valid payload on submission", async () => {
+    const handleSubmit = jest.fn();
+    const { getByRole, user } = setup(
+      <ListComponent {...mockProps} handleSubmit={handleSubmit} />,
+    );
+    const addItemButton = getByRole("button", {
+      name: /Add a new animal type/,
+    });
+
+    await fillInResponse(user);
+
+    await user.click(addItemButton);
+    await fillInResponse(user);
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalled();
+    expect(handleSubmit.mock.calls[0][0]).toMatchObject({
+      data: {
+        mockFn: [
+          {
+            age: 10,
+            cuteness: "Very",
+            email: "richard.parker@pi.com",
+            name: "Richard Parker",
+            size: "Medium",
+          },
+          {
+            age: 10,
+            cuteness: "Very",
+            email: "richard.parker@pi.com",
+            name: "Richard Parker",
+            size: "Medium",
+          },
+        ],
+      },
+    });
+  });
 });
 
 describe("Navigating back", () => {

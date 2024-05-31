@@ -1,9 +1,17 @@
+import { makeData } from "@planx/components/shared/utils";
+import { PublicProps } from "@planx/components/ui";
 import { FormikProps, useFormik } from "formik";
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 
 import {
   generateInitialValues,
   generateValidationSchema,
+  List,
   Schema,
   UserData,
 } from "../model";
@@ -17,7 +25,8 @@ interface ListContextValue {
   editItem: (index: number) => void;
   cancelEditItem: () => void;
   formik: FormikProps<UserData>;
-  handleSubmit: () => void;
+  validateAndSubmitForm: () => void;
+  listProps: PublicProps<List>;
   errors: {
     addItem: boolean;
     unsavedItem: boolean;
@@ -26,17 +35,13 @@ interface ListContextValue {
   };
 }
 
-interface ListProviderProps {
-  children: ReactNode;
-  schema: Schema;
-}
+type ListProviderProps = PropsWithChildren<PublicProps<List>>;
 
 const ListContext = createContext<ListContextValue | undefined>(undefined);
 
-export const ListProvider: React.FC<ListProviderProps> = ({
-  children,
-  schema,
-}) => {
+export const ListProvider: React.FC<ListProviderProps> = (props) => {
+  const { schema, children, handleSubmit } = props;
+
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const [addItemError, setAddItemError] = useState<boolean>(false);
@@ -91,7 +96,7 @@ export const ListProvider: React.FC<ListProviderProps> = ({
     );
   };
 
-  const handleSubmit = () => {
+  const validateAndSubmitForm = () => {
     // Do not allow submissions with an unsaved item
     if (activeIndex !== -1) return setUnsavedItemError(true);
 
@@ -113,8 +118,7 @@ export const ListProvider: React.FC<ListProviderProps> = ({
       userData: schema.min ? [generateInitialValues(schema)] : [],
     },
     onSubmit: (values) => {
-      console.log("Submit!");
-      console.log({ values });
+      handleSubmit?.(makeData(props, values.userData));
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -128,11 +132,12 @@ export const ListProvider: React.FC<ListProviderProps> = ({
         addNewItem,
         saveItem,
         schema,
+        listProps: props,
         editItem,
         removeItem,
         cancelEditItem,
         formik,
-        handleSubmit,
+        validateAndSubmitForm,
         errors: {
           addItem: addItemError,
           unsavedItem: unsavedItemError,
