@@ -50,20 +50,11 @@ export const ListProvider: React.FC<ListProviderProps> = ({
     setUnsavedItemError(false);
   };
 
-  // const setAllFieldsTouched = () => {
-  //   Object.keys(formik.values.userData[activeIndex]).forEach((key) => {
-  //     formik.setFieldTouched(formik.values.userData[activeIndex][key], true);
-  //   });
-  // };
-
   const addNewItem = async () => {
     resetErrors();
 
     // Do not allow a new item to be added if there's still an active item
     if (activeIndex !== -1) return setAddItemError(true);
-
-    // await formik.validateForm();
-    // if (!formik.isValid) return;
 
     // Add new item, and set to active
     setAddItemError(false);
@@ -74,9 +65,9 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   const saveItem = async () => {
     resetErrors();
 
-    // setAllFieldsTouched(activeIndex);
-    await formik.validateForm();
-    if (formik.isValid) {
+    const errors = await formik.validateForm();
+    const isValid = !errors.userData?.length;
+    if (isValid) {
       setActiveIndex(-1);
       setAddItemError(false);
     }
