@@ -53,7 +53,7 @@ SET
   settings = EXCLUDED.settings,
   copied_from = EXCLUDED.copied_from,
   analytics_link = NULL,
-  status = EXCLUDED.status;
+  status = EXCLUDED.status,
   name = EXCLUDED.name;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
