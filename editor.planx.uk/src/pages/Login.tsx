@@ -45,6 +45,16 @@ const Login: React.FC = () => {
         >
           Login with Google
         </Link>
+        <Link
+          variant="body1"
+          color="#FFFFFF"
+          href={`${
+            process.env.REACT_APP_MICROSOFT_OAUTH_OVERRIDE ??
+            process.env.REACT_APP_API_URL
+          }/auth/microsoft`}
+        >
+          Login with Microsoft
+        </Link>
       </LoginContainer>
     </Wrapper>
   );
