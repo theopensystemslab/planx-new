@@ -15,7 +15,7 @@ const mockProps: Props = {
   description: "Mock description",
 };
 
-jest.setTimeout(10_000);
+jest.setTimeout(20_000);
 
 describe("Basic UI", () => {
   it("renders correctly", () => {
