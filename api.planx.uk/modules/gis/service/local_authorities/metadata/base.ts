@@ -14,8 +14,8 @@ type PlanningConstraintsBaseSchema = Record<string, PlanningConstraintConfig>;
 const baseSchema: PlanningConstraintsBaseSchema = {
   article4: {
     active: true,
-    neg: "is not subject to local permitted development restrictions (known as Article 4 directions)",
-    pos: "is subject to local permitted development restrictions (known as Article 4 directions)",
+    neg: "is not in an Article 4 direction area",
+    pos: "is in an Article 4 direction area",
     "digital-land-datasets": ["article-4-direction-area"],
     category: "General policy",
   },

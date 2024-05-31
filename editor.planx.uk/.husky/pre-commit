@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 . "$(dirname -- "$0")/_/husky.sh"
 cd editor.planx.uk
 npx lint-staged

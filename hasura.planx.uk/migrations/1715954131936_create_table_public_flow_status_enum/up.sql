@@ -10,9 +10,15 @@ COMMENT ON TABLE "public"."flow_status_enum" IS E'An enum for tracking the statu
 INSERT INTO "public"."flow_status_enum"("value", "comment") VALUES (E'online', null);
 INSERT INTO "public"."flow_status_enum"("value", "comment") VALUES (E'offline', null);
 
--- Add flow.status column
+-- Add new flow.status column without default value
 alter table "public"."flows" add column "status" text
- not null default 'offline';
+ not null;
+
+ -- Populate flows.status for all existing flows
+UPDATE "public"."flows" SET status = 'online';
+
+-- Set the default value for new rows
+ALTER TABLE "public"."flows" ALTER COLUMN "status" SET DEFAULT 'offline';
 
 alter table "public"."flows"
   add constraint "flows_status_fkey"
@@ -54,7 +60,7 @@ BEGIN
 
         -- Start new event
         INSERT INTO flow_status_history (flow_id, status, event_start)
-        VALUES (NEW.id, OLD.status, NOW());
+        VALUES (NEW.id, NEW.status, NOW());
 
     ELSIF (TG_OP = 'INSERT') THEN
         -- Start new event

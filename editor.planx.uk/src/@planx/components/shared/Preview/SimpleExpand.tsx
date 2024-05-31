@@ -34,7 +34,7 @@ const SimpleExpand: React.FC<PropsWithChildren<Props>> = ({
   const [show, setShow] = React.useState(false);
   return (
     <>
-      <Box mx={1}>
+      <Box>
         <StyledButton
           onClick={() => setShow(!show)}
           aria-expanded={show}

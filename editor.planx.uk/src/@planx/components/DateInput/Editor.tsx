@@ -72,6 +72,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
           <Box mt={2}>
             <InputRow>
               <DateInputUi
+                id={`${props.id}-min`}
                 label="min"
                 value={formik.values.min}
                 error={formik.errors.min}
@@ -84,6 +85,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
           <Box mt={2}>
             <InputRow>
               <DateInputUi
+                id={`${props.id}-max`}
                 label="max"
                 value={formik.values.max}
                 error={formik.errors.max}

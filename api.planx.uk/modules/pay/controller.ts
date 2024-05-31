@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Request } from "express";
 import { responseInterceptor } from "http-proxy-middleware";
-import { logPaymentStatus } from "../send/utils/helpers";
+import { logPaymentStatus } from "./helpers";
 import { usePayProxy } from "./proxy";
 import { $api } from "../../client";
 import { ServerError } from "../../errors";

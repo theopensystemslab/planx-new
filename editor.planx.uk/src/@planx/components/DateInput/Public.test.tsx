@@ -4,7 +4,7 @@ import React from "react";
 import { axe, setup } from "testUtils";
 
 import { ERROR_MESSAGE } from "../shared/constants";
-import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
+import { fillInFieldsUsingLabel } from "../shared/testHelpers";
 import DateInput from "./Public";
 
 test("submits a date", async () => {
@@ -21,10 +21,10 @@ test("submits a date", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Pizza Day");
 
-  await fillInFieldsUsingPlaceholder(user, {
-    DD: "22",
-    MM: "05",
-    YYYY: "2010",
+  await fillInFieldsUsingLabel(user, {
+    Day: "22",
+    Month: "05",
+    Year: "2010",
   });
 
   await user.click(screen.getByTestId("continue-button"));
@@ -103,7 +103,7 @@ test("allows user to type into input field and click continue", async () => {
     <DateInput title="Enter a date" handleSubmit={handleSubmit} />,
   );
 
-  const day = screen.getByPlaceholderText("DD");
+  const day = screen.getByLabelText("Day");
 
   await user.type(day, "2");
   // Trigger blur event
@@ -111,12 +111,12 @@ test("allows user to type into input field and click continue", async () => {
 
   expect(day).toHaveValue("02");
 
-  const month = screen.getByPlaceholderText("MM");
+  const month = screen.getByLabelText("Month");
   await user.type(month, "1");
   await user.type(month, "1");
   expect(month).toHaveValue("11");
 
-  const year = screen.getByPlaceholderText("YYYY");
+  const year = screen.getByLabelText("Year");
   await user.type(year, "1");
   await user.type(year, "9");
   await user.type(year, "9");
@@ -129,9 +129,9 @@ test("allows user to type into input field and click continue", async () => {
 test("date fields have a max length set", async () => {
   setup(<DateInput title="Enter a date" />);
 
-  const day = screen.getByPlaceholderText("DD") as HTMLInputElement;
-  const month = screen.getByPlaceholderText("MM") as HTMLInputElement;
-  const year = screen.getByPlaceholderText("YYYY") as HTMLInputElement;
+  const day = screen.getByLabelText("Day") as HTMLInputElement;
+  const month = screen.getByLabelText("Month") as HTMLInputElement;
+  const year = screen.getByLabelText("Year") as HTMLInputElement;
 
   expect(day.maxLength).toBe(2);
   expect(month.maxLength).toBe(2);
