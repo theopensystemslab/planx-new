@@ -7,6 +7,9 @@ import { setup } from "testUtils";
 
 import DateInputComponent from "./Editor";
 
+// double regular timeout for tests in this file, as they regularly timeout on CI
+jest.setTimeout(10000);
+
 const minError = "Min must be less than max";
 const maxError = "Max must be greater than min";
 const invalidError = "Enter a valid date in DD.MM.YYYY format";
