@@ -215,7 +215,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
               {
                 onClick: async () => {
                   const newName = prompt("New name", flow.name);
-                  if (newName && slugify(newName) !== flow.slug) {
+                  if (newName && newName !== flow.name) {
                     const newSlug = slugify(newName);
                     await client.mutate({
                       mutation: gql`
