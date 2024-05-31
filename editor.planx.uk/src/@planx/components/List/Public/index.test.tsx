@@ -123,7 +123,7 @@ describe("Basic UI", () => {
 describe("Building a list", () => {
   it("does not display a default item if the schema has no required minimum", () => {
     const mockWithMinZero = merge(cloneDeep(mockProps), { schema: { min: 0 } });
-    const { queryByRole, getByRole } = setup(
+    const { queryByRole, getByTestId } = setup(
       <ListComponent {...mockWithMinZero} />,
     );
 
@@ -135,9 +135,7 @@ describe("Building a list", () => {
     expect(activeListHeading).toBeNull();
 
     // Button is present allow additional items to be added
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    const addItemButton = getByTestId("list-add-button");
     expect(addItemButton).toBeInTheDocument();
     expect(addItemButton).not.toBeDisabled();
   });
@@ -161,26 +159,20 @@ describe("Building a list", () => {
   });
 
   test("Adding an item", async () => {
-    const { getAllByRole, getByRole, user } = setup(
+    const { getAllByTestId, getByTestId, user } = setup(
       <ListComponent {...mockProps} />,
     );
 
-    let cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    let cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
     await fillInResponse(user);
 
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    const addItemButton = getByTestId("list-add-button");
     await user.click(addItemButton);
 
     // Item successfully added
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(2);
 
     // Old item is inactive
@@ -199,15 +191,13 @@ describe("Building a list", () => {
 
   test("Editing an item", async () => {
     // Setup three cards
-    const { getAllByRole, getByRole, user } = setup(
+    const { getAllByTestId, getByTestId, user } = setup(
       <ListComponent {...mockProps} />,
     );
 
     await fillInResponse(user);
 
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    const addItemButton = getByTestId("list-add-button");
 
     await user.click(addItemButton);
     await fillInResponse(user);
@@ -215,9 +205,7 @@ describe("Building a list", () => {
     await user.click(addItemButton);
     await fillInResponse(user);
 
-    let cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    const cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(3);
 
     let [firstCard, secondCard, thirdCard] = cards;
@@ -244,10 +232,7 @@ describe("Building a list", () => {
     });
     await user.click(secondCardEditButton);
 
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
-    [firstCard, secondCard, thirdCard] = cards;
+    [firstCard, secondCard, thirdCard] = getAllByTestId(/list-card/);
 
     // Second card now editable
     expect(
@@ -257,14 +242,17 @@ describe("Building a list", () => {
 
   test("Removing an item when all cards are inactive", async () => {
     // Setup three cards
-    const { getAllByRole, getByRole, user, getByLabelText, queryAllByRole } =
-      setup(<ListComponent {...mockProps} />);
+    const {
+      getByTestId,
+      getAllByTestId,
+      user,
+      getByLabelText,
+      queryAllByTestId,
+    } = setup(<ListComponent {...mockProps} />);
 
     await fillInResponse(user);
 
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    const addItemButton = getByTestId("list-add-button");
 
     await user.click(addItemButton);
     await fillInResponse(user);
@@ -272,13 +260,10 @@ describe("Building a list", () => {
     await user.click(addItemButton);
     await fillInResponse(user);
 
-    let cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    let cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(3);
 
-    let [firstCard, secondCard] = cards;
-    const thirdCard = cards[2];
+    let [firstCard, secondCard, thirdCard] = cards;
 
     // Remove third card
     const thirdCardRemoveButton = within(thirdCard!).getByRole("button", {
@@ -286,14 +271,10 @@ describe("Building a list", () => {
     });
 
     await user.click(thirdCardRemoveButton);
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(2);
 
-    [firstCard, secondCard] = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    [firstCard, secondCard, thirdCard] = getAllByTestId(/list-card/);
 
     // Previous items remain inactive
     expect(
@@ -308,14 +289,10 @@ describe("Building a list", () => {
       name: /Remove/,
     });
     await user.click(secondCardRemoveButton);
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
-    [firstCard] = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    [firstCard] = getAllByTestId(/list-card/);
 
     // Previous items remain inactive
     expect(
@@ -327,9 +304,7 @@ describe("Building a list", () => {
       name: /Remove/,
     });
     await user.click(firstCardRemoveButton);
-    cards = queryAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    cards = queryAllByTestId(/list-card/);
     expect(cards).toHaveLength(0);
 
     // Add item back
@@ -342,21 +317,17 @@ describe("Building a list", () => {
 
   test("Removing an item when another card is active", async () => {
     // Setup two cards
-    const { getAllByRole, getByRole, user } = setup(
+    const { getAllByTestId, getByTestId, user } = setup(
       <ListComponent {...mockProps} />,
     );
 
     await fillInResponse(user);
 
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    const addItemButton = getByTestId("list-add-button");
 
     await user.click(addItemButton);
 
-    const [firstCard, secondCard] = getAllByRole("heading", { level: 2 }).map(
-      (el) => el.closest("div"),
-    );
+    const [firstCard, secondCard] = getAllByTestId(/list-card/);
 
     // Second card is active
     expect(
@@ -368,9 +339,7 @@ describe("Building a list", () => {
       name: /Remove/,
     });
     await user.click(firstCardRemoveButton);
-    const cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    const cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
     // First card is active
@@ -399,12 +368,10 @@ describe("Form validation and error handling", () => {
 describe("Payload generation", () => {
   it("generates a valid payload on submission", async () => {
     const handleSubmit = jest.fn();
-    const { getByRole, user } = setup(
+    const { getByTestId, user } = setup(
       <ListComponent {...mockProps} handleSubmit={handleSubmit} />,
     );
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    const addItemButton = getByTestId("list-add-button");
 
     await fillInResponse(user);
 
@@ -420,13 +387,11 @@ describe("Payload generation", () => {
 
 describe("Navigating back", () => {
   test("it pre-populates list correctly", async () => {
-    const { getAllByText, queryByLabelText, getAllByRole } = setup(
+    const { getAllByText, queryByLabelText, getAllByTestId } = setup(
       <ListComponent {...mockProps} previouslySubmittedData={mockPayload} />,
     );
 
-    const cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    const cards = getAllByTestId(/list-card/);
 
     // Two cards
     expect(cards).toHaveLength(2);

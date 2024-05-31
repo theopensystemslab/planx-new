@@ -70,7 +70,7 @@ const ActiveListCard: React.FC<{
     <ErrorWrapper
       error={errors.unsavedItem ? "Please save in order to continue" : ""}
     >
-      <ListCard>
+      <ListCard data-testid={`list-card-${index}`}>
         <Typography component="h2" variant="h3">
           {schema.type} {index + 1}
         </Typography>
@@ -100,7 +100,7 @@ const InactiveListCard: React.FC<{
   const { schema, formik, removeItem, editItem } = useListContext();
 
   return (
-    <ListCard>
+    <ListCard data-testid={`list-card-${i}`}>
       <Typography component="h2" variant="h3">
         {schema.type} {i + 1}
       </Typography>
@@ -179,6 +179,7 @@ const Root = () => {
               color="secondary"
               onClick={addNewItem}
               sx={{ width: "100%" }}
+              data-testid="list-add-button"
             >
               + Add a new {schema.type.toLowerCase()} type
             </Button>
