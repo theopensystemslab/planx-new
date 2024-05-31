@@ -15,6 +15,27 @@ const mockProps: Props = {
   description: "Mock description",
 };
 
+const mockPayload = {
+  data: {
+    mockFn: [
+      {
+        age: 10,
+        cuteness: "Very",
+        email: "richard.parker@pi.com",
+        name: "Richard Parker",
+        size: "Medium",
+      },
+      {
+        age: 10,
+        cuteness: "Very",
+        email: "richard.parker@pi.com",
+        name: "Richard Parker",
+        size: "Medium",
+      },
+    ],
+  },
+};
+
 jest.setTimeout(20_000);
 
 describe("Basic UI", () => {
@@ -393,31 +414,30 @@ describe("Payload generation", () => {
     await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalled();
-    expect(handleSubmit.mock.calls[0][0]).toMatchObject({
-      data: {
-        mockFn: [
-          {
-            age: 10,
-            cuteness: "Very",
-            email: "richard.parker@pi.com",
-            name: "Richard Parker",
-            size: "Medium",
-          },
-          {
-            age: 10,
-            cuteness: "Very",
-            email: "richard.parker@pi.com",
-            name: "Richard Parker",
-            size: "Medium",
-          },
-        ],
-      },
-    });
+    expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockPayload);
   });
 });
 
 describe("Navigating back", () => {
-  test.todo("it pre-populates list correctly");
+  test("it pre-populates list correctly", async () => {
+    const { getAllByText, queryByLabelText, getAllByRole } = setup(
+      <ListComponent {...mockProps} previouslySubmittedData={mockPayload} />,
+    );
+
+    const cards = getAllByRole("heading", { level: 2 }).map((el) =>
+      el.closest("div"),
+    );
+
+    // Two cards
+    expect(cards).toHaveLength(2);
+
+    // Both inactive
+    expect(queryByLabelText(/What's their name?/)).toBeNull();
+    expect(getAllByText(/What's their name?/)).toHaveLength(2);
+
+    // With the correct previous data
+    expect(getAllByText(/Richard Parker/)).toHaveLength(2);
+  });
 });
 
 /**

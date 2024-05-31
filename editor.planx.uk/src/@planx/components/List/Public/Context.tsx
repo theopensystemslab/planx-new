@@ -1,4 +1,7 @@
-import { makeData } from "@planx/components/shared/utils";
+import {
+  getPreviouslySubmittedData,
+  makeData,
+} from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
 import { FormikProps, useFormik } from "formik";
 import React, {
@@ -42,7 +45,9 @@ const ListContext = createContext<ListContextValue | undefined>(undefined);
 export const ListProvider: React.FC<ListProviderProps> = (props) => {
   const { schema, children, handleSubmit } = props;
 
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [activeIndex, setActiveIndex] = useState<number>(
+    props.previouslySubmittedData ? -1 : 0,
+  );
 
   const [addItemError, setAddItemError] = useState<boolean>(false);
   const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
@@ -111,11 +116,19 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
   };
 
   const cancelEditItem = () => setActiveIndex(-1);
+
   const editItem = (index: number) => setActiveIndex(index);
+
+  const getInitialValues = () => {
+    const previousValues = getPreviouslySubmittedData(props);
+    if (previousValues) return previousValues;
+
+    return schema.min ? [generateInitialValues(schema)] : [];
+  };
 
   const formik = useFormik<UserData>({
     initialValues: {
-      userData: schema.min ? [generateInitialValues(schema)] : [],
+      userData: getInitialValues(),
     },
     onSubmit: (values) => {
       handleSubmit?.(makeData(props, values.userData));
