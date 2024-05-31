@@ -86,7 +86,7 @@ function PlanningConstraintsComponent(props: Props) {
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell padding="checkbox">
+                    <TableCell>
                       <Checkbox
                         color="primary"
                         checked={true}
@@ -97,16 +97,16 @@ function PlanningConstraintsComponent(props: Props) {
                       />
                     </TableCell>
                     <TableCell sx={{ fontWeight: FONT_WEIGHT_BOLD }}>
-                      Constraint
+                      Constraints
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {availableDatasets
-                    .sort((a, b) => a.key.localeCompare(b.key))
+                    .sort((a, b) => a.val.localeCompare(b.val))
                     .map((dataset, i: number) => (
                       <TableRow key={i}>
-                        <TableCell padding="checkbox">
+                        <TableCell sx={{ verticalAlign: "top" }}>
                           <Checkbox
                             color="primary"
                             checked={true}
@@ -114,34 +114,29 @@ function PlanningConstraintsComponent(props: Props) {
                           />
                         </TableCell>
                         <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography variant="body2">
-                              {dataset.name}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              p={0.5}
-                              sx={{
-                                maxWidth: "fit-content",
-                                backgroundColor: "#f0f0f0",
-                                color: "#00000061",
-                                fontFamily: `"Source Code Pro", monospace;`,
-                              }}
-                            >
-                              {dataset.key}
-                            </Typography>
-                          </Box>
+                          <InputGroup>
+                            <InputRow>
+                              <Input
+                                format="large"
+                                name="text"
+                                value={dataset.text}
+                                disabled
+                              />
+                            </InputRow>
+                            <InputRow>
+                              <Input
+                                format="data"
+                                name="val"
+                                value={dataset.val}
+                                disabled
+                              />
+                            </InputRow>
+                          </InputGroup>
                           <Box>
                             <Typography
                               variant="body2"
                               color="GrayText"
-                              sx={{ fontSize: ".8em" }}
+                              sx={{ fontSize: ".8em", pb: 1 }}
                             >
                               {`via ${dataset.source}: ${dataset.datasets
                                 .filter(Boolean)
