@@ -118,9 +118,11 @@ export const generateValidationSchema = (schema: Schema) => {
   );
 
   const validationSchema = object().shape({
-    userData: array().of(fieldvalidationSchema),
-    // .min(schema.min, "You must provide at least ${schema.min} items"),
-    // .max(schema.max, "You can provide at most ${schema.max} items"),
+    userData: array()
+      .of(fieldvalidationSchema)
+      .min(schema.min, `You must provide at least ${schema.min} responses`),
+    // TODO: schema.max is optional so this is a little more tricky...
+    // .max(schema.max, `You can provide at most ${schema.max} items`),
   });
 
   return validationSchema;

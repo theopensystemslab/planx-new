@@ -127,10 +127,11 @@ const InactiveListCard: React.FC<{
 };
 
 const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
-  const { formik, activeIndex, schema, addNewItem } = useListContext();
+  const { formik, handleSubmit, activeIndex, schema, addNewItem } =
+    useListContext();
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={handleSubmit} isValid>
       <CardHeader
         title={title}
         description={description}
@@ -154,7 +155,6 @@ const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
 
 function ListComponent(props: Props) {
   // TODO: Validate min / max
-  // TODO: Validate user input against schema fields, track errors
   // TODO: On submit generate a payload
 
   return (
