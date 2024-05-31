@@ -76,16 +76,7 @@ const routes = compose(
           });
         }
 
-        const stateFlowID = useStore.getState().id;
-
-        const flowData = await fetchDraftFlattenedFlowData(flow.id);
-
-        useStore.getState().setFlow({
-          id: stateFlowID,
-          flow: flowData,
-          flowName: flow.name,
-          flowSlug: slug,
-        });
+        useStore.getState().setFlowSlug(slug);
         await useStore.getState().connectTo(flow.id);
       }
 
@@ -93,11 +84,11 @@ const routes = compose(
     }),
 
     "/members": lazy(() => import("./teamMembers")),
-  }),
+  })
 );
 
 const fetchDraftFlattenedFlowData = async (
-  flowId: string,
+  flowId: string
 ): Promise<FlowGraph> => {
   const url = `${process.env.REACT_APP_API_URL}/flows/${flowId}/flatten-data?draft=true`;
   try {
