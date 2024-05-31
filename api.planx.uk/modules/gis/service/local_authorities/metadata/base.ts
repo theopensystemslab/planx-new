@@ -91,7 +91,7 @@ const baseSchema: PlanningConstraintsBaseSchema = {
     active: true,
     neg: "is not, or is not within, a Listed Building",
     pos: "is, or is within, a Listed Building",
-    "digital-land-datasets": ["listed-building-outline"], // LPAs publish polygons, HE publishes points
+    "digital-land-datasets": ["listed-building", "listed-building-outline"], // HE published points, LPAs publish polygons
     category: "Heritage and conservation",
   },
   locallyListed: {

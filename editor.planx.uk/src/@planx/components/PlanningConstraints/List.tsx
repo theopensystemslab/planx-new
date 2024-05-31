@@ -186,10 +186,10 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               {props.value
                 ? `${
                     props.metadata?.plural || "Entities"
-                  } that intersect with your site:`
+                  } that intersect with your property:`
                 : `We did not find any ${
                     props.metadata?.plural?.toLowerCase() || "entities"
-                  } that apply to your site.`}
+                  } that apply to your property.`}
             </Typography>
             {props.value && (
               <List>
@@ -213,6 +213,20 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                 ))}
               </List>
             )}
+            {props.metadata?.plural !== "Classified roads" && (
+              <Typography variant="body2" my={2}>
+                {`See ${props.metadata?.plural?.toLowerCase()} ${
+                  props.value ? `at this property` : ``
+                } on the `}
+                <Link
+                  href={`https://www.planning.data.gov.uk/map/?dataset=${props.metadata?.dataset}#${latitude},${longitude},17.5z`}
+                  target="_blank"
+                >
+                  Planning Data map
+                </Link>
+                {` (opens in a new tab).`}
+              </Typography>
+            )}
             {props.metadata?.text && props.metadata.text !== emptyContent && (
               <Typography variant="body2" component="div">
                 <HelpButton
@@ -233,15 +247,15 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             )}
             <MoreInfo open={open} handleClose={() => setOpen(false)}>
               <MoreInfoSection title="Source">
-                <Typography variant="body2" mb={2}>
-                  {props.key === "road.classified" ? (
+                <Typography variant="body2">
+                  {props.metadata?.plural === "Classified roads" ? (
                     `Ordnance Survey MasterMap Highways`
                   ) : (
                     <Link
-                      href={`https://www.planning.data.gov.uk/map/?dataset=${props.metadata?.dataset}#${latitude},${longitude},17.5z`}
+                      href={`https://www.planning.data.gov.uk/`}
                       target="_blank"
                     >
-                      Planning Data map
+                      Planning Data
                     </Link>
                   )}
                 </Typography>
