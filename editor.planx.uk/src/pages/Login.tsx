@@ -56,10 +56,9 @@ const Login: React.FC = () => {
         <LoginButton
           variant="contained"
           color="secondary"
-          href={`${
-            process.env.REACT_APP_GOOGLE_OAUTH_OVERRIDE ??
+          href={`${process.env.REACT_APP_GOOGLE_OAUTH_OVERRIDE ??
             process.env.REACT_APP_API_URL
-          }/auth/google`}
+            }/auth/google`}
         >
           <Box component="span">
             <GoogleIcon />
@@ -70,13 +69,14 @@ const Login: React.FC = () => {
           disabled
           variant="contained"
           color="secondary"
-          href={`...`}
+          href={`${process.env.REACT_APP_MICROSOFT_OAUTH_OVERRIDE ??
+            process.env.REACT_APP_API_URL
+            }/auth/microsoft`}
         >
           <Box component="span">
             <MicrosoftIcon />
             Continue with Microsoft
           </Box>
-          (coming soon)
         </LoginButton>
       </LoginContainer>
     </Wrapper>

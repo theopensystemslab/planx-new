@@ -123,6 +123,19 @@ export const useGoogleCallbackAuth: RequestHandler = (req, res, next) => {
   })(req, res, next);
 };
 
+export const useMicrosoftAuth: RequestHandler = (req, res, next) => {
+  req.session!.returnTo = req.get("Referrer");
+  return passport.authenticate("microsoft-oidc", {
+    prompt: "select_account",
+  })(req, res, next);
+};
+
+export const useMicrosoftCallbackAuth: RequestHandler = (req, res, next) => {
+  return passport.authenticate("microsoft-oidc", {
+    failureRedirect: "/auth/login/failed",
+  })(req, res, next);
+};
+
 type UseRoleAuth = (authRoles: Role[]) => RequestHandler;
 
 /**

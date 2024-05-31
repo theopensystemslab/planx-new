@@ -15,6 +15,11 @@ import { ServerError } from "./errors";
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
 import { googleStrategy } from "./modules/auth/strategy/google";
+import {
+  getMicrosoftIssuer,
+  getMicrosoftOidcStrategy,
+} from "./modules/auth/strategy/microsoft-oidc";
+import { Issuer } from "openid-client";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import miscRoutes from "./modules/misc/routes";
@@ -116,6 +121,11 @@ app.use(
   }),
 );
 
+// we have to fetch the Microsoft OpenID issuer to pass to our strategy constructor
+// TODO: handle failure to fetch issuer
+getMicrosoftIssuer().then((microsoftIssuer: Issuer) => {
+  passport.use("microsoft-oidc", getMicrosoftOidcStrategy(microsoftIssuer));
+});
 passport.use("google", googleStrategy);
 
 passport.serializeUser(function (user, cb) {
