@@ -137,7 +137,7 @@ export type Props = EditorProps<TYPES.Pay, Pay>;
 
 const Component: React.FC<Props> = (props: Props) => {
   const [flowName] = useStore((store) => [store.flowName]);
-
+  console.log(flowName);
   const initialValues: Pay = {
     title: props.node?.data?.title || "Pay for your application",
     bannerTitle:
@@ -188,6 +188,8 @@ const Component: React.FC<Props> = (props: Props) => {
       props.handleSubmit({ type: TYPES.Pay, data: newValues });
     }
   };
+
+  console.log(flowName);
 
   return (
     <Formik<Pay>

@@ -34,7 +34,7 @@ export interface SharedStore extends Store.Store {
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
   setFlowSlug: (flowSlug: string) => void;
-  setFlowName: (flowSlug: string) => void;
+  setFlowName: (flowName: string) => void;
   $public: (auth?: Auth) => CoreDomainClient;
   $client: CoreDomainClient;
 }
@@ -91,8 +91,7 @@ export const sharedStore: StateCreator<
   },
 
   setFlow({ id, flow, flowSlug, flowName }) {
-    this.setFlowName(flowName);
-    set({ id, flow, flowSlug });
+    set({ id, flow, flowSlug, flowName });
     get().initNavigationStore();
   },
 

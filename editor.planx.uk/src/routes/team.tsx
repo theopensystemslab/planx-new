@@ -50,6 +50,7 @@ const routes = compose(
                 }
               ) {
                 id
+                name
               }
             }
           `,
@@ -66,6 +67,7 @@ const routes = compose(
         }
 
         useStore.getState().setFlowSlug(slug);
+        useStore.getState().setFlowName(flow.name);
         await useStore.getState().connectTo(flow.id);
       }
 
