@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
 import { NumberInput, numberInputValidationSchema } from "../NumberInput/model";
@@ -77,7 +78,7 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   title: data?.title,
   description: data?.description,
   schemaName: data?.schemaName || SCHEMAS[0].name,
-  schema: data?.schema || SCHEMAS[0].schema,
+  schema: cloneDeep(data?.schema) || SCHEMAS[0].schema,
   ...parseMoreInformation(data),
 });
 
@@ -118,11 +119,7 @@ export const generateValidationSchema = (schema: Schema) => {
   );
 
   const validationSchema = object().shape({
-    userData: array()
-      .of(fieldvalidationSchema)
-      .min(schema.min, `You must provide at least ${schema.min} responses`),
-    // TODO: schema.max is optional so this is a little more tricky...
-    // .max(schema.max, `You can provide at most ${schema.max} items`),
+    userData: array().of(fieldvalidationSchema),
   });
 
   return validationSchema;

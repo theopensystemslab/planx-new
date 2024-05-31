@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import InputRow from "ui/shared/InputRow";
 
 import Card from "../../shared/Preview/Card";
@@ -63,29 +64,33 @@ const InputField: React.FC<Field> = (props) => {
 const ActiveListCard: React.FC<{
   index: number;
 }> = ({ index }) => {
-  const { schema, saveItem, cancelEditItem } = useListContext();
+  const { schema, saveItem, cancelEditItem, errors } = useListContext();
 
   return (
-    <ListCard>
-      <Typography component="h2" variant="h3">
-        {schema.type} {index + 1}
-      </Typography>
-      {schema.fields.map((field, i) => (
-        <InputRow key={i}>
-          <InputField {...field} />
-        </InputRow>
-      ))}
-      <Box display="flex" gap={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={async () => await saveItem()}
-        >
-          Save
-        </Button>
-        <Button onClick={cancelEditItem}>Cancel</Button>
-      </Box>
-    </ListCard>
+    <ErrorWrapper
+      error={errors.unsavedItem ? "Please save in order to continue" : ""}
+    >
+      <ListCard>
+        <Typography component="h2" variant="h3">
+          {schema.type} {index + 1}
+        </Typography>
+        {schema.fields.map((field, i) => (
+          <InputRow key={i}>
+            <InputField {...field} />
+          </InputRow>
+        ))}
+        <Box display="flex" gap={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={async () => await saveItem()}
+          >
+            Save
+          </Button>
+          <Button onClick={cancelEditItem}>Cancel</Button>
+        </Box>
+      </ListCard>
+    </ErrorWrapper>
   );
 };
 
@@ -127,8 +132,13 @@ const InactiveListCard: React.FC<{
 };
 
 const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
-  const { formik, handleSubmit, activeIndex, schema, addNewItem } =
+  const { formik, handleSubmit, activeIndex, schema, addNewItem, errors } =
     useListContext();
+
+  const rootError: string =
+    (errors.min && `You must provide at least ${schema.min} response(s)`) ||
+    (errors.max && `You can provide at most ${schema.max} response(s)`) ||
+    "";
 
   return (
     <Card handleSubmit={handleSubmit} isValid>
@@ -139,16 +149,33 @@ const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
         policyRef={policyRef}
         howMeasured={howMeasured}
       />
-      {formik.values.userData.map((_, i) =>
-        i === activeIndex ? (
-          <ActiveListCard key={`card-${i}`} index={i} />
-        ) : (
-          <InactiveListCard key={`card-${i}`} index={i} />
-        ),
-      )}
-      <Button variant="contained" color="secondary" onClick={addNewItem}>
-        + Add a new {schema.type.toLowerCase()} type
-      </Button>
+      <ErrorWrapper error={rootError}>
+        <>
+          {formik.values.userData.map((_, i) =>
+            i === activeIndex ? (
+              <ActiveListCard key={`card-${i}`} index={i} />
+            ) : (
+              <InactiveListCard key={`card-${i}`} index={i} />
+            ),
+          )}
+          <ErrorWrapper
+            error={
+              errors.addItem
+                ? `Please save all responses before adding a new ${schema.type.toLowerCase()}`
+                : ""
+            }
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={addNewItem}
+              sx={{ width: "100%" }}
+            >
+              + Add a new {schema.type.toLowerCase()} type
+            </Button>
+          </ErrorWrapper>
+        </>
+      </ErrorWrapper>
     </Card>
   );
 };
