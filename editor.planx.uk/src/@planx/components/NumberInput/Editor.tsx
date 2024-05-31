@@ -70,7 +70,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
               <Input
                 name="units"
                 value={formik.values.units}
-                placeholder="e.g. square meters"
+                placeholder="eg square metres"
                 onChange={formik.handleChange}
               />
             </InputRowItem>
