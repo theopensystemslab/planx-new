@@ -1,6 +1,4 @@
 import { compose, map, mount, route, withData, withView } from "navi";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { OfflinePage } from "pages/OfflinePage";
 import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
 import React from "react";
@@ -26,21 +24,9 @@ const routes = compose(
   }),
 
   mount({
-    "/": route((req) => ({
-      view: () => {
-        const isFlowOnline = useStore.getState().flowStatus === "online";
-        const isUserResuming = Boolean(req.params.sessionId);
-
-        // Allow users to complete Save & Return journeys, even if a flow is offline
-        const isFlowAccessible = isFlowOnline || isUserResuming;
-
-        return isFlowAccessible ? (
-          <Questions previewEnvironment="standalone" />
-        ) : (
-          <OfflinePage />
-        );
-      },
-    })),
+    "/": route({
+      view: <Questions previewEnvironment="standalone" />,
+    }),
     "/pages/:page": map((req) => {
       return route({
         view: () => <ContentPage page={req.params.page} />,

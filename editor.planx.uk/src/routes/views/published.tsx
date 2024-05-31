@@ -4,6 +4,7 @@ import { NaviRequest } from "navi";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
+import OfflineLayout from "pages/layout/OfflineLayout";
 import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
@@ -55,9 +56,11 @@ export const publishedView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <SaveAndReturnLayout>
-        <View />
-      </SaveAndReturnLayout>
+      <OfflineLayout>
+        <SaveAndReturnLayout>
+          <View />
+        </SaveAndReturnLayout>
+      </OfflineLayout>
     </PublicLayout>
   );
 };
