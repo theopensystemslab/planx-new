@@ -42,6 +42,7 @@ export type NumberField = {
 export type QuestionField = {
   type: "question";
   required?: boolean;
+  unique?: boolean;
   data: QuestionInput & { fn: string };
 };
 
