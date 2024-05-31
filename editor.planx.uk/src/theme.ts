@@ -457,7 +457,7 @@ const getThemeOptions = ({
               color: palette.text.primary,
               border: "2px solid currentcolor",
               borderRadius: "50%",
-              background: "rgba(0,0,0,0)",
+              backgroundColor: "#FFF",
             },
             "&::after": {
               // Styles for radio icon dot

@@ -181,7 +181,6 @@ const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
 };
 
 function ListComponent(props: Props) {
-  // TODO: Validate min / max
   // TODO: On submit generate a payload
 
   return (

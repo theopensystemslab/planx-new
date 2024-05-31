@@ -100,7 +100,6 @@ export const ListProvider: React.FC<ListProviderProps> = ({
       return setMinError(true);
     }
     if (schema.max && formik.values.userData.length > schema.max) {
-      console.log("setting max error");
       return setMaxError(true);
     }
     formik.handleSubmit();
@@ -110,7 +109,9 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   const editItem = (index: number) => setActiveIndex(index);
 
   const formik = useFormik<UserData>({
-    initialValues: { userData: [generateInitialValues(schema)] },
+    initialValues: {
+      userData: schema.min ? [generateInitialValues(schema)] : [],
+    },
     onSubmit: (values) => {
       console.log("Submit!");
       console.log({ values });
