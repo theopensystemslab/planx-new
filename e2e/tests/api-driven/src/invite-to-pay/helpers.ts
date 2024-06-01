@@ -45,6 +45,7 @@ export async function buildITPFlow({
   const flowId: string = await $admin.flow.create({
     teamId,
     slug: `test-invite-to-pay-flow-with-send-to-${destination.toLowerCase()}`,
+    status: "online",
     data: flowGraph,
   });
   const publishedFlowId = await $admin.flow.publish({

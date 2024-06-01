@@ -74,6 +74,7 @@ export async function setUpTestContext(
       slug: context.flow.slug,
       teamId: context.team.id,
       data: context.flow!.data!,
+      status: "online",
     });
     context.flow.publishedId = await $admin.flow.publish({
       flow: {
