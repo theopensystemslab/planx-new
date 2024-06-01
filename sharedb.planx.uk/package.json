@@ -8,7 +8,7 @@
     "jsdom": "^24.0.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.11.3",
-    "sharedb": "^4.1.1",
+    "sharedb": "^5.0.1",
     "ws": "^8.17.0"
   },
   "scripts": {
