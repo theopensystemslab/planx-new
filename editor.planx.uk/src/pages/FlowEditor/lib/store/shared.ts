@@ -1,5 +1,6 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Auth } from "@opensystemslab/planx-core/dist/requests/graphql";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { capitalize } from "lodash";
 import { removeSessionIdSearchParam } from "utils";
@@ -24,11 +25,13 @@ export interface SharedStore extends Store.Store {
     flow,
     flowSlug,
     flowName,
+    flowStatus,
   }: {
     id?: string;
     flow?: Store.flow;
     flowSlug?: string;
     flowName?: string;
+    flowStatus?: FlowStatus;
   }) => void;
   wasVisited: (id: Store.nodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
@@ -90,8 +93,8 @@ export const sharedStore: StateCreator<
     removeSessionIdSearchParam();
   },
 
-  setFlow({ id, flow, flowSlug, flowName }) {
-    set({ id, flow, flowSlug, flowName });
+  setFlow({ id, flow, flowSlug, flowName, flowStatus }) {
+    set({ id, flow, flowSlug, flowName, flowStatus });
     get().initNavigationStore();
   },
 
@@ -100,7 +103,7 @@ export const sharedStore: StateCreator<
       Object.entries(get().breadcrumbs).flatMap(([id, { answers }]) => [
         id,
         ...(answers || []),
-      ]),
+      ])
     ).has(id);
   },
 

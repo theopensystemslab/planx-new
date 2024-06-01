@@ -1,10 +1,17 @@
 - table:
     name: analytics
     schema: public
+  object_relationships:
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
   insert_permissions:
     - role: public
       permission:
-        check: {}
+        check:
+          flow:
+            status:
+              _eq: online
         columns:
           - created_at
           - flow_id
@@ -23,15 +30,26 @@
       permission:
         columns:
           - ended_at
-        filter: {}
+        filter:
+          flow:
+            status:
+              _eq: online
         check: null
 - table:
     name: analytics_logs
     schema: public
+  object_relationships:
+    - name: analytic
+      using:
+        foreign_key_constraint_on: analytics_id
   insert_permissions:
     - role: public
       permission:
-        check: {}
+        check:
+          analytic:
+            flow:
+              status:
+                _eq: online
         columns:
           - analytics_id
           - created_at
@@ -65,7 +83,11 @@
           - metadata
           - next_log_created_at
           - user_exit
-        filter: {}
+        filter:
+          analytic:
+            flow:
+              status:
+                _eq: online
         check: null
 - table:
     name: analytics_summary

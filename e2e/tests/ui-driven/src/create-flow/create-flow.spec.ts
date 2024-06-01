@@ -179,6 +179,54 @@ test.describe("Navigation", () => {
     await expect(previewLink).toBeVisible();
   });
 
+  test("Cannot preview an offline flow", async ({
+    browser,
+  }: {
+    browser: Browser;
+  }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    await page.goto(
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
+    );
+
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Offline" }),
+    ).toBeVisible();
+  });
+
+  test("Turn a flow online", async ({ browser }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
+
+    // Open flow settings
+    // TODO: Access via sidebar when EDITOR_NAVIGATION flag is removed
+    page.getByLabel("Toggle Menu").click();
+    page.getByText("Flow Settings").click();
+
+    // Toggle flow online
+    page.getByLabel("Offline").click();
+    page.getByRole("button", { name: "Save", disabled: false }).click();
+    await expect(
+      page.getByText("Service settings updated successfully"),
+    ).toBeVisible();
+
+    // Exit back to main Editor page
+    page.getByRole("link", { name: "Close" }).click();
+
+    const previewLink = page.getByRole("link", {
+      name: "Open published service",
+    });
+    await expect(previewLink).toBeVisible();
+  });
+
   test("Can preview a published flow", async ({
     browser,
   }: {

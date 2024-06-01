@@ -1,4 +1,5 @@
 import {
+  FlowStatus,
   GovUKPayment,
   NotifyPersonalisation,
   Team,
@@ -19,6 +20,7 @@ export interface Flow {
   name: string;
   team: Team;
   settings?: FlowSettings;
+  status?: FlowStatus;
 }
 export interface GlobalSettings {
   footerContent?: { [key: string]: TextContent };

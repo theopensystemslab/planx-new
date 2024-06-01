@@ -4,6 +4,7 @@ import { NaviRequest } from "navi";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
+import OfflineLayout from "pages/layout/OfflineLayout";
 import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
@@ -45,8 +46,11 @@ export const publishedView = async (req: NaviRequest) => {
   // load pre-flattened published flow if exists, else load & flatten flow
   state.setFlow({
     id: flow.id,
+
     flow: publishedFlow,
+
     flowSlug,
+    flowStatus: flow.status,
     flowName: flow.name,
   });
   state.setGlobalSettings(data.globalSettings[0]);
@@ -55,16 +59,18 @@ export const publishedView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <SaveAndReturnLayout>
-        <View />
-      </SaveAndReturnLayout>
+      <OfflineLayout>
+        <SaveAndReturnLayout>
+          <View />
+        </SaveAndReturnLayout>
+      </OfflineLayout>
     </PublicLayout>
   );
 };
 
 export const fetchSettingsForPublishedView = async (
   flowSlug: string,
-  teamSlug: string,
+  teamSlug: string
 ): Promise<PublishedViewSettings> => {
   try {
     const result = await publicClient.query({
@@ -100,6 +106,7 @@ export const fetchSettingsForPublishedView = async (
               boundaryBBox: boundary_bbox
             }
             settings
+            status
             publishedFlows: published_flows(
               limit: 1
               order_by: { created_at: desc }
