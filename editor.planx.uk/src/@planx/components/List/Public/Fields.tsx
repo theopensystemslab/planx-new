@@ -3,6 +3,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
+import { Option } from "@planx/components/shared";
 import { getIn } from "formik";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
@@ -26,7 +27,10 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({
   const { formik, activeIndex } = useListContext();
 
   return (
-    <InputLabel label={data.title} htmlFor={id}>
+    <InputLabel
+      label={required === false ? data.title + " (optional)" : data.title}
+      htmlFor={id}
+    >
       <Input
         type={((type) => {
           if (type === "email") return "email";
@@ -70,7 +74,10 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
   const { formik, activeIndex } = useListContext();
 
   return (
-    <InputLabel label={data.title} htmlFor={id}>
+    <InputLabel
+      label={required === false ? data.title + " (optional)" : data.title}
+      htmlFor={id}
+    >
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <Input
           required={required}
@@ -104,6 +111,7 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
 export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
   id,
   data,
+  required,
 }) => {
   const { formik, activeIndex } = useListContext();
 
@@ -119,7 +127,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
           },
         })}
       >
-        {data.title}
+        {required === false ? data.title + " (optional)" : data.title}
       </FormLabel>
       <ErrorWrapper
         id={`${id}-error`}
@@ -145,15 +153,25 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
   );
 };
 
-export const SelectFieldInput: React.FC<Props<QuestionField>> = ({
-  id,
-  data,
-  required,
-}) => {
+export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { formik, activeIndex } = useListContext();
+  const { id, data, required } = props;
+
+  const isDisabled = (option: Option) => {
+    if (!props.unique) return false;
+
+    const existingValues = formik.values.userData
+      .map((response) => response[data.fn])
+      .filter((value) => value === option.data.text);
+
+    return existingValues.includes(option.data.text);
+  };
 
   return (
-    <InputLabel label={data.title} id={`select-label-${id}`}>
+    <InputLabel
+      label={required === false ? data.title + " (optional)" : data.title}
+      id={`select-label-${id}`}
+    >
       <ErrorWrapper
         id={`${id}-error`}
         error={getIn(formik.errors, `userData[${activeIndex}][${data.fn}]`)}
@@ -168,7 +186,11 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = ({
           name={`userData[${activeIndex}][${data.fn}]`}
         >
           {data.options.map((option) => (
-            <MenuItem key={option.id} value={option.data.text}>
+            <MenuItem
+              key={option.id}
+              value={option.data.text}
+              disabled={isDisabled(option)}
+            >
               {option.data.text}
             </MenuItem>
           ))}
