@@ -83,7 +83,11 @@ const getDetailedFeedback = async (feedbackId: number) => {
     query: GET_FEEDBACK_BY_ID_QUERY,
     variables: { feedbackId },
   });
-  return detailedFeedback;
+  return {
+    ...detailedFeedback,
+    where: `${detailedFeedback.nodeType} — ${detailedFeedback.nodeTitle}`,
+    browserPlatform: `${detailedFeedback.browser} / ${detailedFeedback.platform}`,
+  };
 };
 
 type FeedbackType =
@@ -122,10 +126,8 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
     "userComment",
     "address",
     "projectType",
-    "nodeTitle",
-    "nodeType",
-    "browser",
-    "platform",
+    "where",
+    "browserPlatform",
   ];
 
   return (
@@ -212,6 +214,16 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
     }
   })();
 
+  const labelMap: Record<string, string> = {
+    userComment: item.type === "issue" ? "What went wrong?" : "User comment",
+    address: "Project address",
+    projectType: "Project type",
+    where: "Where",
+    browserPlatform: "Browser / platform",
+    helpText: "Help text (more information)",
+    userContext: "What were you doing?",
+  };
+
   return (
     <React.Fragment>
       <TableRow key={item.id}>
@@ -247,19 +259,18 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
             }}
           >
             <DetailedFeedback>
-              <SummaryListTable sx={{ margin: "0" }}>
+              <SummaryListTable sx={{ margin: "0", rowGap: "5px" }}>
                 {detailedFeedback &&
-                  filteredFeedbackItems.map(
-                    (key, index) =>
-                      detailedFeedback[key] !== undefined && (
-                        <React.Fragment key={index}>
-                          <Box component="dt">{key}</Box>
-                          <Box component="dd">
-                            {String(detailedFeedback[key])}
-                          </Box>
-                        </React.Fragment>
-                      ),
-                  )}
+                  filteredFeedbackItems
+                    .filter((key) => detailedFeedback[key] !== null)
+                    .map((key, index) => (
+                      <React.Fragment key={index}>
+                        <Box component="dt">{labelMap[key]}</Box>
+                        <Box component="dd">
+                          {String(detailedFeedback[key])}
+                        </Box>
+                      </React.Fragment>
+                    ))}
               </SummaryListTable>
             </DetailedFeedback>
           </Collapse>
