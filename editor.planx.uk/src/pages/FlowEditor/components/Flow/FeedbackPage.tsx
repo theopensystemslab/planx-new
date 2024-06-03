@@ -95,8 +95,8 @@ const getDetailedFeedback = async (feedbackId: number) => {
     detailedFeedback.helpDefinition || ""
   } ${detailedFeedback.helpSources || ""}`.trim();
   const truncatedHelpText =
-    combinedHelpText.length > 80
-      ? `${combinedHelpText.slice(0, 80)}...`
+    combinedHelpText.length > 65
+      ? `${combinedHelpText.slice(0, 65)}...`
       : combinedHelpText;
 
   return {
