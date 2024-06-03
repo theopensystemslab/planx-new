@@ -42,8 +42,8 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   csv-stringify:
-    specifier: ^6.4.5
-    version: 6.4.5
+    specifier: ^6.5.0
+    version: 6.5.0
   date-fns:
     specifier: ^3.3.1
     version: 3.3.1
@@ -3267,8 +3267,8 @@ packages:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
     dev: false
 
-  /csv-stringify@6.4.5:
-    resolution: {integrity: sha512-SPu1Vnh8U5EnzpNOi1NDBL5jU5Rx7DVHr15DNg9LXDTAbQlAVAmEbVt16wZvEW9Fu9Qt4Ji8kmeCJ2B1+4rFTQ==}
+  /csv-stringify@6.5.0:
+    resolution: {integrity: sha512-edlXFVKcUx7r8Vx5zQucsuMg4wb/xT6qyz+Sr1vnLrdXqlLD1+UKyWNyZ9zn6mUW1ewmGxrpVwAcChGF0HQ/2Q==}
     dev: false
 
   /d@1.0.2:
