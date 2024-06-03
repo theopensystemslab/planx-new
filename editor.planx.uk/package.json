@@ -33,7 +33,7 @@
     "@tiptap/extension-text": "^2.1.13",
     "@tiptap/html": "^2.0.3",
     "@tiptap/pm": "^2.0.3",
-    "@tiptap/react": "^2.0.3",
+    "@tiptap/react": "^2.4.0",
     "@tiptap/suggestion": "^2.0.3",
     "@turf/area": "^6.5.0",
     "@turf/buffer": "^6.5.0",
