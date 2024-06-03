@@ -80,8 +80,8 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.4.0)
   '@tiptap/extension-mention':
-    specifier: ^2.1.13
-    version: 2.1.13(@tiptap/core@2.4.0)(@tiptap/pm@2.0.3)(@tiptap/suggestion@2.0.3)
+    specifier: ^2.4.0
+    version: 2.4.0(@tiptap/core@2.4.0)(@tiptap/pm@2.0.3)(@tiptap/suggestion@2.0.3)
   '@tiptap/extension-ordered-list':
     specifier: ^2.1.13
     version: 2.1.13(@tiptap/core@2.4.0)
@@ -7573,8 +7573,8 @@ packages:
       '@tiptap/core': 2.4.0(@tiptap/pm@2.0.3)
     dev: false
 
-  /@tiptap/extension-mention@2.1.13(@tiptap/core@2.4.0)(@tiptap/pm@2.0.3)(@tiptap/suggestion@2.0.3):
-    resolution: {integrity: sha512-OYqaucyBiCN/CmDYjpOVX74RJcIEKmAqiZxUi8Gfaq7ryEO5a8Gk93nK+8uZ0onaqHE+mHpoLFFbcAFbOPgkUQ==}
+  /@tiptap/extension-mention@2.4.0(@tiptap/core@2.4.0)(@tiptap/pm@2.0.3)(@tiptap/suggestion@2.0.3):
+    resolution: {integrity: sha512-7BqCNfqF1Mv9IrtdlHADwXMFo968UNmthf/TepVXC7EX2Ke6/Y4vvxmpYVNZc55FdswFwpVyZ2VeXBj3AC2JcA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
