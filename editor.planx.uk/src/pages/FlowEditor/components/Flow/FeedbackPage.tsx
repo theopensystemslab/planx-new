@@ -25,6 +25,7 @@ import { client } from "lib/graphql";
 import React, { useState } from "react";
 import { Feedback } from "routes/feedback";
 import EditorRow from "ui/editor/EditorRow";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 interface Props {
   feedback: Feedback[];
@@ -43,6 +44,12 @@ const DetailedFeedback = styled(Box)(({ theme }) => ({
   margin: 1,
   maxWidth: "100%",
   padding: theme.spacing(2, 1),
+}));
+
+const StyledSummaryListTable = styled(SummaryListTable)(() => ({
+  "& p": {
+    margin: 0,
+  },
 }));
 
 const GET_FEEDBACK_BY_ID_QUERY = gql`
@@ -83,7 +90,17 @@ const getDetailedFeedback = async (feedbackId: number) => {
     query: GET_FEEDBACK_BY_ID_QUERY,
     variables: { feedbackId },
   });
+
+  const combinedHelpText = `${detailedFeedback.helpText || ""} ${
+    detailedFeedback.helpDefinition || ""
+  } ${detailedFeedback.helpSources || ""}`.trim();
+  const truncatedHelpText =
+    combinedHelpText.length > 80
+      ? `${combinedHelpText.slice(0, 80)}...`
+      : combinedHelpText;
+
   return {
+    combinedHelp: truncatedHelpText,
     ...detailedFeedback,
     where: `${detailedFeedback.nodeType} — ${detailedFeedback.nodeTitle}`,
     browserPlatform: `${detailedFeedback.browser} / ${detailedFeedback.platform}`,
@@ -208,7 +225,7 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
         return ["userContext", ...item.displayFeedbackItems];
       case "helpful":
       case "unhelpful":
-        return ["helpText", ...item.displayFeedbackItems];
+        return ["combinedHelp", ...item.displayFeedbackItems];
       default:
         return item.displayFeedbackItems;
     }
@@ -220,8 +237,15 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
     projectType: "Project type",
     where: "Where",
     browserPlatform: "Browser / platform",
-    helpText: "Help text (more information)",
+    combinedHelp: "Help text (more information)",
     userContext: "What were you doing?",
+  };
+
+  const renderContent = (key: string, value: any) => {
+    if (key === "combinedHelp" && value) {
+      return <ReactMarkdownOrHtml source={value} openLinksOnNewTab />;
+    }
+    return <span>{String(value)}</span>;
   };
 
   return (
@@ -259,7 +283,7 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
             }}
           >
             <DetailedFeedback>
-              <SummaryListTable sx={{ margin: "0", rowGap: "5px" }}>
+              <StyledSummaryListTable sx={{ margin: "0", rowGap: "5px" }}>
                 {detailedFeedback &&
                   filteredFeedbackItems
                     .filter((key) => detailedFeedback[key] !== null)
@@ -267,11 +291,11 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
                       <React.Fragment key={index}>
                         <Box component="dt">{labelMap[key]}</Box>
                         <Box component="dd">
-                          {String(detailedFeedback[key])}
+                          {renderContent(key, detailedFeedback[key])}
                         </Box>
                       </React.Fragment>
                     ))}
-              </SummaryListTable>
+              </StyledSummaryListTable>
             </DetailedFeedback>
           </Collapse>
         </TableCell>
