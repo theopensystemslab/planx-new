@@ -111,8 +111,8 @@ dependencies:
     specifier: ^3.3.7
     version: 3.3.7
   notifications-node-client:
-    specifier: ^8.0.0
-    version: 8.0.0
+    specifier: ^8.1.0
+    version: 8.1.0
   passport:
     specifier: ^0.5.3
     version: 0.5.3
@@ -5718,6 +5718,7 @@ packages:
       chalk: 3.0.0
       diff-match-patch: 1.0.5
     dev: false
+    bundledDependencies: []
 
   /jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
@@ -6311,8 +6312,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /notifications-node-client@8.0.0:
-    resolution: {integrity: sha512-65BxorFYVFOpJ9c2lud/4Ju+Bfn3L/vkih+FuzMhBw1wcOPjwgu4doVH6xO91fHYiAi/0uIx0Mc+NorXeANMHw==}
+  /notifications-node-client@8.1.0:
+    resolution: {integrity: sha512-2NJqPEcvlFRxuPMMWqoVXVUDz9EWl8dQVAhnLfRdv61PaHMqIRiQTdwn2qge8sC3kAsLnJoTl0qxhwDUarkYsQ==}
     engines: {node: '>=14.17.3', npm: '>=6.14.13'}
     dependencies:
       axios: 1.6.8
@@ -8367,7 +8368,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/550634a}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
-    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.4(react@18.3.1)
