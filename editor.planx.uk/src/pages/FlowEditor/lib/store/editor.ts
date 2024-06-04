@@ -278,11 +278,15 @@ export const editorStore: StateCreator<
           ) {
             id
             slug
-            updated_at
-            operations(limit: 1, order_by: { id: desc }) {
+            updatedAt: updated_at
+            operations (
+              limit: 1,
+              order_by: { created_at: desc }
+            ) {
+              createdAt: created_at
               actor {
-                first_name
-                last_name
+                firstName: first_name
+                lastName: last_name
               }
             }
           }

@@ -25,12 +25,12 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { AxiosError } from "axios";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Caret from "ui/icons/Caret";
 import Input from "ui/shared/Input";
 
+import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import EditHistory from "./EditHistory";
@@ -124,9 +124,6 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   },
 })) as typeof Tab;
 
-const formatLastPublish = (date: string, user: string) =>
-  `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
-
 const DebugConsole = () => {
   const [passport, breadcrumbs, flowId, cachedBreadcrumbs] = useStore(
     (state) => [
@@ -203,7 +200,7 @@ const AlteredNestedFlowListItem = (props: Portal) => {
 
   const _nestedFlowLastPublishedRequest = useAsync(async () => {
     const user = await lastPublisher(flowId);
-    setNestedFlowLastPublishedTitle(formatLastPublish(publishedAt, user));
+    setNestedFlowLastPublishedTitle(formatLastPublishMessage(publishedAt, user));
   });
 
   return (
@@ -402,7 +399,7 @@ const Sidebar: React.FC<{
     const date = await lastPublished(flowId);
     const user = await lastPublisher(flowId);
 
-    setLastPublishedTitle(formatLastPublish(date, user));
+    setLastPublishedTitle(formatLastPublishMessage(date, user));
   });
 
   const _validateAndDiffRequest = useAsync(async () => {
