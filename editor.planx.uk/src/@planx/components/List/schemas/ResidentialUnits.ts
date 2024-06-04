@@ -61,9 +61,9 @@ export const ResidentialUnits: Schema = {
     },
     {
       type: "number",
-      required: false,
       data: {
-        title: "How many identical units of this type are there?",
+        title:
+          "How many residential units does the description above apply to?",
         fn: "numberIdenticalUnits",
         allowNegatives: false,
       },
