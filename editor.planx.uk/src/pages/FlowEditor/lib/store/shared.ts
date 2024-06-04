@@ -27,10 +27,10 @@ export interface SharedStore extends Store.Store {
     flowName,
     flowStatus,
   }: {
-    id: string;
-    flow: Store.flow;
-    flowSlug: string;
-    flowName: string;
+    id?: string;
+    flow?: Store.flow;
+    flowSlug?: string;
+    flowName?: string;
     flowStatus?: FlowStatus;
   }) => void;
   wasVisited: (id: Store.nodeId) => boolean;
