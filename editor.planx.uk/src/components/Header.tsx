@@ -554,13 +554,22 @@ const EditorToolbar: React.FC<{
 
             {/* Only show flow settings link if inside a flow route  */}
             {isFlowSettingsVisible && (
-              <MenuItem
-                onClick={() =>
-                  navigate([rootFlowPath(true), "settings"].join("/"))
-                }
-              >
-                Flow Settings
-              </MenuItem>
+              <>
+                <MenuItem
+                  onClick={() =>
+                    navigate([rootFlowPath(true), "settings"].join("/"))
+                  }
+                >
+                  Flow Settings
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    navigate([rootFlowPath(true), "feedback"].join("/"))
+                  }
+                >
+                  Feedback
+                </MenuItem>
+              </>
             )}
 
             {/* Only show global settings & admin panel links from top-level view */}
