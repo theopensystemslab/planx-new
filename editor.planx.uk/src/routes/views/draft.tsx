@@ -37,8 +37,6 @@ export const draftView = async (req: NaviRequest) => {
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
 
-  console.log(flow.name);
-
   return (
     <PublicLayout>
       <View />
