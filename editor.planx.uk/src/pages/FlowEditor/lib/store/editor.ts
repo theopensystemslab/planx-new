@@ -272,17 +272,11 @@ export const editorStore: StateCreator<
     const { data } = await client.query({
       query: gql`
         query GetFlow($teamId: Int!) {
-          flows(
-            order_by: { updated_at: desc }
-            where: { team: { id: { _eq: $teamId } } }
-          ) {
+          flows(where: { team: { id: { _eq: $teamId } } }) {
             id
             slug
             updatedAt: updated_at
-            operations (
-              limit: 1,
-              order_by: { created_at: desc }
-            ) {
+            operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at
               actor {
                 firstName: first_name

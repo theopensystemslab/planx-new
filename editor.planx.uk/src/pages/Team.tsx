@@ -12,6 +12,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import orderBy from "lodash/orderBy";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -195,7 +196,10 @@ const FlowItem: React.FC<FlowItemProps> = ({
             {flow.slug}
           </DashboardLink>
           <LinkSubText>
-            {formatLastEditMessage(flow.operations[0].createdAt, flow.operations[0]?.actor)}
+            {formatLastEditMessage(
+              flow.operations[0].createdAt,
+              flow.operations[0]?.actor,
+            )}
           </LinkSubText>
         </Box>
         {useStore.getState().canUserEditTeam(teamSlug) && (
@@ -281,7 +285,15 @@ const Team: React.FC = () => {
       .getState()
       .getFlows(teamId)
       .then((res: { flows: any[] }) => {
-        setFlows(res.flows);
+        // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
+        const sortedFlows = res.flows
+          .slice()
+          .sort((a, b) =>
+            b.operations[0]["createdAt"].localeCompare(
+              a.operations[0]["createdAt"],
+            ),
+          );
+        setFlows(sortedFlows);
       });
   }, [teamId, setFlows]);
 
