@@ -28,7 +28,6 @@ const standaloneView = async (req: NaviRequest) => {
     flows: [{ name, team, settings: flowSettings }],
     globalSettings,
   } = data;
-  console.log(data);
   const state = useStore.getState();
   state.setFlowName(data.flows[0].name);
   state.setGlobalSettings(globalSettings[0]);
