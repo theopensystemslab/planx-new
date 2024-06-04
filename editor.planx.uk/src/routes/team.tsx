@@ -10,6 +10,7 @@ import {
   withData,
   withView,
 } from "navi";
+
 import React from "react";
 
 import { client } from "../lib/graphql";
@@ -76,7 +77,16 @@ const routes = compose(
           });
         }
 
-        useStore.getState().setFlowSlug(slug);
+        const stateFlowID = useStore.getState().id;
+
+        const flowData = await fetchDraftFlattenedFlowData(flow.id);
+
+        useStore.getState().setFlow({
+          id: stateFlowID,
+          flow: flowData,
+          flowName: flow.name,
+          flowSlug: slug,
+        });
         await useStore.getState().connectTo(flow.id);
       }
 
@@ -86,18 +96,5 @@ const routes = compose(
     "/members": lazy(() => import("./teamMembers")),
   })
 );
-
-const fetchDraftFlattenedFlowData = async (
-  flowId: string
-): Promise<FlowGraph> => {
-  const url = `${process.env.REACT_APP_API_URL}/flows/${flowId}/flatten-data?draft=true`;
-  try {
-    const { data } = await axios.get<FlowGraph>(url);
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw new NotFoundError();
-  }
-};
 
 export default routes;
