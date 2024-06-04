@@ -47,10 +47,15 @@ export interface Props {
   id?: string;
   checked: boolean;
   onChange?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-export default function Checkbox({ id, checked, onChange, inputProps }: Props): FCReturn {
+export default function Checkbox({
+  id,
+  checked,
+  onChange,
+  inputProps,
+}: Props): FCReturn {
   return (
     <Root onClick={() => onChange && onChange()}>
       <Input

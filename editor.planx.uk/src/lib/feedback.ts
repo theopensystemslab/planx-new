@@ -41,7 +41,7 @@ export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
     nodeType: node?.type ? TYPES[node.type] : null,
     device: Bowser.parse(window.navigator.userAgent),
     userData: userData,
-    nodeData: node?.data
+    nodeData: node?.data,
   };
 
   return metadata;

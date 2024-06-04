@@ -52,10 +52,10 @@ const PublicFooter: React.FC = () => {
 
   const globalFooterItems = globalSettings?.footerContent
     ? Object.entries(globalSettings?.footerContent).map(([slug, item]) => ({
-      title: item.heading,
-      content: item.content,
-      href: makeHref(slug),
-    }))
+        title: item.heading,
+        content: item.content,
+        href: makeHref(slug),
+      }))
     : [];
 
   const footerItems = [...flowSettingsContent, ...globalFooterItems].filter(

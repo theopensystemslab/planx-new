@@ -29,6 +29,14 @@ const Option: React.FC<any> = (props) => {
       <Link href={href} prefetch={false} onClick={(e) => e.preventDefault()}>
         <div className="band" style={{ background, color }}></div>
         <div className="text">{props.data.text}</div>
+        {props.data?.val && <div className="schema">{props.data?.val}</div>}
+        {props.data?.img && (
+          <img
+            className="thumbnail"
+            src={props.data.img}
+            alt={props.data.text}
+          />
+        )}
       </Link>
       <ol className="decisions">
         {childNodes.map((child: any) => (

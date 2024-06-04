@@ -39,12 +39,21 @@ test("requires a positive number to be input by default", async () => {
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <NumberInput fn="doors" title="How many doors are you adding?" handleSubmit={handleSubmit} />,
+    <NumberInput
+      fn="doors"
+      title="How many doors are you adding?"
+      handleSubmit={handleSubmit}
+    />,
   );
 
-  expect(screen.getByRole("heading")).toHaveTextContent("How many doors are you adding?");
+  expect(screen.getByRole("heading")).toHaveTextContent(
+    "How many doors are you adding?",
+  );
 
-  await user.type(screen.getByLabelText("How many doors are you adding?"), "-1");
+  await user.type(
+    screen.getByLabelText("How many doors are you adding?"),
+    "-1",
+  );
   await user.click(screen.getByTestId("continue-button"));
 
   expect(screen.getByText("Enter a positive number")).toBeInTheDocument();
@@ -55,10 +64,17 @@ test("allows negative numbers to be input when toggled on by editor", async () =
   const handleSubmit = jest.fn();
 
   const { user } = setup(
-    <NumberInput fn="fahrenheit" title="What's the temperature?" handleSubmit={handleSubmit} allowNegatives={true} />,
+    <NumberInput
+      fn="fahrenheit"
+      title="What's the temperature?"
+      handleSubmit={handleSubmit}
+      allowNegatives={true}
+    />,
   );
 
-  expect(screen.getByRole("heading")).toHaveTextContent("What's the temperature?");
+  expect(screen.getByRole("heading")).toHaveTextContent(
+    "What's the temperature?",
+  );
 
   await user.type(screen.getByLabelText("What's the temperature?"), "-10");
   await user.click(screen.getByTestId("continue-button"));
