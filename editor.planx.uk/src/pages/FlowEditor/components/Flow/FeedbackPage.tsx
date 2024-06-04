@@ -91,9 +91,14 @@ const getDetailedFeedback = async (feedbackId: number) => {
     variables: { feedbackId },
   });
 
-  const combinedHelpText = `${detailedFeedback.helpText || ""} ${
-    detailedFeedback.helpDefinition || ""
-  } ${detailedFeedback.helpSources || ""}`.trim();
+  const combinedHelpText = [
+    detailedFeedback.helpText,
+    detailedFeedback.helpDefinition,
+    detailedFeedback.helpSources,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
   const truncatedHelpText =
     combinedHelpText.length > 65
       ? `${combinedHelpText.slice(0, 65)}...`
@@ -233,10 +238,10 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
 
   const labelMap: Record<string, string> = {
     userComment: item.type === "issue" ? "What went wrong?" : "User comment",
-    address: "Project address",
+    address: "Property address",
     projectType: "Project type",
     where: "Where",
-    browserPlatform: "Browser / platform",
+    browserPlatform: "Browser / device",
     combinedHelp: "Help text (more information)",
     userContext: "What were you doing?",
   };
