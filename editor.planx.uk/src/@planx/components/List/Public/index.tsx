@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import InputRow from "ui/shared/InputRow";
 
 import Card from "../../shared/Preview/Card";
@@ -44,8 +45,8 @@ const CardButton = styled(Button)(({ theme }) => ({
 /**
  * Controller to return correct user input for field in schema
  */
-const InputField: React.FC<Field & { index: number }> = (props) => {
-  const inputFieldId = `input-${props.type}-${props.index}`;
+const InputField: React.FC<Field> = (props) => {
+  const inputFieldId = `input-${props.type}-${props.data.fn}`;
 
   switch (props.type) {
     case "text":
@@ -63,61 +64,64 @@ const InputField: React.FC<Field & { index: number }> = (props) => {
 const ActiveListCard: React.FC<{
   index: number;
 }> = ({ index }) => {
-  const { schema, saveItem, cancelEditItem } = useListContext();
+  const { schema, saveItem, cancelEditItem, errors } = useListContext();
 
   return (
-    // TODO: This should be a HTML form
-    <ListCard>
-      <Typography component="h2" variant="h3">
-        {schema.type} {index + 1}
-      </Typography>
-      {schema.fields.map((field, i) => (
-        <InputRow key={i}>
-          <InputField {...field} index={i} />
-        </InputRow>
-      ))}
-      <Box display="flex" gap={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => saveItem(index, [])}
-        >
-          Save
-        </Button>
-        <Button onClick={cancelEditItem}>Cancel</Button>
-      </Box>
-    </ListCard>
+    <ErrorWrapper
+      error={errors.unsavedItem ? "Please save in order to continue" : ""}
+    >
+      <ListCard data-testid={`list-card-${index}`}>
+        <Typography component="h2" variant="h3">
+          {schema.type} {index + 1}
+        </Typography>
+        {schema.fields.map((field, i) => (
+          <InputRow key={i}>
+            <InputField {...field} />
+          </InputRow>
+        ))}
+        <Box display="flex" gap={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={async () => await saveItem()}
+          >
+            Save
+          </Button>
+          <Button onClick={cancelEditItem}>Cancel</Button>
+        </Box>
+      </ListCard>
+    </ErrorWrapper>
   );
 };
 
 const InactiveListCard: React.FC<{
   index: number;
-}> = ({ index }) => {
-  const { schema, userData, removeItem, editItem } = useListContext();
+}> = ({ index: i }) => {
+  const { schema, formik, removeItem, editItem } = useListContext();
 
   return (
-    <ListCard>
+    <ListCard data-testid={`list-card-${i}`}>
       <Typography component="h2" variant="h3">
-        {schema.type} {index + 1}
+        {schema.type} {i + 1}
       </Typography>
       <Table>
         <TableBody>
-          {schema.fields.map((field, i) => (
-            <TableRow key={`tableRow-${i}`}>
+          {schema.fields.map((field, j) => (
+            <TableRow key={`tableRow-${j}`}>
               <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
                 {field.data.title}
               </TableCell>
-              <TableCell>{userData[index][i]?.val}</TableCell>
+              <TableCell>{formik.values.userData[i][field.data.fn]}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
       <Box display="flex" gap={2}>
-        <CardButton onClick={() => removeItem(index)}>
+        <CardButton onClick={() => removeItem(i)}>
           <DeleteIcon color="warning" fontSize="medium" />
           Remove
         </CardButton>
-        <CardButton onClick={() => editItem(index)}>
+        <CardButton onClick={() => editItem(i)}>
           {/* TODO: Is primary colour really right here? */}
           <EditIcon color="primary" fontSize="medium" />
           Edit
@@ -127,11 +131,26 @@ const InactiveListCard: React.FC<{
   );
 };
 
-const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
-  const { userData, activeIndex, schema, addNewItem } = useListContext();
+const Root = () => {
+  const {
+    formik,
+    validateAndSubmitForm,
+    activeIndex,
+    schema,
+    addNewItem,
+    errors,
+    listProps,
+  } = useListContext();
+
+  const { title, description, info, policyRef, howMeasured } = listProps;
+
+  const rootError: string =
+    (errors.min && `You must provide at least ${schema.min} response(s)`) ||
+    (errors.max && `You can provide at most ${schema.max} response(s)`) ||
+    "";
 
   return (
-    <Card handleSubmit={() => console.log({ userData })} isValid>
+    <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
         title={title}
         description={description}
@@ -139,28 +158,42 @@ const Root = ({ title, description, info, policyRef, howMeasured }: Props) => {
         policyRef={policyRef}
         howMeasured={howMeasured}
       />
-      {userData.map((_, i) =>
-        i === activeIndex ? (
-          <ActiveListCard key={`card-${i}`} index={i} />
-        ) : (
-          <InactiveListCard key={`card-${i}`} index={i} />
-        ),
-      )}
-      <Button variant="contained" color="secondary" onClick={addNewItem}>
-        + Add a new {schema.type.toLowerCase()} type
-      </Button>
+      <ErrorWrapper error={rootError}>
+        <>
+          {formik.values.userData.map((_, i) =>
+            i === activeIndex ? (
+              <ActiveListCard key={`card-${i}`} index={i} />
+            ) : (
+              <InactiveListCard key={`card-${i}`} index={i} />
+            ),
+          )}
+          <ErrorWrapper
+            error={
+              errors.addItem
+                ? `Please save all responses before adding a new ${schema.type.toLowerCase()}`
+                : ""
+            }
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={addNewItem}
+              sx={{ width: "100%" }}
+              data-testid="list-add-button"
+            >
+              + Add a new {schema.type.toLowerCase()} description
+            </Button>
+          </ErrorWrapper>
+        </>
+      </ErrorWrapper>
     </Card>
   );
 };
 
 function ListComponent(props: Props) {
-  // TODO: Validate min / max
-  // TODO: Validate user input against schema fields, track errors
-  // TODO: On submit generate a payload
-
   return (
-    <ListProvider schema={props.schema}>
-      <Root {...props} />
+    <ListProvider {...props}>
+      <Root />
     </ListProvider>
   );
 }

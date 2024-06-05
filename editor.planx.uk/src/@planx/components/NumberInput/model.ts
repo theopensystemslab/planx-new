@@ -1,3 +1,5 @@
+import { object, string } from "yup";
+
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface NumberInput extends MoreInformation {
@@ -28,3 +30,31 @@ export const parseNumberInput = (
   allowNegatives: data?.allowNegatives || false,
   ...parseMoreInformation(data),
 });
+
+export const numberInputValidationSchema = (input: NumberInput) =>
+  string()
+    .required("Enter your answer before continuing")
+    .test({
+      name: "not a number",
+      message: (() => {
+        if (!input.allowNegatives) {
+          return "Enter a positive number";
+        }
+
+        return "Enter a number";
+      })(),
+      test: (value: string | undefined) => {
+        if (!value) {
+          return false;
+        }
+        if (!input.allowNegatives && value.startsWith("-")) {
+          return false;
+        }
+        return value === "0" ? true : Boolean(parseNumber(value));
+      },
+    });
+
+export const validationSchema = (input: NumberInput) =>
+  object({
+    value: numberInputValidationSchema(input),
+  });

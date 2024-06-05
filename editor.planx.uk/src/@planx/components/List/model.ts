@@ -1,10 +1,17 @@
-import { NumberInput } from "../NumberInput/model";
+import { cloneDeep } from "lodash";
+import { array, BaseSchema, object, ObjectSchema, string } from "yup";
+
+import { NumberInput, numberInputValidationSchema } from "../NumberInput/model";
 import { MoreInformation, Option, parseMoreInformation } from "../shared";
-import { TextInput } from "../TextInput/model";
+import {
+  TextInput,
+  userDataSchema as textInputValidationSchema,
+} from "../TextInput/model";
 import { SCHEMAS } from "./Editor";
 
 /**
- * Simplified custom QuestionInput as existing model is too complex for our needs currently
+ * Simplified custom QuestionInput
+ * Existing model is too complex for our needs currently
  * If adding more properties here, check if re-using existing model could be an option
  */
 interface QuestionInput {
@@ -12,6 +19,14 @@ interface QuestionInput {
   description?: string;
   options: Option[];
 }
+
+/**
+ * As above, we need a simplified validation schema for QuestionsInputs
+ */
+const questionInputValidationSchema = (data: QuestionInput) =>
+  string()
+    .oneOf(data.options.map((option) => option.data.text))
+    .required("Select your answer before continuing");
 
 // TODO: Add summary fields for inactive view?
 export type TextField = {
@@ -27,6 +42,7 @@ export type NumberField = {
 export type QuestionField = {
   type: "question";
   required?: boolean;
+  unique?: boolean;
   data: QuestionInput & { fn: string };
 };
 
@@ -46,6 +62,10 @@ export interface Schema {
   max?: number;
 }
 
+type UserResponse = Record<Field["data"]["fn"], string>;
+
+export type UserData = { userData: UserResponse[] };
+
 export interface List extends MoreInformation {
   fn: string;
   title: string;
@@ -59,24 +79,55 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   title: data?.title,
   description: data?.description,
   schemaName: data?.schemaName || SCHEMAS[0].name,
-  schema: data?.schema || SCHEMAS[0].schema,
+  schema: cloneDeep(data?.schema) || SCHEMAS[0].schema,
   ...parseMoreInformation(data),
 });
 
-interface Response {
-  type: Field["type"];
-  val: string;
-  fn: string;
-}
+/**
+ * For each field in schema, return a map of Yup validation schema
+ * Matches both the field type and data
+ */
+const generateValidationSchemaForFields = (
+  fields: Field[],
+): ObjectSchema<Record<Field["data"]["fn"], BaseSchema>> => {
+  const fieldSchemas: { [key: string]: BaseSchema } = {};
 
-export type UserData = Response[][];
+  fields.forEach(({ data, type }) => {
+    switch (type) {
+      case "text":
+        fieldSchemas[data.fn] = textInputValidationSchema(data);
+        break;
+      case "number":
+        fieldSchemas[data.fn] = numberInputValidationSchema(data);
+        break;
+      case "question":
+        fieldSchemas[data.fn] = questionInputValidationSchema(data);
+        break;
+    }
+  });
 
-export const generateNewItem = (schema: Schema): Response[] => {
-  const item = schema.fields.map((field) => ({
-    type: field.type,
-    val: "",
-    fn: field.data.fn,
-  }));
+  const validationSchema = object().shape(fieldSchemas);
 
-  return item;
+  return validationSchema;
+};
+
+/**
+ * Generate a Yup validation schema which matches the incoming generic Schema
+ */
+export const generateValidationSchema = (schema: Schema) => {
+  const fieldvalidationSchema = generateValidationSchemaForFields(
+    schema.fields,
+  );
+
+  const validationSchema = object().shape({
+    userData: array().of(fieldvalidationSchema),
+  });
+
+  return validationSchema;
+};
+
+export const generateInitialValues = (schema: Schema): UserResponse => {
+  const initialValues: UserResponse = {};
+  schema.fields.forEach((field) => (initialValues[field.data.fn] = ""));
+  return initialValues;
 };
