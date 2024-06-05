@@ -18,6 +18,7 @@ import {
   Schema,
   UserData,
 } from "../model";
+import { flatten } from "../utils";
 
 interface ListContextValue {
   schema: Schema;
@@ -131,7 +132,18 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       userData: getInitialValues(),
     },
     onSubmit: (values) => {
-      handleSubmit?.(makeData(props, values.userData));
+      // defaultPassportData is used when coming "back"
+      const defaultPassportData = makeData(props, values.userData)?.["data"];
+
+      // flattenedPassportData can be referenced by future Calculate components
+      const flattenedPassportData = flatten(defaultPassportData);
+
+      handleSubmit?.({
+        data: {
+          ...defaultPassportData,
+          ...flattenedPassportData,
+        },
+      });
     },
     validateOnBlur: false,
     validateOnChange: false,
