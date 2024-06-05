@@ -13,13 +13,14 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
+import { ResidentialUnits } from "./schemas/ResidentialUnits";
 import { Zoo } from "./schemas/Zoo";
 
 type Props = EditorProps<TYPES.List, List>;
 
 export const SCHEMAS = [
-  { name: "Zoo", schema: Zoo },
-  // TODO: Residential units
+  { name: "Residential Units (alpha)", schema: ResidentialUnits },
+  { name: "Zoo (test)", schema: Zoo },
   // TODO: Residential units (GLA)
 ];
 
