@@ -18,3 +18,6 @@ export const formatLastEditMessage = (
   const name = `${actor.firstName} ${actor.lastName}`;
   return `Last edited ${formatLastEditDate(date)} by ${name}`;
 };
+
+export const formatLastPublishMessage = (date: string, user: string): string =>
+  `Last published ${formatLastEditDate(date)} ago by ${user}`;
