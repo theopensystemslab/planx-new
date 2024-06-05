@@ -286,13 +286,11 @@ const Team: React.FC = () => {
       .getFlows(teamId)
       .then((res: { flows: any[] }) => {
         // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-        const sortedFlows = res.flows
-          .slice()
-          .sort((a, b) =>
-            b.operations[0]["createdAt"].localeCompare(
-              a.operations[0]["createdAt"],
-            ),
-          );
+        const sortedFlows = res.flows.toSorted((a, b) =>
+          b.operations[0]["createdAt"].localeCompare(
+            a.operations[0]["createdAt"],
+          ),
+        );
         setFlows(sortedFlows);
       });
   }, [teamId, setFlows]);
