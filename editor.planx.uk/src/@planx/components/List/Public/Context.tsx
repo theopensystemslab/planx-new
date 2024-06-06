@@ -135,13 +135,19 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       // defaultPassportData is used when coming "back"
       const defaultPassportData = makeData(props, values.userData)?.["data"];
 
-      // flattenedPassportData can be referenced by future Calculate components
+      // flattenedPassportData makes individual list items compatible with Calculate components
       const flattenedPassportData = flatten(defaultPassportData);
+
+      // basic example of general summary stats we can add onSubmit
+      const summaries = {
+        [`${props.fn}.count`]: defaultPassportData[`${props.fn}`].length,
+      };
 
       handleSubmit?.({
         data: {
           ...defaultPassportData,
           ...flattenedPassportData,
+          ...summaries,
         },
       });
     },

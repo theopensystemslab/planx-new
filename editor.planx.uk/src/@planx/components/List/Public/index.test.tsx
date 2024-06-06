@@ -43,6 +43,7 @@ const mockPayload = {
     "mockFn.two.email": "richard.parker@pi.com",
     "mockFn.two.name": "Richard Parker",
     "mockFn.two.size": "Medium",
+    "mockFn.count": 2,
   },
 };
 

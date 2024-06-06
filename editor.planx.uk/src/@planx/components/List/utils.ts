@@ -19,8 +19,6 @@ export function flatten<T extends Record<string, any>>(
     const isObject = [
       typeof value === "object",
       value !== null,
-      !(value instanceof Date),
-      !(value instanceof RegExp),
       !(Array.isArray(value) && value.length === 0),
     ].every(Boolean);
 
@@ -70,14 +68,20 @@ const teens = [
 ];
 
 function convertTens(num: number): string {
-  if (num < 10) return ones[num];
-  else if (num >= 10 && num < 20) return teens[num - 10];
-  else {
+  if (num < 10) {
+    return ones[num];
+  } else if (num >= 10 && num < 20) {
+    return teens[num - 10];
+  } else {
+    // format as compound string - eg "thirtyfour" instead of "thirty four"
     return tens[Math.floor(num / 10)] + ones[num % 10];
   }
 }
 
 function convertNumberToText(num: number): string {
-  if (num == 0) return "zero";
-  else return convertTens(num);
+  if (num == 0) {
+    return "zero";
+  } else {
+    return convertTens(num);
+  }
 }
