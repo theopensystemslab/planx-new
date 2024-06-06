@@ -80,7 +80,7 @@ export const ResidentialUnitsGLANew: Schema = {
       data: {
         title:
           "Is this unit compliant with Part M4(2) of the Building Regulations 2010?",
-        fn: "compliance.m42",
+        fn: "complianceM42", // compliance.m42
         options: [
           { id: "true", data: { text: "Yes" } },
           { id: "false", data: { text: "No" } },
@@ -92,7 +92,7 @@ export const ResidentialUnitsGLANew: Schema = {
       data: {
         title:
           "Is this unit compliant with Part M4(3)(2a) of the Building Regulations 2010?",
-        fn: "compliance.m432a",
+        fn: "complianceM432a", // compliance.m432a
         options: [
           { id: "true", data: { text: "Yes" } },
           { id: "false", data: { text: "No" } },
@@ -104,7 +104,7 @@ export const ResidentialUnitsGLANew: Schema = {
       data: {
         title:
           "Is this unit compliant with Part M4(3)(2b) of the Building Regulations 2010?",
-        fn: "compliance.m432b",
+        fn: "complianceM432b", // compliance.m432b
         options: [
           { id: "true", data: { text: "Yes" } },
           { id: "false", data: { text: "No" } },
