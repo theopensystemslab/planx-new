@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { Option } from "@planx/components/shared";
@@ -8,13 +9,19 @@ import { getIn } from "formik";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
+import ChecklistItem from "ui/shared/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../shared/constants";
 import BasicRadio from "../../shared/Radio/BasicRadio";
-import type { NumberField, QuestionField, TextField } from "../model";
+import type {
+  ChecklistField,
+  NumberField,
+  QuestionField,
+  TextField,
+} from "../model";
 import { useListContext } from "./Context";
 
 type Props<T> = T & { id: string };
@@ -108,12 +115,9 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
   );
 };
 
-export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
-  id,
-  data,
-  required,
-}) => {
+export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { formik, activeIndex } = useListContext();
+  const { id, data, required } = props;
 
   return (
     <FormControl sx={{ width: "100%" }} component="fieldset">
@@ -197,5 +201,50 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
         </SelectInput>
       </ErrorWrapper>
     </InputLabel>
+  );
+};
+
+export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
+  const { formik, activeIndex } = useListContext();
+  const { id, data, required } = props;
+
+  return (
+    <FormControl sx={{ width: "100%" }} component="fieldset">
+      <FormLabel
+        component="legend"
+        id={`checklist-group-label-${id}`}
+        sx={(theme) => ({
+          color: theme.palette.text.primary,
+          "&.Mui-focused": {
+            color: theme.palette.text.primary,
+          },
+        })}
+      >
+        {required === false ? data.title + " (optional)" : data.title}
+      </FormLabel>
+      <ErrorWrapper
+        id={`${id}-error`}
+        error={getIn(formik.errors, `userData[${activeIndex}][${data.fn}]`)}
+      >
+        <RadioGroup
+          aria-labelledby={`checklist-group-label-${id}`}
+          name={`userData[${activeIndex}][${[data.fn]}]`}
+          sx={{ p: 1 }}
+          value={formik.values.userData[activeIndex][data.fn]}
+        >
+          {data.options.map(({ id, data }) => (
+            <Grid item xs={12} key={data.text}>
+              <ChecklistItem
+                id={id}
+                label={data.text}
+                checked={false}
+                // checked={formik.values.userData[activeIndex][`${data.val}`].includes(id)}
+                onChange={formik.handleChange}
+              />
+            </Grid>
+          ))}
+        </RadioGroup>
+      </ErrorWrapper>
+    </FormControl>
   );
 };
