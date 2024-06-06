@@ -1,19 +1,8 @@
-import { Schema } from "../model";
+import { Schema } from "../../model";
 
-export const ResidentialUnits: Schema = {
-  type: "Residential Units",
+export const ResidentialUnitsProposed: Schema = {
+  type: "Proposed residential unit",
   fields: [
-    {
-      type: "question",
-      data: {
-        title: "What type of change are you making?",
-        fn: "changeType",
-        options: [
-          { id: "proposed", data: { text: "Proposed" } },
-          { id: "existing", data: { text: "Existing" } },
-        ],
-      },
-    },
     {
       type: "question",
       unique: true,

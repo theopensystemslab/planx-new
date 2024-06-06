@@ -65,7 +65,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.FindProperty:
       return <Question {...allProps} text="Find property" />;
     case TYPES.List:
-      return <Question {...allProps} text="List" />;
+      return <Question {...allProps} text={node?.data?.title ?? "List"} />;
     case TYPES.NextSteps:
       return <Question {...allProps} text="Next steps" />;
     case TYPES.Notice:
