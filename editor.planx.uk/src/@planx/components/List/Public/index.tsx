@@ -170,7 +170,7 @@ const Root = () => {
           <ErrorWrapper
             error={
               errors.addItem
-                ? `Please save all responses before adding a new ${schema.type.toLowerCase()}`
+                ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
                 : ""
             }
           >
@@ -181,7 +181,7 @@ const Root = () => {
               sx={{ width: "100%" }}
               data-testid="list-add-button"
             >
-              + Add a new {schema.type.toLowerCase()} description
+              + Add another {schema.type.toLowerCase()} description
             </Button>
           </ErrorWrapper>
         </>

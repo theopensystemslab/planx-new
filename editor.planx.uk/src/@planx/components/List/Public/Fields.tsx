@@ -108,12 +108,9 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
   );
 };
 
-export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
-  id,
-  data,
-  required,
-}) => {
+export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { formik, activeIndex } = useListContext();
+  const { id, data, required } = props;
 
   return (
     <FormControl sx={{ width: "100%" }} component="fieldset">

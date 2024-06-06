@@ -139,8 +139,16 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       const flattenedPassportData = flatten(defaultPassportData);
 
       // basic example of general summary stats we can add onSubmit
+      let sumIdenticalUnits = 0;
+      defaultPassportData[`${props.fn}`].map(
+        (item) => (sumIdenticalUnits += parseInt(item?.identicalUnits)),
+      );
       const summaries = {
-        [`${props.fn}.count`]: defaultPassportData[`${props.fn}`].length,
+        [`${props.fn}.total.listItems`]:
+          defaultPassportData[`${props.fn}`].length,
+        ...(sumIdenticalUnits > 0 && {
+          [`${props.fn}.total.units`]: sumIdenticalUnits,
+        }),
       };
 
       handleSubmit?.({
