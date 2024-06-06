@@ -53,61 +53,64 @@ export const ResidentialUnitsGLARetained: Schema = {
         ],
       },
     },
+    // {
+    //   type: "checklist", // @todo
+    //   data: {
+    //     title: "Is this unit compliant with any of the following?",
+    //     fn: "compliance",
+    //     options: [
+    //       {
+    //         id: "m42",
+    //         data: { text: "Part M4(2) of the Building Regulations 2010" },
+    //       },
+    //       {
+    //         id: "m432a",
+    //         data: { text: "Part M4(3)(2a) of the Building Regulations 2010" },
+    //       },
+    //       {
+    //         id: "m432b",
+    //         data: { text: "Part M4(3)(2b) of the Building Regulations 2010" },
+    //       },
+    //       { id: "none", data: { text: "None of these" } },
+    //     ],
+    //   },
+    // },
     {
-      type: "checklist",
+      type: "question",
       data: {
-        title: "Is this unit compliant with any of the following?",
-        fn: "compliance",
+        title:
+          "Is this unit compliant with Part M4(2) of the Building Regulations 2010?",
+        fn: "compliance.m42",
         options: [
-          {
-            id: "m42",
-            data: { text: "Part M4(2) of the Building Regulations 2010" },
-          },
-          {
-            id: "m432a",
-            data: { text: "Part M4(3)(2a) of the Building Regulations 2010" },
-          },
-          {
-            id: "m432b",
-            data: { text: "Part M4(3)(2b) of the Building Regulations 2010" },
-          },
-          { id: "none", data: { text: "None of these" } },
+          { id: "true", data: { text: "Yes" } },
+          { id: "false", data: { text: "No" } },
         ],
       },
     },
-    // {
-    //   type: "question", // checklist
-    //   data: {
-    //     title: "Will this unit comply with M4(2)?",
-    //     fn: "m42Compliance",
-    //     options: [
-    //       { id: "yes", data: { text: "Yes" } },
-    //       { id: "no", data: { text: "No" } },
-    //     ],
-    //   },
-    // },
-    // {
-    //   type: "question", // checklist
-    //   data: {
-    //     title: "Will this unit comply with M4(3)(2a)?",
-    //     fn: "m432aCompliance",
-    //     options: [
-    //       { id: "yes", data: { text: "Yes" } },
-    //       { id: "no", data: { text: "No" } },
-    //     ],
-    //   },
-    // },
-    // {
-    //   type: "question", // checklist
-    //   data: {
-    //     title: "Will this unit comply with M4(3)(2b)?",
-    //     fn: "m432bCompliance",
-    //     options: [
-    //       { id: "yes", data: { text: "Yes" } },
-    //       { id: "no", data: { text: "No" } },
-    //     ],
-    //   },
-    // },
+    {
+      type: "question",
+      data: {
+        title:
+          "Is this unit compliant with Part M4(3)(2a) of the Building Regulations 2010?",
+        fn: "compliance.m432a",
+        options: [
+          { id: "true", data: { text: "Yes" } },
+          { id: "false", data: { text: "No" } },
+        ],
+      },
+    },
+    {
+      type: "question",
+      data: {
+        title:
+          "Is this unit compliant with Part M4(3)(2b) of the Building Regulations 2010?",
+        fn: "compliance.m432b",
+        options: [
+          { id: "true", data: { text: "Yes" } },
+          { id: "false", data: { text: "No" } },
+        ],
+      },
+    },
     {
       type: "question",
       data: {

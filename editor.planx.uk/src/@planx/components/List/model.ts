@@ -10,16 +10,11 @@ import {
 import { SCHEMAS } from "./Editor";
 
 /**
- * Simplified custom QuestionInput & ChecklistInput
+ * Simplified custom QuestionInput
  * Existing model is too complex for our needs currently
  * If adding more properties here, check if re-using existing model could be an option
  */
 interface QuestionInput {
-  title: string;
-  description?: string;
-  options: Option[];
-}
-interface ChecklistInput {
   title: string;
   description?: string;
   options: Option[];
@@ -50,17 +45,12 @@ export type QuestionField = {
   unique?: boolean;
   data: QuestionInput & { fn: string };
 };
-export type ChecklistField = {
-  type: "checklist";
-  required?: boolean;
-  data: ChecklistInput & { fn: string };
-};
 
 /**
  * Represents the input types available in the List component
  * Existing models are used to allow to us to re-use existing components, maintaining consistend UX/UI
  */
-export type Field = TextField | NumberField | QuestionField | ChecklistField;
+export type Field = TextField | NumberField | QuestionField;
 
 /**
  * Models the form displayed to the user

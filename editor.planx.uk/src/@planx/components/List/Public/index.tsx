@@ -19,7 +19,6 @@ import CardHeader from "../../shared/Preview/CardHeader";
 import type { Field, List } from "../model";
 import { ListProvider, useListContext } from "./Context";
 import {
-  ChecklistFieldInput,
   NumberFieldInput,
   RadioFieldInput,
   SelectFieldInput,
@@ -59,8 +58,6 @@ const InputField: React.FC<Field> = (props) => {
         return <RadioFieldInput id={inputFieldId} {...props} />;
       }
       return <SelectFieldInput id={inputFieldId} {...props} />;
-    case "checklist":
-      return <ChecklistFieldInput id={inputFieldId} {...props} />;
   }
 };
 
@@ -173,7 +170,7 @@ const Root = () => {
           <ErrorWrapper
             error={
               errors.addItem
-                ? `Please save all responses before adding a new ${schema.type.toLowerCase()}`
+                ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
                 : ""
             }
           >
@@ -184,7 +181,7 @@ const Root = () => {
               sx={{ width: "100%" }}
               data-testid="list-add-button"
             >
-              + Add a new {schema.type.toLowerCase()} description
+              + Add another {schema.type.toLowerCase()} description
             </Button>
           </ErrorWrapper>
         </>
