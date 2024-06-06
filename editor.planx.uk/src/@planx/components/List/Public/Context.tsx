@@ -141,12 +141,14 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       // basic example of general summary stats we can add onSubmit
       let sumIdenticalUnits = 0;
       defaultPassportData[`${props.fn}`].map(
-        (item) => (sumIdenticalUnits += parseInt(item.identicalUnits)),
+        (item) => (sumIdenticalUnits += parseInt(item?.identicalUnits)),
       );
       const summaries = {
         [`${props.fn}.total.listItems`]:
           defaultPassportData[`${props.fn}`].length,
-        [`${props.fn}.total.units`]: sumIdenticalUnits,
+        ...(sumIdenticalUnits > 0 && {
+          [`${props.fn}.total.units`]: sumIdenticalUnits,
+        }),
       };
 
       handleSubmit?.({
