@@ -100,7 +100,7 @@ const presentationalComponents: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
-  [TYPES.List]: undefined,
+  [TYPES.List]: List,
   [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
@@ -335,6 +335,22 @@ interface ComponentProps {
   flow: Store.flow;
   passport: Store.passport;
   nodeId: Store.nodeId;
+}
+
+function List(props: ComponentProps) {
+  const totalUnits = props.passport.data?.[`${props.node.data.fn}.total.units`];
+  const totalListItems =
+    props.passport.data?.[`${props.node.data.fn}.total.listItems`];
+  const summary = totalUnits
+    ? `${totalUnits} units total`
+    : `${totalListItems} items total`;
+
+  return (
+    <>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">{summary}</Box>
+    </>
+  );
 }
 
 function Question(props: ComponentProps) {

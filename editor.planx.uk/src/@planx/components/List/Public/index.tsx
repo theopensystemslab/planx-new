@@ -181,7 +181,7 @@ const Root = () => {
               sx={{ width: "100%" }}
               data-testid="list-add-button"
             >
-              + Add another {schema.type.toLowerCase()} description
+              + Add another {schema.type.toLowerCase()}
             </Button>
           </ErrorWrapper>
         </>
