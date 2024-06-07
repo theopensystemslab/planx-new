@@ -194,7 +194,7 @@ describe("Confirm component without inviteToPay", () => {
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "The fee is",
     );
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 4 })).toHaveTextContent(
       errorMessage,
     );
 
