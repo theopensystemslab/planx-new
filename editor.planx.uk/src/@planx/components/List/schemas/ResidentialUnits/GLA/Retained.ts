@@ -6,14 +6,6 @@ export const ResidentialUnitsGLARetained: Schema = {
     {
       type: "number",
       data: {
-        title: "What is the number of habitable rooms of this unit?",
-        fn: "habitable",
-        allowNegatives: false,
-      },
-    },
-    {
-      type: "number",
-      data: {
         title: "What is the number of bedrooms of this unit?",
         fn: "bedrooms",
         allowNegatives: false,
@@ -53,64 +45,6 @@ export const ResidentialUnitsGLARetained: Schema = {
         ],
       },
     },
-    // {
-    //   type: "checklist", // @todo
-    //   data: {
-    //     title: "Is this unit compliant with any of the following?",
-    //     fn: "compliance",
-    //     options: [
-    //       {
-    //         id: "m42",
-    //         data: { text: "Part M4(2) of the Building Regulations 2010" },
-    //       },
-    //       {
-    //         id: "m432a",
-    //         data: { text: "Part M4(3)(2a) of the Building Regulations 2010" },
-    //       },
-    //       {
-    //         id: "m432b",
-    //         data: { text: "Part M4(3)(2b) of the Building Regulations 2010" },
-    //       },
-    //       { id: "none", data: { text: "None of these" } },
-    //     ],
-    //   },
-    // },
-    {
-      type: "question",
-      data: {
-        title:
-          "Is this unit compliant with Part M4(2) of the Building Regulations 2010?",
-        fn: "complianceM42", // compliance.m42
-        options: [
-          { id: "true", data: { text: "Yes" } },
-          { id: "false", data: { text: "No" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title:
-          "Is this unit compliant with Part M4(3)(2a) of the Building Regulations 2010?",
-        fn: "complianceM432a", // compliance.m432a
-        options: [
-          { id: "true", data: { text: "Yes" } },
-          { id: "false", data: { text: "No" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title:
-          "Is this unit compliant with Part M4(3)(2b) of the Building Regulations 2010?",
-        fn: "complianceM432b", // compliance.m432b
-        options: [
-          { id: "true", data: { text: "Yes" } },
-          { id: "false", data: { text: "No" } },
-        ],
-      },
-    },
     {
       type: "question",
       data: {
@@ -129,61 +63,6 @@ export const ResidentialUnitsGLARetained: Schema = {
           { id: "HMO", data: { text: "HMO" } },
           { id: "student", data: { text: "Student accomodation" } },
           { id: "other", data: { text: "Other" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title: "What best describes the provider of this unit?",
-        fn: "provider",
-        options: [
-          { id: "private", data: { text: "Private" } },
-          { id: "privateRented", data: { text: "Private rented sector" } },
-          { id: "HA", data: { text: "Housing association" } },
-          { id: "LA", data: { text: "Local authority" } },
-          { id: "publicAuthority", data: { text: "Other public authority" } },
-          { id: "councilDelivery", data: { text: "Council delivery company" } },
-          {
-            id: "councilBuildToRent",
-            data: { text: "Council delivered build to rent" },
-          },
-          {
-            id: "affordableHousing",
-            data: { text: "Other affordable housing provider" },
-          },
-          { id: "selfBuild", data: { text: "Self-build" } },
-        ],
-      },
-    },
-    {
-      type: "number",
-      data: {
-        title: "What is the Gross Internal Floor Area (GIA) of this unit?",
-        units: "m²",
-        fn: "area",
-        allowNegatives: false,
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title: "Will this unit provide sheltered accommodation?",
-        fn: "sheltered",
-        options: [
-          { id: "true", data: { text: "Yes" } },
-          { id: "false", data: { text: "No" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title: "Is this unit specifically designed for older people?",
-        fn: "olderPersons",
-        options: [
-          { id: "true", data: { text: "Yes" } },
-          { id: "false", data: { text: "No" } },
         ],
       },
     },
