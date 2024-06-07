@@ -4,6 +4,18 @@ export const ResidentialUnitsGLANew: Schema = {
   type: "New built residential unit",
   fields: [
     {
+      type: "question",
+      data: {
+        title: "What development does this unit result from?",
+        fn: "development",
+        options: [
+          { id: "newBuild", data: { text: "New build", val: "newBuild" } },
+          { id: "changeOfUseFrom", data: { text: "Change of use of existing single home", val: "changeOfUseFrom" } },
+          { id: "changeOfUseTo", data: { text: "Change of use to a home", val: "changeOfUseTo" } },
+        ],
+      },
+    },
+    {
       type: "number",
       data: {
         title: "What is the number of habitable rooms of this unit?",
