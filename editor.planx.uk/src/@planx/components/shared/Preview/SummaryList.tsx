@@ -338,12 +338,15 @@ interface ComponentProps {
 }
 
 function List(props: ComponentProps) {
+  // `...total.units` is only set when the schema includes a field with fn = `identicalUnits`
   const totalUnits = props.passport.data?.[`${props.node.data.fn}.total.units`];
+  // `...total.listItems` is always set for any schema
   const totalListItems =
     props.passport.data?.[`${props.node.data.fn}.total.listItems`];
+
   const summary = totalUnits
-    ? `${totalUnits} units total`
-    : `${totalListItems} items total`;
+    ? `${totalUnits} ${totalUnits > 1 ? `units` : `unit`} total`
+    : `${totalListItems} ${totalListItems > 1 ? `items` : `item`} total`;
 
   return (
     <>

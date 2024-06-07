@@ -75,7 +75,7 @@ export interface List extends MoreInformation {
 }
 
 export const parseContent = (data: Record<string, any> | undefined): List => ({
-  fn: data?.fn || "",
+  fn: data?.fn,
   title: data?.title,
   description: data?.description,
   schemaName: data?.schemaName || SCHEMAS[0].name,

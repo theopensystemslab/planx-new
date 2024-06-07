@@ -64,6 +64,7 @@ function ListComponent(props: Props) {
               value={formik.values.title}
               placeholder="Title"
               onChange={formik.handleChange}
+              required
             />
           </InputRow>
           <InputRow>
@@ -81,6 +82,7 @@ function ListComponent(props: Props) {
               value={formik.values.fn}
               placeholder="Data Field"
               onChange={formik.handleChange}
+              required
             />
           </InputRow>
           <InputRow>
