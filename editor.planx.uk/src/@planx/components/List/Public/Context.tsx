@@ -138,7 +138,9 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       // flattenedPassportData makes individual list items compatible with Calculate components
       const flattenedPassportData = flatten(defaultPassportData);
 
-      // basic example of general summary stats we can add onSubmit
+      // basic example of general summary stats we can add onSubmit:
+      //   1. count of items/responses
+      //   2. if the schema includes a field that sets fn = "identicalUnits", sum of total units
       let sumIdenticalUnits = 0;
       defaultPassportData[`${props.fn}`].map(
         (item) => (sumIdenticalUnits += parseInt(item?.identicalUnits)),
