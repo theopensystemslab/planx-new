@@ -46,10 +46,13 @@ export const ResidentialUnitsGLANew: Schema = {
         title: "Which best describes the tenure of this unit?",
         fn: "tenure",
         options: [
-          { id: "LAR", data: { text: "London Affordable Rent" } },
+          { id: "LAR", data: { text: "London Affordable Rent", val: "LAR" } },
           {
             id: "AR",
-            data: { text: "Affordable rent (not at LAR benchmark rents)" },
+            data: {
+              text: "Affordable rent (not at LAR benchmark rents)",
+              val: "AR",
+            },
           },
           { id: "SR", data: { text: "Social rent", val: "SR" } },
           { id: "LRR", data: { text: "London Living Rent", val: "LRR" } },

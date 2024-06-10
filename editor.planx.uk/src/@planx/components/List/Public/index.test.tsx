@@ -5,6 +5,7 @@ import React from "react";
 import { axe, setup } from "testUtils";
 
 import ListComponent, { Props } from "../Public";
+import { GenericUnitsTest } from "../schemas/GenericUnitsTest";
 import { Zoo } from "../schemas/Zoo";
 
 const mockProps: Props = {
@@ -44,6 +45,19 @@ const mockPayload = {
     "mockFn.two.name": "Richard Parker",
     "mockFn.two.size": "Medium",
     "mockFn.total.listItems": 2,
+  },
+};
+
+const mockPropsUnits: Props = {
+  fn: "proposal.units.residential",
+  schema: GenericUnitsTest,
+  schemaName: "Generic residential units",
+  title: "Describe residential units",
+};
+
+const mockPayloadUnits = {
+  data: {
+    "proposal.units.residential": [],
   },
 };
 
@@ -378,7 +392,7 @@ describe("Form validation and error handling", () => {
 });
 
 describe("Payload generation", () => {
-  it("generates a valid payload on submission", async () => {
+  it("generates a valid payload on submission (Zoo)", async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, user } = setup(
       <ListComponent {...mockProps} handleSubmit={handleSubmit} />,
@@ -394,6 +408,21 @@ describe("Payload generation", () => {
 
     expect(handleSubmit).toHaveBeenCalled();
     expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockPayload);
+  });
+
+  it.skip("generates a valid payload with summary stats on submission (Units)", async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, user } = setup(
+      <ListComponent {...mockPropsUnits} handleSubmit={handleSubmit} />,
+    );
+    const addItemButton = getByTestId("list-add-button");
+
+    // fill in three unique responses
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalled();
+    expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockPayloadUnits);
   });
 });
 
