@@ -13,14 +13,33 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
+import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
+import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
+import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
+import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
+import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
+import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { Zoo } from "./schemas/Zoo";
 
 type Props = EditorProps<TYPES.List, List>;
 
 export const SCHEMAS = [
-  { name: "Zoo", schema: Zoo },
-  // TODO: Residential units
-  // TODO: Residential units (GLA)
+  { name: "Residential units - Existing", schema: ResidentialUnitsExisting },
+  { name: "Residential units - Proposed", schema: ResidentialUnitsProposed },
+  { name: "Residential units (GLA) - New", schema: ResidentialUnitsGLANew },
+  {
+    name: "Residential units (GLA) - Rebuilt",
+    schema: ResidentialUnitsGLARebuilt,
+  },
+  {
+    name: "Residentail units (GLA) - Removed",
+    schema: ResidentialUnitsGLARemoved,
+  },
+  {
+    name: "Residential units (GLA) - Retained",
+    schema: ResidentialUnitsGLARetained,
+  },
+  { name: "Zoo (test)", schema: Zoo },
 ];
 
 function ListComponent(props: Props) {
@@ -45,6 +64,7 @@ function ListComponent(props: Props) {
               value={formik.values.title}
               placeholder="Title"
               onChange={formik.handleChange}
+              required
             />
           </InputRow>
           <InputRow>
@@ -62,6 +82,7 @@ function ListComponent(props: Props) {
               value={formik.values.fn}
               placeholder="Data Field"
               onChange={formik.handleChange}
+              required
             />
           </InputRow>
           <InputRow>

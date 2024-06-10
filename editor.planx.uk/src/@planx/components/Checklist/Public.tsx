@@ -7,7 +7,6 @@ import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { getIn, useFormik } from "formik";
 import React, { useState } from "react";
-import InputLegend from "ui/editor/InputLegend";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";

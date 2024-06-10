@@ -12,7 +12,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import orderBy from "lodash/orderBy";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -21,6 +21,7 @@ import { slugify } from "utils";
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
+import { formatLastEditMessage } from "./FlowEditor/utils";
 
 const Root = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.dark,
@@ -74,17 +75,6 @@ const LinkSubText = styled(Box)(() => ({
     color: "#fff",
   },
 }));
-
-const flowInfoHelper = (time: any, operations: any[] = []) => {
-  let str = `Edited ${formatDistanceToNow(new Date(time))} ago`;
-  // there will always be an user attached to every sharedb
-  // operation soon, so the if statement won't be necessary
-  if (operations[0]?.actor) {
-    const { first_name, last_name } = operations[0].actor;
-    str += ` by ${first_name} ${last_name}`;
-  }
-  return str;
-};
 
 const Confirm = ({
   title,
@@ -206,7 +196,10 @@ const FlowItem: React.FC<FlowItemProps> = ({
             {flow.name}
           </DashboardLink>
           <LinkSubText>
-            {flowInfoHelper(flow.updated_at, flow.operations)}
+            {formatLastEditMessage(
+              flow.operations[0].createdAt,
+              flow.operations[0]?.actor,
+            )}
           </LinkSubText>
         </Box>
         {useStore.getState().canUserEditTeam(teamSlug) && (
@@ -289,17 +282,26 @@ const Team: React.FC = () => {
   const { id: teamId, slug } = useStore((state) => state.getTeam());
   const [flows, setFlows] = useState<any[] | null>(null);
   const navigation = useNavigation();
+
   const fetchFlows = useCallback(() => {
     useStore
       .getState()
       .getFlows(teamId)
       .then((res: { flows: any[] }) => {
-        setFlows(res.flows);
+        // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
+        const sortedFlows = res.flows.toSorted((a, b) =>
+          b.operations[0]["createdAt"].localeCompare(
+            a.operations[0]["createdAt"],
+          ),
+        );
+        setFlows(sortedFlows);
       });
   }, [teamId, setFlows]);
+
   useEffect(() => {
     fetchFlows();
   }, [fetchFlows]);
+
   return (
     <Root>
       <Dashboard>
