@@ -141,16 +141,40 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       // basic example of general summary stats we can add onSubmit:
       //   1. count of items/responses
       //   2. if the schema includes a field that sets fn = "identicalUnits", sum of total units
+      //   3. if the schema includes a field that sets fn = "development", sum of total units by development "val"
       let sumIdenticalUnits = 0;
       defaultPassportData[`${props.fn}`].map(
         (item) => (sumIdenticalUnits += parseInt(item?.identicalUnits)),
       );
+
+      const sumIdenticalUnitsByDevelopmentType: Record<string, number> = {
+        newBuild: 0,
+        changeOfUseFrom: 0,
+        changeOfUseTo: 0,
+      };
+      defaultPassportData[`${props.fn}`].map(
+        (item) =>
+          (sumIdenticalUnitsByDevelopmentType[`${item?.development}`] +=
+            parseInt(item?.identicalUnits)),
+      );
+      const sumIdenticalUnitsByDevelopmentTypeSummary: Record<string, number> =
+        {};
+      Object.entries(sumIdenticalUnitsByDevelopmentType).forEach(([k, v]) => {
+        if (v > 0) {
+          sumIdenticalUnitsByDevelopmentTypeSummary[
+            `${props.fn}.total.units.development.${k}`
+          ] = v;
+        }
+      });
+
       const summaries = {
         [`${props.fn}.total.listItems`]:
           defaultPassportData[`${props.fn}`].length,
         ...(sumIdenticalUnits > 0 && {
           [`${props.fn}.total.units`]: sumIdenticalUnits,
         }),
+        ...(Object.keys(sumIdenticalUnitsByDevelopmentTypeSummary).length > 0 &&
+          sumIdenticalUnitsByDevelopmentTypeSummary),
       };
 
       handleSubmit?.({

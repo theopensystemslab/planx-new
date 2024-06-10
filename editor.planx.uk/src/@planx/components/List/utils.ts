@@ -1,3 +1,5 @@
+import { QuestionField, Schema } from "./model";
+
 // Flattens nested object so we can output passport variables like `{listFn}.{itemIndexAsText}.{fieldFn}`
 //   Adapted from https://gist.github.com/penguinboy/762197
 export function flatten<T extends Record<string, any>>(
@@ -84,4 +86,20 @@ function convertNumberToText(num: number): string {
   } else {
     return convertTens(num);
   }
+}
+
+// In the case of "question" fields, ensure the displayed value reflects option "text", rather than "val" as recorded in passport
+export function formatSchemaDisplayValue(value: string, schema: Schema) {
+  const questionFields = schema.fields.filter(
+    (field) => field.type === "question",
+  ) as QuestionField[];
+  const matchingField = questionFields?.find((field) =>
+    field.data.options.some((option) => option.data.val === value),
+  );
+  const matchingOption = matchingField?.data.options.find(
+    (option) => option.data.val === value,
+  );
+
+  // If we found a "val" match, return its text, else just return the value as passed in
+  return matchingOption?.data?.text || value;
 }

@@ -25,7 +25,7 @@ interface QuestionInput {
  */
 const questionInputValidationSchema = (data: QuestionInput) =>
   string()
-    .oneOf(data.options.map((option) => option.data.text))
+    .oneOf(data.options.map((option) => option.data.val || option.data.text))
     .required("Select your answer before continuing");
 
 // TODO: Add summary fields for inactive view?
