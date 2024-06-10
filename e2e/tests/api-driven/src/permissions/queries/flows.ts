@@ -16,7 +16,7 @@ export const UPDATE_FLOW_QUERY = gql`
   mutation UpdateFlowE2E($team1FlowId: uuid!) {
     result: update_flows_by_pk(
       pk_columns: { id: $team1FlowId }
-      _set: { slug: "new-slug" }
+      _set: { slug: "new-slug", name: "new Name" }
     ) {
       id
     }
