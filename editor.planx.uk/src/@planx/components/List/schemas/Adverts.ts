@@ -1,4 +1,4 @@
-import { Schema } from "../../model";
+import { Schema } from "../model";
 
 export const ProposedAdvertisements: Schema = {
   type: "Proposed advertisements",
