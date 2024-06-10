@@ -36,5 +36,6 @@ export const ProposedAdvertisements: Schema = {
       },
     },
   ],
-  min: 0,
+  min: 1,
+  max: 1,
 } as const;
