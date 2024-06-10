@@ -3,7 +3,7 @@ import { Schema } from "@planx/components/List/model";
 export const GenericUnitsTest: Schema = {
   type: "Unit",
   fields: [
-    // fn = "development" triggers summary stat
+    // fn = "development" triggers summary stat and options set "val"
     {
       type: "question",
       data: {
@@ -22,22 +22,6 @@ export const GenericUnitsTest: Schema = {
             id: "changeOfUseTo",
             data: { text: "Change of use to a home", val: "changeOfUseTo" },
           },
-        ],
-      },
-    },
-    // options set "val"
-    {
-      type: "question",
-      data: {
-        title: "What best describes the type of this unit?",
-        fn: "type",
-        options: [
-          { id: "terraced", data: { text: "Terraced home", val: "terraced" } },
-          {
-            id: "semiDetached",
-            data: { text: "Semi detached home", val: "semiDetached" },
-          },
-          { id: "detached", data: { text: "Detached home", val: "detached" } },
         ],
       },
     },
