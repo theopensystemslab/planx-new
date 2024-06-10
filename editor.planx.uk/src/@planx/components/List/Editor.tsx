@@ -20,6 +20,7 @@ import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Remov
 import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { Zoo } from "./schemas/Zoo";
+import { ProposedAdvertisements } from "./schemas/Adverts";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -40,6 +41,7 @@ export const SCHEMAS = [
     schema: ResidentialUnitsGLARetained,
   },
   { name: "Zoo (test)", schema: Zoo },
+  { name: "Proposed advertisements", schema: ProposedAdvertisements },
 ];
 
 function ListComponent(props: Props) {
