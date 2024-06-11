@@ -13,6 +13,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
+import { ProposedAdvertisements } from "./schemas/Adverts";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
 import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
@@ -20,7 +21,6 @@ import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Remov
 import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { Zoo } from "./schemas/Zoo";
-import { ProposedAdvertisements } from "./schemas/Adverts";
 
 type Props = EditorProps<TYPES.List, List>;
 
