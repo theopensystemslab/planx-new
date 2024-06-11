@@ -4,9 +4,15 @@ import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { axe, setup } from "testUtils";
 
+import { UserResponse } from "../model";
 import ListComponent, { Props } from "../Public";
 import { GenericUnitsTest } from "../schemas/GenericUnitsTest";
 import { Zoo } from "../schemas/Zoo";
+import {
+  flatten,
+  sumIdenticalUnits,
+  sumIdenticalUnitsByDevelopmentType,
+} from "../utils";
 
 const mockProps: Props = {
   fn: "mockFn",
@@ -57,7 +63,36 @@ const mockPropsUnits: Props = {
 
 const mockPayloadUnits = {
   data: {
-    "proposal.units.residential": [],
+    "proposal.units.residential": [
+      {
+        development: "newBuild",
+        garden: "Yes",
+        identicalUnits: 1,
+      },
+      {
+        development: "newBuild",
+        garden: "No",
+        identicalUnits: 2,
+      },
+      {
+        development: "changeOfUseTo",
+        garden: "No",
+        identicalUnits: 2,
+      },
+    ],
+    "proposal.units.residential.one.development": "newBuild",
+    "proposal.units.residential.one.garden": "Yes",
+    "proposal.units.residential.one.identicalUnits": 1,
+    "proposal.units.residential.two.development": "newBuild",
+    "proposal.units.residential.two.garden": "No",
+    "proposal.units.residential.two.identicalUnits": 2,
+    "proposal.units.residential.three.development": "changeOfUseTo",
+    "proposal.units.residential.three.garden": "No",
+    "proposal.units.residential.three.identicalUnits": 2,
+    "proposal.units.residential.total.listItems": 3,
+    "proposal.units.residential.total.units": 5,
+    "proposal.units.residential.total.units.newBuid": 3,
+    "proposal.units.residential.total.units.changeOfUseTo": 2,
   },
 };
 
@@ -415,9 +450,38 @@ describe("Payload generation", () => {
     const { getByTestId, user } = setup(
       <ListComponent {...mockPropsUnits} handleSubmit={handleSubmit} />,
     );
-    const addItemButton = getByTestId("list-add-button");
 
-    // fill in three unique responses
+    const saveButton = screen.getByRole("button", { name: /Save/ });
+    const addItemButton = getByTestId("list-add-button");
+    const developmentSelect = screen.getByRole("combobox");
+    const gardenYesRadio = screen.getAllByRole("radio")[0];
+    const gardenNoRadio = screen.getAllByRole("radio")[1];
+    const unitsNumberInput = screen.getByLabelText(/identical units/);
+
+    // Response 1
+    await user.click(developmentSelect);
+    await user.click(screen.getByRole("option", { name: /New build/ }));
+    await user.click(gardenYesRadio);
+    await user.type(unitsNumberInput, "1");
+    await user.click(saveButton);
+
+    // Response 2
+    await user.click(addItemButton);
+    await user.click(developmentSelect);
+    await user.click(screen.getByRole("option", { name: /New build/ }));
+    await user.click(gardenNoRadio);
+    await user.type(unitsNumberInput, "2");
+    await user.click(saveButton);
+
+    // Response 3
+    await user.click(addItemButton);
+    await user.click(developmentSelect);
+    await user.click(
+      screen.getByRole("option", { name: /Change of use to a home/ }),
+    );
+    await user.click(gardenNoRadio);
+    await user.type(unitsNumberInput, "2");
+    await user.click(saveButton);
 
     await user.click(screen.getByTestId("continue-button"));
 

@@ -1,7 +1,77 @@
-import { QuestionField, Schema } from "./model";
+import { QuestionField, Schema, UserResponse } from "./model";
 
-// Flattens nested object so we can output passport variables like `{listFn}.{itemIndexAsText}.{fieldFn}`
-//   Adapted from https://gist.github.com/penguinboy/762197
+/**
+ * In the case of "question" fields, ensure the displayed value reflects option "text", rather than "val" as recorded in passport
+ * @param value - the `val` or `text` of an Option defined in the schema's fields
+ * @param schema - the Schema object
+ * @returns string - the `text` for the given value `val`, or the original value
+ */
+export function formatSchemaDisplayValue(value: string, schema: Schema) {
+  const questionFields = schema.fields.filter(
+    (field) => field.type === "question",
+  ) as QuestionField[];
+  const matchingField = questionFields?.find((field) =>
+    field.data.options.some((option) => option.data.val === value),
+  );
+  const matchingOption = matchingField?.data.options.find(
+    (option) => option.data.val === value,
+  );
+
+  // If we found a "val" match, return its text, else just return the value as passed in
+  return matchingOption?.data?.text || value;
+}
+
+/**
+ * If the schema includes a field that sets fn = "identicalUnits", sum of total units
+ * @param fn - passport key of current List
+ * @param passportData - default passport data format for the List
+ * @returns - sum of all units, or 0 if field not set
+ */
+export function sumIdenticalUnits(
+  fn: string,
+  passportData: Record<string, UserResponse[]>,
+): number {
+  let sum = 0;
+  passportData[`${fn}`].map((item) => (sum += parseInt(item?.identicalUnits)));
+  return sum;
+}
+
+/**
+ * If the schema includes fields that set fn = "development" and fn = "identicalUnits", sum of total units by development option "val"
+ * @param fn - passport key of current List
+ * @param passportData - default passport data format for the List
+ * @returns - sum of all units by development type, or empty object if fields not set
+ */
+export function sumIdenticalUnitsByDevelopmentType(
+  fn: string,
+  passportData: Record<string, UserResponse[]>,
+): Record<string, number> {
+  // Sum identical units by development type (read option `val` from Schema in future?)
+  const baseSums: Record<string, number> = {
+    newBuild: 0,
+    changeOfUseFrom: 0,
+    changeOfUseTo: 0,
+  };
+  passportData[`${fn}`].map(
+    (item) =>
+      (baseSums[`${item?.development}`] += parseInt(item?.identicalUnits)),
+  );
+
+  // Format property names for passport, and filter out any entries with default sum = 0
+  const formattedSums: Record<string, number> = {};
+  Object.entries(baseSums).forEach(([k, v]) => {
+    if (v > 0) {
+      formattedSums[`${fn}.total.units.development.${k}`] = v;
+    }
+  });
+
+  return formattedSums;
+}
+
+/**
+ * Flattens nested object so we can output passport variables like `{listFn}.{itemIndexAsText}.{fieldFn}`
+ *   Adapted from https://gist.github.com/penguinboy/762197
+ */
 export function flatten<T extends Record<string, any>>(
   object: T,
   path: string | null = null,
@@ -30,8 +100,6 @@ export function flatten<T extends Record<string, any>>(
   }, {} as T);
 }
 
-// Convert a whole number up to 99 to a spelled-out word (eg 34 => 'thirtyfour')
-//   Adapted from https://stackoverflow.com/questions/5529934/javascript-numbers-to-words
 const ones = [
   "",
   "one",
@@ -80,26 +148,14 @@ function convertTens(num: number): string {
   }
 }
 
+/**
+ * Convert a whole number up to 99 to a spelled-out word (eg 34 => 'thirtyfour')
+ *   Adapted from https://stackoverflow.com/questions/5529934/javascript-numbers-to-words
+ */
 function convertNumberToText(num: number): string {
   if (num == 0) {
     return "zero";
   } else {
     return convertTens(num);
   }
-}
-
-// In the case of "question" fields, ensure the displayed value reflects option "text", rather than "val" as recorded in passport
-export function formatSchemaDisplayValue(value: string, schema: Schema) {
-  const questionFields = schema.fields.filter(
-    (field) => field.type === "question",
-  ) as QuestionField[];
-  const matchingField = questionFields?.find((field) =>
-    field.data.options.some((option) => option.data.val === value),
-  );
-  const matchingOption = matchingField?.data.options.find(
-    (option) => option.data.val === value,
-  );
-
-  // If we found a "val" match, return its text, else just return the value as passed in
-  return matchingOption?.data?.text || value;
 }

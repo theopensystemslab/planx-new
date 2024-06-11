@@ -62,7 +62,7 @@ export interface Schema {
   max?: number;
 }
 
-type UserResponse = Record<Field["data"]["fn"], string>;
+export type UserResponse = Record<Field["data"]["fn"], string>;
 
 export type UserData = { userData: UserResponse[] };
 
