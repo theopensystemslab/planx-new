@@ -9,7 +9,6 @@ export const BuildingDetailsGLA: Schema = {
         title: "Building reference",
         fn: "reference",
         type: TextInputType.Short,
-        ],
       },
     },
     {
