@@ -28,8 +28,7 @@ export const previewView = async (req: NaviRequest) => {
   const flowData = await fetchFlattenedFlowData(flow.id);
 
   const state = useStore.getState();
-  state.setFlow({ id: flow.id, flow: flowData, flowSlug });
-  state.setFlowNameFromSlug(flowSlug);
+  state.setFlow({ id: flow.id, flow: flowData, flowSlug, flowName: flow.name });
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
