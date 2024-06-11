@@ -68,7 +68,7 @@ const ActiveListCard: React.FC<{
   const { schema, saveItem, cancelEditItem, errors } = useListContext();
 
   // Hide the index number in the card title if the schema has a max length of 1
-  const shouldHideIndexTitle = schema.max !== 1;
+  const shouldShowIndexTitle = schema.max !== 1;
 
   return (
     <ErrorWrapper
@@ -77,7 +77,7 @@ const ActiveListCard: React.FC<{
       <ListCard data-testid={`list-card-${i}`}>
         <Typography component="h2" variant="h3">
           {schema.type}
-          {shouldHideIndexTitle && ` ${i + 1}`}
+          {shouldShowIndexTitle && ` ${i + 1}`}
         </Typography>
         {schema.fields.map((field, i) => (
           <InputRow key={i}>
@@ -105,13 +105,13 @@ const InactiveListCard: React.FC<{
   const { schema, formik, removeItem, editItem } = useListContext();
 
   // Hide the index number in the card title if the schema has a max length of 1
-  const shouldHideIndexTitle = schema.max !== 1;
+  const shouldShowIndexTitle = schema.max !== 1;
 
   return (
     <ListCard data-testid={`list-card-${i}`}>
       <Typography component="h2" variant="h3">
         {schema.type}
-        {shouldHideIndexTitle && ` ${i + 1}`}
+        {shouldShowIndexTitle && ` ${i + 1}`}
       </Typography>
       <Table>
         <TableBody>
@@ -163,7 +163,7 @@ const Root = () => {
     (errors.max && `You can provide at most ${schema.max} response(s)`) ||
     "";
 
-  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed
+  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (userData = [])
   const shouldShowAddAnotherButton =
     schema.max !== 1 || formik.values.userData.length < 1;
 
