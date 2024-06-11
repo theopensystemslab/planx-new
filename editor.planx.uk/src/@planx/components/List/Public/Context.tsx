@@ -18,7 +18,11 @@ import {
   Schema,
   UserData,
 } from "../model";
-import { flatten } from "../utils";
+import {
+  flatten,
+  sumIdenticalUnits,
+  sumIdenticalUnitsByDevelopmentType,
+} from "../utils";
 
 interface ListContextValue {
   schema: Schema;
@@ -132,7 +136,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       userData: getInitialValues(),
     },
     onSubmit: (values) => {
-      // defaultPassportData is used when coming "back"
+      // defaultPassportData (array) is used when coming "back"
       const defaultPassportData = makeData(props, values.userData)?.["data"];
 
       // flattenedPassportData makes individual list items compatible with Calculate components
@@ -141,16 +145,22 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       // basic example of general summary stats we can add onSubmit:
       //   1. count of items/responses
       //   2. if the schema includes a field that sets fn = "identicalUnits", sum of total units
-      let sumIdenticalUnits = 0;
-      defaultPassportData[`${props.fn}`].map(
-        (item) => (sumIdenticalUnits += parseInt(item?.identicalUnits)),
+      //   3. if the schema includes a field that sets fn = "development" & fn = "identicalUnits", sum of total units by development "val"
+      const totalUnits = sumIdenticalUnits(props.fn, defaultPassportData);
+      const totalUnitsByDevelopmentType = sumIdenticalUnitsByDevelopmentType(
+        props.fn,
+        defaultPassportData,
       );
+
       const summaries = {
         [`${props.fn}.total.listItems`]:
           defaultPassportData[`${props.fn}`].length,
-        ...(sumIdenticalUnits > 0 && {
-          [`${props.fn}.total.units`]: sumIdenticalUnits,
+        ...(totalUnits > 0 && {
+          [`${props.fn}.total.units`]: totalUnits,
         }),
+        ...(totalUnits > 0 &&
+          Object.keys(totalUnitsByDevelopmentType).length > 0 &&
+          totalUnitsByDevelopmentType),
       };
 
       handleSubmit?.({

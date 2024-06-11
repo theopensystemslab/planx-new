@@ -139,7 +139,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
           {data.options.map(({ id, data }) => (
             <BasicRadio
               key={id}
-              id={data.text}
+              id={data.val || data.text}
               title={data.text}
               onChange={formik.handleChange}
             />
@@ -159,9 +159,11 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
 
     const existingValues = formik.values.userData
       .map((response) => response[data.fn])
-      .filter((value) => value === option.data.text);
+      .filter(
+        (value) => value === option.data.val || value === option.data.text,
+      );
 
-    return existingValues.includes(option.data.text);
+    return existingValues.includes(option.data.val || option.data.text);
   };
 
   return (
@@ -185,7 +187,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
           {data.options.map((option) => (
             <MenuItem
               key={option.id}
-              value={option.data.text}
+              value={option.data.val || option.data.text}
               disabled={isDisabled(option)}
             >
               {option.data.text}

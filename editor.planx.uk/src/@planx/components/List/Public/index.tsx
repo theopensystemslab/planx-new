@@ -17,6 +17,7 @@ import InputRow from "ui/shared/InputRow";
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
 import type { Field, List } from "../model";
+import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";
 import {
   NumberFieldInput,
@@ -111,7 +112,12 @@ const InactiveListCard: React.FC<{
               <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
                 {field.data.title}
               </TableCell>
-              <TableCell>{formik.values.userData[i][field.data.fn]}</TableCell>
+              <TableCell>
+                {formatSchemaDisplayValue(
+                  formik.values.userData[i][field.data.fn],
+                  schema,
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
