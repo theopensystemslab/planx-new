@@ -53,6 +53,14 @@ export const OpenSpaceGLA: Schema = {
       },
     },
     {
+      type: "text",
+      data: {
+        title: "Describe the open space",
+        fn: "description",
+        type: TextInputType.Long,
+      },
+    },
+    {
       type: "question",
       data: {
         title: "What is the access to this open space?",
