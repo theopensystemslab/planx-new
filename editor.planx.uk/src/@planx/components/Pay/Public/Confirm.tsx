@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { ApplicationPath } from "types";
 import Banner from "ui/public/Banner";
 import FormWrapper from "ui/public/FormWrapper";
+import ErrorSummary from "ui/shared/ErrorSummary";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
@@ -52,12 +53,6 @@ const PayText = styled(Box)(({ theme }) => ({
   },
 }));
 
-const ErrorSummary = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  padding: theme.spacing(3),
-  border: `5px solid ${theme.palette.error.main}`,
-}));
-
 const PayBody: React.FC<PayBodyProps> = (props) => {
   const path = useStore((state) => state.path);
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
@@ -66,30 +61,21 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
     if (props.error.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
       return (
         <Card handleSubmit={props.onConfirm} isValid>
-          <ErrorSummary role="status" data-testid="error-summary">
-            <Typography variant="h4" component="h3" gutterBottom>
-              {props.error}
-            </Typography>
-            <Typography variant="body2">
-              Click continue to skip payment and proceed with your application
-              for testing.
-            </Typography>
-          </ErrorSummary>
+          <ErrorSummary
+            format="error"
+            heading={props.error}
+            message="Click continue to skip payment and proceed with your application for testing."
+          />
         </Card>
       );
     } else {
       return (
         <Card>
-          <ErrorSummary role="status" data-testid="error-summary">
-            <Typography variant="h4" component="h3" gutterBottom>
-              {props.error}
-            </Typography>
-            <Typography variant="body2">
-              This error has been logged and our team will see it soon. You can
-              safely close this tab and try resuming again soon by returning to
-              this URL.
-            </Typography>
-          </ErrorSummary>
+          <ErrorSummary
+            format="error"
+            heading={props.error}
+            message="This error has been logged and our team will see it soon. You can safely close this tab and try resuming again soon by returning to this URL."
+          />
         </Card>
       );
     }
