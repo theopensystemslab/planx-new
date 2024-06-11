@@ -1,3 +1,4 @@
+import { TextInputType } from "@planx/components/TextInput/model";
 import { Schema } from "@planx/components/List/model";
 
 export const BuildingDetailsGLA: Schema = {
