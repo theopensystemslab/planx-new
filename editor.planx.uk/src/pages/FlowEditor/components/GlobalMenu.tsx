@@ -1,6 +1,6 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import TuneIcon from "@mui/icons-material/Tune";
-import ViewListIcon from "@mui/icons-material/ViewList";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
@@ -34,7 +34,7 @@ const MenuItem = styled("li")(({ theme }) => ({
 
 const MenuTitle = styled(Typography)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  paddingLeft: theme.spacing(0.5),
+  paddingLeft: theme.spacing(0.75),
   textAlign: "left",
 })) as typeof Typography;
 
@@ -55,6 +55,9 @@ const MenuButton = styled(IconButton, {
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.light}`,
   }),
+  "& > svg": {
+    width: "20px",
+  },
 }));
 
 function GlobalMenu() {
@@ -69,7 +72,7 @@ function GlobalMenu() {
   const routes = [
     {
       title: "Select a team",
-      Icon: ViewListIcon,
+      Icon: FormatListBulletedIcon,
       route: "/",
     },
     {

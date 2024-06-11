@@ -14,8 +14,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { HEADER_HEIGHT } from "components/Header";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import orderBy from "lodash/orderBy";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";

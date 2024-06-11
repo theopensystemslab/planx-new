@@ -55,6 +55,9 @@ const MenuButton = styled(IconButton, {
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.light}`,
   }),
+  "& > svg": {
+    width: "20px",
+  },
 }));
 
 function TeamMenu() {

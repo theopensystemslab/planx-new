@@ -14,7 +14,6 @@ import { useStore } from "./FlowEditor/lib/store";
 interface TeamTheme {
   slug: string;
   primaryColour: string;
-  logo: string;
 }
 
 interface Props {
@@ -42,18 +41,22 @@ const StyledLink = styled(Link)(() => ({
   textDecoration: "none",
 }));
 
-const LogoWrap = styled(Box)(() => ({
-  width: "90px",
-  height: "50px",
+const TeamCard = styled(Card)(({ theme }) => ({
   display: "flex",
-  justifyContent: "center",
+  justifyContent: "flex-start",
   alignItems: "center",
+  marginBottom: theme.spacing(2),
+  color: theme.palette.text.primary,
+  outline: `1px solid ${theme.palette.border.light}`,
+  outlineOffset: "-1px",
+  borderRadius: "1px",
 }));
 
-const TeamLogo = styled("img")(() => ({
-  width: "100%",
-  height: "100%",
-  objectFit: "contain",
+const TeamColourBand = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignSelf: "stretch",
+  width: theme.spacing(1.5),
+  zIndex: 1,
 }));
 
 const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
@@ -66,30 +69,15 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
     teamsToRender.map(({ name, slug }) => {
       const theme = teamTheme.find((t) => t.slug === slug);
       const primaryColour = theme ? theme.primaryColour : "#000";
-      const logo = theme ? theme.logo : "";
 
       return (
         <StyledLink href={`/${slug}`} key={slug} prefetch={false}>
-          <Box
-            mb={1}
-            px={2}
-            py={2}
-            bgcolor={primaryColour}
-            component={Card}
-            color="common.white"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h4" component="h2">
+          <TeamCard>
+            <TeamColourBand bgcolor={primaryColour} />
+            <Typography p={2} variant="h3" component="h2">
               {name}
             </Typography>
-            <LogoWrap>
-              {logo && <TeamLogo src={logo} alt={`${name} logo`} />}
-            </LogoWrap>
-          </Box>
+          </TeamCard>
         </StyledLink>
       );
     });
