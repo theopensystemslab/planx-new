@@ -13,14 +13,14 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
+import { ProposedAdvertisements } from "./schemas/Adverts";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
 import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
 import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
 import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
-import { Zoo } from "./schemas/Zoo";
-import { ProposedAdvertisements } from "./schemas/Adverts";
+import { Zoo } from "./schemas/Tests/Zoo";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -40,8 +40,8 @@ export const SCHEMAS = [
     name: "Residential units (GLA) - Retained",
     schema: ResidentialUnitsGLARetained,
   },
-  { name: "Zoo (test)", schema: Zoo },
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
+  { name: "Zoo (test)", schema: Zoo },
 ];
 
 function ListComponent(props: Props) {

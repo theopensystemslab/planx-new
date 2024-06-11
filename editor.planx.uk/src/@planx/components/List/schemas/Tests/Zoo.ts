@@ -1,6 +1,7 @@
 import { TextInputType } from "@planx/components/TextInput/model";
 
-import { Schema } from "../model";
+import { Schema } from "../../model";
+import { Props } from "../../Public";
 
 /**
  * Temp simple example to build out UI
@@ -67,3 +68,43 @@ export const Zoo: Schema = {
   min: 1,
   max: 10,
 } as const;
+
+export const mockZooProps: Props = {
+  fn: "mockFn",
+  schema: Zoo,
+  schemaName: "Zoo",
+  title: "Mock Title",
+  description: "Mock description",
+};
+
+export const mockZooPayload = {
+  data: {
+    mockFn: [
+      {
+        age: 10,
+        cuteness: "Very",
+        email: "richard.parker@pi.com",
+        name: "Richard Parker",
+        size: "Medium",
+      },
+      {
+        age: 10,
+        cuteness: "Very",
+        email: "richard.parker@pi.com",
+        name: "Richard Parker",
+        size: "Medium",
+      },
+    ],
+    "mockFn.one.age": 10,
+    "mockFn.one.cuteness": "Very",
+    "mockFn.one.email": "richard.parker@pi.com",
+    "mockFn.one.name": "Richard Parker",
+    "mockFn.one.size": "Medium",
+    "mockFn.two.age": 10,
+    "mockFn.two.cuteness": "Very",
+    "mockFn.two.email": "richard.parker@pi.com",
+    "mockFn.two.name": "Richard Parker",
+    "mockFn.two.size": "Medium",
+    "mockFn.total.listItems": 2,
+  },
+};
