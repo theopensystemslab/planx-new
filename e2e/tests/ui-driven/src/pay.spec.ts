@@ -23,6 +23,7 @@ let context: Context = {
   ...contextDefaults,
   flow: {
     slug: "pay-test",
+    name: "Pay test",
     data: payFlow,
   },
   sessionIds: [], // used to collect and clean up sessions
