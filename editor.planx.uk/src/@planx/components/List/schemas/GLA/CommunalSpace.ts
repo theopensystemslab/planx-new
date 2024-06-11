@@ -9,8 +9,8 @@ export const CommunalSpaceGLA: Schema = {
         title: "Is this unit of communal space lost or gained?",
         fn: "development",
         options: [
-          { id: "gained", data: { text: "Gained", val: "gained" } },
-          { id: "lost", data: { text: "Lost", val: "lost" } },
+          { id: "gain", data: { text: "Gained", val: "gain" } },
+          { id: "loss", data: { text: "Lost", val: "loss" } },
         ],
       },
     },
