@@ -25,7 +25,7 @@ export interface Context {
     id?: string;
     publishedId?: number;
     slug: string;
-    name?: string;
+    name: string;
     data?: object;
   };
   sessionIds?: string[];

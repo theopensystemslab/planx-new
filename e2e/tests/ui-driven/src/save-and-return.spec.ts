@@ -24,6 +24,7 @@ test.describe("Save and return", () => {
     ...contextDefaults,
     flow: {
       slug: "e2e-save-and-return-test-flow",
+      name: "E2E Save and Return test flow",
       data: simpleSendFlow,
     },
   };

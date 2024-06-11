@@ -18,6 +18,7 @@ let context: Context = {
   ...contextDefaults,
   flow: {
     slug: "invite-to-pay-test",
+    name: "Invite to pay test",
     data: inviteToPayFlow,
   },
   sessionIds: [], // used to collect and clean up sessions
