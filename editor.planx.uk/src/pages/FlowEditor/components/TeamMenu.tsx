@@ -1,6 +1,6 @@
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
 import PaletteIcon from "@mui/icons-material/Palette";
-import ViewListIcon from "@mui/icons-material/ViewList";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
@@ -72,7 +72,7 @@ function TeamMenu() {
   const routes = [
     {
       title: "Services",
-      Icon: ViewListIcon,
+      Icon: FormatListBulletedIcon,
       route: "/",
     },
     {
