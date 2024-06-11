@@ -29,7 +29,7 @@ export const ExistingAndProposedUsesGLA: Schema = {
       data: {
         title: "What is the existing gross internal floor area?",
         units: "m²",
-        fn: "GIAExisting",
+        fn: "area.existing",
         allowNegatives: false,
       },
     },
@@ -38,7 +38,7 @@ export const ExistingAndProposedUsesGLA: Schema = {
       data: {
         title: "What is the gross internal floor area lost?",
         units: "m²",
-        fn: "GIALost",
+        fn: "area.lost",
         allowNegatives: false,
       },
     },
@@ -47,7 +47,7 @@ export const ExistingAndProposedUsesGLA: Schema = {
       data: {
         title: "What is the gross internal floor area gained?",
         units: "m²",
-        fn: "GIAGained",
+        fn: "area.gained",
         allowNegatives: false,
       },
     },
