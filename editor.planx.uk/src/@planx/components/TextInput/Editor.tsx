@@ -1,4 +1,7 @@
+import FormControl from "@mui/material/FormControl";
+import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import {
   EditorProps,
   ICONS,
@@ -12,7 +15,6 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
-import Radio from "ui/shared/Radio";
 
 import { parseTextInput, TextInput } from "./model";
 
@@ -62,36 +64,31 @@ const TextInputComponent: React.FC<Props> = (props) => {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Radio
-              options={[
-                {
-                  value: "short",
-                  label: "Short",
-                },
-                {
-                  value: "long",
-                  label: "Long (250 characters)",
-                },
-                {
-                  value: "extraLong",
-                  label: "Extra long (500 characters)",
-                },
-                {
-                  value: "email",
-                  label: "Email",
-                },
-                {
-                  value: "phone",
-                  label: "Phone",
-                },
-              ]}
-              value={formik.values.type}
-              onChange={(newType) => {
-                formik.setFieldValue("type", newType);
-              }}
-            />
-          </InputRow>
+        </ModalSectionContent>
+        <ModalSectionContent title="Input style">
+          <FormControl component="fieldset">
+            <RadioGroup defaultValue="default">
+              {[
+                { id: "default", title: "Default" },
+                { id: "short", title: "Short" },
+                { id: "long", title: "Long (250 characters)" },
+                { id: "extraLong", title: "Extra long (500 characters)" },
+                { id: "email", title: "Email" },
+                { id: "phone", title: "Phone" },
+              ].map((type) => (
+                <BasicRadio
+                  key={type.id}
+                  id={type.id}
+                  title={type.title}
+                  variant="compact"
+                  value={formik.values.type}
+                  onChange={(newType) => {
+                    formik.setFieldValue("type", newType);
+                  }}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

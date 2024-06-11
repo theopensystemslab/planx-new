@@ -486,7 +486,29 @@ const getThemeOptions = ({
             },
           },
         },
-      },
+        variants: [
+          {
+            props: { variant: "compact" },
+            style: {
+              "& label": { paddingBottom: "200px", },
+              "&.MuiRadio-root": {
+                width: "40px",
+                height: "40px",
+                margin: "0 0 0 0.25em",
+              },
+              "&.MuiRadio-root::before": {
+                top: "8px",
+                left: "8px",
+                width: "24px",
+                height: "24px",
+              },
+              "&.MuiRadio-root::after": {
+                borderWidth: "6px",
+              },
+            },
+          },
+        ],
+      },      
     },
   };
 
