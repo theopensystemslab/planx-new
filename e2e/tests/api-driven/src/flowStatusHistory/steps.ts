@@ -19,7 +19,11 @@ Before<CustomWorld>("@flow-status-history", async function () {
 });
 
 Given<CustomWorld>("a flow exists", async function () {
-  const flowId = await createFlow({ teamId: this.teamId, slug: "test-flow", name:"Test Flow" });
+  const flowId = await createFlow({
+    teamId: this.teamId,
+    slug: "test-flow",
+    name: "Test Flow",
+  });
 
   assert.ok(flowId, "flowId is not defined");
 

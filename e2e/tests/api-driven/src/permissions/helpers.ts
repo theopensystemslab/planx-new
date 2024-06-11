@@ -35,7 +35,7 @@ export const setup = async () => {
   const team1FlowId = await createFlow({
     teamId: teamId1,
     slug: "team-1-flow",
-    name: "Team 1 Flow"
+    name: "Team 1 Flow",
   });
 
   const user2Id = await createUser({
@@ -45,8 +45,7 @@ export const setup = async () => {
   const team2FlowId = await createFlow({
     teamId: teamId2,
     slug: "team-2-flow",
-    name: "Team 2 Flow"
-
+    name: "Team 2 Flow",
   });
 
   const world = {
