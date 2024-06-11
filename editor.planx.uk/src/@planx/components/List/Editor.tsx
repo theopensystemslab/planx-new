@@ -24,6 +24,8 @@ import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
+import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
+import { OpenSpaceGLA } from "./schemas/GLA/OpenSpace";
 import { Zoo } from "./schemas/Zoo";
 import { ProposedAdvertisements } from "./schemas/Adverts";
 
@@ -37,6 +39,8 @@ export const SCHEMAS = [
   { name: "Existing and proposed uses (GLA)", schema: ExistingAndProposedUsesGLA },
   { name: "Communal spaces (GLA)", schema: CommunalSpaceGLA },
   { name: "Building details (GLA)", schema: BuildingDetailsGLA },
+  { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
+  { name: "Open spaces (GLA)", schema: OpenSpaceGLA },
 //  { name: "Residential units (GLA) - New", schema: ResidentialUnitsGLANew },
 //  {
 //    name: "Residential units (GLA) - Rebuilt",
