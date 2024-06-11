@@ -17,8 +17,8 @@ export const ExistingAndProposedUsesGLA: Schema = {
           { id: "cThree", data: { text: "C3 - Dwellinghouses", val: "cThree" } },
           { id: "cFour", data: { text: "C4 - Houses in multiple occupation", val: "cFour" } },
           { id: "e", data: { text: "E - Commercial, business and service", val: "e" } },
-          { id: "fOne", data: { text: "Learning and non-residential institutions", val: "fOne" } },
-          { id: "fTwo", data: { text: "Local community uses", val: "fTwo" } },
+          { id: "fOne", data: { text: "F1 - Learning and non-residential institutions", val: "fOne" } },
+          { id: "fTwo", data: { text: "F2 - Local community uses", val: "fTwo" } },
           { id: "SG", data: { text: "Sui generis", val: "SG" } },
           { id: "unknown", data: { text: "Unknown", val: "unknown" } },
         ],
@@ -27,7 +27,8 @@ export const ExistingAndProposedUsesGLA: Schema = {
     {
       type: "number",
       data: {
-        title: "What is the existing gross internal floor area (in square metres)?",
+        title: "What is the existing gross internal floor area?",
+        units: "m²",
         fn: "GIAExisting",
         allowNegatives: false,
       },
@@ -35,7 +36,8 @@ export const ExistingAndProposedUsesGLA: Schema = {
     {
       type: "number",
       data: {
-        title: "What is the gross internal floor area lost (in square metres)?",
+        title: "What is the gross internal floor area lost?",
+        units: "m²",
         fn: "GIALost",
         allowNegatives: false,
       },
@@ -43,7 +45,8 @@ export const ExistingAndProposedUsesGLA: Schema = {
     {
       type: "number",
       data: {
-        title: "What is the gross internal floor area gained (in square metres)?",
+        title: "What is the gross internal floor area gained?",
+        units: "m²",
         fn: "GIAGained",
         allowNegatives: false,
       },
