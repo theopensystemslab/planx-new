@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Root = styled(Box, {
-  shouldForwardProp: (prop) => !["format"].includes(prop.toString()),
+  shouldForwardProp: (prop) => prop !== "format",
 })<Props>(({ theme, format }) => ({
   padding: theme.spacing(3),
   border: `5px solid ${theme.palette.error.main}`,

@@ -169,7 +169,7 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
             <ErrorSummary
               format="info"
               heading="No feedback found for this service"
-              message="If you're looking for feedback before January 1, 2024, please contact a PlanX developer."
+              message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
             />
           ) : (
             <Feed>

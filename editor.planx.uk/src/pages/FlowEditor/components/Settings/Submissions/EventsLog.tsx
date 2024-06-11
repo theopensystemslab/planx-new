@@ -57,7 +57,7 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
       <ErrorSummary
         format="info"
         heading="No payments or submissions found for this service"
-        message="If you're looking for events before January 1, 2024, please contact a PlanX developer."
+        message="If you're looking for events before 1st January 2024, please contact a PlanX developer."
       />
     );
   return (
