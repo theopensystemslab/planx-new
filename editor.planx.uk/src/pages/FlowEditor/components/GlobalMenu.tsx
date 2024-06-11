@@ -1,17 +1,16 @@
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import RateReviewIcon from "@mui/icons-material/RateReview";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import React from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import EditorIcon from "ui/icons/Editor";
 
-const MENU_WIDTH = "54px";
+const MENU_WIDTH = "185px";
 
 const Root = styled(Box)(({ theme }) => ({
   width: MENU_WIDTH,
@@ -23,7 +22,9 @@ const Root = styled(Box)(({ theme }) => ({
 const MenuWrap = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(4, 0.5, 0, 0.5),
+  padding: theme.spacing(2.5, 0.5, 0, 0.5),
+  position: "sticky",
+  top: 0,
 }));
 
 const MenuItem = styled("li")(({ theme }) => ({
@@ -31,20 +32,11 @@ const MenuItem = styled("li")(({ theme }) => ({
   padding: 0,
 }));
 
-const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow placement="right" classes={{ popper: className }} />
-))(() => ({
-  [`& .${tooltipClasses.arrow}`]: {
-    color: "#2c2c2c",
-  },
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#2c2c2c",
-    left: "-5px",
-    fontSize: "0.8em",
-    borderRadius: 0,
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  },
-}));
+const MenuTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  paddingLeft: theme.spacing(0.75),
+  textAlign: "left",
+})) as typeof Typography;
 
 const MenuButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "isActive",
@@ -63,9 +55,12 @@ const MenuButton = styled(IconButton, {
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.light}`,
   }),
+  "& > svg": {
+    width: "20px",
+  },
 }));
 
-function EditorMenu() {
+function GlobalMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const rootPath = rootFlowPath();
@@ -76,24 +71,19 @@ function EditorMenu() {
 
   const routes = [
     {
-      title: "Editor",
-      Icon: EditorIcon,
+      title: "Select a team",
+      Icon: FormatListBulletedIcon,
       route: "/",
     },
     {
-      title: "Service settings",
+      title: "Admin panel",
+      Icon: AdminPanelSettingsIcon,
+      route: "admin-panel",
+    },
+    {
+      title: "Global settings",
       Icon: TuneIcon,
-      route: "/service",
-    },
-    {
-      title: "Submissions log",
-      Icon: FactCheckIcon,
-      route: "/submissions-log",
-    },
-    {
-      title: "Feedback",
-      Icon: RateReviewIcon,
-      route: "/feedback",
+      route: "global-settings",
     },
   ];
 
@@ -102,11 +92,10 @@ function EditorMenu() {
       <MenuWrap>
         {routes.map(({ title, Icon, route }) => (
           <MenuItem onClick={() => handleClick(route)} key={title}>
-            <TooltipWrap title={title}>
-              <MenuButton isActive={isActive(route)} disableRipple>
-                <Icon />
-              </MenuButton>
-            </TooltipWrap>
+            <MenuButton isActive={isActive(route)} disableRipple>
+              <Icon />
+              <MenuTitle variant="body2">{title}</MenuTitle>
+            </MenuButton>
           </MenuItem>
         ))}
       </MenuWrap>
@@ -114,4 +103,4 @@ function EditorMenu() {
   );
 }
 
-export default EditorMenu;
+export default GlobalMenu;
