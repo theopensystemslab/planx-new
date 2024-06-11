@@ -22,6 +22,7 @@ import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
+import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
 import { Zoo } from "./schemas/Zoo";
 import { ProposedAdvertisements } from "./schemas/Adverts";
 
@@ -33,6 +34,7 @@ export const SCHEMAS = [
   { name: "Residential units (GLA) - Gained", schema: ResidentialUnitsGLAGained },
   { name: "Residential units (GLA) - Lost", schema: ResidentialUnitsGLALost },
   { name: "Existing and proposed uses (GLA)", schema: ExistingAndProposedUsesGLA },
+  { name: "Communal spaces", schema: CommunalSpaceGLA },
 //  { name: "Residential units (GLA) - New", schema: ResidentialUnitsGLANew },
 //  {
 //    name: "Residential units (GLA) - Rebuilt",
