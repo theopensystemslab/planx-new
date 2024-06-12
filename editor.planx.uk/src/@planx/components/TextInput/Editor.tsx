@@ -33,6 +33,11 @@ const TextInputComponent: React.FC<Props> = (props) => {
     },
     validate: () => {},
   });
+
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    formik.setFieldValue("type", event.target.value);
+  };
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -67,12 +72,16 @@ const TextInputComponent: React.FC<Props> = (props) => {
         </ModalSectionContent>
         <ModalSectionContent title="Input style">
           <FormControl component="fieldset">
-            <RadioGroup defaultValue="default">
+            <RadioGroup
+              defaultValue="default"
+              value={formik.values.type}
+              onChange={handleRadioChange}
+            >
               {[
                 { id: "default", title: "Default" },
-                { id: "short", title: "Short" },
-                { id: "long", title: "Long (250 characters)" },
-                { id: "extraLong", title: "Extra long (500 characters)" },
+                { id: "short", title: "Short (max 120 characters)" },
+                { id: "long", title: "Long (max 250 characters)" },
+                { id: "extraLong", title: "Extra long (max 500 characters)" },
                 { id: "email", title: "Email" },
                 { id: "phone", title: "Phone" },
               ].map((type) => (
@@ -81,10 +90,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
                   id={type.id}
                   title={type.title}
                   variant="compact"
-                  value={formik.values.type}
-                  onChange={(newType) => {
-                    formik.setFieldValue("type", newType);
-                  }}
+                  value={type.id}
+                  onChange={() => {}}
                 />
               ))}
             </RadioGroup>
