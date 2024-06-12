@@ -193,7 +193,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
       <DashboardListItem>
         <Box pr={4}>
           <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-            {flow.name ? flow.name : flow.slug}
+            {flow.name === null ? flow.slug : flow.name}
           </DashboardLink>
           <LinkSubText>
             {formatLastEditMessage(
