@@ -6,6 +6,7 @@ import { $public, getClient } from "./client";
 
 export interface FlowData {
   slug: string;
+  name: string;
   data: Flow["data"];
   team_id: number;
   team: { slug: string };
@@ -28,6 +29,7 @@ const getFlowData = async (id: string): Promise<FlowData> => {
         flow: flows_by_pk(id: $id) {
           slug
           data
+          name
           team_id
           team {
             slug
@@ -45,7 +47,7 @@ const getFlowData = async (id: string): Promise<FlowData> => {
         }
       }
     `,
-    { id },
+    { id }
   );
   if (!flow) throw Error(`Unable to get flow with id ${id}`);
 
@@ -62,9 +64,10 @@ interface InsertFlow {
 const insertFlow = async (
   teamId: number,
   slug: string,
+  name: string,
   flowData: Flow["data"],
   creatorId?: number,
-  copiedFrom?: Flow["id"],
+  copiedFrom?: Flow["id"]
 ) => {
   const { client: $client } = getClient();
   try {
@@ -75,6 +78,7 @@ const insertFlow = async (
         mutation InsertFlow(
           $team_id: Int!
           $slug: String!
+          $name: String!
           $data: jsonb = {}
           $creator_id: Int
           $copied_from: uuid
@@ -83,6 +87,7 @@ const insertFlow = async (
             object: {
               team_id: $team_id
               slug: $slug
+              name: $name
               data: $data
               version: 1
               creator_id: $creator_id
@@ -96,17 +101,18 @@ const insertFlow = async (
       {
         team_id: teamId,
         slug: slug,
+        name: name,
         data: flowData,
         creator_id: creatorId,
         copied_from: copiedFrom,
-      },
+      }
     );
 
     await createAssociatedOperation(id);
     return { id };
   } catch (error) {
     throw Error(
-      `User ${creatorId} failed to insert flow to teamId ${teamId}. Please check permissions. Error: ${error}`,
+      `User ${creatorId} failed to insert flow to teamId ${teamId}. Please check permissions. Error: ${error}`
     );
   }
 };
@@ -126,7 +132,7 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
     `,
     {
       flow_id: flowId,
-    },
+    }
   );
 
   return data?.operation;
@@ -144,7 +150,7 @@ interface PublishedFlows {
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (
-  id: string,
+  id: string
 ): Promise<Flow["data"] | undefined> => {
   const { flow } = await $public.client.request<PublishedFlows>(
     gql`
@@ -159,7 +165,7 @@ const getMostRecentPublishedFlow = async (
         }
       }
     `,
-    { id },
+    { id }
   );
 
   const mostRecent = flow?.publishedFlows?.[0]?.data;
@@ -167,7 +173,7 @@ const getMostRecentPublishedFlow = async (
 };
 
 const getMostRecentPublishedFlowVersion = async (
-  id: string,
+  id: string
 ): Promise<number | undefined> => {
   const { flow } = await $public.client.request<PublishedFlows>(
     gql`
@@ -182,7 +188,7 @@ const getMostRecentPublishedFlowVersion = async (
         }
       }
     `,
-    { id },
+    { id }
   );
 
   const mostRecent = flow?.publishedFlows?.[0]?.id;
@@ -198,7 +204,7 @@ const dataMerged = async (
   id: string,
   ob: { [key: string]: Node } = {},
   isPortal = false,
-  draftDataOnly = false,
+  draftDataOnly = false
 ): Promise<FlowGraph> => {
   // get the primary draft flow data, including its' latest published version
   const response = await getFlowData(id);
@@ -211,7 +217,7 @@ const dataMerged = async (
       data = publishedFlows[0].data;
     } else {
       throw new Error(
-        `Publish flow ${team.slug}/${slug} before proceeding. All flows used as external portals must be published.`,
+        `Publish flow ${team.slug}/${slug} before proceeding. All flows used as external portals must be published.`
       );
     }
   }
@@ -262,7 +268,7 @@ const dataMerged = async (
   //   ** this is a final/separate step because older snapshots can be nested in _already_ flattened data (eg not picked up as ComponentType.ExternalPortal above)
   if (!draftDataOnly) {
     for (const [nodeId, node] of Object.entries(ob).filter(
-      ([_nodeId, node]) => node.data?.publishedFlowId,
+      ([_nodeId, node]) => node.data?.publishedFlowId
     )) {
       const mostRecentPublishedFlowId =
         await getMostRecentPublishedFlowVersion(nodeId);
@@ -281,7 +287,7 @@ const dataMerged = async (
 const getChildren = (
   node: Node,
   originalFlow: Flow["data"],
-  newFlow: Flow["data"],
+  newFlow: Flow["data"]
 ): Flow["data"] => {
   if (node.edges) {
     node.edges.forEach((edgeId) => {
@@ -300,7 +306,7 @@ const getChildren = (
  */
 const makeUniqueFlow = (
   flowData: Flow["data"],
-  replaceValue: string,
+  replaceValue: string
 ): Flow["data"] => {
   const charactersToReplace = replaceValue.length;
 
@@ -308,7 +314,7 @@ const makeUniqueFlow = (
     // if this node has edges, rename them (includes _root.edges)
     if (flowData[node]["edges"]) {
       const newEdges = flowData[node]["edges"]?.map(
-        (edge) => edge.slice(0, -charactersToReplace) + replaceValue,
+        (edge) => edge.slice(0, -charactersToReplace) + replaceValue
       );
       delete flowData[node]["edges"];
       flowData[node]["edges"] = newEdges;
