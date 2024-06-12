@@ -1,106 +1,22 @@
-import { screen, within } from "@testing-library/react";
+import { getByText, screen, within } from "@testing-library/react";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { axe, setup } from "testUtils";
 
-import { UserResponse } from "../model";
-import ListComponent, { Props } from "../Public";
-import { GenericUnitsTest } from "../schemas/GenericUnitsTest";
-import { Zoo } from "../schemas/Zoo";
+import ListComponent from "../Public";
 import {
-  flatten,
-  sumIdenticalUnits,
-  sumIdenticalUnitsByDevelopmentType,
-} from "../utils";
-
-const mockProps: Props = {
-  fn: "mockFn",
-  schema: Zoo,
-  schemaName: "Zoo",
-  title: "Mock Title",
-  description: "Mock description",
-};
-
-const mockPayload = {
-  data: {
-    mockFn: [
-      {
-        age: 10,
-        cuteness: "Very",
-        email: "richard.parker@pi.com",
-        name: "Richard Parker",
-        size: "Medium",
-      },
-      {
-        age: 10,
-        cuteness: "Very",
-        email: "richard.parker@pi.com",
-        name: "Richard Parker",
-        size: "Medium",
-      },
-    ],
-    "mockFn.one.age": 10,
-    "mockFn.one.cuteness": "Very",
-    "mockFn.one.email": "richard.parker@pi.com",
-    "mockFn.one.name": "Richard Parker",
-    "mockFn.one.size": "Medium",
-    "mockFn.two.age": 10,
-    "mockFn.two.cuteness": "Very",
-    "mockFn.two.email": "richard.parker@pi.com",
-    "mockFn.two.name": "Richard Parker",
-    "mockFn.two.size": "Medium",
-    "mockFn.total.listItems": 2,
-  },
-};
-
-const mockPropsUnits: Props = {
-  fn: "proposal.units.residential",
-  schema: GenericUnitsTest,
-  schemaName: "Generic residential units",
-  title: "Describe residential units",
-};
-
-const mockPayloadUnits = {
-  data: {
-    "proposal.units.residential": [
-      {
-        development: "newBuild",
-        garden: "Yes",
-        identicalUnits: 1,
-      },
-      {
-        development: "newBuild",
-        garden: "No",
-        identicalUnits: 2,
-      },
-      {
-        development: "changeOfUseTo",
-        garden: "No",
-        identicalUnits: 2,
-      },
-    ],
-    "proposal.units.residential.one.development": "newBuild",
-    "proposal.units.residential.one.garden": "Yes",
-    "proposal.units.residential.one.identicalUnits": 1,
-    "proposal.units.residential.two.development": "newBuild",
-    "proposal.units.residential.two.garden": "No",
-    "proposal.units.residential.two.identicalUnits": 2,
-    "proposal.units.residential.three.development": "changeOfUseTo",
-    "proposal.units.residential.three.garden": "No",
-    "proposal.units.residential.three.identicalUnits": 2,
-    "proposal.units.residential.total.listItems": 3,
-    "proposal.units.residential.total.units": 5,
-    "proposal.units.residential.total.units.newBuid": 3,
-    "proposal.units.residential.total.units.changeOfUseTo": 2,
-  },
-};
+  mockUnitsPayload,
+  mockUnitsProps,
+} from "../schemas/Tests/GenericUnits";
+import { mockMaxOneProps } from "../schemas/Tests/MaxOne";
+import { mockZooPayload, mockZooProps } from "../schemas/Tests/Zoo";
 
 jest.setTimeout(20_000);
 
 describe("Basic UI", () => {
   it("renders correctly", () => {
-    const { getByText } = setup(<ListComponent {...mockProps} />);
+    const { getByText } = setup(<ListComponent {...mockZooProps} />);
 
     expect(getByText(/Mock Title/)).toBeInTheDocument();
     expect(getByText(/Mock description/)).toBeInTheDocument();
@@ -108,7 +24,7 @@ describe("Basic UI", () => {
 
   it("parses provided schema to render expected form", async () => {
     const { getByLabelText, getByText, user, getByRole, queryAllByRole } =
-      setup(<ListComponent {...mockProps} />);
+      setup(<ListComponent {...mockZooProps} />);
 
     // Text inputs are generated from schema...
     const textInput = getByLabelText(/What's their name?/) as HTMLInputElement;
@@ -174,7 +90,7 @@ describe("Basic UI", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<ListComponent {...mockProps} />);
+    const { container } = setup(<ListComponent {...mockZooProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -182,7 +98,9 @@ describe("Basic UI", () => {
 
 describe("Building a list", () => {
   it("does not display a default item if the schema has no required minimum", () => {
-    const mockWithMinZero = merge(cloneDeep(mockProps), { schema: { min: 0 } });
+    const mockWithMinZero = merge(cloneDeep(mockZooProps), {
+      schema: { min: 0 },
+    });
     const { queryByRole, getByTestId } = setup(
       <ListComponent {...mockWithMinZero} />,
     );
@@ -202,7 +120,7 @@ describe("Building a list", () => {
 
   it("displays a default item if the schema has a required minimum", () => {
     const { getByRole, queryByLabelText } = setup(
-      <ListComponent {...mockProps} />,
+      <ListComponent {...mockZooProps} />,
     );
 
     // Card present...
@@ -218,9 +136,22 @@ describe("Building a list", () => {
     expect(inputField).not.toBeDisabled();
   });
 
+  it("hides the index number in the card header and the 'add another' button if the schema has a max of 1", () => {
+    const { getAllByTestId, queryByTestId } = setup(
+      <ListComponent {...mockMaxOneProps} />,
+    );
+
+    const cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(1);
+    expect(cards[0]).toHaveTextContent("Parking spaces");
+
+    const addItemButton = queryByTestId("list-add-button");
+    expect(addItemButton).not.toBeInTheDocument();
+  });
+
   test("Adding an item", async () => {
     const { getAllByTestId, getByTestId, user } = setup(
-      <ListComponent {...mockProps} />,
+      <ListComponent {...mockZooProps} />,
     );
 
     let cards = getAllByTestId(/list-card/);
@@ -252,7 +183,7 @@ describe("Building a list", () => {
   test("Editing an item", async () => {
     // Setup three cards
     const { getAllByTestId, getByTestId, user } = setup(
-      <ListComponent {...mockProps} />,
+      <ListComponent {...mockZooProps} />,
     );
 
     await fillInResponse(user);
@@ -308,7 +239,7 @@ describe("Building a list", () => {
       user,
       getByLabelText,
       queryAllByTestId,
-    } = setup(<ListComponent {...mockProps} />);
+    } = setup(<ListComponent {...mockZooProps} />);
 
     await fillInResponse(user);
 
@@ -378,7 +309,7 @@ describe("Building a list", () => {
   test("Removing an item when another card is active", async () => {
     // Setup two cards
     const { getAllByTestId, getByTestId, user } = setup(
-      <ListComponent {...mockProps} />,
+      <ListComponent {...mockZooProps} />,
     );
 
     await fillInResponse(user);
@@ -430,7 +361,7 @@ describe("Payload generation", () => {
   it("generates a valid payload on submission (Zoo)", async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, user } = setup(
-      <ListComponent {...mockProps} handleSubmit={handleSubmit} />,
+      <ListComponent {...mockZooProps} handleSubmit={handleSubmit} />,
     );
     const addItemButton = getByTestId("list-add-button");
 
@@ -442,13 +373,13 @@ describe("Payload generation", () => {
     await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalled();
-    expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockPayload);
+    expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockZooPayload);
   });
 
   it.skip("generates a valid payload with summary stats on submission (Units)", async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, user } = setup(
-      <ListComponent {...mockPropsUnits} handleSubmit={handleSubmit} />,
+      <ListComponent {...mockUnitsProps} handleSubmit={handleSubmit} />,
     );
 
     const saveButton = screen.getByRole("button", { name: /Save/ });
@@ -486,14 +417,17 @@ describe("Payload generation", () => {
     await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalled();
-    expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockPayloadUnits);
+    expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockUnitsPayload);
   });
 });
 
 describe("Navigating back", () => {
   test("it pre-populates list correctly", async () => {
     const { getAllByText, queryByLabelText, getAllByTestId } = setup(
-      <ListComponent {...mockProps} previouslySubmittedData={mockPayload} />,
+      <ListComponent
+        {...mockZooProps}
+        previouslySubmittedData={mockZooPayload}
+      />,
     );
 
     const cards = getAllByTestId(/list-card/);

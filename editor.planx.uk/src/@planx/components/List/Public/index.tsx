@@ -64,16 +64,20 @@ const InputField: React.FC<Field> = (props) => {
 
 const ActiveListCard: React.FC<{
   index: number;
-}> = ({ index }) => {
+}> = ({ index: i }) => {
   const { schema, saveItem, cancelEditItem, errors } = useListContext();
+
+  // Hide the index number in the card title if the schema has a max length of 1
+  const shouldShowIndexTitle = schema.max !== 1;
 
   return (
     <ErrorWrapper
       error={errors.unsavedItem ? "Please save in order to continue" : ""}
     >
-      <ListCard data-testid={`list-card-${index}`}>
+      <ListCard data-testid={`list-card-${i}`}>
         <Typography component="h2" variant="h3">
-          {schema.type} {index + 1}
+          {schema.type}
+          {shouldShowIndexTitle && ` ${i + 1}`}
         </Typography>
         {schema.fields.map((field, i) => (
           <InputRow key={i}>
@@ -100,10 +104,14 @@ const InactiveListCard: React.FC<{
 }> = ({ index: i }) => {
   const { schema, formik, removeItem, editItem } = useListContext();
 
+  // Hide the index number in the card title if the schema has a max length of 1
+  const shouldShowIndexTitle = schema.max !== 1;
+
   return (
     <ListCard data-testid={`list-card-${i}`}>
       <Typography component="h2" variant="h3">
-        {schema.type} {i + 1}
+        {schema.type}
+        {shouldShowIndexTitle && ` ${i + 1}`}
       </Typography>
       <Table>
         <TableBody>
@@ -155,6 +163,10 @@ const Root = () => {
     (errors.max && `You can provide at most ${schema.max} response(s)`) ||
     "";
 
+  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (userData = [])
+  const shouldShowAddAnotherButton =
+    schema.max !== 1 || formik.values.userData.length < 1;
+
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
@@ -173,23 +185,25 @@ const Root = () => {
               <InactiveListCard key={`card-${i}`} index={i} />
             ),
           )}
-          <ErrorWrapper
-            error={
-              errors.addItem
-                ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
-                : ""
-            }
-          >
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={addNewItem}
-              sx={{ width: "100%" }}
-              data-testid="list-add-button"
+          {shouldShowAddAnotherButton && (
+            <ErrorWrapper
+              error={
+                errors.addItem
+                  ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
+                  : ""
+              }
             >
-              + Add another {schema.type.toLowerCase()}
-            </Button>
-          </ErrorWrapper>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={addNewItem}
+                sx={{ width: "100%" }}
+                data-testid="list-add-button"
+              >
+                + Add another {schema.type.toLowerCase()}
+              </Button>
+            </ErrorWrapper>
+          )}
         </>
       </ErrorWrapper>
     </Card>

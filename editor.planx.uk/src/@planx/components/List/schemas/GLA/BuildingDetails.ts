@@ -1,5 +1,5 @@
-import { TextInputType } from "@planx/components/TextInput/model";
 import { Schema } from "@planx/components/List/model";
+import { TextInputType } from "@planx/components/TextInput/model";
 
 export const BuildingDetailsGLA: Schema = {
   type: "Building detail",

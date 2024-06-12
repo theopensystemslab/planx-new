@@ -11,9 +11,12 @@ export const ResidentialUnitsGLAGained: Schema = {
         options: [
           { id: "newBuild", data: { text: "New build", val: "newBuild" } },
           { id: "conversion", data: { text: "Conversion", val: "conversion" } },
-          { id: "changeOfUse", data: { text: "Change of use", val: "changeOfUse" } },
+          {
+            id: "changeOfUse",
+            data: { text: "Change of use", val: "changeOfUse" },
+          },
           { id: "extension", data: { text: "Extension", val: "extension" } },
-          { id: "notKnown", data: { text: "Not known", val: "notKnown" } },    
+          { id: "notKnown", data: { text: "Not known", val: "notKnown" } },
         ],
       },
     },
