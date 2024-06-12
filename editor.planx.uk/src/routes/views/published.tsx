@@ -49,7 +49,7 @@ export const publishedView = async (req: NaviRequest) => {
     flow: publishedFlow,
     flowSlug,
     flowStatus: flow.status,
-    flowName: flow.name,
+    flowName: flow.name == null ? flowSlug : flow.name,
   });
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
