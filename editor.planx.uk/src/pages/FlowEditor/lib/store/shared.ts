@@ -112,6 +112,9 @@ export const sharedStore: StateCreator<
   },
 
   setFlowName(flowName) {
+    if (flowName === null) {
+      set({ flowName: this.flowSlug });
+    }
     set({ flowName });
   },
 
