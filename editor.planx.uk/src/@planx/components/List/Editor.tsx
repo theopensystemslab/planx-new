@@ -14,34 +14,38 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+
+import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
+import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
+import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
+import { OpenSpaceGLA } from "./schemas/GLA/OpenSpace";
+import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
-import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
-import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
-import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
-import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
+import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
+import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
-import { Zoo } from "./schemas/Zoo";
+import { Zoo } from "./schemas/Tests/Zoo";
 
 type Props = EditorProps<TYPES.List, List>;
 
 export const SCHEMAS = [
   { name: "Residential units - Existing", schema: ResidentialUnitsExisting },
   { name: "Residential units - Proposed", schema: ResidentialUnitsProposed },
-  { name: "Residential units (GLA) - New", schema: ResidentialUnitsGLANew },
   {
-    name: "Residential units (GLA) - Rebuilt",
-    schema: ResidentialUnitsGLARebuilt,
+    name: "Residential units (GLA) - Gained",
+    schema: ResidentialUnitsGLAGained,
   },
+  { name: "Residential units (GLA) - Lost", schema: ResidentialUnitsGLALost },
   {
-    name: "Residentail units (GLA) - Removed",
-    schema: ResidentialUnitsGLARemoved,
+    name: "Existing and proposed uses (GLA)",
+    schema: ExistingAndProposedUsesGLA,
   },
-  {
-    name: "Residential units (GLA) - Retained",
-    schema: ResidentialUnitsGLARetained,
-  },
-  { name: "Zoo (test)", schema: Zoo },
+  { name: "Building details (GLA)", schema: BuildingDetailsGLA },
+  { name: "Communal spaces (GLA)", schema: CommunalSpaceGLA },
+  { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
+  { name: "Open spaces (GLA)", schema: OpenSpaceGLA },
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
+  { name: "(Test only) Zoo", schema: Zoo },
 ];
 
 function ListComponent(props: Props) {
