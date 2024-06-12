@@ -29,7 +29,7 @@ export type CopyFlowController = ValidatedRequestHandler<
 export const copyFlowController: CopyFlowController = async (
   _req,
   res,
-  next
+  next,
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
@@ -37,7 +37,7 @@ export const copyFlowController: CopyFlowController = async (
     const { flow, uniqueFlowData } = await copyFlow(
       flowId,
       replaceValue,
-      insert
+      insert,
     );
 
     res.status(200).send({
@@ -48,7 +48,7 @@ export const copyFlowController: CopyFlowController = async (
     });
   } catch (error) {
     return next(
-      new ServerError({ message: `Failed to copy flow. Error: ${error}` })
+      new ServerError({ message: `Failed to copy flow. Error: ${error}` }),
     );
   }
 };

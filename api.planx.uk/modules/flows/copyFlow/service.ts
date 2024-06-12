@@ -4,7 +4,7 @@ import { userContext } from "../../auth/middleware";
 const copyFlow = async (
   flowId: string,
   replaceValue: string,
-  insert: boolean
+  insert: boolean,
 ) => {
   // Fetch the original flow
   const flow = await getFlowData(flowId);
@@ -26,7 +26,7 @@ const copyFlow = async (
       newName,
       uniqueFlowData,
       parseInt(creatorId),
-      flowId
+      flowId,
     );
   }
 
