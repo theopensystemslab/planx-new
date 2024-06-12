@@ -170,7 +170,7 @@ const Node: React.FC<any> = (props: Props) => {
       return <FindProperty {...allProps} />;
 
     case TYPES.List:
-      return hasFeatureFlag("LIST_COMPONENT") ? <List {...allProps} /> : null;
+      return <List {...allProps} />;
 
     case TYPES.NextSteps:
       return <NextSteps {...allProps} />;
