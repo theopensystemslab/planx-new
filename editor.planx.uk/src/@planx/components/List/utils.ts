@@ -46,11 +46,17 @@ export function sumIdenticalUnitsByDevelopmentType(
   fn: string,
   passportData: Record<string, UserResponse[]>,
 ): Record<string, number> {
-  // Sum identical units by development type (read option `val` from Schema in future?)
+  // Sum identical units by development type (@todo read all possible option `val` from Schema in future)
   const baseSums: Record<string, number> = {
-    newBuild: 0,
+    changeOfUse: 0,
     changeOfUseFrom: 0,
     changeOfUseTo: 0,
+    conversion: 0,
+    gain: 0,
+    extension: 0,
+    loss: 0,
+    newBuild: 0,
+    notKnown: 0,
   };
   passportData[`${fn}`].map(
     (item) =>
