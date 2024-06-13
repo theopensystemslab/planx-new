@@ -37,7 +37,7 @@ const sendSinglePaymentEmail = async ({
   try {
     const { session, paymentRequest } = await validatePaymentRequest(
       paymentRequestId,
-      template
+      template,
     );
     const config = await getInviteToPayNotifyConfig(session, paymentRequest);
     const recipient = template.includes("-agent")
@@ -51,7 +51,7 @@ const sendSinglePaymentEmail = async ({
 
 const validatePaymentRequest = async (
   paymentRequestId: string,
-  template: Template
+  template: Template,
 ): Promise<{ session: SessionDetails; paymentRequest: PaymentRequest }> => {
   try {
     const query = gql`
@@ -90,7 +90,7 @@ const validatePaymentRequest = async (
     } = await client.request<ValidatePaymentRequest>(
       query,
       { paymentRequestId },
-      headers
+      headers,
     );
 
     if (!paymentRequest)
@@ -101,14 +101,14 @@ const validatePaymentRequest = async (
     return { session, paymentRequest };
   } catch (error) {
     throw Error(
-      `Unable to validate payment request. ${(error as Error).message}`
+      `Unable to validate payment request. ${(error as Error).message}`,
     );
   }
 };
 
 const getInviteToPayNotifyConfig = async (
   session: SessionDetails,
-  paymentRequest: PaymentRequest
+  paymentRequest: PaymentRequest,
 ): Promise<InviteToPayNotifyConfig> => ({
   personalisation: {
     ...session.flow.team.notifyPersonalisation,
@@ -123,7 +123,7 @@ const getInviteToPayNotifyConfig = async (
     fee: getFee(paymentRequest),
     projectType:
       (await $public.formatRawProjectTypes(
-        paymentRequest.sessionPreviewData?.["proposal.projectType"] as string[]
+        paymentRequest.sessionPreviewData?.["proposal.projectType"] as string[],
       )) || "Project type not submitted",
     serviceName: session.flow.name,
     serviceLink: getServiceLink(session.flow.team, session.flow.slug),
@@ -143,7 +143,7 @@ const getFee = (paymentRequest: PaymentRequest) => {
 
 const getPaymentLink = (
   session: SessionDetails,
-  paymentRequest: PaymentRequest
+  paymentRequest: PaymentRequest,
 ) => {
   const {
     flow: {

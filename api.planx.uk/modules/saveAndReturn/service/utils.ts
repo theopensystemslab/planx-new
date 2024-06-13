@@ -23,7 +23,7 @@ const getResumeLink = (
     id: string;
   },
   team: Team,
-  flowSlug: string
+  flowSlug: string,
 ) => {
   const serviceLink = getServiceLink(team, flowSlug);
   return `${serviceLink}?sessionId=${session.id}`;
@@ -84,7 +84,7 @@ const sendSingleApplicationEmail = async ({
 const validateSingleSessionRequest = async (
   email: string,
   sessionId: string,
-  template: Template
+  template: Template,
 ) => {
   try {
     const query = gql`
@@ -118,7 +118,7 @@ const validateSingleSessionRequest = async (
     } = await client.request<{ lowcalSessions: LowCalSession[] }>(
       query,
       { sessionId },
-      headers
+      headers,
     );
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
@@ -147,7 +147,7 @@ interface SessionDetails {
  * Parse session details into an object which will be read by email template
  */
 export const getSessionDetails = async (
-  session: LowCalSession
+  session: LowCalSession,
 ): Promise<SessionDetails> => {
   const passportProtectTypes =
     session.data.passport?.data?.["proposal.projectType"];
@@ -175,7 +175,7 @@ const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
   flowName: string,
-  team: Team
+  team: Team,
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),
@@ -269,7 +269,7 @@ export const setupEmailEventTriggers = async (sessionId: string) => {
     return hasUserSaved;
   } catch (error) {
     throw new Error(
-      `Error setting up email notifications for session ${sessionId}. Error: ${error}`
+      `Error setting up email notifications for session ${sessionId}. Error: ${error}`,
     );
   }
 };
