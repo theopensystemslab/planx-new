@@ -49,6 +49,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
@@ -83,6 +84,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
       {
@@ -100,6 +102,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
       {
@@ -117,6 +120,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
@@ -158,6 +162,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
       {
@@ -175,6 +180,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2022-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
@@ -206,6 +212,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
@@ -240,6 +247,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];

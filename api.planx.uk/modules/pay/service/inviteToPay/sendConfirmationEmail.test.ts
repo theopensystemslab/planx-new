@@ -31,6 +31,7 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
             email: agentEmail,
             flow: {
               slug: "some-flow",
+              name: "Some Flow",
               team: {
                 notifyPersonalisation: {
                   emailReplyToId: "123",
