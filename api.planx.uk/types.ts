@@ -17,6 +17,7 @@ export interface Node {
 export interface Flow {
   id: string;
   slug: string;
+  name: string;
   data: {
     [key: string]: Node;
   };

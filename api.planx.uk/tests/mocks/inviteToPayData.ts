@@ -50,6 +50,7 @@ export const validSession: Session = {
   flow: {
     id: "741a2372-b0b4-4f30-98a8-7c98c6464954",
     slug: "apply-for-a-lawful-development-certificate",
+    name: "Apply for a Lawful Development Certificate",
   },
 };
 
@@ -77,6 +78,7 @@ export const validPaymentRequest = {
     email: "the-agent@opensystemslab.io",
     flow: {
       slug: "apply-for-a-lawful-development-certificate",
+      name: "Apply for a Lawful Development Certificate",
       team: {
         name: "Buckinghamshire",
         slug: "buckinghamshire",
