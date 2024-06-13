@@ -12,8 +12,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#5b8c840
-    version: github.com/theopensystemslab/planx-core/5b8c840
+    specifier: git+https://github.com/theopensystemslab/planx-core#ccca2ac
+    version: github.com/theopensystemslab/planx-core/ccca2ac
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -8301,8 +8301,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/5b8c840:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5b8c840}
+  github.com/theopensystemslab/planx-core/ccca2ac:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ccca2ac}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
