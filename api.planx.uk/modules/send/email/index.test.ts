@@ -72,7 +72,7 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         session: {
           email: "simulate-delivered@notifications.service.gov.uk",
-          flow: { slug: "test-flow" },
+          flow: { slug: "test-flow", name: "Test Flow" },
         },
       },
       variables: { id: "123" },
