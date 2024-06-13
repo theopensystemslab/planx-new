@@ -32,7 +32,7 @@ export const previewView = async (req: NaviRequest) => {
     id: flow.id,
     flow: flowData,
     flowSlug,
-    flowName: flow.name === null ? flowSlug : flow.name,
+    flowName: flow.name,
   });
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
