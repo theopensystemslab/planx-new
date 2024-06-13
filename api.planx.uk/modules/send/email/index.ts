@@ -12,7 +12,7 @@ import {
 export async function sendToEmail(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
@@ -40,7 +40,7 @@ export async function sendToEmail(
 
     // Get the applicant email and flow slug associated with the session
     const { email, flow } = await getSessionEmailDetailsById(payload.sessionId);
-    const flowName = capitalize(flow?.slug?.replaceAll("-", " "));
+    const flowName = flow.name;
 
     // Prepare email template
     const config: EmailSubmissionNotifyConfig = {
@@ -65,7 +65,7 @@ export async function sendToEmail(
       localAuthority,
       sendToEmail,
       config,
-      response,
+      response
     );
 
     return res.status(200).send({
