@@ -27,7 +27,7 @@ const PhaseText = styled("span")(() => ({
   color: "rgba(255, 255, 255, 0.49);",
 }));
 
-const Login: React.FC = () => {
+const Login: React.FC = () => { 
   return (
     <Wrapper>
       <LoginContainer>
@@ -41,7 +41,7 @@ const Login: React.FC = () => {
           href={`${
             process.env.REACT_APP_GOOGLE_OAUTH_OVERRIDE ??
             process.env.REACT_APP_API_URL
-          }/auth/google`}
+          }/auth/google${window.location.search}`}
         >
           Login with Google
         </Link>

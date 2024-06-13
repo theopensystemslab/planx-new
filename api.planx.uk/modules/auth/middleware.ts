@@ -111,7 +111,13 @@ export const useJWT = expressjwt({
 });
 
 export const useGoogleAuth: RequestHandler = (req, res, next) => {
-  req.session!.returnTo = req.get("Referrer");
+  // Ensure returnTo maintains `?redirectTo=` param if provided
+  let returnToURL = req.get("Referrer");
+  if (req.query.redirectTo) {
+    returnToURL += `?redirectTo=${encodeURIComponent(req.query.redirectTo as string)}`;
+  }
+
+  req.session!.returnTo = returnToURL;
   return passport.authenticate("google", {
     scope: ["profile", "email"],
   })(req, res, next);
