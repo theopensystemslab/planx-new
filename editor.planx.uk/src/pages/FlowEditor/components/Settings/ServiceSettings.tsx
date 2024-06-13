@@ -244,6 +244,7 @@ const ServiceSettings: React.FC = () => {
           <FormControlLabel
             label={statusForm.values.status}
             sx={{
+              margin: 0,
               [`& .${formControlLabelClasses.label}`]: {
                 fontWeight: FONT_WEIGHT_BOLD,
                 textTransform: "capitalize",
