@@ -87,7 +87,7 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
         helpEmail: "help@email.com",
         helpOpeningHours: "9-5",
         helpPhone: "123",
-        serviceName: "Some flow",
+        serviceName: "Some Flow",
       },
     };
     await sendAgentAndPayeeConfirmationEmail("mockSessionId");
