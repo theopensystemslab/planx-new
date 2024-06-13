@@ -430,6 +430,66 @@ const getThemeOptions = ({
           },
         ],
       },
+      MuiSwitch: {
+        styleOverrides: {
+          root: {
+            width: "80px",
+            height: "48px",
+            padding: "8px",
+            left: "-8px",
+            "& .MuiSwitch-switchBase": {
+              padding: "11px",
+              borderRadius: "50%",
+              color: "rgb(255, 106, 0)",
+              "&.Mui-checked": {
+                transform: "translateX(32px)",
+              },
+            },
+            "& .MuiSwitch-thumb": {
+              background: palette.common.white,
+              width: "26px",
+              height: "26px",
+            },
+            "& .MuiSwitch-track": {
+              background: palette.background.dark,
+              borderRadius: "20px",
+              position: "relative",
+              opacity: "1 !important",
+              "&::before, &::after": {
+                display: "inline-block",
+                position: "absolute",
+                top: "50%",
+                width: "50%",
+                transform: "translateY(-50%)",
+                color: palette.common.white,
+                textAlign: "center",
+                fontSize: "0.75rem",
+                fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              },
+              "&::before": {
+                content: "'ON'",
+                left: "4px",
+                opacity: 0,
+              },
+              "&::after": {
+                content: "'OFF'",
+                right: "4px",
+              },
+            },
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              "& + .MuiSwitch-track": {
+                background: palette.success.dark,
+              },
+              "& + .MuiSwitch-track::before": {
+                opacity: 1,
+              },
+              "& + .MuiSwitch-track::after": {
+                opacity: 0,
+              },
+            },
+          },
+        },
+      },
       MuiRadio: {
         defaultProps: {
           disableRipple: true,
