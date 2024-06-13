@@ -38,7 +38,7 @@ type PayeeAndAgentEmailData = {
 };
 
 async function getDataForPayeeAndAgentEmails(
-  sessionId: string,
+  sessionId: string
 ): Promise<PayeeAndAgentEmailData> {
   const query = gql`
     query GetDataForPayeeAndAgentEmails($sessionId: uuid!) {
@@ -68,6 +68,7 @@ async function getDataForPayeeAndAgentEmails(
       email: string;
       flow: {
         slug: string;
+        name: string;
         team: {
           notifyPersonalisation: {
             emailReplyToId: string;
@@ -89,7 +90,7 @@ async function getDataForPayeeAndAgentEmails(
   const data = response.lowcal_sessions[0];
   const { emailReplyToId, helpEmail, helpOpeningHours, helpPhone } =
     data.flow.team.notifyPersonalisation;
-  const serviceName = convertSlugToName(data.flow.slug);
+  const serviceName = data.flow.name;
   const applicantEmail = data.email;
   const { payeeEmail, payeeName, address, projectTypes, applicantName } =
     data.paymentRequests[0];

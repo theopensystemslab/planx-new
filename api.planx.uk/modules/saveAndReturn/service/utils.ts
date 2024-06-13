@@ -23,7 +23,7 @@ const getResumeLink = (
     id: string;
   },
   team: Team,
-  flowSlug: string,
+  flowSlug: string
 ) => {
   const serviceLink = getServiceLink(team, flowSlug);
   return `${serviceLink}?sessionId=${session.id}`;
@@ -61,13 +61,10 @@ const sendSingleApplicationEmail = async ({
   sessionId: string;
 }) => {
   try {
-    const { flowSlug, team, session } = await validateSingleSessionRequest(
-      email,
-      sessionId,
-      template,
-    );
+    const { flowSlug, flowName, team, session } =
+      await validateSingleSessionRequest(email, sessionId, template);
     const config = {
-      personalisation: getPersonalisation(session, flowSlug, team),
+      personalisation: getPersonalisation(session, flowSlug, flowName, team),
       reference: null,
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
@@ -87,7 +84,7 @@ const sendSingleApplicationEmail = async ({
 const validateSingleSessionRequest = async (
   email: string,
   sessionId: string,
-  template: Template,
+  template: Template
 ) => {
   try {
     const query = gql`
@@ -103,6 +100,7 @@ const validateSingleSessionRequest = async (
           has_user_saved
           flow {
             slug
+            name
             team {
               name
               slug
@@ -120,13 +118,14 @@ const validateSingleSessionRequest = async (
     } = await client.request<{ lowcalSessions: LowCalSession[] }>(
       query,
       { sessionId },
-      headers,
+      headers
     );
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 
     return {
       flowSlug: session.flow.slug,
+      flowName: session.flow.name,
       team: session.flow.team,
       session: await getSessionDetails(session),
     };
@@ -148,7 +147,7 @@ interface SessionDetails {
  * Parse session details into an object which will be read by email template
  */
 export const getSessionDetails = async (
-  session: LowCalSession,
+  session: LowCalSession
 ): Promise<SessionDetails> => {
   const passportProtectTypes =
     session.data.passport?.data?.["proposal.projectType"];
@@ -175,12 +174,13 @@ export const getSessionDetails = async (
 const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
-  team: Team,
+  flowName: string,
+  team: Team
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),
     serviceLink: getServiceLink(team, flowSlug),
-    serviceName: convertSlugToName(flowSlug),
+    serviceName: flowName,
     teamName: team.name,
     sessionId: session.id,
     ...team.notifyPersonalisation,
@@ -269,7 +269,7 @@ export const setupEmailEventTriggers = async (sessionId: string) => {
     return hasUserSaved;
   } catch (error) {
     throw new Error(
-      `Error setting up email notifications for session ${sessionId}. Error: ${error}`,
+      `Error setting up email notifications for session ${sessionId}. Error: ${error}`
     );
   }
 };
