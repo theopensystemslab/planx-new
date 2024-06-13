@@ -3,43 +3,38 @@ import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
 import intersection from "lodash/intersection";
 import {
   ComponentType,
+  Edges,
   FlowGraph,
   Node,
 } from "@opensystemslab/planx-core/types";
 import type { Entry } from "type-fest";
 
-const validateAndDiffFlow = async (flowId: string) => {
+type AlteredNode = {
+  id: string;
+  type?: ComponentType;
+  edges?: Edges;
+  data?: Node["data"];
+};
+
+type ValidationResponse = {
+  title: string;
+  isValid: boolean;
+  message: string;
+};
+
+interface ValidateAndDiffResponse {
+  alteredNodes: AlteredNode[] | null;
+  message: string;
+  validationChecks?: ValidationResponse[];
+}
+
+const validateAndDiffFlow = async (
+  flowId: string,
+): Promise<ValidateAndDiffResponse> => {
   const flattenedFlow = await dataMerged(flowId);
-
-  const {
-    isValid: sectionsAreValid,
-    message: sectionsValidationMessage,
-    description: sectionsValidationDescription,
-  } = validateSections(flattenedFlow);
-  if (!sectionsAreValid) {
-    return {
-      alteredNodes: null,
-      message: sectionsValidationMessage,
-      description: sectionsValidationDescription,
-    };
-  }
-
-  const {
-    isValid: payIsValid,
-    message: payValidationMessage,
-    description: payValidationDescription,
-  } = validateInviteToPay(flattenedFlow);
-  if (!payIsValid) {
-    return {
-      alteredNodes: null,
-      message: payValidationMessage,
-      description: payValidationDescription,
-    };
-  }
-
   const mostRecent = await getMostRecentPublishedFlow(flowId);
-  const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
+  const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
   if (!delta)
     return {
       alteredNodes: null,
@@ -51,39 +46,40 @@ const validateAndDiffFlow = async (flowId: string) => {
     ...flattenedFlow[key],
   }));
 
+  const validationChecks = [];
+  const sections = validateSections(flattenedFlow);
+  const inviteToPay = validateInviteToPay(flattenedFlow);
+  validationChecks.push(sections, inviteToPay);
+
   return {
     alteredNodes,
-    message: "Changes valid",
+    message: "Changes queued to publish",
+    validationChecks: validationChecks,
   };
-};
-
-type ValidationResponse = {
-  isValid: boolean;
-  message: string;
-  description?: string;
 };
 
 const validateSections = (flowGraph: FlowGraph): ValidationResponse => {
   if (getSectionNodeIds(flowGraph)?.length > 0) {
     if (!sectionIsInFirstPosition(flowGraph)) {
       return {
+        title: "Sections",
         isValid: false,
-        message: "Cannot publish an invalid flow",
-        description: "When using Sections, your flow must start with a Section",
+        message: "When using Sections, your flow must start with a Section",
       };
     }
 
     if (!allSectionsOnRoot(flowGraph)) {
       return {
+        title: "Sections",
         isValid: false,
-        message: "Cannot publish an invalid flow",
-        description:
+        message:
           "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
       };
     }
   }
 
   return {
+    title: "Sections",
     isValid: true,
     message: "This flow has valid Sections or is not using Sections",
   };
@@ -112,15 +108,15 @@ const allSectionsOnRoot = (flowData: FlowGraph): boolean => {
 
 const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
   const invalidResponseTemplate = {
+    title: "Invite to Pay",
     isValid: false,
-    message: "Cannot publish an invalid flow",
   };
 
   if (inviteToPayEnabled(flowGraph)) {
     if (numberOfComponentType(flowGraph, ComponentType.Pay) > 1) {
       return {
         ...invalidResponseTemplate,
-        description:
+        message:
           "When using Invite to Pay, your flow must have exactly ONE Pay",
       };
     }
@@ -128,14 +124,14 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
     if (!hasComponentType(flowGraph, ComponentType.Send)) {
       return {
         ...invalidResponseTemplate,
-        description: "When using Invite to Pay, your flow must have a Send",
+        message: "When using Invite to Pay, your flow must have a Send",
       };
     }
 
     if (numberOfComponentType(flowGraph, ComponentType.Send) > 1) {
       return {
         ...invalidResponseTemplate,
-        description:
+        message:
           "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
       };
     }
@@ -143,8 +139,7 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
     if (!hasComponentType(flowGraph, ComponentType.FindProperty)) {
       return {
         ...invalidResponseTemplate,
-        description:
-          "When using Invite to Pay, your flow must have a FindProperty",
+        message: "When using Invite to Pay, your flow must have a FindProperty",
       };
     }
 
@@ -157,13 +152,14 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
     ) {
       return {
         ...invalidResponseTemplate,
-        description:
-          "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`",
+        message:
+          "When using Invite to Pay, your flow must have a Checklist that sets `proposal.projectType`",
       };
     }
   }
 
   return {
+    title: "Invite to Pay",
     isValid: true,
     message:
       "This flow is valid for Invite to Pay or is not using Invite to Pay",
