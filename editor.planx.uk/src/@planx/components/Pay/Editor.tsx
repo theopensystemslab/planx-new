@@ -137,7 +137,6 @@ export type Props = EditorProps<TYPES.Pay, Pay>;
 
 const Component: React.FC<Props> = (props: Props) => {
   const [flowName] = useStore((store) => [store.flowName]);
-
   const initialValues: Pay = {
     title: props.node?.data?.title || "Pay for your application",
     bannerTitle:

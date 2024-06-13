@@ -49,6 +49,7 @@ export const publishedView = async (req: NaviRequest) => {
     flow: publishedFlow,
     flowSlug,
     flowStatus: flow.status,
+    flowName: flow.name,
   });
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
@@ -84,6 +85,7 @@ export const fetchSettingsForPublishedView = async (
             }
           ) {
             id
+            name
             team {
               theme {
                 primaryColour: primary_colour

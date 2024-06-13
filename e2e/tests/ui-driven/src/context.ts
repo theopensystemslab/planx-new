@@ -25,6 +25,7 @@ export interface Context {
     id?: string;
     publishedId?: number;
     slug: string;
+    name: string;
     data?: object;
   };
   sessionIds?: string[];
@@ -67,11 +68,13 @@ export async function setUpTestContext(
   if (
     context.flow?.slug &&
     context.flow?.data &&
+    context.flow?.name &&
     context.team?.id &&
     context.user?.id
   ) {
     context.flow.id = await $admin.flow.create({
       slug: context.flow.slug,
+      name: context.flow.name,
       teamId: context.team.id,
       data: context.flow!.data!,
       status: "online",

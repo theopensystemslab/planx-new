@@ -1,5 +1,15 @@
+import { FlowGraph } from "@opensystemslab/planx-core/types";
+import axios from "axios";
 import gql from "graphql-tag";
-import { compose, lazy, mount, route, withData, withView } from "navi";
+import {
+  compose,
+  lazy,
+  mount,
+  NotFoundError,
+  route,
+  withData,
+  withView,
+} from "navi";
 import React from "react";
 
 import { client } from "../lib/graphql";
@@ -50,6 +60,7 @@ const routes = compose(
                 }
               ) {
                 id
+                name
               }
             }
           `,
@@ -65,6 +76,7 @@ const routes = compose(
           });
         }
 
+        useStore.getState().setFlowName(flow.name);
         useStore.getState().setFlowSlug(slug);
         await useStore.getState().connectTo(flow.id);
       }

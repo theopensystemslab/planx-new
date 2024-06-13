@@ -193,7 +193,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
       <DashboardListItem>
         <Box pr={4}>
           <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-            {flow.slug}
+            {flow.name}
           </DashboardLink>
           <LinkSubText>
             {formatLastEditMessage(
@@ -207,21 +207,23 @@ const FlowItem: React.FC<FlowItemProps> = ({
             items={[
               {
                 onClick: async () => {
-                  const newSlug = prompt("New name", flow.slug);
-                  if (newSlug && slugify(newSlug) !== flow.slug) {
+                  const newName = prompt("New name", flow.name);
+                  if (newName && newName !== flow.name) {
+                    const newSlug = slugify(newName);
                     await client.mutate({
                       mutation: gql`
                         mutation UpdateFlowSlug(
                           $teamId: Int
                           $slug: String
                           $newSlug: String
+                          $newName: String
                         ) {
                           update_flows(
                             where: {
                               team: { id: { _eq: $teamId } }
                               slug: { _eq: $slug }
                             }
-                            _set: { slug: $newSlug }
+                            _set: { slug: $newSlug, name: $newName }
                           ) {
                             affected_rows
                           }
@@ -230,7 +232,8 @@ const FlowItem: React.FC<FlowItemProps> = ({
                       variables: {
                         teamId: teamId,
                         slug: flow.slug,
-                        newSlug: slugify(newSlug),
+                        newSlug: newSlug,
+                        newName: newName,
                       },
                     });
 
@@ -328,7 +331,7 @@ const Team: React.FC = () => {
                 const newFlowSlug = slugify(newFlowName);
                 useStore
                   .getState()
-                  .createFlow(teamId, newFlowSlug)
+                  .createFlow(teamId, newFlowSlug, newFlowName)
                   .then((newId: string) => {
                     navigation.navigate(`/${slug}/${newId}`);
                   });

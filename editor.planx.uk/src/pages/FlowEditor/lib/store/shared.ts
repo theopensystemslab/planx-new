@@ -24,18 +24,20 @@ export interface SharedStore extends Store.Store {
     id,
     flow,
     flowSlug,
+    flowName,
     flowStatus,
   }: {
-    id: string;
-    flow: Store.flow;
-    flowSlug: string;
+    id?: string;
+    flow?: Store.flow;
+    flowSlug?: string;
+    flowName?: string;
     flowStatus?: FlowStatus;
   }) => void;
   wasVisited: (id: Store.nodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
   setFlowSlug: (flowSlug: string) => void;
-  setFlowNameFromSlug: (flowSlug: string) => void;
+  setFlowName: (flowName: string) => void;
   $public: (auth?: Auth) => CoreDomainClient;
   $client: CoreDomainClient;
 }
@@ -91,9 +93,8 @@ export const sharedStore: StateCreator<
     removeSessionIdSearchParam();
   },
 
-  setFlow({ id, flow, flowSlug, flowStatus }) {
-    this.setFlowNameFromSlug(flowSlug);
-    set({ id, flow, flowSlug, flowStatus });
+  setFlow({ id, flow, flowSlug, flowName, flowStatus }) {
+    set({ id, flow, flowSlug, flowName, flowStatus });
     get().initNavigationStore();
   },
 
@@ -110,8 +111,7 @@ export const sharedStore: StateCreator<
     set({ flowSlug });
   },
 
-  setFlowNameFromSlug(flowSlug) {
-    const flowName = capitalize(flowSlug.replaceAll?.("-", " "));
+  setFlowName(flowName) {
     set({ flowName });
   },
 

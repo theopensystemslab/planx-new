@@ -14,6 +14,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
 import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";

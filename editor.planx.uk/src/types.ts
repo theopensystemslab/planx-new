@@ -17,6 +17,7 @@ export type FormikHookReturn = ReturnType<typeof useFormik>;
 export interface Flow {
   id: string;
   slug: string;
+  name: string;
   team: Team;
   settings?: FlowSettings;
   status?: FlowStatus;
