@@ -1,5 +1,8 @@
+import FormControl from "@mui/material/FormControl";
+import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import { EditorProps, InternalNotes } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
@@ -7,7 +10,6 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
-import Radio from "ui/shared/Radio";
 
 import { parseSetValue, SetValue } from "./model";
 
@@ -84,6 +86,11 @@ function SetValueComponent(props: Props) {
     },
   });
 
+  const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
+    const target = event.target as HTMLInputElement;
+    formik.setFieldValue("operation", target.value);
+  };
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -113,13 +120,20 @@ function SetValueComponent(props: Props) {
         </ModalSectionContent>
         <ModalSectionContent title="Operation">
           <DescriptionText {...formik.values} />
-          <Radio
-            options={options}
-            value={formik.values.operation}
-            onChange={(newOperation) => {
-              formik.setFieldValue("operation", newOperation);
-            }}
-          />
+          <FormControl component="fieldset">
+            <RadioGroup defaultValue="replace" value={formik.values.operation}>
+              {options.map((option) => (
+                <BasicRadio
+                  key={option.value}
+                  id={option.value}
+                  title={option.label}
+                  variant="compact"
+                  value={option.value}
+                  onChange={handleRadioChange}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
         </ModalSectionContent>
       </ModalSection>
       <InternalNotes

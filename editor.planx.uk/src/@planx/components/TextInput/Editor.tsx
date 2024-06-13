@@ -34,10 +34,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
     validate: () => {},
   });
 
-  const handleRadioChange = (
-    event: React.SyntheticEvent<Element, Event>,
-    checked: boolean,
-  ) => {
+  const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;
     formik.setFieldValue("type", target.value);
   };
