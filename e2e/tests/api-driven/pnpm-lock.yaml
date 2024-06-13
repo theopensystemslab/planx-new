@@ -9,8 +9,8 @@ dependencies:
     specifier: ^9.3.0
     version: 9.3.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#5b8c840
-    version: github.com/theopensystemslab/planx-core/5b8c840
+    specifier: git+https://github.com/theopensystemslab/planx-core#ccca2ac
+    version: github.com/theopensystemslab/planx-core/ccca2ac
   axios:
     specifier: ^1.6.8
     version: 1.6.8
@@ -446,6 +446,7 @@ packages:
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
       debug: 4.3.4(supports-color@8.1.1)
@@ -461,6 +462,7 @@ packages:
 
   /@humanwhocodes/object-schema@2.0.3:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
+    deprecated: Use @eslint/object-schema instead
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -2936,8 +2938,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/5b8c840:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5b8c840}
+  github.com/theopensystemslab/planx-core/ccca2ac:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ccca2ac}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
