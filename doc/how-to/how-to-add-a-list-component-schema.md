@@ -1,4 +1,4 @@
-# How to add a schema to the List component
+# How to add schemas to the List component
 
 ## Context
 The List component allows us to ask many questions on the same page, and for the user to add many responses or items to each prompt - replacing the complex & dense tables for topics like residential units found in paper application forms. 
