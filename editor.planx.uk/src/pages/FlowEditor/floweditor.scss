@@ -39,9 +39,12 @@ $fontMonospace: "Source Code Pro", monospace;
 // ------------------------------------------------
 
 #editor {
-  flex: 1;
-  overflow: auto;
-  padding: $editorPadding;
+  display: flex;
+  padding: 0;
+
+  #flow {
+    padding: $editorPadding;
+  }
 
   ol,
   li {
