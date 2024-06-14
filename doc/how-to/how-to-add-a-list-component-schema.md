@@ -42,7 +42,7 @@ This is the possible shape of each varity of field:
   },
 },
 {
-  type: "text,
+  type: "text",
   required: true,
   data: {
     title: "What type of tree are you planting?",
