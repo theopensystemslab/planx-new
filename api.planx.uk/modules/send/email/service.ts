@@ -55,6 +55,7 @@ interface GetSessionEmailDetailsById {
     email: string;
     flow: {
       slug: string;
+      name: string;
     };
   } | null;
 }
@@ -67,6 +68,7 @@ export async function getSessionEmailDetailsById(sessionId: string) {
           email
           flow {
             slug
+            name
           }
         }
       }

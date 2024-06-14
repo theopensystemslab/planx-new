@@ -18,6 +18,7 @@ interface SessionDetails {
   email: string;
   flow: {
     slug: string;
+    name: string;
     team: Team;
   };
 }
@@ -69,6 +70,7 @@ const validatePaymentRequest = async (
             email
             flow {
               slug
+              name
               team {
                 id
                 name
@@ -123,7 +125,7 @@ const getInviteToPayNotifyConfig = async (
       (await $public.formatRawProjectTypes(
         paymentRequest.sessionPreviewData?.["proposal.projectType"] as string[],
       )) || "Project type not submitted",
-    serviceName: convertSlugToName(session.flow.slug),
+    serviceName: session.flow.name,
     serviceLink: getServiceLink(session.flow.team, session.flow.slug),
     expiryDate: calculateExpiryDate(paymentRequest.createdAt),
     paymentLink: getPaymentLink(session, paymentRequest),

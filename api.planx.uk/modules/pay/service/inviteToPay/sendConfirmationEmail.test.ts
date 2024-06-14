@@ -31,6 +31,7 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
             email: agentEmail,
             flow: {
               slug: "some-flow",
+              name: "Some Flow",
               team: {
                 notifyPersonalisation: {
                   emailReplyToId: "123",
@@ -86,7 +87,7 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
         helpEmail: "help@email.com",
         helpOpeningHours: "9-5",
         helpPhone: "123",
-        serviceName: "Some flow",
+        serviceName: "Some Flow",
       },
     };
     await sendAgentAndPayeeConfirmationEmail("mockSessionId");

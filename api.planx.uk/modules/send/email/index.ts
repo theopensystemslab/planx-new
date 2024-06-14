@@ -40,7 +40,7 @@ export async function sendToEmail(
 
     // Get the applicant email and flow slug associated with the session
     const { email, flow } = await getSessionEmailDetailsById(payload.sessionId);
-    const flowName = capitalize(flow?.slug?.replaceAll("-", " "));
+    const flowName = flow.name;
 
     // Prepare email template
     const config: EmailSubmissionNotifyConfig = {

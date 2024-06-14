@@ -16,6 +16,7 @@ export const mockTeam = {
 export const mockFlow: Flow = {
   id: "dcfd4f07-76da-4b67-9822-2aca92b27551",
   slug: "slug",
+  name: "Flow Name",
   team_id: mockTeam.id,
   data: {
     _root: {
@@ -63,6 +64,7 @@ export const mockLowcalSession: LowCalSession = {
   },
   flow: {
     slug: "apply-for-a-lawful-development-certificate",
+    name: "Apply for a Lawful Development Certificate",
     team: mockTeam,
   },
   flow_id: mockFlow.id,

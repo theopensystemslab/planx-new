@@ -61,13 +61,10 @@ const sendSingleApplicationEmail = async ({
   sessionId: string;
 }) => {
   try {
-    const { flowSlug, team, session } = await validateSingleSessionRequest(
-      email,
-      sessionId,
-      template,
-    );
+    const { flowSlug, flowName, team, session } =
+      await validateSingleSessionRequest(email, sessionId, template);
     const config = {
-      personalisation: getPersonalisation(session, flowSlug, team),
+      personalisation: getPersonalisation(session, flowSlug, flowName, team),
       reference: null,
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
@@ -103,6 +100,7 @@ const validateSingleSessionRequest = async (
           has_user_saved
           flow {
             slug
+            name
             team {
               name
               slug
@@ -127,6 +125,7 @@ const validateSingleSessionRequest = async (
 
     return {
       flowSlug: session.flow.slug,
+      flowName: session.flow.name,
       team: session.flow.team,
       session: await getSessionDetails(session),
     };
@@ -175,12 +174,13 @@ export const getSessionDetails = async (
 const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
+  flowName: string,
   team: Team,
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),
     serviceLink: getServiceLink(team, flowSlug),
-    serviceName: convertSlugToName(flowSlug),
+    serviceName: flowName,
     teamName: team.name,
     sessionId: session.id,
     ...team.notifyPersonalisation,

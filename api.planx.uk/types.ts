@@ -17,6 +17,7 @@ export interface Node {
 export interface Flow {
   id: string;
   slug: string;
+  name: string;
   data: {
     [key: string]: Node;
   };
@@ -85,6 +86,7 @@ export interface LowCalSession {
   has_user_saved: boolean;
   flow: {
     slug: string;
+    name: string;
     team: Team;
   };
   lockedAt?: string;

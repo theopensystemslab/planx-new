@@ -19,6 +19,7 @@ export const validSessionQueryMock = {
       flow: {
         id: validSession.flow.id,
         slug: validSession.flow.slug,
+        name: validSession.flow.name,
       },
     },
   },
@@ -37,6 +38,7 @@ export const detailedValidSessionQueryMock = {
       flow: {
         id: validSession.flow.id,
         slug: validSession.flow.slug,
+        name: validSession.flow.name,
       },
     },
   },
