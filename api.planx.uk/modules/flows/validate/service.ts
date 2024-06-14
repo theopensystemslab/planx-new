@@ -1,13 +1,18 @@
-import * as jsondiffpatch from "jsondiffpatch";
-import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
-import intersection from "lodash/intersection";
 import {
   ComponentType,
   Edges,
   FlowGraph,
   Node,
 } from "@opensystemslab/planx-core/types";
-import type { Entry } from "type-fest";
+import * as jsondiffpatch from "jsondiffpatch";
+import intersection from "lodash/intersection";
+
+import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
+import {
+  hasComponentType,
+  isComponentType,
+  numberOfComponentType,
+} from "./helpers";
 
 type AlteredNode = {
   id: string;
@@ -18,7 +23,7 @@ type AlteredNode = {
 
 type ValidationResponse = {
   title: string;
-  isValid: boolean;
+  status: "Pass" | "Fail" | "Not applicable";
   message: string;
 };
 
@@ -41,6 +46,7 @@ const validateAndDiffFlow = async (
       message: "No new changes to publish",
     };
 
+  // Only get alteredNodes and do validationChecks if there have been changes
   const alteredNodes = Object.keys(delta).map((key) => ({
     id: key,
     ...flattenedFlow[key],
@@ -51,10 +57,19 @@ const validateAndDiffFlow = async (
   const inviteToPay = validateInviteToPay(flattenedFlow);
   validationChecks.push(sections, inviteToPay);
 
+  // Sort validation checks by status: Fail, Pass, Not applicable
+  const applicableChecks = validationChecks
+    .filter((v) => v.status !== "Not applicable")
+    .sort((a, b) => a.status.localeCompare(b.status));
+  const notApplicableChecks = validationChecks.filter(
+    (v) => v.status === "Not applicable",
+  );
+  const sortedValidationChecks = applicableChecks.concat(notApplicableChecks);
+
   return {
     alteredNodes,
     message: "Changes queued to publish",
-    validationChecks: validationChecks,
+    validationChecks: sortedValidationChecks,
   };
 };
 
@@ -63,7 +78,7 @@ const validateSections = (flowGraph: FlowGraph): ValidationResponse => {
     if (!sectionIsInFirstPosition(flowGraph)) {
       return {
         title: "Sections",
-        isValid: false,
+        status: "Fail",
         message: "When using Sections, your flow must start with a Section",
       };
     }
@@ -71,17 +86,23 @@ const validateSections = (flowGraph: FlowGraph): ValidationResponse => {
     if (!allSectionsOnRoot(flowGraph)) {
       return {
         title: "Sections",
-        isValid: false,
+        status: "Fail",
         message:
           "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
       };
     }
+
+    return {
+      title: "Sections",
+      status: "Pass",
+      message: "Your flow has valid Sections",
+    };
   }
 
   return {
     title: "Sections",
-    isValid: true,
-    message: "This flow has valid Sections or is not using Sections",
+    status: "Not applicable",
+    message: "Your flow is not using Sections",
   };
 };
 
@@ -107,15 +128,11 @@ const allSectionsOnRoot = (flowData: FlowGraph): boolean => {
 };
 
 const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
-  const invalidResponseTemplate = {
-    title: "Invite to Pay",
-    isValid: false,
-  };
-
   if (inviteToPayEnabled(flowGraph)) {
     if (numberOfComponentType(flowGraph, ComponentType.Pay) > 1) {
       return {
-        ...invalidResponseTemplate,
+        title: "Invite to Pay",
+        status: "Fail",
         message:
           "When using Invite to Pay, your flow must have exactly ONE Pay",
       };
@@ -123,14 +140,16 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
 
     if (!hasComponentType(flowGraph, ComponentType.Send)) {
       return {
-        ...invalidResponseTemplate,
+        title: "Invite to Pay",
+        status: "Fail",
         message: "When using Invite to Pay, your flow must have a Send",
       };
     }
 
     if (numberOfComponentType(flowGraph, ComponentType.Send) > 1) {
       return {
-        ...invalidResponseTemplate,
+        title: "Invite to Pay",
+        status: "Fail",
         message:
           "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
       };
@@ -138,7 +157,8 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
 
     if (!hasComponentType(flowGraph, ComponentType.FindProperty)) {
       return {
-        ...invalidResponseTemplate,
+        title: "Invite to Pay",
+        status: "Fail",
         message: "When using Invite to Pay, your flow must have a FindProperty",
       };
     }
@@ -151,18 +171,24 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
       )
     ) {
       return {
-        ...invalidResponseTemplate,
+        title: "Invite to Pay",
+        status: "Fail",
         message:
           "When using Invite to Pay, your flow must have a Checklist that sets `proposal.projectType`",
       };
     }
+
+    return {
+      title: "Invite to Pay",
+      status: "Pass",
+      message: "Your flow has valid Invite to Pay",
+    };
   }
 
   return {
     title: "Invite to Pay",
-    isValid: true,
-    message:
-      "This flow is valid for Invite to Pay or is not using Invite to Pay",
+    status: "Not applicable",
+    message: "Your flow is not using Invite to Pay",
   };
 };
 
@@ -178,51 +204,6 @@ const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
     payNodeStatuses.length > 0 &&
     payNodeStatuses.every((status) => status === true)
   );
-};
-
-const isComponentType = (
-  entry: Entry<FlowGraph>,
-  type: ComponentType,
-): entry is [string, Node] => {
-  const [nodeId, node] = entry;
-  if (nodeId === "_root") return false;
-  return Boolean(node?.type === type);
-};
-
-const hasComponentType = (
-  flowGraph: FlowGraph,
-  type: ComponentType,
-  fn?: string,
-): boolean => {
-  const nodeIds = Object.entries(flowGraph).filter(
-    (entry): entry is [string, Node] => isComponentType(entry, type),
-  );
-  if (fn) {
-    nodeIds
-      ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
-      ?.map(([nodeId, _nodeData]) => nodeId);
-  } else {
-    nodeIds?.map(([nodeId, _nodeData]) => nodeId);
-  }
-  return Boolean(nodeIds?.length);
-};
-
-const numberOfComponentType = (
-  flowGraph: FlowGraph,
-  type: ComponentType,
-  fn?: string,
-): number => {
-  const nodeIds = Object.entries(flowGraph).filter(
-    (entry): entry is [string, Node] => isComponentType(entry, type),
-  );
-  if (fn) {
-    nodeIds
-      ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
-      ?.map(([nodeId, _nodeData]) => nodeId);
-  } else {
-    nodeIds?.map(([nodeId, _nodeData]) => nodeId);
-  }
-  return nodeIds?.length;
 };
 
 export { validateAndDiffFlow };

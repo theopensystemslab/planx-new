@@ -27,7 +27,7 @@ import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import EditHistory from "./EditHistory";
-import { AlteredNode, AlteredNodesSummaryContent, ValidationChecks } from "./PublishDialog";
+import { AlteredNode, AlteredNodesSummaryContent, ValidationCheck, ValidationChecks } from "./PublishDialog";
 
 type SidebarTabs = "PreviewBrowser" | "History";
 
@@ -174,7 +174,7 @@ const Sidebar: React.FC<{
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet",
   );
-  const [validationChecks, setValidationChecks] = useState<{ title: string; isValid: boolean; message: string; }[]>([]);
+  const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>([]);
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
@@ -182,6 +182,56 @@ const Sidebar: React.FC<{
 
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
+  };
+
+  const handleCheckForChangesToPublish = async () => {
+    try {
+      setLastPublishedTitle("Checking for changes...");
+      const alteredFlow = await validateAndDiffFlow(flowId);
+      setAlteredNodes(
+        alteredFlow?.data.alteredNodes
+          ? alteredFlow.data.alteredNodes
+          : [],
+      );
+      setLastPublishedTitle(
+        alteredFlow?.data.alteredNodes
+          ? `Found changes to ${alteredFlow.data.alteredNodes.length} nodes`
+          : alteredFlow?.data.message,
+      );
+      setValidationChecks(alteredFlow?.data?.validationChecks);
+      setDialogOpen(true);
+    } catch (error) {
+      setLastPublishedTitle(
+        "Error checking for changes to publish",
+      );
+
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.error);
+      } else {
+        alert(
+          `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
+        );
+      }
+    }
+  };
+
+  const handlePublish = async () => {
+    try {
+      setDialogOpen(false);
+      setLastPublishedTitle("Publishing changes...");
+      const { alteredNodes, message } = await publishFlow(
+        flowId,
+        summary,
+      );
+      setLastPublishedTitle(
+        alteredNodes
+          ? `Successfully published changes to ${alteredNodes.length} nodes`
+          : `${message}` || "No new changes to publish",
+      );
+    } catch (error) {
+      setLastPublishedTitle("Error trying to publish");
+      alert(error);
+    }
   };
 
   const _lastPublishedRequest = useAsync(async () => {
@@ -310,36 +360,7 @@ const Sidebar: React.FC<{
                 variant="contained"
                 color="primary"
                 disabled={!useStore.getState().canUserEditTeam(teamSlug)}
-                onClick={async () => {
-                  try {
-                    setLastPublishedTitle("Checking for changes...");
-                    const alteredFlow = await validateAndDiffFlow(flowId);
-                    setAlteredNodes(
-                      alteredFlow?.data.alteredNodes
-                        ? alteredFlow.data.alteredNodes
-                        : [],
-                    );
-                    setLastPublishedTitle(
-                      alteredFlow?.data.alteredNodes
-                        ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
-                        : alteredFlow?.data.message,
-                    );
-                    setValidationChecks(alteredFlow?.data?.validationChecks);
-                    setDialogOpen(true);
-                  } catch (error) {
-                    setLastPublishedTitle(
-                      "Error checking for changes to publish",
-                    );
-
-                    if (error instanceof AxiosError) {
-                      alert(error.response?.data?.error);
-                    } else {
-                      alert(
-                        `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
-                      );
-                    }
-                  }
-                }}
+                onClick={handleCheckForChangesToPublish}
               >
                 CHECK FOR CHANGES TO PUBLISH
               </Button>
@@ -349,15 +370,16 @@ const Sidebar: React.FC<{
               onClose={() => setDialogOpen(false)}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
+              maxWidth="md"
             >
-              <DialogTitle style={{ paddingBottom: 0 }}>
-                {lastPublishedTitle}
+              <DialogTitle variant="h3" component="h1">
+                {`Check for changes to publish`}
               </DialogTitle>
               <DialogContent>
                 {alteredNodes?.length ? (
                   <>
                     <AlteredNodesSummaryContent
-                      alteredNodes={alteredNodes}
+                      alteredNodes={alteredNodes} lastPublishedTitle={lastPublishedTitle}
                     />
                     <ValidationChecks validationChecks={validationChecks} />
                     <Box pb={2}>
@@ -378,35 +400,20 @@ const Sidebar: React.FC<{
                     />
                   </>
                 ) : (
-                  lastPublishedTitle
+                  <Typography variant="body2">
+                    {`No new changes to publish`}
+                  </Typography>
                 )}
               </DialogContent>
-              <DialogActions>
+              <DialogActions sx={{ paddingX: 2 }}>
                 <Button onClick={() => setDialogOpen(false)}>
                   KEEP EDITING
                 </Button>
                 <Button
                   color="primary"
-                  onClick={async () => {
-                    try {
-                      setDialogOpen(false);
-                      setLastPublishedTitle("Publishing changes...");
-                      const { alteredNodes, message } = await publishFlow(
-                        flowId,
-                        summary,
-                      );
-                      setLastPublishedTitle(
-                        alteredNodes
-                          ? `Successfully published changes to ${alteredNodes.length} node(s)`
-                          : `${message}` || "No new changes to publish",
-                      );
-                    } catch (error) {
-                      setLastPublishedTitle("Error trying to publish");
-                      alert(error);
-                      console.log(error);
-                    }
-                  }}
-                  disabled={!alteredNodes || alteredNodes.length === 0 || validationChecks.filter((v) => !v.isValid).length > 0}
+                  variant="contained"
+                  onClick={handlePublish}
+                  disabled={!alteredNodes || alteredNodes.length === 0 || validationChecks.filter((v) => v.status === "Fail").length > 0}
                 >
                   PUBLISH
                 </Button>

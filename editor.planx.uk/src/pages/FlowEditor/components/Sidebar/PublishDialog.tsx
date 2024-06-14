@@ -1,5 +1,6 @@
 import Close from "@mui/icons-material/Close";
 import Done from "@mui/icons-material/Done";
+import NotInterested from "@mui/icons-material/NotInterested";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
@@ -13,7 +14,6 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
@@ -113,12 +113,13 @@ interface AlteredNodesSummary {
 
 export const AlteredNodesSummaryContent = (props: {
   alteredNodes: AlteredNode[];
+  lastPublishedTitle: string;
 }) => {
-  const { alteredNodes } = props;
+  const { alteredNodes, lastPublishedTitle } = props;
   const [expandNodes, setExpandNodes] = useState<boolean>(false);
 
   const changeSummary: AlteredNodesSummary = {
-    title: "",
+    title: lastPublishedTitle,
     portals: [],
     updated: 0,
     deleted: 0,
@@ -143,21 +144,24 @@ export const AlteredNodesSummaryContent = (props: {
 
   return (
     <Box pb={2}>
+      <Typography variant="h4" component="h3" pb={2}>
+        {`Changes`}
+      </Typography>
       {changeSummary["title"] && (
-        <Typography variant="body2" pb={2}>
+        <Typography variant="body2">
           {changeSummary["title"]}
         </Typography>
       )}
       {(changeSummary["updated"] > 0 || changeSummary["deleted"] > 0) && (
         <Box pb={2}>
-          <ul>
-            <li key={"updated"}>
+          <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+            <ListItem key={"updated"} disablePadding sx={{ display: "list-item" }}>
               <Typography variant="body2">{`${changeSummary["updated"]} nodes have been updated or added`}</Typography>
-            </li>
-            <li key={"deleted"}>
+            </ListItem>
+            <ListItem key={"deleted"} disablePadding sx={{ display: "list-item" }}>
               <Typography variant="body2">{`${changeSummary["deleted"]} nodes have been deleted`}</Typography>
-            </li>
-          </ul>
+            </ListItem>
+          </List>
           <Box
             style={{
               display: "flex",
@@ -204,7 +208,7 @@ export const AlteredNodesSummaryContent = (props: {
         <>
           <Box pt={2}>
             <Typography variant="body2">{`This includes recently published changes in the following nested services:`}</Typography>
-            <List sx={{ listStyleType: "disc", marginLeft: 4 }}>
+            <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
               {changeSummary["portals"].map((portal) => (
                 <AlteredNestedFlowListItem {...portal} />
               ))}
@@ -217,25 +221,41 @@ export const AlteredNodesSummaryContent = (props: {
   );
 };
 
+export interface ValidationCheck {
+  title: string;
+  status: "Pass" | "Fail" | "Not applicable";
+  message: string;
+}
+
 export const ValidationChecks = (props: {
-  validationChecks: { title: string; isValid: boolean; message: string; }[]
+  validationChecks: ValidationCheck[]
 }) => {
   const { validationChecks } = props;
 
+  const getIcon = (status: ValidationCheck["status"]) => {
+    if (status === "Pass") {
+      return <Done color="success" />;
+    } else if (status === "Fail") {
+      return <Close color="error" />;
+    } else if (status === "Not applicable") {
+      return <NotInterested color="disabled" />;
+    }
+  }
+
   return (
     <Box pb={2}>
-      <Typography variant="body2" fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+      <Typography variant="h4" component="h3">
         Validation checks
       </Typography>
       <List sx={{ pb: 2 }}>
         {validationChecks.map((check, i) => (
           <ListItem key={i} disablePadding>
-            <ListItemIcon>
-              {check.isValid ? <Done color="success" /> : <Close color="error" />}
+            <ListItemIcon sx={{ minWidth: (theme) => theme.spacing(3) }}>
+              {getIcon(check.status)}
             </ListItemIcon>
             <ListItemText
-              primary={<Typography variant="body2">{check.title}</Typography>}
-              secondary={<Typography variant="body2" fontSize="small">{check.message}</Typography>}
+              primary={<Typography variant="body2" color={check.status === "Not applicable" ? "GrayText" : "inherit"}>{check.title}</Typography>}
+              secondary={<Typography variant="body2" fontSize="small" color={check.status === "Not applicable" ? "GrayText" : "inherit"}>{check.message}</Typography>}
             />
           </ListItem>
         ))}
