@@ -20,4 +20,4 @@ export const formatLastEditMessage = (
 };
 
 export const formatLastPublishMessage = (date: string, user: string): string =>
-  `Last published ${formatLastEditDate(date)} ago by ${user}`;
+  `Last published ${formatLastEditDate(date)} by ${user}`;
