@@ -232,15 +232,11 @@ export const ValidationChecks = (props: {
 }) => {
   const { validationChecks } = props;
 
-  const getIcon = (status: ValidationCheck["status"]) => {
-    if (status === "Pass") {
-      return <Done color="success" />;
-    } else if (status === "Fail") {
-      return <Close color="error" />;
-    } else if (status === "Not applicable") {
-      return <NotInterested color="disabled" />;
-    }
-  }
+  const Icon: Record<ValidationCheck["status"], React.ReactElement> = {
+    "Pass": <Done color="success" />,
+    "Fail": <Close color="error" />,
+    "Not applicable": <NotInterested color="disabled" />
+  };
 
   return (
     <Box pb={2}>
@@ -251,7 +247,7 @@ export const ValidationChecks = (props: {
         {validationChecks.map((check, i) => (
           <ListItem key={i} disablePadding>
             <ListItemIcon sx={{ minWidth: (theme) => theme.spacing(3) }}>
-              {getIcon(check.status)}
+              {Icon[check.status]}
             </ListItemIcon>
             <ListItemText
               primary={<Typography variant="body2" color={check.status === "Not applicable" ? "GrayText" : "inherit"}>{check.title}</Typography>}
@@ -262,5 +258,5 @@ export const ValidationChecks = (props: {
       </List>
       <Divider />
     </Box>
-  )
+  );
 }
