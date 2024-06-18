@@ -1650,6 +1650,115 @@
       permission:
         filter: {}
 - table:
+    name: team_settings
+    schema: public
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - has_planning_data
+          - id
+          - team_id
+          - boundary_json
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+      comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - has_planning_data
+          - id
+          - team_id
+          - boundary_json
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+      comment: ""
+    - role: public
+      permission:
+        columns:
+          - has_planning_data
+          - id
+          - team_id
+          - boundary_json
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - has_planning_data
+          - id
+          - team_id
+          - boundary_json
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - has_planning_data
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+        check: null
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - has_planning_data
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+        check: null
+      comment: ""
+- table:
     name: team_themes
     schema: public
   object_relationships:
