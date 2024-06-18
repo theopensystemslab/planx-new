@@ -1,4 +1,4 @@
-import { getByText, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
@@ -8,9 +8,9 @@ import ListComponent from "../Public";
 import {
   mockUnitsPayload,
   mockUnitsProps,
-} from "../schemas/Tests/GenericUnits";
-import { mockMaxOneProps } from "../schemas/Tests/MaxOne";
-import { mockZooPayload, mockZooProps } from "../schemas/Tests/Zoo";
+} from "../schemas/mocks/GenericUnits";
+import { mockMaxOneProps } from "../schemas/mocks/MaxOne";
+import { mockZooPayload, mockZooProps } from "../schemas/mocks/Zoo";
 
 jest.setTimeout(20_000);
 
