@@ -49,7 +49,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({
         rows={
           data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
         }
-        name={`userData[${activeIndex}][${data.fn}]`}
+        name={`userData[${activeIndex}]['${data.fn}']`}
         required={required}
         inputProps={{
           "aria-describedby": [
@@ -82,7 +82,7 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
         <Input
           required={required}
           bordered
-          name={`userData[${activeIndex}][${[data.fn]}]`}
+          name={`userData[${activeIndex}]['${data.fn}']`}
           type="number"
           value={formik.values.userData[activeIndex][data.fn]}
           onChange={formik.handleChange}
@@ -132,7 +132,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
       >
         <RadioGroup
           aria-labelledby={`radio-buttons-group-label-${id}`}
-          name={`userData[${activeIndex}][${[data.fn]}]`}
+          name={`userData[${activeIndex}]['${data.fn}']`}
           sx={{ p: 1 }}
           value={formik.values.userData[activeIndex][data.fn]}
         >
@@ -182,7 +182,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
           labelId={`select-label-${id}`}
           value={formik.values.userData[activeIndex][data.fn]}
           onChange={formik.handleChange}
-          name={`userData[${activeIndex}][${data.fn}]`}
+          name={`userData[${activeIndex}]['${data.fn}']`}
         >
           {data.options.map((option) => (
             <MenuItem
