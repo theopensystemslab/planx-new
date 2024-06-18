@@ -1,6 +1,8 @@
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import Box from "@mui/material/Box";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
+import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
@@ -26,7 +28,6 @@ import ListManager, {
 } from "ui/editor/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import OptionButton from "ui/editor/OptionButton";
 import RichTextInput from "ui/editor/RichTextInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
@@ -261,16 +262,18 @@ const Component: React.FC<Props> = (props: Props) => {
                   onChange={handleChange}
                 />
               </InputRow>
+              <InputRow>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={values.hidePay}
+                      onChange={() => setFieldValue("hidePay", !values.hidePay)}
+                    />
+                  }
+                  label="Hide the pay buttons and show fee for information only"
+                />
+              </InputRow>
             </ModalSectionContent>
-            <OptionButton
-              selected={values.hidePay}
-              onClick={() => {
-                setFieldValue("hidePay", !values.hidePay);
-              }}
-              style={{ width: "100%" }}
-            >
-              Hide the pay buttons and show fee for information only
-            </OptionButton>
           </ModalSection>
           <ModalSection>
             <ModalSectionContent
@@ -349,15 +352,22 @@ const Component: React.FC<Props> = (props: Props) => {
           </ModalSection>
           <ModalSection>
             <ModalSectionContent title="Invite to Pay" Icon={ICONS[TYPES.Pay]}>
-              <OptionButton
-                selected={values.allowInviteToPay}
-                onClick={() => {
-                  setFieldValue("allowInviteToPay", !values.allowInviteToPay);
-                }}
-                style={{ width: "100%" }}
-              >
-                Allow applicants to invite someone else to pay
-              </OptionButton>
+              <InputRow>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={values.allowInviteToPay}
+                      onChange={() =>
+                        setFieldValue(
+                          "allowInviteToPay",
+                          !values.allowInviteToPay,
+                        )
+                      }
+                    />
+                  }
+                  label="Allow applicants to invite someone else to pay"
+                />
+              </InputRow>
               {values.allowInviteToPay ? (
                 <>
                   <Box>
