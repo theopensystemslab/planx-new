@@ -80,13 +80,15 @@ describe("sessions", () => {
         `mutation InsertFlow(
         $data: jsonb!,
         $slug: String!,
+        $name: String!,
         $teamId: Int!,
       ) {
         insert_flows_one(
           object: {
             data: $data
             slug: $slug
-            team_id: $teamId,
+            name: $name
+            team_id: $teamId
             version: 1
           }
         ) {
@@ -97,6 +99,7 @@ describe("sessions", () => {
           data: { x: 1 },
           slug: "flow1",
           teamId: teamId,
+          name: "flow 1",
         }
       );
       flowId = res2.data.insert_flows_one.id;
