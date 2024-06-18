@@ -14,7 +14,6 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
-
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
 import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
@@ -24,7 +23,6 @@ import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
-import { Zoo } from "./schemas/Tests/Zoo";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -45,7 +43,6 @@ export const SCHEMAS = [
   { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
   { name: "Open spaces (GLA)", schema: OpenSpaceGLA },
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
-  { name: "(Test only) Zoo", schema: Zoo },
 ];
 
 function ListComponent(props: Props) {
