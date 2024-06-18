@@ -97,7 +97,7 @@ export const ResidentialUnitsGLAGained: Schema = {
       data: {
         title:
           "Is this unit compliant with Part M4(2) of the Building Regulations 2010?",
-        fn: "complianceM42", // compliance.m42
+        fn: "compliance.m42",
         options: [
           { id: "true", data: { text: "Yes" } },
           { id: "false", data: { text: "No" } },
@@ -109,7 +109,7 @@ export const ResidentialUnitsGLAGained: Schema = {
       data: {
         title:
           "Is this unit compliant with Part M4(3)(2a) of the Building Regulations 2010?",
-        fn: "complianceM432a", // compliance.m432a
+        fn: "compliance.m432a",
         options: [
           { id: "true", data: { text: "Yes" } },
           { id: "false", data: { text: "No" } },
@@ -121,7 +121,7 @@ export const ResidentialUnitsGLAGained: Schema = {
       data: {
         title:
           "Is this unit compliant with Part M4(3)(2b) of the Building Regulations 2010?",
-        fn: "complianceM432b", // compliance.m432b
+        fn: "compliance.m432b",
         options: [
           { id: "true", data: { text: "Yes" } },
           { id: "false", data: { text: "No" } },
@@ -144,7 +144,7 @@ export const ResidentialUnitsGLAGained: Schema = {
           { id: "coLiving", data: { text: "Co living unit" } },
           { id: "hostel", data: { text: "Hostel room" } },
           { id: "HMO", data: { text: "HMO" } },
-          { id: "student", data: { text: "Student accomodation" } },
+          { id: "student", data: { text: "Student accommodation" } },
           { id: "other", data: { text: "Other" } },
         ],
       },
