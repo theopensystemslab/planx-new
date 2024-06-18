@@ -433,10 +433,11 @@ const getThemeOptions = ({
       MuiSwitch: {
         styleOverrides: {
           root: {
-            width: "80px",
-            height: "48px",
+            width: "76px",
+            height: "44px",
             padding: "8px",
             left: "-8px",
+            marginRight: "-4px",
             "& .MuiSwitch-switchBase": {
               padding: "11px",
               borderRadius: "50%",
@@ -447,8 +448,8 @@ const getThemeOptions = ({
             },
             "& .MuiSwitch-thumb": {
               background: palette.common.white,
-              width: "26px",
-              height: "26px",
+              width: "22px",
+              height: "22px",
             },
             "& .MuiSwitch-track": {
               background: palette.background.dark,
@@ -550,7 +551,7 @@ const getThemeOptions = ({
           {
             props: { variant: "compact" },
             style: {
-              "& label": { paddingBottom: "200px", },
+              "& label": { paddingBottom: "200px" },
               "&.MuiRadio-root": {
                 width: "40px",
                 height: "40px",
@@ -568,7 +569,7 @@ const getThemeOptions = ({
             },
           },
         ],
-      },      
+      },
     },
   };
 
