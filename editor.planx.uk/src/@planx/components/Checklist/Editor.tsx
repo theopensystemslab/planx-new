@@ -1,7 +1,9 @@
 import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import IconButton from "@mui/material/IconButton";
+import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
@@ -14,7 +16,6 @@ import InputGroup from "ui/editor/InputGroup";
 import ListManager from "ui/editor/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import OptionButton from "ui/editor/OptionButton";
 import RichTextInput from "ui/editor/RichTextInput";
 import SimpleMenu from "ui/editor/SimpleMenu";
 import Input from "ui/shared/Input";
@@ -393,29 +394,41 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-            <OptionButton
-              selected={!!formik.values.groupedOptions}
-              onClick={() => {
-                formik.setValues({
-                  ...formik.values,
-                  ...toggleExpandableChecklist({
-                    options: formik.values.options,
-                    groupedOptions: formik.values.groupedOptions,
-                  }),
-                });
-              }}
-            >
-              Expandable
-            </OptionButton>
-
-            <OptionButton
-              selected={formik.values.allRequired}
-              onClick={() => {
-                formik.setFieldValue("allRequired", !formik.values.allRequired);
-              }}
-            >
-              All required
-            </OptionButton>
+            <InputRow>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={!!formik.values.groupedOptions}
+                    onChange={() =>
+                      formik.setValues({
+                        ...formik.values,
+                        ...toggleExpandableChecklist({
+                          options: formik.values.options,
+                          groupedOptions: formik.values.groupedOptions,
+                        }),
+                      })
+                    }
+                  />
+                }
+                label="Expandable"
+              />
+            </InputRow>
+            <InputRow>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formik.values.allRequired}
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "allRequired",
+                        !formik.values.allRequired,
+                      )
+                    }
+                  />
+                }
+                label="All required"
+              />
+            </InputRow>
           </InputGroup>
         </ModalSectionContent>
 
