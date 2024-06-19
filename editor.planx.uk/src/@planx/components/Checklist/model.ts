@@ -23,7 +23,7 @@ interface ChecklistExpandableProps {
 export const toggleExpandableChecklist = (
   checklist: ChecklistExpandableProps,
 ): ChecklistExpandableProps => {
-  if (checklist.options) {
+  if (checklist.options !== undefined && checklist.options.length > 0) {
     return {
       ...checklist,
       groupedOptions: [
@@ -34,13 +34,25 @@ export const toggleExpandableChecklist = (
       ],
       options: undefined,
     };
-  }
-  if (checklist.groupedOptions) {
+  } else if (
+    checklist.groupedOptions !== undefined &&
+    checklist.groupedOptions.length > 0
+  ) {
     return {
       ...checklist,
       options: checklist.groupedOptions.flatMap((opt) => opt.children),
       groupedOptions: undefined,
     };
+  } else {
+    return {
+      ...checklist,
+      options: checklist.options || [],
+      groupedOptions: checklist.groupedOptions || [
+        {
+          title: "Section 1",
+          children: [],
+        },
+      ],
+    };
   }
-  return checklist;
 };
