@@ -22,6 +22,8 @@ config:
     secure: AAABACgwjEmlLmE19ofRO8e/JpD8sHDV2lcDmSXbU/Mw8ZRh5gTgll8DZ3BVjpDWfQfIecBAIf2TFgeo9CsBSLjfaRJ7eJyKDSWm7i8LlMC2JN/PN+Ig8oeI0H0oLkqJIziNKKjx+e97zDiXO9LZ1CVzrywR
   application:hasura-admin-secret:
     secure: AAABAHsoh7ZNkr6ep3xXsUZpp/JIjshBX+tJ0KOFgGnJ4wxR0oIcB6VewVDuwSyFJRVix72YahM=
+  application:hasura-cpu: "256"
+  application:hasura-memory: "1024"
   application:hasura-planx-api-key:
     secure: AAABANHLs3ItPxkteh0chwMP2bKuHO3ovuRLi4FsIrCqerzXVIaTLFDqNR+4KBTeMPz4cnF5tCTwsrJv9GruZdXU+lg=
   application:jwt-secret:
