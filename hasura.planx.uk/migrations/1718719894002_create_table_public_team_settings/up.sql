@@ -23,4 +23,4 @@ comment on column "public"."team_settings"."help_email" is E'For use in gov noti
 comment on column "public"."team_settings"."help_opening_hours" is E'For use in gov notify emails';
 comment on column "public"."team_settings"."email_reply_to_id" is E'Generate by gov notify and relates to the "reply to" address in notifications';
 comment on column "public"."team_settings"."boundary_url" is E'User entered boundary linked to https://www.planning.data.gov.uk/';
-comment on column "public"."team_settings"."boundary_json" is E'Long form boundary geojson - used to compute boundary__bbox';
+comment on column "public"."team_settings"."boundary_json" is E'Long form boundary geojson - used to compute boundary_bbox';
