@@ -81,8 +81,8 @@ PostgresDB.prototype.commit = function (
 
         client.query("BEGIN", (err) => {
           client.query(
-            "INSERT INTO flows (id, slug) VALUES ($1, $2) ON CONFLICT DO NOTHING",
-            [id, id],
+            "INSERT INTO flows (id, slug, name) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING",
+            [id, id, id],
             (err, _res) => {
               if (err) {
                 rollback(client, done);
@@ -156,7 +156,7 @@ PostgresDB.prototype.commit = function (
 };
 
 // Get the named document from the database. The callback is called with (err,
-// snapshot). A snapshot with a version of zero is returned if the docuemnt
+// snapshot). A snapshot with a version of zero is returned if the document
 // has never been created in the database.
 PostgresDB.prototype.getSnapshot = function (
   _collection,

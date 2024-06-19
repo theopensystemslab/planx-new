@@ -9,9 +9,9 @@ describe("portals", () => {
     let res = await gqlAdmin(`
       mutation {
         insert_flows(objects: [
-          {slug: "TEST_root"},
-          {slug: "TEST_portal"},
-          {slug: "TEST_subportal"}
+          {slug: "TEST_root", name: "Test root"},
+          {slug: "TEST_portal", name: "Test portal"},
+          {slug: "TEST_subportal", name: "Test subportal"}
         ]) {
           returning {
             id
