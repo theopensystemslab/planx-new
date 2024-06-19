@@ -42,7 +42,7 @@ export const EmptyFormLongText: StoryObj = {
 export const EmptyFormExtraLongText: StoryObj = {
   args: {
     title: "Describe your project",
-    description: "Be as descriptive as you can. You have 500 characters.",
+    description: "Be as descriptive as you can. You have 750 characters.",
     type: TextInputType.ExtraLong,
   },
 };

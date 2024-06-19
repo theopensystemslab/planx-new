@@ -78,7 +78,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 { id: "default", title: "Default" },
                 { id: "short", title: "Short (max 120 characters)" },
                 { id: "long", title: "Long (max 250 characters)" },
-                { id: "extraLong", title: "Extra long (max 500 characters)" },
+                { id: "extraLong", title: "Extra long (max 750 characters)" },
                 { id: "email", title: "Email" },
                 { id: "phone", title: "Phone" },
               ].map((type) => (
