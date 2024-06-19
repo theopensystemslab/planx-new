@@ -32,7 +32,7 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
           return "Your answer must be 250 characters or fewer.";
         }
         if (type === TextInputType.ExtraLong) {
-          return "Your answer must be 500 characters or fewer.";
+          return "Your answer must be 750 characters or fewer.";
         }
         if (type === TextInputType.Email) {
           return "Enter an email address in the correct format, like name@example.com";
@@ -52,7 +52,7 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
           return Boolean(value && value.length <= 250);
         }
         if (type === TextInputType.ExtraLong) {
-          return Boolean(value && value.length <= 500);
+          return Boolean(value && value.length <= 750);
         }
         if (type === TextInputType.Email) {
           return Boolean(value && emailRegex.test(value));
