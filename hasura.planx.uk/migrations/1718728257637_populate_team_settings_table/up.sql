@@ -8,7 +8,7 @@ COALESCE(notify_personalisation ->> 'helpPhone', '(01234) 567890') as help_phone
 COALESCE(notify_personalisation ->> 'helpOpeningHours', 'Monday - Friday, 9am - 5pm') as help_opening_hours,
 COALESCE(notify_personalisation ->> 'emailReplyToId', '727d48fa-cb8a-42f9-b8b2-55032f3bb451') as email_reply_to_id,
 CAST(COALESCE(settings ->> 'hasPlanningData', 'false' ) as boolean) as has_planning_data,
-COALESCE(settings #>> '{externalPlanningSite,url}', 'https://www.planningportal.co.uk/' )as external_planning_site_url,
+COALESCE(settings #>> '{externalPlanningSite,url}', 'https://www.planningportal.co.uk/' ) as external_planning_site_url,
 COALESCE(settings #>> '{externalPlanningSite,name}', 'Planning Portal') as external_planning_site_name,
 settings ->> 'boundary' as boundary_url,
 boundary as boundary_json
