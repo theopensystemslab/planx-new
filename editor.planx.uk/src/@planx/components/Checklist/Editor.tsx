@@ -150,8 +150,40 @@ const OptionEditor: React.FC<{
 const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
     <ModalSectionContent subtitle="Options">
+      <InputRow>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={formik.values.allRequired}
+              onChange={() =>
+                formik.setFieldValue("allRequired", !formik.values.allRequired)
+              }
+            />
+          }
+          label="All required for validation"
+        />
+      </InputRow>
+      <InputRow>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={!!formik.values.groupedOptions}
+              onChange={() =>
+                formik.setValues({
+                  ...formik.values,
+                  ...toggleExpandableChecklist({
+                    options: formik.values.options,
+                    groupedOptions: formik.values.groupedOptions,
+                  }),
+                })
+              }
+            />
+          }
+          label="Expandable"
+        />
+      </InputRow>
       {formik.values.groupedOptions ? (
-        <Box>
+        <Box mt={2}>
           {formik.values.groupedOptions.map(
             (groupedOption: Group<Option>, groupIndex: number) => (
               <Box key={groupIndex} mt={groupIndex === 0 ? 0 : 4}>
@@ -259,25 +291,27 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           </Box>
         </Box>
       ) : (
-        <ListManager
-          values={formik.values.options || []}
-          onChange={(newOptions) => {
-            formik.setFieldValue("options", newOptions);
-          }}
-          newValueLabel="add new option"
-          newValue={() =>
-            ({
-              data: {
-                text: "",
-                description: "",
-                val: "",
-                flag: "",
-              },
-            }) as Option
-          }
-          Editor={OptionEditor}
-          editorExtraProps={{ showValueField: !!formik.values.fn }}
-        />
+        <Box mt={2}>
+          <ListManager
+            values={formik.values.options || []}
+            onChange={(newOptions) => {
+              formik.setFieldValue("options", newOptions);
+            }}
+            newValueLabel="add new option"
+            newValue={() =>
+              ({
+                data: {
+                  text: "",
+                  description: "",
+                  val: "",
+                  flag: "",
+                },
+              }) as Option
+            }
+            Editor={OptionEditor}
+            editorExtraProps={{ showValueField: !!formik.values.fn }}
+          />
+        </Box>
       )}
     </ModalSectionContent>
   );
@@ -392,41 +426,6 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 value={formik.values.fn}
                 placeholder="Data Field"
                 onChange={formik.handleChange}
-              />
-            </InputRow>
-            <InputRow>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={!!formik.values.groupedOptions}
-                    onChange={() =>
-                      formik.setValues({
-                        ...formik.values,
-                        ...toggleExpandableChecklist({
-                          options: formik.values.options,
-                          groupedOptions: formik.values.groupedOptions,
-                        }),
-                      })
-                    }
-                  />
-                }
-                label="Expandable"
-              />
-            </InputRow>
-            <InputRow>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formik.values.allRequired}
-                    onChange={() =>
-                      formik.setFieldValue(
-                        "allRequired",
-                        !formik.values.allRequired,
-                      )
-                    }
-                  />
-                }
-                label="All required"
               />
             </InputRow>
           </InputGroup>
