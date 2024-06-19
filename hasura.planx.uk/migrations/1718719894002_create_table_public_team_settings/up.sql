@@ -10,7 +10,7 @@ CREATE TABLE "public"."team_settings" ("id" serial NOT NULL,
 "external_planning_site_url" text DEFAULT 'https://www.planningportal.co.uk/', 
 "external_planning_site_name" text DEFAULT 'Planning Portal',
 "boundary_url" text,  
-"boundary_json" jsonb NOT NULL DEFAULT '{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[1.9134116, 49.528423], [1.9134116, 61.331151], [1.9134116, 61.331151], [-10.76418, 61.331151], [-10.76418, 49.528423]]]}, "properties": {}}'::jsonb, "boundary_url" text, 
+"boundary_json" jsonb NOT NULL DEFAULT '{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[1.9134116, 49.528423], [1.9134116, 61.331151], [1.9134116, 61.331151], [-10.76418, 61.331151], [-10.76418, 49.528423]]]}, "properties": {}}'::jsonb,
 PRIMARY KEY ("id") , 
 FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON UPDATE cascade ON DELETE cascade, 
 UNIQUE ("id"), UNIQUE ("team_id"), UNIQUE ("reference_code"));
