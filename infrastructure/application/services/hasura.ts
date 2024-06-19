@@ -68,7 +68,8 @@ export const createHasuraService = async ({
         },
         hasura: {
           image: repo.buildAndPushImage("../../hasura.planx.uk"),
-          memory: 1024 /*MB*/,
+          cpu: config.requireNumber("hasura-cpu"),
+          memory: config.requireNumber("hasura-memory"),
           environment: [
             { name: "HASURA_GRAPHQL_ENABLE_CONSOLE", value: "true" },
             {
@@ -106,7 +107,7 @@ export const createHasuraService = async ({
             },
           ],
         },
-      } 
+      },
     },
     desiredCount: 1,
   });

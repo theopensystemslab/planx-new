@@ -85,7 +85,7 @@ export const ResidentialUnitsGLARetained: Schema = {
           { id: "HMO", data: { text: "HMO", val: "HMO" } },
           {
             id: "student",
-            data: { text: "Student accomodation", val: "student" },
+            data: { text: "Student accommodation", val: "student" },
           },
           { id: "other", data: { text: "Other", val: "other" } },
         ],

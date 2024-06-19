@@ -107,12 +107,20 @@ describe("sections validation on diff", () => {
       .set(auth)
       .expect(200)
       .then((res) => {
-        expect(res.body).toEqual({
-          alteredNodes: null,
-          message: "Cannot publish an invalid flow",
-          description:
-            "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
-        });
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Sections",
+            status: "Fail",
+            message:
+              "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
+          },
+          {
+            title: "Invite to Pay",
+            status: "Not applicable",
+            message: "Your flow is not using Invite to Pay",
+          },
+        ]);
       });
   });
 
@@ -148,12 +156,19 @@ describe("sections validation on diff", () => {
       .set(auth)
       .expect(200)
       .then((res) => {
-        expect(res.body).toEqual({
-          alteredNodes: null,
-          message: "Cannot publish an invalid flow",
-          description:
-            "When using Sections, your flow must start with a Section",
-        });
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Sections",
+            status: "Fail",
+            message: "When using Sections, your flow must start with a Section",
+          },
+          {
+            title: "Invite to Pay",
+            status: "Not applicable",
+            message: "Your flow is not using Invite to Pay",
+          },
+        ]);
       });
   });
 });
@@ -180,10 +195,19 @@ describe("invite to pay validation on diff", () => {
       .set(auth)
       .expect(200)
       .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have a Send",
-        );
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Invite to Pay",
+            status: "Fail",
+            message: "When using Invite to Pay, your flow must have a Send",
+          },
+          {
+            title: "Sections",
+            status: "Not applicable",
+            message: "Your flow is not using Sections",
+          },
+        ]);
       });
   });
 
@@ -219,10 +243,20 @@ describe("invite to pay validation on diff", () => {
       .set(auth)
       .expect(200)
       .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
-        );
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Invite to Pay",
+            status: "Fail",
+            message:
+              "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
+          },
+          {
+            title: "Sections",
+            status: "Not applicable",
+            message: "Your flow is not using Sections",
+          },
+        ]);
       });
   });
 
@@ -254,10 +288,20 @@ describe("invite to pay validation on diff", () => {
       .set(auth)
       .expect(200)
       .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have a FindProperty",
-        );
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Invite to Pay",
+            status: "Fail",
+            message:
+              "When using Invite to Pay, your flow must have a FindProperty",
+          },
+          {
+            title: "Sections",
+            status: "Not applicable",
+            message: "Your flow is not using Sections",
+          },
+        ]);
       });
   });
 
@@ -291,10 +335,20 @@ describe("invite to pay validation on diff", () => {
       .set(auth)
       .expect(200)
       .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have exactly ONE Pay",
-        );
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Invite to Pay",
+            status: "Fail",
+            message:
+              "When using Invite to Pay, your flow must have exactly ONE Pay",
+          },
+          {
+            title: "Sections",
+            status: "Not applicable",
+            message: "Your flow is not using Sections",
+          },
+        ]);
       });
   });
 
@@ -330,10 +384,20 @@ describe("invite to pay validation on diff", () => {
       .set(auth)
       .expect(200)
       .then((res) => {
-        expect(res.body.message).toEqual("Cannot publish an invalid flow");
-        expect(res.body.description).toEqual(
-          "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`",
-        );
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Invite to Pay",
+            status: "Fail",
+            message:
+              "When using Invite to Pay, your flow must have a Checklist that sets `proposal.projectType`",
+          },
+          {
+            title: "Sections",
+            status: "Not applicable",
+            message: "Your flow is not using Sections",
+          },
+        ]);
       });
   });
 });

@@ -11,15 +11,15 @@ describe("passport data shape", () => {
       mockFn: [
         {
           age: 10,
-          cuteness: "Very",
-          email: "richard.parker@pi.com",
+          "cuteness.amount": "Very",
+          "email.address": "richard.parker@pi.com",
           name: "Richard Parker",
           size: "Medium",
         },
         {
           age: 10,
-          cuteness: "Very",
-          email: "richard.parker@pi.com",
+          "cuteness.amount": "Very",
+          "email.address": "richard.parker@pi.com",
           name: "Richard Parker",
           size: "Medium",
         },
@@ -28,13 +28,13 @@ describe("passport data shape", () => {
 
     expect(flatten(defaultPassportData)).toEqual({
       "mockFn.one.age": 10,
-      "mockFn.one.cuteness": "Very",
-      "mockFn.one.email": "richard.parker@pi.com",
+      "mockFn.one.cuteness.amount": "Very",
+      "mockFn.one.email.address": "richard.parker@pi.com",
       "mockFn.one.name": "Richard Parker",
       "mockFn.one.size": "Medium",
       "mockFn.two.age": 10,
-      "mockFn.two.cuteness": "Very",
-      "mockFn.two.email": "richard.parker@pi.com",
+      "mockFn.two.cuteness.amount": "Very",
+      "mockFn.two.email.address": "richard.parker@pi.com",
       "mockFn.two.name": "Richard Parker",
       "mockFn.two.size": "Medium",
     });

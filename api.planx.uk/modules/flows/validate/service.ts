@@ -1,91 +1,108 @@
-import * as jsondiffpatch from "jsondiffpatch";
-import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
-import intersection from "lodash/intersection";
 import {
   ComponentType,
+  Edges,
   FlowGraph,
   Node,
 } from "@opensystemslab/planx-core/types";
-import type { Entry } from "type-fest";
+import * as jsondiffpatch from "jsondiffpatch";
+import intersection from "lodash/intersection";
 
-const validateAndDiffFlow = async (flowId: string) => {
+import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
+import {
+  hasComponentType,
+  isComponentType,
+  numberOfComponentType,
+} from "./helpers";
+
+type AlteredNode = {
+  id: string;
+  type?: ComponentType;
+  edges?: Edges;
+  data?: Node["data"];
+};
+
+type ValidationResponse = {
+  title: string;
+  status: "Pass" | "Fail" | "Not applicable";
+  message: string;
+};
+
+interface ValidateAndDiffResponse {
+  alteredNodes: AlteredNode[] | null;
+  message: string;
+  validationChecks?: ValidationResponse[];
+}
+
+const validateAndDiffFlow = async (
+  flowId: string,
+): Promise<ValidateAndDiffResponse> => {
   const flattenedFlow = await dataMerged(flowId);
-
-  const {
-    isValid: sectionsAreValid,
-    message: sectionsValidationMessage,
-    description: sectionsValidationDescription,
-  } = validateSections(flattenedFlow);
-  if (!sectionsAreValid) {
-    return {
-      alteredNodes: null,
-      message: sectionsValidationMessage,
-      description: sectionsValidationDescription,
-    };
-  }
-
-  const {
-    isValid: payIsValid,
-    message: payValidationMessage,
-    description: payValidationDescription,
-  } = validateInviteToPay(flattenedFlow);
-  if (!payIsValid) {
-    return {
-      alteredNodes: null,
-      message: payValidationMessage,
-      description: payValidationDescription,
-    };
-  }
-
   const mostRecent = await getMostRecentPublishedFlow(flowId);
-  const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
+  const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
   if (!delta)
     return {
       alteredNodes: null,
       message: "No new changes to publish",
     };
 
+  // Only get alteredNodes and do validationChecks if there have been changes
   const alteredNodes = Object.keys(delta).map((key) => ({
     id: key,
     ...flattenedFlow[key],
   }));
 
+  const validationChecks = [];
+  const sections = validateSections(flattenedFlow);
+  const inviteToPay = validateInviteToPay(flattenedFlow);
+  validationChecks.push(sections, inviteToPay);
+
+  // Sort validation checks by status: Fail, Pass, Not applicable
+  const applicableChecks = validationChecks
+    .filter((v) => v.status !== "Not applicable")
+    .sort((a, b) => a.status.localeCompare(b.status));
+  const notApplicableChecks = validationChecks.filter(
+    (v) => v.status === "Not applicable",
+  );
+  const sortedValidationChecks = applicableChecks.concat(notApplicableChecks);
+
   return {
     alteredNodes,
-    message: "Changes valid",
+    message: "Changes queued to publish",
+    validationChecks: sortedValidationChecks,
   };
-};
-
-type ValidationResponse = {
-  isValid: boolean;
-  message: string;
-  description?: string;
 };
 
 const validateSections = (flowGraph: FlowGraph): ValidationResponse => {
   if (getSectionNodeIds(flowGraph)?.length > 0) {
     if (!sectionIsInFirstPosition(flowGraph)) {
       return {
-        isValid: false,
-        message: "Cannot publish an invalid flow",
-        description: "When using Sections, your flow must start with a Section",
+        title: "Sections",
+        status: "Fail",
+        message: "When using Sections, your flow must start with a Section",
       };
     }
 
     if (!allSectionsOnRoot(flowGraph)) {
       return {
-        isValid: false,
-        message: "Cannot publish an invalid flow",
-        description:
+        title: "Sections",
+        status: "Fail",
+        message:
           "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
       };
     }
+
+    return {
+      title: "Sections",
+      status: "Pass",
+      message: "Your flow has valid Sections",
+    };
   }
 
   return {
-    isValid: true,
-    message: "This flow has valid Sections or is not using Sections",
+    title: "Sections",
+    status: "Not applicable",
+    message: "Your flow is not using Sections",
   };
 };
 
@@ -111,40 +128,38 @@ const allSectionsOnRoot = (flowData: FlowGraph): boolean => {
 };
 
 const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
-  const invalidResponseTemplate = {
-    isValid: false,
-    message: "Cannot publish an invalid flow",
-  };
-
   if (inviteToPayEnabled(flowGraph)) {
     if (numberOfComponentType(flowGraph, ComponentType.Pay) > 1) {
       return {
-        ...invalidResponseTemplate,
-        description:
+        title: "Invite to Pay",
+        status: "Fail",
+        message:
           "When using Invite to Pay, your flow must have exactly ONE Pay",
       };
     }
 
     if (!hasComponentType(flowGraph, ComponentType.Send)) {
       return {
-        ...invalidResponseTemplate,
-        description: "When using Invite to Pay, your flow must have a Send",
+        title: "Invite to Pay",
+        status: "Fail",
+        message: "When using Invite to Pay, your flow must have a Send",
       };
     }
 
     if (numberOfComponentType(flowGraph, ComponentType.Send) > 1) {
       return {
-        ...invalidResponseTemplate,
-        description:
+        title: "Invite to Pay",
+        status: "Fail",
+        message:
           "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
       };
     }
 
     if (!hasComponentType(flowGraph, ComponentType.FindProperty)) {
       return {
-        ...invalidResponseTemplate,
-        description:
-          "When using Invite to Pay, your flow must have a FindProperty",
+        title: "Invite to Pay",
+        status: "Fail",
+        message: "When using Invite to Pay, your flow must have a FindProperty",
       };
     }
 
@@ -156,17 +171,24 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
       )
     ) {
       return {
-        ...invalidResponseTemplate,
-        description:
-          "When using Invite to Pay, your flow must have a Checklist that sets the passport variable `proposal.projectType`",
+        title: "Invite to Pay",
+        status: "Fail",
+        message:
+          "When using Invite to Pay, your flow must have a Checklist that sets `proposal.projectType`",
       };
     }
+
+    return {
+      title: "Invite to Pay",
+      status: "Pass",
+      message: "Your flow has valid Invite to Pay",
+    };
   }
 
   return {
-    isValid: true,
-    message:
-      "This flow is valid for Invite to Pay or is not using Invite to Pay",
+    title: "Invite to Pay",
+    status: "Not applicable",
+    message: "Your flow is not using Invite to Pay",
   };
 };
 
@@ -182,51 +204,6 @@ const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
     payNodeStatuses.length > 0 &&
     payNodeStatuses.every((status) => status === true)
   );
-};
-
-const isComponentType = (
-  entry: Entry<FlowGraph>,
-  type: ComponentType,
-): entry is [string, Node] => {
-  const [nodeId, node] = entry;
-  if (nodeId === "_root") return false;
-  return Boolean(node?.type === type);
-};
-
-const hasComponentType = (
-  flowGraph: FlowGraph,
-  type: ComponentType,
-  fn?: string,
-): boolean => {
-  const nodeIds = Object.entries(flowGraph).filter(
-    (entry): entry is [string, Node] => isComponentType(entry, type),
-  );
-  if (fn) {
-    nodeIds
-      ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
-      ?.map(([nodeId, _nodeData]) => nodeId);
-  } else {
-    nodeIds?.map(([nodeId, _nodeData]) => nodeId);
-  }
-  return Boolean(nodeIds?.length);
-};
-
-const numberOfComponentType = (
-  flowGraph: FlowGraph,
-  type: ComponentType,
-  fn?: string,
-): number => {
-  const nodeIds = Object.entries(flowGraph).filter(
-    (entry): entry is [string, Node] => isComponentType(entry, type),
-  );
-  if (fn) {
-    nodeIds
-      ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
-      ?.map(([nodeId, _nodeData]) => nodeId);
-  } else {
-    nodeIds?.map(([nodeId, _nodeData]) => nodeId);
-  }
-  return nodeIds?.length;
 };
 
 export { validateAndDiffFlow };

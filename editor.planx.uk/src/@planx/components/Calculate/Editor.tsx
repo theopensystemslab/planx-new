@@ -1,4 +1,6 @@
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { styled } from "@mui/material/styles";
+import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
@@ -12,7 +14,6 @@ import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import OptionButton from "ui/editor/OptionButton";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
@@ -100,17 +101,22 @@ export default function Component(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <OptionButton
-            selected={formik.values.formatOutputForAutomations}
-            onClick={() => {
-              formik.setFieldValue(
-                "formatOutputForAutomations",
-                !formik.values.formatOutputForAutomations,
-              );
-            }}
-          >
-            Format the output to automate a future Question or Checklist only
-          </OptionButton>
+          <InputRow>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formik.values.formatOutputForAutomations}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "formatOutputForAutomations",
+                      !formik.values.formatOutputForAutomations,
+                    )
+                  }
+                />
+              }
+              label="Format the output to automate a future Question or Checklist only"
+            />
+          </InputRow>
         </ModalSectionContent>
         <ModalSectionContent title="Formula">
           <InputRow>

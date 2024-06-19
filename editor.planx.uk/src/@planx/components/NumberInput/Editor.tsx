@@ -1,3 +1,5 @@
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NumberInput } from "@planx/components/NumberInput/model";
 import { parseNumberInput } from "@planx/components/NumberInput/model";
@@ -11,7 +13,6 @@ import { useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import OptionButton from "ui/editor/OptionButton";
 import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
@@ -76,17 +77,20 @@ export default function NumberInputComponent(props: Props): FCReturn {
             </InputRowItem>
           </InputRow>
           <InputRow>
-            <OptionButton
-              selected={formik.values.allowNegatives}
-              onClick={() => {
-                formik.setFieldValue(
-                  "allowNegatives",
-                  !formik.values.allowNegatives,
-                );
-              }}
-            >
-              Allow negative numbers to be input
-            </OptionButton>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formik.values.allowNegatives}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "allowNegatives",
+                      !formik.values.allowNegatives,
+                    )
+                  }
+                />
+              }
+              label="Allow negative numbers to be input"
+            />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
