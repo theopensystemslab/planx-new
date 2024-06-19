@@ -1652,6 +1652,10 @@
 - table:
     name: team_settings
     schema: public
+  object_relationships:
+    - name: team
+      using:
+        foreign_key_constraint_on: team_id
   select_permissions:
     - role: api
       permission:
@@ -1692,19 +1696,15 @@
     - role: public
       permission:
         columns:
-          - has_planning_data
-          - id
-          - team_id
           - boundary_json
           - boundary_url
-          - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
-          - help_email
-          - help_opening_hours
-          - help_phone
+          - has_planning_data
           - homepage
+          - id
           - reference_code
+          - team_id
         filter: {}
       comment: ""
     - role: teamEditor
