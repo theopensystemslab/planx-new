@@ -37,7 +37,7 @@ test.describe("Login", () => {
       return response.url().includes("/graphql");
     });
 
-    const team = page.locator("h2", { hasText: context.team.name });
+    const team = page.locator("h3", { hasText: context.team.name });
     await expect(team).toBeVisible();
   });
 
@@ -50,7 +50,7 @@ test.describe("Login", () => {
     });
     await page.goto("/");
 
-    const teamLink = page.locator("h2").filter({ hasText: context.team.name });
+    const teamLink = page.locator("h3").filter({ hasText: context.team.name });
     await teamLink.waitFor(); // wait for this to be visible
 
     // drop graphql requests
