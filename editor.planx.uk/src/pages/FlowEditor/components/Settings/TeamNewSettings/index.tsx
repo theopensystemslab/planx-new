@@ -9,7 +9,9 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import EditorRow from "ui/editor/EditorRow";
 
+import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
+import HomepagePlanningForm from "./HomepagePlanningForm";
 
 export const DesignPreview = styled(Box)(({ theme }) => ({
   border: `2px solid ${theme.palette.border.input}`,
@@ -83,8 +85,8 @@ const TeamNewSettings: React.FC = () => {
       {formikConfig && (
         <>
           <ContactForm type="Contact" />
-          <ContactForm type="Homepage and Planning Portal" />
-          <ContactForm type="Boundary" />
+          <HomepagePlanningForm />
+          <BoundaryForm />
         </>
       )}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
