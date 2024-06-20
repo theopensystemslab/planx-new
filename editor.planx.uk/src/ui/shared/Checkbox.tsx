@@ -11,7 +11,7 @@ const Root = styled(Box)(({ theme }) => ({
   height: 40,
   borderColor: theme.palette.text.primary,
   border: "2px solid",
-  background: "transparent",
+  backgroundColor: theme.palette.common.white,
   "&:focus-within": borderedFocusStyle,
 }));
 
