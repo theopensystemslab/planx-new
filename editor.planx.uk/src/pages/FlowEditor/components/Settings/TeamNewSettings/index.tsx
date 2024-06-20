@@ -1,0 +1,99 @@
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Snackbar from "@mui/material/Snackbar";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { TeamTheme } from "@opensystemslab/planx-core/types";
+import { FormikConfig } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect, useState } from "react";
+import EditorRow from "ui/editor/EditorRow";
+
+import ContactForm from "./ContactForm";
+
+export const DesignPreview = styled(Box)(({ theme }) => ({
+  border: `2px solid ${theme.palette.border.input}`,
+  padding: theme.spacing(2),
+  boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
+}));
+
+export const EXAMPLE_COLOUR = "#007078";
+
+export interface FormProps {
+  formikConfig: FormikConfig<TeamTheme>;
+  onSuccess: () => void;
+}
+
+const TeamNewSettings: React.FC = () => {
+  const [formikConfig, setFormikConfig] = useState<
+    FormikConfig<TeamTheme> | undefined
+  >(undefined);
+
+  /**
+   * Fetch current team and setup shared form config
+   */
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
+        if (!fetchedTeam) throw Error("Unable to find team");
+
+        setFormikConfig({
+          initialValues: fetchedTeam.theme,
+          // This value will be set per form section
+          onSubmit: () => {},
+          validateOnBlur: false,
+          validateOnChange: false,
+          enableReinitialize: true,
+        });
+      } catch (error) {
+        console.error("Error fetching team:", error);
+      }
+    };
+
+    fetchTeam();
+  }, []);
+
+  const [open, setOpen] = useState(true);
+  const [updateMessage, setUpdateMessage] = useState("Setting Updated");
+
+  const handleClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const onSuccess = () => setOpen(true);
+
+  return (
+    <Box maxWidth="formWrap" mx="auto">
+      <EditorRow>
+        <Typography variant="h2" component="h3" gutterBottom>
+          General
+        </Typography>
+        <Typography variant="body1">
+          Important links and settings for how your users connect with you
+        </Typography>
+      </EditorRow>
+      {formikConfig && (
+        <>
+          <ContactForm type="Contact" />
+          <ContactForm type="Homepage and Planning Portal" />
+          <ContactForm type="Boundary" />
+        </>
+      )}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          {updateMessage}
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+};
+
+export default TeamNewSettings;

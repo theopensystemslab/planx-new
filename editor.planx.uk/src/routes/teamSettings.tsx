@@ -8,6 +8,7 @@ import {
   withData,
 } from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
+import TeamNewSettings from "pages/FlowEditor/components/Settings/TeamNewSettings";
 import TeamSettings from "pages/FlowEditor/components/Settings/TeamSettings";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -24,6 +25,7 @@ const teamSettingsRoutes = compose(
     "/": redirect("./team"),
     "/:tab": map(async (req) => {
       const isAuthorised = useStore.getState().canUserEditTeam(req.params.team);
+
       if (!isAuthorised)
         throw new NotFoundError(
           `User does not have access to ${req.originalUrl}`,
@@ -44,6 +46,11 @@ const teamSettingsRoutes = compose(
                 name: "Design",
                 route: "design",
                 Component: DesignSettings,
+              },
+              {
+                name: "General",
+                route: "general",
+                Component: TeamNewSettings,
               },
             ]}
           />
