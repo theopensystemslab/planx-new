@@ -13,7 +13,7 @@ router.get(
   Controller.handleSuccess,
 );
 router.get("/auth/microsoft", Middleware.useMicrosoftAuth)
-router.get(
+router.post(
   "/auth/microsoft/callback",
   Middleware.useMicrosoftCallbackAuth,
   Controller.handleSuccess,

@@ -124,6 +124,7 @@ app.use(
 // we have to fetch the Microsoft OpenID issuer to pass to our strategy constructor
 // TODO: handle failure to fetch issuer
 getMicrosoftIssuer().then((microsoftIssuer: Issuer) => {
+  console.log("GOT MS ISSUER - SETTING UP STRATEGY")
   passport.use("microsoft-oidc", getMicrosoftOidcStrategy(microsoftIssuer));
 });
 passport.use("google", googleStrategy);
