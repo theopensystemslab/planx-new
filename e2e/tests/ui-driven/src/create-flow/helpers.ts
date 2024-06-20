@@ -29,6 +29,6 @@ export async function getTeamPage({
   teamName: string;
 }): Promise<Page> {
   const page = await getAdminPage({ browser, userId });
-  await page.locator("h2", { hasText: teamName }).click();
+  await page.locator("h3", { hasText: teamName }).click();
   return page;
 }
