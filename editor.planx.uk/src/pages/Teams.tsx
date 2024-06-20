@@ -65,7 +65,7 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
         <StyledLink href={`/${slug}`} key={slug} prefetch={false}>
           <TeamCard>
             <TeamColourBand bgcolor={primaryColour} />
-            <Typography p={2} variant="h3" component="h2">
+            <Typography p={2} variant="h3">
               {name}
             </Typography>
           </TeamCard>
