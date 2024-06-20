@@ -19,7 +19,6 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { visuallyHidden } from "@mui/utils";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
@@ -48,8 +47,8 @@ import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
 export const HEADER_HEIGHT = 74;
 
-const Root = styled(AppBar)(() => ({
-  color: "#fff",
+const Root = styled(AppBar)(({ theme }) => ({
+  color: theme.palette.common.white,
 }));
 
 const BreadcrumbsRoot = styled(Box)(() => ({
@@ -59,6 +58,12 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   columnGap: 10,
   alignItems: "center",
 }));
+
+const BreadcrumbsLink = styled(Link)(({ theme }) => ({
+  color: theme.palette.common.white,
+  textDecoration: "none",
+  borderBottom: "1px solid currentColor",
+})) as typeof Link;
 
 const StyledToolbar = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT,
@@ -103,7 +108,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.background.dark,
-  color: "#fff",
+  color: theme.palette.common.white,
   borderRadius: 0,
   boxShadow: "none",
   minWidth: 180,
@@ -131,7 +136,7 @@ const SkipLink = styled("a")(({ theme }) => ({
   width: "100vw",
   height: HEADER_HEIGHT / 2,
   backgroundColor: theme.palette.background.dark,
-  color: "#fff",
+  color: theme.palette.common.white,
   textDecoration: "underline",
   padding: theme.spacing(1),
   paddingLeft: theme.spacing(3),
@@ -203,33 +208,25 @@ const Breadcrumbs: React.FC = () => {
 
   return (
     <BreadcrumbsRoot>
-      <Link
-        style={{
-          color: "#fff",
-          textDecoration: "none",
-        }}
+      <BreadcrumbsLink
         component={ReactNaviLink}
         href={"/"}
         prefetch={false}
         {...(isStandalone && { target: "_blank" })}
       >
         Plan✕
-      </Link>
+      </BreadcrumbsLink>
       {team.slug && (
         <>
           {" / "}
-          <Link
-            style={{
-              color: "#fff",
-              textDecoration: "none",
-            }}
+          <BreadcrumbsLink
             component={ReactNaviLink}
             href={`/${team.slug}`}
             prefetch={false}
             {...(isStandalone && { target: "_blank" })}
           >
             {team.slug}
-          </Link>
+          </BreadcrumbsLink>
         </>
       )}
       {route.data.flow && (
@@ -467,19 +464,7 @@ const EditorToolbar: React.FC<{
                       <MenuOpenIcon />
                     </IconButton>
                   )}
-                  <Box mr={1}>
-                    <Avatar
-                      sx={{
-                        bgcolor: grey[200],
-                        color: "text.primary",
-                        fontSize: "1em",
-                        fontWeight: "600",
-                      }}
-                    >
-                      {user.firstName[0]}
-                      {user.lastName[0]}
-                    </Avatar>
-                  </Box>
+                  <Box mr={1}></Box>
                   <IconButton
                     edge="end"
                     color="inherit"
@@ -487,6 +472,24 @@ const EditorToolbar: React.FC<{
                     onClick={handleMenuToggle}
                     size="large"
                   >
+                    <Avatar
+                      component="span"
+                      sx={{
+                        bgcolor: grey[200],
+                        color: "text.primary",
+                        fontSize: "1rem",
+                        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                        width: 33,
+                        height: 33,
+                        marginRight: "0.5rem",
+                      }}
+                    >
+                      {user.firstName[0]}
+                      {user.lastName[0]}
+                    </Avatar>
+                    <Typography variant="body2" fontSize="small">
+                      Menu
+                    </Typography>
                     <KeyboardArrowDown />
                   </IconButton>
                 </ProfileSection>
