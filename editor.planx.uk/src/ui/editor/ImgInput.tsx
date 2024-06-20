@@ -27,6 +27,14 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   marginLeft: theme.spacing(0.5),
 }));
 
+const ImageWrapper = styled(Box)(() => ({
+  width: 50,
+  height: 50,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+}));
+
 /** Uploads an image and returns corresponding URL */
 export default function ImgInput({
   img,
@@ -86,13 +94,15 @@ export default function ImgInput({
           Remove
         </MenuItem>
       </Menu>
-      <img
-        width={50}
-        height={50}
-        src={img}
-        alt="embedded img"
-        style={{ display: "block", backgroundColor: backgroundColor }}
-      />
+      <ImageWrapper sx={{ backgroundColor: backgroundColor }}>
+        <img
+          width={44}
+          height={44}
+          src={img}
+          alt="embedded img"
+          style={{ display: "block", height: "auto" }}
+        />
+      </ImageWrapper>
     </ImageUploadContainer>
   ) : (
     <Tooltip title="Drop file here">
