@@ -1,4 +1,4 @@
-import { Schema } from "../../model";
+import { Schema } from "@planx/components/List/model";
 
 export const NonResidentialFloorspace: Schema = {
   type: "Non-residential floorspace",
