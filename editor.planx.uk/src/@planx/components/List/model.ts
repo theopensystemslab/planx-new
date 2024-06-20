@@ -8,6 +8,7 @@ import {
   userDataSchema as textInputValidationSchema,
 } from "../TextInput/model";
 import { SCHEMAS } from "./Editor";
+import { checklistValidationSchema } from "../Checklist/model";
 
 /**
  * Simplified custom QuestionInput
@@ -15,6 +16,12 @@ import { SCHEMAS } from "./Editor";
  * If adding more properties here, check if re-using existing model could be an option
  */
 interface QuestionInput {
+  title: string;
+  description?: string;
+  options: Option[];
+}
+
+interface ChecklistInput {
   title: string;
   description?: string;
   options: Option[];
@@ -42,12 +49,17 @@ export type QuestionField = {
   type: "question";
   data: QuestionInput & { fn: string };
 };
+export type ChecklistField = {
+  type: "checklist";
+  required?: true;
+  data: ChecklistInput & { fn: string };
+};
 
 /**
  * Represents the input types available in the List component
  * Existing models are used to allow to us to re-use existing components, maintaining consistend UX/UI
  */
-export type Field = TextField | NumberField | QuestionField;
+export type Field = TextField | NumberField | QuestionField | ChecklistField;
 
 /**
  * Models the form displayed to the user
@@ -59,7 +71,7 @@ export interface Schema {
   max?: number;
 }
 
-export type UserResponse = Record<Field["data"]["fn"], string>;
+export type UserResponse = Record<Field["data"]["fn"], string | string[]>;
 
 export type UserData = { userData: UserResponse[] };
 
@@ -100,6 +112,9 @@ const generateValidationSchemaForFields = (
       case "question":
         fieldSchemas[data.fn] = questionInputValidationSchema(data);
         break;
+      case "checklist":
+        fieldSchemas[data.fn] = checklistValidationSchema(data);
+        break;
     }
   });
 
@@ -125,6 +140,10 @@ export const generateValidationSchema = (schema: Schema) => {
 
 export const generateInitialValues = (schema: Schema): UserResponse => {
   const initialValues: UserResponse = {};
-  schema.fields.forEach((field) => (initialValues[field.data.fn] = ""));
+  schema.fields.forEach((field) => {
+    field.type === "checklist"
+      ? (initialValues[field.data.fn] = [])
+      : (initialValues[field.data.fn] = "");
+  });
   return initialValues;
 };

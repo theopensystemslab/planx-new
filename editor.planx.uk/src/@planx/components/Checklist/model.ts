@@ -1,4 +1,5 @@
 import { MoreInformation, Option } from "../shared";
+import { array } from "yup";
 
 export interface Group<T> {
   title: string;
@@ -21,7 +22,7 @@ interface ChecklistExpandableProps {
 }
 
 export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps,
+  checklist: ChecklistExpandableProps
 ): ChecklistExpandableProps => {
   if (checklist.options !== undefined && checklist.options.length > 0) {
     return {
@@ -56,3 +57,46 @@ export const toggleExpandableChecklist = (
     };
   }
 };
+
+export const getFlatOptions = ({
+  options,
+  groupedOptions,
+}: {
+  options: Checklist["options"];
+  groupedOptions: Checklist["groupedOptions"];
+}) => {
+  if (options) {
+    return options;
+  }
+  if (groupedOptions) {
+    return groupedOptions.flatMap((group) => group.children);
+  }
+  return [];
+};
+
+export const checklistValidationSchema = ({
+  allRequired,
+  options,
+  groupedOptions,
+}: Checklist) =>
+  array()
+    .required()
+    .test({
+      name: "atLeastOneChecked",
+      message: "Select at least one option",
+      test: (checked?: Array<string>) => {
+        return Boolean(checked && checked.length > 0);
+      },
+    })
+    .test({
+      name: "notAllChecked",
+      message: "All options must be checked",
+      test: (checked?: Array<string>) => {
+        if (!allRequired) {
+          return true;
+        }
+        const flatOptions = getFlatOptions({ options, groupedOptions });
+        const allChecked = checked && checked.length === flatOptions.length;
+        return Boolean(allChecked);
+      },
+    });
