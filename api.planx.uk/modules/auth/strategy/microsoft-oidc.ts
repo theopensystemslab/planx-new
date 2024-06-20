@@ -23,38 +23,59 @@ export const getMicrosoftOidcStrategy = (
   console.log("redirect uri domain:");
   console.log(process.env.API_URL_EXT);
 
+  const client_id = process.env.MICROSOFT_CLIENT_ID!;
+  if (typeof client_id !== 'string') {
+    throw new Error('No MICROSOFT_CLIENT_ID in the environment');
+  }
+
   const microsoftClient = new microsoftIssuer.Client({
-    client_id: process.env.MICROSOFT_CLIENT_ID!,
+    client_id: client_id,
     client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
     redirect_uris: [`${process.env.API_URL_EXT}/auth/microsoft/callback`],
     post_logout_redirect_uris: [`${process.env.API_URL_EXT}/logout`],
     response_types: ["id_token"],
   });
 
+  // should nonce be generated here, or in middleware functions?
   const nonce = generators.nonce();
   console.log(`Generated a nonce: ${nonce}`);
   // TODO: store nonce (encrypted and httpOnly) in session
-
-  microsoftClient.authorizationUrl({
-    scope: "openid email profile",
-    response_mode: "form_post", // could also be 'query' or 'fragment'
-    nonce,
-  });
 
   console.log("Built Microsoft client:");
   console.log(microsoftClient.metadata);
 
   // oidc = Open ID Connect
-  return new Strategy(
-    { client: microsoftClient },
-    async (tokenset: TokenSet, userInfo: any, done: any): Promise<void> => {
-      console.log("USER INFO:");
-      console.log(userInfo);
-
+  return new Strategy({
+      client: microsoftClient,
+      params: {
+        scope: "openid email profile",
+        response_mode: "form_post", // could also be 'query' or 'fragment'
+        nonce,
+      },
+      passReqToCallback: true,
+      // usePKCE: false, // whether to use PKCE - defaults to true, according to docs
+    },
+    async (req: any, tokenSet: TokenSet, done: any): Promise<void> => {
+      console.log("INVOKING STRATEGY CALLBACK!")
+      
       console.log("TOKEN SET:");
-      console.log(tokenset);
+      console.log(tokenSet);
+      
+      console.log("ID TOKEN:")
+      console.log(tokenSet.id_token)
+      
+      console.log("CLAIMS:")
+      console.log(tokenSet.claims())
 
-      const email = "xxx";
+      const id_token = tokenSet.id_token;
+      const state = tokenSet.state;
+      // TODO: do something with state??
+
+      const claims = tokenSet.claims();
+      const email = claims.email
+      const returned_nonce = claims.nonce
+      // TODO: compare nonces
+
       if (!email) throw Error("Unable to authenticate without email");
 
       const jwt = await buildJWT(email);
@@ -66,7 +87,9 @@ export const getMicrosoftOidcStrategy = (
         } as any);
       }
 
-      done(null, { jwt });
+      return done(null, { jwt });
+
+      // TODO: handle error case i.e. done(err)
     },
   );
 };
