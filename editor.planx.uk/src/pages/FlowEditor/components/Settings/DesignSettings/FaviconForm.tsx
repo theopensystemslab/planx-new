@@ -10,7 +10,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { FormProps, SettingsForm } from ".";
+import { FormProps } from ".";
+import { SettingsForm } from "../shared/SettingsForm";
 
 export const FaviconForm: React.FC<FormProps> = ({
   formikConfig,
@@ -36,7 +37,7 @@ export const FaviconForm: React.FC<FormProps> = ({
       : formik.setFieldValue("favicon", null);
 
   return (
-    <SettingsForm
+    <SettingsForm<TeamTheme>
       formik={formik}
       legend="Favicon"
       description={

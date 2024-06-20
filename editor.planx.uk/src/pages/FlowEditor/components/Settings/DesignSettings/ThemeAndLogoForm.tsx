@@ -12,7 +12,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { DesignPreview, FormProps, SettingsForm } from ".";
+import { DesignPreview, FormProps } from ".";
+import { SettingsForm } from "../shared/SettingsForm";
 
 export const ThemeAndLogoForm: React.FC<FormProps> = ({
   formikConfig,
@@ -54,7 +55,7 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
       : formik.setFieldValue("logo", null);
 
   return (
-    <SettingsForm
+    <SettingsForm<TeamTheme>
       formik={formik}
       legend="Theme colour & logo"
       description={
