@@ -6,7 +6,7 @@ import { QuestionField, Schema, UserResponse } from "./model";
  * @param schema - the Schema object
  * @returns string - the `text` for the given value `val`, or the original value
  */
-export function formatSchemaDisplayValue(value: string, schema: Schema) {
+export function formatSchemaDisplayValue(value: string | string[], schema: Schema) {
   const questionFields = schema.fields.filter(
     (field) => field.type === "question",
   ) as QuestionField[];
@@ -32,7 +32,11 @@ export function sumIdenticalUnits(
   passportData: Record<string, UserResponse[]>,
 ): number {
   let sum = 0;
-  passportData[`${fn}`].map((item) => (sum += parseInt(item?.identicalUnits)));
+  passportData[`${fn}`].map((item) => {
+    if (typeof item?.identicalUnits === "string") {
+      sum += parseInt(item?.identicalUnits)
+    }
+  });
   return sum;
 }
 
@@ -59,8 +63,11 @@ export function sumIdenticalUnitsByDevelopmentType(
     notKnown: 0,
   };
   passportData[`${fn}`].map(
-    (item) =>
-      (baseSums[`${item?.development}`] += parseInt(item?.identicalUnits)),
+    (item) => {
+      if (typeof item?.identicalUnits === "string") {
+        (baseSums[`${item?.development}`] += parseInt(item?.identicalUnits))
+      }
+    }
   );
 
   // Format property names for passport, and filter out any entries with default sum = 0
