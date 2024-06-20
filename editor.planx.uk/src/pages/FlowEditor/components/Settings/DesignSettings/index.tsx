@@ -1,17 +1,13 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
-import { FormikConfig, FormikProps } from "formik";
+import { FormikConfig } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import EditorRow from "ui/editor/EditorRow";
-import InputGroup from "ui/editor/InputGroup";
-import InputLegend from "ui/editor/InputLegend";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { ButtonForm } from "./ButtonForm";
 import { FaviconForm } from "./FaviconForm";
@@ -26,66 +22,10 @@ export const DesignPreview = styled(Box)(({ theme }) => ({
 
 export const EXAMPLE_COLOUR = "#007078";
 
-type SettingsFormProps = {
-  legend: string;
-  description: React.ReactElement;
-  input: React.ReactElement;
-  formik: FormikProps<TeamTheme>;
-  preview?: React.ReactElement;
-};
-
 export interface FormProps {
   formikConfig: FormikConfig<TeamTheme>;
   onSuccess: () => void;
 }
-
-export const SettingsForm: React.FC<SettingsFormProps> = ({
-  formik,
-  legend,
-  description,
-  input,
-  preview,
-}) => {
-  return (
-    <EditorRow background>
-      <form onSubmit={formik.handleSubmit}>
-        <InputGroup flowSpacing>
-          <InputLegend>{legend}</InputLegend>
-          {description}
-          {input}
-        </InputGroup>
-        {preview && (
-          <Box>
-            <Typography variant="h4" my={1}>
-              Preview:
-            </Typography>
-            {preview}
-          </Box>
-        )}
-        <ErrorWrapper
-          error={Object.values(formik.errors).join(", ")}
-          id="design-settings-theme-error"
-        >
-          <Box>
-            <Button type="submit" variant="contained" disabled={!formik.dirty}>
-              Save
-            </Button>
-            <Button
-              onClick={() => formik.resetForm()}
-              type="reset"
-              variant="contained"
-              disabled={!formik.dirty}
-              color="secondary"
-              sx={{ ml: 1.5 }}
-            >
-              Reset changes
-            </Button>
-          </Box>
-        </ErrorWrapper>
-      </form>
-    </EditorRow>
-  );
-};
 
 const DesignSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
