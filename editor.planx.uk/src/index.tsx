@@ -48,7 +48,7 @@ const hasJWT = (): boolean | void => {
   // Remove JWT from URL, and re-run this function
   setCookie("jwt", jwtSearchParams);
   setCookie("auth", { loggedIn: true });
-  window.location.href = "/";
+  window.history.go(-1);
 };
 
 const Layout: React.FC<{
