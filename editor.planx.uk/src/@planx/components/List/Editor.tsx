@@ -24,6 +24,7 @@ import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
+import { NonResidentialFloorspace } from "./schemas/Floorspace";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -35,6 +36,7 @@ export const SCHEMAS = [
     schema: ResidentialUnitsGLAGained,
   },
   { name: "Residential units (GLA) - Lost", schema: ResidentialUnitsGLALost },
+  { name: "Non-residential floorspace", schema: NonResidentialFloorspace },
   {
     name: "Existing and proposed uses (GLA)",
     schema: ExistingAndProposedUsesGLA,
