@@ -124,6 +124,7 @@ export const useGoogleCallbackAuth: RequestHandler = (req, res, next) => {
 };
 
 export const useMicrosoftAuth: RequestHandler = (req, res, next) => {
+  console.log("INVOKING MICROSOFT MIDDLEWARE")
   req.session!.returnTo = req.get("Referrer");
   return passport.authenticate("microsoft-oidc", {
     prompt: "select_account",
@@ -131,6 +132,7 @@ export const useMicrosoftAuth: RequestHandler = (req, res, next) => {
 };
 
 export const useMicrosoftCallbackAuth: RequestHandler = (req, res, next) => {
+  console.log("INVOKING MICROSOFT CALLBACK MIDDLEWARE")
   return passport.authenticate("microsoft-oidc", {
     failureRedirect: "/auth/login/failed",
   })(req, res, next);
