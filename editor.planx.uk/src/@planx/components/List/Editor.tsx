@@ -20,10 +20,10 @@ import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
 import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
 import { OpenSpaceGLA } from "./schemas/GLA/OpenSpace";
 import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
-import { Zoo } from "./schemas/mocks/Zoo";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
+import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 
 type Props = EditorProps<TYPES.List, List>;
@@ -36,6 +36,10 @@ export const SCHEMAS = [
     schema: ResidentialUnitsGLAGained,
   },
   { name: "Residential units (GLA) - Lost", schema: ResidentialUnitsGLALost },
+  {
+    name: "Residential units (GLA) - Removed",
+    schema: ResidentialUnitsGLARemoved,
+  },
   { name: "Non-residential floorspace", schema: NonResidentialFloorspace },
   {
     name: "Existing and proposed uses (GLA)",

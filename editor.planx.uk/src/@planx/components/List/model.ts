@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
+import { checklistValidationSchema } from "../Checklist/model";
 import { NumberInput, numberInputValidationSchema } from "../NumberInput/model";
 import { MoreInformation, Option, parseMoreInformation } from "../shared";
 import {
@@ -8,7 +9,6 @@ import {
   userDataSchema as textInputValidationSchema,
 } from "../TextInput/model";
 import { SCHEMAS } from "./Editor";
-import { checklistValidationSchema } from "../Checklist/model";
 
 /**
  * Simplified custom QuestionInput

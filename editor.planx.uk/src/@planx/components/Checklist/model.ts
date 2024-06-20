@@ -1,5 +1,6 @@
-import { MoreInformation, Option } from "../shared";
 import { array } from "yup";
+
+import { MoreInformation, Option } from "../shared";
 
 export interface Group<T> {
   title: string;
@@ -22,7 +23,7 @@ interface ChecklistExpandableProps {
 }
 
 export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps
+  checklist: ChecklistExpandableProps,
 ): ChecklistExpandableProps => {
   if (checklist.options !== undefined && checklist.options.length > 0) {
     return {

@@ -1,7 +1,12 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import { checklistValidationSchema, getFlatOptions, type Checklist, type Group } from "@planx/components/Checklist/model";
+import {
+  type Checklist,
+  checklistValidationSchema,
+  getFlatOptions,
+  type Group,
+} from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
@@ -12,10 +17,10 @@ import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { object } from "yup";
 
 import { Option } from "../shared";
 import type { PublicProps } from "../ui";
-import { object } from "yup";
 
 export type Props = PublicProps<Checklist>;
 
