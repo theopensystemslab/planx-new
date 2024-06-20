@@ -1755,7 +1755,14 @@
           - help_phone
           - homepage
           - reference_code
-        filter: {}
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
         check: null
       comment: ""
 - table:
