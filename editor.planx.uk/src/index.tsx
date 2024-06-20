@@ -40,15 +40,17 @@ const hasJWT = (): boolean | void => {
   if (authCookie) return true;
 
   // If JWT not set via cookie, check search params
-  const jwtSearchParams = new URLSearchParams(window.location.search).get(
-    "jwt",
-  );
+  const searchParams = new URLSearchParams(window.location.search);
+  const jwtSearchParams = searchParams.get("jwt",);
   if (!jwtSearchParams) return false;
 
   // Remove JWT from URL, and re-run this function
   setCookie("jwt", jwtSearchParams);
   setCookie("auth", { loggedIn: true });
-  window.location.href = "/";
+  // Strip leading "/" from redirectTo URL
+  const redirectTo = (searchParams.get("redirectTo") || "/").substring(1);
+
+  window.location.replace(encodeURIComponent(redirectTo));
 };
 
 const Layout: React.FC<{
