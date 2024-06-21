@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import { containerClasses } from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT } from "components/Header";
 import React, { PropsWithChildren } from "react";
@@ -10,7 +11,7 @@ const Root = styled(Box)(({ theme }) => ({
   flexDirection: "row",
   width: "100%",
   minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
-  "& > .MuiContainer-root": {
+  [`& > .${containerClasses.root}`]: {
     paddingTop: theme.spacing(6),
     paddingBottom: theme.spacing(6),
   },

@@ -30,11 +30,10 @@ const editorRoutes = compose(
               id
               name
               slug
-            }
-            teamThemes: teams_summary {
-              slug
-              primaryColour: primary_colour
-              logo
+              theme {
+                primaryColour: primary_colour
+                logo
+              }
             }
           }
         `,

@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { Link } from "react-navi";
+import { borderedFocusStyle } from "theme";
 import Dashboard from "ui/editor/Dashboard";
 
 import { useStore } from "./FlowEditor/lib/store";
@@ -30,6 +31,9 @@ export const Root = styled(Box)(({ theme }) => ({
 
 const StyledLink = styled(Link)(() => ({
   textDecoration: "none",
+  "&:focus-within > div": {
+    ...borderedFocusStyle,
+  },
 }));
 
 const TeamCard = styled(Card)(({ theme }) => ({
@@ -53,20 +57,23 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
   const canUserEditTeam = useStore.getState().canUserEditTeam;
 
-  const editableTeams = teams.filter((team) => canUserEditTeam(team.slug));
-  const viewOnlyTeams = teams.filter((team) => !canUserEditTeam(team.slug));
+  const editableTeams: Team[] = [];
+  const viewOnlyTeams: Team[] = [];
+
+  teams.forEach((team) =>
+    canUserEditTeam(team.slug)
+      ? editableTeams.push(team)
+      : viewOnlyTeams.push(team),
+  );
 
   const renderTeams = (teamsToRender: Array<Team>) =>
-    teamsToRender.map(({ name, slug }) => {
-      const theme = teamTheme.find((t) => t.slug === slug);
-      const primaryColour = theme ? theme.primaryColour : "#000";
-
+    teamsToRender.map((team) => {
       return (
-        <StyledLink href={`/${slug}`} key={slug} prefetch={false}>
+        <StyledLink href={`/${team.slug}`} key={team.slug} prefetch={false}>
           <TeamCard>
-            <TeamColourBand bgcolor={primaryColour} />
+            <TeamColourBand bgcolor={team.theme.primaryColour} />
             <Typography p={2} variant="h3">
-              {name}
+              {team.name}
             </Typography>
           </TeamCard>
         </StyledLink>

@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { borderedFocusStyle } from "theme";
 import Dashboard from "ui/editor/Dashboard";
 import { slugify } from "utils";
 
@@ -59,6 +60,9 @@ const DashboardLink = styled(Link)(({ theme }) => ({
   padding: theme.spacing(2),
   margin: 0,
   width: "100%",
+  "&:focus-within": {
+    ...borderedFocusStyle,
+  },
 }));
 
 const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
@@ -70,21 +74,6 @@ const LinkSubText = styled(Box)(({ theme }) => ({
   color: theme.palette.grey[400],
   fontWeight: "normal",
   paddingTop: "0.5em",
-}));
-
-const HiddenText = styled(Box)(() => ({
-  color: "transparent",
-  position: "absolute",
-  height: "100%",
-  width: "100%",
-  top: 0,
-  left: 0,
-  display: "flex",
-  "&::selection": {
-    background: "hotpink",
-    color: "black",
-    padding: "1em",
-  },
 }));
 
 const Confirm = ({
@@ -205,7 +194,6 @@ const FlowItem: React.FC<FlowItemProps> = ({
           <Typography variant="h4" component="h2">
             {flow.name}
           </Typography>
-          <HiddenText aria-hidden="true">{flow.slug}</HiddenText>
           <LinkSubText>
             {formatLastEditMessage(
               flow.operations[0].createdAt,
