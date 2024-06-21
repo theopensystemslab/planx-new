@@ -84,7 +84,7 @@ export default function BoundaryForm() {
         <>
           <InputRow>
             <InputRowLabel>
-              Logo:
+              Boundary URL
               <Input
                 name="boundary"
                 value={boundaryState}
