@@ -5,6 +5,7 @@ import React, { ReactNode } from "react";
 const Label = styled(Typography)(({ theme }) => ({
   flexShrink: 1,
   flexGrow: 0,
+  width: "100%",
   paddingRight: theme.spacing(2),
   alignSelf: "center",
   "&:not(:nth-child(1))": {

@@ -6,10 +6,12 @@ import InputDescription from "ui/editor/InputDescription";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import RichTextInput from "ui/editor/RichTextInput";
+import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
+import { SettingsForm } from "../shared/SettingsForm";
 import { NewSettingsForm } from "./newSettingsForm";
 
 export default function BoundaryForm() {
@@ -60,7 +62,7 @@ export default function BoundaryForm() {
   );
 
   const newBoundary = (
-    <NewSettingsForm
+    <SettingsForm
       legend="Boundary"
       description={
         <InputDescription>
@@ -82,14 +84,16 @@ export default function BoundaryForm() {
       input={
         <>
           <InputRow>
-            <InputRowLabel>Logo:</InputRowLabel>
-            <RichTextInput
-              name="boundary"
-              value={boundaryState}
-              onChange={(ev: ChangeEvent<HTMLInputElement>) => {
-                setBoundaryState(ev.target.value);
-              }}
-            />
+            <InputRowLabel>
+              Logo:
+              <Input
+                name="boundary"
+                value={boundaryState}
+                onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+                  setBoundaryState(ev.target.value);
+                }}
+              />
+            </InputRowLabel>
           </InputRow>
         </>
       }

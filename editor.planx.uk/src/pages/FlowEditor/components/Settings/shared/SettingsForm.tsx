@@ -12,7 +12,7 @@ type SettingsFormProps<TFormikValues> = {
   legend: string;
   description: React.ReactElement;
   input: React.ReactElement;
-  formik: FormikProps<TFormikValues>;
+  formik?: FormikProps<TFormikValues>;
   preview?: React.ReactElement;
 };
 
@@ -25,7 +25,7 @@ export const SettingsForm = <TFormikValues,>({
 }: SettingsFormProps<TFormikValues>) => {
   return (
     <EditorRow background>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik?.handleSubmit}>
         <InputGroup flowSpacing>
           <InputLegend>{legend}</InputLegend>
           {description}
@@ -40,18 +40,18 @@ export const SettingsForm = <TFormikValues,>({
           </Box>
         )}
         <ErrorWrapper
-          error={Object.values(formik.errors).join(", ")}
+          error={Object.values(formik?.errors ? formik.errors : []).join(", ")}
           id="settings-error"
         >
           <Box>
-            <Button type="submit" variant="contained" disabled={!formik.dirty}>
+            <Button type="submit" variant="contained" disabled={!formik?.dirty}>
               Save
             </Button>
             <Button
-              onClick={() => formik.resetForm()}
+              onClick={() => formik?.resetForm()}
               type="reset"
               variant="contained"
-              disabled={!formik.dirty}
+              disabled={!formik?.dirty}
               color="secondary"
               sx={{ ml: 1.5 }}
             >
