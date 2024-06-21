@@ -26,7 +26,7 @@ export interface FormProps {
   onSuccess: () => void;
 }
 
-const TeamNewSettings: React.FC = () => {
+const GeneralSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
     FormikConfig<TeamTheme> | undefined
   >(undefined);
@@ -98,4 +98,4 @@ const TeamNewSettings: React.FC = () => {
   );
 };
 
-export default TeamNewSettings;
+export default GeneralSettings;

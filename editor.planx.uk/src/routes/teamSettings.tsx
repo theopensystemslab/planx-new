@@ -8,7 +8,7 @@ import {
   withData,
 } from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
-import TeamNewSettings from "pages/FlowEditor/components/Settings/TeamNewSettings";
+import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import TeamSettings from "pages/FlowEditor/components/Settings/TeamSettings";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -50,7 +50,7 @@ const teamSettingsRoutes = compose(
               {
                 name: "General",
                 route: "general",
-                Component: TeamNewSettings,
+                Component: GeneralSettings,
               },
             ]}
           />

@@ -12,7 +12,6 @@ import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { SettingsForm } from "../shared/SettingsForm";
-import { NewSettingsForm } from "./newSettingsForm";
 
 export default function BoundaryForm() {
   const [boundaryState, setBoundaryState] = useState("");
