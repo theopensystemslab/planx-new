@@ -56,7 +56,13 @@ const GeneralSettings: React.FC = () => {
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        setFormikConfig({ initialValues: initialValues, onSubmit: () => {} });
+        setFormikConfig({
+          initialValues: initialValues,
+          onSubmit: () => {},
+          validateOnBlur: false,
+          validateOnChange: false,
+          enableReinitialize: true,
+        });
       } catch (error) {
         console.error("Error fetching team:", error);
       }

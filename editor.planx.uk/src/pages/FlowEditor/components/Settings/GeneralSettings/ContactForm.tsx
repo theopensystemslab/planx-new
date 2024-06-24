@@ -4,13 +4,23 @@ import InputDescription from "ui/editor/InputDescription";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
+import * as Yup from "yup";
 
 import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
 export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
+  const formSchema = Yup.object().shape({
+    helpEmail: Yup.string()
+      .email("Please enter valid email")
+      .required("Help Email is required"),
+    helpPhone: Yup.string().required("Help Phone is required"),
+    helpOpeningHours: Yup.string(),
+  });
+
   const formik = useFormik({
     ...formikConfig,
+    validationSchema: formSchema,
     onSubmit(values, { resetForm }) {
       onSuccess();
       resetForm({ values });
