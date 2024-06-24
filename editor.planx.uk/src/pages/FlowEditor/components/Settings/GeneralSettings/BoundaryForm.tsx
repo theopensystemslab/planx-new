@@ -8,8 +8,14 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
-export default function BoundaryForm({ formikConfig }: FormProps) {
-  const formik = useFormik({ ...formikConfig });
+export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
+  const formik = useFormik({
+    ...formikConfig,
+    onSubmit(values, { resetForm }) {
+      onSuccess();
+      resetForm({ values });
+    },
+  });
 
   return (
     <SettingsForm

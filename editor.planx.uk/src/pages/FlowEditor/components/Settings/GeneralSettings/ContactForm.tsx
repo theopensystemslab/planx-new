@@ -12,10 +12,8 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const formik = useFormik({
     ...formikConfig,
     onSubmit(values, { resetForm }) {
-      if (onSuccess) {
-        onSuccess();
-        resetForm({ values });
-      }
+      onSuccess();
+      resetForm({ values });
     },
   });
 

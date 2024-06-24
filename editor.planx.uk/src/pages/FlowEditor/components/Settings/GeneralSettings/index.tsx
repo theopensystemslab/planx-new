@@ -34,7 +34,7 @@ export interface GeneralSettings {
 
 export interface FormProps {
   formikConfig: FormikConfig<GeneralSettings>;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
 const GeneralSettings: React.FC = () => {
@@ -94,8 +94,11 @@ const GeneralSettings: React.FC = () => {
       {formikConfig && (
         <>
           <ContactForm formikConfig={formikConfig} onSuccess={onSuccess} />
-          <HomepagePlanningForm formikConfig={formikConfig} />
-          <BoundaryForm formikConfig={formikConfig} />
+          <HomepagePlanningForm
+            formikConfig={formikConfig}
+            onSuccess={onSuccess}
+          />
+          <BoundaryForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>
       )}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

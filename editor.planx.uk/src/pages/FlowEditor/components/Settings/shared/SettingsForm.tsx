@@ -12,7 +12,7 @@ type SettingsFormProps<TFormikValues> = {
   legend: string;
   description: React.ReactElement;
   input: React.ReactElement;
-  formik?: FormikProps<TFormikValues>;
+  formik: FormikProps<TFormikValues>;
   preview?: React.ReactElement;
 };
 

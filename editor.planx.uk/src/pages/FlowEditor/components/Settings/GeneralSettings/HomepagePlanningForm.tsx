@@ -9,10 +9,19 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
-export default function HomepagePlanningForm({ formikConfig }: FormProps) {
+export default function HomepagePlanningForm({
+  formikConfig,
+  onSuccess,
+}: FormProps) {
   const [showPlanningInputs, setShowPlanningInputs] = useState(false);
 
-  const formik = useFormik({ ...formikConfig });
+  const formik = useFormik({
+    ...formikConfig,
+    onSubmit(values, { resetForm }) {
+      onSuccess();
+      resetForm({ values });
+    },
+  });
 
   const onChangeFn = (type: string, event: ChangeEvent<HTMLInputElement>) =>
     formik.setFieldValue(type, event.target.value);
