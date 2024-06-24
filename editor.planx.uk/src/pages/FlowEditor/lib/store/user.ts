@@ -44,7 +44,6 @@ export const userStore: StateCreator<
     const { getUser, setUser } = get();
     const currentUser = getUser();
     if (currentUser) return;
-
     const user = await getLoggedInUser();
     setUser(user);
   },
