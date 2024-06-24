@@ -56,7 +56,9 @@ export default function HomepagePlanningForm({ formikConfig }: FormProps) {
               Do you collect Planning data?
               <RadioGroup
                 name="isPlanningDataCollected"
-                defaultValue={"Yes"}
+                defaultValue={
+                  formik.values.isPlanningDataCollected === true ? "yes" : "no"
+                }
                 onChange={(event) => {
                   formik.setFieldValue(
                     "isPlanningDataCollected",

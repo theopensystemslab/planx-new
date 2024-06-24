@@ -48,7 +48,7 @@ const GeneralSettings: React.FC = () => {
     helpPhone: "",
     helpOpeningHours: "",
     homepage: "",
-    isPlanningDataCollected: false,
+    isPlanningDataCollected: true,
     portalName: "",
     portalUrl: "",
   };
