@@ -1,16 +1,36 @@
 import RadioGroup from "@mui/material/RadioGroup";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
-import React from "react";
+import { useFormik } from "formik";
+import React, { ChangeEvent, useState } from "react";
 import InputDescription from "ui/editor/InputDescription";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { SettingsForm } from "../shared/SettingsForm";
-export default function HomepagePlanningForm() {
+import { FormProps } from ".";
+export default function HomepagePlanningForm({ formikConfig }: FormProps) {
+  const [showPlanningInputs, setShowPlanningInputs] = useState(false);
+
+  const formik = useFormik({ ...formikConfig });
+
+  const onChangeFn = (type: string, event: ChangeEvent<HTMLInputElement>) =>
+    formik.setFieldValue(type, event.target.value);
+
+  const boolTransform = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value === "yes") {
+      setShowPlanningInputs(true);
+      return true;
+    } else if (event.target.value === "no") {
+      setShowPlanningInputs(false);
+      return false;
+    }
+  };
+
   return (
     <SettingsForm
       legend="Homepage and Planning Portal"
+      formik={formik}
       description={
         <InputDescription>
           A link to your homepage displayed publicly to your users to help
@@ -23,23 +43,39 @@ export default function HomepagePlanningForm() {
           <InputRow>
             <InputRowLabel>
               Homepage URL
-              <Input name="homepage" />
+              <Input
+                name="homepage"
+                onChange={(event) => {
+                  onChangeFn("homepage", event);
+                }}
+              />
             </InputRowLabel>
           </InputRow>
           <InputRow>
             <InputRowLabel>
               Do you collect Planning data?
-              <RadioGroup defaultValue={"Yes"}>
+              <RadioGroup
+                name="isPlanningDataCollected"
+                defaultValue={"Yes"}
+                onChange={(event) => {
+                  formik.setFieldValue(
+                    "isPlanningDataCollected",
+                    boolTransform(event),
+                  );
+                }}
+              >
                 <BasicRadio
                   title="Yes"
                   variant="compact"
                   id="yes"
+                  value="yes"
                   onChange={() => {}}
                 />
                 <BasicRadio
                   title="No"
                   variant="compact"
                   id="no"
+                  value="no"
                   onChange={() => {}}
                 />
               </RadioGroup>
@@ -48,13 +84,25 @@ export default function HomepagePlanningForm() {
           <InputRow>
             <InputRowLabel>
               Planning Portal Name
-              <Input name="portal_name" />
+              <Input
+                name="portalName"
+                disabled={showPlanningInputs ? false : true}
+                onChange={(event) => {
+                  onChangeFn("portalName", event);
+                }}
+              />
             </InputRowLabel>
           </InputRow>
           <InputRow>
             <InputRowLabel>
               Planning Portal URL
-              <Input name="portal_url" />
+              <Input
+                name="portalUrl"
+                disabled={showPlanningInputs ? false : true}
+                onChange={(event) => {
+                  onChangeFn("portalUrl", event);
+                }}
+              />
             </InputRowLabel>
           </InputRow>
         </>

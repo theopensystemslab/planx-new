@@ -21,33 +21,42 @@ export const DesignPreview = styled(Box)(({ theme }) => ({
 
 export const EXAMPLE_COLOUR = "#007078";
 
+export interface GeneralSettings {
+  boundaryUrl: string;
+  helpEmail: string;
+  helpPhone: string;
+  helpOpeningHours: string;
+  homepage: string;
+  isPlanningDataCollected: boolean;
+  portalName: string;
+  portalUrl: string;
+}
+
 export interface FormProps {
-  formikConfig: FormikConfig<TeamTheme>;
-  onSuccess: () => void;
+  formikConfig: FormikConfig<GeneralSettings>;
+  onSuccess?: () => void;
 }
 
 const GeneralSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
-    FormikConfig<TeamTheme> | undefined
+    FormikConfig<GeneralSettings> | undefined
   >(undefined);
 
-  /**
-   * Fetch current team and setup shared form config
-   */
+  const initialValues = {
+    boundaryUrl: "",
+    helpEmail: "",
+    helpPhone: "",
+    helpOpeningHours: "",
+    homepage: "",
+    isPlanningDataCollected: false,
+    portalName: "",
+    portalUrl: "",
+  };
+
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
-        if (!fetchedTeam) throw Error("Unable to find team");
-
-        setFormikConfig({
-          initialValues: fetchedTeam.theme,
-          // This value will be set per form section
-          onSubmit: () => {},
-          validateOnBlur: false,
-          validateOnChange: false,
-          enableReinitialize: true,
-        });
+        setFormikConfig({ initialValues: initialValues, onSubmit: () => {} });
       } catch (error) {
         console.error("Error fetching team:", error);
       }
@@ -84,9 +93,9 @@ const GeneralSettings: React.FC = () => {
       </EditorRow>
       {formikConfig && (
         <>
-          <ContactForm type="Contact" />
-          <HomepagePlanningForm />
-          <BoundaryForm />
+          <ContactForm formikConfig={formikConfig} onSuccess={onSuccess} />
+          <HomepagePlanningForm formikConfig={formikConfig} />
+          <BoundaryForm formikConfig={formikConfig} />
         </>
       )}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
