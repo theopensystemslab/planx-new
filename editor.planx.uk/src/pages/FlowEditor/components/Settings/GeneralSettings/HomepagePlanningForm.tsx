@@ -13,7 +13,7 @@ export default function HomepagePlanningForm({
   formikConfig,
   onSuccess,
 }: FormProps) {
-  const [showPlanningInputs, setShowPlanningInputs] = useState(false);
+  const [showPlanningInputs, setShowPlanningInputs] = useState(true);
 
   const formik = useFormik({
     ...formikConfig,
