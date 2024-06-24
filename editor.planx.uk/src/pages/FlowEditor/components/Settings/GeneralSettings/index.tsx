@@ -8,7 +8,6 @@ import EditorRow from "ui/editor/EditorRow";
 
 import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
-import HomepagePlanningForm from "./HomepagePlanningForm";
 
 export interface GeneralSettings {
   boundaryUrl: string;
@@ -89,10 +88,6 @@ const GeneralSettings: React.FC = () => {
       {formikConfig && (
         <>
           <ContactForm formikConfig={formikConfig} onSuccess={onSuccess} />
-          <HomepagePlanningForm
-            formikConfig={formikConfig}
-            onSuccess={onSuccess}
-          />
           <BoundaryForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>
       )}

@@ -16,6 +16,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       .required("Help Email is required"),
     helpPhone: Yup.string().required("Help Phone is required"),
     helpOpeningHours: Yup.string(),
+    homepage: Yup.string().url("Please enter a valid URL for the homepage"),
   });
 
   const formik = useFormik({
@@ -42,6 +43,17 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       }
       input={
         <>
+          <InputRow>
+            <InputRowLabel>
+              Homepage URL
+              <Input
+                name="homepage"
+                onChange={(event) => {
+                  onChangeFn("homepage", event);
+                }}
+              />
+            </InputRowLabel>
+          </InputRow>
           <InputRow>
             <InputRowLabel>
               Contact email address
