@@ -40,7 +40,7 @@ export const SettingsForm = <TFormikValues,>({
           </Box>
         )}
         <ErrorWrapper
-          error={Object.values(formik.errors ? formik.errors : []).join(", ")}
+          error={Object.values(formik.errors).join(", ")}
           id="settings-error"
         >
           <Box>
