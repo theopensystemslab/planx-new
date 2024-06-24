@@ -47,7 +47,7 @@ test.describe("Navigation", () => {
 
     Promise.all([await page.goto("/"), await initialRequest]);
 
-    const team = page.locator("h2", { hasText: context.team.name });
+    const team = page.locator("h3", { hasText: context.team.name });
 
     let isRepeatedRequestMade = false;
     page.on(
@@ -74,7 +74,7 @@ test.describe("Navigation", () => {
     });
 
     await page.goto("/");
-    const team = page.locator("h2", { hasText: context.team.name });
+    const team = page.locator("h3", { hasText: context.team.name });
     await team.click();
 
     const teamSlugInHeader = page.getByRole("link", {
