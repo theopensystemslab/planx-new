@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import InputDescription from "ui/editor/InputDescription";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";

@@ -1,23 +1,14 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Snackbar from "@mui/material/Snackbar";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { FormikConfig } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import EditorRow from "ui/editor/EditorRow";
 
 import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
 import HomepagePlanningForm from "./HomepagePlanningForm";
-
-export const DesignPreview = styled(Box)(({ theme }) => ({
-  border: `2px solid ${theme.palette.border.input}`,
-  padding: theme.spacing(2),
-  boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
-}));
 
 export interface GeneralSettings {
   boundaryUrl: string;
@@ -69,7 +60,7 @@ const GeneralSettings: React.FC = () => {
     fetchTeam();
   }, []);
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [updateMessage, setUpdateMessage] = useState("Setting Updated");
 
   const handleClose = (

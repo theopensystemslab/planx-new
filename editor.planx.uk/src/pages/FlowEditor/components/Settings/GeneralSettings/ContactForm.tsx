@@ -44,7 +44,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
         <>
           <InputRow>
             <InputRowLabel>
-              Help Email
+              Contact email address
               <Input
                 name="helpEmail"
                 onChange={(event) => {
@@ -55,7 +55,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
           </InputRow>
           <InputRow>
             <InputRowLabel>
-              Help Phone
+              Phone number
               <Input
                 name="helpPhone"
                 onChange={(event) => {
@@ -66,7 +66,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
           </InputRow>
           <InputRow>
             <InputRowLabel>
-              Help Opening Hours
+              Opening hours
               <Input
                 multiline
                 name="helpOpeningHours"
