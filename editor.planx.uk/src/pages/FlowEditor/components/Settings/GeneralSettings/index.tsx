@@ -19,8 +19,6 @@ export const DesignPreview = styled(Box)(({ theme }) => ({
   boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
 }));
 
-export const EXAMPLE_COLOUR = "#007078";
-
 export interface GeneralSettings {
   boundaryUrl: string;
   helpEmail: string;
