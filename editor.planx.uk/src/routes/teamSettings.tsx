@@ -26,10 +26,10 @@ const teamSettingsRoutes = compose(
     "/:tab": map(async (req) => {
       const isAuthorised = useStore.getState().canUserEditTeam(req.params.team);
 
-      // if (!isAuthorised)
-      //  throw new NotFoundError(
-      //   `User does not have access to ${req.originalUrl}`,
-      // );
+      if (!isAuthorised)
+        throw new NotFoundError(
+          `User does not have access to ${req.originalUrl}`,
+        );
 
       return route(async (req) => ({
         title: makeTitle([req.params.team, "Team Settings"].join("/")),
