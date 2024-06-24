@@ -51,7 +51,7 @@ export const SettingsForm = <TFormikValues,>({
               onClick={() => formik.resetForm()}
               type="reset"
               variant="contained"
-              disabled={!formik?.dirty}
+              disabled={!formik.dirty}
               color="secondary"
               sx={{ ml: 1.5 }}
             >
