@@ -18,6 +18,7 @@ export interface TeamStore {
   teamSettings: TeamSettings;
   teamSlug: string;
   teamTheme: TeamTheme;
+  teamGeneralSettings: GeneralTeamSettings;
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
@@ -40,6 +41,7 @@ export const teamStore: StateCreator<
   teamSettings: {} as TeamSettings,
   teamSlug: "",
   teamTheme: {} as TeamTheme,
+  teamGeneralSettings: {} as GeneralTeamSettings,
 
   setTeam: (team) => {
     set({
@@ -50,6 +52,7 @@ export const teamStore: StateCreator<
       teamSettings: team.teamSettings,
       teamSlug: team.slug,
       teamTheme: team.theme,
+      teamGeneralSettings: team.team_settings,
     });
 
     if (team.theme?.favicon) {
@@ -66,6 +69,7 @@ export const teamStore: StateCreator<
     teamSettings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
+    team_settings: get().teamGeneralSettings,
   }),
 
   initTeamStore: async (slug) => {

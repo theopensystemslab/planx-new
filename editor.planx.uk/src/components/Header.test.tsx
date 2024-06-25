@@ -85,7 +85,7 @@ describe("Header Component - Editor Route", () => {
           id: 123,
           email: "test@example.com",
         },
-      }),
+      })
     );
 
     jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
@@ -98,7 +98,7 @@ describe("Header Component - Editor Route", () => {
           data: {
             flow: "test-flow",
           },
-        }) as any,
+        }) as any
     );
   });
 
@@ -139,7 +139,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
             data: {
               flow: "test-flow",
             },
-          }) as any,
+          }) as any
       );
     });
 
@@ -148,7 +148,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
       expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
       expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
         "src",
-        "logo.jpg",
+        "logo.jpg"
       );
     });
 
@@ -156,7 +156,7 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
       act(() => setState({ teamTheme: mockTeam2.theme }));
       setup(<Header />);
       expect(
-        screen.queryByAltText(`${mockTeam2.name} Logo`),
+        screen.queryByAltText(`${mockTeam2.name} Logo`)
       ).not.toBeInTheDocument();
       expect(screen.getByText("Plan✕")).toBeInTheDocument();
       act(() => setState({ teamTheme: mockTeam1.theme }));
@@ -190,7 +190,7 @@ describe("Section navigation bar", () => {
           data: {
             flow: "test-flow",
           },
-        }) as any,
+        }) as any
     );
   });
 

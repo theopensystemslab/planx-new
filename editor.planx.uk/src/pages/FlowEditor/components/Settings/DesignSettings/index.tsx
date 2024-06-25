@@ -42,7 +42,6 @@ const DesignSettings: React.FC = () => {
       try {
         const fetchedTeam = await useStore.getState().fetchCurrentTeam();
         if (!fetchedTeam) throw Error("Unable to find team");
-
         setFormikConfig({
           initialValues: fetchedTeam.theme,
           // This value will be set per form section
