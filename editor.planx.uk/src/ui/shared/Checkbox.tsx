@@ -56,14 +56,18 @@ export default function Checkbox({
   onChange,
   inputProps,
 }: Props): FCReturn {
+  const handleChange = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault()
+    onChange && onChange();
+  }
+
   return (
-    <Root onClick={() => onChange && onChange()}>
+    <Root onClick={handleChange}>
       <Input
         defaultChecked={checked}
         type="checkbox"
         id={id}
         data-testid={id}
-        onChange={() => onChange && onChange()}
         {...inputProps}
       />
       <Icon checked={checked} />
