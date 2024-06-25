@@ -23,6 +23,8 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
+import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
+import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
 import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 
@@ -36,6 +38,14 @@ export const SCHEMAS = [
     schema: ResidentialUnitsGLAGained,
   },
   { name: "Residential units (GLA) - Lost", schema: ResidentialUnitsGLALost },
+  {
+    name: "Residential units (GLA) - New",
+    schema: ResidentialUnitsGLANew,
+  },
+  {
+    name: "Residential units (GLA) - Rebuilt",
+    schema: ResidentialUnitsGLARebuilt,
+  },
   {
     name: "Residential units (GLA) - Removed",
     schema: ResidentialUnitsGLARemoved,

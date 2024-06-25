@@ -94,42 +94,6 @@ export const ResidentialUnitsGLARemoved: Schema = {
     {
       type: "question",
       data: {
-        title:
-          "Is this unit compliant with Part M4(2) of the Building Regulations 2010?",
-        fn: "compliance.m42",
-        options: [
-          { id: "true", data: { text: "Yes", val: "true" } },
-          { id: "false", data: { text: "No", val: "false" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title:
-          "Is this unit compliant with Part M4(3)(2a) of the Building Regulations 2010?",
-        fn: "compliance.m432a",
-        options: [
-          { id: "true", data: { text: "Yes", val: "true" } },
-          { id: "false", data: { text: "No", val: "false" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title:
-          "Is this unit compliant with Part M4(3)(2b) of the Building Regulations 2010?",
-        fn: "compliance.m432b",
-        options: [
-          { id: "true", data: { text: "Yes", val: "true" } },
-          { id: "false", data: { text: "No", val: "false" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
         title: "What best describes the type of this unit?",
         fn: "type",
         options: [
