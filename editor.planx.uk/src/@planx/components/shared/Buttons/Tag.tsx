@@ -67,7 +67,9 @@ export default function Tag(props: Props): FCReturn {
       id={id}
       tagType={tagType}
     >
-      <Box sx={visuallyHidden} component="span">The status of this section of the application is:</Box>
+      <Box sx={visuallyHidden} component="span">
+        The status of this section of the application is:
+      </Box>
       {children}
     </Root>
   );

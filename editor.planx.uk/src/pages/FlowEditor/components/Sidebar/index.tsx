@@ -13,21 +13,26 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
 import { AxiosError } from "axios";
+import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Input from "ui/shared/Input";
 
-import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import EditHistory from "./EditHistory";
-import { AlteredNode, AlteredNodesSummaryContent, ValidationCheck, ValidationChecks } from "./PublishDialog";
+import {
+  AlteredNode,
+  AlteredNodesSummaryContent,
+  ValidationCheck,
+  ValidationChecks,
+} from "./PublishDialog";
 
 type SidebarTabs = "PreviewBrowser" | "History";
 
@@ -174,7 +179,9 @@ const Sidebar: React.FC<{
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet",
   );
-  const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>([]);
+  const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>(
+    [],
+  );
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
@@ -189,9 +196,7 @@ const Sidebar: React.FC<{
       setLastPublishedTitle("Checking for changes...");
       const alteredFlow = await validateAndDiffFlow(flowId);
       setAlteredNodes(
-        alteredFlow?.data.alteredNodes
-          ? alteredFlow.data.alteredNodes
-          : [],
+        alteredFlow?.data.alteredNodes ? alteredFlow.data.alteredNodes : [],
       );
       setLastPublishedTitle(
         alteredFlow?.data.alteredNodes
@@ -201,9 +206,7 @@ const Sidebar: React.FC<{
       setValidationChecks(alteredFlow?.data?.validationChecks);
       setDialogOpen(true);
     } catch (error) {
-      setLastPublishedTitle(
-        "Error checking for changes to publish",
-      );
+      setLastPublishedTitle("Error checking for changes to publish");
 
       if (error instanceof AxiosError) {
         alert(error.response?.data?.error);
@@ -219,10 +222,7 @@ const Sidebar: React.FC<{
     try {
       setDialogOpen(false);
       setLastPublishedTitle("Publishing changes...");
-      const { alteredNodes, message } = await publishFlow(
-        flowId,
-        summary,
-      );
+      const { alteredNodes, message } = await publishFlow(flowId, summary);
       setLastPublishedTitle(
         alteredNodes
           ? `Successfully published changes to ${alteredNodes.length} nodes`
@@ -379,13 +379,17 @@ const Sidebar: React.FC<{
                 {alteredNodes?.length ? (
                   <>
                     <AlteredNodesSummaryContent
-                      alteredNodes={alteredNodes} lastPublishedTitle={lastPublishedTitle}
+                      alteredNodes={alteredNodes}
+                      lastPublishedTitle={lastPublishedTitle}
                     />
                     <ValidationChecks validationChecks={validationChecks} />
                     <Box pb={2}>
                       <Typography variant="body2">
                         {`Preview these content changes in-service before publishing `}
-                        <Link href={props.url.replace("/published", "/preview")} target="_blank">
+                        <Link
+                          href={props.url.replace("/published", "/preview")}
+                          target="_blank"
+                        >
                           {`here (opens in a new tab).`}
                         </Link>
                       </Typography>
@@ -413,7 +417,12 @@ const Sidebar: React.FC<{
                   color="primary"
                   variant="contained"
                   onClick={handlePublish}
-                  disabled={!alteredNodes || alteredNodes.length === 0 || validationChecks.filter((v) => v.status === "Fail").length > 0}
+                  disabled={
+                    !alteredNodes ||
+                    alteredNodes.length === 0 ||
+                    validationChecks.filter((v) => v.status === "Fail").length >
+                      0
+                  }
                 >
                   PUBLISH
                 </Button>

@@ -1,4 +1,5 @@
 import { Store } from "pages/FlowEditor/lib/store";
+
 import { SetValue } from "./model";
 
 type PreviousValues = string | string[] | undefined;

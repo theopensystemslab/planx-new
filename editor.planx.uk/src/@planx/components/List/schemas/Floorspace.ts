@@ -28,15 +28,24 @@ export const NonResidentialFloorspace: Schema = {
           },
           {
             id: "eAShops",
-            data: { text: "E(a) - Retail (other than hot food): Shops", val: "eAShops" },
+            data: {
+              text: "E(a) - Retail (other than hot food): Shops",
+              val: "eAShops",
+            },
           },
           {
             id: "eANetTradeableArea",
-            data: { text: "E(a) - Retail (other than hot food): Net tradeable area", val: "eANetTradeableArea" },
+            data: {
+              text: "E(a) - Retail (other than hot food): Net tradeable area",
+              val: "eANetTradeableArea",
+            },
           },
           {
             id: "eB",
-            data: { text: "E(b) - Sale of food and drink (mostly consumed on the premises)", val: "eB" },
+            data: {
+              text: "E(b) - Sale of food and drink (mostly consumed on the premises)",
+              val: "eB",
+            },
           },
           {
             id: "eCI",
@@ -44,7 +53,10 @@ export const NonResidentialFloorspace: Schema = {
           },
           {
             id: "eCII",
-            data: { text: "E(c)(ii) - Professional services (other than health or medical)", val: "eCII" },
+            data: {
+              text: "E(c)(ii) - Professional services (other than health or medical)",
+              val: "eCII",
+            },
           },
           {
             id: "eCIII",
@@ -52,7 +64,10 @@ export const NonResidentialFloorspace: Schema = {
           },
           {
             id: "eD",
-            data: { text: "E(d) - Indoor sports, recreation or fitness", val: "eD" },
+            data: {
+              text: "E(d) - Indoor sports, recreation or fitness",
+              val: "eD",
+            },
           },
           {
             id: "eF",
@@ -60,15 +75,24 @@ export const NonResidentialFloorspace: Schema = {
           },
           {
             id: "eGI",
-            data: { text: "E(g)(i) - Office (to carry out operational or administrative functions)", val: "eGI" },
+            data: {
+              text: "E(g)(i) - Office (to carry out operational or administrative functions)",
+              val: "eGI",
+            },
           },
           {
             id: "eGII",
-            data: { text: "E(g)(ii) - Research and development of products or processes", val: "eGII" },
+            data: {
+              text: "E(g)(ii) - Research and development of products or processes",
+              val: "eGII",
+            },
           },
           {
             id: "eGIII",
-            data: { text: "E(g)(iii) - Any industrial process (can be carried out within a residential area)", val: "eGIII" },
+            data: {
+              text: "E(g)(iii) - Any industrial process (can be carried out within a residential area)",
+              val: "eGIII",
+            },
           },
           {
             id: "fOneA",
@@ -121,11 +145,17 @@ export const NonResidentialFloorspace: Schema = {
           },
           {
             id: "fTwoA",
-            data: { text: "F2(a) - Shop selling essential goods (not over 280sqm and no other such facility in 1000m radius)", val: "fTwoA" },
+            data: {
+              text: "F2(a) - Shop selling essential goods (not over 280sqm and no other such facility in 1000m radius)",
+              val: "fTwoA",
+            },
           },
           {
             id: "fTwoB",
-            data: { text: "F2(b) - Hall or meeting place for local community (principal use)", val: "fTwoB" },
+            data: {
+              text: "F2(b) - Hall or meeting place for local community (principal use)",
+              val: "fTwoB",
+            },
           },
           {
             id: "fTwoC",
@@ -133,7 +163,10 @@ export const NonResidentialFloorspace: Schema = {
           },
           {
             id: "fTwoD",
-            data: { text: "F2(d) - Indoor or outdoor swimming pool or skating rink", val: "fTwoD" },
+            data: {
+              text: "F2(d) - Indoor or outdoor swimming pool or skating rink",
+              val: "fTwoD",
+            },
           },
           { id: "other", data: { text: "Other", val: "other" } },
         ],
@@ -151,7 +184,8 @@ export const NonResidentialFloorspace: Schema = {
     {
       type: "number",
       data: {
-        title: "What is the gross internal floor area to be lost by change of use or demolition?",
+        title:
+          "What is the gross internal floor area to be lost by change of use or demolition?",
         units: "m²",
         fn: "area.loss",
         allowNegatives: false,
@@ -160,7 +194,8 @@ export const NonResidentialFloorspace: Schema = {
     {
       type: "number",
       data: {
-        title: "What is the total gross internal floor area proposed (including change of use)?",
+        title:
+          "What is the total gross internal floor area proposed (including change of use)?",
         units: "m²",
         fn: "area.proposed",
         allowNegatives: false,

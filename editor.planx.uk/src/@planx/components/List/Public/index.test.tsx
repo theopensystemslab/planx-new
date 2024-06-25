@@ -348,7 +348,7 @@ describe("Building a list", () => {
     expect(cards).toHaveLength(1);
 
     const cancelButton = getByText(/Cancel/, { selector: "button" });
-    await user.click(cancelButton)
+    await user.click(cancelButton);
 
     cards = queryAllByTestId(/list-card/);
     expect(cards).toHaveLength(0);
@@ -376,7 +376,7 @@ describe("Building a list", () => {
     expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
   });
 });
- 
+
 describe("Form validation and error handling", () => {
   test.todo("form validation is triggered when saving an item");
   test.todo("text fields use existing validation schemas");

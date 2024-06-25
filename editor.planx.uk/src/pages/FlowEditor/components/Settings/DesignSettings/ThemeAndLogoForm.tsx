@@ -12,8 +12,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { DesignPreview, FormProps } from ".";
 import { SettingsForm } from "../shared/SettingsForm";
+import { DesignPreview, FormProps } from ".";
 
 export const ThemeAndLogoForm: React.FC<FormProps> = ({
   formikConfig,

@@ -65,7 +65,8 @@ const InputField: React.FC<Field> = (props) => {
 const ActiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, saveItem, cancelEditItem, errors, isPageComponent } = useListContext();
+  const { schema, saveItem, cancelEditItem, errors, isPageComponent } =
+    useListContext();
 
   return (
     <ErrorWrapper
@@ -99,7 +100,8 @@ const ActiveListCard: React.FC<{
 const InactiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, formik, removeItem, editItem, isPageComponent } = useListContext();
+  const { schema, formik, removeItem, editItem, isPageComponent } =
+    useListContext();
 
   return (
     <ListCard data-testid={`list-card-${i}`}>

@@ -57,7 +57,9 @@ const AnalyticsDisabledBanner: React.FC = () => {
             </Box>
             <Button size="small" onClick={() => setShowAnalyticsWarning(false)}>
               Hide
-              <Box sx={visuallyHidden} component="span">the analytics banner</Box>
+              <Box sx={visuallyHidden} component="span">
+                the analytics banner
+              </Box>
             </Button>
           </Container>
         </AnalyticsWarning>

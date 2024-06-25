@@ -10,8 +10,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { FormProps } from ".";
 import { SettingsForm } from "../shared/SettingsForm";
+import { FormProps } from ".";
 
 export const FaviconForm: React.FC<FormProps> = ({
   formikConfig,

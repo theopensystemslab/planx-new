@@ -10,8 +10,17 @@ export const ResidentialUnitsProposed: Schema = {
         fn: "development",
         options: [
           { id: "newBuild", data: { text: "New build", val: "newBuild" } },
-          { id: "changeOfUseFrom", data: { text: "Change of use of existing single home", val: "changeOfUseFrom" } },
-          { id: "changeOfUseTo", data: { text: "Change of use to a home", val: "changeOfUseTo" } },
+          {
+            id: "changeOfUseFrom",
+            data: {
+              text: "Change of use of existing single home",
+              val: "changeOfUseFrom",
+            },
+          },
+          {
+            id: "changeOfUseTo",
+            data: { text: "Change of use to a home", val: "changeOfUseTo" },
+          },
         ],
       },
     },

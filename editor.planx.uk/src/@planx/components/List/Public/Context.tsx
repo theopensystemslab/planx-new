@@ -63,7 +63,9 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     props.previouslySubmittedData ? -1 : 0,
   );
 
-  const [activeItemInitialState, setActiveItemInitialState] = useState<UserResponse | undefined>(undefined);
+  const [activeItemInitialState, setActiveItemInitialState] = useState<
+    UserResponse | undefined
+  >(undefined);
 
   const [addItemError, setAddItemError] = useState<boolean>(false);
   const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
@@ -132,16 +134,16 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     activeItemInitialState
       ? resetItemToPreviousState()
       : removeItem(activeIndex);
-    
+
     setActiveItemInitialState(undefined);
 
     exitEditMode();
-  }
+  };
 
   const editItem = (index: number) => {
     setActiveItemInitialState(formik.values.userData[index]);
     setActiveIndex(index);
-  }
+  };
 
   const getInitialValues = () => {
     const previousValues = getPreviouslySubmittedData(props);
@@ -151,12 +153,9 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
   };
 
   const exitEditMode = () => setActiveIndex(-1);
-  
-  const resetItemToPreviousState = () => 
-    formik.setFieldValue(
-      `userData[${activeIndex}]`,
-      activeItemInitialState
-    )
+
+  const resetItemToPreviousState = () =>
+    formik.setFieldValue(`userData[${activeIndex}]`, activeItemInitialState);
 
   const isPageComponent = schema.max === 1;
 
