@@ -33,7 +33,7 @@ export function sumIdenticalUnits(
 ): number {
   let sum = 0;
   passportData[`${fn}`].map((item) => {
-    if (typeof item?.identicalUnits === "string") {
+    if (!Array.isArray(item?.identicalUnits)) {
       sum += parseInt(item?.identicalUnits)
     }
   });
@@ -64,7 +64,7 @@ export function sumIdenticalUnitsByDevelopmentType(
   };
   passportData[`${fn}`].map(
     (item) => {
-      if (typeof item?.identicalUnits === "string") {
+      if (!Array.isArray(item?.identicalUnits)) {
         (baseSums[`${item?.development}`] += parseInt(item?.identicalUnits))
       }
     }
