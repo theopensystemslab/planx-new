@@ -129,7 +129,7 @@ const InactiveListCard: React.FC<{
               <TableCell>
                 {formatSchemaDisplayValue(
                   formik.values.userData[i][field.data.fn],
-                  schema,
+                  schema.fields[j],
                 )}
               </TableCell>
             </TableRow>
