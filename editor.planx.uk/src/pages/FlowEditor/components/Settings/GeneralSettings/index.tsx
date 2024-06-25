@@ -2,7 +2,9 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
+import { GeneralTeamSettings } from "@opensystemslab/planx-core/types";
 import { FormikConfig } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
@@ -18,28 +20,23 @@ export interface GeneralSettings {
 }
 
 export interface FormProps {
-  formikConfig: FormikConfig<GeneralSettings>;
+  formikConfig: FormikConfig<GeneralTeamSettings>;
   onSuccess: () => void;
 }
 
 const GeneralSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
-    FormikConfig<GeneralSettings> | undefined
+    FormikConfig<GeneralTeamSettings> | undefined
   >(undefined);
-
-  const initialValues = {
-    boundaryUrl: "",
-    helpEmail: "",
-    helpPhone: "",
-    helpOpeningHours: "",
-    homepage: "",
-  };
 
   useEffect(() => {
     const fetchTeam = async () => {
       try {
+        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
+        console.log(fetchedTeam);
+        if (!fetchedTeam) throw Error("Unable to find team");
         setFormikConfig({
-          initialValues: initialValues,
+          initialValues: fetchedTeam.team_settings,
           onSubmit: () => {},
           validateOnBlur: false,
           validateOnChange: false,
@@ -58,7 +55,7 @@ const GeneralSettings: React.FC = () => {
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
-    reason?: string,
+    reason?: string
   ) => {
     if (reason === "clickaway") {
       return;

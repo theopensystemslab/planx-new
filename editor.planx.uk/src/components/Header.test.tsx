@@ -26,6 +26,15 @@ const mockTeam1: Team = {
     linkColour: "#0010A4",
     favicon: null,
   },
+  team_settings: {
+    boundaryUrl: "https://www.planning.data.gov.uk/",
+    homepage: "opensystemlabs.oi",
+    helpEmail: "example@council.co.uk",
+    helpPhone: "(01234) 56789",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm",
+    emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+    referenceCode: "OSL",
+  },
 };
 
 const mockTeam2: Team = {
@@ -41,6 +50,15 @@ const mockTeam2: Team = {
     actionColour: "#0010A4",
     linkColour: "#0010A4",
     favicon: null,
+  },
+  team_settings: {
+    boundaryUrl: "https://www.planning.data.gov.uk/",
+    homepage: "closedsystemlabs.io",
+    helpEmail: "example@council.co.uk",
+    helpPhone: "(01234) 56789",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm",
+    emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+    referenceCode: "CSL",
   },
 };
 
