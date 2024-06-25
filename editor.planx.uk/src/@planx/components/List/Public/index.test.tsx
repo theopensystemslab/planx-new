@@ -338,8 +338,45 @@ describe("Building a list", () => {
       within(cards[0]!).getByLabelText(/What's their name?/),
     ).toBeInTheDocument();
   });
-});
 
+  test("Cancelling an invalid (new) item removes it", async () => {
+    const { getAllByTestId, getByText, user, queryAllByTestId } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+
+    let cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(1);
+
+    const cancelButton = getByText(/Cancel/, { selector: "button" });
+    await user.click(cancelButton)
+
+    cards = queryAllByTestId(/list-card/);
+    expect(cards).toHaveLength(0);
+  });
+
+  test("Cancelling a valid (existing) item resets previous state", async () => {
+    const { getByLabelText, getByText, user, queryByText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+
+    await fillInResponse(user);
+
+    expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
+
+    const editButton = getByText(/Edit/, { selector: "button" });
+    await user.click(editButton);
+
+    const emailInput = getByLabelText(/email/);
+    await user.type(emailInput, "my.new.email@test.com");
+
+    const cancelButton = getByText(/Cancel/, { selector: "button" });
+    await user.click(cancelButton);
+
+    expect(queryByText("my.new.email@test.com")).not.toBeInTheDocument();
+    expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
+  });
+});
+ 
 describe("Form validation and error handling", () => {
   test.todo("form validation is triggered when saving an item");
   test.todo("text fields use existing validation schemas");

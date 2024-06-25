@@ -17,6 +17,7 @@ import {
   List,
   Schema,
   UserData,
+  UserResponse,
 } from "../model";
 import {
   flatten,
@@ -35,6 +36,14 @@ interface ListContextValue {
   formik: FormikProps<UserData>;
   validateAndSubmitForm: () => void;
   listProps: PublicProps<List>;
+  /**
+   * @deprecated
+   * @description
+   * Hide features if the schema is temporarily mocking a "Page" component
+   * @todo
+   * Refactor and allow a single-item "Page" component to properly manage this
+   */
+  isPageComponent: boolean;
   errors: {
     addItem: boolean;
     unsavedItem: boolean;
@@ -53,6 +62,8 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState<number>(
     props.previouslySubmittedData ? -1 : 0,
   );
+
+  const [activeItemInitialState, setActiveItemInitialState] = useState<UserResponse | undefined>(undefined);
 
   const [addItemError, setAddItemError] = useState<boolean>(false);
   const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
@@ -83,7 +94,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     const errors = await formik.validateForm();
     const isValid = !errors.userData?.length;
     if (isValid) {
-      setActiveIndex(-1);
+      exitEditMode();
       setAddItemError(false);
     }
   };
@@ -91,12 +102,9 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
   const removeItem = (index: number) => {
     resetErrors();
 
+    // If item is before currently active card, retain active card
     if (activeIndex && index < activeIndex) {
-      // If item is before currently active card, retain active card
       setActiveIndex((prev) => (prev === -1 ? 0 : prev - 1));
-    } else if (index === activeIndex || index === 0) {
-      // If item is currently in Edit mode, exit Edit mode
-      cancelEditItem();
     }
 
     // Remove item from userData
@@ -120,9 +128,20 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     formik.handleSubmit();
   };
 
-  const cancelEditItem = () => setActiveIndex(-1);
+  const cancelEditItem = () => {
+    activeItemInitialState
+      ? resetItemToPreviousState()
+      : removeItem(activeIndex);
+    
+    setActiveItemInitialState(undefined);
 
-  const editItem = (index: number) => setActiveIndex(index);
+    exitEditMode();
+  }
+
+  const editItem = (index: number) => {
+    setActiveItemInitialState(formik.values.userData[index]);
+    setActiveIndex(index);
+  }
 
   const getInitialValues = () => {
     const previousValues = getPreviouslySubmittedData(props);
@@ -130,6 +149,16 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
 
     return schema.min ? [generateInitialValues(schema)] : [];
   };
+
+  const exitEditMode = () => setActiveIndex(-1);
+  
+  const resetItemToPreviousState = () => 
+    formik.setFieldValue(
+      `userData[${activeIndex}]`,
+      activeItemInitialState
+    )
+
+  const isPageComponent = schema.max === 1;
 
   const formik = useFormik<UserData>({
     initialValues: {
@@ -189,6 +218,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
         cancelEditItem,
         formik,
         validateAndSubmitForm,
+        isPageComponent,
         errors: {
           addItem: addItemError,
           unsavedItem: unsavedItemError,

@@ -65,10 +65,7 @@ const InputField: React.FC<Field> = (props) => {
 const ActiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, saveItem, cancelEditItem, errors } = useListContext();
-
-  // Hide the index number in the card title if the schema has a max length of 1
-  const shouldShowIndexTitle = schema.max !== 1;
+  const { schema, saveItem, cancelEditItem, errors, isPageComponent } = useListContext();
 
   return (
     <ErrorWrapper
@@ -77,7 +74,7 @@ const ActiveListCard: React.FC<{
       <ListCard data-testid={`list-card-${i}`}>
         <Typography component="h2" variant="h3">
           {schema.type}
-          {shouldShowIndexTitle && ` ${i + 1}`}
+          {!isPageComponent && ` ${i + 1}`}
         </Typography>
         {schema.fields.map((field, i) => (
           <InputRow key={i}>
@@ -92,7 +89,7 @@ const ActiveListCard: React.FC<{
           >
             Save
           </Button>
-          <Button onClick={cancelEditItem}>Cancel</Button>
+          {!isPageComponent && <Button onClick={cancelEditItem}>Cancel</Button>}
         </Box>
       </ListCard>
     </ErrorWrapper>
@@ -102,16 +99,13 @@ const ActiveListCard: React.FC<{
 const InactiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, formik, removeItem, editItem } = useListContext();
-
-  // Hide the index number in the card title if the schema has a max length of 1
-  const shouldShowIndexTitle = schema.max !== 1;
+  const { schema, formik, removeItem, editItem, isPageComponent } = useListContext();
 
   return (
     <ListCard data-testid={`list-card-${i}`}>
       <Typography component="h2" variant="h3">
         {schema.type}
-        {shouldShowIndexTitle && ` ${i + 1}`}
+        {!isPageComponent && ` ${i + 1}`}
       </Typography>
       <Table>
         <TableBody>
