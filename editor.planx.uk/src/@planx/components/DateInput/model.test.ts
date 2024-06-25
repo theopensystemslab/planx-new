@@ -47,7 +47,10 @@ describe("dateSchema", () => {
     expect(await dateSchema().isValid("2021-23-03")).toBe(false);
   });
 
-  const validate = async (date?: string) => await dateSchema().validate(date).catch((err) => err.errors);
+  const validate = async (date?: string) =>
+    await dateSchema()
+      .validate(date)
+      .catch((err) => err.errors);
 
   it("throws an error for an undefined value (empty form)", async () => {
     const errors = await validate(undefined);
@@ -58,12 +61,12 @@ describe("dateSchema", () => {
     const errors = await validate("ab-cd-efgh");
     expect(errors[0]).toMatch(/Date must include a day/);
   });
-  
+
   it("throws an error for a missing day", async () => {
     const errors = await validate("2024-12-");
     expect(errors[0]).toMatch(/Date must include a day/);
   });
-  
+
   it("throws an error for a missing month", async () => {
     const errors = await validate("2024--25");
     expect(errors[0]).toMatch(/Date must include a month/);
@@ -112,7 +115,7 @@ describe("dateRangeSchema", () => {
         "1980-06-15",
       ),
     ).toBe(false);
-  })
+  });
 });
 
 test("padding on input", () => {

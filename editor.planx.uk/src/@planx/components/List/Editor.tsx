@@ -14,6 +14,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+import { NonResidentialFloorspace } from "./schemas/Floorspace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
 import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
@@ -24,7 +25,6 @@ import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
-import { NonResidentialFloorspace } from "./schemas/Floorspace";
 
 type Props = EditorProps<TYPES.List, List>;
 

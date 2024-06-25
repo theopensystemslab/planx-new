@@ -12,11 +12,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Caret from "ui/icons/Caret";
 
-import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import { useStore } from "../../lib/store";
 
 export interface AlteredNode {
@@ -68,7 +68,9 @@ const AlteredNestedFlowListItem = (props: Portal) => {
 
   const _nestedFlowLastPublishedRequest = useAsync(async () => {
     const user = await lastPublisher(flowId);
-    setNestedFlowLastPublishedTitle(formatLastPublishMessage(publishedAt, user));
+    setNestedFlowLastPublishedTitle(
+      formatLastPublishMessage(publishedAt, user),
+    );
   });
 
   return (
@@ -148,17 +150,23 @@ export const AlteredNodesSummaryContent = (props: {
         {`Changes`}
       </Typography>
       {changeSummary["title"] && (
-        <Typography variant="body2">
-          {changeSummary["title"]}
-        </Typography>
+        <Typography variant="body2">{changeSummary["title"]}</Typography>
       )}
       {(changeSummary["updated"] > 0 || changeSummary["deleted"] > 0) && (
         <Box pb={2}>
           <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
-            <ListItem key={"updated"} disablePadding sx={{ display: "list-item" }}>
+            <ListItem
+              key={"updated"}
+              disablePadding
+              sx={{ display: "list-item" }}
+            >
               <Typography variant="body2">{`${changeSummary["updated"]} nodes have been updated or added`}</Typography>
             </ListItem>
-            <ListItem key={"deleted"} disablePadding sx={{ display: "list-item" }}>
+            <ListItem
+              key={"deleted"}
+              disablePadding
+              sx={{ display: "list-item" }}
+            >
               <Typography variant="body2">{`${changeSummary["deleted"]} nodes have been deleted`}</Typography>
             </ListItem>
           </List>
@@ -228,14 +236,14 @@ export interface ValidationCheck {
 }
 
 export const ValidationChecks = (props: {
-  validationChecks: ValidationCheck[]
+  validationChecks: ValidationCheck[];
 }) => {
   const { validationChecks } = props;
 
   const Icon: Record<ValidationCheck["status"], React.ReactElement> = {
-    "Pass": <Done color="success" />,
-    "Fail": <Close color="error" />,
-    "Not applicable": <NotInterested color="disabled" />
+    Pass: <Done color="success" />,
+    Fail: <Close color="error" />,
+    "Not applicable": <NotInterested color="disabled" />,
   };
 
   return (
@@ -250,8 +258,27 @@ export const ValidationChecks = (props: {
               {Icon[check.status]}
             </ListItemIcon>
             <ListItemText
-              primary={<Typography variant="body2" color={check.status === "Not applicable" ? "GrayText" : "inherit"}>{check.title}</Typography>}
-              secondary={<Typography variant="body2" fontSize="small" color={check.status === "Not applicable" ? "GrayText" : "inherit"}>{check.message}</Typography>}
+              primary={
+                <Typography
+                  variant="body2"
+                  color={
+                    check.status === "Not applicable" ? "GrayText" : "inherit"
+                  }
+                >
+                  {check.title}
+                </Typography>
+              }
+              secondary={
+                <Typography
+                  variant="body2"
+                  fontSize="small"
+                  color={
+                    check.status === "Not applicable" ? "GrayText" : "inherit"
+                  }
+                >
+                  {check.message}
+                </Typography>
+              }
             />
           </ListItem>
         ))}
@@ -259,4 +286,4 @@ export const ValidationChecks = (props: {
       <Divider />
     </Box>
   );
-}
+};

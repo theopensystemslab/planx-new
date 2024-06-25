@@ -1,8 +1,8 @@
 import "@mui/material/Chip";
 // eslint-disable-next-line no-restricted-imports
 import "@mui/material/styles/createPalette";
-import { RadioProps } from "@mui/material/Radio";
 
+import { RadioProps } from "@mui/material/Radio";
 
 declare module "@mui/material/Chip" {
   interface ChipPropsVariantOverrides {

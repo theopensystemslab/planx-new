@@ -9,7 +9,7 @@ export const formatLastEditDate = (date: string): string => {
 
 export const formatLastEditMessage = (
   date: string,
-  actor?: { firstName: string; lastName: string }
+  actor?: { firstName: string; lastName: string },
 ): string => {
   if (!actor) {
     return `Last edited ${formatLastEditDate(date)}`;

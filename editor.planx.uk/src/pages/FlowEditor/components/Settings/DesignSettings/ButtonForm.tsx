@@ -11,8 +11,8 @@ import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { DesignPreview, FormProps } from ".";
 import { SettingsForm } from "../shared/SettingsForm";
+import { DesignPreview, FormProps } from ".";
 
 export const ButtonForm: React.FC<FormProps> = ({
   formikConfig,

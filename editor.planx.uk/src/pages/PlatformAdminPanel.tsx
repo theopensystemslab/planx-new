@@ -58,7 +58,7 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
   const a4Endpoint = `${process.env.REACT_APP_API_URL}/gis/${data.slug}/article4-schema`;
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data: a4Check, isValidating } = useSWR(
-    () => data.slug ? a4Endpoint : null,
+    () => (data.slug ? a4Endpoint : null),
     fetcher,
   );
 
@@ -123,7 +123,13 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
               </>
               <>
                 <Box component="dt">{"Article 4s (API)"}</Box>
-                <Box component="dd">{!isValidating && a4Check?.status ? <Configured /> : <NotConfigured />}</Box>
+                <Box component="dd">
+                  {!isValidating && a4Check?.status ? (
+                    <Configured />
+                  ) : (
+                    <NotConfigured />
+                  )}
+                </Box>
               </>
               <>
                 <Box component="dt">{"Reference code"}</Box>
