@@ -15,9 +15,6 @@ export interface GeneralSettings {
   helpPhone: string;
   helpOpeningHours: string;
   homepage: string;
-  isPlanningDataCollected: boolean;
-  portalName: string;
-  portalUrl: string;
 }
 
 export interface FormProps {
@@ -36,9 +33,6 @@ const GeneralSettings: React.FC = () => {
     helpPhone: "",
     helpOpeningHours: "",
     homepage: "",
-    isPlanningDataCollected: true,
-    portalName: "",
-    portalUrl: "",
   };
 
   useEffect(() => {

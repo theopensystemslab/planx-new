@@ -1660,9 +1660,6 @@
     - role: api
       permission:
         columns:
-          - has_planning_data
-          - id
-          - team_id
           - boundary_json
           - boundary_url
           - email_reply_to_id
@@ -1672,15 +1669,14 @@
           - help_opening_hours
           - help_phone
           - homepage
+          - id
           - reference_code
+          - team_id
         filter: {}
       comment: ""
     - role: platformAdmin
       permission:
         columns:
-          - has_planning_data
-          - id
-          - team_id
           - boundary_json
           - boundary_url
           - email_reply_to_id
@@ -1690,7 +1686,9 @@
           - help_opening_hours
           - help_phone
           - homepage
+          - id
           - reference_code
+          - team_id
         filter: {}
       comment: ""
     - role: public
@@ -1700,7 +1698,6 @@
           - boundary_url
           - external_planning_site_name
           - external_planning_site_url
-          - has_planning_data
           - homepage
           - id
           - reference_code
@@ -1710,9 +1707,6 @@
     - role: teamEditor
       permission:
         columns:
-          - has_planning_data
-          - id
-          - team_id
           - boundary_json
           - boundary_url
           - email_reply_to_id
@@ -1722,7 +1716,9 @@
           - help_opening_hours
           - help_phone
           - homepage
+          - id
           - reference_code
+          - team_id
         filter: {}
       comment: ""
   update_permissions:
@@ -1733,7 +1729,6 @@
           - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
-          - has_planning_data
           - help_email
           - help_opening_hours
           - help_phone
@@ -1749,7 +1744,6 @@
           - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
-          - has_planning_data
           - help_email
           - help_opening_hours
           - help_phone
