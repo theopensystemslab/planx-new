@@ -202,31 +202,22 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
   const changeCheckbox =
     (id: string) =>
     async (
-      event: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined,
+      _checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined,
     ) => {
-      // console.log("Clicked id: ", id)
-
-      // console.log("Before: ", formik.values.userData[activeIndex][fn])
       let newCheckedIds;
 
       if (formik.values.userData[activeIndex][fn].includes(id)) {
-        // console.log("Already in list")
         newCheckedIds = (
           formik.values.userData[activeIndex][fn] as string[]
         ).filter((x) => x !== id);
-        // console.log("After: ", newCheckedIds)
       } else {
-        // console.log("New")
         newCheckedIds = [...formik.values.userData[activeIndex][fn], id];
-        // console.log("After: ", newCheckedIds)
       }
 
       await formik.setFieldValue(
         `userData[${activeIndex}]['${fn}']`,
         newCheckedIds,
       );
-
-      // console.log(formik.values.userData[activeIndex][fn])
     };
 
   return (

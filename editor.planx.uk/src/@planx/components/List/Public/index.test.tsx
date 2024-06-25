@@ -651,6 +651,11 @@ const fillInResponse = async (user: UserEvent) => {
   const cuteRadio = screen.getAllByRole("radio")[0];
   await user.click(cuteRadio);
 
+  const eatCheckboxes = screen.getAllByRole("checkbox");
+  await user.click(eatCheckboxes[0]);
+  await user.click(eatCheckboxes[1]);
+  await user.click(eatCheckboxes[2]);
+
   const saveButton = screen.getByRole("button", {
     name: /Save/,
   });

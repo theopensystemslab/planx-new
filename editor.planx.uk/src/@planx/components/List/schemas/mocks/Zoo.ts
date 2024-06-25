@@ -64,6 +64,20 @@ export const Zoo: Schema = {
         ],
       },
     },
+    // Checklist
+    {
+      type: "checklist",
+      data: {
+        title: "What do they eat?",
+        fn: "food",
+        options: [
+          { id: "meat", data: { text: "Meat" } },
+          { id: "leaves", data: { text: "Leaves" } },
+          { id: "bamboo", data: { text: "Bamboo" } },
+          { id: "fruit", data: { text: "fruit" } },
+        ],
+      },
+    },
   ],
   min: 1,
   max: 3,
@@ -86,6 +100,7 @@ export const mockZooPayload = {
         "email.address": "richard.parker@pi.com",
         name: "Richard Parker",
         size: "Medium",
+        food: ["meat", "leaves", "bamboo"],
       },
       {
         age: 10,
@@ -93,6 +108,7 @@ export const mockZooPayload = {
         "email.address": "richard.parker@pi.com",
         name: "Richard Parker",
         size: "Medium",
+        food: ["meat", "leaves", "bamboo"],
       },
     ],
     "mockFn.one.age": 10,
