@@ -13,6 +13,7 @@ import { mockMaxOneProps } from "../schemas/mocks/MaxOne";
 import { mockZooPayload, mockZooProps } from "../schemas/mocks/Zoo";
 
 jest.setTimeout(20_000);
+Element.prototype.scrollIntoView = jest.fn();
 
 describe("Basic UI", () => {
   it("renders correctly", () => {
