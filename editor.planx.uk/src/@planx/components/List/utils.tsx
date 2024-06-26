@@ -95,14 +95,19 @@ export function sumIdenticalUnitsByDevelopmentType(
   return formattedSums;
 }
 
+interface FlattenOptions {
+  depth?: number;
+  path?: string | null;
+  separator?: string;
+};
+
 /**
  * Flattens nested object so we can output passport variables like `{listFn}.{itemIndexAsText}.{fieldFn}`
  *   Adapted from https://gist.github.com/penguinboy/762197
  */
 export function flatten<T extends Record<string, any>>(
-  object: T,
-  path: string | null = null,
-  separator = ".",
+    object: T,
+    { depth = Infinity, path = null, separator = ".", }: FlattenOptions = {}
 ): T {
   return Object.keys(object).reduce((acc: T, key: string): T => {
     const value = object[key];
@@ -121,8 +126,8 @@ export function flatten<T extends Record<string, any>>(
       !(Array.isArray(value) && value.length === 0),
     ].every(Boolean);
 
-    return isObject
-      ? { ...acc, ...flatten(value, newPath, separator) }
+    return (isObject && depth > 0)
+      ? { ...acc, ...flatten(value, { depth: depth - 1, path: newPath, separator }) }
       : { ...acc, [newPath]: value };
   }, {} as T);
 }

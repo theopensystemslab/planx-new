@@ -171,7 +171,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       const defaultPassportData = makeData(props, values.userData)?.["data"];
 
       // flattenedPassportData makes individual list items compatible with Calculate components
-      const flattenedPassportData = flatten(defaultPassportData);
+      const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
 
       // basic example of general summary stats we can add onSubmit:
       //   1. count of items/responses

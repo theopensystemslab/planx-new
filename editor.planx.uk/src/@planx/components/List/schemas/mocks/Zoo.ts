@@ -3,10 +3,6 @@ import { TextInputType } from "@planx/components/TextInput/model";
 import { Schema } from "../../model";
 import { Props } from "../../Public";
 
-/**
- * Temp simple example to build out UI
- * Can be re-used as mock for testing
- */
 export const Zoo: Schema = {
   type: "Animal",
   fields: [
@@ -116,11 +112,13 @@ export const mockZooPayload = {
     "mockFn.one.email.address": "richard.parker@pi.com",
     "mockFn.one.name": "Richard Parker",
     "mockFn.one.size": "Medium",
+    "mockFn.one.food": ["meat", "leaves", "bamboo"],
     "mockFn.two.age": 10,
     "mockFn.two.cuteness.amount": "Very",
     "mockFn.two.email.address": "richard.parker@pi.com",
     "mockFn.two.name": "Richard Parker",
     "mockFn.two.size": "Medium",
+    "mockFn.two.food": ["meat", "leaves", "bamboo"],
     "mockFn.total.listItems": 2,
   },
 };
