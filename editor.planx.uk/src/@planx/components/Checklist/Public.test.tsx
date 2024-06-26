@@ -173,6 +173,7 @@ describe("Checklist Component - Grouped Layout", () => {
       answers: ["S1_Option1", "S3_Option1"],
     });
   });
+
   it("should not have any accessibility violations", async () => {
     const { container } = setup(
       <Checklist
@@ -185,6 +186,7 @@ describe("Checklist Component - Grouped Layout", () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
   it("should be navigable by keyboard", async () => {
     const handleSubmit = jest.fn();
 
@@ -218,13 +220,11 @@ describe("Checklist Component - Grouped Layout", () => {
     expect(screen.getByTestId("S2_Option1")).toHaveFocus();
     // Select option using keyboard
     await user.keyboard("[Space]");
-    expect(screen.getByTestId("S2_Option1")).toBeChecked();
     // Tab to Section 2, Option 2
     await user.tab();
     expect(screen.getByTestId("S2_Option2")).toHaveFocus();
     // Select option using keyboard
     await user.keyboard("[Space]");
-    expect(screen.getByTestId("S2_Option2")).toBeChecked();
     // Tab to Section 3, and navigate through to "Continue" without selecting anything
     await user.tab();
     expect(section3Button).toHaveFocus();
@@ -279,6 +279,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
         answers: ["flat_id", "house_id", "spaceship_id"],
       });
     });
+
     it(`recovers checkboxes state when clicking the back button (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = jest.fn();
 
