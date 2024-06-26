@@ -28,7 +28,7 @@ const teamSettingsRoutes = compose(
 
       if (!isAuthorised)
         throw new NotFoundError(
-          `User does not have access to ${req.originalUrl}`,
+          `User does not have access to ${req.originalUrl}`
         );
 
       return route(async (req) => ({
@@ -47,17 +47,17 @@ const teamSettingsRoutes = compose(
                 route: "design",
                 Component: DesignSettings,
               },
-              // {
-              //   name: "General",
-              //   route: "general",
-              //   Component: GeneralSettings,
-              // },
+              {
+                name: "General",
+                route: "general",
+                Component: GeneralSettings,
+              },
             ]}
           />
         ),
       }));
     }),
-  }),
+  })
 );
 
 export default teamSettingsRoutes;
