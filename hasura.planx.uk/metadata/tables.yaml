@@ -1856,6 +1856,13 @@
           table:
             name: team_integrations
             schema: public
+    - name: team_settings
+      using:
+        foreign_key_constraint_on:
+          column: team_id
+          table:
+            name: team_settings
+            schema: public
     - name: theme
       using:
         foreign_key_constraint_on:
