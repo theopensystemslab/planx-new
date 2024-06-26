@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import React, { useMemo } from "react";
-import EditorRow from "ui/editor/EditorRow";
+import SettingsRow from "ui/editor/SettingsRow";
 
 import { useStore } from "../../../lib/store";
 import EventsLog from "./EventsLog";
@@ -75,21 +75,21 @@ const Submissions: React.FC = () => {
   return (
     <Container maxWidth="contentWrap">
       <Box>
-        <EditorRow>
+        <SettingsRow>
           <Typography variant="h2" component="h3" gutterBottom>
             Submissions
           </Typography>
           <Typography variant="body1">
             Feed of payment and submission events for this service
           </Typography>
-        </EditorRow>
-        <EditorRow>
+        </SettingsRow>
+        <SettingsRow>
           <EventsLog
             submissions={submissions}
             loading={loading}
             error={error}
           />
-        </EditorRow>
+        </SettingsRow>
       </Box>
     </Container>
   );

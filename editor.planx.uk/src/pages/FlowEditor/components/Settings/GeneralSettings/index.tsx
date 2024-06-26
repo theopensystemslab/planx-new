@@ -4,7 +4,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
 import { FormikConfig } from "formik";
 import React, { useEffect, useState } from "react";
-import EditorRow from "ui/editor/EditorRow";
+import SettingsRow from "ui/editor/SettingsRow";
 
 import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
@@ -71,14 +71,14 @@ const GeneralSettings: React.FC = () => {
 
   return (
     <Box maxWidth="formWrap" mx="auto">
-      <EditorRow>
+      <SettingsRow>
         <Typography variant="h2" component="h3" gutterBottom>
           General
         </Typography>
         <Typography variant="body1">
           Important links and settings for how your users connect with you
         </Typography>
-      </EditorRow>
+      </SettingsRow>
       {formikConfig && (
         <>
           <ContactForm formikConfig={formikConfig} onSuccess={onSuccess} />

@@ -24,7 +24,7 @@ import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import React, { useState } from "react";
 import { Feedback } from "routes/feedback";
-import EditorRow from "ui/editor/EditorRow";
+import SettingsRow from "ui/editor/SettingsRow";
 import ErrorSummary from "ui/shared/ErrorSummary";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
@@ -156,15 +156,15 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
   return (
     <Container maxWidth="contentWrap">
       <Box py={4}>
-        <EditorRow>
+        <SettingsRow>
           <Typography variant="h2" component="h3" gutterBottom>
             Feedback log
           </Typography>
           <Typography variant="body1">
             Feedback from users about this service.
           </Typography>
-        </EditorRow>
-        <EditorRow>
+        </SettingsRow>
+        <SettingsRow>
           {feedback.length === 0 ? (
             <ErrorSummary
               format="info"
@@ -202,7 +202,7 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
               </Table>
             </Feed>
           )}
-        </EditorRow>
+        </SettingsRow>
       </Box>
     </Container>
   );

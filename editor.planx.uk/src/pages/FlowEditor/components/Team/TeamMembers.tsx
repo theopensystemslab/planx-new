@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import { Role, User } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import EditorRow from "ui/editor/EditorRow";
+import SettingsRow from "ui/editor/SettingsRow";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   background: theme.palette.background.dark,
@@ -129,7 +129,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
   return (
     <Container maxWidth="contentWrap">
       <Box py={7}>
-        <EditorRow>
+        <SettingsRow>
           <Typography variant="h2" component="h3" gutterBottom>
             Team editors
           </Typography>
@@ -137,8 +137,8 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
             Editors have access to edit your services.
           </Typography>
           <MembersTable members={activeMembers} />
-        </EditorRow>
-        <EditorRow>
+        </SettingsRow>
+        <SettingsRow>
           <Typography variant="h2" component="h3" gutterBottom>
             Admins
           </Typography>
@@ -146,9 +146,9 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
             Admins have editor access across all teams.
           </Typography>
           <MembersTable members={platformAdmins} />
-        </EditorRow>
+        </SettingsRow>
         {archivedMembers.length > 0 && (
-          <EditorRow>
+          <SettingsRow>
             <Typography variant="h2" component="h3" gutterBottom>
               Archived team editors
             </Typography>
@@ -157,7 +157,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
               be part of the edit history of your services.
             </Typography>
             <MembersTable members={archivedMembers} />
-          </EditorRow>
+          </SettingsRow>
         )}
       </Box>
     </Container>

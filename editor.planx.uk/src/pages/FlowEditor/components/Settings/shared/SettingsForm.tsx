@@ -3,9 +3,10 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { FormikProps } from "formik";
 import React from "react";
-import EditorRow from "ui/editor/EditorRow";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
+import SettingsDescription from "ui/editor/SettingsDescription";
+import SettingsRow from "ui/editor/SettingsRow";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 type SettingsFormProps<TFormikValues> = {
@@ -24,11 +25,11 @@ export const SettingsForm = <TFormikValues,>({
   preview,
 }: SettingsFormProps<TFormikValues>) => {
   return (
-    <EditorRow background>
+    <SettingsRow background>
       <form onSubmit={formik.handleSubmit}>
         <InputGroup flowSpacing>
           <InputLegend>{legend}</InputLegend>
-          {description}
+          <SettingsDescription>{description}</SettingsDescription>
           {input}
         </InputGroup>
         {preview && (
@@ -60,6 +61,6 @@ export const SettingsForm = <TFormikValues,>({
           </Box>
         </ErrorWrapper>
       </form>
-    </EditorRow>
+    </SettingsRow>
   );
 };

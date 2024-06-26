@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import EditorRow from "ui/editor/EditorRow";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
+import SettingsRow from "ui/editor/SettingsRow";
 
 const ServiceFlags: React.FC = () => {
   return (
     <Box maxWidth="formWrap" mx="auto">
-      <EditorRow>
+      <SettingsRow>
         <Typography variant="h2" component="h3" gutterBottom>
           Service flags
         </Typography>
@@ -15,10 +15,10 @@ const ServiceFlags: React.FC = () => {
           Manage the flag sets that this service uses. Flags at the top of a set
           override flags below.
         </Typography>
-      </EditorRow>
-      <EditorRow>
+      </SettingsRow>
+      <SettingsRow>
         <FeaturePlaceholder title="Feature in development" />
-      </EditorRow>
+      </SettingsRow>
     </Box>
   );
 };

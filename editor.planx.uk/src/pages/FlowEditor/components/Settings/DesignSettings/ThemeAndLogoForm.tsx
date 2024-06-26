@@ -7,7 +7,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker";
 import ImgInput from "ui/editor/ImgInput";
-import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
@@ -60,13 +59,13 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
       legend="Theme colour & logo"
       description={
         <>
-          <InputDescription>
+          <p>
             The theme colour and logo, are used in the header of the service.
             The theme colour should be a dark colour that contrasts with white
             ("#ffffff"). The logo should contrast with a dark background colour
             (your theme colour) and have a transparent background.
-          </InputDescription>
-          <InputDescription>
+          </p>
+          <p>
             <Link
               href="https://opensystemslab.notion.site/10-Customise-the-appearance-of-your-services-3811fe9707534f6cbc0921fc44a2b193"
               target="_blank"
@@ -74,7 +73,7 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
             >
               See our guide for setting theme colours and logos
             </Link>
-          </InputDescription>
+          </p>
         </>
       }
       input={

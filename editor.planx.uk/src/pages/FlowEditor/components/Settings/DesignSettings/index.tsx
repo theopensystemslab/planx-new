@@ -7,7 +7,7 @@ import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { FormikConfig } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
-import EditorRow from "ui/editor/EditorRow";
+import SettingsRow from "ui/editor/SettingsRow";
 
 import { ButtonForm } from "./ButtonForm";
 import { FaviconForm } from "./FaviconForm";
@@ -76,14 +76,14 @@ const DesignSettings: React.FC = () => {
 
   return (
     <Box maxWidth="formWrap" mx="auto">
-      <EditorRow>
+      <SettingsRow>
         <Typography variant="h2" component="h3" gutterBottom>
           Design
         </Typography>
         <Typography variant="body1">
           How your service appears to public users.
         </Typography>
-      </EditorRow>
+      </SettingsRow>
       {formikConfig && (
         <>
           <ThemeAndLogoForm formikConfig={formikConfig} onSuccess={onSuccess} />

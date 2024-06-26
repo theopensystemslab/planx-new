@@ -5,8 +5,12 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import type { TextContent } from "types";
+import InputGroup from "ui/editor/InputGroup";
+import InputLegend from "ui/editor/InputLegend";
 import ListManager from "ui/editor/ListManager";
 import RichTextInput from "ui/editor/RichTextInput";
+import SettingsDescription from "ui/editor/SettingsDescription";
+import SettingsRow from "ui/editor/SettingsRow";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
@@ -45,36 +49,40 @@ function Component() {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Box p={3}>
-        <Typography variant="h1">Global Settings</Typography>
-        <Box mb={2}>
-          <Box py={3} borderBottom={1}>
-            <Typography variant="h2" component="h3" gutterBottom>
-              <strong>Footer Elements</strong>
-            </Typography>
-            <Typography variant="body1">
-              Manage the content that will appear in the footer
-            </Typography>
-          </Box>
-          <ListManager
-            values={formik.values.footerContent}
-            onChange={(newOptions) => {
-              formik.setFieldValue("footerContent", newOptions);
-            }}
-            newValue={() =>
-              ({
-                heading: "",
-                content: "",
-                show: true,
-              }) as TextContent
-            }
-            Editor={ContentEditor}
-          />
-        </Box>
-
-        <Button type="submit" variant="contained" color="primary">
-          Save
-        </Button>
+      <Box maxWidth="formWrap" mx="auto" my={7}>
+        <SettingsRow>
+          <Typography variant="h2" component="h3" gutterBottom>
+            Global Settings
+          </Typography>
+        </SettingsRow>
+        <SettingsRow background>
+          <InputGroup flowSpacing>
+            <InputLegend>Footer Elements</InputLegend>
+            <SettingsDescription>
+              Manage the content that will appear in the footer. The heading
+              will appear as a footer link which will open a content page.
+            </SettingsDescription>
+            <Box width="100%" mb={4} pl={{ md: 2 }}>
+              <ListManager
+                values={formik.values.footerContent}
+                onChange={(newOptions) => {
+                  formik.setFieldValue("footerContent", newOptions);
+                }}
+                newValue={() =>
+                  ({
+                    heading: "",
+                    content: "",
+                    show: true,
+                  }) as TextContent
+                }
+                Editor={ContentEditor}
+              />
+            </Box>
+          </InputGroup>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
+        </SettingsRow>
       </Box>
     </form>
   );
@@ -86,39 +94,37 @@ function ContentEditor(props: {
 }) {
   return (
     <Box width="100%">
-      <Box my={3} width="80%">
-        <InputRow>
-          <InputRowItem>
-            <Input
-              placeholder="Heading"
-              format="bold"
-              value={props.value.heading}
-              onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
-                  heading: ev.target.value,
-                });
-              }}
-            />
-          </InputRowItem>
-        </InputRow>
-        <InputRow>
-          <InputRowItem>
-            <RichTextInput
-              placeholder="Text"
-              multiline
-              rows={6}
-              value={props.value.content}
-              onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
-                  content: ev.target.value,
-                });
-              }}
-            />
-          </InputRowItem>
-        </InputRow>
-      </Box>
+      <InputRow>
+        <InputRowItem>
+          <Input
+            placeholder="Heading"
+            format="bold"
+            value={props.value.heading}
+            onChange={(ev) => {
+              props.onChange({
+                ...props.value,
+                heading: ev.target.value,
+              });
+            }}
+          />
+        </InputRowItem>
+      </InputRow>
+      <InputRow>
+        <InputRowItem>
+          <RichTextInput
+            placeholder="Page content"
+            multiline
+            rows={6}
+            value={props.value.content}
+            onChange={(ev) => {
+              props.onChange({
+                ...props.value,
+                content: ev.target.value,
+              });
+            }}
+          />
+        </InputRowItem>
+      </InputRow>
     </Box>
   );
 }
