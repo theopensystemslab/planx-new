@@ -26,6 +26,9 @@ export interface TeamStore {
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
   updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
+  updateGeneralSettings: (
+    generalSettings: Partial<GeneralTeamSettings>,
+  ) => Promise<boolean>;
 }
 
 export const teamStore: StateCreator<
@@ -130,6 +133,18 @@ export const teamStore: StateCreator<
   updateTeamTheme: async (theme: Partial<TeamTheme>) => {
     const { teamId, $client } = get();
     const isSuccess = await $client.team.updateTheme(teamId, theme);
+    return isSuccess;
+  },
+
+  updateGeneralSettings: async (
+    generalSettings: Partial<GeneralTeamSettings>,
+  ) => {
+    const { teamId, $client } = get();
+    console.log(generalSettings);
+    const isSuccess = await $client.team.updateGeneralSettings(
+      teamId,
+      generalSettings,
+    );
     return isSuccess;
   },
 });
