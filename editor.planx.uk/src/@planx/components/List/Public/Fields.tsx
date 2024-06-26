@@ -4,7 +4,6 @@ import FormLabel from "@mui/material/FormLabel";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { Option } from "@planx/components/shared";
-import { getIn } from "formik";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
@@ -16,6 +15,7 @@ import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../shared/constants";
 import BasicRadio from "../../shared/Radio/BasicRadio";
 import type { NumberField, QuestionField, TextField } from "../model";
 import { useListContext } from "./Context";
+import { get } from "lodash";
 
 type Props<T> = T & { id: string };
 
@@ -40,9 +40,9 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({
         bordered
         value={formik.values.userData[activeIndex][data.fn]}
         onChange={formik.handleChange}
-        errorMessage={getIn(
+        errorMessage={get(
           formik.errors,
-          `userData[${activeIndex}][${data.fn}]`,
+          ["userData", activeIndex, data.fn],
         )}
         id={id}
         rows={
@@ -53,7 +53,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({
         inputProps={{
           "aria-describedby": [
             data.description ? DESCRIPTION_TEXT : "",
-            getIn(formik.errors, `userData[${activeIndex}][${data.fn}]`)
+            get(formik.errors, ["userData", activeIndex, data.fn])
               ? `${ERROR_MESSAGE}-${id}`
               : "",
           ]
@@ -84,14 +84,14 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
           type="number"
           value={formik.values.userData[activeIndex][data.fn]}
           onChange={formik.handleChange}
-          errorMessage={getIn(
+          errorMessage={get(
             formik.errors,
-            `userData[${activeIndex}][${data.fn}]`,
+            ["userData", activeIndex, data.fn],
           )}
           inputProps={{
             "aria-describedby": [
               data.description ? DESCRIPTION_TEXT : "",
-              getIn(formik.errors, `userData[${activeIndex}][${data.fn}]`)
+              get(formik.errors, ["userData", activeIndex, data.fn])
                 ? `${ERROR_MESSAGE}-${id}`
                 : "",
             ]
@@ -126,7 +126,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
       </FormLabel>
       <ErrorWrapper
         id={`${id}-error`}
-        error={getIn(formik.errors, `userData[${activeIndex}][${data.fn}]`)}
+        error={get(formik.errors, ["userData", activeIndex, data.fn])}
       >
         <RadioGroup
           aria-labelledby={`radio-buttons-group-label-${id}`}
@@ -159,7 +159,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
     >
       <ErrorWrapper
         id={`${id}-error`}
-        error={getIn(formik.errors, `userData[${activeIndex}][${data.fn}]`)}
+        error={get(formik.errors, ["userData", activeIndex, data.fn])}
       >
         <SelectInput
           bordered

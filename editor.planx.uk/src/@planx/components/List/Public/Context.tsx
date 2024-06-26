@@ -84,6 +84,11 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     // Do not allow a new item to be added if there's still an active item
     if (activeIndex !== -1) return setAddItemError(true);
 
+    // Do not allow new item to be added if it will exceed max
+    if (schema.max && formik.values.userData.length === schema.max) {
+      return setMaxError(true);
+    }
+
     // Add new item, and set to active
     setAddItemError(false);
     formik.values.userData.push(generateInitialValues(schema));
@@ -120,13 +125,11 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     // Do not allow submissions with an unsaved item
     if (activeIndex !== -1) return setUnsavedItemError(true);
 
-    // Manually validate min/max
+    // Manually validate minimum number of items
     if (formik.values.userData.length < schema.min) {
       return setMinError(true);
     }
-    if (schema.max && formik.values.userData.length > schema.max) {
-      return setMaxError(true);
-    }
+    
     formik.handleSubmit();
   };
 

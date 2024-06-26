@@ -66,7 +66,7 @@ export const Zoo: Schema = {
     },
   ],
   min: 1,
-  max: 10,
+  max: 3,
 } as const;
 
 export const mockZooProps: Props = {
