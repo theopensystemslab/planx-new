@@ -89,7 +89,7 @@ export const mockUnitsPayload = {
     "proposal.units.residential.three.identicalUnits": 2,
     "proposal.units.residential.total.listItems": 3,
     "proposal.units.residential.total.units": 5,
-    "proposal.units.residential.total.units.newBuid": 3,
-    "proposal.units.residential.total.units.changeOfUseTo": 2,
+    "proposal.units.residential.total.units.development.newBuild": 3,
+    "proposal.units.residential.total.units.development.changeOfUseTo": 2,
   },
 };
