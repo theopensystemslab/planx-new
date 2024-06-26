@@ -9,7 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import InputRow from "ui/shared/InputRow";
@@ -67,12 +67,19 @@ const ActiveListCard: React.FC<{
 }> = ({ index: i }) => {
   const { schema, saveItem, cancelEditItem, errors, isPageComponent } =
     useListContext();
-
+  
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }, []);
+  
   return (
     <ErrorWrapper
       error={errors.unsavedItem ? "Please save in order to continue" : ""}
     >
-      <ListCard data-testid={`list-card-${i}`}>
+      <ListCard data-testid={`list-card-${i}`} ref={ref}>
         <Typography component="h2" variant="h3">
           {schema.type}
           {!isPageComponent && ` ${i + 1}`}
