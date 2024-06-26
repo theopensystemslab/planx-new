@@ -133,7 +133,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
         <RadioGroup
           aria-labelledby={`radio-buttons-group-label-${id}`}
           name={`userData[${activeIndex}]['${data.fn}']`}
-          sx={{ p: 1 }}
+          sx={{ p: 1, mb: -2 }}
           value={formik.values.userData[activeIndex][data.fn]}
         >
           {data.options.map(({ id, data }) => (
