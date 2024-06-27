@@ -28,7 +28,7 @@ const Root = styled(Box, {
   }),
 }));
 
-export default function SettingsRow({
+export default function SettingsSection({
   children,
   background,
 }: {

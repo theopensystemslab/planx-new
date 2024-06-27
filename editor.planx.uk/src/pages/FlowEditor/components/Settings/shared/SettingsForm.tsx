@@ -6,7 +6,7 @@ import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import SettingsDescription from "ui/editor/SettingsDescription";
-import SettingsRow from "ui/editor/SettingsRow";
+import SettingsSection from "ui/editor/SettingsSection";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 type SettingsFormProps<TFormikValues> = {
@@ -25,7 +25,7 @@ export const SettingsForm = <TFormikValues,>({
   preview,
 }: SettingsFormProps<TFormikValues>) => {
   return (
-    <SettingsRow background>
+    <SettingsSection background>
       <form onSubmit={formik.handleSubmit}>
         <InputGroup flowSpacing>
           <InputLegend>{legend}</InputLegend>
@@ -61,6 +61,6 @@ export const SettingsForm = <TFormikValues,>({
           </Box>
         </ErrorWrapper>
       </form>
-    </SettingsRow>
+    </SettingsSection>
   );
 };

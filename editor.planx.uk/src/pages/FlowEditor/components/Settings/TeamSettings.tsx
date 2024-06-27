@@ -2,34 +2,34 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
-import SettingsRow from "ui/editor/SettingsRow";
+import SettingsSection from "ui/editor/SettingsSection";
 
 const Team: React.FC = () => {
   return (
     <Box maxWidth="formWrap" mx="auto">
-      <SettingsRow>
+      <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Team
         </Typography>
         <Typography variant="body1">
           Manage who has permission to edit this service.
         </Typography>
-      </SettingsRow>
-      <SettingsRow>
+      </SettingsSection>
+      <SettingsSection>
         <FeaturePlaceholder title="Feature in development" />
-      </SettingsRow>
+      </SettingsSection>
       <hr style={{ margin: "40px 0" }} />
-      <SettingsRow>
+      <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Sharing
         </Typography>
         <Typography variant="body1">
           Allow other teams on Plan✕ to find and use your service pattern.
         </Typography>
-      </SettingsRow>
-      <SettingsRow>
+      </SettingsSection>
+      <SettingsSection>
         <FeaturePlaceholder title="Feature in development" />
-      </SettingsRow>
+      </SettingsSection>
     </Box>
   );
 };

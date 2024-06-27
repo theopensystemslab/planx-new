@@ -14,7 +14,7 @@ import InputLegend from "ui/editor/InputLegend";
 import ListManager from "ui/editor/ListManager";
 import RichTextInput from "ui/editor/RichTextInput";
 import SettingsDescription from "ui/editor/SettingsDescription";
-import SettingsRow from "ui/editor/SettingsRow";
+import SettingsSection from "ui/editor/SettingsSection";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
@@ -69,12 +69,12 @@ function Component() {
     <Dashboard>
       <Container maxWidth="contentWrap">
         <form onSubmit={formik.handleSubmit}>
-          <SettingsRow>
+          <SettingsSection>
             <Typography variant="h2" component="h3" gutterBottom>
               Global Settings
             </Typography>
-          </SettingsRow>
-          <SettingsRow background>
+          </SettingsSection>
+          <SettingsSection background>
             <InputGroup flowSpacing>
               <InputLegend>Footer Elements</InputLegend>
               <SettingsDescription>
@@ -104,7 +104,7 @@ function Component() {
             <Button type="submit" variant="contained" color="primary">
               Save
             </Button>
-          </SettingsRow>
+          </SettingsSection>
         </form>
       </Container>
       <Snackbar
