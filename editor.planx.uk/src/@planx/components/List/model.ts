@@ -28,20 +28,18 @@ const questionInputValidationSchema = (data: QuestionInput) =>
     .oneOf(data.options.map((option) => option.data.val || option.data.text))
     .required("Select your answer before continuing");
 
-// TODO: Add summary fields for inactive view?
 export type TextField = {
   type: "text";
-  required?: boolean;
   data: TextInput & { fn: string };
 };
+
 export type NumberField = {
   type: "number";
-  required?: boolean;
   data: NumberInput & { fn: string };
 };
+
 export type QuestionField = {
   type: "question";
-  required?: boolean;
   unique?: boolean;
   data: QuestionInput & { fn: string };
 };
