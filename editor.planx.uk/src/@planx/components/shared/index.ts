@@ -44,6 +44,9 @@ export const parseFormValues = (ob: any, defaultValues = {}) =>
         .map((o) => parseFormValues(Object.entries(o)))
         // don't store options with no values
         .filter((o) => Object.keys(o).length > 0);
+    } else if (v && typeof v === "object") {
+      // if it's a nested object
+      acc[k] = parseFormValues(Object.entries(v));
     } else {
       // it's a number or boolean etc
       acc[k] = v;
