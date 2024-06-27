@@ -18,7 +18,6 @@ import SettingsRow from "ui/editor/SettingsRow";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
 import { slugify } from "utils";
 
 function Component() {
@@ -68,7 +67,7 @@ function Component() {
 
   return (
     <Dashboard>
-      <Container maxWidth="formWrap">
+      <Container maxWidth="contentWrap">
         <form onSubmit={formik.handleSubmit}>
           <SettingsRow>
             <Typography variant="h2" component="h3" gutterBottom>
@@ -79,10 +78,13 @@ function Component() {
             <InputGroup flowSpacing>
               <InputLegend>Footer Elements</InputLegend>
               <SettingsDescription>
-                Manage the content that will appear in the footer. The heading
-                will appear as a footer link which will open a content page.
+                <p>Manage the content that will appear in the footer.</p>
+                <p>
+                  The heading will appear as a footer link which will open a
+                  content page.
+                </p>
               </SettingsDescription>
-              <Box width="100%" mb={4}>
+              <Box width="100%" mb={4} p={0}>
                 <ListManager
                   values={formik.values.footerContent}
                   onChange={(newOptions) => {
