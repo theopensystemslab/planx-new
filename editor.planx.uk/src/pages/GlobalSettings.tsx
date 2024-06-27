@@ -18,6 +18,7 @@ import SettingsRow from "ui/editor/SettingsRow";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
+import InputRowLabel from "ui/shared/InputRowLabel";
 import { slugify } from "utils";
 
 function Component() {
@@ -50,7 +51,7 @@ function Component() {
       );
 
       updateGlobalSettings(formatted);
-      setIsAlertOpen(true); // Open the snackbar
+      setIsAlertOpen(true);
     },
   });
 
@@ -126,7 +127,7 @@ function ContentEditor(props: {
       <InputRow>
         <InputRowItem>
           <Input
-            placeholder="Heading"
+            placeholder="Page title"
             format="bold"
             value={props.value.heading}
             onChange={(ev) => {
