@@ -1,6 +1,13 @@
 import React from "react";
 
 import { Field, UserResponse } from "./model";
+import { styled } from "@mui/material/styles";
+
+const List = styled("ul")(() => ({
+  listStylePosition: "inside",
+  padding: 0,
+  margin: 0,
+}))
 
 /**
  * In the case of "question" and "checklist" fields, ensure the displayed value reflects option "text", rather than "val" as recorded in passport
@@ -21,11 +28,11 @@ export function formatSchemaDisplayValue(
         (value as string[]).includes(option.id),
       );
       return (
-        <ul>
+        <List>
           {matchingOptions.map((option) => (
             <li key={option.id}>{option.data.text}</li>
           ))}
-        </ul>
+        </List>
       );
     }
     case "question": {
