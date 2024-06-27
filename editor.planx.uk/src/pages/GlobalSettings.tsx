@@ -1,10 +1,14 @@
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useState } from "react";
 import type { TextContent } from "types";
+import Dashboard from "ui/editor/Dashboard";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import ListManager from "ui/editor/ListManager";
@@ -21,6 +25,8 @@ function Component() {
     state.globalSettings,
     state.updateGlobalSettings,
   ]);
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -44,47 +50,70 @@ function Component() {
       );
 
       updateGlobalSettings(formatted);
+      setIsAlertOpen(true); // Open the snackbar
     },
   });
 
+  const handleClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setIsAlertOpen(false);
+  };
+
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <Box maxWidth="formWrap" mx="auto" my={7}>
-        <SettingsRow>
-          <Typography variant="h2" component="h3" gutterBottom>
-            Global Settings
-          </Typography>
-        </SettingsRow>
-        <SettingsRow background>
-          <InputGroup flowSpacing>
-            <InputLegend>Footer Elements</InputLegend>
-            <SettingsDescription>
-              Manage the content that will appear in the footer. The heading
-              will appear as a footer link which will open a content page.
-            </SettingsDescription>
-            <Box width="100%" mb={4} pl={{ md: 2 }}>
-              <ListManager
-                values={formik.values.footerContent}
-                onChange={(newOptions) => {
-                  formik.setFieldValue("footerContent", newOptions);
-                }}
-                newValue={() =>
-                  ({
-                    heading: "",
-                    content: "",
-                    show: true,
-                  }) as TextContent
-                }
-                Editor={ContentEditor}
-              />
-            </Box>
-          </InputGroup>
-          <Button type="submit" variant="contained" color="primary">
-            Save
-          </Button>
-        </SettingsRow>
-      </Box>
-    </form>
+    <Dashboard>
+      <Container maxWidth="formWrap">
+        <form onSubmit={formik.handleSubmit}>
+          <SettingsRow>
+            <Typography variant="h2" component="h3" gutterBottom>
+              Global Settings
+            </Typography>
+          </SettingsRow>
+          <SettingsRow background>
+            <InputGroup flowSpacing>
+              <InputLegend>Footer Elements</InputLegend>
+              <SettingsDescription>
+                Manage the content that will appear in the footer. The heading
+                will appear as a footer link which will open a content page.
+              </SettingsDescription>
+              <Box width="100%" mb={4}>
+                <ListManager
+                  values={formik.values.footerContent}
+                  onChange={(newOptions) => {
+                    formik.setFieldValue("footerContent", newOptions);
+                  }}
+                  newValue={() =>
+                    ({
+                      heading: "",
+                      content: "",
+                      show: true,
+                    }) as TextContent
+                  }
+                  Editor={ContentEditor}
+                />
+              </Box>
+            </InputGroup>
+            <Button type="submit" variant="contained" color="primary">
+              Save
+            </Button>
+          </SettingsRow>
+        </form>
+      </Container>
+      <Snackbar
+        open={isAlertOpen}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Footer settings updated successfully
+        </Alert>
+      </Snackbar>
+    </Dashboard>
   );
 }
 
