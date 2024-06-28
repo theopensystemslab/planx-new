@@ -42,8 +42,8 @@ dependencies:
     specifier: ^0.8.3
     version: 0.8.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#c17c3e3
-    version: github.com/theopensystemslab/planx-core/c17c3e3(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#b975cf9
+    version: github.com/theopensystemslab/planx-core/b975cf9(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -10471,7 +10471,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
   /config-chain@1.1.13:
     resolution: {integrity: sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==}
@@ -21639,9 +21639,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/c17c3e3(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c17c3e3}
-    id: github.com/theopensystemslab/planx-core/c17c3e3
+  github.com/theopensystemslab/planx-core/b975cf9(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b975cf9}
+    id: github.com/theopensystemslab/planx-core/b975cf9
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
