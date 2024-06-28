@@ -22,13 +22,12 @@ type Props<T> = T & { id: string };
 export const TextFieldInput: React.FC<Props<TextField>> = ({
   id,
   data,
-  required,
 }) => {
   const { formik, activeIndex } = useListContext();
 
   return (
     <InputLabel
-      label={required === false ? data.title + " (optional)" : data.title}
+      label={data.title}
       htmlFor={id}
     >
       <Input
@@ -50,7 +49,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({
           data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
         }
         name={`userData[${activeIndex}]['${data.fn}']`}
-        required={required}
+        required
         inputProps={{
           "aria-describedby": [
             data.description ? DESCRIPTION_TEXT : "",
@@ -69,18 +68,17 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({
 export const NumberFieldInput: React.FC<Props<NumberField>> = ({
   id,
   data,
-  required,
 }) => {
   const { formik, activeIndex } = useListContext();
 
   return (
     <InputLabel
-      label={required === false ? data.title + " (optional)" : data.title}
+      label={data.title}
       htmlFor={id}
     >
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <Input
-          required={required}
+          required
           bordered
           name={`userData[${activeIndex}]['${data.fn}']`}
           type="number"
@@ -110,7 +108,7 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
 
 export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { formik, activeIndex } = useListContext();
-  const { id, data, required } = props;
+  const { id, data } = props;
 
   return (
     <FormControl sx={{ width: "100%" }} component="fieldset">
@@ -124,7 +122,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
           },
         })}
       >
-        {required === false ? data.title + " (optional)" : data.title}
+        {data.title}
       </FormLabel>
       <ErrorWrapper
         id={`${id}-error`}
@@ -152,7 +150,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
 
 export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { formik, activeIndex } = useListContext();
-  const { id, data, required } = props;
+  const { id, data } = props;
 
   const isDisabled = (option: Option) => {
     if (!props.unique) return false;
@@ -168,7 +166,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
 
   return (
     <InputLabel
-      label={required === false ? data.title + " (optional)" : data.title}
+      label={data.title}
       id={`select-label-${id}`}
     >
       <ErrorWrapper
@@ -177,7 +175,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
       >
         <SelectInput
           bordered
-          required={required}
+          required
           title={data.title}
           labelId={`select-label-${id}`}
           value={formik.values.userData[activeIndex][data.fn]}
