@@ -95,7 +95,6 @@ export const fetchSettingsForPublishedView = async (
                 favicon
               }
               name
-
               teamSettings: team_settings {
                 boundaryUrl: boundary_url
                 homepage
