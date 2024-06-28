@@ -148,10 +148,9 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
     it("displays a logo when available", () => {
       setup(<Header />);
       expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
-      expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
-        "src",
-        "logo.jpg",
-      );
+      expect(
+        screen.getByAltText(`${mockTeam1.name} Homepage (opens in a new tab)`),
+      ).toHaveAttribute("src", "logo.jpg");
     });
 
     it("falls back to the PlanX link when a logo is not present", () => {
