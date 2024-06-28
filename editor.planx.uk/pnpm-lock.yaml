@@ -39,11 +39,11 @@ dependencies:
     specifier: ^5.15.2
     version: 5.15.2(@types/react@18.2.45)(react@18.2.0)
   '@opensystemslab/map':
-    specifier: ^0.8.2
-    version: 0.8.2
+    specifier: ^0.8.3
+    version: 0.8.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#db69b87
-    version: github.com/theopensystemslab/planx-core/db69b87(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#c17c3e3
+    version: github.com/theopensystemslab/planx-core/c17c3e3(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -5602,8 +5602,8 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@0.8.2:
-    resolution: {integrity: sha512-bNWGX4AlJCTVvMymubrEmkBcZIdB5nXLw4ALJlEtZvAnsSJVYlhjG6OiN4GXqRuZTBDpI/l4gu/6giaidEjdwQ==}
+  /@opensystemslab/map@0.8.3:
+    resolution: {integrity: sha512-4WS4Cow27wmffp7KLtSB/m9HtXz0UDCXJXhq9kz152ofSretWgAl7+WFbqC+CeoVx+CV7ETmbFdjoJ3yZQzJ0Q==}
     dependencies:
       '@turf/union': 6.5.0
       accessible-autocomplete: 2.0.4
@@ -6639,7 +6639,7 @@ packages:
       '@storybook/preview-api': 7.6.7
       '@storybook/theming': 7.6.7(react-dom@18.2.0)(react@18.2.0)
       '@storybook/types': 7.6.7
-      '@types/lodash': 4.14.202
+      '@types/lodash': 4.17.5
       color-convert: 2.0.1
       dequal: 2.0.3
       lodash: 4.17.21
@@ -8373,7 +8373,6 @@ packages:
 
   /@types/lodash@4.17.5:
     resolution: {integrity: sha512-MBIOHVZqVqgfro1euRDWX7OO0fBVUUMrN6Pwm8LQsz8cWhEpihlvR70ENj3f40j58TNxZaWv2ndSkInykNBBJw==}
-    dev: false
 
   /@types/mdast@3.0.15:
     resolution: {integrity: sha512-LnwD+mUEfxWMa1QpDraczIn6k0Ee3SMicuYSSzS6ZYl2gKS09EClnJYGd8Du6rfc5r/GZEk5o1mRb8TaTj03sQ==}
@@ -21640,9 +21639,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/db69b87(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/db69b87}
-    id: github.com/theopensystemslab/planx-core/db69b87
+  github.com/theopensystemslab/planx-core/c17c3e3(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c17c3e3}
+    id: github.com/theopensystemslab/planx-core/c17c3e3
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
