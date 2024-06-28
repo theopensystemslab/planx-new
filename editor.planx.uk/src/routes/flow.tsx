@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import natsort from "natsort";
 import {
@@ -177,11 +176,7 @@ const nodeRoutes = mount({
   "/:parent/nodes/:id/edit": editNode,
 });
 
-const SettingsContainer = () => (
-  <Box sx={{ width: "100%", px: 4, py: 5, overflowY: "auto" }}>
-    <View />
-  </Box>
-);
+const SettingsContainer = () => <View />;
 
 const routes = compose(
   withData((req) => ({

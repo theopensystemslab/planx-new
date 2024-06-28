@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import React, { useMemo } from "react";
@@ -74,23 +73,17 @@ const Submissions: React.FC = () => {
 
   return (
     <Container maxWidth="contentWrap">
-      <Box>
-        <SettingsSection>
-          <Typography variant="h2" component="h3" gutterBottom>
-            Submissions
-          </Typography>
-          <Typography variant="body1">
-            Feed of payment and submission events for this service
-          </Typography>
-        </SettingsSection>
-        <SettingsSection>
-          <EventsLog
-            submissions={submissions}
-            loading={loading}
-            error={error}
-          />
-        </SettingsSection>
-      </Box>
+      <SettingsSection>
+        <Typography variant="h2" component="h3" gutterBottom>
+          Submissions
+        </Typography>
+        <Typography variant="body1">
+          Feed of payment and submission events for this service
+        </Typography>
+      </SettingsSection>
+      <SettingsSection>
+        <EventsLog submissions={submissions} loading={loading} error={error} />
+      </SettingsSection>
     </Container>
   );
 };
