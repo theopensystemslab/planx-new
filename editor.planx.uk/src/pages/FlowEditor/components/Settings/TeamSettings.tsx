@@ -1,4 +1,4 @@
-import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
@@ -6,7 +6,7 @@ import SettingsSection from "ui/editor/SettingsSection";
 
 const Team: React.FC = () => {
   return (
-    <Box maxWidth="formWrap" mx="auto">
+    <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Team
@@ -30,7 +30,7 @@ const Team: React.FC = () => {
       <SettingsSection>
         <FeaturePlaceholder title="Feature in development" />
       </SettingsSection>
-    </Box>
+    </Container>
   );
 };
 export default Team;
