@@ -1,5 +1,4 @@
 import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
@@ -11,9 +10,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { Role, User } from "@opensystemslab/planx-core/types";
+import EditorNavMenu, { teamLayoutRoutes } from "components/EditorNavMenu";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import SettingsSection from "ui/editor/SettingsSection";
+import Dashboard from "ui/editor/Dashboard";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   background: theme.palette.background.dark,
@@ -127,8 +128,9 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
   );
 
   return (
-    <Container maxWidth="contentWrap">
-      <Box py={7}>
+    <Dashboard>
+      <EditorNavMenu routes={teamLayoutRoutes} />
+      <Container maxWidth="contentWrap">
         <SettingsSection>
           <Typography variant="h2" component="h3" gutterBottom>
             Team editors
@@ -159,7 +161,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
             <MembersTable members={archivedMembers} />
           </SettingsSection>
         )}
-      </Box>
-    </Container>
+      </Container>
+    </Dashboard>
   );
 };

@@ -1,5 +1,6 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -75,7 +76,7 @@ const DesignSettings: React.FC = () => {
   const onSuccess = () => setOpen(true);
 
   return (
-    <Box maxWidth="formWrap" mx="auto">
+    <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Design
@@ -97,7 +98,7 @@ const DesignSettings: React.FC = () => {
           Theme updated successfully
         </Alert>
       </Snackbar>
-    </Box>
+    </Container>
   );
 };
 

@@ -63,7 +63,7 @@ const BreadcrumbsRoot = styled(Box)(() => ({
 const BreadcrumbsLink = styled(Link)(({ theme }) => ({
   color: theme.palette.common.white,
   textDecoration: "none",
-  borderBottom: "1px solid currentColor",
+  borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
 })) as typeof Link;
 
 const StyledToolbar = styled(MuiToolbar)(() => ({
@@ -488,7 +488,7 @@ const EditorToolbar: React.FC<{
                       {user.lastName[0]}
                     </Avatar>
                     <Typography variant="body2" fontSize="small">
-                      Menu
+                      Account
                     </Typography>
                     <KeyboardArrowDown />
                   </IconButton>

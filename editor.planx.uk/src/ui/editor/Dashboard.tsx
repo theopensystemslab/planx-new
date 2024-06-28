@@ -4,7 +4,15 @@ import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT } from "components/Header";
 import React, { PropsWithChildren } from "react";
 
-const Root = styled(Box)(({ theme }) => ({
+const DashboardWrap = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  width: "100%",
+  display: "flex",
+  alignItems: "flex-start",
+  flexGrow: 1,
+}));
+
+const DashboardContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   color: theme.palette.text.primary,
   display: "flex",
@@ -12,11 +20,15 @@ const Root = styled(Box)(({ theme }) => ({
   width: "100%",
   minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
   [`& > .${containerClasses.root}`]: {
-    paddingTop: theme.spacing(6),
-    paddingBottom: theme.spacing(6),
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(5),
   },
 }));
 
 export default function Dashboard(props: PropsWithChildren) {
-  return <Root>{props.children}</Root>;
+  return (
+    <DashboardWrap>
+      <DashboardContainer>{props.children}</DashboardContainer>
+    </DashboardWrap>
+  );
 }

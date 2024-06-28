@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
+import EditorNavMenu, { globalLayoutRoutes } from "components/EditorNavMenu";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
@@ -67,6 +68,7 @@ function Component() {
 
   return (
     <Dashboard>
+      <EditorNavMenu routes={globalLayoutRoutes} />
       <Container maxWidth="contentWrap">
         <form onSubmit={formik.handleSubmit}>
           <SettingsSection>
