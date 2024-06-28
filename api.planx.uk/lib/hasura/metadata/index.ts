@@ -12,7 +12,6 @@ interface ScheduledEvent {
 export interface CombinedResponse {
   bops?: ScheduledEventResponse;
   uniform?: ScheduledEventResponse;
-  idox?: ScheduledEventResponse;
   email?: ScheduledEventResponse;
   s3?: ScheduledEventResponse;
 }

@@ -4,7 +4,6 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 export enum Destination {
   BOPS = "bops",
   Uniform = "uniform",
-  Idox = "idox",
   Email = "email",
   S3 = "s3",
 }
@@ -76,13 +75,6 @@ export function getCombinedEventsPayload({
 
     combinedEventsPayload[Destination.Uniform] = {
       localAuthority: uniformTeamSlug,
-      body: { sessionId },
-    };
-  }
-
-  if (destinations.includes(Destination.Idox)) {
-    combinedEventsPayload[Destination.Idox] = {
-      localAuthority: teamSlug,
       body: { sessionId },
     };
   }

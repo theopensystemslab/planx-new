@@ -57,16 +57,11 @@ const SendComponent: React.FC<Props> = (props) => {
     },
   ];
 
-  // Show S3 & Nexus options on staging only
+  // Show S3 option on staging only
   if (process.env.REACT_APP_ENV !== "production") {
     options.push({
       value: Destination.S3,
       label: "Upload to AWS S3 bucket",
-    });
-
-    options.push({
-      value: Destination.Idox,
-      label: "Idox Nexus",
     });
   }
 

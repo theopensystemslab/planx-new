@@ -97,16 +97,6 @@ const CreateSendEvents: React.FC<Props> = ({
     }
 
     if (
-      destinations.includes(Destination.Idox) && 
-      isReady && 
-      props.handleSubmit
-    ) {
-      props.handleSubmit(
-        makeData(props, request.value.idox?.event_id, "idoxSendEventId")
-      );
-    }
-
-    if (
       destinations.includes(Destination.Email) &&
       isReady &&
       props.handleSubmit

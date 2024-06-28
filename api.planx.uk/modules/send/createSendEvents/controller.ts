@@ -10,7 +10,7 @@ const createSendEvents: CreateSendEventsController = async (
   res,
   next,
 ) => {
-  const { email, uniform, bops, s3, idox } = res.locals.parsedReq.body;
+  const { email, uniform, bops, s3 } = res.locals.parsedReq.body;
   const { sessionId } = res.locals.parsedReq.params;
 
   try {
@@ -45,16 +45,6 @@ const createSendEvents: CreateSendEventsController = async (
         comment: `uniform_submission_${sessionId}`,
       });
       combinedResponse["uniform"] = uniformEvent;
-    }
-
-    if (idox) {
-      const idoxEvent = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/idox/${idox.localAuthority}`,
-        schedule_at: new Date(now.getTime() + 60 * 1000),
-        payload: idox.body,
-        comment: `idox_nexus_submission_${sessionId}`,
-      });
-      combinedResponse["idox"] = idoxEvent;
     }
 
     if (s3) {

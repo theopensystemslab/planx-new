@@ -15,7 +15,6 @@ export const combinedEventsPayloadSchema = z.object({
     bops: eventSchema.optional(),
     uniform: eventSchema.optional(),
     s3: eventSchema.optional(),
-    idox: eventSchema.optional(),
   }),
   params: z.object({
     sessionId: z.string().uuid(),
