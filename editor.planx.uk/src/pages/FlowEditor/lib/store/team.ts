@@ -17,7 +17,7 @@ export interface TeamStore {
   teamId: number;
   teamIntegrations: TeamIntegrations;
   teamName: string;
-  teamSettings?: TeamSettings;
+  teamSettings: TeamSettings;
   teamSlug: string;
   teamTheme: TeamTheme;
 
@@ -40,7 +40,7 @@ export const teamStore: StateCreator<
   teamId: 0,
   teamIntegrations: {} as TeamIntegrations,
   teamName: "",
-  teamSettings: undefined,
+  teamSettings: {} as TeamSettings,
   teamSlug: "",
   teamTheme: {} as TeamTheme,
 
@@ -51,7 +51,7 @@ export const teamStore: StateCreator<
       teamId: team.id,
       teamIntegrations: team.integrations,
       teamName: team.name,
-      teamSettings: team.settings,
+      teamSettings: team.teamSettings,
       teamSlug: team.slug,
       teamTheme: team.theme,
     });
@@ -67,8 +67,7 @@ export const teamStore: StateCreator<
     id: get().teamId,
     integrations: get().teamIntegrations,
     name: get().teamName,
-    notifyPersonalisation: get().notifyPersonalisation,
-    settings: get().teamSettings,
+    teamSettings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
   }),

@@ -17,10 +17,8 @@ export const Basic = {
   args: {
     purpose: DialogPurpose.MissingProjectType,
     teamSettings: {
-      externalPlanningSite: {
-        name: "Council website",
-        url: "test.gov.uk",
-      },
+      externalPlanningSiteName: "Council website",
+      externalPlanningSiteUrl: "test.gov.uk",
     },
   },
 } satisfies Story;

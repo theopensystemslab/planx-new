@@ -26,6 +26,17 @@ const mockTeam1: Team = {
     linkColour: "#0010A4",
     favicon: null,
   },
+  teamSettings: {
+    boundaryUrl: "https://www.planning.data.gov.uk/",
+    homepage: "opensystemlabs.oi",
+    helpEmail: "example@council.co.uk",
+    helpPhone: "(01234) 56789",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm",
+    emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+    referenceCode: "OSL",
+    externalPlanningSiteName: "Open Planning",
+    externalPlanningSiteUrl: "openplanning.com",
+  },
 };
 
 const mockTeam2: Team = {
@@ -42,6 +53,17 @@ const mockTeam2: Team = {
     linkColour: "#0010A4",
     favicon: null,
   },
+  teamSettings: {
+    boundaryUrl: "https://www.planning.data.gov.uk/",
+    homepage: "closedsystemlabs.oi",
+    helpEmail: "example@council.co.uk",
+    helpPhone: "(01234) 56789",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm",
+    emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+    referenceCode: "CSL",
+    externalPlanningSiteName: "Closed Planning",
+    externalPlanningSiteUrl: "closedplanning.com",
+  },
 };
 
 jest.spyOn(ReactNavi, "useNavigation").mockReturnValue({
@@ -54,7 +76,7 @@ describe("Header Component - Editor Route", () => {
       setState({
         previewEnvironment: "editor",
         teamName: mockTeam1.name,
-        teamSettings: mockTeam1.settings,
+        teamSettings: mockTeam1.teamSettings,
         teamTheme: mockTeam1.theme,
         teamSlug: mockTeam1.slug,
         user: {
