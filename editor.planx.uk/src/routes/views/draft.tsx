@@ -69,12 +69,18 @@ const fetchSettingsForDraftView = async (
                 favicon
               }
               name
-              settings
+              teamSettings: team_settings {
+                boundaryUrl: boundary_url
+                homepage
+                helpEmail: help_email
+                helpPhone: help_phone
+                helpOpeningHours: help_opening_hours
+                emailReplyToId: email_reply_to_id
+              }
               integrations {
                 hasPlanningData: has_planning_data
               }
               slug
-              notifyPersonalisation: notify_personalisation
               boundaryBBox: boundary_bbox
             }
             settings
