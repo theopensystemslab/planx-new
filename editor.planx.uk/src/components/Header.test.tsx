@@ -12,7 +12,7 @@ import Header from "./Header";
 
 const { setState, getState } = vanillaStore;
 
-const mockTeam1: Team = {
+const mockTeam1: Partial<Team> = {
   id: 123,
   name: "Open Systems Lab",
   slug: "opensystemslab",
@@ -38,7 +38,7 @@ const mockTeam1: Team = {
   },
 };
 
-const mockTeam2: Team = {
+const mockTeam2: Partial<Team> = {
   id: 456,
   name: "Closed Systems Lab",
   slug: "closedsystemslab",
