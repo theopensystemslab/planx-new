@@ -1,5 +1,4 @@
 import {
-  NotifyPersonalisation,
   Team,
   TeamIntegrations,
   TeamSettings,
@@ -13,7 +12,6 @@ import { SharedStore } from "./shared";
 
 export interface TeamStore {
   boundaryBBox?: Team["boundaryBBox"];
-  notifyPersonalisation?: NotifyPersonalisation;
   teamId: number;
   teamIntegrations: TeamIntegrations;
   teamName: string;
@@ -36,7 +34,6 @@ export const teamStore: StateCreator<
   TeamStore
 > = (set, get) => ({
   boundaryBBox: undefined,
-  notifyPersonalisation: undefined,
   teamId: 0,
   teamIntegrations: {} as TeamIntegrations,
   teamName: "",
@@ -47,7 +44,6 @@ export const teamStore: StateCreator<
   setTeam: (team) => {
     set({
       boundaryBBox: team.boundaryBBox,
-      notifyPersonalisation: team.notifyPersonalisation,
       teamId: team.id,
       teamIntegrations: team.integrations,
       teamName: team.name,
@@ -109,7 +105,6 @@ export const teamStore: StateCreator<
   clearTeamStore: () =>
     set({
       boundaryBBox: undefined,
-      notifyPersonalisation: undefined,
       teamId: 0,
       teamIntegrations: undefined,
       teamName: "",
