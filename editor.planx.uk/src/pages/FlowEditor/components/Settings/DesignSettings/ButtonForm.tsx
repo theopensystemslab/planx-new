@@ -7,7 +7,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import ColorPicker from "ui/editor/ColorPicker";
-import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
@@ -39,12 +38,12 @@ export const ButtonForm: React.FC<FormProps> = ({
       legend="Button colour"
       description={
         <>
-          <InputDescription>
+          <p>
             The button background colour should be either a dark or light
             colour. The text will be programmatically selected to contrast with
             the selected colour (being either black or white).
-          </InputDescription>
-          <InputDescription>
+          </p>
+          <p>
             <Link
               href="https://opensystemslab.notion.site/10-Customise-the-appearance-of-your-services-3811fe9707534f6cbc0921fc44a2b193"
               target="_blank"
@@ -52,7 +51,7 @@ export const ButtonForm: React.FC<FormProps> = ({
             >
               See our guide for setting button colours
             </Link>
-          </InputDescription>
+          </p>
         </>
       }
       input={

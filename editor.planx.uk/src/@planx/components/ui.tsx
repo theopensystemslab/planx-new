@@ -31,6 +31,7 @@ import type { handleSubmit } from "pages/Preview/Node";
 import React, { ChangeEvent } from "react";
 import ImgInput from "ui/editor/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
+import InputLabel from "ui/editor/InputLabel";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -109,46 +110,41 @@ export const MoreInformation = ({
   return (
     <ModalSection>
       <ModalSectionContent title="More Information" Icon={InfoOutlined}>
-        <InputGroup label="Why it matters">
-          <InputRow>
+        <InputGroup flowSpacing>
+          <InputLabel label="Why it matters">
             <RichTextInput
               multiline
               name="info"
               value={info}
               onChange={changeField}
-              placeholder="Why it matters"
             />
-          </InputRow>
-        </InputGroup>
-        <InputGroup label="Policy source">
-          <InputRow>
+          </InputLabel>
+          <InputLabel label="Policy source">
             <RichTextInput
               multiline
               name="policyRef"
               value={policyRef}
               onChange={changeField}
-              placeholder="Policy source"
             />
-          </InputRow>
-        </InputGroup>
-        <InputGroup label="How it is defined?">
-          <InputRow>
-            <RichTextInput
-              multiline
-              name="howMeasured"
-              value={howMeasured}
-              onChange={changeField}
-              placeholder="How it is defined?"
-            />
-            <ImgInput
-              img={definitionImg}
-              onChange={(newUrl) => {
-                changeField({
-                  target: { name: "definitionImg", value: newUrl },
-                });
-              }}
-            />
-          </InputRow>
+          </InputLabel>
+          <InputLabel label="How it is defined?">
+            <InputRow>
+              <RichTextInput
+                multiline
+                name="howMeasured"
+                value={howMeasured}
+                onChange={changeField}
+              />
+              <ImgInput
+                img={definitionImg}
+                onChange={(newUrl) => {
+                  changeField({
+                    target: { name: "definitionImg", value: newUrl },
+                  });
+                }}
+              />
+            </InputRow>
+          </InputLabel>
         </InputGroup>
       </ModalSectionContent>
     </ModalSection>

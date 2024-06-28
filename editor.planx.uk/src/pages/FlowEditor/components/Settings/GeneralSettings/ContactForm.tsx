@@ -1,9 +1,7 @@
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
-import InputDescription from "ui/editor/InputDescription";
+import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
-import InputRow from "ui/shared/InputRow";
-import InputRowLabel from "ui/shared/InputRowLabel";
 import * as Yup from "yup";
 
 import { SettingsForm } from "../shared/SettingsForm";
@@ -36,58 +34,50 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       legend="Contact Information"
       formik={formik}
       description={
-        <InputDescription>
+        <>
           Details to help direct different messages, feedback, and enquiries
           from users.
-        </InputDescription>
+        </>
       }
       input={
         <>
-          <InputRow>
-            <InputRowLabel>
-              Homepage URL
-              <Input
-                name="homepage"
-                onChange={(event) => {
-                  onChangeFn("homepage", event);
-                }}
-              />
-            </InputRowLabel>
-          </InputRow>
-          <InputRow>
-            <InputRowLabel>
-              Contact email address
-              <Input
-                name="helpEmail"
-                onChange={(event) => {
-                  onChangeFn("helpEmail", event);
-                }}
-              />
-            </InputRowLabel>
-          </InputRow>
-          <InputRow>
-            <InputRowLabel>
-              Phone number
-              <Input
-                name="helpPhone"
-                onChange={(event) => {
-                  onChangeFn("helpPhone", event);
-                }}
-              />
-            </InputRowLabel>
-          </InputRow>
-          <InputRow>
-            <InputRowLabel>
-              Opening hours
-              <Input
-                multiline
-                name="helpOpeningHours"
-                onChange={(event) => {
-                  onChangeFn("helpOpeningHours", event);
-                }}
-              />
-            </InputRowLabel>
-          </InputRow>
+          <InputLabel label="Homepage URL" htmlFor="homepageUrl">
+            <Input
+              name="homepage"
+              onChange={(event) => {
+                onChangeFn("homepage", event);
+              }}
+              id="homepageUrl"
+            />
+          </InputLabel>
+          <InputLabel label="Contact email address" htmlFor="helpEmail">
+            <Input
+              name="helpEmail"
+              onChange={(event) => {
+                onChangeFn("helpEmail", event);
+              }}
+              id="helpEmail"
+            />
+          </InputLabel>
+          <InputLabel label="Phone number" htmlFor="helpPhone">
+            <Input
+              name="helpPhone"
+              onChange={(event) => {
+                onChangeFn("helpPhone", event);
+              }}
+              id="helpPhone"
+            />
+          </InputLabel>
+          <InputLabel label="Opening hours" htmlFor="helpOpeningHours">
+            <Input
+              multiline
+              name="helpOpeningHours"
+              onChange={(event) => {
+                onChangeFn("helpOpeningHours", event);
+              }}
+              id="helpOpeningHours"
+            />
+          </InputLabel>
         </>
       }
     />

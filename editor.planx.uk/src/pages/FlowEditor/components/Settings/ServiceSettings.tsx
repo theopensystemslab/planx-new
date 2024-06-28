@@ -11,10 +11,11 @@ import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
-import EditorRow from "ui/editor/EditorRow";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import RichTextInput from "ui/editor/RichTextInput";
+import SettingsDescription from "ui/editor/SettingsDescription";
+import SettingsSection from "ui/editor/SettingsSection";
 import Input, { Props as InputProps } from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
@@ -39,14 +40,16 @@ const TextInput: React.FC<{
 }) => {
   return (
     <Box width="100%">
-      <Box mb={2} display="flex" alignItems="center">
+      <Box mb={0.5} display="flex" alignItems="center">
         <Switch {...switchProps} color="primary" />
         <Typography variant="h4" component="h5">
           {title}
         </Typography>
       </Box>
-      <Box mb={2}>
-        {description && <Typography variant="body2">{description}</Typography>}
+      <Box mb={1}>
+        {description && (
+          <SettingsDescription>{description}</SettingsDescription>
+        )}
       </Box>
       <InputRow>
         <InputRowItem>
@@ -142,15 +145,15 @@ const ServiceSettings: React.FC = () => {
   return (
     <Box maxWidth="formWrap" mx="auto">
       <Box component="form" onSubmit={elementsForm.handleSubmit} mb={2}>
-        <EditorRow>
+        <SettingsSection>
           <Typography variant="h2" component="h3" gutterBottom>
             Elements
           </Typography>
           <Typography variant="body1">
             Manage the features that users will be able to see.
           </Typography>
-        </EditorRow>
-        <EditorRow background>
+        </SettingsSection>
+        <SettingsSection background>
           <TextInput
             title="Legal Disclaimer"
             description="Displayed before a user submits their application"
@@ -170,8 +173,8 @@ const ServiceSettings: React.FC = () => {
               onChange: elementsForm.handleChange,
             }}
           />
-        </EditorRow>
-        <EditorRow background>
+        </SettingsSection>
+        <SettingsSection background>
           <InputGroup flowSpacing>
             <InputLegend>Footer Links</InputLegend>
             <InputRow>
@@ -219,8 +222,8 @@ const ServiceSettings: React.FC = () => {
               />
             </InputRow>
           </InputGroup>
-        </EditorRow>
-        <EditorRow>
+        </SettingsSection>
+        <SettingsSection>
           <Button
             type="submit"
             variant="contained"
@@ -229,22 +232,23 @@ const ServiceSettings: React.FC = () => {
           >
             Update elements
           </Button>
-        </EditorRow>
+        </SettingsSection>
       </Box>
       <Box component="form" onSubmit={statusForm.handleSubmit}>
-        <EditorRow>
+        <SettingsSection>
           <Typography variant="h2" component="h3" gutterBottom>
             Status
           </Typography>
           <Typography variant="body1">
             Manage the status of your service.
           </Typography>
-        </EditorRow>
-        <EditorRow background>
+        </SettingsSection>
+        <SettingsSection background>
           <FormControlLabel
             label={statusForm.values.status}
             sx={{
               margin: 0,
+              marginBottom: 0.5,
               [`& .${formControlLabelClasses.label}`]: {
                 fontWeight: FONT_WEIGHT_BOLD,
                 textTransform: "capitalize",
@@ -267,16 +271,14 @@ const ServiceSettings: React.FC = () => {
               />
             }
           />
-          <Typography variant="body1">
-            Toggle your service between "offline" and "online".
-          </Typography>
-          <Typography variant="body1">
-            A service must be online to be accessed by the public, and to enable
-            analytics gathering.
-          </Typography>
-          <Typography variant="body1">
-            Offline services can still be edited and published as normal.
-          </Typography>
+          <SettingsDescription>
+            <p>Toggle your service between "offline" and "online".</p>
+            <p>
+              A service must be online to be accessed by the public, and to
+              enable analytics gathering.
+            </p>
+            <p>Offline services can still be edited and published as normal.</p>
+          </SettingsDescription>
           <Box>
             <Button
               type="submit"
@@ -296,7 +298,7 @@ const ServiceSettings: React.FC = () => {
               Reset changes
             </Button>
           </Box>
-        </EditorRow>
+        </SettingsSection>
       </Box>
       <Snackbar
         open={isAlertOpen}

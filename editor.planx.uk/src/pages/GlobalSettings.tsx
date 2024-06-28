@@ -1,12 +1,20 @@
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useState } from "react";
 import type { TextContent } from "types";
+import Dashboard from "ui/editor/Dashboard";
+import InputGroup from "ui/editor/InputGroup";
+import InputLegend from "ui/editor/InputLegend";
 import ListManager from "ui/editor/ListManager";
 import RichTextInput from "ui/editor/RichTextInput";
+import SettingsDescription from "ui/editor/SettingsDescription";
+import SettingsSection from "ui/editor/SettingsSection";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
@@ -17,6 +25,8 @@ function Component() {
     state.globalSettings,
     state.updateGlobalSettings,
   ]);
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -40,43 +50,73 @@ function Component() {
       );
 
       updateGlobalSettings(formatted);
+      setIsAlertOpen(true);
     },
   });
 
-  return (
-    <form onSubmit={formik.handleSubmit}>
-      <Box p={3}>
-        <Typography variant="h1">Global Settings</Typography>
-        <Box mb={2}>
-          <Box py={3} borderBottom={1}>
-            <Typography variant="h2" component="h3" gutterBottom>
-              <strong>Footer Elements</strong>
-            </Typography>
-            <Typography variant="body1">
-              Manage the content that will appear in the footer
-            </Typography>
-          </Box>
-          <ListManager
-            values={formik.values.footerContent}
-            onChange={(newOptions) => {
-              formik.setFieldValue("footerContent", newOptions);
-            }}
-            newValue={() =>
-              ({
-                heading: "",
-                content: "",
-                show: true,
-              }) as TextContent
-            }
-            Editor={ContentEditor}
-          />
-        </Box>
+  const handleClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-        <Button type="submit" variant="contained" color="primary">
-          Save
-        </Button>
-      </Box>
-    </form>
+    setIsAlertOpen(false);
+  };
+
+  return (
+    <Dashboard>
+      <Container maxWidth="contentWrap">
+        <form onSubmit={formik.handleSubmit}>
+          <SettingsSection>
+            <Typography variant="h2" component="h3" gutterBottom>
+              Global Settings
+            </Typography>
+          </SettingsSection>
+          <SettingsSection background>
+            <InputGroup flowSpacing>
+              <InputLegend>Footer Elements</InputLegend>
+              <SettingsDescription>
+                <p>Manage the content that will appear in the footer.</p>
+                <p>
+                  The heading will appear as a footer link which will open a
+                  content page.
+                </p>
+              </SettingsDescription>
+              <Box width="100%" mb={4} p={0}>
+                <ListManager
+                  values={formik.values.footerContent}
+                  onChange={(newOptions) => {
+                    formik.setFieldValue("footerContent", newOptions);
+                  }}
+                  newValue={() =>
+                    ({
+                      heading: "",
+                      content: "",
+                      show: true,
+                    }) as TextContent
+                  }
+                  Editor={ContentEditor}
+                />
+              </Box>
+            </InputGroup>
+            <Button type="submit" variant="contained" color="primary">
+              Save
+            </Button>
+          </SettingsSection>
+        </form>
+      </Container>
+      <Snackbar
+        open={isAlertOpen}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Footer settings updated successfully
+        </Alert>
+      </Snackbar>
+    </Dashboard>
   );
 }
 
@@ -86,39 +126,37 @@ function ContentEditor(props: {
 }) {
   return (
     <Box width="100%">
-      <Box my={3} width="80%">
-        <InputRow>
-          <InputRowItem>
-            <Input
-              placeholder="Heading"
-              format="bold"
-              value={props.value.heading}
-              onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
-                  heading: ev.target.value,
-                });
-              }}
-            />
-          </InputRowItem>
-        </InputRow>
-        <InputRow>
-          <InputRowItem>
-            <RichTextInput
-              placeholder="Text"
-              multiline
-              rows={6}
-              value={props.value.content}
-              onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
-                  content: ev.target.value,
-                });
-              }}
-            />
-          </InputRowItem>
-        </InputRow>
-      </Box>
+      <InputRow>
+        <InputRowItem>
+          <Input
+            placeholder="Page title"
+            format="bold"
+            value={props.value.heading}
+            onChange={(ev) => {
+              props.onChange({
+                ...props.value,
+                heading: ev.target.value,
+              });
+            }}
+          />
+        </InputRowItem>
+      </InputRow>
+      <InputRow>
+        <InputRowItem>
+          <RichTextInput
+            placeholder="Page content"
+            multiline
+            rows={6}
+            value={props.value.content}
+            onChange={(ev) => {
+              props.onChange({
+                ...props.value,
+                content: ev.target.value,
+              });
+            }}
+          />
+        </InputRowItem>
+      </InputRow>
     </Box>
   );
 }

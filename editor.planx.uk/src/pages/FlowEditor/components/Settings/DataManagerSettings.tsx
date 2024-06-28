@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import EditorRow from "ui/editor/EditorRow";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
+import SettingsSection from "ui/editor/SettingsSection";
 
 const DataManagerSettings: React.FC = () => {
   return (
     <Box maxWidth="formWrap" mx="auto">
-      <EditorRow>
+      <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Data Manager
         </Typography>
@@ -15,10 +15,10 @@ const DataManagerSettings: React.FC = () => {
           Manage the data that your service uses and makes available via its
           API.
         </Typography>
-      </EditorRow>
-      <EditorRow>
+      </SettingsSection>
+      <SettingsSection>
         <FeaturePlaceholder title="Feature in development" />
-      </EditorRow>
+      </SettingsSection>
     </Box>
   );
 };
