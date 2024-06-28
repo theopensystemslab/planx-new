@@ -152,18 +152,6 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { formik, activeIndex } = useListContext();
   const { id, data } = props;
 
-  const isDisabled = (option: Option) => {
-    if (!props.unique) return false;
-
-    const existingValues = formik.values.userData
-      .map((response) => response[data.fn])
-      .filter(
-        (value) => value === option.data.val || value === option.data.text,
-      );
-
-    return existingValues.includes(option.data.val || option.data.text);
-  };
-
   return (
     <InputLabel
       label={data.title}
@@ -186,7 +174,6 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
             <MenuItem
               key={option.id}
               value={option.data.val || option.data.text}
-              disabled={isDisabled(option)}
             >
               {option.data.text}
             </MenuItem>

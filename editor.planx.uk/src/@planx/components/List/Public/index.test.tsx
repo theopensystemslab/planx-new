@@ -383,7 +383,6 @@ describe("Form validation and error handling", () => {
   test.todo("text fields use existing validation schemas");
   test.todo("number fields use existing validation schemas");
   test.todo("question fields use validation schema");
-  test.todo("unique constraints are enforced on question where this is set");
   test.todo("an error displays if the minimum number of items is not met");
   test.todo("an error displays if the maximum number of items is exceeded");
   test.todo(
