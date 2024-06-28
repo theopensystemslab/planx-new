@@ -155,55 +155,53 @@ export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
 
   return (
     <Container maxWidth="contentWrap">
-      <Box py={4}>
-        <SettingsSection>
-          <Typography variant="h2" component="h3" gutterBottom>
-            Feedback log
-          </Typography>
-          <Typography variant="body1">
-            Feedback from users about this service.
-          </Typography>
-        </SettingsSection>
-        <SettingsSection>
-          {feedback.length === 0 ? (
-            <ErrorSummary
-              format="info"
-              heading="No feedback found for this service"
-              message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
-            />
-          ) : (
-            <Feed>
-              <Table stickyHeader sx={{ tableLayout: "fixed" }}>
-                <TableHead>
-                  <TableRow
-                    sx={{ "& > *": { borderBottomColor: "black !important" } }}
-                  >
-                    <TableCell sx={{ width: 160 }}>
-                      <strong>Type</strong>
-                    </TableCell>
-                    <TableCell sx={{ width: 100 }}>
-                      <strong>Date</strong>
-                    </TableCell>
-                    <TableCell sx={{ width: 340 }}>
-                      <strong>Comment</strong>
-                    </TableCell>
-                    <TableCell sx={{ width: 60 }}></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {feedback.map((item) => (
-                    <CollapsibleRow
-                      key={item.id}
-                      {...item}
-                      displayFeedbackItems={displayFeedbackItems}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            </Feed>
-          )}
-        </SettingsSection>
-      </Box>
+      <SettingsSection>
+        <Typography variant="h2" component="h3" gutterBottom>
+          Feedback log
+        </Typography>
+        <Typography variant="body1">
+          Feedback from users about this service.
+        </Typography>
+      </SettingsSection>
+      <SettingsSection>
+        {feedback.length === 0 ? (
+          <ErrorSummary
+            format="info"
+            heading="No feedback found for this service"
+            message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
+          />
+        ) : (
+          <Feed>
+            <Table stickyHeader sx={{ tableLayout: "fixed" }}>
+              <TableHead>
+                <TableRow
+                  sx={{ "& > *": { borderBottomColor: "black !important" } }}
+                >
+                  <TableCell sx={{ width: 160 }}>
+                    <strong>Type</strong>
+                  </TableCell>
+                  <TableCell sx={{ width: 100 }}>
+                    <strong>Date</strong>
+                  </TableCell>
+                  <TableCell sx={{ width: 340 }}>
+                    <strong>Comment</strong>
+                  </TableCell>
+                  <TableCell sx={{ width: 60 }}></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {feedback.map((item) => (
+                  <CollapsibleRow
+                    key={item.id}
+                    {...item}
+                    displayFeedbackItems={displayFeedbackItems}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </Feed>
+        )}
+      </SettingsSection>
     </Container>
   );
 };

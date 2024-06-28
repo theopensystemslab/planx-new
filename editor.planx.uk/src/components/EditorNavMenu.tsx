@@ -87,7 +87,7 @@ const flowLayoutRoutes: Route[] = [
 ];
 
 const MENU_WIDTH_COMPACT = "52px";
-const MENU_WIDTH_FULL = "184px";
+const MENU_WIDTH_FULL = "178px";
 
 const Root = styled(Box)<{ compact?: boolean }>(({ theme, compact }) => ({
   width: compact ? MENU_WIDTH_COMPACT : MENU_WIDTH_FULL,
@@ -99,7 +99,7 @@ const Root = styled(Box)<{ compact?: boolean }>(({ theme, compact }) => ({
 const MenuWrap = styled("ul")(({ theme }) => ({
   listStyle: "none",
   margin: 0,
-  padding: theme.spacing(2.5, 0.4, 0, 0.4),
+  padding: theme.spacing(1, 0.4, 0, 0.4),
   position: "sticky",
   top: 0,
 }));
