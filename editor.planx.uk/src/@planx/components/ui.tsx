@@ -117,7 +117,6 @@ export const MoreInformation = ({
               name="info"
               value={info}
               onChange={changeField}
-              placeholder="Why it matters"
             />
           </InputLabel>
           <InputLabel label="Policy source">
@@ -126,7 +125,6 @@ export const MoreInformation = ({
               name="policyRef"
               value={policyRef}
               onChange={changeField}
-              placeholder="Policy source"
             />
           </InputLabel>
           <InputLabel label="How it is defined?">
@@ -136,7 +134,6 @@ export const MoreInformation = ({
                 name="howMeasured"
                 value={howMeasured}
                 onChange={changeField}
-                placeholder="How it is defined?"
               />
               <ImgInput
                 img={definitionImg}
