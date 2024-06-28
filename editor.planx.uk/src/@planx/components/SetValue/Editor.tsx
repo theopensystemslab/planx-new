@@ -106,18 +106,20 @@ function SetValueComponent(props: Props) {
             />
           </InputRow>
         </ModalSectionContent>
-        <ModalSectionContent title="Field value">
-          <InputRow>
-            <Input
-              required
-              format="data"
-              name="val"
-              value={formik.values.val}
-              placeholder="value"
-              onChange={formik.handleChange}
-            />
-          </InputRow>
-        </ModalSectionContent>
+        {formik.values.operation !== "removeAll" &&
+          <ModalSectionContent title="Field value">
+            <InputRow>
+              <Input
+                required
+                format="data"
+                name="val"
+                value={formik.values.val}
+                placeholder="value"
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+          </ModalSectionContent>
+        }
         <ModalSectionContent title="Operation">
           <DescriptionText {...formik.values} />
           <FormControl component="fieldset">

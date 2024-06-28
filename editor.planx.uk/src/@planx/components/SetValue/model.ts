@@ -1,10 +1,20 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
-export interface SetValue extends MoreInformation {
+export interface BaseSetValue extends MoreInformation {
   fn: string;
-  val: string;
-  operation: "replace" | "append" | "removeOne" | "removeAll";
 }
+
+interface SetValueWithVal extends BaseSetValue {
+  val: string;
+  operation: "replace" | "append" | "removeOne";
+}
+
+interface SetValueWithoutVal extends BaseSetValue {
+  val?: string;
+  operation: "removeAll";
+}
+
+export type SetValue = SetValueWithVal | SetValueWithoutVal;
 
 export const parseSetValue = (
   data: Record<string, any> | undefined,
