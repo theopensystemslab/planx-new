@@ -1,3 +1,5 @@
+import { array } from "yup";
+
 import { MoreInformation, Option } from "../shared";
 
 export interface Group<T> {
@@ -56,3 +58,46 @@ export const toggleExpandableChecklist = (
     };
   }
 };
+
+export const getFlatOptions = ({
+  options,
+  groupedOptions,
+}: {
+  options: Checklist["options"];
+  groupedOptions: Checklist["groupedOptions"];
+}) => {
+  if (options) {
+    return options;
+  }
+  if (groupedOptions) {
+    return groupedOptions.flatMap((group) => group.children);
+  }
+  return [];
+};
+
+export const checklistValidationSchema = ({
+  allRequired,
+  options,
+  groupedOptions,
+}: Checklist) =>
+  array()
+    .required()
+    .test({
+      name: "atLeastOneChecked",
+      message: "Select at least one option",
+      test: (checked?: Array<string>) => {
+        return Boolean(checked && checked.length > 0);
+      },
+    })
+    .test({
+      name: "notAllChecked",
+      message: "All options must be checked",
+      test: (checked?: Array<string>) => {
+        if (!allRequired) {
+          return true;
+        }
+        const flatOptions = getFlatOptions({ options, groupedOptions });
+        const allChecked = checked && checked.length === flatOptions.length;
+        return Boolean(allChecked);
+      },
+    });

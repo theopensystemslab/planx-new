@@ -453,7 +453,15 @@ describe("Form validation and error handling", () => {
       expect(cuteInputErrorMessage).toHaveTextContent(/Select your answer before continuing/);
     });
 
-    test.todo("checklist fields")
+    test("checklist fields", async () => {
+      const { user, getByRole, getByTestId } = setup(<ListComponent {...mockZooProps} />);
+
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const foodInputErrorMessage = getByTestId(/error-message-input-checklist-food/);
+
+      expect(foodInputErrorMessage).toHaveTextContent(/Select at least one option/);
+    })
   });
 
   test("an error displays if the minimum number of items is not met", async () => {
@@ -650,6 +658,11 @@ const fillInResponse = async (user: UserEvent) => {
 
   const cuteRadio = screen.getAllByRole("radio")[0];
   await user.click(cuteRadio);
+
+  const eatCheckboxes = screen.getAllByRole("checkbox");
+  await user.click(eatCheckboxes[0]);
+  await user.click(eatCheckboxes[1]);
+  await user.click(eatCheckboxes[2]);
 
   const saveButton = screen.getByRole("button", {
     name: /Save/,

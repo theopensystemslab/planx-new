@@ -1,19 +1,27 @@
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
-import { Option } from "@planx/components/shared";
+import { visuallyHidden } from "@mui/utils";
+import { getIn } from "formik";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
+import ChecklistItem from "ui/shared/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../shared/constants";
 import BasicRadio from "../../shared/Radio/BasicRadio";
-import type { NumberField, QuestionField, TextField } from "../model";
+import type {
+  ChecklistField,
+  NumberField,
+  QuestionField,
+  TextField,
+} from "../model";
 import { useListContext } from "./Context";
 import { get } from "lodash";
 
@@ -179,6 +187,58 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
             </MenuItem>
           ))}
         </SelectInput>
+      </ErrorWrapper>
+    </InputLabel>
+  );
+};
+
+export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
+  const { formik, activeIndex } = useListContext();
+  const {
+    id,
+    data: { options, title, fn },
+  } = props;
+
+  const changeCheckbox =
+    (id: string) =>
+    async (
+      _checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined,
+    ) => {
+      let newCheckedIds;
+
+      if (formik.values.userData[activeIndex][fn].includes(id)) {
+        newCheckedIds = (
+          formik.values.userData[activeIndex][fn] as string[]
+        ).filter((x) => x !== id);
+      } else {
+        newCheckedIds = [...formik.values.userData[activeIndex][fn], id];
+      }
+
+      await formik.setFieldValue(
+        `userData[${activeIndex}]['${fn}']`,
+        newCheckedIds,
+      );
+    };
+
+  return (
+    <InputLabel label={title} id={`checklist-label-${id}`}>
+      <ErrorWrapper
+        error={getIn(formik.errors, `userData[${activeIndex}]['${fn}']`)}
+        id={id}
+      >
+        <Grid container component="fieldset">
+          <legend style={visuallyHidden}>{title}</legend>
+          {options.map((option) => (
+            <ChecklistItem
+              onChange={changeCheckbox(option.id)}
+              label={option.data.text}
+              id={option.id}
+              checked={formik.values.userData[activeIndex][fn].includes(
+                option.id,
+              )}
+            />
+          ))}
+        </Grid>
       </ErrorWrapper>
     </InputLabel>
   );

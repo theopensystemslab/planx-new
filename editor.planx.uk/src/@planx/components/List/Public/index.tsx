@@ -20,6 +20,7 @@ import type { Field, List } from "../model";
 import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";
 import {
+  ChecklistFieldInput,
   NumberFieldInput,
   RadioFieldInput,
   SelectFieldInput,
@@ -59,6 +60,8 @@ const InputField: React.FC<Field> = (props) => {
         return <RadioFieldInput id={inputFieldId} {...props} />;
       }
       return <SelectFieldInput id={inputFieldId} {...props} />;
+    case "checklist":
+      return <ChecklistFieldInput id={inputFieldId} {...props} />;
   }
 };
 
@@ -126,7 +129,7 @@ const InactiveListCard: React.FC<{
               <TableCell>
                 {formatSchemaDisplayValue(
                   formik.values.userData[i][field.data.fn],
-                  schema,
+                  schema.fields[j],
                 )}
               </TableCell>
             </TableRow>

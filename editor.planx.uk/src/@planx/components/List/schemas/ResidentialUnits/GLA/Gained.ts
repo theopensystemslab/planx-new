@@ -70,61 +70,25 @@ export const ResidentialUnitsGLAGained: Schema = {
         ],
       },
     },
-    // {
-    //   type: "checklist", // @todo
-    //   data: {
-    //     title: "Is this unit compliant with any of the following?",
-    //     fn: "compliance",
-    //     options: [
-    //       {
-    //         id: "m42",
-    //         data: { text: "Part M4(2) of the Building Regulations 2010" },
-    //       },
-    //       {
-    //         id: "m432a",
-    //         data: { text: "Part M4(3)(2a) of the Building Regulations 2010" },
-    //       },
-    //       {
-    //         id: "m432b",
-    //         data: { text: "Part M4(3)(2b) of the Building Regulations 2010" },
-    //       },
-    //       { id: "none", data: { text: "None of these" } },
-    //     ],
-    //   },
-    // },
     {
-      type: "question",
+      type: "checklist",
       data: {
-        title:
-          "Is this unit compliant with Part M4(2) of the Building Regulations 2010?",
-        fn: "compliance.m42",
+        title: "Is this unit compliant with any of the following?",
+        fn: "compliance",
         options: [
-          { id: "true", data: { text: "Yes" } },
-          { id: "false", data: { text: "No" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title:
-          "Is this unit compliant with Part M4(3)(2a) of the Building Regulations 2010?",
-        fn: "compliance.m432a",
-        options: [
-          { id: "true", data: { text: "Yes" } },
-          { id: "false", data: { text: "No" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title:
-          "Is this unit compliant with Part M4(3)(2b) of the Building Regulations 2010?",
-        fn: "compliance.m432b",
-        options: [
-          { id: "true", data: { text: "Yes" } },
-          { id: "false", data: { text: "No" } },
+          {
+            id: "m42",
+            data: { text: "Part M4(2) of the Building Regulations 2010" },
+          },
+          {
+            id: "m432a",
+            data: { text: "Part M4(3)(2a) of the Building Regulations 2010" },
+          },
+          {
+            id: "m432b",
+            data: { text: "Part M4(3)(2b) of the Building Regulations 2010" },
+          },
+          { id: "none", data: { text: "None of these" } },
         ],
       },
     },

@@ -15,6 +15,7 @@ describe("passport data shape", () => {
           "email.address": "richard.parker@pi.com",
           name: "Richard Parker",
           size: "Medium",
+          food: ["bamboo", "leaves"],
         },
         {
           age: 10,
@@ -22,21 +23,24 @@ describe("passport data shape", () => {
           "email.address": "richard.parker@pi.com",
           name: "Richard Parker",
           size: "Medium",
+          food: ["meat", "bamboo", "leaves"],
         },
       ],
     };
 
-    expect(flatten(defaultPassportData)).toEqual({
+    expect(flatten(defaultPassportData, { depth: 2 })).toEqual({
       "mockFn.one.age": 10,
       "mockFn.one.cuteness.amount": "Very",
       "mockFn.one.email.address": "richard.parker@pi.com",
       "mockFn.one.name": "Richard Parker",
       "mockFn.one.size": "Medium",
+      "mockFn.one.food": ["bamboo", "leaves"],
       "mockFn.two.age": 10,
       "mockFn.two.cuteness.amount": "Very",
       "mockFn.two.email.address": "richard.parker@pi.com",
       "mockFn.two.name": "Richard Parker",
       "mockFn.two.size": "Medium",
+      "mockFn.two.food": ["meat", "bamboo", "leaves"],
     });
   });
 

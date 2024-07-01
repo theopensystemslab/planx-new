@@ -1,24 +1,47 @@
-import { QuestionField, Schema, UserResponse } from "./model";
+import React from "react";
+
+import { Field, UserResponse } from "./model";
+import { styled } from "@mui/material/styles";
+
+const List = styled("ul")(() => ({
+  listStylePosition: "inside",
+  padding: 0,
+  margin: 0,
+}))
 
 /**
- * In the case of "question" fields, ensure the displayed value reflects option "text", rather than "val" as recorded in passport
+ * In the case of "question" and "checklist" fields, ensure the displayed value reflects option "text", rather than "val" as recorded in passport
  * @param value - the `val` or `text` of an Option defined in the schema's fields
- * @param schema - the Schema object
- * @returns string - the `text` for the given value `val`, or the original value
+ * @param field - the Field object
+ * @returns string | React.JSX.Element - the `text` for the given value `val`, or the original value
  */
-export function formatSchemaDisplayValue(value: string, schema: Schema) {
-  const questionFields = schema.fields.filter(
-    (field) => field.type === "question",
-  ) as QuestionField[];
-  const matchingField = questionFields?.find((field) =>
-    field.data.options.some((option) => option.data.val === value),
-  );
-  const matchingOption = matchingField?.data.options.find(
-    (option) => option.data.val === value,
-  );
-
-  // If we found a "val" match, return its text, else just return the value as passed in
-  return matchingOption?.data?.text || value;
+export function formatSchemaDisplayValue(
+  value: string | string[],
+  field: Field,
+) {
+  switch (field.type) {
+    case "number":
+    case "text":
+      return value;
+    case "checklist": {
+      const matchingOptions = field.data.options.filter((option) =>
+        (value as string[]).includes(option.id),
+      );
+      return (
+        <List>
+          {matchingOptions.map((option) => (
+            <li key={option.id}>{option.data.text}</li>
+          ))}
+        </List>
+      );
+    }
+    case "question": {
+      const matchingOption = field.data.options.find(
+        (option) => option.data.val === value,
+      );
+      return matchingOption?.data.text;
+    }
+  }
 }
 
 /**
@@ -32,7 +55,11 @@ export function sumIdenticalUnits(
   passportData: Record<string, UserResponse[]>,
 ): number {
   let sum = 0;
-  passportData[`${fn}`].map((item) => (sum += parseInt(item?.identicalUnits)));
+  passportData[`${fn}`].map((item) => {
+    if (!Array.isArray(item?.identicalUnits)) {
+      sum += parseInt(item?.identicalUnits);
+    }
+  });
   return sum;
 }
 
@@ -58,10 +85,11 @@ export function sumIdenticalUnitsByDevelopmentType(
     newBuild: 0,
     notKnown: 0,
   };
-  passportData[`${fn}`].map(
-    (item) =>
-      (baseSums[`${item?.development}`] += parseInt(item?.identicalUnits)),
-  );
+  passportData[`${fn}`].map((item) => {
+    if (!Array.isArray(item?.identicalUnits)) {
+      baseSums[`${item?.development}`] += parseInt(item?.identicalUnits);
+    }
+  });
 
   // Format property names for passport, and filter out any entries with default sum = 0
   const formattedSums: Record<string, number> = {};
@@ -74,14 +102,19 @@ export function sumIdenticalUnitsByDevelopmentType(
   return formattedSums;
 }
 
+interface FlattenOptions {
+  depth?: number;
+  path?: string | null;
+  separator?: string;
+};
+
 /**
  * Flattens nested object so we can output passport variables like `{listFn}.{itemIndexAsText}.{fieldFn}`
  *   Adapted from https://gist.github.com/penguinboy/762197
  */
 export function flatten<T extends Record<string, any>>(
-  object: T,
-  path: string | null = null,
-  separator = ".",
+    object: T,
+    { depth = Infinity, path = null, separator = ".", }: FlattenOptions = {}
 ): T {
   return Object.keys(object).reduce((acc: T, key: string): T => {
     const value = object[key];
@@ -100,8 +133,8 @@ export function flatten<T extends Record<string, any>>(
       !(Array.isArray(value) && value.length === 0),
     ].every(Boolean);
 
-    return isObject
-      ? { ...acc, ...flatten(value, newPath, separator) }
+    return (isObject && depth > 0)
+      ? { ...acc, ...flatten(value, { depth: depth - 1, path: newPath, separator }) }
       : { ...acc, [newPath]: value };
   }, {} as T);
 }
