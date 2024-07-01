@@ -1,15 +1,16 @@
 import Close from "@mui/icons-material/Close";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import EditorNavMenu, { teamLayoutRoutes } from "components/EditorNavMenu";
 import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
 import { Link, useNavigation } from "react-navi";
+import Dashboard from "ui/editor/Dashboard";
 
 export interface SettingsTab {
   route: string;
@@ -40,9 +41,10 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Container maxWidth={false} disableGutters>
-          <Box py={7}>{children}</Box>
-        </Container>
+        <Dashboard>
+          <EditorNavMenu routes={teamLayoutRoutes} />
+          {children}
+        </Dashboard>
       )}
     </div>
   );
