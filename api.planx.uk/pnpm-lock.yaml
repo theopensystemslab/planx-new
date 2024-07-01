@@ -113,7 +113,7 @@ dependencies:
     specifier: ^3.3.7
     version: 3.3.7
   notifications-node-client:
-    specifier: ^8.1.0
+    specifier: ^8.2.0
     version: 8.2.0
   passport:
     specifier: ^0.5.3
