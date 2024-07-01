@@ -79,7 +79,7 @@
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "^7.8.1",
     "scroll-into-view-if-needed": "^3.1.0",
-    "sharedb": "^3.3.2",
+    "sharedb": "^5.0.2",
     "subscriptions-transport-ws": "^0.11.0",
     "swr": "^2.2.4",
     "tippy.js": "^6.3.7",
