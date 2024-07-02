@@ -108,8 +108,8 @@ dependencies:
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.4.0)(@tiptap/pm@2.0.3)
   '@turf/area':
-    specifier: ^6.5.0
-    version: 6.5.0
+    specifier: ^7.0.0
+    version: 7.0.0
   '@turf/buffer':
     specifier: ^6.5.0
     version: 6.5.0
@@ -8192,11 +8192,12 @@ packages:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
     dev: true
 
-  /@turf/area@6.5.0:
-    resolution: {integrity: sha512-xCZdiuojokLbQ+29qR6qoMD89hv+JAgWjLrwSEWL+3JV8IXKeNFl6XkEJz9HGkVpnXvQKJoRz4/liT+8ZZ5Jyg==}
+  /@turf/area@7.0.0:
+    resolution: {integrity: sha512-Q/P6OGV8dJJs1BiraKFNBjtsMbz7B52mLCtgKh3syzujSREMx52RlsiOBQp8GujFMMiau+Mt25XKbVwtjHVi8Q==}
     dependencies:
-      '@turf/helpers': 6.5.0
-      '@turf/meta': 6.5.0
+      '@turf/helpers': 7.0.0
+      '@turf/meta': 7.0.0
+      tslib: 2.6.3
     dev: false
 
   /@turf/bbox@6.5.0:
@@ -8235,6 +8236,13 @@ packages:
     resolution: {integrity: sha512-VbI1dV5bLFzohYYdgqwikdMVpe7pJ9X3E+dlr425wa2/sMJqYDhTO++ec38/pcPvPE6oD9WEEeU3Xu3gza+VPw==}
     dev: false
 
+  /@turf/helpers@7.0.0:
+    resolution: {integrity: sha512-vwZvxRuyjGpGXvhXSbT9mX6FK92dBMLWbMbDJ/MXQUPx17ReVPFc+6N6IcxAzZfkiCnqy7vpuq0c+/TTrQxIiA==}
+    dependencies:
+      deep-equal: 2.2.3
+      tslib: 2.6.3
+    dev: false
+
   /@turf/invariant@6.5.0:
     resolution: {integrity: sha512-Wv8PRNCtPD31UVbdJE/KVAWKe7l6US+lJItRR/HOEW3eh+U/JwRCSUl/KZ7bmjM/C+zLNoreM2TU6OoLACs4eg==}
     dependencies:
@@ -8245,6 +8253,12 @@ packages:
     resolution: {integrity: sha512-RrArvtsV0vdsCBegoBtOalgdSOfkBrTJ07VkpiCnq/491W67hnMWmDu7e6Ztw0C3WldRYTXkg3SumfdzZxLBHA==}
     dependencies:
       '@turf/helpers': 6.5.0
+    dev: false
+
+  /@turf/meta@7.0.0:
+    resolution: {integrity: sha512-cEXr13uFwhXq5mFBy0IK1U/QepE5qgk3zXpBYsla3lYV7cB83Vh+NNUR+r0/w/QoJqest1TG4H20F9tGYWPi/g==}
+    dependencies:
+      '@turf/helpers': 7.0.0
     dev: false
 
   /@turf/projection@6.5.0:
@@ -11187,7 +11201,6 @@ packages:
       which-boxed-primitive: 1.0.2
       which-collection: 1.0.2
       which-typed-array: 1.1.15
-    dev: true
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -11707,7 +11720,6 @@ packages:
       is-string: 1.0.7
       isarray: 2.0.5
       stop-iteration-iterator: 1.0.0
-    dev: true
 
   /es-iterator-helpers@1.0.19:
     resolution: {integrity: sha512-zoMwbCcH5hwUkKJkT8kDIBZSz9I6mVG//+lDCinLCGov4+r7NIy0ld8o03M0cJxl2spVf6ESYVS6/gpIfq1FFw==}
@@ -13780,7 +13792,6 @@ packages:
     dependencies:
       call-bind: 1.0.7
       has-tostringtag: 1.0.2
-    dev: true
 
   /is-array-buffer@3.0.4:
     resolution: {integrity: sha512-wcjaerHw0ydZwfhiKbXJWLDY8A7yV7KhjQOpb83hGgGfId/aQa4TOvwyzn2PuswW2gPCYEL/nEAiSVpdOj1lXw==}
@@ -19664,7 +19675,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       internal-slot: 1.0.7
-    dev: true
 
   /store2@2.14.3:
     resolution: {integrity: sha512-4QcZ+yx7nzEFiV4BMLnr/pRa5HYzNITX2ri0Zh6sT9EyQHbBHacC6YigllUPU9X3D0f/22QCgfokpKs52YRrUg==}
