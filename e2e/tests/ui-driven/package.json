@@ -19,6 +19,7 @@
     "serve": "^14.2.1",
     "uuid": "^9.0.1"
   },
+  "packageManager": "pnpm@8.6.6",
   "devDependencies": {
     "@playwright/test": "^1.40.1",
     "@types/node": "18.16.1",

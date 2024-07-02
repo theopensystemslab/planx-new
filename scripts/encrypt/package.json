@@ -7,6 +7,7 @@
     "encrypt": "ts-node encrypt.ts",
     "decrypt": "ts-node decrypt.ts"
   },
+  "packageManager": "pnpm@8.6.6",
   "keywords": [],
   "dependencies": {
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#722e1c7",

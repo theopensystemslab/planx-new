@@ -10,6 +10,7 @@
     "@pulumi/pulumi": "^3.0.0",
     "tldjs": "^2.3.1"
   },
+  "packageManager": "pnpm@8.6.6",
   "pnpm": {
     "overrides": {
       "protobufjs": ">=7.2.4",
