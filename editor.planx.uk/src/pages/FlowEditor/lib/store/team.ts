@@ -1,4 +1,5 @@
 import {
+  GeneralTeamSettings,
   NotifyPersonalisation,
   Team,
   TeamIntegrations,
@@ -20,6 +21,7 @@ export interface TeamStore {
   teamSettings?: TeamSettings;
   teamSlug: string;
   teamTheme: TeamTheme;
+  teamGeneralSettings: GeneralTeamSettings;
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
@@ -27,6 +29,9 @@ export interface TeamStore {
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
   updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
+  updateGeneralSettings: (
+    generalSettings: Partial<GeneralTeamSettings>,
+  ) => Promise<boolean>;
 }
 
 export const teamStore: StateCreator<
@@ -43,6 +48,7 @@ export const teamStore: StateCreator<
   teamSettings: undefined,
   teamSlug: "",
   teamTheme: {} as TeamTheme,
+  teamGeneralSettings: {} as GeneralTeamSettings,
 
   setTeam: (team) => {
     set({
@@ -54,6 +60,7 @@ export const teamStore: StateCreator<
       teamSettings: team.settings,
       teamSlug: team.slug,
       teamTheme: team.theme,
+      teamGeneralSettings: team.team_settings,
     });
 
     if (team.theme?.favicon) {
@@ -71,6 +78,7 @@ export const teamStore: StateCreator<
     settings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
+    team_settings: get().teamGeneralSettings,
   }),
 
   initTeamStore: async (slug) => {
@@ -132,6 +140,18 @@ export const teamStore: StateCreator<
   updateTeamTheme: async (theme: Partial<TeamTheme>) => {
     const { teamId, $client } = get();
     const isSuccess = await $client.team.updateTheme(teamId, theme);
+    return isSuccess;
+  },
+
+  updateGeneralSettings: async (
+    generalSettings: Partial<GeneralTeamSettings>,
+  ) => {
+    const { teamId, $client } = get();
+    console.log(generalSettings);
+    const isSuccess = await $client.team.updateGeneralSettings(
+      teamId,
+      generalSettings,
+    );
     return isSuccess;
   },
 });

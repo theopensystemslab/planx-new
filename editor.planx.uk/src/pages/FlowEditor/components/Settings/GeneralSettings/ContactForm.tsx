@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
@@ -20,9 +21,17 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const formik = useFormik({
     ...formikConfig,
     validationSchema: formSchema,
-    onSubmit(values, { resetForm }) {
-      onSuccess();
-      resetForm({ values });
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateGeneralSettings({
+        homepage: values.homepage,
+        helpEmail: values.helpEmail,
+        helpPhone: values.helpPhone,
+        helpOpeningHours: values.helpOpeningHours,
+      });
+      if (isSuccess) {
+        onSuccess();
+        resetForm({ values });
+      }
     },
   });
 
@@ -41,43 +50,55 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       }
       input={
         <>
-          <InputLabel label="Homepage URL" htmlFor="homepageUrl">
-            <Input
-              name="homepage"
-              onChange={(event) => {
-                onChangeFn("homepage", event);
-              }}
-              id="homepageUrl"
-            />
-          </InputLabel>
-          <InputLabel label="Contact email address" htmlFor="helpEmail">
-            <Input
-              name="helpEmail"
-              onChange={(event) => {
-                onChangeFn("helpEmail", event);
-              }}
-              id="helpEmail"
-            />
-          </InputLabel>
-          <InputLabel label="Phone number" htmlFor="helpPhone">
-            <Input
-              name="helpPhone"
-              onChange={(event) => {
-                onChangeFn("helpPhone", event);
-              }}
-              id="helpPhone"
-            />
-          </InputLabel>
-          <InputLabel label="Opening hours" htmlFor="helpOpeningHours">
-            <Input
-              multiline
-              name="helpOpeningHours"
-              onChange={(event) => {
-                onChangeFn("helpOpeningHours", event);
-              }}
-              id="helpOpeningHours"
-            />
-          </InputLabel>
+          <InputRow>
+            <InputRowLabel>
+              Homepage URL
+              <Input
+                name="homepage"
+                value={formik.values.homepage}
+                onChange={(event) => {
+                  onChangeFn("homepage", event);
+                }}
+              />
+            </InputRowLabel>
+          </InputRow>
+          <InputRow>
+            <InputRowLabel>
+              Contact email address
+              <Input
+                name="helpEmail"
+                value={formik.values.helpEmail}
+                onChange={(event) => {
+                  onChangeFn("helpEmail", event);
+                }}
+              />
+            </InputRowLabel>
+          </InputRow>
+          <InputRow>
+            <InputRowLabel>
+              Phone number
+              <Input
+                name="helpPhone"
+                value={formik.values.helpPhone}
+                onChange={(event) => {
+                  onChangeFn("helpPhone", event);
+                }}
+              />
+            </InputRowLabel>
+          </InputRow>
+          <InputRow>
+            <InputRowLabel>
+              Opening hours
+              <Input
+                multiline
+                name="helpOpeningHours"
+                value={formik.values.helpOpeningHours}
+                onChange={(event) => {
+                  onChangeFn("helpOpeningHours", event);
+                }}
+              />
+            </InputRowLabel>
+          </InputRow>
         </>
       }
     />
