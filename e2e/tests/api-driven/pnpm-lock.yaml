@@ -9,8 +9,8 @@ dependencies:
     specifier: ^9.3.0
     version: 9.3.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#b975cf9
-    version: github.com/theopensystemslab/planx-core/b975cf9
+    specifier: git+https://github.com/theopensystemslab/planx-core#462914f
+    version: github.com/theopensystemslab/planx-core/462914f
   axios:
     specifier: ^1.6.8
     version: 1.6.8
@@ -258,6 +258,7 @@ packages:
 
   /@cucumber/gherkin-streams@5.0.1(@cucumber/gherkin@26.2.0)(@cucumber/message-streams@4.0.1)(@cucumber/messages@22.0.0):
     resolution: {integrity: sha512-/7VkIE/ASxIP/jd4Crlp4JHXqdNFxPGQokqWqsaCCiqBiu5qHoKMxcWNlp9njVL/n9yN4S08OmY3ZR8uC5x74Q==}
+    hasBin: true
     peerDependencies:
       '@cucumber/gherkin': '>=22.0.0'
       '@cucumber/message-streams': '>=4.0.0'
@@ -2806,6 +2807,7 @@ packages:
 
   /ts-node@10.9.1(@types/node@18.16.1)(typescript@5.4.3):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
+    hasBin: true
     peerDependencies:
       '@swc/core': '>=1.2.50'
       '@swc/wasm': '>=1.2.50'
@@ -3051,10 +3053,11 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/b975cf9:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b975cf9}
+  github.com/theopensystemslab/planx-core/462914f:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/462914f}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
+    prepare: true
     requiresBuild: true
     dependencies:
       '@emotion/react': 11.11.4(react@18.3.1)

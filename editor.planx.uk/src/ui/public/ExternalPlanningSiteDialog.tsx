@@ -32,11 +32,11 @@ const getTitleAndContent = (
         content: (
           <>
             <p>At present, only the listed project types are supported.</p>
-            {settings?.supportEmail && (
+            {settings?.helpEmail && (
               <p>
                 Please feel free to{" "}
                 <Link
-                  href={`mailto:${settings?.supportEmail}?subject=${encodeURIComponent(
+                  href={`mailto:${settings?.helpEmail}?subject=${encodeURIComponent(
                     "Planning Application - Suggestion for Project Type",
                   )}`}
                 >
@@ -53,7 +53,6 @@ const getTitleAndContent = (
 
 interface Props {
   purpose: DialogPurpose;
-  teamSettings?: TeamSettings;
 }
 
 export default function ExternalPlanningSiteDialog({
@@ -77,7 +76,7 @@ export default function ExternalPlanningSiteDialog({
             <p>
               You can apply for a Lawful Development Certificate without an
               address and postcode through{" "}
-              <strong>{teamSettings?.externalPlanningSite?.name}</strong>.
+              <strong>{teamSettings?.externalPlanningSiteName}</strong>.
             </p>
           </DialogContent>
           <DialogActions>
@@ -88,12 +87,9 @@ export default function ExternalPlanningSiteDialog({
             >
               <Typography variant="body2">Return to application</Typography>
             </Link>
-            <Link
-              href={teamSettings?.externalPlanningSite?.url}
-              target="_blank"
-            >
+            <Link href={teamSettings?.externalPlanningSiteUrl} target="_blank">
               <Typography variant="body2">
-                Go to {teamSettings?.externalPlanningSite?.name}
+                Go to {teamSettings?.externalPlanningSiteName}
                 <span style={visuallyHidden}> (opens in a new tab)</span>
               </Typography>
             </Link>
