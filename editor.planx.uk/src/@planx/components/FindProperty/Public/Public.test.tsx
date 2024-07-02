@@ -34,8 +34,8 @@ const osAddressProps = {
   "property.type": ["residential.HMO.parent"],
   "property.localAuthorityDistrict": ["Southwark"],
   "property.region": ["London"],
-  "property.boundary.title.area": 1234.98,
-  "property.boundary.title.area.hectares": 0.123498,
+  "property.boundary.title.area": 1232.22,
+  "property.boundary.title.area.hectares": 0.123222,
   "property.boundary.title": {
     geometry: {
       type: "MultiPolygon",
@@ -83,8 +83,8 @@ const proposedAddressProps = {
   },
   "property.localAuthorityDistrict": ["Southwark"],
   "property.region": ["London"],
-  "property.boundary.title.area": 1234.98,
-  "property.boundary.title.area.hectares": 0.123498,
+  "property.boundary.title.area": 1232.22,
+  "property.boundary.title.area.hectares": 0.123222,
   "property.boundary.title": {
     geometry: {
       type: "MultiPolygon",
