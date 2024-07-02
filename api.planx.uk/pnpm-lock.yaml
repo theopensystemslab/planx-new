@@ -274,7 +274,7 @@ devDependencies:
     specifier: ^2.0.0
     version: 2.0.0(@types/node@18.19.13)(typescript@5.5.2)
   typescript:
-    specifier: ^5.4.3
+    specifier: ^5.5.2
     version: 5.5.2
   uuid:
     specifier: ^10.0.0
