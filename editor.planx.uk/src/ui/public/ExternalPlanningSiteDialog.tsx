@@ -53,7 +53,6 @@ const getTitleAndContent = (
 
 interface Props {
   purpose: DialogPurpose;
-  teamSettings?: Partial<TeamSettings>;
 }
 
 export default function ExternalPlanningSiteDialog({
