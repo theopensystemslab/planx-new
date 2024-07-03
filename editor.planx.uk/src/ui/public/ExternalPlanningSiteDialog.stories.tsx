@@ -16,11 +16,5 @@ export default meta;
 export const Basic = {
   args: {
     purpose: DialogPurpose.MissingProjectType,
-    teamSettings: {
-      externalPlanningSite: {
-        name: "Council website",
-        url: "test.gov.uk",
-      },
-    },
   },
 } satisfies Story;
