@@ -11,7 +11,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
   const formik = useFormik({
     ...formikConfig,
     onSubmit: async (values, { resetForm }) => {
-      const isSuccess = await useStore.getState().updateTeamSettings({
+      const isSuccess = await useStore.getState().updateGeneralSettings({
         boundaryUrl: values.boundaryUrl,
       });
       console.log("button pressed");

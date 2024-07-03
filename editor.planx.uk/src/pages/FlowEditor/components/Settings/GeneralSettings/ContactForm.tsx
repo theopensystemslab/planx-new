@@ -24,7 +24,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
     ...formikConfig,
     validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
-      const isSuccess = await useStore.getState().updateTeamSettings({
+      const isSuccess = await useStore.getState().updateGeneralSettings({
         homepage: values.homepage,
         helpEmail: values.helpEmail,
         helpPhone: values.helpPhone,

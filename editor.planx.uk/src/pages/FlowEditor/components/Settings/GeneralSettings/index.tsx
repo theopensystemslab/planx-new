@@ -2,7 +2,7 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
-import { TeamSettings } from "@opensystemslab/planx-core/types";
+import { GeneralTeamSettings } from "@opensystemslab/planx-core/types";
 import { FormikConfig } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -11,14 +11,22 @@ import SettingsSection from "ui/editor/SettingsSection";
 import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
 
+export interface GeneralSettings {
+  boundaryUrl: string;
+  helpEmail: string;
+  helpPhone: string;
+  helpOpeningHours: string;
+  homepage: string;
+}
+
 export interface FormProps {
-  formikConfig: FormikConfig<TeamSettings>;
+  formikConfig: FormikConfig<GeneralTeamSettings>;
   onSuccess: () => void;
 }
 
 const GeneralSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
-    FormikConfig<TeamSettings> | undefined
+    FormikConfig<GeneralTeamSettings> | undefined
   >(undefined);
 
   useEffect(() => {
@@ -28,7 +36,7 @@ const GeneralSettings: React.FC = () => {
         console.log(fetchedTeam);
         if (!fetchedTeam) throw Error("Unable to find team");
         setFormikConfig({
-          initialValues: fetchedTeam.teamSettings,
+          initialValues: fetchedTeam.team_settings,
           onSubmit: () => {},
           validateOnBlur: false,
           validateOnChange: false,
