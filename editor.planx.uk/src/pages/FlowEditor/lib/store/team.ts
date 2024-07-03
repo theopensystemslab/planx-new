@@ -15,10 +15,9 @@ export interface TeamStore {
   teamId: number;
   teamIntegrations: TeamIntegrations;
   teamName: string;
-  teamSettings: TeamSettings;
   teamSlug: string;
   teamTheme: TeamTheme;
-  teamGeneralSettings: GeneralTeamSettings;
+  teamSettings: TeamSettings;
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
@@ -26,9 +25,7 @@ export interface TeamStore {
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
   updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
-  updateGeneralSettings: (
-    generalSettings: Partial<GeneralTeamSettings>,
-  ) => Promise<boolean>;
+  updateTeamSettings: (teamSettings: Partial<TeamSettings>) => Promise<boolean>;
 }
 
 export const teamStore: StateCreator<
@@ -41,10 +38,9 @@ export const teamStore: StateCreator<
   teamId: 0,
   teamIntegrations: {} as TeamIntegrations,
   teamName: "",
-  teamSettings: {} as TeamSettings,
   teamSlug: "",
   teamTheme: {} as TeamTheme,
-  teamGeneralSettings: {} as GeneralTeamSettings,
+  teamSettings: {} as TeamSettings,
 
   setTeam: (team) => {
     set({
@@ -52,10 +48,9 @@ export const teamStore: StateCreator<
       teamId: team.id,
       teamIntegrations: team.integrations,
       teamName: team.name,
-      teamSettings: team.teamSettings,
       teamSlug: team.slug,
       teamTheme: team.theme,
-      teamGeneralSettings: team.team_settings,
+      teamSettings: team.teamSettings,
     });
 
     if (team.theme?.favicon) {
@@ -69,10 +64,9 @@ export const teamStore: StateCreator<
     id: get().teamId,
     integrations: get().teamIntegrations,
     name: get().teamName,
-    teamSettings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
-    team_settings: get().teamGeneralSettings,
+    teamSettings: get().teamSettings,
   }),
 
   initTeamStore: async (slug) => {
@@ -136,12 +130,10 @@ export const teamStore: StateCreator<
     return isSuccess;
   },
 
-  updateGeneralSettings: async (
-    generalSettings: Partial<GeneralTeamSettings>,
-  ) => {
+  updateTeamSettings: async (generalSettings: Partial<TeamSettings>) => {
     const { teamId, $client } = get();
     console.log(generalSettings);
-    const isSuccess = await $client.team.updateGeneralSettings(
+    const isSuccess = await $client.team.updateTeamSettings(
       teamId,
       generalSettings,
     );
