@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import * as Yup from "yup";
 
@@ -14,8 +15,10 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       .email("Please enter valid email")
       .required("Help Email is required"),
     helpPhone: Yup.string().required("Help Phone is required"),
-    helpOpeningHours: Yup.string(),
-    homepage: Yup.string().url("Please enter a valid URL for the homepage"),
+    helpOpeningHours: Yup.string().required(),
+    homepage: Yup.string()
+      .url("Please enter a valid URL for the homepage")
+      .required("Enter a homepage"),
   });
 
   const formik = useFormik({
@@ -38,10 +41,13 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const onChangeFn = (type: string, event: ChangeEvent<HTMLInputElement>) =>
     formik.setFieldValue(type, event.target.value);
 
+  console.log(formik.errors);
+
   return (
     <SettingsForm
       legend="Contact Information"
       formik={formik}
+      isErrors={false}
       description={
         <>
           Details to help direct different messages, feedback, and enquiries
@@ -50,16 +56,21 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       }
       input={
         <>
-          <InputLabel label="Homepage URL" htmlFor="homepageUrl">
-            <Input
-              name="homepage"
-              onChange={(event) => {
-                onChangeFn("homepage", event);
-              }}
-              value={formik.values.homepage}
-              id="homepageUrl"
-            />
-          </InputLabel>
+          <ErrorWrapper
+            error={formik.errors.homepage || undefined}
+            id="settings-error"
+          >
+            <InputLabel label="Homepage URL" htmlFor="homepage">
+              <Input
+                name="homepage"
+                onChange={(event) => {
+                  onChangeFn("homepage", event);
+                }}
+                value={formik.values.homepage}
+                id="homepage"
+              />
+            </InputLabel>
+          </ErrorWrapper>
           <InputLabel label="Contact email address" htmlFor="helpEmail">
             <Input
               name="helpEmail"

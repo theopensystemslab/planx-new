@@ -33,6 +33,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
     <SettingsForm
       formik={formik}
       legend="Boundary"
+      isErrors={false}
       description={
         <>
           <p>
@@ -53,16 +54,21 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
         </>
       }
       input={
-        <InputLabel label="Boundary URL" htmlFor="boundaryUrl">
-          <Input
-            name="boundary"
-            value={formik.values.boundaryUrl}
-            onChange={(ev: ChangeEvent<HTMLInputElement>) => {
-              formik.setFieldValue("boundaryUrl", ev.target.value);
-            }}
-            id="boundaryUrl"
-          />
-        </InputLabel>
+        <ErrorWrapper
+          error={Object.values(formik.errors).join(", ")}
+          id="settings-error"
+        >
+          <InputLabel label="Boundary URL" htmlFor="boundaryUrl">
+            <Input
+              name="boundary"
+              value={formik.values.boundaryUrl}
+              onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+                formik.setFieldValue("boundaryUrl", ev.target.value);
+              }}
+              id="boundaryUrl"
+            />
+          </InputLabel>
+        </ErrorWrapper>
       }
     />
   );

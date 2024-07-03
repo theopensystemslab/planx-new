@@ -15,6 +15,7 @@ type SettingsFormProps<TFormikValues> = {
   input: React.ReactElement;
   formik: FormikProps<TFormikValues>;
   preview?: React.ReactElement;
+  isErrors?: boolean;
 };
 
 export const SettingsForm = <TFormikValues,>({
@@ -23,7 +24,10 @@ export const SettingsForm = <TFormikValues,>({
   description,
   input,
   preview,
+  isErrors,
 }: SettingsFormProps<TFormikValues>) => {
+  // By default, errors is set to true
+  isErrors === undefined ? (isErrors = true) : false;
   return (
     <SettingsSection background>
       <form onSubmit={formik.handleSubmit}>
@@ -40,10 +44,32 @@ export const SettingsForm = <TFormikValues,>({
             {preview}
           </Box>
         )}
-        <ErrorWrapper
-          error={Object.values(formik.errors).join(", ")}
-          id="settings-error"
-        >
+        {isErrors ? (
+          <ErrorWrapper
+            error={Object.values(formik.errors).join(", ")}
+            id="settings-error"
+          >
+            <Box>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={!formik.dirty}
+              >
+                Save
+              </Button>
+              <Button
+                onClick={() => formik.resetForm()}
+                type="reset"
+                variant="contained"
+                disabled={!formik.dirty}
+                color="secondary"
+                sx={{ ml: 1.5 }}
+              >
+                Reset changes
+              </Button>
+            </Box>
+          </ErrorWrapper>
+        ) : (
           <Box>
             <Button type="submit" variant="contained" disabled={!formik.dirty}>
               Save
@@ -59,7 +85,7 @@ export const SettingsForm = <TFormikValues,>({
               Reset changes
             </Button>
           </Box>
-        </ErrorWrapper>
+        )}
       </form>
     </SettingsSection>
   );
