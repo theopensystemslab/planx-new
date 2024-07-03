@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import * as Yup from "yup";
 
@@ -45,7 +44,6 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
     <SettingsForm
       legend="Contact Information"
       formik={formik}
-      isErrors={false}
       description={
         <>
           Details to help direct different messages, feedback, and enquiries
@@ -54,21 +52,16 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       }
       input={
         <>
-          <ErrorWrapper
-            error={formik.errors.homepage || undefined}
-            id="settings-error"
-          >
-            <InputLabel label="Homepage URL" htmlFor="homepage">
-              <Input
-                name="homepage"
-                onChange={(event) => {
-                  onChangeFn("homepage", event);
-                }}
-                value={formik.values.homepage}
-                id="homepage"
-              />
-            </InputLabel>
-          </ErrorWrapper>
+          <InputLabel label="Homepage URL" htmlFor="homepage">
+            <Input
+              name="homepage"
+              onChange={(event) => {
+                onChangeFn("homepage", event);
+              }}
+              value={formik.values.homepage}
+              id="homepage"
+            />
+          </InputLabel>
           <InputLabel label="Contact email address" htmlFor="helpEmail">
             <Input
               name="helpEmail"
