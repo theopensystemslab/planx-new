@@ -1,13 +1,14 @@
+import { styled } from "@mui/material/styles";
 import React from "react";
+import { optional } from "zod";
 
 import { Field, UserResponse } from "./model";
-import { styled } from "@mui/material/styles";
 
 const List = styled("ul")(() => ({
   listStylePosition: "inside",
   padding: 0,
   margin: 0,
-}))
+}));
 
 /**
  * In the case of "question" and "checklist" fields, ensure the displayed value reflects option "text", rather than "val" as recorded in passport
@@ -21,6 +22,7 @@ export function formatSchemaDisplayValue(
 ) {
   switch (field.type) {
     case "number":
+      return field.data.units ? `${value} ${field.data.units}` : value;
     case "text":
       return value;
     case "checklist": {
@@ -106,15 +108,15 @@ interface FlattenOptions {
   depth?: number;
   path?: string | null;
   separator?: string;
-};
+}
 
 /**
  * Flattens nested object so we can output passport variables like `{listFn}.{itemIndexAsText}.{fieldFn}`
  *   Adapted from https://gist.github.com/penguinboy/762197
  */
 export function flatten<T extends Record<string, any>>(
-    object: T,
-    { depth = Infinity, path = null, separator = ".", }: FlattenOptions = {}
+  object: T,
+  { depth = Infinity, path = null, separator = "." }: FlattenOptions = {},
 ): T {
   return Object.keys(object).reduce((acc: T, key: string): T => {
     const value = object[key];
@@ -133,8 +135,11 @@ export function flatten<T extends Record<string, any>>(
       !(Array.isArray(value) && value.length === 0),
     ].every(Boolean);
 
-    return (isObject && depth > 0)
-      ? { ...acc, ...flatten(value, { depth: depth - 1, path: newPath, separator }) }
+    return isObject && depth > 0
+      ? {
+          ...acc,
+          ...flatten(value, { depth: depth - 1, path: newPath, separator }),
+        }
       : { ...acc, [newPath]: value };
   }, {} as T);
 }
