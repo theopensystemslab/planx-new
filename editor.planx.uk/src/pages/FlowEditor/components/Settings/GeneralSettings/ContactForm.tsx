@@ -41,8 +41,6 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const onChangeFn = (type: string, event: ChangeEvent<HTMLInputElement>) =>
     formik.setFieldValue(type, event.target.value);
 
-  console.log(formik.errors);
-
   return (
     <SettingsForm
       legend="Contact Information"
