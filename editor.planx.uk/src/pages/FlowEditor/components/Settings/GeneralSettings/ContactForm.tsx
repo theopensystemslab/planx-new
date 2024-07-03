@@ -26,6 +26,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
         helpEmail: values.helpEmail,
         helpOpeningHours: values.helpOpeningHours,
         helpPhone: values.helpPhone,
+        homepage: values.homepage,
       });
       if (isSuccess) {
         onSuccess();

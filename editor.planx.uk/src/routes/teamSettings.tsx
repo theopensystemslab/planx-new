@@ -38,6 +38,11 @@ const teamSettingsRoutes = compose(
             currentTab={req.params.tab}
             tabs={[
               {
+                name: "General",
+                route: "general",
+                Component: GeneralSettings,
+              },
+              {
                 name: "Team",
                 route: "team",
                 Component: TeamSettings,
@@ -46,11 +51,6 @@ const teamSettingsRoutes = compose(
                 name: "Design",
                 route: "design",
                 Component: DesignSettings,
-              },
-              {
-                name: "General",
-                route: "general",
-                Component: GeneralSettings,
               },
             ]}
           />
