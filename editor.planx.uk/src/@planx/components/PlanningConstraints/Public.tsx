@@ -6,17 +6,15 @@ import type {
   GISResponse,
 } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
-import DelayedLoadingSkeleton from "components/DelayedLoadingSkeleton";
-import { useFormik } from "formik";
-import { submitFeedback } from "lib/feedback";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import useSWR, { Fetcher } from "swr";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";
@@ -24,7 +22,11 @@ import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import ConstraintsList from "./List";
-import type { IntersectingConstraints, PlanningConstraints } from "./model";
+import {
+  DEFAULT_PLANNING_CONDITIONS_DISCLAIMER,
+  type IntersectingConstraints,
+  type PlanningConstraints,
+} from "./model";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -55,20 +57,11 @@ function Component(props: Props) {
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  // Configure which planx teams should query Digital Land (or continue to use custom GIS) and set URL params accordingly
-  //   In future, Digital Land will theoretically support any UK address and this list won't be necessary, but data collection still limited to select councils!
-  const digitalLandOrganisations: string[] = [
-    "opensystemslab",
-    "buckinghamshire",
-    "canterbury",
-    "camden",
-    "doncaster",
-    "gloucester",
-    "lambeth",
-    "medway",
-    "newcastle",
-    "southwark",
-  ];
+  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly
+  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
+  const hasPlanningData = useStore(
+    (state) => state.teamIntegrations?.hasPlanningData,
+  );
 
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
@@ -86,9 +79,7 @@ function Component(props: Props) {
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
-      digitalLandOrganisations.includes(teamSlug)
-        ? digitalLandParams
-        : customGisParams,
+      hasPlanningData ? digitalLandParams : customGisParams,
     ).toString();
 
   const fetcher: Fetcher<GISResponse | GISResponse["constraints"]> = (
@@ -116,10 +107,7 @@ function Component(props: Props) {
     error: roadsError,
     isValidating: isValidatingRoads,
   } = useSWR(
-    () =>
-      usrn && digitalLandOrganisations.includes(teamSlug)
-        ? classifiedRoadsEndpoint
-        : null,
+    () => (usrn && hasPlanningData ? classifiedRoadsEndpoint : null),
     fetcher,
     { revalidateOnFocus: false },
   );
@@ -144,14 +132,14 @@ function Component(props: Props) {
           title={props.title}
           description={props.description || ""}
           fn={props.fn}
+          disclaimer={props.disclaimer}
           constraints={constraints}
           metadata={metadata}
-          previousFeedback={props.previouslySubmittedData?.feedback}
-          handleSubmit={(values: { feedback?: string }) => {
+          handleSubmit={() => {
             const _constraints: Array<
               EnhancedGISResponse | GISResponse["constraints"]
             > = [];
-            if (digitalLandOrganisations.includes(teamSlug)) {
+            if (hasPlanningData) {
               if (data && !dataError)
                 _constraints.push({
                   ...data,
@@ -185,7 +173,6 @@ function Component(props: Props) {
             };
 
             props.handleSubmit?.({
-              ...values,
               data: passportData,
             });
           }}
@@ -193,11 +180,11 @@ function Component(props: Props) {
         />
       ) : (
         <Card handleSubmit={props.handleSubmit} isValid>
-          <QuestionHeader
+          <CardHeader
             title={props.title}
             description={props.description || ""}
           />
-          <DelayedLoadingSkeleton text="Fetching data..." />
+          <DelayedLoadingIndicator text="Fetching data..." />
         </Card>
       )}
     </>
@@ -208,11 +195,11 @@ export type PlanningConstraintsContentProps = {
   title: string;
   description: string;
   fn: string;
+  disclaimer: string;
   constraints: GISResponse["constraints"];
   metadata: GISResponse["metadata"];
-  handleSubmit: (values: { feedback: string }) => void;
+  handleSubmit: () => void;
   refreshConstraints: () => void;
-  previousFeedback?: string;
 };
 
 export function PlanningConstraintsContent(
@@ -223,25 +210,9 @@ export function PlanningConstraintsContent(
     description,
     constraints,
     metadata,
-    handleSubmit,
     refreshConstraints,
-    previousFeedback,
+    disclaimer,
   } = props;
-  const formik = useFormik({
-    initialValues: {
-      feedback: previousFeedback || "",
-    },
-    onSubmit: (values) => {
-      if (values.feedback) {
-        submitFeedback(
-          values.feedback,
-          "Inaccurate planning constraints",
-          constraints,
-        );
-      }
-      handleSubmit?.(values);
-    },
-  });
   const error = constraints.error || undefined;
   const showError = error || !Object.values(constraints)?.length;
 
@@ -254,17 +225,17 @@ export function PlanningConstraintsContent(
   );
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
-      <QuestionHeader title={title} description={description} />
+    <Card handleSubmit={props.handleSubmit}>
+      <CardHeader title={title} description={description} />
       {showError && (
         <ConstraintsFetchError
           error={error}
           refreshConstraints={refreshConstraints}
         />
       )}
-      {positiveConstraints.length > 0 && (
+      {!showError && positiveConstraints.length > 0 && (
         <>
-          <Typography variant="h3" component="h2" gutterBottom>
+          <Typography variant="h3" component="h2" mt={3}>
             These are the planning constraints we think apply to this property
           </Typography>
           <ConstraintsList data={positiveConstraints} metadata={metadata} />
@@ -279,44 +250,48 @@ export function PlanningConstraintsContent(
               <ConstraintsList data={negativeConstraints} metadata={metadata} />
             </SimpleExpand>
           )}
-          <PlanningConditionsInfo />
+          <Disclaimer text={disclaimer} />
         </>
       )}
-      {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
-        <>
-          <Typography variant="h3" component="h2">
-            It looks like there are no constraints on this property
-          </Typography>
-          <Typography variant="body2">
-            Based on the information you've given it looks like there are no
-            planning constraints on your property that might limit what you can
-            do.
-          </Typography>
-          <Typography variant="body2">
-            Continue with your application to tell us more about your project.
-          </Typography>
-          <SimpleExpand
-            id="negative-constraints-list"
-            buttonText={{
-              open: "Show the things we checked",
-              closed: "Hide constraints that don't apply",
-            }}
-          >
-            <ConstraintsList data={negativeConstraints} metadata={metadata} />
-          </SimpleExpand>
-          <PlanningConditionsInfo />
-        </>
-      )}
+      {!showError &&
+        positiveConstraints.length === 0 &&
+        negativeConstraints.length > 0 && (
+          <>
+            <Typography variant="h3" component="h2" gutterBottom mt={3}>
+              It looks like there are no constraints on this property
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Based on the information you've given it looks like there are no
+              planning constraints on your property that might limit what you
+              can do.
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Continue with your application to tell us more about your project.
+            </Typography>
+            <SimpleExpand
+              id="negative-constraints-list"
+              buttonText={{
+                open: "Show the things we checked",
+                closed: "Hide constraints that don't apply",
+              }}
+            >
+              <ConstraintsList data={negativeConstraints} metadata={metadata} />
+            </SimpleExpand>
+            <Disclaimer text={disclaimer} />
+          </>
+        )}
     </Card>
   );
 }
 
-const PlanningConditionsInfo = () => (
+const Disclaimer = (props: { text: string }) => (
   <WarningContainer>
     <ErrorOutline />
-    <Typography variant="body1" ml={2} fontWeight={FONT_WEIGHT_SEMI_BOLD}>
-      This page does not include information about historic planning conditions
-      that may apply to this property.
+    <Typography variant="body1" component="div" ml={2} mb={1}>
+      <ReactMarkdownOrHtml
+        source={props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+        openLinksOnNewTab
+      />
     </Typography>
   </WarningContainer>
 );
@@ -357,7 +332,7 @@ interface ConstraintsGraphErrorProps {
 
 const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (
   <Card handleSubmit={props.handleSubmit} isValid>
-    <QuestionHeader title={props.title} description={props.description || ""} />
+    <CardHeader title={props.title} description={props.description || ""} />
     <ErrorSummaryContainer
       role="status"
       data-testid="error-summary-invalid-graph"
