@@ -22,11 +22,7 @@ export function formatSchemaDisplayValue(
 ) {
   switch (field.type) {
     case "number":
-      if (field.data.units) {
-        return `${value} ${field.data.units}`;
-      } else {
-        return value;
-      }
+      return field.data.units ? `${value} ${field.data.units}` : value;
     case "text":
       return value;
     case "checklist": {
