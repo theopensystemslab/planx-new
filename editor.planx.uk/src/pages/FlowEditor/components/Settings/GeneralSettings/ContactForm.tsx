@@ -55,12 +55,14 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
               onChange={(event) => {
                 onChangeFn("homepage", event);
               }}
+              value={formik.values.homepage}
               id="homepageUrl"
             />
           </InputLabel>
           <InputLabel label="Contact email address" htmlFor="helpEmail">
             <Input
               name="helpEmail"
+              value={formik.values.helpEmail}
               onChange={(event) => {
                 onChangeFn("helpEmail", event);
               }}
@@ -70,6 +72,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
           <InputLabel label="Phone number" htmlFor="helpPhone">
             <Input
               name="helpPhone"
+              value={formik.values.helpPhone}
               onChange={(event) => {
                 onChangeFn("helpPhone", event);
               }}
@@ -80,6 +83,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
             <Input
               multiline
               name="helpOpeningHours"
+              value={formik.values.helpOpeningHours}
               onChange={(event) => {
                 onChangeFn("helpOpeningHours", event);
               }}

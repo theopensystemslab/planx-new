@@ -47,11 +47,11 @@ const teamSettingsRoutes = compose(
                 route: "design",
                 Component: DesignSettings,
               },
-              // {
-              //   name: "General",
-              //   route: "general",
-              //   Component: GeneralSettings,
-              // },
+              {
+                name: "General",
+                route: "general",
+                Component: GeneralSettings,
+              },
             ]}
           />
         ),
