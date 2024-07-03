@@ -2,22 +2,14 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
-import * as Yup from "yup";
 
 import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
 export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
-  const formSchema = Yup.object().shape({
-    boundaryUrl: Yup.string()
-      .url("URL's must look like the example given above")
-      .required("Enter a boundary URL"),
-  });
   const formik = useFormik({
     ...formikConfig,
-    validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
       const isSuccess = await useStore.getState().updateTeamSettings({
         boundaryUrl: values.boundaryUrl,
