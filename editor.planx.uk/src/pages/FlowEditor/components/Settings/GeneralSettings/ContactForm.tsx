@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
@@ -13,16 +14,26 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       .email("Please enter valid email")
       .required("Help Email is required"),
     helpPhone: Yup.string().required("Help Phone is required"),
-    helpOpeningHours: Yup.string(),
-    homepage: Yup.string().url("Please enter a valid URL for the homepage"),
+    helpOpeningHours: Yup.string().required(),
+    homepage: Yup.string()
+      .url("Please enter a valid URL for the homepage")
+      .required("Enter a homepage"),
   });
 
   const formik = useFormik({
     ...formikConfig,
     validationSchema: formSchema,
-    onSubmit(values, { resetForm }) {
-      onSuccess();
-      resetForm({ values });
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateTeamSettings({
+        helpEmail: values.helpEmail,
+        helpOpeningHours: values.helpOpeningHours,
+        helpPhone: values.helpPhone,
+        homepage: values.homepage,
+      });
+      if (isSuccess) {
+        onSuccess();
+        resetForm({ values });
+      }
     },
   });
 
@@ -41,18 +52,20 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       }
       input={
         <>
-          <InputLabel label="Homepage URL" htmlFor="homepageUrl">
+          <InputLabel label="Homepage URL" htmlFor="homepage">
             <Input
               name="homepage"
               onChange={(event) => {
                 onChangeFn("homepage", event);
               }}
-              id="homepageUrl"
+              value={formik.values.homepage}
+              id="homepage"
             />
           </InputLabel>
           <InputLabel label="Contact email address" htmlFor="helpEmail">
             <Input
               name="helpEmail"
+              value={formik.values.helpEmail}
               onChange={(event) => {
                 onChangeFn("helpEmail", event);
               }}
@@ -62,6 +75,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
           <InputLabel label="Phone number" htmlFor="helpPhone">
             <Input
               name="helpPhone"
+              value={formik.values.helpPhone}
               onChange={(event) => {
                 onChangeFn("helpPhone", event);
               }}
@@ -72,6 +86,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
             <Input
               multiline
               name="helpOpeningHours"
+              value={formik.values.helpOpeningHours}
               onChange={(event) => {
                 onChangeFn("helpOpeningHours", event);
               }}

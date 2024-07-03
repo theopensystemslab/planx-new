@@ -2,44 +2,33 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
+import { TeamSettings } from "@opensystemslab/planx-core/types";
 import { FormikConfig } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
 import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
 
-export interface GeneralSettings {
-  boundaryUrl: string;
-  helpEmail: string;
-  helpPhone: string;
-  helpOpeningHours: string;
-  homepage: string;
-}
-
 export interface FormProps {
-  formikConfig: FormikConfig<GeneralSettings>;
+  formikConfig: FormikConfig<TeamSettings>;
   onSuccess: () => void;
 }
 
 const GeneralSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
-    FormikConfig<GeneralSettings> | undefined
+    FormikConfig<TeamSettings> | undefined
   >(undefined);
-
-  const initialValues = {
-    boundaryUrl: "",
-    helpEmail: "",
-    helpPhone: "",
-    helpOpeningHours: "",
-    homepage: "",
-  };
 
   useEffect(() => {
     const fetchTeam = async () => {
       try {
+        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
+        if (!fetchedTeam) throw Error("Unable to find team");
+
         setFormikConfig({
-          initialValues: initialValues,
+          initialValues: fetchedTeam.teamSettings,
           onSubmit: () => {},
           validateOnBlur: false,
           validateOnChange: false,
