@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
@@ -9,9 +10,14 @@ import { FormProps } from ".";
 export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
   const formik = useFormik({
     ...formikConfig,
-    onSubmit(values, { resetForm }) {
-      onSuccess();
-      resetForm({ values });
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateTeamSettings({
+        boundaryUrl: values.boundaryUrl,
+      });
+      if (isSuccess) {
+        onSuccess();
+        resetForm({ values });
+      }
     },
   });
 

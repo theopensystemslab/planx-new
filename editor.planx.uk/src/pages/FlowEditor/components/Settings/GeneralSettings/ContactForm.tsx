@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
@@ -20,9 +21,16 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const formik = useFormik({
     ...formikConfig,
     validationSchema: formSchema,
-    onSubmit(values, { resetForm }) {
-      onSuccess();
-      resetForm({ values });
+    onSubmit: async (values, { resetForm }) => {
+      const isSuccess = await useStore.getState().updateTeamSettings({
+        helpEmail: values.helpEmail,
+        helpOpeningHours: values.helpOpeningHours,
+        helpPhone: values.helpPhone,
+      });
+      if (isSuccess) {
+        onSuccess();
+        resetForm({ values });
+      }
     },
   });
 
