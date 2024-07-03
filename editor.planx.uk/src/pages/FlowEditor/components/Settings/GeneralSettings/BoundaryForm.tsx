@@ -3,13 +3,21 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
+import * as Yup from "yup";
 
 import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
 export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
+  const formSchema = Yup.object().shape({
+    boundaryUrl: Yup.string()
+      .url("The URL should be in the form shown above")
+      .required("Enter a boundary URL"),
+  });
+
   const formik = useFormik({
     ...formikConfig,
+    validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
       const isSuccess = await useStore.getState().updateTeamSettings({
         boundaryUrl: values.boundaryUrl,

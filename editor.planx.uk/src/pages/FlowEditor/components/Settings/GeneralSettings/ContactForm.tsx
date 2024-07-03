@@ -11,12 +11,12 @@ import { FormProps } from ".";
 export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const formSchema = Yup.object().shape({
     helpEmail: Yup.string()
-      .email("Please enter valid email")
-      .required("Help Email is required"),
-    helpPhone: Yup.string().required("Help Phone is required"),
+      .email("Enter a valid email address")
+      .required("Enter a help email address"),
+    helpPhone: Yup.string().required("Enter a help phone number"),
     helpOpeningHours: Yup.string().required(),
     homepage: Yup.string()
-      .url("Please enter a valid URL for the homepage")
+      .url("Enter a valid URL")
       .required("Enter a homepage"),
   });
 
