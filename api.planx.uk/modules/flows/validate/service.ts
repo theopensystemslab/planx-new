@@ -55,7 +55,8 @@ const validateAndDiffFlow = async (
   const validationChecks = [];
   const sections = validateSections(flattenedFlow);
   const inviteToPay = validateInviteToPay(flattenedFlow);
-  validationChecks.push(sections, inviteToPay);
+  const fileTypes = validateFileTypes(flattenedFlow);
+  validationChecks.push(sections, inviteToPay, fileTypes);
 
   // Sort validation checks by status: Fail, Pass, Not applicable
   const applicableChecks = validationChecks
@@ -204,6 +205,48 @@ const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
     payNodeStatuses.length > 0 &&
     payNodeStatuses.every((status) => status === true)
   );
+};
+
+const validateFileTypes = (flowGraph: FlowGraph): ValidationResponse => {
+  const allFileFns = [
+    ...getFileUploadNodeFns(flowGraph),
+    ...getFileUploadAndLabelNodeFns(flowGraph),
+  ];
+  // todo: get schema file types via planx-core method, compare arrays
+
+  if (allFileFns.length < 1) {
+    return {
+      title: "File types",
+      status: "Not applicable",
+      message: "Your flow is not using FileUpload or UploadAndLabel",
+    };
+  }
+
+  return {
+    title: "File types",
+    status: "Pass",
+    message:
+      "Files collected via FileUpload or UploadAndLabel are all supported by the ODP Schema",
+  };
+};
+
+const getFileUploadNodeFns = (flowGraph: FlowGraph): string[] => {
+  const fileUploadNodes = Object.entries(flowGraph).filter(
+    (entry): entry is [string, Node] =>
+      isComponentType(entry, ComponentType.FileUpload),
+  );
+  return fileUploadNodes.map(([_nodeId, node]) => node.data?.fn as string);
+};
+
+const getFileUploadAndLabelNodeFns = (flowGraph: FlowGraph): string[] => {
+  const uploadAndLabelNodes = Object.entries(flowGraph).filter(
+    (entry): entry is [string, Node] =>
+      isComponentType(entry, ComponentType.FileUploadAndLabel),
+  );
+  const uploadAndLabelFileTypes = uploadAndLabelNodes
+    .map(([_nodeId, node]) => node.data?.fileTypes)
+    .flat();
+  return uploadAndLabelFileTypes?.map((file: any) => file?.fn as string);
 };
 
 export { validateAndDiffFlow };
