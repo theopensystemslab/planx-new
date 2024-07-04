@@ -34,8 +34,9 @@ import {
   ValidationCheck,
   ValidationChecks,
 } from "./PublishDialog";
+import Search from "./Search";
 
-type SidebarTabs = "PreviewBrowser" | "History";
+type SidebarTabs = "PreviewBrowser" | "History" | "Search";
 
 const Console = styled(Box)(() => ({
   overflow: "auto",
@@ -449,6 +450,13 @@ const Sidebar: React.FC<{
             value="History"
             label="History"
           />
+          <StyledTab
+            disableFocusRipple
+            disableTouchRipple
+            disableRipple
+            value="Search"
+            label="Search"
+          />
         </Tabs>
       </TabList>
       {activeTab === "PreviewBrowser" && (
@@ -461,6 +469,11 @@ const Sidebar: React.FC<{
           <Container>
             <EditHistory />
           </Container>
+        </SidebarContainer>
+      )}
+      {activeTab === "Search" && (
+        <SidebarContainer py={3}>
+          <Search />
         </SidebarContainer>
       )}
       {showDebugConsole && <DebugConsole />}

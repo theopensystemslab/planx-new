@@ -1,9 +1,11 @@
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { borderedFocusStyle } from "theme";
 
-const Root = styled(Box)(({ theme }) => ({
+const Root = styled(Box, {
+  shouldForwardProp: (prop) => !["disabled"].includes(prop.toString()),
+})<BoxProps & { disabled?: boolean }>(({ theme, disabled }) => ({
   display: "inline-flex",
   flexShrink: 0,
   position: "relative",
@@ -13,6 +15,10 @@ const Root = styled(Box)(({ theme }) => ({
   border: "2px solid",
   backgroundColor: theme.palette.common.white,
   "&:focus-within": borderedFocusStyle,
+  ...(disabled && {
+    border: `2px solid ${theme.palette.grey[400]}`,
+    backgroundColor: theme.palette.grey[400],
+  }),
 }));
 
 const Input = styled("input")(() => ({
@@ -24,11 +30,13 @@ const Input = styled("input")(() => ({
 
 interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   checked: boolean;
+  disabled?: boolean;
 }
 
 const Icon = styled("span", {
-  shouldForwardProp: (prop) => prop !== "checked",
-})<IconProps>(({ theme, checked }) => ({
+  shouldForwardProp: (prop) =>
+    !["checked", "disabled"].includes(prop.toString()),
+})<IconProps>(({ theme, checked, disabled }) => ({
   display: checked ? "block" : "none",
   content: "''",
   position: "absolute",
@@ -41,6 +49,10 @@ const Icon = styled("span", {
   top: "42%",
   transform: "translate(-50%, -50%) rotate(45deg)",
   cursor: "pointer",
+  ...(disabled && {
+    borderBottom: `5px solid white`,
+    borderRight: `5px solid white`,
+  }),
 }));
 
 export interface Props {
@@ -62,7 +74,7 @@ export default function Checkbox({
   };
 
   return (
-    <Root onClick={handleChange}>
+    <Root onClick={handleChange} disabled={inputProps?.disabled}>
       <Input
         defaultChecked={checked}
         type="checkbox"
@@ -70,7 +82,7 @@ export default function Checkbox({
         data-testid={id}
         {...inputProps}
       />
-      <Icon checked={checked} />
+      <Icon checked={checked} disabled={inputProps?.disabled} />
     </Root>
   );
 }
