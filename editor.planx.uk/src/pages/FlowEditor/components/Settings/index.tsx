@@ -6,12 +6,9 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import EditorNavMenu, { teamLayoutRoutes } from "components/EditorNavMenu";
 import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
 import { Link, useNavigation } from "react-navi";
-import Dashboard from "ui/editor/Dashboard";
-
 export interface SettingsTab {
   route: string;
   name: string;
@@ -40,12 +37,8 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`nav-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Dashboard>
-          <EditorNavMenu routes={teamLayoutRoutes} />
-          {children}
-        </Dashboard>
-      )}
+      {/* TODO: check this out */}
+      {value === index ? children : null}
     </div>
   );
 }

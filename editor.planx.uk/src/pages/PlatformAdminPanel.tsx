@@ -9,12 +9,10 @@ import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
-import EditorNavMenu, { globalLayoutRoutes } from "components/EditorNavMenu";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import useSWR from "swr";
 import { AdminPanelData } from "types";
-import Dashboard from "ui/editor/Dashboard";
 import Caret from "ui/icons/Caret";
 
 const StyledTeamAccordion = styled(Accordion, {
@@ -37,22 +35,17 @@ function Component() {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
   return (
-    <Dashboard>
-      <EditorNavMenu routes={globalLayoutRoutes} />
-      <Container maxWidth={false}>
-        <Box sx={{ overflow: "hidden" }}>
-          <Typography variant="h1">Platform Admin Panel</Typography>
-          <Typography variant="body1" mb={3}>
-            {`This is an overview of each team's integrations and settings for the `}
-            <strong>{process.env.REACT_APP_ENV}</strong>
-            {` environment`}
-          </Typography>
-          {adminPanelData?.map((team) => (
-            <TeamData key={team.id} data={team} />
-          ))}
-        </Box>
-      </Container>
-    </Dashboard>
+    <Container maxWidth={false}>
+      <Box sx={{ overflow: "hidden" }}>
+        <Typography variant="h1">Platform Admin Panel</Typography>
+        <Typography variant="body1" mb={3}>
+          {`This is an overview of each team's integrations and settings for the `}
+          <strong>{process.env.REACT_APP_ENV}</strong>
+          {` environment`}
+        </Typography>
+        {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
+      </Box>
+    </Container>
   );
 }
 

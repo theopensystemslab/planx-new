@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { containerClasses } from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
+import EditorNavMenu, { teamLayoutRoutes } from "components/EditorNavMenu";
 import { HEADER_HEIGHT } from "components/Header";
 import React, { PropsWithChildren } from "react";
 
@@ -28,6 +29,7 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
 export default function Dashboard(props: PropsWithChildren) {
   return (
     <DashboardWrap>
+      <EditorNavMenu routes={teamLayoutRoutes} />
       <DashboardContainer>{props.children}</DashboardContainer>
     </DashboardWrap>
   );

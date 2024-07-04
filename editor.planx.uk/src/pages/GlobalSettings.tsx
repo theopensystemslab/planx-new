@@ -4,12 +4,10 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
-import EditorNavMenu, { globalLayoutRoutes } from "components/EditorNavMenu";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import type { TextContent } from "types";
-import Dashboard from "ui/editor/Dashboard";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import ListManager from "ui/editor/ListManager";
@@ -67,8 +65,7 @@ function Component() {
   };
 
   return (
-    <Dashboard>
-      <EditorNavMenu routes={globalLayoutRoutes} />
+    <>
       <Container maxWidth="contentWrap">
         <form onSubmit={formik.handleSubmit}>
           <SettingsSection>
@@ -118,7 +115,7 @@ function Component() {
           Footer settings updated successfully
         </Alert>
       </Snackbar>
-    </Dashboard>
+    </>
   );
 }
 
