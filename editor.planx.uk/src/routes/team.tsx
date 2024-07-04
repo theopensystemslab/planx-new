@@ -1,15 +1,6 @@
-import { FlowGraph } from "@opensystemslab/planx-core/types";
-import axios from "axios";
 import gql from "graphql-tag";
-import {
-  compose,
-  lazy,
-  mount,
-  NotFoundError,
-  route,
-  withData,
-  withView,
-} from "navi";
+import { compose, lazy, mount, route, withData, withView } from "navi";
+import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import React from "react";
 
 import { client } from "../lib/graphql";
@@ -85,6 +76,14 @@ const routes = compose(
     }),
 
     "/members": lazy(() => import("./teamMembers")),
+    "/design": compose(
+      route(async (req) => ({
+        title: makeTitle(
+          [req.params.team, req.params.flow, "design"].join("/"),
+        ),
+        view: DesignSettings,
+      })),
+    ),
   }),
 );
 
