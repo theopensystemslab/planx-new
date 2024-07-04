@@ -380,28 +380,30 @@ describe("Building a list", () => {
 
 describe("Form validation and error handling", () => {
   test("form validation is triggered when saving an item", async () => {
-    const { user, getByRole, getAllByTestId } = setup(<ListComponent {...mockZooProps} />);
+    const { user, getByRole, getAllByTestId } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
 
     let errorMessages = getAllByTestId(/error-message-input/);
-    
+
     // Each field has an ErrorWrapper
-    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length)
+    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length);
 
     // All are empty initially
-    errorMessages.forEach(message => {
+    errorMessages.forEach((message) => {
       expect(message).toBeEmptyDOMElement();
     });
 
     await user.click(getByRole("button", { name: /Save/ }));
-    
+
     // Error wrappers persist
     errorMessages = getAllByTestId(/error-message-input/);
-    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length)
+    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length);
 
     // Each field is in an error state
-    errorMessages.forEach(message => {
+    errorMessages.forEach((message) => {
       expect(message).not.toBeEmptyDOMElement();
-    });   
+    });
   });
 
   /**
@@ -410,62 +412,95 @@ describe("Form validation and error handling", () => {
    */
   describe("existing validation schemas are correctly referenced", () => {
     test("text fields", async () => {
-      const { user, getByRole, getByTestId } = setup(<ListComponent {...mockZooProps} />);
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
 
       const nameInput = screen.getByLabelText(/name/);
-      await user.type(nameInput, "This is a long string of text over one hundred and twenty characters, which should trigger the 'short' text validation warning");
+      await user.type(
+        nameInput,
+        "This is a long string of text over one hundred and twenty characters, which should trigger the 'short' text validation warning",
+      );
       await user.click(getByRole("button", { name: /Save/ }));
 
-      const nameInputErrorMessage = getByTestId(/error-message-input-text-name/);
+      const nameInputErrorMessage = getByTestId(
+        /error-message-input-text-name/,
+      );
 
-      expect(nameInputErrorMessage).toHaveTextContent(/Your answer must be 120 characters or fewer/);
+      expect(nameInputErrorMessage).toHaveTextContent(
+        /Your answer must be 120 characters or fewer/,
+      );
     });
 
     test("number fields", async () => {
-      const { user, getByRole, getByTestId } = setup(<ListComponent {...mockZooProps} />);
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
 
       const ageInput = screen.getByLabelText(/old/);
       await user.type(ageInput, "-35");
       await user.click(getByRole("button", { name: /Save/ }));
 
-      const ageInputErrorMessage = getByTestId(/error-message-input-number-age/);
+      const ageInputErrorMessage = getByTestId(
+        /error-message-input-number-age/,
+      );
 
       expect(ageInputErrorMessage).toHaveTextContent(/Enter a positive number/);
     });
 
     test("question fields", async () => {
-      const { user, getByRole, getByTestId } = setup(<ListComponent {...mockZooProps} />);
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
 
       await user.click(getByRole("button", { name: /Save/ }));
 
-      const sizeInputErrorMessage = getByTestId(/error-message-input-question-size/);
+      const sizeInputErrorMessage = getByTestId(
+        /error-message-input-question-size/,
+      );
 
-      expect(sizeInputErrorMessage).toHaveTextContent(/Select your answer before continuing/);
+      expect(sizeInputErrorMessage).toHaveTextContent(
+        /Select your answer before continuing/,
+      );
     });
 
     test("radio fields", async () => {
-      const { user, getByRole, getByTestId } = setup(<ListComponent {...mockZooProps} />);
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
 
       await user.click(getByRole("button", { name: /Save/ }));
 
-      const cuteInputErrorMessage = getByTestId(/error-message-input-question-cute/);
+      const cuteInputErrorMessage = getByTestId(
+        /error-message-input-question-cute/,
+      );
 
-      expect(cuteInputErrorMessage).toHaveTextContent(/Select your answer before continuing/);
+      expect(cuteInputErrorMessage).toHaveTextContent(
+        /Select your answer before continuing/,
+      );
     });
 
     test("checklist fields", async () => {
-      const { user, getByRole, getByTestId } = setup(<ListComponent {...mockZooProps} />);
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
 
       await user.click(getByRole("button", { name: /Save/ }));
 
-      const foodInputErrorMessage = getByTestId(/error-message-input-checklist-food/);
+      const foodInputErrorMessage = getByTestId(
+        /error-message-input-checklist-food/,
+      );
 
-      expect(foodInputErrorMessage).toHaveTextContent(/Select at least one option/);
-    })
+      expect(foodInputErrorMessage).toHaveTextContent(
+        /Select at least one option/,
+      );
+    });
   });
 
   test("an error displays if the minimum number of items is not met", async () => {
-    const { user, getByRole, getByTestId, getByText } = setup(<ListComponent {...mockZooProps} />);
+    const { user, getByRole, getByTestId, getByText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
 
     const minNumberOfItems = mockZooProps.schema.min;
     expect(minNumberOfItems).toEqual(1);
@@ -473,12 +508,16 @@ describe("Form validation and error handling", () => {
     await user.click(getByRole("button", { name: /Cancel/ }));
     await user.click(getByTestId("continue-button"));
 
-    const minItemsErrorMessage = getByText(`You must provide at least ${minNumberOfItems} response(s)`)
+    const minItemsErrorMessage = getByText(
+      `You must provide at least ${minNumberOfItems} response(s)`,
+    );
     expect(minItemsErrorMessage).toBeVisible();
   });
 
   test("an error displays if the maximum number of items is exceeded", async () => {
-    const { user, getAllByTestId, getByTestId, getByText } = setup(<ListComponent {...mockZooProps} />);
+    const { user, getAllByTestId, getByTestId, getByText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
     const addItemButton = getByTestId(/list-add-button/);
 
     const maxNumberOfItems = mockZooProps.schema.max;
@@ -497,45 +536,51 @@ describe("Form validation and error handling", () => {
     // Try to add a fourth
     await user.click(getByTestId(/list-add-button/));
 
-    const maxItemsErrorMessage = getByText(`You can provide at most ${maxNumberOfItems} response(s)`)
+    const maxItemsErrorMessage = getByText(
+      `You can provide at most ${maxNumberOfItems} response(s)`,
+    );
     expect(maxItemsErrorMessage).toBeVisible();
   });
 
-  test(
-    "an error displays if you add a new item, without saving the active item", async () => {
-      const { user, getByTestId, getByText, getByLabelText } = setup(<ListComponent {...mockZooProps} />);
-      // Start filling out item
-      const nameInput = getByLabelText(/name/);
-      await user.type(nameInput, "Richard Parker");
+  test("an error displays if you add a new item, without saving the active item", async () => {
+    const { user, getByTestId, getByText, getByLabelText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+    // Start filling out item
+    const nameInput = getByLabelText(/name/);
+    await user.type(nameInput, "Richard Parker");
 
-      const emailInput = getByLabelText(/email/);
-      await user.type(emailInput, "richard.parker@pi.com");
+    const emailInput = getByLabelText(/email/);
+    await user.type(emailInput, "richard.parker@pi.com");
 
-      // Try to add a new item
-      await user.click(getByTestId(/list-add-button/));
+    // Try to add a new item
+    await user.click(getByTestId(/list-add-button/));
 
-      const activeItemErrorMessage = getByText(/Please save all responses before adding another/)
-      expect(activeItemErrorMessage).toBeVisible();
-    }
-  );
+    const activeItemErrorMessage = getByText(
+      /Please save all responses before adding another/,
+    );
+    expect(activeItemErrorMessage).toBeVisible();
+  });
 
-  test(
-    "an error displays if you continue, without saving the active item", async () => {
-      const { user, getByTestId, getByText, getByLabelText } = setup(<ListComponent {...mockZooProps} />);
-      // Start filling out item
-      const nameInput = getByLabelText(/name/);
-      await user.type(nameInput, "Richard Parker");
+  test("an error displays if you continue, without saving the active item", async () => {
+    const { user, getByTestId, getByText, getByLabelText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+    // Start filling out item
+    const nameInput = getByLabelText(/name/);
+    await user.type(nameInput, "Richard Parker");
 
-      const emailInput = getByLabelText(/email/);
-      await user.type(emailInput, "richard.parker@pi.com");
+    const emailInput = getByLabelText(/email/);
+    await user.type(emailInput, "richard.parker@pi.com");
 
-      // Try to continue
-      await user.click(getByTestId(/continue-button/));
+    // Try to continue
+    await user.click(getByTestId(/continue-button/));
 
-      const unsavedItemErrorMessage = getByText(/Please save in order to continue/)
-      expect(unsavedItemErrorMessage).toBeVisible();
-    }
-  );
+    const unsavedItemErrorMessage = getByText(
+      /Please save in order to continue/,
+    );
+    expect(unsavedItemErrorMessage).toBeVisible();
+  });
 });
 
 describe("Payload generation", () => {
@@ -559,9 +604,8 @@ describe("Payload generation", () => {
 
   it("generates a valid payload with summary stats on submission (Units)", async () => {
     const handleSubmit = jest.fn();
-    const { getByTestId, user, getByRole, getAllByRole, getByLabelText } = setup(
-      <ListComponent {...mockUnitsProps} handleSubmit={handleSubmit} />,
-    );
+    const { getByTestId, user, getByRole, getAllByRole, getByLabelText } =
+      setup(<ListComponent {...mockUnitsProps} handleSubmit={handleSubmit} />);
 
     const addItemButton = getByTestId("list-add-button");
 
@@ -601,7 +645,7 @@ describe("Payload generation", () => {
     gardenYesRadio = getAllByRole("radio")[0];
     gardenNoRadio = getAllByRole("radio")[1];
     unitsNumberInput = getByLabelText(/identical units/);
-    
+
     await user.click(developmentSelect);
     await user.click(getByRole("option", { name: /Change of use to a home/ }));
     await user.click(gardenNoRadio);
@@ -611,7 +655,7 @@ describe("Payload generation", () => {
     await user.click(getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalled();
-    const output = handleSubmit.mock.calls[0][0]
+    const output = handleSubmit.mock.calls[0][0];
     expect(output).toMatchObject(mockUnitsPayload);
   });
 });
