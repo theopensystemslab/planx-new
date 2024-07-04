@@ -10,9 +10,9 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
-import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import EditorIcon from "ui/icons/Editor";
 
@@ -22,74 +22,12 @@ interface Route {
   route: string;
 }
 
-interface EditorNavMenuProps {
-  routes: Route[];
-  compact?: boolean;
-}
-
-const globalLayoutRoutes: Route[] = [
-  {
-    title: "Select a team",
-    Icon: FormatListBulletedIcon,
-    route: "/",
-  },
-  {
-    title: "Admin panel",
-    Icon: AdminPanelSettingsIcon,
-    route: "admin-panel",
-  },
-  {
-    title: "Global settings",
-    Icon: TuneIcon,
-    route: "global-settings",
-  },
-];
-
-const teamLayoutRoutes: Route[] = [
-  {
-    title: "Services",
-    Icon: FormatListBulletedIcon,
-    route: "/",
-  },
-  {
-    title: "Team members",
-    Icon: GroupIcon,
-    route: "/members",
-  },
-  {
-    title: "Design",
-    Icon: PaletteIcon,
-    route: "/settings/design",
-  },
-];
-
-const flowLayoutRoutes: Route[] = [
-  {
-    title: "Editor",
-    Icon: EditorIcon,
-    route: "",
-  },
-  {
-    title: "Service settings",
-    Icon: TuneIcon,
-    route: "/service",
-  },
-  {
-    title: "Submissions log",
-    Icon: FactCheckIcon,
-    route: "/submissions-log",
-  },
-  {
-    title: "Feedback",
-    Icon: RateReviewIcon,
-    route: "/feedback",
-  },
-];
-
 const MENU_WIDTH_COMPACT = "52px";
 const MENU_WIDTH_FULL = "178px";
 
-const Root = styled(Box)<{ compact?: boolean }>(({ theme, compact }) => ({
+const Root = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "compact",
+})<{ compact?: boolean }>(({ theme, compact }) => ({
   width: compact ? MENU_WIDTH_COMPACT : MENU_WIDTH_FULL,
   flexShrink: 0,
   background: theme.palette.background.paper,
@@ -152,21 +90,91 @@ const MenuButton = styled(IconButton, {
   },
 }));
 
-function EditorNavMenu({ routes, compact }: EditorNavMenuProps) {
+function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
-  const rootPath = rootFlowPath();
+  const [teamSlug, flowSlug] = useStore((state) => [
+    state.teamSlug,
+    state.flowSlug,
+  ]);
 
-  const isActive = (route: string) => {
-    const currentPath = url.pathname.replace(rootPath, "");
-    return currentPath === route;
-  };
+  const isActive = (route: string) => url.href.endsWith(route);
 
   const handleClick = (route: string) => {
-    if (!isActive(route)) {
-      navigate(rootPath + route);
-    }
+    if (isActive(route)) return;
+    navigate(route);
   };
+
+  const globalLayoutRoutes: Route[] = [
+    {
+      title: "Select a team",
+      Icon: FormatListBulletedIcon,
+      route: "/",
+    },
+    {
+      title: "Admin panel",
+      Icon: AdminPanelSettingsIcon,
+      route: "admin-panel",
+    },
+    {
+      title: "Global settings",
+      Icon: TuneIcon,
+      route: "global-settings",
+    },
+  ];
+
+  const teamLayoutRoutes: Route[] = [
+    {
+      title: "Services",
+      Icon: FormatListBulletedIcon,
+      route: `/${teamSlug}`,
+    },
+    {
+      title: "Team members",
+      Icon: GroupIcon,
+      route: `/${teamSlug}/members`,
+    },
+    {
+      title: "Design",
+      Icon: PaletteIcon,
+      route: `/${teamSlug}/design`,
+    },
+  ];
+
+  const flowLayoutRoutes: Route[] = [
+    {
+      title: "Editor",
+      Icon: EditorIcon,
+      route: `/${teamSlug}/${flowSlug}`,
+    },
+    {
+      title: "Service settings",
+      Icon: TuneIcon,
+      route: `/${teamSlug}/${flowSlug}/service`,
+    },
+    {
+      title: "Submissions log",
+      Icon: FactCheckIcon,
+      route: `/${teamSlug}/${flowSlug}/submissions-log`,
+    },
+    {
+      title: "Feedback",
+      Icon: RateReviewIcon,
+      route: `/${teamSlug}/${flowSlug}/feedback`,
+    },
+  ];
+
+  const getRoutesForUrl = (
+    url: string,
+  ): { routes: Route[]; compact: boolean } => {
+    if (flowSlug && url.includes(flowSlug))
+      return { routes: flowLayoutRoutes, compact: true };
+    if (teamSlug && url.includes(teamSlug))
+      return { routes: teamLayoutRoutes, compact: false };
+    return { routes: globalLayoutRoutes, compact: false };
+  };
+
+  const { routes, compact } = getRoutesForUrl(url.href);
 
   return (
     <Root compact={compact}>
@@ -192,5 +200,4 @@ function EditorNavMenu({ routes, compact }: EditorNavMenuProps) {
   );
 }
 
-export { flowLayoutRoutes, globalLayoutRoutes, teamLayoutRoutes };
 export default EditorNavMenu;
