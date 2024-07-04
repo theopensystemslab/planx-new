@@ -1,90 +1,12 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import { ComponentType } from "@opensystemslab/planx-core/types";
-import { ICONS } from "@planx/components/ui";
 import { debounce } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent, useCallback, useState } from "react";
 import useSWR from "swr";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import InputLabel from "ui/editor/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
-
-const mockData: SearchResult[] = [
-  {
-    nodeId: "abc123",
-    nodeType: ComponentType.Question,
-    nodeTitle: "Is the property in Lambeth?",
-    text: "Lambeth example biodiversity text",
-    path: ["_root", "xyz123", "abc123"],
-  },
-  {
-    nodeId: "abc456",
-    nodeType: ComponentType.Notice,
-    nodeTitle: "It looks like the property is not in Lambeth",
-    text: "Lambeth example biodiversity text",
-    path: ["_root", "xyz123", "abc123"],
-  },
-  {
-    nodeId: "abc789",
-    nodeType: ComponentType.Question,
-    nodeTitle: "What are you applying about?",
-    text: "Lambeth example biodiversity text",
-    path: ["_root", "xyz123", "abc123"],
-  },
-];
-
-export interface SearchResult {
-  nodeId: string;
-  nodeType: ComponentType;
-  nodeTitle?: string;
-  text: string;
-  path: string[];
-}
-
-const SearchResults: React.FC<{ results: SearchResult[] }> = ({ results }) => {
-  return (
-    <Box
-      sx={{ width: "100%", gap: 2, display: "flex", flexDirection: "column" }}
-    >
-      {results.map((result) => (
-        <SearchResultCard key={result.nodeId} {...result} />
-      ))}
-    </Box>
-  );
-};
-
-const SearchResultCard: React.FC<SearchResult> = ({
-  nodeTitle,
-  text,
-  nodeType,
-}) => {
-  const Icon = ICONS[nodeType];
-
-  return (
-    <Box
-      sx={(theme) => ({
-        pb: 2,
-        borderBottom: `1px solid ${theme.palette.border.main}`,
-      })}
-    >
-      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-        {Icon && <Icon sx={{ mr: 1 }} />}
-        <Typography
-          variant="body2"
-          fontSize={14}
-          fontWeight={FONT_WEIGHT_SEMI_BOLD}
-        >
-          Question
-          {nodeTitle && ` - ${nodeTitle}`}
-        </Typography>
-      </Box>
-      <Typography variant="body2">{text}</Typography>
-    </Box>
-  );
-};
 
 const Search: React.FC = () => {
   const [flowId] = useStore((state) => [state.id]);
@@ -104,7 +26,7 @@ const Search: React.FC = () => {
 
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const endpoint = `${process.env.REACT_APP_API_URL}/flows/${flowId}/search`;
-  const { data, error } = useSWR<SearchResult[]>(
+  const { data, error } = useSWR(
     debouncedQuery ? `${endpoint}?find=${debouncedQuery}` : null,
     fetcher,
   );
@@ -125,7 +47,7 @@ const Search: React.FC = () => {
       />
       <Box pt={3}>
         {error && "Something went wrong"}
-        {mockData ? <SearchResults results={mockData} /> : "Loading..."}
+        {data ? JSON.stringify(data, null, 4) : "Loading..."}
       </Box>
     </Container>
   );
