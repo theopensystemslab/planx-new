@@ -13,12 +13,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import EditorNavMenu, { teamLayoutRoutes } from "components/EditorNavMenu";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
-import Dashboard from "ui/editor/Dashboard";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -295,70 +293,67 @@ const Team: React.FC = () => {
   }, [fetchFlows]);
 
   return (
-    <Dashboard>
-      <EditorNavMenu routes={teamLayoutRoutes} />
-      <Container maxWidth="formWrap">
+    <Container maxWidth="formWrap">
+      <Box
+        pb={1}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Box
-          pb={1}
           sx={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h2" component="h1" pr={1}>
-              Services
-            </Typography>
-            {useStore.getState().canUserEditTeam(slug) ? (
-              <Edit />
-            ) : (
-              <Visibility />
-            )}
-          </Box>
-          {useStore.getState().canUserEditTeam(slug) && (
-            <AddButton
-              onClick={() => {
-                const newFlowName = prompt("Service name");
-                if (newFlowName) {
-                  const newFlowSlug = slugify(newFlowName);
-                  useStore
-                    .getState()
-                    .createFlow(teamId, newFlowSlug, newFlowName)
-                    .then((newId: string) => {
-                      navigation.navigate(`/${slug}/${newId}`);
-                    });
-                }
-              }}
-            >
-              Add a new service
-            </AddButton>
+          <Typography variant="h2" component="h1" pr={1}>
+            Services
+          </Typography>
+          {useStore.getState().canUserEditTeam(slug) ? (
+            <Edit />
+          ) : (
+            <Visibility />
           )}
         </Box>
-        {flows && (
-          <DashboardList>
-            {flows.map((flow: any) => (
-              <FlowItem
-                flow={flow}
-                key={flow.slug}
-                teamId={teamId}
-                teamSlug={slug}
-                refreshFlows={() => {
-                  fetchFlows();
-                }}
-              />
-            ))}
-          </DashboardList>
+        {useStore.getState().canUserEditTeam(slug) && (
+          <AddButton
+            onClick={() => {
+              const newFlowName = prompt("Service name");
+              if (newFlowName) {
+                const newFlowSlug = slugify(newFlowName);
+                useStore
+                  .getState()
+                  .createFlow(teamId, newFlowSlug, newFlowName)
+                  .then((newId: string) => {
+                    navigation.navigate(`/${slug}/${newId}`);
+                  });
+              }
+            }}
+          >
+            Add a new service
+          </AddButton>
         )}
-      </Container>
-    </Dashboard>
+      </Box>
+      {flows && (
+        <DashboardList>
+          {flows.map((flow: any) => (
+            <FlowItem
+              flow={flow}
+              key={flow.slug}
+              teamId={teamId}
+              teamSlug={slug}
+              refreshFlows={() => {
+                fetchFlows();
+              }}
+            />
+          ))}
+        </DashboardList>
+      )}
+    </Container>
   );
 };
 

@@ -10,11 +10,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { Role, User } from "@opensystemslab/planx-core/types";
-import EditorNavMenu, { teamLayoutRoutes } from "components/EditorNavMenu";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import SettingsSection from "ui/editor/SettingsSection";
-import Dashboard from "ui/editor/Dashboard";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   background: theme.palette.background.dark,
@@ -128,40 +126,37 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
   );
 
   return (
-    <Dashboard>
-      <EditorNavMenu routes={teamLayoutRoutes} />
-      <Container maxWidth="contentWrap">
+    <Container maxWidth="contentWrap">
+      <SettingsSection>
+        <Typography variant="h2" component="h3" gutterBottom>
+          Team editors
+        </Typography>
+        <Typography variant="body1">
+          Editors have access to edit your services.
+        </Typography>
+        <MembersTable members={activeMembers} />
+      </SettingsSection>
+      <SettingsSection>
+        <Typography variant="h2" component="h3" gutterBottom>
+          Admins
+        </Typography>
+        <Typography variant="body1">
+          Admins have editor access across all teams.
+        </Typography>
+        <MembersTable members={platformAdmins} />
+      </SettingsSection>
+      {archivedMembers.length > 0 && (
         <SettingsSection>
           <Typography variant="h2" component="h3" gutterBottom>
-            Team editors
+            Archived team editors
           </Typography>
           <Typography variant="body1">
-            Editors have access to edit your services.
+            Past team members who no longer have access to the Editor, but may
+            be part of the edit history of your services.
           </Typography>
-          <MembersTable members={activeMembers} />
+          <MembersTable members={archivedMembers} />
         </SettingsSection>
-        <SettingsSection>
-          <Typography variant="h2" component="h3" gutterBottom>
-            Admins
-          </Typography>
-          <Typography variant="body1">
-            Admins have editor access across all teams.
-          </Typography>
-          <MembersTable members={platformAdmins} />
-        </SettingsSection>
-        {archivedMembers.length > 0 && (
-          <SettingsSection>
-            <Typography variant="h2" component="h3" gutterBottom>
-              Archived team editors
-            </Typography>
-            <Typography variant="body1">
-              Past team members who no longer have access to the Editor, but may
-              be part of the edit history of your services.
-            </Typography>
-            <MembersTable members={archivedMembers} />
-          </SettingsSection>
-        )}
-      </Container>
-    </Dashboard>
+      )}
+    </Container>
   );
 };
