@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
+import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import React from "react";
 
 import { client } from "../lib/graphql";
@@ -82,6 +83,14 @@ const routes = compose(
           [req.params.team, req.params.flow, "design"].join("/"),
         ),
         view: DesignSettings,
+      })),
+    ),
+    "/general-settings": compose(
+      route(async (req) => ({
+        title: makeTitle(
+          [req.params.team, req.params.flow, "settings"].join("/"),
+        ),
+        view: GeneralSettings,
       })),
     ),
   }),

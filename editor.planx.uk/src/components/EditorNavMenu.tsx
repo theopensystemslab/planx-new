@@ -139,6 +139,11 @@ function EditorNavMenu() {
       Icon: PaletteIcon,
       route: `/${teamSlug}/design`,
     },
+    {
+      title: "Settings",
+      Icon: TuneIcon,
+      route: `/${teamSlug}/general-settings`,
+    },
   ];
 
   const flowLayoutRoutes: Route[] = [
