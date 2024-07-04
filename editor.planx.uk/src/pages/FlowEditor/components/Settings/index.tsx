@@ -37,7 +37,6 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`nav-tab-${index}`}
       {...other}
     >
-      {/* TODO: check this out */}
       {value === index ? children : null}
     </div>
   );
