@@ -11,6 +11,7 @@ import { visuallyHidden } from "@mui/utils";
 import { FileUploadSlot } from "@planx/components/FileUpload/Public";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 interface Props extends FileUploadSlot {
   removeFile: () => void;
@@ -19,12 +20,12 @@ interface Props extends FileUploadSlot {
 }
 
 const Root = styled(Box)(({ theme }) => ({
-  border: `1px solid ${theme.palette.border.main}`,
   marginBottom: theme.spacing(0.5),
   marginTop: theme.spacing(5),
 }));
 
 const FileCard = styled(Box)(({ theme }) => ({
+  border: `1px solid ${theme.palette.border.main}`,
   position: "relative",
   height: "auto",
   display: "flex",
@@ -91,74 +92,89 @@ export const UploadedFileCard: React.FC<Props> = ({
   removeFile,
   onChange,
   tags,
+  status,
 }) => (
   <Root>
-    <FileCard>
-      <ProgressBar
-        width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
-        role="progressbar"
-        aria-valuenow={progress * 100 || 0}
-        aria-label={file.path}
-      />
-      <FilePreview>
-        {file instanceof File && file?.type?.includes("image") ? (
-          <ImagePreview file={file} url={url} />
-        ) : (
-          <FileIcon />
-        )}
-      </FilePreview>
-      <Box
-        sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}
-      >
-        <Box mr={2}>
-          <Typography
-            variant="body1"
-            pb="0.25em"
-            sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}
+    <ErrorWrapper
+      error={
+        status === "error"
+          ? "Upload failed, please remove file and try again"
+          : undefined
+      }
+    >
+      <>
+        <FileCard>
+          <ProgressBar
+            width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
+            role="progressbar"
+            aria-valuenow={progress * 100 || 0}
+            aria-label={file.path}
+          />
+          <FilePreview>
+            {file instanceof File && file?.type?.includes("image") ? (
+              <ImagePreview file={file} url={url} />
+            ) : (
+              <FileIcon />
+            )}
+          </FilePreview>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
           >
-            {file.path}
-          </Typography>
-          <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
-        </Box>
-        {removeFile && (
-          <IconButton
-            size="small"
-            aria-label={`Delete ${file.path}`}
-            title={`Delete ${file.path}`}
-            onClick={removeFile}
-          >
-            <DeleteIcon />
-          </IconButton>
-        )}
-      </Box>
-    </FileCard>
-    {tags && (
-      <TagRoot>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {tags.map((tag) => (
-            <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
-              <Chip
-                label={tag}
-                variant="uploadedFileTag"
+            <Box mr={2}>
+              <Typography
+                variant="body1"
+                pb="0.25em"
+                sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}
+              >
+                {file.path}
+              </Typography>
+              <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
+            </Box>
+            {removeFile && (
+              <IconButton
                 size="small"
-                data-testid="uploaded-file-chip"
-              />
-            </ListItem>
-          ))}
-        </Box>
-        <Link
-          onClick={() => onChange && onChange()}
-          sx={{ fontFamily: "inherit", fontSize: "inherit" }}
-          component="button"
-          variant="body2"
-        >
-          Change
-          <Box sx={visuallyHidden} component="span">
-            the list of what file {file.path} shows
+                aria-label={`Delete ${file.path}`}
+                title={`Delete ${file.path}`}
+                onClick={removeFile}
+              >
+                <DeleteIcon />
+              </IconButton>
+            )}
           </Box>
-        </Link>
-      </TagRoot>
-    )}
+        </FileCard>
+        {tags && (
+          <TagRoot>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+              {tags.map((tag) => (
+                <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
+                  <Chip
+                    label={tag}
+                    variant="uploadedFileTag"
+                    size="small"
+                    data-testid="uploaded-file-chip"
+                  />
+                </ListItem>
+              ))}
+            </Box>
+            <Link
+              onClick={() => onChange && onChange()}
+              sx={{ fontFamily: "inherit", fontSize: "inherit" }}
+              component="button"
+              variant="body2"
+            >
+              Change
+              <Box sx={visuallyHidden} component="span">
+                the list of what file {file.path} shows
+              </Box>
+            </Link>
+          </TagRoot>
+        )}
+      </>
+    </ErrorWrapper>
   </Root>
 );
 

@@ -148,6 +148,7 @@ function Component(props: Props) {
             break;
           }
           case "allRequiredFilesUploaded":
+          case "errorStatus":
             setFileListError(err?.message);
             break;
         }
@@ -188,10 +189,6 @@ function Component(props: Props) {
   return (
     <Card
       handleSubmit={props.hideDropZone ? props.handleSubmit : validateAndSubmit}
-      isValid={
-        props.hideDropZone ||
-        slots.every((slot) => slot.url && slot.status === "success")
-      }
     >
       <FullWidthWrapper>
         <CardHeader {...props} />
