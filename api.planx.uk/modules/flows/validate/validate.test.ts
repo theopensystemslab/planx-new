@@ -516,4 +516,76 @@ describe("ODP Schema file type validation on diff", () => {
         ]);
       });
   });
+
+  it("skips validation checks for UploadAndLabel components used in info-only mode with hidden dropzone", async () => {
+    const alteredFlow = {
+      ...mockFlowData,
+      fileUpload: {
+        type: 140,
+        data: {
+          color: "#EFEFEF",
+          fn: "roofPlan.existing",
+          title: "Roof plans",
+        },
+      },
+      fileUploadAndLabelInfoOnly: {
+        type: 145,
+        data: {
+          title: "Prepare these documents",
+          fileTypes: [
+            {
+              name: "Design and access statement",
+              fn: "designAndAccessTypo",
+              rule: {
+                condition: "AlwaysRequired",
+              },
+            },
+          ],
+          hideDropZone: true,
+        },
+      },
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(auth)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Sections",
+            status: "Pass",
+            message: "Your flow has valid Sections",
+          },
+          {
+            title: "File types",
+            status: "Pass",
+            message:
+              "Files collected via FileUpload or UploadAndLabel are all supported by the ODP Schema",
+          },
+          {
+            title: "Invite to Pay",
+            status: "Not applicable",
+            message: "Your flow is not using Invite to Pay",
+          },
+        ]);
+      });
+  });
 });

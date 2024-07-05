@@ -258,9 +258,11 @@ const getFileUploadNodeFns = (flowGraph: FlowGraph): string[] => {
 };
 
 const getFileUploadAndLabelNodeFns = (flowGraph: FlowGraph): string[] => {
+  // Exclude Upload & Label nodes used in "info-only" mode with a hidden dropzone
   const uploadAndLabelNodes = Object.entries(flowGraph).filter(
     (entry): entry is [string, Node] =>
-      isComponentType(entry, ComponentType.FileUploadAndLabel),
+      isComponentType(entry, ComponentType.FileUploadAndLabel) &&
+      entry[1].data?.hideDropZone !== true,
   );
   const uploadAndLabelFileTypes = uploadAndLabelNodes
     .map(([_nodeId, node]) => node.data?.fileTypes)
