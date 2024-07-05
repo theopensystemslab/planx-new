@@ -37,15 +37,12 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
     onSubmit: async (values, { resetForm }) => {
       try {
         const { data } = await axios.get(`${values.boundaryUrl}.geojson`);
-
-        //lambeth: 626195
-        //bmingham: 8600271
         const bboxPoly = bboxPolygon(bbox(data));
         const bboxFeature = feature(bboxPoly.geometry);
 
         const isUpdateSuccess = await useStore.getState().updateTeamSettings({
           boundaryUrl: values.boundaryUrl,
-          boundaryBbox: data,
+          boundaryBbox: bboxFeature,
         });
         if (isUpdateSuccess) {
           onSuccess();
