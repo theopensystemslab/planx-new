@@ -97,6 +97,7 @@ export const fetchSettingsForPublishedView = async (
               name
               settings: team_settings {
                 boundaryUrl: boundary_url
+                boundaryBBox: boundary_bbox
                 homepage
                 helpEmail: help_email
                 helpPhone: help_phone
@@ -107,8 +108,6 @@ export const fetchSettingsForPublishedView = async (
                 hasPlanningData: has_planning_data
               }
               slug
-
-              boundaryBBox: boundary_bbox
             }
             settings
             status
