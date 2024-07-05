@@ -12,17 +12,12 @@ import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
 export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
-  const jsonRegEx = /\.json$/;
-  const geoRegEx = /\.geojson$/;
+  const suffixRegEx = /\d{1,10}$/;
 
   const formSchema = Yup.object().shape({
     boundaryUrl: Yup.string()
       .matches(
-        jsonRegEx,
-        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/entity/123456",
-      )
-      .matches(
-        geoRegEx,
+        suffixRegEx,
         "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/entity/123456",
       )
       .url(
