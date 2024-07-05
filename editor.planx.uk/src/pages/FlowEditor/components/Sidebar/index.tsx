@@ -19,6 +19,7 @@ import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { AxiosError } from "axios";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
@@ -450,13 +451,15 @@ const Sidebar: React.FC<{
             value="History"
             label="History"
           />
-          <StyledTab
-            disableFocusRipple
-            disableTouchRipple
-            disableRipple
-            value="Search"
-            label="Search"
-          />
+          {hasFeatureFlag("SEARCH") && (
+            <StyledTab
+              disableFocusRipple
+              disableTouchRipple
+              disableRipple
+              value="Search"
+              label="Search"
+            />
+          )}
         </Tabs>
       </TabList>
       {activeTab === "PreviewBrowser" && (
