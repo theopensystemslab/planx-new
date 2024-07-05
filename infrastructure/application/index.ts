@@ -76,6 +76,10 @@ const CUSTOM_DOMAINS: CustomDomains =
           domain: "planningservices.gloucester.gov.uk",
           name: "gloucester",
         },
+        {
+          domain: "planningservices.epsom-ewell.gov.uk",
+          name: "epsom-and-ewell",
+        },
       ]
     : [];
 
