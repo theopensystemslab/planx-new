@@ -14,7 +14,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       .email("Enter a valid email address")
       .required("Enter a help email address"),
     helpPhone: Yup.string().required("Enter a help phone number"),
-    helpOpeningHours: Yup.string().required(),
+    helpOpeningHours: Yup.string().required("Enter your opening hours"),
     homepage: Yup.string()
       .url("Enter a valid URL")
       .required("Enter a homepage"),
@@ -59,6 +59,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
                 onChangeFn("homepage", event);
               }}
               value={formik.values.homepage}
+              errorMessage={formik.errors.homepage}
               id="homepage"
             />
           </InputLabel>
@@ -66,6 +67,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
             <Input
               name="helpEmail"
               value={formik.values.helpEmail}
+              errorMessage={formik.errors.helpEmail}
               onChange={(event) => {
                 onChangeFn("helpEmail", event);
               }}
@@ -76,6 +78,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
             <Input
               name="helpPhone"
               value={formik.values.helpPhone}
+              errorMessage={formik.errors.helpPhone}
               onChange={(event) => {
                 onChangeFn("helpPhone", event);
               }}
@@ -87,6 +90,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
               multiline
               name="helpOpeningHours"
               value={formik.values.helpOpeningHours}
+              errorMessage={formik.errors.helpOpeningHours}
               onChange={(event) => {
                 onChangeFn("helpOpeningHours", event);
               }}
