@@ -11,7 +11,7 @@ export interface Props {
   label?: string;
   inline?: boolean;
   color?: string;
-  errorMessage?: string | undefined;
+  errorMessage?: string;
   onChange?: (newColor: string) => void;
 }
 
@@ -96,7 +96,10 @@ export default function ColorPicker(props: Props): FCReturn {
   };
 
   return (
-    <ErrorWrapper error={props.errorMessage || undefined} id="settings-error">
+    <ErrorWrapper
+      error={props.errorMessage || undefined}
+      id="colour-picker-error"
+    >
       <Root inline={props.inline}>
         <Typography mr={2} variant="body2" component="label">
           {props.label || "Background colour"}:{" "}
