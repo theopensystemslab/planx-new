@@ -11,7 +11,9 @@ import { FormProps } from ".";
 export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
   const formSchema = Yup.object().shape({
     boundaryUrl: Yup.string()
-      .url("The URL should be in the form shown above")
+      .url(
+        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/",
+      )
       .required("Enter a boundary URL"),
   });
 
@@ -57,6 +59,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
           <Input
             name="boundary"
             value={formik.values.boundaryUrl}
+            errorMessage={formik.errors.boundaryUrl}
             onChange={(ev: ChangeEvent<HTMLInputElement>) => {
               formik.setFieldValue("boundaryUrl", ev.target.value);
             }}
