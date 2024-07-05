@@ -1,7 +1,6 @@
 import { bbox, bboxPolygon, feature } from "@turf/turf";
 import axios from "axios";
 import { useFormik } from "formik";
-import { GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
