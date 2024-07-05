@@ -1,4 +1,7 @@
+import { bbox, bboxPolygon, feature } from "@turf/turf";
+import axios from "axios";
 import { useFormik } from "formik";
+import { GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
@@ -9,10 +12,21 @@ import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
 export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
+  const jsonRegEx = /\.json$/;
+  const geoRegEx = /\.geojson$/;
+
   const formSchema = Yup.object().shape({
     boundaryUrl: Yup.string()
+      .matches(
+        jsonRegEx,
+        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/entity/123456",
+      )
+      .matches(
+        geoRegEx,
+        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/entity/123456",
+      )
       .url(
-        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/",
+        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/entity/123456",
       )
       .required("Enter a boundary URL"),
   });
@@ -21,12 +35,26 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
     ...formikConfig,
     validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
-      const isSuccess = await useStore.getState().updateTeamSettings({
-        boundaryUrl: values.boundaryUrl,
-      });
-      if (isSuccess) {
-        onSuccess();
-        resetForm({ values });
+      try {
+        const { data } = await axios.get(`${values.boundaryUrl}.geojson`);
+
+        //lambeth: 626195
+        //bmingham: 8600271
+        const bboxPoly = bboxPolygon(bbox(data));
+        const bboxFeature = feature(bboxPoly.geometry);
+
+        const isUpdateSuccess = await useStore.getState().updateTeamSettings({
+          boundaryUrl: values.boundaryUrl,
+          boundaryBbox: data,
+        });
+        if (isUpdateSuccess) {
+          onSuccess();
+          resetForm({ values });
+        }
+      } catch (error) {
+        formik.errors.boundaryUrl =
+          "We are unable to retrieve your boundary, try again";
+        console.error(error);
       }
     },
   });
@@ -49,7 +77,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              https://www.planning.data.gov.uk/
+              https://www.planning.data.gov.uk/entity/123456
             </a>
           </p>
         </>
