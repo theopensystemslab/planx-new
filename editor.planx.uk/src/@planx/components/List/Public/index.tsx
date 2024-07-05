@@ -70,14 +70,14 @@ const ActiveListCard: React.FC<{
 }> = ({ index: i }) => {
   const { schema, saveItem, cancelEditItem, errors, isPageComponent } =
     useListContext();
-  
+
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" })
+      ref.current.scrollIntoView({ behavior: "smooth" });
     }
   }, []);
-  
+
   return (
     <ErrorWrapper
       error={errors.unsavedItem ? "Please save in order to continue" : ""}

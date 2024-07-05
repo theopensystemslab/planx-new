@@ -57,9 +57,9 @@ export default function Checkbox({
   inputProps,
 }: Props): FCReturn {
   const handleChange = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.preventDefault()
+    e.preventDefault();
     onChange && onChange();
-  }
+  };
 
   return (
     <Root onClick={handleChange}>
