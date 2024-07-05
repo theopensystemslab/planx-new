@@ -42,8 +42,8 @@ dependencies:
     specifier: ^0.8.3
     version: 0.8.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#60158b2
-    version: github.com/theopensystemslab/planx-core/60158b2(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#d398f2c
+    version: github.com/theopensystemslab/planx-core/d398f2c(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -14758,6 +14758,7 @@ packages:
 
   /js-yaml@3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
+    hasBin: true
     dependencies:
       argparse: 1.0.10
       esprima: 4.0.1
@@ -21521,9 +21522,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/60158b2(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/60158b2}
-    id: github.com/theopensystemslab/planx-core/60158b2
+  github.com/theopensystemslab/planx-core/d398f2c(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d398f2c}
+    id: github.com/theopensystemslab/planx-core/d398f2c
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

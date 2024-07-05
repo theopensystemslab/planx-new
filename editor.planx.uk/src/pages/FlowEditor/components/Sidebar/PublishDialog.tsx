@@ -18,6 +18,7 @@ import { useAsync } from "react-use";
 import Caret from "ui/icons/Caret";
 
 import { useStore } from "../../lib/store";
+import Warning from "@mui/icons-material/Warning";
 
 export interface AlteredNode {
   id: string;
@@ -231,7 +232,7 @@ export const AlteredNodesSummaryContent = (props: {
 
 export interface ValidationCheck {
   title: string;
-  status: "Pass" | "Fail" | "Not applicable";
+  status: "Pass" | "Fail" | "Warn" | "Not applicable";
   message: string;
 }
 
@@ -243,6 +244,7 @@ export const ValidationChecks = (props: {
   const Icon: Record<ValidationCheck["status"], React.ReactElement> = {
     Pass: <Done color="success" />,
     Fail: <Close color="error" />,
+    Warn: <Warning color="warning" />,
     "Not applicable": <NotInterested color="disabled" />,
   };
 

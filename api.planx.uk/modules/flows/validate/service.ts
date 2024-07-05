@@ -1,3 +1,4 @@
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import {
   ComponentType,
   Edges,
@@ -23,7 +24,7 @@ type AlteredNode = {
 
 type ValidationResponse = {
   title: string;
-  status: "Pass" | "Fail" | "Not applicable";
+  status: "Pass" | "Fail" | "Warn" | "Not applicable";
   message: string;
 };
 
@@ -58,14 +59,17 @@ const validateAndDiffFlow = async (
   const fileTypes = validateFileTypes(flattenedFlow);
   validationChecks.push(sections, inviteToPay, fileTypes);
 
-  // Sort validation checks by status: Fail, Pass, Not applicable
-  const applicableChecks = validationChecks
-    .filter((v) => v.status !== "Not applicable")
-    .sort((a, b) => a.status.localeCompare(b.status));
+  // Arrange list of validation checks in order of status: Fail, Warn, Pass, Not applicable
+  const failingChecks = validationChecks.filter((v) => v.status == "Fail");
+  const warningChecks = validationChecks.filter((v) => v.status === "Warn");
+  const passingChecks = validationChecks.filter((v) => v.status === "Pass");
   const notApplicableChecks = validationChecks.filter(
     (v) => v.status === "Not applicable",
   );
-  const sortedValidationChecks = applicableChecks.concat(notApplicableChecks);
+  const sortedValidationChecks = failingChecks
+    .concat(warningChecks)
+    .concat(passingChecks)
+    .concat(notApplicableChecks);
 
   return {
     alteredNodes,
@@ -208,17 +212,32 @@ const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
 };
 
 const validateFileTypes = (flowGraph: FlowGraph): ValidationResponse => {
+  // Get all passport variables set by FileUpload and/or FileUploadAndLabel
   const allFileFns = [
     ...getFileUploadNodeFns(flowGraph),
     ...getFileUploadAndLabelNodeFns(flowGraph),
   ];
-  // todo: get schema file types via planx-core method, compare arrays
-
   if (allFileFns.length < 1) {
     return {
       title: "File types",
       status: "Not applicable",
       message: "Your flow is not using FileUpload or UploadAndLabel",
+    };
+  }
+
+  // Get all file types supported by current release of ODP Schema & compare
+  const validFileTypes = getValidSchemaValues("FileType");
+  const invalidFileFns: string[] = [];
+  allFileFns.forEach((fn) => {
+    if (!validFileTypes?.includes(fn)) {
+      invalidFileFns.push(fn);
+    }
+  });
+  if (invalidFileFns.length > 0) {
+    return {
+      title: "File types",
+      status: "Warn",
+      message: `Your FileUpload or UploadAndLabel are setting data fields that are not supported by the ODP Schema: ${invalidFileFns.join(", ")}`,
     };
   }
 
