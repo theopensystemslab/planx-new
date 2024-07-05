@@ -50,7 +50,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
         }
       } catch (error) {
         formik.errors.boundaryUrl =
-          "We are unable to retrieve your boundary, try again";
+          "We are unable to retrieve your boundary, check your boundary URL and try again";
         console.error(error);
       }
     },
