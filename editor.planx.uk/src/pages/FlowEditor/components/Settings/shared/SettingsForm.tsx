@@ -40,27 +40,21 @@ export const SettingsForm = <TFormikValues,>({
             {preview}
           </Box>
         )}
-
-        <ErrorWrapper
-          error={Object.values(formik.errors).join(", ")}
-          id="settings-error"
-        >
-          <Box>
-            <Button type="submit" variant="contained" disabled={!formik.dirty}>
-              Save
-            </Button>
-            <Button
-              onClick={() => formik.resetForm()}
-              type="reset"
-              variant="contained"
-              disabled={!formik.dirty}
-              color="secondary"
-              sx={{ ml: 1.5 }}
-            >
-              Reset changes
-            </Button>
-          </Box>
-        </ErrorWrapper>
+        <Box>
+          <Button type="submit" variant="contained" disabled={!formik.dirty}>
+            Save
+          </Button>
+          <Button
+            onClick={() => formik.resetForm()}
+            type="reset"
+            variant="contained"
+            disabled={!formik.dirty}
+            color="secondary"
+            sx={{ ml: 1.5 }}
+          >
+            Reset changes
+          </Button>
+        </Box>
       </form>
     </SettingsSection>
   );

@@ -61,6 +61,7 @@ export const ButtonForm: React.FC<FormProps> = ({
               color={formik.values.actionColour}
               onChange={(color) => formik.setFieldValue("actionColour", color)}
               label="Button colour"
+              errorMessage={formik.errors.actionColour}
             />
           </InputRowItem>
         </InputRow>

@@ -11,12 +11,16 @@ import { FormProps } from ".";
 export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const formSchema = Yup.object().shape({
     helpEmail: Yup.string()
-      .email("Please enter valid email")
-      .required("Help Email is required"),
-    helpPhone: Yup.string().required("Help Phone is required"),
-    helpOpeningHours: Yup.string().required(),
+      .email(
+        "Enter an email address in the correct format, like example@email.com",
+      )
+      .required("Enter a help email address"),
+    helpPhone: Yup.string().required("Enter a help phone number"),
+    helpOpeningHours: Yup.string().required("Enter your opening hours"),
     homepage: Yup.string()
-      .url("Please enter a valid URL for the homepage")
+      .url(
+        "Enter a homepage URL in the correct format, like https://www.localauthority.gov.uk/",
+      )
       .required("Enter a homepage"),
   });
 
@@ -59,6 +63,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
                 onChangeFn("homepage", event);
               }}
               value={formik.values.homepage}
+              errorMessage={formik.errors.homepage}
               id="homepage"
             />
           </InputLabel>
@@ -66,6 +71,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
             <Input
               name="helpEmail"
               value={formik.values.helpEmail}
+              errorMessage={formik.errors.helpEmail}
               onChange={(event) => {
                 onChangeFn("helpEmail", event);
               }}
@@ -76,6 +82,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
             <Input
               name="helpPhone"
               value={formik.values.helpPhone}
+              errorMessage={formik.errors.helpPhone}
               onChange={(event) => {
                 onChangeFn("helpPhone", event);
               }}
@@ -87,6 +94,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
               multiline
               name="helpOpeningHours"
               value={formik.values.helpOpeningHours}
+              errorMessage={formik.errors.helpOpeningHours}
               onChange={(event) => {
                 onChangeFn("helpOpeningHours", event);
               }}

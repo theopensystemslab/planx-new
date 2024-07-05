@@ -86,6 +86,7 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
                   formik.setFieldValue("primaryColour", color)
                 }
                 label="Theme colour"
+                errorMessage={formik.errors.primaryColour}
               />
             </InputRowItem>
           </InputRow>
