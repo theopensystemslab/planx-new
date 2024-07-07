@@ -237,7 +237,7 @@ const validateFileTypes = (flowGraph: FlowGraph): ValidationResponse => {
   if (invalidFileFns.length > 0) {
     // Get unique fns with count of occurances
     const countInvalidFileFns = countBy(invalidFileFns);
-    let summarisedInvalidFileFns: string[] = [];
+    const summarisedInvalidFileFns: string[] = [];
     Object.entries(countInvalidFileFns).map(([k, v]: [string, number]) => {
       summarisedInvalidFileFns.push(`${k} (${v})`);
     });
