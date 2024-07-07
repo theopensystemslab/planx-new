@@ -106,7 +106,7 @@ function SetValueComponent(props: Props) {
             />
           </InputRow>
         </ModalSectionContent>
-        {formik.values.operation !== "removeAll" &&
+        {formik.values.operation !== "removeAll" && (
           <ModalSectionContent title="Field value">
             <InputRow>
               <Input
@@ -119,7 +119,7 @@ function SetValueComponent(props: Props) {
               />
             </InputRow>
           </ModalSectionContent>
-        }
+        )}
         <ModalSectionContent title="Operation">
           <DescriptionText {...formik.values} />
           <FormControl component="fieldset">

@@ -2,13 +2,16 @@ import Box, { BoxProps } from "@mui/material/Box";
 import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { ErrorMessage } from "formik";
 import React, { useState } from "react";
 import { ChromePicker, ColorChangeHandler } from "react-color";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 export interface Props {
   label?: string;
   inline?: boolean;
   color?: string;
+  errorMessage?: string;
   onChange?: (newColor: string) => void;
 }
 
@@ -93,28 +96,33 @@ export default function ColorPicker(props: Props): FCReturn {
   };
 
   return (
-    <Root inline={props.inline}>
-      <Typography mr={2} variant="body2" component="label">
-        {props.label || "Background colour"}:{" "}
-      </Typography>
-      <StyledButtonBase show={show} onClick={handleClick} disableRipple>
-        <Swatch sx={{ backgroundColor: props.color }} className="swatch" />
-        {props.color}
-      </StyledButtonBase>
-      {show ? (
-        <Popover className="popover">
-          <Cover
-            onClick={handleClose}
-            aria-label="Close Colour Picker"
-            disableRipple
-          />
-          <ChromePicker
-            color={props.color}
-            disableAlpha={true}
-            onChange={handleChange}
-          />
-        </Popover>
-      ) : null}
-    </Root>
+    <ErrorWrapper
+      error={props.errorMessage || undefined}
+      id="colour-picker-error"
+    >
+      <Root inline={props.inline}>
+        <Typography mr={2} variant="body2" component="label">
+          {props.label || "Background colour"}:{" "}
+        </Typography>
+        <StyledButtonBase show={show} onClick={handleClick} disableRipple>
+          <Swatch sx={{ backgroundColor: props.color }} className="swatch" />
+          {props.color}
+        </StyledButtonBase>
+        {show ? (
+          <Popover className="popover">
+            <Cover
+              onClick={handleClose}
+              aria-label="Close Colour Picker"
+              disableRipple
+            />
+            <ChromePicker
+              color={props.color}
+              disableAlpha={true}
+              onChange={handleChange}
+            />
+          </Popover>
+        ) : null}
+      </Root>
+    </ErrorWrapper>
   );
 }

@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
 import { getIn } from "formik";
+import { get } from "lodash";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
@@ -23,21 +24,14 @@ import type {
   TextField,
 } from "../model";
 import { useListContext } from "./Context";
-import { get } from "lodash";
 
 type Props<T> = T & { id: string };
 
-export const TextFieldInput: React.FC<Props<TextField>> = ({
-  id,
-  data,
-}) => {
+export const TextFieldInput: React.FC<Props<TextField>> = ({ id, data }) => {
   const { formik, activeIndex } = useListContext();
 
   return (
-    <InputLabel
-      label={data.title}
-      htmlFor={id}
-    >
+    <InputLabel label={data.title} htmlFor={id}>
       <Input
         type={((type) => {
           if (type === "email") return "email";
@@ -48,10 +42,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({
         bordered
         value={formik.values.userData[activeIndex][data.fn]}
         onChange={formik.handleChange}
-        errorMessage={get(
-          formik.errors,
-          ["userData", activeIndex, data.fn],
-        )}
+        errorMessage={get(formik.errors, ["userData", activeIndex, data.fn])}
         id={id}
         rows={
           data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
@@ -80,10 +71,7 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
   const { formik, activeIndex } = useListContext();
 
   return (
-    <InputLabel
-      label={data.title}
-      htmlFor={id}
-    >
+    <InputLabel label={data.title} htmlFor={id}>
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <Input
           required
@@ -92,10 +80,7 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({
           type="number"
           value={formik.values.userData[activeIndex][data.fn]}
           onChange={formik.handleChange}
-          errorMessage={get(
-            formik.errors,
-            ["userData", activeIndex, data.fn],
-          )}
+          errorMessage={get(formik.errors, ["userData", activeIndex, data.fn])}
           inputProps={{
             "aria-describedby": [
               data.description ? DESCRIPTION_TEXT : "",
@@ -161,10 +146,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { id, data } = props;
 
   return (
-    <InputLabel
-      label={data.title}
-      id={`select-label-${id}`}
-    >
+    <InputLabel label={data.title} id={`select-label-${id}`}>
       <ErrorWrapper
         id={`${id}-error`}
         error={get(formik.errors, ["userData", activeIndex, data.fn])}

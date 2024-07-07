@@ -129,7 +129,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     if (formik.values.userData.length < schema.min) {
       return setMinError(true);
     }
-    
+
     formik.handleSubmit();
   };
 
