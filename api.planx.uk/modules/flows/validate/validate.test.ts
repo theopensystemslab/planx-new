@@ -501,7 +501,7 @@ describe("ODP Schema file type validation on diff", () => {
             title: "File types",
             status: "Warn",
             message:
-              "Your FileUpload or UploadAndLabel are setting data fields that are not supported by the ODP Schema: sitePlanTypo",
+              "Your FileUpload or UploadAndLabel are setting data fields that are not supported by the current release of the ODP Schema: sitePlanTypo (1)",
           },
           {
             title: "Sections",

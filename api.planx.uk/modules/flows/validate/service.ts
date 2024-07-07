@@ -7,6 +7,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import * as jsondiffpatch from "jsondiffpatch";
 import intersection from "lodash/intersection";
+import countBy from "lodash/countBy";
 
 import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
 import {
@@ -234,10 +235,16 @@ const validateFileTypes = (flowGraph: FlowGraph): ValidationResponse => {
     }
   });
   if (invalidFileFns.length > 0) {
+    // Get unique fns with count of occurances
+    const countInvalidFileFns = countBy(invalidFileFns);
+    let summarisedInvalidFileFns: string[] = [];
+    Object.entries(countInvalidFileFns).map(([k, v]: [string, number]) => {
+      summarisedInvalidFileFns.push(`${k} (${v})`);
+    });
     return {
       title: "File types",
       status: "Warn",
-      message: `Your FileUpload or UploadAndLabel are setting data fields that are not supported by the ODP Schema: ${invalidFileFns.join(", ")}`,
+      message: `Your FileUpload or UploadAndLabel are setting data fields that are not supported by the current release of the ODP Schema: ${summarisedInvalidFileFns.join(", ")}`,
     };
   }
 

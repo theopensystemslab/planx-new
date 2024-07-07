@@ -42,8 +42,8 @@ dependencies:
     specifier: ^0.8.3
     version: 0.8.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#d398f2c
-    version: github.com/theopensystemslab/planx-core/d398f2c(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#ed7c187
+    version: github.com/theopensystemslab/planx-core/ed7c187(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -13022,6 +13022,7 @@ packages:
   /glob@10.4.2:
     resolution: {integrity: sha512-GwMlUF6PkPo3Gk21UxkCohOv0PLcIXVtKyLlpEI28R/cO/4eNOdmLk3CMW1wROV/WR/EsZOWAfBbBOqYvs88/w==}
     engines: {node: '>=16 || 14 >=14.18'}
+    hasBin: true
     dependencies:
       foreground-child: 3.2.1
       jackspeak: 3.4.0
@@ -21522,9 +21523,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/d398f2c(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d398f2c}
-    id: github.com/theopensystemslab/planx-core/d398f2c
+  github.com/theopensystemslab/planx-core/ed7c187(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ed7c187}
+    id: github.com/theopensystemslab/planx-core/ed7c187
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
