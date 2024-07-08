@@ -1,17 +1,12 @@
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
-import {
-  ComponentType,
-  Edges,
-  FlowGraph,
-  Node,
-} from "@opensystemslab/planx-core/types";
+import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
 import countBy from "lodash/countBy";
 
 import { isComponentType } from "../helpers";
 import { FlowValidationResponse } from "./index";
 
 const validateProjectTypes = (flowGraph: FlowGraph): FlowValidationResponse => {
-  // Get all passport values set by Answers of Questions or Checklists that set fn "proposal.projectType"
+  // Get all passport values set by Answers of Checklists that set fn "proposal.projectType"
   const projectTypeVals = getProjectTypeVals(flowGraph);
   if (projectTypeVals.length < 1) {
     return {
