@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#ed7c187
-    version: github.com/theopensystemslab/planx-core/ed7c187
+    specifier: git+https://github.com/theopensystemslab/planx-core#b43b268
+    version: github.com/theopensystemslab/planx-core/b43b268
   axios:
     specifier: ^1.6.8
     version: 1.6.8
@@ -1588,6 +1588,7 @@ packages:
 
   /glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -1684,6 +1685,7 @@ packages:
 
   /inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2
@@ -2622,8 +2624,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: false
 
-  /type-fest@4.20.1:
-    resolution: {integrity: sha512-R6wDsVsoS9xYOpy8vgeBlqpdOyzJ12HNfQhC/aAKWM3YoCV9TtunJzh/QpkMgeDhkoynDcw5f1y+qF9yc/HHyg==}
+  /type-fest@4.21.0:
+    resolution: {integrity: sha512-ADn2w7hVPcK6w1I0uWnM//y1rLXZhzB9mr0a3OirzclKF1Wp6VzevUmzz/NRAWunOT6E8HrnpGY7xOfc6K57fA==}
     engines: {node: '>=16'}
     dev: false
 
@@ -2780,8 +2782,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/ed7c187:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ed7c187}
+  github.com/theopensystemslab/planx-core/b43b268:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b43b268}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2806,7 +2808,7 @@ packages:
       prettier: 3.3.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.20.1
+      type-fest: 4.21.0
       uuid: 10.0.0
       zod: 3.23.8
     transitivePeerDependencies:
