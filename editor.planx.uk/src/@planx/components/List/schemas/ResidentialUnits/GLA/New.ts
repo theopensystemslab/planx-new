@@ -1,7 +1,7 @@
 import { Schema } from "@planx/components/List/model";
 
 export const ResidentialUnitsGLANew: Schema = {
-  type: "New built residential unit",
+  type: "New residential unit",
   fields: [
     {
       type: "question",

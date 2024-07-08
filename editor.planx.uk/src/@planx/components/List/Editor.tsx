@@ -22,11 +22,10 @@ import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUse
 import { OpenSpaceGLA } from "./schemas/GLA/OpenSpace";
 import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
-import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
-import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
 import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
 import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
+import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 
 
@@ -35,11 +34,6 @@ type Props = EditorProps<TYPES.List, List>;
 export const SCHEMAS = [
   { name: "Residential units - Existing", schema: ResidentialUnitsExisting },
   { name: "Residential units - Proposed", schema: ResidentialUnitsProposed },
-  {
-    name: "Residential units (GLA) - Gained",
-    schema: ResidentialUnitsGLAGained,
-  },
-  { name: "Residential units (GLA) - Lost", schema: ResidentialUnitsGLALost },
   {
     name: "Residential units (GLA) - New",
     schema: ResidentialUnitsGLANew,
@@ -51,6 +45,10 @@ export const SCHEMAS = [
   {
     name: "Residential units (GLA) - Removed",
     schema: ResidentialUnitsGLARemoved,
+  },
+  {
+    name: "Residential units (GLA) - Retained",
+    schema: ResidentialUnitsGLARetained,
   },
   { name: "Non-residential floorspace", schema: NonResidentialFloorspace },
   {
