@@ -63,7 +63,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
 
   const [environment, boundaryBBox] = useStore((state) => [
     state.previewEnvironment,
-    state.teamSettings.boundaryBbox,
+    state.teamSettings.boundaryBBox,
   ]);
 
   useEffect(() => {

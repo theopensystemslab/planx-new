@@ -43,8 +43,8 @@ dependencies:
     specifier: ^0.8.3
     version: 0.8.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#b43b268
-    version: github.com/theopensystemslab/planx-core/b43b268(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#a7ad0ff
+    version: github.com/theopensystemslab/planx-core/a7ad0ff(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -6819,11 +6819,11 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/builder-manager@8.1.10(prettier@3.0.0):
+  /@storybook/builder-manager@8.1.10(prettier@3.3.2):
     resolution: {integrity: sha512-dhg54zpaglR9XKNAiwMqm5/IONMCEG/hO/iTfNHJI1rAGeWhvM71cmhF+VlKUcjpTlIfHe7J19+TL+sWQJNgtg==}
     dependencies:
       '@fal-works/esbuild-plugin-global-externals': 2.1.2
-      '@storybook/core-common': 8.1.10(prettier@3.0.0)
+      '@storybook/core-common': 8.1.10(prettier@3.3.2)
       '@storybook/manager': 8.1.10
       '@storybook/node-logger': 8.1.10
       '@types/ejs': 3.1.5
@@ -6927,12 +6927,12 @@ packages:
       '@babel/types': 7.24.7
       '@ndelangen/get-tarball': 3.0.9
       '@storybook/codemod': 8.1.10
-      '@storybook/core-common': 8.1.10(prettier@3.0.0)
+      '@storybook/core-common': 8.1.10(prettier@3.3.2)
       '@storybook/core-events': 8.1.10
-      '@storybook/core-server': 8.1.10(prettier@3.0.0)(react-dom@18.2.0)(react@18.2.0)
+      '@storybook/core-server': 8.1.10(prettier@3.3.2)(react-dom@18.2.0)(react@18.2.0)
       '@storybook/csf-tools': 8.1.10
       '@storybook/node-logger': 8.1.10
-      '@storybook/telemetry': 8.1.10(prettier@3.0.0)
+      '@storybook/telemetry': 8.1.10(prettier@3.3.2)
       '@storybook/types': 8.1.10
       '@types/semver': 7.5.8
       '@yarnpkg/fslib': 2.10.3
@@ -7071,7 +7071,7 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/core-common@8.1.10(prettier@3.0.0):
+  /@storybook/core-common@8.1.10(prettier@3.3.2):
     resolution: {integrity: sha512-+0GhgDRQwUlXu1lY77NdLnVBVycCEW0DG7eu7rvLYYkTyNRxbdl2RWsQpjr/j4sxqT6u82l9/b+RWpmsl4MgMQ==}
     peerDependencies:
       prettier: ^2 || ^3
@@ -7100,8 +7100,8 @@ packages:
       node-fetch: 2.7.0
       picomatch: 2.3.1
       pkg-dir: 5.0.0
-      prettier: 3.0.0
-      prettier-fallback: /prettier@3.0.0
+      prettier: 3.3.2
+      prettier-fallback: /prettier@3.3.2
       pretty-hrtime: 1.0.3
       resolve-from: 5.0.0
       semver: 7.6.2
@@ -7133,16 +7133,16 @@ packages:
       ts-dedent: 2.2.0
     dev: true
 
-  /@storybook/core-server@8.1.10(prettier@3.0.0)(react-dom@18.2.0)(react@18.2.0):
+  /@storybook/core-server@8.1.10(prettier@3.3.2)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-jNL5/daNyo7Rcu+y/bOmSB1P65pmcaLwvpr31EUEIISaAqvgruaneS3GKHg2TR0wcxEoHaM4abqhW6iwkI/XYQ==}
     dependencies:
       '@aw-web-design/x-default-browser': 1.4.126
       '@babel/core': 7.24.7
       '@babel/parser': 7.24.7
       '@discoveryjs/json-ext': 0.5.7
-      '@storybook/builder-manager': 8.1.10(prettier@3.0.0)
+      '@storybook/builder-manager': 8.1.10(prettier@3.3.2)
       '@storybook/channels': 8.1.10
-      '@storybook/core-common': 8.1.10(prettier@3.0.0)
+      '@storybook/core-common': 8.1.10(prettier@3.3.2)
       '@storybook/core-events': 8.1.10
       '@storybook/csf': 0.1.11
       '@storybook/csf-tools': 8.1.10
@@ -7152,7 +7152,7 @@ packages:
       '@storybook/manager-api': 8.1.10(react-dom@18.2.0)(react@18.2.0)
       '@storybook/node-logger': 8.1.10
       '@storybook/preview-api': 8.1.10
-      '@storybook/telemetry': 8.1.10(prettier@3.0.0)
+      '@storybook/telemetry': 8.1.10(prettier@3.3.2)
       '@storybook/types': 8.1.10
       '@types/detect-port': 1.3.5
       '@types/diff': 5.2.1
@@ -7594,11 +7594,11 @@ packages:
       qs: 6.12.3
     dev: true
 
-  /@storybook/telemetry@8.1.10(prettier@3.0.0):
+  /@storybook/telemetry@8.1.10(prettier@3.3.2):
     resolution: {integrity: sha512-pwiMWrq85D0AnaAgYNfB2w2BDgqnetQ+tXwsUAw4fUEFwA4oPU6r0uqekRbNNE6wmSSYjiiFP3JgknBFqjd2hg==}
     dependencies:
       '@storybook/client-logger': 8.1.10
-      '@storybook/core-common': 8.1.10(prettier@3.0.0)
+      '@storybook/core-common': 8.1.10(prettier@3.3.2)
       '@storybook/csf-tools': 8.1.10
       chalk: 4.1.2
       detect-package-manager: 2.0.1
@@ -7912,20 +7912,6 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/dom@8.20.1:
-    resolution: {integrity: sha512-/DiOQ5xBxgdYRC8LNk7U+RWat0S3qRLeIw3ZIkMQ9kkVlRmwD/Eg8k8CqIpD6GW7u20JIUOfMKbxtiLutpjQ4g==}
-    engines: {node: '>=12'}
-    dependencies:
-      '@babel/code-frame': 7.24.7
-      '@babel/runtime': 7.24.7
-      '@types/aria-query': 5.0.4
-      aria-query: 5.1.3
-      chalk: 4.1.2
-      dom-accessibility-api: 0.5.16
-      lz-string: 1.5.0
-      pretty-format: 27.5.1
-    dev: true
-
   /@testing-library/dom@9.3.4:
     resolution: {integrity: sha512-FlS4ZWlp97iiNWig0Muq8p+3rVDjRiYE+YKGbAqXOu9nwJFFOdL00kFpz42M+4huzYi86vAK1sOOfyOG45muIQ==}
     engines: {node: '>=14'}
@@ -7963,7 +7949,7 @@ packages:
       react-dom: ^18.0.0
     dependencies:
       '@babel/runtime': 7.24.7
-      '@testing-library/dom': 8.20.1
+      '@testing-library/dom': 9.3.4
       '@types/react-dom': 18.2.18
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -21847,9 +21833,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/b43b268(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b43b268}
-    id: github.com/theopensystemslab/planx-core/b43b268
+  github.com/theopensystemslab/planx-core/a7ad0ff(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a7ad0ff}
+    id: github.com/theopensystemslab/planx-core/a7ad0ff
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

@@ -28,7 +28,7 @@ const GeneralSettings: React.FC = () => {
         if (!fetchedTeam) throw Error("Unable to find team");
 
         setFormikConfig({
-          initialValues: fetchedTeam.teamSettings,
+          initialValues: fetchedTeam.settings,
           onSubmit: () => {},
           validateOnBlur: false,
           validateOnChange: false,
