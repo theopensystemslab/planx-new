@@ -1,14 +1,13 @@
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/ui";
-import { Feature } from "@turf/helpers";
+import { Feature } from "geojson";
 import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
