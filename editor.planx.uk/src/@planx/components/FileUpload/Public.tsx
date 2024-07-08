@@ -42,6 +42,17 @@ const slotsSchema = array()
           !slots.some((slot) => slot.status === "uploading"),
       );
     },
+  })
+  .test({
+    name: "errorStatus",
+    message: "Remove files which failed to upload",
+    test: (slots?: Array<FileUploadSlot>) => {
+      return Boolean(
+        slots &&
+          slots.length > 0 &&
+          !slots.some((slot) => slot.status === "error"),
+      );
+    },
   });
 
 const FileUpload: React.FC<Props> = (props) => {

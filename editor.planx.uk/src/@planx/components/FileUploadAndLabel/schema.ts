@@ -91,10 +91,21 @@ export const slotsSchema = array()
     name: "nonUploading",
     message: "Please wait for upload to complete",
     test: (slots?: Array<FileUploadSlot>) => {
-      const isEveryUploadComplete = Boolean(
-        slots?.every((slot) => slot.status === "success"),
+      const isAnyUploadInProgress = Boolean(
+        slots?.some((slot) => slot.status === "uploading"),
       );
-      return isEveryUploadComplete;
+      return !isAnyUploadInProgress;
+    },
+  })
+  .test({
+    name: "errorStatus",
+    message: "Remove files which failed to upload",
+    test: (slots?: Array<FileUploadSlot>) => {
+      return Boolean(
+        slots &&
+          slots.length > 0 &&
+          !slots.some((slot) => slot.status === "error"),
+      );
     },
   });
 
