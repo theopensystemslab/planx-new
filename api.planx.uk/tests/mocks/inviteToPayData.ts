@@ -83,7 +83,7 @@ export const validPaymentRequest = {
         name: "Buckinghamshire",
         slug: "buckinghamshire",
         domain: "planningservices.buckinghamshire.gov.uk",
-        notifyPersonalisation: {
+        settings: {
           helpEmail: "help@council.gov.uk",
           helpPhone: "123",
           helpOpeningHours: "9a-5p",

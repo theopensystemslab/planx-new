@@ -1,9 +1,9 @@
-import type { SiteAddress } from "@opensystemslab/planx-core/types";
+import type { SiteAddress, Team } from "@opensystemslab/planx-core/types";
 import { differenceInDays } from "date-fns";
 import { gql } from "graphql-request";
 import { $api, $public } from "../../../client";
 import { sendEmail } from "../../../lib/notify";
-import { LowCalSession, Team } from "../../../types";
+import { LowCalSession } from "../../../types";
 import { DAYS_UNTIL_EXPIRY, calculateExpiryDate, getResumeLink } from "./utils";
 
 /**
@@ -17,7 +17,7 @@ const resumeApplication = async (teamSlug: string, email: string) => {
   const config = {
     personalisation: await getPersonalisation(sessions, team),
     reference: null,
-    emailReplyToId: team.notifyPersonalisation.emailReplyToId,
+    emailReplyToId: team.settings.emailReplyToId,
   };
   const response = await sendEmail("resume", email, config);
   return response;
@@ -64,7 +64,7 @@ const validateRequest = async (
         teams(where: { slug: { _eq: $teamSlug } }) {
           slug
           name
-          notifyPersonalisation: notify_personalisation
+          settings: team_settings
           domain
         }
       }
@@ -93,7 +93,10 @@ const getPersonalisation = async (sessions: LowCalSession[], team: Team) => {
   return {
     teamName: team.name,
     content: await buildContentFromSessions(sessions, team),
-    ...team.notifyPersonalisation,
+    helpEmail: team.settings.helpEmail,
+    helpPhone: team.settings.helpPhone,
+    helpOpeningHours: team.settings.helpOpeningHours,
+    emailReplyToId: team.settings.emailReplyToId,
   };
 };
 

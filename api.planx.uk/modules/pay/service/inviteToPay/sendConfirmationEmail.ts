@@ -46,7 +46,12 @@ async function getDataForPayeeAndAgentEmails(
         flow {
           slug
           team {
-            notifyPersonalisation: notify_personalisation
+            notifyPersonalisation: team_settings {
+              helpEmail: help_email
+              helpPhone: help_phone
+              emailReplyToId: email_reply_to_id
+              helpOpeningHours: help_opening_hours
+            }
           }
         }
         paymentRequests: payment_requests(

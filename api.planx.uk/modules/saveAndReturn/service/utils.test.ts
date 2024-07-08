@@ -1,5 +1,6 @@
+import { Team } from "@opensystemslab/planx-core/types";
 import { queryMock } from "../../../tests/graphqlQueryMock";
-import { LowCalSession, LowCalSessionData, Team } from "../../../types";
+import { LowCalSession, LowCalSessionData } from "../../../types";
 import {
   getResumeLink,
   getSessionDetails,

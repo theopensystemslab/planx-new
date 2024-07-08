@@ -17,7 +17,12 @@ export async function getTeamEmailSettings(localAuthority: string) {
       query GetTeamEmailSettings($slug: String) {
         teams(where: { slug: { _eq: $slug } }) {
           sendToEmail: submission_email
-          notifyPersonalisation: notify_personalisation
+          notifyPersonalisation: team_settings {
+            helpEmail: help_email
+            helpPhone: help_phone
+            emailReplyToId: email_reply_to_id
+            helpOpeningHours: help_opening_hours
+          }
         }
       }
     `,
