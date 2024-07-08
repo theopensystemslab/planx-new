@@ -13,16 +13,14 @@ import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
 export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
-  const suffixRegEx = /\d{1,10}$/;
+  const planningDataURLRegex =
+    /^https:\/\/www\.planning\.data\.gov\.uk\/entity\/\d{1,7}$/;
 
   const formSchema = Yup.object().shape({
     boundaryUrl: Yup.string()
       .matches(
-        suffixRegEx,
-        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/entity/123456",
-      )
-      .url(
-        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/entity/123456",
+        planningDataURLRegex,
+        "Enter a boundary URL in the correct format, https://www.planning.data.gov.uk/entity/1234567",
       )
       .required("Enter a boundary URL"),
   });
@@ -70,7 +68,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              https://www.planning.data.gov.uk/entity/123456
+              https://www.planning.data.gov.uk/entity/1234567
             </a>
           </p>
         </>
