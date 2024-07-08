@@ -186,7 +186,7 @@ export const flowWithInviteToPay: Flow["data"] = {
   ChecklistOptionTwo: {
     data: {
       text: "Build new",
-      val: "build",
+      val: "new",
     },
     type: 200,
   },

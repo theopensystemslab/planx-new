@@ -125,6 +125,12 @@ describe("sections validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
           },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
+          },
         ]);
       });
   });
@@ -178,6 +184,12 @@ describe("sections validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
           },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
+          },
         ]);
       });
   });
@@ -211,6 +223,12 @@ describe("invite to pay validation on diff", () => {
             title: "Invite to Pay",
             status: "Fail",
             message: "When using Invite to Pay, your flow must have a Send",
+          },
+          {
+            title: "Project types",
+            status: "Pass",
+            message:
+              "Project types set via Checklists are all supported by the ODP Schema",
           },
           {
             title: "Sections",
@@ -267,6 +285,12 @@ describe("invite to pay validation on diff", () => {
               "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
           },
           {
+            title: "Project types",
+            status: "Pass",
+            message:
+              "Project types set via Checklists are all supported by the ODP Schema",
+          },
+          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
@@ -315,6 +339,12 @@ describe("invite to pay validation on diff", () => {
             status: "Fail",
             message:
               "When using Invite to Pay, your flow must have a FindProperty",
+          },
+          {
+            title: "Project types",
+            status: "Pass",
+            message:
+              "Project types set via Checklists are all supported by the ODP Schema",
           },
           {
             title: "Sections",
@@ -367,6 +397,12 @@ describe("invite to pay validation on diff", () => {
             status: "Fail",
             message:
               "When using Invite to Pay, your flow must have exactly ONE Pay",
+          },
+          {
+            title: "Project types",
+            status: "Pass",
+            message:
+              "Project types set via Checklists are all supported by the ODP Schema",
           },
           {
             title: "Sections",
@@ -431,6 +467,12 @@ describe("invite to pay validation on diff", () => {
             title: "File types",
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
+          },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
           },
         ]);
       });
@@ -513,6 +555,12 @@ describe("ODP Schema file type validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
           },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
+          },
         ]);
       });
   });
@@ -584,6 +632,12 @@ describe("ODP Schema file type validation on diff", () => {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
+          },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
           },
         ]);
       });
