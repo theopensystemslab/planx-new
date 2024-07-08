@@ -14,6 +14,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+import { MaterialDetails } from "./schemas/Materials";
 import { NonResidentialFloorspace } from "./schemas/Floorspace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
@@ -27,6 +28,7 @@ import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
 import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
 import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
+
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -55,6 +57,7 @@ export const SCHEMAS = [
     name: "Existing and proposed uses (GLA)",
     schema: ExistingAndProposedUsesGLA,
   },
+  { name: "Material details", schema: MaterialDetails },
   { name: "Building details (GLA)", schema: BuildingDetailsGLA },
   { name: "Communal spaces (GLA)", schema: CommunalSpaceGLA },
   { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
