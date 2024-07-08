@@ -24,7 +24,6 @@ api.planx.uk/tmp/
 # Ignore certificate files
 **/*.chain
 **/*.cert
-**/*.crt
 **/*.key
 **/*.pfx
 **/*.pkcs12
