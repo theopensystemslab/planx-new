@@ -1,4 +1,6 @@
-import { bbox, bboxPolygon, feature } from "@turf/turf";
+import { bbox } from "@turf/bbox";
+import { bboxPolygon } from "@turf/bbox-polygon";
+import { feature } from "@turf/helpers";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
