@@ -110,6 +110,12 @@ dependencies:
   '@turf/area':
     specifier: ^7.0.0
     version: 7.0.0
+  '@turf/bbox':
+    specifier: ^7.0.0
+    version: 7.0.0
+  '@turf/bbox-polygon':
+    specifier: ^7.0.0
+    version: 7.0.0
   '@turf/buffer':
     specifier: ^7.0.0
     version: 7.0.0
@@ -8052,6 +8058,13 @@ packages:
     dependencies:
       '@turf/helpers': 7.0.0
       '@turf/meta': 7.0.0
+      tslib: 2.6.3
+    dev: false
+
+  /@turf/bbox-polygon@7.0.0:
+    resolution: {integrity: sha512-RMBADOr0zOhVhTidKXCAx1TLTzgBvZwQKI6KJ1FgoCPH7GMZZnMXGMvOtdQLdsplS4Zs6+NoVtaK2x0+EXdYJQ==}
+    dependencies:
+      '@turf/helpers': 7.0.0
       tslib: 2.6.3
     dev: false
 

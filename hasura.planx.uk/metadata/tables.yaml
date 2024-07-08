@@ -1729,6 +1729,7 @@
     - role: platformAdmin
       permission:
         columns:
+          - boundary_bbox
           - boundary_url
           - email_reply_to_id
           - external_planning_site_name
@@ -1744,6 +1745,7 @@
     - role: teamEditor
       permission:
         columns:
+          - boundary_bbox
           - boundary_url
           - email_reply_to_id
           - external_planning_site_name

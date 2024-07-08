@@ -71,6 +71,7 @@ const fetchSettingsForDraftView = async (
               name
               settings: team_settings {
                 boundaryUrl: boundary_url
+                boundaryBBox: boundary_bbox
                 homepage
                 helpEmail: help_email
                 helpPhone: help_phone
@@ -81,7 +82,6 @@ const fetchSettingsForDraftView = async (
                 hasPlanningData: has_planning_data
               }
               slug
-              boundaryBBox: boundary_bbox
             }
             settings
             slug

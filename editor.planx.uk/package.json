@@ -36,6 +36,8 @@
     "@tiptap/react": "^2.4.0",
     "@tiptap/suggestion": "^2.0.3",
     "@turf/area": "^7.0.0",
+    "@turf/bbox": "^7.0.0",
+    "@turf/bbox-polygon": "^7.0.0",
     "@turf/buffer": "^7.0.0",
     "@turf/helpers": "^7.0.0",
     "array-move": "^4.0.0",

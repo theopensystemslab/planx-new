@@ -11,7 +11,6 @@ import type { StateCreator } from "zustand";
 import { SharedStore } from "./shared";
 
 export interface TeamStore {
-  boundaryBBox?: Team["boundaryBBox"];
   teamId: number;
   teamIntegrations: TeamIntegrations;
   teamName: string;
@@ -34,7 +33,6 @@ export const teamStore: StateCreator<
   [],
   TeamStore
 > = (set, get) => ({
-  boundaryBBox: undefined,
   teamId: 0,
   teamIntegrations: {} as TeamIntegrations,
   teamName: "",
@@ -44,7 +42,6 @@ export const teamStore: StateCreator<
 
   setTeam: (team) => {
     set({
-      boundaryBBox: team.boundaryBBox,
       teamId: team.id,
       teamIntegrations: team.integrations,
       teamName: team.name,
@@ -60,7 +57,6 @@ export const teamStore: StateCreator<
   },
 
   getTeam: () => ({
-    boundaryBBox: get().boundaryBBox,
     id: get().teamId,
     integrations: get().teamIntegrations,
     name: get().teamName,
@@ -105,7 +101,6 @@ export const teamStore: StateCreator<
 
   clearTeamStore: () =>
     set({
-      boundaryBBox: undefined,
       teamId: 0,
       teamIntegrations: undefined,
       teamName: "",
