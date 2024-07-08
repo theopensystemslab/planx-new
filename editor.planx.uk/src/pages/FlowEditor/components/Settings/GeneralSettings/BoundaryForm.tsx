@@ -1,8 +1,8 @@
 import { bbox } from "@turf/bbox";
 import { bboxPolygon } from "@turf/bbox-polygon";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { useFormik } from "formik";
-import type { Feature, MultiPolygon,Polygon } from "geojson";
+import type { Feature, MultiPolygon, Polygon } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
@@ -54,8 +54,12 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
           resetForm({ values });
         }
       } catch (error) {
-        formik.errors.boundaryUrl =
-          "We are unable to retrieve your boundary, check your boundary URL and try again";
+        if (isAxiosError(error)) {
+          formik.setFieldError(
+            "boundaryUrl",
+            "We are unable to retrieve your boundary, check your boundary URL and try again",
+          );
+        }
         console.error(error);
       }
     },
