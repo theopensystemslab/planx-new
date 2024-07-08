@@ -2155,9 +2155,7 @@
           - is_platform_admin
           - last_name
           - updated_at
-        filter:
-          id:
-            _eq: x-hasura-user-id
+        filter: {}
   update_permissions:
     - role: platformAdmin
       permission:
