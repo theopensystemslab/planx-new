@@ -1,3 +1,4 @@
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import {
   ComponentType,
   Edges,
@@ -6,6 +7,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import * as jsondiffpatch from "jsondiffpatch";
 import intersection from "lodash/intersection";
+import countBy from "lodash/countBy";
 
 import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
 import {
@@ -23,7 +25,7 @@ type AlteredNode = {
 
 type ValidationResponse = {
   title: string;
-  status: "Pass" | "Fail" | "Not applicable";
+  status: "Pass" | "Fail" | "Warn" | "Not applicable";
   message: string;
 };
 
@@ -55,16 +57,20 @@ const validateAndDiffFlow = async (
   const validationChecks = [];
   const sections = validateSections(flattenedFlow);
   const inviteToPay = validateInviteToPay(flattenedFlow);
-  validationChecks.push(sections, inviteToPay);
+  const fileTypes = validateFileTypes(flattenedFlow);
+  validationChecks.push(sections, inviteToPay, fileTypes);
 
-  // Sort validation checks by status: Fail, Pass, Not applicable
-  const applicableChecks = validationChecks
-    .filter((v) => v.status !== "Not applicable")
-    .sort((a, b) => a.status.localeCompare(b.status));
+  // Arrange list of validation checks in order of status: Fail, Warn, Pass, Not applicable
+  const failingChecks = validationChecks.filter((v) => v.status == "Fail");
+  const warningChecks = validationChecks.filter((v) => v.status === "Warn");
+  const passingChecks = validationChecks.filter((v) => v.status === "Pass");
   const notApplicableChecks = validationChecks.filter(
     (v) => v.status === "Not applicable",
   );
-  const sortedValidationChecks = applicableChecks.concat(notApplicableChecks);
+  const sortedValidationChecks = failingChecks
+    .concat(warningChecks)
+    .concat(passingChecks)
+    .concat(notApplicableChecks);
 
   return {
     alteredNodes,
@@ -193,9 +199,8 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
 };
 
 const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
-  const payNodes = Object.entries(flowGraph).filter(
-    (entry): entry is [string, Node] =>
-      isComponentType(entry, ComponentType.Pay),
+  const payNodes = Object.entries(flowGraph).filter((entry) =>
+    isComponentType(entry, ComponentType.Pay),
   );
   const payNodeStatuses = payNodes.map(
     ([_nodeId, node]) => node?.data?.allowInviteToPay,
@@ -204,6 +209,70 @@ const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
     payNodeStatuses.length > 0 &&
     payNodeStatuses.every((status) => status === true)
   );
+};
+
+const validateFileTypes = (flowGraph: FlowGraph): ValidationResponse => {
+  // Get all passport variables set by FileUpload and/or FileUploadAndLabel
+  const allFileFns = [
+    ...getFileUploadNodeFns(flowGraph),
+    ...getFileUploadAndLabelNodeFns(flowGraph),
+  ];
+  if (allFileFns.length < 1) {
+    return {
+      title: "File types",
+      status: "Not applicable",
+      message: "Your flow is not using FileUpload or UploadAndLabel",
+    };
+  }
+
+  // Get all file types supported by current release of ODP Schema & compare
+  const validFileTypes = getValidSchemaValues("FileType");
+  const invalidFileFns: string[] = [];
+  allFileFns.forEach((fn) => {
+    if (!validFileTypes?.includes(fn)) {
+      invalidFileFns.push(fn);
+    }
+  });
+  if (invalidFileFns.length > 0) {
+    // Get unique fns with count of occurances
+    const countInvalidFileFns = countBy(invalidFileFns);
+    const summarisedInvalidFileFns: string[] = [];
+    Object.entries(countInvalidFileFns).map(([k, v]: [string, number]) => {
+      summarisedInvalidFileFns.push(`${k} (${v})`);
+    });
+    return {
+      title: "File types",
+      status: "Warn",
+      message: `Your FileUpload or UploadAndLabel are setting data fields that are not supported by the current release of the ODP Schema: ${summarisedInvalidFileFns.join(", ")}`,
+    };
+  }
+
+  return {
+    title: "File types",
+    status: "Pass",
+    message:
+      "Files collected via FileUpload or UploadAndLabel are all supported by the ODP Schema",
+  };
+};
+
+const getFileUploadNodeFns = (flowGraph: FlowGraph): string[] => {
+  const fileUploadNodes = Object.entries(flowGraph).filter((entry) =>
+    isComponentType(entry, ComponentType.FileUpload),
+  );
+  return fileUploadNodes.map(([_nodeId, node]) => node.data?.fn as string);
+};
+
+const getFileUploadAndLabelNodeFns = (flowGraph: FlowGraph): string[] => {
+  // Exclude Upload & Label nodes used in "info-only" mode with a hidden dropzone
+  const uploadAndLabelNodes = Object.entries(flowGraph).filter(
+    (entry) =>
+      isComponentType(entry, ComponentType.FileUploadAndLabel) &&
+      entry[1].data?.hideDropZone !== true,
+  );
+  const uploadAndLabelFileTypes = uploadAndLabelNodes
+    .map(([_nodeId, node]: [string, Node]) => node.data?.fileTypes)
+    .flat();
+  return uploadAndLabelFileTypes?.map((file: any) => file?.fn as string);
 };
 
 export { validateAndDiffFlow };
