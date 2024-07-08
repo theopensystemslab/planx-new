@@ -1,8 +1,8 @@
 import { bbox } from "@turf/bbox";
 import { bboxPolygon } from "@turf/bbox-polygon";
-import { feature } from "@turf/helpers";
 import axios from "axios";
 import { useFormik } from "formik";
+import type { Feature, MultiPolygon,Polygon } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
@@ -11,6 +11,17 @@ import * as Yup from "yup";
 
 import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
+
+export type PlanningDataEntity = Feature<
+  Polygon | MultiPolygon,
+  Record<string, unknown>
+>;
+
+/**
+ * Convert a complex local authority boundary to a simplified bounding box
+ */
+const convertToBoundingBox = (feature: PlanningDataEntity): Feature<Polygon> =>
+  bboxPolygon(bbox(feature));
 
 export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
   const planningDataURLRegex =
@@ -30,13 +41,13 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
     validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const { data } = await axios.get(`${values.boundaryUrl}.geojson`);
-        const bboxPoly = bboxPolygon(bbox(data));
-        const bboxFeature = feature(bboxPoly.geometry);
+        const { data } = await axios.get<PlanningDataEntity>(
+          `${values.boundaryUrl}.geojson`,
+        );
 
         const isUpdateSuccess = await useStore.getState().updateTeamSettings({
           boundaryUrl: values.boundaryUrl,
-          boundaryBbox: bboxFeature,
+          boundaryBbox: convertToBoundingBox(data),
         });
         if (isUpdateSuccess) {
           onSuccess();
