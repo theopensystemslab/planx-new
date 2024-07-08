@@ -199,9 +199,8 @@ const validateInviteToPay = (flowGraph: FlowGraph): ValidationResponse => {
 };
 
 const inviteToPayEnabled = (flowGraph: FlowGraph): boolean => {
-  const payNodes = Object.entries(flowGraph).filter(
-    (entry): entry is [string, Node] =>
-      isComponentType(entry, ComponentType.Pay),
+  const payNodes = Object.entries(flowGraph).filter((entry) =>
+    isComponentType(entry, ComponentType.Pay),
   );
   const payNodeStatuses = payNodes.map(
     ([_nodeId, node]) => node?.data?.allowInviteToPay,
@@ -257,9 +256,8 @@ const validateFileTypes = (flowGraph: FlowGraph): ValidationResponse => {
 };
 
 const getFileUploadNodeFns = (flowGraph: FlowGraph): string[] => {
-  const fileUploadNodes = Object.entries(flowGraph).filter(
-    (entry): entry is [string, Node] =>
-      isComponentType(entry, ComponentType.FileUpload),
+  const fileUploadNodes = Object.entries(flowGraph).filter((entry) =>
+    isComponentType(entry, ComponentType.FileUpload),
   );
   return fileUploadNodes.map(([_nodeId, node]) => node.data?.fn as string);
 };
@@ -267,12 +265,12 @@ const getFileUploadNodeFns = (flowGraph: FlowGraph): string[] => {
 const getFileUploadAndLabelNodeFns = (flowGraph: FlowGraph): string[] => {
   // Exclude Upload & Label nodes used in "info-only" mode with a hidden dropzone
   const uploadAndLabelNodes = Object.entries(flowGraph).filter(
-    (entry): entry is [string, Node] =>
+    (entry) =>
       isComponentType(entry, ComponentType.FileUploadAndLabel) &&
       entry[1].data?.hideDropZone !== true,
   );
   const uploadAndLabelFileTypes = uploadAndLabelNodes
-    .map(([_nodeId, node]) => node.data?.fileTypes)
+    .map(([_nodeId, node]: [string, Node]) => node.data?.fileTypes)
     .flat();
   return uploadAndLabelFileTypes?.map((file: any) => file?.fn as string);
 };
