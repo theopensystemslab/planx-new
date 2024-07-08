@@ -1,7 +1,7 @@
 import { Node } from "@opensystemslab/planx-core/types";
 import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
 import { z } from "zod";
-import { validateAndDiffFlow } from "./service";
+import { validateAndDiffFlow } from "./service/index";
 import { ServerError } from "../../../errors";
 
 interface ValidateAndDiffResponse {
