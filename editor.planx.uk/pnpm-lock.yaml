@@ -111,11 +111,11 @@ dependencies:
     specifier: ^7.0.0
     version: 7.0.0
   '@turf/buffer':
-    specifier: ^6.5.0
-    version: 6.5.0
+    specifier: ^7.0.0
+    version: 7.0.0
   '@turf/helpers':
-    specifier: ^6.5.0
-    version: 6.5.0
+    specifier: ^7.0.0
+    version: 7.0.0
   array-move:
     specifier: ^4.0.0
     version: 4.0.0
@@ -343,6 +343,9 @@ devDependencies:
   '@types/draft-js':
     specifier: ^0.11.12
     version: 0.11.12
+  '@types/geojson':
+    specifier: ^7946.0.14
+    version: 7946.0.14
   '@types/jest':
     specifier: ^27.5.2
     version: 27.5.2
@@ -8052,36 +8055,39 @@ packages:
       tslib: 2.6.3
     dev: false
 
-  /@turf/bbox@6.5.0:
-    resolution: {integrity: sha512-RBbLaao5hXTYyyg577iuMtDB8ehxMlUqHEJiMs8jT1GHkFhr6sYre3lmLsPeYEi/ZKj5TP5tt7fkzNdJ4GIVyw==}
+  /@turf/bbox@7.0.0:
+    resolution: {integrity: sha512-IyXG5HAsn6IZLdAtQo7aWYccjU5WsV+uzIzhGaXrh/qTVylSYmRiWgLdiekHZVED9nv9r7D/EJUMOT4zyA6POA==}
     dependencies:
-      '@turf/helpers': 6.5.0
-      '@turf/meta': 6.5.0
+      '@turf/helpers': 7.0.0
+      '@turf/meta': 7.0.0
+      tslib: 2.6.3
     dev: false
 
-  /@turf/buffer@6.5.0:
-    resolution: {integrity: sha512-qeX4N6+PPWbKqp1AVkBVWFerGjMYMUyencwfnkCesoznU6qvfugFHNAngNqIBVnJjZ5n8IFyOf+akcxnrt9sNg==}
+  /@turf/buffer@7.0.0:
+    resolution: {integrity: sha512-viw3XjTtYVtkq5DkRDBQjXoi5QeEMhe4JHWXIfHMHs4o5F9B+lZ8+TtXWo18X5aAXknv6ib1z2syoaQdBpb5Xw==}
     dependencies:
-      '@turf/bbox': 6.5.0
-      '@turf/center': 6.5.0
-      '@turf/helpers': 6.5.0
-      '@turf/meta': 6.5.0
-      '@turf/projection': 6.5.0
+      '@turf/bbox': 7.0.0
+      '@turf/center': 7.0.0
+      '@turf/helpers': 7.0.0
+      '@turf/jsts': 2.7.1
+      '@turf/meta': 7.0.0
+      '@turf/projection': 7.0.0
       d3-geo: 1.7.1
-      turf-jsts: 1.2.3
     dev: false
 
-  /@turf/center@6.5.0:
-    resolution: {integrity: sha512-T8KtMTfSATWcAX088rEDKjyvQCBkUsLnK/Txb6/8WUXIeOZyHu42G7MkdkHRoHtwieLdduDdmPLFyTdG5/e7ZQ==}
+  /@turf/center@7.0.0:
+    resolution: {integrity: sha512-5RZia9uuWxz2oCyd1vsNkBeraBNdwCsIo4UGRQdyswBeLFVbRwIUa7M7+2z2D7B1YIgovuLIRVfk6FeWUQXDtQ==}
     dependencies:
-      '@turf/bbox': 6.5.0
-      '@turf/helpers': 6.5.0
+      '@turf/bbox': 7.0.0
+      '@turf/helpers': 7.0.0
+      tslib: 2.6.3
     dev: false
 
-  /@turf/clone@6.5.0:
-    resolution: {integrity: sha512-mzVtTFj/QycXOn6ig+annKrM6ZlimreKYz6f/GSERytOpgzodbQyOgkfwru100O1KQhhjSudKK4DsQ0oyi9cTw==}
+  /@turf/clone@7.0.0:
+    resolution: {integrity: sha512-bQBx/wbQoGNtZzuHetLt44NMqOCnjSXcvTWm+LJ7YTmwrqZVAjISDhFxgawY/L+G3p+ya5WoxQwZWak80uYg3A==}
     dependencies:
-      '@turf/helpers': 6.5.0
+      '@turf/helpers': 7.0.0
+      tslib: 2.6.3
     dev: false
 
   /@turf/helpers@6.5.0:
@@ -8101,10 +8107,10 @@ packages:
       '@turf/helpers': 6.5.0
     dev: false
 
-  /@turf/meta@6.5.0:
-    resolution: {integrity: sha512-RrArvtsV0vdsCBegoBtOalgdSOfkBrTJ07VkpiCnq/491W67hnMWmDu7e6Ztw0C3WldRYTXkg3SumfdzZxLBHA==}
+  /@turf/jsts@2.7.1:
+    resolution: {integrity: sha512-+nwOKme/aUprsxnLSfr2LylV6eL6T1Tuln+4Hl92uwZ8FrmjDRCH5Bi1LJNVfWCiYgk8+5K+t2zDphWNTsIFDA==}
     dependencies:
-      '@turf/helpers': 6.5.0
+      jsts: 2.7.1
     dev: false
 
   /@turf/meta@7.0.0:
@@ -8113,12 +8119,13 @@ packages:
       '@turf/helpers': 7.0.0
     dev: false
 
-  /@turf/projection@6.5.0:
-    resolution: {integrity: sha512-/Pgh9mDvQWWu8HRxqpM+tKz8OzgauV+DiOcr3FCjD6ubDnrrmMJlsf6fFJmggw93mtVPrZRL6yyi9aYCQBOIvg==}
+  /@turf/projection@7.0.0:
+    resolution: {integrity: sha512-EoPbZPZSDv0AJMfYhqnS455CVMYwPU78kHyQHeOnMR1Tc5z+TiImvyq55umhfecgpETzuDsjFkmeQ2phDKTmbA==}
     dependencies:
-      '@turf/clone': 6.5.0
-      '@turf/helpers': 6.5.0
-      '@turf/meta': 6.5.0
+      '@turf/clone': 7.0.0
+      '@turf/helpers': 7.0.0
+      '@turf/meta': 7.0.0
+      tslib: 2.6.3
     dev: false
 
   /@turf/union@6.5.0:
@@ -8281,7 +8288,6 @@ packages:
 
   /@types/geojson@7946.0.14:
     resolution: {integrity: sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==}
-    dev: false
 
   /@types/graceful-fs@4.1.9:
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
@@ -15029,6 +15035,11 @@ packages:
       tiny-warning: 1.0.3
     dev: true
 
+  /jsts@2.7.1:
+    resolution: {integrity: sha512-x2wSZHEBK20CY+Wy+BPE7MrFQHW6sIsdaGUMEqmGAio+3gFzQaBYPwLRonUfQf9Ak8pBieqj9tUofX1+WtAEIg==}
+    engines: {node: '>= 12'}
+    dev: false
+
   /jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
@@ -15309,6 +15320,7 @@ packages:
 
   /loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
     dependencies:
       js-tokens: 4.0.0
 
@@ -18723,6 +18735,7 @@ packages:
 
   /resolve@1.22.8:
     resolution: {integrity: sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==}
+    hasBin: true
     dependencies:
       is-core-module: 2.13.1
       path-parse: 1.0.7
@@ -18730,6 +18743,7 @@ packages:
 
   /resolve@2.0.0-next.5:
     resolution: {integrity: sha512-U7WjGVG9sH8tvjW5SmGbQuui75FiyjAX72HX15DwBBwF9dNiQZRQAg9nnPhYy+TUnE0+VcrttuvNI8oSxZcocA==}
+    hasBin: true
     dependencies:
       is-core-module: 2.13.1
       path-parse: 1.0.7
@@ -20302,10 +20316,6 @@ packages:
     dependencies:
       tslib: 1.14.1
       typescript: 5.4.3
-
-  /turf-jsts@1.2.3:
-    resolution: {integrity: sha512-Ja03QIJlPuHt4IQ2FfGex4F4JAr8m3jpaHbFbQrgwr7s7L6U8ocrHiF3J1+wf9jzhGKxvDeaCAnGDot8OjGFyA==}
-    dev: false
 
   /type-check@0.3.2:
     resolution: {integrity: sha512-ZCmOJdvOWDBYJlzAoFkC+Q0+bUyEOS1ltgp1MGU03fqHG+dbi9tBFU2Rd9QKiDZFAYrhPh2JUf7rZRIuHRKtOg==}

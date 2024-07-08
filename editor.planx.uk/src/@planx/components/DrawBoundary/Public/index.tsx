@@ -14,7 +14,8 @@ import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/Pr
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
 import buffer from "@turf/buffer";
-import { type Feature, point } from "@turf/helpers";
+import { point } from "@turf/helpers";
+import { Feature } from "geojson";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
