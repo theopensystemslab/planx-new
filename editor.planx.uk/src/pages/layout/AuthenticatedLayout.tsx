@@ -23,6 +23,7 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
   flexDirection: "row",
   width: "100%",
   minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+  overflow: "hidden",
   [`& > .${containerClasses.root}`]: {
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(5),
