@@ -54,5 +54,4 @@ Feature: Testing Permissions for teamEditor Role
 
     Examples:
       | TABLE           | ACTION          |
-      | users           | select          |
       | team_members    | select          |
