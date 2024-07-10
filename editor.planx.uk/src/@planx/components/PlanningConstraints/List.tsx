@@ -78,7 +78,7 @@ export default function ConstraintsList({
     <Box mb={3}>
       {Object.keys(groupedConstraints).map(
         (category: string, index: number) => (
-          <>
+          <React.Fragment key={`${category}-wrapper`}>
             <ListSubheader
               component="div"
               disableGutters
@@ -118,7 +118,7 @@ export default function ConstraintsList({
                 </ConstraintListItem>
               ))}
             </List>
-          </>
+          </React.Fragment>
         ),
       )}
     </Box>
