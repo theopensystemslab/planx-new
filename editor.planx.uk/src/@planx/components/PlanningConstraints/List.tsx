@@ -147,7 +147,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-          <Typography variant="body2" pr={1.5}>
+          <Typography component="div" variant="body2" pr={1.5}>
             {children}
           </Typography>
         </AccordionSummary>
@@ -199,7 +199,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               </List>
             )}
           </>
-          <Typography variant="body2">
+          <Typography component="div" variant="body2">
             <ReactMarkdownOrHtml
               source={props.metadata?.text?.replaceAll(
                 "(/",
