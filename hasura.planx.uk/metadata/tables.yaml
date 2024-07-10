@@ -1415,6 +1415,46 @@
       permission:
         filter: {}
 - table:
+    name: s3_applications
+    schema: public
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - id
+          - webhook_request
+          - webhook_response
+          - session_id
+          - team_slug
+          - created_at
+      comment: ""
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - webhook_request
+          - webhook_response
+          - session_id
+          - team_slug
+          - created_at
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - webhook_request
+          - webhook_response
+          - session_id
+          - team_slug
+          - created_at
+        filter: {}
+        check: null
+      comment: ""
+- table:
     name: sessions
     schema: public
   computed_fields:
