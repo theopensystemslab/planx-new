@@ -4,7 +4,7 @@ on:
     inputs:
       pull_request_id:
         required: true
-        type: integer
+        type: number
         description: Pull Request number which should have its pizza destroyed
 
 env:
@@ -20,4 +20,8 @@ jobs:
           action: destroy
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
-          pullrequest_id: ${{  github.event.inputs.pull_request_id  }}
+          os_type: alpine
+          plan: vc2-1c-1gb
+          pull_request_id: ${{  github.event.inputs.pull_request_id  }}
+          region: lhr
+          tag: manual-teardown
