@@ -369,8 +369,8 @@ export const previewStore: StateCreator<
         });
       }
     }
-    updateSectionData();
     setCurrentCard();
+    updateSectionData();
   },
 
   resultData(flagSet, overrides) {
@@ -380,6 +380,7 @@ export const previewStore: StateCreator<
 
   resumeSession(session: Session) {
     set({ ...session });
+    get().setCurrentCard();
     get().updateSectionData();
   },
 
