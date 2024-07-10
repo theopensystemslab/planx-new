@@ -3,6 +3,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store, vanillaStore } from "../../store";
 
 const { getState, setState } = vanillaStore;
+const { canGoBack, getCurrentCard, resetPreview } = getState();
 
 // https://imgur.com/VFV64ax
 const flow: Store.flow = {
@@ -58,7 +59,7 @@ const flow: Store.flow = {
 };
 
 beforeEach(() => {
-  getState().resetPreview();
+  resetPreview();
   setState({
     flow,
   });
@@ -74,7 +75,7 @@ describe("can go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(true);
+    expect(canGoBack(getCurrentCard())).toStrictEqual(true);
   });
 
   test("the user skipped the payment component", () => {
@@ -89,13 +90,13 @@ describe("can go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(true);
+    expect(canGoBack(getCurrentCard())).toStrictEqual(true);
   });
 });
 
 describe("cannot go back if", () => {
   test("it's the very first component", () => {
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+    expect(canGoBack(getCurrentCard())).toStrictEqual(false);
   });
 
   test("the only previous component was auto-answered", () => {
@@ -107,7 +108,7 @@ describe("cannot go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+    expect(canGoBack(getCurrentCard())).toStrictEqual(false);
   });
 
   test("the applicant made a payment", () => {
@@ -128,7 +129,7 @@ describe("cannot go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+    expect(canGoBack(getCurrentCard())).toStrictEqual(false);
   });
 
   test("changing a component's answer", () => {
@@ -150,6 +151,6 @@ describe("cannot go back if", () => {
       },
       changedNode: "Confirmation",
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+    expect(canGoBack(getCurrentCard())).toStrictEqual(false);
   });
 });

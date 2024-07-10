@@ -3,7 +3,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store, vanillaStore } from "../../store";
 
 const { getState, setState } = vanillaStore;
-const { upcomingCardIds, resetPreview, record, currentCard } = getState();
+const { upcomingCardIds, resetPreview, record, getCurrentCard } = getState();
 
 const flow: Store.flow = {
   _root: {
@@ -75,7 +75,7 @@ test.skip("A node is only auto-answered when it is the first upcomingCardId(), n
   record("SetValue", { data: { fruit: ["apple"] }, auto: true });
   clickContinue();
 
-  expect(currentCard()?.id).toBe("Content");
+  expect(getCurrentCard()?.id).toBe("Content");
 
   // "AutomatedQuestion" should still be queued up, not already answered based on SetValue
   expect(visitedNodes()).not.toContain("AutomatedQuestion");

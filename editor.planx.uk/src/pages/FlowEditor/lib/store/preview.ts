@@ -41,6 +41,7 @@ export interface PreviewStore extends Store.Store {
   ) => Array<string>;
   currentCard: ({ id: Store.nodeId } & Store.node) | null;
   setCurrentCard: () => void;
+  getCurrentCard: () => ({ id: Store.nodeId } & Store.node) | null;
   hasPaid: () => boolean;
   previousCard: (
     node: Store.node | null,
@@ -654,6 +655,8 @@ export const previewStore: StateCreator<
   },
 
   currentCard: null,
+
+  getCurrentCard: () => get().currentCard,
 });
 
 const knownNots = (

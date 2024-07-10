@@ -15,7 +15,7 @@ let flowWithPassportComponents = cloneDeep(
   flowWithPassportComponentsMock,
 ) as Store.flow;
 
-const { record, resetPreview, previousCard, currentCard, changeAnswer } =
+const { record, resetPreview, previousCard, getCurrentCard, changeAnswer } =
   getState();
 
 beforeEach(() => {
@@ -182,7 +182,7 @@ describe("nodesDependentOnPassport with record", () => {
       },
     });
 
-    expect(currentCard()?.id).toEqual("drawBoundary");
+    expect(getCurrentCard()?.id).toEqual("drawBoundary");
   });
 
   test("should clear _nodesPendingEdit after edition", () => {
@@ -229,8 +229,8 @@ describe("nodesDependentOnPassport with previousCard", () => {
       _nodesPendingEdit: [],
     });
 
-    expect(currentCard()?.id).toEqual("drawBoundary");
-    expect(previousCard(currentCard())).toEqual("text");
+    expect(getCurrentCard()?.id).toEqual("drawBoundary");
+    expect(previousCard(getCurrentCard())).toEqual("text");
   });
 
   test("To be last pushed to the breadcrumbs when changing answer", () => {
@@ -247,7 +247,7 @@ describe("nodesDependentOnPassport with previousCard", () => {
       _nodesPendingEdit,
     });
 
-    expect(previousCard(currentCard())).toEqual("findProperty");
+    expect(previousCard(getCurrentCard())).toEqual("findProperty");
   });
 });
 

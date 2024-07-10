@@ -4,8 +4,13 @@ import flowWithBranchingFilters from "./mocks/flowWithBranchingFilters.json";
 import flowWithRootFilter from "./mocks/flowWithRootFilter.json";
 
 const { getState, setState } = vanillaStore;
-const { upcomingCardIds, resetPreview, record, currentCard, collectedFlags } =
-  getState();
+const {
+  upcomingCardIds,
+  resetPreview,
+  record,
+  getCurrentCard,
+  collectedFlags,
+} = getState();
 
 // https://i.imgur.com/k0kkKox.png
 describe("A filter on the root of the graph", () => {
@@ -74,9 +79,9 @@ describe("A filter on a branch", () => {
     record("fork", { answers: ["filter2"] });
 
     // XXX: Test fails here
-    // The currentCard returns as "immunityFlag2" which we should not land on -
+    // The getCurrentCard returns as "immunityFlag2" which we should not land on -
     // the flags on the first filter are skipped, we go direct from "immunityPath1" to "fork"
-    expect(currentCard()?.id).toBe("immunityPath2");
+    expect(getCurrentCard()?.id).toBe("immunityPath2");
   });
 });
 
@@ -97,7 +102,7 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
     record("TiIuAVIXsV", { answers: ["hdaeOVIXsV"], auto: false });
 
     // land on the correct result component
-    expect(currentCard()?.id).toBe("seN42VIXsV");
+    expect(getCurrentCard()?.id).toBe("seN42VIXsV");
     expect(getState().resultData()["Planning permission"]).toHaveProperty(
       "flag.value",
       "PLANNING_PERMISSION_REQUIRED",
@@ -131,7 +136,7 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
     upcomingCardIds();
 
     // land on the correct result component
-    expect(currentCard()?.id).toBe("seN42VIXsV");
+    expect(getCurrentCard()?.id).toBe("seN42VIXsV");
     expect(getState().resultData()["Planning permission"]).toHaveProperty(
       "flag.value",
       "PLANNING_PERMISSION_REQUIRED",
