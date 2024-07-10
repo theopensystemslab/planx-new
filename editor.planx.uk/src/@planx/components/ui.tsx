@@ -127,7 +127,7 @@ export const MoreInformation = ({
               onChange={changeField}
             />
           </InputLabel>
-          <InputLabel label="How it is defined?">
+          <InputLabel label="How it is defined?" htmlFor="howMeasured">
             <InputRow>
               <RichTextInput
                 multiline
