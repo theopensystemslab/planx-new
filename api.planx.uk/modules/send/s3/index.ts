@@ -1,16 +1,19 @@
+import axios from "axios";
 import type { NextFunction, Request, Response } from "express";
+import { gql } from "graphql-request";
 import { $api } from "../../../client";
+import { Passport } from "../../../types";
 import { uploadPrivateFile } from "../../file/service/uploadFile";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
-import axios from "axios";
 import { isApplicationTypeSupported } from "../utils/helpers";
-import { Passport } from "../../../types";
 
-export async function sendToS3(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+interface CreateS3Application {
+  insertS3Application: {
+    id: string;
+  };
+}
+
+const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
   // `/upload-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
   const { payload } = req.body;
   const localAuthority = req.params.localAuthority;
@@ -58,8 +61,7 @@ export async function sendToS3(
     );
 
     // Send a notification with the file URL to the Power Automate webook
-    let webhookResponseStatus: number | undefined;
-    await axios({
+    const webhookRequest = {
       method: "POST",
       url: powerAutomateWebhookURL,
       adapter: "http",
@@ -73,19 +75,55 @@ export async function sendToS3(
         file: fileUrl,
         payload: doValidation ? "Validated ODP Schema" : "Discretionary",
       },
-    })
-      .then((res) => {
-        // TODO Create & update audit table entry here
+    };
+    let webhookResponseStatus: number | undefined;
+    await axios(webhookRequest)
+      .then(async (res) => {
         webhookResponseStatus = res.status;
+
+        // Mark session as submitted so that reminder and expiry emails are not triggered
+        markSessionAsSubmitted(sessionId);
+
+        // Create an audit entry
+        const applicationId = await $api.client.request<CreateS3Application>(
+          gql`
+            mutation CreateS3Application(
+              $session_id: String!
+              $team_slug: String!
+              $webhook_request: jsonb!
+              $webhook_response: jsonb = {}
+            ) {
+              insertS3Application: insert_s3_applications_one(
+                object: {
+                  session_id: $session_id
+                  team_slug: $team_slug
+                  webhook_request: $webhook_request
+                  webhook_response: $webhook_response
+                }
+              ) {
+                id
+              }
+            }
+          `,
+          {
+            session_id: sessionId,
+            team_slug: localAuthority,
+            webhook_request: webhookRequest,
+            webhook_response: res,
+          },
+        );
+
+        return {
+          application: {
+            ...applicationId.insertS3Application,
+          },
+        };
       })
       .catch((error) => {
         throw new Error(
           `Failed to send submission notification to ${localAuthority}'s Power Automate Webhook (${sessionId}): ${error}`,
         );
       });
-
-    // Mark session as submitted so that reminder and expiry emails are not triggered
-    markSessionAsSubmitted(sessionId);
 
     return res.status(200).send({
       message: `Successfully uploaded submission to S3: ${fileUrl}`,
@@ -100,4 +138,6 @@ export async function sendToS3(
       }`,
     });
   }
-}
+};
+
+export { sendToS3 };

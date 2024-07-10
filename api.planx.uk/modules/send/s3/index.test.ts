@@ -53,6 +53,14 @@ describe(`uploading an application to S3`, () => {
         slug: "unsupported-team",
       },
     });
+
+    queryMock.mockQuery({
+      name: "CreateS3Application",
+      matchOnVariables: false,
+      data: {
+        insertS3Application: { id: 1 },
+      },
+    });
   });
 
   it("requires auth", async () => {
