@@ -38,7 +38,7 @@ const ReconciliationPage: React.FC<Props> = ({
     state.flow,
     state.hasSections,
     state.sectionNodes,
-    state.currentCard(),
+    state.currentCard,
     state.changeAnswer,
     state.record,
     state.computePassport(),

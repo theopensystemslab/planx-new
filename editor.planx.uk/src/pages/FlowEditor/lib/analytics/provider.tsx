@@ -51,7 +51,6 @@ let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;
 const analyticsContext = createContext<{
   createAnalytics: (type: AnalyticsType) => Promise<void>;
   trackEvent: (eventData: EventData) => Promise<void>;
-  node: Store.node | null;
   track: (
     nodeId: string,
     direction?: AnalyticsLogDirection,
@@ -60,7 +59,6 @@ const analyticsContext = createContext<{
 }>({
   createAnalytics: () => Promise.resolve(),
   trackEvent: () => Promise.resolve(),
-  node: null,
   track: () => Promise.resolve(),
 });
 const { Provider } = analyticsContext;
@@ -90,7 +88,6 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     state.id,
     state.flow,
   ]);
-  const node = currentCard();
   const isAnalyticsEnabled =
     new URL(window.location.href).searchParams.get("analytics") !== "false";
   const shouldTrackAnalytics =
@@ -138,7 +135,6 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     <Provider
       value={{
         createAnalytics,
-        node,
         trackEvent,
         track,
       }}
@@ -314,7 +310,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     });
     const id = response.data.insert_analytics_one.id;
     setAnalyticsId(id);
-    const currentNodeId = currentCard()?.id;
+    const currentNodeId = currentCard?.id;
     if (currentNodeId) track(currentNodeId, type, id);
   }
 
