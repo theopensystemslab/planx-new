@@ -15,8 +15,14 @@ let flowWithPassportComponents = cloneDeep(
   flowWithPassportComponentsMock,
 ) as Store.flow;
 
-const { record, resetPreview, previousCard, getCurrentCard, changeAnswer } =
-  getState();
+const {
+  record,
+  resetPreview,
+  previousCard,
+  getCurrentCard,
+  changeAnswer,
+  setCurrentCard,
+} = getState();
 
 beforeEach(() => {
   resetPreview();
@@ -61,7 +67,7 @@ describe("removeNodesDependentOnPassport", () => {
 });
 
 describe("nodesDependentOnPassport with record", () => {
-  test("should remove Draw Boundary and Planning contraints from cachedBreadcrumbs", () => {
+  test("should remove Draw Boundary and Planning constraints from cachedBreadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
     } as Store.cachedBreadcrumbs;
@@ -228,6 +234,9 @@ describe("nodesDependentOnPassport with previousCard", () => {
       flow,
       _nodesPendingEdit: [],
     });
+
+    // Manually call setCurrentCard() as we're not using record() as part of our setup
+    setCurrentCard();
 
     expect(getCurrentCard()?.id).toEqual("drawBoundary");
     expect(previousCard(getCurrentCard())).toEqual("text");
