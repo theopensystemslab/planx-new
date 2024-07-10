@@ -79,7 +79,7 @@ describe("A filter on a branch", () => {
     record("fork", { answers: ["filter2"] });
 
     // XXX: Test fails here
-    // The getCurrentCard returns as "immunityFlag2" which we should not land on -
+    // getCurrentCard returns as "immunityFlag2" which we should not land on -
     // the flags on the first filter are skipped, we go direct from "immunityPath1" to "fork"
     expect(getCurrentCard()?.id).toBe("immunityPath2");
   });
