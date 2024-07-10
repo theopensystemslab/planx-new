@@ -69,7 +69,7 @@ describe("s3_applications", () => {
     test("can query and mutate s3 applications", () => {
       expect(i.queries).toContain("s3_applications");
       expect(i.mutations).toContain("insert_s3_applications");
-      expect(i.mutations).toContais("update_s3_applications_by_pk");
+      expect(i.mutations).toContain("update_s3_applications_by_pk");
     });
 
     test("cannot delete s3 applications", () => {
