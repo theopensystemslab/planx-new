@@ -39,7 +39,8 @@ export interface PreviewStore extends Store.Store {
     upToNodeId: Store.nodeId,
     visited?: Array<string>,
   ) => Array<string>;
-  currentCard: () => Store.node | null;
+  currentCard: ({ id: Store.nodeId } & Store.node) | null;
+  setCurrentCard: () => void;
   hasPaid: () => boolean;
   previousCard: (
     node: Store.node | null,
@@ -136,18 +137,15 @@ export const previewStore: StateCreator<
     return res;
   },
 
-  currentCard() {
+  setCurrentCard() {
     const { upcomingCardIds, flow } = get();
     const upcoming = upcomingCardIds();
 
     if (upcoming.length > 0) {
       const id = upcoming[0];
-      return {
-        id,
-        ...flow[id],
-      };
+      set({ currentCard: { id, ...flow[id] } });
     } else {
-      return null;
+      set({ currentCard: null });
     }
   },
 
@@ -287,6 +285,7 @@ export const previewStore: StateCreator<
       _nodesPendingEdit,
       changedNode,
       updateSectionData,
+      setCurrentCard,
     } = get();
 
     if (!flow[id]) throw new Error(`id "${id}" not found`);
@@ -370,6 +369,7 @@ export const previewStore: StateCreator<
       }
     }
     updateSectionData();
+    setCurrentCard();
   },
 
   resultData(flagSet, overrides) {
@@ -652,6 +652,8 @@ export const previewStore: StateCreator<
 
     return currentRequestedFiles || emptyFileList;
   },
+
+  currentCard: null,
 });
 
 const knownNots = (
