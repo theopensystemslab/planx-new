@@ -1557,6 +1557,7 @@
           - number_times_resumed
           - sent_to_bops
           - sent_to_email
+          - sent_to_s3_power_automate
           - sent_to_uniform
           - user_clicked_save
           - user_invited_to_pay
@@ -1565,7 +1566,16 @@
           - email_applications
           - payment_requests
           - payment_status
+          - s3_applications
           - uniform_applications
+          - allow_list_answers
+          - application_declaration_connection
+          - draw_boundary_action
+          - find_property_action
+          - property_constraints_planning
+          - property_type
+          - proposal_project_type
+          - user_role
           - service_slug
           - session_id
           - team_slug
@@ -1579,6 +1589,7 @@
           - number_times_resumed
           - sent_to_bops
           - sent_to_email
+          - sent_to_s3_power_automate
           - sent_to_uniform
           - user_clicked_save
           - user_invited_to_pay
@@ -1587,7 +1598,16 @@
           - email_applications
           - payment_requests
           - payment_status
+          - s3_applications
           - uniform_applications
+          - allow_list_answers
+          - application_declaration_connection
+          - draw_boundary_action
+          - find_property_action
+          - property_constraints_planning
+          - property_type
+          - proposal_project_type
+          - user_role
           - service_slug
           - session_id
           - team_slug
