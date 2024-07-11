@@ -12,25 +12,6 @@ import { PartialDeep } from "type-fest";
 const ENDPOINT = "/resume-application";
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 
-const mockFormatRawProjectTypes = jest
-  .fn()
-  .mockResolvedValue(["New office premises"]);
-
-jest.mock("@opensystemslab/planx-core", () => {
-  const actualCoreDomainClient = jest.requireActual(
-    "@opensystemslab/planx-core",
-  ).CoreDomainClient;
-
-  return {
-    CoreDomainClient: class extends actualCoreDomainClient {
-      constructor() {
-        super();
-        this.formatRawProjectTypes = () => mockFormatRawProjectTypes();
-      }
-    },
-  };
-});
-
 describe("buildContentFromSessions function", () => {
   it("should return correctly formatted content for a single session", async () => {
     const sessions: PartialDeep<LowCalSession>[] = [
@@ -56,7 +37,7 @@ describe("buildContentFromSessions function", () => {
 
     const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
@@ -126,15 +107,15 @@ describe("buildContentFromSessions function", () => {
     ];
     const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123\n\nService: Apply for a Lawful Development Certificate
       Address: 2 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=456\n\nService: Apply for a Lawful Development Certificate
       Address: 3 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=789`;
     expect(
@@ -186,7 +167,7 @@ describe("buildContentFromSessions function", () => {
     ];
     const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
@@ -219,7 +200,7 @@ describe("buildContentFromSessions function", () => {
 
     const result = `Service: Apply for a Lawful Development Certificate
       Address: Address not submitted
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
@@ -231,7 +212,6 @@ describe("buildContentFromSessions function", () => {
   });
 
   it("should handle an empty project type field", async () => {
-    mockFormatRawProjectTypes.mockResolvedValueOnce("");
     const sessions: PartialDeep<LowCalSession>[] = [
       {
         data: {

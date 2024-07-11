@@ -1,9 +1,10 @@
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { SiteAddress } from "@opensystemslab/planx-core/types";
-import { format, addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 import { gql } from "graphql-request";
-import { LowCalSession, Team } from "../../../types";
+import { $api } from "../../../client";
 import { Template, getClientForTemplate, sendEmail } from "../../../lib/notify";
-import { $api, $public } from "../../../client";
+import { LowCalSession, Team } from "../../../types";
 
 const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
@@ -120,7 +121,7 @@ const validateSingleSessionRequest = async (
       flowSlug: session.flow.slug,
       flowName: session.flow.name,
       team: session.flow.team,
-      session: await getSessionDetails(session),
+      session: getSessionDetails(session),
     };
   } catch (error) {
     throw Error(`Unable to validate request. ${(error as Error).message}`);
@@ -139,14 +140,11 @@ interface SessionDetails {
 /**
  * Parse session details into an object which will be read by email template
  */
-export const getSessionDetails = async (
-  session: LowCalSession,
-): Promise<SessionDetails> => {
+export const getSessionDetails = (session: LowCalSession): SessionDetails => {
   const passportProtectTypes =
     session.data.passport?.data?.["proposal.projectType"];
   const projectTypes =
-    passportProtectTypes &&
-    (await $public.formatRawProjectTypes(passportProtectTypes));
+    passportProtectTypes && formatRawProjectTypes(passportProtectTypes);
   const address: SiteAddress | undefined =
     session.data?.passport?.data?._address;
   const addressLine = address?.single_line_address || address?.title;
@@ -268,12 +266,12 @@ export const setupEmailEventTriggers = async (sessionId: string) => {
 };
 
 export {
-  getSaveAndReturnPublicHeaders,
-  getResumeLink,
-  sendSingleApplicationEmail,
-  markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
   REMINDER_DAYS_FROM_EXPIRY,
   calculateExpiryDate,
+  getResumeLink,
+  getSaveAndReturnPublicHeaders,
+  markSessionAsSubmitted,
+  sendSingleApplicationEmail,
   softDeleteSession,
 };

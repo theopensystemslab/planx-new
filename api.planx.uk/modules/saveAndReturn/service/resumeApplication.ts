@@ -1,7 +1,8 @@
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import type { SiteAddress } from "@opensystemslab/planx-core/types";
 import { differenceInDays } from "date-fns";
 import { gql } from "graphql-request";
-import { $api, $public } from "../../../client";
+import { $api } from "../../../client";
 import { sendEmail } from "../../../lib/notify";
 import { LowCalSession, Team } from "../../../types";
 import { DAYS_UNTIL_EXPIRY, calculateExpiryDate, getResumeLink } from "./utils";
@@ -109,9 +110,11 @@ const buildContentFromSessions = async (
     const address: SiteAddress | undefined =
       session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
-    const projectType = await $public.formatRawProjectTypes(
-      session.data?.passport?.data?.["proposal.projectType"],
-    );
+    const projectType = session.data?.passport?.data?.["proposal.projectType"]
+      ? formatRawProjectTypes(
+          session.data?.passport?.data?.["proposal.projectType"],
+        )
+      : "Project type not submitted";
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 

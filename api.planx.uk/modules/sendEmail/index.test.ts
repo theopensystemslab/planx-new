@@ -9,15 +9,10 @@ import {
   mockValidateSingleSessionRequest,
   mockValidateSingleSessionRequestMissingSession,
 } from "../../tests/mocks/saveAndReturnMocks";
-import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 const SAVE_ENDPOINT = "/send-email/save";
-
-jest
-  .spyOn(CoreDomainClient.prototype, "formatRawProjectTypes")
-  .mockResolvedValue("New office premises");
 
 describe("Send Email endpoint", () => {
   beforeEach(() => {
