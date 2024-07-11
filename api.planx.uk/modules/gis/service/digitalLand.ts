@@ -28,6 +28,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   doncaster: require("./local_authorities/metadata/doncaster"),
   "epsom-and-ewell": require("./local_authorities/metadata/epsomAndEwell"),
   gateshead: require("./local_authorities/metadata/gateshead"),
+  gloucester: require("./local_authorities/metadata/gloucester"),
   lambeth: require("./local_authorities/metadata/lambeth"),
   medway: require("./local_authorities/metadata/medway"),
   newcastle: require("./local_authorities/metadata/newcastle"),
