@@ -43,8 +43,8 @@ dependencies:
     specifier: ^0.8.3
     version: 0.8.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#a7ad0ff
-    version: github.com/theopensystemslab/planx-core/a7ad0ff(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#75127e6
+    version: github.com/theopensystemslab/planx-core/75127e6(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -6798,7 +6798,7 @@ packages:
       '@storybook/preview-api': 7.6.7
       '@storybook/theming': 7.6.7(react-dom@18.2.0)(react@18.2.0)
       '@storybook/types': 7.6.7
-      '@types/lodash': 4.14.202
+      '@types/lodash': 4.17.6
       color-convert: 2.0.1
       dequal: 2.0.3
       lodash: 4.17.21
@@ -8556,7 +8556,6 @@ packages:
 
   /@types/lodash@4.17.6:
     resolution: {integrity: sha512-OpXEVoCKSS3lQqjx9GGGOapBeuW5eUboYHRlHP9urXPX25IKZ6AnP5ZRxtVf63iieUbsHxLn8NQ5Nlftc6yzAA==}
-    dev: false
 
   /@types/mdast@3.0.15:
     resolution: {integrity: sha512-LnwD+mUEfxWMa1QpDraczIn6k0Ee3SMicuYSSzS6ZYl2gKS09EClnJYGd8Du6rfc5r/GZEk5o1mRb8TaTj03sQ==}
@@ -21833,9 +21832,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/a7ad0ff(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a7ad0ff}
-    id: github.com/theopensystemslab/planx-core/a7ad0ff
+  github.com/theopensystemslab/planx-core/75127e6(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/75127e6}
+    id: github.com/theopensystemslab/planx-core/75127e6
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
