@@ -1,11 +1,7 @@
-import {
-  SiteAddress,
-  Team,
-  TeamSettings,
-} from "@opensystemslab/planx-core/types";
+import { SiteAddress, Team } from "@opensystemslab/planx-core/types";
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
-import { LowCalSession, NotifyConfig } from "../../../types";
+import { LowCalSession } from "../../../types";
 import { Template, getClientForTemplate, sendEmail } from "../../../lib/notify";
 import { $api, $public } from "../../../client";
 
