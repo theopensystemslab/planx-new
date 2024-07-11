@@ -63,6 +63,8 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     canGoBack,
     setPreviewEnvironment,
     getType,
+    node,
+    setCurrentCard,
   ] = useStore((state) => [
     state.previousCard,
     state.record,
@@ -75,9 +77,11 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.canGoBack,
     state.setPreviewEnvironment,
     state.getType,
+    state.currentCard,
+    state.setCurrentCard,
   ]);
   const isStandalone = previewEnvironment === "standalone";
-  const { createAnalytics, node, trackEvent } = useAnalyticsTracking();
+  const { createAnalytics, trackEvent } = useAnalyticsTracking();
   const [gotFlow, setGotFlow] = useState(false);
   const isUsingLocalStorage =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
@@ -89,6 +93,8 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   // Initial setup
   useEffect(() => {
+    setCurrentCard();
+
     if (!isStandalone) return;
 
     if (isUsingLocalStorage) {

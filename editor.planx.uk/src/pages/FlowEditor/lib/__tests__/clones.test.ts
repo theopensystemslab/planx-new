@@ -3,7 +3,7 @@ const { getState, setState } = vanillaStore;
 import forwardsFlow from "./mocks/flowWithClones.json";
 import reverseFlow from "./mocks/flowWithReverseClones.json";
 
-const { record, previousCard, currentCard, upcomingCardIds, resetPreview } =
+const { record, previousCard, getCurrentCard, upcomingCardIds, resetPreview } =
   getState();
 
 beforeEach(() => {
@@ -54,14 +54,14 @@ describe("Clone order in flow (backwards)", () => {
     // Traverse forward to final node
     record("question", { answers: ["leftChoice"] });
     record("clone", { answers: ["finalNode"] });
-    expect(currentCard()?.id).toBe("finalNode");
+    expect(getCurrentCard()?.id).toBe("finalNode");
 
     // Traverse back one-by-one to first node
-    let previous = previousCard(currentCard());
+    let previous = previousCard(getCurrentCard());
     expect(previous).toBe("clone");
     record(previous!);
 
-    previous = previousCard(currentCard());
+    previous = previousCard(getCurrentCard());
     expect(previous).toBe("question");
     record(previous!);
 
@@ -79,18 +79,18 @@ describe("Clone order in flow (backwards)", () => {
     record("question", { answers: ["rightChoice"] });
     record("rightNotice", { answers: ["clone"] });
     record("clone", { answers: ["finalNode"] });
-    expect(currentCard()?.id).toBe("finalNode");
+    expect(getCurrentCard()?.id).toBe("finalNode");
 
     // Traverse back one-by-one to first node
-    let previous = previousCard(currentCard());
+    let previous = previousCard(getCurrentCard());
     expect(previous).toBe("clone");
     record(previous!);
 
-    previous = previousCard(currentCard());
+    previous = previousCard(getCurrentCard());
     expect(previous).toBe("rightNotice");
     record(previous!);
 
-    previous = previousCard(currentCard());
+    previous = previousCard(getCurrentCard());
     expect(previous).toBe("question");
     record(previous!);
 

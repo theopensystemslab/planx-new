@@ -15,8 +15,14 @@ let flowWithPassportComponents = cloneDeep(
   flowWithPassportComponentsMock,
 ) as Store.flow;
 
-const { record, resetPreview, previousCard, currentCard, changeAnswer } =
-  getState();
+const {
+  record,
+  resetPreview,
+  previousCard,
+  getCurrentCard,
+  changeAnswer,
+  setCurrentCard,
+} = getState();
 
 beforeEach(() => {
   resetPreview();
@@ -61,7 +67,7 @@ describe("removeNodesDependentOnPassport", () => {
 });
 
 describe("nodesDependentOnPassport with record", () => {
-  test("should remove Draw Boundary and Planning contraints from cachedBreadcrumbs", () => {
+  test("should remove Draw Boundary and Planning constraints from cachedBreadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
     } as Store.cachedBreadcrumbs;
@@ -182,7 +188,7 @@ describe("nodesDependentOnPassport with record", () => {
       },
     });
 
-    expect(currentCard()?.id).toEqual("drawBoundary");
+    expect(getCurrentCard()?.id).toEqual("drawBoundary");
   });
 
   test("should clear _nodesPendingEdit after edition", () => {
@@ -229,8 +235,11 @@ describe("nodesDependentOnPassport with previousCard", () => {
       _nodesPendingEdit: [],
     });
 
-    expect(currentCard()?.id).toEqual("drawBoundary");
-    expect(previousCard(currentCard())).toEqual("text");
+    // Manually call setCurrentCard() as we're not using record() as part of our setup
+    setCurrentCard();
+
+    expect(getCurrentCard()?.id).toEqual("drawBoundary");
+    expect(previousCard(getCurrentCard())).toEqual("text");
   });
 
   test("To be last pushed to the breadcrumbs when changing answer", () => {
@@ -247,7 +256,7 @@ describe("nodesDependentOnPassport with previousCard", () => {
       _nodesPendingEdit,
     });
 
-    expect(previousCard(currentCard())).toEqual("findProperty");
+    expect(previousCard(getCurrentCard())).toEqual("findProperty");
   });
 });
 

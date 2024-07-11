@@ -259,20 +259,19 @@ const Breadcrumbs: React.FC = () => {
 };
 
 const NavBar: React.FC = () => {
-  const [index, sectionCount, title, hasSections, saveToEmail, path] = useStore(
-    (state) => [
+  const [index, sectionCount, title, hasSections, saveToEmail, path, node] =
+    useStore((state) => [
       state.currentSectionIndex,
       state.sectionCount,
       state.currentSectionTitle,
       state.hasSections,
       state.saveToEmail,
       state.path,
-    ],
-  );
+      state.currentCard,
+    ]);
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession && !saveToEmail;
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
-  const { node } = useAnalyticsTracking();
   const isSectionCard = node?.type == TYPES.Section;
   const isVisible =
     hasSections &&

@@ -33,7 +33,7 @@ export default function Component(props: Props) {
     state.breadcrumbs,
     state.cachedBreadcrumbs,
     state.changeAnswer,
-    state.currentCard(),
+    state.currentCard,
     state.currentSectionIndex,
     state.flow,
     state.flowName,

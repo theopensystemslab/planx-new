@@ -2,7 +2,7 @@ import { vanillaStore } from "../../store";
 
 const { getState, setState } = vanillaStore;
 
-const { overrideAnswer, currentCard, upcomingCardIds, record } = getState();
+const { overrideAnswer, getCurrentCard, upcomingCardIds, record } = getState();
 
 test("it clears the correct breadcrumb and navigates back to the right node", async () => {
   // set up initial state, confirm our passport computes as expected
@@ -38,7 +38,7 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
   });
 
   // confirm we've navigated back to the right node, and that PropertyInformation is queued up again in upcoming cards
-  expect(currentCard()?.id).toEqual("FirstPropertyTypeQuestionNodeId");
+  expect(getCurrentCard()?.id).toEqual("FirstPropertyTypeQuestionNodeId");
   expect(upcomingCardIds()).toContain("PropertyInformationNodeId");
 
   // select a new answer, confirm our passport has updated
