@@ -1,24 +1,10 @@
 import { queryMock } from "../../../tests/graphqlQueryMock";
 import { LowCalSession, LowCalSessionData, Team } from "../../../types";
 import {
-  convertSlugToName,
   getResumeLink,
   getSessionDetails,
   setupEmailEventTriggers,
 } from "./utils";
-
-describe("convertSlugToName util function", () => {
-  it("should return the correct value", () => {
-    const testData = [
-      ["open-systems-lab", "Open systems lab"],
-      ["lambeth", "Lambeth"],
-    ];
-
-    testData.forEach(([slug, name]) => {
-      expect(convertSlugToName(slug)).toEqual(name);
-    });
-  });
-});
 
 describe("getResumeLink util function", () => {
   it("should return the correct value for a custom domain", () => {

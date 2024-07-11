@@ -4,12 +4,7 @@ import { gql } from "graphql-request";
 import { $api, $public } from "../../../client";
 import { sendEmail } from "../../../lib/notify";
 import { LowCalSession, Team } from "../../../types";
-import {
-  DAYS_UNTIL_EXPIRY,
-  calculateExpiryDate,
-  convertSlugToName,
-  getResumeLink,
-} from "./utils";
+import { DAYS_UNTIL_EXPIRY, calculateExpiryDate, getResumeLink } from "./utils";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -111,7 +106,6 @@ const buildContentFromSessions = async (
   team: Team,
 ): Promise<string> => {
   const contentBuilder = async (session: LowCalSession) => {
-    const service = convertSlugToName(session.flow.slug);
     const address: SiteAddress | undefined =
       session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
@@ -126,7 +120,7 @@ const buildContentFromSessions = async (
     const sessionAge = differenceInDays(today, new Date(session.created_at));
 
     if (sessionAge < DAYS_UNTIL_EXPIRY)
-      return `Service: ${service}
+      return `Service: ${session.flow.name}
       Address: ${addressLine || "Address not submitted"}
       Project type: ${projectType || "Project type not submitted"}
       Expiry Date: ${expiryDate}

@@ -9,13 +9,6 @@ const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
 
 /**
- * Converts a flow's slug to a pretty name
- * XXX: This relies on pretty names not having dashes in them, which may not always be true (e.g. Na h-Eileanan Siar, Stoke-on-Trent)
- */
-const convertSlugToName = (slug: string): string =>
-  slug[0].toUpperCase() + slug.substring(1).replaceAll("-", " ");
-
-/**
  * Build the magic link which will be sent to users via email to continue their application
  */
 const getResumeLink = (
@@ -276,7 +269,6 @@ export const setupEmailEventTriggers = async (sessionId: string) => {
 
 export {
   getSaveAndReturnPublicHeaders,
-  convertSlugToName,
   getResumeLink,
   sendSingleApplicationEmail,
   markSessionAsSubmitted,
