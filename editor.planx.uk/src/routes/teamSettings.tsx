@@ -22,7 +22,7 @@ const teamSettingsRoutes = compose(
   })),
 
   mount({
-    "/": redirect("./team"),
+    "/": redirect("./general"),
     "/:tab": map(async (req) => {
       const isAuthorised = useStore.getState().canUserEditTeam(req.params.team);
 
