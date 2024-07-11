@@ -1,7 +1,6 @@
 import { gql } from "graphql-request";
 import {
   calculateExpiryDate,
-  convertSlugToName,
   getServiceLink,
 } from "../../../saveAndReturn/service/utils";
 import {

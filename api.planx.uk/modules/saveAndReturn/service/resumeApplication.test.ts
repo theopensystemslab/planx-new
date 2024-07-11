@@ -54,7 +54,7 @@ describe("buildContentFromSessions function", () => {
       },
     ];
 
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
@@ -124,15 +124,15 @@ describe("buildContentFromSessions function", () => {
         },
       },
     ];
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123\n\nService: Apply for a lawful development certificate
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123\n\nService: Apply for a Lawful Development Certificate
       Address: 2 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=456\n\nService: Apply for a lawful development certificate
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=456\n\nService: Apply for a Lawful Development Certificate
       Address: 3 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
@@ -184,7 +184,7 @@ describe("buildContentFromSessions function", () => {
         },
       },
     ];
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: New office premises
       Expiry Date: 29 May 2026
@@ -217,7 +217,7 @@ describe("buildContentFromSessions function", () => {
       },
     ];
 
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: Address not submitted
       Project type: New office premises
       Expiry Date: 29 May 2026
@@ -252,7 +252,7 @@ describe("buildContentFromSessions function", () => {
       },
     ];
 
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: Project type not submitted
       Expiry Date: 29 May 2026
