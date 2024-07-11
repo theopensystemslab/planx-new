@@ -174,7 +174,7 @@ export default function MakePayment({
     const [projectType, setProjectType] = useState<string | undefined>();
 
     useEffect(() => {
-      const fetchProjectType = async () => {
+      const fetchProjectType = () => {
         const projectType = formatRawProjectTypes(rawProjectTypes);
         setProjectType(projectType);
       };
