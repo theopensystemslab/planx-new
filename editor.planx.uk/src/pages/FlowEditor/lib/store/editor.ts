@@ -282,7 +282,7 @@ export const editorStore: StateCreator<
     client.cache.reset();
     const { data } = await client.query({
       query: gql`
-        query GetFlow($teamId: Int!) {
+        query GetFlows($teamId: Int!) {
           flows(where: { team: { id: { _eq: $teamId } } }) {
             id
             name
