@@ -1,5 +1,8 @@
 import { gql } from "@apollo/client";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  FlowStatus,
+} from "@opensystemslab/planx-core/types";
 import natsort from "natsort";
 import {
   compose,
@@ -7,6 +10,7 @@ import {
   map,
   Matcher,
   mount,
+  NaviRequest,
   redirect,
   route,
   withData,
@@ -26,8 +30,7 @@ import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "../pages/FlowEditor/data/types";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import type { Flow } from "../types";
-import { getFlowSettings } from "./flowSettings";
+import type { Flow, FlowSettings } from "../types";
 import { makeTitle } from "./utils";
 import { flowEditorView } from "./views/flowEditor";
 
@@ -178,6 +181,42 @@ const nodeRoutes = mount({
 
 const SettingsContainer = () => <View />;
 
+interface GetFlowSettings {
+  flows: {
+    id: string;
+    settings: FlowSettings;
+    status: FlowStatus;
+  }[];
+}
+
+export const getFlowSettings = async (req: NaviRequest) => {
+  const {
+    data: {
+      flows: [{ settings, status }],
+    },
+  } = await client.query<GetFlowSettings>({
+    query: gql`
+      query GetFlow($slug: String!, $team_slug: String!) {
+        flows(
+          limit: 1
+          where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
+        ) {
+          id
+          settings
+          status
+        }
+      }
+    `,
+    variables: {
+      slug: req.params.flow,
+      team_slug: req.params.team,
+    },
+  });
+
+  useStore.getState().setFlowSettings(settings);
+  useStore.getState().setFlowStatus(status);
+};
+
 const routes = compose(
   withData((req) => ({
     flow: req.params.flow.split(",")[0],
@@ -212,8 +251,6 @@ const routes = compose(
       }),
       nodeRoutes,
     ),
-
-    "/settings": lazy(() => import("./flowSettings")),
 
     "/service": compose(
       withView(SettingsContainer),

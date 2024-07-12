@@ -1,4 +1,3 @@
-import "./components/Settings";
 import "./floweditor.scss";
 
 import Box from "@mui/material/Box";

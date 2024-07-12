@@ -28,8 +28,6 @@ const routes = compose(
       view: <Team />,
     })),
 
-    "/settings": lazy(() => import("./teamSettings")),
-
     "/:flow": lazy(async (req) => {
       const [slug] = req.params.flow.split(",");
 
