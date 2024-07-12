@@ -114,7 +114,7 @@ function EditorNavMenu() {
       title: "Select a team",
       Icon: FormatListBulletedIcon,
       route: "/",
-      accessibleBy: ["platformAdmin"],
+      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
       title: "Admin panel",
@@ -147,13 +147,13 @@ function EditorNavMenu() {
       title: "Design",
       Icon: PaletteIcon,
       route: `/${teamSlug}/design`,
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/general-settings`,
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
   ];
 
@@ -168,13 +168,13 @@ function EditorNavMenu() {
       title: "Service settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/${flowSlug}/service`,
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions-log`,
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Feedback",
@@ -202,8 +202,8 @@ function EditorNavMenu() {
     return accessibleBy.includes("teamViewer");
   });
 
-  // Hide menu if the user cannot access any options
-  if (!visibleRoutes.length) return null;
+  // Hide menu if the user does not have a selection of items
+  if (visibleRoutes.length < 2) return null;
 
   return (
     <Root compact={compact}>
