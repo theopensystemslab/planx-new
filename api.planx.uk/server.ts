@@ -13,7 +13,7 @@ import helmet from "helmet";
 import { ServerError } from "./errors";
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
-import { passport } from "./modules/auth/passport";
+import { passportWithStrategies } from "./modules/auth/passport";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import miscRoutes from "./modules/misc/routes";
@@ -115,8 +115,8 @@ app.use(
   }),
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passportWithStrategies.initialize());
+app.use(passportWithStrategies.session());
 
 app.use(urlencoded({ extended: true }));
 

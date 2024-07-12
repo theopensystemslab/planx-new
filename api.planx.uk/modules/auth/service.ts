@@ -3,16 +3,11 @@ import { $api } from "../../client";
 import { User, Role } from "@opensystemslab/planx-core/types";
 
 export const buildJWT = async (email: string): Promise<string | undefined> => {
-  console.log("FETCHING USER FROM HASURA BY EMAIL")
   await checkUserCanAccessEnv(email, process.env.NODE_ENV);
   const user = await $api.user.getByEmail(email);
-  console.log("USER:")
-  console.log(user)
   if (!user) return;
 
   const claims = generateHasuraClaimsForUser(user);
-  console.log("CLAIMS:")
-  console.log(claims)
 
   const data = {
     sub: user.id.toString(),
