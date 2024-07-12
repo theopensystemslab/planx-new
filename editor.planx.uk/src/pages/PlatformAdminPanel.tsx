@@ -36,15 +36,15 @@ function Component() {
 
   return (
     <Container maxWidth={false}>
-      <Box sx={{ overflow: "hidden" }}>
-        <Typography variant="h1">Platform Admin Panel</Typography>
-        <Typography variant="body1" mb={3}>
-          {`This is an overview of each team's integrations and settings for the `}
-          <strong>{process.env.REACT_APP_ENV}</strong>
-          {` environment`}
-        </Typography>
-        {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
-      </Box>
+      <Typography variant="h2" component="h1" gutterBottom>
+        Platform Admin Panel
+      </Typography>
+      <Typography variant="body1" mb={3}>
+        {`This is an overview of each team's integrations and settings for the `}
+        <strong>{process.env.REACT_APP_ENV}</strong>
+        {` environment.`}
+      </Typography>
+      {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
     </Container>
   );
 }
@@ -73,17 +73,19 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
         expandIcon={<Caret />}
         sx={{ pr: 1.5 }}
       >
-        <Typography variant="h2">{data.name}</Typography>
+        <Typography variant="h3" component="h2">
+          {data.name}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Grid
           container
-          direction="row"
+          direction={{ xs: "column", lg: "row" }}
           justifyContent="flex-start"
           alignItems="flex-start"
           spacing={3}
         >
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4} width="100%">
             <SummaryListTable dense={true}>
               <>
                 <Box component="dt">{"Slug"}</Box>
@@ -112,7 +114,7 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
               </>
             </SummaryListTable>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4} width="100%">
             <SummaryListTable dense={true}>
               <>
                 <Box component="dt">{"Planning constraints"}</Box>
@@ -146,7 +148,7 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
               </>
             </SummaryListTable>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4} width="100%">
             <SummaryListTable dense={true}>
               <>
                 <Box component="dt">{"GOV.UK Notify"}</Box>
