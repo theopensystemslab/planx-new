@@ -10,7 +10,7 @@ import { Role } from "@opensystemslab/planx-core/types";
 
 import { ServerError } from "../../errors";
 import { Template } from "../../lib/notify";
-import { passport } from "./passport";
+import { passportWithStrategies } from "./passport";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -113,41 +113,34 @@ export const useJWT = expressjwt({
 
 export const useGoogleAuth: RequestHandler = (req, res, next) => {
   req.session!.returnTo = req.get("Referrer");
-  return passport.authenticate("google", {
+  return passportWithStrategies.authenticate("google", {
     scope: ["profile", "email"],
   })(req, res, next);
 };
 
 export const useGoogleCallbackAuth: RequestHandler = (req, res, next) => {
-  return passport.authenticate("google", {
+  return passportWithStrategies.authenticate("google", {
     failureRedirect: "/auth/login/failed",
   })(req, res, next);
 };
 
 export const useMicrosoftAuth: RequestHandler = (req, res, next) => {
-  console.log("INVOKING MICROSOFT MIDDLEWARE")
   req.session!.returnTo = req.get("Referrer");
-  console.log("REFERRER:")
-  console.log(req.get("Referrer"))
+
+  // generate a nonce to enable us to validate the response from OP
   const nonce = generators.nonce();
-  console.log(`Generated a nonce: ${nonce}`);
+  console.debug(`Generated a nonce: %s`, nonce);
   req.session!.nonce = nonce
-  // @ts-expect-error - method not typed to accept nonce (but it does deliver it to the strategy)
-  // DOES IT ??
-  return passport.authenticate("microsoft-oidc", {
+  
+  // @ts-expect-error (method not typed to accept nonce, but it does pass it to the strategy)
+  return passportWithStrategies.authenticate("microsoft-oidc", {
     prompt: "select_account",
-    nonce: nonce,
+    nonce,
   })(req, res, next);
 };
 
 export const useMicrosoftCallbackAuth: RequestHandler = (req, res, next) => {
-  console.log("INVOKING MICROSOFT CALLBACK MIDDLEWARE")
-  console.log("THIS ALMOST WORKS, BUT THEN REDIRECTS BACK TO MICROSOFT AFTER HITTING /")
-
-  console.log("REQ:")
-  console.log(req)
-
-  return passport.authenticate("microsoft-oidc", {
+  return passportWithStrategies.authenticate("microsoft-oidc", {
     failureRedirect: "/auth/login/failed",
   })(req, res, next);
 };
