@@ -9,7 +9,6 @@ import {
   mockValidateSingleSessionRequest,
   mockValidateSingleSessionRequestMissingSession,
 } from "../../tests/mocks/saveAndReturnMocks";
-import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";

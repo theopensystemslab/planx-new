@@ -213,7 +213,6 @@ describe("buildContentFromSessions function", () => {
   });
 
   it("should handle an empty project type field", async () => {
-    mockFormatRawProjectTypes.mockResolvedValueOnce("");
     const sessions: PartialDeep<LowCalSession>[] = [
       {
         data: {
