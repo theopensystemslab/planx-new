@@ -69,7 +69,7 @@ const fetchSettingsForDraftView = async (
                 favicon
               }
               name
-              teamSettings: team_settings {
+              settings: team_settings {
                 boundaryUrl: boundary_url
                 boundaryBBox: boundary_bbox
                 homepage
