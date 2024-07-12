@@ -1,6 +1,7 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 import FormControlLabel, {
   formControlLabelClasses,
 } from "@mui/material/FormControlLabel";
@@ -143,7 +144,7 @@ const ServiceSettings: React.FC = () => {
   });
 
   return (
-    <Box maxWidth="formWrap" mx="auto">
+    <Container maxWidth="formWrap">
       <Box component="form" onSubmit={elementsForm.handleSubmit} mb={2}>
         <SettingsSection>
           <Typography variant="h2" component="h3" gutterBottom>
@@ -309,7 +310,7 @@ const ServiceSettings: React.FC = () => {
           Service settings updated successfully
         </Alert>
       </Snackbar>
-    </Box>
+    </Container>
   );
 };
 

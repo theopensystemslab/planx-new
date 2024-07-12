@@ -41,7 +41,7 @@ import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
-import { rootFlowPath, rootTeamPath } from "../routes/utils";
+import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import TestEnvironmentBanner from "./TestEnvironmentBanner";
@@ -63,7 +63,7 @@ const BreadcrumbsRoot = styled(Box)(() => ({
 const BreadcrumbsLink = styled(Link)(({ theme }) => ({
   color: theme.palette.common.white,
   textDecoration: "none",
-  borderBottom: "1px solid currentColor",
+  borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
 })) as typeof Link;
 
 const StyledToolbar = styled(MuiToolbar)(() => ({
@@ -436,13 +436,6 @@ const EditorToolbar: React.FC<{
     setOpen(!open);
   };
 
-  const isFlowSettingsVisible = route.data.flow && canUserEditTeam(team.slug);
-
-  const isTeamSettingsVisible =
-    route.data.team && !route.data.flow && canUserEditTeam(team.slug);
-
-  const isGlobalSettingsVisible = !route.data.team && user?.isPlatformAdmin;
-
   return (
     <>
       <StyledToolbar disableGutters>
@@ -488,7 +481,7 @@ const EditorToolbar: React.FC<{
                       {user.lastName[0]}
                     </Avatar>
                     <Typography variant="body2" fontSize="small">
-                      Menu
+                      Account
                     </Typography>
                     <KeyboardArrowDown />
                   </IconButton>
@@ -520,73 +513,6 @@ const EditorToolbar: React.FC<{
               </ListItemIcon>
               <ListItemText>{user.email}</ListItemText>
             </MenuItem>
-            {(user.isPlatformAdmin || user.teams.length > 0) && (
-              <MenuItem disabled>
-                <ListItemIcon>
-                  <Edit />
-                </ListItemIcon>
-                <ListItemText>
-                  {user.isPlatformAdmin
-                    ? `All teams`
-                    : user.teams.map((team) => team.team.name).join(", ")}
-                </ListItemText>
-              </MenuItem>
-            )}
-            <Permission.IsNotPlatformAdmin>
-              <MenuItem disabled divider>
-                <ListItemIcon>
-                  <Visibility />
-                </ListItemIcon>
-                <ListItemText>All teams</ListItemText>
-              </MenuItem>
-            </Permission.IsNotPlatformAdmin>
-
-            {/* Only show team settings link if inside a team route  */}
-            {isTeamSettingsVisible && (
-              <>
-                <MenuItem
-                  onClick={() => navigate(`${rootTeamPath()}/settings`)}
-                >
-                  Team Settings
-                </MenuItem>
-                <MenuItem onClick={() => navigate(`${rootTeamPath()}/members`)}>
-                  Team Members
-                </MenuItem>
-              </>
-            )}
-
-            {/* Only show flow settings link if inside a flow route  */}
-            {isFlowSettingsVisible && (
-              <>
-                <MenuItem
-                  onClick={() =>
-                    navigate([rootFlowPath(true), "settings"].join("/"))
-                  }
-                >
-                  Flow Settings
-                </MenuItem>
-                <MenuItem
-                  onClick={() =>
-                    navigate([rootFlowPath(true), "feedback"].join("/"))
-                  }
-                >
-                  Feedback
-                </MenuItem>
-              </>
-            )}
-
-            {/* Only show global settings & admin panel links from top-level view */}
-            {isGlobalSettingsVisible && (
-              <>
-                <MenuItem onClick={() => navigate("/global-settings")}>
-                  Global Settings
-                </MenuItem>
-                <MenuItem onClick={() => navigate("/admin-panel")}>
-                  Admin Panel
-                </MenuItem>
-              </>
-            )}
-
             <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
           </StyledPaper>
         </StyledPopover>

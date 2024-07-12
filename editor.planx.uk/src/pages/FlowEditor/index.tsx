@@ -1,8 +1,8 @@
-import "./components/Settings";
 import "./floweditor.scss";
 
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
+import { HEADER_HEIGHT } from "components/Header";
 import React, { useRef } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
@@ -10,11 +10,13 @@ import Flow from "./components/Flow";
 import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
+
 const EditorContainer = styled(Box)(() => ({
   display: "flex",
   alignItems: "stretch",
   overflow: "hidden",
   flexGrow: 1,
+  maxHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
 }));
 
 const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {

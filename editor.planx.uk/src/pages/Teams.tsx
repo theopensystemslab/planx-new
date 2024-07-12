@@ -7,7 +7,6 @@ import { Team } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
-import Dashboard from "ui/editor/Dashboard";
 
 import { useStore } from "./FlowEditor/lib/store";
 
@@ -20,14 +19,6 @@ interface Props {
   teams: Array<Team>;
   teamTheme: Array<TeamTheme>;
 }
-
-export const Root = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
-  width: "100%",
-  display: "flex",
-  alignItems: "flex-start",
-  flexGrow: 1,
-}));
 
 const StyledLink = styled(Link)(() => ({
   textDecoration: "none",
@@ -80,32 +71,28 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
       );
     });
   return (
-    <Root>
-      <Dashboard>
-        <Container maxWidth="formWrap">
-          <Typography variant="h2" component="h1" mb={4}>
-            Select a team
+    <Container maxWidth="formWrap">
+      <Typography variant="h2" component="h1" mb={4}>
+        Select a team
+      </Typography>
+      {editableTeams.length > 0 && (
+        <>
+          <Typography variant="h3" component="h2" mb={2}>
+            My teams
           </Typography>
-          {editableTeams.length > 0 && (
-            <>
-              <Typography variant="h3" component="h2" mb={2}>
-                My teams
-              </Typography>
-              {renderTeams(editableTeams)}
-            </>
-          )}
+          {renderTeams(editableTeams)}
+        </>
+      )}
 
-          {viewOnlyTeams.length > 0 && (
-            <>
-              <Typography variant="h3" component="h2" mt={4} mb={2}>
-                Other teams (view only)
-              </Typography>
-              {renderTeams(viewOnlyTeams)}
-            </>
-          )}
-        </Container>
-      </Dashboard>
-    </Root>
+      {viewOnlyTeams.length > 0 && (
+        <>
+          <Typography variant="h3" component="h2" mt={4} mb={2}>
+            Other teams (view only)
+          </Typography>
+          {renderTeams(viewOnlyTeams)}
+        </>
+      )}
+    </Container>
   );
 };
 

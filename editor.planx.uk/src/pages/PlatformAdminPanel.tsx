@@ -4,6 +4,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -34,15 +35,17 @@ function Component() {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
   return (
-    <Box p={3}>
-      <Typography variant="h1">Platform Admin Panel</Typography>
-      <Typography variant="body1" mb={3}>
-        {`This is an overview of each team's integrations and settings for the `}
-        <strong>{process.env.REACT_APP_ENV}</strong>
-        {` environment`}
-      </Typography>
-      {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
-    </Box>
+    <Container maxWidth={false}>
+      <Box sx={{ overflow: "hidden" }}>
+        <Typography variant="h1">Platform Admin Panel</Typography>
+        <Typography variant="body1" mb={3}>
+          {`This is an overview of each team's integrations and settings for the `}
+          <strong>{process.env.REACT_APP_ENV}</strong>
+          {` environment`}
+        </Typography>
+        {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
+      </Box>
+    </Container>
   );
 }
 

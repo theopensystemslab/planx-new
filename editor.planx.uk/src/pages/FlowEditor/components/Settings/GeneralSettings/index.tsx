@@ -1,5 +1,5 @@
 import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
 import { TeamSettings } from "@opensystemslab/planx-core/types";
@@ -59,13 +59,13 @@ const GeneralSettings: React.FC = () => {
   const onSuccess = () => setOpen(true);
 
   return (
-    <Box maxWidth="formWrap" mx="auto">
+    <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           General
         </Typography>
         <Typography variant="body1">
-          Important links and settings for how your users connect with you
+          Important links and settings for how your users connect with you.
         </Typography>
       </SettingsSection>
       {formikConfig && (
@@ -79,7 +79,7 @@ const GeneralSettings: React.FC = () => {
           {updateMessage}
         </Alert>
       </Snackbar>
-    </Box>
+    </Container>
   );
 };
 
