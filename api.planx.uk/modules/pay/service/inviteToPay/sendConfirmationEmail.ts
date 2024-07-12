@@ -1,13 +1,14 @@
-import { $public, $api } from "../../../../client";
-import { sendEmail } from "../../../../lib/notify";
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
+import { $api } from "../../../../client";
+import { sendEmail } from "../../../../lib/notify";
 import type { AgentAndPayeeSubmissionNotifyConfig } from "../../../../types";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
   const { personalisation, applicantEmail, payeeEmail, projectTypes } =
     await getDataForPayeeAndAgentEmails(sessionId);
   const projectType = projectTypes.length
-    ? await $public.formatRawProjectTypes(projectTypes)
+    ? formatRawProjectTypes(projectTypes)
     : "Project type not submitted";
   const config: AgentAndPayeeSubmissionNotifyConfig = {
     personalisation: {

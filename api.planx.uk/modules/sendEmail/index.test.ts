@@ -15,10 +15,6 @@ import { CoreDomainClient } from "@opensystemslab/planx-core";
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 const SAVE_ENDPOINT = "/send-email/save";
 
-jest
-  .spyOn(CoreDomainClient.prototype, "formatRawProjectTypes")
-  .mockResolvedValue("New office premises");
-
 describe("Send Email endpoint", () => {
   beforeEach(() => {
     queryMock.reset();

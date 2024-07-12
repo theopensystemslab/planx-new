@@ -1,16 +1,16 @@
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
+import type { PaymentRequest, Team } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
-import {
-  calculateExpiryDate,
-  getServiceLink,
-} from "../../../saveAndReturn/service/utils";
 import {
   Template,
   getClientForTemplate,
   sendEmail,
 } from "../../../../lib/notify";
 import { InviteToPayNotifyConfig } from "../../../../types";
-import type { PaymentRequest, Team } from "@opensystemslab/planx-core/types";
-import { $public } from "../../../../client";
+import {
+  calculateExpiryDate,
+  getServiceLink,
+} from "../../../saveAndReturn/service/utils";
 
 interface SessionDetails {
   email: string;
@@ -37,7 +37,7 @@ const sendSinglePaymentEmail = async ({
       paymentRequestId,
       template,
     );
-    const config = await getInviteToPayNotifyConfig(session, paymentRequest);
+    const config = getInviteToPayNotifyConfig(session, paymentRequest);
     const recipient = template.includes("-agent")
       ? session.email
       : paymentRequest.payeeEmail;
@@ -104,10 +104,10 @@ const validatePaymentRequest = async (
   }
 };
 
-const getInviteToPayNotifyConfig = async (
+const getInviteToPayNotifyConfig = (
   session: SessionDetails,
   paymentRequest: PaymentRequest,
-): Promise<InviteToPayNotifyConfig> => {
+): InviteToPayNotifyConfig => {
   const flow = session.flow;
   const { settings } = session.flow.team;
 
@@ -127,11 +127,11 @@ const getInviteToPayNotifyConfig = async (
       ).title,
       fee: getFee(paymentRequest),
       projectType:
-        (await $public.formatRawProjectTypes(
+        formatRawProjectTypes(
           paymentRequest.sessionPreviewData?.[
             "proposal.projectType"
           ] as string[],
-        )) || "Project type not submitted",
+        ) || "Project type not submitted",
       serviceName: session.flow.name,
       serviceLink: getServiceLink(flow.team, flow.slug),
       expiryDate: calculateExpiryDate(paymentRequest.createdAt),
