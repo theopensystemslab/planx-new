@@ -1,11 +1,11 @@
 import cloneDeep from "lodash/cloneDeep";
 
-import { Store, vanillaStore } from "../../store";
+import { Store, useStore } from "../../store";
 import { removeNodesDependentOnPassport } from "../../store/preview";
 import breadcrumbsDependentOnPassportMock from "../mocks/breadcrumbsDependentOnPassport.json";
 import flowWithPassportComponentsMock from "../mocks/flowWithPassportComponents.json";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 let breadcrumbsDependentOnPassport = cloneDeep(
   breadcrumbsDependentOnPassportMock,

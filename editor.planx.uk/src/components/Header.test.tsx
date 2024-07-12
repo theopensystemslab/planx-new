@@ -1,6 +1,6 @@
 import { Team } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
-import { vanillaStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
@@ -10,7 +10,7 @@ import flowWithoutSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWit
 import flowWithThreeSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithThreeSections.json";
 import Header from "./Header";
 
-const { setState, getState } = vanillaStore;
+const { setState, getState } = useStore;
 
 const mockTeam1: Team = {
   id: 123,

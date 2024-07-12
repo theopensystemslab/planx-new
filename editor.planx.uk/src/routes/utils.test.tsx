@@ -1,11 +1,11 @@
 import { waitFor } from "@testing-library/react";
 import { NaviRequest } from "navi";
-import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
+import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
 
 import { isSaveReturnFlow, setPath } from "./utils";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 let initialState: FullStore;
 
 const mockFlow = {

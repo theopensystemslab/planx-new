@@ -1,9 +1,9 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { cloneDeep, merge } from "lodash";
 
-import { Store, vanillaStore } from "../store";
+import { Store, useStore } from "../store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 const { resetPreview, record, computePassport, getCurrentCard } = getState();
 
 const baseFlow: Store.flow = {

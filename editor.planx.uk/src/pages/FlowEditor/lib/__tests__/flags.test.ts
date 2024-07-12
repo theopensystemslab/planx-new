@@ -1,8 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
-import { vanillaStore } from "../store";
+import { useStore } from "../store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 describe("in a flow with no collected flags, the user", () => {
   beforeEach(() => {

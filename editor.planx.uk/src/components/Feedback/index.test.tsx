@@ -4,13 +4,13 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
-import { vanillaStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { axe, setup } from "testUtils";
 
 import Feedback from "./index";
 
-const { setState } = vanillaStore;
+const { setState } = useStore;
 
 const mockedBreadcrumbs: Breadcrumbs = {
   LU5xin8PHs: {

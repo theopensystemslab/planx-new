@@ -1,8 +1,8 @@
-import { FullStore, vanillaStore } from "../store";
+import { FullStore, useStore } from "../store";
 import multipleExternalPortals from "./mocks/multipleExternalPortals.json";
 import singleExternalPortal from "./mocks/singleExternalPortal.json";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 const { upcomingCardIds, record } = getState();
 
 let initialState: FullStore;

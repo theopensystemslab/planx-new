@@ -1,6 +1,6 @@
-import { vanillaStore } from "../../store";
+import { useStore } from "../../store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 const { overrideAnswer, getCurrentCard, upcomingCardIds, record } = getState();
 
