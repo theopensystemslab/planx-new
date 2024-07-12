@@ -1,10 +1,11 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
-import { SiteAddress } from "@opensystemslab/planx-core/types";
+import { SiteAddress, Team } from "@opensystemslab/planx-core/types";
 import { addDays, format } from "date-fns";
 import { gql } from "graphql-request";
+
 import { $api } from "../../../client";
 import { Template, getClientForTemplate, sendEmail } from "../../../lib/notify";
-import { LowCalSession, Team } from "../../../types";
+import { LowCalSession } from "../../../types";
 
 const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
@@ -60,7 +61,7 @@ const sendSingleApplicationEmail = async ({
     const config = {
       personalisation: getPersonalisation(session, flowSlug, flowName, team),
       reference: null,
-      emailReplyToId: team.notifyPersonalisation.emailReplyToId,
+      emailReplyToId: team.settings.emailReplyToId,
     };
     const firstSave = !session.hasUserSaved;
     if (firstSave && !session.submittedAt)
@@ -98,7 +99,7 @@ const validateSingleSessionRequest = async (
             team {
               name
               slug
-              notifyPersonalisation: notify_personalisation
+              settings: team_settings
               domain
             }
           }
@@ -174,7 +175,10 @@ const getPersonalisation = (
     serviceName: flowName,
     teamName: team.name,
     sessionId: session.id,
-    ...team.notifyPersonalisation,
+    helpEmail: team.settings.helpEmail,
+    helpPhone: team.settings.helpPhone,
+    helpOpeningHours: team.settings.helpOpeningHours,
+    emailReplyToId: team.settings.emailReplyToId,
     ...session,
   };
 };

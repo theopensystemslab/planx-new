@@ -47,7 +47,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
 
         const isUpdateSuccess = await useStore.getState().updateTeamSettings({
           boundaryUrl: values.boundaryUrl,
-          boundaryBbox: convertToBoundingBox(data),
+          boundaryBBox: convertToBoundingBox(data),
         });
         if (isUpdateSuccess) {
           onSuccess();

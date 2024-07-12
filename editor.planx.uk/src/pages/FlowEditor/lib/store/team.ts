@@ -45,7 +45,7 @@ export const teamStore: StateCreator<
       teamId: team.id,
       teamIntegrations: team.integrations,
       teamName: team.name,
-      teamSettings: team.teamSettings,
+      teamSettings: team.settings,
       teamSlug: team.slug,
       teamTheme: team.theme,
     });
@@ -60,7 +60,7 @@ export const teamStore: StateCreator<
     id: get().teamId,
     integrations: get().teamIntegrations,
     name: get().teamName,
-    teamSettings: get().teamSettings,
+    settings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
   }),

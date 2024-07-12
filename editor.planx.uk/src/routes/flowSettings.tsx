@@ -95,13 +95,13 @@ const flowSettingsRoutes = compose(
           `User does not have access to ${req.originalUrl}`,
         );
 
-      return route({
-        getData: getFlowSettings,
+      return route(async (req) => ({
+        getData: await getFlowSettings(req),
         title: makeTitle(
           [req.params.team, req.params.flow, "Flow Settings"].join("/"),
         ),
         view: <Settings currentTab={req.params.tab} tabs={tabs} />,
-      });
+      }));
     }),
   }),
 );

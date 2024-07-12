@@ -77,13 +77,13 @@ const fetchSettingsForDraftView = async (
                 helpPhone: help_phone
                 helpOpeningHours: help_opening_hours
                 emailReplyToId: email_reply_to_id
+                boundaryBBox: boundary_bbox
               }
               integrations {
                 hasPlanningData: has_planning_data
               }
               slug
             }
-            settings
             slug
             name
           }

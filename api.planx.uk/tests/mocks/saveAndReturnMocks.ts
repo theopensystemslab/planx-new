@@ -1,17 +1,18 @@
 import { v4 as uuidV4 } from "uuid";
 import type { LowCalSession, Flow } from "../../types";
+import { Team } from "@opensystemslab/planx-core/types";
 
 export const mockTeam = {
   id: 1,
   slug: "test-team",
   name: "Test Team",
-  notifyPersonalisation: {
+  settings: {
     helpEmail: "example@council.gov.uk",
     helpPhone: "(01234) 567890",
     helpOpeningHours: "Monday - Friday, 9am - 5pm",
     emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
   },
-};
+} as Team;
 
 export const mockFlow: Flow = {
   id: "dcfd4f07-76da-4b67-9822-2aca92b27551",

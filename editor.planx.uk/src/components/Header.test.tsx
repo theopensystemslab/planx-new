@@ -26,7 +26,7 @@ const mockTeam1: Team = {
     linkColour: "#0010A4",
     favicon: null,
   },
-  teamSettings: {
+  settings: {
     boundaryUrl: "https://www.planning.data.gov.uk/",
     helpEmail: "example@council.co.uk",
     helpPhone: "(01234) 56789",
@@ -52,7 +52,7 @@ const mockTeam2: Team = {
     linkColour: "#0010A4",
     favicon: null,
   },
-  teamSettings: {
+  settings: {
     boundaryUrl: "https://www.planning.data.gov.uk/",
     helpEmail: "example@council.co.uk",
     helpPhone: "(01234) 56789",
@@ -74,7 +74,7 @@ describe("Header Component - Editor Route", () => {
       setState({
         previewEnvironment: "editor",
         teamName: mockTeam1.name,
-        teamSettings: mockTeam1.teamSettings,
+        teamSettings: mockTeam1.settings,
         teamTheme: mockTeam1.theme,
         teamSlug: mockTeam1.slug,
         user: {

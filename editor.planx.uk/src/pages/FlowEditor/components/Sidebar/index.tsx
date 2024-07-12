@@ -22,6 +22,7 @@ import { AxiosError } from "axios";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
+import Permission from "ui/editor/Permission";
 import Input from "ui/shared/Input";
 
 import Questions from "../../../Preview/Questions";
@@ -163,7 +164,6 @@ const Sidebar: React.FC<{
     lastPublisher,
     validateAndDiffFlow,
     isFlowPublished,
-    isPlatformAdmin,
   ] = useStore((state) => [
     state.id,
     state.flowAnalyticsLink,
@@ -173,7 +173,6 @@ const Sidebar: React.FC<{
     state.lastPublisher,
     state.validateAndDiffFlow,
     state.isFlowPublished,
-    state.user?.isPlatformAdmin,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -297,7 +296,7 @@ const Sidebar: React.FC<{
             </Tooltip>
           )}
 
-          {isPlatformAdmin && (
+          <Permission.IsPlatformAdmin>
             <Tooltip arrow title="Open draft service">
               <Link
                 href={props.url.replace("/published", "/draft")}
@@ -308,7 +307,7 @@ const Sidebar: React.FC<{
                 <OpenInNewOffIcon />
               </Link>
             </Tooltip>
-          )}
+          </Permission.IsPlatformAdmin>
 
           <Tooltip arrow title="Open preview of changes to publish">
             <Link

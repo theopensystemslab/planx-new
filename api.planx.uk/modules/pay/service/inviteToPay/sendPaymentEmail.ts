@@ -1,12 +1,12 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
-import type { PaymentRequest } from "@opensystemslab/planx-core/types";
+import type { PaymentRequest, Team } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import {
   Template,
   getClientForTemplate,
   sendEmail,
 } from "../../../../lib/notify";
-import { InviteToPayNotifyConfig, Team } from "../../../../types";
+import { InviteToPayNotifyConfig } from "../../../../types";
 import {
   calculateExpiryDate,
   getServiceLink,
@@ -74,7 +74,7 @@ const validatePaymentRequest = async (
                 name
                 slug
                 domain
-                notifyPersonalisation: notify_personalisation
+                settings: team_settings
               }
             }
           }
@@ -107,28 +107,38 @@ const validatePaymentRequest = async (
 const getInviteToPayNotifyConfig = (
   session: SessionDetails,
   paymentRequest: PaymentRequest,
-): InviteToPayNotifyConfig => ({
-  personalisation: {
-    ...session.flow.team.notifyPersonalisation,
-    sessionId: paymentRequest.sessionId,
-    paymentRequestId: paymentRequest.id,
-    payeeEmail: paymentRequest.payeeEmail,
-    payeeName: paymentRequest.payeeName,
-    agentName: paymentRequest.applicantName,
-    address: (
-      paymentRequest.sessionPreviewData?._address as Record<"title", string>
-    ).title,
-    fee: getFee(paymentRequest),
-    projectType:
-      formatRawProjectTypes(
-        paymentRequest.sessionPreviewData?.["proposal.projectType"] as string[],
-      ) || "Project type not submitted",
-    serviceName: session.flow.name,
-    serviceLink: getServiceLink(session.flow.team, session.flow.slug),
-    expiryDate: calculateExpiryDate(paymentRequest.createdAt),
-    paymentLink: getPaymentLink(session, paymentRequest),
-  },
-});
+): InviteToPayNotifyConfig => {
+  const flow = session.flow;
+  const { settings } = session.flow.team;
+
+  return {
+    personalisation: {
+      helpEmail: settings.helpEmail,
+      helpPhone: settings.helpPhone,
+      emailReplyToId: settings.emailReplyToId,
+      helpOpeningHours: settings.helpOpeningHours,
+      sessionId: paymentRequest.sessionId,
+      paymentRequestId: paymentRequest.id,
+      payeeEmail: paymentRequest.payeeEmail,
+      payeeName: paymentRequest.payeeName,
+      agentName: paymentRequest.applicantName,
+      address: (
+        paymentRequest.sessionPreviewData?._address as Record<"title", string>
+      ).title,
+      fee: getFee(paymentRequest),
+      projectType:
+        formatRawProjectTypes(
+          paymentRequest.sessionPreviewData?.[
+            "proposal.projectType"
+          ] as string[],
+        ) || "Project type not submitted",
+      serviceName: session.flow.name,
+      serviceLink: getServiceLink(flow.team, flow.slug),
+      expiryDate: calculateExpiryDate(paymentRequest.createdAt),
+      paymentLink: getPaymentLink(session, paymentRequest),
+    },
+  };
+};
 
 const getFee = (paymentRequest: PaymentRequest) => {
   const toPounds = (pence: number) => pence / 100;
