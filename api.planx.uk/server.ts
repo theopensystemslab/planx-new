@@ -10,20 +10,14 @@ import pinoLogger from "express-pino-logger";
 import helmet from "helmet";
 import { Server } from "http";
 import "isomorphic-fetch";
-import passport from "passport";
 import noir from "pino-noir";
 import airbrake from "./airbrake.js";
 import { useSwaggerDocs } from "./docs/index.js";
 import { ServerError } from "./errors/index.js";
 import adminRoutes from "./modules/admin/routes.js";
 import analyticsRoutes from "./modules/analytics/routes.js";
-import {
-  getMicrosoftIssuer,
-  getMicrosoftOidcStrategy,
-} from "./modules/auth/strategy/microsoft-oidc.js";
-import { Issuer } from "openid-client";
+import { passportWithStrategies } from "./modules/auth/passport.js";
 import authRoutes from "./modules/auth/routes.js";
-import { googleStrategy } from "./modules/auth/strategy/google.js";
 import fileRoutes from "./modules/file/routes.js";
 import flowRoutes from "./modules/flows/routes.js";
 import gisRoutes from "./modules/gis/routes.js";
@@ -126,24 +120,8 @@ app.use(
 
 // register stubs after cookieSession middleware initialisation
 app.use(registerSessionStubs);
-
-// we have to fetch the Microsoft OpenID issuer to pass to our strategy constructor
-// TODO: handle failure to fetch issuer
-getMicrosoftIssuer().then((microsoftIssuer: Issuer) => {
-  console.log("GOT MS ISSUER - SETTING UP STRATEGY")
-  passport.use("microsoft-oidc", getMicrosoftOidcStrategy(microsoftIssuer));
-});
-passport.use("google", googleStrategy);
-
-passport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function (obj: Express.User, cb) {
-  cb(null, obj);
-});
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passportWithStrategies.initialize());
+app.use(passportWithStrategies.session());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Setup API routes
