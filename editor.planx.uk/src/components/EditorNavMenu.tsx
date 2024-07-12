@@ -114,7 +114,7 @@ function EditorNavMenu() {
       title: "Select a team",
       Icon: FormatListBulletedIcon,
       route: "/",
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: ["platformAdmin"],
     },
     {
       title: "Admin panel",
@@ -201,6 +201,9 @@ function EditorNavMenu() {
     if (canUserEditTeam(teamSlug)) return accessibleBy.includes("teamEditor");
     return accessibleBy.includes("teamViewer");
   });
+
+  // Hide menu if the user cannot access any options
+  if (!visibleRoutes.length) return null;
 
   return (
     <Root compact={compact}>
