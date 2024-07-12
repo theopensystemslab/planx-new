@@ -9,8 +9,10 @@ export function createTeam(
       name: "E2E Test Team",
       slug: "E2E",
       submissionEmail: TEST_EMAIL,
-      homepage: "planx.uk",
-      referenceCode: "ABCD",
+      settings: {
+        homepage: "http://www.planx.uk",
+        referenceCode: "ABCD",
+      },
       ...args,
     }),
   );
