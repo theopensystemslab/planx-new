@@ -24,6 +24,7 @@ import {
   validateAndDiffFlowController,
   validateAndDiffSchema,
 } from "./validate/controller";
+import { searchFlowDataController, searchFlowDataSchema } from "./search/controller";
 const router = Router();
 
 router.post(
@@ -79,5 +80,7 @@ router.get(
   validate(flattenFlowData),
   flattenFlowDataController,
 );
+
+router.get("/flows/:flowId/search", validate(searchFlowDataSchema), searchFlowDataController);
 
 export default router;
