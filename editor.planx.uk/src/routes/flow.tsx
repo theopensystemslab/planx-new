@@ -224,7 +224,7 @@ const routes = compose(
       withView(SettingsContainer),
 
       route(async (req) => ({
-        getData: getFlowSettings,
+        getData: await getFlowSettings(req),
         title: makeTitle(
           [req.params.team, req.params.flow, "service"].join("/"),
         ),
@@ -236,7 +236,7 @@ const routes = compose(
       withView(SettingsContainer),
 
       route(async (req) => ({
-        getData: getFlowSettings,
+        getData: await getFlowSettings(req),
         title: makeTitle(
           [req.params.team, req.params.flow, "service-flags"].join("/"),
         ),
