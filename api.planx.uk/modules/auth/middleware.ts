@@ -1,15 +1,16 @@
 import crypto from "crypto";
 import assert from "assert";
-import { ServerError } from "../../errors";
-import { Template } from "../../lib/notify";
 import { expressjwt } from "express-jwt";
-
-import passport from "passport";
-
 import { RequestHandler } from "http-proxy-middleware";
-import { Role } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
 import { Request } from "express";
+import { generators } from 'openid-client'
+
+import { Role } from "@opensystemslab/planx-core/types";
+
+import { ServerError } from "../../errors";
+import { Template } from "../../lib/notify";
+import { passport } from "./passport";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -126,13 +127,26 @@ export const useGoogleCallbackAuth: RequestHandler = (req, res, next) => {
 export const useMicrosoftAuth: RequestHandler = (req, res, next) => {
   console.log("INVOKING MICROSOFT MIDDLEWARE")
   req.session!.returnTo = req.get("Referrer");
+  console.log("REFERRER:")
+  console.log(req.get("Referrer"))
+  const nonce = generators.nonce();
+  console.log(`Generated a nonce: ${nonce}`);
+  req.session!.nonce = nonce
+  // @ts-expect-error - method not typed to accept nonce (but it does deliver it to the strategy)
+  // DOES IT ??
   return passport.authenticate("microsoft-oidc", {
     prompt: "select_account",
+    nonce: nonce,
   })(req, res, next);
 };
 
 export const useMicrosoftCallbackAuth: RequestHandler = (req, res, next) => {
   console.log("INVOKING MICROSOFT CALLBACK MIDDLEWARE")
+  console.log("THIS ALMOST WORKS, BUT THEN REDIRECTS BACK TO MICROSOFT AFTER HITTING /")
+
+  console.log("REQ:")
+  console.log(req)
+
   return passport.authenticate("microsoft-oidc", {
     failureRedirect: "/auth/login/failed",
   })(req, res, next);
