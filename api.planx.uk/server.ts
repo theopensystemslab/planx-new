@@ -9,17 +9,11 @@ import express, { ErrorRequestHandler } from "express";
 import noir from "pino-noir";
 import pinoLogger from "express-pino-logger";
 import { Server } from "http";
-import passport from "passport";
 import helmet from "helmet";
 import { ServerError } from "./errors";
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
-import { googleStrategy } from "./modules/auth/strategy/google";
-import {
-  getMicrosoftIssuer,
-  getMicrosoftOidcStrategy,
-} from "./modules/auth/strategy/microsoft-oidc";
-import { Issuer } from "openid-client";
+import { passport } from "./modules/auth/passport";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import miscRoutes from "./modules/misc/routes";
@@ -121,23 +115,9 @@ app.use(
   }),
 );
 
-// we have to fetch the Microsoft OpenID issuer to pass to our strategy constructor
-// TODO: handle failure to fetch issuer
-getMicrosoftIssuer().then((microsoftIssuer: Issuer) => {
-  console.log("GOT MS ISSUER - SETTING UP STRATEGY")
-  passport.use("microsoft-oidc", getMicrosoftOidcStrategy(microsoftIssuer));
-});
-passport.use("google", googleStrategy);
-
-passport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function (obj: Express.User, cb) {
-  cb(null, obj);
-});
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(urlencoded({ extended: true }));
 
 // Setup API routes

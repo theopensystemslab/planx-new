@@ -1,6 +1,8 @@
 import { CookieOptions, RequestHandler, Response } from "express";
 import { Request } from "express-jwt";
 
+import { client } from './passport'
+
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
     status: 401,
@@ -8,9 +10,18 @@ export const failedLogin: RequestHandler = (_req, _res, next) =>
   });
 
 export const logout: RequestHandler = (req, res) => {
+  console.log("INVOKING LOGOUT CONTROLLER")
+
+  console.log("REQ:")
+  console.log(req)
+
   req.logout(() => {
     // do nothing
   });
+  // TODO: redirect to logout URL with id_token_hint (and logout_hint ??)
+  // logout_url = client.endSessionUrl({
+  //   id_token_hint: 
+  // });
   res.redirect(process.env.EDITOR_URL_EXT!);
 };
 
