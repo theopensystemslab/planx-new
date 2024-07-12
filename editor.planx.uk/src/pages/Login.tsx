@@ -1,6 +1,8 @@
+import GoogleIcon from "@mui/icons-material/Google";
+import MicrosoftIcon from "@mui/icons-material/Microsoft";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
@@ -27,6 +29,12 @@ const PhaseText = styled("span")(() => ({
   color: "rgba(255, 255, 255, 0.49);",
 }));
 
+const LoginButton = styled(Button)(({ theme }) => ({
+  minWidth: "280px",
+  gap: theme.spacing(0.75),
+  marginTop: theme.spacing(1),
+}));
+
 const Login: React.FC = () => {
   return (
     <Wrapper>
@@ -35,16 +43,21 @@ const Login: React.FC = () => {
           Plan✕
           <PhaseText>beta</PhaseText>
         </Typography>
-        <Link
-          variant="body1"
-          color="#FFFFFF"
+        <LoginButton
+          variant="contained"
+          color="secondary"
           href={`${
             process.env.REACT_APP_GOOGLE_OAUTH_OVERRIDE ??
             process.env.REACT_APP_API_URL
           }/auth/google`}
         >
-          Login with Google
-        </Link>
+          <GoogleIcon />
+          Continue with Google
+        </LoginButton>
+        <LoginButton variant="contained" color="secondary" href={`...`}>
+          <MicrosoftIcon />
+          Continue with Microsoft
+        </LoginButton>
       </LoginContainer>
     </Wrapper>
   );
