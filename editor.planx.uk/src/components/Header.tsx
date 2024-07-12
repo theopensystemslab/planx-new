@@ -37,6 +37,7 @@ import {
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
+import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -531,14 +532,14 @@ const EditorToolbar: React.FC<{
                 </ListItemText>
               </MenuItem>
             )}
-            {!user.isPlatformAdmin && (
+            <Permission.IsNotPlatformAdmin>
               <MenuItem disabled divider>
                 <ListItemIcon>
                   <Visibility />
                 </ListItemIcon>
                 <ListItemText>All teams</ListItemText>
               </MenuItem>
-            )}
+            </Permission.IsNotPlatformAdmin>
 
             {/* Only show team settings link if inside a team route  */}
             {isTeamSettingsVisible && (
