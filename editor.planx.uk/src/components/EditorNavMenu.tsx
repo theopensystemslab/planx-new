@@ -10,6 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { Role } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
@@ -20,6 +21,7 @@ interface Route {
   title: string;
   Icon: React.ElementType;
   route: string;
+  accessibleBy: Role[];
 }
 
 const MENU_WIDTH_COMPACT = "52px";
@@ -93,9 +95,11 @@ const MenuButton = styled(IconButton, {
 function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
-  const [teamSlug, flowSlug] = useStore((state) => [
+  const [teamSlug, flowSlug, user, canUserEditTeam] = useStore((state) => [
     state.teamSlug,
     state.flowSlug,
+    state.user,
+    state.canUserEditTeam,
   ]);
 
   const isActive = (route: string) => url.href.endsWith(route);
@@ -110,16 +114,19 @@ function EditorNavMenu() {
       title: "Select a team",
       Icon: FormatListBulletedIcon,
       route: "/",
+      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
       title: "Admin panel",
       Icon: AdminPanelSettingsIcon,
       route: "admin-panel",
+      accessibleBy: ["platformAdmin"],
     },
     {
       title: "Global settings",
       Icon: TuneIcon,
       route: "global-settings",
+      accessibleBy: ["platformAdmin"],
     },
   ];
 
@@ -128,21 +135,25 @@ function EditorNavMenu() {
       title: "Services",
       Icon: FormatListBulletedIcon,
       route: `/${teamSlug}`,
+      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
       title: "Team members",
       Icon: GroupIcon,
       route: `/${teamSlug}/members`,
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Design",
       Icon: PaletteIcon,
       route: `/${teamSlug}/design`,
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/general-settings`,
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
   ];
 
@@ -151,21 +162,25 @@ function EditorNavMenu() {
       title: "Editor",
       Icon: EditorIcon,
       route: `/${teamSlug}/${flowSlug}`,
+      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
       title: "Service settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/${flowSlug}/service`,
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions-log`,
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
       route: `/${teamSlug}/${flowSlug}/feedback`,
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
   ];
 
@@ -181,10 +196,19 @@ function EditorNavMenu() {
 
   const { routes, compact } = getRoutesForUrl(url.href);
 
+  const visibleRoutes = routes.filter(({ accessibleBy }) => {
+    if (user?.isPlatformAdmin) return accessibleBy.includes("platformAdmin");
+    if (canUserEditTeam(teamSlug)) return accessibleBy.includes("teamEditor");
+    return accessibleBy.includes("teamViewer");
+  });
+
+  // Hide menu if the user does not have a selection of items
+  if (visibleRoutes.length < 2) return null;
+
   return (
     <Root compact={compact}>
       <MenuWrap>
-        {routes.map(({ title, Icon, route }) => (
+        {visibleRoutes.map(({ title, Icon, route }) => (
           <MenuItem onClick={() => handleClick(route)} key={title}>
             {compact ? (
               <TooltipWrap title={title}>
