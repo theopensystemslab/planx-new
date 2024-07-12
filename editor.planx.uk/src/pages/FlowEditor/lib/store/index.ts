@@ -1,7 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { isPreviewOnlyDomain } from "routes/utils";
-import { create, UseBoundStore } from "zustand";
-import { createStore, StoreApi } from "zustand/vanilla";
+import { create, StoreApi,UseBoundStore } from "zustand";
 
 import type { EditorStore, EditorUIStore } from "./editor";
 import type { NavigationStore } from "./navigation";
@@ -54,32 +53,25 @@ export type PublicStore = SharedStore &
 
 export type FullStore = PublicStore & EditorStore & EditorUIStore & UserStore;
 
-interface PlanXStores {
-  // Non-React implementation (e.g. for use in tests)
-  vanillaStore: StoreApi<FullStore>;
-  // React hook
-  useStore: UseBoundStore<StoreApi<FullStore>>;
-}
-
 /**
  * If accessing the public preview, don't load editor store files
  * Cast to FullStore for autocomplete and linting
  */
-const createPublicStore = (): StoreApi<FullStore> =>
-  createStore<PublicStore>((...args) => ({
+const createPublicStore = () =>
+  create<PublicStore>()((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),
     ...navigationStore(...args),
     ...settingsStore(...args),
     ...teamStore(...args),
-  })) as StoreApi<FullStore>;
+  })) as UseBoundStore<StoreApi<FullStore>>;
 
 /**
  * If accessing the editor then load ALL store files
  */
-const createFullStore = (): StoreApi<FullStore> => {
+const createFullStore = () => {
   const { editorStore, editorUIStore } = require("./editor");
-  return createStore<FullStore>((...args) => ({
+  return create<FullStore>()((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),
     ...navigationStore(...args),
@@ -94,12 +86,7 @@ const createFullStore = (): StoreApi<FullStore> => {
 const isPublic =
   isPreviewOnlyDomain || window?.location?.href?.includes("/published");
 
-export const { vanillaStore, useStore }: PlanXStores = (() => {
-  const vanillaStore: StoreApi<FullStore> = (() =>
-    isPublic ? createPublicStore() : createFullStore())();
-
-  return { vanillaStore, useStore: create(vanillaStore) };
-})();
+export const useStore = isPublic ? createPublicStore() : createFullStore();
 
 // having window.api in console is useful for debugging
 (window as any)["api"] = useStore;
