@@ -5,7 +5,7 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
-import { addDesignatedVariable } from "./helpers";
+import { addDesignatedVariable, omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
 import { $api } from "../../../client";
 
@@ -119,14 +119,14 @@ async function go(
       );
       // because there can be many digital land datasets per planx variable, check if this key is already in our result
       if (key && Object.keys(formattedResult).includes(key)) {
-        formattedResult[key]["data"]?.push(entity);
+        formattedResult[key]["data"]?.push(omitGeometry(entity));
       } else {
         if (key) {
           formattedResult[key] = {
             fn: key,
             value: true,
             text: baseSchema[key].pos,
-            data: [entity],
+            data: [omitGeometry(entity)],
             category: baseSchema[key].category,
           };
         }
