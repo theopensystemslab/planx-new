@@ -104,7 +104,9 @@ const errorLink = onError(({ graphQLErrors, operation }) => {
     handleHasuraGraphQLErrors(graphQLErrors, operation);
   } else {
     console.error(
-      `[Error]: Operation name: ${operation.operationName}. Details: ${operation}`,
+      `[Error]: Operation name: ${
+        operation.operationName
+      }. Details: ${JSON.stringify(operation)}`,
     );
     toast.error("Network error, attempting to reconnect…", {
       toastId,
