@@ -2,6 +2,7 @@ import Check from "@mui/icons-material/Check";
 import Container from "@mui/material/Container";
 import { lighten, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import {
   GovUKPayment,
   type PaymentRequest,
@@ -170,19 +171,7 @@ export default function MakePayment({
     );
 
   const PaymentDetails = () => {
-    const $public = useStore((state) => state.$public);
-    const [projectType, setProjectType] = useState<string | undefined>();
-
-    useEffect(() => {
-      const fetchProjectType = async () => {
-        const projectType = await $public().formatRawProjectTypes(
-          rawProjectTypes,
-        );
-        setProjectType(projectType);
-      };
-      fetchProjectType();
-    }, []);
-
+    const projectType = formatRawProjectTypes(rawProjectTypes);
     const data = [
       { term: "Application type", details: flowName },
       {

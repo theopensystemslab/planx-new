@@ -14,7 +14,7 @@ export const mockPaymentRequest: Partial<PaymentRequest> = {
     _address: {
       title: "123, Test Street, Testville",
     },
-    "proposal.projectType": ["alter.decks", "alter.internal.walls"],
+    "proposal.projectType": ["alter.decks", "alter.internal"],
   },
   paymentAmount: 12345,
   applicantName: "Mr Agent (Agency Ltd)",
@@ -44,7 +44,7 @@ export const mockSessionData: Omit<SessionData, "id"> = {
       },
       "property.type": ["residential.dwelling.house.semiDetached"],
       "property.region": ["South East"],
-      "proposal.projectType": ["alter.decks", "alter.internal.walls"],
+      "proposal.projectType": ["alter.decks", "alter.internal"],
       "applicant.agent.email": "testAgent@opensystemslab.com",
       "application.fee.payable": 123.45,
       "_contact.applicant.agent": {

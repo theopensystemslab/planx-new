@@ -1,7 +1,9 @@
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import type { SiteAddress, Team } from "@opensystemslab/planx-core/types";
 import { differenceInDays } from "date-fns";
 import { gql } from "graphql-request";
-import { $api, $public } from "../../../client";
+
+import { $api } from "../../../client";
 import { sendEmail } from "../../../lib/notify";
 import { LowCalSession } from "../../../types";
 import { DAYS_UNTIL_EXPIRY, calculateExpiryDate, getResumeLink } from "./utils";
@@ -64,7 +66,16 @@ const validateRequest = async (
         teams(where: { slug: { _eq: $teamSlug } }) {
           slug
           name
-          settings: team_settings
+          settings: team_settings {
+            boundaryUrl: boundary_url
+            boundaryBBox: boundary_bbox
+            homepage
+            helpEmail: help_email
+            helpPhone: help_phone
+            helpOpeningHours: help_opening_hours
+            emailReplyToId: email_reply_to_id
+            boundaryBBox: boundary_bbox
+          }
           domain
         }
       }
@@ -108,13 +119,15 @@ const buildContentFromSessions = async (
   sessions: LowCalSession[],
   team: Team,
 ): Promise<string> => {
-  const contentBuilder = async (session: LowCalSession) => {
+  const contentBuilder = (session: LowCalSession) => {
     const address: SiteAddress | undefined =
       session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
-    const projectType = await $public.formatRawProjectTypes(
-      session.data?.passport?.data?.["proposal.projectType"],
-    );
+    const projectType = session.data?.passport?.data?.["proposal.projectType"]
+      ? formatRawProjectTypes(
+          session.data?.passport?.data?.["proposal.projectType"],
+        )
+      : "Project type not submitted";
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 

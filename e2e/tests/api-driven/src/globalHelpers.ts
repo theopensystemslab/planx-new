@@ -11,7 +11,6 @@ export function createTeam(
       submissionEmail: TEST_EMAIL,
       settings: {
         homepage: "http://www.planx.uk",
-        referenceCode: "ABCD",
       },
       ...args,
     }),

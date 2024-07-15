@@ -30,7 +30,7 @@ const flow: FlowGraph = {
   },
   IfcqOHdMyi: {
     data: {
-      val: "alter.internal.walls",
+      val: "alter.internal",
       text: "Alter internal walls",
     },
     type: ComponentType.Answer,

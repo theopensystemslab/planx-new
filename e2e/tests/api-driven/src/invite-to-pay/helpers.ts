@@ -186,7 +186,7 @@ const setupMockBopsSubmissionUrl = async (teamId: number) => {
 
 export const setup = async () => {
   await setUpMocks();
-  const teamId = await createTeam();
+  const teamId = await createTeam({ settings: { referenceCode: "ABC" } });
   const userId = await createUser();
   await setupMockBopsSubmissionUrl(teamId);
 
