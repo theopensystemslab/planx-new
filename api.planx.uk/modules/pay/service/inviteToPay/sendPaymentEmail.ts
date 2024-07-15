@@ -74,7 +74,16 @@ const validatePaymentRequest = async (
                 name
                 slug
                 domain
-                settings: team_settings
+                settings: team_settings {
+                  boundaryUrl: boundary_url
+                  boundaryBBox: boundary_bbox
+                  homepage
+                  helpEmail: help_email
+                  helpPhone: help_phone
+                  helpOpeningHours: help_opening_hours
+                  emailReplyToId: email_reply_to_id
+                  boundaryBBox: boundary_bbox
+                }
               }
             }
           }
