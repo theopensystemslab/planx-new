@@ -2,7 +2,6 @@ import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Auth } from "@opensystemslab/planx-core/dist/requests/graphql";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
-import { capitalize } from "lodash";
 import { removeSessionIdSearchParam } from "utils";
 import type { StateCreator } from "zustand";
 

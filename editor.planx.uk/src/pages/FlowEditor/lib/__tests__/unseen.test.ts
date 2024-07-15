@@ -1,6 +1,6 @@
-import { Store, vanillaStore } from "../store";
+import { Store, useStore } from "../store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 // https://github.com/theopensystemslab/planx-new/pull/430#issue-625111571
 const flow: Store.flow = {

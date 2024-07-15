@@ -1,9 +1,9 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import shuffle from "lodash/shuffle";
 
-import { vanillaStore } from "../store";
+import { useStore } from "../store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 beforeEach(() => {
   getState().resetPreview();

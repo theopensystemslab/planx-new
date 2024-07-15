@@ -1,9 +1,9 @@
-import { vanillaStore } from "../store";
+import { useStore } from "../store";
 import flowWithAutoAnsweredFilterPaths from "./mocks/flowWithAutoAnsweredFilterPaths.json";
 import flowWithBranchingFilters from "./mocks/flowWithBranchingFilters.json";
 import flowWithRootFilter from "./mocks/flowWithRootFilter.json";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 const {
   upcomingCardIds,
   resetPreview,

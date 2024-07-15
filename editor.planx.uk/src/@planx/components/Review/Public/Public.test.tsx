@@ -1,5 +1,5 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
-import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
+import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { axe, setup } from "testUtils";
 
@@ -25,7 +25,7 @@ import {
 import { mockedBreadcrumbs, mockedFlow, mockedPassport } from "./mocks/simple";
 import Review from "./Presentational";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 let initialState: FullStore;
 

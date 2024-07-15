@@ -1,4 +1,4 @@
-import { Store, vanillaStore } from "../store";
+import { Store, useStore } from "../store";
 
 // flow preview: https://i.imgur.com/nCov5CE.png
 
@@ -106,7 +106,7 @@ const flow: Store.flow = {
   },
 };
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 describe("if I initially pick", () => {
   beforeEach(() => {

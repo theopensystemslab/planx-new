@@ -2,7 +2,7 @@ import { Breadcrumbs } from "@opensystemslab/planx-core/types";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { screen } from "@testing-library/react";
 import axios from "axios";
-import { vanillaStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { axe, setup } from "testUtils";
@@ -18,7 +18,7 @@ jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 global.URL.createObjectURL = jest.fn();
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 test("recovers previously submitted files when clicking the back button", async () => {
   const handleSubmit = jest.fn();

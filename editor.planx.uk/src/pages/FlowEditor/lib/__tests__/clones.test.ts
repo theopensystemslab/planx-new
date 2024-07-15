@@ -1,5 +1,5 @@
-import { vanillaStore } from "../store";
-const { getState, setState } = vanillaStore;
+import { useStore } from "../store";
+const { getState, setState } = useStore;
 import forwardsFlow from "./mocks/flowWithClones.json";
 import reverseFlow from "./mocks/flowWithReverseClones.json";
 
