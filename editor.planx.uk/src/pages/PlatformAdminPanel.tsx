@@ -13,21 +13,27 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import useSWR from "swr";
 import { AdminPanelData } from "types";
+import SettingsSection from "ui/editor/SettingsSection";
 import Caret from "ui/icons/Caret";
 
 const StyledTeamAccordion = styled(Accordion, {
   shouldForwardProp: (prop) => prop !== "primaryColour",
 })<{ primaryColour?: string }>(({ theme, primaryColour }) => ({
-  borderTop: "none", // TODO figure out how to remove top border (box shadow?) when collapsed
-  borderLeft: `10px solid ${primaryColour}`,
   backgroundColor: theme.palette.background.paper,
+  outline: `1px solid ${theme.palette.border.light}`,
   width: "100%",
   position: "relative",
-  marginBottom: theme.spacing(2),
-  padding: theme.spacing(1),
+  "&::before": {
+    display: "none",
+  },
   "&::after": {
+    content: "''",
     position: "absolute",
-    width: "100%",
+    left: 0,
+    top: 0,
+    width: theme.spacing(1.5),
+    height: "100%",
+    backgroundColor: primaryColour,
   },
 }));
 
@@ -36,15 +42,19 @@ function Component() {
 
   return (
     <Container maxWidth={false}>
-      <Box sx={{ overflow: "hidden" }}>
-        <Typography variant="h1">Platform Admin Panel</Typography>
-        <Typography variant="body1" mb={3}>
+      <SettingsSection>
+        <Typography variant="h2" component="h1" gutterBottom>
+          Platform Admin Panel
+        </Typography>
+        <Typography variant="body1">
           {`This is an overview of each team's integrations and settings for the `}
           <strong>{process.env.REACT_APP_ENV}</strong>
-          {` environment`}
+          {` environment.`}
         </Typography>
+      </SettingsSection>
+      <SettingsSection>
         {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
-      </Box>
+      </SettingsSection>
     </Container>
   );
 }
@@ -71,19 +81,22 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
         id={`${data.name}-header`}
         aria-controls={`${data.name}-panel`}
         expandIcon={<Caret />}
-        sx={{ pr: 1.5 }}
+        sx={{ p: 1.5, pl: 3 }}
       >
-        <Typography variant="h2">{data.name}</Typography>
+        <Typography variant="h3" component="h2">
+          {data.name}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Grid
           container
-          direction="row"
+          direction={{ xs: "column", lg: "row" }}
           justifyContent="flex-start"
           alignItems="flex-start"
           spacing={3}
+          px={1.5}
         >
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4} width="100%">
             <SummaryListTable dense={true}>
               <>
                 <Box component="dt">{"Slug"}</Box>
@@ -112,7 +125,7 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
               </>
             </SummaryListTable>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4} width="100%">
             <SummaryListTable dense={true}>
               <>
                 <Box component="dt">{"Planning constraints"}</Box>
@@ -146,7 +159,7 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
               </>
             </SummaryListTable>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4} width="100%">
             <SummaryListTable dense={true}>
               <>
                 <Box component="dt">{"GOV.UK Notify"}</Box>
