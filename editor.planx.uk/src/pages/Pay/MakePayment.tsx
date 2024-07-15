@@ -171,16 +171,7 @@ export default function MakePayment({
     );
 
   const PaymentDetails = () => {
-    const [projectType, setProjectType] = useState<string | undefined>();
-
-    useEffect(() => {
-      const fetchProjectType = () => {
-        const projectType = formatRawProjectTypes(rawProjectTypes);
-        setProjectType(projectType);
-      };
-      fetchProjectType();
-    }, []);
-
+    const projectType = formatRawProjectTypes(rawProjectTypes);
     const data = [
       { term: "Application type", details: flowName },
       {
