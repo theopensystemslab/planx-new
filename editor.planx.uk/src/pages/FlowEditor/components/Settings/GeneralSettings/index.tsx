@@ -10,6 +10,7 @@ import SettingsSection from "ui/editor/SettingsSection";
 
 import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
+import ReferenceCodeForm from "./ReferenceCodeForm";
 
 export interface FormProps {
   formikConfig: FormikConfig<TeamSettings>;
@@ -62,7 +63,7 @@ const GeneralSettings: React.FC = () => {
     <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          General
+          Settings
         </Typography>
         <Typography variant="body1">
           Important links and settings for how your users connect with you.
@@ -72,6 +73,10 @@ const GeneralSettings: React.FC = () => {
         <>
           <ContactForm formikConfig={formikConfig} onSuccess={onSuccess} />
           <BoundaryForm formikConfig={formikConfig} onSuccess={onSuccess} />
+          <ReferenceCodeForm
+            formikConfig={formikConfig}
+            onSuccess={onSuccess}
+          />
         </>
       )}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
