@@ -1,15 +1,12 @@
-import type { SiteAddress } from "@opensystemslab/planx-core/types";
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
+import type { SiteAddress, Team } from "@opensystemslab/planx-core/types";
 import { differenceInDays } from "date-fns";
 import { gql } from "graphql-request";
-import { $api, $public } from "../../../client";
+
+import { $api } from "../../../client";
 import { sendEmail } from "../../../lib/notify";
-import { LowCalSession, Team } from "../../../types";
-import {
-  DAYS_UNTIL_EXPIRY,
-  calculateExpiryDate,
-  convertSlugToName,
-  getResumeLink,
-} from "./utils";
+import { LowCalSession } from "../../../types";
+import { DAYS_UNTIL_EXPIRY, calculateExpiryDate, getResumeLink } from "./utils";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -22,7 +19,7 @@ const resumeApplication = async (teamSlug: string, email: string) => {
   const config = {
     personalisation: await getPersonalisation(sessions, team),
     reference: null,
-    emailReplyToId: team.notifyPersonalisation.emailReplyToId,
+    emailReplyToId: team.settings.emailReplyToId,
   };
   const response = await sendEmail("resume", email, config);
   return response;
@@ -69,7 +66,16 @@ const validateRequest = async (
         teams(where: { slug: { _eq: $teamSlug } }) {
           slug
           name
-          notifyPersonalisation: notify_personalisation
+          settings: team_settings {
+            boundaryUrl: boundary_url
+            boundaryBBox: boundary_bbox
+            homepage
+            helpEmail: help_email
+            helpPhone: help_phone
+            helpOpeningHours: help_opening_hours
+            emailReplyToId: email_reply_to_id
+            boundaryBBox: boundary_bbox
+          }
           domain
         }
       }
@@ -98,7 +104,10 @@ const getPersonalisation = async (sessions: LowCalSession[], team: Team) => {
   return {
     teamName: team.name,
     content: await buildContentFromSessions(sessions, team),
-    ...team.notifyPersonalisation,
+    helpEmail: team.settings.helpEmail,
+    helpPhone: team.settings.helpPhone,
+    helpOpeningHours: team.settings.helpOpeningHours,
+    emailReplyToId: team.settings.emailReplyToId,
   };
 };
 
@@ -110,14 +119,15 @@ const buildContentFromSessions = async (
   sessions: LowCalSession[],
   team: Team,
 ): Promise<string> => {
-  const contentBuilder = async (session: LowCalSession) => {
-    const service = convertSlugToName(session.flow.slug);
+  const contentBuilder = (session: LowCalSession) => {
     const address: SiteAddress | undefined =
       session.data?.passport?.data?._address;
     const addressLine = address?.single_line_address || address?.title;
-    const projectType = await $public.formatRawProjectTypes(
-      session.data?.passport?.data?.["proposal.projectType"],
-    );
+    const projectType = session.data?.passport?.data?.["proposal.projectType"]
+      ? formatRawProjectTypes(
+          session.data?.passport?.data?.["proposal.projectType"],
+        )
+      : "Project type not submitted";
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 
@@ -126,7 +136,7 @@ const buildContentFromSessions = async (
     const sessionAge = differenceInDays(today, new Date(session.created_at));
 
     if (sessionAge < DAYS_UNTIL_EXPIRY)
-      return `Service: ${service}
+      return `Service: ${session.flow.name}
       Address: ${addressLine || "Address not submitted"}
       Project type: ${projectType || "Project type not submitted"}
       Expiry Date: ${expiryDate}

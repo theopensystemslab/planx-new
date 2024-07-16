@@ -1,7 +1,7 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import axios from "axios";
-import { vanillaStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { FullStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { axe, setup } from "testUtils";
@@ -11,7 +11,7 @@ import { mockFileTypes, mockFileTypesUniqueKeys } from "./mocks";
 import { PASSPORT_REQUESTED_FILES_KEY } from "./model";
 import FileUploadAndLabelComponent from "./Public";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 let initialState: FullStore;
 
 jest.mock("axios");

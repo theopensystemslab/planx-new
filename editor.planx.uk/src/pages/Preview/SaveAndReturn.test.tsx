@@ -1,12 +1,12 @@
 import Button from "@mui/material/Button";
 import { act, screen, waitFor } from "@testing-library/react";
-import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
+import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { axe, setup } from "testUtils";
 
 import SaveAndReturn, { ConfirmEmail } from "./SaveAndReturn";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 let initialState: FullStore;
 

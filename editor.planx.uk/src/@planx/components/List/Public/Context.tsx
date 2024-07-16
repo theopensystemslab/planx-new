@@ -1,73 +1,232 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import {
+  getPreviouslySubmittedData,
+  makeData,
+} from "@planx/components/shared/utils";
+import { PublicProps } from "@planx/components/ui";
+import { FormikProps, useFormik } from "formik";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 
-import { generateNewItem, Schema, UserData } from "../model";
+import {
+  generateInitialValues,
+  generateValidationSchema,
+  List,
+  Schema,
+  UserData,
+  UserResponse,
+} from "../model";
+import {
+  flatten,
+  sumIdenticalUnits,
+  sumIdenticalUnitsByDevelopmentType,
+} from "../utils";
 
 interface ListContextValue {
   schema: Schema;
-  activeIndex: number | undefined;
-  userData: UserData;
+  activeIndex: number;
   addNewItem: () => void;
-  saveItem: (index: number, updatedItem: UserData[0]) => void;
+  saveItem: () => Promise<void>;
   removeItem: (index: number) => void;
   editItem: (index: number) => void;
   cancelEditItem: () => void;
+  formik: FormikProps<UserData>;
+  validateAndSubmitForm: () => void;
+  listProps: PublicProps<List>;
+  /**
+   * @deprecated
+   * @description
+   * Hide features if the schema is temporarily mocking a "Page" component
+   * @todo
+   * Refactor and allow a single-item "Page" component to properly manage this
+   */
+  isPageComponent: boolean;
+  errors: {
+    addItem: boolean;
+    unsavedItem: boolean;
+    min: boolean;
+    max: boolean;
+  };
 }
 
-interface ListProviderProps {
-  children: ReactNode;
-  schema: Schema;
-}
+type ListProviderProps = PropsWithChildren<PublicProps<List>>;
 
 const ListContext = createContext<ListContextValue | undefined>(undefined);
 
-export const ListProvider: React.FC<ListProviderProps> = ({
-  children,
-  schema,
-}) => {
-  const [activeIndex, setActiveIndex] = useState<number | undefined>(0);
-  const [userData, setUserData] = useState<UserData>(
-    schema.min === 0 ? [] : [generateNewItem(schema)],
+export const ListProvider: React.FC<ListProviderProps> = (props) => {
+  const { schema, children, handleSubmit } = props;
+
+  const [activeIndex, setActiveIndex] = useState<number>(
+    props.previouslySubmittedData ? -1 : 0,
   );
 
-  const addNewItem = () => {
-    setUserData([...userData, generateNewItem(schema)]);
-    setActiveIndex((prev) => (prev === undefined ? 0 : prev + 1));
+  const [activeItemInitialState, setActiveItemInitialState] = useState<
+    UserResponse | undefined
+  >(undefined);
+
+  const [addItemError, setAddItemError] = useState<boolean>(false);
+  const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
+  const [minError, setMinError] = useState<boolean>(false);
+  const [maxError, setMaxError] = useState<boolean>(false);
+
+  const resetErrors = () => {
+    setMinError(false);
+    setMaxError(false);
+    setUnsavedItemError(false);
   };
 
-  const saveItem = (index: number, updatedItem: UserData[0]) => {
-    setUserData((prev) =>
-      prev.map((item, i) => (i === index ? updatedItem : item)),
-    );
+  const addNewItem = async () => {
+    resetErrors();
+
+    // Do not allow a new item to be added if there's still an active item
+    if (activeIndex !== -1) return setAddItemError(true);
+
+    // Do not allow new item to be added if it will exceed max
+    if (schema.max && formik.values.userData.length === schema.max) {
+      return setMaxError(true);
+    }
+
+    // Add new item, and set to active
+    setAddItemError(false);
+    formik.values.userData.push(generateInitialValues(schema));
+    setActiveIndex(formik.values.userData.length - 1);
   };
 
-  const editItem = (index: number) => setActiveIndex(index);
+  const saveItem = async () => {
+    resetErrors();
+
+    const errors = await formik.validateForm();
+    const isValid = !errors.userData?.length;
+    if (isValid) {
+      exitEditMode();
+      setAddItemError(false);
+    }
+  };
 
   const removeItem = (index: number) => {
+    resetErrors();
+
+    // If item is before currently active card, retain active card
     if (activeIndex && index < activeIndex) {
-      // If item is before currently active card, retain active card
-      setActiveIndex((prev) => (prev === undefined ? 0 : prev - 1));
-    } else if (index === activeIndex || index === 0) {
-      // If item is currently in Edit mode, exit Edit mode
-      cancelEditItem();
+      setActiveIndex((prev) => (prev === -1 ? 0 : prev - 1));
     }
 
     // Remove item from userData
-    setUserData((prev) => prev.filter((_, i) => i !== index));
+    formik.setFieldValue(
+      "userData",
+      formik.values.userData.filter((_, i) => i !== index),
+    );
   };
 
-  const cancelEditItem = () => setActiveIndex(undefined);
+  const validateAndSubmitForm = () => {
+    // Do not allow submissions with an unsaved item
+    if (activeIndex !== -1) return setUnsavedItemError(true);
+
+    // Manually validate minimum number of items
+    if (formik.values.userData.length < schema.min) {
+      return setMinError(true);
+    }
+
+    formik.handleSubmit();
+  };
+
+  const cancelEditItem = () => {
+    activeItemInitialState
+      ? resetItemToPreviousState()
+      : removeItem(activeIndex);
+
+    setActiveItemInitialState(undefined);
+
+    exitEditMode();
+  };
+
+  const editItem = (index: number) => {
+    setActiveItemInitialState(formik.values.userData[index]);
+    setActiveIndex(index);
+  };
+
+  const getInitialValues = () => {
+    const previousValues = getPreviouslySubmittedData(props);
+    if (previousValues) return previousValues;
+
+    return schema.min ? [generateInitialValues(schema)] : [];
+  };
+
+  const exitEditMode = () => setActiveIndex(-1);
+
+  const resetItemToPreviousState = () =>
+    formik.setFieldValue(`userData[${activeIndex}]`, activeItemInitialState);
+
+  const isPageComponent = schema.max === 1;
+
+  const formik = useFormik<UserData>({
+    initialValues: {
+      userData: getInitialValues(),
+    },
+    onSubmit: (values) => {
+      // defaultPassportData (array) is used when coming "back"
+      const defaultPassportData = makeData(props, values.userData)?.["data"];
+
+      // flattenedPassportData makes individual list items compatible with Calculate components
+      const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
+
+      // basic example of general summary stats we can add onSubmit:
+      //   1. count of items/responses
+      //   2. if the schema includes a field that sets fn = "identicalUnits", sum of total units
+      //   3. if the schema includes a field that sets fn = "development" & fn = "identicalUnits", sum of total units by development "val"
+      const totalUnits = sumIdenticalUnits(props.fn, defaultPassportData);
+      const totalUnitsByDevelopmentType = sumIdenticalUnitsByDevelopmentType(
+        props.fn,
+        defaultPassportData,
+      );
+
+      const summaries = {
+        [`${props.fn}.total.listItems`]:
+          defaultPassportData[`${props.fn}`].length,
+        ...(totalUnits > 0 && {
+          [`${props.fn}.total.units`]: totalUnits,
+        }),
+        ...(totalUnits > 0 &&
+          Object.keys(totalUnitsByDevelopmentType).length > 0 &&
+          totalUnitsByDevelopmentType),
+      };
+
+      handleSubmit?.({
+        data: {
+          ...defaultPassportData,
+          ...flattenedPassportData,
+          ...summaries,
+        },
+      });
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: generateValidationSchema(schema),
+  });
 
   return (
     <ListContext.Provider
       value={{
         activeIndex,
-        userData,
         addNewItem,
         saveItem,
         schema,
+        listProps: props,
         editItem,
         removeItem,
         cancelEditItem,
+        formik,
+        validateAndSubmitForm,
+        isPageComponent,
+        errors: {
+          addItem: addItemError,
+          unsavedItem: unsavedItemError,
+          min: minError,
+          max: maxError,
+        },
       }}
     >
       {children}

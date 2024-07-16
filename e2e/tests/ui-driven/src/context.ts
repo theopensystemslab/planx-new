@@ -4,6 +4,8 @@ import { sign } from "jsonwebtoken";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient, gql } from "graphql-request";
 
+type NewTeam = Parameters<CoreDomainClient["team"]["create"]>[0];
+
 export interface Context {
   user: {
     id?: number;
@@ -12,19 +14,12 @@ export interface Context {
     email: string;
     isPlatformAdmin: boolean;
   };
-  team: {
-    id?: number;
-    name: string;
-    slug: string;
-    logo: string;
-    primaryColour: string;
-    homepage: string;
-    submissionEmail: string;
-  };
+  team: { id?: number } & NewTeam;
   flow?: {
     id?: string;
     publishedId?: number;
     slug: string;
+    name: string;
     data?: object;
   };
   sessionIds?: string[];
@@ -40,9 +35,13 @@ export const contextDefaults: Context = {
   team: {
     name: "E2E Test Team",
     slug: "E2E",
-    logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
-    primaryColour: "#444444",
-    homepage: "planx.uk",
+    theme: {
+      logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
+      primaryColour: "#444444",
+    },
+    settings: {
+      homepage: "planx.uk",
+    },
     submissionEmail: "simulate-delivered@notifications.service.gov.uk",
   },
 };
@@ -59,19 +58,22 @@ export async function setUpTestContext(
     context.team.id = await $admin.team.create({
       slug: context.team.slug,
       name: context.team.name,
-      homepage: context.team.homepage,
       submissionEmail: context.team.submissionEmail,
-      referenceCode: "ABCD",
+      settings: {
+        homepage: context.team.settings?.homepage,
+      },
     });
   }
   if (
     context.flow?.slug &&
     context.flow?.data &&
+    context.flow?.name &&
     context.team?.id &&
     context.user?.id
   ) {
     context.flow.id = await $admin.flow.create({
       slug: context.flow.slug,
+      name: context.flow.name,
       teamId: context.team.id,
       data: context.flow!.data!,
       status: "online",

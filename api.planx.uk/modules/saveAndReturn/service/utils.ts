@@ -1,19 +1,14 @@
-import { SiteAddress } from "@opensystemslab/planx-core/types";
-import { format, addDays } from "date-fns";
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
+import { SiteAddress, Team } from "@opensystemslab/planx-core/types";
+import { addDays, format } from "date-fns";
 import { gql } from "graphql-request";
-import { LowCalSession, Team } from "../../../types";
+
+import { $api } from "../../../client";
 import { Template, getClientForTemplate, sendEmail } from "../../../lib/notify";
-import { $api, $public } from "../../../client";
+import { LowCalSession } from "../../../types";
 
 const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];
-
-/**
- * Converts a flow's slug to a pretty name
- * XXX: This relies on pretty names not having dashes in them, which may not always be true (e.g. Na h-Eileanan Siar, Stoke-on-Trent)
- */
-const convertSlugToName = (slug: string): string =>
-  slug[0].toUpperCase() + slug.substring(1).replaceAll("-", " ");
 
 /**
  * Build the magic link which will be sent to users via email to continue their application
@@ -61,15 +56,12 @@ const sendSingleApplicationEmail = async ({
   sessionId: string;
 }) => {
   try {
-    const { flowSlug, team, session } = await validateSingleSessionRequest(
-      email,
-      sessionId,
-      template,
-    );
+    const { flowSlug, flowName, team, session } =
+      await validateSingleSessionRequest(email, sessionId, template);
     const config = {
-      personalisation: getPersonalisation(session, flowSlug, team),
+      personalisation: getPersonalisation(session, flowSlug, flowName, team),
       reference: null,
-      emailReplyToId: team.notifyPersonalisation.emailReplyToId,
+      emailReplyToId: team.settings.emailReplyToId,
     };
     const firstSave = !session.hasUserSaved;
     if (firstSave && !session.submittedAt)
@@ -103,10 +95,20 @@ const validateSingleSessionRequest = async (
           has_user_saved
           flow {
             slug
+            name
             team {
               name
               slug
-              notifyPersonalisation: notify_personalisation
+              settings: team_settings {
+                boundaryUrl: boundary_url
+                boundaryBBox: boundary_bbox
+                homepage
+                helpEmail: help_email
+                helpPhone: help_phone
+                helpOpeningHours: help_opening_hours
+                emailReplyToId: email_reply_to_id
+                boundaryBBox: boundary_bbox
+              }
               domain
             }
           }
@@ -127,8 +129,9 @@ const validateSingleSessionRequest = async (
 
     return {
       flowSlug: session.flow.slug,
+      flowName: session.flow.name,
       team: session.flow.team,
-      session: await getSessionDetails(session),
+      session: getSessionDetails(session),
     };
   } catch (error) {
     throw Error(`Unable to validate request. ${(error as Error).message}`);
@@ -147,14 +150,11 @@ interface SessionDetails {
 /**
  * Parse session details into an object which will be read by email template
  */
-export const getSessionDetails = async (
-  session: LowCalSession,
-): Promise<SessionDetails> => {
+export const getSessionDetails = (session: LowCalSession): SessionDetails => {
   const passportProtectTypes =
     session.data.passport?.data?.["proposal.projectType"];
   const projectTypes =
-    passportProtectTypes &&
-    (await $public.formatRawProjectTypes(passportProtectTypes));
+    passportProtectTypes && formatRawProjectTypes(passportProtectTypes);
   const address: SiteAddress | undefined =
     session.data?.passport?.data?._address;
   const addressLine = address?.single_line_address || address?.title;
@@ -175,15 +175,19 @@ export const getSessionDetails = async (
 const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
+  flowName: string,
   team: Team,
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),
     serviceLink: getServiceLink(team, flowSlug),
-    serviceName: convertSlugToName(flowSlug),
+    serviceName: flowName,
     teamName: team.name,
     sessionId: session.id,
-    ...team.notifyPersonalisation,
+    helpEmail: team.settings.helpEmail,
+    helpPhone: team.settings.helpPhone,
+    helpOpeningHours: team.settings.helpOpeningHours,
+    emailReplyToId: team.settings.emailReplyToId,
     ...session,
   };
 };
@@ -275,13 +279,12 @@ export const setupEmailEventTriggers = async (sessionId: string) => {
 };
 
 export {
-  getSaveAndReturnPublicHeaders,
-  convertSlugToName,
-  getResumeLink,
-  sendSingleApplicationEmail,
-  markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
   REMINDER_DAYS_FROM_EXPIRY,
   calculateExpiryDate,
+  getResumeLink,
+  getSaveAndReturnPublicHeaders,
+  markSessionAsSubmitted,
+  sendSingleApplicationEmail,
   softDeleteSession,
 };

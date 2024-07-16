@@ -6,6 +6,7 @@ import { $public, getClient } from "./client";
 
 export interface FlowData {
   slug: string;
+  name: string;
   data: Flow["data"];
   team_id: number;
   team: { slug: string };
@@ -28,6 +29,7 @@ const getFlowData = async (id: string): Promise<FlowData> => {
         flow: flows_by_pk(id: $id) {
           slug
           data
+          name
           team_id
           team {
             slug
@@ -62,6 +64,7 @@ interface InsertFlow {
 const insertFlow = async (
   teamId: number,
   slug: string,
+  name: string,
   flowData: Flow["data"],
   creatorId?: number,
   copiedFrom?: Flow["id"],
@@ -75,6 +78,7 @@ const insertFlow = async (
         mutation InsertFlow(
           $team_id: Int!
           $slug: String!
+          $name: String!
           $data: jsonb = {}
           $creator_id: Int
           $copied_from: uuid
@@ -83,6 +87,7 @@ const insertFlow = async (
             object: {
               team_id: $team_id
               slug: $slug
+              name: $name
               data: $data
               version: 1
               creator_id: $creator_id
@@ -96,6 +101,7 @@ const insertFlow = async (
       {
         team_id: teamId,
         slug: slug,
+        name: name,
         data: flowData,
         creator_id: creatorId,
         copied_from: copiedFrom,

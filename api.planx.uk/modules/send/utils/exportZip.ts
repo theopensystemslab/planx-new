@@ -22,10 +22,12 @@ export async function buildSubmissionExportZip({
   sessionId,
   includeOneAppXML = false,
   includeDigitalPlanningJSON = false,
+  onlyDigitalPlanningJSON = false,
 }: {
   sessionId: string;
   includeOneAppXML?: boolean;
   includeDigitalPlanningJSON?: boolean;
+  onlyDigitalPlanningJSON?: boolean;
 }): Promise<ExportZip> {
   // fetch session data
   const sessionData = await $api.session.find(sessionId);
@@ -41,7 +43,7 @@ export async function buildSubmissionExportZip({
   const zip = new ExportZip(sessionId, flowSlug);
 
   // add OneApp XML to the zip
-  if (includeOneAppXML) {
+  if (includeOneAppXML && !onlyDigitalPlanningJSON) {
     try {
       const xml = await $api.export.oneAppPayload(sessionId);
       const xmlStream = str(xml.trim());
@@ -57,7 +59,7 @@ export async function buildSubmissionExportZip({
   }
 
   // add ODP Schema JSON to the zip, skipping validation if an unsupported application type
-  if (includeDigitalPlanningJSON) {
+  if (includeDigitalPlanningJSON || onlyDigitalPlanningJSON) {
     try {
       const doValidation = isApplicationTypeSupported(passport);
       const schema = doValidation
@@ -75,115 +77,117 @@ export async function buildSubmissionExportZip({
     }
   }
 
-  // add remote files on S3 to the zip
-  const files = new Passport(passport).files;
-  if (files.length) {
-    for (const file of files) {
-      // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-      // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-      // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = decodeURIComponent(
-        file.url.split("/").slice(-2).join("-"),
-      );
-      await zip.addRemoteFile({ url: file.url, name: uniqueFilename });
+  if (!onlyDigitalPlanningJSON) {
+    // add remote user-uploaded files on S3 to the zip
+    const files = new Passport(passport).files;
+    if (files.length) {
+      for (const file of files) {
+        // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
+        // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
+        // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
+        const uniqueFilename = decodeURIComponent(
+          file.url.split("/").slice(-2).join("-"),
+        );
+        await zip.addRemoteFile({ url: file.url, name: uniqueFilename });
+      }
     }
-  }
 
-  // generate csv data
-  const responses = await $api.export.csvData(sessionId);
-  const redactedResponses = await $api.export.csvDataRedacted(sessionId);
+    // generate csv data
+    const responses = await $api.export.csvData(sessionId);
+    const redactedResponses = await $api.export.csvDataRedacted(sessionId);
 
-  // write csv to the zip
-  try {
-    const csvStream = stringify(responses, {
-      columns: ["question", "responses", "metadata"],
-      header: true,
-    });
-    await zip.addStream({
-      name: "application.csv",
-      stream: csvStream,
-    });
-  } catch (error) {
-    throw new Error(
-      `Failed to generate CSV for ${sessionId} zip. Error - ${error}`,
-    );
-  }
-
-  // add template files to zip
-  const templateNames =
-    await $api.getDocumentTemplateNamesForSession(sessionId);
-  for (const templateName of templateNames || []) {
+    // write csv to the zip
     try {
-      const isTemplateSupported = hasRequiredDataForTemplate({
-        passport,
-        templateName,
+      const csvStream = stringify(responses, {
+        columns: ["question", "responses", "metadata"],
+        header: true,
       });
-      if (isTemplateSupported) {
-        const templateStream = generateDocxTemplateStream({
+      await zip.addStream({
+        name: "application.csv",
+        stream: csvStream,
+      });
+    } catch (error) {
+      throw new Error(
+        `Failed to generate CSV for ${sessionId} zip. Error - ${error}`,
+      );
+    }
+
+    // add template files to zip
+    const templateNames =
+      await $api.getDocumentTemplateNamesForSession(sessionId);
+    for (const templateName of templateNames || []) {
+      try {
+        const isTemplateSupported = hasRequiredDataForTemplate({
           passport,
           templateName,
         });
-        await zip.addStream({
-          name: `${templateName}.doc`,
-          stream: templateStream,
-        });
+        if (isTemplateSupported) {
+          const templateStream = generateDocxTemplateStream({
+            passport,
+            templateName,
+          });
+          await zip.addStream({
+            name: `${templateName}.doc`,
+            stream: templateStream,
+          });
+        }
+      } catch (error) {
+        console.log(
+          `Template "${templateName}" could not be generated so has been skipped. Error - ${error}`,
+        );
+        continue;
       }
-    } catch (error) {
-      console.log(
-        `Template "${templateName}" could not be generated so has been skipped. Error - ${error}`,
-      );
-      continue;
     }
-  }
 
-  const boundingBox = passport.data["property.boundary.site.buffered"];
-  const userAction = passport.data?.["drawBoundary.action"];
-  // generate and add an HTML overview document for the submission to zip
-  const overviewHTML = generateApplicationHTML({
-    planXExportData: responses as PlanXExportData[],
-    boundingBox,
-    userAction,
-  });
-  await zip.addFile({
-    name: "Overview.htm",
-    buffer: Buffer.from(overviewHTML),
-  });
-
-  // generate and add an HTML overview document for the submission to zip
-  const redactedOverviewHTML = generateApplicationHTML({
-    planXExportData: redactedResponses as PlanXExportData[],
-    boundingBox,
-    userAction,
-  });
-  await zip.addFile({
-    name: "RedactedOverview.htm",
-    buffer: Buffer.from(redactedOverviewHTML),
-  });
-
-  // add an optional GeoJSON file to zip
-  const geojson: GeoJSON.Feature | undefined =
-    passport?.data?.["property.boundary.site"];
-  if (geojson) {
-    if (userAction) {
-      geojson["properties"] ??= {};
-      geojson["properties"]["planx_user_action"] = userAction;
-    }
-    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile({
-      name: "LocationPlanGeoJSON.geojson",
-      buffer: geoBuff,
-    });
-
-    // generate and add an HTML boundary document for the submission to zip
-    const boundaryHTML = generateMapHTML({
-      geojson,
+    const boundingBox = passport.data["property.boundary.site.buffered"];
+    const userAction = passport.data?.["drawBoundary.action"];
+    // generate and add an HTML overview document for the submission to zip
+    const overviewHTML = generateApplicationHTML({
+      planXExportData: responses as PlanXExportData[],
       boundingBox,
       userAction,
     });
     await zip.addFile({
-      name: "LocationPlan.htm",
-      buffer: Buffer.from(boundaryHTML),
+      name: "Overview.htm",
+      buffer: Buffer.from(overviewHTML),
     });
+
+    // generate and add an HTML overview document for the submission to zip
+    const redactedOverviewHTML = generateApplicationHTML({
+      planXExportData: redactedResponses as PlanXExportData[],
+      boundingBox,
+      userAction,
+    });
+    await zip.addFile({
+      name: "RedactedOverview.htm",
+      buffer: Buffer.from(redactedOverviewHTML),
+    });
+
+    // add an optional GeoJSON file to zip
+    const geojson: GeoJSON.Feature | undefined =
+      passport?.data?.["property.boundary.site"];
+    if (geojson) {
+      if (userAction) {
+        geojson["properties"] ??= {};
+        geojson["properties"]["planx_user_action"] = userAction;
+      }
+      const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+      zip.addFile({
+        name: "LocationPlanGeoJSON.geojson",
+        buffer: geoBuff,
+      });
+
+      // generate and add an HTML boundary document for the submission to zip
+      const boundaryHTML = generateMapHTML({
+        geojson,
+        boundingBox,
+        userAction,
+      });
+      await zip.addFile({
+        name: "LocationPlan.htm",
+        buffer: Buffer.from(boundaryHTML),
+      });
+    }
   }
 
   // write the zip

@@ -430,6 +430,67 @@ const getThemeOptions = ({
           },
         ],
       },
+      MuiSwitch: {
+        styleOverrides: {
+          root: {
+            width: "76px",
+            height: "44px",
+            padding: "8px",
+            left: "-8px",
+            marginRight: "-4px",
+            "& .MuiSwitch-switchBase": {
+              padding: "11px",
+              borderRadius: "50%",
+              color: "rgb(255, 106, 0)",
+              "&.Mui-checked": {
+                transform: "translateX(32px)",
+              },
+            },
+            "& .MuiSwitch-thumb": {
+              background: palette.common.white,
+              width: "22px",
+              height: "22px",
+            },
+            "& .MuiSwitch-track": {
+              background: palette.background.dark,
+              borderRadius: "20px",
+              position: "relative",
+              opacity: "1 !important",
+              "&::before, &::after": {
+                display: "inline-block",
+                position: "absolute",
+                top: "50%",
+                width: "50%",
+                transform: "translateY(-50%)",
+                color: palette.common.white,
+                textAlign: "center",
+                fontSize: "0.75rem",
+                fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              },
+              "&::before": {
+                content: "'ON'",
+                left: "4px",
+                opacity: 0,
+              },
+              "&::after": {
+                content: "'OFF'",
+                right: "4px",
+              },
+            },
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              "& + .MuiSwitch-track": {
+                background: palette.success.dark,
+              },
+              "& + .MuiSwitch-track::before": {
+                opacity: 1,
+              },
+              "& + .MuiSwitch-track::after": {
+                opacity: 0,
+              },
+            },
+          },
+        },
+      },
       MuiRadio: {
         defaultProps: {
           disableRipple: true,
@@ -457,7 +518,7 @@ const getThemeOptions = ({
               color: palette.text.primary,
               border: "2px solid currentcolor",
               borderRadius: "50%",
-              background: "rgba(0,0,0,0)",
+              backgroundColor: "#FFF",
             },
             "&::after": {
               // Styles for radio icon dot
@@ -486,6 +547,28 @@ const getThemeOptions = ({
             },
           },
         },
+        variants: [
+          {
+            props: { variant: "compact" },
+            style: {
+              "& label": { paddingBottom: "200px" },
+              "&.MuiRadio-root": {
+                width: "40px",
+                height: "40px",
+                margin: "0 0 0 0.25em",
+              },
+              "&.MuiRadio-root::before": {
+                top: "8px",
+                left: "8px",
+                width: "24px",
+                height: "24px",
+              },
+              "&.MuiRadio-root::after": {
+                borderWidth: "6px",
+              },
+            },
+          },
+        ],
       },
     },
   };

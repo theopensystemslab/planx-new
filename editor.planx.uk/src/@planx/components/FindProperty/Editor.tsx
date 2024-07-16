@@ -1,3 +1,5 @@
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
   EditorProps,
@@ -10,7 +12,6 @@ import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import OptionButton from "ui/editor/OptionButton";
 import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
@@ -60,17 +61,20 @@ function FindPropertyComponent(props: Props) {
         </ModalSectionContent>
         <ModalSectionContent>
           <InputRow>
-            <OptionButton
-              selected={formik.values.allowNewAddresses}
-              onClick={() => {
-                formik.setFieldValue(
-                  "allowNewAddresses",
-                  !formik.values.allowNewAddresses,
-                );
-              }}
-            >
-              Allow users to plot new addresses without a UPRN
-            </OptionButton>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formik.values.allowNewAddresses}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "allowNewAddresses",
+                      !formik.values.allowNewAddresses,
+                    )
+                  }
+                />
+              }
+              label="Allow users to plot new addresses without a UPRN"
+            />
           </InputRow>
           {formik.values.allowNewAddresses ? (
             <>

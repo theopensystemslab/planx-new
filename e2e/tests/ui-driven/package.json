@@ -8,17 +8,18 @@
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#5710d52",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#6c2cc59",
     "axios": "^1.6.8",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
-    "graphql": "^16.8.1",
+    "graphql": "^16.9.0",
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "serve": "^14.2.1",
     "uuid": "^9.0.1"
   },
+  "packageManager": "pnpm@8.6.6",
   "devDependencies": {
     "@playwright/test": "^1.40.1",
     "@types/node": "18.16.1",

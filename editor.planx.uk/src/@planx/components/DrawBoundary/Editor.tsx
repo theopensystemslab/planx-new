@@ -1,3 +1,5 @@
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
   EditorProps,
@@ -10,7 +12,6 @@ import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import OptionButton from "ui/editor/OptionButton";
 import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
@@ -100,17 +101,22 @@ function DrawBoundaryComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <OptionButton
-            selected={formik.values.hideFileUpload}
-            onClick={() => {
-              formik.setFieldValue(
-                "hideFileUpload",
-                !formik.values.hideFileUpload,
-              );
-            }}
-          >
-            Hide file upload and allow user to continue without data
-          </OptionButton>
+          <InputRow>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formik.values.hideFileUpload}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "hideFileUpload",
+                      !formik.values.hideFileUpload,
+                    )
+                  }
+                />
+              }
+              label="Hide file upload and allow user to continue without data"
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

@@ -24,7 +24,7 @@ updates:
       - "theopensystemslab/planx"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
 
   # Hasura
   - package-ecosystem: "npm"
@@ -38,7 +38,7 @@ updates:
       - "theopensystemslab/planx"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
 
   - package-ecosystem: "docker"
     directory: "/hasura.planx.uk"
@@ -76,7 +76,7 @@ updates:
       - "theopensystemslab/planx"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
   
   # ShareDB
   - package-ecosystem: "npm"
@@ -90,7 +90,7 @@ updates:
       - "theopensystemslab/planx"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
 
   - package-ecosystem: "docker"
     directory: "/sharedb.planx.uk"
@@ -115,7 +115,7 @@ updates:
       - "theopensystemslab/planx"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
 
   - package-ecosystem: "docker"
     directory: "/api.planx.uk"
@@ -142,7 +142,7 @@ updates:
       - "theopensystemslab/planx"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
   
   # Infrastructure
   # - package-ecosystem: "npm"

@@ -5,6 +5,7 @@ import React, { ReactNode } from "react";
 const Legend = styled(Typography)(() => ({
   display: "block",
   width: "100%",
+  padding: 0,
 })) as typeof Typography;
 
 export default function InputLegend({ children }: { children: ReactNode }) {

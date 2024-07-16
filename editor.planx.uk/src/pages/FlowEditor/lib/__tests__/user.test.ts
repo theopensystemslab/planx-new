@@ -1,8 +1,8 @@
 import { User } from "@opensystemslab/planx-core/types";
 
-import { FullStore, vanillaStore } from "../store";
+import { FullStore, useStore } from "../store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 const { canUserEditTeam } = getState();
 
 const redUser: User = {

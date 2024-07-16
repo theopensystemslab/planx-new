@@ -23,13 +23,12 @@ export type FeedbackMetadata = {
 export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
   const {
     breadcrumbs,
-    currentCard,
+    currentCard: node,
     computePassport,
     fetchCurrentTeam,
     id: flowId,
   } = useStore.getState();
   const { id: teamId } = await fetchCurrentTeam();
-  const node = currentCard();
   const userData = {
     breadcrumbs: breadcrumbs,
     passport: computePassport(),
@@ -41,7 +40,7 @@ export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
     nodeType: node?.type ? TYPES[node.type] : null,
     device: Bowser.parse(window.navigator.userAgent),
     userData: userData,
-    nodeData: node?.data
+    nodeData: node?.data,
   };
 
   return metadata;

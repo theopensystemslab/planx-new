@@ -1,8 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = [
-  "EDITOR_NAVIGATION",
-  "LIST_COMPONENT",
-] as const;
+const AVAILABLE_FEATURE_FLAGS = ["SEARCH"] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 

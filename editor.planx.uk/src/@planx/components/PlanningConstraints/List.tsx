@@ -88,7 +88,7 @@ export default function ConstraintsList({
     <Box key={Object.keys(groupedConstraints).join("-")} mb={3}>
       {Object.keys(groupedConstraints).map(
         (category: string, index: number) => (
-          <>
+          <React.Fragment key={`${category}-wrapper`}>
             <ListSubheader
               component="div"
               disableGutters
@@ -128,7 +128,7 @@ export default function ConstraintsList({
                 </ConstraintListItem>
               ))}
             </List>
-          </>
+          </React.Fragment>
         ),
       )}
     </Box>
@@ -170,7 +170,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-          <Typography variant="body2" pr={1.5}>
+          <Typography component="div" variant="body2" pr={1.5}>
             {children}
           </Typography>
         </AccordionSummary>

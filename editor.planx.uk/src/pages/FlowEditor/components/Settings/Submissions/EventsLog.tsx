@@ -18,14 +18,9 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import ErrorFallback from "components/ErrorFallback";
 import { format } from "date-fns";
 import React, { useState } from "react";
+import ErrorSummary from "ui/shared/ErrorSummary";
 
 import { GetSubmissionsResponse, Submission } from ".";
-
-const ErrorSummary = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  padding: theme.spacing(3),
-  border: `5px solid ${theme.palette.error.main}`,
-}));
 
 const Response = styled(Box)(() => ({
   fontSize: "1em",
@@ -59,16 +54,12 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
   if (error) return <ErrorFallback error={error} />;
   if (submissions.length === 0)
     return (
-      <ErrorSummary role="status" data-testid="error-summary">
-        <Typography variant="h4" gutterBottom>
-          {`No payments or submissions found for this service`}
-        </Typography>
-        <Typography variant="body2">
-          {`If you're looking for events before January 1, 2024, please contact a PlanX developer.`}
-        </Typography>
-      </ErrorSummary>
+      <ErrorSummary
+        format="info"
+        heading="No payments or submissions found for this service"
+        message="If you're looking for events before 1st January 2024, please contact a PlanX developer."
+      />
     );
-
   return (
     <Feed>
       <Table stickyHeader sx={{ tableLayout: "fixed" }}>

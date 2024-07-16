@@ -49,8 +49,8 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            sendToEmail: "planners@southwark.gov.uk",
-            notifyPersonalisation: { emailReplyToId: "abc123" },
+            sendToEmail: "planning.office.example@council.gov.uk",
+            settings: { emailReplyToId: "abc123" },
           },
         ],
       },
@@ -72,7 +72,7 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         session: {
           email: "simulate-delivered@notifications.service.gov.uk",
-          flow: { slug: "test-flow" },
+          flow: { slug: "test-flow", name: "Test Flow" },
         },
       },
       variables: { id: "123" },
@@ -96,7 +96,7 @@ describe(`sending an application by email to a planning office`, () => {
       variables: {
         sessionId: "123",
         teamSlug: "southwark",
-        recipient: "planning.office.example@southwark.gov.uk",
+        recipient: "planning.office.example@council.gov.uk",
         request: {
           personalisation: {
             serviceName: "Apply for something",
@@ -119,7 +119,7 @@ describe(`sending an application by email to a planning office`, () => {
       .then((res) => {
         expect(res.body).toEqual({
           message: `Successfully sent to email`,
-          inbox: "planners@southwark.gov.uk",
+          inbox: "planning.office.example@council.gov.uk",
           govuk_notify_template: "Submit",
         });
       });
@@ -153,7 +153,7 @@ describe(`sending an application by email to a planning office`, () => {
         teams: [
           {
             sendToEmail: null,
-            notifyPersonalisation: { emailReplyToId: "abc123" },
+            settings: { emailReplyToId: "abc123" },
           },
         ],
       },
@@ -200,7 +200,7 @@ describe(`downloading application data received by email`, () => {
       name: "GetTeamEmailSettings",
       matchOnVariables: false,
       data: {
-        teams: [{ sendToEmail: "planners@southwark.gov.uk" }],
+        teams: [{ sendToEmail: "planning.office.example@council.gov.uk" }],
       },
       variables: { slug: "southwark" },
     });
@@ -229,7 +229,7 @@ describe(`downloading application data received by email`, () => {
   it("errors if email query param does not match the stored database value for this team", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=wrong@southwark.gov.uk&localAuthority=southwark",
+        "/download-application-files/123?email=wrong@council.gov.uk&localAuthority=southwark",
       )
       .expect(403)
       .then((res) => {
@@ -251,7 +251,7 @@ describe(`downloading application data received by email`, () => {
 
     await supertest(app)
       .get(
-        "/download-application-files/456?email=planners@southwark.gov.uk&localAuthority=southwark",
+        "/download-application-files/456?email=planning.office.example@council.gov.uk&localAuthority=southwark",
       )
       .expect(400)
       .then((res) => {
@@ -264,7 +264,7 @@ describe(`downloading application data received by email`, () => {
   it("calls addTemplateFilesToZip()", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=planners@southwark.gov.uk&localAuthority=southwark",
+        "/download-application-files/123?email=planning.office.example@council.gov.uk&localAuthority=southwark",
       )
       .expect(200)
       .then((_res) => {

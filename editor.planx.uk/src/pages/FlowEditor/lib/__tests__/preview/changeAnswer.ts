@@ -1,9 +1,9 @@
 import cloneDeep from "lodash/cloneDeep";
 
-import { Store, vanillaStore } from "../../store";
+import { Store, useStore } from "../../store";
 import flowWithAutoAnswersMock from "../mocks/flowWithAutoAnswers.json";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 const flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
 

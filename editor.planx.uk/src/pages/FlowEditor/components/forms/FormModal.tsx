@@ -61,9 +61,7 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.DateInput}>Date Input</option>
         <option value={TYPES.AddressInput}>Address Input</option>
         <option value={TYPES.ContactInput}>Contact Input</option>
-        {hasFeatureFlag("LIST_COMPONENT") && (
-          <option value={TYPES.List}>List</option>
-        )}
+        <option value={TYPES.List}>List</option>
       </optgroup>
       <optgroup label="Information">
         <option value={TYPES.TaskList}>Task List</option>

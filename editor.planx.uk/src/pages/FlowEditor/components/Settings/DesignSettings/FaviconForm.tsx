@@ -5,12 +5,12 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput";
-import InputDescription from "ui/editor/InputDescription";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { FormProps, SettingsForm } from ".";
+import { SettingsForm } from "../shared/SettingsForm";
+import { FormProps } from ".";
 
 export const FaviconForm: React.FC<FormProps> = ({
   formikConfig,
@@ -36,16 +36,16 @@ export const FaviconForm: React.FC<FormProps> = ({
       : formik.setFieldValue("favicon", null);
 
   return (
-    <SettingsForm
+    <SettingsForm<TeamTheme>
       formik={formik}
       legend="Favicon"
       description={
         <>
-          <InputDescription>
+          <p>
             Set the favicon to be used in the browser tab. The favicon should be
             32x32px and in .ico or .png format.
-          </InputDescription>
-          <InputDescription>
+          </p>
+          <p>
             <Link
               href="https://opensystemslab.notion.site/10-Customise-the-appearance-of-your-services-3811fe9707534f6cbc0921fc44a2b193"
               target="_blank"
@@ -53,7 +53,7 @@ export const FaviconForm: React.FC<FormProps> = ({
             >
               See our guide for favicons
             </Link>
-          </InputDescription>
+          </p>
         </>
       }
       input={

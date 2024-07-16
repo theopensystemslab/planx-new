@@ -1,8 +1,10 @@
 import RuleIcon from "@mui/icons-material/Rule";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
+import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
@@ -21,7 +23,6 @@ import ListManager, {
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { ModalSubtitle } from "ui/editor/ModalSubtitle";
-import OptionButton from "ui/editor/OptionButton";
 import RichTextInput from "ui/editor/RichTextInput";
 import SelectInput from "ui/editor/SelectInput";
 import Input from "ui/shared/Input";
@@ -91,14 +92,22 @@ function FileUploadAndLabelComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <OptionButton
-            selected={formik.values.hideDropZone}
-            onClick={() => {
-              formik.setFieldValue("hideDropZone", !formik.values.hideDropZone);
-            }}
-          >
-            Hide the drop zone and show files list for information only
-          </OptionButton>
+          <InputRow>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formik.values.hideDropZone}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "hideDropZone",
+                      !formik.values.hideDropZone,
+                    )
+                  }
+                />
+              }
+              label="Hide the drop zone and show files list for information only"
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>

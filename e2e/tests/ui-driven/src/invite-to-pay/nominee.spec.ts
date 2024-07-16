@@ -18,6 +18,7 @@ let context: Context = {
   ...contextDefaults,
   flow: {
     slug: "invite-to-pay-test",
+    name: "Invite to pay test",
     data: inviteToPayFlow,
   },
   sessionIds: [], // used to collect and clean up sessions
@@ -55,7 +56,7 @@ test.describe("Nominee journey @regression", async () => {
     await expect(page.getByText("123, Test Street, Testville")).toBeVisible();
 
     const formattedProjectType =
-      "Alteration of internal walls and addition or alteration of a deck";
+      "Add a verandah or deck and changes to internal walls or layout";
     await expect(page.getByText(formattedProjectType)).toBeVisible();
 
     const payButton = page.getByRole("button", {

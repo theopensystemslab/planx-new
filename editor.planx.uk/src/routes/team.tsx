@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 import { compose, lazy, mount, route, withData, withView } from "navi";
+import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
+import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import React from "react";
 
 import { client } from "../lib/graphql";
@@ -26,8 +28,6 @@ const routes = compose(
       view: <Team />,
     })),
 
-    "/settings": lazy(() => import("./teamSettings")),
-
     "/:flow": lazy(async (req) => {
       const [slug] = req.params.flow.split(",");
 
@@ -50,6 +50,7 @@ const routes = compose(
                 }
               ) {
                 id
+                name
               }
             }
           `,
@@ -65,6 +66,7 @@ const routes = compose(
           });
         }
 
+        useStore.getState().setFlowName(flow.name);
         useStore.getState().setFlowSlug(slug);
         await useStore.getState().connectTo(flow.id);
       }
@@ -73,6 +75,22 @@ const routes = compose(
     }),
 
     "/members": lazy(() => import("./teamMembers")),
+    "/design": compose(
+      route(async (req) => ({
+        title: makeTitle(
+          [req.params.team, req.params.flow, "design"].join("/"),
+        ),
+        view: DesignSettings,
+      })),
+    ),
+    "/general-settings": compose(
+      route(async (req) => ({
+        title: makeTitle(
+          [req.params.team, req.params.flow, "settings"].join("/"),
+        ),
+        view: GeneralSettings,
+      })),
+    ),
   }),
 );
 

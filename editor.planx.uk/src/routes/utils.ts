@@ -49,6 +49,7 @@ export const setPath = (flowData: Store.flow, req: NaviRequest) => {
 //      So I've hard-coded these domain names until a better solution comes along.
 //
 const PREVIEW_ONLY_DOMAINS = [
+  "planningservices.epsom-ewell.gov.uk",
   "planningservices.barnet.gov.uk",
   "planningservices.buckinghamshire.gov.uk",
   "planningservices.camden.gov.uk",

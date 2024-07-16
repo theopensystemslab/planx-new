@@ -1,137 +1,227 @@
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
+import { visuallyHidden } from "@mui/utils";
+import { getIn } from "formik";
+import { get } from "lodash";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
+import ChecklistItem from "ui/shared/ChecklistItem";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { DESCRIPTION_TEXT } from "../../shared/constants";
+import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../shared/constants";
 import BasicRadio from "../../shared/Radio/BasicRadio";
-import type { NumberField, QuestionField, TextField } from "../model";
+import type {
+  ChecklistField,
+  NumberField,
+  QuestionField,
+  TextField,
+} from "../model";
+import { useListContext } from "./Context";
 
 type Props<T> = T & { id: string };
 
-export const TextFieldInput: React.FC<Props<TextField>> = ({
-  id,
-  data,
-  required,
-}) => (
-  <InputLabel label={data.title} htmlFor={id}>
-    <Input
-      type={((type) => {
-        if (type === "email") return "email";
-        else if (type === "phone") return "tel";
-        return "text";
-      })(data.type)}
-      multiline={data.type && ["long", "extraLong"].includes(data.type)}
-      bordered
-      id={id}
-      rows={
-        data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
-      }
-      name="text"
-      required={required}
-      inputProps={{
-        "aria-describedby": [
-          data.description ? DESCRIPTION_TEXT : "",
-          // TODO: When handling errors, revisit this
-          // formik.errors.text ? `${ERROR_MESSAGE}-${inputFieldId}` : "",
-        ]
-          .filter(Boolean)
-          .join(" "),
-      }}
-    />
-  </InputLabel>
-);
+export const TextFieldInput: React.FC<Props<TextField>> = ({ id, data }) => {
+  const { formik, activeIndex } = useListContext();
 
-export const NumberFieldInput: React.FC<Props<NumberField>> = ({
-  id,
-  data,
-  required,
-}) => (
-  <InputLabel label={data.title} htmlFor={id}>
-    <Box sx={{ display: "flex", alignItems: "baseline" }}>
+  return (
+    <InputLabel label={data.title} htmlFor={id}>
       <Input
-        required={required}
+        type={((type) => {
+          if (type === "email") return "email";
+          else if (type === "phone") return "tel";
+          return "text";
+        })(data.type)}
+        multiline={data.type && ["long", "extraLong"].includes(data.type)}
         bordered
-        name="value"
-        type="number"
-        // value={formik.values.value}
-        // onChange={formik.handleChange}
-        // errorMessage={formik.errors.value as string}
+        value={formik.values.userData[activeIndex][data.fn]}
+        onChange={formik.handleChange}
+        errorMessage={get(formik.errors, ["userData", activeIndex, data.fn])}
+        id={id}
+        rows={
+          data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
+        }
+        name={`userData[${activeIndex}]['${data.fn}']`}
+        required
         inputProps={{
           "aria-describedby": [
             data.description ? DESCRIPTION_TEXT : "",
-            // formik.errors.value ? `${ERROR_MESSAGE}-${props.id}` : "",
+            get(formik.errors, ["userData", activeIndex, data.fn])
+              ? `${ERROR_MESSAGE}-${id}`
+              : "",
           ]
             .filter(Boolean)
             .join(" "),
         }}
-        id={id}
       />
-      {data.units && <InputRowLabel>{data.units}</InputRowLabel>}
-    </Box>
-  </InputLabel>
-);
+    </InputLabel>
+  );
+};
 
-export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
+export const NumberFieldInput: React.FC<Props<NumberField>> = ({
   id,
   data,
-}) => (
-  <FormControl sx={{ width: "100%" }} component="fieldset">
-    <FormLabel
-      component="legend"
-      id={`radio-buttons-group-label-${id}`}
-      sx={(theme) => ({
-        color: theme.palette.text.primary,
-        "&.Mui-focused": {
-          color: theme.palette.text.primary,
-        },
-      })}
-    >
-      {data.title}
-    </FormLabel>
-    {/* <ErrorWrapper id={props.id} error={formik.errors.selected?.id}> */}
-    <RadioGroup
-      aria-labelledby={`radio-buttons-group-label-${id}`}
-      name={`radio-buttons-group-${id}`}
-      sx={{ p: 1 }}
-      // value={formik.values.selected.id}
-    >
-      {data.options.map(({ id, data }) => (
-        <BasicRadio
-          key={id}
+}) => {
+  const { formik, activeIndex } = useListContext();
+
+  return (
+    <InputLabel label={data.title} htmlFor={id}>
+      <Box sx={{ display: "flex", alignItems: "baseline" }}>
+        <Input
+          required
+          bordered
+          name={`userData[${activeIndex}]['${data.fn}']`}
+          type="number"
+          value={formik.values.userData[activeIndex][data.fn]}
+          onChange={formik.handleChange}
+          errorMessage={get(formik.errors, ["userData", activeIndex, data.fn])}
+          inputProps={{
+            "aria-describedby": [
+              data.description ? DESCRIPTION_TEXT : "",
+              get(formik.errors, ["userData", activeIndex, data.fn])
+                ? `${ERROR_MESSAGE}-${id}`
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" "),
+          }}
           id={id}
-          title={data.text}
-          onChange={() => console.log("change radio")}
         />
-      ))}
-    </RadioGroup>
-    {/* </ErrorWrapper> */}
-  </FormControl>
-);
+        {data.units && <InputRowLabel>{data.units}</InputRowLabel>}
+      </Box>
+    </InputLabel>
+  );
+};
 
-export const SelectFieldInput: React.FC<Props<QuestionField>> = ({
-  id,
-  data,
-  required,
-}) => (
-  <InputLabel label={data.title} id={`select-label-${id}`}>
-    <SelectInput
-      bordered
-      required={required}
-      title={data.title}
-      labelId={`select-label-${id}`}
-    >
-      {data.options.map((option) => (
-        <MenuItem key={option.id} value={option.data.text}>
-          {option.data.text}
-        </MenuItem>
-      ))}
-    </SelectInput>
-  </InputLabel>
-);
+export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
+  const { formik, activeIndex } = useListContext();
+  const { id, data } = props;
+
+  return (
+    <FormControl sx={{ width: "100%" }} component="fieldset">
+      <FormLabel
+        component="legend"
+        id={`radio-buttons-group-label-${id}`}
+        sx={(theme) => ({
+          color: theme.palette.text.primary,
+          "&.Mui-focused": {
+            color: theme.palette.text.primary,
+          },
+        })}
+      >
+        {data.title}
+      </FormLabel>
+      <ErrorWrapper
+        id={`${id}-error`}
+        error={get(formik.errors, ["userData", activeIndex, data.fn])}
+      >
+        <RadioGroup
+          aria-labelledby={`radio-buttons-group-label-${id}`}
+          name={`userData[${activeIndex}]['${data.fn}']`}
+          sx={{ p: 1, mb: -2 }}
+          value={formik.values.userData[activeIndex][data.fn]}
+        >
+          {data.options.map(({ id, data }) => (
+            <BasicRadio
+              key={id}
+              id={data.val || data.text}
+              title={data.text}
+              onChange={formik.handleChange}
+            />
+          ))}
+        </RadioGroup>
+      </ErrorWrapper>
+    </FormControl>
+  );
+};
+
+export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
+  const { formik, activeIndex } = useListContext();
+  const { id, data } = props;
+
+  return (
+    <InputLabel label={data.title} id={`select-label-${id}`}>
+      <ErrorWrapper
+        id={`${id}-error`}
+        error={get(formik.errors, ["userData", activeIndex, data.fn])}
+      >
+        <SelectInput
+          bordered
+          required
+          title={data.title}
+          labelId={`select-label-${id}`}
+          value={formik.values.userData[activeIndex][data.fn]}
+          onChange={formik.handleChange}
+          name={`userData[${activeIndex}]['${data.fn}']`}
+        >
+          {data.options.map((option) => (
+            <MenuItem
+              key={option.id}
+              value={option.data.val || option.data.text}
+            >
+              {option.data.text}
+            </MenuItem>
+          ))}
+        </SelectInput>
+      </ErrorWrapper>
+    </InputLabel>
+  );
+};
+
+export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
+  const { formik, activeIndex } = useListContext();
+  const {
+    id,
+    data: { options, title, fn },
+  } = props;
+
+  const changeCheckbox =
+    (id: string) =>
+    async (
+      _checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined,
+    ) => {
+      let newCheckedIds;
+
+      if (formik.values.userData[activeIndex][fn].includes(id)) {
+        newCheckedIds = (
+          formik.values.userData[activeIndex][fn] as string[]
+        ).filter((x) => x !== id);
+      } else {
+        newCheckedIds = [...formik.values.userData[activeIndex][fn], id];
+      }
+
+      await formik.setFieldValue(
+        `userData[${activeIndex}]['${fn}']`,
+        newCheckedIds,
+      );
+    };
+
+  return (
+    <InputLabel label={title} id={`checklist-label-${id}`}>
+      <ErrorWrapper
+        error={getIn(formik.errors, `userData[${activeIndex}]['${fn}']`)}
+        id={id}
+      >
+        <Grid container component="fieldset">
+          <legend style={visuallyHidden}>{title}</legend>
+          {options.map((option) => (
+            <ChecklistItem
+              onChange={changeCheckbox(option.id)}
+              label={option.data.text}
+              id={option.id}
+              checked={formik.values.userData[activeIndex][fn].includes(
+                option.id,
+              )}
+            />
+          ))}
+        </Grid>
+      </ErrorWrapper>
+    </InputLabel>
+  );
+};

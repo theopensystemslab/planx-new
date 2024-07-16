@@ -12,9 +12,10 @@ const Root = styled(Box, {
 })<RootProps>(({ background, theme }) => ({
   display: "block",
   width: "100%",
-  padding: theme.spacing(2.5, 0),
+  marginTop: theme.spacing(2),
+  paddingBottom: theme.spacing(1),
   "&:first-of-type": {
-    paddingTop: 0,
+    marginTop: 0,
   },
   "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),
@@ -27,7 +28,7 @@ const Root = styled(Box, {
   }),
 }));
 
-export default function EditorRow({
+export default function SettingsSection({
   children,
   background,
 }: {

@@ -18,9 +18,9 @@ import { OT } from "@planx/graph/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { Operation } from "types";
 
 import { useStore } from "../../lib/store";
-import { Operation } from "types";
 import { formatLastEditDate } from "../../utils";
 
 const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (

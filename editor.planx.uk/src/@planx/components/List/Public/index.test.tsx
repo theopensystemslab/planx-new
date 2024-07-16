@@ -1,22 +1,23 @@
-import { within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
+import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { axe, setup } from "testUtils";
 
-import ListComponent, { Props } from "../Public";
-import { Zoo } from "../schemas/Zoo";
+import ListComponent from "../Public";
+import {
+  mockUnitsPayload,
+  mockUnitsProps,
+} from "../schemas/mocks/GenericUnits";
+import { mockMaxOneProps } from "../schemas/mocks/MaxOne";
+import { mockZooPayload, mockZooProps } from "../schemas/mocks/Zoo";
 
-const mockProps: Props = {
-  fn: "mock",
-  schema: Zoo,
-  schemaName: "Zoo",
-  title: "Mock Title",
-  description: "Mock description",
-};
+jest.setTimeout(20_000);
+Element.prototype.scrollIntoView = jest.fn();
 
 describe("Basic UI", () => {
   it("renders correctly", () => {
-    const { getByText } = setup(<ListComponent {...mockProps} />);
+    const { getByText } = setup(<ListComponent {...mockZooProps} />);
 
     expect(getByText(/Mock Title/)).toBeInTheDocument();
     expect(getByText(/Mock description/)).toBeInTheDocument();
@@ -24,7 +25,7 @@ describe("Basic UI", () => {
 
   it("parses provided schema to render expected form", async () => {
     const { getByLabelText, getByText, user, getByRole, queryAllByRole } =
-      setup(<ListComponent {...mockProps} />);
+      setup(<ListComponent {...mockZooProps} />);
 
     // Text inputs are generated from schema...
     const textInput = getByLabelText(/What's their name?/) as HTMLInputElement;
@@ -90,20 +91,18 @@ describe("Basic UI", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(<ListComponent {...mockProps} />);
+    const { container } = setup(<ListComponent {...mockZooProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 });
 
-describe("Navigating back", () => {
-  test.todo("it pre-populates list correctly");
-});
-
 describe("Building a list", () => {
   it("does not display a default item if the schema has no required minimum", () => {
-    const mockWithMinZero = merge(cloneDeep(mockProps), { schema: { min: 0 } });
-    const { queryByRole, getByRole } = setup(
+    const mockWithMinZero = merge(cloneDeep(mockZooProps), {
+      schema: { min: 0 },
+    });
+    const { queryByRole, getByTestId } = setup(
       <ListComponent {...mockWithMinZero} />,
     );
 
@@ -115,16 +114,14 @@ describe("Building a list", () => {
     expect(activeListHeading).toBeNull();
 
     // Button is present allow additional items to be added
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    const addItemButton = getByTestId("list-add-button");
     expect(addItemButton).toBeInTheDocument();
     expect(addItemButton).not.toBeDisabled();
   });
 
   it("displays a default item if the schema has a required minimum", () => {
     const { getByRole, queryByLabelText } = setup(
-      <ListComponent {...mockProps} />,
+      <ListComponent {...mockZooProps} />,
     );
 
     // Card present...
@@ -140,25 +137,34 @@ describe("Building a list", () => {
     expect(inputField).not.toBeDisabled();
   });
 
-  test("Adding an item", async () => {
-    const { getAllByRole, getByRole, user } = setup(
-      <ListComponent {...mockProps} />,
+  it("hides the index number in the card header and the 'add another' button if the schema has a max of 1", () => {
+    const { getAllByTestId, queryByTestId } = setup(
+      <ListComponent {...mockMaxOneProps} />,
     );
 
-    let cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
+    const cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(1);
+    expect(cards[0]).toHaveTextContent("Parking spaces");
+
+    const addItemButton = queryByTestId("list-add-button");
+    expect(addItemButton).not.toBeInTheDocument();
+  });
+
+  test("Adding an item", async () => {
+    const { getAllByTestId, getByTestId, user } = setup(
+      <ListComponent {...mockZooProps} />,
     );
+
+    let cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    await fillInResponse(user);
+
+    const addItemButton = getByTestId("list-add-button");
     await user.click(addItemButton);
 
     // Item successfully added
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(2);
 
     // Old item is inactive
@@ -177,39 +183,24 @@ describe("Building a list", () => {
 
   test("Editing an item", async () => {
     // Setup three cards
-    const { getAllByRole, getByRole, user, findByLabelText } = setup(
-      <ListComponent {...mockProps} />,
+    const { getAllByTestId, getByTestId, user } = setup(
+      <ListComponent {...mockZooProps} />,
     );
 
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
-    await user.click(addItemButton);
-    await user.click(addItemButton);
+    await fillInResponse(user);
 
-    let cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    const addItemButton = getByTestId("list-add-button");
+
+    await user.click(addItemButton);
+    await fillInResponse(user);
+
+    await user.click(addItemButton);
+    await fillInResponse(user);
+
+    const cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(3);
 
     let [firstCard, secondCard, thirdCard] = cards;
-
-    // Final card is currently active
-    expect(thirdCard).not.toBeNull();
-    expect(
-      within(thirdCard!).getByLabelText(/What's their name?/),
-    ).toBeInTheDocument();
-
-    // Hitting "cancel" takes us out of Edit mode
-    const thirdCardCancelButton = within(thirdCard!).getByRole("button", {
-      name: /Cancel/,
-    });
-    await user.click(thirdCardCancelButton);
-
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
-    [firstCard, secondCard, thirdCard] = cards;
 
     // No cards currently active
     expect(
@@ -233,10 +224,7 @@ describe("Building a list", () => {
     });
     await user.click(secondCardEditButton);
 
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
-    [firstCard, secondCard, thirdCard] = cards;
+    [firstCard, secondCard, thirdCard] = getAllByTestId(/list-card/);
 
     // Second card now editable
     expect(
@@ -246,44 +234,39 @@ describe("Building a list", () => {
 
   test("Removing an item when all cards are inactive", async () => {
     // Setup three cards
-    const { getAllByRole, getByRole, user, getByLabelText, queryAllByRole } =
-      setup(<ListComponent {...mockProps} />);
+    const {
+      getByTestId,
+      getAllByTestId,
+      user,
+      getByLabelText,
+      queryAllByTestId,
+    } = setup(<ListComponent {...mockZooProps} />);
 
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
-    await user.click(addItemButton);
-    await user.click(addItemButton);
+    await fillInResponse(user);
 
-    let cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    const addItemButton = getByTestId("list-add-button");
+
+    await user.click(addItemButton);
+    await fillInResponse(user);
+
+    await user.click(addItemButton);
+    await fillInResponse(user);
+
+    let cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(3);
 
     let [firstCard, secondCard, thirdCard] = cards;
-
-    const thirdCardCancelButton = within(thirdCard!).getByRole("button", {
-      name: /Cancel/,
-    });
-    await user.click(thirdCardCancelButton);
-
-    [firstCard, secondCard, thirdCard] = getAllByRole("heading", {
-      level: 2,
-    }).map((el) => el.closest("div"));
 
     // Remove third card
     const thirdCardRemoveButton = within(thirdCard!).getByRole("button", {
       name: /Remove/,
     });
+
     await user.click(thirdCardRemoveButton);
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(2);
 
-    [firstCard, secondCard] = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    [firstCard, secondCard, thirdCard] = getAllByTestId(/list-card/);
 
     // Previous items remain inactive
     expect(
@@ -298,14 +281,10 @@ describe("Building a list", () => {
       name: /Remove/,
     });
     await user.click(secondCardRemoveButton);
-    cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
-    [firstCard] = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    [firstCard] = getAllByTestId(/list-card/);
 
     // Previous items remain inactive
     expect(
@@ -317,9 +296,7 @@ describe("Building a list", () => {
       name: /Remove/,
     });
     await user.click(firstCardRemoveButton);
-    cards = queryAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    cards = queryAllByTestId(/list-card/);
     expect(cards).toHaveLength(0);
 
     // Add item back
@@ -332,17 +309,17 @@ describe("Building a list", () => {
 
   test("Removing an item when another card is active", async () => {
     // Setup two cards
-    const { getAllByRole, getByRole, user, getByLabelText, queryAllByRole } =
-      setup(<ListComponent {...mockProps} />);
+    const { getAllByTestId, getByTestId, user } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
 
-    const addItemButton = getByRole("button", {
-      name: /Add a new animal type/,
-    });
+    await fillInResponse(user);
+
+    const addItemButton = getByTestId("list-add-button");
+
     await user.click(addItemButton);
 
-    const [firstCard, secondCard] = getAllByRole("heading", { level: 2 }).map(
-      (el) => el.closest("div"),
-    );
+    const [firstCard, secondCard] = getAllByTestId(/list-card/);
 
     // Second card is active
     expect(
@@ -354,9 +331,7 @@ describe("Building a list", () => {
       name: /Remove/,
     });
     await user.click(firstCardRemoveButton);
-    const cards = getAllByRole("heading", { level: 2 }).map((el) =>
-      el.closest("div"),
-    );
+    const cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
     // First card is active
@@ -364,15 +339,377 @@ describe("Building a list", () => {
       within(cards[0]!).getByLabelText(/What's their name?/),
     ).toBeInTheDocument();
   });
+
+  test("Cancelling an invalid (new) item removes it", async () => {
+    const { getAllByTestId, getByText, user, queryAllByTestId } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+
+    let cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(1);
+
+    const cancelButton = getByText(/Cancel/, { selector: "button" });
+    await user.click(cancelButton);
+
+    cards = queryAllByTestId(/list-card/);
+    expect(cards).toHaveLength(0);
+  });
+
+  test("Cancelling a valid (existing) item resets previous state", async () => {
+    const { getByLabelText, getByText, user, queryByText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+
+    await fillInResponse(user);
+
+    expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
+
+    const editButton = getByText(/Edit/, { selector: "button" });
+    await user.click(editButton);
+
+    const emailInput = getByLabelText(/email/);
+    await user.type(emailInput, "my.new.email@test.com");
+
+    const cancelButton = getByText(/Cancel/, { selector: "button" });
+    await user.click(cancelButton);
+
+    expect(queryByText("my.new.email@test.com")).not.toBeInTheDocument();
+    expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
+  });
 });
 
 describe("Form validation and error handling", () => {
-  test.todo("Text field");
-  test.todo("Number field");
-  test.todo("Question field - select");
-  test.todo("Question field - radio");
+  test("form validation is triggered when saving an item", async () => {
+    const { user, getByRole, getAllByTestId } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+
+    let errorMessages = getAllByTestId(/error-message-input/);
+
+    // Each field has an ErrorWrapper
+    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length);
+
+    // All are empty initially
+    errorMessages.forEach((message) => {
+      expect(message).toBeEmptyDOMElement();
+    });
+
+    await user.click(getByRole("button", { name: /Save/ }));
+
+    // Error wrappers persist
+    errorMessages = getAllByTestId(/error-message-input/);
+    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length);
+
+    // Each field is in an error state
+    errorMessages.forEach((message) => {
+      expect(message).not.toBeEmptyDOMElement();
+    });
+  });
+
+  /**
+   * These tests are not exhaustive tests of validation schemas, these can be tested in their respective model.test.ts files
+   * We are testing that the validation schemas are correctly "wired up" to out List component fields
+   */
+  describe("existing validation schemas are correctly referenced", () => {
+    test("text fields", async () => {
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      const nameInput = screen.getByLabelText(/name/);
+      await user.type(
+        nameInput,
+        "This is a long string of text over one hundred and twenty characters, which should trigger the 'short' text validation warning",
+      );
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const nameInputErrorMessage = getByTestId(
+        /error-message-input-text-name/,
+      );
+
+      expect(nameInputErrorMessage).toHaveTextContent(
+        /Your answer must be 120 characters or fewer/,
+      );
+    });
+
+    test("number fields", async () => {
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      const ageInput = screen.getByLabelText(/old/);
+      await user.type(ageInput, "-35");
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const ageInputErrorMessage = getByTestId(
+        /error-message-input-number-age/,
+      );
+
+      expect(ageInputErrorMessage).toHaveTextContent(/Enter a positive number/);
+    });
+
+    test("question fields", async () => {
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const sizeInputErrorMessage = getByTestId(
+        /error-message-input-question-size/,
+      );
+
+      expect(sizeInputErrorMessage).toHaveTextContent(
+        /Select your answer before continuing/,
+      );
+    });
+
+    test("radio fields", async () => {
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const cuteInputErrorMessage = getByTestId(
+        /error-message-input-question-cute/,
+      );
+
+      expect(cuteInputErrorMessage).toHaveTextContent(
+        /Select your answer before continuing/,
+      );
+    });
+
+    test("checklist fields", async () => {
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const foodInputErrorMessage = getByTestId(
+        /error-message-input-checklist-food/,
+      );
+
+      expect(foodInputErrorMessage).toHaveTextContent(
+        /Select at least one option/,
+      );
+    });
+  });
+
+  test("an error displays if the minimum number of items is not met", async () => {
+    const { user, getByRole, getByTestId, getByText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+
+    const minNumberOfItems = mockZooProps.schema.min;
+    expect(minNumberOfItems).toEqual(1);
+
+    await user.click(getByRole("button", { name: /Cancel/ }));
+    await user.click(getByTestId("continue-button"));
+
+    const minItemsErrorMessage = getByText(
+      `You must provide at least ${minNumberOfItems} response(s)`,
+    );
+    expect(minItemsErrorMessage).toBeVisible();
+  });
+
+  test("an error displays if the maximum number of items is exceeded", async () => {
+    const { user, getAllByTestId, getByTestId, getByText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+    const addItemButton = getByTestId(/list-add-button/);
+
+    const maxNumberOfItems = mockZooProps.schema.max;
+    expect(maxNumberOfItems).toEqual(3);
+
+    // Complete three items
+    await fillInResponse(user);
+    await user.click(addItemButton);
+    await fillInResponse(user);
+    await user.click(addItemButton);
+    await fillInResponse(user);
+
+    const cards = getAllByTestId(/list-card/);
+    expect(cards).toHaveLength(3);
+
+    // Try to add a fourth
+    await user.click(getByTestId(/list-add-button/));
+
+    const maxItemsErrorMessage = getByText(
+      `You can provide at most ${maxNumberOfItems} response(s)`,
+    );
+    expect(maxItemsErrorMessage).toBeVisible();
+  });
+
+  test("an error displays if you add a new item, without saving the active item", async () => {
+    const { user, getByTestId, getByText, getByLabelText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+    // Start filling out item
+    const nameInput = getByLabelText(/name/);
+    await user.type(nameInput, "Richard Parker");
+
+    const emailInput = getByLabelText(/email/);
+    await user.type(emailInput, "richard.parker@pi.com");
+
+    // Try to add a new item
+    await user.click(getByTestId(/list-add-button/));
+
+    const activeItemErrorMessage = getByText(
+      /Please save all responses before adding another/,
+    );
+    expect(activeItemErrorMessage).toBeVisible();
+  });
+
+  test("an error displays if you continue, without saving the active item", async () => {
+    const { user, getByTestId, getByText, getByLabelText } = setup(
+      <ListComponent {...mockZooProps} />,
+    );
+    // Start filling out item
+    const nameInput = getByLabelText(/name/);
+    await user.type(nameInput, "Richard Parker");
+
+    const emailInput = getByLabelText(/email/);
+    await user.type(emailInput, "richard.parker@pi.com");
+
+    // Try to continue
+    await user.click(getByTestId(/continue-button/));
+
+    const unsavedItemErrorMessage = getByText(
+      /Please save in order to continue/,
+    );
+    expect(unsavedItemErrorMessage).toBeVisible();
+  });
 });
 
 describe("Payload generation", () => {
-  it.todo("generates a valid payload on submission");
+  it("generates a valid payload on submission (Zoo)", async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, user } = setup(
+      <ListComponent {...mockZooProps} handleSubmit={handleSubmit} />,
+    );
+    const addItemButton = getByTestId("list-add-button");
+
+    await fillInResponse(user);
+
+    await user.click(addItemButton);
+    await fillInResponse(user);
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalled();
+    expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockZooPayload);
+  });
+
+  it("generates a valid payload with summary stats on submission (Units)", async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, user, getByRole, getAllByRole, getByLabelText } =
+      setup(<ListComponent {...mockUnitsProps} handleSubmit={handleSubmit} />);
+
+    const addItemButton = getByTestId("list-add-button");
+
+    // Response 1
+    let saveButton = getByRole("button", { name: /Save/ });
+    let developmentSelect = getByRole("combobox");
+    let gardenYesRadio = getAllByRole("radio")[0];
+    let gardenNoRadio = getAllByRole("radio")[1];
+    let unitsNumberInput = getByLabelText(/identical units/);
+
+    await user.click(developmentSelect);
+    await user.click(getByRole("option", { name: /New build/ }));
+    await user.click(gardenYesRadio);
+    await user.type(unitsNumberInput, "1");
+    await user.click(saveButton);
+
+    // Response 2
+    await user.click(addItemButton);
+
+    saveButton = getByRole("button", { name: /Save/ });
+    developmentSelect = getByRole("combobox");
+    gardenYesRadio = getAllByRole("radio")[0];
+    gardenNoRadio = getAllByRole("radio")[1];
+    unitsNumberInput = getByLabelText(/identical units/);
+
+    await user.click(developmentSelect);
+    await user.click(getByRole("option", { name: /New build/ }));
+    await user.click(gardenNoRadio);
+    await user.type(unitsNumberInput, "2");
+    await user.click(saveButton);
+
+    // Response 3
+    await user.click(addItemButton);
+
+    saveButton = getByRole("button", { name: /Save/ });
+    developmentSelect = getByRole("combobox");
+    gardenYesRadio = getAllByRole("radio")[0];
+    gardenNoRadio = getAllByRole("radio")[1];
+    unitsNumberInput = getByLabelText(/identical units/);
+
+    await user.click(developmentSelect);
+    await user.click(getByRole("option", { name: /Change of use to a home/ }));
+    await user.click(gardenNoRadio);
+    await user.type(unitsNumberInput, "2");
+    await user.click(saveButton);
+
+    await user.click(getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalled();
+    const output = handleSubmit.mock.calls[0][0];
+    expect(output).toMatchObject(mockUnitsPayload);
+  });
 });
+
+describe("Navigating back", () => {
+  test("it pre-populates list correctly", async () => {
+    const { getAllByText, queryByLabelText, getAllByTestId } = setup(
+      <ListComponent
+        {...mockZooProps}
+        previouslySubmittedData={mockZooPayload}
+      />,
+    );
+
+    const cards = getAllByTestId(/list-card/);
+
+    // Two cards
+    expect(cards).toHaveLength(2);
+
+    // Both inactive
+    expect(queryByLabelText(/What's their name?/)).toBeNull();
+    expect(getAllByText(/What's their name?/)).toHaveLength(2);
+
+    // With the correct previous data
+    expect(getAllByText(/Richard Parker/)).toHaveLength(2);
+  });
+});
+
+/**
+ * Helper function to fill out a list item form
+ */
+const fillInResponse = async (user: UserEvent) => {
+  const nameInput = screen.getByLabelText(/name/);
+  await user.type(nameInput, "Richard Parker");
+
+  const emailInput = screen.getByLabelText(/email/);
+  await user.type(emailInput, "richard.parker@pi.com");
+
+  const ageInput = screen.getByLabelText(/old/);
+  await user.type(ageInput, "10");
+
+  const sizeSelect = screen.getByRole("combobox");
+  await user.click(sizeSelect);
+  await user.click(screen.getByRole("option", { name: /Medium/ }));
+
+  const cuteRadio = screen.getAllByRole("radio")[0];
+  await user.click(cuteRadio);
+
+  const eatCheckboxes = screen.getAllByRole("checkbox");
+  await user.click(eatCheckboxes[0]);
+  await user.click(eatCheckboxes[1]);
+  await user.click(eatCheckboxes[2]);
+
+  const saveButton = screen.getByRole("button", {
+    name: /Save/,
+  });
+  await user.click(saveButton);
+};

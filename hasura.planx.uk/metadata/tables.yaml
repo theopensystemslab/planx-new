@@ -1284,16 +1284,6 @@
           - created_at
         filter: {}
 - table:
-    name: project_types
-    schema: public
-  select_permissions:
-    - role: public
-      permission:
-        columns:
-          - description
-          - value
-        filter: {}
-- table:
     name: published_flows
     schema: public
   object_relationships:
@@ -1415,6 +1405,46 @@
       permission:
         filter: {}
 - table:
+    name: s3_applications
+    schema: public
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - id
+          - webhook_request
+          - webhook_response
+          - session_id
+          - team_slug
+          - created_at
+      comment: ""
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - webhook_request
+          - webhook_response
+          - session_id
+          - team_slug
+          - created_at
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - webhook_request
+          - webhook_response
+          - session_id
+          - team_slug
+          - created_at
+        filter: {}
+        check: null
+      comment: ""
+- table:
     name: sessions
     schema: public
   computed_fields:
@@ -1517,6 +1547,7 @@
           - number_times_resumed
           - sent_to_bops
           - sent_to_email
+          - sent_to_s3_power_automate
           - sent_to_uniform
           - user_clicked_save
           - user_invited_to_pay
@@ -1525,7 +1556,16 @@
           - email_applications
           - payment_requests
           - payment_status
+          - s3_applications
           - uniform_applications
+          - allow_list_answers
+          - application_declaration_connection
+          - draw_boundary_action
+          - find_property_action
+          - property_constraints_planning
+          - property_type
+          - proposal_project_type
+          - user_role
           - service_slug
           - session_id
           - team_slug
@@ -1539,6 +1579,7 @@
           - number_times_resumed
           - sent_to_bops
           - sent_to_email
+          - sent_to_s3_power_automate
           - sent_to_uniform
           - user_clicked_save
           - user_invited_to_pay
@@ -1547,7 +1588,16 @@
           - email_applications
           - payment_requests
           - payment_status
+          - s3_applications
           - uniform_applications
+          - allow_list_answers
+          - application_declaration_connection
+          - draw_boundary_action
+          - find_property_action
+          - property_constraints_planning
+          - property_type
+          - proposal_project_type
+          - user_role
           - service_slug
           - session_id
           - team_slug
@@ -1650,6 +1700,122 @@
       permission:
         filter: {}
 - table:
+    name: team_settings
+    schema: public
+  object_relationships:
+    - name: team
+      using:
+        foreign_key_constraint_on: team_id
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - id
+          - team_id
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+      comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+          - team_id
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+      comment: ""
+    - role: public
+      permission:
+        columns:
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - id
+          - reference_code
+          - team_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - id
+          - team_id
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter: {}
+        check: null
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
+          - external_planning_site_name
+          - external_planning_site_url
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - homepage
+          - reference_code
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+        check: null
+      comment: ""
+- table:
     name: team_themes
     schema: public
   object_relationships:
@@ -1745,6 +1911,13 @@
           column: team_id
           table:
             name: team_integrations
+            schema: public
+    - name: team_settings
+      using:
+        foreign_key_constraint_on:
+          column: team_id
+          table:
+            name: team_settings
             schema: public
     - name: theme
       using:
@@ -2034,9 +2207,7 @@
           - is_platform_admin
           - last_name
           - updated_at
-        filter:
-          id:
-            _eq: x-hasura-user-id
+        filter: {}
   update_permissions:
     - role: platformAdmin
       permission:

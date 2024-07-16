@@ -281,11 +281,12 @@ const initialUrlValue = "https://";
 
 // Makes sure that if the user pastes a full URL into the input, the pre-populated `https://` is removed
 // e.g. https://https://something.com -> https://something.com
+// Also trim whitespace from links which flag sanitation errors
 const trimUrlValue = (url: string) => {
   if (url.startsWith(`${initialUrlValue}${initialUrlValue}`)) {
     return url.slice(initialUrlValue.length);
   }
-  return url;
+  return url.trim();
 };
 
 const getContentHierarchyError = (doc: JSONContent): string | null => {

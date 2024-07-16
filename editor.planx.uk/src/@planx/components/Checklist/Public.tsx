@@ -1,19 +1,23 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import type { Checklist, Group } from "@planx/components/Checklist/model";
+import {
+  type Checklist,
+  checklistValidationSchema,
+  getFlatOptions,
+  type Group,
+} from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { getIn, useFormik } from "formik";
 import React, { useState } from "react";
-import InputLegend from "ui/editor/InputLegend";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import { array, object } from "yup";
+import { object } from "yup";
 
 import { Option } from "../shared";
 import type { PublicProps } from "../ui";
@@ -32,36 +36,21 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
     : [...arr, value];
 }
 
-function getFlatOptions({
-  options,
-  groupedOptions,
-}: {
-  options: Checklist["options"];
-  groupedOptions: Checklist["groupedOptions"];
-}) {
-  if (options) {
-    return options;
-  }
-  if (groupedOptions) {
-    return groupedOptions.flatMap((group) => group.children);
-  }
-  return [];
-}
+const ChecklistComponent: React.FC<Props> = (props) => {
+  const {
+    description = "",
+    groupedOptions,
+    handleSubmit,
+    howMeasured,
+    info,
+    options,
+    policyRef,
+    text,
+    img,
+    previouslySubmittedData,
+    id,
+  } = props;
 
-const ChecklistComponent: React.FC<Props> = ({
-  allRequired,
-  description = "",
-  groupedOptions,
-  handleSubmit,
-  howMeasured,
-  info,
-  options,
-  policyRef,
-  text,
-  img,
-  previouslySubmittedData,
-  id,
-}) => {
   const formik = useFormik<{ checked: Array<string> }>({
     initialValues: {
       checked: previouslySubmittedData?.answers || [],
@@ -72,27 +61,7 @@ const ChecklistComponent: React.FC<Props> = ({
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      checked: array()
-        .required()
-        .test({
-          name: "atLeastOneChecked",
-          message: "Select at least one option",
-          test: (checked?: Array<string>) => {
-            return Boolean(checked && checked.length > 0);
-          },
-        })
-        .test({
-          name: "notAllChecked",
-          message: "All options must be checked",
-          test: (checked?: Array<string>) => {
-            if (!allRequired) {
-              return true;
-            }
-            const flatOptions = getFlatOptions({ options, groupedOptions });
-            const allChecked = checked && checked.length === flatOptions.length;
-            return Boolean(allChecked);
-          },
-        }),
+      checked: checklistValidationSchema(props),
     }),
   });
 

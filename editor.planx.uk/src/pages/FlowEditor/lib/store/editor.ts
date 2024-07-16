@@ -73,7 +73,7 @@ export interface EditorStore extends Store.Store {
   connectTo: (id: Store.nodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
   copyNode: (id: Store.nodeId) => void;
-  createFlow: (teamId: any, newSlug: any) => Promise<string>;
+  createFlow: (teamId: any, newSlug: any, newName: string) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<any>;
@@ -139,7 +139,12 @@ export const editorStore: StateCreator<
 
     const cloneStateFromShareDb = () => {
       const flow = JSON.parse(JSON.stringify(doc.data));
-      get().setFlow({ id, flow, flowSlug: get().flowSlug });
+      get().setFlow({
+        id,
+        flow,
+        flowSlug: get().flowSlug,
+        flowName: get().flowName,
+      });
     };
 
     // set state from initial load
@@ -186,12 +191,17 @@ export const editorStore: StateCreator<
     localStorage.setItem("clipboard", id);
   },
 
-  createFlow: async (teamId, newSlug) => {
+  createFlow: async (teamId, newSlug, newName) => {
     let response = (await client.mutate({
       mutation: gql`
-        mutation CreateFlow($data: jsonb, $slug: String, $teamId: Int) {
+        mutation CreateFlow(
+          $data: jsonb
+          $slug: String
+          $teamId: Int
+          $name: String
+        ) {
           insert_flows_one(
-            object: { slug: $slug, team_id: $teamId, version: 1 }
+            object: { slug: $slug, team_id: $teamId, version: 1, name: $name }
           ) {
             id
             data
@@ -199,6 +209,7 @@ export const editorStore: StateCreator<
         }
       `,
       variables: {
+        name: newName,
         slug: newSlug,
         teamId,
       },
@@ -271,18 +282,17 @@ export const editorStore: StateCreator<
     client.cache.reset();
     const { data } = await client.query({
       query: gql`
-        query GetFlow($teamId: Int!) {
-          flows(
-            order_by: { updated_at: desc }
-            where: { team: { id: { _eq: $teamId } } }
-          ) {
+        query GetFlows($teamId: Int!) {
+          flows(where: { team: { id: { _eq: $teamId } } }) {
             id
+            name
             slug
-            updated_at
-            operations(limit: 1, order_by: { id: desc }) {
+            updatedAt: updated_at
+            operations(limit: 1, order_by: { created_at: desc }) {
+              createdAt: created_at
               actor {
-                first_name
-                last_name
+                firstName: first_name
+                lastName: last_name
               }
             }
           }

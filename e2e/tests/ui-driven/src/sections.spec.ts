@@ -38,6 +38,7 @@ test.describe("Section statuses", () => {
     ...contextDefaults,
     flow: {
       slug: "sections-test-flow",
+      name: "Sections test flow",
       data: flow,
     },
   };

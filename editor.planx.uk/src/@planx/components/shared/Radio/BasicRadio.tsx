@@ -8,15 +8,22 @@ export interface Props {
   id: string;
   title: string;
   onChange: FormControlLabelProps["onChange"];
+  variant?: "default" | "compact";
+  value?: string;
 }
 
-const BasicRadio: React.FC<Props> = ({ id, onChange, title }) => (
+const BasicRadio: React.FC<Props> = ({
+  id,
+  onChange,
+  title,
+  variant = "default",
+}) => (
   <FormControlLabel
     value={id}
     onChange={onChange}
-    control={<Radio />}
+    control={<Radio variant={variant} />}
     label={title}
-    sx={{ pb: 1 }}
+    sx={variant === "default" ? { pb: 1 } : {}}
   />
 );
 

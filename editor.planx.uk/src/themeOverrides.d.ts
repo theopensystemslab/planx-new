@@ -2,6 +2,8 @@ import "@mui/material/Chip";
 // eslint-disable-next-line no-restricted-imports
 import "@mui/material/styles/createPalette";
 
+import { RadioProps } from "@mui/material/Radio";
+
 declare module "@mui/material/Chip" {
   interface ChipPropsVariantOverrides {
     uploadedFileTag: true;
@@ -75,5 +77,17 @@ declare module "@mui/material/Button" {
 
   interface ButtonPropsColorOverrides {
     prompt: true;
+  }
+}
+
+// Append our custom variants to MUI Radio
+declare module "@mui/material/Radio" {
+  interface RadioPropsVariantOverrides {
+    compact: true;
+  }
+}
+declare module "@mui/material" {
+  interface RadioProps {
+    variant?: keyof RadioPropsVariantOverrides;
   }
 }

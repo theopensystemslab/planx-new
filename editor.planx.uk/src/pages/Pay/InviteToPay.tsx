@@ -26,7 +26,9 @@ const FormInner = styled(Box)(({ theme }) => ({
 const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
   const theme = useTheme();
   const expiryDate = getExpiryDateForPaymentRequest(createdAt);
-  const team = useStore((state) => state.getTeam());
+  const { helpEmail, helpOpeningHours, helpPhone } = useStore(
+    (state) => state.teamSettings,
+  );
 
   return (
     <>
@@ -70,18 +72,14 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
           </List>
           <Box>
             <Typography variant="body2">
-              <strong>Telephone</strong> {team.notifyPersonalisation?.helpPhone}
+              <strong>Telephone</strong> {helpPhone}
             </Typography>
-            <Typography variant="body2">
-              {team.notifyPersonalisation?.helpOpeningHours}
-            </Typography>
+            <Typography variant="body2">{helpOpeningHours}</Typography>
           </Box>
           <Box>
             <Typography variant="body2">
               <strong>Email</strong>{" "}
-              <Link href={`mailto:${team.notifyPersonalisation?.helpEmail}`}>
-                {team.notifyPersonalisation?.helpEmail}
-              </Link>
+              <Link href={`mailto:${helpEmail}`}>{helpEmail}</Link>
             </Typography>
             <Typography variant="body2">
               We aim to respond within 2 working days.

@@ -1,4 +1,4 @@
-import { LowCalSession, Team } from "../../../types";
+import { LowCalSession } from "../../../types";
 import supertest from "supertest";
 import app from "../../../server";
 import { queryMock } from "../../../tests/graphqlQueryMock";
@@ -8,28 +8,10 @@ import {
 } from "../../../tests/mocks/saveAndReturnMocks";
 import { buildContentFromSessions } from "./resumeApplication";
 import { PartialDeep } from "type-fest";
+import { Team } from "@opensystemslab/planx-core/types";
 
 const ENDPOINT = "/resume-application";
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
-
-const mockFormatRawProjectTypes = jest
-  .fn()
-  .mockResolvedValue(["New office premises"]);
-
-jest.mock("@opensystemslab/planx-core", () => {
-  const actualCoreDomainClient = jest.requireActual(
-    "@opensystemslab/planx-core",
-  ).CoreDomainClient;
-
-  return {
-    CoreDomainClient: class extends actualCoreDomainClient {
-      constructor() {
-        super();
-        this.formatRawProjectTypes = () => mockFormatRawProjectTypes();
-      }
-    },
-  };
-});
 
 describe("buildContentFromSessions function", () => {
   it("should return correctly formatted content for a single session", async () => {
@@ -49,13 +31,14 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
 
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
@@ -83,6 +66,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
       {
@@ -100,6 +84,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
       {
@@ -117,20 +102,21 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123\n\nService: Apply for a lawful development certificate
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123\n\nService: Apply for a Lawful Development Certificate
       Address: 2 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
-      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=456\n\nService: Apply for a lawful development certificate
+      Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=456\n\nService: Apply for a Lawful Development Certificate
       Address: 3 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=789`;
     expect(
@@ -158,6 +144,7 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
       {
@@ -175,12 +162,13 @@ describe("buildContentFromSessions function", () => {
         created_at: "2022-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
@@ -206,13 +194,14 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
 
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: Address not submitted
-      Project type: New office premises
+      Project type: New offices
       Expiry Date: 29 May 2026
       Link: example.com/team/apply-for-a-lawful-development-certificate/published?sessionId=123`;
     expect(
@@ -224,7 +213,6 @@ describe("buildContentFromSessions function", () => {
   });
 
   it("should handle an empty project type field", async () => {
-    mockFormatRawProjectTypes.mockResolvedValueOnce("");
     const sessions: PartialDeep<LowCalSession>[] = [
       {
         data: {
@@ -240,11 +228,12 @@ describe("buildContentFromSessions function", () => {
         created_at: "2026-05-01T01:02:03.865452+00:00",
         flow: {
           slug: "apply-for-a-lawful-development-certificate",
+          name: "Apply for a Lawful Development Certificate",
         },
       },
     ];
 
-    const result = `Service: Apply for a lawful development certificate
+    const result = `Service: Apply for a Lawful Development Certificate
       Address: 1 High Street
       Project type: Project type not submitted
       Expiry Date: 29 May 2026

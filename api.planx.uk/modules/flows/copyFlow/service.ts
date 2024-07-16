@@ -15,6 +15,7 @@ const copyFlow = async (
   // Check if copied flow data should be inserted into `flows` table, or just returned for reference
   if (insert) {
     const newSlug = flow.slug + "-copy";
+    const newName = flow.name + " (copy)";
     const creatorId = userContext.getStore()?.user?.sub;
     if (!creatorId) throw Error("User details missing from request");
 
@@ -22,6 +23,7 @@ const copyFlow = async (
     await insertFlow(
       flow.team_id,
       newSlug,
+      newName,
       uniqueFlowData,
       parseInt(creatorId),
       flowId,

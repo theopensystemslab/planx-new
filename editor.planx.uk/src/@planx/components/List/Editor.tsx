@@ -13,14 +13,53 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
-import { Zoo } from "./schemas/Zoo";
+import { ProposedAdvertisements } from "./schemas/Adverts";
+import { NonResidentialFloorspace } from "./schemas/Floorspace";
+import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
+import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
+import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
+import { OpenSpaceGLA } from "./schemas/GLA/OpenSpace";
+import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
+import { MaterialDetails } from "./schemas/Materials";
+import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
+import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
+import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
+import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
+import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
+import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 
 type Props = EditorProps<TYPES.List, List>;
 
 export const SCHEMAS = [
-  { name: "Zoo", schema: Zoo },
-  // TODO: Residential units
-  // TODO: Residential units (GLA)
+  { name: "Residential units - Existing", schema: ResidentialUnitsExisting },
+  { name: "Residential units - Proposed", schema: ResidentialUnitsProposed },
+  {
+    name: "Residential units (GLA) - New",
+    schema: ResidentialUnitsGLANew,
+  },
+  {
+    name: "Residential units (GLA) - Rebuilt",
+    schema: ResidentialUnitsGLARebuilt,
+  },
+  {
+    name: "Residential units (GLA) - Removed",
+    schema: ResidentialUnitsGLARemoved,
+  },
+  {
+    name: "Residential units (GLA) - Retained",
+    schema: ResidentialUnitsGLARetained,
+  },
+  { name: "Non-residential floorspace", schema: NonResidentialFloorspace },
+  {
+    name: "Existing and proposed uses (GLA)",
+    schema: ExistingAndProposedUsesGLA,
+  },
+  { name: "Material details", schema: MaterialDetails },
+  { name: "Building details (GLA)", schema: BuildingDetailsGLA },
+  { name: "Communal spaces (GLA)", schema: CommunalSpaceGLA },
+  { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
+  { name: "Open spaces (GLA)", schema: OpenSpaceGLA },
+  { name: "Proposed advertisements", schema: ProposedAdvertisements },
 ];
 
 function ListComponent(props: Props) {
@@ -45,6 +84,7 @@ function ListComponent(props: Props) {
               value={formik.values.title}
               placeholder="Title"
               onChange={formik.handleChange}
+              required
             />
           </InputRow>
           <InputRow>
@@ -62,6 +102,7 @@ function ListComponent(props: Props) {
               value={formik.values.fn}
               placeholder="Data Field"
               onChange={formik.handleChange}
+              required
             />
           </InputRow>
           <InputRow>

@@ -47,7 +47,7 @@ test.describe("Navigation", () => {
 
     Promise.all([await page.goto("/"), await initialRequest]);
 
-    const team = page.locator("h2", { hasText: context.team.name });
+    const team = page.locator("h3", { hasText: context.team.name });
 
     let isRepeatedRequestMade = false;
     page.on(
@@ -74,7 +74,7 @@ test.describe("Navigation", () => {
     });
 
     await page.goto("/");
-    const team = page.locator("h2", { hasText: context.team.name });
+    const team = page.locator("h3", { hasText: context.team.name });
     await team.click();
 
     const teamSlugInHeader = page.getByRole("link", {
@@ -207,9 +207,7 @@ test.describe("Navigation", () => {
     await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
 
     // Open flow settings
-    // TODO: Access via sidebar when EDITOR_NAVIGATION flag is removed
-    page.getByLabel("Toggle Menu").click();
-    page.getByText("Flow Settings").click();
+    page.locator('[aria-label="Service settings"]').click();
 
     // Toggle flow online
     page.getByLabel("Offline").click();
@@ -219,7 +217,7 @@ test.describe("Navigation", () => {
     ).toBeVisible();
 
     // Exit back to main Editor page
-    page.getByRole("link", { name: "Close" }).click();
+    page.locator('[aria-label="Editor"]').click();
 
     const previewLink = page.getByRole("link", {
       name: "Open published service",

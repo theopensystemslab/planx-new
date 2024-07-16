@@ -1,4 +1,5 @@
 import { Store } from "pages/FlowEditor/lib/store";
+
 import { SetValue } from "./model";
 
 type PreviousValues = string | string[] | undefined;
@@ -14,7 +15,7 @@ type HandleSetValue = (params: {
  * Called by computePassport()
  */
 export const handleSetValue: HandleSetValue = ({
-  nodeData: { operation, fn, val: current },
+  nodeData,
   previousValues,
   passport,
 }) => {
@@ -30,31 +31,28 @@ export const handleSetValue: HandleSetValue = ({
   const previous = formatPreviousValues(previousValues);
 
   const newValues = calculateNewValues({
-    operation,
+    nodeData,
     previous,
-    current,
   });
 
   if (newValues) {
-    passport.data![fn] = newValues;
+    passport.data![nodeData.fn] = newValues;
 
     // Operation has cleared passport value
-    if (!newValues.length) delete passport.data![fn];
+    if (!newValues.length) delete passport.data![nodeData.fn];
   }
 
   return passport;
 };
 
 type CalculateNewValues = (params: {
-  operation: SetValue["operation"];
+  nodeData: SetValue;
   previous: string[];
-  current: string;
 }) => string | string[] | undefined;
 
 const calculateNewValues: CalculateNewValues = ({
-  operation,
+  nodeData: { operation, val: current },
   previous,
-  current,
 }) => {
   switch (operation) {
     case "replace":

@@ -11,7 +11,7 @@ import { Flow, GlobalSettings } from "types";
 import { getTeamFromDomain } from "../utils";
 
 interface StandaloneViewData {
-  flows: Pick<Flow, "team" | "settings">[];
+  flows: Pick<Flow, "name" | "team" | "settings">[];
   globalSettings: GlobalSettings[];
 }
 
@@ -24,14 +24,12 @@ const standaloneView = async (req: NaviRequest) => {
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
   const data = await fetchDataForStandaloneView(flowSlug, teamSlug);
-
   const {
-    flows: [{ team, settings: flowSettings }],
+    flows: [{ name, team, settings: flowSettings }],
     globalSettings,
   } = data;
-
   const state = useStore.getState();
-  state.setFlowNameFromSlug(flowSlug);
+  state.setFlowName(data.flows[0].name);
   state.setGlobalSettings(globalSettings[0]);
   state.setFlowSettings(flowSettings);
   state.setTeam(team);
@@ -61,6 +59,7 @@ const fetchDataForStandaloneView = async (
             }
           ) {
             id
+            name
             team {
               theme {
                 primaryColour: primary_colour
@@ -70,15 +69,21 @@ const fetchDataForStandaloneView = async (
                 favicon
               }
               name
-              settings
+              settings: team_settings {
+                boundaryUrl: boundary_url
+                boundaryBBox: boundary_bbox
+                homepage
+                helpEmail: help_email
+                helpPhone: help_phone
+                helpOpeningHours: help_opening_hours
+                emailReplyToId: email_reply_to_id
+                boundaryBBox: boundary_bbox
+              }
               integrations {
                 hasPlanningData: has_planning_data
               }
               slug
-              notifyPersonalisation: notify_personalisation
-              boundaryBBox: boundary_bbox
             }
-            settings
           }
 
           globalSettings: global_settings {

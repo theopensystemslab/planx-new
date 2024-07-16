@@ -20,6 +20,7 @@ export interface Feedback {
   userComment: string | null;
   userContext: string | null;
   createdAt: string;
+  address: string | null;
 }
 
 const feedbackRoutes = compose(
@@ -56,6 +57,7 @@ const feedbackRoutes = compose(
               userComment: user_comment
               userContext: user_context
               createdAt: created_at
+              address
             }
           }
         `,

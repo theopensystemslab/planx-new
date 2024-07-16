@@ -11,6 +11,7 @@ import {
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { SetValue } from "@planx/components/SetValue/model";
+import { handleSetValue } from "@planx/components/SetValue/utils";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
@@ -29,7 +30,6 @@ import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
-import { handleSetValue } from "@planx/components/SetValue/utils";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 let memoizedPreviousCardId: string | undefined = undefined;
@@ -39,7 +39,9 @@ export interface PreviewStore extends Store.Store {
     upToNodeId: Store.nodeId,
     visited?: Array<string>,
   ) => Array<string>;
-  currentCard: () => Store.node | null;
+  currentCard: ({ id: Store.nodeId } & Store.node) | null;
+  setCurrentCard: () => void;
+  getCurrentCard: () => ({ id: Store.nodeId } & Store.node) | null;
   hasPaid: () => boolean;
   previousCard: (
     node: Store.node | null,
@@ -136,18 +138,15 @@ export const previewStore: StateCreator<
     return res;
   },
 
-  currentCard() {
+  setCurrentCard() {
     const { upcomingCardIds, flow } = get();
     const upcoming = upcomingCardIds();
 
     if (upcoming.length > 0) {
       const id = upcoming[0];
-      return {
-        id,
-        ...flow[id],
-      };
+      set({ currentCard: { id, ...flow[id] } });
     } else {
-      return null;
+      set({ currentCard: null });
     }
   },
 
@@ -287,6 +286,7 @@ export const previewStore: StateCreator<
       _nodesPendingEdit,
       changedNode,
       updateSectionData,
+      setCurrentCard,
     } = get();
 
     if (!flow[id]) throw new Error(`id "${id}" not found`);
@@ -369,6 +369,7 @@ export const previewStore: StateCreator<
         });
       }
     }
+    setCurrentCard();
     updateSectionData();
   },
 
@@ -379,6 +380,7 @@ export const previewStore: StateCreator<
 
   resumeSession(session: Session) {
     set({ ...session });
+    get().setCurrentCard();
     get().updateSectionData();
   },
 
@@ -652,6 +654,10 @@ export const previewStore: StateCreator<
 
     return currentRequestedFiles || emptyFileList;
   },
+
+  currentCard: null,
+
+  getCurrentCard: () => get().currentCard,
 });
 
 const knownNots = (

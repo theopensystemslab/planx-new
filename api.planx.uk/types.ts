@@ -1,5 +1,5 @@
 import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
-import { GovUKPayment } from "@opensystemslab/planx-core/types";
+import { GovUKPayment, Team } from "@opensystemslab/planx-core/types";
 
 /**
  * @deprecated Migrating to Node from planx-core
@@ -17,6 +17,7 @@ export interface Node {
 export interface Flow {
   id: string;
   slug: string;
+  name: string;
   data: {
     [key: string]: Node;
   };
@@ -48,20 +49,6 @@ export interface UserData {
 
 export type Breadcrumb = Record<string, UserData>;
 
-export interface Team {
-  id: number;
-  slug: string;
-  name: string;
-  domain?: string;
-  boundaryBBox?: object;
-  notifyPersonalisation: {
-    helpEmail: string;
-    helpPhone: string;
-    helpOpeningHours: string;
-    emailReplyToId: string;
-  };
-}
-
 export interface Passport {
   data: Record<string, any>;
 }
@@ -85,6 +72,7 @@ export interface LowCalSession {
   has_user_saved: boolean;
   flow: {
     slug: string;
+    name: string;
     team: Team;
   };
   lockedAt?: string;

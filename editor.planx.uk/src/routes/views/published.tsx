@@ -49,6 +49,7 @@ export const publishedView = async (req: NaviRequest) => {
     flow: publishedFlow,
     flowSlug,
     flowStatus: flow.status,
+    flowName: flow.name,
   });
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
@@ -84,6 +85,7 @@ export const fetchSettingsForPublishedView = async (
             }
           ) {
             id
+            name
             team {
               theme {
                 primaryColour: primary_colour
@@ -93,15 +95,21 @@ export const fetchSettingsForPublishedView = async (
                 favicon
               }
               name
-              settings
+              settings: team_settings {
+                boundaryUrl: boundary_url
+                boundaryBBox: boundary_bbox
+                homepage
+                helpEmail: help_email
+                helpPhone: help_phone
+                helpOpeningHours: help_opening_hours
+                emailReplyToId: email_reply_to_id
+                boundaryBBox: boundary_bbox
+              }
               integrations {
                 hasPlanningData: has_planning_data
               }
               slug
-              notifyPersonalisation: notify_personalisation
-              boundaryBBox: boundary_bbox
             }
-            settings
             status
             publishedFlows: published_flows(
               limit: 1

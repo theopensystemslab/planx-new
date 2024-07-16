@@ -1,8 +1,10 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
-import { Store, vanillaStore } from "../../store";
+import { Store, useStore } from "../../store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
+const { canGoBack, getCurrentCard, resetPreview, record, changeAnswer } =
+  getState();
 
 // https://imgur.com/VFV64ax
 const flow: Store.flow = {
@@ -58,7 +60,7 @@ const flow: Store.flow = {
 };
 
 beforeEach(() => {
-  getState().resetPreview();
+  resetPreview();
   setState({
     flow,
   });
@@ -66,90 +68,69 @@ beforeEach(() => {
 
 describe("can go back if", () => {
   test("the previous component was manually answered", () => {
-    setState({
-      breadcrumbs: {
-        Question: {
-          auto: false,
-          answers: ["NoFeeAnswerPath"],
-        },
-      },
+    record("Question", {
+      auto: false,
+      answers: ["NoFeeAnswerPath"],
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(true);
+
+    expect(canGoBack(getCurrentCard())).toStrictEqual(true);
   });
 
   test("the user skipped the payment component", () => {
-    setState({
-      breadcrumbs: {
-        Question: {
-          auto: false,
-          answers: ["NoFeeAnswerPath"],
-        },
-        Pay: {
-          auto: true,
-        },
-      },
+    record("Question", {
+      auto: false,
+      answers: ["NoFeeAnswerPath"],
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(true);
+    record("Pay", { auto: true });
+
+    expect(canGoBack(getCurrentCard())).toStrictEqual(true);
   });
 });
 
 describe("cannot go back if", () => {
   test("it's the very first component", () => {
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+    expect(canGoBack(getCurrentCard())).toStrictEqual(false);
   });
 
   test("the only previous component was auto-answered", () => {
-    setState({
-      breadcrumbs: {
-        Question: {
-          auto: true,
-          answers: ["NoFeeAnswerPath"],
-        },
-      },
+    record("Question", {
+      auto: true,
+      answers: ["NoFeeAnswerPath"],
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+
+    expect(canGoBack(getCurrentCard())).toStrictEqual(false);
   });
 
   test("the applicant made a payment", () => {
-    setState({
-      breadcrumbs: {
-        Question: {
-          auto: false,
-          answers: ["FeeAnswerPath"],
-        },
-        Calculate: {
-          auto: true,
-          data: {
-            fee: 10,
-          },
-        },
-        Pay: {
-          auto: false,
-        },
+    record("Question", {
+      auto: false,
+      answers: ["NoFeeAnswerPath"],
+    });
+    record("Calculate", {
+      auto: true,
+      data: {
+        fee: 10,
       },
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+    record("Pay", { auto: false });
+
+    expect(canGoBack(getCurrentCard())).toStrictEqual(false);
   });
 
   test("changing a component's answer", () => {
-    setState({
-      breadcrumbs: {
-        Question: {
-          auto: false,
-          answers: ["FeeAnswerPath"],
-        },
-        Calculate: {
-          auto: true,
-          data: {
-            fee: 10,
-          },
-        },
-        Pay: {
-          auto: false,
-        },
-      },
-      changedNode: "Confirmation",
+    record("Question", {
+      auto: false,
+      answers: ["FeeAnswerPath"],
     });
-    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+    record("Calculate", {
+      auto: true,
+      data: {
+        fee: 10,
+      },
+    });
+    record("Pay", { auto: false });
+    changeAnswer("Confirmation");
+
+    expect(canGoBack(getCurrentCard())).toStrictEqual(false);
   });
 });

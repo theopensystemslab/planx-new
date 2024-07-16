@@ -48,6 +48,7 @@ const hasJWT = (): boolean | void => {
   // Remove JWT from URL, and re-run this function
   setCookie("jwt", jwtSearchParams);
   setCookie("auth", { loggedIn: true });
+  // TODO: observe any redirect in secure fashion
   window.location.href = "/";
 };
 

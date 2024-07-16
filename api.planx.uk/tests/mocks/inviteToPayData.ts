@@ -50,6 +50,7 @@ export const validSession: Session = {
   flow: {
     id: "741a2372-b0b4-4f30-98a8-7c98c6464954",
     slug: "apply-for-a-lawful-development-certificate",
+    name: "Apply for a Lawful Development Certificate",
   },
 };
 
@@ -77,11 +78,12 @@ export const validPaymentRequest = {
     email: "the-agent@opensystemslab.io",
     flow: {
       slug: "apply-for-a-lawful-development-certificate",
+      name: "Apply for a Lawful Development Certificate",
       team: {
         name: "Buckinghamshire",
         slug: "buckinghamshire",
         domain: "planningservices.buckinghamshire.gov.uk",
-        notifyPersonalisation: {
+        settings: {
           helpEmail: "help@council.gov.uk",
           helpPhone: "123",
           helpOpeningHours: "9a-5p",
@@ -184,7 +186,7 @@ export const flowWithInviteToPay: Flow["data"] = {
   ChecklistOptionTwo: {
     data: {
       text: "Build new",
-      val: "build",
+      val: "new",
     },
     type: 200,
   },

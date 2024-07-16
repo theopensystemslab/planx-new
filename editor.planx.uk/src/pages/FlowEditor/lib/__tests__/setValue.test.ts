@@ -1,10 +1,10 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { cloneDeep, merge } from "lodash";
 
-import { Store, vanillaStore } from "../store";
+import { Store, useStore } from "../store";
 
-const { getState, setState } = vanillaStore;
-const { resetPreview, record, computePassport, currentCard } = getState();
+const { getState, setState } = useStore;
+const { resetPreview, record, computePassport, getCurrentCard } = getState();
 
 const baseFlow: Store.flow = {
   _root: {
@@ -76,7 +76,7 @@ describe("SetValue component", () => {
       expect(breadcrumbKeys).toContain("setValue1");
 
       // Middle of flow reached
-      expect(currentCard()?.id).toEqual("middleOfService");
+      expect(getCurrentCard()?.id).toEqual("middleOfService");
 
       // Passport correctly populated
       expect(computePassport()?.data?.myKey).toHaveLength(1);
@@ -94,7 +94,7 @@ describe("SetValue component", () => {
       expect(breadcrumbKeys).toContain("setValue2");
 
       // End of flow reached
-      expect(currentCard()?.id).toEqual("endOfService");
+      expect(getCurrentCard()?.id).toEqual("endOfService");
 
       // Passport correctly populated
       expect(computePassport()?.data?.myKey).toHaveLength(1);
@@ -133,7 +133,7 @@ describe("SetValue component", () => {
       expect(breadcrumbKeys).toContain("setValue1");
 
       // Middle of flow reached
-      expect(currentCard()?.id).toEqual("middleOfService");
+      expect(getCurrentCard()?.id).toEqual("middleOfService");
 
       // Passport correctly populated
       expect(computePassport()?.data?.myKey).toHaveLength(1);
@@ -155,7 +155,7 @@ describe("SetValue component", () => {
       expect(breadcrumbKeys).toContain("setValue2");
 
       // End of flow reached
-      expect(currentCard()?.id).toEqual("endOfService");
+      expect(getCurrentCard()?.id).toEqual("endOfService");
 
       // Passport correctly populated
       expect(computePassport()?.data?.myKey).toHaveLength(2);
@@ -212,7 +212,7 @@ describe("SetValue component", () => {
       expect(breadcrumbKeys).toContain("setValue1");
 
       // Middle of flow reached
-      expect(currentCard()?.id).toEqual("middleOfService");
+      expect(getCurrentCard()?.id).toEqual("middleOfService");
 
       // Passport correctly populated - value not present
       expect(computePassport()?.data?.myKey).toBeUndefined();
@@ -236,7 +236,7 @@ describe("SetValue component", () => {
       record("setValue3", { data: { myKey: ["mySecondValue"] } });
 
       // End of flow reached
-      expect(currentCard()?.id).toEqual("endOfService");
+      expect(getCurrentCard()?.id).toEqual("endOfService");
 
       // Passport correctly populated - value no longer set
       expect(computePassport()?.data?.myKey).toBeUndefined();
@@ -265,7 +265,7 @@ describe("SetValue component", () => {
       record("setValue3", { data: { myKey: ["myUnsetValue"] } });
 
       // End of flow reached
-      expect(currentCard()?.id).toEqual("endOfService");
+      expect(getCurrentCard()?.id).toEqual("endOfService");
 
       // Passport correctly populated - passport variable not removed as values do not match
       expect(computePassport()?.data?.myKey).toEqual("mySecondValue");
@@ -320,7 +320,7 @@ describe("SetValue component", () => {
       expect(breadcrumbKeys).toContain("setValue1");
 
       // Middle of flow reached
-      expect(currentCard()?.id).toEqual("middleOfService");
+      expect(getCurrentCard()?.id).toEqual("middleOfService");
 
       // Passport correctly populated - value not present
       expect(computePassport()?.data?.myKey).toBeUndefined();
@@ -344,7 +344,7 @@ describe("SetValue component", () => {
       record("setValue3", { data: { myKey: ["mySecondValue"] } });
 
       // End of flow reached
-      expect(currentCard()?.id).toEqual("endOfService");
+      expect(getCurrentCard()?.id).toEqual("endOfService");
 
       // Passport correctly populated - key:value pair removed
       expect(computePassport()?.data).not.toHaveProperty("myKey");

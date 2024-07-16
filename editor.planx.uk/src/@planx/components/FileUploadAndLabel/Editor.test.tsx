@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/react";
-import { vanillaStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -7,7 +7,7 @@ import { setup } from "testUtils";
 
 import FileUploadAndLabelComponent from "./Editor";
 
-const { getState } = vanillaStore;
+const { getState } = useStore;
 
 describe("FileUploadAndLabel - Editor Modal", () => {
   // TODO correctly mock an authenticated Platform Admin user so 'add new' button is enabled in final test

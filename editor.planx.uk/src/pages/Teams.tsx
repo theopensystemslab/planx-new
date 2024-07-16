@@ -1,73 +1,98 @@
-import Edit from "@mui/icons-material/Edit";
-import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { Link } from "react-navi";
+import { borderedFocusStyle } from "theme";
 
 import { useStore } from "./FlowEditor/lib/store";
 
-interface Props {
-  teams: Array<Team>;
+interface TeamTheme {
+  slug: string;
+  primaryColour: string;
 }
 
-const Root = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.dark,
-  color: "#fff",
-  width: "100%",
-  flex: 1,
-  justifyContent: "flex-start",
-  alignItems: "center",
-}));
-
-const Dashboard = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.dark,
-  color: "#fff",
-  width: "100%",
-  maxWidth: 600,
-  margin: "auto",
-  padding: theme.spacing(8, 0, 4, 0),
-}));
+interface Props {
+  teams: Array<Team>;
+  teamTheme: Array<TeamTheme>;
+}
 
 const StyledLink = styled(Link)(() => ({
   textDecoration: "none",
+  "&:focus-within > div": {
+    ...borderedFocusStyle,
+  },
 }));
 
-const Teams: React.FC<Props> = ({ teams }) => {
+const TeamCard = styled(Card)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  marginBottom: theme.spacing(2),
+  color: theme.palette.text.primary,
+  outline: `1px solid ${theme.palette.border.light}`,
+  outlineOffset: "-1px",
+  borderRadius: "1px",
+}));
+
+const TeamColourBand = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignSelf: "stretch",
+  width: theme.spacing(1.5),
+  zIndex: 1,
+}));
+
+const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
+  const canUserEditTeam = useStore.getState().canUserEditTeam;
+
+  const editableTeams: Team[] = [];
+  const viewOnlyTeams: Team[] = [];
+
+  teams.forEach((team) =>
+    canUserEditTeam(team.slug)
+      ? editableTeams.push(team)
+      : viewOnlyTeams.push(team),
+  );
+
+  const renderTeams = (teamsToRender: Array<Team>) =>
+    teamsToRender.map((team) => {
+      return (
+        <StyledLink href={`/${team.slug}`} key={team.slug} prefetch={false}>
+          <TeamCard>
+            <TeamColourBand bgcolor={team.theme.primaryColour} />
+            <Typography p={2} variant="h3">
+              {team.name}
+            </Typography>
+          </TeamCard>
+        </StyledLink>
+      );
+    });
   return (
-    <Root>
-      <Dashboard>
-        <Box pl={2} pb={2}>
-          <Typography variant="h2" component="h1" gutterBottom>
-            Select a team
+    <Container maxWidth="formWrap">
+      <Typography variant="h2" component="h1" mb={4}>
+        Select a team
+      </Typography>
+      {editableTeams.length > 0 && (
+        <>
+          <Typography variant="h3" component="h2" mb={2}>
+            My teams
           </Typography>
-        </Box>
-        {teams.map(({ name, slug }) => (
-          <StyledLink href={`/${slug}`} key={slug} prefetch={false}>
-            <Box
-              mb={2.5}
-              px={2.5}
-              py={3}
-              mx={2}
-              component={Card}
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Typography variant="h4" component="h2">
-                {name}
-              </Typography>
-              {useStore.getState().canUserEditTeam(slug) ? (
-                <Edit />
-              ) : (
-                <Visibility />
-              )}
-            </Box>
-          </StyledLink>
-        ))}
-      </Dashboard>
-    </Root>
+          {renderTeams(editableTeams)}
+        </>
+      )}
+
+      {viewOnlyTeams.length > 0 && (
+        <>
+          <Typography variant="h3" component="h2" mt={4} mb={2}>
+            Other teams (view only)
+          </Typography>
+          {renderTeams(viewOnlyTeams)}
+        </>
+      )}
+    </Container>
   );
 };
 

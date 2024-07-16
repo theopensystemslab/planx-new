@@ -1,7 +1,7 @@
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
-import { FullStore, Store, vanillaStore } from "pages/FlowEditor/lib/store";
+import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
@@ -11,7 +11,7 @@ import { ApplicationPath, Breadcrumbs } from "types";
 import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
@@ -194,7 +194,7 @@ describe("Confirm component without inviteToPay", () => {
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "The fee is",
     );
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 4 })).toHaveTextContent(
       errorMessage,
     );
 

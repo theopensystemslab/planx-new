@@ -1,6 +1,6 @@
 import { Team } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
-import { vanillaStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
@@ -10,7 +10,7 @@ import flowWithoutSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWit
 import flowWithThreeSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithThreeSections.json";
 import Header from "./Header";
 
-const { setState, getState } = vanillaStore;
+const { setState, getState } = useStore;
 
 const mockTeam1: Team = {
   id: 123,
@@ -25,6 +25,16 @@ const mockTeam1: Team = {
     actionColour: "#0010A4",
     linkColour: "#0010A4",
     favicon: null,
+  },
+  settings: {
+    boundaryUrl: "https://www.planning.data.gov.uk/",
+    helpEmail: "example@council.co.uk",
+    helpPhone: "(01234) 56789",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm",
+    emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+    referenceCode: "OSL",
+    externalPlanningSiteName: "Open Planning",
+    externalPlanningSiteUrl: "openplanning.com",
   },
 };
 
@@ -41,6 +51,16 @@ const mockTeam2: Team = {
     actionColour: "#0010A4",
     linkColour: "#0010A4",
     favicon: null,
+  },
+  settings: {
+    boundaryUrl: "https://www.planning.data.gov.uk/",
+    helpEmail: "example@council.co.uk",
+    helpPhone: "(01234) 56789",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm",
+    emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+    referenceCode: "CSL",
+    externalPlanningSiteName: "Closed Planning",
+    externalPlanningSiteUrl: "closedplanning.com",
   },
 };
 

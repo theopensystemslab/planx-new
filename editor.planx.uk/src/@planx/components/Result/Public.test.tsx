@@ -2,10 +2,10 @@ import { screen } from "@testing-library/react";
 import React from "react";
 import { axe, setup } from "testUtils";
 
-import { vanillaStore } from "../../../pages/FlowEditor/lib/store";
+import { useStore } from "../../../pages/FlowEditor/lib/store";
 import Result from "./Public";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 beforeEach(() => {
   getState().resetPreview();

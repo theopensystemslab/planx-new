@@ -6,11 +6,6 @@ import {
   validatePaymentRequestNotFoundQueryMock,
   validatePaymentRequestQueryMock,
 } from "../../../../tests/mocks/inviteToPayMocks";
-import { CoreDomainClient } from "@opensystemslab/planx-core";
-
-jest
-  .spyOn(CoreDomainClient.prototype, "formatRawProjectTypes")
-  .mockResolvedValue("New office premises");
 
 const TEST_PAYMENT_REQUEST_ID = "09655c28-3f34-4619-9385-cd57312acc44";
 

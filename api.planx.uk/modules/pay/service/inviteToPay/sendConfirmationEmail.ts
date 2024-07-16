@@ -1,14 +1,14 @@
-import { $public, $api } from "../../../../client";
-import { sendEmail } from "../../../../lib/notify";
+import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
-import { convertSlugToName } from "../../../saveAndReturn/service/utils";
+import { $api } from "../../../../client";
+import { sendEmail } from "../../../../lib/notify";
 import type { AgentAndPayeeSubmissionNotifyConfig } from "../../../../types";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
   const { personalisation, applicantEmail, payeeEmail, projectTypes } =
     await getDataForPayeeAndAgentEmails(sessionId);
   const projectType = projectTypes.length
-    ? await $public.formatRawProjectTypes(projectTypes)
+    ? formatRawProjectTypes(projectTypes)
     : "Project type not submitted";
   const config: AgentAndPayeeSubmissionNotifyConfig = {
     personalisation: {
@@ -47,7 +47,12 @@ async function getDataForPayeeAndAgentEmails(
         flow {
           slug
           team {
-            notifyPersonalisation: notify_personalisation
+            notifyPersonalisation: team_settings {
+              helpEmail: help_email
+              helpPhone: help_phone
+              emailReplyToId: email_reply_to_id
+              helpOpeningHours: help_opening_hours
+            }
           }
         }
         paymentRequests: payment_requests(
@@ -68,6 +73,7 @@ async function getDataForPayeeAndAgentEmails(
       email: string;
       flow: {
         slug: string;
+        name: string;
         team: {
           notifyPersonalisation: {
             emailReplyToId: string;
@@ -89,7 +95,7 @@ async function getDataForPayeeAndAgentEmails(
   const data = response.lowcal_sessions[0];
   const { emailReplyToId, helpEmail, helpOpeningHours, helpPhone } =
     data.flow.team.notifyPersonalisation;
-  const serviceName = convertSlugToName(data.flow.slug);
+  const serviceName = data.flow.name;
   const applicantEmail = data.email;
   const { payeeEmail, payeeName, address, projectTypes, applicantName } =
     data.paymentRequests[0];

@@ -34,6 +34,7 @@ describe("Create payment send events webhook", () => {
           flow: {
             id: "flow-123",
             slug: "apply-for-something",
+            name: "Apply for Something",
           },
         },
       },

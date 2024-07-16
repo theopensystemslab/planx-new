@@ -48,7 +48,7 @@ const Card: React.FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme();
-  const [path, currentCard] = useStore((state) => [
+  const [path, visibleNode] = useStore((state) => [
     state.path,
     state.currentCard,
   ]);
@@ -57,9 +57,7 @@ const Card: React.FC<Props> = ({
   const { track } = useAnalyticsTracking();
 
   useEffect(() => {
-    // The Card component is only rendered when there's content the user will
-    // see
-    const visibleNode = currentCard();
+    // The Card component is only rendered when there's content the user will see
     if (visibleNode?.id) track(visibleNode?.id);
   }, []);
 

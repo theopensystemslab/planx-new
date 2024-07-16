@@ -100,7 +100,7 @@ const presentationalComponents: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
-  [TYPES.List]: undefined,
+  [TYPES.List]: List,
   [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
@@ -335,6 +335,25 @@ interface ComponentProps {
   flow: Store.flow;
   passport: Store.passport;
   nodeId: Store.nodeId;
+}
+
+function List(props: ComponentProps) {
+  // `...total.units` is only set when the schema includes a field with fn = `identicalUnits`
+  const totalUnits = props.passport.data?.[`${props.node.data.fn}.total.units`];
+  // `...total.listItems` is always set for any schema
+  const totalListItems =
+    props.passport.data?.[`${props.node.data.fn}.total.listItems`];
+
+  const summary = totalUnits
+    ? `${totalUnits} ${totalUnits > 1 ? `units` : `unit`} total`
+    : `${totalListItems} ${totalListItems > 1 ? `items` : `item`} total`;
+
+  return (
+    <>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">{summary}</Box>
+    </>
+  );
 }
 
 function Question(props: ComponentProps) {

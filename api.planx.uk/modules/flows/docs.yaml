@@ -56,6 +56,25 @@ components:
               type: array
               items:
                 type: string
+    ValidationCheck:
+      type: object
+      properties:
+        title:
+          type: string
+          example: File types
+          required: true
+        status:
+          type: string
+          enum:
+            - Pass
+            - Fail
+            - Warn
+            - Not applicable
+          example: Pass
+        message:
+          type: string
+          example: Your flow has valid file types
+      required: true
   responses:
     CopyFlow:
       content:
@@ -124,19 +143,20 @@ components:
             properties:
               message:
                 type: string
-                required: false
-              description:
-                type: string
-                required: false
+                required: true
               alteredNodes:
                 oneOf:
                   - type: array
                     items:
                       $ref: "#/components/schemas/Node"
                   - type: "null"
-              updatedFlow:
-                $ref: "#/components/schemas/FlowData"
+              validationChecks:
                 required: false
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/ValidationCheck"
+                  - type: "null"
     FlattenData:
       content:
         application/json:

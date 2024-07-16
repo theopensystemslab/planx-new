@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { Store, vanillaStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 const { upcomingCardIds, resetPreview, record } = getState();
 
 // Helper method

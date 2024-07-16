@@ -71,6 +71,12 @@ export default isPreviewOnlyDomain
     })
   : mount({
       "/:team/:flow/published": lazy(() => import("./published")), // loads current published flow if exists, or throws Not Found if unpublished
+      "canterbury/find-out-if-you-need-planning-permission/preview": map(
+        async (req) =>
+          redirect(
+            `/canterbury/find-out-if-you-need-planning-permission/published${req?.search}`,
+          ),
+      ), // temporary redirect while Canterbury works with internal IT to update advertised service links
       "/:team/:flow/preview": lazy(() => import("./preview")), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
       "/:team/:flow/draft": lazy(() => import("./draft")), // loads current draft flow and draft external portals
       "/:team/:flow/pay": mountPayRoutes(),

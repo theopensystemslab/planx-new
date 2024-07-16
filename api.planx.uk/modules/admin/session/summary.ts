@@ -2,17 +2,12 @@ import {
   GovUKPayment,
   PaymentRequest,
   Session,
+  Team,
 } from "@opensystemslab/planx-core/types";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
-import {
-  Breadcrumb,
-  Flow,
-  LowCalSession,
-  Passport,
-  Team,
-} from "../../../types";
+import { Breadcrumb, Flow, LowCalSession, Passport } from "../../../types";
 import { $api } from "../../../client";
 
 /**

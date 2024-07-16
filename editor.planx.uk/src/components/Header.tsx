@@ -19,7 +19,6 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { visuallyHidden } from "@mui/utils";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
@@ -38,18 +37,19 @@ import {
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
+import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
-import { rootFlowPath, rootTeamPath } from "../routes/utils";
+import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
 export const HEADER_HEIGHT = 74;
 
-const Root = styled(AppBar)(() => ({
-  color: "#fff",
+const Root = styled(AppBar)(({ theme }) => ({
+  color: theme.palette.common.white,
 }));
 
 const BreadcrumbsRoot = styled(Box)(() => ({
@@ -59,6 +59,12 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   columnGap: 10,
   alignItems: "center",
 }));
+
+const BreadcrumbsLink = styled(Link)(({ theme }) => ({
+  color: theme.palette.common.white,
+  textDecoration: "none",
+  borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
+})) as typeof Link;
 
 const StyledToolbar = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT,
@@ -103,7 +109,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.background.dark,
-  color: "#fff",
+  color: theme.palette.common.white,
   borderRadius: 0,
   boxShadow: "none",
   minWidth: 180,
@@ -131,7 +137,7 @@ const SkipLink = styled("a")(({ theme }) => ({
   width: "100vw",
   height: HEADER_HEIGHT / 2,
   backgroundColor: theme.palette.background.dark,
-  color: "#fff",
+  color: theme.palette.common.white,
   textDecoration: "underline",
   padding: theme.spacing(1),
   paddingLeft: theme.spacing(3),
@@ -203,33 +209,25 @@ const Breadcrumbs: React.FC = () => {
 
   return (
     <BreadcrumbsRoot>
-      <Link
-        style={{
-          color: "#fff",
-          textDecoration: "none",
-        }}
+      <BreadcrumbsLink
         component={ReactNaviLink}
         href={"/"}
         prefetch={false}
         {...(isStandalone && { target: "_blank" })}
       >
         Plan✕
-      </Link>
+      </BreadcrumbsLink>
       {team.slug && (
         <>
           {" / "}
-          <Link
-            style={{
-              color: "#fff",
-              textDecoration: "none",
-            }}
+          <BreadcrumbsLink
             component={ReactNaviLink}
             href={`/${team.slug}`}
             prefetch={false}
             {...(isStandalone && { target: "_blank" })}
           >
             {team.slug}
-          </Link>
+          </BreadcrumbsLink>
         </>
       )}
       {route.data.flow && (
@@ -262,20 +260,19 @@ const Breadcrumbs: React.FC = () => {
 };
 
 const NavBar: React.FC = () => {
-  const [index, sectionCount, title, hasSections, saveToEmail, path] = useStore(
-    (state) => [
+  const [index, sectionCount, title, hasSections, saveToEmail, path, node] =
+    useStore((state) => [
       state.currentSectionIndex,
       state.sectionCount,
       state.currentSectionTitle,
       state.hasSections,
       state.saveToEmail,
       state.path,
-    ],
-  );
+      state.currentCard,
+    ]);
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession && !saveToEmail;
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
-  const { node } = useAnalyticsTracking();
   const isSectionCard = node?.type == TYPES.Section;
   const isVisible =
     hasSections &&
@@ -439,13 +436,6 @@ const EditorToolbar: React.FC<{
     setOpen(!open);
   };
 
-  const isFlowSettingsVisible = route.data.flow && canUserEditTeam(team.slug);
-
-  const isTeamSettingsVisible =
-    route.data.team && !route.data.flow && canUserEditTeam(team.slug);
-
-  const isGlobalSettingsVisible = !route.data.team && user?.isPlatformAdmin;
-
   return (
     <>
       <StyledToolbar disableGutters>
@@ -467,19 +457,7 @@ const EditorToolbar: React.FC<{
                       <MenuOpenIcon />
                     </IconButton>
                   )}
-                  <Box mr={1}>
-                    <Avatar
-                      sx={{
-                        bgcolor: grey[200],
-                        color: "text.primary",
-                        fontSize: "1em",
-                        fontWeight: "600",
-                      }}
-                    >
-                      {user.firstName[0]}
-                      {user.lastName[0]}
-                    </Avatar>
-                  </Box>
+                  <Box mr={1}></Box>
                   <IconButton
                     edge="end"
                     color="inherit"
@@ -487,6 +465,24 @@ const EditorToolbar: React.FC<{
                     onClick={handleMenuToggle}
                     size="large"
                   >
+                    <Avatar
+                      component="span"
+                      sx={{
+                        bgcolor: grey[200],
+                        color: "text.primary",
+                        fontSize: "1rem",
+                        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                        width: 33,
+                        height: 33,
+                        marginRight: "0.5rem",
+                      }}
+                    >
+                      {user.firstName[0]}
+                      {user.lastName[0]}
+                    </Avatar>
+                    <Typography variant="body2" fontSize="small">
+                      Account
+                    </Typography>
                     <KeyboardArrowDown />
                   </IconButton>
                 </ProfileSection>
@@ -517,64 +513,6 @@ const EditorToolbar: React.FC<{
               </ListItemIcon>
               <ListItemText>{user.email}</ListItemText>
             </MenuItem>
-            {(user.isPlatformAdmin || user.teams.length > 0) && (
-              <MenuItem disabled>
-                <ListItemIcon>
-                  <Edit />
-                </ListItemIcon>
-                <ListItemText>
-                  {user.isPlatformAdmin
-                    ? `All teams`
-                    : user.teams.map((team) => team.team.name).join(", ")}
-                </ListItemText>
-              </MenuItem>
-            )}
-            {!user.isPlatformAdmin && (
-              <MenuItem disabled divider>
-                <ListItemIcon>
-                  <Visibility />
-                </ListItemIcon>
-                <ListItemText>All teams</ListItemText>
-              </MenuItem>
-            )}
-
-            {/* Only show team settings link if inside a team route  */}
-            {isTeamSettingsVisible && (
-              <>
-                <MenuItem
-                  onClick={() => navigate(`${rootTeamPath()}/settings`)}
-                >
-                  Team Settings
-                </MenuItem>
-                <MenuItem onClick={() => navigate(`${rootTeamPath()}/members`)}>
-                  Team Members
-                </MenuItem>
-              </>
-            )}
-
-            {/* Only show flow settings link if inside a flow route  */}
-            {isFlowSettingsVisible && (
-              <MenuItem
-                onClick={() =>
-                  navigate([rootFlowPath(true), "settings"].join("/"))
-                }
-              >
-                Flow Settings
-              </MenuItem>
-            )}
-
-            {/* Only show global settings & admin panel links from top-level view */}
-            {isGlobalSettingsVisible && (
-              <>
-                <MenuItem onClick={() => navigate("/global-settings")}>
-                  Global Settings
-                </MenuItem>
-                <MenuItem onClick={() => navigate("/admin-panel")}>
-                  Admin Panel
-                </MenuItem>
-              </>
-            )}
-
             <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
           </StyledPaper>
         </StyledPopover>

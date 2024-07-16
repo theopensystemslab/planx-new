@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
-import Add from "@mui/icons-material/Add";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Edit from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
+import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,33 +13,16 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { borderedFocusStyle } from "theme";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
-
-const Root = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.dark,
-  color: "#fff",
-  width: "100%",
-  flex: 1,
-  justifyContent: "flex-start",
-  alignItems: "center",
-}));
-
-const Dashboard = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.dark,
-  color: "#fff",
-  width: "100%",
-  maxWidth: 600,
-  margin: "auto",
-  padding: theme.spacing(8, 0, 4, 0),
-}));
+import { formatLastEditMessage } from "./FlowEditor/utils";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(0, 0, 3),
@@ -49,7 +33,13 @@ const DashboardList = styled("ul")(({ theme }) => ({
 const DashboardListItem = styled("li")(({ theme }) => ({
   listStyle: "none",
   position: "relative",
-  padding: theme.spacing(2.5, 2),
+  color: theme.palette.common.white,
+  margin: theme.spacing(1, 0),
+  background: theme.palette.text.primary,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "stretch",
+  borderRadius: "2px",
 }));
 
 const DashboardLink = styled(Link)(({ theme }) => ({
@@ -58,33 +48,24 @@ const DashboardLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "currentColor",
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  marginBottom: theme.spacing(1.5),
-  marginTop: 0,
-}));
-
-const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
-  position: "absolute",
-  top: theme.spacing(2),
-  right: theme.spacing(1),
-}));
-
-const LinkSubText = styled(Box)(() => ({
-  color: "#aaa",
-  "& a": {
-    color: "#fff",
+  padding: theme.spacing(2),
+  margin: 0,
+  width: "100%",
+  "&:focus-within": {
+    ...borderedFocusStyle,
   },
 }));
 
-const flowInfoHelper = (time: any, operations: any[] = []) => {
-  let str = `Edited ${formatDistanceToNow(new Date(time))} ago`;
-  // there will always be an user attached to every sharedb
-  // operation soon, so the if statement won't be necessary
-  if (operations[0]?.actor) {
-    const { first_name, last_name } = operations[0].actor;
-    str += ` by ${first_name} ${last_name}`;
-  }
-  return str;
-};
+const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
+  display: "flex",
+  borderLeft: `1px solid ${theme.palette.border.main}`,
+}));
+
+const LinkSubText = styled(Box)(({ theme }) => ({
+  color: theme.palette.grey[400],
+  fontWeight: "normal",
+  paddingTop: "0.5em",
+}));
 
 const Confirm = ({
   title,
@@ -123,13 +104,12 @@ const Confirm = ({
 );
 
 const AddButtonRoot = styled(ButtonBase)(({ theme }) => ({
-  width: "100%",
-  padding: theme.spacing(4),
   fontSize: 20,
-  backgroundColor: "rgba(255,255,255,0.25)",
-  display: "block",
+  display: "flex",
+  alignItems: "center",
   textAlign: "left",
-  marginTop: theme.spacing(2),
+  color: theme.palette.primary.main,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
 function AddButton({
@@ -141,7 +121,7 @@ function AddButton({
 }): FCReturn {
   return (
     <AddButtonRoot onClick={onClick}>
-      <Add sx={{ mr: 3, verticalAlign: "middle" }} /> {children}
+      <AddCircleOutlineIcon sx={{ mr: 1 }} /> {children}
     </AddButtonRoot>
   );
 }
@@ -201,34 +181,39 @@ const FlowItem: React.FC<FlowItemProps> = ({
         />
       )}
       <DashboardListItem>
-        <Box pr={4}>
-          <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-            {flow.slug}
-          </DashboardLink>
+        <DashboardLink href={`./${flow.slug}`} prefetch={false}>
+          <Typography variant="h4" component="h2">
+            {flow.name}
+          </Typography>
           <LinkSubText>
-            {flowInfoHelper(flow.updated_at, flow.operations)}
+            {formatLastEditMessage(
+              flow.operations[0].createdAt,
+              flow.operations[0]?.actor,
+            )}
           </LinkSubText>
-        </Box>
+        </DashboardLink>
         {useStore.getState().canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
             items={[
               {
                 onClick: async () => {
-                  const newSlug = prompt("New name", flow.slug);
-                  if (newSlug && slugify(newSlug) !== flow.slug) {
+                  const newName = prompt("New name", flow.name);
+                  if (newName && newName !== flow.name) {
+                    const newSlug = slugify(newName);
                     await client.mutate({
                       mutation: gql`
                         mutation UpdateFlowSlug(
                           $teamId: Int
                           $slug: String
                           $newSlug: String
+                          $newName: String
                         ) {
                           update_flows(
                             where: {
                               team: { id: { _eq: $teamId } }
                               slug: { _eq: $slug }
                             }
-                            _set: { slug: $newSlug }
+                            _set: { slug: $newSlug, name: $newName }
                           ) {
                             affected_rows
                           }
@@ -237,7 +222,8 @@ const FlowItem: React.FC<FlowItemProps> = ({
                       variables: {
                         teamId: teamId,
                         slug: flow.slug,
-                        newSlug: slugify(newSlug),
+                        newSlug: newSlug,
+                        newName: newName,
                       },
                     });
 
@@ -286,31 +272,46 @@ const Team: React.FC = () => {
   const { id: teamId, slug } = useStore((state) => state.getTeam());
   const [flows, setFlows] = useState<any[] | null>(null);
   const navigation = useNavigation();
+
   const fetchFlows = useCallback(() => {
     useStore
       .getState()
       .getFlows(teamId)
       .then((res: { flows: any[] }) => {
-        setFlows(res.flows);
+        // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
+        const sortedFlows = res.flows.toSorted((a, b) =>
+          b.operations[0]["createdAt"].localeCompare(
+            a.operations[0]["createdAt"],
+          ),
+        );
+        setFlows(sortedFlows);
       });
   }, [teamId, setFlows]);
+
   useEffect(() => {
     fetchFlows();
   }, [fetchFlows]);
+
   return (
-    <Root>
-      <Dashboard>
+    <Container maxWidth="formWrap">
+      <Box
+        pb={1}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Box
-          pl={2}
-          pb={2}
-          style={{
+          sx={{
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "row",
             alignItems: "center",
           }}
         >
-          <Typography variant="h2" component="h1">
-            My services
+          <Typography variant="h2" component="h1" pr={1}>
+            Services
           </Typography>
           {useStore.getState().canUserEditTeam(slug) ? (
             <Edit />
@@ -326,7 +327,7 @@ const Team: React.FC = () => {
                 const newFlowSlug = slugify(newFlowName);
                 useStore
                   .getState()
-                  .createFlow(teamId, newFlowSlug)
+                  .createFlow(teamId, newFlowSlug, newFlowName)
                   .then((newId: string) => {
                     navigation.navigate(`/${slug}/${newId}`);
                   });
@@ -336,23 +337,23 @@ const Team: React.FC = () => {
             Add a new service
           </AddButton>
         )}
-        {flows && (
-          <DashboardList>
-            {flows.map((flow: any) => (
-              <FlowItem
-                flow={flow}
-                key={flow.slug}
-                teamId={teamId}
-                teamSlug={slug}
-                refreshFlows={() => {
-                  fetchFlows();
-                }}
-              />
-            ))}
-          </DashboardList>
-        )}
-      </Dashboard>
-    </Root>
+      </Box>
+      {flows && (
+        <DashboardList>
+          {flows.map((flow: any) => (
+            <FlowItem
+              flow={flow}
+              key={flow.slug}
+              teamId={teamId}
+              teamSlug={slug}
+              refreshFlows={() => {
+                fetchFlows();
+              }}
+            />
+          ))}
+        </DashboardList>
+      )}
+    </Container>
   );
 };
 

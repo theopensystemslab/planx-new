@@ -1,8 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 
-import { Store, vanillaStore } from "../store";
+import { Store, useStore } from "../store";
 
-const { getState, setState } = vanillaStore;
+const { getState, setState } = useStore;
 
 const flow: Store.flow = {
   _root: {
