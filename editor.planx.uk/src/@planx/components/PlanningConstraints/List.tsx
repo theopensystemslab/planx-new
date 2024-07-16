@@ -140,7 +140,7 @@ interface ConstraintListItemProps {
 }
 
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
-  const { longitude, latitude } =
+  const { longitude, latitude, usrn } =
     (useStore(
       (state) => state.computePassport().data?._address,
     ) as SiteAddress) || {};
@@ -206,7 +206,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               </List>
             )}
           </React.Fragment>
-          {isSourcedFromPlanningData && (
+          {isSourcedFromPlanningData ? (
             <Typography component="div" variant="body2" my={2}>
               {`View on the `}
               <Link
@@ -217,18 +217,23 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               </Link>
               {` (opens in a new tab).`}
             </Typography>
-          )}
-          {isSourcedFromPlanningData && (
-            <Typography variant="h5" gutterBottom>
-              {`How is it defined`}
+          ) : (
+            <Typography component="div" variant="body2" my={2}>
+              {`We searched Ordnance Survey MasterMap Highways for the Unique Street Reference Number of your property`}
+              {usrn && ` (${usrn})`}
             </Typography>
           )}
+          <Typography variant="h5">{`How is it defined`}</Typography>
           <Typography component="div" variant="body2">
             <ReactMarkdownOrHtml
-              source={props.metadata?.text?.replaceAll(
-                "(/",
-                "(https://www.planning.data.gov.uk/",
-              )}
+              source={
+                isSourcedFromPlanningData
+                  ? props.metadata?.text?.replaceAll(
+                      "(/",
+                      "(https://www.planning.data.gov.uk/",
+                    )
+                  : props.metadata?.text
+              }
               openLinksOnNewTab
             />
           </Typography>
