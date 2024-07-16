@@ -1284,16 +1284,6 @@
           - created_at
         filter: {}
 - table:
-    name: project_types
-    schema: public
-  select_permissions:
-    - role: public
-      permission:
-        columns:
-          - description
-          - value
-        filter: {}
-- table:
     name: published_flows
     schema: public
   object_relationships:
