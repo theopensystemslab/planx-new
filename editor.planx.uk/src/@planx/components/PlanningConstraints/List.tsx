@@ -219,7 +219,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             </Typography>
           ) : (
             <Typography component="div" variant="body2" my={2}>
-              {`We searched Ordnance Survey MasterMap Highways for the Unique Street Reference Number of your property`}
+              {`We searched Ordnance Survey MasterMap Highways using the Unique Street Reference Number of your property`}
               {usrn && ` (${usrn})`}
             </Typography>
           )}
