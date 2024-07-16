@@ -189,17 +189,23 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                           disableGutters
                           sx={{ display: "list-item" }}
                         >
-                          <Typography variant="body2">
-                            <Link
-                              href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
-                              target="_blank"
-                            >
-                              {record.name ||
-                                (record["flood-risk-level"] &&
-                                  `${props.metadata?.name} - Level ${record["flood-risk-level"]}`) ||
-                                `Planning Data entity #${record.entity}`}
-                            </Link>
-                          </Typography>
+                          {isSourcedFromPlanningData ? (
+                            <Typography variant="body2">
+                              <Link
+                                href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
+                                target="_blank"
+                              >
+                                {record.name ||
+                                  (record["flood-risk-level"] &&
+                                    `${props.metadata?.name} - Level ${record["flood-risk-level"]}`) ||
+                                  `Planning Data entity #${record.entity}`}
+                              </Link>
+                            </Typography>
+                          ) : (
+                            <Typography variant="body2">
+                              {record.name}
+                            </Typography>
+                          )}
                         </ListItem>
                       ),
                   )}
