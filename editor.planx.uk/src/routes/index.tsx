@@ -74,7 +74,7 @@ export default isPreviewOnlyDomain
       "canterbury/find-out-if-you-need-planning-permission/preview": map(
         async (req) =>
           redirect(
-            `/canterbury-find-out-if-you-need-planning-permission/published${req?.search}`,
+            `/canterbury/find-out-if-you-need-planning-permission/published${req?.search}`,
           ),
       ), // temporary redirect while Canterbury works with internal IT to update advertised service links
       "/:team/:flow/preview": lazy(() => import("./preview")), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
