@@ -14,11 +14,14 @@ import type {
   Metadata,
 } from "@opensystemslab/planx-core/types";
 import groupBy from "lodash/groupBy";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ReactNode } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+
+import { SiteAddress } from "../FindProperty/model";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",
@@ -70,7 +73,7 @@ export default function ConstraintsList({
   data,
   metadata,
 }: ConstraintsListProps) {
-  const groupedConstraints = groupBy(data, (constraint: Constraint) => {
+  const groupedConstraints = groupBy(data, (constraint) => {
     return constraint.category;
   });
 
@@ -105,10 +108,11 @@ export default function ConstraintsList({
                 {category}
               </Typography>
             </ListSubheader>
-            <List dense disablePadding>
-              {groupedConstraints[category].map((con: any) => (
+            <List key={`${category}-${index}`} dense disablePadding>
+              {groupedConstraints[category].map((con) => (
                 <ConstraintListItem
-                  key={con.text}
+                  key={con.fn}
+                  value={con.value}
                   content={con.text}
                   data={con.value ? con.data : null}
                   metadata={metadata?.[con.fn]}
@@ -126,8 +130,9 @@ export default function ConstraintsList({
 }
 
 interface ConstraintListItemProps {
-  key: string;
-  content: string;
+  key: Constraint["fn"];
+  value: Constraint["value"];
+  content: Constraint["text"];
   data: Constraint["data"] | null;
   metadata?: Metadata;
   category: string;
@@ -135,10 +140,16 @@ interface ConstraintListItemProps {
 }
 
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
+  const { longitude, latitude } =
+    (useStore(
+      (state) => state.computePassport().data?._address,
+    ) as SiteAddress) || {};
   const item = props.metadata?.name.replaceAll(" ", "-");
+  const isSourcedFromPlanningData =
+    props.metadata?.plural !== "Classified roads";
 
   return (
-    <ListItem disablePadding sx={{ backgroundColor: "white" }}>
+    <ListItem key={props.key} disablePadding sx={{ backgroundColor: "white" }}>
       <StyledAccordion {...props} disableGutters>
         <AccordionSummary
           id={`${item}-header`}
@@ -158,7 +169,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             background: (theme) => theme.palette.background.default,
           }}
         >
-          <>
+          <React.Fragment>
             <Typography variant="h4" gutterBottom>
               {`This property ${props?.content}`}
             </Typography>
@@ -179,26 +190,39 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                           sx={{ display: "list-item" }}
                         >
                           <Typography variant="body2">
-                            {record.name}{" "}
-                            {record.name && record["documentation-url"] && (
-                              <span>
-                                (
-                                <Link
-                                  href={record["documentation-url"]}
-                                  target="_blank"
-                                >
-                                  source
-                                </Link>
-                                )
-                              </span>
-                            )}
+                            <Link
+                              href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
+                              target="_blank"
+                            >
+                              {record.name ||
+                                (record["flood-risk-level"] &&
+                                  `${props.metadata?.name} - Level ${record["flood-risk-level"]}`) ||
+                                `Planning Data entity #${record.entity}`}
+                            </Link>
                           </Typography>
                         </ListItem>
                       ),
                   )}
               </List>
             )}
-          </>
+          </React.Fragment>
+          {isSourcedFromPlanningData && (
+            <Typography component="div" variant="body2" my={2}>
+              {`View on the `}
+              <Link
+                href={`https://www.planning.data.gov.uk/map/?dataset=${props.metadata?.dataset}#${latitude},${longitude},17.5z`}
+                target="_blank"
+              >
+                Planning Data map
+              </Link>
+              {` (opens in a new tab).`}
+            </Typography>
+          )}
+          {isSourcedFromPlanningData && (
+            <Typography variant="h5" gutterBottom>
+              {`How is it defined`}
+            </Typography>
+          )}
           <Typography component="div" variant="body2">
             <ReactMarkdownOrHtml
               source={props.metadata?.text?.replaceAll(
