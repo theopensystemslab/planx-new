@@ -62,7 +62,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
               onChange={(event) => {
                 onChangeFn("homepage", event);
               }}
-              value={formik.values.homepage}
+              value={formik.values.homepage ?? ""}
               errorMessage={formik.errors.homepage}
               id="homepage"
             />
@@ -91,7 +91,6 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
           </InputLabel>
           <InputLabel label="Opening hours" htmlFor="helpOpeningHours">
             <Input
-              multiline
               name="helpOpeningHours"
               value={formik.values.helpOpeningHours}
               errorMessage={formik.errors.helpOpeningHours}
