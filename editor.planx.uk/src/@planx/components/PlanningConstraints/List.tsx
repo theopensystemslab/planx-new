@@ -88,7 +88,7 @@ export default function ConstraintsList({
               disableGutters
               disableSticky
               color="primary"
-              key={category}
+              key={`${category}-ls`}
               style={{
                 padding: 0,
                 backgroundColor: CATEGORY_COLORS[category],
@@ -161,7 +161,11 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const planningDataMapURL = `https://www.planning.data.gov.uk/map/?${encodedMatchingDatasets}#${latitude},${longitude},17.5z`;
 
   return (
-    <ListItem key={props.key} disablePadding sx={{ backgroundColor: "white" }}>
+    <ListItem
+      key={`${props.key}-li`}
+      disablePadding
+      sx={{ backgroundColor: "white" }}
+    >
       <StyledAccordion {...props} disableGutters>
         <AccordionSummary
           id={`${item}-header`}
@@ -192,35 +196,30 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                 sx={{ listStyleType: "disc", pl: 4, pt: 1 }}
               >
                 {props.data &&
-                  props.data.map(
-                    (record: any) =>
-                      record.name && (
-                        <ListItem
-                          key={record.entity}
-                          dense
-                          disableGutters
-                          sx={{ display: "list-item" }}
-                        >
-                          {isSourcedFromPlanningData ? (
-                            <Typography variant="body2">
-                              <Link
-                                href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
-                                target="_blank"
-                              >
-                                {record.name ||
-                                  (record["flood-risk-level"] &&
-                                    `${props.metadata?.name} - Level ${record["flood-risk-level"]}`) ||
-                                  `Planning Data entity #${record.entity}`}
-                              </Link>
-                            </Typography>
-                          ) : (
-                            <Typography variant="body2">
-                              {record.name}
-                            </Typography>
-                          )}
-                        </ListItem>
-                      ),
-                  )}
+                  props.data.map((record: any) => (
+                    <ListItem
+                      key={`entity-${record.entity}-li`}
+                      dense
+                      disableGutters
+                      sx={{ display: "list-item" }}
+                    >
+                      {isSourcedFromPlanningData ? (
+                        <Typography variant="body2">
+                          <Link
+                            href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
+                            target="_blank"
+                          >
+                            {record.name ||
+                              (record["flood-risk-level"] &&
+                                `${props.metadata?.name} - Level ${record["flood-risk-level"]}`) ||
+                              `Planning Data entity #${record.entity}`}
+                          </Link>
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2">{record.name}</Typography>
+                      )}
+                    </ListItem>
+                  ))}
               </List>
             )}
           </React.Fragment>
