@@ -68,7 +68,7 @@ export const OverrideEntitiesModal = ({
             gutterBottom
             mb={2}
           >
-            Report an inaccuracy
+            This constraint doesn't apply to me
           </Typography>
           <Typography variant="body2" gutterBottom>
             Have we identified a planning constraint that you don't think
@@ -76,14 +76,13 @@ export const OverrideEntitiesModal = ({
           </Typography>
           <Typography variant="body2" gutterBottom>
             We check constraints using a geospatial search, and minor
-            differences in boundaries can occassionally lead to adjacent
-            constraints being incorrectly returned.
+            differences in boundaries may lead to inaccurate results such as a
+            constraint on an adjacent property.
           </Typography>
           <Typography variant="body2" gutterBottom>
-            Select any incorrect constraints to proceed with the rest of your
-            application as if they do not apply, and we'll relay your report and
-            the original search result with your submission. Your feedback will
-            help councils improve their public data.
+            Select any inaccurate constraints to proceed forward as if they do
+            not apply to your property. Your feedback will also help councils
+            improve their public data.
           </Typography>
           <Divider sx={{ marginY: 2 }} />
           <Typography id="entities-group" variant="body1">
