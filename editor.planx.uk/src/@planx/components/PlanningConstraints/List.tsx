@@ -264,7 +264,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                   setShowModal(true);
                 }}
               >
-                This constraint doesn't apply to me
+                This constraint doesn't apply to my property
               </Link>
             </Typography>
           )}
