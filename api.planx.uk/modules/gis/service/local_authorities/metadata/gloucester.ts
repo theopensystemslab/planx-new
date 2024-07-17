@@ -14,9 +14,9 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {
     // Planx granular values link to Digital Land entity.reference
     records: {
-      "article4.gloucester.SouthgateStreetConservationArea":
+      "article4.gloucester.southgateStreetConservationArea":
         "Southgate Street Conservation Area",
-      "article4.gloucester.StMichaelsSquare":
+      "article4.gloucester.stMichaelsSquare":
         "St Michael’s Square Article 4 direction",
     },
   },
