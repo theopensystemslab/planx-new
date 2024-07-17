@@ -15,13 +15,14 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { SiteAddress } from "../FindProperty/model";
+import { OverrideEntitiesModal } from "./Modal";
 import { availableDatasets } from "./model";
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -141,6 +142,9 @@ interface ConstraintListItemProps {
 }
 
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [disputedEntities, setDisputedEntities] = useState<string[]>([]);
+
   const { longitude, latitude, usrn } =
     (useStore(
       (state) => state.computePassport().data?._address,
@@ -238,7 +242,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             </Typography>
           )}
           <Typography variant="h5">{`How is it defined`}</Typography>
-          <Typography component="div" variant="body2">
+          <Typography component="div" variant="body2" my={2}>
             <ReactMarkdownOrHtml
               source={
                 isSourcedFromPlanningData
@@ -251,6 +255,27 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               openLinksOnNewTab
             />
           </Typography>
+          {props.value && Boolean(props.data?.length) && (
+            <Typography variant="h5">
+              <Link
+                component="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setShowModal(true);
+                }}
+              >
+                Report an innaccuracy
+              </Link>
+            </Typography>
+          )}
+          <OverrideEntitiesModal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            entities={props.data}
+            metadata={props.metadata}
+            disputedEntities={disputedEntities}
+            setDisputedEntities={setDisputedEntities}
+          />
         </AccordionDetails>
       </StyledAccordion>
     </ListItem>
