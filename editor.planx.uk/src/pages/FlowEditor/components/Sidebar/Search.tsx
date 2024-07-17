@@ -3,45 +3,20 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
-import { debounce } from "lodash";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ChangeEvent, useCallback, useState } from "react";
-import useSWR from "swr";
+import { useSearch } from "hooks/useSearch";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
+import React, { ChangeEvent, useMemo } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import InputLabel from "ui/editor/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
 
-const mockData: SearchResult[] = [
-  {
-    nodeId: "abc123",
-    nodeType: ComponentType.Question,
-    nodeTitle: "Is the property in Lambeth?",
-    text: "Lambeth example biodiversity text",
-    path: ["_root", "xyz123", "abc123"],
-  },
-  {
-    nodeId: "abc456",
-    nodeType: ComponentType.Notice,
-    nodeTitle: "It looks like the property is not in Lambeth",
-    text: "Lambeth example biodiversity text",
-    path: ["_root", "xyz123", "abc123"],
-  },
-  {
-    nodeId: "abc789",
-    nodeType: ComponentType.Question,
-    nodeTitle: "What are you applying about?",
-    text: "Lambeth example biodiversity text",
-    path: ["_root", "xyz123", "abc123"],
-  },
-];
-
 export interface SearchResult {
+  id?: Store.nodeId;
+  type?: ComponentType;
+  data?: any;
+  edges?: Store.nodeId[];
   nodeId: string;
-  nodeType: ComponentType;
-  nodeTitle?: string;
-  text: string;
-  path: string[];
 }
 
 const SearchResults: React.FC<{ results: SearchResult[] }> = ({ results }) => {
@@ -56,12 +31,9 @@ const SearchResults: React.FC<{ results: SearchResult[] }> = ({ results }) => {
   );
 };
 
-const SearchResultCard: React.FC<SearchResult> = ({
-  nodeTitle,
-  text,
-  nodeType,
-}) => {
-  const Icon = ICONS[nodeType];
+// TODO: This likely needs to be related to facets?
+const SearchResultCard: React.FC<SearchResult> = ({ data, type }) => {
+  const Icon = ICONS[type!];
 
   return (
     <Box
@@ -78,36 +50,52 @@ const SearchResultCard: React.FC<SearchResult> = ({
           fontWeight={FONT_WEIGHT_SEMI_BOLD}
         >
           Question
-          {nodeTitle && ` - ${nodeTitle}`}
+          {data.text && ` - ${data.text}`}
         </Typography>
       </Box>
-      <Typography variant="body2">{text}</Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          backgroundColor: "#f0f0f0",
+          borderColor: "#d3d3d3",
+          fontFamily: `"Source Code Pro", monospace;`,
+        }}
+      >
+        {data.fn || data.val}
+      </Typography>
     </Box>
   );
 };
 
 const Search: React.FC = () => {
-  const [flowId] = useStore((state) => [state.id]);
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState(query);
-
-  const debounceSearch = useCallback(
-    debounce((input) => setDebouncedQuery(input), 500),
-    [],
+  const nodes = useStore((state) => state.flow);
+  // TODO: add to store?
+  // TODO: think about parentIds
+  const nodeList = useMemo(
+    () =>
+      Object.entries(nodes).map(([nodeId, nodeData]) => ({
+        nodeId,
+        ...nodeData,
+      })),
+    [nodes],
   );
+
+  /** Map of search facets to associated node keys */
+  const facets = {
+    data: ["data.fn", "data.val"],
+  };
+
+  const { results, search } = useSearch({
+    list: nodeList,
+    keys: facets.data,
+  });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    setQuery(input);
-    debounceSearch(input);
+    console.log({ input });
+    search(input);
+    console.log(results);
   };
-
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
-  const endpoint = `${process.env.REACT_APP_API_URL}/flows/${flowId}/search`;
-  const { error } = useSWR<SearchResult[]>(
-    debouncedQuery ? `${endpoint}?find=${debouncedQuery}` : null,
-    fetcher,
-  );
 
   return (
     <Container component={Box} p={3}>
@@ -124,8 +112,7 @@ const Search: React.FC = () => {
         onChange={() => {}}
       />
       <Box pt={3}>
-        {error && "Something went wrong"}
-        {mockData ? <SearchResults results={mockData} /> : "Loading..."}
+        {results ? <SearchResults results={results} /> : "Loading..."}
       </Box>
     </Container>
   );
