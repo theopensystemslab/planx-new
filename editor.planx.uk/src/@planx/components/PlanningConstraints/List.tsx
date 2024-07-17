@@ -22,6 +22,7 @@ import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { SiteAddress } from "../FindProperty/model";
+import { availableDatasets } from "./model";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",
@@ -148,6 +149,17 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const isSourcedFromPlanningData =
     props.metadata?.plural !== "Classified roads";
 
+  // Some constraint categories search for entities amongst many PD datasets, but our `props.metadata.dataset` will only store reference to the last one
+  //   Cross reference with `availableDatasets` in Editor to ensure map URL is filtered to include each possible dataset
+  const matchingDatasets = availableDatasets.find(
+    (d) =>
+      props.metadata?.dataset && d.datasets.includes(props.metadata.dataset),
+  )?.datasets || [props?.metadata?.dataset];
+  const encodedMatchingDatasets = matchingDatasets
+    ?.map((d) => `dataset=${d}`)
+    .join("&");
+  const planningDataMapURL = `https://www.planning.data.gov.uk/map/?${encodedMatchingDatasets}#${latitude},${longitude},17.5z`;
+
   return (
     <ListItem key={props.key} disablePadding sx={{ backgroundColor: "white" }}>
       <StyledAccordion {...props} disableGutters>
@@ -215,10 +227,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           {isSourcedFromPlanningData ? (
             <Typography component="div" variant="body2" my={2}>
               {`View on the `}
-              <Link
-                href={`https://www.planning.data.gov.uk/map/?dataset=${props.metadata?.dataset}#${latitude},${longitude},17.5z`}
-                target="_blank"
-              >
+              <Link href={planningDataMapURL} target="_blank">
                 Planning Data map
               </Link>
               {` (opens in a new tab).`}
