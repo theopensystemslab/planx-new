@@ -68,11 +68,11 @@ export const OverrideEntitiesModal = ({
             gutterBottom
             mb={2}
           >
-            This constraint doesn't apply to my property
+            This constraint doesn't apply to this property
           </Typography>
           <Typography variant="body2" gutterBottom>
             Have we identified a planning constraint that you don't think
-            applies to your property?
+            applies to this property?
           </Typography>
           <Typography variant="body2" gutterBottom>
             We check constraints using a geospatial search, and minor
@@ -81,7 +81,7 @@ export const OverrideEntitiesModal = ({
           </Typography>
           <Typography variant="body2" gutterBottom>
             Select each inaccurate constraint below to proceed forward as if it
-            does not apply to your property. Your feedback will also help
+            does not apply to this property. Your feedback will also help
             councils improve their public data.
           </Typography>
           <Divider sx={{ marginY: 2 }} />
