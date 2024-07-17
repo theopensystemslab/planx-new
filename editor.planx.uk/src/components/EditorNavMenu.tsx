@@ -117,15 +117,15 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
-      title: "Admin panel",
-      Icon: AdminPanelSettingsIcon,
-      route: "admin-panel",
-      accessibleBy: ["platformAdmin"],
-    },
-    {
       title: "Global settings",
       Icon: TuneIcon,
       route: "global-settings",
+      accessibleBy: ["platformAdmin"],
+    },
+    {
+      title: "Admin panel",
+      Icon: AdminPanelSettingsIcon,
+      route: "admin-panel",
       accessibleBy: ["platformAdmin"],
     },
   ];
@@ -138,9 +138,9 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
-      title: "Team members",
-      Icon: GroupIcon,
-      route: `/${teamSlug}/members`,
+      title: "Settings",
+      Icon: TuneIcon,
+      route: `/${teamSlug}/general-settings`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
@@ -150,9 +150,9 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
-      title: "Settings",
-      Icon: TuneIcon,
-      route: `/${teamSlug}/general-settings`,
+      title: "Team members",
+      Icon: GroupIcon,
+      route: `/${teamSlug}/members`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
   ];
