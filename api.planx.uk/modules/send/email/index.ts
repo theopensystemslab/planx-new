@@ -1,8 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
-import capitalize from "lodash/capitalize";
-import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
 import { sendEmail } from "../../../lib/notify";
 import { EmailSubmissionNotifyConfig } from "../../../types";
+import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
 import {
   getSessionEmailDetailsById,
   getTeamEmailSettings,
