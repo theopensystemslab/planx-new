@@ -4,40 +4,77 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import visuallyHidden from "@mui/utils/visuallyHidden";
 import { Constraint, Metadata } from "@opensystemslab/planx-core/types";
-import React from "react";
+import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
+
+import { formatEntityName } from "./List";
+import { InaccurateConstraints } from "./Public";
 
 interface OverrideEntitiesModalProps {
   showModal: boolean;
   setShowModal: (value: React.SetStateAction<boolean>) => void;
+  fn: Constraint["fn"];
   entities: Constraint["data"] | null;
   metadata?: Metadata;
-  disputedEntities: string[];
-  setDisputedEntities: (value: React.SetStateAction<string[]>) => void;
+  inaccurateConstraints: InaccurateConstraints;
+  setInaccurateConstraints: (
+    value: React.SetStateAction<InaccurateConstraints>,
+  ) => void;
 }
 
 export const OverrideEntitiesModal = ({
   showModal,
   setShowModal,
+  fn,
   entities,
   metadata,
-  disputedEntities,
-  setDisputedEntities,
+  inaccurateConstraints,
+  setInaccurateConstraints,
 }: OverrideEntitiesModalProps) => {
-  const handleValidation = () => {
-    console.log("todo");
-  };
+  const [errors, setErrors] = useState<Record<string, string> | undefined>();
+  const title = `Which ${
+    metadata?.plural?.toLowerCase() || "entities"
+  } are inaccurate?`;
 
   const closeModal = (_event: any, reason?: string) => {
     if (reason && reason == "backdropClick") {
       return;
     }
+    setShowModal(false);
+  };
+
+  // Directly update inaccurateConstraints in state when options are selected/deselected
+  const changeCheckbox =
+    (id: string, fn: Constraint["fn"]) =>
+    (_checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined) => {
+      let newCheckedIds;
+
+      if (inaccurateConstraints?.[fn]?.["entities"]?.includes(id)) {
+        newCheckedIds = inaccurateConstraints?.[fn]?.["entities"]?.filter(
+          (e) => e !== id,
+        );
+      } else {
+        newCheckedIds = [
+          ...(inaccurateConstraints?.[fn]?.["entities"] || []),
+          id,
+        ];
+      }
+
+      const newInaccurateConstraints = {
+        ...inaccurateConstraints,
+        ...{ [fn]: { entities: newCheckedIds, reason: "" } },
+      };
+      setInaccurateConstraints(newInaccurateConstraints);
+    };
+
+  const validateAndSubmit = () => {
     setShowModal(false);
   };
 
@@ -80,47 +117,49 @@ export const OverrideEntitiesModal = ({
             constraint on an adjacent property.
           </Typography>
           <Typography variant="body2" gutterBottom>
-            Select each inaccurate constraint below to proceed forward as if it
-            does not apply to this property. Your feedback will also help
-            councils improve their public data.
+            <strong>
+              Select an inaccurate constraint below to proceed forward as if it
+              does not apply to this property.
+            </strong>{" "}
+            Your feedback will also help us improve local open data.
           </Typography>
           <Divider sx={{ marginY: 2 }} />
-          <Typography id="entities-group" variant="body1">
-            {`Which ${
-              metadata?.plural?.toLowerCase() || "entities"
-            } are inaccurate?`}
-          </Typography>
-          <List
-            disablePadding
-            dense
-            sx={{ marginBottom: 2 }}
-            role="group"
-            aria-labelledby="entities-group"
-          >
-            {Boolean(entities?.length) &&
-              entities?.map((e) => (
-                <ListItem
-                  key={`${e.entity}-li`}
-                  dense
-                  disablePadding
-                  disableGutters
-                >
-                  <ChecklistItem
-                    label={
-                      (e.name as string) ||
-                      ((e["flood-risk-level"] &&
-                        `${metadata?.name} - Level ${e["flood-risk-level"]}`) as string) ||
-                      (`Planning Data entity #${e.entity}` as string)
-                    }
-                    checked={false}
-                    onChange={() => console.log("clicked this one")}
-                  />
-                </ListItem>
-              ))}
-          </List>
-          <InputLabel label="Tell us why" htmlFor="reason">
-            <Input name="reason" type="text" bordered required />
-          </InputLabel>
+          <Box marginBottom={2}>
+            <InputLabel
+              label={title}
+              id={`checklist-label-inaccurate-entities`}
+            >
+              <ErrorWrapper
+                error={errors?.["checked"]}
+                id={`checklist-error-inaccurate-entities`}
+              >
+                <Grid container component="fieldset">
+                  <legend style={visuallyHidden}>{title}</legend>
+                  {Boolean(entities?.length) &&
+                    entities?.map((e) => (
+                      <ChecklistItem
+                        key={`${e.entity}`}
+                        id={`${e.entity}`}
+                        label={formatEntityName(e, metadata)}
+                        checked={
+                          inaccurateConstraints?.[fn]?.["entities"]?.includes(
+                            `${e.entity}`,
+                          ) || false
+                        }
+                        onChange={changeCheckbox(`${e.entity}`, fn)}
+                      />
+                    ))}
+                </Grid>
+              </ErrorWrapper>
+            </InputLabel>
+          </Box>
+          <Box>
+            <InputLabel label="Tell us why" htmlFor="reason">
+              <ErrorWrapper id={`input-error-inaccurate-entities`}>
+                <Input name="reason" type="text" bordered required />
+              </ErrorWrapper>
+            </InputLabel>
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions
@@ -134,17 +173,17 @@ export const OverrideEntitiesModal = ({
           <Button
             variant="contained"
             color="prompt"
-            onClick={handleValidation}
-            data-testid="modal-done-button"
+            onClick={validateAndSubmit}
+            data-testid="override-modal-submit-button"
           >
-            Done
+            Submit
           </Button>
           <Button
             variant="contained"
             color="secondary"
             sx={{ ml: 1.5 }}
             onClick={closeModal}
-            data-testid="modal-cancel-button"
+            data-testid="override-modal-cancel-button"
           >
             Cancel
           </Button>

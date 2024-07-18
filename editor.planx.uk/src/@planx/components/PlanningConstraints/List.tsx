@@ -24,6 +24,7 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { SiteAddress } from "../FindProperty/model";
 import { OverrideEntitiesModal } from "./Modal";
 import { availableDatasets } from "./model";
+import { InaccurateConstraints } from "./Public";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",
@@ -69,11 +70,17 @@ const StyledAccordion = styled(Accordion, {
 interface ConstraintsListProps {
   data: Constraint[];
   metadata: GISResponse["metadata"];
+  inaccurateConstraints: InaccurateConstraints;
+  setInaccurateConstraints: (
+    value: React.SetStateAction<InaccurateConstraints>,
+  ) => void;
 }
 
 export default function ConstraintsList({
   data,
   metadata,
+  inaccurateConstraints,
+  setInaccurateConstraints,
 }: ConstraintsListProps) {
   const groupedConstraints = groupBy(data, (constraint) => {
     return constraint.category;
@@ -114,11 +121,14 @@ export default function ConstraintsList({
               {groupedConstraints[category].map((con) => (
                 <ConstraintListItem
                   key={con.fn}
+                  fn={con.fn}
                   value={con.value}
                   content={con.text}
                   data={con.value ? con.data : null}
                   metadata={metadata?.[con.fn]}
                   category={category}
+                  inaccurateConstraints={inaccurateConstraints}
+                  setInaccurateConstraints={setInaccurateConstraints}
                 >
                   {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
                 </ConstraintListItem>
@@ -132,18 +142,21 @@ export default function ConstraintsList({
 }
 
 interface ConstraintListItemProps {
-  key: Constraint["fn"];
+  fn: Constraint["fn"];
   value: Constraint["value"];
   content: Constraint["text"];
   data: Constraint["data"] | null;
   metadata?: Metadata;
   category: string;
   children: ReactNode;
+  inaccurateConstraints: InaccurateConstraints;
+  setInaccurateConstraints: (
+    value: React.SetStateAction<InaccurateConstraints>,
+  ) => void;
 }
 
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [disputedEntities, setDisputedEntities] = useState<string[]>([]);
 
   const { longitude, latitude, usrn } =
     (useStore(
@@ -166,7 +179,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
 
   return (
     <ListItem
-      key={`${props.key}-li`}
+      key={`${props.fn}-li`}
       disablePadding
       sx={{ backgroundColor: "white" }}
     >
@@ -213,10 +226,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                             href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
                             target="_blank"
                           >
-                            {record.name ||
-                              (record["flood-risk-level"] &&
-                                `${props.metadata?.name} - Level ${record["flood-risk-level"]}`) ||
-                              `Planning Data entity #${record.entity}`}
+                            {formatEntityName(record, props.metadata)}
                           </Link>
                         </Typography>
                       ) : (
@@ -271,13 +281,31 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           <OverrideEntitiesModal
             showModal={showModal}
             setShowModal={setShowModal}
+            fn={props.fn}
             entities={props.data}
             metadata={props.metadata}
-            disputedEntities={disputedEntities}
-            setDisputedEntities={setDisputedEntities}
+            inaccurateConstraints={props.inaccurateConstraints}
+            setInaccurateConstraints={props.setInaccurateConstraints}
           />
         </AccordionDetails>
       </StyledAccordion>
     </ListItem>
+  );
+}
+
+/**
+ * Not all Planning Data entity records populate "name",
+ *   so configure meaningful fallback values for the list display
+ */
+export function formatEntityName(
+  entity: Record<string, any>,
+  metadata?: Metadata,
+): string {
+  return (
+    entity.name ||
+    (metadata?.name &&
+      entity["flood-risk-level"] &&
+      `${metadata.name} - Level ${entity["flood-risk-level"]}`) ||
+    `Planning Data entity #${entity.entity}`
   );
 }
