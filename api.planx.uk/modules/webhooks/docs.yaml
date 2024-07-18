@@ -92,11 +92,33 @@ components:
                                   type: string
       required:
         - body
+    S3Submission:
+      type: object
+      properties: 
+        body: 
+          type: object
+          properties:
+            event:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    new:
+                      type: object
+                      properties:
+                        session_id: 
+                          type: string
+                        team_slug:
+                          type: string
+      required:
+        - body
     SendSlackNotification:
       oneOf:
         - $ref: "#/components/schemas/BopsSubmission"
         - $ref: "#/components/schemas/UniformSubmission"
         - $ref: "#/components/schemas/EmailSubmission"
+        - $ref: "#/components/schemas/S3Submission"
     CreatePaymentEvent:
       type: object
       properties:
