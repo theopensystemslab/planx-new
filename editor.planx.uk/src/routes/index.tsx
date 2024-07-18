@@ -71,7 +71,7 @@ export default isPreviewOnlyDomain
     })
   : mount({
       "/:team/:flow/published": lazy(() => import("./published")), // loads current published flow if exists, or throws Not Found if unpublished
-      "canterbury/find-out-if-you-need-planning-permission/preview": map(
+      "/canterbury/find-out-if-you-need-planning-permission/preview": map(
         async (req) =>
           redirect(
             `/canterbury/find-out-if-you-need-planning-permission/published${req?.search}`,
