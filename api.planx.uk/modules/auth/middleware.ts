@@ -4,7 +4,7 @@ import { expressjwt } from "express-jwt";
 import { RequestHandler } from "http-proxy-middleware";
 import { AsyncLocalStorage } from "async_hooks";
 import { Request } from "express";
-import { generators } from 'openid-client'
+import { generators } from "openid-client";
 
 import { Role } from "@opensystemslab/planx-core/types";
 
@@ -130,8 +130,8 @@ export const useMicrosoftAuth: RequestHandler = (req, res, next) => {
   // generate a nonce to enable us to validate the response from OP
   const nonce = generators.nonce();
   console.debug(`Generated a nonce: %s`, nonce);
-  req.session!.nonce = nonce
-  
+  req.session!.nonce = nonce;
+
   // @ts-expect-error (method not typed to accept nonce, but it does pass it to the strategy)
   return passportWithStrategies.authenticate("microsoft-oidc", {
     prompt: "select_account",
