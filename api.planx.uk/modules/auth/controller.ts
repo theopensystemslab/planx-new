@@ -1,6 +1,8 @@
 import { CookieOptions, RequestHandler, Response } from "express";
 import { Request } from "express-jwt";
 
+import { microsoftOidcClient } from './passport'
+
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
     status: 401,
@@ -12,6 +14,7 @@ export const logout: RequestHandler = (req, res) => {
     // do nothing
   });
   // TODO: implement logout for Microsoft strategy (redirect to logout URL with hint)
+  // logout_url = microsoftOidcClient.endSessionUrl({ id_token_hint });
   res.redirect(process.env.EDITOR_URL_EXT!);
 };
 
