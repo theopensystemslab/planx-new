@@ -94,8 +94,8 @@ components:
         - body
     S3Submission:
       type: object
-      properties: 
-        body: 
+      properties:
+        body:
           type: object
           properties:
             event:
@@ -107,7 +107,7 @@ components:
                     new:
                       type: object
                       properties:
-                        session_id: 
+                        session_id:
                           type: string
                         team_slug:
                           type: string
