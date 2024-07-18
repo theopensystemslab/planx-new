@@ -1,39 +1,38 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { ComponentType } from "@opensystemslab/planx-core/types";
+import { IndexedNode, OrderedFlow } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import { useSearch } from "hooks/useSearch";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, { ChangeEvent, useMemo } from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { ChangeEvent, useEffect } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import InputLabel from "ui/editor/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
 
-export interface SearchResult {
-  id?: Store.nodeId;
-  type?: ComponentType;
-  data?: any;
-  edges?: Store.nodeId[];
-  nodeId: string;
-}
-
-const SearchResults: React.FC<{ results: SearchResult[] }> = ({ results }) => {
+const SearchResults: React.FC<{ results: OrderedFlow }> = ({ results }) => {
   return (
     <Box
       sx={{ width: "100%", gap: 2, display: "flex", flexDirection: "column" }}
     >
       {results.map((result) => (
-        <SearchResultCard key={result.nodeId} {...result} />
+        <SearchResultCard key={result.id} {...result} />
       ))}
     </Box>
   );
 };
 
 // TODO: This likely needs to be related to facets?
-const SearchResultCard: React.FC<SearchResult> = ({ data, type }) => {
+const SearchResultCard: React.FC<IndexedNode> = ({ data, type }) => {
   const Icon = ICONS[type!];
+
+  const handleClick = () => {
+    console.log("todo!")
+    // get path for node
+    // generate url from path
+    // navigate to url
+  };
 
   return (
     <Box
@@ -41,6 +40,7 @@ const SearchResultCard: React.FC<SearchResult> = ({ data, type }) => {
         pb: 2,
         borderBottom: `1px solid ${theme.palette.border.main}`,
       })}
+      onClick={handleClick}
     >
       <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
         {Icon && <Icon sx={{ mr: 1 }} />}
@@ -50,7 +50,7 @@ const SearchResultCard: React.FC<SearchResult> = ({ data, type }) => {
           fontWeight={FONT_WEIGHT_SEMI_BOLD}
         >
           Question
-          {data.text && ` - ${data.text}`}
+          {data?.text && ` - ${data.text}`}
         </Typography>
       </Box>
       <Typography
@@ -61,24 +61,21 @@ const SearchResultCard: React.FC<SearchResult> = ({ data, type }) => {
           fontFamily: `"Source Code Pro", monospace;`,
         }}
       >
-        {data.fn || data.val}
+        {(data?.fn as string) || (data?.val as string)}
       </Typography>
     </Box>
   );
 };
 
 const Search: React.FC = () => {
-  const nodes = useStore((state) => state.flow);
-  // TODO: add to store?
-  // TODO: think about parentIds
-  const nodeList = useMemo(
-    () =>
-      Object.entries(nodes).map(([nodeId, nodeData]) => ({
-        nodeId,
-        ...nodeData,
-      })),
-    [nodes],
-  );
+  const [orderedFlow, setOrderedFlow] = useStore((state) => [
+    state.orderedFlow,
+    state.setOrderedFlow,
+  ]);
+
+  useEffect(() => {
+    if (!orderedFlow) setOrderedFlow()
+  }, [setOrderedFlow]);
 
   /** Map of search facets to associated node keys */
   const facets = {
@@ -86,7 +83,7 @@ const Search: React.FC = () => {
   };
 
   const { results, search } = useSearch({
-    list: nodeList,
+    list: orderedFlow || [],
     keys: facets.data,
   });
 
@@ -111,7 +108,7 @@ const Search: React.FC = () => {
         }}
         onChange={() => {}}
       />
-      <Box pt={3}>
+      <Box py={3}>
         {results ? <SearchResults results={results} /> : "Loading..."}
       </Box>
     </Container>
