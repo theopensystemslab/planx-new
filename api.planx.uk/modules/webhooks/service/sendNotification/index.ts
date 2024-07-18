@@ -5,6 +5,7 @@ import {
   EmailEventData,
   EventData,
   EventType,
+  S3EventData,
   UniformEventData,
 } from "./types";
 import { $api } from "../../../../client";
@@ -41,6 +42,11 @@ const getMessageForEventType = (data: EventData, type: EventType) => {
     const { request, session_id, team_slug } = data as EmailEventData;
     return `New email submission "${request.personalisation.serviceName}" *${session_id}* [${team_slug}]`;
   }
+
+  if (type === "s3-submission") {
+    const { session_id, team_slug } = data as S3EventData;
+    return `New S3 + Power Automate submission *${session_id}* [${team_slug}]`;
+  }
 };
 
 const getSessionIdFromEvent = (data: EventData, type: EventType) =>
@@ -48,6 +54,7 @@ const getSessionIdFromEvent = (data: EventData, type: EventType) =>
     "bops-submission": (data as BOPSEventData).session_id,
     "uniform-submission": (data as UniformEventData).payload?.sessionId,
     "email-submission": (data as EmailEventData).session_id,
+    "s3-submission": (data as S3EventData).session_id,
   })[type];
 
 const getExemptionStatusesForSession = async (sessionId: string) => {

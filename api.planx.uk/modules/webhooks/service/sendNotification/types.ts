@@ -3,6 +3,7 @@ import { ValidatedRequestHandler } from "../../../../shared/middleware/validate"
 import {
   bopsSubmissionSchema,
   emailSubmissionSchema,
+  s3SubmissionSchema,
   sendSlackNotificationSchema,
   uniformSubmissionSchema,
 } from "./schema";
@@ -25,7 +26,14 @@ export type UniformEventData = UniformBody["event"]["data"]["new"];
 export type EmailBody = z.infer<typeof emailSubmissionSchema>["body"];
 export type EmailEventData = EmailBody["event"]["data"]["new"];
 
-export type EventData = BOPSEventData | UniformEventData | EmailEventData;
+export type S3Body = z.infer<typeof s3SubmissionSchema>["body"];
+export type S3EventData = S3Body["event"]["data"]["new"];
+
+export type EventData =
+  | BOPSEventData
+  | UniformEventData
+  | EmailEventData
+  | S3EventData;
 
 export type SendSlackNotification = ValidatedRequestHandler<
   typeof sendSlackNotificationSchema,
