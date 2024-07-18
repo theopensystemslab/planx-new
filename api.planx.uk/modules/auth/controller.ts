@@ -1,7 +1,7 @@
 import { CookieOptions, RequestHandler, Response } from "express";
 import { Request } from "express-jwt";
 
-import { microsoftOidcClient } from './passport'
+import { microsoftOidcClient } from "./passport";
 
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
