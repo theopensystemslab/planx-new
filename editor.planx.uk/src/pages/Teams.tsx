@@ -51,6 +51,8 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
   const canUserEditTeam = useStore.getState().canUserEditTeam;
 
+  const isPlatformAdmin = useStore.getState().getUser()?.isPlatformAdmin;
+
   const editableTeams: Team[] = [];
   const viewOnlyTeams: Team[] = [];
 
@@ -88,23 +90,27 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
         <Typography variant="h2" component="h1">
           Select a team
         </Typography>
-        <AddButton
-          onClick={async () => {
-            const newTeamName = prompt("Team name");
-            if (newTeamName) {
-              const newSlug = slugify(newTeamName);
-              const response = await useStore
-                .getState()
-                .create({
-                  name: newTeamName,
-                  slug: newSlug,
-                })
-                .then(() => navigation.navigate(`/${newSlug}`));
-            }
-          }}
-        >
-          Add a new Team
-        </AddButton>
+        {isPlatformAdmin ? (
+          <AddButton
+            onClick={async () => {
+              const newTeamName = prompt("Team name");
+              if (newTeamName) {
+                const newSlug = slugify(newTeamName);
+                const response = await useStore
+                  .getState()
+                  .create({
+                    name: newTeamName,
+                    slug: newSlug,
+                  })
+                  .then(() => navigation.navigate(`/${newSlug}`));
+              }
+            }}
+          >
+            Add a new Team
+          </AddButton>
+        ) : (
+          <></>
+        )}
       </Box>
       {editableTeams.length > 0 && (
         <>
