@@ -108,11 +108,11 @@ const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
             team_slug: localAuthority,
             webhook_request: webhookRequest,
             webhook_response: {
-              status: res.status, 
-              statusText: res.statusText, 
+              status: res.status,
+              statusText: res.statusText,
               headers: res.headers,
               config: res.config,
-              data: res.data
+              data: res.data,
             },
           },
         );
