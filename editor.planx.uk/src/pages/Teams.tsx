@@ -83,7 +83,7 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "flex-end",
+          alignItems: "center",
           marginBottom: "40px",
         }}
       >
