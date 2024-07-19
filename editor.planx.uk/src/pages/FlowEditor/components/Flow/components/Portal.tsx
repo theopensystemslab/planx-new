@@ -14,7 +14,10 @@ import Hanger from "./Hanger";
 import Question from "./Question";
 
 const ExternalPortal: React.FC<any> = (props) => {
-  const copyNode = useStore((state) => state.copyNode);
+  const [copyNode, addExternalPortal] = useStore((state) => [
+    state.copyNode,
+    state.addExternalPortal,
+  ]);
   const [href, setHref] = useState("Loading...");
 
   const { data, loading } = useQuery(
@@ -23,6 +26,7 @@ const ExternalPortal: React.FC<any> = (props) => {
         flows_by_pk(id: $id) {
           id
           slug
+          name
           team {
             slug
           }
@@ -31,8 +35,17 @@ const ExternalPortal: React.FC<any> = (props) => {
     `,
     {
       variables: { id: props.data.flowId },
-      onCompleted: (data) =>
-        setHref([data.flows_by_pk.team.slug, data.flows_by_pk.slug].join("/")),
+      onCompleted: (data) => {
+        const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join(
+          "/",
+        );
+        setHref(href);
+        addExternalPortal({
+          id: props.data.flowId,
+          name: data.flows_by_pk.name,
+          href,
+        });
+      },
     },
   );
 
