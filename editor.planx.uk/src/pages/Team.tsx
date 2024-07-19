@@ -325,12 +325,20 @@ const Team: React.FC = () => {
               const newFlowName = prompt("Service name");
               if (newFlowName) {
                 const newFlowSlug = slugify(newFlowName);
-                useStore
-                  .getState()
-                  .createFlow(teamId, newFlowSlug, newFlowName)
-                  .then((newId: string) => {
-                    navigation.navigate(`/${slug}/${newId}`);
-                  });
+                const duplicateFlowName = flows?.find(
+                  (flow) => flow.slug === newFlowSlug,
+                );
+
+                duplicateFlowName === undefined
+                  ? useStore
+                      .getState()
+                      .createFlow(teamId, newFlowSlug, newFlowName)
+                      .then((newId: string) => {
+                        navigation.navigate(`/${slug}/${newId}`);
+                      })
+                  : alert(
+                      `The flow "${newFlowName}" already exits. Enter a unique flow name to continue`,
+                    );
               }
             }}
           >
