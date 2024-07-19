@@ -1,0 +1,5 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- UPDATE "public"."blpu_codes"
+-- SET value = 'residential.dwelling.house'
+-- WHERE code IN ('RD02', 'RD03', 'RD04');

@@ -37,6 +37,23 @@ export const FETCH_BLPU_CODES = gql`
   }
 `;
 
+// For automations, these CLASSIFICATION_CODES set `property.type` = `residential.dwelling.house` ONLY
+//   and the fourth segment is extracted to it's own variable `property.attachment`
+export const ATTACHMENT_CLASSIFICATION_CODES = [
+  {
+    code: "RD02",
+    value: "detached",
+  },
+  {
+    code: "RD03",
+    value: "semiDetached",
+  },
+  {
+    code: "RD04",
+    value: "terrace",
+  },
+];
+
 type Props = PublicProps<FindProperty>;
 
 const AddressLoadingWrap = styled(Box)(({ theme }) => ({
@@ -144,6 +161,18 @@ function Component(props: Props) {
       newPassportData["_address"] = address;
       if (address?.planx_value) {
         newPassportData["property.type"] = [address.planx_value];
+      }
+
+      if (
+        address?.classification_code &&
+        ATTACHMENT_CLASSIFICATION_CODES.map((c) => c.code).includes(
+          address.classification_code,
+        )
+      ) {
+        const attachmentValue = ATTACHMENT_CLASSIFICATION_CODES.find(
+          (c) => c.code === address.classification_code,
+        )?.value;
+        newPassportData["property.attachment"] = [attachmentValue];
       }
 
       if (localAuthorityDistricts) {

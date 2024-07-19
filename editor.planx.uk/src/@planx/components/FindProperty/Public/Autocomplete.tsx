@@ -76,6 +76,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           uprn: selectedAddress.UPRN.padStart(12, "0"),
           usrn: selectedAddress.USRN, // padStart(8, "0") will break /roads API request
           blpu_code: selectedAddress.BLPU_STATE_CODE,
+          classification_code: selectedAddress.CLASSIFICATION_CODE,
           latitude: selectedAddress.LAT,
           longitude: selectedAddress.LNG,
           organisation: selectedAddress.ORGANISATION || null,
