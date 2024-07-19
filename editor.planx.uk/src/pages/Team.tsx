@@ -337,7 +337,7 @@ const Team: React.FC = () => {
                         navigation.navigate(`/${slug}/${newId}`);
                       })
                   : alert(
-                      `The flow "${newFlowName}" already exits. Enter a unique flow name to continue`,
+                      `The flow "${newFlowName}" already exists. Enter a unique flow name to continue`,
                     );
               }
             }}
