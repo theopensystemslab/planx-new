@@ -19,6 +19,7 @@ const setupPassport = () => {
 
   // build Microsoft OIDC client, and use it to build the related strategy
   let microsoftOidcClient;
+  // TODO: need to block on fetch of issuer, but can't use top level await...
   Issuer.discover(MICROSOFT_OPENID_CONFIG_URL).then((microsoftIssuer) => {
     console.debug("Discovered issuer %s", microsoftIssuer.issuer);
     const microsoftClientConfig = getMicrosoftClientConfig();
