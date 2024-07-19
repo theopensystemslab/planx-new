@@ -329,7 +329,7 @@ const Team: React.FC = () => {
                   (flow) => flow.slug === newFlowSlug,
                 );
 
-                duplicateFlowName === undefined
+                !duplicateFlowName
                   ? useStore
                       .getState()
                       .createFlow(teamId, newFlowSlug, newFlowName)
