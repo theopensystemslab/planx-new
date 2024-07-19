@@ -4,11 +4,14 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
+import navigation from "lib/navigation";
 import React from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
+import { slugify } from "utils";
 
 import { useStore } from "./FlowEditor/lib/store";
+import { AddButton } from "./Team";
 
 interface TeamTheme {
   slug: string;
@@ -72,9 +75,37 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
     });
   return (
     <Container maxWidth="formWrap">
-      <Typography variant="h2" component="h1" mb={4}>
-        Select a team
-      </Typography>
+      <Box
+        pb={1}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          marginBottom: "40px",
+        }}
+      >
+        <Typography variant="h2" component="h1">
+          Select a team
+        </Typography>
+        <AddButton
+          onClick={async () => {
+            const newTeamName = prompt("Team name");
+            if (newTeamName) {
+              const newSlug = slugify(newTeamName);
+              const response = await useStore
+                .getState()
+                .create({
+                  name: newTeamName,
+                  slug: newSlug,
+                })
+                .then(() => navigation.navigate(`/${newSlug}`));
+            }
+          }}
+        >
+          Add a new Team
+        </AddButton>
+      </Box>
       {editableTeams.length > 0 && (
         <>
           <Typography variant="h3" component="h2" mb={2}>
