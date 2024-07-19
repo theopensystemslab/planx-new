@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -12,6 +13,7 @@ import { capitalize, get } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent, useEffect } from "react";
+import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_BOLD, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
@@ -26,7 +28,18 @@ const SearchResultRoot = styled(List)(({ theme }) => ({
 const SearchResultCardRoot = styled(ListItemButton)(({ theme }) => ({
   padding: theme.spacing(1),
   border: `1px solid ${theme.palette.common.black}`,
-  display: "block",
+  display: "block"
+}));
+
+const ExternalPortalCard = styled(ListItemButton)(({ theme }) => ({
+  backgroundColor: "black",
+  color: theme.palette.common.white,
+  "&:hover": {
+    backgroundColor: "black",
+    "& p:last-of-type": {
+      textDecoration: "underline",
+    }
+  }
 }));
 
 const SearchResults: React.FC<{ results: SearchResults<IndexedNode> }> = ({
@@ -39,7 +52,9 @@ const SearchResults: React.FC<{ results: SearchResults<IndexedNode> }> = ({
       </Typography>
       <SearchResultRoot>
         {results.map((result) => (
-          <SearchResultCard key={result.item.id} result={result} />
+          <ListItem key={result.item.id} disablePadding>
+            <SearchResultCard result={result} />
+          </ListItem>
         ))}
       </SearchResultRoot>
     </>
@@ -160,6 +175,7 @@ const SearchResultCard: React.FC<{ result: SearchResult<IndexedNode> }> = ({
 const ExternalPortalList: React.FC = () => {
   const externalPortals = useStore((state) => state.externalPortals);
   const hasExternalPortals = Object.keys(externalPortals).length;
+  const { navigate } = useNavigation();
 
   if (!hasExternalPortals) return null;
 
@@ -169,38 +185,27 @@ const ExternalPortalList: React.FC = () => {
         Your service also contains the following external portals, which have
         not been searched:
       </Typography>
+      <List sx={{ gap: 2 }}>
       {Object.values(externalPortals).map(({ name, href }) => (
-        <Box
-          sx={(theme) => ({
-            backgroundColor: "black",
-            color: theme.palette.common.white,
-            mb: 2,
-            p: 1,
-          })}
-          key={`external-portal-card-${name}`}
-        >
-          <Typography
-            variant="body2"
-            fontWeight={FONT_WEIGHT_SEMI_BOLD}
-            display="inline-block"
-            mr={0.5}
-          >
-            External portal •
-          </Typography>
-          <Typography
-            variant="body2"
-            component="a"
-            href={"../" + href}
-            sx={(theme) => ({
-              color: theme.palette.common.white,
-              textDecoration: "none",
-              borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
-            })}
-          >
-            {href}
-          </Typography>
-        </Box>
+        <ListItem key={`external-portal-card-${name}`} disablePadding sx={{ mb: 2 }}>
+          <ExternalPortalCard  onClick={() => navigate("../" + href)}>
+            <Typography
+              variant="body2"
+              fontWeight={FONT_WEIGHT_SEMI_BOLD}
+              mr={0.5}
+              whiteSpace="nowrap"
+            >
+              External portal •
+            </Typography>
+            <Typography
+              variant="body2"
+            >
+              {href.replaceAll("/", " / ")}
+            </Typography>
+          </ExternalPortalCard>
+        </ListItem>
       ))}
+      </List>
     </Box>
   );
 };
