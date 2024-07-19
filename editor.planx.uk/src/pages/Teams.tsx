@@ -94,15 +94,25 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
           <AddButton
             onClick={async () => {
               const newTeamName = prompt("Team name");
+
               if (newTeamName) {
                 const newSlug = slugify(newTeamName);
-                const response = await useStore
-                  .getState()
-                  .create({
-                    name: newTeamName,
-                    slug: newSlug,
-                  })
-                  .then(() => navigation.navigate(`/${newSlug}`));
+                const teamNameDuplicate = teams.find(
+                  (team) => team.slug === newSlug,
+                );
+                if (teamNameDuplicate === undefined) {
+                  await useStore
+                    .getState()
+                    .create({
+                      name: newTeamName,
+                      slug: newSlug,
+                    })
+                    .then(() => navigation.navigate(`/${newSlug}`));
+                } else {
+                  alert(
+                    `A team with the name "${teamNameDuplicate.name}" already exists, enter a unique team name`,
+                  );
+                }
               }
             }}
           >

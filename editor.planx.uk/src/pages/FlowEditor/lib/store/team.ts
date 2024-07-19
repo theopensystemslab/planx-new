@@ -78,7 +78,6 @@ export const teamStore: StateCreator<
 
   create: async (newTeam) => {
     const { $client } = get();
-    console.log(newTeam);
     const isSuccess = await $client.team.create(newTeam);
     return isSuccess;
   },
