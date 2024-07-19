@@ -29,6 +29,11 @@ interface OverrideEntitiesModalProps {
   ) => void;
 }
 
+const ERROR_MESSAGES = {
+  checklist: "Select at least one option",
+  input: "Enter a value",
+};
+
 export const OverrideEntitiesModal = ({
   showModal,
   setShowModal,
@@ -38,7 +43,15 @@ export const OverrideEntitiesModal = ({
   inaccurateConstraints,
   setInaccurateConstraints,
 }: OverrideEntitiesModalProps) => {
-  const [errors, setErrors] = useState<Record<string, string> | undefined>();
+  const [checkedOptions, setCheckedOptions] = useState<string[] | undefined>(
+    inaccurateConstraints?.[fn]?.["entities"],
+  );
+  const [showChecklistError, setShowChecklistError] = useState<boolean>(false);
+  const [textInput, setTextInput] = useState<string | undefined>(
+    inaccurateConstraints?.[fn]?.["reason"],
+  );
+  const [showInputError, setShowInputError] = useState<boolean>(false);
+
   const title = `Which ${
     metadata?.plural?.toLowerCase() || "entities"
   } are inaccurate?`;
@@ -47,35 +60,57 @@ export const OverrideEntitiesModal = ({
     if (reason && reason == "backdropClick") {
       return;
     }
+    // Clear any non-submitted inputs
+    setCheckedOptions(undefined);
+    setTextInput(undefined);
     setShowModal(false);
   };
 
-  // Directly update inaccurateConstraints in state when options are selected/deselected
   const changeCheckbox =
-    (id: string, fn: Constraint["fn"]) =>
+    (id: string) =>
     (_checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined) => {
       let newCheckedIds;
 
-      if (inaccurateConstraints?.[fn]?.["entities"]?.includes(id)) {
-        newCheckedIds = inaccurateConstraints?.[fn]?.["entities"]?.filter(
-          (e) => e !== id,
-        );
+      if (checkedOptions?.includes(id)) {
+        newCheckedIds = checkedOptions.filter((e) => e !== id);
       } else {
-        newCheckedIds = [
-          ...(inaccurateConstraints?.[fn]?.["entities"] || []),
-          id,
-        ];
+        newCheckedIds = [...(checkedOptions || []), id];
       }
 
-      const newInaccurateConstraints = {
-        ...inaccurateConstraints,
-        ...{ [fn]: { entities: newCheckedIds, reason: "" } },
-      };
-      setInaccurateConstraints(newInaccurateConstraints);
+      if (newCheckedIds.length > 0) {
+        setShowChecklistError(false);
+      }
+      setCheckedOptions(newCheckedIds);
     };
 
+  const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > 1) {
+      setShowInputError(false);
+    }
+    setTextInput(e.target.value);
+  };
+
   const validateAndSubmit = () => {
-    setShowModal(false);
+    const invalidChecklist = !checkedOptions || checkedOptions.length === 0;
+    const invalidInput = !textInput || textInput.trim().length === 0;
+
+    // All form fields are required to submit
+    if (invalidChecklist && invalidInput) {
+      setShowChecklistError(true);
+      setShowInputError(true);
+    } else if (invalidChecklist) {
+      setShowChecklistError(true);
+    } else if (invalidInput) {
+      setShowInputError(true);
+    } else {
+      // Update inaccurateConstraints in parent component state on valid Modal submit
+      const newInaccurateConstraints = {
+        ...inaccurateConstraints,
+        ...{ [fn]: { entities: checkedOptions, reason: textInput } },
+      };
+      setInaccurateConstraints(newInaccurateConstraints);
+      setShowModal(false);
+    }
   };
 
   return (
@@ -130,7 +165,9 @@ export const OverrideEntitiesModal = ({
               id={`checklist-label-inaccurate-entities`}
             >
               <ErrorWrapper
-                error={errors?.["checked"]}
+                error={
+                  showChecklistError ? ERROR_MESSAGES["checklist"] : undefined
+                }
                 id={`checklist-error-inaccurate-entities`}
               >
                 <Grid container component="fieldset">
@@ -142,11 +179,9 @@ export const OverrideEntitiesModal = ({
                         id={`${e.entity}`}
                         label={formatEntityName(e, metadata)}
                         checked={
-                          inaccurateConstraints?.[fn]?.["entities"]?.includes(
-                            `${e.entity}`,
-                          ) || false
+                          checkedOptions?.includes(`${e.entity}`) || false
                         }
-                        onChange={changeCheckbox(`${e.entity}`, fn)}
+                        onChange={changeCheckbox(`${e.entity}`)}
                       />
                     ))}
                 </Grid>
@@ -155,8 +190,20 @@ export const OverrideEntitiesModal = ({
           </Box>
           <Box>
             <InputLabel label="Tell us why" htmlFor="reason">
-              <ErrorWrapper id={`input-error-inaccurate-entities`}>
-                <Input name="reason" type="text" bordered required />
+              <ErrorWrapper
+                error={showInputError ? ERROR_MESSAGES["input"] : undefined}
+                id={`input-error-inaccurate-entities`}
+              >
+                <Input
+                  bordered
+                  required
+                  multiline
+                  rows={2}
+                  name="reason"
+                  type="text"
+                  value={textInput}
+                  onChange={(e) => changeInput(e)}
+                />
               </ErrorWrapper>
             </InputLabel>
           </Box>
