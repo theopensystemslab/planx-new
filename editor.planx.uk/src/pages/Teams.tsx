@@ -110,7 +110,7 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
                     .then(() => navigation.navigate(`/${newSlug}`));
                 } else {
                   alert(
-                    `A team with the name "${teamNameDuplicate.name}" already exists, enter a unique team name`,
+                    `A team with the name "${teamNameDuplicate.name}" already exists. Enter a unique team name to continue.`,
                   );
                 }
               }

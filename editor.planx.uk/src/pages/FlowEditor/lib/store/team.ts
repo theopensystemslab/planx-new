@@ -10,16 +10,6 @@ import type { StateCreator } from "zustand";
 
 import { SharedStore } from "./shared";
 
-interface NewTeam {
-  name: string;
-  slug: string;
-  domain?: string;
-  reference?: string;
-  submissionEmail?: string;
-  settings?: Partial<TeamSettings>;
-  theme?: Partial<TeamTheme>;
-}
-
 export interface TeamStore {
   teamId: number;
   teamIntegrations: TeamIntegrations;
@@ -35,7 +25,7 @@ export interface TeamStore {
   fetchCurrentTeam: () => Promise<Team>;
   updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
   updateTeamSettings: (teamSettings: Partial<TeamSettings>) => Promise<boolean>;
-  create: (newTeam: NewTeam) => Promise<number>;
+  create: (newTeam: { name: string; slug: string }) => Promise<number>;
 }
 
 export const teamStore: StateCreator<
