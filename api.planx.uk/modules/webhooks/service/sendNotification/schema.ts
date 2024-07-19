@@ -59,8 +59,25 @@ export const emailSubmissionSchema = z.object({
   }),
 });
 
+export const s3SubmissionSchema = z.object({
+  body: z.object({
+    event: z.object({
+      data: z.object({
+        new: z.object({
+          session_id: z.string(),
+          team_slug: z.string(),
+        }),
+      }),
+    }),
+  }),
+  query: z.object({
+    type: z.literal("s3-submission"),
+  }),
+});
+
 export const sendSlackNotificationSchema = z.union([
   bopsSubmissionSchema,
   uniformSubmissionSchema,
   emailSubmissionSchema,
+  s3SubmissionSchema,
 ]);
