@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
+
 import { $api } from "../../../client";
 import { Passport } from "../../../types";
 import { uploadPrivateFile } from "../../file/service/uploadFile";
@@ -60,8 +61,8 @@ const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
       `${sessionId}.json`,
     );
 
-    // Send a notification with the file URL to the Power Automate webook
-    const webhookRequest = {
+    // Send a notification with the file URL to the Power Automate webhook
+    const webhookRequest: AxiosRequestConfig = {
       method: "POST",
       url: powerAutomateWebhookURL,
       adapter: "http",
@@ -76,11 +77,8 @@ const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
         payload: doValidation ? "Validated ODP Schema" : "Discretionary",
       },
     };
-    let webhookResponseStatus: number | undefined;
-    await axios(webhookRequest)
+    const webhookResponse = await axios(webhookRequest)
       .then(async (res) => {
-        webhookResponseStatus = res.status;
-
         // Mark session as submitted so that reminder and expiry emails are not triggered
         markSessionAsSubmitted(sessionId);
 
@@ -114,9 +112,8 @@ const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
         );
 
         return {
-          application: {
-            ...applicationId.insertS3Application,
-          },
+          id: applicationId.insertS3Application?.id,
+          axiosResponse: res,
         };
       })
       .catch((error) => {
@@ -125,10 +122,11 @@ const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
         );
       });
 
-    return res.status(200).send({
+    res.status(200).send({
       message: `Successfully uploaded submission to S3: ${fileUrl}`,
       payload: doValidation ? "Validated ODP Schema" : "Discretionary",
-      webhookResponse: webhookResponseStatus,
+      webhookResponse: webhookResponse.axiosResponse.status,
+      auditEntryId: webhookResponse.id,
     });
   } catch (error) {
     return next({
