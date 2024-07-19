@@ -118,9 +118,7 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
           >
             Add a new Team
           </AddButton>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </Box>
       {editableTeams.length > 0 && (
         <>
