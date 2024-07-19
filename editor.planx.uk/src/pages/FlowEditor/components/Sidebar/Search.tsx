@@ -7,12 +7,13 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType, IndexedNode } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
+import { useFormik } from "formik";
 import type { SearchResult, SearchResults } from "hooks/useSearch";
 import { useSearch } from "hooks/useSearch";
 import { capitalize, get } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ChangeEvent, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_BOLD, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem";
@@ -48,8 +49,11 @@ const SearchResults: React.FC<{ results: SearchResults<IndexedNode> }> = ({
   return (
     <>
       <Typography variant="h3" mb={1}>
-        {results.length} {results.length > 1 ? "results" : "result"}:
+        {!results.length && "No matches found"}
+        {results.length === 1 && "1 result:"}
+        {results.length > 1 && `${results.length} results:`}
       </Typography>
+
       <SearchResultRoot>
         {results.map((result) => (
           <ListItem key={result.item.id} disablePadding>
@@ -83,6 +87,7 @@ const Headline: React.FC<HeadlineProps> = ({ text, matchIndices, variant }) => {
             variant === "data" ? '"Source Code Pro", monospace' : "inherit"
           }
           variant="body2"
+          display={"inline-block"}
         >
           {char}
         </Typography>
@@ -131,6 +136,7 @@ const SearchResultCard: React.FC<{ result: SearchResult<IndexedNode> }> = ({
 
   const handleClick = () => {
     console.log("todo!");
+    console.log({ nodeId: result.item.id })
     // get path for node
     // generate url from path
     // navigate to url
@@ -180,35 +186,40 @@ const ExternalPortalList: React.FC = () => {
   if (!hasExternalPortals) return null;
 
   return (
-    <Box pt={4}>
+    <Box pt={2}>
       <Typography variant="body1" mb={2}>
         Your service also contains the following external portals, which have
         not been searched:
       </Typography>
       <List sx={{ gap: 2 }}>
-      {Object.values(externalPortals).map(({ name, href }) => (
-        <ListItem key={`external-portal-card-${name}`} disablePadding sx={{ mb: 2 }}>
-          <ExternalPortalCard  onClick={() => navigate("../" + href)}>
-            <Typography
-              variant="body2"
-              fontWeight={FONT_WEIGHT_SEMI_BOLD}
-              mr={0.5}
-              whiteSpace="nowrap"
-            >
-              External portal •
-            </Typography>
-            <Typography
-              variant="body2"
-            >
-              {href.replaceAll("/", " / ")}
-            </Typography>
-          </ExternalPortalCard>
-        </ListItem>
-      ))}
+        {Object.values(externalPortals).map(({ name, href }) => (
+          <ListItem key={`external-portal-card-${name}`} disablePadding sx={{ mb: 2 }}>
+            <ExternalPortalCard onClick={() => navigate("../" + href)}>
+              <Typography
+                variant="body2"
+                fontWeight={FONT_WEIGHT_SEMI_BOLD}
+                mr={0.5}
+                whiteSpace="nowrap"
+              >
+                External portal •
+              </Typography>
+              <Typography
+                variant="body2"
+              >
+                {href.replaceAll("/", " / ")}
+              </Typography>
+            </ExternalPortalCard>
+          </ListItem>
+        ))}
       </List>
     </Box>
   );
 };
+
+interface SearchNodes {
+  input: string;
+  facets: ["data.fn", "data.val"],
+}
 
 const Search: React.FC = () => {
   const [orderedFlow, setOrderedFlow] = useStore((state) => [
@@ -220,52 +231,53 @@ const Search: React.FC = () => {
     if (!orderedFlow) setOrderedFlow();
   }, [setOrderedFlow]);
 
-  /** Map of search facets to associated node keys */
-  const facets = {
-    data: ["data.fn", "data.val"],
-  };
+  const formik = useFormik<SearchNodes>({
+    initialValues: { input: "", facets: ["data.fn", "data.val"] },
+    onSubmit: ({ input }) => { search(input) },
+  });
 
   const { results, search } = useSearch({
     list: orderedFlow || [],
-    keys: facets.data,
+    keys: formik.values.facets
   });
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    search(input);
-  };
 
   return (
     <Container component={Box} p={3}>
-      <Typography
-        component={"label"}
-        htmlFor="search"
-        variant="h3"
-        mb={1}
-        display={"block"}
-      >
-        Search this flow and internal portals
-      </Typography>
-      <Input
-        name="search"
-        onChange={handleChange}
-        inputProps={{ spellCheck: false }}
-      />
-      <ChecklistItem
-        label="Search only data fields"
-        id={"search-data-field-facet"}
-        checked
-        inputProps={{ disabled: true }}
-        onChange={() => {}}
-      />
-      <Box pt={3}>
-        {results.length > 0 && (
-          <>
-            <SearchResults results={results} />
-            <ExternalPortalList />
-          </>
-        )}
-      </Box>
+      <form onSubmit={formik.handleSubmit}>
+        <Typography
+          component={"label"}
+          htmlFor="search"
+          variant="h3"
+          mb={1}
+          display={"block"}
+        >
+          Search this flow and internal portals
+        </Typography>
+        <Input
+          name="search"
+          value={formik.values.input}
+          onChange={(e) => {
+            formik.setFieldValue("input", e.target.value)
+            formik.handleSubmit();
+          }}
+          inputProps={{ spellCheck: false }}
+        />
+        <ChecklistItem
+          label="Search only data fields"
+          id={"search-data-field-facet"}
+          checked
+          inputProps={{ disabled: true }}
+          onChange={() => { }}
+        />
+        <Box pt={3}>
+          {formik.values.input && (
+            <>
+              <SearchResults results={results} />
+              <ExternalPortalList />
+            </>
+          )}
+        </Box>
+      </form>
     </Container>
   );
 };
