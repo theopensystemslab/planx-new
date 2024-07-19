@@ -36,7 +36,7 @@ interface InaccurateConstraint {
 }
 
 export type InaccurateConstraints =
-  | Record<Constraint["fn"], InaccurateConstraint>
+  | Record<string, InaccurateConstraint>
   | undefined;
 
 export default Component;

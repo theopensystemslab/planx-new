@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import { Constraint, Metadata } from "@opensystemslab/planx-core/types";
+import omit from "lodash/omit";
 import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem";
@@ -60,9 +61,14 @@ export const OverrideEntitiesModal = ({
     if (reason && reason == "backdropClick") {
       return;
     }
-    // Clear any non-submitted inputs
+
+    // Clear any non-submitted inputs on cancel & sync parent state
     setCheckedOptions(undefined);
     setTextInput(undefined);
+    const newInaccurateConstraints = omit(inaccurateConstraints, fn);
+    setInaccurateConstraints(newInaccurateConstraints);
+
+    // Close modal
     setShowModal(false);
   };
 
@@ -103,7 +109,7 @@ export const OverrideEntitiesModal = ({
     } else if (invalidInput) {
       setShowInputError(true);
     } else {
-      // Update inaccurateConstraints in parent component state on valid Modal submit
+      // Update inaccurateConstraints in parent component state on valid submit
       const newInaccurateConstraints = {
         ...inaccurateConstraints,
         ...{ [fn]: { entities: checkedOptions, reason: textInput } },

@@ -2,6 +2,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box, { BoxProps } from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -218,19 +219,40 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                       key={`entity-${record.entity}-li`}
                       dense
                       disableGutters
-                      sx={{ display: "list-item" }}
+                      sx={{
+                        display: "list-item",
+                        color: props.inaccurateConstraints?.[props.fn]?.[
+                          "entities"
+                        ]?.includes(`${record.entity}`)
+                          ? "GrayText"
+                          : "inherit",
+                      }}
                     >
                       {isSourcedFromPlanningData ? (
-                        <Typography variant="body2">
+                        <Typography variant="body2" component="span">
                           <Link
                             href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
                             target="_blank"
+                            sx={{
+                              color: props.inaccurateConstraints?.[props.fn]?.[
+                                "entities"
+                              ]?.includes(`${record.entity}`)
+                                ? "GrayText"
+                                : "inherit",
+                            }}
                           >
                             {formatEntityName(record, props.metadata)}
                           </Link>
                         </Typography>
                       ) : (
                         <Typography variant="body2">{record.name}</Typography>
+                      )}
+                      {props.inaccurateConstraints?.[props.fn]?.[
+                        "entities"
+                      ]?.includes(`${record.entity}`) && (
+                        <Typography variant="body2" component="span">
+                          {` [Not applicable]`}
+                        </Typography>
                       )}
                     </ListItem>
                   ))}
