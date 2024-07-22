@@ -100,23 +100,19 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
 
               if (newTeamName) {
                 const newSlug = slugify(newTeamName);
-                return newSlug;
-              }
-              const teamNameDuplicate = teams.find(
-                (team) => team.slug === newSlug,
-              );
-              if (teamNameDuplicate === undefined) {
-                await useStore
-                  .getState()
-                  .create({
+                const teamSlugDuplicate = teams.find(
+                  (team) => team.slug === newSlug,
+                );
+                if (teamSlugDuplicate !== undefined) {
+                  alert(
+                    `A team with the name "${teamSlugDuplicate.name}" already exists. Enter a unique team name to continue.`,
+                  );
+                } else {
+                  await createTeam({
                     name: newTeamName,
                     slug: newSlug,
-                  })
-                  .then(() => navigation.navigate(`/${newSlug}`));
-              } else {
-                alert(
-                  `A team with the name "${teamNameDuplicate.name}" already exists. Enter a unique team name to continue.`,
-                );
+                  }).then(() => navigation.navigate(`/${newSlug}`));
+                }
               }
             }}
           >

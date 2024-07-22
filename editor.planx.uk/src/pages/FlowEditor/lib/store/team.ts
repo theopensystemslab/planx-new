@@ -25,7 +25,7 @@ export interface TeamStore {
   fetchCurrentTeam: () => Promise<Team>;
   updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
   updateTeamSettings: (teamSettings: Partial<TeamSettings>) => Promise<boolean>;
-  create: (newTeam: { name: string; slug: string }) => Promise<number>;
+  createTeam: (newTeam: { name: string; slug: string }) => Promise<number>;
 }
 
 export const teamStore: StateCreator<
@@ -66,7 +66,7 @@ export const teamStore: StateCreator<
     theme: get().teamTheme,
   }),
 
-  create: async (newTeam) => {
+  createTeam: async (newTeam) => {
     const { $client } = get();
     const isSuccess = await $client.team.create(newTeam);
     return isSuccess;
