@@ -44,7 +44,6 @@ export default Component;
 function Component(props: Props) {
   const [inaccurateConstraints, setInaccurateConstraints] =
     useState<InaccurateConstraints>();
-  console.log(inaccurateConstraints);
 
   const siteBoundary = useStore(
     (state) => state.computePassport().data?.["property.boundary.site"],
@@ -167,6 +166,8 @@ function Component(props: Props) {
               if (data) _constraints.push(data as GISResponse["constraints"]);
             }
 
+            const _overrides = inaccurateConstraints;
+
             const _nots: any = {};
             const intersectingConstraints: IntersectingConstraints = {};
             Object.entries(constraints).forEach(([key, data]) => {
@@ -181,6 +182,7 @@ function Component(props: Props) {
 
             const passportData = {
               _constraints,
+              _overrides,
               _nots,
               ...intersectingConstraints,
             };

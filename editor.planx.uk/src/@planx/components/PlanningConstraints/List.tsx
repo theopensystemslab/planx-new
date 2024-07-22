@@ -2,7 +2,6 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box, { BoxProps } from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -14,6 +13,7 @@ import type {
   GISResponse,
   Metadata,
 } from "@opensystemslab/planx-core/types";
+import { hasFeatureFlag } from "lib/featureFlags";
 import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ReactNode, useState } from "react";
@@ -163,7 +163,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
     (useStore(
       (state) => state.computePassport().data?._address,
     ) as SiteAddress) || {};
-  const item = props.metadata?.name.replaceAll(" ", "-");
+
   const isSourcedFromPlanningData =
     props.metadata?.plural !== "Classified roads";
 
@@ -178,6 +178,12 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
     .join("&");
   const planningDataMapURL = `https://www.planning.data.gov.uk/map/?${encodedMatchingDatasets}#${latitude},${longitude},17.5z`;
 
+  // If a user overrides every entity in a constraint category, then that whole category becomes inapplicable and we want to gray it out
+  const allEntitiesInaccurate =
+    props.data?.length !== 0 &&
+    props.data?.length ===
+      props.inaccurateConstraints?.[props.fn]?.["entities"]?.length;
+
   return (
     <ListItem
       key={`${props.fn}-li`}
@@ -186,13 +192,18 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
     >
       <StyledAccordion {...props} disableGutters>
         <AccordionSummary
-          id={`${item}-header`}
-          aria-controls={`${item}-panel`}
+          id={`${props.fn}-header`}
+          aria-controls={`${props.fn}-panel`}
           classes={{ content: classes.content }}
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-          <Typography component="div" variant="body2" pr={1.5}>
+          <Typography
+            component="div"
+            variant="body2"
+            pr={1.5}
+            sx={{ color: allEntitiesInaccurate ? "GrayText" : "inherit" }}
+          >
             {children}
           </Typography>
         </AccordionSummary>
@@ -287,19 +298,21 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               openLinksOnNewTab
             />
           </Typography>
-          {props.value && Boolean(props.data?.length) && (
-            <Typography variant="h5">
-              <Link
-                component="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setShowModal(true);
-                }}
-              >
-                This constraint doesn't apply to this property
-              </Link>
-            </Typography>
-          )}
+          {hasFeatureFlag("OVERRIDE_CONSTRAINTS") &&
+            props.value &&
+            Boolean(props.data?.length) && (
+              <Typography variant="h5">
+                <Link
+                  component="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setShowModal(true);
+                  }}
+                >
+                  This constraint doesn't apply to this property
+                </Link>
+              </Typography>
+            )}
           <OverrideEntitiesModal
             showModal={showModal}
             setShowModal={setShowModal}
