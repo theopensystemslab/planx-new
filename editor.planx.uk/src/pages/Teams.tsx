@@ -49,7 +49,10 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 }));
 
 const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
-  const canUserEditTeam = useStore.getState().canUserEditTeam;
+  const [canUserEditTeam, createTeam] = useStore((state) => [
+    state.canUserEditTeam,
+    state.createTeam,
+  ]);
 
   const isPlatformAdmin = useStore.getState().getUser()?.isPlatformAdmin;
 
@@ -97,26 +100,27 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
 
               if (newTeamName) {
                 const newSlug = slugify(newTeamName);
-                const teamNameDuplicate = teams.find(
-                  (team) => team.slug === newSlug,
+                return newSlug;
+              }
+              const teamNameDuplicate = teams.find(
+                (team) => team.slug === newSlug,
+              );
+              if (teamNameDuplicate === undefined) {
+                await useStore
+                  .getState()
+                  .create({
+                    name: newTeamName,
+                    slug: newSlug,
+                  })
+                  .then(() => navigation.navigate(`/${newSlug}`));
+              } else {
+                alert(
+                  `A team with the name "${teamNameDuplicate.name}" already exists. Enter a unique team name to continue.`,
                 );
-                if (teamNameDuplicate === undefined) {
-                  await useStore
-                    .getState()
-                    .create({
-                      name: newTeamName,
-                      slug: newSlug,
-                    })
-                    .then(() => navigation.navigate(`/${newSlug}`));
-                } else {
-                  alert(
-                    `A team with the name "${teamNameDuplicate.name}" already exists. Enter a unique team name to continue.`,
-                  );
-                }
               }
             }}
           >
-            Add a new Team
+            Add a new team
           </AddButton>
         ) : null}
       </Box>
