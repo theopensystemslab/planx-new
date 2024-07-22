@@ -32,7 +32,7 @@ interface OverrideEntitiesModalProps {
 
 const ERROR_MESSAGES = {
   checklist: "Select at least one option",
-  input: "Enter a value",
+  input: "Enter a value", // @todo split into empty & maxLength input errors
 };
 
 export const OverrideEntitiesModal = ({
@@ -44,12 +44,15 @@ export const OverrideEntitiesModal = ({
   inaccurateConstraints,
   setInaccurateConstraints,
 }: OverrideEntitiesModalProps) => {
+  const initialCheckedOptions = inaccurateConstraints?.[fn]?.["entities"];
   const [checkedOptions, setCheckedOptions] = useState<string[] | undefined>(
-    inaccurateConstraints?.[fn]?.["entities"],
+    initialCheckedOptions,
   );
   const [showChecklistError, setShowChecklistError] = useState<boolean>(false);
+
+  const initialTextInput = inaccurateConstraints?.[fn]?.["reason"];
   const [textInput, setTextInput] = useState<string | undefined>(
-    inaccurateConstraints?.[fn]?.["reason"],
+    initialTextInput,
   );
   const [showInputError, setShowInputError] = useState<boolean>(false);
 
@@ -62,11 +65,9 @@ export const OverrideEntitiesModal = ({
       return;
     }
 
-    // Clear any non-submitted inputs on cancel & sync parent state
-    setCheckedOptions(undefined);
-    setTextInput(undefined);
-    const newInaccurateConstraints = omit(inaccurateConstraints, fn);
-    setInaccurateConstraints(newInaccurateConstraints);
+    // Revert any non-submitted inputs on cancel
+    setCheckedOptions(initialCheckedOptions);
+    setTextInput(initialTextInput);
 
     // Close modal
     setShowModal(false);
@@ -90,7 +91,7 @@ export const OverrideEntitiesModal = ({
     };
 
   const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 1) {
+    if (e.target.value.length) {
       setShowInputError(false);
     }
     setTextInput(e.target.value);
@@ -102,14 +103,23 @@ export const OverrideEntitiesModal = ({
 
     // All form fields are required to submit
     if (invalidChecklist && invalidInput) {
-      setShowChecklistError(true);
-      setShowInputError(true);
+      // If you're re-opening the modal to remove previous answers
+      if (initialCheckedOptions?.length && initialTextInput) {
+        // Sync cleared form data to parent state
+        const newInaccurateConstraints = omit(inaccurateConstraints, fn);
+        setInaccurateConstraints(newInaccurateConstraints);
+        setShowModal(false);
+      } else {
+        // If the form was empty to start
+        setShowChecklistError(true);
+        setShowInputError(true);
+      }
     } else if (invalidChecklist) {
       setShowChecklistError(true);
     } else if (invalidInput) {
       setShowInputError(true);
     } else {
-      // Update inaccurateConstraints in parent component state on valid submit
+      // Update parent component state on valid submit
       const newInaccurateConstraints = {
         ...inaccurateConstraints,
         ...{ [fn]: { entities: checkedOptions, reason: textInput } },
@@ -138,7 +148,7 @@ export const OverrideEntitiesModal = ({
       }}
     >
       <DialogContent>
-        <Box>
+        <Box component="form">
           <Typography
             variant="h3"
             component="h2"
@@ -224,6 +234,7 @@ export const OverrideEntitiesModal = ({
       >
         <Box>
           <Button
+            type="submit"
             variant="contained"
             color="prompt"
             onClick={validateAndSubmit}
