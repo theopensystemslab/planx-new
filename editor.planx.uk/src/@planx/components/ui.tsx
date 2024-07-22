@@ -1,3 +1,4 @@
+import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CallSplit from "@mui/icons-material/CallSplit";
@@ -75,6 +76,7 @@ export const ICONS: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.List]: ListAlt,
+  [TYPES.MapAndLabel]: AddLocationAltIcon,
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NextSteps]: ArrowForwardIcon,
   [TYPES.NumberInput]: Pin,

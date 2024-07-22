@@ -19,6 +19,7 @@ export const SLUGS: {
   [TYPES.InternalPortal]: "internal-portal",
   [TYPES.FileUploadAndLabel]: "file-upload-and-label",
   [TYPES.List]: "list",
+  [TYPES.MapAndLabel]: "map-and-label",
   [TYPES.NextSteps]: "next-steps",
   [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",

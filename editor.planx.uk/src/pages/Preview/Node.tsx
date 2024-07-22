@@ -16,6 +16,7 @@ import FileUpload from "@planx/components/FileUpload/Public";
 import FileUploadAndLabel from "@planx/components/FileUploadAndLabel/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import List from "@planx/components/List/Public";
+import MapAndLabelComponent from "@planx/components/MapAndLabel/Editor";
 import NextSteps from "@planx/components/NextSteps/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
@@ -171,6 +172,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.List:
       return <List {...allProps} />;
+
+    case TYPES.MapAndLabel:
+      return <MapAndLabelComponent />;
 
     case TYPES.NextSteps:
       return <NextSteps {...allProps} />;
