@@ -43,8 +43,8 @@ dependencies:
     specifier: ^0.8.3
     version: 0.8.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#339cb50
-    version: github.com/theopensystemslab/planx-core/339cb50(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#b5c7814
+    version: github.com/theopensystemslab/planx-core/b5c7814(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -5217,8 +5217,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.24.7
       '@floating-ui/react-dom': 2.1.1(react-dom@18.2.0)(react@18.2.0)
-      '@mui/types': 7.2.14(@types/react@18.2.45)
-      '@mui/utils': 5.16.0(@types/react@18.2.45)(react@18.2.0)
+      '@mui/types': 7.2.15(@types/react@18.2.45)
+      '@mui/utils': 5.16.5(@types/react@18.2.45)(react@18.2.0)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -5240,8 +5240,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.24.7
       '@floating-ui/react-dom': 2.1.1(react-dom@18.3.1)(react@18.3.1)
-      '@mui/types': 7.2.14(@types/react@18.2.45)
-      '@mui/utils': 5.16.0(@types/react@18.2.45)(react@18.3.1)
+      '@mui/types': 7.2.15(@types/react@18.2.45)
+      '@mui/utils': 5.16.5(@types/react@18.2.45)(react@18.3.1)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -5391,7 +5391,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.24.7
-      '@mui/utils': 5.16.0(@types/react@18.2.45)(react@18.2.0)
+      '@mui/utils': 5.16.5(@types/react@18.2.45)(react@18.2.0)
       '@types/react': 18.2.45
       prop-types: 15.8.1
       react: 18.2.0
@@ -5576,8 +5576,8 @@ packages:
       react-is: 18.3.1
     dev: false
 
-  /@mui/utils@5.16.0(@types/react@18.2.45)(react@18.3.1):
-    resolution: {integrity: sha512-kLLi5J1xY+mwtUlMb8Ubdxf4qFAA1+U7WPBvjM/qQ4CIwLCohNb0sHo1oYPufjSIH/Z9+dhVxD7dJlfGjd1AVA==}
+  /@mui/utils@5.16.5(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-CwhcA9y44XwK7k2joL3Y29mRUnoBt+gOZZdGyw7YihbEwEErJYBtDwbZwVgH68zAljGe/b+Kd5bzfl63Gi3R2A==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
@@ -5587,10 +5587,12 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.24.7
+      '@mui/types': 7.2.15(@types/react@18.2.45)
       '@types/prop-types': 15.7.12
       '@types/react': 18.2.45
+      clsx: 2.1.1
       prop-types: 15.8.1
-      react: 18.3.1
+      react: 18.2.0
       react-is: 18.3.1
     dev: false
 
@@ -21897,9 +21899,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/339cb50(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/339cb50}
-    id: github.com/theopensystemslab/planx-core/339cb50
+  github.com/theopensystemslab/planx-core/b5c7814(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b5c7814}
+    id: github.com/theopensystemslab/planx-core/b5c7814
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
