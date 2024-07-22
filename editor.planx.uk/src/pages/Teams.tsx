@@ -55,8 +55,6 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
     state.createTeam,
   ]);
 
-  const isPlatformAdmin = useStore.getState().getUser()?.isPlatformAdmin;
-
   const editableTeams: Team[] = [];
   const viewOnlyTeams: Team[] = [];
 
@@ -112,7 +110,8 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
                   await createTeam({
                     name: newTeamName,
                     slug: newSlug,
-                  }).then(() => navigation.navigate(`/${newSlug}`));
+                  });
+                  navigation.navigate(`/${newSlug}`);
                 }
               }
             }}
