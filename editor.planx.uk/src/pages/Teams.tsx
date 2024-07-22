@@ -4,11 +4,15 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
+import navigation from "lib/navigation";
 import React from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
+import Permission from "ui/editor/Permission";
+import { slugify } from "utils";
 
 import { useStore } from "./FlowEditor/lib/store";
+import { AddButton } from "./Team";
 
 interface TeamTheme {
   slug: string;
@@ -46,7 +50,10 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 }));
 
 const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
-  const canUserEditTeam = useStore.getState().canUserEditTeam;
+  const [canUserEditTeam, createTeam] = useStore((state) => [
+    state.canUserEditTeam,
+    state.createTeam,
+  ]);
 
   const editableTeams: Team[] = [];
   const viewOnlyTeams: Team[] = [];
@@ -72,9 +79,47 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
     });
   return (
     <Container maxWidth="formWrap">
-      <Typography variant="h2" component="h1" mb={4}>
-        Select a team
-      </Typography>
+      <Box
+        pb={1}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "40px",
+        }}
+      >
+        <Typography variant="h2" component="h1">
+          Select a team
+        </Typography>
+        <Permission.IsPlatformAdmin>
+          <AddButton
+            onClick={async () => {
+              const newTeamName = prompt("Team name");
+
+              if (newTeamName) {
+                const newSlug = slugify(newTeamName);
+                const teamSlugDuplicate = teams.find(
+                  (team) => team.slug === newSlug,
+                );
+                if (teamSlugDuplicate !== undefined) {
+                  alert(
+                    `A team with the name "${teamSlugDuplicate.name}" already exists. Enter a unique team name to continue.`,
+                  );
+                } else {
+                  await createTeam({
+                    name: newTeamName,
+                    slug: newSlug,
+                  });
+                  navigation.navigate(`/${newSlug}`);
+                }
+              }
+            }}
+          >
+            Add a new team
+          </AddButton>
+        </Permission.IsPlatformAdmin>
+      </Box>
       {editableTeams.length > 0 && (
         <>
           <Typography variant="h3" component="h2" mb={2}>

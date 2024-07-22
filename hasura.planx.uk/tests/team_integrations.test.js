@@ -40,8 +40,10 @@ describe("team_integrations", () => {
       expect(i.queries).not.toContain("team_integrations");
     });
 
-    test("cannot create, update, or delete team_integrations", () => {
-      expect(i).toHaveNoMutationsFor("team_integrations");
+    test("can create but, cannot update, or delete team_integrations", () => {
+      expect(i.mutations).toContain("insert_team_integrations");
+      expect(i.mutations).not.toContain("update_team_integrations_by_pk");
+      expect(i.mutations).not.toContain("delete_team_integrations");
     });
   });
 

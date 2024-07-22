@@ -112,7 +112,7 @@ const AddButtonRoot = styled(ButtonBase)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
 }));
 
-function AddButton({
+export function AddButton({
   children,
   onClick,
 }: {

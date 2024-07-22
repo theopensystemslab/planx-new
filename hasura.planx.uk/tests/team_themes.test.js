@@ -37,12 +37,16 @@ describe("team_themes", () => {
       expect(i.queries).toContain("team_themes");
     });
 
-    test("cannot insert team_themes", () => {
+    test("cannot query insert team_themes", () => {
       expect(i.queries).not.toContain("insert_team_themes");
     });
 
     test("can query team_themes", async () => {
       expect(i.queries).toContain("team_themes");
+    });
+
+    test("can insert team_themes", () => {
+      expect(i.mutations).toContain("insert_team_themes");
     });
 
     test("can mutate team_themes", async () => {
