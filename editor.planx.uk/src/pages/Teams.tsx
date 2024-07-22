@@ -8,6 +8,7 @@ import navigation from "lib/navigation";
 import React from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
+import Permission from "ui/editor/Permission";
 import { slugify } from "utils";
 
 import { useStore } from "./FlowEditor/lib/store";
@@ -93,7 +94,7 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
         <Typography variant="h2" component="h1">
           Select a team
         </Typography>
-        {isPlatformAdmin ? (
+        <Permission.IsPlatformAdmin>
           <AddButton
             onClick={async () => {
               const newTeamName = prompt("Team name");
@@ -118,7 +119,7 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
           >
             Add a new team
           </AddButton>
-        ) : null}
+        </Permission.IsPlatformAdmin>
       </Box>
       {editableTeams.length > 0 && (
         <>
