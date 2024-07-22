@@ -1,8 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { EditorProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 
-import { EditorProps } from "../ui";
 import { MapAndLabel, parseContent } from "./model";
 
 type Props = EditorProps<TYPES.MapAndLabel, MapAndLabel>;
