@@ -1,8 +1,14 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
+import InputGroup from "ui/editor/InputGroup";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import RichTextInput from "ui/editor/RichTextInput";
+import Input from "ui/shared/Input";
+import InputRow from "ui/shared/InputRow";
 
-import { EditorProps } from "../ui";
+import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { MapAndLabel, parseContent } from "./model";
 
 type Props = EditorProps<TYPES.MapAndLabel, MapAndLabel>;
@@ -22,7 +28,53 @@ function MapAndLabelComponent(props: Props) {
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      //...
+      <ModalSection>
+        <ModalSectionContent
+          title="Map and label"
+          Icon={ICONS[TYPES.MapAndLabel]}
+        >
+          <InputGroup>
+            <InputRow>
+              <Input
+                format="large"
+                name="title"
+                placeholder={"Title"}
+                value={formik.values.title}
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+            <InputRow>
+              <RichTextInput
+                name="description"
+                placeholder="Description"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+            <InputRow>
+              <Input
+                format="data"
+                name="fn"
+                placeholder={"Data Field"}
+                value={formik.values.fn}
+                disabled
+              />
+            </InputRow>
+          </InputGroup>
+        </ModalSectionContent>
+      </ModalSection>
+      <MoreInformation
+        changeField={formik.handleChange}
+        definitionImg={formik.values.definitionImg}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
+      />
+      <InternalNotes
+        name="notes"
+        value={formik.values.notes}
+        onChange={formik.handleChange}
+      />
     </form>
   );
 }
