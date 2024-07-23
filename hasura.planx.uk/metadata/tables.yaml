@@ -1633,6 +1633,26 @@
     - name: team
       using:
         foreign_key_constraint_on: team_id
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - id
+          - team_id
+          - production_bops_submission_url
+          - staging_bops_submission_url
+          - production_power_automate_api_key
+          - staging_power_automate_api_key
+          - has_planning_data
+          - production_file_api_key
+          - staging_file_api_key
+          - production_bops_secret
+          - staging_bops_secret
+          - production_govpay_secret
+          - staging_govpay_secret
+          - power_automate_webhook_url
+      comment: ""
   select_permissions:
     - role: api
       permission:
@@ -1727,6 +1747,24 @@
     - name: team
       using:
         foreign_key_constraint_on: team_id
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - id
+          - external_planning_site_name
+          - external_planning_site_url
+          - homepage
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - email_reply_to_id
+          - team_id
+          - boundary_bbox
+          - reference_code
+          - boundary_url
+      comment: ""
   select_permissions:
     - role: api
       permission:
@@ -1843,6 +1881,19 @@
     - name: team
       using:
         foreign_key_constraint_on: team_id
+  insert_permissions:
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - id
+          - team_id
+          - favicon
+          - logo
+          - action_colour
+          - link_colour
+          - primary_colour
+      comment: ""
   select_permissions:
     - role: api
       permission:
