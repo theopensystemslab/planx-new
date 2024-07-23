@@ -156,7 +156,7 @@ export const OverrideEntitiesModal = ({
             gutterBottom
             mb={2}
           >
-            This constraint doesn't apply to this property
+            I don't think this constraint applies to this property
           </Typography>
           <Typography variant="body2" gutterBottom>
             Have we identified a planning constraint that you don't think

@@ -309,7 +309,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                     setShowModal(true);
                   }}
                 >
-                  This constraint doesn't apply to this property
+                  I don't think this constraint applies to this property
                 </Link>
               </Typography>
             )}
