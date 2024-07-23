@@ -62,7 +62,9 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.AddressInput}>Address Input</option>
         <option value={TYPES.ContactInput}>Contact Input</option>
         <option value={TYPES.List}>List</option>
-        <option value={TYPES.MapAndLabel}>Map and Label</option>
+        {hasFeatureFlag("TREES") && (
+          <option value={TYPES.MapAndLabel}>Map and Label</option>
+        )}
       </optgroup>
       <optgroup label="Information">
         <option value={TYPES.TaskList}>Task List</option>
