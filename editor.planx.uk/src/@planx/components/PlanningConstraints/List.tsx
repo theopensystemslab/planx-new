@@ -164,8 +164,21 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
       (state) => state.computePassport().data?._address,
     ) as SiteAddress) || {};
 
+  const hasPlanningData = useStore(
+    (state) => state.teamIntegrations?.hasPlanningData,
+  );
+
+  // Whether a particular constraint list item is sourced from Planning Data
   const isSourcedFromPlanningData =
     props.metadata?.plural !== "Classified roads";
+
+  // Whether to show the link to the override modal
+  const showOverrideLink = 
+    hasFeatureFlag("OVERRIDE_CONSTRAINTS") && 
+    hasPlanningData && // skip teams that don't publish via Planning Data eg Scotland, Braintree
+    props.fn !== "article4" && // skip A4s because we can't confidently update granular passport vars based on entity data
+    props.value && // skip negative constraints that don't apply to this apply
+    Boolean(props.data?.length); // skip any positive constraints that don't have individual linked entities
 
   // Some constraint categories search for entities amongst many PD datasets, but our `props.metadata.dataset` will only store reference to the last one
   //   Cross reference with `availableDatasets` in Editor to ensure map URL is filtered to include each possible dataset
@@ -298,21 +311,19 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               openLinksOnNewTab
             />
           </Typography>
-          {hasFeatureFlag("OVERRIDE_CONSTRAINTS") &&
-            props.value &&
-            Boolean(props.data?.length) && (
-              <Typography variant="h5">
-                <Link
-                  component="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setShowModal(true);
-                  }}
-                >
-                  I don't think this constraint applies to this property
-                </Link>
-              </Typography>
-            )}
+          {showOverrideLink && (
+            <Typography variant="h5">
+              <Link
+                component="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setShowModal(true);
+                }}
+              >
+                I don't think this constraint applies to this property
+              </Link>
+            </Typography>
+          )}
           <OverrideEntitiesModal
             showModal={showModal}
             setShowModal={setShowModal}

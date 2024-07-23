@@ -148,6 +148,7 @@ function Component(props: Props) {
           constraints={constraints}
           metadata={metadata}
           handleSubmit={() => {
+            // `_constraints` & `_overrides` are responsible for auditing
             const _constraints: Array<
               EnhancedGISResponse | GISResponse["constraints"]
             > = [];
@@ -168,10 +169,20 @@ function Component(props: Props) {
 
             const _overrides = inaccurateConstraints;
 
+            // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
             const _nots: any = {};
             const intersectingConstraints: IntersectingConstraints = {};
             Object.entries(constraints).forEach(([key, data]) => {
-              if (data.value) {
+              let overridden = false;
+              if (data.value && inaccurateConstraints?.[key]) {
+                overridden = data.data?.length === inaccurateConstraints[key]["entities"]?.length;
+              
+                if (["listed", "flood", "designated"].includes(key)) {
+                  // todo extra checks about granularity
+                }
+              }
+
+              if (data.value && !overridden) {
                 intersectingConstraints[props.fn] ||= [];
                 intersectingConstraints[props.fn].push(key);
               } else {
