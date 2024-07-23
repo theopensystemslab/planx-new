@@ -12,6 +12,7 @@ function MapAndLabelComponent(props: Props) {
     <Card handleSubmit={props.handleSubmit} isValid>
       <CardHeader
         title={props.title}
+        description={props.description}
         info={props.info}
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
