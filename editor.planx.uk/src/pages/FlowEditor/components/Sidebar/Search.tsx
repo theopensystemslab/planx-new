@@ -29,7 +29,7 @@ const SearchResultRoot = styled(List)(({ theme }) => ({
 const SearchResultCardRoot = styled(ListItemButton)(({ theme }) => ({
   padding: theme.spacing(1),
   border: `1px solid ${theme.palette.common.black}`,
-  display: "block"
+  display: "block",
 }));
 
 const ExternalPortalCard = styled(ListItemButton)(({ theme }) => ({
@@ -39,8 +39,8 @@ const ExternalPortalCard = styled(ListItemButton)(({ theme }) => ({
     backgroundColor: "black",
     "& p:last-of-type": {
       textDecoration: "underline",
-    }
-  }
+    },
+  },
 }));
 
 const SearchResults: React.FC<{ results: SearchResults<IndexedNode> }> = ({
@@ -110,7 +110,7 @@ const SearchResultCard: React.FC<{ result: SearchResult<IndexedNode> }> = ({
     let Icon = ICONS[item.type];
     // TODO: Generate display key from key
     let displayKey = "Data";
-    const headline = get(item, key).toString() || "";
+    let headline = get(item, key)?.toString() || "";
 
     // For Answer nodes, update display values to match the parent question
     if (item.type === ComponentType.Answer) {
@@ -118,6 +118,12 @@ const SearchResultCard: React.FC<{ result: SearchResult<IndexedNode> }> = ({
       Icon = ICONS[ComponentType.Question];
       title = parentNode!.data.text!;
       displayKey = "Answer (data)";
+    }
+
+    if (item.type === ComponentType.FileUploadAndLabel) {
+      headline =
+        (item["data"]?.["fileTypes"] as [])[result.refIndex]["fn"] || "";
+      displayKey = "File type (data)";
     }
 
     return {
@@ -136,7 +142,7 @@ const SearchResultCard: React.FC<{ result: SearchResult<IndexedNode> }> = ({
 
   const handleClick = () => {
     console.log("todo!");
-    console.log({ nodeId: result.item.id })
+    console.log({ nodeId: result.item.id });
     // get path for node
     // generate url from path
     // navigate to url
@@ -193,7 +199,11 @@ const ExternalPortalList: React.FC = () => {
       </Typography>
       <List sx={{ gap: 2 }}>
         {Object.values(externalPortals).map(({ name, href }) => (
-          <ListItem key={`external-portal-card-${name}`} disablePadding sx={{ mb: 2 }}>
+          <ListItem
+            key={`external-portal-card-${name}`}
+            disablePadding
+            sx={{ mb: 2 }}
+          >
             <ExternalPortalCard onClick={() => navigate("../" + href)}>
               <Typography
                 variant="body2"
@@ -203,9 +213,7 @@ const ExternalPortalList: React.FC = () => {
               >
                 External portal •
               </Typography>
-              <Typography
-                variant="body2"
-              >
+              <Typography variant="body2">
                 {href.replaceAll("/", " / ")}
               </Typography>
             </ExternalPortalCard>
@@ -218,7 +226,7 @@ const ExternalPortalList: React.FC = () => {
 
 interface SearchNodes {
   input: string;
-  facets: ["data.fn", "data.val"],
+  facets: ["data.fn", "data.val", "data.fileTypes.fn"];
 }
 
 const Search: React.FC = () => {
@@ -232,13 +240,18 @@ const Search: React.FC = () => {
   }, [setOrderedFlow]);
 
   const formik = useFormik<SearchNodes>({
-    initialValues: { input: "", facets: ["data.fn", "data.val"] },
-    onSubmit: ({ input }) => { search(input) },
+    initialValues: {
+      input: "",
+      facets: ["data.fn", "data.val", "data.fileTypes.fn"],
+    },
+    onSubmit: ({ input }) => {
+      search(input);
+    },
   });
 
   const { results, search } = useSearch({
     list: orderedFlow || [],
-    keys: formik.values.facets
+    keys: formik.values.facets,
   });
 
   return (
@@ -257,7 +270,7 @@ const Search: React.FC = () => {
           name="search"
           value={formik.values.input}
           onChange={(e) => {
-            formik.setFieldValue("input", e.target.value)
+            formik.setFieldValue("input", e.target.value);
             formik.handleSubmit();
           }}
           inputProps={{ spellCheck: false }}
@@ -267,7 +280,7 @@ const Search: React.FC = () => {
           id={"search-data-field-facet"}
           checked
           inputProps={{ disabled: true }}
-          onChange={() => { }}
+          onChange={() => {}}
         />
         <Box pt={3}>
           {formik.values.input && (
