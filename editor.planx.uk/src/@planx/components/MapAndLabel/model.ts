@@ -2,6 +2,8 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface MapAndLabel extends MoreInformation {
   fn: string;
+  title?:string;
+  description?:string;
 }
 
 export const parseContent = (
@@ -9,4 +11,6 @@ export const parseContent = (
 ): MapAndLabel => ({
   fn: data?.fn || "",
   ...parseMoreInformation(data),
+  title:"",
+  description:""
 });
