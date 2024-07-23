@@ -12,7 +12,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
-import React from "react";
+import React, { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { stringify } from "wkt";
@@ -30,9 +30,21 @@ import {
 
 type Props = PublicProps<PlanningConstraints>;
 
+interface InaccurateConstraint {
+  entities: string[];
+  reason: string;
+}
+
+export type InaccurateConstraints =
+  | Record<string, InaccurateConstraint>
+  | undefined;
+
 export default Component;
 
 function Component(props: Props) {
+  const [inaccurateConstraints, setInaccurateConstraints] =
+    useState<InaccurateConstraints>();
+
   const siteBoundary = useStore(
     (state) => state.computePassport().data?.["property.boundary.site"],
   );
@@ -154,6 +166,8 @@ function Component(props: Props) {
               if (data) _constraints.push(data as GISResponse["constraints"]);
             }
 
+            const _overrides = inaccurateConstraints;
+
             const _nots: any = {};
             const intersectingConstraints: IntersectingConstraints = {};
             Object.entries(constraints).forEach(([key, data]) => {
@@ -168,6 +182,7 @@ function Component(props: Props) {
 
             const passportData = {
               _constraints,
+              _overrides,
               _nots,
               ...intersectingConstraints,
             };
@@ -177,6 +192,8 @@ function Component(props: Props) {
             });
           }}
           refreshConstraints={() => mutate()}
+          inaccurateConstraints={inaccurateConstraints}
+          setInaccurateConstraints={setInaccurateConstraints}
         />
       ) : (
         <Card handleSubmit={props.handleSubmit} isValid>
@@ -200,6 +217,10 @@ export type PlanningConstraintsContentProps = {
   metadata: GISResponse["metadata"];
   handleSubmit: () => void;
   refreshConstraints: () => void;
+  inaccurateConstraints: InaccurateConstraints;
+  setInaccurateConstraints: (
+    value: React.SetStateAction<InaccurateConstraints>,
+  ) => void;
 };
 
 export function PlanningConstraintsContent(
@@ -212,6 +233,8 @@ export function PlanningConstraintsContent(
     metadata,
     refreshConstraints,
     disclaimer,
+    inaccurateConstraints,
+    setInaccurateConstraints,
   } = props;
   const error = constraints.error || undefined;
   const showError = error || !Object.values(constraints)?.length;
@@ -238,7 +261,12 @@ export function PlanningConstraintsContent(
           <Typography variant="h3" component="h2" mt={3}>
             These are the planning constraints we think apply to this property
           </Typography>
-          <ConstraintsList data={positiveConstraints} metadata={metadata} />
+          <ConstraintsList
+            data={positiveConstraints}
+            metadata={metadata}
+            inaccurateConstraints={inaccurateConstraints}
+            setInaccurateConstraints={setInaccurateConstraints}
+          />
           {negativeConstraints.length > 0 && (
             <SimpleExpand
               id="negative-constraints-list"
@@ -247,7 +275,12 @@ export function PlanningConstraintsContent(
                 closed: "Hide constraints that don't apply",
               }}
             >
-              <ConstraintsList data={negativeConstraints} metadata={metadata} />
+              <ConstraintsList
+                data={negativeConstraints}
+                metadata={metadata}
+                inaccurateConstraints={inaccurateConstraints}
+                setInaccurateConstraints={setInaccurateConstraints}
+              />
             </SimpleExpand>
           )}
           <Disclaimer text={disclaimer} />
@@ -275,7 +308,12 @@ export function PlanningConstraintsContent(
                 closed: "Hide constraints that don't apply",
               }}
             >
-              <ConstraintsList data={negativeConstraints} metadata={metadata} />
+              <ConstraintsList
+                data={negativeConstraints}
+                metadata={metadata}
+                inaccurateConstraints={inaccurateConstraints}
+                setInaccurateConstraints={setInaccurateConstraints}
+              />
             </SimpleExpand>
             <Disclaimer text={disclaimer} />
           </>

@@ -13,16 +13,19 @@ import type {
   GISResponse,
   Metadata,
 } from "@opensystemslab/planx-core/types";
+import { hasFeatureFlag } from "lib/featureFlags";
 import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { SiteAddress } from "../FindProperty/model";
+import { OverrideEntitiesModal } from "./Modal";
 import { availableDatasets } from "./model";
+import { InaccurateConstraints } from "./Public";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "General policy": "#99C1DE",
@@ -68,11 +71,17 @@ const StyledAccordion = styled(Accordion, {
 interface ConstraintsListProps {
   data: Constraint[];
   metadata: GISResponse["metadata"];
+  inaccurateConstraints: InaccurateConstraints;
+  setInaccurateConstraints: (
+    value: React.SetStateAction<InaccurateConstraints>,
+  ) => void;
 }
 
 export default function ConstraintsList({
   data,
   metadata,
+  inaccurateConstraints,
+  setInaccurateConstraints,
 }: ConstraintsListProps) {
   const groupedConstraints = groupBy(data, (constraint) => {
     return constraint.category;
@@ -113,11 +122,14 @@ export default function ConstraintsList({
               {groupedConstraints[category].map((con) => (
                 <ConstraintListItem
                   key={con.fn}
+                  fn={con.fn}
                   value={con.value}
                   content={con.text}
                   data={con.value ? con.data : null}
                   metadata={metadata?.[con.fn]}
                   category={category}
+                  inaccurateConstraints={inaccurateConstraints}
+                  setInaccurateConstraints={setInaccurateConstraints}
                 >
                   {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
                 </ConstraintListItem>
@@ -131,21 +143,27 @@ export default function ConstraintsList({
 }
 
 interface ConstraintListItemProps {
-  key: Constraint["fn"];
+  fn: Constraint["fn"];
   value: Constraint["value"];
   content: Constraint["text"];
   data: Constraint["data"] | null;
   metadata?: Metadata;
   category: string;
   children: ReactNode;
+  inaccurateConstraints: InaccurateConstraints;
+  setInaccurateConstraints: (
+    value: React.SetStateAction<InaccurateConstraints>,
+  ) => void;
 }
 
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   const { longitude, latitude, usrn } =
     (useStore(
       (state) => state.computePassport().data?._address,
     ) as SiteAddress) || {};
-  const item = props.metadata?.name.replaceAll(" ", "-");
+
   const isSourcedFromPlanningData =
     props.metadata?.plural !== "Classified roads";
 
@@ -160,21 +178,32 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
     .join("&");
   const planningDataMapURL = `https://www.planning.data.gov.uk/map/?${encodedMatchingDatasets}#${latitude},${longitude},17.5z`;
 
+  // If a user overrides every entity in a constraint category, then that whole category becomes inapplicable and we want to gray it out
+  const allEntitiesInaccurate =
+    props.data?.length !== 0 &&
+    props.data?.length ===
+      props.inaccurateConstraints?.[props.fn]?.["entities"]?.length;
+
   return (
     <ListItem
-      key={`${props.key}-li`}
+      key={`${props.fn}-li`}
       disablePadding
       sx={{ backgroundColor: "white" }}
     >
       <StyledAccordion {...props} disableGutters>
         <AccordionSummary
-          id={`${item}-header`}
-          aria-controls={`${item}-panel`}
+          id={`${props.fn}-header`}
+          aria-controls={`${props.fn}-panel`}
           classes={{ content: classes.content }}
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-          <Typography component="div" variant="body2" pr={1.5}>
+          <Typography
+            component="div"
+            variant="body2"
+            pr={1.5}
+            sx={{ color: allEntitiesInaccurate ? "GrayText" : "inherit" }}
+          >
             {children}
           </Typography>
         </AccordionSummary>
@@ -201,22 +230,40 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                       key={`entity-${record.entity}-li`}
                       dense
                       disableGutters
-                      sx={{ display: "list-item" }}
+                      sx={{
+                        display: "list-item",
+                        color: props.inaccurateConstraints?.[props.fn]?.[
+                          "entities"
+                        ]?.includes(`${record.entity}`)
+                          ? "GrayText"
+                          : "inherit",
+                      }}
                     >
                       {isSourcedFromPlanningData ? (
-                        <Typography variant="body2">
+                        <Typography variant="body2" component="span">
                           <Link
                             href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
                             target="_blank"
+                            sx={{
+                              color: props.inaccurateConstraints?.[props.fn]?.[
+                                "entities"
+                              ]?.includes(`${record.entity}`)
+                                ? "GrayText"
+                                : "inherit",
+                            }}
                           >
-                            {record.name ||
-                              (record["flood-risk-level"] &&
-                                `${props.metadata?.name} - Level ${record["flood-risk-level"]}`) ||
-                              `Planning Data entity #${record.entity}`}
+                            {formatEntityName(record, props.metadata)}
                           </Link>
                         </Typography>
                       ) : (
                         <Typography variant="body2">{record.name}</Typography>
+                      )}
+                      {props.inaccurateConstraints?.[props.fn]?.[
+                        "entities"
+                      ]?.includes(`${record.entity}`) && (
+                        <Typography variant="body2" component="span">
+                          {` [Not applicable]`}
+                        </Typography>
                       )}
                     </ListItem>
                   ))}
@@ -238,7 +285,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             </Typography>
           )}
           <Typography variant="h5">{`How is it defined`}</Typography>
-          <Typography component="div" variant="body2">
+          <Typography component="div" variant="body2" my={2}>
             <ReactMarkdownOrHtml
               source={
                 isSourcedFromPlanningData
@@ -251,8 +298,49 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               openLinksOnNewTab
             />
           </Typography>
+          {hasFeatureFlag("OVERRIDE_CONSTRAINTS") &&
+            props.value &&
+            Boolean(props.data?.length) && (
+              <Typography variant="h5">
+                <Link
+                  component="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setShowModal(true);
+                  }}
+                >
+                  I don't think this constraint applies to this property
+                </Link>
+              </Typography>
+            )}
+          <OverrideEntitiesModal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            fn={props.fn}
+            entities={props.data}
+            metadata={props.metadata}
+            inaccurateConstraints={props.inaccurateConstraints}
+            setInaccurateConstraints={props.setInaccurateConstraints}
+          />
         </AccordionDetails>
       </StyledAccordion>
     </ListItem>
+  );
+}
+
+/**
+ * Not all Planning Data entity records populate "name",
+ *   so configure meaningful fallback values for the list display
+ */
+export function formatEntityName(
+  entity: Record<string, any>,
+  metadata?: Metadata,
+): string {
+  return (
+    entity.name ||
+    (metadata?.name &&
+      entity["flood-risk-level"] &&
+      `${metadata.name} - Level ${entity["flood-risk-level"]}`) ||
+    `Planning Data entity #${entity.entity}`
   );
 }

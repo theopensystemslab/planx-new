@@ -44,6 +44,8 @@ const propsWithIntersections: PlanningConstraintsContentProps = {
   },
   handleSubmit: () => {},
   refreshConstraints: () => {},
+  inaccurateConstraints: {},
+  setInaccurateConstraints: () => {},
 };
 
 const propsWithoutIntersections: PlanningConstraintsContentProps = {
@@ -63,6 +65,8 @@ const propsWithoutIntersections: PlanningConstraintsContentProps = {
   },
   handleSubmit: () => {},
   refreshConstraints: () => {},
+  inaccurateConstraints: {},
+  setInaccurateConstraints: () => {},
 };
 
 export const WithIntersections = {
