@@ -174,7 +174,7 @@ const Node: React.FC<any> = (props: Props) => {
       return <List {...allProps} />;
 
     case TYPES.MapAndLabel:
-      return <MapAndLabelComponent />;
+      return <MapAndLabelComponent {...allProps} />;
 
     case TYPES.NextSteps:
       return <NextSteps {...allProps} />;
