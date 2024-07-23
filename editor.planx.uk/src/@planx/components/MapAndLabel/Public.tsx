@@ -20,3 +20,5 @@ function MapAndLabelComponent(props: Props) {
     </Card>
   );
 }
+
+export default MapAndLabelComponent;
