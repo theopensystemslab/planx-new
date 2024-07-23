@@ -2,8 +2,10 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box, { BoxProps } from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
+import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
@@ -178,7 +180,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
     .join("&");
   const planningDataMapURL = `https://www.planning.data.gov.uk/map/?${encodedMatchingDatasets}#${latitude},${longitude},17.5z`;
 
-  // If a user overrides every entity in a constraint category, then that whole category becomes inapplicable and we want to gray it out
+  // If a user overrides every entity in a constraint category, then that whole category becomes inapplicable and we want to add a chip
   const allEntitiesInaccurate =
     props.data?.length !== 0 &&
     props.data?.length ===
@@ -198,11 +200,18 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
+           {allEntitiesInaccurate && (
+            <Chip
+              label="Not applicable"
+              variant="notApplicableTag"
+              size="small"
+              sx={{ mr: 0.75 }}
+            />
+          )}
           <Typography
             component="div"
             variant="body2"
             pr={1.5}
-            sx={{ color: allEntitiesInaccurate ? "GrayText" : "inherit" }}
           >
             {children}
           </Typography>
@@ -232,39 +241,32 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                       disableGutters
                       sx={{
                         display: "list-item",
-                        color: props.inaccurateConstraints?.[props.fn]?.[
-                          "entities"
-                        ]?.includes(`${record.entity}`)
-                          ? "GrayText"
-                          : "inherit",
                       }}
                     >
-                      {isSourcedFromPlanningData ? (
-                        <Typography variant="body2" component="span">
-                          <Link
-                            href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
-                            target="_blank"
-                            sx={{
-                              color: props.inaccurateConstraints?.[props.fn]?.[
-                                "entities"
-                              ]?.includes(`${record.entity}`)
-                                ? "GrayText"
-                                : "inherit",
-                            }}
-                          >
-                            {formatEntityName(record, props.metadata)}
-                          </Link>
-                        </Typography>
-                      ) : (
-                        <Typography variant="body2">{record.name}</Typography>
-                      )}
-                      {props.inaccurateConstraints?.[props.fn]?.[
-                        "entities"
-                      ]?.includes(`${record.entity}`) && (
-                        <Typography variant="body2" component="span">
-                          {` [Not applicable]`}
-                        </Typography>
-                      )}
+                      <Box sx={{ display: "flex" }}>
+                        {props.inaccurateConstraints?.[props.fn]?.[
+                          "entities"
+                        ]?.includes(`${record.entity}`) && (
+                          <Chip
+                            label="Not applicable"
+                            variant="notApplicableTag"
+                            size="small"
+                            sx={{ mr: 0.75 }}
+                          />
+                        )}
+                        {isSourcedFromPlanningData ? (
+                          <Typography variant="body2" component="span">
+                            <Link
+                              href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
+                              target="_blank"
+                            >
+                              {formatEntityName(record, props.metadata)}
+                            </Link>
+                          </Typography>
+                        ) : (
+                          <Typography variant="body2">{record.name}</Typography>
+                        )}
+                      </Box>
                     </ListItem>
                   ))}
               </List>
@@ -302,15 +304,17 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             props.value &&
             Boolean(props.data?.length) && (
               <Typography variant="h5">
-                <Link
-                  component="button"
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
                   onClick={(event) => {
                     event.stopPropagation();
                     setShowModal(true);
                   }}
                 >
                   I don't think this constraint applies to this property
-                </Link>
+                </Button>
               </Typography>
             )}
           <OverrideEntitiesModal

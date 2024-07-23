@@ -428,6 +428,14 @@ const getThemeOptions = ({
               color: darken(palette.info.main, 0.8),
             },
           },
+          {
+            props: { variant: "notApplicableTag" },
+            style: {
+              backgroundColor: lighten(palette.warning.light, 0.7),
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              color: palette.text.primary,
+            },
+          },
         ],
       },
       MuiSwitch: {
