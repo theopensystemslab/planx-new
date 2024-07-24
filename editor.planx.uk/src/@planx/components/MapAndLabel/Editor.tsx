@@ -1,13 +1,17 @@
+import ColorLensIcon from "@mui/icons-material/ColorLens";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
+import ColorPicker from "ui/editor/ColorPicker";
 import InputGroup from "ui/editor/InputGroup";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
 
+import { MapContainer } from "../shared/Preview/MapContainer";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { MapAndLabel, parseContent } from "./model";
 
@@ -62,6 +66,30 @@ function MapAndLabelComponent(props: Props) {
               />
             </InputRow>
           </InputGroup>
+        </ModalSectionContent>
+      </ModalSection>
+      <ModalSection>
+        <ModalSectionContent title="Formatting" Icon={ColorLensIcon}>
+          <InputGroup>
+            <InputRow>
+              <InputRowItem>
+                <ColorPicker label="Line Colour" />
+              </InputRowItem>
+            </InputRow>
+            <InputRow>
+              <InputRowItem>
+                <ColorPicker label="Fill Colour" />
+              </InputRowItem>
+            </InputRow>
+          </InputGroup>
+          <MapContainer environment="standalone">
+            <my-map
+              drawMode
+              drawPointer="crosshair"
+              zoom={20}
+              showCentreMarker
+            />
+          </MapContainer>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation
