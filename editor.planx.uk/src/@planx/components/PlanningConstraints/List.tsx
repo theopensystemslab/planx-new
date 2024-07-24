@@ -177,7 +177,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
     hasFeatureFlag("OVERRIDE_CONSTRAINTS") && 
     hasPlanningData && // skip teams that don't publish via Planning Data eg Scotland, Braintree
     props.fn !== "article4" && // skip A4s because we can't confidently update granular passport vars based on entity data
-    props.value && // skip negative constraints that don't apply to this apply
+    props.value && // skip negative constraints that don't apply to this property
     Boolean(props.data?.length); // skip any positive constraints that don't have individual linked entities
 
   // Some constraint categories search for entities amongst many PD datasets, but our `props.metadata.dataset` will only store reference to the last one

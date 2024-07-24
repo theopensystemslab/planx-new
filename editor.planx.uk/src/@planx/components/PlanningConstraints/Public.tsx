@@ -10,7 +10,6 @@ import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
-import intersection from "lodash/intersection";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
@@ -28,6 +27,7 @@ import {
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "./model";
+import { handleOverrides } from "./utils";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -171,7 +171,7 @@ function Component(props: Props) {
             const _overrides = inaccurateConstraints;
 
             // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
-            const _nots: any = {};
+            const _nots: IntersectingConstraints = {};
             const intersectingConstraints: IntersectingConstraints = {};
             Object.entries(constraints).forEach(([key, data]) => {
               if (data.value) {
@@ -184,64 +184,13 @@ function Component(props: Props) {
             });
 
             // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
-            if (inaccurateConstraints && intersection(intersectingConstraints[props.fn], Object.keys(inaccurateConstraints)).length > 0) {
-              Object.entries(inaccurateConstraints).forEach(([inaccurateKey, inaccurateConstraint]) => {
-                // Check if the whole constraint category (including any of its granular children) is now inapplicable
-                const allEntitiesInaccurate = inaccurateConstraint.entities.length === constraints[inaccurateKey]["data"].length;
-                if (allEntitiesInaccurate) {
-                  intersectingConstraints[props.fn] = intersectingConstraints[props.fn].filter((intersectingKey) => !intersectingKey.startsWith(inaccurateKey));
-                  _nots[props.fn].push(inaccurateKey);
-                } 
-                
-                // If less than all listed buildings or flood zones have been marked as inaccurate, ensure their granular children variables are correct
-                if (!allEntitiesInaccurate && ["listed", "flood"].includes(inaccurateKey)) {
-                  // For each entity in this category marked as inaccurate, determine it's granular key
-                  const granularInaccurateKeys: string[] = [];
-                  inaccurateConstraint["entities"].forEach((entityId) => {
-                    const inaccurateEntity = constraints[inaccurateKey]["data"].find((d: any) => d?.entity === parseInt(entityId));
-
-                    if (inaccurateEntity["listed-building-grade"]) {
-                      granularInaccurateKeys.push(`listed.grade.${inaccurateEntity["listed-building-grade"]}`);
-                    } else if (inaccurateEntity["flood-risk-level"]) {
-                      granularInaccurateKeys.push(`flood.zone.${inaccurateEntity["flood-risk-level"]}`);
-                    }
-                  });
-
-                  // For each entity in this category NOT marked as inaccurate, determine it's granular key
-                  const granularAccurateKeys: string[] = [];            
-                  const accurateEntities = constraints[inaccurateKey]["data"].filter((d: any) => !inaccurateConstraint["entities"].includes(d?.entity?.toString()));
-                  accurateEntities.forEach((accurateEntity: any) => {
-                    if (accurateEntity["listed-building-grade"]) {
-                      granularAccurateKeys.push(`listed.grade.${accurateEntity["listed-building-grade"]}`);
-                    } else if (accurateEntity["flood-risk-level"]) {
-                      granularAccurateKeys.push(`flood.zone.${accurateEntity["flood-risk-level"]}`);
-                    }
-                  });
-
-                  // Remove any inaccurate keys that do NOT still apply to any remaining constraints
-                  const granularKeysToRemove = granularAccurateKeys.filter((k) => !granularInaccurateKeys.includes(k));
-                  if (granularKeysToRemove.length > 0) {
-                    granularKeysToRemove.forEach((k) => {
-                      intersectingConstraints[props.fn] = intersectingConstraints[props.fn].filter((intersectingKey) => intersectingKey !== k);
-                      _nots[props.fn].push(k);
-                    });
-                  }
-                }
-              });
-
-              // Ensure designated land variable still has at least one applicable granular child, else remove it
-              const orphanedDesignatedKey = intersectingConstraints[props.fn].includes("designated") && intersectingConstraints[props.fn].filter((intersectingKey) => intersectingKey.startsWith("designated.")).length === 0;
-              if (orphanedDesignatedKey) {
-                intersectingConstraints[props.fn] = intersectingConstraints[props.fn].filter((intersectingKey) => intersectingKey !== "designated");
-                _nots[props.fn].push("designated");
-              }
-            }
+            const { nots: notsAfterOverrides, intersectingConstraints: intersectingConstraintsAfterOverrides } = handleOverrides(props.fn, constraints, inaccurateConstraints, intersectingConstraints, _nots);
 
             const passportData = {
               _constraints,
               _overrides,
-              _nots,
-              ...intersectingConstraints,
+              _nots: notsAfterOverrides,
+              ...intersectingConstraintsAfterOverrides,
             };
 
             props.handleSubmit?.({
