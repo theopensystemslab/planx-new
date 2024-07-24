@@ -7,6 +7,7 @@ import { RadioProps } from "@mui/material/Radio";
 declare module "@mui/material/Chip" {
   interface ChipPropsVariantOverrides {
     uploadedFileTag: true;
+    notApplicableTag: true;
   }
 }
 

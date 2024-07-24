@@ -2,6 +2,8 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box, { BoxProps } from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -172,10 +174,10 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const isSourcedFromPlanningData =
     props.metadata?.plural !== "Classified roads";
 
-  // Whether to show the link to the override modal
-  const showOverrideLink = 
+  // Whether to show the button to the override modal
+  const showOverrideButton = 
     hasFeatureFlag("OVERRIDE_CONSTRAINTS") && 
-    hasPlanningData && // skip teams that don't publish via Planning Data eg Scotland, Braintree
+    hasPlanningData && // skip teams that don't publish via Planning Data eg Braintree
     props.fn !== "article4" && // skip A4s because we can't confidently update granular passport vars based on entity data
     props.value && // skip negative constraints that don't apply to this property
     Boolean(props.data?.length); // skip any positive constraints that don't have individual linked entities
@@ -191,7 +193,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
     .join("&");
   const planningDataMapURL = `https://www.planning.data.gov.uk/map/?${encodedMatchingDatasets}#${latitude},${longitude},17.5z`;
 
-  // If a user overrides every entity in a constraint category, then that whole category becomes inapplicable and we want to gray it out
+  // If a user overrides every entity in a constraint category, then that whole category becomes inapplicable and we want to add a chip
   const allEntitiesInaccurate =
     props.data?.length !== 0 &&
     props.data?.length ===
@@ -211,14 +213,23 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-          <Typography
-            component="div"
-            variant="body2"
-            pr={1.5}
-            sx={{ color: allEntitiesInaccurate ? "GrayText" : "inherit" }}
-          >
-            {children}
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}> 
+            <Typography
+              component="div"
+              variant="body2"
+              pr={1.5}
+            >
+              {children}
+            </Typography>
+            {allEntitiesInaccurate && (
+              <Chip
+                label={props.value ? "Marked as not applicable" : "Not applicable"}
+                variant="notApplicableTag"
+                size="small"
+                sx={{ mr: 0.75 }}
+              />
+            )}
+          </Box>
         </AccordionSummary>
         <AccordionDetails
           sx={{
@@ -245,39 +256,32 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                       disableGutters
                       sx={{
                         display: "list-item",
-                        color: props.inaccurateConstraints?.[props.fn]?.[
-                          "entities"
-                        ]?.includes(`${record.entity}`)
-                          ? "GrayText"
-                          : "inherit",
                       }}
                     >
-                      {isSourcedFromPlanningData ? (
-                        <Typography variant="body2" component="span">
-                          <Link
-                            href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
-                            target="_blank"
-                            sx={{
-                              color: props.inaccurateConstraints?.[props.fn]?.[
-                                "entities"
-                              ]?.includes(`${record.entity}`)
-                                ? "GrayText"
-                                : "inherit",
-                            }}
-                          >
-                            {formatEntityName(record, props.metadata)}
-                          </Link>
-                        </Typography>
-                      ) : (
-                        <Typography variant="body2">{record.name}</Typography>
-                      )}
-                      {props.inaccurateConstraints?.[props.fn]?.[
-                        "entities"
-                      ]?.includes(`${record.entity}`) && (
-                        <Typography variant="body2" component="span">
-                          {` [Not applicable]`}
-                        </Typography>
-                      )}
+                      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "flex-start", md: "center" } }}>
+                        {isSourcedFromPlanningData ? (
+                          <Typography variant="body2" component="span">
+                            <Link
+                              href={`https://www.planning.data.gov.uk/entity/${record.entity}`}
+                              target="_blank"
+                            >
+                              {formatEntityName(record, props.metadata)}
+                            </Link>
+                          </Typography>
+                        ) : (
+                          <Typography variant="body2">{record.name}</Typography>
+                        )}
+                          {props.inaccurateConstraints?.[props.fn]?.[
+                          "entities"
+                        ]?.includes(`${record.entity}`) && (
+                          <Chip
+                            label="Marked as not applicable"
+                            variant="notApplicableTag"
+                            size="small"
+                            sx={{ ml: { md: "0.75em" } }}
+                          />
+                        )}
+                      </Box>
                     </ListItem>
                   ))}
               </List>
@@ -311,19 +315,21 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               openLinksOnNewTab
             />
           </Typography>
-          {showOverrideLink && (
-            <Typography variant="h5">
-              <Link
-                component="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setShowModal(true);
-                }}
-              >
-                I don't think this constraint applies to this property
-              </Link>
-            </Typography>
-          )}
+          {showOverrideButton && (
+              <Typography variant="h5">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setShowModal(true);
+                  }}
+                >
+                  I don't think this constraint applies to this property
+                </Button>
+              </Typography>
+            )}
           <OverrideEntitiesModal
             showModal={showModal}
             setShowModal={setShowModal}
