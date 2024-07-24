@@ -10,6 +10,7 @@ import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
+import intersection from "lodash/intersection";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
@@ -125,12 +126,12 @@ function Component(props: Props) {
   );
 
   // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
-  const constraints: GISResponse["constraints"] | {} = {
+  const constraints: GISResponse["constraints"] | Record<string, any> = {
     ...(data?.constraints || data),
     ...roads?.constraints,
   };
 
-  const metadata: GISResponse["metadata"] | {} = {
+  const metadata: GISResponse["metadata"] | Record<string, any> = {
     ...data?.metadata,
     ...roads?.metadata,
   };
@@ -173,16 +174,7 @@ function Component(props: Props) {
             const _nots: any = {};
             const intersectingConstraints: IntersectingConstraints = {};
             Object.entries(constraints).forEach(([key, data]) => {
-              let overridden = false;
-              if (data.value && inaccurateConstraints?.[key]) {
-                overridden = data.data?.length === inaccurateConstraints[key]["entities"]?.length;
-              
-                if (["listed", "flood", "designated"].includes(key)) {
-                  // todo extra checks about granularity
-                }
-              }
-
-              if (data.value && !overridden) {
+              if (data.value) {
                 intersectingConstraints[props.fn] ||= [];
                 intersectingConstraints[props.fn].push(key);
               } else {
@@ -190,6 +182,60 @@ function Component(props: Props) {
                 _nots[props.fn].push(key);
               }
             });
+
+            // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
+            if (inaccurateConstraints && intersection(intersectingConstraints[props.fn], Object.keys(inaccurateConstraints)).length > 0) {
+              Object.entries(inaccurateConstraints).forEach(([inaccurateKey, inaccurateConstraint]) => {
+                // Check if the whole constraint category (including any of its granular children) is now inapplicable
+                const allEntitiesInaccurate = inaccurateConstraint.entities.length === constraints[inaccurateKey]["data"].length;
+                if (allEntitiesInaccurate) {
+                  intersectingConstraints[props.fn] = intersectingConstraints[props.fn].filter((intersectingKey) => !intersectingKey.startsWith(inaccurateKey));
+                  _nots[props.fn].push(inaccurateKey);
+                } 
+                
+                // If less than all listed buildings or flood zones have been marked as inaccurate, ensure their granular children variables are correct
+                if (!allEntitiesInaccurate && ["listed", "flood"].includes(inaccurateKey)) {
+                  // For each entity in this category marked as inaccurate, determine it's granular key
+                  const granularInaccurateKeys: string[] = [];
+                  inaccurateConstraint["entities"].forEach((entityId) => {
+                    const inaccurateEntity = constraints[inaccurateKey]["data"].find((d: any) => d?.entity === parseInt(entityId));
+
+                    if (inaccurateEntity["listed-building-grade"]) {
+                      granularInaccurateKeys.push(`listed.grade.${inaccurateEntity["listed-building-grade"]}`);
+                    } else if (inaccurateEntity["flood-risk-level"]) {
+                      granularInaccurateKeys.push(`flood.zone.${inaccurateEntity["flood-risk-level"]}`);
+                    }
+                  });
+
+                  // For each entity in this category NOT marked as inaccurate, determine it's granular key
+                  const granularAccurateKeys: string[] = [];            
+                  const accurateEntities = constraints[inaccurateKey]["data"].filter((d: any) => !inaccurateConstraint["entities"].includes(d?.entity?.toString()));
+                  accurateEntities.forEach((accurateEntity: any) => {
+                    if (accurateEntity["listed-building-grade"]) {
+                      granularAccurateKeys.push(`listed.grade.${accurateEntity["listed-building-grade"]}`);
+                    } else if (accurateEntity["flood-risk-level"]) {
+                      granularAccurateKeys.push(`flood.zone.${accurateEntity["flood-risk-level"]}`);
+                    }
+                  });
+
+                  // Remove any inaccurate keys that do NOT still apply to any remaining constraints
+                  const granularKeysToRemove = granularAccurateKeys.filter((k) => !granularInaccurateKeys.includes(k));
+                  if (granularKeysToRemove.length > 0) {
+                    granularKeysToRemove.forEach((k) => {
+                      intersectingConstraints[props.fn] = intersectingConstraints[props.fn].filter((intersectingKey) => intersectingKey !== k);
+                      _nots[props.fn].push(k);
+                    });
+                  }
+                }
+              });
+
+              // Ensure designated land variable still has at least one applicable granular child, else remove it
+              const orphanedDesignatedKey = intersectingConstraints[props.fn].includes("designated") && intersectingConstraints[props.fn].filter((intersectingKey) => intersectingKey.startsWith("designated.")).length === 0;
+              if (orphanedDesignatedKey) {
+                intersectingConstraints[props.fn] = intersectingConstraints[props.fn].filter((intersectingKey) => intersectingKey !== "designated");
+                _nots[props.fn].push("designated");
+              }
+            }
 
             const passportData = {
               _constraints,
@@ -356,8 +402,8 @@ const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
       No information available
     </Typography>
     {props.error &&
-    typeof props.error === "string" &&
-    props.error.endsWith("local authority") ? (
+      typeof props.error === "string" &&
+      props.error.endsWith("local authority") ? (
       <Typography variant="body2">{capitalize(props.error)}</Typography>
     ) : (
       <>
