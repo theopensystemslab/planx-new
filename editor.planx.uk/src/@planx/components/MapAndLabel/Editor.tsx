@@ -41,6 +41,7 @@ function MapAndLabelComponent(props: Props) {
                 placeholder={"Title"}
                 value={formik.values.title}
                 onChange={formik.handleChange}
+                required
               />
             </InputRow>
             <InputRow>
@@ -57,7 +58,7 @@ function MapAndLabelComponent(props: Props) {
                 name="fn"
                 placeholder={"Data Field"}
                 value={formik.values.fn}
-                disabled
+                required
               />
             </InputRow>
           </InputGroup>
