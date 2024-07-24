@@ -3,9 +3,9 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
-import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
@@ -200,21 +200,31 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-           {allEntitiesInaccurate && (
-            <Chip
-              label="Not applicable"
-              variant="notApplicableTag"
-              size="small"
-              sx={{ mr: 0.75 }}
-            />
-          )}
-          <Typography
-            component="div"
-            variant="body2"
-            pr={1.5}
-          >
-            {children}
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}> 
+            <Typography
+              component="div"
+              variant="body2"
+              pr={1.5}
+            >
+              {children}
+            </Typography>
+            {allEntitiesInaccurate && (
+              <>
+                <Chip
+                  label="Not applicable"
+                  variant="notApplicableTag"
+                  size="small"
+                  sx={{ mr: 0.75, ":not(#negative-constraints-list &)": { display: "none !important" } }}
+                />
+                <Chip
+                  label="Marked as not applicable"
+                  variant="notApplicableTag"
+                  size="small"
+                  sx={{ mr: 0.75, "#negative-constraints-list &": { display: "none !important" } }}
+                />
+              </>
+            )}
+          </Box>
         </AccordionSummary>
         <AccordionDetails
           sx={{
@@ -243,17 +253,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                         display: "list-item",
                       }}
                     >
-                      <Box sx={{ display: "flex" }}>
-                        {props.inaccurateConstraints?.[props.fn]?.[
-                          "entities"
-                        ]?.includes(`${record.entity}`) && (
-                          <Chip
-                            label="Not applicable"
-                            variant="notApplicableTag"
-                            size="small"
-                            sx={{ mr: 0.75 }}
-                          />
-                        )}
+                      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "flex-start", md: "center" } }}>
                         {isSourcedFromPlanningData ? (
                           <Typography variant="body2" component="span">
                             <Link
@@ -265,6 +265,16 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                           </Typography>
                         ) : (
                           <Typography variant="body2">{record.name}</Typography>
+                        )}
+                          {props.inaccurateConstraints?.[props.fn]?.[
+                          "entities"
+                        ]?.includes(`${record.entity}`) && (
+                          <Chip
+                            label="Marked as not applicable"
+                            variant="notApplicableTag"
+                            size="small"
+                            sx={{ ml: { md: "0.75em" } }}
+                          />
                         )}
                       </Box>
                     </ListItem>
