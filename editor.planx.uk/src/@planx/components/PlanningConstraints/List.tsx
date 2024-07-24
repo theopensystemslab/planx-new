@@ -209,20 +209,12 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               {children}
             </Typography>
             {allEntitiesInaccurate && (
-              <>
-                <Chip
-                  label="Not applicable"
-                  variant="notApplicableTag"
-                  size="small"
-                  sx={{ mr: 0.75, ":not(#negative-constraints-list &)": { display: "none !important" } }}
-                />
-                <Chip
-                  label="Marked as not applicable"
-                  variant="notApplicableTag"
-                  size="small"
-                  sx={{ mr: 0.75, "#negative-constraints-list &": { display: "none !important" } }}
-                />
-              </>
+              <Chip
+                label={props.value ? "Marked as not applicable" : "Not applicable"}
+                variant="notApplicableTag"
+                size="small"
+                sx={{ mr: 0.75 }}
+              />
             )}
           </Box>
         </AccordionSummary>
