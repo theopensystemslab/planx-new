@@ -166,9 +166,10 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
       (state) => state.computePassport().data?._address,
     ) as SiteAddress) || {};
 
-  const hasPlanningData = useStore(
-    (state) => state.teamIntegrations?.hasPlanningData,
-  );
+  const hasPlanningData = true;
+  // useStore(
+  //   (state) => state.teamIntegrations?.hasPlanningData,
+  // );
 
   // Whether a particular constraint list item is sourced from Planning Data
   const isSourcedFromPlanningData =
