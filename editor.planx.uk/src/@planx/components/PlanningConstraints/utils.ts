@@ -10,7 +10,6 @@ export function handleOverrides(
   nots: IntersectingConstraints,
 ): { intersectingConstraints: IntersectingConstraints, nots: IntersectingConstraints } {
   if (inaccurateConstraints) {
-    // If a previously marked inaccurate constraint key isn't in the latest GIS response, just skip it
     Object.entries(inaccurateConstraints).forEach(([inaccurateKey, inaccurateConstraint]) => {
       // Check if the whole constraint category (including any of its granular children) is now inapplicable
       const allEntitiesInaccurate = inaccurateConstraint.entities.length === constraints[inaccurateKey]["data"].length;
