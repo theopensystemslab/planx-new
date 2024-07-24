@@ -6,6 +6,7 @@ import { visuallyHidden } from "@mui/utils";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
+import MapAndLabelComponent from "@planx/components/MapAndLabel/Editor";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -101,6 +102,7 @@ const presentationalComponents: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.List]: List,
+  [TYPES.MapAndLabel]: MapAndLabelComponent,
   [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,

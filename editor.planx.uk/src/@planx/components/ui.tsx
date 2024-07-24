@@ -23,6 +23,7 @@ import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 import ReportProblemOutlined from "@mui/icons-material/ReportProblemOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import Send from "@mui/icons-material/Send";
+import ShapeLine from "@mui/icons-material/ShapeLine";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -75,6 +76,7 @@ export const ICONS: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.List]: ListAlt,
+  [TYPES.MapAndLabel]: ShapeLine,
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NextSteps]: ArrowForwardIcon,
   [TYPES.NumberInput]: Pin,
