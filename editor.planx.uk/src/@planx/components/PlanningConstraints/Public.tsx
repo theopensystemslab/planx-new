@@ -43,8 +43,17 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
+  // Even though this component will fetch fresh GIS data when coming "back",
+  //   still prepopulate any previously marked inaccurateConstraints
+  const [currentCardId, cachedBreadcrumbs] = useStore(
+    (state) => [
+      state.currentCard?.id,
+      state.cachedBreadcrumbs,
+    ],
+  );
+  const initialInaccurateConstraints = currentCardId && cachedBreadcrumbs?.[currentCardId]?.["data"]?.["_overrides"];
   const [inaccurateConstraints, setInaccurateConstraints] =
-    useState<InaccurateConstraints>();
+    useState<InaccurateConstraints>(initialInaccurateConstraints);
 
   const siteBoundary = useStore(
     (state) => state.computePassport().data?.["property.boundary.site"],

@@ -176,9 +176,9 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
 
   // Whether to show the button to the override modal
   const showOverrideButton = 
-    hasFeatureFlag("OVERRIDE_CONSTRAINTS") && 
+    // hasFeatureFlag("OVERRIDE_CONSTRAINTS") && 
     hasPlanningData && // skip teams that don't publish via Planning Data eg Braintree
-    props.fn !== "article4" && // skip A4s because we can't confidently update granular passport vars based on entity data
+    !props.fn.startsWith("article4") && // skip A4s (and therefore CAZs) because we can't confidently update granular passport vars based on entity data
     props.value && // skip negative constraints that don't apply to this property
     Boolean(props.data?.length); // skip any positive constraints that don't have individual linked entities
 
@@ -354,6 +354,7 @@ export function formatEntityName(
   metadata?: Metadata,
 ): string {
   return (
+    (entity["listed-building-grade"] && `${entity.name} - Grade ${entity["listed-building-grade"]}`) ||
     entity.name ||
     (metadata?.name &&
       entity["flood-risk-level"] &&
