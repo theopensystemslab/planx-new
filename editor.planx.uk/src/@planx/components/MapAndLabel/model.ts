@@ -2,7 +2,7 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface MapAndLabel extends MoreInformation {
   fn: string;
-  title?: string;
+  title: string;
   description?: string;
   lineColour: string;
   fillColour: string;
