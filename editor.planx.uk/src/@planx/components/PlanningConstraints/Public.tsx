@@ -43,28 +43,24 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
-  // Even though this component will fetch fresh GIS data when coming "back",
-  //   still prepopulate any previously marked inaccurateConstraints
-  const [currentCardId, cachedBreadcrumbs] = useStore(
+  const [currentCardId, cachedBreadcrumbs, teamSlug, siteBoundary, { x, y, longitude, latitude, usrn }] = useStore(
     (state) => [
       state.currentCard?.id,
       state.cachedBreadcrumbs,
+      state.teamSlug,
+      state.computePassport().data?.["property.boundary.site"],
+      (state.computePassport().data?.["_address"] as SiteAddress) || {},
     ],
   );
+
+  // PlanningConstraints must come after at least a FindProperty in the graph
+  const showGraphError = !x || !y || !longitude || !latitude;
+
+  // Even though this component will fetch fresh GIS data when coming "back",
+  //   still prepopulate any previously marked inaccurateConstraints
   const initialInaccurateConstraints = currentCardId && cachedBreadcrumbs?.[currentCardId]?.["data"]?.["_overrides"];
   const [inaccurateConstraints, setInaccurateConstraints] =
     useState<InaccurateConstraints>(initialInaccurateConstraints);
-
-  const siteBoundary = useStore(
-    (state) => state.computePassport().data?.["property.boundary.site"],
-  );
-  const { x, y, longitude, latitude, usrn } =
-    (useStore(
-      (state) => state.computePassport().data?._address,
-    ) as SiteAddress) || {};
-  const showGraphError = !x || !y || !longitude || !latitude;
-
-  const teamSlug = useStore((state) => state.teamSlug);
 
   // Get current query parameters (eg ?analytics=false&sessionId=XXX) to determine if we should audit this response
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -81,9 +77,10 @@ function Component(props: Props) {
 
   // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly
   //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
-  const hasPlanningData = useStore(
-    (state) => state.teamIntegrations?.hasPlanningData,
-  );
+  const hasPlanningData = true;
+  // useStore(
+  //   (state) => state.teamIntegrations?.hasPlanningData,
+  // );
 
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
