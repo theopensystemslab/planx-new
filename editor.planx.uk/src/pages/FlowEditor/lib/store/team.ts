@@ -94,6 +94,9 @@ export const teamStore: StateCreator<
                 }
               }
             }
+            integrations {
+              hasPlanningData: has_planning_data
+            }
           }
         }
       `,

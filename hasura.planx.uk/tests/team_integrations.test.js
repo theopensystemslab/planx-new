@@ -7,7 +7,7 @@ describe("team_integrations", () => {
       i = await introspectAs("public");
     });
 
-    test("cannot query team_integrations", () => {
+    test("can query team_integrations", () => {
       expect(i.queries).toContain("team_integrations");
     });
 
@@ -36,8 +36,8 @@ describe("team_integrations", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query team_integrations", () => {
-      expect(i.queries).not.toContain("team_integrations");
+    test("cann query team_integrations", () => {
+      expect(i.queries).toContain("team_integrations");
     });
 
     test("can create but, cannot update, or delete team_integrations", () => {
@@ -52,8 +52,8 @@ describe("team_integrations", () => {
       i = await introspectAs("teamEditor");
     });
 
-    test("cannot query team_integrations", () => {
-      expect(i.queries).not.toContain("team_integrations");
+    test("can query team_integrations", () => {
+      expect(i.queries).toContain("team_integrations");
     });
 
     test("cannot create, update, or delete team_integrations", () => {
