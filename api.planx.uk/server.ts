@@ -14,8 +14,8 @@ import { ServerError } from "./errors/index.js";
 import airbrake from "./airbrake.js";
 import { apiLimiter } from "./rateLimit.js";
 import { registerSessionStubs } from "./session.js";
-import { passportWithStrategies } from "./modules/auth/passport.js";
-import authRoutes from "./modules/auth/routes.js";
+import getPassport from "./modules/auth/passport.js";
+import getAuthRoutes from "./modules/auth/routes.js";
 import teamRoutes from "./modules/team/routes.js";
 import miscRoutes from "./modules/misc/routes.js";
 import userRoutes from "./modules/user/routes.js";
@@ -119,9 +119,16 @@ app.use(
 
 // register stubs after cookieSession middleware initialisation
 app.use(registerSessionStubs);
-app.use(passportWithStrategies.initialize());
-app.use(passportWithStrategies.session());
+
+// equip passport with auth strategies early on, so we can pass it to route handlers
+const passport = await getPassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// auth routes rely on the passport class we've just initialised
+const authRoutes = await getAuthRoutes(passport);
 
 // Setup API routes
 app.use(adminRoutes);

@@ -14,9 +14,9 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    // ensure the code is ready for transpilation by tsx/esbuild (used in dev)
+    // ensure the code is ready for per-file transpilation (e.g. for testing)
+    // TODO: replace with "verbatimModuleSyntax" option (laborious)
     "isolatedModules": true,
-    // TODO: implement "verbatimModuleSyntax" option (laborious)
   },
   "exclude": ["node_modules", "dist"],
 }
