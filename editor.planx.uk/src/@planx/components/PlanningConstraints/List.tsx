@@ -160,22 +160,17 @@ interface ConstraintListItemProps {
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const { longitude, latitude, usrn } =
-    (useStore(
-      (state) => state.computePassport().data?._address,
-    ) as SiteAddress) || {};
-
-  const hasPlanningData = true;
-  // useStore(
-  //   (state) => state.teamIntegrations?.hasPlanningData,
-  // );
+  const [{ longitude, latitude, usrn }, hasPlanningData] = useStore((state) => [
+    (state.computePassport().data?.["_address"] as SiteAddress) || {},
+    state.teamIntegrations?.hasPlanningData,
+  ]);
 
   // Whether a particular constraint list item is sourced from Planning Data
   const isSourcedFromPlanningData =
     props.metadata?.plural !== "Classified roads";
 
   // Whether to show the button to the override modal
-  const showOverrideButton = 
+  const showOverrideButton =
     hasPlanningData && // skip teams that don't publish via Planning Data eg Braintree
     !props.fn.startsWith("article4") && // skip A4s (and therefore CAZs) because we can't confidently update granular passport vars based on entity data
     props.value && // skip negative constraints that don't apply to this property
@@ -212,17 +207,22 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}> 
-            <Typography
-              component="div"
-              variant="body2"
-              pr={1.5}
-            >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Typography component="div" variant="body2" pr={1.5}>
               {children}
             </Typography>
             {allEntitiesInaccurate && (
               <Chip
-                label={props.value ? "Marked as not applicable" : "Not applicable"}
+                label={
+                  props.value ? "Marked as not applicable" : "Not applicable"
+                }
                 variant="notApplicableTag"
                 size="small"
                 sx={{ mr: 0.75 }}
@@ -257,7 +257,13 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                         display: "list-item",
                       }}
                     >
-                      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "flex-start", md: "center" } }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: { xs: "column", md: "row" },
+                          alignItems: { xs: "flex-start", md: "center" },
+                        }}
+                      >
                         {isSourcedFromPlanningData ? (
                           <Typography variant="body2" component="span">
                             <Link
@@ -270,7 +276,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                         ) : (
                           <Typography variant="body2">{record.name}</Typography>
                         )}
-                          {props.inaccurateConstraints?.[props.fn]?.[
+                        {props.inaccurateConstraints?.[props.fn]?.[
                           "entities"
                         ]?.includes(`${record.entity}`) && (
                           <Chip
@@ -315,20 +321,20 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
             />
           </Typography>
           {showOverrideButton && (
-              <Typography variant="h5">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setShowModal(true);
-                  }}
-                >
-                  I don't think this constraint applies to this property
-                </Button>
-              </Typography>
-            )}
+            <Typography variant="h5">
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setShowModal(true);
+                }}
+              >
+                I don't think this constraint applies to this property
+              </Button>
+            </Typography>
+          )}
           <OverrideEntitiesModal
             showModal={showModal}
             setShowModal={setShowModal}
@@ -354,7 +360,7 @@ export function formatEntityName(
 ): string {
   if (entity["listed-building-grade"]) {
     // Listed buildings should additionally display their grade
-    return `${entity.name} - Grade ${entity["listed-building-grade"]}`
+    return `${entity.name} - Grade ${entity["listed-building-grade"]}`;
   } else if (entity["flood-risk-level"] && metadata?.name) {
     // Flood zones don't publish "name", so rely on dataset name plus risk level
     return `${metadata.name} - Level ${entity["flood-risk-level"]}`;

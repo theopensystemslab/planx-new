@@ -43,22 +43,30 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
-  const [currentCardId, cachedBreadcrumbs, teamSlug, siteBoundary, { x, y, longitude, latitude, usrn }] = useStore(
-    (state) => [
-      state.currentCard?.id,
-      state.cachedBreadcrumbs,
-      state.teamSlug,
-      state.computePassport().data?.["property.boundary.site"],
-      (state.computePassport().data?.["_address"] as SiteAddress) || {},
-    ],
-  );
+  const [
+    currentCardId,
+    cachedBreadcrumbs,
+    teamSlug,
+    siteBoundary,
+    { x, y, longitude, latitude, usrn },
+    hasPlanningData,
+  ] = useStore((state) => [
+    state.currentCard?.id,
+    state.cachedBreadcrumbs,
+    state.teamSlug,
+    state.computePassport().data?.["property.boundary.site"],
+    (state.computePassport().data?.["_address"] as SiteAddress) || {},
+    state.teamIntegrations?.hasPlanningData,
+  ]);
 
   // PlanningConstraints must come after at least a FindProperty in the graph
   const showGraphError = !x || !y || !longitude || !latitude;
 
   // Even though this component will fetch fresh GIS data when coming "back",
   //   still prepopulate any previously marked inaccurateConstraints
-  const initialInaccurateConstraints = currentCardId && cachedBreadcrumbs?.[currentCardId]?.["data"]?.["_overrides"];
+  const initialInaccurateConstraints =
+    currentCardId &&
+    cachedBreadcrumbs?.[currentCardId]?.["data"]?.["_overrides"];
   const [inaccurateConstraints, setInaccurateConstraints] =
     useState<InaccurateConstraints>(initialInaccurateConstraints);
 
@@ -75,13 +83,7 @@ function Component(props: Props) {
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly
-  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
-  const hasPlanningData = true;
-  // useStore(
-  //   (state) => state.teamIntegrations?.hasPlanningData,
-  // );
-
+  const root = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
     ...params,
@@ -93,8 +95,8 @@ function Component(props: Props) {
     version: "1",
   };
 
-  // Fetch planning constraints data for a given local authority
-  const root = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
+  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly to fetch data
+  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
@@ -190,7 +192,16 @@ function Component(props: Props) {
             });
 
             // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
-            const { nots: notsAfterOverrides, intersectingConstraints: intersectingConstraintsAfterOverrides } = handleOverrides(props.fn, constraints, inaccurateConstraints, intersectingConstraints, _nots);
+            const {
+              nots: notsAfterOverrides,
+              intersectingConstraints: intersectingConstraintsAfterOverrides,
+            } = handleOverrides(
+              props.fn,
+              constraints,
+              inaccurateConstraints,
+              intersectingConstraints,
+              _nots,
+            );
 
             const passportData = {
               _constraints,
@@ -357,8 +368,8 @@ const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
       No information available
     </Typography>
     {props.error &&
-      typeof props.error === "string" &&
-      props.error.endsWith("local authority") ? (
+    typeof props.error === "string" &&
+    props.error.endsWith("local authority") ? (
       <Typography variant="body2">{capitalize(props.error)}</Typography>
     ) : (
       <>
