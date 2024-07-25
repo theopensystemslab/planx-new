@@ -27,18 +27,17 @@ function MapAndLabelComponent(props: Props) {
 
   const formik = useFormik({
     initialValues: parseContent(props.node?.data),
-    validate: ({ lineColour }) => {
+    validate: ({ drawColour }) => {
       const isContrastThresholdMet =
-        getContrastRatio("#FFF", lineColour) > theme.palette.contrastThreshold;
+        getContrastRatio("#FFF", drawColour) > theme.palette.contrastThreshold;
       if (!isContrastThresholdMet) {
         return {
-          lineColour:
+          drawColour:
             "Theme colour does not meet accessibility contrast requirements (3:1)",
         };
       }
     },
     onSubmit: (newValues) => {
-      console.log({ onSubmit: props });
       props.handleSubmit?.({
         type: TYPES.MapAndLabel,
         data: newValues,
@@ -90,11 +89,11 @@ function MapAndLabelComponent(props: Props) {
               <InputRowItem>
                 <ColorPicker
                   label="Line Colour"
-                  color={formik.values.lineColour}
+                  color={formik.values.drawColour}
                   onChange={(color) => {
-                    formik.setFieldValue("lineColour", color);
+                    formik.setFieldValue("drawColour", color);
                   }}
-                  errorMessage={formik.errors.lineColour}
+                  errorMessage={formik.errors.drawColour}
                 />
               </InputRowItem>
             </InputRow>

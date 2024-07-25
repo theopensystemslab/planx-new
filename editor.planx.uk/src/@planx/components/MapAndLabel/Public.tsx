@@ -9,7 +9,6 @@ import { MapAndLabel } from "./model";
 type Props = PublicProps<MapAndLabel>;
 
 function MapAndLabelComponent(props: Props) {
-  console.log({ public: props });
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
       <CardHeader
@@ -24,9 +23,9 @@ function MapAndLabelComponent(props: Props) {
           drawMode
           drawPointer="crosshair"
           zoom={20}
-          drawFillColor={props.lineColour + "35"}
-          drawColor={props.lineColour}
-          drawPointColor={props.lineColour}
+          drawFillColor={props.drawColour + "35"}
+          drawColor={props.drawColour}
+          drawPointColor={props.drawColour}
           showCentreMarker
           drawType={props.drawType}
         />
