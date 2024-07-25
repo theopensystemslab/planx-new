@@ -10,11 +10,14 @@ import noir from "pino-noir";
 import pinoLogger from "express-pino-logger";
 import { Server } from "http";
 import helmet from "helmet";
+
+import { Role } from "@opensystemslab/planx-core/types";
+
 import { ServerError } from "./errors";
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
-import { passportWithStrategies } from "./modules/auth/passport";
-import authRoutes from "./modules/auth/routes";
+import getPassport from "./modules/auth/passport";
+import getAuthRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import miscRoutes from "./modules/misc/routes";
 import userRoutes from "./modules/user/routes";
@@ -30,146 +33,153 @@ import gisRoutes from "./modules/gis/routes";
 import payRoutes from "./modules/pay/routes";
 import sendRoutes from "./modules/send/routes";
 import { useSwaggerDocs } from "./docs";
-import { Role } from "@opensystemslab/planx-core/types";
 
-const app = express();
+export default async (): Promise<Server> => {
+  const app = express();
 
-useSwaggerDocs(app);
+  useSwaggerDocs(app);
 
-app.set("trust proxy", 1);
+  app.set("trust proxy", 1);
 
-const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
-  if (!origin) return callback(null, true);
+  const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
+    if (!origin) return callback(null, true);
 
-  const isTest = process.env.NODE_ENV === "test";
-  const localDevEnvs =
-    /^http:\/\/(127\.0\.0\.1|localhost):(3000|5173|6006|7007)$/;
-  const isDevelopment =
-    process.env.APP_ENVIRONMENT === "development" || localDevEnvs.test(origin);
-  const allowList = process.env.CORS_ALLOWLIST?.split(", ") || [];
-  const isAllowed = Boolean(allowList.includes(origin));
-  const isMapDocs = Boolean(origin.endsWith("oslmap.netlify.app"));
+    const isTest = process.env.NODE_ENV === "test";
+    const localDevEnvs =
+      /^http:\/\/(127\.0\.0\.1|localhost):(3000|5173|6006|7007)$/;
+    const isDevelopment =
+      process.env.APP_ENVIRONMENT === "development" ||
+      localDevEnvs.test(origin);
+    const allowList = process.env.CORS_ALLOWLIST?.split(", ") || [];
+    const isAllowed = Boolean(allowList.includes(origin));
+    const isMapDocs = Boolean(origin.endsWith("oslmap.netlify.app"));
 
-  isTest || isDevelopment || isAllowed || isMapDocs
-    ? callback(null, true)
-    : callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
-};
+    isTest || isDevelopment || isAllowed || isMapDocs
+      ? callback(null, true)
+      : callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
+  };
 
-app.use(
-  cors({
-    credentials: true,
-    methods: "*",
-    origin: checkAllowedOrigins,
-    allowedHeaders: [
-      "Accept",
-      "Authorization",
-      "Content-Type",
-      "Origin",
-      "X-Requested-With",
-    ],
-  }),
-);
-
-app.use(json({ limit: "100mb" }));
-
-// Converts req.headers.cookie: string, to req.cookies: Record<string, string>
-app.use(cookieParser());
-
-if (process.env.NODE_ENV !== "test") {
   app.use(
-    pinoLogger({
-      serializers: noir(["req.headers.authorization"], "**REDACTED**"),
-      autoLogging: {
-        ignore: (req) => {
-          const isAWSHealthchecker =
-            req.headers["user-agent"] === "ELB-HealthChecker/2.0";
-          const isLocalDockerHealthchecker =
-            req.headers["user-agent"] === "Wget" &&
-            req.headers.host === "localhost:7002";
-
-          return isAWSHealthchecker || isLocalDockerHealthchecker;
-        },
-      },
+    cors({
+      credentials: true,
+      methods: "*",
+      origin: checkAllowedOrigins,
+      allowedHeaders: [
+        "Accept",
+        "Authorization",
+        "Content-Type",
+        "Origin",
+        "X-Requested-With",
+      ],
     }),
   );
-}
 
-// Rate limit requests per IP address
-app.use(apiLimiter);
+  app.use(json({ limit: "100mb" }));
 
-// Secure Express by setting various HTTP headers
-app.use(helmet());
+  // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
+  app.use(cookieParser());
 
-assert(process.env.GOVUK_NOTIFY_API_KEY);
-assert(process.env.HASURA_PLANX_API_KEY);
-assert(process.env.BOPS_API_TOKEN);
-assert(process.env.UNIFORM_TOKEN_URL);
-assert(process.env.UNIFORM_SUBMISSION_URL);
+  if (process.env.NODE_ENV !== "test") {
+    app.use(
+      pinoLogger({
+        serializers: noir(["req.headers.authorization"], "**REDACTED**"),
+        autoLogging: {
+          ignore: (req) => {
+            const isAWSHealthchecker =
+              req.headers["user-agent"] === "ELB-HealthChecker/2.0";
+            const isLocalDockerHealthchecker =
+              req.headers["user-agent"] === "Wget" &&
+              req.headers.host === "localhost:7002";
 
-// needed for storing original URL to redirect to in login flow
-app.use(
-  cookieSession({
-    maxAge: 24 * 60 * 60 * 100,
-    name: "session",
-    secret: process.env.SESSION_SECRET,
-  }),
-);
+            return isAWSHealthchecker || isLocalDockerHealthchecker;
+          },
+        },
+      }),
+    );
+  }
 
-app.use(passportWithStrategies.initialize());
-app.use(passportWithStrategies.session());
+  // Rate limit requests per IP address
+  app.use(apiLimiter);
 
-app.use(urlencoded({ extended: true }));
+  // Secure Express by setting various HTTP headers
+  app.use(helmet());
 
-// Setup API routes
-app.use(adminRoutes);
-app.use(analyticsRoutes);
-app.use(authRoutes);
-app.use(fileRoutes);
-app.use(flowRoutes);
-app.use(gisRoutes);
-app.use(miscRoutes);
-app.use(ordnanceSurveyRoutes);
-app.use(payRoutes);
-app.use(saveAndReturnRoutes);
-app.use(sendEmailRoutes);
-app.use(sendRoutes);
-app.use(teamRoutes);
-app.use(userRoutes);
-app.use(webhookRoutes);
+  assert(process.env.GOVUK_NOTIFY_API_KEY);
+  assert(process.env.HASURA_PLANX_API_KEY);
+  assert(process.env.BOPS_API_TOKEN);
+  assert(process.env.UNIFORM_TOKEN_URL);
+  assert(process.env.UNIFORM_SUBMISSION_URL);
 
-const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
-  const { status = 500, message = "Something went wrong" } = (() => {
-    if (
-      airbrake &&
-      (errorObject instanceof Error || errorObject instanceof ServerError)
-    ) {
-      airbrake.notify(errorObject);
-      return {
-        ...errorObject,
-        message: errorObject.message.concat(", this error has been logged"),
-      };
-    } else {
-      console.log(errorObject);
-      return errorObject;
-    }
-  })();
+  // needed for storing original URL to redirect to in login flow
+  app.use(
+    cookieSession({
+      maxAge: 24 * 60 * 60 * 100,
+      name: "session",
+      secret: process.env.SESSION_SECRET,
+    }),
+  );
 
-  res.status(status).send({
-    error: message,
-  });
+  // equip passport with auth strategies early on, so we can pass it to route handlers
+  const passport = await getPassport();
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  app.use(urlencoded({ extended: true }));
+
+  // auth routes rely on the passport class we've just initialised
+  const authRoutes = await getAuthRoutes(passport);
+
+  // Setup API routes
+  app.use(adminRoutes);
+  app.use(analyticsRoutes);
+  app.use(authRoutes);
+  app.use(fileRoutes);
+  app.use(flowRoutes);
+  app.use(gisRoutes);
+  app.use(miscRoutes);
+  app.use(ordnanceSurveyRoutes);
+  app.use(payRoutes);
+  app.use(saveAndReturnRoutes);
+  app.use(sendEmailRoutes);
+  app.use(sendRoutes);
+  app.use(teamRoutes);
+  app.use(userRoutes);
+  app.use(webhookRoutes);
+
+  const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
+    const { status = 500, message = "Something went wrong" } = (() => {
+      if (
+        airbrake &&
+        (errorObject instanceof Error || errorObject instanceof ServerError)
+      ) {
+        airbrake.notify(errorObject);
+        return {
+          ...errorObject,
+          message: errorObject.message.concat(", this error has been logged"),
+        };
+      } else {
+        console.log(errorObject);
+        return errorObject;
+      }
+    })();
+
+    res.status(status).send({
+      error: message,
+    });
+  };
+
+  // Handle any server errors that were passed with next(err)
+  // Order is significant, this should be the final app.use()
+  app.use(errorHandler);
+
+  const server = new Server(app);
+
+  server.keepAliveTimeout = 30000; // 30s
+  server.headersTimeout = 35000; // 35s
+  server.setTimeout(60 * 1000); // 60s
+
+  return server;
 };
-
-// Handle any server errors that were passed with next(err)
-// Order is significant, this should be the final app.use()
-app.use(errorHandler);
-
-const server = new Server(app);
-
-server.keepAliveTimeout = 30000; // 30s
-server.headersTimeout = 35000; // 35s
-server.setTimeout(60 * 1000); // 60s
-
-export default server;
 
 /* eslint-disable @typescript-eslint/no-namespace */
 // declaring User in a d.ts file is overwritten by other files
