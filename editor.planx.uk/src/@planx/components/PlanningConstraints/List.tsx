@@ -15,7 +15,6 @@ import type {
   GISResponse,
   Metadata,
 } from "@opensystemslab/planx-core/types";
-import { hasFeatureFlag } from "lib/featureFlags";
 import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ReactNode, useState } from "react";
@@ -177,7 +176,6 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
 
   // Whether to show the button to the override modal
   const showOverrideButton = 
-    // hasFeatureFlag("OVERRIDE_CONSTRAINTS") && 
     hasPlanningData && // skip teams that don't publish via Planning Data eg Braintree
     !props.fn.startsWith("article4") && // skip A4s (and therefore CAZs) because we can't confidently update granular passport vars based on entity data
     props.value && // skip negative constraints that don't apply to this property
@@ -354,12 +352,14 @@ export function formatEntityName(
   entity: Record<string, any>,
   metadata?: Metadata,
 ): string {
-  return (
-    (entity["listed-building-grade"] && `${entity.name} - Grade ${entity["listed-building-grade"]}`) ||
-    entity.name ||
-    (metadata?.name &&
-      entity["flood-risk-level"] &&
-      `${metadata.name} - Level ${entity["flood-risk-level"]}`) ||
-    `Planning Data entity #${entity.entity}`
-  );
+  if (entity["listed-building-grade"]) {
+    // Listed buildings should additionally display their grade
+    return `${entity.name} - Grade ${entity["listed-building-grade"]}`
+  } else if (entity["flood-risk-level"] && metadata?.name) {
+    // Flood zones don't publish "name", so rely on dataset name plus risk level
+    return `${metadata.name} - Level ${entity["flood-risk-level"]}`;
+  } else {
+    // Default to entity "name" or fallback to "id"
+    return entity.name || `Planning Data entity #${entity.entity}`;
+  }
 }
