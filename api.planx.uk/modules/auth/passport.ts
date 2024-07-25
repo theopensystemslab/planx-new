@@ -1,4 +1,5 @@
-import { custom, Issuer } from "openid-client";
+import { Issuer } from "openid-client";
+import type { Authenticator } from "passport";
 import passport from "passport";
 
 import { googleStrategy } from "./strategy/google.js";
@@ -8,41 +9,32 @@ import {
   MICROSOFT_OPENID_CONFIG_URL,
 } from "./strategy/microsoft-oidc.js";
 
-const setupPassport = () => {
-  // TODO: remove below config (timeout extended for local testing with poor connection)
-  custom.setHttpOptionsDefaults({
-    timeout: 10000,
-  });
+export default async (): Promise<Authenticator> => {
+  // explicitly instantiate new passport class for clarity
+  const customPassport = new passport.Passport();
 
-  // explicitly instantiate new passport for clarity
-  const passportWithStrategies = new passport.Passport();
+  // instantiate Microsoft OIDC client, and use it to build the related strategy
+  const microsoftIssuer = await Issuer.discover(MICROSOFT_OPENID_CONFIG_URL);
+  console.debug("Discovered issuer %s", microsoftIssuer.issuer);
+  const microsoftOidcClient = new microsoftIssuer.Client(
+    getMicrosoftClientConfig(),
+  );
+  console.debug("Built Microsoft client: %O", microsoftOidcClient);
+  customPassport.use(
+    "microsoft-oidc",
+    getMicrosoftOidcStrategy(microsoftOidcClient),
+  );
 
-  // build Microsoft OIDC client, and use it to build the related strategy
-  let microsoftOidcClient;
-  // TODO: need to block on fetch of issuer, but can't use top level await...
-  Issuer.discover(MICROSOFT_OPENID_CONFIG_URL).then((microsoftIssuer) => {
-    console.debug("Discovered issuer %s", microsoftIssuer.issuer);
-    const microsoftClientConfig = getMicrosoftClientConfig();
-    microsoftOidcClient = new microsoftIssuer.Client(microsoftClientConfig);
-    console.debug("Built Microsoft client: %O", microsoftOidcClient);
-    passportWithStrategies.use(
-      "microsoft-oidc",
-      getMicrosoftOidcStrategy(microsoftOidcClient),
-    );
-  });
-
-  // do any other aspects of passport setup which can be handled here
-  passportWithStrategies.use("google", googleStrategy);
-  passportWithStrategies.serializeUser((user: any, done) => {
+  // do other aspects of passport setup which can be handled here
+  // TODO: replace types here (e.g. user: Express.User - but verify this first)
+  customPassport.use("google", googleStrategy);
+  customPassport.serializeUser((user: any, done) => {
     done(null, user);
   });
-  passportWithStrategies.deserializeUser((obj: any, done) => {
+  customPassport.deserializeUser((obj: any, done) => {
     done(null, obj);
   });
 
-  return { passportWithStrategies, microsoftOidcClient };
+  // tsc dislikes the use of 'this' in the passportjs codebase, so we cast explicitly
+  return customPassport as Authenticator;
 };
-
-// instantiate and export the new passport class and Microsoft client as early as possible
-const { passportWithStrategies, microsoftOidcClient } = setupPassport();
-export { passportWithStrategies, microsoftOidcClient };

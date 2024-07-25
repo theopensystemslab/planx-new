@@ -16,8 +16,8 @@ import { useSwaggerDocs } from "./docs/index.js";
 import { ServerError } from "./errors/index.js";
 import adminRoutes from "./modules/admin/routes.js";
 import analyticsRoutes from "./modules/analytics/routes.js";
-import { passportWithStrategies } from "./modules/auth/passport.js";
-import authRoutes from "./modules/auth/routes.js";
+import getPassport from "./modules/auth/passport.js";
+import getAuthRoutes from "./modules/auth/routes.js";
 import fileRoutes from "./modules/file/routes.js";
 import flowRoutes from "./modules/flows/routes.js";
 import gisRoutes from "./modules/gis/routes.js";
@@ -120,9 +120,16 @@ app.use(
 
 // register stubs after cookieSession middleware initialisation
 app.use(registerSessionStubs);
-app.use(passportWithStrategies.initialize());
-app.use(passportWithStrategies.session());
+
+// equip passport with auth strategies early on, so we can pass it to route handlers
+const passport = await getPassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// auth routes rely on the passport class we've just initialised
+const authRoutes = await getAuthRoutes(passport);
 
 // Setup API routes
 app.use(adminRoutes);
