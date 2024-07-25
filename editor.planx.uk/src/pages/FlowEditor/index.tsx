@@ -2,7 +2,7 @@ import "./floweditor.scss";
 
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { HEADER_HEIGHT } from "components/Header";
+import { HEADER_HEIGHT_EDITOR } from "components/Header";
 import React, { useRef } from "react";
 
 import { rootFlowPath } from "../../routes/utils";
@@ -16,7 +16,7 @@ const EditorContainer = styled(Box)(() => ({
   alignItems: "stretch",
   overflow: "hidden",
   flexGrow: 1,
-  maxHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
 }));
 
 const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
