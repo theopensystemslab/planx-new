@@ -3,6 +3,12 @@
   "license": "MPL-2.0",
   "private": true,
   "packageManager": "pnpm@8.6.6",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "engines": {
+    "node": ">=18.16",
+    "pnpm": "8.6.6"
+  },
   "dependencies": {
     "@airbrake/node": "^2.1.8",
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#6b2fd26",
