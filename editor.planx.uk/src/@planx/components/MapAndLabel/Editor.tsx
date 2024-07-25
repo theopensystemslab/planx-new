@@ -33,7 +33,7 @@ function MapAndLabelComponent(props: Props) {
       if (!isContrastThresholdMet) {
         return {
           drawColour:
-            "Theme colour does not meet accessibility contrast requirements (3:1)",
+            "Drawing colour does not meet accessibility contrast requirements (3:1)",
         };
       }
     },
@@ -88,7 +88,7 @@ function MapAndLabelComponent(props: Props) {
             <InputRow>
               <InputRowItem>
                 <ColorPicker
-                  label="Line Colour"
+                  label="Drawing Colour"
                   color={formik.values.drawColour}
                   onChange={(color) => {
                     formik.setFieldValue("drawColour", color);
