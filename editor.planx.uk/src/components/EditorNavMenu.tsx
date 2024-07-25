@@ -24,8 +24,8 @@ interface Route {
   accessibleBy: Role[];
 }
 
-const MENU_WIDTH_COMPACT = "52px";
-const MENU_WIDTH_FULL = "178px";
+const MENU_WIDTH_COMPACT = "51px";
+const MENU_WIDTH_FULL = "164px";
 
 const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "compact",
@@ -218,8 +218,8 @@ function EditorNavMenu() {
               </TooltipWrap>
             ) : (
               <MenuButton isActive={isActive(route)} disableRipple>
-                <Icon />
-                <MenuTitle variant="body2">{title}</MenuTitle>
+                <Icon fontSize="small" />
+                <MenuTitle variant="body3">{title}</MenuTitle>
               </MenuButton>
             )}
           </MenuItem>
