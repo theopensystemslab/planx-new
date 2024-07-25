@@ -126,10 +126,14 @@ const Logo = styled("img")(() => ({
   objectFit: "contain",
 }));
 
-const LogoLink = styled(Link)(() => ({
+const LogoLink = styled(Link)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   "&:focus-visible": borderedFocusStyle,
+  "@media print": {
+    backgroundColor: theme.palette.common.black,
+    padding: "0.25em",
+  },
 }));
 
 const SkipLink = styled("a")(({ theme }) => ({
@@ -362,8 +366,9 @@ const PublicToolbar: React.FC<{
                   aria-label="Restart Application"
                   size="large"
                   aria-describedby="restart-application-description"
+                  sx={{ "@media print": { color: "black" } }}
                 >
-                  <Reset color="secondary" />
+                  <Reset color="inherit" />
                   <Typography
                     id="restart-application-description"
                     variant="body2"
@@ -563,7 +568,10 @@ const Header: React.FC = () => {
       elevation={0}
       color="transparent"
       ref={headerRef}
-      style={{ backgroundColor: theme?.primaryColour || "#2c2c2c" }}
+      sx={{
+        backgroundColor: theme?.primaryColour || "#2c2c2c",
+        "@media print": { backgroundColor: "white", color: "black" },
+      }}
     >
       <Toolbar headerRef={headerRef}></Toolbar>
     </Root>

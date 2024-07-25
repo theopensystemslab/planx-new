@@ -68,7 +68,17 @@ const PublicFooter: React.FC = () => {
       <Feedback />
       <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
-          <Box pr={2} display="flex">
+          <Box
+            pr={2}
+            display="flex"
+            sx={{
+              "@media print": {
+                backgroundColor: "black",
+                padding: "0.5em",
+                margin: "0.5em",
+              },
+            }}
+          >
             <img src={Logo} alt="Open Government License Logo" />
           </Box>
           <Typography variant="body2">
