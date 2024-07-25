@@ -128,6 +128,7 @@ export function AddButton({
 
 interface FlowItemProps {
   flow: any;
+  flows: any;
   teamId: number;
   teamSlug: string;
   refreshFlows: () => void;
@@ -135,6 +136,7 @@ interface FlowItemProps {
 
 const FlowItem: React.FC<FlowItemProps> = ({
   flow,
+  flows,
   teamId,
   teamSlug,
   refreshFlows,
@@ -200,34 +202,43 @@ const FlowItem: React.FC<FlowItemProps> = ({
                   const newName = prompt("New name", flow.name);
                   if (newName && newName !== flow.name) {
                     const newSlug = slugify(newName);
-                    await client.mutate({
-                      mutation: gql`
-                        mutation UpdateFlowSlug(
-                          $teamId: Int
-                          $slug: String
-                          $newSlug: String
-                          $newName: String
-                        ) {
-                          update_flows(
-                            where: {
-                              team: { id: { _eq: $teamId } }
-                              slug: { _eq: $slug }
-                            }
-                            _set: { slug: $newSlug, name: $newName }
+                    const duplicateFlowName = flows?.find(
+                      (flow: any) => flow.slug === newSlug,
+                    );
+                    if (!duplicateFlowName) {
+                      await client.mutate({
+                        mutation: gql`
+                          mutation UpdateFlowSlug(
+                            $teamId: Int
+                            $slug: String
+                            $newSlug: String
+                            $newName: String
                           ) {
-                            affected_rows
+                            update_flows(
+                              where: {
+                                team: { id: { _eq: $teamId } }
+                                slug: { _eq: $slug }
+                              }
+                              _set: { slug: $newSlug, name: $newName }
+                            ) {
+                              affected_rows
+                            }
                           }
-                        }
-                      `,
-                      variables: {
-                        teamId: teamId,
-                        slug: flow.slug,
-                        newSlug: newSlug,
-                        newName: newName,
-                      },
-                    });
+                        `,
+                        variables: {
+                          teamId: teamId,
+                          slug: flow.slug,
+                          newSlug: newSlug,
+                          newName: newName,
+                        },
+                      });
 
-                    refreshFlows();
+                      refreshFlows();
+                    } else if (duplicateFlowName) {
+                      alert(
+                        `The flow "${newName}" already exists. Enter a unique flow name to continue`,
+                      );
+                    }
                   }
                 },
                 label: "Rename",
@@ -351,6 +362,7 @@ const Team: React.FC = () => {
           {flows.map((flow: any) => (
             <FlowItem
               flow={flow}
+              flows={flows}
               key={flow.slug}
               teamId={teamId}
               teamSlug={slug}
