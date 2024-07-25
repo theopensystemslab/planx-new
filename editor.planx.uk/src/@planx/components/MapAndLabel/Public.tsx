@@ -23,7 +23,8 @@ function MapAndLabelComponent(props: Props) {
           drawMode
           drawPointer="crosshair"
           zoom={20}
-          drawFillColor={props.drawColour + "35"}
+          // adding 1A to the hexcode string adds 10% opacity to the colour
+          drawFillColor={props.drawColour + "1A"}
           drawColor={props.drawColour}
           drawPointColor={props.drawColour}
           showCentreMarker
