@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { locationSearch } from "./service";
-import { hasArticle4Schema } from "./service/article4Schema";
-import { classifiedRoadsSearch } from "./service/classifiedRoads";
+import { locationSearch } from "./service/index.js";
+import { hasArticle4Schema } from "./service/article4Schema.js";
+import { classifiedRoadsSearch } from "./service/classifiedRoads.js";
 
 const router = Router();
 

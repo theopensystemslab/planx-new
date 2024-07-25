@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import { omit } from "lodash";
-import app from "../../../server";
-import { queryMock } from "../../../tests/graphqlQueryMock";
+import app from "../../../server.js";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import {
   mockFlow,
   mockLowcalSession,
@@ -13,10 +13,10 @@ import {
   stubUpdateLowcalSessionData,
   mockLockedSession,
   mockErrorSession,
-} from "../../../tests/mocks/saveAndReturnMocks";
-import type { Node, Flow, Breadcrumb } from "../../../types";
-import { userContext } from "../../auth/middleware";
-import { getJWT } from "../../../tests/mockJWT";
+} from "../../../tests/mocks/saveAndReturnMocks.js";
+import type { Node, Flow, Breadcrumb } from "../../../types.js";
+import { userContext } from "../../auth/middleware.js";
+import { getJWT } from "../../../tests/mockJWT.js";
 
 const validateSessionPath = "/validate-session";
 const getStoreMock = jest.spyOn(userContext, "getStore");

@@ -1,5 +1,5 @@
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { buildJWT } from "../service";
+import { buildJWT } from "../service.js";
 
 export const googleStrategy = new GoogleStrategy(
   {

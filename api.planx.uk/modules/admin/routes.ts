@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { usePlatformAdminAuth } from "../auth/middleware";
-import { getOneAppXML } from "./session/oneAppXML";
-import { getCSVData, getRedactedCSVData } from "./session/csv";
-import { getHTMLExport, getRedactedHTMLExport } from "./session/html";
-import { generateZip } from "./session/zip";
-import { getSessionSummary } from "./session/summary";
-import { getDigitalPlanningApplicationPayload } from "./session/digitalPlanningData";
+import { usePlatformAdminAuth } from "../auth/middleware.js";
+import { getOneAppXML } from "./session/oneAppXML.js";
+import { getCSVData, getRedactedCSVData } from "./session/csv.js";
+import { getHTMLExport, getRedactedHTMLExport } from "./session/html.js";
+import { generateZip } from "./session/zip.js";
+import { getSessionSummary } from "./session/summary.js";
+import { getDigitalPlanningApplicationPayload } from "./session/digitalPlanningData.js";
 
 const router = Router();
 

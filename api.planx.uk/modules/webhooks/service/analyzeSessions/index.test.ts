@@ -1,8 +1,8 @@
 import supertest from "supertest";
 
-import app from "../../../../server";
-import * as operations from "./operations";
-import * as sharedOperations from "../sanitiseApplicationData/operations";
+import app from "../../../../server.js";
+import * as operations from "./operations.js";
+import * as sharedOperations from "../sanitiseApplicationData/operations.js";
 
 const mockSend = jest.fn();
 const mockSlackNotify = jest.fn().mockImplementation(() => {

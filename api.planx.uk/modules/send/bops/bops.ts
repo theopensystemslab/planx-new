@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
-import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
+import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { $api } from "../../../client";
-import { ServerError } from "../../../errors";
+import { $api } from "../../../client/index.js";
+import { ServerError } from "../../../errors/index.js";
 
 interface SendToBOPSRequest {
   payload: {

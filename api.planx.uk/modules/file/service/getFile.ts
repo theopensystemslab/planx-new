@@ -1,5 +1,5 @@
-import S3 from "aws-sdk/clients/s3";
-import { s3Factory } from "./utils";
+import S3 from "aws-sdk/clients/s3.js";
+import { s3Factory } from "./utils.js";
 
 export const getFileFromS3 = async (fileId: string) => {
   const s3 = s3Factory();

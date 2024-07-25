@@ -3,10 +3,10 @@ import { Router } from "express";
 import {
   resumeApplicationController,
   validateSessionController,
-} from "./controller";
-import { sendEmailLimiter } from "../../rateLimit";
-import { validate } from "../../shared/middleware/validate";
-import { resumeApplicationSchema, validateSessionSchema } from "./types";
+} from "./controller.js";
+import { sendEmailLimiter } from "../../rateLimit.js";
+import { validate } from "../../shared/middleware/validate.js";
+import { resumeApplicationSchema, validateSessionSchema } from "./types.js";
 
 const router = Router();
 

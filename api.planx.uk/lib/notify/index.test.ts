@@ -1,6 +1,6 @@
-import { sendEmail } from ".";
+import { sendEmail } from "./index.js";
 import { NotifyClient } from "notifications-node-client";
-import { NotifyConfig } from "../../types";
+import { NotifyConfig } from "../../types.js";
 
 jest.mock("notifications-node-client");
 

@@ -1,7 +1,7 @@
-import { postToSlack } from "../sanitiseApplicationData";
-import { operationHandler } from "../sanitiseApplicationData/operations";
-import { OperationResult } from "../sanitiseApplicationData/types";
-import { getAnalyzeSessionOperations } from "./operations";
+import { postToSlack } from "../sanitiseApplicationData/index.js";
+import { operationHandler } from "../sanitiseApplicationData/operations.js";
+import { OperationResult } from "../sanitiseApplicationData/types.js";
+import { getAnalyzeSessionOperations } from "./operations.js";
 
 /**
  * Called by Hasura cron job `analyze_sessions` on a nightly basis

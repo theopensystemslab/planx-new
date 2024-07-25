@@ -1,10 +1,10 @@
 import supertest from "supertest";
 
-import { queryMock } from "../../../tests/graphqlQueryMock";
-import { authHeader, getJWT } from "../../../tests/mockJWT";
-import app from "../../../server";
-import { userContext } from "../../auth/middleware";
-import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
+import { authHeader, getJWT } from "../../../tests/mockJWT.js";
+import app from "../../../server.js";
+import { userContext } from "../../auth/middleware.js";
+import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
 
 beforeAll(() => {
   const getStoreMock = jest.spyOn(userContext, "getStore");

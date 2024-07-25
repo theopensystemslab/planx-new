@@ -5,9 +5,9 @@ import fs from "fs";
 import { gql } from "graphql-request";
 import jwt from "jsonwebtoken";
 import { Buffer } from "node:buffer";
-import { $api } from "../../../client";
-import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
-import { buildSubmissionExportZip } from "../utils/exportZip";
+import { $api } from "../../../client/index.js";
+import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
+import { buildSubmissionExportZip } from "../utils/exportZip.js";
 
 interface UniformClient {
   clientId: string;

@@ -1,8 +1,8 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { gql } from "graphql-request";
-import { $api } from "../../client";
-import { ServerError } from "../../errors";
-import { GovPayMetadata } from "./types";
+import { $api } from "../../client/index.js";
+import { ServerError } from "../../errors/index.js";
+import { GovPayMetadata } from "./types.js";
 import { formatGovPayMetadata } from "@opensystemslab/planx-core";
 import {
   GovPayMetadataValue,

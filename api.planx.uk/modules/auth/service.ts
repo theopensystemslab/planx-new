@@ -1,5 +1,5 @@
 import { sign } from "jsonwebtoken";
-import { $api } from "../../client";
+import { $api } from "../../client/index.js";
 import { User, Role } from "@opensystemslab/planx-core/types";
 
 export const buildJWT = async (email: string): Promise<string | undefined> => {

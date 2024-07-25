@@ -1,8 +1,8 @@
 import SlackNotify from "slack-notify";
 
-import { getOperations, operationHandler } from "./operations";
-import { OperationResult } from "./types";
-import { getFormattedEnvironment } from "../../../../helpers";
+import { getOperations, operationHandler } from "./operations.js";
+import { OperationResult } from "./types.js";
+import { getFormattedEnvironment } from "../../../../helpers.js";
 
 /**
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis

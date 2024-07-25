@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { useOrdnanceSurveyProxy } from "./controller";
+import { useOrdnanceSurveyProxy } from "./controller.js";
 
 const router = Router();
 

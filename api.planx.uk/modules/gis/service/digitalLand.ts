@@ -5,9 +5,9 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
-import { addDesignatedVariable } from "./helpers";
-import { baseSchema } from "./local_authorities/metadata/base";
-import { $api } from "../../../client";
+import { addDesignatedVariable } from "./helpers.js";
+import { baseSchema } from "./local_authorities/metadata/base.js";
+import { $api } from "../../../client/index.js";
 
 export interface LocalAuthorityMetadata {
   planningConstraints: {

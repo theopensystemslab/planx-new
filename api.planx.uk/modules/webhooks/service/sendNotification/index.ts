@@ -7,8 +7,8 @@ import {
   EventType,
   S3EventData,
   UniformEventData,
-} from "./types";
-import { $api } from "../../../../client";
+} from "./types.js";
+import { $api } from "../../../../client/index.js";
 
 export const sendSlackNotification = async (
   data: EventData,

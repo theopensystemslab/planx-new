@@ -1,8 +1,8 @@
 import {
   CombinedResponse,
   createScheduledEvent,
-} from "../../../lib/hasura/metadata";
-import { CreateSendEventsController } from "./types";
+} from "../../../lib/hasura/metadata/index.js";
+import { CreateSendEventsController } from "./types.js";
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
 const createSendEvents: CreateSendEventsController = async (

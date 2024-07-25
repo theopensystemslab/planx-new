@@ -4,10 +4,10 @@ import {
   FlowGraph,
   Node,
 } from "@opensystemslab/planx-core/types";
-import countBy from "lodash/countBy";
+import countBy from "lodash/countBy.js";
 
-import { isComponentType } from "../helpers";
-import { FlowValidationResponse } from "./index";
+import { isComponentType } from "../helpers.js";
+import { FlowValidationResponse } from "./index.js";
 
 const validateFileTypes = (flowGraph: FlowGraph): FlowValidationResponse => {
   // Get all passport variables set by FileUpload and/or FileUploadAndLabel

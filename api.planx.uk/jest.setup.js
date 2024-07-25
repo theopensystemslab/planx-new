@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { queryMock } from "./tests/graphqlQueryMock";
+import { queryMock } from "./tests/graphqlQueryMock.js";
 
 dotenv.config({
   path: "./.env.test",

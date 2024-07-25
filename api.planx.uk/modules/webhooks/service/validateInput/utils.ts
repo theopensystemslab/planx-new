@@ -2,7 +2,7 @@ import { isObject } from "lodash";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 import { decode } from "he";
-import { reportError } from "../../../pay/helpers";
+import { reportError } from "../../../pay/helpers.js";
 
 // Setup JSDOM and DOMPurify
 const window = new JSDOM("").window;

@@ -1,29 +1,32 @@
 import { Router } from "express";
-import { validate } from "../../shared/middleware/validate";
-import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware";
-import { copyFlowController, copyFlowSchema } from "./copyFlow/controller";
+import { validate } from "../../shared/middleware/validate.js";
+import { usePlatformAdminAuth, useTeamEditorAuth } from "../auth/middleware.js";
+import { copyFlowController, copyFlowSchema } from "./copyFlow/controller.js";
 import {
   copyFlowAsPortalSchema,
   copyPortalAsFlowController,
-} from "./copyFlowAsPortal/controller";
+} from "./copyFlowAsPortal/controller.js";
 import {
   downloadFlowSchema,
   downloadFlowSchemaController,
-} from "./downloadSchema/controller";
+} from "./downloadSchema/controller.js";
 import {
   findAndReplaceController,
   findAndReplaceSchema,
-} from "./findReplace/controller";
+} from "./findReplace/controller.js";
 import {
   flattenFlowData,
   flattenFlowDataController,
-} from "./flattenFlow/controller";
-import { moveFlowController, moveFlowSchema } from "./moveFlow/controller";
-import { publishFlowController, publishFlowSchema } from "./publish/controller";
+} from "./flattenFlow/controller.js";
+import { moveFlowController, moveFlowSchema } from "./moveFlow/controller.js";
+import {
+  publishFlowController,
+  publishFlowSchema,
+} from "./publish/controller.js";
 import {
   validateAndDiffFlowController,
   validateAndDiffSchema,
-} from "./validate/controller";
+} from "./validate/controller.js";
 const router = Router();
 
 router.post(

@@ -8,7 +8,7 @@ https://www.planning.data.gov.uk/entity/?dataset=article-4-direction&dataset=art
 https://docs.google.com/spreadsheets/d/1ALSH4hiupdUlrA7Rq7jhfHnWr0-PcB-IzhsztPLl7FY/edit?gid=0#gid=0
 */
 
-import { LocalAuthorityMetadata } from "../../digitalLand";
+import { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {

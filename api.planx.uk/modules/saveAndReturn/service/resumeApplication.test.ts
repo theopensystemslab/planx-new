@@ -1,12 +1,12 @@
-import { LowCalSession } from "../../../types";
+import { LowCalSession } from "../../../types.js";
 import supertest from "supertest";
-import app from "../../../server";
-import { queryMock } from "../../../tests/graphqlQueryMock";
+import app from "../../../server.js";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import {
   mockLowcalSession,
   mockTeam,
-} from "../../../tests/mocks/saveAndReturnMocks";
-import { buildContentFromSessions } from "./resumeApplication";
+} from "../../../tests/mocks/saveAndReturnMocks.js";
+import { buildContentFromSessions } from "./resumeApplication.js";
 import { PartialDeep } from "type-fest";
 import { Team } from "@opensystemslab/planx-core/types";
 

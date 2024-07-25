@@ -1,9 +1,9 @@
 import * as jsondiffpatch from "jsondiffpatch";
-import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers";
+import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
 import { gql } from "graphql-request";
 import { FlowGraph, Node } from "@opensystemslab/planx-core/types";
-import { userContext } from "../../auth/middleware";
-import { getClient } from "../../../client";
+import { userContext } from "../../auth/middleware.js";
+import { getClient } from "../../../client/index.js";
 
 interface PublishFlow {
   publishedFlow: {

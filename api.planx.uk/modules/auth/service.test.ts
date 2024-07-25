@@ -1,4 +1,4 @@
-import { checkUserCanAccessEnv } from "./service";
+import { checkUserCanAccessEnv } from "./service.js";
 
 const mockIsStagingOnly = jest.fn();
 
