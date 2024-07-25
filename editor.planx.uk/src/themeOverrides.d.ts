@@ -1,6 +1,8 @@
 import "@mui/material/Chip";
 // eslint-disable-next-line no-restricted-imports
 import "@mui/material/styles/createPalette";
+import "@mui/material/styles";
+import "@mui/material/Typography";
 
 import { RadioProps } from "@mui/material/Radio";
 
@@ -90,5 +92,22 @@ declare module "@mui/material/Radio" {
 declare module "@mui/material" {
   interface RadioProps {
     variant?: keyof RadioPropsVariantOverrides;
+  }
+}
+
+
+// Add a new typography variant "body3" for use in the editor
+declare module "@mui/material/styles" {
+  interface TypographyVariants {
+    body3: React.CSSProperties;
+  }
+  interface TypographyVariantsOptions {
+    body3?: React.CSSProperties;
+  }
+}
+
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+    body3: true;
   }
 }

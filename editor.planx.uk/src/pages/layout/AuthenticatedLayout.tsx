@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { containerClasses } from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import EditorNavMenu from "components/EditorNavMenu";
-import { HEADER_HEIGHT } from "components/Header";
+import { HEADER_HEIGHT_EDITOR } from "components/Header";
 import React, { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -22,11 +22,15 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   width: "100%",
-  minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+  minHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
   overflow: "hidden",
   [`& > .${containerClasses.root}`]: {
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(5),
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
+    [theme.breakpoints.up("lg")]: {
+      paddingTop: theme.spacing(5),
+      paddingBottom: theme.spacing(5),
+    },
   },
 }));
 

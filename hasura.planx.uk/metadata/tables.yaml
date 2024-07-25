@@ -1672,7 +1672,23 @@
           - staging_govpay_secret
           - power_automate_webhook_url
         filter: {}
+    - role: platformAdmin
+      permission:
+        columns:
+          - has_planning_data
+          - id
+          - team_id
+        filter: {}
+      comment: ""
     - role: public
+      permission:
+        columns:
+          - has_planning_data
+          - id
+          - team_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
       permission:
         columns:
           - has_planning_data
