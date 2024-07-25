@@ -1,3 +1,4 @@
+import { alpha } from "@mui/material/styles";
 import React from "react";
 
 import Card from "../shared/Preview/Card";
@@ -23,8 +24,7 @@ function MapAndLabelComponent(props: Props) {
           drawMode
           drawPointer="crosshair"
           zoom={20}
-          // adding 1A to the hexcode string adds 10% opacity to the colour
-          drawFillColor={props.drawColour + "1A"}
+          drawFillColor={alpha(props.drawColour, 0.1)}
           drawColor={props.drawColour}
           drawPointColor={props.drawColour}
           showCentreMarker
