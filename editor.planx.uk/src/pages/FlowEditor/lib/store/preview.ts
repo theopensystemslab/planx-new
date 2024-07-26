@@ -478,8 +478,9 @@ export const previewStore: StateCreator<
                     const responseValues = String(r.data.val).split(",").sort();
 
                     for (const responseValue of responseValues) {
-                      return passportValues.some((passportValue: any) =>
-                        String(passportValue).startsWith(responseValue),
+                      return passportValues.some(
+                        (passportValue: any) =>
+                          String(passportValue) === responseValue,
                       );
                     }
                   });
