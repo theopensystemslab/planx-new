@@ -16,6 +16,11 @@ import airbrake from "./airbrake.js";
 import { apiLimiter } from "./rateLimit.js";
 import { registerSessionStubs } from "./session.js";
 import { googleStrategy } from "./modules/auth/strategy/google.js";
+import {
+  getMicrosoftIssuer,
+  getMicrosoftOidcStrategy,
+} from "./modules/auth/strategy/microsoft-oidc.js";
+import { Issuer } from "openid-client";
 import authRoutes from "./modules/auth/routes.js";
 import teamRoutes from "./modules/team/routes.js";
 import miscRoutes from "./modules/misc/routes.js";
@@ -121,6 +126,12 @@ app.use(
 // register stubs after cookieSession middleware initialisation
 app.use(registerSessionStubs);
 
+// we have to fetch the Microsoft OpenID issuer to pass to our strategy constructor
+// TODO: handle failure to fetch issuer
+getMicrosoftIssuer().then((microsoftIssuer: Issuer) => {
+  console.log("GOT MS ISSUER - SETTING UP STRATEGY")
+  passport.use("microsoft-oidc", getMicrosoftOidcStrategy(microsoftIssuer));
+});
 passport.use("google", googleStrategy);
 
 passport.serializeUser(function (user, cb) {
