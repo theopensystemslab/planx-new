@@ -1,4 +1,5 @@
 {
+  // as of July 24, esnext == es2022 and nodenext == node16
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
