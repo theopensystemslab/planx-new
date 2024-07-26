@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import { styled } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType, IndexedNode } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
@@ -32,15 +32,11 @@ const SearchResultCardRoot = styled(ListItemButton)(({ theme }) => ({
   display: "block",
 }));
 
-const ExternalPortalCard = styled(ListItemButton)(({ theme }) => ({
-  backgroundColor: "black",
-  color: theme.palette.common.white,
-  "&:hover": {
-    backgroundColor: "black",
-    "& p:last-of-type": {
-      textDecoration: "underline",
-    },
-  },
+const PortalList = styled(List)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  padding: theme.spacing(0.5, 0),
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.border.light}`,
 }));
 
 const SearchResults: React.FC<{ results: SearchResults<IndexedNode> }> = ({
@@ -191,29 +187,17 @@ const ExternalPortalList: React.FC = () => {
         Your service also contains the following external portals, which have
         not been searched:
       </Typography>
-      <List sx={{ gap: 2 }}>
+      <PortalList>
         {Object.values(externalPortals).map(({ name, href }) => (
-          <ListItem
-            key={`external-portal-card-${name}`}
-            disablePadding
-            sx={{ mb: 2 }}
-          >
-            <ExternalPortalCard onClick={() => navigate("../" + href)}>
-              <Typography
-                variant="body2"
-                fontWeight={FONT_WEIGHT_SEMI_BOLD}
-                mr={0.5}
-                whiteSpace="nowrap"
-              >
-                External portal •
-              </Typography>
+          <ListItem key={`external-portal-card-${name}`} disablePadding>
+            <ListItemButton component="a" href={`../${href}`}>
               <Typography variant="body2">
                 {href.replaceAll("/", " / ")}
               </Typography>
-            </ExternalPortalCard>
+            </ListItemButton>
           </ListItem>
         ))}
-      </List>
+      </PortalList>
     </Box>
   );
 };
