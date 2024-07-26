@@ -70,13 +70,16 @@ const Login: React.FC = () => {
           disabled
           variant="contained"
           color="secondary"
-          href={`...`}
+          href={`${
+            process.env.REACT_APP_MICROSOFT_OAUTH_OVERRIDE ??
+            process.env.REACT_APP_API_URL
+          }/auth/microsoft`}
         >
           <Box component="span">
             <MicrosoftIcon />
             Continue with Microsoft
           </Box>
-          (coming soon)
+          (in development)
         </LoginButton>
       </LoginContainer>
     </Wrapper>

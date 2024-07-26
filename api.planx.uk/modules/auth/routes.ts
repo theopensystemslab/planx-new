@@ -12,5 +12,11 @@ router.get(
   Middleware.useGoogleCallbackAuth,
   Controller.handleSuccess,
 );
+router.get("/auth/microsoft", Middleware.useMicrosoftAuth)
+router.post(
+  "/auth/microsoft/callback",
+  Middleware.useMicrosoftCallbackAuth,
+  Controller.handleSuccess,
+);
 
 export default router;
