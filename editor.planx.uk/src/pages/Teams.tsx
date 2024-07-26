@@ -4,7 +4,8 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
-import React from "react";
+import { useSearch } from "hooks/useSearch";
+import React, { useRef } from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
 
@@ -51,7 +52,16 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
   const editableTeams: Team[] = [];
   const viewOnlyTeams: Team[] = [];
 
-  teams.forEach((team) =>
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { results, search } = useSearch({
+    list: teams,
+    keys: ["name", "slug"],
+  });
+  const displayTeams = inputRef.current?.value
+    ? results.map(({ item: team }) => team)
+    : teams;
+
+  displayTeams.forEach((team) =>
     canUserEditTeam(team.slug)
       ? editableTeams.push(team)
       : viewOnlyTeams.push(team),
@@ -75,6 +85,8 @@ const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
       <Typography variant="h2" component="h1" mb={4}>
         Select a team
       </Typography>
+      <input onChange={(e) => search(e.target.value)} ref={inputRef}></input>
+
       {editableTeams.length > 0 && (
         <>
           <Typography variant="h3" component="h2" mb={2}>
