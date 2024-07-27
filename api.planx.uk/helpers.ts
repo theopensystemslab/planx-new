@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import { capitalize } from "lodash";
+import lodash from "lodash";
 import { Flow, Node } from "./types.js";
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
 import { $public, getClient } from "./client/index.js";
@@ -347,7 +347,7 @@ const getFormattedEnvironment = (): string => {
   if (environment === "development") {
     environment = "local";
   }
-  return capitalize(environment);
+  return lodash.capitalize(environment);
 };
 
 export {

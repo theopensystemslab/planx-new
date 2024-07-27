@@ -1,6 +1,6 @@
 import "isomorphic-fetch";
 import "express-async-errors";
-import { json, urlencoded } from "body-parser";
+import bodyParser from "body-parser";
 import assert from "assert";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
@@ -73,7 +73,7 @@ app.use(
   }),
 );
 
-app.use(json({ limit: "100mb" }));
+app.use(bodyParser.json({ limit: "100mb" }));
 
 // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
 app.use(cookieParser());
@@ -132,7 +132,7 @@ passport.deserializeUser(function (obj: Express.User, cb) {
 });
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Setup API routes
 app.use(adminRoutes);

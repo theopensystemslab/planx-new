@@ -1,7 +1,7 @@
 const localAuthorities = {
-  braintree: require("./local_authorities/braintree"),
-  scotland: require("./local_authorities/scotland"),
-  digitalLand: require("./digitalLand"),
+  braintree: await import("./local_authorities/braintree.js"),
+  scotland: await import("./local_authorities/scotland.js"),
+  digitalLand: await import("./digitalLand.js"),
 };
 
 /**

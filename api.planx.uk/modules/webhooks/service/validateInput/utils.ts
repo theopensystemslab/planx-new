@@ -1,7 +1,7 @@
-import { isObject } from "lodash";
+import lodash from "lodash";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
-import { decode } from "he";
+import he from "he";
 import { reportError } from "../../../pay/helpers.js";
 
 // Setup JSDOM and DOMPurify
@@ -27,7 +27,7 @@ export const isObjectValid = (
     return input.every((child) => isObjectValid(child, validator));
   }
 
-  if (isObject(input)) {
+  if (lodash.isObject(input)) {
     return Object.values(input).every((child) =>
       isObjectValid(child, validator),
     );
@@ -45,7 +45,7 @@ export const isCleanHTML = (input: unknown): boolean => {
   // DOMPurify has not removed any attributes or values
   const isClean =
     cleanHTML.length === input.length ||
-    decode(cleanHTML).length === decode(input).length;
+    he.decode(cleanHTML).length === he.decode(input).length;
 
   if (!isClean) logUncleanHTMLError(input, cleanHTML);
 

@@ -1,4 +1,4 @@
-import { sign } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
 import { $api } from "../../client/index.js";
 import { User, Role } from "@opensystemslab/planx-core/types";
 
@@ -13,12 +13,12 @@ export const buildJWT = async (email: string): Promise<string | undefined> => {
     "https://hasura.io/jwt/claims": generateHasuraClaimsForUser(user),
   };
 
-  const jwt = sign(data, process.env.JWT_SECRET!);
+  const jwt = jsonwebtoken.sign(data, process.env.JWT_SECRET!);
   return jwt;
 };
 
 export const buildJWTForAPIRole = () =>
-  sign(
+  jsonwebtoken.sign(
     {
       "https://hasura.io/jwt/claims": {
         "x-hasura-allowed-roles": ["api"],

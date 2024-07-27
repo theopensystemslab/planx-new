@@ -19,23 +19,31 @@ export interface LocalAuthorityMetadata {
 
 /** When a team publishes their granular Article 4 data, add them to this list. Key must match team slug */
 export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
-  "barking-and-dagenham": require("./local_authorities/metadata/barkingAndDagenham"),
-  barnet: require("./local_authorities/metadata/barnet"),
-  birmingham: require("./local_authorities/metadata/birmingham"),
-  buckinghamshire: require("./local_authorities/metadata/buckinghamshire"),
-  camden: require("./local_authorities/metadata/camden"),
-  canterbury: require("./local_authorities/metadata/canterbury"),
-  doncaster: require("./local_authorities/metadata/doncaster"),
-  "epsom-and-ewell": require("./local_authorities/metadata/epsomAndEwell"),
-  gateshead: require("./local_authorities/metadata/gateshead"),
-  gloucester: require("./local_authorities/metadata/gloucester"),
-  lambeth: require("./local_authorities/metadata/lambeth"),
-  medway: require("./local_authorities/metadata/medway"),
-  newcastle: require("./local_authorities/metadata/newcastle"),
-  southwark: require("./local_authorities/metadata/southwark"),
-  "st-albans": require("./local_authorities/metadata/stAlbans"),
-  tewkesbury: require("./local_authorities/metadata/tewkesbury"),
-  "west-berkshire": require("./local_authorities/metadata/westBerkshire"),
+  "barking-and-dagenham": await import(
+    "./local_authorities/metadata/barkingAndDagenham.js"
+  ),
+  barnet: await import("./local_authorities/metadata/barnet.js"),
+  birmingham: await import("./local_authorities/metadata/birmingham.js"),
+  buckinghamshire: await import(
+    "./local_authorities/metadata/buckinghamshire.js"
+  ),
+  camden: await import("./local_authorities/metadata/camden.js"),
+  canterbury: await import("./local_authorities/metadata/canterbury.js"),
+  doncaster: await import("./local_authorities/metadata/doncaster.js"),
+  "epsom-and-ewell": await import(
+    "./local_authorities/metadata/epsomAndEwell.js"
+  ),
+  gateshead: await import("./local_authorities/metadata/gateshead.js"),
+  gloucester: await import("./local_authorities/metadata/gloucester.js"),
+  lambeth: await import("./local_authorities/metadata/lambeth.js"),
+  medway: await import("./local_authorities/metadata/medway.js"),
+  newcastle: await import("./local_authorities/metadata/newcastle.js"),
+  southwark: await import("./local_authorities/metadata/southwark.js"),
+  "st-albans": await import("./local_authorities/metadata/stAlbans.js"),
+  tewkesbury: await import("./local_authorities/metadata/tewkesbury.js"),
+  "west-berkshire": await import(
+    "./local_authorities/metadata/westBerkshire.js"
+  ),
 };
 
 /**
