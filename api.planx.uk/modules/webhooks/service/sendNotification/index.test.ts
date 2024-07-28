@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import app from "../../../../server";
 import SlackNotify from "slack-notify";
-import { BOPSBody, EmailBody, S3Body, UniformBody } from "./types";
+import { BOPSBody, EmailBody, FlowStatusBody, S3Body, UniformBody } from "./types";
 import { $api } from "../../../../client";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 
@@ -390,6 +390,65 @@ describe("Send Slack notifications endpoint", () => {
 
       await post(ENDPOINT)
         .query({ type: "s3-submission" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+        .send(body)
+        .expect(500)
+        .then((response) => {
+          expect(mockSend).toHaveBeenCalledTimes(1);
+          expect(response.body.error).toMatch(/Failed to send/);
+        });
+    });
+  });
+
+  describe("Flow status update notification", () => {
+    const body: FlowStatusBody = {
+      event: {
+        data: {
+          new: {
+            status: "online",
+            id: "flow-123"
+          }
+        }
+      }
+    };
+
+    it("skips the staging environment", async () => {
+      process.env.APP_ENVIRONMENT = "staging";
+      await post(ENDPOINT)
+        .query({ type: "flow-status" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+        .send(body)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.message).toMatch(/skipping Slack notification/);
+        });
+    });
+
+    it("posts to Slack on success", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+
+      await post(ENDPOINT)
+        .query({ type: "flow-status" })
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+        .send(body)
+        .expect(200)
+        .then((response) => {
+          expect(SlackNotify).toHaveBeenCalledWith(
+            process.env.SLACK_WEBHOOK_URL,
+          );
+          expect(mockSend).toHaveBeenCalledTimes(1);
+          expect(response.body.message).toBe("Posted to Slack");
+          expect(response.body.data).toMatch(/online/);
+          expect(response.body.data).toMatch(/flow-123/);
+        });
+    });
+
+    it("returns error when Slack fails", async () => {
+      process.env.APP_ENVIRONMENT = "production";
+      mockSend.mockRejectedValue("Fail!");
+
+      await post(ENDPOINT)
+        .query({ type: "flow-status" })
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
         .send(body)
         .expect(500)
