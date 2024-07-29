@@ -411,6 +411,7 @@ describe("Send Slack notifications endpoint", () => {
       event: {
         data: {
           new: {
+            id: "flow-id-369",
             status: "online",
           },
         },
@@ -443,6 +444,8 @@ describe("Send Slack notifications endpoint", () => {
           );
           expect(mockSend).toHaveBeenCalledTimes(1);
           expect(response.body.message).toBe("Posted to Slack");
+          expect(response.body.data).toMatch(/large_green_circle/);
+          expect(response.body.data).toMatch(/flow-id-369/);
           expect(response.body.data).toMatch(/online/);
         });
     });

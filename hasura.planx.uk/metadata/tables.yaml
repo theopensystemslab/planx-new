@@ -694,10 +694,8 @@
           action: transform
           template: |-
             {
-              "table": {
-                "name": {{$body.table.name}},
-                "schema": {{$body.table.schema}}
-              }
+              "id": {{$body.event.data.new.id}},
+              "status": {{$body.event.data.new.status}}
             }
         method: POST
         query_params:
