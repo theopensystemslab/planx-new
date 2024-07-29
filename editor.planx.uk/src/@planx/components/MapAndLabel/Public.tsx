@@ -24,9 +24,9 @@ function MapAndLabelComponent(props: Props) {
           drawMode
           drawPointer="crosshair"
           zoom={20}
-          drawFillColor={alpha(props.drawColour, 0.1)}
-          drawColor={props.drawColour}
-          drawPointColor={props.drawColour}
+          drawFillColor={alpha(props.drawColor, 0.1)}
+          drawColor={props.drawColor}
+          drawPointColor={props.drawColor}
           drawType={props.drawType}
         />
       </MapContainer>

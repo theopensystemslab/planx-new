@@ -80,11 +80,11 @@ function MapAndLabelComponent(props: Props) {
                 <ColorPicker
                   label="Drawing Colour"
                   inline={false}
-                  color={formik.values.drawColour}
+                  color={formik.values.drawColor}
                   onChange={(color) => {
-                    formik.setFieldValue("drawColour", color);
+                    formik.setFieldValue("drawColor", color);
                   }}
-                  errorMessage={formik.errors.drawColour}
+                  errorMessage={formik.errors.drawColor}
                 />
               </InputRowItem>
             </InputRow>
