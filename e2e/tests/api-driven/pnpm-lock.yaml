@@ -9,8 +9,8 @@ dependencies:
     specifier: ^9.3.0
     version: 9.3.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#122ff24
-    version: github.com/theopensystemslab/planx-core/122ff24
+    specifier: git+https://github.com/theopensystemslab/planx-core#dd24b0a
+    version: github.com/theopensystemslab/planx-core/dd24b0a
   axios:
     specifier: ^1.7.2
     version: 1.7.2
@@ -631,8 +631,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.24.7
       '@floating-ui/react-dom': 2.1.1(react-dom@18.3.1)(react@18.3.1)
-      '@mui/types': 7.2.14
-      '@mui/utils': 5.15.20(react@18.3.1)
+      '@mui/types': 7.2.15
+      '@mui/utils': 5.16.5(react@18.3.1)
       '@popperjs/core': 2.11.8
       clsx: 2.1.1
       prop-types: 15.8.1
@@ -746,15 +746,6 @@ packages:
       react: 18.3.1
     dev: false
 
-  /@mui/types@7.2.14:
-    resolution: {integrity: sha512-MZsBZ4q4HfzBsywtXgM1Ksj6HDThtiwmOKUXH1pKYISI9gAVXCNHNpo7TlGoGrBaYWZTdNoirIN7JsQcQUjmQQ==}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dev: false
-
   /@mui/types@7.2.15:
     resolution: {integrity: sha512-nbo7yPhtKJkdf9kcVOF8JZHPZTmqXjJ/tI0bdWgHg5tp9AnIN4Y7f7wm9T+0SyGYJk76+GYZ8Q5XaTYAsUHN0Q==}
     peerDependencies:
@@ -762,23 +753,6 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
-    dev: false
-
-  /@mui/utils@5.15.20(react@18.3.1):
-    resolution: {integrity: sha512-mAbYx0sovrnpAu1zHc3MDIhPqL8RPVC5W5xcO1b7PiSCJPtckIZmBkp8hefamAvUiAV8gpfMOM6Zb+eSisbI2A==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0
-      react: ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.24.7
-      '@types/prop-types': 15.7.12
-      prop-types: 15.8.1
-      react: 18.3.1
-      react-is: 18.3.1
     dev: false
 
   /@mui/utils@5.16.5(react@18.3.1):
@@ -3102,8 +3076,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/122ff24:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/122ff24}
+  github.com/theopensystemslab/planx-core/dd24b0a:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dd24b0a}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
