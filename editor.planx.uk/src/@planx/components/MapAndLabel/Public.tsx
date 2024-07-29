@@ -1,6 +1,6 @@
 import { alpha } from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React from "react";
 
 import Card from "../shared/Preview/Card";
 import CardHeader from "../shared/Preview/CardHeader";
