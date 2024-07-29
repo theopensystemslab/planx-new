@@ -31,8 +31,9 @@ function MapAndLabelComponent(props: Props) {
           drawPointColor={props.drawColor}
           drawType={props.drawType}
           clipGeojsonData={
-            teamSettings?.boundaryBBox &&
-            JSON.stringify(teamSettings?.boundaryBBox)
+            teamSettings?.boundaryBBox
+              ? JSON.stringify(teamSettings?.boundaryBBox)
+              : undefined
           }
         />
       </MapContainer>
