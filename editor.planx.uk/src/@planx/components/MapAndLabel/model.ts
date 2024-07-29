@@ -5,7 +5,7 @@ export interface MapAndLabel extends MoreInformation {
   title: string;
   description?: string;
   drawColour: string;
-  drawType?: "Polygon" | "Point";
+  drawType: "Polygon" | "Point";
 }
 
 export const parseContent = (
