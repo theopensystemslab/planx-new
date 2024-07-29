@@ -49,7 +49,7 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
   zIndex: 1,
 }));
 
-const Teams: React.FC<Props> = ({ teams, teamTheme }) => {
+const Teams: React.FC<Props> = ({ teams }) => {
   const [canUserEditTeam, createTeam] = useStore((state) => [
     state.canUserEditTeam,
     state.createTeam,

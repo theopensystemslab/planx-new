@@ -44,7 +44,7 @@ const GeneralSettings: React.FC = () => {
   }, []);
 
   const [open, setOpen] = useState(false);
-  const [updateMessage, setUpdateMessage] = useState("Setting Updated");
+  const [updateMessage, _setUpdateMessage] = useState("Setting Updated");
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,

@@ -37,7 +37,6 @@ import {
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
-import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -46,7 +45,8 @@ import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import TestEnvironmentBanner from "./TestEnvironmentBanner";
 
-export const HEADER_HEIGHT = 74;
+const HEADER_HEIGHT_PUBLIC = 74;
+export const HEADER_HEIGHT_EDITOR = 56;
 
 const Root = styled(AppBar)(({ theme }) => ({
   color: theme.palette.common.white,
@@ -66,8 +66,19 @@ const BreadcrumbsLink = styled(Link)(({ theme }) => ({
   borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
 })) as typeof Link;
 
-const StyledToolbar = styled(MuiToolbar)(() => ({
-  height: HEADER_HEIGHT,
+const PublicHeader = styled(MuiToolbar)(() => ({
+  height: HEADER_HEIGHT_PUBLIC,
+}));
+
+const EditorHeader = styled(MuiToolbar)(({ theme }) => ({
+  [theme.breakpoints.up("md")]: {
+    minHeight: HEADER_HEIGHT_EDITOR,
+  },
+}));
+
+const EditorHeaderContainer = styled(Box)(({ theme }) => ({
+  width: "100%",
+  padding: theme.spacing(0, 2),
 }));
 
 const InnerContainer = styled(Box)(() => ({
@@ -97,6 +108,9 @@ const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   justifyContent: "space-between",
   alignItems: "center",
   marginRight: theme.spacing(1),
+  [theme.breakpoints.up("md")]: {
+    minHeight: HEADER_HEIGHT_EDITOR,
+  },
 }));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
@@ -119,23 +133,27 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const Logo = styled("img")(() => ({
-  height: HEADER_HEIGHT - 5,
+  height: HEADER_HEIGHT_PUBLIC - 5,
   width: "100%",
   maxWidth: 140,
-  maxHeight: HEADER_HEIGHT - 20,
+  maxHeight: HEADER_HEIGHT_PUBLIC - 20,
   objectFit: "contain",
 }));
 
-const LogoLink = styled(Link)(() => ({
+const LogoLink = styled(Link)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   "&:focus-visible": borderedFocusStyle,
+  "@media print": {
+    backgroundColor: theme.palette.common.black,
+    padding: "0.25em",
+  },
 }));
 
 const SkipLink = styled("a")(({ theme }) => ({
   tabIndex: 0,
   width: "100vw",
-  height: HEADER_HEIGHT / 2,
+  height: HEADER_HEIGHT_PUBLIC / 2,
   backgroundColor: theme.palette.background.dark,
   color: theme.palette.common.white,
   textDecoration: "underline",
@@ -214,6 +232,7 @@ const Breadcrumbs: React.FC = () => {
         href={"/"}
         prefetch={false}
         {...(isStandalone && { target: "_blank" })}
+        variant="body1"
       >
         Plan✕
       </BreadcrumbsLink>
@@ -225,6 +244,7 @@ const Breadcrumbs: React.FC = () => {
             href={`/${team.slug}`}
             prefetch={false}
             {...(isStandalone && { target: "_blank" })}
+            variant="body1"
           >
             {team.slug}
           </BreadcrumbsLink>
@@ -241,6 +261,7 @@ const Breadcrumbs: React.FC = () => {
             component={ReactNaviLink}
             href={rootFlowPath(false)}
             prefetch={false}
+            variant="body1"
           >
             {route.data.flow}
           </Link>
@@ -249,9 +270,9 @@ const Breadcrumbs: React.FC = () => {
       {route.data.flow && (
         <>
           {useStore.getState().canUserEditTeam(team.slug) ? (
-            <Edit />
+            <Edit fontSize="small" />
           ) : (
-            <Visibility />
+            <Visibility fontSize="small" />
           )}
         </>
       )}
@@ -290,7 +311,6 @@ const NavBar: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              minHeight: HEADER_HEIGHT,
             }}
           >
             <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
@@ -347,7 +367,7 @@ const PublicToolbar: React.FC<{
   return (
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
-      <StyledToolbar disableGutters>
+      <PublicHeader disableGutters>
         <Container maxWidth={false}>
           <InnerContainer>
             <LeftBox>
@@ -362,8 +382,9 @@ const PublicToolbar: React.FC<{
                   aria-label="Restart Application"
                   size="large"
                   aria-describedby="restart-application-description"
+                  sx={{ "@media print": { color: "black" } }}
                 >
-                  <Reset color="secondary" />
+                  <Reset color="inherit" />
                   <Typography
                     id="restart-application-description"
                     variant="body2"
@@ -378,7 +399,7 @@ const PublicToolbar: React.FC<{
             </RightBox>
           </InnerContainer>
         </Container>
-      </StyledToolbar>
+      </PublicHeader>
       {!showCentredServiceTitle && (
         <Container maxWidth={false}>
           <ServiceTitle />
@@ -421,7 +442,7 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef, route }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [togglePreview, user, team, canUserEditTeam] = useStore((state) => [
+  const [togglePreview, user] = useStore((state) => [
     state.togglePreview,
     state.getUser(),
     state.getTeam(),
@@ -438,8 +459,8 @@ const EditorToolbar: React.FC<{
 
   return (
     <>
-      <StyledToolbar disableGutters>
-        <Container maxWidth={false}>
+      <EditorHeader disableGutters>
+        <EditorHeaderContainer>
           <InnerContainer>
             <LeftBox>
               <Breadcrumbs />
@@ -464,6 +485,7 @@ const EditorToolbar: React.FC<{
                     aria-label="Toggle Menu"
                     onClick={handleMenuToggle}
                     size="large"
+                    sx={{ padding: "0.25em" }}
                   >
                     <Avatar
                       component="span"
@@ -480,17 +502,15 @@ const EditorToolbar: React.FC<{
                       {user.firstName[0]}
                       {user.lastName[0]}
                     </Avatar>
-                    <Typography variant="body2" fontSize="small">
-                      Account
-                    </Typography>
+                    <Typography variant="body3">Account</Typography>
                     <KeyboardArrowDown />
                   </IconButton>
                 </ProfileSection>
               )}
             </RightBox>
           </InnerContainer>
-        </Container>
-      </StyledToolbar>
+        </EditorHeaderContainer>
+      </EditorHeader>
       <TestEnvironmentBanner />
       {user && (
         <StyledPopover
@@ -563,7 +583,10 @@ const Header: React.FC = () => {
       elevation={0}
       color="transparent"
       ref={headerRef}
-      style={{ backgroundColor: theme?.primaryColour || "#2c2c2c" }}
+      sx={{
+        backgroundColor: theme?.primaryColour || "#2c2c2c",
+        "@media print": { backgroundColor: "white", color: "black" },
+      }}
     >
       <Toolbar headerRef={headerRef}></Toolbar>
     </Root>

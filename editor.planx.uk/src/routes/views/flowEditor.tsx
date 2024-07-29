@@ -67,8 +67,10 @@ const getFlowMetadata = async (
  */
 export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
-  const { flowAnalyticsLink, isFlowPublished } =
-    await getFlowMetadata(flow, req.params.team);
+  const { flowAnalyticsLink, isFlowPublished } = await getFlowMetadata(
+    flow,
+    req.params.team,
+  );
   useStore.setState({ flowAnalyticsLink, isFlowPublished });
 
   return (

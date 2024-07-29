@@ -188,6 +188,9 @@ const getThemeOptions = ({
       body2: {
         fontSize: "1rem",
       },
+      body3: {
+        fontSize: "0.913rem",
+      },
     },
     palette,
     breakpoints: {
@@ -426,6 +429,14 @@ const getThemeOptions = ({
               backgroundColor: lighten(palette.success.main, 0.8),
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
               color: darken(palette.info.main, 0.8),
+            },
+          },
+          {
+            props: { variant: "notApplicableTag" },
+            style: {
+              backgroundColor: lighten(palette.warning.light, 0.7),
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              color: palette.text.primary,
             },
           },
         ],
