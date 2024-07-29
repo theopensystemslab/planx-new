@@ -22,6 +22,7 @@ function MapAndLabelComponent(props: Props) {
         howMeasured={props.howMeasured}
       />
       <MapContainer environment="standalone">
+        {/* @ts-ignore */}
         <my-map
           drawMode
           drawPointer="crosshair"
@@ -31,9 +32,8 @@ function MapAndLabelComponent(props: Props) {
           drawPointColor={props.drawColor}
           drawType={props.drawType}
           clipGeojsonData={
-            teamSettings?.boundaryBBox
-              ? JSON.stringify(teamSettings?.boundaryBBox)
-              : undefined
+            teamSettings?.boundaryBBox &&
+            JSON.stringify(teamSettings?.boundaryBBox)
           }
         />
       </MapContainer>
