@@ -83,7 +83,7 @@ function MapAndLabelComponent(props: Props) {
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
-        <ModalSectionContent title="Map Formatting">
+        <ModalSectionContent title="Map formatting">
           <InputGroup>
             <InputRow>
               <InputRowItem>
@@ -101,7 +101,7 @@ function MapAndLabelComponent(props: Props) {
         </ModalSectionContent>
         <ModalSectionContent title="Map Drawing Type">
           <FormControl component="fieldset">
-            <RadioGroup defaultValue="default" value={formik.values.drawType}>
+            <RadioGroup defaultValue="Polygon" value={formik.values.drawType}>
               {[
                 { id: "Polygon", title: "Polygon" },
                 { id: "Point", title: "Point" },
