@@ -1,10 +1,9 @@
-import ColorLensIcon from "@mui/icons-material/ColorLens";
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
-import { getContrastRatio, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import ColorPicker from "ui/editor/ColorPicker";
 import InputGroup from "ui/editor/InputGroup";
 import ModalSection from "ui/editor/ModalSection";
@@ -28,16 +27,6 @@ function MapAndLabelComponent(props: Props) {
 
   const formik = useFormik({
     initialValues: parseContent(props.node?.data),
-    validate: ({ drawColour }) => {
-      const isContrastThresholdMet =
-        getContrastRatio("#FFF", drawColour) > theme.palette.contrastThreshold;
-      if (!isContrastThresholdMet) {
-        return {
-          drawColour:
-            "Drawing colour does not meet accessibility contrast requirements (3:1)",
-        };
-      }
-    },
     onSubmit: (newValues) => {
       props.handleSubmit?.({
         type: TYPES.MapAndLabel,
