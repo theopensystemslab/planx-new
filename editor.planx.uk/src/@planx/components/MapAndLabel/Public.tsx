@@ -1,5 +1,6 @@
 import { alpha } from "@mui/material/styles";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useState } from "react";
 
 import Card from "../shared/Preview/Card";
 import CardHeader from "../shared/Preview/CardHeader";
@@ -10,6 +11,25 @@ import { MapAndLabel } from "./model";
 type Props = PublicProps<MapAndLabel>;
 
 function MapAndLabelComponent(props: Props) {
+  const teamSettings = useStore.getState().teamSettings;
+
+  const defaultBboxJSON = {
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: [
+        [
+          [1.9134116, 49.528423],
+          [1.9134116, 61.331151],
+          [1.9134116, 61.331151],
+          [-10.76418, 61.331151],
+          [-10.76418, 49.528423],
+        ],
+      ],
+    },
+    properties: {},
+  };
+
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
       <CardHeader
@@ -23,11 +43,16 @@ function MapAndLabelComponent(props: Props) {
         <my-map
           drawMode
           drawPointer="crosshair"
-          zoom={20}
+          zoom={16}
           drawFillColor={alpha(props.drawColor, 0.1)}
           drawColor={props.drawColor}
           drawPointColor={props.drawColor}
           drawType={props.drawType}
+          clipGeojsonData={
+            teamSettings !== undefined
+              ? JSON.stringify(teamSettings.boundaryBBox)
+              : JSON.stringify(defaultBboxJSON)
+          }
         />
       </MapContainer>
     </Card>
