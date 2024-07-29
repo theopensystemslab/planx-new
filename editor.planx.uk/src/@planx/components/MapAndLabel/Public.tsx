@@ -27,7 +27,6 @@ function MapAndLabelComponent(props: Props) {
           drawFillColor={alpha(props.drawColour, 0.1)}
           drawColor={props.drawColour}
           drawPointColor={props.drawColour}
-          showCentreMarker
           drawType={props.drawType}
         />
       </MapContainer>

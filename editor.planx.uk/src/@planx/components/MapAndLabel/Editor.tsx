@@ -10,6 +10,7 @@ import InputGroup from "ui/editor/InputGroup";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
+import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
@@ -89,6 +90,7 @@ function MapAndLabelComponent(props: Props) {
               <InputRowItem>
                 <ColorPicker
                   label="Drawing Colour"
+                  inline={false}
                   color={formik.values.drawColour}
                   onChange={(color) => {
                     formik.setFieldValue("drawColour", color);
@@ -99,26 +101,28 @@ function MapAndLabelComponent(props: Props) {
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
-        <ModalSectionContent title="Map Drawing Type">
+        <ModalSectionContent>
           <FormControl component="fieldset">
-            <RadioGroup defaultValue="Polygon" value={formik.values.drawType}>
-              {[
-                { id: "Polygon", title: "Polygon" },
-                { id: "Point", title: "Point" },
-              ].map((type) => (
-                <BasicRadio
-                  key={type.id}
-                  id={type.id}
-                  title={type.title}
-                  variant="compact"
-                  value={type.id}
-                  onChange={(e: React.SyntheticEvent<Element, Event>) => {
-                    const target = e?.target as HTMLInputElement;
-                    formik.setFieldValue("drawType", target.value);
-                  }}
-                />
-              ))}
-            </RadioGroup>
+            <InputLabel label="Map drawing type">
+              <RadioGroup defaultValue="Polygon" value={formik.values.drawType}>
+                {[
+                  { id: "Polygon", title: "Polygon" },
+                  { id: "Point", title: "Point" },
+                ].map((type) => (
+                  <BasicRadio
+                    key={type.id}
+                    id={type.id}
+                    title={type.title}
+                    variant="compact"
+                    value={type.id}
+                    onChange={(e: React.SyntheticEvent<Element, Event>) => {
+                      const target = e?.target as HTMLInputElement;
+                      formik.setFieldValue("drawType", target.value);
+                    }}
+                  />
+                ))}
+              </RadioGroup>
+            </InputLabel>
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
