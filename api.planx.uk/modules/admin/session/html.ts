@@ -1,5 +1,8 @@
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
-import type { DrawBoundaryUserAction, PlanXExportData } from "@opensystemslab/planx-core/types";
+import type {
+  DrawBoundaryUserAction,
+  PlanXExportData,
+} from "@opensystemslab/planx-core/types";
 import type { RequestHandler } from "express";
 import { $api } from "../../../client";
 
