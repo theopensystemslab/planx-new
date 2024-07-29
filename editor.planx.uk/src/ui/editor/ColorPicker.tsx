@@ -2,7 +2,6 @@ import Box, { BoxProps } from "@mui/material/Box";
 import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { ErrorMessage } from "formik";
 import React, { useState } from "react";
 import { ChromePicker, ColorChangeHandler } from "react-color";
 import ErrorWrapper from "ui/shared/ErrorWrapper";

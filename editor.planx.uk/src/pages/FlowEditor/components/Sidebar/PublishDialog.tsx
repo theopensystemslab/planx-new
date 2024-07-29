@@ -1,6 +1,7 @@
 import Close from "@mui/icons-material/Close";
 import Done from "@mui/icons-material/Done";
 import NotInterested from "@mui/icons-material/NotInterested";
+import Warning from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
@@ -18,7 +19,6 @@ import { useAsync } from "react-use";
 import Caret from "ui/icons/Caret";
 
 import { useStore } from "../../lib/store";
-import Warning from "@mui/icons-material/Warning";
 
 export interface AlteredNode {
   id: string;

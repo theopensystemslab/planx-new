@@ -1,6 +1,5 @@
 import { styled } from "@mui/material/styles";
 import React from "react";
-import { optional } from "zod";
 
 import { Field, UserResponse } from "./model";
 

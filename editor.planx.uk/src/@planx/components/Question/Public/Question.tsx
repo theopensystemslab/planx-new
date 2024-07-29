@@ -2,7 +2,6 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
-import { useTheme } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
@@ -45,8 +44,6 @@ export enum QuestionLayout {
 }
 
 const Question: React.FC<IQuestion> = (props) => {
-  const theme = useTheme();
-
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
     (response) => response.id === previousResponseId,

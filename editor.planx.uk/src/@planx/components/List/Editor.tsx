@@ -14,20 +14,19 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { List, parseContent } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
-import { MaterialDetails } from "./schemas/Materials";
 import { NonResidentialFloorspace } from "./schemas/Floorspace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
 import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
 import { OpenSpaceGLA } from "./schemas/GLA/OpenSpace";
 import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
+import { MaterialDetails } from "./schemas/Materials";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
 import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
 import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
 import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
-
 
 type Props = EditorProps<TYPES.List, List>;
 

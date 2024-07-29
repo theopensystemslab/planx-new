@@ -1,8 +1,10 @@
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
-import { $api } from "../../../client";
+import type {
+  DrawBoundaryUserAction,
+  PlanXExportData,
+} from "@opensystemslab/planx-core/types";
 import type { RequestHandler } from "express";
-import type { PlanXExportData } from "@opensystemslab/planx-core/types";
-import { DrawBoundaryUserAction } from "@opensystemslab/planx-core/dist/templates/html/map/Map";
+import { $api } from "../../../client";
 
 type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;
 
