@@ -190,7 +190,7 @@ const getThemeOptions = ({
       },
       body3: {
         fontSize: "0.913rem",
-      }
+      },
     },
     palette,
     breakpoints: {

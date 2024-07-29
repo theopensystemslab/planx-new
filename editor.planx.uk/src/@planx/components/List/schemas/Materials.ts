@@ -29,7 +29,10 @@ export const MaterialDetails: Schema = {
           },
           {
             id: "surface",
-            data: { text: "External ground materials for access and parking", val: "surface" },
+            data: {
+              text: "External ground materials for access and parking",
+              val: "surface",
+            },
           },
           {
             id: "lighting",

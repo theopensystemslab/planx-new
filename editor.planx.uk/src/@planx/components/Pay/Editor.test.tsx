@@ -1,6 +1,5 @@
 import { User } from "@opensystemslab/planx-core/types";
 import { fireEvent, waitFor } from "@testing-library/react";
-import { toggleFeatureFlag } from "lib/featureFlags";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";

@@ -442,7 +442,7 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef, route }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [togglePreview, user, team, canUserEditTeam] = useStore((state) => [
+  const [togglePreview, user] = useStore((state) => [
     state.togglePreview,
     state.getUser(),
     state.getTeam(),
@@ -502,9 +502,7 @@ const EditorToolbar: React.FC<{
                       {user.firstName[0]}
                       {user.lastName[0]}
                     </Avatar>
-                    <Typography variant="body3">
-                      Account
-                    </Typography>
+                    <Typography variant="body3">Account</Typography>
                     <KeyboardArrowDown />
                   </IconButton>
                 </ProfileSection>

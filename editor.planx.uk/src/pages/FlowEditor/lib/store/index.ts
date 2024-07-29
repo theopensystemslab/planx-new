@@ -1,6 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { isPreviewOnlyDomain } from "routes/utils";
-import { create, StoreApi,UseBoundStore } from "zustand";
+import { create, StoreApi, UseBoundStore } from "zustand";
 
 import type { EditorStore, EditorUIStore } from "./editor";
 import type { NavigationStore } from "./navigation";
