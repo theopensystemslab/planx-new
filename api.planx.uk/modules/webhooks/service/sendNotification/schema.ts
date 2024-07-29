@@ -80,7 +80,6 @@ export const flowStatusSchema = z.object({
     event: z.object({
       data: z.object({
         new: z.object({
-          id: z.string(),
           status: z.string(),
         }),
       }),
@@ -96,4 +95,5 @@ export const sendSlackNotificationSchema = z.union([
   uniformSubmissionSchema,
   emailSubmissionSchema,
   s3SubmissionSchema,
+  flowStatusSchema,
 ]);

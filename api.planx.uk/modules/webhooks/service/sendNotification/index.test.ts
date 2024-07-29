@@ -1,7 +1,13 @@
 import supertest from "supertest";
 import app from "../../../../server";
 import SlackNotify from "slack-notify";
-import { BOPSBody, EmailBody, FlowStatusBody, S3Body, UniformBody } from "./types";
+import {
+  BOPSBody,
+  EmailBody,
+  FlowStatusBody,
+  S3Body,
+  UniformBody,
+} from "./types";
 import { $api } from "../../../../client";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 
@@ -406,10 +412,9 @@ describe("Send Slack notifications endpoint", () => {
         data: {
           new: {
             status: "online",
-            id: "flow-123"
-          }
-        }
-      }
+          },
+        },
+      },
     };
 
     it("skips the staging environment", async () => {
@@ -439,7 +444,6 @@ describe("Send Slack notifications endpoint", () => {
           expect(mockSend).toHaveBeenCalledTimes(1);
           expect(response.body.message).toBe("Posted to Slack");
           expect(response.body.data).toMatch(/online/);
-          expect(response.body.data).toMatch(/flow-123/);
         });
     });
 

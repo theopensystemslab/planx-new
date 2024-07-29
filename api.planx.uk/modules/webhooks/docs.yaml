@@ -259,12 +259,19 @@ paths:
       security:
         - hasuraAuth: []
       summary: Send Slack notification
-      description: Endpoint to trigger a Slack notification following a submission event
+      description: Endpoint to trigger a Slack notification following a database event (eg insert record into submission audit table, update a flow table column)
       parameters:
         - in: query
           name: type
           type: string
-          enum: ["bops-submission", "uniform-submission", "email-submission"]
+          enum:
+            [
+              "bops-submission",
+              "uniform-submission",
+              "email-submission",
+              "s3-submission",
+              "flow-status",
+            ]
           required: true
       requestBody:
         content:
