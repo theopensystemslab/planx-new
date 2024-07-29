@@ -95,7 +95,6 @@ declare module "@mui/material" {
   }
 }
 
-
 // Add a new typography variant "body3" for use in the editor
 declare module "@mui/material/styles" {
   interface TypographyVariants {

@@ -104,7 +104,7 @@ const Search: React.FC = () => {
 
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const endpoint = `${process.env.REACT_APP_API_URL}/flows/${flowId}/search`;
-  const { data, error } = useSWR<SearchResult[]>(
+  const { error } = useSWR<SearchResult[]>(
     debouncedQuery ? `${endpoint}?find=${debouncedQuery}` : null,
     fetcher,
   );

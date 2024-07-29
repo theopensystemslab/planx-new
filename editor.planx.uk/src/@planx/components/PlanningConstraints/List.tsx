@@ -200,17 +200,22 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
           expandIcon={<Caret />}
           sx={{ pr: 1.5, background: `rgba(255, 255, 255, 0.8)` }}
         >
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}> 
-            <Typography
-              component="div"
-              variant="body2"
-              pr={1.5}
-            >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Typography component="div" variant="body2" pr={1.5}>
               {children}
             </Typography>
             {allEntitiesInaccurate && (
               <Chip
-                label={props.value ? "Marked as not applicable" : "Not applicable"}
+                label={
+                  props.value ? "Marked as not applicable" : "Not applicable"
+                }
                 variant="notApplicableTag"
                 size="small"
                 sx={{ mr: 0.75 }}
@@ -245,7 +250,13 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                         display: "list-item",
                       }}
                     >
-                      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "flex-start", md: "center" } }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: { xs: "column", md: "row" },
+                          alignItems: { xs: "flex-start", md: "center" },
+                        }}
+                      >
                         {isSourcedFromPlanningData ? (
                           <Typography variant="body2" component="span">
                             <Link
@@ -258,7 +269,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
                         ) : (
                           <Typography variant="body2">{record.name}</Typography>
                         )}
-                          {props.inaccurateConstraints?.[props.fn]?.[
+                        {props.inaccurateConstraints?.[props.fn]?.[
                           "entities"
                         ]?.includes(`${record.entity}`) && (
                           <Chip

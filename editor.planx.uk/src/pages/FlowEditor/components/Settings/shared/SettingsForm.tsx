@@ -7,7 +7,6 @@ import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 type SettingsFormProps<TFormikValues> = {
   legend: string;
