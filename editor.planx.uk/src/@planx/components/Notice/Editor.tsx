@@ -56,7 +56,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
           </InputRow>
           <ColorPicker
             inline
-            label="Background colou"
+            label="Background colour"
             color={props.value.color}
             onChange={(color) => {
               props.onChange({
