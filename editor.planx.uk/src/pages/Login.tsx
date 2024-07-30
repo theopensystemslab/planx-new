@@ -31,8 +31,18 @@ const PhaseText = styled("span")(() => ({
 
 const LoginButton = styled(Button)(({ theme }) => ({
   minWidth: "280px",
-  gap: theme.spacing(0.75),
   marginTop: theme.spacing(1),
+  display: "flex",
+  flexDirection: "column",
+  "& > span": {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(0.75),
+  },
+  "&.Mui-disabled": {
+    color: "#eee",
+    backgroundColor: `rgba(0, 0, 0, 0.25)`,
+  },
 }));
 
 const Login: React.FC = () => {
@@ -51,12 +61,22 @@ const Login: React.FC = () => {
             process.env.REACT_APP_API_URL
           }/auth/google`}
         >
-          <GoogleIcon />
-          Continue with Google
+          <Box component="span">
+            <GoogleIcon />
+            Continue with Google
+          </Box>
         </LoginButton>
-        <LoginButton variant="contained" color="secondary" href={`...`}>
-          <MicrosoftIcon />
-          Continue with Microsoft
+        <LoginButton
+          disabled
+          variant="contained"
+          color="secondary"
+          href={`...`}
+        >
+          <Box component="span">
+            <MicrosoftIcon />
+            Continue with Microsoft
+          </Box>
+          (coming soon)
         </LoginButton>
       </LoginContainer>
     </Wrapper>
