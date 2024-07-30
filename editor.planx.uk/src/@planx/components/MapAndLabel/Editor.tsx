@@ -13,6 +13,7 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
+import InputRowLabel from "ui/shared/InputRowLabel";
 
 import BasicRadio from "../shared/Radio/BasicRadio";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
@@ -76,17 +77,18 @@ function MapAndLabelComponent(props: Props) {
         <ModalSectionContent title="Map formatting">
           <InputGroup>
             <InputRow>
-              <InputRowItem>
-                <ColorPicker
-                  label="Drawing Colour"
-                  inline={false}
-                  color={formik.values.drawColor}
-                  onChange={(color) => {
-                    formik.setFieldValue("drawColor", color);
-                  }}
-                  errorMessage={formik.errors.drawColor}
-                />
-              </InputRowItem>
+              <InputLabel label="Drawing colour">
+                <InputRowItem>
+                  <ColorPicker
+                    inline={false}
+                    color={formik.values.drawColor}
+                    onChange={(color) => {
+                      formik.setFieldValue("drawColor", color);
+                    }}
+                    errorMessage={formik.errors.drawColor}
+                  />
+                </InputRowItem>
+              </InputLabel>
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
