@@ -1,18 +1,25 @@
+import Cancel from "@mui/icons-material/Cancel";
+import CheckCircle from "@mui/icons-material/CheckCircle";
 import Close from "@mui/icons-material/Close";
 import Done from "@mui/icons-material/Done";
+import Help from "@mui/icons-material/Help";
 import NotInterested from "@mui/icons-material/NotInterested";
-import Warning from "@mui/icons-material/Warning";
+import WarningAmber from "@mui/icons-material/WarningAmber";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { styled } from "@mui/material/styles";
+import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import countBy from "lodash/countBy";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
@@ -147,7 +154,7 @@ export const AlteredNodesSummaryContent = (props: {
 
   return (
     <Box pb={2}>
-      <Typography variant="h4" component="h3" pb={2}>
+      <Typography variant="h4" component="h3" gutterBottom>
         {`Changes`}
       </Typography>
       {changeSummary["title"] && (
@@ -230,6 +237,17 @@ export const AlteredNodesSummaryContent = (props: {
   );
 };
 
+const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.background.default,
+    color: theme.palette.text.primary,
+    boxShadow: theme.shadows[1],
+    fontSize: theme.typography.body2,
+  },
+}));
+
 export interface ValidationCheck {
   title: string;
   status: "Pass" | "Fail" | "Warn" | "Not applicable";
@@ -244,19 +262,41 @@ export const ValidationChecks = (props: {
   const Icon: Record<ValidationCheck["status"], React.ReactElement> = {
     Pass: <Done color="success" />,
     Fail: <Close color="error" />,
-    Warn: <Warning color="warning" />,
+    Warn: <WarningAmber color="warning" />,
     "Not applicable": <NotInterested color="disabled" />,
   };
 
   return (
     <Box pb={2}>
-      <Typography variant="h4" component="h3">
+      <Typography
+        variant="h4"
+        component="h3"
+        gutterBottom
+        sx={{ display: "flex", alignItems: "center" }}
+      >
         Validation checks
+        <LightTooltip
+          title="Validation checks are automatic tests that scan your service and highlight when content changes introduce an error, like incorrectly using a component type or breaking an integration."
+          placement="right"
+        >
+          <IconButton>
+            <Help color="primary" />
+          </IconButton>
+        </LightTooltip>
       </Typography>
-      <List sx={{ pb: 2 }}>
+      <ValidationSummary validationChecks={validationChecks} />
+      <List>
         {validationChecks.map((check, i) => (
-          <ListItem key={i} disablePadding>
-            <ListItemIcon sx={{ minWidth: (theme) => theme.spacing(3) }}>
+          <ListItem
+            key={i}
+            dense
+            sx={{
+              backgroundColor: (theme) => theme.palette.background.default,
+              border: (theme) => `1px solid ${theme.palette.border.light}`,
+              marginTop: "-1px", // eliminate double borders
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: (theme) => theme.spacing(4) }}>
               {Icon[check.status]}
             </ListItemIcon>
             <ListItemText
@@ -285,7 +325,62 @@ export const ValidationChecks = (props: {
           </ListItem>
         ))}
       </List>
-      <Divider />
+    </Box>
+  );
+};
+
+const ValidationSummary = (props: { validationChecks: ValidationCheck[] }) => {
+  const { validationChecks } = props;
+  const atLeastOneFail =
+    validationChecks.filter((check) => check.status === "Fail").length > 0;
+  const countByStatus = countBy(validationChecks, "status");
+
+  const summary: string[] = [];
+  Object.entries(countByStatus).map(([status, count]) => {
+    switch (status) {
+      case "Fail":
+        summary.push(`${count} failing`);
+        break;
+      case "Warn":
+        summary.push(count === 1 ? `${count} warning` : `${count} warnings`);
+        break;
+      case "Pass":
+        summary.push(`${count} successful`);
+        break;
+      case "Not applicable":
+        summary.push(`${count} skipped`);
+        break;
+    }
+  });
+  // If there aren't any fails, still add "0 errors" to end of summary string for distinction from "warnings"
+  const formattedSummary = atLeastOneFail
+    ? summary.join(", ")
+    : summary.join(", ").concat(", 0 errors");
+
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      {atLeastOneFail ? (
+        <Cancel
+          color="error"
+          fontSize="large"
+          sx={{ minWidth: (theme) => theme.spacing(5.5) }}
+        />
+      ) : (
+        <CheckCircle
+          color="success"
+          fontSize="large"
+          sx={{ minWidth: (theme) => theme.spacing(5.5) }}
+        />
+      )}
+      <Typography
+        variant="body1"
+        component="div"
+        sx={{ display: "flex", flexDirection: "column" }}
+        gutterBottom
+      >
+        {atLeastOneFail ? `Fix errors before publishing` : `Ready to publish`}
+        <Typography variant="caption">{formattedSummary}</Typography>
+      </Typography>
     </Box>
   );
 };
