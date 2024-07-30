@@ -93,7 +93,15 @@ export const sharedStore: StateCreator<
   },
 
   setFlow({ id, flow, flowSlug, flowName, flowStatus }) {
-    set({ id, flow, flowSlug, flowName, flowStatus });
+    set({
+      id,
+      flow,
+      flowSlug,
+      flowName,
+      flowStatus,
+      orderedFlow: undefined,
+      externalPortals: {},
+    });
     get().initNavigationStore();
   },
 
