@@ -7,10 +7,12 @@ export const buildJWT = async (email: string): Promise<string | undefined> => {
   const user = await $api.user.getByEmail(email);
   if (!user) return;
 
+  const claims = generateHasuraClaimsForUser(user);
+
   const data = {
     sub: user.id.toString(),
     email,
-    "https://hasura.io/jwt/claims": generateHasuraClaimsForUser(user),
+    "https://hasura.io/jwt/claims": claims,
   };
 
   const jwt = sign(data, process.env.JWT_SECRET!);

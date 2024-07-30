@@ -1,15 +1,16 @@
 import crypto from "crypto";
 import assert from "assert";
-import { ServerError } from "../../errors";
-import { Template } from "../../lib/notify";
 import { expressjwt } from "express-jwt";
-
-import passport from "passport";
-
 import { RequestHandler } from "http-proxy-middleware";
-import { Role } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
 import { Request } from "express";
+import { generators } from "openid-client";
+import { Authenticator } from "passport";
+
+import { Role } from "@opensystemslab/planx-core/types";
+
+import { ServerError } from "../../errors";
+import { Template } from "../../lib/notify";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -110,17 +111,54 @@ export const useJWT = expressjwt({
   getToken: getToken,
 });
 
-export const useGoogleAuth: RequestHandler = (req, res, next) => {
-  req.session!.returnTo = req.get("Referrer");
-  return passport.authenticate("google", {
-    scope: ["profile", "email"],
-  })(req, res, next);
+export const getGoogleAuthHandler = (
+  passport: Authenticator,
+): RequestHandler => {
+  return (req, res, next) => {
+    req.session!.returnTo = req.get("Referrer");
+    return passport.authenticate("google", {
+      scope: ["profile", "email"],
+    })(req, res, next);
+  };
 };
 
-export const useGoogleCallbackAuth: RequestHandler = (req, res, next) => {
-  return passport.authenticate("google", {
-    failureRedirect: "/auth/login/failed",
-  })(req, res, next);
+export const getGoogleCallbackAuthHandler = (
+  passport: Authenticator,
+): RequestHandler => {
+  return (req, res, next) => {
+    return passport.authenticate("google", {
+      failureRedirect: "/auth/login/failed",
+    })(req, res, next);
+  };
+};
+
+export const getMicrosoftAuthHandler = (
+  passport: Authenticator,
+): RequestHandler => {
+  return (req, res, next) => {
+    req.session!.returnTo = req.get("Referrer");
+
+    // generate a nonce to enable us to validate the response from OP
+    const nonce = generators.nonce();
+    console.debug(`Generated a nonce: %s`, nonce);
+    req.session!.nonce = nonce;
+
+    // @ts-expect-error (method not typed to accept nonce, but it does pass it to the strategy)
+    return passport.authenticate("microsoft-oidc", {
+      prompt: "select_account",
+      nonce,
+    })(req, res, next);
+  };
+};
+
+export const getMicrosoftCallbackAuthHandler = (
+  passport: Authenticator,
+): RequestHandler => {
+  return (req, res, next) => {
+    return passport.authenticate("microsoft-oidc", {
+      failureRedirect: "/auth/login/failed",
+    })(req, res, next);
+  };
 };
 
 type UseRoleAuth = (authRoles: Role[]) => RequestHandler;
