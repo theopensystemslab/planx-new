@@ -95,18 +95,21 @@ declare module "@mui/material" {
   }
 }
 
-// Add a new typography variant "body3" for use in the editor
+// Add new typography variants
 declare module "@mui/material/styles" {
   interface TypographyVariants {
     body3: React.CSSProperties;
+    data: React.CSSProperties;
   }
   interface TypographyVariantsOptions {
     body3?: React.CSSProperties;
+    data?: React.CSSProperties;
   }
 }
 
 declare module "@mui/material/Typography" {
   interface TypographyPropsVariantOverrides {
     body3: true;
+    data: true;
   }
 }

@@ -191,6 +191,9 @@ const getThemeOptions = ({
       body3: {
         fontSize: "0.913rem",
       },
+      data: {
+        fontFamily: '"Source Code Pro", monospace',
+      },
     },
     palette,
     breakpoints: {
