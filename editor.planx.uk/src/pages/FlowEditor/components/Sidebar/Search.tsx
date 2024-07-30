@@ -75,15 +75,13 @@ const Headline: React.FC<HeadlineProps> = ({ text, matchIndices, variant }) => {
     <>
       {text.split("").map((char, index) => (
         <Typography
-          fontWeight={isHighlighted(index) ? FONT_WEIGHT_BOLD : "regular"}
           component="span"
-          p={0}
+          variant="data"
           key={`headline-character-${index}`}
-          fontFamily={
-            variant === "data" ? '"Source Code Pro", monospace' : "inherit"
-          }
-          variant="body2"
-          display={"inline-block"}
+          sx={(theme) => ({
+            fontWeight: isHighlighted(index) ? FONT_WEIGHT_BOLD : "regular",
+            fontSize: theme.typography.body2.fontSize,
+          })}
         >
           {char}
         </Typography>
