@@ -30,3 +30,4 @@ api.planx.uk/tmp/
 **/*.pkcs12
 **/*.p12
 **/*.p7b
+**/*.pem
