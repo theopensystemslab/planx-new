@@ -31,7 +31,6 @@ import Send from "@planx/components/Send/Public";
 import SetValue from "@planx/components/SetValue/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";

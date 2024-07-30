@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import React from "react";
 import { axe, setup } from "testUtils";
 

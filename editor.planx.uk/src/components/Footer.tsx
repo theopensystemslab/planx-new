@@ -14,6 +14,10 @@ const Root = styled("footer")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     padding: theme.spacing(3, 0),
   },
+  "@media print": {
+    color: theme.palette.common.black,
+    backgroundColor: theme.palette.common.white,
+  },
 }));
 
 const ButtonGroup = styled(Box)(({ theme }) => ({

@@ -140,10 +140,14 @@ const Logo = styled("img")(() => ({
   objectFit: "contain",
 }));
 
-const LogoLink = styled(Link)(() => ({
+const LogoLink = styled(Link)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   "&:focus-visible": borderedFocusStyle,
+  "@media print": {
+    backgroundColor: theme.palette.common.black,
+    padding: "0.25em",
+  },
 }));
 
 const SkipLink = styled("a")(({ theme }) => ({
@@ -378,8 +382,9 @@ const PublicToolbar: React.FC<{
                   aria-label="Restart Application"
                   size="large"
                   aria-describedby="restart-application-description"
+                  sx={{ "@media print": { color: "black" } }}
                 >
-                  <Reset color="secondary" />
+                  <Reset color="inherit" />
                   <Typography
                     id="restart-application-description"
                     variant="body2"
@@ -437,7 +442,7 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef, route }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [togglePreview, user, team, canUserEditTeam] = useStore((state) => [
+  const [togglePreview, user] = useStore((state) => [
     state.togglePreview,
     state.getUser(),
     state.getTeam(),
@@ -497,9 +502,7 @@ const EditorToolbar: React.FC<{
                       {user.firstName[0]}
                       {user.lastName[0]}
                     </Avatar>
-                    <Typography variant="body3">
-                      Account
-                    </Typography>
+                    <Typography variant="body3">Account</Typography>
                     <KeyboardArrowDown />
                   </IconButton>
                 </ProfileSection>
@@ -580,7 +583,10 @@ const Header: React.FC = () => {
       elevation={0}
       color="transparent"
       ref={headerRef}
-      style={{ backgroundColor: theme?.primaryColour || "#2c2c2c" }}
+      sx={{
+        backgroundColor: theme?.primaryColour || "#2c2c2c",
+        "@media print": { backgroundColor: "white", color: "black" },
+      }}
     >
       <Toolbar headerRef={headerRef}></Toolbar>
     </Root>
