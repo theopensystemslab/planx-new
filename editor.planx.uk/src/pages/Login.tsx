@@ -66,7 +66,6 @@ const Login: React.FC = () => {
           </Box>
         </LoginButton>
         <LoginButton
-          disabled
           variant="contained"
           color="secondary"
           href={`${process.env.REACT_APP_MICROSOFT_OAUTH_OVERRIDE ??
