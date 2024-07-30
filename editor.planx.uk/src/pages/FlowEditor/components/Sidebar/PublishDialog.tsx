@@ -4,7 +4,7 @@ import Close from "@mui/icons-material/Close";
 import Done from "@mui/icons-material/Done";
 import Help from "@mui/icons-material/Help";
 import NotInterested from "@mui/icons-material/NotInterested";
-import Warning from "@mui/icons-material/Warning";
+import WarningAmber from "@mui/icons-material/WarningAmber";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
@@ -262,7 +262,7 @@ export const ValidationChecks = (props: {
   const Icon: Record<ValidationCheck["status"], React.ReactElement> = {
     Pass: <Done color="success" />,
     Fail: <Close color="error" />,
-    Warn: <Warning color="warning" />,
+    Warn: <WarningAmber color="warning" />,
     "Not applicable": <NotInterested color="disabled" />,
   };
 
@@ -293,6 +293,7 @@ export const ValidationChecks = (props: {
             sx={{
               backgroundColor: (theme) => theme.palette.background.default,
               border: (theme) => `1px solid ${theme.palette.border.light}`,
+              marginTop: "-1px", // eliminate double borders
             }}
           >
             <ListItemIcon sx={{ minWidth: (theme) => theme.spacing(4) }}>
