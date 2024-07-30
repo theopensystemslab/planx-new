@@ -100,9 +100,11 @@ export default function ColorPicker(props: Props): FCReturn {
       id="colour-picker-error"
     >
       <Root inline={props.inline}>
-        <Typography mr={2} variant="body2" component="label">
-          {props.label || "Background colour"}:{" "}
-        </Typography>
+        {props.label && (
+          <Typography mr={2} variant="body2" component="label">
+            {props.label || "Background colour"}:{" "}
+          </Typography>
+        )}
         <StyledButtonBase show={show} onClick={handleClick} disableRipple>
           <Swatch sx={{ backgroundColor: props.color }} className="swatch" />
           {props.color}
