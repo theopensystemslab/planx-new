@@ -20,28 +20,33 @@ function MapAndLabelComponent(props: Props) {
   const [boundary, setBoundary] = useState<Boundary>();
   const [area, setArea] = useState<number | undefined>(0);
 
-  const areaChangeHandler = ({ detail }: { detail: string }) => {
-    console.log(detail);
-    const numberString = detail.split(" ")[0];
-    const area = Number(numberString);
-    setArea(area);
-  };
+  useEffect(() => {
+    const areaChangeHandler = ({ detail }: { detail: string }) => {
+      const numberString = detail.split(" ")[0];
+      const area = Number(numberString);
+      setArea(area);
+    };
 
-  const geojsonChangeHandler = ({ detail: geojson }: any) => {
-    console.log(geojson);
-    if (geojson["EPSG:3857"]?.features) {
-      // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
-      setBoundary(geojson["EPSG:3857"].features);
-    } else {
-      // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined
-      setBoundary(undefined);
-    }
-  };
+    const geojsonChangeHandler = ({ detail: geojson }: any) => {
+      if (geojson["EPSG:3857"]?.features) {
+        // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
+        setBoundary(geojson["EPSG:3857"].features[0]);
+      } else {
+        // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined
+        setBoundary(undefined);
+      }
+    };
 
-  const map: any = document.getElementById("draw-boundary-map");
+    const map: any = document.getElementById("draw-boundary-map");
 
-  map?.addEventListener("areaChange", areaChangeHandler);
-  map?.addEventListener("geojsonChange", geojsonChangeHandler);
+    map?.addEventListener("areaChange", areaChangeHandler);
+    map?.addEventListener("geojsonChange", geojsonChangeHandler);
+
+    return function cleanup() {
+      map?.removeEventListener("areaChange", areaChangeHandler);
+      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
+    };
+  }, []);
 
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
@@ -57,8 +62,8 @@ function MapAndLabelComponent(props: Props) {
         <my-map
           id="draw-boundary-map"
           drawMode
-          drawGeojsonData={JSON.stringify(boundary)}
           drawPointer="crosshair"
+          drawGeojsonData={JSON.stringify(boundary)}
           zoom={16}
           drawFillColor={alpha(props.drawColor, 0.1)}
           drawColor={props.drawColor}
