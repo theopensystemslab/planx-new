@@ -159,7 +159,6 @@ const Sidebar: React.FC<{
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
     flowId,
-    flowAnalyticsLink,
     resetPreview,
     publishFlow,
     lastPublished,
@@ -168,7 +167,6 @@ const Sidebar: React.FC<{
     isFlowPublished,
   ] = useStore((state) => [
     state.id,
-    state.flowAnalyticsLink,
     state.resetPreview,
     state.publishFlow,
     state.lastPublished,
@@ -276,27 +274,6 @@ const Sidebar: React.FC<{
               onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
             />
           </Tooltip>
-
-          {flowAnalyticsLink ? (
-            <Tooltip arrow title="Open analytics page">
-              <Link
-                href={flowAnalyticsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-              >
-                <SignalCellularAltIcon />
-              </Link>
-            </Tooltip>
-          ) : (
-            <Tooltip arrow title="Analytics page unavailable">
-              <Box>
-                <Link component={"button"} disabled aria-disabled={true}>
-                  <SignalCellularAltIcon />
-                </Link>
-              </Box>
-            </Tooltip>
-          )}
 
           <Permission.IsPlatformAdmin>
             <Tooltip arrow title="Open draft service">
