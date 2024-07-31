@@ -87,6 +87,16 @@ export async function sendToIdoxNexus(
     const { token, organisation, organisationId } =
       await authenticate(uniformClient);
 
+    // Temporary guard clause for testing phase 
+    //   Ensures payload `files` will always be api.editor.planx.dev links which Idox has token to download (unlike api.XXX.planx.pizza)
+    if (process.env.NODE_ENV !== "staging") {
+      return res.status(200).send({
+        message: `Successfully authenticated to Idox Nexus, skipping submission because not staging env`,
+        organisation: organisation,
+        organisationId: organisationId,
+      });
+    }
+
     // 2/4 - Create a submission
     const idoxSubmissionId = await createSubmission(
       token,
