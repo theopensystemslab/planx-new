@@ -77,18 +77,16 @@ function MapAndLabelComponent(props: Props) {
         <ModalSectionContent title="Map formatting">
           <InputGroup>
             <InputRow>
-              <InputLabel label="Drawing colour">
-                <InputRowItem>
-                  <ColorPicker
-                    inline={false}
-                    color={formik.values.drawColor}
-                    onChange={(color) => {
-                      formik.setFieldValue("drawColor", color);
-                    }}
-                    errorMessage={formik.errors.drawColor}
-                  />
-                </InputRowItem>
-              </InputLabel>
+              <InputRowItem>
+                <ColorPicker
+                  label="Drawing colour"
+                  color={formik.values.drawColor}
+                  onChange={(color) => {
+                    formik.setFieldValue("drawColor", color);
+                  }}
+                  errorMessage={formik.errors.drawColor}
+                />
+              </InputRowItem>
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
