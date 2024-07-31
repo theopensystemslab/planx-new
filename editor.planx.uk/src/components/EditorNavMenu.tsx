@@ -1,7 +1,9 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import PaletteIcon from "@mui/icons-material/Palette";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
@@ -204,7 +206,7 @@ function EditorNavMenu() {
       ? [
           {
             title: "Analytics (external link)",
-            Icon: SignalCellularAltIcon,
+            Icon: LeaderboardIcon,
             route: flowAnalyticsLink,
             accessibleBy: [platformAdmin, teamEditor],
           },
@@ -212,7 +214,7 @@ function EditorNavMenu() {
       : [
           {
             title: "Analytics page unavailable",
-            Icon: SignalCellularAltIcon,
+            Icon: LeaderboardIcon,
             route: "#",
             accessibleBy: [platformAdmin, teamEditor],
             disabled: true,
