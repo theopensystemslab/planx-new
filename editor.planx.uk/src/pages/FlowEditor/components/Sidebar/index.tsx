@@ -1,11 +1,16 @@
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import ContentCopyTwoToneIcon from "@mui/icons-material/ContentCopyTwoTone";
 import LanguageIcon from "@mui/icons-material/Language";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import Alert from "@mui/material/Alert";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -132,7 +137,7 @@ const DebugConsole = () => {
       state.breadcrumbs,
       state.id,
       state.cachedBreadcrumbs,
-    ],
+    ]
   );
   return (
     <Console borderTop={2} borderColor="border.main" bgcolor="background.paper">
@@ -175,15 +180,16 @@ const Sidebar: React.FC<{
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
-    "This flow is not published yet",
+    "This flow is not published yet"
   );
   const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>(
-    [],
+    []
   );
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
+  const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
@@ -194,12 +200,12 @@ const Sidebar: React.FC<{
       setLastPublishedTitle("Checking for changes...");
       const alteredFlow = await validateAndDiffFlow(flowId);
       setAlteredNodes(
-        alteredFlow?.data.alteredNodes ? alteredFlow.data.alteredNodes : [],
+        alteredFlow?.data.alteredNodes ? alteredFlow.data.alteredNodes : []
       );
       setLastPublishedTitle(
         alteredFlow?.data.alteredNodes
           ? `Found changes to ${alteredFlow.data.alteredNodes.length} nodes`
-          : alteredFlow?.data.message,
+          : alteredFlow?.data.message
       );
       setValidationChecks(alteredFlow?.data?.validationChecks);
       setDialogOpen(true);
@@ -210,7 +216,7 @@ const Sidebar: React.FC<{
         alert(error.response?.data?.error);
       } else {
         alert(
-          `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
+          `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`
         );
       }
     }
@@ -224,7 +230,7 @@ const Sidebar: React.FC<{
       setLastPublishedTitle(
         alteredNodes
           ? `Successfully published changes to ${alteredNodes.length} nodes`
-          : `${message}` || "No new changes to publish",
+          : `${message}` || "No new changes to publish"
       );
     } catch (error) {
       setLastPublishedTitle("Error trying to publish");
@@ -242,23 +248,37 @@ const Sidebar: React.FC<{
   const _validateAndDiffRequest = useAsync(async () => {
     const newChanges = await validateAndDiffFlow(flowId);
     setAlteredNodes(
-      newChanges?.data.alteredNodes ? newChanges.data.alteredNodes : [],
+      newChanges?.data.alteredNodes ? newChanges.data.alteredNodes : []
     );
   });
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
+  const handleClick = () => {
+    navigator.clipboard.writeText(props.url.replace("/published", "/preview"));
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+  };
+
   return (
     <Root>
       <Header>
         <Box width="100%" display="flex">
           <input
-            type="text"
             disabled
             value={props.url.replace("/published", "/preview")}
+            onClick={handleClick}
           />
-
+          <Tooltip
+            arrow
+            title={isCopied ? "Copied" : "Copy link"}
+            onClick={handleClick}
+          >
+            {isCopied ? <ContentCopyTwoToneIcon /> : <ContentCopyIcon />}
+          </Tooltip>
           <Tooltip arrow title="Refresh preview">
             <RefreshIcon
               onClick={() => {
@@ -273,6 +293,27 @@ const Sidebar: React.FC<{
               onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
             />
           </Tooltip>
+
+          {flowAnalyticsLink ? (
+            <Tooltip arrow title="Open analytics page">
+              <Link
+                href={flowAnalyticsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <SignalCellularAltIcon />
+              </Link>
+            </Tooltip>
+          ) : (
+            <Tooltip arrow title="Analytics page unavailable">
+              <Box>
+                <Link component={"button"} disabled aria-disabled={true}>
+                  <SignalCellularAltIcon />
+                </Link>
+              </Box>
+            </Tooltip>
+          )}
 
           <Permission.IsPlatformAdmin>
             <Tooltip arrow title="Open draft service">
@@ -319,6 +360,199 @@ const Sidebar: React.FC<{
             </Tooltip>
           )}
         </Box>
+        <Box mt={1} mb={1} width={"100%"} display={"flex"}>
+          <Tooltip arrow title={isCopied ? "Copied" : "Copy link"}>
+            <Chip
+              variant={isCopied ? "filled" : "outlined"}
+              color="primary"
+              label={props.url.replace("/published", "/preview")}
+              onClick={handleClick}
+            />
+          </Tooltip>
+        </Box>
+        <Box mt={1} mb={1} width={"100%"} display={"flex"}>
+          <Tooltip arrow title={isCopied ? "Copied" : "Copy link"}>
+            <Chip
+              variant={isCopied ? "filled" : "outlined"}
+              color="primary"
+              icon={<ContentCopyIcon />}
+              label={"Copy your published link"}
+              onClick={handleClick}
+              sx={{ padding: "12px" }}
+            />
+          </Tooltip>
+          <Tooltip arrow title="Refresh preview">
+            <RefreshIcon
+              onClick={() => {
+                resetPreview();
+                setKey((a) => !a);
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip arrow title="Toggle debug console">
+            <MenuOpenIcon
+              onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
+            />
+          </Tooltip>
+
+          {flowAnalyticsLink ? (
+            <Tooltip arrow title="Open analytics page">
+              <Link
+                href={flowAnalyticsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <SignalCellularAltIcon />
+              </Link>
+            </Tooltip>
+          ) : (
+            <Tooltip arrow title="Analytics page unavailable">
+              <Box>
+                <Link component={"button"} disabled aria-disabled={true}>
+                  <SignalCellularAltIcon />
+                </Link>
+              </Box>
+            </Tooltip>
+          )}
+
+          <Permission.IsPlatformAdmin>
+            <Tooltip arrow title="Open draft service">
+              <Link
+                href={props.url.replace("/published", "/draft")}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <OpenInNewOffIcon />
+              </Link>
+            </Tooltip>
+          </Permission.IsPlatformAdmin>
+
+          <Tooltip arrow title="Open preview of changes to publish">
+            <Link
+              href={props.url.replace("/published", "/preview")}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="inherit"
+            >
+              <OpenInNewIcon />
+            </Link>
+          </Tooltip>
+
+          {isFlowPublished ? (
+            <Tooltip arrow title="Open published service">
+              <Link
+                href={props.url + "?analytics=false"}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <LanguageIcon />
+              </Link>
+            </Tooltip>
+          ) : (
+            <Tooltip arrow title="Flow not yet published">
+              <Box>
+                <Link component={"button"} disabled aria-disabled={true}>
+                  <LanguageIcon />
+                </Link>
+              </Box>
+            </Tooltip>
+          )}
+        </Box>
+        <Box width="100%" display="flex">
+          <Tooltip arrow title={isCopied ? "Copied" : "Copy link"}>
+            <Chip
+              variant={isCopied ? "filled" : "outlined"}
+              color="primary"
+              label={"Copy your published link"}
+              onClick={handleClick}
+            />
+          </Tooltip>
+          <Tooltip arrow title="Refresh preview">
+            <RefreshIcon
+              onClick={() => {
+                resetPreview();
+                setKey((a) => !a);
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip arrow title="Toggle debug console">
+            <MenuOpenIcon
+              onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
+            />
+          </Tooltip>
+
+          {flowAnalyticsLink ? (
+            <Tooltip arrow title="Open analytics page">
+              <Link
+                href={flowAnalyticsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <SignalCellularAltIcon />
+              </Link>
+            </Tooltip>
+          ) : (
+            <Tooltip arrow title="Analytics page unavailable">
+              <Box>
+                <Link component={"button"} disabled aria-disabled={true}>
+                  <SignalCellularAltIcon />
+                </Link>
+              </Box>
+            </Tooltip>
+          )}
+
+          <Permission.IsPlatformAdmin>
+            <Tooltip arrow title="Open draft service">
+              <Link
+                href={props.url.replace("/published", "/draft")}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <OpenInNewOffIcon />
+              </Link>
+            </Tooltip>
+          </Permission.IsPlatformAdmin>
+
+          <Tooltip arrow title="Open preview of changes to publish">
+            <Link
+              href={props.url.replace("/published", "/preview")}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="inherit"
+            >
+              <OpenInNewIcon />
+            </Link>
+          </Tooltip>
+
+          {isFlowPublished ? (
+            <Tooltip arrow title="Open published service">
+              <Link
+                href={props.url + "?analytics=false"}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+              >
+                <LanguageIcon />
+              </Link>
+            </Tooltip>
+          ) : (
+            <Tooltip arrow title="Flow not yet published">
+              <Box>
+                <Link component={"button"} disabled aria-disabled={true}>
+                  <LanguageIcon />
+                </Link>
+              </Box>
+            </Tooltip>
+          )}
+        </Box>
+        <Box mb={1} width={"100%"} display={"flex"}></Box>
         <Box width="100%" mt={2}>
           <Box
             display="flex"
