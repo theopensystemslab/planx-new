@@ -82,6 +82,7 @@ export const ThemeAndLogoForm: React.FC<FormProps> = ({
             <InputRowItem>
               <ColorPicker
                 color={formik.values.primaryColour}
+                inline
                 onChange={(color) =>
                   formik.setFieldValue("primaryColour", color)
                 }
