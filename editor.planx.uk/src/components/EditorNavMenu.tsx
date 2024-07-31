@@ -4,6 +4,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
 import PaletteIcon from "@mui/icons-material/Palette";
 import RateReviewIcon from "@mui/icons-material/RateReview";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -22,6 +23,7 @@ interface Route {
   Icon: React.ElementType;
   route: string;
   accessibleBy: Role[];
+  disabled?: boolean;
 }
 
 const MENU_WIDTH_COMPACT = "51px";
@@ -71,62 +73,77 @@ const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const MenuButton = styled(IconButton, {
-  shouldForwardProp: (prop) => prop !== "isActive",
-})<{ isActive: boolean }>(({ theme, isActive }) => ({
-  color: theme.palette.text.primary,
-  width: "100%",
-  border: "1px solid transparent",
-  justifyContent: "flex-start",
-  borderRadius: "3px",
-  "&:hover": {
-    background: "white",
-    borderColor: theme.palette.border.light,
-  },
-  ...(isActive && {
-    background: theme.palette.common.white,
+  shouldForwardProp: (prop) => prop !== "isActive" && prop !== "disabled",
+})<{ isActive: boolean; disabled?: boolean }>(
+  ({ theme, isActive, disabled }) => ({
     color: theme.palette.text.primary,
-    border: `1px solid ${theme.palette.border.main}`,
+    width: "100%",
+    border: "1px solid transparent",
+    justifyContent: "flex-start",
+    borderRadius: "3px",
+    "&:hover": {
+      background: disabled ? "none" : theme.palette.common.white,
+      borderColor: disabled ? "transparent" : theme.palette.border.light,
+    },
+    ...(isActive && {
+      background: theme.palette.common.white,
+      color: theme.palette.text.primary,
+      border: `1px solid ${theme.palette.border.main}`,
+    }),
+    ...(disabled && {
+      color: theme.palette.text.disabled,
+    }),
+    "& > svg": {
+      opacity: 0.8,
+    },
   }),
-  "& > svg": {
-    opacity: 0.8,
-  },
-}));
+);
 
 function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
-  const [teamSlug, flowSlug, user, canUserEditTeam] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-    state.user,
-    state.canUserEditTeam,
-  ]);
+  const [teamSlug, flowSlug, user, canUserEditTeam, flowAnalyticsLink] =
+    useStore((state) => [
+      state.teamSlug,
+      state.flowSlug,
+      state.user,
+      state.canUserEditTeam,
+      state.flowAnalyticsLink,
+    ]);
 
   const isActive = (route: string) => url.href.endsWith(route);
 
-  const handleClick = (route: string) => {
-    if (isActive(route)) return;
-    navigate(route);
+  const handleClick = (route: string, disabled?: boolean) => {
+    if (isActive(route) || disabled) return;
+    if (route.startsWith("http://") || route.startsWith("https://")) {
+      window.open(route, "_blank");
+    } else {
+      navigate(route);
+    }
   };
+
+  const platformAdmin: Role = "platformAdmin";
+  const teamEditor: Role = "teamEditor";
+  const teamViewer: Role = "teamViewer";
 
   const globalLayoutRoutes: Route[] = [
     {
       title: "Select a team",
       Icon: FormatListBulletedIcon,
       route: "/",
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: [platformAdmin, teamEditor, teamViewer],
     },
     {
       title: "Global settings",
       Icon: TuneIcon,
       route: "global-settings",
-      accessibleBy: ["platformAdmin"],
+      accessibleBy: [platformAdmin],
     },
     {
       title: "Admin panel",
       Icon: AdminPanelSettingsIcon,
       route: "admin-panel",
-      accessibleBy: ["platformAdmin"],
+      accessibleBy: [platformAdmin],
     },
   ];
 
@@ -135,25 +152,25 @@ function EditorNavMenu() {
       title: "Services",
       Icon: FormatListBulletedIcon,
       route: `/${teamSlug}`,
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: [platformAdmin, teamEditor, teamViewer],
     },
     {
       title: "Settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/general-settings`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: [platformAdmin, teamEditor],
     },
     {
       title: "Design",
       Icon: PaletteIcon,
       route: `/${teamSlug}/design`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: [platformAdmin, teamEditor],
     },
     {
       title: "Team members",
       Icon: GroupIcon,
       route: `/${teamSlug}/members`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: [platformAdmin, teamEditor],
     },
   ];
 
@@ -162,26 +179,44 @@ function EditorNavMenu() {
       title: "Editor",
       Icon: EditorIcon,
       route: `/${teamSlug}/${flowSlug}`,
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: [platformAdmin, teamEditor, teamViewer],
     },
     {
       title: "Service settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/${flowSlug}/service`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: [platformAdmin, teamEditor],
     },
     {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions-log`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: [platformAdmin, teamEditor],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
       route: `/${teamSlug}/${flowSlug}/feedback`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: [platformAdmin, teamEditor],
     },
+    ...(flowAnalyticsLink
+      ? [
+          {
+            title: "Analytics (external link)",
+            Icon: SignalCellularAltIcon,
+            route: flowAnalyticsLink,
+            accessibleBy: [platformAdmin, teamEditor],
+          },
+        ]
+      : [
+          {
+            title: "Analytics page unavailable",
+            Icon: SignalCellularAltIcon,
+            route: "#",
+            accessibleBy: [platformAdmin, teamEditor],
+            disabled: true,
+          },
+        ]),
   ];
 
   const getRoutesForUrl = (
@@ -208,16 +243,24 @@ function EditorNavMenu() {
   return (
     <Root compact={compact}>
       <MenuWrap>
-        {visibleRoutes.map(({ title, Icon, route }) => (
-          <MenuItem onClick={() => handleClick(route)} key={title}>
+        {visibleRoutes.map(({ title, Icon, route, disabled }) => (
+          <MenuItem onClick={() => handleClick(route, disabled)} key={title}>
             {compact ? (
               <TooltipWrap title={title}>
-                <MenuButton isActive={isActive(route)} disableRipple>
+                <MenuButton
+                  isActive={isActive(route)}
+                  disabled={disabled}
+                  disableRipple
+                >
                   <Icon />
                 </MenuButton>
               </TooltipWrap>
             ) : (
-              <MenuButton isActive={isActive(route)} disableRipple>
+              <MenuButton
+                isActive={isActive(route)}
+                disabled={disabled}
+                disableRipple
+              >
                 <Icon fontSize="small" />
                 <MenuTitle variant="body3">{title}</MenuTitle>
               </MenuButton>
