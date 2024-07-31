@@ -187,6 +187,8 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
 const StyledNavBar = styled("nav")(({ theme }) => ({
   backgroundColor: theme.palette.primary.dark,
   fontSize: 16,
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
 }));
 
 const SectionName = styled(Typography)(() => ({
