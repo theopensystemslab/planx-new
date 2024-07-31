@@ -73,7 +73,8 @@ const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const MenuButton = styled(IconButton, {
-  shouldForwardProp: (prop) => !["isActive", "disabled"].includes(prop)
+  shouldForwardProp: (prop) =>
+    !["isActive", "disabled"].includes(prop as string),
 })<{ isActive: boolean; disabled?: boolean }>(
   ({ theme, isActive, disabled }) => ({
     color: theme.palette.text.primary,
