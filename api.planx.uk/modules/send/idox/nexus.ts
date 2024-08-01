@@ -26,8 +26,8 @@ interface RawUniformAuthResponse {
 
 interface UniformAuthResponse {
   token: string;
-  organisation: string;
-  organisationId: string;
+  organisations: Record<string, string>;
+  authorities: string[];
 }
 
 interface UniformApplication {
@@ -84,24 +84,24 @@ export async function sendToIdoxNexus(
 
   try {
     // Request 1/4 - Authenticate
-    const { token, organisation, organisationId } =
+    const { token, organisations, authorities } =
       await authenticate(uniformClient);
 
-    // Temporary guard clause for testing phase 
+    // Temporary guard clause for testing phase
     //   Ensures payload `files` will always be api.editor.planx.dev links which Idox has token to download (unlike api.XXX.planx.pizza)
     if (process.env.NODE_ENV !== "staging") {
       return res.status(200).send({
         message: `Successfully authenticated to Idox Nexus, skipping submission because not staging env`,
-        organisation: organisation,
-        organisationId: organisationId,
+        organisations: organisations,
+        authorities: authorities,
       });
     }
 
     // 2/4 - Create a submission
     const idoxSubmissionId = await createSubmission(
       token,
-      organisation,
-      organisationId,
+      "none",
+      "none",
       payload.sessionId,
     );
 
@@ -189,7 +189,7 @@ async function authenticate({
 
   const authConfig: AxiosRequestConfig = {
     method: "POST",
-    url: process.env.UNIFORM_TOKEN_URL!,
+    url: process.env.IDOX_NEXUS_TOKEN_URL!,
     headers: {
       Authorization: `Basic ${authString}`,
       "Content-type": "application/x-www-form-urlencoded",
@@ -207,21 +207,21 @@ async function authenticate({
     throw Error("Failed to authenticate to Uniform - no access token returned");
   }
 
-  // Decode access_token to get "organisation-name" & "organisation-id"
+  // Decode access_token to get "organisations" & "authorities"
   const decodedAccessToken = jwt.decode(response.data.access_token) as any;
-  const organisation = decodedAccessToken?.["organisation-name"];
-  const organisationId = decodedAccessToken?.["organisation-id"];
+  const organisations = decodedAccessToken?.["organisations"];
+  const authorities = decodedAccessToken?.["authorities"];
 
-  if (!organisation || !organisationId) {
+  if (!organisations || !authorities) {
     throw Error(
-      "Failed to authenticate to Uniform - failed to decode organisation details from access_token",
+      "Failed to authenticate to Uniform - failed to decode organisations or authorities from access_token",
     );
   }
 
   const uniformAuthResponse: UniformAuthResponse = {
     token: response.data.access_token,
-    organisation: organisation,
-    organisationId: organisationId,
+    organisations: organisations,
+    authorities: authorities,
   };
 
   return uniformAuthResponse;
