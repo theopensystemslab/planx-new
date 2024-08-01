@@ -2,6 +2,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import PaletteIcon from "@mui/icons-material/Palette";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -22,6 +23,7 @@ interface Route {
   Icon: React.ElementType;
   route: string;
   accessibleBy: Role[];
+  disabled?: boolean;
 }
 
 const MENU_WIDTH_COMPACT = "51px";
@@ -72,20 +74,27 @@ const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
 
 const MenuButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "isActive",
-})<{ isActive: boolean }>(({ theme, isActive }) => ({
+})<{ isActive: boolean }>(({ theme, isActive, disabled }) => ({
   color: theme.palette.text.primary,
   width: "100%",
   border: "1px solid transparent",
   justifyContent: "flex-start",
   borderRadius: "3px",
   "&:hover": {
-    background: "white",
+    background: theme.palette.common.white,
     borderColor: theme.palette.border.light,
   },
   ...(isActive && {
     background: theme.palette.common.white,
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.main}`,
+  }),
+  ...(disabled && {
+    color: theme.palette.text.disabled,
+    "&:hover": {
+      background: "none",
+      borderColor: "transparent",
+    },
   }),
   "& > svg": {
     opacity: 0.8,
@@ -95,18 +104,26 @@ const MenuButton = styled(IconButton, {
 function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
-  const [teamSlug, flowSlug, user, canUserEditTeam] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-    state.user,
-    state.canUserEditTeam,
-  ]);
+  const [teamSlug, flowSlug, user, canUserEditTeam, flowAnalyticsLink] =
+    useStore((state) => [
+      state.teamSlug,
+      state.flowSlug,
+      state.user,
+      state.canUserEditTeam,
+      state.flowAnalyticsLink,
+    ]);
 
   const isActive = (route: string) => url.href.endsWith(route);
 
-  const handleClick = (route: string) => {
-    if (isActive(route)) return;
-    navigate(route);
+  const handleClick = (route: string, disabled?: boolean) => {
+    if (isActive(route) || disabled) return;
+    const isExternalLink =
+      route.startsWith("http://") || route.startsWith("https://");
+    if (isExternalLink) {
+      window.open(route, "_blank");
+    } else {
+      navigate(route);
+    }
   };
 
   const globalLayoutRoutes: Route[] = [
@@ -157,7 +174,7 @@ function EditorNavMenu() {
     },
   ];
 
-  const flowLayoutRoutes: Route[] = [
+  const flowLayoutRoutesMain: Route[] = [
     {
       title: "Editor",
       Icon: EditorIcon,
@@ -184,6 +201,30 @@ function EditorNavMenu() {
     },
   ];
 
+  const flowAnalyticsRoute: Route[] = flowAnalyticsLink
+    ? [
+        {
+          title: "Analytics (external link)",
+          Icon: LeaderboardIcon,
+          route: flowAnalyticsLink,
+          accessibleBy: ["platformAdmin", "teamEditor"],
+        },
+      ]
+    : [
+        {
+          title: "Analytics page unavailable",
+          Icon: LeaderboardIcon,
+          route: "#",
+          accessibleBy: ["platformAdmin", "teamEditor"],
+          disabled: true,
+        },
+      ];
+
+  const flowLayoutRoutes: Route[] = [
+    ...flowLayoutRoutesMain,
+    ...flowAnalyticsRoute,
+  ];
+
   const getRoutesForUrl = (
     url: string,
   ): { routes: Route[]; compact: boolean } => {
@@ -208,16 +249,28 @@ function EditorNavMenu() {
   return (
     <Root compact={compact}>
       <MenuWrap>
-        {visibleRoutes.map(({ title, Icon, route }) => (
-          <MenuItem onClick={() => handleClick(route)} key={title}>
+        {visibleRoutes.map(({ title, Icon, route, disabled }) => (
+          <MenuItem key={title}>
             {compact ? (
               <TooltipWrap title={title}>
-                <MenuButton isActive={isActive(route)} disableRipple>
-                  <Icon />
-                </MenuButton>
+                <Box component="span">
+                  <MenuButton
+                    isActive={isActive(route)}
+                    disabled={disabled}
+                    disableRipple
+                    onClick={() => handleClick(route, disabled)}
+                  >
+                    <Icon />
+                  </MenuButton>
+                </Box>
               </TooltipWrap>
             ) : (
-              <MenuButton isActive={isActive(route)} disableRipple>
+              <MenuButton
+                isActive={isActive(route)}
+                disabled={disabled}
+                disableRipple
+                onClick={() => handleClick(route, disabled)}
+              >
                 <Icon fontSize="small" />
                 <MenuTitle variant="body3">{title}</MenuTitle>
               </MenuButton>
