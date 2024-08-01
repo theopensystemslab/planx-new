@@ -73,32 +73,33 @@ const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const MenuButton = styled(IconButton, {
-  shouldForwardProp: (prop) =>
-    !["isActive", "disabled"].includes(prop as string),
-})<{ isActive: boolean; disabled?: boolean }>(
-  ({ theme, isActive, disabled }) => ({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive: boolean }>(({ theme, isActive }) => ({
+  color: theme.palette.text.primary,
+  width: "100%",
+  border: "1px solid transparent",
+  justifyContent: "flex-start",
+  borderRadius: "3px",
+  "&:hover": {
+    background: theme.palette.common.white,
+    borderColor: theme.palette.border.light,
+  },
+  ...(isActive && {
+    background: theme.palette.common.white,
     color: theme.palette.text.primary,
-    width: "100%",
-    border: "1px solid transparent",
-    justifyContent: "flex-start",
-    borderRadius: "3px",
-    "&:hover": {
-      background: disabled ? "none" : theme.palette.common.white,
-      borderColor: disabled ? "transparent" : theme.palette.border.light,
-    },
-    ...(isActive && {
-      background: theme.palette.common.white,
-      color: theme.palette.text.primary,
-      border: `1px solid ${theme.palette.border.main}`,
-    }),
-    ...(disabled && {
-      color: theme.palette.text.disabled,
-    }),
-    "& > svg": {
-      opacity: 0.8,
-    },
+    border: `1px solid ${theme.palette.border.main}`,
   }),
-);
+  "&[disabled]": {
+    color: theme.palette.text.disabled,
+    "&:hover": {
+      background: "none",
+      borderColor: "transparent",
+    },
+  },
+  "& > svg": {
+    opacity: 0.8,
+  },
+}));
 
 function EditorNavMenu() {
   const { navigate } = useNavigation();
@@ -116,7 +117,9 @@ function EditorNavMenu() {
 
   const handleClick = (route: string, disabled?: boolean) => {
     if (isActive(route) || disabled) return;
-    if (route.startsWith("http://") || route.startsWith("https://")) {
+    const isExternalLink =
+      route.startsWith("http://") || route.startsWith("https://");
+    if (isExternalLink) {
       window.open(route, "_blank");
     } else {
       navigate(route);
@@ -245,22 +248,26 @@ function EditorNavMenu() {
     <Root compact={compact}>
       <MenuWrap>
         {visibleRoutes.map(({ title, Icon, route, disabled }) => (
-          <MenuItem onClick={() => handleClick(route, disabled)} key={title}>
+          <MenuItem key={title}>
             {compact ? (
               <TooltipWrap title={title}>
-                <MenuButton
-                  isActive={isActive(route)}
-                  disabled={disabled}
-                  disableRipple
-                >
-                  <Icon />
-                </MenuButton>
+                <Box component="span">
+                  <MenuButton
+                    isActive={isActive(route)}
+                    disabled={disabled}
+                    disableRipple
+                    onClick={() => handleClick(route, disabled)}
+                  >
+                    <Icon />
+                  </MenuButton>
+                </Box>
               </TooltipWrap>
             ) : (
               <MenuButton
                 isActive={isActive(route)}
                 disabled={disabled}
                 disableRipple
+                onClick={() => handleClick(route, disabled)}
               >
                 <Icon fontSize="small" />
                 <MenuTitle variant="body3">{title}</MenuTitle>

@@ -3,7 +3,6 @@ import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
