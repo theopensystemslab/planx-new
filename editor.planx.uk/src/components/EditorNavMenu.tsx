@@ -126,28 +126,24 @@ function EditorNavMenu() {
     }
   };
 
-  const platformAdmin: Role = "platformAdmin";
-  const teamEditor: Role = "teamEditor";
-  const teamViewer: Role = "teamViewer";
-
   const globalLayoutRoutes: Route[] = [
     {
       title: "Select a team",
       Icon: FormatListBulletedIcon,
       route: "/",
-      accessibleBy: [platformAdmin, teamEditor, teamViewer],
+      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
       title: "Global settings",
       Icon: TuneIcon,
       route: "global-settings",
-      accessibleBy: [platformAdmin],
+      accessibleBy: ["platformAdmin"],
     },
     {
       title: "Admin panel",
       Icon: AdminPanelSettingsIcon,
       route: "admin-panel",
-      accessibleBy: [platformAdmin],
+      accessibleBy: ["platformAdmin"],
     },
   ];
 
@@ -156,71 +152,77 @@ function EditorNavMenu() {
       title: "Services",
       Icon: FormatListBulletedIcon,
       route: `/${teamSlug}`,
-      accessibleBy: [platformAdmin, teamEditor, teamViewer],
+      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
       title: "Settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/general-settings`,
-      accessibleBy: [platformAdmin, teamEditor],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Design",
       Icon: PaletteIcon,
       route: `/${teamSlug}/design`,
-      accessibleBy: [platformAdmin, teamEditor],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Team members",
       Icon: GroupIcon,
       route: `/${teamSlug}/members`,
-      accessibleBy: [platformAdmin, teamEditor],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
   ];
 
-  const flowLayoutRoutes: Route[] = [
+  const flowLayoutRoutesMain: Route[] = [
     {
       title: "Editor",
       Icon: EditorIcon,
       route: `/${teamSlug}/${flowSlug}`,
-      accessibleBy: [platformAdmin, teamEditor, teamViewer],
+      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
     },
     {
       title: "Service settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/${flowSlug}/service`,
-      accessibleBy: [platformAdmin, teamEditor],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions-log`,
-      accessibleBy: [platformAdmin, teamEditor],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
       route: `/${teamSlug}/${flowSlug}/feedback`,
-      accessibleBy: [platformAdmin, teamEditor],
+      accessibleBy: ["platformAdmin", "teamEditor"],
     },
-    ...(flowAnalyticsLink
-      ? [
-          {
-            title: "Analytics (external link)",
-            Icon: LeaderboardIcon,
-            route: flowAnalyticsLink,
-            accessibleBy: [platformAdmin, teamEditor],
-          },
-        ]
-      : [
-          {
-            title: "Analytics page unavailable",
-            Icon: LeaderboardIcon,
-            route: "#",
-            accessibleBy: [platformAdmin, teamEditor],
-            disabled: true,
-          },
-        ]),
+  ];
+
+  const flowAnalyticsRoute: Route[] = flowAnalyticsLink
+    ? [
+        {
+          title: "Analytics (external link)",
+          Icon: LeaderboardIcon,
+          route: flowAnalyticsLink,
+          accessibleBy: ["platformAdmin", "teamEditor"],
+        },
+      ]
+    : [
+        {
+          title: "Analytics page unavailable",
+          Icon: LeaderboardIcon,
+          route: "#",
+          accessibleBy: ["platformAdmin", "teamEditor"],
+          disabled: true,
+        },
+      ];
+
+  const flowLayoutRoutes: Route[] = [
+    ...flowLayoutRoutesMain,
+    ...flowAnalyticsRoute,
   ];
 
   const getRoutesForUrl = (
