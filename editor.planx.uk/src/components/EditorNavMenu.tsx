@@ -74,7 +74,7 @@ const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
 
 const MenuButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "isActive",
-})<{ isActive: boolean }>(({ theme, isActive }) => ({
+})<{ isActive: boolean }>(({ theme, isActive, disabled }) => ({
   color: theme.palette.text.primary,
   width: "100%",
   border: "1px solid transparent",
@@ -89,13 +89,13 @@ const MenuButton = styled(IconButton, {
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.main}`,
   }),
-  "&[disabled]": {
+  ...(disabled && {
     color: theme.palette.text.disabled,
     "&:hover": {
       background: "none",
       borderColor: "transparent",
     },
-  },
+  }),
   "& > svg": {
     opacity: 0.8,
   },
