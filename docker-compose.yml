@@ -142,7 +142,7 @@ services:
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
       ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
       MINIO_PORT: ${MINIO_PORT}
-      CORS_ALLOWLIST: ${EDITOR_URL_EXT}, ${API_URL_EXT}
+      CORS_ALLOWLIST: ${EDITOR_URL_EXT}, ${API_URL_EXT}, https://login.live.com, https://login.microsoftonline.com
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       # Local authority config
       # Lambeth
@@ -153,6 +153,9 @@ services:
       UNIFORM_CLIENT_AYLESBURY_VALE: ${UNIFORM_CLIENT_AYLESBURY_VALE}
       UNIFORM_CLIENT_CHILTERN: ${UNIFORM_CLIENT_CHILTERN}
       UNIFORM_CLIENT_WYCOMBE: ${UNIFORM_CLIENT_WYCOMBE}
+      # microsoft-oidc strategy testing
+      MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
+      MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
 
   sharedb:
     restart: unless-stopped

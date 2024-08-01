@@ -9,12 +9,11 @@ import express, { ErrorRequestHandler } from "express";
 import noir from "pino-noir";
 import pinoLogger from "express-pino-logger";
 import { Server } from "http";
-import passport from "passport";
 import helmet from "helmet";
 import { ServerError } from "./errors";
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
-import { googleStrategy } from "./modules/auth/strategy/google";
+import { passportWithStrategies } from "./modules/auth/passport";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
 import miscRoutes from "./modules/misc/routes";
@@ -116,17 +115,9 @@ app.use(
   }),
 );
 
-passport.use("google", googleStrategy);
+app.use(passportWithStrategies.initialize());
+app.use(passportWithStrategies.session());
 
-passport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function (obj: Express.User, cb) {
-  cb(null, obj);
-});
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(urlencoded({ extended: true }));
 
 // Setup API routes
