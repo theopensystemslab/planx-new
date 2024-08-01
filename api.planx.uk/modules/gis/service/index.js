@@ -1,7 +1,14 @@
+import * as digitalLand from "./digitalLand.js";
+import * as scotland from "./local_authorities/scotland.js";
+import * as braintree from "./local_authorities/braintree.js";
+
 const localAuthorities = {
-  braintree: await import("./local_authorities/braintree.js"),
-  scotland: await import("./local_authorities/scotland.js"),
-  digitalLand: await import("./digitalLand.js"),
+  // braintree: await import("./local_authorities/braintree.js"),
+  // scotland: await import("./local_authorities/scotland.js"),
+  // digitalLand: await import("./digitalLand.js"),
+  digitalLand,
+  braintree,
+  scotland,
 };
 
 /**

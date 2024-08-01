@@ -1,17 +1,16 @@
 import type { JestConfigWithTsJest } from "ts-jest";
 
 const config: JestConfigWithTsJest = {
-  // we don't use a preset, preferring to give an explicit manual config
+  // ts-jest presets are deprecated, so we prefer to give an explicit manual config
   testEnvironment: "node",
   transform: {
-    // esbuild-jest is unmaintained and can't handle TypeScript with ESM, so we stick to ts-jest
-    // TODO: if tests are slow, consider swapping out for @swc/jest
+    // esbuild-jest transformer is unmaintained and can't handle ts-with-esm, so we stick to ts-jest
+    // TODO: if tests are too slow, consider swapping out for @swc/jest
     "^.+\\.[jt]s$": [
       "ts-jest",
       {
         useESM: true,
-        target: "esnext",
-        // we need a separate moduleResolutuion for tests (jest v30 may fix this)
+        // we need a separate module/moduleResolution config for tests (jest v30 may fix this)
         tsconfig: "tsconfig.test.json",
       },
     ],

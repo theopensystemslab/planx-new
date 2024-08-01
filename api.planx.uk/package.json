@@ -62,7 +62,7 @@
     "lint": "eslint '**/*.{js,ts}' && prettier -c .",
     "lint:fix": "eslint --fix '**/*.{js,ts}' && prettier -w .",
     "check": "tsc --noEmit && pnpm lint",
-    "test": "TZ=Europe/London NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --silent",
+    "test": "TZ=Europe/London NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --no-cache",
     "test:coverage": "TZ=Europe/London NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest; open ./coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --coverage=false --watch",
     "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files",
@@ -116,7 +116,7 @@
     "prettier": "^3.2.4",
     "rimraf": "^5.0.5",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.3",
+    "ts-jest": "^29.2.4",
     "tsx": "^4.16.2",
     "typescript": "^5.5.2",
     "uuid": "^10.0.0"
