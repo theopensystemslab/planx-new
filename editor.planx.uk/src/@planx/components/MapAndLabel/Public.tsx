@@ -19,6 +19,9 @@ function MapAndLabelComponent(props: Props) {
   const teamSettings = useStore.getState().teamSettings;
   const [boundary, setBoundary] = useState<Boundary>();
   const [area, setArea] = useState<number | undefined>(0);
+  const [objectArray, setObjectArray] = useState<any>([]);
+
+  let count = 0;
 
   useEffect(() => {
     const areaChangeHandler = ({ detail }: { detail: string }) => {
@@ -29,8 +32,14 @@ function MapAndLabelComponent(props: Props) {
 
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
+        count++;
+
         // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
         setBoundary(geojson["EPSG:3857"].features[0]);
+        setObjectArray([
+          ...objectArray,
+          { number: count, feature: geojson["EPSG:3857"].features[0] },
+        ]);
       } else {
         // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined
         setBoundary(undefined);
@@ -45,8 +54,9 @@ function MapAndLabelComponent(props: Props) {
     return function cleanup() {
       map?.removeEventListener("areaChange", areaChangeHandler);
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
+      console.log("cleanup");
     };
-  }, []);
+  }, [objectArray]);
 
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
