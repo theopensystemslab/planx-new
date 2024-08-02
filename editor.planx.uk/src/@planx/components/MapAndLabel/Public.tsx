@@ -54,9 +54,8 @@ function MapAndLabelComponent(props: Props) {
     return function cleanup() {
       map?.removeEventListener("areaChange", areaChangeHandler);
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
-      console.log("cleanup");
     };
-  }, [objectArray]);
+  }, [objectArray, boundary]);
 
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
