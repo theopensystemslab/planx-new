@@ -286,6 +286,7 @@ const Sidebar: React.FC<{
             <Box padding={1} mb={1} display={"block"} textAlign={"end"}>
               <Button
                 variant="text"
+                style={{ boxShadow: "none" }}
                 onClick={() => {
                   setLinkDialogOpen(false);
                 }}
@@ -308,7 +309,9 @@ const Sidebar: React.FC<{
                       component={"button"}
                       style={{ textDecoration: "none" }}
                       onMouseLeave={() => {
-                        setCopyMessage("copy");
+                        setTimeout(() => {
+                          setCopyMessage("copy");
+                        }, 1000);
                       }}
                       onClick={() => {
                         setCopyMessage("copied");
@@ -324,7 +327,7 @@ const Sidebar: React.FC<{
                         variant="body1"
                       >
                         <ContentCopyIcon />
-                        {"copy"}
+                        {copyMessage}
                       </Typography>
                     </Link>
                   </Tooltip>
