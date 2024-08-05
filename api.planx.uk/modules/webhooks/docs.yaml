@@ -103,32 +103,13 @@ components:
                     team_slug:
                       type: string
       required:
-        - body
-      FlowStatusChange:
-        type: object
-        properties:
-          event:
-            type: object
-            properties:
-              data:
-                type: object
-                properties:
-                  new:
-                    type: object
-                    properties:
-                      id:
-                        type: string;
-                      status:
-                        type: string;
-        required:
-          - body
+        - event
     SendSlackNotification:
       oneOf:
         - $ref: "#/components/schemas/BopsSubmission"
         - $ref: "#/components/schemas/UniformSubmission"
         - $ref: "#/components/schemas/EmailSubmission"
         - $ref: "#/components/schemas/S3Submission"
-        - $ref: "#/components/schemas/FlowStatusChange"
     CreatePaymentEvent:
       type: object
       properties:
@@ -269,19 +250,12 @@ paths:
       security:
         - hasuraAuth: []
       summary: Send Slack notification
-      description: Endpoint to trigger a Slack notification following a database event (eg insert record into submission audit table, update a flow table column)
+      description: Endpoint to trigger a Slack notification following a submission event
       parameters:
         - in: query
           name: type
           type: string
-          enum:
-            [
-              "bops-submission",
-              "uniform-submission",
-              "email-submission",
-              "s3-submission",
-              "flow-status",
-            ]
+          enum: ["bops-submission", "uniform-submission", "email-submission"]
           required: true
       requestBody:
         content:
