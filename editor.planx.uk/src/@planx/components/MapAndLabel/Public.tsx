@@ -60,13 +60,13 @@ function MapAndLabelComponent(props: Props) {
   }, [objectArray, boundary]);
 
   useEffect(() => {
-    if (!boundary && objectArray.length > 1) {
+    if (!boundary && objectArray.length < 1) {
       setMapValidationError("Add a boundary to the map");
     }
   }, [boundary]);
 
   return (
-    <Card handleSubmit={props.handleSubmit} isValid>
+    <Card handleSubmit={props.handleSubmit} isValid={!mapValidationError}>
       <CardHeader
         title={props.title}
         description={props.description}
