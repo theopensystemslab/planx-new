@@ -75,9 +75,26 @@ export const s3SubmissionSchema = z.object({
   }),
 });
 
+export const flowStatusSchema = z.object({
+  body: z.object({
+    event: z.object({
+      data: z.object({
+        new: z.object({
+          id: z.string(),
+          status: z.string(),
+        }),
+      }),
+    }),
+  }),
+  query: z.object({
+    type: z.literal("flow-status"),
+  }),
+});
+
 export const sendSlackNotificationSchema = z.union([
   bopsSubmissionSchema,
   uniformSubmissionSchema,
   emailSubmissionSchema,
   s3SubmissionSchema,
+  flowStatusSchema,
 ]);
