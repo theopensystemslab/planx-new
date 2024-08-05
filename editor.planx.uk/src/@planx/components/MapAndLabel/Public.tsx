@@ -4,6 +4,7 @@ import { Feature } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../shared/Preview/Card";
 import CardHeader from "../shared/Preview/CardHeader";
@@ -13,13 +14,14 @@ import { MapAndLabel } from "./model";
 
 type Props = PublicProps<MapAndLabel>;
 
-export type Boundary = Feature | undefined;
+type Boundary = Feature | undefined;
 
 function MapAndLabelComponent(props: Props) {
   const teamSettings = useStore.getState().teamSettings;
   const [boundary, setBoundary] = useState<Boundary>();
   const [area, setArea] = useState<number | undefined>(0);
   const [objectArray, setObjectArray] = useState<any>([]);
+  const [mapValidationError, setMapValidationError] = useState<string>();
 
   let count = 0;
 
@@ -57,6 +59,12 @@ function MapAndLabelComponent(props: Props) {
     };
   }, [objectArray, boundary]);
 
+  useEffect(() => {
+    if (!boundary && objectArray.length > 1) {
+      setMapValidationError("Add a boundary to the map");
+    }
+  }, [boundary]);
+
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
       <CardHeader
@@ -66,36 +74,39 @@ function MapAndLabelComponent(props: Props) {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <MapContainer environment="standalone">
-        {/* @ts-ignore */}
-        <my-map
-          id="draw-boundary-map"
-          drawMode
-          drawPointer="crosshair"
-          drawGeojsonData={JSON.stringify(boundary)}
-          zoom={16}
-          drawFillColor={alpha(props.drawColor, 0.1)}
-          drawColor={props.drawColor}
-          drawPointColor={props.drawColor}
-          drawType={props.drawType}
-          clipGeojsonData={
-            teamSettings?.boundaryBBox &&
-            JSON.stringify(teamSettings?.boundaryBBox)
-          }
-        />
-        <MapFooter>
-          <Typography variant="body1">
-            The property boundary you have drawn is{" "}
-            <Typography
-              component="span"
-              noWrap
-              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-            >
-              {area?.toLocaleString("en-GB") ?? 0} m²
+      <ErrorWrapper error={mapValidationError} id="draw-boundary-map">
+        <MapContainer environment="standalone">
+          {/* @ts-ignore */}
+          <my-map
+            id="draw-boundary-map"
+            drawMode
+            drawPointer="crosshair"
+            drawGeojsonData={JSON.stringify(boundary)}
+            zoom={16}
+            drawFillColor={alpha(props.drawColor, 0.1)}
+            drawColor={props.drawColor}
+            drawPointColor={props.drawColor}
+            drawType={props.drawType}
+            clipGeojsonData={
+              teamSettings?.boundaryBBox &&
+              JSON.stringify(teamSettings?.boundaryBBox)
+            }
+          />
+
+          <MapFooter>
+            <Typography variant="body1">
+              The property boundary you have drawn is{" "}
+              <Typography
+                component="span"
+                noWrap
+                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+              >
+                {area?.toLocaleString("en-GB") ?? 0} m²
+              </Typography>
             </Typography>
-          </Typography>
-        </MapFooter>
-      </MapContainer>
+          </MapFooter>
+        </MapContainer>
+      </ErrorWrapper>
     </Card>
   );
 }
