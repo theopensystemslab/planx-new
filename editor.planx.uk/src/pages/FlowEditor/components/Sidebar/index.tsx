@@ -11,6 +11,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
@@ -316,55 +317,248 @@ const Sidebar: React.FC<{
               {`Links to Copy`}
             </DialogTitle>
             <DialogContent>
-              <Box display={"flex"} flexDirection={"column"} gap={"8px"}>
-                <Box display={"flex"} flexDirection={"row"}>
-                  <ImageWrapper
-                    sx={{ backgroundColor: currentTeam?.theme.primaryColour }}
+              <Stack spacing={2} mb={"30px"}>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  gap={"8px"}
+                  mb={1}
+                >
+                  <Box
+                    display={"flex"}
+                    flexDirection={"row"}
+                    alignItems={"center"}
+                    gap={"7px"}
                   >
-                    <img
-                      width={44}
-                      src={currentTeam?.theme.logo || undefined}
-                      alt="Local authority logo"
-                      sizes=""
-                    />
-                  </ImageWrapper>
-
-                  <Typography variant="h4" component={"h4"} mr={1}>
-                    {"Published flow with subdomain"}
-                  </Typography>
-                  <Tooltip title={copyMessage}>
-                    <Link
-                      component={"button"}
-                      style={{ textDecoration: "none" }}
-                      onMouseLeave={() => {
-                        setTimeout(() => {
-                          setCopyMessage("copy");
-                        }, 1000);
-                      }}
-                      onClick={() => {
-                        setCopyMessage("copied");
-                        navigator.clipboard.writeText(
-                          props.url.replace("/published", "/preview"),
-                        );
-                      }}
+                    <ImageWrapper
+                      sx={{ backgroundColor: currentTeam?.theme.primaryColour }}
                     >
-                      <Typography
-                        display={"flex"}
-                        flexDirection={"row"}
-                        gap={"4px"}
-                        variant="body1"
+                      <img
+                        height={12}
+                        width={"auto"}
+                        src={currentTeam?.theme.logo || undefined}
+                        alt="Local authority logo"
+                        sizes=""
+                      />
+                    </ImageWrapper>
+
+                    <Typography variant="h4" component={"h4"} mr={1}>
+                      {"Published flow with subdomain"}
+                    </Typography>
+                    <Tooltip title={copyMessage}>
+                      <Link
+                        component={"button"}
+                        style={{ textDecoration: "none" }}
+                        onMouseLeave={() => {
+                          setTimeout(() => {
+                            setCopyMessage("copy");
+                          }, 1000);
+                        }}
+                        onClick={() => {
+                          setCopyMessage("copied");
+                          navigator.clipboard.writeText(
+                            props.url.replace("/published", "/preview"),
+                          );
+                        }}
                       >
-                        <ContentCopyIcon />
-                        {copyMessage}
-                      </Typography>
-                    </Link>
-                  </Tooltip>
+                        <Typography
+                          display={"flex"}
+                          flexDirection={"row"}
+                          gap={"4px"}
+                          variant="body2"
+                        >
+                          <ContentCopyIcon />
+                          {copyMessage}
+                        </Typography>
+                      </Link>
+                    </Tooltip>
+                  </Box>
+                  <Link>{props.url.replace("/published", "/preview")} </Link>
+                  <Typography>
+                    {"This is the description of the published link"}
+                  </Typography>
                 </Box>
-                <Link>{props.url.replace("/published", "/preview")} </Link>
-                <Typography>
-                  {"This is the description of the published link"}
-                </Typography>
-              </Box>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  gap={"8px"}
+                  mb={1}
+                >
+                  <Box
+                    display={"flex"}
+                    flexDirection={"row"}
+                    alignItems={"center"}
+                    gap={"7px"}
+                  >
+                    <ImageWrapper
+                      sx={{ backgroundColor: currentTeam?.theme.primaryColour }}
+                    >
+                      <img
+                        height={12}
+                        width={"auto"}
+                        src={currentTeam?.theme.logo || undefined}
+                        alt="Local authority logo"
+                        sizes=""
+                      />
+                    </ImageWrapper>
+
+                    <Typography variant="h4" component={"h4"} mr={1}>
+                      {"Published flow with subdomain"}
+                    </Typography>
+                    <Tooltip title={copyMessage}>
+                      <Link
+                        component={"button"}
+                        style={{ textDecoration: "none" }}
+                        onMouseLeave={() => {
+                          setTimeout(() => {
+                            setCopyMessage("copy");
+                          }, 1000);
+                        }}
+                        onClick={() => {
+                          setCopyMessage("copied");
+                          navigator.clipboard.writeText(
+                            props.url.replace("/published", "/preview"),
+                          );
+                        }}
+                      >
+                        <Typography
+                          display={"flex"}
+                          flexDirection={"row"}
+                          gap={"4px"}
+                          variant="body2"
+                        >
+                          <ContentCopyIcon />
+                          {copyMessage}
+                        </Typography>
+                      </Link>
+                    </Tooltip>
+                  </Box>
+                  <Link>{props.url.replace("/published", "/preview")} </Link>
+                  <Typography>
+                    {"This is the description of the published link"}
+                  </Typography>
+                </Box>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  gap={"8px"}
+                  mb={1}
+                >
+                  <Box
+                    display={"flex"}
+                    flexDirection={"row"}
+                    alignItems={"center"}
+                    gap={"7px"}
+                  >
+                    <ImageWrapper
+                      sx={{ backgroundColor: currentTeam?.theme.primaryColour }}
+                    >
+                      <img
+                        height={12}
+                        width={"auto"}
+                        src={currentTeam?.theme.logo || undefined}
+                        alt="Local authority logo"
+                        sizes=""
+                      />
+                    </ImageWrapper>
+
+                    <Typography variant="h4" component={"h4"} mr={1}>
+                      {"Published flow with subdomain"}
+                    </Typography>
+                    <Tooltip title={copyMessage}>
+                      <Link
+                        component={"button"}
+                        style={{ textDecoration: "none" }}
+                        onMouseLeave={() => {
+                          setTimeout(() => {
+                            setCopyMessage("copy");
+                          }, 1000);
+                        }}
+                        onClick={() => {
+                          setCopyMessage("copied");
+                          navigator.clipboard.writeText(
+                            props.url.replace("/published", "/preview"),
+                          );
+                        }}
+                      >
+                        <Typography
+                          display={"flex"}
+                          flexDirection={"row"}
+                          gap={"4px"}
+                          variant="body2"
+                        >
+                          <ContentCopyIcon />
+                          {copyMessage}
+                        </Typography>
+                      </Link>
+                    </Tooltip>
+                  </Box>
+                  <Link>{props.url.replace("/published", "/preview")} </Link>
+                  <Typography>
+                    {"This is the description of the published link"}
+                  </Typography>
+                </Box>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  gap={"8px"}
+                  mb={1}
+                >
+                  <Box
+                    display={"flex"}
+                    flexDirection={"row"}
+                    alignItems={"center"}
+                    gap={"7px"}
+                  >
+                    <ImageWrapper
+                      sx={{ backgroundColor: currentTeam?.theme.primaryColour }}
+                    >
+                      <img
+                        height={12}
+                        width={"auto"}
+                        src={currentTeam?.theme.logo || undefined}
+                        alt="Local authority logo"
+                        sizes=""
+                      />
+                    </ImageWrapper>
+
+                    <Typography variant="h4" component={"h4"} mr={1}>
+                      {"Published flow with subdomain"}
+                    </Typography>
+                    <Tooltip title={copyMessage}>
+                      <Link
+                        component={"button"}
+                        style={{ textDecoration: "none" }}
+                        onMouseLeave={() => {
+                          setTimeout(() => {
+                            setCopyMessage("copy");
+                          }, 1000);
+                        }}
+                        onClick={() => {
+                          setCopyMessage("copied");
+                          navigator.clipboard.writeText(
+                            props.url.replace("/published", "/preview"),
+                          );
+                        }}
+                      >
+                        <Typography
+                          display={"flex"}
+                          flexDirection={"row"}
+                          gap={"4px"}
+                          variant="body2"
+                        >
+                          <ContentCopyIcon />
+                          {copyMessage}
+                        </Typography>
+                      </Link>
+                    </Tooltip>
+                  </Box>
+                  <Link>{props.url.replace("/published", "/preview")} </Link>
+                  <Typography>
+                    {"This is the description of the published link"}
+                  </Typography>
+                </Box>
+              </Stack>
             </DialogContent>
           </Dialog>
           <Box
