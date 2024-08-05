@@ -8,7 +8,7 @@ import { TeamMember, TeamMembersProps } from "./types";
 
 export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
   const platformAdmins = (teamMembersByRole.platformAdmin || []).filter(
-    (member) => member.email,
+    (member) => member.email
   );
   const otherRoles = Object.keys(teamMembersByRole)
     .filter((role) => role !== "platformAdmin")
@@ -19,7 +19,7 @@ export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
   const activeMembers = otherRoles.filter((member) => member.email);
 
   const archivedMembers = otherRoles.filter(
-    (member) => member.role !== "platformAdmin" && !member.email,
+    (member) => member.role !== "platformAdmin" && !member.email
   );
 
   return (
