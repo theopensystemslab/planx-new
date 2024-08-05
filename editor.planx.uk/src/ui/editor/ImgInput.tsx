@@ -27,7 +27,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   marginLeft: theme.spacing(0.5),
 }));
 
-export const ImageWrapper = styled(Box)(() => ({
+const ImageWrapper = styled(Box)(() => ({
   width: 50,
   height: 50,
   display: "flex",
