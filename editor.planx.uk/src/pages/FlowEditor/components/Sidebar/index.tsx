@@ -24,7 +24,6 @@ import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useEffect, useState } from "react";
 import { useAsync } from "react-use";
-import { ImageWrapper } from "ui/editor/ImgInput";
 import Permission from "ui/editor/Permission";
 import Input from "ui/shared/Input";
 
@@ -99,6 +98,15 @@ const TabList = styled(Box)(({ theme }) => ({
   "& .MuiTabs-indicator": {
     display: "none",
   },
+}));
+
+const ImageWrapper = styled(Box)(() => ({
+  width: "auto",
+  height: 24,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  padding: "4px",
 }));
 
 const StyledTab = styled(Tab)(({ theme }) => ({
@@ -317,7 +325,7 @@ const Sidebar: React.FC<{
               {`Links to Copy`}
             </DialogTitle>
             <DialogContent>
-              <Stack spacing={2} mb={"30px"}>
+              <Stack spacing={"25px"} mb={"30px"}>
                 <Box
                   display={"flex"}
                   flexDirection={"column"}
