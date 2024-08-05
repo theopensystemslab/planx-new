@@ -1,3 +1,5 @@
+import CloseIcon from "@mui/icons-material/Close";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LinkIcon from "@mui/icons-material/Link";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
@@ -7,6 +9,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tab, { tabClasses } from "@mui/material/Tab";
@@ -176,6 +179,7 @@ const Sidebar: React.FC<{
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(false);
+  const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
 
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
@@ -271,6 +275,7 @@ const Sidebar: React.FC<{
           >
             <LinkIcon fontSize="medium" /> Copy link
           </Button>
+
           <Dialog
             open={linkDialogOpen}
             onClose={() => setLinkDialogOpen(false)}
@@ -278,10 +283,58 @@ const Sidebar: React.FC<{
             aria-describedby="alert-dialog-description"
             maxWidth="md"
           >
-            <DialogTitle variant="h3" component="h1">
+            <Box padding={1} mb={1} display={"block"} textAlign={"end"}>
+              <Button
+                variant="text"
+                onClick={() => {
+                  setLinkDialogOpen(false);
+                }}
+              >
+                <CloseIcon color="action" />
+              </Button>
+              <Divider />
+            </Box>
+            <DialogTitle variant="h3" component="h3">
               {`Links to Copy`}
             </DialogTitle>
-            <DialogContent></DialogContent>
+            <DialogContent>
+              <Box display={"flex"} flexDirection={"column"} gap={"8px"}>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <Typography variant="h4" component={"h4"} mr={1}>
+                    {"Published flow with subdomain"}
+                  </Typography>
+                  <Tooltip title={copyMessage}>
+                    <Link
+                      component={"button"}
+                      style={{ textDecoration: "none" }}
+                      onMouseLeave={() => {
+                        setCopyMessage("copy");
+                      }}
+                      onClick={() => {
+                        setCopyMessage("copied");
+                        navigator.clipboard.writeText(
+                          props.url.replace("/published", "/preview"),
+                        );
+                      }}
+                    >
+                      <Typography
+                        display={"flex"}
+                        flexDirection={"row"}
+                        gap={"4px"}
+                        variant="body1"
+                      >
+                        <ContentCopyIcon />
+                        {"copy"}
+                      </Typography>
+                    </Link>
+                  </Tooltip>
+                </Box>
+                <Link>{props.url.replace("/published", "/preview")} </Link>
+                <Typography>
+                  {"This is the description of the published link"}
+                </Typography>
+              </Box>
+            </DialogContent>
           </Dialog>
           <Box
             display="flex"
