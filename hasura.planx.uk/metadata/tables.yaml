@@ -674,35 +674,6 @@
                     _eq: x-hasura-user-id
                 - role:
                     _eq: teamEditor
-  event_triggers:
-    - name: setup_flow_status_notifications
-      definition:
-        enable_manual: false
-        update:
-          columns:
-            - status
-      retry_conf:
-        interval_sec: 30
-        num_retries: 1
-        timeout_sec: 60
-      webhook_from_env: HASURA_PLANX_API_URL
-      headers:
-        - name: authorization
-          value_from_env: HASURA_PLANX_API_KEY
-      request_transform:
-        body:
-          action: transform
-          template: |-
-            {
-              "id": {{$body.event.data.new.id}},
-              "status": {{$body.event.data.new.status}}
-            }
-        method: POST
-        query_params:
-          type: flow-status
-        template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
-        version: 2
 - table:
     name: global_settings
     schema: public
