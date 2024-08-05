@@ -41,6 +41,7 @@ const ContentComponent: React.FC<Props> = (props) => {
           </InputRow>
           <ColorPicker
             inline
+            label="Background colour"
             color={formik.values.color}
             onChange={(color) => {
               formik.setFieldValue("color", color);

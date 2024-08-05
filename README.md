@@ -114,12 +114,18 @@ Once a deployment is completed, a Slack notification will be sent to the #planx-
 
 ### Troubleshooting
 
+**Diverging branches**
+
 If the commit history of `main` and `production` diverge and `production` contains commit hashes that are NOT on main, try running this command from `production` to reset and then follow the original deploy steps above:
 ```bash
 git reset --hard <most recent commit hash **matching** main> && git push --force
 ```
 
 You'll have to temporarily turn off branch protection rules to make this change, so run it by another dev to confirm.
+
+**Unmet peer dependencies**
+
+Make sure `pnpm` is installed globally at version 8.6.6 `pnpm add -g pnpm@8.6.6`, otherwise you may hit some unmet peer dependencies issues. 
 
 ## Audits
 

@@ -44,6 +44,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     primary: "#0B0C0C",
     secondary: "#505A5F",
     placeholder: "#68787D",
+    disabled: "#68787D",
   },
   link: {
     main: DEFAULT_PRIMARY_COLOR,
@@ -190,6 +191,9 @@ const getThemeOptions = ({
       },
       body3: {
         fontSize: "0.913rem",
+      },
+      data: {
+        fontFamily: '"Source Code Pro", monospace',
       },
     },
     palette,

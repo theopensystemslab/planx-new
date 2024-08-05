@@ -1,4 +1,6 @@
 import { gql } from "@apollo/client";
+import { sortFlow } from "@opensystemslab/planx-core";
+import { FlowGraph, OrderedFlow } from "@opensystemslab/planx-core/types";
 import {
   add,
   clone,
@@ -97,6 +99,14 @@ export interface EditorStore extends Store.Store {
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
   undoOperation: (ops: OT.Op[]) => void;
+  orderedFlow?: OrderedFlow;
+  setOrderedFlow: () => void;
+  externalPortals: Record<string, { name: string; href: string }>;
+  addExternalPortal: (portal: {
+    id: string;
+    name: string;
+    href: string;
+  }) => void;
 }
 
 export const editorStore: StateCreator<
@@ -460,5 +470,21 @@ export const editorStore: StateCreator<
   undoOperation: (ops: OT.Op[]) => {
     const inverseOps: OT.Op[] = type.invert(ops);
     send(inverseOps);
+  },
+
+  orderedFlow: undefined,
+
+  setOrderedFlow: () => {
+    const flow = get().flow as FlowGraph;
+    const orderedFlow = sortFlow(flow);
+    set({ orderedFlow });
+  },
+
+  externalPortals: {},
+
+  addExternalPortal: ({ id, name, href }) => {
+    const externalPortals = get().externalPortals;
+    externalPortals[id] = { name, href };
+    set({ externalPortals });
   },
 });

@@ -33,6 +33,7 @@ const Editor = (props: { value: Item; onChange: (newVal: Item) => void }) => (
       placeholder="Title"
     />
     <ColorPicker
+      label="Colour"
       color={props.value.color}
       onChange={(color) => {
         props.onChange({
