@@ -175,6 +175,7 @@ const Sidebar: React.FC<{
   const [summary, setSummary] = useState<string>();
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
   const [isCopied, setIsCopied] = useState<boolean>(false);
+  const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
@@ -240,12 +241,9 @@ const Sidebar: React.FC<{
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
+  // navigator.clipboard.writeText(props.url.replace("/published", "/preview"));
   const handleClick = () => {
-    navigator.clipboard.writeText(props.url.replace("/published", "/preview"));
-    setIsCopied(true);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 1000);
+    setLinkDialogOpen(true);
   };
 
   return (
@@ -268,10 +266,23 @@ const Sidebar: React.FC<{
             }}
             variant="contained"
             color="secondary"
+            onClick={handleClick}
             disabled={!useStore.getState().canUserEditTeam(teamSlug)}
           >
             <LinkIcon fontSize="medium" /> Copy link
           </Button>
+          <Dialog
+            open={linkDialogOpen}
+            onClose={() => setLinkDialogOpen(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            maxWidth="md"
+          >
+            <DialogTitle variant="h3" component="h1">
+              {`Links to Copy`}
+            </DialogTitle>
+            <DialogContent></DialogContent>
+          </Dialog>
           <Box
             display="flex"
             flexDirection="column"
