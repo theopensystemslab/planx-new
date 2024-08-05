@@ -2,10 +2,8 @@ import { Role, User } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { groupBy } from "lodash";
 import { compose, mount, NotFoundError, route, withData } from "navi";
-import {
-  TeamMember,
-  TeamMembers,
-} from "pages/FlowEditor/components/Team/TeamMembers";
+import { TeamMembers } from "pages/FlowEditor/components/Team/TeamMembers";
+import { TeamMember } from "pages/FlowEditor/components/Team/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
