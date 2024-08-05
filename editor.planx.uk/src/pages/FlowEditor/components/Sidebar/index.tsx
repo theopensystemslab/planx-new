@@ -16,11 +16,14 @@ import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { Team } from "@opensystemslab/planx-core/types";
+import { Image } from "@planx/components/shared/Preview/CardHeader";
 import { AxiosError } from "axios";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAsync } from "react-use";
+import { ImageWrapper } from "ui/editor/ImgInput";
 import Permission from "ui/editor/Permission";
 import Input from "ui/shared/Input";
 
@@ -157,6 +160,7 @@ const Sidebar: React.FC<{
     lastPublisher,
     validateAndDiffFlow,
     isFlowPublished,
+    fetchCurrentTeam,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
@@ -165,6 +169,7 @@ const Sidebar: React.FC<{
     state.lastPublisher,
     state.validateAndDiffFlow,
     state.isFlowPublished,
+    state.fetchCurrentTeam,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -177,13 +182,25 @@ const Sidebar: React.FC<{
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
-  const [isCopied, setIsCopied] = useState<boolean>(false);
   const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(false);
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
+  const [currentTeam, setCurrentTeam] = useState<Team | undefined>(undefined);
 
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
   };
+
+  useEffect(() => {
+    const getCurrentTeam = async () => {
+      const [response] = await Promise.all([fetchCurrentTeam()]);
+      setCurrentTeam(response);
+      return response;
+    };
+
+    getCurrentTeam();
+  }, []);
+
+  console.log(currentTeam);
 
   const handleCheckForChangesToPublish = async () => {
     try {
@@ -301,6 +318,17 @@ const Sidebar: React.FC<{
             <DialogContent>
               <Box display={"flex"} flexDirection={"column"} gap={"8px"}>
                 <Box display={"flex"} flexDirection={"row"}>
+                  <ImageWrapper
+                    sx={{ backgroundColor: currentTeam?.theme.primaryColour }}
+                  >
+                    <img
+                      width={44}
+                      src={currentTeam?.theme.logo || undefined}
+                      alt="Local authority logo"
+                      sizes=""
+                    />
+                  </ImageWrapper>
+
                   <Typography variant="h4" component={"h4"} mr={1}>
                     {"Published flow with subdomain"}
                   </Typography>
