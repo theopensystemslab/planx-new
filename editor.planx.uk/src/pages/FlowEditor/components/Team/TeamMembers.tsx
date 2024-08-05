@@ -4,9 +4,9 @@ import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
 import { MembersTable } from "./MembersTable";
-import { Props, TeamMember } from "./types";
+import { TeamMember, TeamMembersProps } from "./types";
 
-export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
+export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
   const platformAdmins = (teamMembersByRole.platformAdmin || []).filter(
     (member) => member.email,
   );
@@ -31,7 +31,7 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
         <Typography variant="body1">
           Editors have access to edit your services.
         </Typography>
-        <MembersTable members={activeMembers} />
+        <MembersTable members={activeMembers} showAddMemberButton />
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>

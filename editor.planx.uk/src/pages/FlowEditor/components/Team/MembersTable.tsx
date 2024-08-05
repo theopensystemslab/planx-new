@@ -5,14 +5,16 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { AddButton } from "pages/Team";
 import React from "react";
 
 import { StyledAvatar, StyledTableRow } from "./styles";
-import { TeamMember } from "./types";
+import { MembersTableProps } from "./types";
 
-export const MembersTable: React.FC<{ members: TeamMember[] }> = ({
+export const MembersTable = ({
   members,
-}) => {
+  showAddMemberButton,
+}: MembersTableProps) => {
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
     teamEditor: "Editor",
@@ -79,6 +81,19 @@ export const MembersTable: React.FC<{ members: TeamMember[] }> = ({
               <TableCell>{member.email}</TableCell>
             </StyledTableRow>
           ))}
+          {showAddMemberButton && (
+            <StyledTableRow>
+              <TableCell>
+                <AddButton
+                  onClick={() =>
+                    alert("Sorry! This feature is not complete yet...")
+                  }
+                >
+                  Add a new editor
+                </AddButton>
+              </TableCell>
+            </StyledTableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>
