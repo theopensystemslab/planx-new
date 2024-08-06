@@ -1,12 +1,19 @@
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
 import { MembersTable } from "./MembersTable";
 import { TeamMember, TeamMembersProps } from "./types";
 
 export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
+  const [showModal, setShowModal] = useState(false);
+
   const platformAdmins = (teamMembersByRole.platformAdmin || []).filter(
     (member) => member.email,
   );
@@ -31,7 +38,11 @@ export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
         <Typography variant="body1">
           Editors have access to edit your services.
         </Typography>
-        <MembersTable members={activeMembers} showAddMemberButton />
+        <MembersTable
+          members={activeMembers}
+          showAddMemberButton
+          setShowModal={setShowModal}
+        />
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
@@ -53,6 +64,59 @@ export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
           </Typography>
           <MembersTable members={archivedMembers} />
         </SettingsSection>
+      )}
+      {showModal && (
+        <Dialog
+          // maxWidth="xl"
+          // aria-labelledby="dialog-heading"
+          PaperProps={{
+            sx: {
+              width: "100%",
+              maxWidth: (theme) => theme.breakpoints.values.md,
+              borderRadius: 0,
+              borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
+              background: "#FFF",
+              margin: (theme) => theme.spacing(2),
+            },
+          }}
+          open={showModal}
+          onClose={() => setShowModal(false)}
+        >
+          <DialogContent>
+            <Box sx={{ mt: 1, mb: 4 }}>
+              <Typography variant="h3" component="h2" id="dialog-heading">
+                Add a new editor
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              padding: 2,
+            }}
+          >
+            <Box>
+              <Button
+                variant="contained"
+                color="prompt"
+                onClick={() => setShowModal(false)} // nothing yet
+                data-testid="modal-create-user-button"
+              >
+                Create user
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ ml: 1.5 }}
+                onClick={() => setShowModal(false)}
+                data-testid="modal-cancel-button"
+              >
+                Cancel
+              </Button>
+            </Box>
+          </DialogActions>
+        </Dialog>
       )}
     </Container>
   );

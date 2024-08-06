@@ -15,6 +15,7 @@ import { MembersTableProps } from "./types";
 export const MembersTable = ({
   members,
   showAddMemberButton,
+  setShowModal = () => true,
 }: MembersTableProps) => {
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
@@ -85,11 +86,7 @@ export const MembersTable = ({
           {showAddMemberButton && hasFeatureFlag("ADD_NEW_EDITOR") && (
             <TableRow>
               <TableCell colSpan={3}>
-                <AddButton
-                  onClick={() =>
-                    alert("Sorry! This feature is not complete yet...")
-                  }
-                >
+                <AddButton onClick={() => setShowModal(true)}>
                   Add a new editor
                 </AddButton>
               </TableCell>
