@@ -1,3 +1,4 @@
+import ChevronRightRounded from "@mui/icons-material/ChevronRightRounded";
 import CloseIcon from "@mui/icons-material/Close";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -18,6 +19,7 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
+import { darken } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
@@ -59,6 +61,7 @@ const Root = styled(Box)(({ theme }) => ({
   width: "500px",
   display: "flex",
   flexShrink: 0,
+  zIndex: 1,
   flexDirection: "column",
   borderLeft: `1px solid ${theme.palette.border.main}`,
   background: theme.palette.background.paper,
@@ -79,9 +82,38 @@ const Header = styled("header")(({ theme }) => ({
     flex: "1",
     padding: "5px",
     marginRight: "5px",
-    background: theme.palette.common.white,
+    background: theme.palette.background.paper,
+
     border: "1px solid rgba(0, 0, 0, 0.2)",
   },
+}));
+
+const ToggleButton = styled(Button)(({ theme }) => ({
+  background: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.border.main}`,
+  borderImage: `linear-gradient(to right, ${theme.palette.border.main} 50%, transparent 50%) 30% 1`,
+  position: "absolute",
+  left: "-35px",
+  height: "100%",
+  boxShadow: "none",
+  textAlign: "left",
+  paddingLeft: "4px",
+  "&:hover": {
+    background: theme.palette.background.paper,
+    boxShadow: "none",
+  },
+}));
+
+const CopyButton = styled(Button)(({ theme }) => ({
+  background: theme.palette.common.white,
+  border: `1px solid ${theme.palette.border.main}`,
+  boxShadow: "none",
+  color: theme.palette.common.black,
+  width: "35%",
+  display: "flex",
+  flexDirection: "row",
+  gap: "8px",
+  borderRadius: "5px",
 }));
 
 const TabList = styled(Box)(({ theme }) => ({
@@ -251,6 +283,7 @@ const Sidebar: React.FC<{
     validateAndDiffFlow,
     isFlowPublished,
     fetchCurrentTeam,
+    togglePreview,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
@@ -260,6 +293,7 @@ const Sidebar: React.FC<{
     state.validateAndDiffFlow,
     state.isFlowPublished,
     state.fetchCurrentTeam,
+    state.togglePreview,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -361,24 +395,21 @@ const Sidebar: React.FC<{
           width="100%"
           mt={2}
           mb={2}
+          pl={2}
           display="flex"
           flexDirection="row"
           gap={"24px"}
+          style={{ position: "relative" }}
         >
-          <Button
-            sx={{
-              width: "35%",
-              display: "flex",
-              flexDirection: "row",
-              gap: "8px",
-            }}
-            variant="contained"
-            color="secondary"
+          <ToggleButton onClick={togglePreview}>
+            <ChevronRightRounded />
+          </ToggleButton>
+          <CopyButton
             onClick={handleClick}
             disabled={!useStore.getState().canUserEditTeam(teamSlug)}
           >
             <LinkIcon fontSize="medium" /> Copy link
-          </Button>
+          </CopyButton>
 
           <Dialog
             open={linkDialogOpen}
@@ -400,8 +431,8 @@ const Sidebar: React.FC<{
               </Button>
               <Divider />
             </Box>
-            <DialogTitle variant="h3" component="h3">
-              {`Links to Copy`}
+            <DialogTitle mb={"25px"} variant="h3" component="h3">
+              {`Share this flow`}
             </DialogTitle>
             <DialogContent>
               <Stack spacing={"25px"} mb={"30px"}>
@@ -409,30 +440,28 @@ const Sidebar: React.FC<{
                   <LinkComponent
                     primaryColour={currentTeam?.theme.primaryColour}
                     titleIcon={currentTeam?.theme.logo || undefined}
-                    title={"Subdomain"}
+                    title={"Published flow with subdomain"}
                     link={`${currentTeam?.domain}/${flowSlug}`}
                   />
                 )}
                 <LinkComponent
                   titleIcon={<LanguageIcon />}
-                  title={"Published"}
+                  title={"Published flow"}
                   isPublished={isFlowPublished}
                   link={props.url}
-                  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                  description="View of the currently published version of this flow."
                 />
                 <LinkComponent
-                  primaryColour={currentTeam?.theme.primaryColour}
                   titleIcon={<OpenInNewIcon />}
-                  title={"Preview"}
+                  title={"Preview flow"}
                   link={props.url.replace("/published", "/preview")}
-                  description="Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                  description="View of the draft data of the main flow and the latest published version of nested flows. This link is representative of what your next published version will look like."
                 />{" "}
                 <LinkComponent
-                  primaryColour={currentTeam?.theme.primaryColour}
                   titleIcon={<OpenInNewOffIcon />}
-                  title={"Draft"}
+                  title={"Draft flow"}
                   link={props.url.replace("/published", "/draft")}
-                  description="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                  description="View of the draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
                 />
               </Stack>
             </DialogContent>

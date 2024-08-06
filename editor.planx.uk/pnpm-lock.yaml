@@ -46,8 +46,8 @@ dependencies:
     specifier: ^0.8.3
     version: 0.8.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#6b2fd26
-    version: github.com/theopensystemslab/planx-core/6b2fd26(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#7c37fc3
+    version: github.com/theopensystemslab/planx-core/7c37fc3(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -15182,8 +15182,8 @@ packages:
   /json-parse-even-better-errors@2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
 
-  /json-schema-to-typescript@14.1.0:
-    resolution: {integrity: sha512-VIeAFQkn88gFh26MSHWG4uX7TjK/arTw0NVLMZn6vX1WrSF+P6xu5MyEdovu+9PJ0uiS5gm0wzwQvYW9eSq1uw==}
+  /json-schema-to-typescript@15.0.0:
+    resolution: {integrity: sha512-gOX3cJB4eL1ztMc3WUh569ubRcKnr8MnYk++6+/WaaN4bufGHSR6EcbUbvLZgirPQOfvni5SSGkRx0pYloYU8A==}
     engines: {node: '>=16.0.0'}
     hasBin: true
     dependencies:
@@ -21898,9 +21898,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/6b2fd26(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6b2fd26}
-    id: github.com/theopensystemslab/planx-core/6b2fd26
+  github.com/theopensystemslab/planx-core/7c37fc3(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7c37fc3}
+    id: github.com/theopensystemslab/planx-core/7c37fc3
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -21920,7 +21920,7 @@ packages:
       fast-xml-parser: 4.4.1
       graphql: 16.9.0
       graphql-request: 6.1.0(graphql@16.9.0)
-      json-schema-to-typescript: 14.1.0
+      json-schema-to-typescript: 15.0.0
       lodash: 4.17.21
       marked: 13.0.3
       prettier: 3.3.3
