@@ -313,10 +313,16 @@ test.describe("Gov Pay integration @regression", async () => {
     await expect(page.getByText("Application sent")).toBeVisible();
     await expect(page.getByText(actualPaymentId)).toBeVisible();
 
-    // try going back to the payment page
+    // Try going back to the GovPay payment page
     await page.goBack();
+    // Unable to make another payment - just get a status page...
     await expect(
-      page.locator("h1").getByText("Your payment session has expired"),
+      page.locator("h1").getByText("Your payment was successful"),
+    ).toBeVisible();
+    // ...with a link back to PlanX
+    await page.locator("a").getByText("View your payment summary").click();
+    await expect(
+      page.locator("h1").getByText("Application sent"),
     ).toBeVisible();
   });
 });
