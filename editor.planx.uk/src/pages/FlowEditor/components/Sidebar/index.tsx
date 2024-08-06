@@ -390,7 +390,7 @@ const Sidebar: React.FC<{
         <Box
           width="100%"
           mt={2}
-          mb={2}
+          mb={4}
           pl={2}
           display="flex"
           flexDirection="row"
