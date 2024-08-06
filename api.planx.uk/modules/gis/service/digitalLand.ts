@@ -5,7 +5,7 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
-import { addDesignatedVariable, omitGeometry } from "./helpers";
+import { addDesignatedVariable } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base";
 import { $api } from "../../../client";
 
@@ -68,6 +68,7 @@ async function go(
     entries: "current",
     geometry: geom,
     geometry_relation: "intersects",
+    exclude_fields: "geometry,point",
     limit: "100", // TODO handle pagination in future for large polygons & many datasets, but should be well within this limit now
   };
   // 'dataset' param is not array[string] per docs, instead re-specify param name per unique dataset
@@ -120,14 +121,14 @@ async function go(
       );
       // because there can be many digital land datasets per planx variable, check if this key is already in our result
       if (key && Object.keys(formattedResult).includes(key)) {
-        formattedResult[key]["data"]?.push(omitGeometry(entity));
+        formattedResult[key]["data"]?.push(entity);
       } else {
         if (key) {
           formattedResult[key] = {
             fn: key,
             value: true,
             text: baseSchema[key].pos,
-            data: [omitGeometry(entity)],
+            data: [entity],
             category: baseSchema[key].category,
           };
         }
