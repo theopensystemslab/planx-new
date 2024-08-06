@@ -273,7 +273,6 @@ const Sidebar: React.FC<{
   const [summary, setSummary] = useState<string>();
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
   const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(false);
-  const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
   const [currentTeam, setCurrentTeam] = useState<Team | undefined>(undefined);
 
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
