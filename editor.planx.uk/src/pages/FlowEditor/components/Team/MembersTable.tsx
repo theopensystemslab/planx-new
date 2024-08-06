@@ -83,8 +83,8 @@ export const MembersTable = ({
             </StyledTableRow>
           ))}
           {showAddMemberButton && hasFeatureFlag("ADD_NEW_EDITOR") && (
-            <StyledTableRow>
-              <TableCell>
+            <TableRow>
+              <TableCell colSpan={3}>
                 <AddButton
                   onClick={() =>
                     alert("Sorry! This feature is not complete yet...")
@@ -93,7 +93,7 @@ export const MembersTable = ({
                   Add a new editor
                 </AddButton>
               </TableCell>
-            </StyledTableRow>
+            </TableRow>
           )}
         </TableBody>
       </Table>
