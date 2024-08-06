@@ -3,10 +3,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LanguageIcon from "@mui/icons-material/Language";
 import LinkIcon from "@mui/icons-material/Link";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -19,14 +17,12 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
-import { darken } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
-import { Image } from "@planx/components/shared/Preview/CardHeader";
 import { AxiosError } from "axios";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
@@ -257,6 +253,7 @@ const LinkComponent = (props: {
               flexDirection={"row"}
               gap={"4px"}
               variant="body2"
+              sx={{ textDecoration: "underline dotted" }}
             >
               <ContentCopyIcon />
               {copyMessage}
@@ -264,7 +261,7 @@ const LinkComponent = (props: {
           </Button>
         </Tooltip>
       </Box>
-      <Link>{props.link} </Link>
+      <Link sx={{ "&:hover": { cursor: "pointer" } }}>{props.link} </Link>
       <Typography>{props.description}</Typography>
     </Box>
   );
