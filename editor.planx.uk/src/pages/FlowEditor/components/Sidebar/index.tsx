@@ -13,6 +13,7 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
+import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
@@ -37,7 +38,6 @@ import {
   ValidationChecks,
 } from "./PublishDialog";
 import Search from "./Search";
-
 type SidebarTabs = "PreviewBrowser" | "History" | "Search";
 
 const Console = styled(Box)(() => ({
@@ -154,6 +154,72 @@ const DebugConsole = () => {
         {JSON.stringify({ passport, breadcrumbs, cachedBreadcrumbs }, null, 2)}
       </pre>
     </Console>
+  );
+};
+
+const LinkComponent = (props: {
+  primaryColour?: string;
+  titleIcon?: string | SvgIconProps;
+  title: string;
+  link: string;
+  description: string;
+}) => {
+  const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
+
+  return (
+    <Box display={"flex"} flexDirection={"column"} gap={"8px"} mb={1}>
+      <Box
+        display={"flex"}
+        flexDirection={"row"}
+        alignItems={"center"}
+        gap={"7px"}
+      >
+        {typeof props.titleIcon === "string" ? (
+          <ImageWrapper sx={{ backgroundColor: props.primaryColour }}>
+            <img
+              height={12}
+              width={"auto"}
+              src={props.titleIcon || undefined}
+              alt="Local authority logo"
+            />
+          </ImageWrapper>
+        ) : (
+          <>{props.titleIcon}</>
+        )}
+
+        <Typography variant="h4" component={"h4"} mr={1}>
+          {props.title}
+        </Typography>
+        <Tooltip title={copyMessage}>
+          <Button
+            component={"button"}
+            variant="help"
+            style={{ textDecoration: "none" }}
+            onMouseLeave={() => {
+              setTimeout(() => {
+                setCopyMessage("copy");
+              }, 1000);
+            }}
+            onClick={() => {
+              setCopyMessage("copied");
+              navigator.clipboard.writeText(props.link);
+            }}
+          >
+            <Typography
+              display={"flex"}
+              flexDirection={"row"}
+              gap={"4px"}
+              variant="body2"
+            >
+              <ContentCopyIcon />
+              {copyMessage}
+            </Typography>
+          </Button>
+        </Tooltip>
+      </Box>
+      <Link>{props.link} </Link>
+      <Typography>{props.description}</Typography>
+    </Box>
   );
 };
 
@@ -332,6 +398,20 @@ const Sidebar: React.FC<{
                   gap={"8px"}
                   mb={1}
                 >
+                  <LinkComponent
+                    primaryColour={currentTeam?.theme.primaryColour}
+                    titleIcon={currentTeam?.theme.logo || undefined}
+                    title={"Trial Link"}
+                    link={props.url.replace("/published", "/draft")}
+                    description="This is the description for a test link to trial a new component"
+                  />
+                  <LinkComponent
+                    primaryColour={currentTeam?.theme.primaryColour}
+                    titleIcon={<CloseIcon />}
+                    title={"Trial Link"}
+                    link={props.url.replace("/published", "/draft")}
+                    description="This is the description for a test link to trial a new component"
+                  />
                   <Box
                     display={"flex"}
                     flexDirection={"row"}
