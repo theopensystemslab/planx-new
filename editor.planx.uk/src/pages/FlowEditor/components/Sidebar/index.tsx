@@ -238,7 +238,6 @@ const LinkComponent = (props: {
           <Button
             component={"button"}
             variant="help"
-            style={{ textDecoration: "none" }}
             onMouseLeave={() => {
               setTimeout(() => {
                 setCopyMessage("copy");
@@ -254,7 +253,6 @@ const LinkComponent = (props: {
               flexDirection={"row"}
               gap={"4px"}
               variant="body2"
-              sx={{ textDecoration: "underline dotted" }}
             >
               <ContentCopyIcon />
               {copyMessage}
