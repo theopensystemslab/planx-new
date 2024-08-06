@@ -417,7 +417,7 @@ const Sidebar: React.FC<{
                   titleIcon={<LanguageIcon />}
                   title={"Published"}
                   isPublished={isFlowPublished}
-                  link={props.url.replace("/published", "/published")}
+                  link={props.url}
                   description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
                 />
                 <LinkComponent
