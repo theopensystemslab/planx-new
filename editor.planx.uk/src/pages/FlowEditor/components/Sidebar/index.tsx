@@ -354,8 +354,9 @@ const Sidebar: React.FC<{
                       {"Published flow with subdomain"}
                     </Typography>
                     <Tooltip title={copyMessage}>
-                      <Link
+                      <Button
                         component={"button"}
+                        variant="help"
                         style={{ textDecoration: "none" }}
                         onMouseLeave={() => {
                           setTimeout(() => {
@@ -378,7 +379,7 @@ const Sidebar: React.FC<{
                           <ContentCopyIcon />
                           {copyMessage}
                         </Typography>
-                      </Link>
+                      </Button>
                     </Tooltip>
                   </Box>
                   <Link>{props.url.replace("/published", "/preview")} </Link>
