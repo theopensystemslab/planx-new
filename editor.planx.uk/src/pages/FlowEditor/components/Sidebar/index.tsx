@@ -110,6 +110,7 @@ const CopyButton = styled(Button)(({ theme }) => ({
   flexDirection: "row",
   gap: "8px",
   borderRadius: "5px",
+  padding: "8px",
 }));
 
 const TabList = styled(Box)(({ theme }) => ({
