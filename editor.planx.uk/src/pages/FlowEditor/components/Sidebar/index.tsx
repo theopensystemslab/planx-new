@@ -260,7 +260,14 @@ const LinkComponent = (props: {
           </Button>
         </Tooltip>
       </Box>
-      <Link sx={{ "&:hover": { cursor: "pointer" } }}>{props.link} </Link>
+      <Link
+        href={props.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{ "&:hover": { cursor: "pointer" } }}
+      >
+        {props.link}{" "}
+      </Link>
       <Typography>{props.description}</Typography>
     </Box>
   );
