@@ -1,5 +1,5 @@
 /* eslint-disable jest/expect-expect */
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -22,6 +22,8 @@ describe("when a user views the Team members screen with the ADD_NEW_EDITOR feat
     await screen.findByText("Team editors");
   });
   it("shows the 'add new editor' button", async () => {
-    await screen.findByText("Add a new editor");
+    const teamEditorsTable = screen.getByTestId("team-editors");
+    screen.debug();
+    await within(teamEditorsTable).findByText("Add a new editor");
   });
 });
