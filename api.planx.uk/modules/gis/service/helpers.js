@@ -197,16 +197,6 @@ const getA4Subvariables = (features, articleFours, a4Key) => {
   return result;
 };
 
-// Filter a Digital Land entity response object, omitting the "geometry" & "point" keys if exists
-const omitGeometry = (entity) => {
-  return Object.keys(entity)
-    .filter((key) => !["geometry", "point"].includes(key))
-    .reduce((obj, key) => {
-      obj[key] = entity[key];
-      return obj;
-    }, {});
-};
-
 export {
   setEsriGeometryType,
   setEsriGeometry,
@@ -219,6 +209,5 @@ export {
   squashResultLayers,
   rollupResultLayers,
   getA4Subvariables,
-  omitGeometry,
   addDesignatedVariable,
 };
