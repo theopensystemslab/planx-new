@@ -8,7 +8,11 @@ import { setup } from "../../../../../testUtils";
 import { TeamMembers } from "../TeamMembers";
 import { exampleTeamMembersData } from "./exampleTeamMembersData";
 
-describe("when a user views the Team members screen", () => {
+jest.mock("lib/featureFlags.ts", () => ({
+  hasFeatureFlag: jest.fn().mockReturnValue(true),
+}));
+
+describe("when a user views the Team members screen with the ADD_NEW_EDITOR feature flag enabled", () => {
   beforeEach(async () => {
     setup(
       <DndProvider backend={HTML5Backend}>
