@@ -68,7 +68,7 @@ async function go(
     entries: "current",
     geometry: geom,
     geometry_relation: "intersects",
-    exclude_fields: "geometry,point",
+    exclude_field: "geometry,point",
     limit: "100", // TODO handle pagination in future for large polygons & many datasets, but should be well within this limit now
   };
   // 'dataset' param is not array[string] per docs, instead re-specify param name per unique dataset
