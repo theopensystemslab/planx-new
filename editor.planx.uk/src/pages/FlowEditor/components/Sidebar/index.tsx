@@ -289,8 +289,6 @@ const Sidebar: React.FC<{
     getCurrentTeam();
   }, []);
 
-  console.log(currentTeam);
-
   const handleCheckForChangesToPublish = async () => {
     try {
       setLastPublishedTitle("Checking for changes...");
@@ -350,8 +348,8 @@ const Sidebar: React.FC<{
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
+  const flowSlug = window.location.pathname.split("/")[2];
 
-  // navigator.clipboard.writeText(props.url.replace("/published", "/preview"));
   const handleClick = () => {
     setLinkDialogOpen(true);
   };
@@ -407,12 +405,14 @@ const Sidebar: React.FC<{
             </DialogTitle>
             <DialogContent>
               <Stack spacing={"25px"} mb={"30px"}>
-                <LinkComponent
-                  primaryColour={currentTeam?.theme.primaryColour}
-                  titleIcon={currentTeam?.theme.logo || undefined}
-                  title={"Subdomain"}
-                  link={props.url.replace("/published", "/subdomain")}
-                />
+                {currentTeam?.domain && (
+                  <LinkComponent
+                    primaryColour={currentTeam?.theme.primaryColour}
+                    titleIcon={currentTeam?.theme.logo || undefined}
+                    title={"Subdomain"}
+                    link={`${currentTeam?.domain}/${flowSlug}`}
+                  />
+                )}
                 <LinkComponent
                   titleIcon={<LanguageIcon />}
                   title={"Published"}
