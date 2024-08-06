@@ -100,7 +100,7 @@ const ToggleButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const CopyButton = styled(Button)(({ theme }) => ({
+const ViewButton = styled(Button)(({ theme }) => ({
   background: theme.palette.common.white,
   border: `1px solid ${theme.palette.border.main}`,
   boxShadow: "none",
@@ -402,12 +402,12 @@ const Sidebar: React.FC<{
           <ToggleButton onClick={togglePreview}>
             <ChevronRightRounded />
           </ToggleButton>
-          <CopyButton
+          <ViewButton
             onClick={handleClick}
             disabled={!useStore.getState().canUserEditTeam(teamSlug)}
           >
             <LinkIcon fontSize="medium" /> View links
-          </CopyButton>
+          </ViewButton>
 
           <Dialog
             open={linkDialogOpen}
