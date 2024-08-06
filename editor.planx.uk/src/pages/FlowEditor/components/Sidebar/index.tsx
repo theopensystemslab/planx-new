@@ -405,7 +405,7 @@ const Sidebar: React.FC<{
             onClick={handleClick}
             disabled={!useStore.getState().canUserEditTeam(teamSlug)}
           >
-            <LinkIcon fontSize="medium" /> Copy link
+            <LinkIcon fontSize="medium" /> View links
           </CopyButton>
 
           <Dialog
@@ -454,12 +454,14 @@ const Sidebar: React.FC<{
                   link={props.url.replace("/published", "/preview")}
                   description="View of the draft data of the main flow and the latest published version of nested flows. This link is representative of what your next published version will look like."
                 />{" "}
-                <LinkComponent
-                  titleIcon={<OpenInNewOffIcon />}
-                  title={"Draft flow"}
-                  link={props.url.replace("/published", "/draft")}
-                  description="View of the draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
-                />
+                <Permission.IsPlatformAdmin>
+                  <LinkComponent
+                    titleIcon={<OpenInNewOffIcon />}
+                    title={"Draft flow"}
+                    link={props.url.replace("/published", "/draft")}
+                    description="View of the draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
+                  />
+                </Permission.IsPlatformAdmin>
               </Stack>
             </DialogContent>
           </Dialog>
