@@ -417,6 +417,10 @@ export = async () => {
             name: "IDOX_NEXUS_TOKEN_URL",
             value: config.requireSecret("idox-nexus-token-url"),
           },
+          {
+            name: "IDOX_NEXUS_SUBMISSION_URL",
+            value: config.requireSecret("idox-nexus-submission-url"),
+          },
           generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
           ...generateTeamSecrets(config, env),
         ],
