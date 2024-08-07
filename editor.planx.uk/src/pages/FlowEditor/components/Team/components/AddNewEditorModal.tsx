@@ -4,18 +4,17 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
-import React, { SetStateAction } from "react";
+import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
 
+import { AddNewEditorModalProps } from "../types";
+
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
-}: {
-  showModal: boolean;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
-}) => (
+}: AddNewEditorModalProps) => (
   <Dialog
     aria-labelledby="dialog-heading"
     PaperProps={{
@@ -43,7 +42,7 @@ export const AddNewEditorModal = ({
             <Input
               name="firstname"
               onChange={() => {
-                console.log("bla"); // nothing yet
+                console.log("bla"); // TODO in next PR
               }}
               value={""}
               errorMessage={""}
@@ -54,7 +53,7 @@ export const AddNewEditorModal = ({
             <Input
               name="lastname"
               onChange={() => {
-                console.log("bla"); // nothing yet
+                console.log("bla"); // TODO in next PR
               }}
               value={""}
               errorMessage={""}
@@ -65,7 +64,7 @@ export const AddNewEditorModal = ({
             <Input
               name="email"
               onChange={() => {
-                console.log("bla"); // nothing yet
+                console.log("bla"); // TODO in next PR
               }}
               value={""}
               errorMessage={""}
