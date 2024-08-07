@@ -273,10 +273,6 @@ const Sidebar: React.FC<{
     );
   });
 
-  const handleClick = () => {
-    setLinkDialogOpen(true);
-  };
-
   return (
     <Root>
       <Header>
@@ -291,14 +287,14 @@ const Sidebar: React.FC<{
           style={{ position: "relative" }}
         >
           <ViewButton
-            onClick={handleClick}
+            onClick={() => setLinkDialogOpen(true)}
             disabled={!useStore.getState().canUserEditTeam(teamSlug)}
           >
             <LinkIcon fontSize="medium" /> View links
           </ViewButton>
           <LinkDialog
             containsTheme
-            linkDialogOpen
+            linkDialogOpen={linkDialogOpen}
             teamTheme={teamTheme}
             teamDomain={teamDomain}
             flowSlug={flowSlug}

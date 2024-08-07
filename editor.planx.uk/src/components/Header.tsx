@@ -24,7 +24,7 @@ import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React, { RefObject, useRef, useState } from "react";
+import React, { RefObject, useEffect, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
   useCurrentRoute,
@@ -577,8 +577,19 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
 };
 
 const Header: React.FC = () => {
+  const [isOutsideEditor, setIsOutsideEditor] = useState<boolean>(false);
   const headerRef = useRef<HTMLDivElement>(null);
   const theme = useStore((state) => state.teamTheme);
+  const environment = useStore((state) => state.previewEnvironment);
+  const pathnameArray = window.location.pathname.split("/");
+
+  useEffect(() => {
+    const findPathname = pathnameArray.find(
+      (pathname) => pathname === "preview" || pathname === "draft",
+    );
+    setIsOutsideEditor(Boolean(findPathname));
+  }, pathnameArray);
+
   return (
     <Root
       position="static"
@@ -586,7 +597,10 @@ const Header: React.FC = () => {
       color="transparent"
       ref={headerRef}
       sx={{
-        backgroundColor: theme?.primaryColour || "#2c2c2c",
+        backgroundColor:
+          isOutsideEditor || environment === "standalone"
+            ? theme.primaryColour
+            : "#2c2c2c",
         "@media print": { backgroundColor: "white", color: "black" },
       }}
     >
