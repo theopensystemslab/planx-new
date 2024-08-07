@@ -7,7 +7,7 @@ import { ChromePicker, ColorChangeHandler } from "react-color";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 export interface Props {
-  label?: string;
+  label: string;
   inline?: boolean;
   color?: string;
   errorMessage?: string;
@@ -24,7 +24,8 @@ const Root = styled(Box, {
   padding: 0,
   position: "relative",
   display: "flex",
-  alignItems: "center",
+  alignItems: inline ? "center" : "flex-start",
+  flexDirection: inline ? "row" : "column",
   ...(inline && {
     padding: theme.spacing(2, 0),
     "& .popover": {
@@ -100,9 +101,15 @@ export default function ColorPicker(props: Props): FCReturn {
       id="colour-picker-error"
     >
       <Root inline={props.inline}>
-        <Typography mr={2} variant="body2" component="label">
-          {props.label || "Background colour"}:{" "}
-        </Typography>
+        {props.inline ? (
+          <Typography mr={2} variant="body2" component="label">
+            {props.label}:{" "}
+          </Typography>
+        ) : (
+          <Typography sx={{ pb: 1 }} variant="body1" component="label">
+            {props.label}
+          </Typography>
+        )}
         <StyledButtonBase show={show} onClick={handleClick} disableRipple>
           <Swatch sx={{ backgroundColor: props.color }} className="swatch" />
           {props.color}

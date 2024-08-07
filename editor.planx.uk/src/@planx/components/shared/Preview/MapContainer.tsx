@@ -18,6 +18,11 @@ export const MapContainer = styled(Box)<MapContainerProps>(
       // Only increase map size in Published, Preview, and Draft routes
       height:
         size === "large" && environment === "standalone" ? "70vh" : "50vh",
+      // Ensure map is not reduced to an unusable height
+      minHeight: "400px",
+      [theme.breakpoints.up("md")]: {
+        minHeight: "480px",
+      },
     },
   }),
 );

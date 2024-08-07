@@ -68,6 +68,7 @@ export const TextLinkForm: React.FC<FormProps> = ({
           <InputRowItem>
             <ColorPicker
               color={formik.values.linkColour}
+              inline
               onChange={(color) => formik.setFieldValue("linkColour", color)}
               label="Text link colour"
               errorMessage={formik.errors.linkColour}
