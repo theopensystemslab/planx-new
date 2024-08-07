@@ -57,7 +57,6 @@ const Root = styled(Box)(({ theme }) => ({
   width: "500px",
   display: "flex",
   flexShrink: 0,
-  zIndex: 1,
   flexDirection: "column",
   borderLeft: `1px solid ${theme.palette.border.main}`,
   background: theme.palette.background.paper,
