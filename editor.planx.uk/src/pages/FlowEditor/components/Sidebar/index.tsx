@@ -34,6 +34,7 @@ import Input from "ui/shared/Input";
 import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import EditHistory from "./EditHistory";
+import LinkDialog from "./LinkDialog";
 import {
   AlteredNode,
   AlteredNodesSummaryContent,
@@ -117,15 +118,6 @@ const TabList = styled(Box)(({ theme }) => ({
   },
 }));
 
-const ImageWrapper = styled(Box)(() => ({
-  height: 24,
-  width: 24,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "2px",
-}));
-
 const StyledTab = styled(Tab)(({ theme }) => ({
   position: "relative",
   zIndex: 1,
@@ -174,88 +166,6 @@ const DebugConsole = () => {
   );
 };
 
-const LinkComponent = (props: {
-  primaryColour?: string;
-  titleIcon?: string | SvgIconProps;
-  title: string;
-  link: string;
-  description?: string;
-  isPublished?: boolean;
-}) => {
-  const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
-
-  return (
-    <Box
-      sx={{
-        opacity:
-          props.isPublished || props.isPublished === undefined ? "100%" : "50%",
-      }}
-      display={"flex"}
-      flexDirection={"column"}
-      gap={"8px"}
-      mb={1}
-    >
-      <Box
-        display={"flex"}
-        flexDirection={"row"}
-        alignItems={"center"}
-        gap={"7px"}
-      >
-        {typeof props.titleIcon === "string" ? (
-          <ImageWrapper sx={{ backgroundColor: props.primaryColour }}>
-            <img
-              height={"auto"}
-              width={20}
-              src={props.titleIcon || undefined}
-              alt="Local authority logo"
-            />
-          </ImageWrapper>
-        ) : (
-          <>{props.titleIcon}</>
-        )}
-
-        <Typography variant="h4" component={"h4"} mr={1}>
-          {props.title}
-        </Typography>
-        <Tooltip title={copyMessage}>
-          <Button
-            component={"button"}
-            variant="help"
-            onMouseLeave={() => {
-              setTimeout(() => {
-                setCopyMessage("copy");
-              }, 500);
-            }}
-            onClick={() => {
-              setCopyMessage("copied");
-              navigator.clipboard.writeText(props.link);
-            }}
-          >
-            <Typography
-              display={"flex"}
-              flexDirection={"row"}
-              gap={"4px"}
-              variant="body2"
-            >
-              <ContentCopyIcon />
-              {copyMessage}
-            </Typography>
-          </Button>
-        </Tooltip>
-      </Box>
-      <Link
-        href={props.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{ "&:hover": { cursor: "pointer" } }}
-      >
-        {props.link}{" "}
-      </Link>
-      <Typography>{props.description}</Typography>
-    </Box>
-  );
-};
-
 const Sidebar: React.FC<{
   url: string;
 }> = React.memo((props) => {
@@ -301,9 +211,6 @@ const Sidebar: React.FC<{
   const [summary, setSummary] = useState<string>();
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
   const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(false);
-  const [currentTeam, setCurrentTeam] = useState<Team | undefined>(undefined);
-
-  console.log({ teamTheme, teamSlug, teamDomain });
 
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
@@ -389,64 +296,16 @@ const Sidebar: React.FC<{
           >
             <LinkIcon fontSize="medium" /> View links
           </ViewButton>
+          <LinkDialog
+            containsTheme
+            linkDialogOpen
+            teamTheme={teamTheme}
+            teamDomain={teamDomain}
+            flowSlug={flowSlug}
+            isFlowPublished={isFlowPublished}
+            url={props.url}
+          />
 
-          <Dialog
-            open={linkDialogOpen}
-            onClose={() => setLinkDialogOpen(false)}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            fullWidth
-            maxWidth="md"
-          >
-            <Box padding={1} mb={1} display={"block"} textAlign={"end"}>
-              <Button
-                variant="text"
-                style={{ boxShadow: "none" }}
-                onClick={() => {
-                  setLinkDialogOpen(false);
-                }}
-              >
-                <CloseIcon color="action" />
-              </Button>
-              <Divider />
-            </Box>
-            <DialogTitle mb={"25px"} variant="h3" component="h3">
-              {`Share this flow`}
-            </DialogTitle>
-            <DialogContent>
-              <Stack spacing={"25px"} mb={"30px"}>
-                {teamDomain && (
-                  <LinkComponent
-                    primaryColour={teamTheme.primaryColour}
-                    titleIcon={teamTheme.logo || undefined}
-                    title={"Published flow with subdomain"}
-                    link={`${teamDomain}/${flowSlug}`}
-                  />
-                )}
-                <LinkComponent
-                  titleIcon={<LanguageIcon />}
-                  title={"Published flow"}
-                  isPublished={isFlowPublished}
-                  link={props.url}
-                  description="View of the currently published version of this flow."
-                />
-                <LinkComponent
-                  titleIcon={<OpenInNewIcon />}
-                  title={"Preview flow"}
-                  link={props.url.replace("/published", "/preview")}
-                  description="View of the draft data of the main flow and the latest published version of nested flows. This link is representative of what your next published version will look like."
-                />{" "}
-                <Permission.IsPlatformAdmin>
-                  <LinkComponent
-                    titleIcon={<OpenInNewOffIcon />}
-                    title={"Draft flow"}
-                    link={props.url.replace("/published", "/draft")}
-                    description="View of the draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
-                  />
-                </Permission.IsPlatformAdmin>
-              </Stack>
-            </DialogContent>
-          </Dialog>
           <Box
             display="flex"
             flexDirection="column"
