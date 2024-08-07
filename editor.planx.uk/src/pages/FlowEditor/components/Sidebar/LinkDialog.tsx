@@ -15,8 +15,10 @@ import { styled } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { link } from "fs";
+import { SetState } from "immer/dist/internal";
 import { intersectDependencies } from "mathjs";
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import Permission from "ui/editor/Permission";
 
 interface DialogTeamTheme {
@@ -29,6 +31,7 @@ interface DialogBaseProps {
   flowSlug: string;
   isFlowPublished: boolean;
   url: string;
+  setLinkDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface DialogPropsWithTheme {
@@ -49,6 +52,7 @@ const ImageWrapper = styled(Box)(() => ({
 }));
 
 const LinkComponent = (props: {
+  linkType: "published" | "draft" | "subdomain" | "preview";
   primaryColour?: string;
   titleIcon?: string | SvgIconProps;
   title: string;
@@ -117,31 +121,27 @@ const LinkComponent = (props: {
           </Button>
         </Tooltip>
       </Box>
-      <Link
-        href={props.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{ "&:hover": { cursor: "pointer" } }}
-      >
-        {props.link}{" "}
-      </Link>
+      {
+        <Link
+          href={props.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{ "&:hover": { cursor: "pointer" } }}
+        >
+          {props.link}
+        </Link>
+      }
       <Typography>{props.description}</Typography>
     </Box>
   );
 };
 
 export default function LinkDialog(props: DialogProps) {
-  const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(
-    props.linkDialogOpen,
-  );
-
-  useEffect(() => {
-    setLinkDialogOpen(props.linkDialogOpen);
-  }, [props.linkDialogOpen]);
+  console.log(props.linkDialogOpen);
   return (
     <Dialog
-      open={linkDialogOpen}
-      onClose={() => setLinkDialogOpen(false)}
+      open={props.linkDialogOpen}
+      onClose={() => props.setLinkDialogOpen(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       fullWidth
@@ -152,7 +152,7 @@ export default function LinkDialog(props: DialogProps) {
           variant="text"
           style={{ boxShadow: "none" }}
           onClick={() => {
-            setLinkDialogOpen(false);
+            props.setLinkDialogOpen(false);
           }}
         >
           <CloseIcon color="action" />
@@ -166,6 +166,7 @@ export default function LinkDialog(props: DialogProps) {
         <Stack spacing={"25px"} mb={"30px"}>
           {props.teamDomain && props.teamTheme ? (
             <LinkComponent
+              linkType="subdomain"
               primaryColour={props.teamTheme.primaryColour}
               titleIcon={props.teamTheme.logo || undefined}
               title={"Published flow with subdomain"}
@@ -173,6 +174,7 @@ export default function LinkDialog(props: DialogProps) {
             />
           ) : null}
           <LinkComponent
+            linkType="published"
             titleIcon={<LanguageIcon />}
             title={"Published flow"}
             isPublished={props.isFlowPublished}
@@ -180,6 +182,7 @@ export default function LinkDialog(props: DialogProps) {
             description="View of the currently published version of this flow."
           />
           <LinkComponent
+            linkType="preview"
             titleIcon={<OpenInNewIcon />}
             title={"Preview flow"}
             link={props.url.replace("/published", "/preview")}
@@ -187,6 +190,7 @@ export default function LinkDialog(props: DialogProps) {
           />{" "}
           <Permission.IsPlatformAdmin>
             <LinkComponent
+              linkType="draft"
               titleIcon={<OpenInNewOffIcon />}
               title={"Draft flow"}
               link={props.url.replace("/published", "/draft")}

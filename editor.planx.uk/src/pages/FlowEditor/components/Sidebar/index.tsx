@@ -293,6 +293,7 @@ const Sidebar: React.FC<{
             <LinkIcon fontSize="medium" /> View links
           </ViewButton>
           <LinkDialog
+            setLinkDialogOpen={setLinkDialogOpen}
             containsTheme
             linkDialogOpen={linkDialogOpen}
             teamTheme={teamTheme}
