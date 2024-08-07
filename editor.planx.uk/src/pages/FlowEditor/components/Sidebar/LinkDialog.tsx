@@ -16,7 +16,7 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { intersectDependencies } from "mathjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Permission from "ui/editor/Permission";
 
 interface DialogTeamTheme {
@@ -135,6 +135,9 @@ export default function LinkDialog(props: DialogProps) {
     props.linkDialogOpen,
   );
 
+  useEffect(() => {
+    setLinkDialogOpen(props.linkDialogOpen);
+  }, [props.linkDialogOpen]);
   return (
     <Dialog
       open={linkDialogOpen}
