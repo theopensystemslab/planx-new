@@ -17,8 +17,7 @@ export const AddNewEditorModal = ({
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
 }) => (
   <Dialog
-    // maxWidth="xl"
-    // aria-labelledby="dialog-heading"
+    aria-labelledby="dialog-heading"
     PaperProps={{
       sx: {
         width: "100%",
