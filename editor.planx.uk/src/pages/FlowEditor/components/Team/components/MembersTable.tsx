@@ -9,8 +9,8 @@ import { hasFeatureFlag } from "lib/featureFlags";
 import { AddButton } from "pages/Team";
 import React from "react";
 
-import { StyledAvatar, StyledTableRow } from "./styles";
-import { MembersTableProps } from "./types";
+import { StyledAvatar, StyledTableRow } from "./../styles";
+import { MembersTableProps } from "./../types";
 
 export const MembersTable = ({
   members,
