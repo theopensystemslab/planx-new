@@ -89,7 +89,7 @@ const ViewButton = styled(Button)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   boxShadow: "none",
   color: theme.palette.common.black,
-  width: "35%",
+  width: "30%",
   display: "flex",
   flexDirection: "row",
   gap: "8px",
@@ -321,7 +321,7 @@ const Sidebar: React.FC<{
                 disabled={!useStore.getState().canUserEditTeam(teamSlug)}
                 onClick={handleCheckForChangesToPublish}
               >
-                CHECK FOR CHANGES TO PUBLISH
+                Check for changes to publish
               </Button>
             </Badge>
             <Dialog
