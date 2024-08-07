@@ -84,22 +84,6 @@ const Header = styled("header")(({ theme }) => ({
   },
 }));
 
-const ToggleButton = styled(Button)(({ theme }) => ({
-  background: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.border.main}`,
-  borderImage: `linear-gradient(to right, ${theme.palette.border.main} 50%, transparent 50%) 30% 1`,
-  position: "absolute",
-  left: "-35px",
-  height: "100%",
-  boxShadow: "none",
-  textAlign: "left",
-  paddingLeft: "4px",
-  "&:hover": {
-    background: theme.palette.background.paper,
-    boxShadow: "none",
-  },
-}));
-
 const ViewButton = styled(Button)(({ theme }) => ({
   background: theme.palette.common.white,
   border: `1px solid ${theme.palette.border.main}`,
@@ -404,9 +388,6 @@ const Sidebar: React.FC<{
           gap={"24px"}
           style={{ position: "relative" }}
         >
-          <ToggleButton onClick={togglePreview}>
-            <ChevronRightRounded />
-          </ToggleButton>
           <ViewButton
             onClick={handleClick}
             disabled={!useStore.getState().canUserEditTeam(teamSlug)}
