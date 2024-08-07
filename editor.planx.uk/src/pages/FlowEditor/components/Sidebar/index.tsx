@@ -104,6 +104,22 @@ const TabList = styled(Box)(({ theme }) => ({
   },
 }));
 
+const ToggleButton = styled(Button)(({ theme }) => ({
+  background: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.border.main}`,
+  borderImage: `linear-gradient(to right, ${theme.palette.border.main} 50%, transparent 50%) 30% 1`,
+  position: "absolute",
+  left: "-35px",
+  height: "100%",
+  boxShadow: "none",
+  textAlign: "left",
+  paddingLeft: "4px",
+  "&:hover": {
+    background: theme.palette.background.paper,
+    boxShadow: "none",
+  },
+}));
+
 const StyledTab = styled(Tab)(({ theme }) => ({
   position: "relative",
   zIndex: 1,
