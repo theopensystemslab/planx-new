@@ -26,7 +26,7 @@ import { Team } from "@opensystemslab/planx-core/types";
 import { AxiosError } from "axios";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAsync } from "react-use";
 import Permission from "ui/editor/Permission";
 import Input from "ui/shared/Input";
@@ -270,6 +270,10 @@ const Sidebar: React.FC<{
     isFlowPublished,
     fetchCurrentTeam,
     togglePreview,
+    flowSlug,
+    teamSlug,
+    teamTheme,
+    teamDomain,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
@@ -280,6 +284,10 @@ const Sidebar: React.FC<{
     state.isFlowPublished,
     state.fetchCurrentTeam,
     state.togglePreview,
+    state.flowSlug,
+    state.teamSlug,
+    state.teamTheme,
+    state.teamDomain,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -295,19 +303,11 @@ const Sidebar: React.FC<{
   const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(false);
   const [currentTeam, setCurrentTeam] = useState<Team | undefined>(undefined);
 
+  console.log({ teamTheme, teamSlug, teamDomain });
+
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
   };
-
-  useEffect(() => {
-    const getCurrentTeam = async () => {
-      const [response] = await Promise.all([fetchCurrentTeam()]);
-      setCurrentTeam(response);
-      return response;
-    };
-
-    getCurrentTeam();
-  }, []);
 
   const handleCheckForChangesToPublish = async () => {
     try {
@@ -366,10 +366,6 @@ const Sidebar: React.FC<{
     );
   });
 
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
-  const flowSlug = window.location.pathname.split("/")[2];
-
   const handleClick = () => {
     setLinkDialogOpen(true);
   };
@@ -419,12 +415,12 @@ const Sidebar: React.FC<{
             </DialogTitle>
             <DialogContent>
               <Stack spacing={"25px"} mb={"30px"}>
-                {currentTeam?.domain && (
+                {teamDomain && (
                   <LinkComponent
-                    primaryColour={currentTeam?.theme.primaryColour}
-                    titleIcon={currentTeam?.theme.logo || undefined}
+                    primaryColour={teamTheme.primaryColour}
+                    titleIcon={teamTheme.logo || undefined}
                     title={"Published flow with subdomain"}
-                    link={`${currentTeam?.domain}/${flowSlug}`}
+                    link={`${teamDomain}/${flowSlug}`}
                   />
                 )}
                 <LinkComponent

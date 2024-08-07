@@ -14,6 +14,7 @@ export interface TeamStore {
   teamId: number;
   teamIntegrations: TeamIntegrations;
   teamName: string;
+  teamDomain?: string;
   teamSettings: TeamSettings;
   teamSlug: string;
   teamTheme: TeamTheme;
@@ -37,6 +38,7 @@ export const teamStore: StateCreator<
   teamId: 0,
   teamIntegrations: {} as TeamIntegrations,
   teamName: "",
+  teamDomain: "",
   teamSettings: {} as TeamSettings,
   teamSlug: "",
   teamTheme: {} as TeamTheme,
@@ -46,6 +48,7 @@ export const teamStore: StateCreator<
       teamId: team.id,
       teamIntegrations: team.integrations,
       teamName: team.name,
+      teamDomain: team.domain,
       teamSettings: team.settings,
       teamSlug: team.slug,
       teamTheme: team.theme,
@@ -61,6 +64,7 @@ export const teamStore: StateCreator<
     id: get().teamId,
     integrations: get().teamIntegrations,
     name: get().teamName,
+    domain: get().teamDomain,
     settings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
@@ -84,6 +88,7 @@ export const teamStore: StateCreator<
             id
             name
             slug
+            domain
             flows(order_by: { updated_at: desc }) {
               slug
               updated_at
