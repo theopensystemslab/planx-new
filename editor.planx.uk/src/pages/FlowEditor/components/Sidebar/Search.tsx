@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import { styled, Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType, IndexedNode } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
@@ -14,7 +14,6 @@ import { capitalize, get } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
-import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_BOLD, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
@@ -76,7 +75,7 @@ const Headline: React.FC<HeadlineProps> = ({ text, matchIndices, variant }) => {
       {text.split("").map((char, index) => (
         <Typography
           component="span"
-          variant="data"
+          variant={variant}
           key={`headline-character-${index}`}
           sx={(theme) => ({
             fontWeight: isHighlighted(index) ? FONT_WEIGHT_BOLD : "regular",
@@ -104,7 +103,7 @@ const SearchResultCard: React.FC<{ result: SearchResult<IndexedNode> }> = ({
     let Icon = ICONS[item.type];
     // TODO: Generate display key from key
     let displayKey = "Data";
-    const headline = get(item, key).toString() || "";
+    let headline = get(item, key)?.toString() || "";
 
     // For Answer nodes, update display values to match the parent question
     if (item.type === ComponentType.Answer) {
@@ -112,6 +111,40 @@ const SearchResultCard: React.FC<{ result: SearchResult<IndexedNode> }> = ({
       Icon = ICONS[ComponentType.Question];
       title = parentNode!.data.text!;
       displayKey = "Option (data)";
+    }
+
+    if (item.type === ComponentType.FileUploadAndLabel) {
+      headline =
+        (item["data"]?.["fileTypes"] as [])[result.refIndex]["fn"] || "";
+      displayKey = "File type (data)";
+    }
+
+    if (item.type === ComponentType.Calculate) {
+      if (result.key === "formula") {
+        headline = item.data!.formula;
+        displayKey = "Formula";
+      }
+      if (result.key === "data.output") {
+        headline = item.data!.output;
+        displayKey = "Output (data)";
+      }
+      // never?
+    }
+
+    if (item.type === ComponentType.List) {
+      if (result.key === "data.schema.fields.data.fn") {
+        headline = (item.data as any).schema.fields[result.refIndex].data.fn;
+        displayKey = "Data";
+      }
+      if (result.key === "data.schema.fields.data.options.data.val") {
+        // Fuse.js flattens deeply nested arrays when using refIndex
+        const options = (item.data as any).schema.fields.flatMap((field: any) => field.data.options)
+        console.log({options})
+        headline = options[result.refIndex].data.val;
+        displayKey = "Option (data)";
+      }
+      // never?
+
     }
 
     return {
@@ -175,7 +208,6 @@ const SearchResultCard: React.FC<{ result: SearchResult<IndexedNode> }> = ({
 const ExternalPortalList: React.FC = () => {
   const externalPortals = useStore((state) => state.externalPortals);
   const hasExternalPortals = Object.keys(externalPortals).length;
-  const { navigate } = useNavigation();
 
   if (!hasExternalPortals) return null;
 
@@ -202,7 +234,21 @@ const ExternalPortalList: React.FC = () => {
 
 interface SearchNodes {
   input: string;
-  facets: ["data.fn", "data.val"];
+  facets: [
+    "data.fn", 
+    "data.val", 
+    // FUAL
+    "data.fileTypes.fn", 
+    // Calculate
+    "data.output",
+    { 
+      name: "formula", 
+      getFn: (node: IndexedNode) => string[],
+    },
+    // List
+    "data.schema.fields.data.fn",
+    "data.schema.fields.data.options.data.val",
+  ];
 }
 
 const Search: React.FC = () => {
@@ -213,10 +259,21 @@ const Search: React.FC = () => {
 
   useEffect(() => {
     if (!orderedFlow) setOrderedFlow();
-  }, [setOrderedFlow]);
+  }, [setOrderedFlow, orderedFlow]);
 
   const formik = useFormik<SearchNodes>({
-    initialValues: { input: "", facets: ["data.fn", "data.val"] },
+    initialValues: {
+      input: "",
+      facets: [
+        "data.fn", 
+        "data.val", 
+        "data.fileTypes.fn", 
+        "data.output", 
+        { name: "formula", getFn: (node: IndexedNode) => Object.keys(node.data?.defaults || {}) },
+        "data.schema.fields.data.fn",
+        "data.schema.fields.data.options.data.val",
+      ]
+    },
     onSubmit: ({ input }) => {
       search(input);
     },
