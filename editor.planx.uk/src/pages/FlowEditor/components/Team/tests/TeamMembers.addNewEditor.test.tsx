@@ -7,16 +7,6 @@ jest.mock("lib/featureFlags.ts", () => ({
   hasFeatureFlag: jest.fn().mockReturnValue(true),
 }));
 
-describe("when a user views the Team members screen with the ADD_NEW_EDITOR feature flag enabled", () => {
-  beforeEach(async () => {
-    await setupTeamMembersScreen();
-  });
-  it("shows the 'add new editor' button", async () => {
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    await within(teamEditorsTable).findByText("Add a new editor");
-  });
-});
-
 describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add a new editor'", () => {
   beforeEach(async () => {
     await setupTeamMembersScreen();

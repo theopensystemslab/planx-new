@@ -13,7 +13,7 @@ export interface MembersTableProps {
   showAddMemberButton?: boolean;
   setShowModal?: React.Dispatch<SetStateAction<boolean>>;
 }
-export type AddNewEditorModalProps = {
+export interface AddNewEditorModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
-};
+}
