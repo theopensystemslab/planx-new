@@ -1,4 +1,5 @@
 import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { useTheme } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -9,17 +10,20 @@ import InputGroup from "ui/editor/InputGroup";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
+import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
 
 import BasicRadio from "../shared/Radio/BasicRadio";
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
 import { MapAndLabel, parseContent } from "./model";
+import { Trees } from "./schemas/Trees";
 
 type Props = EditorProps<TYPES.MapAndLabel, MapAndLabel>;
+
+export const SCHEMAS = [{ name: "Trees", schema: Trees }];
 
 export default MapAndLabelComponent;
 
@@ -113,6 +117,30 @@ function MapAndLabelComponent(props: Props) {
               </RadioGroup>
             </InputLabel>
           </FormControl>
+        </ModalSectionContent>
+        <ModalSectionContent title="Schema">
+          <InputRow>
+            <InputRowItem>
+              <SelectInput
+                value={formik.values.schemaName}
+                onChange={(e) => {
+                  formik.setFieldValue("schemaName", e.target.value);
+                  formik.setFieldValue(
+                    "schema",
+                    SCHEMAS.find(
+                      ({ name }) => name === (e.target.value as string),
+                    )?.schema,
+                  );
+                }}
+              >
+                {SCHEMAS.map(({ name }) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </SelectInput>
+            </InputRowItem>
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation
