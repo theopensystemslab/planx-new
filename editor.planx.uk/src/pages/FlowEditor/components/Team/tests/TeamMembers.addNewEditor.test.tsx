@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 import { fireEvent, screen, within } from "@testing-library/react";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";

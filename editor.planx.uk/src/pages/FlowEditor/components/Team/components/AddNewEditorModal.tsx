@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -5,6 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
+import { client } from "lib/graphql";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
@@ -12,6 +14,49 @@ import Input from "ui/shared/Input";
 import * as Yup from "yup";
 
 import { AddNewEditorModalProps } from "../types";
+
+const createUser = async (
+  email: string,
+  firstName: string,
+  lastName: string,
+  isPlatformAdmin?: boolean
+) => {
+  const response = (await client.mutate({
+    mutation: gql`
+      mutation CreateUser(
+        $email: String!
+        $firstName: String!
+        $lastName: String!
+        $isPlatformAdmin: Boolean
+      ) {
+        insert_users_one(
+          object: {
+            email: $email
+            first_name: $firstName
+            last_name: $lastName
+            is_platform_admin: $isPlatformAdmin
+          }
+        ) {
+          id
+          email
+          first_name
+          last_name
+          is_platform_admin
+        }
+      }
+    `,
+    variables: {
+      email,
+      firstName,
+      lastName,
+      isPlatformAdmin,
+    },
+  })) as any;
+  const { id } = response.data.insert_users_one;
+
+  console.log("created a user with id: ", id);
+  return id;
+};
 
 export const AddNewEditorModal = ({
   showModal,
@@ -28,9 +73,17 @@ export const AddNewEditorModal = ({
       lastName: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
     }),
-    onSubmit: (values) => {
-      console.log({ values });
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values, { resetForm }) => {
+      await createUser(
+        // TODO: do I need to use a store?
+        values.email,
+        values.firstName,
+        values.lastName,
+        false // TODO: sort out isPlatformAdmin
+      ).then(console.log);
+
+      setShowModal(false);
+      resetForm({ values }); // TODO: onSuccess
     },
   });
 
