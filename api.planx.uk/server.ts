@@ -31,6 +31,7 @@ import fileRoutes from "./modules/file/routes";
 import gisRoutes from "./modules/gis/routes";
 import payRoutes from "./modules/pay/routes";
 import sendRoutes from "./modules/send/routes";
+import testRoutes from "./modules/test/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 
@@ -149,6 +150,7 @@ app.use(sendRoutes);
 app.use(teamRoutes);
 app.use(userRoutes);
 app.use(webhookRoutes);
+app.use(testRoutes);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
