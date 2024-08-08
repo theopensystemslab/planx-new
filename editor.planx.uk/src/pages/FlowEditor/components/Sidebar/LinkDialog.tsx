@@ -15,10 +15,7 @@ import { styled } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { link } from "fs";
-import { SetState } from "immer/dist/internal";
-import { intersectDependencies } from "mathjs";
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Permission from "ui/editor/Permission";
 
 interface DialogTeamTheme {
@@ -51,6 +48,12 @@ const ImageWrapper = styled(Box)(() => ({
   padding: "2px",
 }));
 
+const InactiveLink = styled(Typography)(({ theme }) => ({
+  width: "100%",
+  textAlign: "left",
+  color: theme.palette.text.secondary,
+}));
+
 const LinkComponent = (props: {
   linkType: "published" | "draft" | "subdomain" | "preview";
   primaryColour?: string;
@@ -63,16 +66,7 @@ const LinkComponent = (props: {
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
 
   return (
-    <Box
-      sx={{
-        opacity:
-          props.isPublished || props.isPublished === undefined ? "100%" : "50%",
-      }}
-      display={"flex"}
-      flexDirection={"column"}
-      gap={"8px"}
-      mb={1}
-    >
+    <Box display={"flex"} flexDirection={"column"} gap={"8px"} mb={1}>
       <Box
         display={"flex"}
         flexDirection={"row"}
@@ -108,6 +102,7 @@ const LinkComponent = (props: {
               setCopyMessage("copied");
               navigator.clipboard.writeText(props.link);
             }}
+            disabled={props.linkType === "published" && !props.isPublished}
           >
             <Typography
               display={"flex"}
@@ -121,7 +116,11 @@ const LinkComponent = (props: {
           </Button>
         </Tooltip>
       </Box>
-      {
+      <Typography>{props.description}</Typography>
+      {}
+      {props.linkType === "published" && !props.isPublished ? (
+        <InactiveLink variant="body1">{props.link}</InactiveLink>
+      ) : (
         <Link
           href={props.link}
           target="_blank"
@@ -130,8 +129,7 @@ const LinkComponent = (props: {
         >
           {props.link}
         </Link>
-      }
-      <Typography>{props.description}</Typography>
+      )}
     </Box>
   );
 };
