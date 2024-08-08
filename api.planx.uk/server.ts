@@ -14,6 +14,7 @@ import helmet from "helmet";
 import { ServerError } from "./errors";
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
+import { registerSessionStubs } from "./session";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
@@ -115,6 +116,9 @@ app.use(
     secret: process.env.SESSION_SECRET,
   }),
 );
+
+// register stubs after cookieSession middleware initialisation
+app.use(registerSessionStubs);
 
 passport.use("google", googleStrategy);
 
