@@ -5,14 +5,18 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { hasFeatureFlag } from "lib/featureFlags";
+import { AddButton } from "pages/Team";
 import React from "react";
 
-import { StyledAvatar, StyledTableRow } from "./styles";
-import { TeamMember } from "./types";
+import { StyledAvatar, StyledTableRow } from "./../styles";
+import { MembersTableProps } from "./../types";
 
-export const MembersTable: React.FC<{ members: TeamMember[] }> = ({
+export const MembersTable = ({
   members,
-}) => {
+  showAddMemberButton,
+  setShowModal = () => true,
+}: MembersTableProps) => {
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
     teamEditor: "Editor",
@@ -79,6 +83,15 @@ export const MembersTable: React.FC<{ members: TeamMember[] }> = ({
               <TableCell>{member.email}</TableCell>
             </StyledTableRow>
           ))}
+          {showAddMemberButton && hasFeatureFlag("ADD_NEW_EDITOR") && (
+            <TableRow>
+              <TableCell colSpan={3}>
+                <AddButton onClick={() => setShowModal(true)}>
+                  Add a new editor
+                </AddButton>
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>
