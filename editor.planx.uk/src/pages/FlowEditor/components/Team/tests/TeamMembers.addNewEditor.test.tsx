@@ -1,5 +1,5 @@
 /* eslint-disable jest/expect-expect */
-import { fireEvent, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 
@@ -19,12 +19,12 @@ describe("when a user views the Team members screen with the ADD_NEW_EDITOR feat
 
 describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add a new editor'", () => {
   beforeEach(async () => {
-    await setupTeamMembersScreen();
+    const user = await setupTeamMembersScreen();
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByText(
-      "Add a new editor",
+      "Add a new editor"
     );
-    fireEvent.click(addEditorButton);
+    user.click(addEditorButton);
   });
   it("opens the modal and displays the input fields", async () => {
     expect(await screen.findByTestId("modal-create-user-button")).toBeVisible();
