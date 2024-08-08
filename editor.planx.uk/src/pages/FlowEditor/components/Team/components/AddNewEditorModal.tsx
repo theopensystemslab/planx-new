@@ -38,14 +38,14 @@ export const AddNewEditorModal = ({
     <Dialog
       aria-labelledby="dialog-heading"
       PaperProps={{
-        sx: {
+        sx: (theme) => ({
           width: "100%",
-          maxWidth: (theme) => theme.breakpoints.values.md,
+          maxWidth: theme.breakpoints.values.md,
           borderRadius: 0,
-          borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
+          borderTop: `20px solid ${theme.palette.primary.main}`,
           background: "#FFF",
-          margin: (theme) => theme.spacing(2),
-        },
+          margin: theme.spacing(2),
+        }),
       }}
       open={showModal}
       onClose={() => setShowModal(false)}

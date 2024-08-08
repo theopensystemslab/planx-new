@@ -1,5 +1,5 @@
 // add/edit/remove feature flags in array below
-export const AVAILABLE_FEATURE_FLAGS = [
+const AVAILABLE_FEATURE_FLAGS = [
   "SEARCH",
   "OVERRIDE_CONSTRAINTS",
   "TREES",
