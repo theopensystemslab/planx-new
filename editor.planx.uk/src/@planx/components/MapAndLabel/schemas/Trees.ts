@@ -17,7 +17,7 @@ export const Trees: Schema = {
       data: {
         title: "Proposed work",
         fn: "work",
-        type: TextInputType.Long,
+        type: TextInputType.Short,
       },
     },
     {
@@ -25,7 +25,7 @@ export const Trees: Schema = {
       data: {
         title: "Justification",
         fn: "justification",
-        type: TextInputType.Long,
+        type: TextInputType.Short,
       },
     },
     {
@@ -57,7 +57,7 @@ export const Trees: Schema = {
       type: "text",
       data: {
         title: "Expected completion date",
-        fn: "species",
+        fn: "completionDate",
         type: TextInputType.Short,
       },
     },

@@ -1,41 +1,110 @@
 import Typography from "@mui/material/Typography";
+import { Field } from "@planx/components/List/model";
 import { Feature } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
-import InputField from "ui/editor/InputField";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import InputRow from "ui/shared/InputRow";
 
-import { Schema } from "../../List/model";
 import { ListCard } from "../../List/Public";
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
 import { MapContainer, MapFooter } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import { MapAndLabel } from "./../model";
+import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
+import {
+  ChecklistFieldInput,
+  NumberFieldInput,
+  RadioFieldInput,
+  SelectFieldInput,
+  TextFieldInput,
+} from "./Fields";
 
 type Props = PublicProps<MapAndLabel>;
 
-function MapAndLabelComponent(props: Props) {
-  const isMounted = useRef(false);
+/**
+ * Controller to return correct user input for field in schema
+ */
+export const InputField: React.FC<Field> = (props) => {
+  const inputFieldId = `input-${props.type}-${props.data.fn}`;
+
+  switch (props.type) {
+    case "text":
+      return <TextFieldInput id={inputFieldId} {...props} />;
+    case "number":
+      return <NumberFieldInput id={inputFieldId} {...props} />;
+    case "question":
+      if (props.data.options.length === 2) {
+        return <RadioFieldInput id={inputFieldId} {...props} />;
+      }
+      return <SelectFieldInput id={inputFieldId} {...props} />;
+    case "checklist":
+      return <ChecklistFieldInput id={inputFieldId} {...props} />;
+  }
+};
+
+const ActiveFeatureCard: React.FC<{
+  index: number;
+  feature: Feature;
+}> = ({ index: i, feature }) => {
+  const { schema } = useMapAndLabelContext();
+
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+
+  return (
+    <ListCard data-testid={`list-card-${i}`} ref={ref}>
+      <Typography component="h2" variant="h3">
+        {`${schema.type} ${i}`}
+      </Typography>
+      <Typography variant="body2">
+        {`${feature.geometry.type}`}
+        {feature.geometry.type === "Point"
+          ? ` (${feature.geometry.coordinates.map((coord) =>
+              coord.toFixed(5),
+            )})`
+          : ` (area ${feature.properties?.area || `0 m²`})`}
+      </Typography>
+      {schema.fields.map((field, i) => (
+        <InputRow key={i}>
+          <InputField {...field} />
+        </InputRow>
+      ))}
+    </ListCard>
+  );
+};
+
+const Root = () => {
+  const { validateAndSubmitForm, mapAndLabelProps } = useMapAndLabelContext();
+  const {
+    title,
+    description,
+    info,
+    policyRef,
+    howMeasured,
+    drawColor,
+    drawType,
+    schemaName,
+  } = mapAndLabelProps;
+
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
-
-  console.log("HERE", props.schema);
 
   const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
   const [mapValidationError, setMapValidationError] = useState<string>();
 
   useEffect(() => {
-    if (isMounted.current) setFeatures([]);
-    isMounted.current = true;
-
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         setFeatures(geojson["EPSG:3857"].features);
       } else {
-        // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set features to undefined
+        // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
       }
     };
@@ -50,13 +119,13 @@ function MapAndLabelComponent(props: Props) {
   }, [setFeatures]);
 
   return (
-    <Card handleSubmit={props.handleSubmit} isValid={true}>
+    <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
-        title={props.title}
-        description={props.description}
-        info={props.info}
-        policyRef={props.policyRef}
-        howMeasured={props.howMeasured}
+        title={title}
+        description={description}
+        info={info}
+        policyRef={policyRef}
+        howMeasured={howMeasured}
       />
       <FullWidthWrapper>
         <ErrorWrapper
@@ -67,18 +136,16 @@ function MapAndLabelComponent(props: Props) {
             {/* @ts-ignore */}
             <my-map
               id="map-and-label-map"
-              ariaLabelOlFixedOverlay="An interactive map for plotting and describing individual features"
+              ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode
               drawMany
-              drawColor={props.drawColor}
-              drawType={props.drawType}
+              drawColor={drawColor}
+              drawType={drawType}
               drawPointer="crosshair"
-              drawGeojsonData={JSON.stringify(features)}
               zoom={20}
               maxZoom={23}
               latitude={Number(passport?.data?._address?.latitude)}
               longitude={Number(passport?.data?._address?.longitude)}
-              resetControlImage="trash"
               osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
               osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
               clipGeojsonData={
@@ -92,7 +159,7 @@ function MapAndLabelComponent(props: Props) {
           <Typography variant="body1">
             {`You've plotted ${
               features?.length || 0
-            } ${props.schemaName.toLocaleLowerCase()}`}
+            } ${schemaName.toLocaleLowerCase()}`}
           </Typography>
         </MapFooter>
       </FullWidthWrapper>
@@ -102,36 +169,19 @@ function MapAndLabelComponent(props: Props) {
           <ActiveFeatureCard
             key={`feature-card-${parseInt(feature.properties?.label) || i}`}
             index={parseInt(feature.properties?.label) || i}
-            schema={props.schema}
+            feature={feature}
           />
         ))}
     </Card>
   );
-}
-
-const ActiveFeatureCard: React.FC<{
-  index: number;
-  schema: Schema;
-}> = ({ index: i, schema }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, []);
-
-  return (
-    <ListCard data-testid={`list-card-${i}`} ref={ref}>
-      <Typography component="h2" variant="h3">
-        {`${schema.type} ${i}`}
-      </Typography>
-      {schema.fields.map((field, i) => (
-        <InputRow key={i}>
-          <InputField {...field} />
-        </InputRow>
-      ))}
-    </ListCard>
-  );
 };
+
+function MapAndLabelComponent(props: Props) {
+  return (
+    <MapAndLabelProvider {...props}>
+      <Root />
+    </MapAndLabelProvider>
+  );
+}
 
 export default MapAndLabelComponent;
