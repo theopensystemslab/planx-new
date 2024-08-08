@@ -47,7 +47,7 @@ const CardButton = styled(Button)(({ theme }) => ({
 /**
  * Controller to return correct user input for field in schema
  */
-export const InputField: React.FC<Field> = (props) => {
+const InputField: React.FC<Field> = (props) => {
   const inputFieldId = `input-${props.type}-${props.data.fn}`;
 
   switch (props.type) {
