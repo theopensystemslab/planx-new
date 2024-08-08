@@ -78,7 +78,6 @@ const ExternalPortal: React.FC<any> = (props) => {
   }
 
   const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
     e.stopPropagation();
     copyNode(props.id);
   };
@@ -95,13 +94,7 @@ const ExternalPortal: React.FC<any> = (props) => {
         className={classNames("card", "portal", { isDragging })}
         onContextMenu={handleContext}
       >
-        <Link
-          href={`/${href}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          prefetch={false}
-          ref={drag}
-        >
+        <Link href={`/${href}`} prefetch={false} ref={drag}>
           <span>{href}</span>
         </Link>
         <Link href={editHref} prefetch={false} className="portalMenu">
