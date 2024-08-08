@@ -57,6 +57,7 @@ const getMessageForEventType = async (data: EventData, type: EventType) => {
 
   if (type === "flow-status") {
     const { id: flowId, status } = data as FlowStatusEventData;
+    // todo fetch extra data based on flowId
     const emoji = status === "online" ? ":large_green_circle:" : ":no_entry:";
     message = `${emoji} Flow is now *${status}* (${flowId})`;
   }

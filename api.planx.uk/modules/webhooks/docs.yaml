@@ -104,22 +104,22 @@ components:
                       type: string
       required:
         - body
-      FlowStatusChange:
-        type: object
-        properties:
-          event:
-            type: object
-            properties:
-              data:
-                type: object
-                properties:
-                  new:
-                    type: object
-                    properties:
-                      id:
-                        type: string;
-                      status:
-                        type: string;
+    FlowStatusChange:
+      type: object
+      properties:
+        event:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                new:
+                  type: object
+                  properties:
+                    id:
+                      type: string;
+                    status:
+                      type: string;
         required:
           - body
     SendSlackNotification:
