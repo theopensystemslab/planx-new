@@ -14,6 +14,7 @@ import helmet from "helmet";
 import { ServerError } from "./errors";
 import airbrake from "./airbrake";
 import { apiLimiter } from "./rateLimit";
+import { registerSessionStubs } from "./session";
 import { googleStrategy } from "./modules/auth/strategy/google";
 import authRoutes from "./modules/auth/routes";
 import teamRoutes from "./modules/team/routes";
@@ -30,6 +31,7 @@ import fileRoutes from "./modules/file/routes";
 import gisRoutes from "./modules/gis/routes";
 import payRoutes from "./modules/pay/routes";
 import sendRoutes from "./modules/send/routes";
+import testRoutes from "./modules/test/routes";
 import { useSwaggerDocs } from "./docs";
 import { Role } from "@opensystemslab/planx-core/types";
 
@@ -116,6 +118,9 @@ app.use(
   }),
 );
 
+// register stubs after cookieSession middleware initialisation
+app.use(registerSessionStubs);
+
 passport.use("google", googleStrategy);
 
 passport.serializeUser(function (user, cb) {
@@ -145,6 +150,7 @@ app.use(sendRoutes);
 app.use(teamRoutes);
 app.use(userRoutes);
 app.use(webhookRoutes);
+app.use(testRoutes);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
