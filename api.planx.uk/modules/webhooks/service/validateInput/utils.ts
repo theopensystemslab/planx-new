@@ -1,4 +1,4 @@
-import lodash from "lodash";
+import isObject from "lodash/isObject.js";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 import he from "he";
@@ -27,7 +27,7 @@ export const isObjectValid = (
     return input.every((child) => isObjectValid(child, validator));
   }
 
-  if (lodash.isObject(input)) {
+  if (isObject(input)) {
     return Object.values(input).every((child) =>
       isObjectValid(child, validator),
     );

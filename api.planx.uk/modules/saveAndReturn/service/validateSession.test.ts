@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import lodash from "lodash";
+import omit from "lodash/omit.js";
 import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import {
@@ -22,7 +22,7 @@ const validateSessionPath = "/validate-session";
 const getStoreMock = jest.spyOn(userContext, "getStore");
 
 describe("Validate Session endpoint", () => {
-  const reconciledData = lodash.omit(mockLowcalSession.data, "passport");
+  const reconciledData = omit(mockLowcalSession.data, "passport");
 
   beforeEach(() => {
     getStoreMock.mockReturnValue({

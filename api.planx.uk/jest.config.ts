@@ -15,6 +15,8 @@ const config: JestConfigWithTsJest = {
       },
     ],
   },
+  // mime v4 (which moves to pure ESM) may still have commonJS traces, so we transform it
+  transformIgnorePatterns: ["node_modules\\/.pnpm\\/(?!(mime))"],
   testPathIgnorePatterns: ["dist/*"],
   setupFilesAfterEnv: ["./jest.setup.js"],
   // handle .ts files first, as ESM modules, and remove .js from imports for jest

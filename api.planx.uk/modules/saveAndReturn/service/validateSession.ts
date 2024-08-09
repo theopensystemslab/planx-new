@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import lodash from "lodash";
+import omit from "lodash/omit.js";
 import { getMostRecentPublishedFlow } from "../../../helpers.js";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
@@ -29,7 +29,7 @@ export async function validateSession(
   sessionId: string,
   fetchedSession: Partial<LowCalSession>,
 ) {
-  const sessionData = lodash.omit(fetchedSession.data!, "passport");
+  const sessionData = omit(fetchedSession.data!, "passport");
   const sessionUpdatedAt = fetchedSession.updated_at!;
   const flowId = fetchedSession.flow_id!;
 
