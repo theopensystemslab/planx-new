@@ -1,12 +1,15 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
-import { MembersTable } from "./MembersTable";
-import { Props, TeamMember } from "./types";
+import { AddNewEditorModal } from "./components/AddNewEditorModal";
+import { MembersTable } from "./components/MembersTable";
+import { TeamMember, TeamMembersProps } from "./types";
 
-export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
+export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
+  const [showModal, setShowModal] = useState(false);
+
   const platformAdmins = (teamMembersByRole.platformAdmin || []).filter(
     (member) => member.email,
   );
@@ -24,14 +27,18 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
 
   return (
     <Container maxWidth="contentWrap">
-      <SettingsSection>
+      <SettingsSection testId="team-editors">
         <Typography variant="h2" component="h3" gutterBottom>
           Team editors
         </Typography>
         <Typography variant="body1">
           Editors have access to edit your services.
         </Typography>
-        <MembersTable members={activeMembers} />
+        <MembersTable
+          members={activeMembers}
+          showAddMemberButton
+          setShowModal={setShowModal}
+        />
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
@@ -53,6 +60,9 @@ export const TeamMembers: React.FC<Props> = ({ teamMembersByRole }) => {
           </Typography>
           <MembersTable members={archivedMembers} />
         </SettingsSection>
+      )}
+      {showModal && (
+        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
       )}
     </Container>
   );
