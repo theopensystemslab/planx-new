@@ -1,8 +1,10 @@
+import ChevronRightRounded from "@mui/icons-material/ChevronRightRounded";
+import CloseIcon from "@mui/icons-material/Close";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LanguageIcon from "@mui/icons-material/Language";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import LinkIcon from "@mui/icons-material/Link";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,16 +13,20 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
+import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { Team } from "@opensystemslab/planx-core/types";
 import { AxiosError } from "axios";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAsync } from "react-use";
 import Permission from "ui/editor/Permission";
 import Input from "ui/shared/Input";
@@ -28,6 +34,7 @@ import Input from "ui/shared/Input";
 import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import EditHistory from "./EditHistory";
+import LinkDialog from "./LinkDialog";
 import {
   AlteredNode,
   AlteredNodesSummaryContent,
@@ -35,7 +42,6 @@ import {
   ValidationChecks,
 } from "./PublishDialog";
 import Search from "./Search";
-
 type SidebarTabs = "PreviewBrowser" | "History" | "Search";
 
 const Console = styled(Box)(() => ({
@@ -72,15 +78,23 @@ const Header = styled("header")(({ theme }) => ({
     flex: "1",
     padding: "5px",
     marginRight: "5px",
-    background: theme.palette.common.white,
+    background: theme.palette.background.paper,
+
     border: "1px solid rgba(0, 0, 0, 0.2)",
   },
-  "& svg": {
-    cursor: "pointer",
-    opacity: "0.7",
-    margin: "6px 4px 1px 4px",
-    fontSize: "1.2rem",
-  },
+}));
+
+const ViewButton = styled(Button)(({ theme }) => ({
+  background: theme.palette.common.white,
+  border: `1px solid ${theme.palette.border.main}`,
+  boxShadow: "none",
+  color: theme.palette.common.black,
+  width: "30%",
+  display: "flex",
+  flexDirection: "row",
+  gap: "8px",
+  borderRadius: "5px",
+  padding: "8px",
 }));
 
 const TabList = styled(Box)(({ theme }) => ({
@@ -164,6 +178,12 @@ const Sidebar: React.FC<{
     lastPublisher,
     validateAndDiffFlow,
     isFlowPublished,
+    fetchCurrentTeam,
+    togglePreview,
+    flowSlug,
+    teamSlug,
+    teamTheme,
+    teamDomain,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
@@ -172,6 +192,12 @@ const Sidebar: React.FC<{
     state.lastPublisher,
     state.validateAndDiffFlow,
     state.isFlowPublished,
+    state.fetchCurrentTeam,
+    state.togglePreview,
+    state.flowSlug,
+    state.teamSlug,
+    state.teamTheme,
+    state.teamDomain,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -184,6 +210,7 @@ const Sidebar: React.FC<{
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
+  const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
     setActiveTab(newValue);
@@ -246,80 +273,36 @@ const Sidebar: React.FC<{
     );
   });
 
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
-
   return (
     <Root>
       <Header>
-        <Box width="100%" display="flex">
-          <input
-            type="text"
-            disabled
-            value={props.url.replace("/published", "/preview")}
+        <Box
+          width="100%"
+          mt={2}
+          mb={4}
+          pl={2}
+          display="flex"
+          flexDirection="row"
+          gap={"24px"}
+          style={{ position: "relative" }}
+        >
+          <ViewButton
+            onClick={() => setLinkDialogOpen(true)}
+            disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+          >
+            <LinkIcon fontSize="medium" /> View links
+          </ViewButton>
+          <LinkDialog
+            setLinkDialogOpen={setLinkDialogOpen}
+            containsTheme
+            linkDialogOpen={linkDialogOpen}
+            teamTheme={teamTheme}
+            teamDomain={teamDomain}
+            flowSlug={flowSlug}
+            isFlowPublished={isFlowPublished}
+            url={props.url}
           />
 
-          <Tooltip arrow title="Refresh preview">
-            <RefreshIcon
-              onClick={() => {
-                resetPreview();
-                setKey((a) => !a);
-              }}
-            />
-          </Tooltip>
-
-          <Tooltip arrow title="Toggle debug console">
-            <MenuOpenIcon
-              onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
-            />
-          </Tooltip>
-
-          <Permission.IsPlatformAdmin>
-            <Tooltip arrow title="Open draft service">
-              <Link
-                href={props.url.replace("/published", "/draft")}
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-              >
-                <OpenInNewOffIcon />
-              </Link>
-            </Tooltip>
-          </Permission.IsPlatformAdmin>
-
-          <Tooltip arrow title="Open preview of changes to publish">
-            <Link
-              href={props.url.replace("/published", "/preview")}
-              target="_blank"
-              rel="noopener noreferrer"
-              color="inherit"
-            >
-              <OpenInNewIcon />
-            </Link>
-          </Tooltip>
-
-          {isFlowPublished ? (
-            <Tooltip arrow title="Open published service">
-              <Link
-                href={props.url + "?analytics=false"}
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-              >
-                <LanguageIcon />
-              </Link>
-            </Tooltip>
-          ) : (
-            <Tooltip arrow title="Flow not yet published">
-              <Box>
-                <Link component={"button"} disabled aria-disabled={true}>
-                  <LanguageIcon />
-                </Link>
-              </Box>
-            </Tooltip>
-          )}
-        </Box>
-        <Box width="100%" mt={2}>
           <Box
             display="flex"
             flexDirection="column"
@@ -339,7 +322,7 @@ const Sidebar: React.FC<{
                 disabled={!useStore.getState().canUserEditTeam(teamSlug)}
                 onClick={handleCheckForChangesToPublish}
               >
-                CHECK FOR CHANGES TO PUBLISH
+                Check for changes to publish
               </Button>
             </Badge>
             <Dialog
@@ -405,8 +388,13 @@ const Sidebar: React.FC<{
                 </Button>
               </DialogActions>
             </Dialog>
-            <Box mr={0}>
-              <Typography variant="caption">{lastPublishedTitle}</Typography>
+            <Box mr={0} sx={{ position: "relative", width: "100%" }}>
+              <Typography
+                sx={{ position: "absolute", width: "100%", left: 0 }}
+                variant="caption"
+              >
+                {lastPublishedTitle}
+              </Typography>
             </Box>
           </Box>
         </Box>
