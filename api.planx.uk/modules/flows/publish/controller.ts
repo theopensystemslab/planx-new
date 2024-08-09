@@ -1,8 +1,8 @@
 import { Node } from "@opensystemslab/planx-core/types";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
+import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { z } from "zod";
-import { publishFlow } from "./service";
-import { ServerError } from "../../../errors";
+import { publishFlow } from "./service.js";
+import { ServerError } from "../../../errors/index.js";
 
 interface PublishFlowResponse {
   message: string;

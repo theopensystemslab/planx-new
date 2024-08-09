@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { useSendEmailAuth } from "../auth/middleware";
+import { useSendEmailAuth } from "../auth/middleware.js";
 import {
   confirmationEmailController,
   paymentEmailController,
   singleApplicationEmailController,
-} from "./controller";
-import { sendEmailLimiter } from "../../rateLimit";
-import { validate } from "../../shared/middleware/validate";
+} from "./controller.js";
+import { sendEmailLimiter } from "../../rateLimit.js";
+import { validate } from "../../shared/middleware/validate.js";
 import {
   confirmationEmailSchema,
   paymentEmailSchema,
   singleApplicationEmailSchema,
-} from "./types";
+} from "./types.js";
 
 const router = Router();
 

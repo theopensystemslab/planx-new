@@ -1,5 +1,5 @@
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { isTestPayment } from "./utils";
+import { isTestPayment } from "./utils.js";
 
 describe("isTestPayment() helper function", () => {
   const OLD_ENV = process.env;

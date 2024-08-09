@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../../server";
+import app from "../../server.js";
 
 describe("Session setup", () => {
   test("adds dummy methods to req.session to avoid passport/cookie-session incompatibility issue", async () => {

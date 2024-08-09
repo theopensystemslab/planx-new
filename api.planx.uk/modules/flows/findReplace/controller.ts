@@ -1,8 +1,8 @@
-import { Flow } from "../../../types";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
+import { Flow } from "../../../types.js";
+import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { z } from "zod";
-import { ServerError } from "../../../errors";
-import { findAndReplaceInFlow } from "./service";
+import { ServerError } from "../../../errors/index.js";
+import { findAndReplaceInFlow } from "./service.js";
 import { FlowGraph } from "@opensystemslab/planx-core/types";
 
 interface FindAndReplaceResponse {

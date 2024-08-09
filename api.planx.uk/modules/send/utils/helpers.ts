@@ -1,4 +1,4 @@
-import { Passport } from "../../../types";
+import { Passport } from "../../../types.js";
 
 /**
  * Checks whether a session's passport data includes an application type supported by the ODP Schema

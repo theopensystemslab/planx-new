@@ -5,9 +5,27 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
-import { addDesignatedVariable } from "./helpers";
-import { baseSchema } from "./local_authorities/metadata/base";
-import { $api } from "../../../client";
+import { addDesignatedVariable } from "./helpers.js";
+import { baseSchema } from "./local_authorities/metadata/base.js";
+import { $api } from "../../../client/index.js";
+
+import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
+import * as barnet from "./local_authorities/metadata/barnet.js";
+import * as birmingham from "./local_authorities/metadata/birmingham.js";
+import * as buckinghamshire from "./local_authorities/metadata/buckinghamshire.js";
+import * as camden from "./local_authorities/metadata/camden.js";
+import * as canterbury from "./local_authorities/metadata/canterbury.js";
+import * as doncaster from "./local_authorities/metadata/doncaster.js";
+import * as epsomAndEwell from "./local_authorities/metadata/epsomAndEwell.js";
+import * as gateshead from "./local_authorities/metadata/gateshead.js";
+import * as gloucester from "./local_authorities/metadata/gloucester.js";
+import * as lambeth from "./local_authorities/metadata/lambeth.js";
+import * as medway from "./local_authorities/metadata/medway.js";
+import * as newcastle from "./local_authorities/metadata/newcastle.js";
+import * as southwark from "./local_authorities/metadata/southwark.js";
+import * as stAlbans from "./local_authorities/metadata/stAlbans.js";
+import * as tewkesbury from "./local_authorities/metadata/tewkesbury.js";
+import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
 
 export interface LocalAuthorityMetadata {
   planningConstraints: {
@@ -19,23 +37,23 @@ export interface LocalAuthorityMetadata {
 
 /** When a team publishes their granular Article 4 data, add them to this list. Key must match team slug */
 export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
-  "barking-and-dagenham": require("./local_authorities/metadata/barkingAndDagenham"),
-  barnet: require("./local_authorities/metadata/barnet"),
-  birmingham: require("./local_authorities/metadata/birmingham"),
-  buckinghamshire: require("./local_authorities/metadata/buckinghamshire"),
-  camden: require("./local_authorities/metadata/camden"),
-  canterbury: require("./local_authorities/metadata/canterbury"),
-  doncaster: require("./local_authorities/metadata/doncaster"),
-  "epsom-and-ewell": require("./local_authorities/metadata/epsomAndEwell"),
-  gateshead: require("./local_authorities/metadata/gateshead"),
-  gloucester: require("./local_authorities/metadata/gloucester"),
-  lambeth: require("./local_authorities/metadata/lambeth"),
-  medway: require("./local_authorities/metadata/medway"),
-  newcastle: require("./local_authorities/metadata/newcastle"),
-  southwark: require("./local_authorities/metadata/southwark"),
-  "st-albans": require("./local_authorities/metadata/stAlbans"),
-  tewkesbury: require("./local_authorities/metadata/tewkesbury"),
-  "west-berkshire": require("./local_authorities/metadata/westBerkshire"),
+  "barking-and-dagenham": barkingAndDagenham,
+  barnet,
+  birmingham,
+  buckinghamshire,
+  camden,
+  canterbury,
+  doncaster,
+  "epsom-and-ewell": epsomAndEwell,
+  gateshead,
+  gloucester,
+  lambeth,
+  medway,
+  newcastle,
+  southwark,
+  "st-albans": stAlbans,
+  tewkesbury,
+  "west-berkshire": westBerkshire,
 };
 
 /**

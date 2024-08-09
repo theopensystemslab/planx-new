@@ -1,12 +1,12 @@
 import supertest from "supertest";
 
-import { queryMock } from "../../../tests/graphqlQueryMock";
-import { authHeader, getJWT } from "../../../tests/mockJWT";
-import app from "../../../server";
-import { flowWithInviteToPay } from "../../../tests/mocks/inviteToPayData";
-import { userContext } from "../../auth/middleware";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
+import { authHeader, getJWT } from "../../../tests/mockJWT.js";
+import app from "../../../server.js";
+import { flowWithInviteToPay } from "../../../tests/mocks/inviteToPayData.js";
+import { userContext } from "../../auth/middleware.js";
 import { FlowGraph } from "@opensystemslab/planx-core/types";
-import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks";
+import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
 
 beforeAll(() => {
   const getStoreMock = jest.spyOn(userContext, "getStore");

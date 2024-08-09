@@ -1,9 +1,9 @@
 import { gql } from "graphql-request";
 import { Request } from "express";
-import { fetchPaymentViaProxyWithCallback } from "../../controller";
+import { fetchPaymentViaProxyWithCallback } from "../../controller.js";
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { $api } from "../../../../client";
-import { postPaymentNotificationToSlack } from "../utils";
+import { $api } from "../../../../client/index.js";
+import { postPaymentNotificationToSlack } from "../utils.js";
 
 export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
   async (req: Request, govUkResponse: GovUKPayment) => {

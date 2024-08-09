@@ -5,7 +5,7 @@ import {
   useNoCache,
   useFilePermission,
   useTeamEditorAuth,
-} from "../auth/middleware";
+} from "../auth/middleware.js";
 import {
   downloadFileSchema,
   privateDownloadController,
@@ -13,8 +13,8 @@ import {
   publicDownloadController,
   publicUploadController,
   uploadFileSchema,
-} from "./controller";
-import { validate } from "../../shared/middleware/validate";
+} from "./controller.js";
+import { validate } from "../../shared/middleware/validate.js";
 
 const router = Router();
 

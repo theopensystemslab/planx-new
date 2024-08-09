@@ -1,5 +1,5 @@
 import { GovUKPayment } from "@opensystemslab/planx-core/types";
-import { $api } from "../../../client";
+import { $api } from "../../../client/index.js";
 import { gql } from "graphql-request";
 
 import SlackNotify from "slack-notify";

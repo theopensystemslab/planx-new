@@ -1,10 +1,10 @@
 import supertest from "supertest";
 
-import { queryMock } from "../../../tests/graphqlQueryMock";
-import { authHeader } from "../../../tests/mockJWT";
-import app from "../../../server";
-import { Flow } from "../../../types";
-import { userContext } from "../../auth/middleware";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
+import { authHeader } from "../../../tests/mockJWT.js";
+import app from "../../../server.js";
+import { Flow } from "../../../types.js";
+import { userContext } from "../../auth/middleware.js";
 
 beforeEach(() => {
   queryMock.mockQuery({

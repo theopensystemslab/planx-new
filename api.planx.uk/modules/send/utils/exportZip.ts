@@ -1,11 +1,11 @@
 import os from "os";
 import path from "path";
-import { $api } from "../../../client";
+import { $api } from "../../../client/index.js";
 import { stringify } from "csv-stringify";
 import fs from "fs";
 import str from "string-to-stream";
 import AdmZip from "adm-zip";
-import { getFileFromS3 } from "../../file/service/getFile";
+import { getFileFromS3 } from "../../file/service/getFile.js";
 import {
   hasRequiredDataForTemplate,
   generateMapHTML,
@@ -13,10 +13,10 @@ import {
   generateDocxTemplateStream,
 } from "@opensystemslab/planx-core";
 import { Passport } from "@opensystemslab/planx-core";
-import type { Passport as IPassport } from "../../../types";
+import type { Passport as IPassport } from "../../../types.js";
 import type { Stream } from "node:stream";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
-import { isApplicationTypeSupported } from "./helpers";
+import { isApplicationTypeSupported } from "./helpers.js";
 
 export async function buildSubmissionExportZip({
   sessionId,

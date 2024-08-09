@@ -5,12 +5,12 @@ import {
   Template,
   getClientForTemplate,
   sendEmail,
-} from "../../../../lib/notify";
-import { InviteToPayNotifyConfig } from "../../../../types";
+} from "../../../../lib/notify/index.js";
+import { InviteToPayNotifyConfig } from "../../../../types.js";
 import {
   calculateExpiryDate,
   getServiceLink,
-} from "../../../saveAndReturn/service/utils";
+} from "../../../saveAndReturn/service/utils.js";
 
 interface SessionDetails {
   email: string;

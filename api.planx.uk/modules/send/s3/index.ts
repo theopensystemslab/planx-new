@@ -2,11 +2,11 @@ import axios, { AxiosRequestConfig } from "axios";
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
-import { $api } from "../../../client";
-import { Passport } from "../../../types";
-import { uploadPrivateFile } from "../../file/service/uploadFile";
-import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
-import { isApplicationTypeSupported } from "../utils/helpers";
+import { $api } from "../../../client/index.js";
+import { Passport } from "../../../types.js";
+import { uploadPrivateFile } from "../../file/service/uploadFile.js";
+import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
+import { isApplicationTypeSupported } from "../utils/helpers.js";
 
 interface CreateS3Application {
   insertS3Application: {

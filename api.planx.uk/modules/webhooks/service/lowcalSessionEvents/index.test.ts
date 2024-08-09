@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import app from "../../../../server";
-import { createScheduledEvent } from "../../../../lib/hasura/metadata";
+import app from "../../../../server.js";
+import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
 
 const { post } = supertest(app);
 

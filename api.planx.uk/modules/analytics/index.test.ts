@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import app from "../../server";
-import { queryMock } from "../../tests/graphqlQueryMock";
+import app from "../../server.js";
+import { queryMock } from "../../tests/graphqlQueryMock.js";
 
 describe("Logging analytics", () => {
   beforeEach(() => {

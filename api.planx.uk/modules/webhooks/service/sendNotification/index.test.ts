@@ -1,8 +1,8 @@
 import supertest from "supertest";
-import app from "../../../../server";
+import app from "../../../../server.js";
 import SlackNotify from "slack-notify";
-import { BOPSBody, EmailBody, S3Body, UniformBody } from "./types";
-import { $api } from "../../../../client";
+import { BOPSBody, EmailBody, S3Body, UniformBody } from "./types.js";
+import { $api } from "../../../../client/index.js";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 const mockSessionWithFee = {

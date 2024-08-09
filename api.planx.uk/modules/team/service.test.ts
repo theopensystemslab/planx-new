@@ -1,12 +1,12 @@
-import { getJWT } from "../../tests/mockJWT";
-import { userContext } from "../auth/middleware";
+import { getJWT } from "../../tests/mockJWT.js";
+import { userContext } from "../auth/middleware.js";
 
 import {
   getUserAndTeam,
   addMember,
   removeMember,
   changeMemberRole,
-} from "./service";
+} from "./service.js";
 
 const getStoreMock = jest.spyOn(userContext, "getStore");
 

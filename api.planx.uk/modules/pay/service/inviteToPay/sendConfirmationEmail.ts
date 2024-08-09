@@ -1,8 +1,8 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
-import { $api } from "../../../../client";
-import { sendEmail } from "../../../../lib/notify";
-import type { AgentAndPayeeSubmissionNotifyConfig } from "../../../../types";
+import { $api } from "../../../../client/index.js";
+import { sendEmail } from "../../../../lib/notify/index.js";
+import type { AgentAndPayeeSubmissionNotifyConfig } from "../../../../types.js";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
   const { personalisation, applicantEmail, payeeEmail, projectTypes } =

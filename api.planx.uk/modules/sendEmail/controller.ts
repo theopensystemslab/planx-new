@@ -1,15 +1,15 @@
 import {
   sendSinglePaymentEmail,
   sendAgentAndPayeeConfirmationEmail,
-} from "../pay/service/inviteToPay";
-import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils";
-import { ServerError } from "../../errors";
+} from "../pay/service/inviteToPay/index.js";
+import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils.js";
+import { ServerError } from "../../errors/index.js";
 import { NextFunction } from "express";
 import {
   ConfirmationEmail,
   PaymentEmail,
   SingleApplicationEmail,
-} from "./types";
+} from "./types.js";
 
 export const singleApplicationEmailController: SingleApplicationEmail = async (
   _req,

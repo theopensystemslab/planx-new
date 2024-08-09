@@ -3,10 +3,14 @@ import type { SiteAddress, Team } from "@opensystemslab/planx-core/types";
 import { differenceInDays } from "date-fns";
 import { gql } from "graphql-request";
 
-import { $api } from "../../../client";
-import { sendEmail } from "../../../lib/notify";
-import { LowCalSession } from "../../../types";
-import { DAYS_UNTIL_EXPIRY, calculateExpiryDate, getResumeLink } from "./utils";
+import { $api } from "../../../client/index.js";
+import { sendEmail } from "../../../lib/notify/index.js";
+import { LowCalSession } from "../../../types.js";
+import {
+  DAYS_UNTIL_EXPIRY,
+  calculateExpiryDate,
+  getResumeLink,
+} from "./utils.js";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)

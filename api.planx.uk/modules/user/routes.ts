@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { useLoginAuth, usePlatformAdminAuth } from "../auth/middleware";
-import { validate } from "../../shared/middleware/validate";
+import { useLoginAuth, usePlatformAdminAuth } from "../auth/middleware.js";
+import { validate } from "../../shared/middleware/validate.js";
 import {
   createUserSchema,
   createUser,
   deleteUserSchema,
   deleteUser,
   getLoggedInUserDetails,
-} from "./controller";
+} from "./controller.js";
 
 const router = Router();
 

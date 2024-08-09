@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { stringify } from "csv-stringify";
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate";
+import { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 
 export const healthCheck: RequestHandler = (_req, res) =>
   res.json({ hello: "world" });

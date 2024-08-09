@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import { queryMock } from "../../../../tests/graphqlQueryMock";
-import app from "../../../../server";
+import { queryMock } from "../../../../tests/graphqlQueryMock.js";
+import app from "../../../../server.js";
 import {
   validSessionQueryMock,
   notFoundQueryMock,
@@ -10,14 +10,14 @@ import {
   unlockSessionQueryMock,
   getPublishedFlowDataQueryMock,
   createPaymentRequestQueryMock,
-} from "../../../../tests/mocks/inviteToPayMocks";
+} from "../../../../tests/mocks/inviteToPayMocks.js";
 import {
   payee,
   applicant,
   validSession,
   notFoundSession,
   paymentRequestResponse,
-} from "../../../../tests/mocks/inviteToPayData";
+} from "../../../../tests/mocks/inviteToPayData.js";
 
 describe("Invite to pay API route", () => {
   const inviteToPayBaseRoute = "/invite-to-pay";

@@ -1,11 +1,11 @@
 import { ComponentType, Edges, Node } from "@opensystemslab/planx-core/types";
 import * as jsondiffpatch from "jsondiffpatch";
 
-import { dataMerged, getMostRecentPublishedFlow } from "../../../../helpers";
-import { validateFileTypes } from "./fileTypes";
-import { validateInviteToPay } from "./inviteToPay";
-import { validateSections } from "./sections";
-import { validateProjectTypes } from "./projectTypes";
+import { dataMerged, getMostRecentPublishedFlow } from "../../../../helpers.js";
+import { validateFileTypes } from "./fileTypes.js";
+import { validateInviteToPay } from "./inviteToPay.js";
+import { validateSections } from "./sections.js";
+import { validateProjectTypes } from "./projectTypes.js";
 
 type AlteredNode = {
   id: string;

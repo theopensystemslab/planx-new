@@ -2,7 +2,7 @@ import {
   squashResultLayers,
   rollupResultLayers,
   getA4Subvariables,
-} from "./helpers";
+} from "./helpers.js";
 
 describe("squashResultLayer helper function", () => {
   test("It should squash the list of layers passed in", () => {
