@@ -14,12 +14,14 @@ export const parseContent = (
   description:
     data?.description ||
     "Planning constraints might limit how you can develop or use the property",
-  fn: data?.fn || "property.constraints.planning",
+  fn: data?.fn || DEFAULT_FN,
   disclaimer: data?.disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER,
   ...parseMoreInformation(data),
 });
 
 export type IntersectingConstraints = Record<string, string[]>;
+
+export const DEFAULT_FN = "property.constraints.planning";
 
 export const DEFAULT_PLANNING_CONDITIONS_DISCLAIMER =
   "<p><strong>This page does not include information about historic planning conditions that may apply to this property.</strong></p>";
