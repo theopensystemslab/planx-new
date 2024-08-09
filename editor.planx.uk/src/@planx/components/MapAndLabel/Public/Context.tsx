@@ -23,13 +23,16 @@ import { MapAndLabel } from "../model";
 interface MapAndLabelContextValue {
   schema: Schema;
   activeIndex: number;
+  addNewItem: () => void;
   saveItem: () => Promise<void>;
+  removeItem: (index: number) => void;
   editItem: (index: number) => void;
   cancelEditItem: () => void;
   formik: FormikProps<UserData>;
   validateAndSubmitForm: () => void;
   mapAndLabelProps: PublicProps<MapAndLabel>;
   errors: {
+    addItem: boolean;
     unsavedItem: boolean;
     min: boolean;
     max: boolean;
@@ -54,6 +57,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     UserResponse | undefined
   >(undefined);
 
+  const [addItemError, setAddItemError] = useState<boolean>(false);
   const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
   const [minError, setMinError] = useState<boolean>(false);
   const [maxError, setMaxError] = useState<boolean>(false);
@@ -64,6 +68,23 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     setUnsavedItemError(false);
   };
 
+  const addNewItem = async () => {
+    resetErrors();
+
+    // Do not allow a new item to be added if there's still an active item
+    if (activeIndex !== -1) return setAddItemError(true);
+
+    // Do not allow new item to be added if it will exceed max
+    if (schema.max && formik.values.userData.length === schema.max) {
+      return setMaxError(true);
+    }
+
+    // Add new item, and set to active
+    setAddItemError(false);
+    formik.values.userData.push(generateInitialValues(schema));
+    setActiveIndex(formik.values.userData.length - 1);
+  };
+
   const saveItem = async () => {
     resetErrors();
 
@@ -71,7 +92,23 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     const isValid = !errors.userData?.length;
     if (isValid) {
       exitEditMode();
+      setAddItemError(false);
     }
+  };
+
+  const removeItem = (index: number) => {
+    resetErrors();
+
+    // If item is before currently active card, retain active card
+    if (activeIndex && index < activeIndex) {
+      setActiveIndex((prev) => (prev === -1 ? 0 : prev - 1));
+    }
+
+    // Remove item from userData
+    formik.setFieldValue(
+      "userData",
+      formik.values.userData.filter((_, i) => i !== index),
+    );
   };
 
   const validateAndSubmitForm = () => {
@@ -87,7 +124,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   };
 
   const cancelEditItem = () => {
-    if (activeItemInitialState) resetItemToPreviousState();
+    activeItemInitialState
+      ? resetItemToPreviousState()
+      : removeItem(activeIndex);
 
     setActiveItemInitialState(undefined);
 
@@ -134,14 +173,17 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     <MapAndLabelContext.Provider
       value={{
         activeIndex,
+        addNewItem,
         saveItem,
         schema,
         mapAndLabelProps: props,
         editItem,
+        removeItem,
         cancelEditItem,
         formik,
         validateAndSubmitForm,
         errors: {
+          addItem: addItemError,
           unsavedItem: unsavedItemError,
           min: minError,
           max: maxError,

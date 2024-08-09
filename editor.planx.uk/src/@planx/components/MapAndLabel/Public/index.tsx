@@ -1,16 +1,26 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { Field } from "@planx/components/List/model";
+import { formatSchemaDisplayValue } from "@planx/components/List/utils";
 import { Feature } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
-import FullWidthWrapper from "ui/public/FullWidthWrapper";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import InputRow from "ui/shared/InputRow";
 
-import { ListCard } from "../../List/Public";
+import { CardButton, ListCard } from "../../List/Public";
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
-import { MapContainer, MapFooter } from "../../shared/Preview/MapContainer";
+import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import { MapAndLabel } from "./../model";
 import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
@@ -47,51 +57,10 @@ export const InputField: React.FC<Field> = (props) => {
 
 const ActiveFeatureCard: React.FC<{
   index: number;
-  feature: Feature;
-}> = ({ index: i, feature }) => {
-  const { schema } = useMapAndLabelContext();
-
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, []);
-
-  return (
-    <ListCard data-testid={`list-card-${i}`} ref={ref}>
-      <Typography component="h2" variant="h3">
-        {`${schema.type} ${i}`}
-      </Typography>
-      <Typography variant="body2">
-        {`${feature.geometry.type}`}
-        {feature.geometry.type === "Point"
-          ? ` (${feature.geometry.coordinates.map((coord) =>
-              coord.toFixed(5),
-            )})`
-          : ` (area ${feature.properties?.area || `0 m²`})`}
-      </Typography>
-      {schema.fields.map((field, i) => (
-        <InputRow key={i}>
-          <InputField {...field} />
-        </InputRow>
-      ))}
-    </ListCard>
-  );
-};
-
-const Root = () => {
-  const { validateAndSubmitForm, mapAndLabelProps } = useMapAndLabelContext();
-  const {
-    title,
-    description,
-    info,
-    policyRef,
-    howMeasured,
-    drawColor,
-    drawType,
-    schemaName,
-  } = mapAndLabelProps;
+}> = ({ index: i }) => {
+  const { schema, mapAndLabelProps, saveItem, cancelEditItem } =
+    useMapAndLabelContext();
+  const { drawColor, drawType, schemaName } = mapAndLabelProps;
 
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
@@ -118,16 +87,36 @@ const Root = () => {
     };
   }, [setFeatures]);
 
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+
   return (
-    <Card handleSubmit={validateAndSubmitForm} isValid>
-      <CardHeader
-        title={title}
-        description={description}
-        info={info}
-        policyRef={policyRef}
-        howMeasured={howMeasured}
-      />
-      <FullWidthWrapper>
+    <ListCard data-testid={`list-card-${i}`} ref={ref}>
+      <Typography component="h2" variant="h3">
+        {`${schema.type} ${i + 1}`}
+      </Typography>
+      {/* <Typography variant="body2">
+        {`${feature.geometry.type}`}
+        {feature.geometry.type === "Point"
+          ? ` (${feature.geometry.coordinates.map((coord) =>
+              coord.toFixed(5),
+            )})`
+          : ` (area ${feature.properties?.area || `0 m²`})`}
+      </Typography> */}
+      {schema.fields.map((field, i) => (
+        <InputRow key={i}>
+          <InputField {...field} />
+        </InputRow>
+      ))}
+      <InputLabel
+        id="map-and-label-map-label"
+        label="Where is it? Plot as many trees as apply to these details"
+        htmlFor="map-and-label-map"
+      >
         <ErrorWrapper
           error={mapValidationError}
           id="map-and-label-map-error-wrapper"
@@ -137,6 +126,7 @@ const Root = () => {
             <my-map
               id="map-and-label-map"
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
+              height={400}
               drawMode
               drawMany
               drawColor={drawColor}
@@ -155,23 +145,134 @@ const Root = () => {
             />
           </MapContainer>
         </ErrorWrapper>
-        <MapFooter>
-          <Typography variant="body1">
-            {`You've plotted ${
-              features?.length || 0
-            } ${schemaName.toLocaleLowerCase()}`}
-          </Typography>
-        </MapFooter>
-      </FullWidthWrapper>
-      {features &&
-        features?.length > 0 &&
-        features.map((feature, i) => (
-          <ActiveFeatureCard
-            key={`feature-card-${parseInt(feature.properties?.label) || i}`}
-            index={parseInt(feature.properties?.label) || i}
-            feature={feature}
-          />
-        ))}
+      </InputLabel>
+      <Box display="flex" gap={2}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={async () => await saveItem()}
+        >
+          Save
+        </Button>
+        <Button onClick={cancelEditItem}>Cancel</Button>
+      </Box>
+    </ListCard>
+  );
+};
+
+const InactiveFeatureCard: React.FC<{
+  index: number;
+}> = ({ index: i }) => {
+  const { schema, formik, removeItem, editItem } = useMapAndLabelContext();
+
+  return (
+    <ListCard data-testid={`list-card-${i}`}>
+      <Typography component="h2" variant="h3">
+        {schema.type}
+        {` ${i + 1}`}
+      </Typography>
+      <Table>
+        <TableBody>
+          {schema.fields.map((field, j) => (
+            <TableRow key={`tableRow-${j}`}>
+              <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+                {field.data.title}
+              </TableCell>
+              <TableCell>
+                {formatSchemaDisplayValue(
+                  formik.values.userData[i][field.data.fn],
+                  schema.fields[j],
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <Box display="flex" gap={2}>
+        <CardButton onClick={() => removeItem(i)}>
+          <DeleteIcon color="warning" fontSize="medium" />
+          Remove
+        </CardButton>
+        <CardButton onClick={() => editItem(i)}>
+          {/* TODO: Is primary colour really right here? */}
+          <EditIcon color="primary" fontSize="medium" />
+          Edit
+        </CardButton>
+      </Box>
+    </ListCard>
+  );
+};
+
+const Root = () => {
+  const {
+    formik,
+    validateAndSubmitForm,
+    activeIndex,
+    schema,
+    addNewItem,
+    errors,
+    mapAndLabelProps,
+  } = useMapAndLabelContext();
+
+  const {
+    title,
+    description,
+    info,
+    policyRef,
+    howMeasured,
+    drawColor,
+    drawType,
+    schemaName,
+  } = mapAndLabelProps;
+
+  const rootError: string =
+    (errors.min && `You must provide at least ${schema.min} response(s)`) ||
+    (errors.max && `You can provide at most ${schema.max} response(s)`) ||
+    "";
+
+  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (userData = [])
+  const shouldShowAddAnotherButton =
+    schema.max !== 1 || formik.values.userData.length < 1;
+
+  return (
+    <Card handleSubmit={validateAndSubmitForm} isValid>
+      <CardHeader
+        title={title}
+        description={description}
+        info={info}
+        policyRef={policyRef}
+        howMeasured={howMeasured}
+      />
+      <ErrorWrapper error={rootError}>
+        <>
+          {formik.values.userData.map((_, i) =>
+            i === activeIndex ? (
+              <ActiveFeatureCard key={`card-${i}`} index={i} />
+            ) : (
+              <InactiveFeatureCard key={`card-${i}`} index={i} />
+            ),
+          )}
+          {shouldShowAddAnotherButton && (
+            <ErrorWrapper
+              error={
+                errors.addItem
+                  ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
+                  : ""
+              }
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={addNewItem}
+                sx={{ width: "100%" }}
+                data-testid="list-add-button"
+              >
+                + Add another {schema.type.toLowerCase()}
+              </Button>
+            </ErrorWrapper>
+          )}
+        </>
+      </ErrorWrapper>
     </Card>
   );
 };

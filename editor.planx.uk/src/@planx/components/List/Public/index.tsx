@@ -39,7 +39,7 @@ export const ListCard = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-const CardButton = styled(Button)(({ theme }) => ({
+export const CardButton = styled(Button)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
   gap: theme.spacing(2),
 }));
