@@ -29,7 +29,7 @@ import {
 
 export type Props = PublicProps<List>;
 
-const ListCard = styled(Box)(({ theme }) => ({
+export const ListCard = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   backgroundColor: theme.palette.background.paper,
   border: "1px solid darkgray",
@@ -39,7 +39,7 @@ const ListCard = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-const CardButton = styled(Button)(({ theme }) => ({
+export const CardButton = styled(Button)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
   gap: theme.spacing(2),
 }));

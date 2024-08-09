@@ -43,8 +43,8 @@ dependencies:
     specifier: ^5.15.11
     version: 5.15.11(@types/react@18.2.45)(react@18.2.0)
   '@opensystemslab/map':
-    specifier: ^0.8.3
-    version: 0.8.3
+    specifier: git+https://github.com/theopensystemslab/map#03b57d7
+    version: github.com/theopensystemslab/map/03b57d7
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#6b2fd26
     version: github.com/theopensystemslab/planx-core/6b2fd26(@types/react@18.2.45)
@@ -5663,23 +5663,6 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@0.8.3:
-    resolution: {integrity: sha512-4WS4Cow27wmffp7KLtSB/m9HtXz0UDCXJXhq9kz152ofSretWgAl7+WFbqC+CeoVx+CV7ETmbFdjoJ3yZQzJ0Q==}
-    dependencies:
-      '@turf/union': 6.5.0
-      accessible-autocomplete: 2.0.4
-      file-saver: 2.0.5
-      govuk-frontend: 5.4.1
-      jspdf: 2.5.1
-      lit: 3.1.4
-      ol: 9.2.4
-      ol-ext: 4.0.21(ol@9.2.4)
-      ol-mapbox-style: 12.3.4(ol@9.2.4)
-      postcode: 5.1.0
-      proj4: 2.11.0
-      rambda: 8.6.0
-    dev: false
-
   /@petamoriken/float16@3.8.7:
     resolution: {integrity: sha512-/Ri4xDDpe12NT6Ex/DRgHzLlobiQXEW/hmG08w1wj/YU7hLemk97c+zHQFp0iZQ9r7YqgLEXZR2sls4HxBf9NA==}
     dev: false
@@ -8333,21 +8316,11 @@ packages:
       tslib: 2.6.3
     dev: false
 
-  /@turf/helpers@6.5.0:
-    resolution: {integrity: sha512-VbI1dV5bLFzohYYdgqwikdMVpe7pJ9X3E+dlr425wa2/sMJqYDhTO++ec38/pcPvPE6oD9WEEeU3Xu3gza+VPw==}
-    dev: false
-
   /@turf/helpers@7.0.0:
     resolution: {integrity: sha512-vwZvxRuyjGpGXvhXSbT9mX6FK92dBMLWbMbDJ/MXQUPx17ReVPFc+6N6IcxAzZfkiCnqy7vpuq0c+/TTrQxIiA==}
     dependencies:
       deep-equal: 2.2.3
       tslib: 2.6.3
-    dev: false
-
-  /@turf/invariant@6.5.0:
-    resolution: {integrity: sha512-Wv8PRNCtPD31UVbdJE/KVAWKe7l6US+lJItRR/HOEW3eh+U/JwRCSUl/KZ7bmjM/C+zLNoreM2TU6OoLACs4eg==}
-    dependencies:
-      '@turf/helpers': 6.5.0
     dev: false
 
   /@turf/jsts@2.7.1:
@@ -8371,12 +8344,13 @@ packages:
       tslib: 2.6.3
     dev: false
 
-  /@turf/union@6.5.0:
-    resolution: {integrity: sha512-igYWCwP/f0RFHIlC2c0SKDuM/ObBaqSljI3IdV/x71805QbIvY/BYGcJdyNcgEA6cylIGl/0VSlIbpJHZ9ldhw==}
+  /@turf/union@7.0.0:
+    resolution: {integrity: sha512-NRnP0GJ3guzVh6D2KNZvqNLMkbZtPQ6X1U4czK9ETicLROzqq6wM/S8gHZJVoh0KxxK1RYDsKu0RGFVobVT2vA==}
     dependencies:
-      '@turf/helpers': 6.5.0
-      '@turf/invariant': 6.5.0
+      '@turf/helpers': 7.0.0
+      '@turf/meta': 7.0.0
       polygon-clipping: 0.15.7
+      tslib: 2.6.3
     dev: false
 
   /@types/aria-query@5.0.4:
@@ -18102,8 +18076,8 @@ packages:
     dependencies:
       performance-now: 2.1.0
 
-  /rambda@8.6.0:
-    resolution: {integrity: sha512-Ax+/bAcV2h4wINXx6wm0792G5uXZAl78rzhei+FqmHezg45vbeTUyDAmDNbSdjNOL6LGN8AUEvzaYD7oO5eYrw==}
+  /rambda@9.2.1:
+    resolution: {integrity: sha512-6Dp+QQVQuAuhwBlbIvL2FjJVHCKF29W+n9ca/BMTVDqpj+Q7KKqUh7UAINEna8aaB2/oRvPuL5hViCTQARa70Q==}
     dev: false
 
   /ramda@0.29.0:
@@ -21896,6 +21870,27 @@ packages:
       immer: 9.0.21
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  github.com/theopensystemslab/map/03b57d7:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/map/tar.gz/03b57d7}
+    name: '@opensystemslab/map'
+    version: 0.8.3
+    prepare: true
+    requiresBuild: true
+    dependencies:
+      '@turf/union': 7.0.0
+      accessible-autocomplete: 2.0.4
+      file-saver: 2.0.5
+      govuk-frontend: 5.4.1
+      jspdf: 2.5.1
+      lit: 3.1.4
+      ol: 9.2.4
+      ol-ext: 4.0.21(ol@9.2.4)
+      ol-mapbox-style: 12.3.4(ol@9.2.4)
+      postcode: 5.1.0
+      proj4: 2.11.0
+      rambda: 9.2.1
     dev: false
 
   github.com/theopensystemslab/planx-core/6b2fd26(@types/react@18.2.45):
