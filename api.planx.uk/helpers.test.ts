@@ -4,13 +4,13 @@ import {
   getFlowData,
   getFormattedEnvironment,
   isLiveEnv,
-} from "./helpers";
-import { queryMock } from "./tests/graphqlQueryMock";
+} from "./helpers.js";
+import { queryMock } from "./tests/graphqlQueryMock.js";
 import {
   childFlow,
   draftParentFlow,
   flattenedParentFlow,
-} from "./tests/mocks/validateAndPublishMocks";
+} from "./tests/mocks/validateAndPublishMocks.js";
 
 describe("getFormattedEnvironment() function", () => {
   const OLD_ENV = process.env;

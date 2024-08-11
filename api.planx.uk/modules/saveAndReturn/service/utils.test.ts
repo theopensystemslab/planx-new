@@ -1,11 +1,11 @@
 import { Team } from "@opensystemslab/planx-core/types";
-import { queryMock } from "../../../tests/graphqlQueryMock";
-import { LowCalSession, LowCalSessionData } from "../../../types";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
+import { LowCalSession, LowCalSessionData } from "../../../types.js";
 import {
   getResumeLink,
   getSessionDetails,
   setupEmailEventTriggers,
-} from "./utils";
+} from "./utils.js";
 
 describe("getResumeLink util function", () => {
   it("should return the correct value for a custom domain", () => {

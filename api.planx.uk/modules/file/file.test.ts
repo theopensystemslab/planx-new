@@ -1,8 +1,8 @@
 import supertest from "supertest";
 
-import app from "../../server";
-import { deleteFilesByURL } from "./service/deleteFile";
-import { authHeader } from "../../tests/mockJWT";
+import app from "../../server.js";
+import { deleteFilesByURL } from "./service/deleteFile.js";
+import { authHeader } from "../../tests/mockJWT.js";
 
 let mockPutObject: jest.Mocked<() => void>;
 let mockGetObject: jest.Mocked<() => void>;

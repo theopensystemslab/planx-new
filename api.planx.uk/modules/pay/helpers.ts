@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
-import airbrake from "../../airbrake";
-import { $api } from "../../client";
+import airbrake from "../../airbrake.js";
+import { $api } from "../../client/index.js";
 
 export async function logPaymentStatus({
   sessionId,

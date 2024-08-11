@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { useHasuraAuth } from "../auth/middleware";
-import { createPaymentSendEvents } from "../pay/service/inviteToPay/createPaymentSendEvents";
-import { validate } from "../../shared/middleware/validate";
+import { useHasuraAuth } from "../auth/middleware.js";
+import { createPaymentSendEvents } from "../pay/service/inviteToPay/createPaymentSendEvents.js";
+import { validate } from "../../shared/middleware/validate.js";
 import {
   isCleanJSONBController,
   createPaymentExpiryEventsController,
@@ -12,11 +12,11 @@ import {
   sanitiseApplicationDataController,
   sendSlackNotificationController,
   analyzeSessionsController,
-} from "./controller";
-import { sendSlackNotificationSchema } from "./service/sendNotification/schema";
-import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema";
-import { createSessionEventSchema } from "./service/lowcalSessionEvents/schema";
-import { isCleanJSONBSchema } from "./service/validateInput/schema";
+} from "./controller.js";
+import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
+import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
+import { createSessionEventSchema } from "./service/lowcalSessionEvents/schema.js";
+import { isCleanJSONBSchema } from "./service/validateInput/schema.js";
 
 const router = Router();
 

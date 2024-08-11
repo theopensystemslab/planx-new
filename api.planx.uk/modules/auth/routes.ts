@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as Middleware from "./middleware";
-import * as Controller from "./controller";
+import * as Middleware from "./middleware.js";
+import * as Controller from "./controller.js";
 
 const router = Router();
 

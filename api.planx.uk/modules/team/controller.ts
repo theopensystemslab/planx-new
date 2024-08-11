@@ -1,7 +1,7 @@
-import * as Service from "./service";
+import * as Service from "./service.js";
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate";
-import { ServerError } from "../../errors";
+import { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
+import { ServerError } from "../../errors/index.js";
 
 interface TeamMemberResponse {
   message: string;

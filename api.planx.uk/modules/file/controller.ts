@@ -1,10 +1,10 @@
 import assert from "assert";
-import { uploadPrivateFile, uploadPublicFile } from "./service/uploadFile";
-import { buildFilePath } from "./service/utils";
-import { getFileFromS3 } from "./service/getFile";
+import { uploadPrivateFile, uploadPublicFile } from "./service/uploadFile.js";
+import { buildFilePath } from "./service/utils.js";
+import { getFileFromS3 } from "./service/getFile.js";
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate";
-import { ServerError } from "../../errors";
+import { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
+import { ServerError } from "../../errors/index.js";
 
 assert(process.env.AWS_S3_BUCKET);
 assert(process.env.AWS_S3_REGION);

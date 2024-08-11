@@ -1,0 +1,28 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: test
+    description: Requests for testing purposes
+paths:
+  /test-session:
+    get:
+      summary: Test req.session object
+      description: Confirms session has necessary dummy methods registered
+      tags: ["test"]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hasRegenerate:
+                    type: boolean
+                  hasSave:
+                    type: boolean
+                example:
+                  hasRegenerate: true
+                  hasSave: true

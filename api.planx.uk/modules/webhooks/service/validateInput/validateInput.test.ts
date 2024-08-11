@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../../../../server";
+import app from "../../../../server.js";
 
 const { post } = supertest(app);
 const ENDPOINT = "/webhooks/hasura/validate-input/jsonb/clean-html";

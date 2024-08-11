@@ -1,5 +1,5 @@
-import { makeUniqueFlow, getFlowData, insertFlow } from "../../../helpers";
-import { userContext } from "../../auth/middleware";
+import { makeUniqueFlow, getFlowData, insertFlow } from "../../../helpers.js";
+import { userContext } from "../../auth/middleware.js";
 
 const copyFlow = async (
   flowId: string,

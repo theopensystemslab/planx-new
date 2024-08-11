@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../../../shared/middleware/validate";
-import { isCleanHTML, isObjectValid } from "./utils";
+import { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
+import { isCleanHTML, isObjectValid } from "./utils.js";
 
 // Definition: https://hasura.io/docs/latest/schema/postgres/input-validations/#response
 type HasuraValidateInputResponse = undefined | { message: string };

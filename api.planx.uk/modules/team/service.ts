@@ -1,4 +1,4 @@
-import { getClient } from "../../client";
+import { getClient } from "../../client/index.js";
 import { TeamRole } from "@opensystemslab/planx-core/types";
 
 interface UpsertMember {

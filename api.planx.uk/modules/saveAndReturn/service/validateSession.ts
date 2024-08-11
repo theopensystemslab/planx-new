@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
-import { omit } from "lodash";
-import { getMostRecentPublishedFlow } from "../../../helpers";
+import omit from "lodash/omit.js";
+import { getMostRecentPublishedFlow } from "../../../helpers.js";
 import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type {
@@ -13,9 +13,9 @@ import type {
   LowCalSessionData,
   PublishedFlow,
   Node,
-} from "../../../types";
-import { $api } from "../../../client";
-import { ValidationResponse } from "../types";
+} from "../../../types.js";
+import { $api } from "../../../client/index.js";
+import { ValidationResponse } from "../types.js";
 
 export type ReconciledSession = {
   alteredSectionIds: Array<string>;

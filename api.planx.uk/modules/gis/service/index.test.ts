@@ -1,8 +1,8 @@
 import supertest from "supertest";
 
-import loadOrRecordNockRequests from "../../../tests/loadOrRecordNockRequests";
-import app from "../../../server";
-import { locationSearchWithTimeout } from ".";
+import loadOrRecordNockRequests from "../../../tests/loadOrRecordNockRequests.js";
+import app from "../../../server.js";
+import { locationSearchWithTimeout } from "./index.js";
 
 // Tests commented out due to reliance on external API calls and fallibility of nocks
 //   Please comment in and run locally if making changes to /gis functionality

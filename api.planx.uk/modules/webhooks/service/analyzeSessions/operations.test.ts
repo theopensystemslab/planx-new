@@ -1,9 +1,9 @@
-import { queryMock } from "../../../../tests/graphqlQueryMock";
+import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 
 import {
   getSubmittedUnAnalyzedSessionIds,
   updateLowcalSessionAllowListAnswers,
-} from "./operations";
+} from "./operations.js";
 
 jest.mock("../../../../lib/hasura/schema");
 const mockFindSession = jest.fn();

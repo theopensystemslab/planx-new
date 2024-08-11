@@ -1,7 +1,7 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { getClient } from ".";
-import { userContext } from "../modules/auth/middleware";
-import { getJWT } from "../tests/mockJWT";
+import { getClient } from "./index.js";
+import { userContext } from "../modules/auth/middleware.js";
+import { getJWT } from "../tests/mockJWT.js";
 
 test("getClient() throws an error if a store is not set", () => {
   expect(() => getClient()).toThrow();

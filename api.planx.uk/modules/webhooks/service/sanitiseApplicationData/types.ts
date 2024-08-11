@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../../../shared/middleware/validate";
+import { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 
 export interface OperationResult {
   operationName: string;

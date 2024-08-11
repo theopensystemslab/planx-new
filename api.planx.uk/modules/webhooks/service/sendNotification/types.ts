@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../../../shared/middleware/validate";
+import { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import {
   bopsSubmissionSchema,
   emailSubmissionSchema,
   s3SubmissionSchema,
   sendSlackNotificationSchema,
   uniformSubmissionSchema,
-} from "./schema";
+} from "./schema.js";
 
 interface SendSlackNotificationResponse {
   message: string;

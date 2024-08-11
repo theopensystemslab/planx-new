@@ -1,4 +1,4 @@
-import { isEqual } from "./middleware";
+import { isEqual } from "./middleware.js";
 
 describe("isEqual() helper function", () => {
   it("handles undefined secrets", () => {

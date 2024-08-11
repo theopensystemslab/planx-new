@@ -1,8 +1,8 @@
 import nock from "nock";
-import { queryMock } from "../../tests/graphqlQueryMock";
+import { queryMock } from "../../tests/graphqlQueryMock.js";
 import supertest from "supertest";
 
-import app from "../../server";
+import app from "../../server.js";
 
 jest.mock("@opensystemslab/planx-core", () => {
   return {

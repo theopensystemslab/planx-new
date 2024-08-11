@@ -1,11 +1,11 @@
 import supertest from "supertest";
-import app from "../../../../server";
-import { queryMock } from "../../../../tests/graphqlQueryMock";
+import app from "../../../../server.js";
+import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 
 import {
   validatePaymentRequestNotFoundQueryMock,
   validatePaymentRequestQueryMock,
-} from "../../../../tests/mocks/inviteToPayMocks";
+} from "../../../../tests/mocks/inviteToPayMocks.js";
 
 const TEST_PAYMENT_REQUEST_ID = "09655c28-3f34-4619-9385-cd57312acc44";
 

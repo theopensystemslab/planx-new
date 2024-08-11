@@ -1,5 +1,5 @@
-import { runSQL } from "../../../../lib/hasura/schema";
-import { queryMock } from "../../../../tests/graphqlQueryMock";
+import { runSQL } from "../../../../lib/hasura/schema/index.js";
+import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import {
   mockIds,
   mockSanitiseBOPSApplicationsMutation,
@@ -10,7 +10,7 @@ import {
   mockGetExpiredSessionIdsQuery,
   mockDeletePaymentRequests,
   mockDeleteFeedbackMutation,
-} from "./mocks/queries";
+} from "./mocks/queries.js";
 import {
   deleteHasuraEventLogs,
   getRetentionPeriod,
@@ -25,7 +25,7 @@ import {
   deletePaymentRequests,
   deleteHasuraScheduledEventsForSubmittedSessions,
   deleteFeedback,
-} from "./operations";
+} from "./operations.js";
 
 jest.mock("../../../../lib/hasura/schema");
 const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;

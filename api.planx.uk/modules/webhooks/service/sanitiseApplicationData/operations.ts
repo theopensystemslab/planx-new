@@ -1,10 +1,10 @@
 import { gql } from "graphql-request";
 import { subMonths } from "date-fns";
 
-import { Operation, OperationResult, QueryResult } from "./types";
-import { runSQL } from "../../../../lib/hasura/schema";
-import { deleteFilesByURL } from "../../../file/service/deleteFile";
-import { $api } from "../../../../client";
+import { Operation, OperationResult, QueryResult } from "./types.js";
+import { runSQL } from "../../../../lib/hasura/schema/index.js";
+import { deleteFilesByURL } from "../../../file/service/deleteFile.js";
+import { $api } from "../../../../client/index.js";
 import { Passport } from "@opensystemslab/planx-core";
 
 const RETENTION_PERIOD_MONTHS = 6;

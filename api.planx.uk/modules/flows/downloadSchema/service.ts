@@ -1,4 +1,4 @@
-import { getFlowData } from "../../../helpers";
+import { getFlowData } from "../../../helpers.js";
 
 interface FlowSchema {
   node: string;
