@@ -1,16 +1,19 @@
+import TabContext from "@mui/lab/TabContext";
+import TabPanel from "@mui/lab/TabPanel";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { Field } from "@planx/components/List/model";
 import { Feature } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 import InputRow from "ui/shared/InputRow";
 
-import { ListCard } from "../../List/Public";
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
-import { MapContainer, MapFooter } from "../../shared/Preview/MapContainer";
+import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import { MapAndLabel } from "./../model";
 import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
@@ -45,38 +48,78 @@ export const InputField: React.FC<Field> = (props) => {
   }
 };
 
-const ActiveFeatureCard: React.FC<{
-  index: number;
-  feature: Feature;
-}> = ({ index: i, feature }) => {
-  const { schema } = useMapAndLabelContext();
+function a11yProps(index: number) {
+  return {
+    id: `vertical-tab-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
+  };
+}
 
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, []);
+const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
+  features,
+}) => {
+  const { schema } = useMapAndLabelContext();
+  const [activeTab, setActiveTab] = useState<string>(
+    features[features.length - 1].properties?.label || "",
+  );
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setActiveTab(newValue);
+  };
 
   return (
-    <ListCard data-testid={`list-card-${i}`} ref={ref}>
-      <Typography component="h2" variant="h3">
-        {`${schema.type} ${i}`}
-      </Typography>
-      <Typography variant="body2">
-        {`${feature.geometry.type}`}
-        {feature.geometry.type === "Point"
-          ? ` (${feature.geometry.coordinates.map((coord) =>
-              coord.toFixed(5),
-            )})`
-          : ` (area ${feature.properties?.area || `0 m²`})`}
-      </Typography>
-      {schema.fields.map((field, i) => (
-        <InputRow key={i}>
-          <InputField {...field} />
-        </InputRow>
-      ))}
-    </ListCard>
+    <Box
+      sx={{
+        flexGrow: 1,
+        bgcolor: "background.paper",
+        display: "flex",
+        maxHeight: "fit-content",
+      }}
+    >
+      <TabContext value={activeTab}>
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={activeTab}
+          onChange={handleChange}
+          aria-label="Vertical tabs example"
+          sx={{ borderRight: 1, borderColor: "divider" }}
+        >
+          {features.map((feature, i) => (
+            <Tab
+              key={`tab-${i}`}
+              value={feature.properties?.label}
+              label={`${schema.type} ${feature.properties?.label}`}
+              {...a11yProps(i)}
+            />
+          ))}
+        </Tabs>
+        {features.map((feature, i) => (
+          <TabPanel
+            key={`tabpanel-${i}`}
+            value={feature.properties?.label}
+            sx={{ width: "100%" }}
+          >
+            <Typography component="h2" variant="h3">
+              {`${schema.type} ${feature.properties?.label}`}
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              {`${feature.geometry.type}`}
+              {feature.geometry.type === "Point"
+                ? ` (${feature.geometry.coordinates.map((coord) =>
+                    coord.toFixed(5),
+                  )})`
+                : ` (area ${feature.properties?.area || `0 m²`})`}
+            </Typography>
+            {schema.fields.map((field, i) => (
+              <InputRow key={i}>
+                <InputField {...field} />
+              </InputRow>
+            ))}
+          </TabPanel>
+        ))}
+      </TabContext>
+    </Box>
   );
 };
 
@@ -97,7 +140,6 @@ const Root = () => {
   const passport = useStore((state) => state.computePassport());
 
   const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
-  const [mapValidationError, setMapValidationError] = useState<string>();
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
@@ -128,50 +170,44 @@ const Root = () => {
         howMeasured={howMeasured}
       />
       <FullWidthWrapper>
-        <ErrorWrapper
-          error={mapValidationError}
-          id="map-and-label-map-error-wrapper"
-        >
-          <MapContainer environment="standalone">
-            {/* @ts-ignore */}
-            <my-map
-              id="map-and-label-map"
-              ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
-              drawMode
-              drawMany
-              drawColor={drawColor}
-              drawType={drawType}
-              drawPointer="crosshair"
-              zoom={20}
-              maxZoom={23}
-              latitude={Number(passport?.data?._address?.latitude)}
-              longitude={Number(passport?.data?._address?.longitude)}
-              osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-              osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
-              clipGeojsonData={
-                teamSettings?.boundaryBBox &&
-                JSON.stringify(teamSettings?.boundaryBBox)
-              }
-            />
-          </MapContainer>
-        </ErrorWrapper>
-        <MapFooter>
-          <Typography variant="body1">
-            {`You've plotted ${
-              features?.length || 0
-            } ${schemaName.toLocaleLowerCase()}`}
-          </Typography>
-        </MapFooter>
-      </FullWidthWrapper>
-      {features &&
-        features?.length > 0 &&
-        features.map((feature, i) => (
-          <ActiveFeatureCard
-            key={`feature-card-${parseInt(feature.properties?.label) || i}`}
-            index={parseInt(feature.properties?.label) || i}
-            feature={feature}
+        <MapContainer environment="standalone">
+          {/* @ts-ignore */}
+          <my-map
+            id="map-and-label-map"
+            ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
+            drawMode
+            drawMany
+            drawColor={drawColor}
+            drawType={drawType}
+            drawPointer="crosshair"
+            zoom={20}
+            maxZoom={23}
+            latitude={Number(passport?.data?._address?.latitude)}
+            longitude={Number(passport?.data?._address?.longitude)}
+            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+            osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+            clipGeojsonData={
+              teamSettings?.boundaryBBox &&
+              JSON.stringify(teamSettings?.boundaryBBox)
+            }
           />
-        ))}
+        </MapContainer>
+        {features && features?.length > 0 ? (
+          <VerticalFeatureTabs features={features} />
+        ) : (
+          <Box
+            sx={
+              {
+                /** TODO match figma */
+              }
+            }
+          >
+            <Typography variant="body2">
+              {`Plot a feature on the map to begin`}
+            </Typography>
+          </Box>
+        )}
+      </FullWidthWrapper>
     </Card>
   );
 };
