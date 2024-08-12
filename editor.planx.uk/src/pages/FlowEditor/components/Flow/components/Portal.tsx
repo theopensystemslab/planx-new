@@ -16,6 +16,8 @@ import Question from "./Question";
 const ExternalPortal: React.FC<any> = (props) => {
   const [href, setHref] = useState("Loading...");
 
+  const [addExternalPortal] = useStore((state) => [state.addExternalPortal]);
+
   const { data, loading } = useQuery(
     gql`
       query GetExternalPortal($id: uuid!) {
@@ -36,6 +38,11 @@ const ExternalPortal: React.FC<any> = (props) => {
           "/",
         );
         setHref(href);
+        addExternalPortal({
+          id: props.data.flowId,
+          name: data.flows_by_pk.name,
+          href,
+        });
       },
     },
   );
