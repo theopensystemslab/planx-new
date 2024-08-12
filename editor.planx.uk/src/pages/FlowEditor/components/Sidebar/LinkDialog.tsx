@@ -123,14 +123,20 @@ const PublishedLinkContent = (props: PublishedLinkProps) => {
   return (
     <Stack spacing={"15px"}>
       {props.subdomain && props.status === "online" && props.isPublished ? (
-        <ActivePublishedLink title="Subdomain" link={props.subdomain} />
+        <ActivePublishedLink title="With subdomain" link={props.subdomain} />
       ) : props.subdomain && props.status === "online" && !props.isPublished ? (
-        <InactivePublishedLink title="Subdomain" message={props.subdomain} />
+        <InactivePublishedLink
+          title="With subdomain"
+          message={props.subdomain}
+        />
       ) : props.subdomain && props.status === "offline" && props.isPublished ? (
-        <InactivePublishedLink title="Subdomain" message={props.subdomain} />
+        <InactivePublishedLink
+          title="With subdomain"
+          message={props.subdomain}
+        />
       ) : (
         <InactivePublishedLink
-          title="Subdomain"
+          title="With subdomain"
           message={"There is not a domain configured for this team"}
         />
       )}
@@ -223,7 +229,7 @@ export default function LinkDialog(props: DialogBaseProps) {
     "The published version of this flow. It is not yet viewable by the public.";
 
   const publishedOnlineDescription =
-    "This flow has been published and is viewable by the public.";
+    "The published version of the flow that is viewable by the public.";
 
   return (
     <Dialog
@@ -273,7 +279,7 @@ export default function LinkDialog(props: DialogBaseProps) {
             titleIcon={<OpenInNewIcon />}
             title={"Preview"}
             link={props.url.replace("/published", "/preview")}
-            description="The draft data of the main flow and the latest published version of nested flows. This link is representative of what your next published version will look like."
+            description="This link is representative of what your next published version will look like. It contains the draft data of the main flow and the latest published version of nested flows. "
             type="preview"
           />{" "}
           <Permission.IsPlatformAdmin>
@@ -281,7 +287,7 @@ export default function LinkDialog(props: DialogBaseProps) {
               titleIcon={<OpenInNewOffIcon />}
               title={"Draft"}
               link={props.url.replace("/published", "/draft")}
-              description="The draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
+              description="This link is not representative of what your next published version will look like. It contains the draft data of the main flow and the draft data of nested flows."
               type="draft"
             />
           </Permission.IsPlatformAdmin>
