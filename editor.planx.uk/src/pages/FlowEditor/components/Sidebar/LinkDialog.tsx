@@ -15,7 +15,11 @@ import { styled } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import gql from "graphql-tag";
+import { client } from "lib/graphql";
+import { useStore } from "pages/FlowEditor/lib/store";
+import { prop, props } from "ramda";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import Permission from "ui/editor/Permission";
 
 interface DialogTeamTheme {
@@ -25,6 +29,7 @@ interface DialogTeamTheme {
 
 interface DialogBaseProps {
   linkDialogOpen: boolean;
+  teamSlug: string;
   flowSlug: string;
   isFlowPublished: boolean;
   url: string;
@@ -39,32 +44,91 @@ interface DialogPropsWithTheme {
 
 type DialogProps = DialogBaseProps & DialogPropsWithTheme;
 
-const ImageWrapper = styled(Box)(() => ({
-  height: 24,
-  width: 24,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "2px",
-}));
-
 const InactiveLink = styled(Typography)(({ theme }) => ({
   width: "100%",
   textAlign: "left",
   color: theme.palette.text.secondary,
 }));
 
-const LinkComponent = (props: {
-  linkType: "published" | "draft" | "subdomain" | "preview";
-  primaryColour?: string;
-  titleIcon?: string | SvgIconProps;
+const PaddedText = styled(Typography)(({ theme }) => ({
+  paddingLeft: "31px",
+}));
+
+const CopyButton = (props: any) => {
+  const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
+  return (
+    <Tooltip title={copyMessage}>
+      <Button
+        component={"button"}
+        variant="help"
+        onMouseLeave={() => {
+          setTimeout(() => {
+            setCopyMessage("copy");
+          }, 500);
+        }}
+        onClick={() => {
+          setCopyMessage("copied");
+          navigator.clipboard.writeText(props.link);
+        }}
+      >
+        <Typography
+          display={"flex"}
+          flexDirection={"row"}
+          gap={"4px"}
+          variant="body2"
+        >
+          <ContentCopyIcon />
+          {copyMessage}
+        </Typography>
+      </Button>
+    </Tooltip>
+  );
+};
+
+const PublishedLink = (props: {
+  status?: string;
+  subdomain?: string;
+  link: string;
+  isPublished: boolean;
+}) => {
+  return (
+    <>
+      <PaddedText variant="h4" mr={1}>
+        {"Subdomain"}
+      </PaddedText>
+      <Link pl={"31px"} href={props.subdomain}>
+        {props.subdomain}
+      </Link>
+      <PaddedText variant="h4" mr={1}>
+        {"Published"}
+      </PaddedText>
+      <Link pl={"31px"} href={props.link}>
+        {props.link}
+      </Link>{" "}
+    </>
+  );
+};
+
+const BaseLink = (props: { link: string }) => {
+  return (
+    <>
+      <Link pl={"31px"} href={props.link}>
+        {props.link}
+      </Link>
+    </>
+  );
+};
+
+const LinkContainer = (props: {
+  subdomain?: string;
+  titleIcon?: SvgIconProps;
   title: string;
   link: string;
   description?: string;
-  isPublished?: boolean;
+  status?: string;
+  linkComponent: ReactNode;
 }) => {
-  const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
-
+  const infoPadding = "31px";
   return (
     <Box display={"flex"} flexDirection={"column"} gap={"8px"} mb={1}>
       <Box
@@ -73,69 +137,49 @@ const LinkComponent = (props: {
         alignItems={"center"}
         gap={"7px"}
       >
-        {typeof props.titleIcon === "string" ? (
-          <ImageWrapper sx={{ backgroundColor: props.primaryColour }}>
-            <img
-              height={"auto"}
-              width={20}
-              src={props.titleIcon || undefined}
-              alt="Local authority logo"
-            />
-          </ImageWrapper>
-        ) : (
-          <>{props.titleIcon}</>
-        )}
-
+        <>{props.titleIcon}</>
         <Typography variant="h4" component={"h4"} mr={1}>
           {props.title}
         </Typography>
-        <Tooltip title={copyMessage}>
-          <Button
-            component={"button"}
-            variant="help"
-            onMouseLeave={() => {
-              setTimeout(() => {
-                setCopyMessage("copy");
-              }, 500);
-            }}
-            onClick={() => {
-              setCopyMessage("copied");
-              navigator.clipboard.writeText(props.link);
-            }}
-            disabled={props.linkType === "published" && !props.isPublished}
-          >
-            <Typography
-              display={"flex"}
-              flexDirection={"row"}
-              gap={"4px"}
-              variant="body2"
-            >
-              <ContentCopyIcon />
-              {copyMessage}
-            </Typography>
-          </Button>
-        </Tooltip>
+        <CopyButton link={props.link} />
       </Box>
-      <Typography>{props.description}</Typography>
-      {}
-      {props.linkType === "published" && !props.isPublished ? (
-        <InactiveLink variant="body1">{props.link}</InactiveLink>
-      ) : (
-        <Link
-          href={props.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{ "&:hover": { cursor: "pointer" } }}
-        >
-          {props.link}
-        </Link>
-      )}
+      <Typography pl={infoPadding}>{props.description}</Typography>
+      {props.linkComponent}
     </Box>
   );
 };
 
 export default function LinkDialog(props: DialogProps) {
-  console.log(props.linkDialogOpen);
+  const [flowStatus, setFlowStatus] = useState<string | undefined>();
+  // Retrieving flow status to determine which links to show in View Links
+  useEffect(() => {
+    const fetchFlowStatus = async () => {
+      const { data } = await client.query<any>({
+        query: gql`
+          query GetFlow($slug: String!, $team_slug: String!) {
+            flows(
+              limit: 1
+              where: {
+                slug: { _eq: $slug }
+                team: { slug: { _eq: $team_slug } }
+              }
+            ) {
+              status
+            }
+          }
+        `,
+        variables: {
+          slug: props.flowSlug,
+          team_slug: props.teamSlug,
+        },
+      });
+      console.log();
+      setFlowStatus(data.flows[0].status);
+    };
+
+    fetchFlowStatus();
+  }, []);
+
   return (
     <Dialog
       open={props.linkDialogOpen}
@@ -162,37 +206,38 @@ export default function LinkDialog(props: DialogProps) {
       </DialogTitle>
       <DialogContent>
         <Stack spacing={"25px"} mb={"30px"}>
-          {props.teamDomain && props.teamTheme ? (
-            <LinkComponent
-              linkType="subdomain"
-              primaryColour={props.teamTheme.primaryColour}
-              titleIcon={props.teamTheme.logo || undefined}
-              title={"Published flow with subdomain"}
-              link={`${props.teamDomain}/${props.flowSlug}`}
-            />
-          ) : null}
-          <LinkComponent
-            linkType="published"
+          <LinkContainer
             titleIcon={<LanguageIcon />}
             title={"Published flow"}
-            isPublished={props.isFlowPublished}
             link={props.url}
             description="View of the currently published version of this flow."
+            linkComponent={
+              <PublishedLink
+                subdomain="thisisasubdomain"
+                status={flowStatus}
+                link={props.url}
+                isPublished={props.isFlowPublished}
+              />
+            }
           />
-          <LinkComponent
-            linkType="preview"
+          <LinkContainer
             titleIcon={<OpenInNewIcon />}
             title={"Preview flow"}
             link={props.url.replace("/published", "/preview")}
             description="View of the draft data of the main flow and the latest published version of nested flows. This link is representative of what your next published version will look like."
+            linkComponent={
+              <BaseLink link={props.url.replace("/published", "/draft")} />
+            }
           />{" "}
           <Permission.IsPlatformAdmin>
-            <LinkComponent
-              linkType="draft"
+            <LinkContainer
               titleIcon={<OpenInNewOffIcon />}
               title={"Draft flow"}
               link={props.url.replace("/published", "/draft")}
               description="View of the draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
+              linkComponent={
+                <BaseLink link={props.url.replace("/published", "/draft")} />
+              }
             />
           </Permission.IsPlatformAdmin>
         </Stack>

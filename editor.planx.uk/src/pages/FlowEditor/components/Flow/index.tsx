@@ -24,6 +24,8 @@ const Flow = ({ breadcrumbs = [] }: any) => {
     href: `${window.location.pathname.split(id)[0]}${id}`,
   }));
 
+  console.log(useStore.getState().flowStatus);
+
   return (
     <>
       <ol id="flow" data-layout={flowLayout} className="decisions">
