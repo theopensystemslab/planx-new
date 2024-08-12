@@ -110,7 +110,9 @@ const ActivePublishedLink = (props: any) => {
     <LinkBox>
       {" "}
       <PaddedText variant="h4">{props.title}</PaddedText>
-      <Link pl={"31px"}>{props.link}</Link>
+      <Link pl="31px" href={props.link}>
+        {props.link}
+      </Link>
     </LinkBox>
   );
 };
