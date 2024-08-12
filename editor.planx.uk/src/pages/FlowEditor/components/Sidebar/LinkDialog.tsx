@@ -156,6 +156,14 @@ const LinkContainer = (props: LinkProps) => {
           {props.type !== "published" && <CopyButton link={props.link} />}
         </Box>
         <Typography pl={infoPadding}>{props.description}</Typography>
+        {props.status === "offline" && props.type === "published" && (
+          <Typography pl={infoPadding}>
+            You can switch it to “Online” in your{" "}
+            <Link href={props.link.replace("/published", "/service")}>
+              Service Settings
+            </Link>
+          </Typography>
+        )}
       </LinkBox>
       {props.type === "published" ? (
         <PublishedLink
@@ -203,6 +211,15 @@ export default function LinkDialog(props: DialogBaseProps) {
     fetchFlowStatus();
   }, []);
 
+  const unpublishedOfflineDescription =
+    "The flow is not yet published and is not yet viewable by the public.";
+
+  const publishedOfflineDescription =
+    "The published version of this flow. It is not yet viewable by the public.";
+
+  const publishedOnlineDescription =
+    "This flow has been published and is viewable by the public.";
+
   return (
     <Dialog
       open={props.linkDialogOpen}
@@ -233,7 +250,13 @@ export default function LinkDialog(props: DialogBaseProps) {
             titleIcon={<LanguageIcon />}
             title={"Published flow"}
             link={props.url}
-            description="View of the currently published version of this flow."
+            description={
+              !props.isFlowPublished && flowStatus !== "online"
+                ? unpublishedOfflineDescription
+                : props.isFlowPublished && flowStatus !== "online"
+                ? publishedOfflineDescription
+                : publishedOnlineDescription
+            }
             type="published"
             isPublished={props.isFlowPublished}
             status={flowStatus}
