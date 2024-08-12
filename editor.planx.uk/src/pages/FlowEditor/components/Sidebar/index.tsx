@@ -1,6 +1,8 @@
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import LinkIcon from "@mui/icons-material/Link";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import SchemaIcon from "@mui/icons-material/Schema";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -289,7 +291,7 @@ const Sidebar: React.FC<{
           </SecondaryButton>
           <SecondaryButton color="primary">
             <Tooltip arrow title="Toggle debug console">
-              <MenuOpenIcon
+              <AccountTreeIcon
                 onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
               />
             </Tooltip>
