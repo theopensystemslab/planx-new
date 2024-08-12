@@ -16,7 +16,7 @@ import Question from "./Question";
 const ExternalPortal: React.FC<any> = (props) => {
   const [href, setHref] = useState("Loading...");
 
-  const [addExternalPortal] = useStore((state) => [state.addExternalPortal]);
+  const addExternalPortal = useStore.getState().addExternalPortal;
 
   const { data, loading } = useQuery(
     gql`
