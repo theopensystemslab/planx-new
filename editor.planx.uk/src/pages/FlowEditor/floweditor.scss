@@ -47,7 +47,8 @@ $fontMonospace: "Source Code Pro", monospace;
   li {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 auto;
+    width: max-content;
 
     > a:focus,
     > a:active {
@@ -179,10 +180,10 @@ $fontMonospace: "Source Code Pro", monospace;
 
   &.type-Section {
     [data-layout="top-down"] & {
-      width: 100%;
+      width: 100% !important;
     }
     [data-layout="left-right"] & {
-      height: 100%;
+      height: 100% !important;
     }
   }
 

@@ -3,7 +3,7 @@ import type {
   PaymentRequest,
   FlowGraph,
 } from "@opensystemslab/planx-core/types";
-import { Flow } from "../../types";
+import { Flow } from "../../types.js";
 
 export const validEmail = "the-payee@opensystemslab.io";
 

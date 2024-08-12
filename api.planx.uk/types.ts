@@ -1,5 +1,8 @@
-import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
-import { GovUKPayment, Team } from "@opensystemslab/planx-core/types";
+import {
+  GovUKPayment,
+  Team,
+  PaymentRequest,
+} from "@opensystemslab/planx-core/types";
 
 /**
  * @deprecated Migrating to Node from planx-core

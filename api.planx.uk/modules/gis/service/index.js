@@ -1,8 +1,8 @@
-const localAuthorities = {
-  braintree: require("./local_authorities/braintree"),
-  scotland: require("./local_authorities/scotland"),
-  digitalLand: require("./digitalLand"),
-};
+import * as digitalLand from "./digitalLand.js";
+import * as scotland from "./local_authorities/scotland.js";
+import * as braintree from "./local_authorities/braintree.js";
+
+const localAuthorities = { digitalLand, braintree, scotland };
 
 /**
  * @swagger

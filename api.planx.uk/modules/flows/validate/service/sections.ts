@@ -1,8 +1,8 @@
 import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
-import intersection from "lodash/intersection";
+import intersection from "lodash/intersection.js";
 
-import { isComponentType } from "../helpers";
-import { FlowValidationResponse } from "./index";
+import { isComponentType } from "../helpers.js";
+import { FlowValidationResponse } from "./index.js";
 
 const validateSections = (flowGraph: FlowGraph): FlowValidationResponse => {
   if (getSectionNodeIds(flowGraph)?.length > 0) {

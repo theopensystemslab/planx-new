@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import assert from "assert";
-import { ServerError } from "../../errors";
-import { Template } from "../../lib/notify";
+import { ServerError } from "../../errors/index.js";
+import { Template } from "../../lib/notify/index.js";
 import { expressjwt } from "express-jwt";
 
 import passport from "passport";

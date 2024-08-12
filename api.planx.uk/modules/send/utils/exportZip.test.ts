@@ -1,7 +1,7 @@
-import { mockLowcalSession } from "../../../tests/mocks/saveAndReturnMocks";
-import { buildSubmissionExportZip } from "./exportZip";
-import type { LowCalSession } from "../../../types";
-import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks";
+import { mockLowcalSession } from "../../../tests/mocks/saveAndReturnMocks.js";
+import { buildSubmissionExportZip } from "./exportZip.js";
+import type { LowCalSession } from "../../../types.js";
+import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 
 jest.mock("fs", () => ({
   mkdtempSync: () => "tmpdir",

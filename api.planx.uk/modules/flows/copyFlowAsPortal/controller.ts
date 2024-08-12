@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { Flow } from "../../../types";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
-import { copyPortalAsFlow } from "./service";
-import { ServerError } from "../../../errors";
+import { Flow } from "../../../types.js";
+import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import { copyPortalAsFlow } from "./service.js";
+import { ServerError } from "../../../errors/index.js";
 
 interface CopyFlowAsPortalResponse {
   message: string;

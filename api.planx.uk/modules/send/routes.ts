@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { createSendEvents } from "./createSendEvents/controller";
-import { useHasuraAuth } from "../auth/middleware";
-import { sendToBOPS } from "./bops/bops";
-import { sendToUniform } from "./uniform/uniform";
-import { sendToEmail } from "./email";
-import { validate } from "../../shared/middleware/validate";
-import { combinedEventsPayloadSchema } from "./createSendEvents/types";
-import { downloadApplicationFiles } from "./downloadApplicationFiles";
-import { sendToS3 } from "./s3";
-import { sendToIdoxNexus } from "./idox/nexus";
+import { createSendEvents } from "./createSendEvents/controller.js";
+import { useHasuraAuth } from "../auth/middleware.js";
+import { sendToBOPS } from "./bops/bops.js";
+import { sendToUniform } from "./uniform/uniform.js";
+import { sendToEmail } from "./email/index.js";
+import { validate } from "../../shared/middleware/validate.js";
+import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
+import { downloadApplicationFiles } from "./downloadApplicationFiles/index.js";
+import { sendToS3 } from "./s3/index.js";
+import { sendToIdoxNexus } from "./idox/nexus.js";
 
 const router = Router();
 

@@ -1,12 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
-import { sendEmail } from "../../../lib/notify";
-import { EmailSubmissionNotifyConfig } from "../../../types";
-import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils";
+import { sendEmail } from "../../../lib/notify/index.js";
+import { EmailSubmissionNotifyConfig } from "../../../types.js";
+import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import {
   getSessionEmailDetailsById,
   getTeamEmailSettings,
   insertAuditEntry,
-} from "./service";
+} from "./service.js";
 
 export async function sendToEmail(
   req: Request,

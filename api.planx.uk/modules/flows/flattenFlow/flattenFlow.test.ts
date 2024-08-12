@@ -1,13 +1,13 @@
 import supertest from "supertest";
 
-import app from "../../../server";
-import { queryMock } from "../../../tests/graphqlQueryMock";
+import app from "../../../server.js";
+import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import {
   childFlow,
   draftParentFlow,
   flattenedParentFlow,
   mockFlowData,
-} from "../../../tests/mocks/validateAndPublishMocks";
+} from "../../../tests/mocks/validateAndPublishMocks.js";
 
 beforeEach(() => {
   queryMock.mockQuery({

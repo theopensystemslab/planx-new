@@ -1,6 +1,6 @@
 import "isomorphic-fetch";
 import "express-async-errors";
-import { json, urlencoded } from "body-parser";
+import bodyParser from "body-parser";
 import assert from "assert";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
@@ -11,26 +11,28 @@ import pinoLogger from "express-pino-logger";
 import { Server } from "http";
 import passport from "passport";
 import helmet from "helmet";
-import { ServerError } from "./errors";
-import airbrake from "./airbrake";
-import { apiLimiter } from "./rateLimit";
-import { googleStrategy } from "./modules/auth/strategy/google";
-import authRoutes from "./modules/auth/routes";
-import teamRoutes from "./modules/team/routes";
-import miscRoutes from "./modules/misc/routes";
-import userRoutes from "./modules/user/routes";
-import webhookRoutes from "./modules/webhooks/routes";
-import analyticsRoutes from "./modules/analytics/routes";
-import adminRoutes from "./modules/admin/routes";
-import flowRoutes from "./modules/flows/routes";
-import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes";
-import saveAndReturnRoutes from "./modules/saveAndReturn/routes";
-import sendEmailRoutes from "./modules/sendEmail/routes";
-import fileRoutes from "./modules/file/routes";
-import gisRoutes from "./modules/gis/routes";
-import payRoutes from "./modules/pay/routes";
-import sendRoutes from "./modules/send/routes";
-import { useSwaggerDocs } from "./docs";
+import { ServerError } from "./errors/index.js";
+import airbrake from "./airbrake.js";
+import { apiLimiter } from "./rateLimit.js";
+import { registerSessionStubs } from "./session.js";
+import { googleStrategy } from "./modules/auth/strategy/google.js";
+import authRoutes from "./modules/auth/routes.js";
+import teamRoutes from "./modules/team/routes.js";
+import miscRoutes from "./modules/misc/routes.js";
+import userRoutes from "./modules/user/routes.js";
+import webhookRoutes from "./modules/webhooks/routes.js";
+import analyticsRoutes from "./modules/analytics/routes.js";
+import adminRoutes from "./modules/admin/routes.js";
+import flowRoutes from "./modules/flows/routes.js";
+import ordnanceSurveyRoutes from "./modules/ordnanceSurvey/routes.js";
+import saveAndReturnRoutes from "./modules/saveAndReturn/routes.js";
+import sendEmailRoutes from "./modules/sendEmail/routes.js";
+import fileRoutes from "./modules/file/routes.js";
+import gisRoutes from "./modules/gis/routes.js";
+import payRoutes from "./modules/pay/routes.js";
+import sendRoutes from "./modules/send/routes.js";
+import testRoutes from "./modules/test/routes.js";
+import { useSwaggerDocs } from "./docs/index.js";
 import { Role } from "@opensystemslab/planx-core/types";
 
 const app = express();
@@ -71,7 +73,7 @@ app.use(
   }),
 );
 
-app.use(json({ limit: "100mb" }));
+app.use(bodyParser.json({ limit: "100mb" }));
 
 // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
 app.use(cookieParser());
@@ -116,6 +118,9 @@ app.use(
   }),
 );
 
+// register stubs after cookieSession middleware initialisation
+app.use(registerSessionStubs);
+
 passport.use("google", googleStrategy);
 
 passport.serializeUser(function (user, cb) {
@@ -127,7 +132,7 @@ passport.deserializeUser(function (obj: Express.User, cb) {
 });
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Setup API routes
 app.use(adminRoutes);
@@ -145,6 +150,7 @@ app.use(sendRoutes);
 app.use(teamRoutes);
 app.use(userRoutes);
 app.use(webhookRoutes);
+app.use(testRoutes);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { localAuthorityMetadata } from "./digitalLand";
+import { localAuthorityMetadata } from "./digitalLand.js";
 
 /**
  * @swagger

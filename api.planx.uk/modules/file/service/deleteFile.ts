@@ -1,5 +1,5 @@
-import { DeleteObjectsRequest } from "aws-sdk/clients/s3";
-import { getS3KeyFromURL, s3Factory } from "./utils";
+import { DeleteObjectsRequest } from "aws-sdk/clients/s3.js";
+import { getS3KeyFromURL, s3Factory } from "./utils.js";
 
 export const deleteFilesByURL = async (
   fileURLs: string[],

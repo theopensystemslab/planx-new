@@ -7,8 +7,8 @@ import {
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
-import { Breadcrumb, Flow, LowCalSession, Passport } from "../../../types";
-import { $api } from "../../../client";
+import { Breadcrumb, Flow, LowCalSession, Passport } from "../../../types.js";
+import { $api } from "../../../client/index.js";
 
 /**
  * @swagger

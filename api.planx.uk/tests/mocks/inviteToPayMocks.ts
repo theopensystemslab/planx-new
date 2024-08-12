@@ -8,7 +8,7 @@ import {
   paymentRequestResponse,
   validPaymentRequest,
   paymentAmountPence,
-} from "./inviteToPayData";
+} from "./inviteToPayData.js";
 
 export const validSessionQueryMock = {
   name: "GetSessionById",

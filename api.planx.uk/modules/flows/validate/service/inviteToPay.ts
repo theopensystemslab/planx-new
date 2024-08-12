@@ -4,8 +4,8 @@ import {
   hasComponentType,
   isComponentType,
   numberOfComponentType,
-} from "../helpers";
-import { FlowValidationResponse } from "./index";
+} from "../helpers.js";
+import { FlowValidationResponse } from "./index.js";
 
 const validateInviteToPay = (flowGraph: FlowGraph): FlowValidationResponse => {
   if (inviteToPayEnabled(flowGraph)) {

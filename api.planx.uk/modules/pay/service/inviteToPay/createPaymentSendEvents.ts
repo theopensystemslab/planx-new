@@ -4,10 +4,10 @@ import { gql } from "graphql-request";
 import {
   CombinedResponse,
   createScheduledEvent,
-} from "../../../../lib/hasura/metadata";
-import { $api, $public } from "../../../../client";
-import { getMostRecentPublishedFlow } from "../../../../helpers";
-import { Flow, Node } from "../../../../types";
+} from "../../../../lib/hasura/metadata/index.js";
+import { $api, $public } from "../../../../client/index.js";
+import { getMostRecentPublishedFlow } from "../../../../helpers.js";
+import { Flow, Node } from "../../../../types.js";
 
 enum Destination {
   BOPS = "bops",

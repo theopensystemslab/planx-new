@@ -1,7 +1,7 @@
 import supertest from "supertest";
-import app from "../../server";
-import { authHeader, getJWT } from "../../tests/mockJWT";
-import { userContext } from "../auth/middleware";
+import app from "../../server.js";
+import { authHeader, getJWT } from "../../tests/mockJWT.js";
+import { userContext } from "../auth/middleware.js";
 
 const getStoreMock = jest.spyOn(userContext, "getStore");
 

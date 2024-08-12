@@ -3,8 +3,8 @@ import type {
   DrawBoundaryUserAction,
   PlanXExportData,
 } from "@opensystemslab/planx-core/types";
+import { $api } from "../../../client/index.js";
 import type { RequestHandler } from "express";
-import { $api } from "../../../client";
 
 type HTMLExportHandler = RequestHandler<{ sessionId: string }, string>;
 

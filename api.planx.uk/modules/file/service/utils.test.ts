@@ -1,4 +1,4 @@
-import { getS3KeyFromURL, s3Factory } from "./utils";
+import { getS3KeyFromURL, s3Factory } from "./utils.js";
 
 describe("s3 Factory", () => {
   const OLD_ENV = process.env;

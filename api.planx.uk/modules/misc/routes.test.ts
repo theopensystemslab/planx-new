@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../../server";
+import app from "../../server.js";
 
 describe("healthcheck endpoint", () => {
   it("always returns a 200", async () => {

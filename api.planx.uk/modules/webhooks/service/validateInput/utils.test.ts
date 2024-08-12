@@ -1,4 +1,4 @@
-import { isCleanHTML, isObjectValid } from "./utils";
+import { isCleanHTML, isObjectValid } from "./utils.js";
 
 describe("isObjectValid", () => {
   it("calls the callback for each child if validator returns true", () => {
