@@ -16,29 +16,19 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import gql from "graphql-tag";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { client } from "../../../../lib/graphql";
 import Permission from "../../../../ui/editor/Permission";
 
-interface DialogTeamTheme {
-  logo: string | null;
-  primaryColour: string;
-}
-
 interface DialogBaseProps {
   linkDialogOpen: boolean;
+  teamDomain?: string;
   teamSlug: string;
   flowSlug: string;
   isFlowPublished: boolean;
   url: string;
   setLinkDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-interface DialogPropsWithTheme {
-  containsTheme: true;
-  teamTheme: DialogTeamTheme;
-  teamDomain?: string;
 }
 
 interface LinkProps {
@@ -56,8 +46,6 @@ type PublishedLinkProps = Pick<
   LinkProps,
   "status" | "subdomain" | "link" | "isPublished"
 >;
-
-type DialogProps = DialogBaseProps & DialogPropsWithTheme;
 
 const InactiveLink = styled(Typography)(({ theme }) => ({
   width: "100%",
@@ -185,7 +173,7 @@ const LinkContainer = (props: LinkProps) => {
   );
 };
 
-export default function LinkDialog(props: DialogProps) {
+export default function LinkDialog(props: DialogBaseProps) {
   const [flowStatus, setFlowStatus] = useState<string | undefined>();
   // Retrieving flow status to determine which links to show in View Links
   useEffect(() => {

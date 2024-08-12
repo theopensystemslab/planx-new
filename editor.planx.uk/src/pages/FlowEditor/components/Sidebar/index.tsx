@@ -1,10 +1,4 @@
-import ChevronRightRounded from "@mui/icons-material/ChevronRightRounded";
-import CloseIcon from "@mui/icons-material/Close";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import LanguageIcon from "@mui/icons-material/Language";
 import LinkIcon from "@mui/icons-material/Link";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -13,26 +7,18 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
-import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { Team } from "@opensystemslab/planx-core/types";
 import { AxiosError } from "axios";
-import gql from "graphql-tag";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAsync } from "react-use";
-import Permission from "ui/editor/Permission";
 import Input from "ui/shared/Input";
 
-import { client } from "../../../../lib/graphql";
 import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import EditHistory from "./EditHistory";
@@ -183,9 +169,7 @@ const Sidebar: React.FC<{
     fetchCurrentTeam,
     togglePreview,
     flowSlug,
-    flowStatus,
     teamSlug,
-    teamTheme,
     teamDomain,
   ] = useStore((state) => [
     state.id,
@@ -198,9 +182,7 @@ const Sidebar: React.FC<{
     state.fetchCurrentTeam,
     state.togglePreview,
     state.flowSlug,
-    state.flowStatus,
     state.teamSlug,
-    state.teamTheme,
     state.teamDomain,
   ]);
   const [key, setKey] = useState<boolean>(false);
@@ -298,9 +280,7 @@ const Sidebar: React.FC<{
           </ViewButton>
           <LinkDialog
             setLinkDialogOpen={setLinkDialogOpen}
-            containsTheme
             linkDialogOpen={linkDialogOpen}
-            teamTheme={teamTheme}
             teamDomain={teamDomain}
             teamSlug={teamSlug}
             flowSlug={flowSlug}
