@@ -70,10 +70,10 @@ export async function sendToIdoxNexus(
   const localAuthority = req.params.localAuthority;
   const idoxNexusClient = getIdoxNexusClient();
 
-  // // confirm that this session has not already been successfully submitted before proceeding
-  // const submittedApp = await checkUniformAuditTable(payload?.sessionId);
-  // const isAlreadySubmitted =
-  //   submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload;
+  // confirm that this session has not already been successfully submitted before proceeding
+  const submittedApp = await checkUniformAuditTable(payload?.sessionId);
+  const _isAlreadySubmitted =
+    submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload;
   // if (isAlreadySubmitted) {
   //   return res.status(200).send({
   //     sessionId: payload?.sessionId,
@@ -84,13 +84,12 @@ export async function sendToIdoxNexus(
 
   try {
     // Request 1/4 - Authenticate
-    const { token, organisations, authorities } =
-      await authenticate(idoxNexusClient);
+    const { token, organisations } = await authenticate(idoxNexusClient);
 
     // TEMP - Mock organisations do NOT correspond to council envs, so randomly alternate submissions among ones we have access to for initial testing
     //   Switch to `team_integrations`-based approach later
     const orgIds = Object.keys(organisations);
-    const randomOrgId = orgIds[Math.floor(Math.random() & orgIds.length)];
+    const randomOrgId = orgIds[Math.floor(Math.random() * orgIds.length)];
     const randomOrg = organisations[randomOrgId];
 
     // 2/4 - Create a submission
@@ -237,9 +236,15 @@ async function createSubmission(
 ): Promise<string> {
   const createSubmissionEndpoint = `${process.env.IDOX_NEXUS_SUBMISSION_URL!}/secure/submission`;
 
-  const isStaging = ["mock-server", "staging"].some((hostname) =>
+  const isStaging = ["mock-server", "staging", "dev"].some((hostname) =>
     createSubmissionEndpoint.includes(hostname),
   );
+
+  const session = await $api.session.find(sessionId);
+  const rawApplicationType = session?.data.passport.data?.[
+    "application.type"
+  ] as string[];
+  const parentApplicationType = rawApplicationType?.[0]?.split(".")?.[0];
 
   const createSubmissionConfig: AxiosRequestConfig = {
     url: createSubmissionEndpoint,
@@ -249,7 +254,7 @@ async function createSubmission(
       "Content-type": "application/json",
     },
     data: JSON.stringify({
-      entity: "householder",
+      entity: parentApplicationType,
       module: "dcplanx",
       organisation: organisation,
       organisationId: organisationId,
