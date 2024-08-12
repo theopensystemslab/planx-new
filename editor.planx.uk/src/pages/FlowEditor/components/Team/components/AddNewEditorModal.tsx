@@ -7,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { client } from "lib/graphql";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
@@ -19,7 +20,7 @@ const createUser = async (
   email: string,
   firstName: string,
   lastName: string,
-  isPlatformAdmin?: boolean
+  isPlatformAdmin?: boolean,
 ) => {
   const response = (await client.mutate({
     mutation: gql`
@@ -52,16 +53,66 @@ const createUser = async (
       isPlatformAdmin,
     },
   })) as any;
-  const { id } = response.data.insert_users_one;
+  const { id, email: emailAddress } = response.data.insert_users_one;
 
-  console.log("created a user with id: ", id);
-  return id;
+  console.log("created a user with id: ", id, "and email: ", emailAddress);
+  return { id, emailAddress };
 };
 
+const addUserToTeam = async (teamId: number, userId: number) => {
+  const response = await client.mutate({
+    mutation: gql`
+      mutation AddUserToTeam($teamId: Int!, $userId: Int!) {
+        insert_team_members_one(
+          object: { team_id: $teamId, user_id: $userId, role: teamEditor }
+        ) {
+          team_id
+          user_id
+          role
+        }
+      }
+    `,
+    variables: {
+      teamId,
+      userId,
+    },
+  });
+
+  const res = response.data.insert_team_members_one;
+  console.log(res);
+  return res;
+};
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
 }: AddNewEditorModalProps) => {
+  const handleSubmit = async (
+    values: { email: string; firstName: string; lastName: string },
+    { resetForm }: any,
+  ) => {
+    const fetchedTeam = await useStore.getState().fetchCurrentTeam(); // TODO: error handling if unable to fetch team
+
+    const teamId = fetchedTeam.id;
+
+    // TODO: do I need to use a store?
+    await createUser(
+      values.email,
+      values.firstName,
+      values.lastName,
+      false, // TODO: sort out isPlatformAdmin
+      // ).then(console.log);
+      // .then add team member
+    )
+      .then((values) => addUserToTeam(teamId, values.id))
+      .then(console.log);
+
+    // use generic role?
+
+    setShowModal(false);
+    resetForm({ values }); // TODO: onSuccess
+    // TODO: refresh list of users automatically or optimistically update
+  };
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -73,18 +124,7 @@ export const AddNewEditorModal = ({
       lastName: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
     }),
-    onSubmit: async (values, { resetForm }) => {
-      await createUser(
-        // TODO: do I need to use a store?
-        values.email,
-        values.firstName,
-        values.lastName,
-        false // TODO: sort out isPlatformAdmin
-      ).then(console.log);
-
-      setShowModal(false);
-      resetForm({ values }); // TODO: onSuccess
-    },
+    onSubmit: handleSubmit,
   });
 
   return (
@@ -169,4 +209,3 @@ export const AddNewEditorModal = ({
     </Dialog>
   );
 };
-
