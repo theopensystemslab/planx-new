@@ -109,7 +109,9 @@ const ActivePublishedLink = (props: any) => {
   return (
     <LinkBox>
       {" "}
-      <PaddedText variant="h4">{props.title}</PaddedText>
+      <PaddedText variant="h4">
+        {props.title} <CopyButton link={props.link} />
+      </PaddedText>
       <Link pl="31px" href={props.link}>
         {props.link}
       </Link>
