@@ -49,9 +49,9 @@ export async function sendToIdoxNexus(
   next: NextFunction,
 ) {
   /**
-   * Submits application data to Uniform
+   * Submits application data to Idox's Submission API (aka Nexus)
    *
-   *   first, create a zip folder containing an XML (Idox's schema), CSV (our format), and any user-uploaded files
+   *   first, create a zip folder containing the ODP Schema JSON
    *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
    *   finally, insert a record into uniform_applications for future auditing
    */
@@ -87,11 +87,17 @@ export async function sendToIdoxNexus(
     const { token, organisations, authorities } =
       await authenticate(idoxNexusClient);
 
+    // TEMP - Mock organisations do NOT correspond to council envs, so randomly alternate submissions among ones we have access to for initial testing
+    //   Switch to `team_integrations`-based approach later
+    const orgIds = Object.keys(organisations);
+    const randomOrgId = orgIds[Math.floor(Math.random() & orgIds.length)];
+    const randomOrg = organisations[randomOrgId];
+
     // 2/4 - Create a submission
     const idoxSubmissionId = await createSubmission(
       token,
-      "none",
-      "none",
+      randomOrg,
+      randomOrgId,
       payload.sessionId,
     );
 
@@ -124,7 +130,7 @@ export async function sendToIdoxNexus(
     markSessionAsSubmitted(payload?.sessionId);
 
     return res.status(200).send({
-      message: `Successfully created an Idox Nexus submission`,
+      message: `Successfully created an Idox Nexus submission (${randomOrgId} - ${randomOrg})`,
       zipAttached: attachmentAdded,
       application: applicationAuditRecord,
     });
@@ -243,15 +249,15 @@ async function createSubmission(
       "Content-type": "application/json",
     },
     data: JSON.stringify({
-      entity: "dc",
-      module: "dc",
+      entity: "householder",
+      module: "dcplanx",
       organisation: organisation,
       organisationId: organisationId,
       submissionReference: sessionId,
       description: isStaging
         ? "Staging submission from PlanX"
         : "Production submission from PlanX",
-      submissionProcessorType: "API",
+      submissionProcessorType: "PLANX_QUEUE",
     }),
   };
 
@@ -284,8 +290,7 @@ async function attachArchive(
     return false;
   }
 
-  const attachArchiveEndpoint = `${process.env
-    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
+  const attachArchiveEndpoint = `${process.env.IDOX_NEXUS_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
@@ -307,7 +312,7 @@ async function attachArchive(
   const isSuccess = response.status === 204;
 
   // Temp additional logging to debug failures
-  console.log("*** Uniform attachArchive response ***");
+  console.log("*** Idox Nexus attachArchive response ***");
   console.log({ status: response.status });
   console.log(JSON.stringify(response.data, null, 2));
   console.log("******");
@@ -324,7 +329,7 @@ async function retrieveSubmission(
   submissionId: string,
 ): Promise<UniformSubmissionResponse> {
   const getSubmissionEndpoint = `${process.env
-    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
+    .IDOX_NEXUS_SUBMISSION_URL!}/secure/submission/${submissionId}`;
 
   const getSubmissionConfig: AxiosRequestConfig = {
     url: getSubmissionEndpoint,
