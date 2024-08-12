@@ -585,7 +585,8 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const findPathname =
-      pathnameArray.pop() === "preview" || pathnameArray.pop() === "draft";
+      pathnameArray.slice(-1)[0] === "preview" ||
+      pathnameArray.slice(-1)[0] === "draft";
 
     setIsOutsideEditor(Boolean(findPathname));
   }, pathnameArray);
