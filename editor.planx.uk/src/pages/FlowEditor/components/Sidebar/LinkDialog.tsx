@@ -95,44 +95,45 @@ const CopyButton = (props: any) => {
   );
 };
 
-const PublishedLink = (props: PublishedLinkProps) => {
+const InactivePublishedLink = (props: any) => {
+  return (
+    <LinkBox>
+      {" "}
+      <PaddedText variant="h4">{props.title}</PaddedText>
+      <InactiveLink pl={"31px"}>{props.message}</InactiveLink>{" "}
+    </LinkBox>
+  );
+};
+
+const ActivePublishedLink = (props: any) => {
+  return (
+    <LinkBox>
+      {" "}
+      <PaddedText variant="h4">{props.title}</PaddedText>
+      <Link pl={"31px"}>{props.link}</Link>
+    </LinkBox>
+  );
+};
+
+const PublishedLinkContent = (props: PublishedLinkProps) => {
   return (
     <Stack spacing={"15px"}>
-      {props.subdomain && props.status === "online" ? (
-        <LinkBox>
-          {" "}
-          <PaddedText variant="h4">
-            {"Subdomain"}
-            <CopyButton link={props.link} />
-          </PaddedText>
-          <Link pl={"31px"} href={props.subdomain}>
-            {props.subdomain}
-          </Link>{" "}
-        </LinkBox>
+      {props.subdomain && props.status === "online" && props.isPublished ? (
+        <ActivePublishedLink title="Subdomain" link={props.subdomain} />
+      ) : props.subdomain && props.status === "online" && !props.isPublished ? (
+        <InactivePublishedLink title="Subdomain" message={props.subdomain} />
+      ) : props.subdomain && props.status === "offline" && props.isPublished ? (
+        <InactivePublishedLink title="Subdomain" message={props.subdomain} />
       ) : (
-        <LinkBox>
-          {" "}
-          <PaddedText variant="h4">{"Subdomain"}</PaddedText>
-          <InactiveLink pl={"31px"}>
-            {"There is not a subdomain configured for this team"}
-          </InactiveLink>{" "}
-        </LinkBox>
+        <InactivePublishedLink
+          title="Subdomain"
+          message={"There is not a domain configured for this team"}
+        />
       )}
       {props.isPublished && props.status === "online" ? (
-        <LinkBox>
-          <PaddedText variant="h4">
-            {"Published"}
-            <CopyButton link={props.link} />
-          </PaddedText>
-          <Link pl={"31px"} href={props.link}>
-            {props.link}
-          </Link>{" "}
-        </LinkBox>
+        <ActivePublishedLink title="PlanX link" link={props.link} />
       ) : (
-        <LinkBox>
-          <PaddedText variant="h4">{"Published"}</PaddedText>
-          <InactiveLink pl={"31px"}>{props.link}</InactiveLink>{" "}
-        </LinkBox>
+        <InactivePublishedLink title="PlanX link" message={props.link} />
       )}
     </Stack>
   );
@@ -166,7 +167,7 @@ const LinkContainer = (props: LinkProps) => {
         )}
       </LinkBox>
       {props.type === "published" ? (
-        <PublishedLink
+        <PublishedLinkContent
           status={props.status}
           subdomain={props.subdomain}
           link={props.link}
@@ -260,6 +261,7 @@ export default function LinkDialog(props: DialogBaseProps) {
             type="published"
             isPublished={props.isFlowPublished}
             status={flowStatus}
+            subdomain={props.teamDomain}
           />
           <LinkContainer
             titleIcon={<OpenInNewIcon />}

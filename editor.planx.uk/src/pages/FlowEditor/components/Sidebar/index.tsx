@@ -85,7 +85,7 @@ const ViewButton = styled(Button)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   boxShadow: "none",
   color: theme.palette.common.black,
-  width: "30%",
+  width: "33%",
   display: "flex",
   flexDirection: "row",
   gap: "8px",
