@@ -265,7 +265,9 @@ export default function LinkDialog(props: DialogBaseProps) {
             type="published"
             isPublished={props.isFlowPublished}
             status={flowStatus}
-            subdomain={`${props.teamDomain}/${props.flowSlug}`}
+            subdomain={
+              props.teamDomain && `${props.teamDomain}/${props.flowSlug}`
+            }
           />
           <LinkContainer
             titleIcon={<OpenInNewIcon />}
