@@ -69,6 +69,12 @@ const PaddedText = styled(Typography)(({ theme }) => ({
   paddingLeft: "31px",
 }));
 
+const LinkBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+}));
+
 const CopyButton = (props: any) => {
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
   return (
@@ -91,9 +97,9 @@ const CopyButton = (props: any) => {
           display={"flex"}
           flexDirection={"row"}
           gap={"4px"}
-          variant="body2"
+          variant="body3"
         >
-          <ContentCopyIcon />
+          <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
           {copyMessage}
         </Typography>
       </Button>
@@ -103,9 +109,9 @@ const CopyButton = (props: any) => {
 
 const PublishedLink = (props: PublishedLinkProps) => {
   return (
-    <>
+    <Stack spacing={"15px"}>
       {props.subdomain && props.status === "online" ? (
-        <>
+        <LinkBox>
           {" "}
           <PaddedText variant="h4">
             {"Subdomain"}
@@ -114,18 +120,18 @@ const PublishedLink = (props: PublishedLinkProps) => {
           <Link pl={"31px"} href={props.subdomain}>
             {props.subdomain}
           </Link>{" "}
-        </>
+        </LinkBox>
       ) : (
-        <>
+        <LinkBox>
           {" "}
           <PaddedText variant="h4">{"Subdomain"}</PaddedText>
           <InactiveLink pl={"31px"}>
             {"There is not a subdomain configured for this team"}
           </InactiveLink>{" "}
-        </>
+        </LinkBox>
       )}
       {props.isPublished && props.status === "online" ? (
-        <>
+        <LinkBox>
           <PaddedText variant="h4">
             {"Published"}
             <CopyButton link={props.link} />
@@ -133,34 +139,36 @@ const PublishedLink = (props: PublishedLinkProps) => {
           <Link pl={"31px"} href={props.link}>
             {props.link}
           </Link>{" "}
-        </>
+        </LinkBox>
       ) : (
-        <>
+        <LinkBox>
           <PaddedText variant="h4">{"Published"}</PaddedText>
           <InactiveLink pl={"31px"}>{props.link}</InactiveLink>{" "}
-        </>
+        </LinkBox>
       )}
-    </>
+    </Stack>
   );
 };
 
 const LinkContainer = (props: LinkProps) => {
   const infoPadding = "31px";
   return (
-    <Box display={"flex"} flexDirection={"column"} gap={"8px"} mb={1}>
-      <Box
-        display={"flex"}
-        flexDirection={"row"}
-        alignItems={"center"}
-        gap={"7px"}
-      >
-        <>{props.titleIcon}</>
-        <Typography variant="h4" component={"h4"}>
-          {props.title}
-        </Typography>
-        {props.type !== "published" && <CopyButton link={props.link} />}
-      </Box>
-      <Typography pl={infoPadding}>{props.description}</Typography>
+    <Box display={"flex"} flexDirection={"column"} gap={"15px"} mb={1}>
+      <LinkBox>
+        <Box
+          display={"flex"}
+          flexDirection={"row"}
+          alignItems={"center"}
+          gap={"7px"}
+        >
+          <>{props.titleIcon}</>
+          <Typography variant="h4" component={"h4"}>
+            {props.title}
+          </Typography>
+          {props.type !== "published" && <CopyButton link={props.link} />}
+        </Box>
+        <Typography pl={infoPadding}>{props.description}</Typography>
+      </LinkBox>
       {props.type === "published" ? (
         <PublishedLink
           status={props.status}
