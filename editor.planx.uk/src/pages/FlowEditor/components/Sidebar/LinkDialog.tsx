@@ -16,6 +16,7 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import gql from "graphql-tag";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 
 import { client } from "../../../../lib/graphql";
@@ -193,7 +194,10 @@ const LinkContainer = (props: LinkProps) => {
 };
 
 export default function LinkDialog(props: DialogBaseProps) {
-  const [flowStatus, setFlowStatus] = useState<string | undefined>();
+  const [setFlowStatus, flowStatus] = useStore((state) => [
+    state.setFlowStatus,
+    state.flowStatus,
+  ]);
   // Retrieving flow status to determine which links to show in View Links
   useEffect(() => {
     const fetchFlowStatus = async () => {
