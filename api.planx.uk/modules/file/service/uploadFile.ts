@@ -1,8 +1,8 @@
-import S3 from "aws-sdk/clients/s3";
+import S3 from "aws-sdk/clients/s3.js";
 import { customAlphabet } from "nanoid";
-import { getType } from "mime";
-import { s3Factory } from "./utils";
-import { isLiveEnv } from "../../../helpers";
+import mime from "mime";
+import { s3Factory } from "./utils.js";
+import { isLiveEnv } from "../../../helpers.js";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 
 export const uploadPublicFile = async (
@@ -67,7 +67,7 @@ export function generateFileParams(
   fileType: string | null;
   key: string;
 } {
-  const fileType = getType(filename);
+  const fileType = mime.getType(filename);
   const key = `${filekey || nanoid()}/${filename}`;
 
   const params = {

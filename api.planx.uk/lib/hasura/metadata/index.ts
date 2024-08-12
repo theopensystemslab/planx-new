@@ -90,4 +90,4 @@ const createScheduledEvent = async (args: RequiredScheduledEventArgs) => {
   }
 };
 
-export { createScheduledEvent, RequiredScheduledEventArgs };
+export { createScheduledEvent, type RequiredScheduledEventArgs };

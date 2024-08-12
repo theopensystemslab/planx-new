@@ -1,4 +1,4 @@
-import { getS3KeyFromURL, s3Factory } from "./utils";
+import { getS3KeyFromURL, s3Factory } from "./utils.js";
 
 describe("s3 Factory", () => {
   const OLD_ENV = process.env;
@@ -12,7 +12,7 @@ describe("s3 Factory", () => {
   });
 
   it("returns Minio config for local development", () => {
-    expect(s3Factory()).toHaveProperty("endpoint.host", "minio");
+    expect(s3Factory()).toHaveProperty("endpoint.host", "minio:1234");
   });
 
   ["pizza", "staging", "production"].forEach((env) => {

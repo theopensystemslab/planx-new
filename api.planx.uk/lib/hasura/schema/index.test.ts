@@ -1,4 +1,4 @@
-import { runSQL } from ".";
+import { runSQL } from "./index.js";
 import Axios, { AxiosError } from "axios";
 
 jest.mock("axios", () => ({

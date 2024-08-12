@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import { buildSubmissionExportZip } from "../utils/exportZip";
-import { getSessionData, getTeamEmailSettings } from "../email/service";
+import { buildSubmissionExportZip } from "../utils/exportZip.js";
+import { getSessionData, getTeamEmailSettings } from "../email/service.js";
 
 export async function downloadApplicationFiles(
   req: Request,

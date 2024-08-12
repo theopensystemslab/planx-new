@@ -1,18 +1,22 @@
 {
+  // as of July 24, esnext == es2022 and nodenext == node16
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2021"],
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "lib": ["esnext"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "noImplicitAny": true,
     "outDir": "dist",
     "resolveJsonModule": true,
     "rootDir": ".",
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2021",
+    "target": "esnext",
+    // ensure the code is ready for transpilation by tsx/esbuild (used in dev)
+    "isolatedModules": true,
+    // TODO: implement "verbatimModuleSyntax" option (laborious)
   },
   "exclude": ["node_modules", "dist"],
 }

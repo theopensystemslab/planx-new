@@ -1,6 +1,6 @@
 import supertest from "supertest";
-import app from "../../server";
-import { authHeader } from "../../tests/mockJWT";
+import app from "../../server.js";
+import { authHeader } from "../../tests/mockJWT.js";
 
 const mockAddMember = jest.fn();
 const mockRemoveMember = jest.fn();

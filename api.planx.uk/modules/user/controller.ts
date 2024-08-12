@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate";
-import { getClient } from "../../client";
-import { ServerError } from "../../errors";
+import { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
+import { getClient } from "../../client/index.js";
+import { ServerError } from "../../errors/index.js";
 import { RequestHandler } from "express";
 import { User } from "@opensystemslab/planx-core/types";
-import { userContext } from "../auth/middleware";
+import { userContext } from "../auth/middleware.js";
 
 interface UserResponse {
   message: string;

@@ -1,5 +1,5 @@
-import S3 from "aws-sdk/clients/s3";
-import { isLiveEnv } from "../../../helpers";
+import S3 from "aws-sdk/clients/s3.js";
+import { isLiveEnv } from "../../../helpers.js";
 
 export function s3Factory() {
   return new S3({

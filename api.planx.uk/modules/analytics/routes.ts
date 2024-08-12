@@ -1,10 +1,10 @@
-import { validate } from "./../../shared/middleware/validate";
+import { validate } from "./../../shared/middleware/validate.js";
 import { Router } from "express";
 import {
   logAnalyticsSchema,
   logUserExitController,
   logUserResumeController,
-} from "./controller";
+} from "./controller.js";
 
 const router = Router();
 

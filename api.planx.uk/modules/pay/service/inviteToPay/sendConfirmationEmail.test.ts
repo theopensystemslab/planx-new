@@ -1,8 +1,8 @@
 import supertest from "supertest";
-import app from "../../../../server";
-import { queryMock } from "../../../../tests/graphqlQueryMock";
-import { sendAgentAndPayeeConfirmationEmail } from "./sendConfirmationEmail";
-import { sendEmail } from "../../../../lib/notify";
+import app from "../../../../server.js";
+import { queryMock } from "../../../../tests/graphqlQueryMock.js";
+import { sendAgentAndPayeeConfirmationEmail } from "./sendConfirmationEmail.js";
+import { sendEmail } from "../../../../lib/notify/index.js";
 
 jest.mock("../../../../lib/notify", () => ({
   sendEmail: jest.fn(),

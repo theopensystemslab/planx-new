@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { fixRequestBody, Options } from "http-proxy-middleware";
-import { useProxy } from "../../shared/middleware/proxy";
+import { useProxy } from "../../shared/middleware/proxy.js";
 
 export const usePayProxy = (
   options: Partial<Options>,

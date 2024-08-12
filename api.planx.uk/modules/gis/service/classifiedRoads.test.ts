@@ -1,8 +1,8 @@
 import supertest from "supertest";
 
-import loadOrRecordNockRequests from "../../../tests/loadOrRecordNockRequests";
-import app from "../../../server";
-import { PASSPORT_FN } from "./classifiedRoads";
+import loadOrRecordNockRequests from "../../../tests/loadOrRecordNockRequests.js";
+import app from "../../../server.js";
+import { PASSPORT_FN } from "./classifiedRoads.js";
 
 it("returns an error if required query param is missing", async () => {
   await supertest(app)

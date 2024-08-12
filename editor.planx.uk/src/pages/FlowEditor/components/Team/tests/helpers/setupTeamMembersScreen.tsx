@@ -8,10 +8,11 @@ import { TeamMembers } from "../../TeamMembers";
 import { exampleTeamMembersData } from "./../exampleTeamMembersData";
 
 export async function setupTeamMembersScreen() {
-  setup(
+  const { user } = setup(
     <DndProvider backend={HTML5Backend}>
       <TeamMembers teamMembersByRole={exampleTeamMembersData} />
-    </DndProvider>,
+    </DndProvider>
   );
   await screen.findByText("Team editors");
+  return user;
 }

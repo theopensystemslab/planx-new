@@ -1,8 +1,8 @@
 import supertest from "supertest";
-import app from "../../../../server";
-import { createScheduledEvent } from "../../../../lib/hasura/metadata";
-import { queryMock } from "../../../../tests/graphqlQueryMock";
-import { flowWithInviteToPay } from "../../../../tests/mocks/inviteToPayData";
+import app from "../../../../server.js";
+import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
+import { queryMock } from "../../../../tests/graphqlQueryMock.js";
+import { flowWithInviteToPay } from "../../../../tests/mocks/inviteToPayData.js";
 
 jest.mock("../../../../lib/hasura/metadata");
 const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<

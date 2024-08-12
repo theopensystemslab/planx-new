@@ -1,7 +1,7 @@
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate";
+import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { z } from "zod";
-import { ServerError } from "../../../errors";
-import { moveFlow } from "./service";
+import { ServerError } from "../../../errors/index.js";
+import { moveFlow } from "./service.js";
 
 interface MoveFlowResponse {
   message: string;

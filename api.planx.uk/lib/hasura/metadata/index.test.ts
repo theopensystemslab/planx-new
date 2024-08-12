@@ -1,4 +1,4 @@
-import { createScheduledEvent, RequiredScheduledEventArgs } from ".";
+import { createScheduledEvent, RequiredScheduledEventArgs } from "./index.js";
 import Axios, { AxiosError } from "axios";
 
 jest.mock("axios", () => ({

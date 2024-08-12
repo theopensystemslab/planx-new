@@ -9,7 +9,7 @@ https://environment.data.gov.uk/arcgis/rest/services
 https://inspire.wycombe.gov.uk/ (legacy)
 */
 
-import { LocalAuthorityMetadata } from "../../digitalLand";
+import { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {
