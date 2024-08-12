@@ -1,4 +1,6 @@
 import LinkIcon from "@mui/icons-material/Link";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -7,10 +9,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { AxiosError } from "axios";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -70,6 +74,10 @@ const Header = styled("header")(({ theme }) => ({
 
     border: "1px solid rgba(0, 0, 0, 0.2)",
   },
+}));
+
+const SecondaryButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.common.black,
 }));
 
 const ViewButton = styled(Button)(({ theme }) => ({
@@ -263,14 +271,41 @@ const Sidebar: React.FC<{
     <Root>
       <Header>
         <Box
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"flex-end"}
+          padding={"0px 20px"}
+          gap={"8px"}
+        >
+          <SecondaryButton color="primary">
+            <Tooltip arrow title="Refresh preview">
+              <RefreshIcon
+                onClick={() => {
+                  resetPreview();
+                  setKey((a) => !a);
+                }}
+              />
+            </Tooltip>
+          </SecondaryButton>
+          <SecondaryButton color="primary">
+            <Tooltip arrow title="Toggle debug console">
+              <MenuOpenIcon
+                onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
+              />
+            </Tooltip>
+          </SecondaryButton>
+        </Box>
+        <Box
           width="100%"
           mt={2}
           mb={4}
           pl={2}
+          pr={2}
           display="flex"
           flexDirection="row"
           gap={"24px"}
           style={{ position: "relative" }}
+          justifyContent={"space-between"}
         >
           <ViewButton
             onClick={() => setLinkDialogOpen(true)}
@@ -288,12 +323,7 @@ const Sidebar: React.FC<{
             url={props.url}
           />
 
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-end"
-            marginRight={1}
-          >
+          <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Badge
               sx={{ width: "100%" }}
               badgeContent={alteredNodes && alteredNodes.length}
