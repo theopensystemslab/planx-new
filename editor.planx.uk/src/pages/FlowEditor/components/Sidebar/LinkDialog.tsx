@@ -16,11 +16,10 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import gql from "graphql-tag";
-import { client } from "lib/graphql";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { prop, props } from "ramda";
-import React, { FC, ReactNode, useEffect, useState } from "react";
-import Permission from "ui/editor/Permission";
+import React, { ReactNode, useEffect, useState } from "react";
+
+import { client } from "../../../../lib/graphql";
+import Permission from "../../../../ui/editor/Permission";
 
 interface DialogTeamTheme {
   logo: string | null;
@@ -41,6 +40,22 @@ interface DialogPropsWithTheme {
   teamTheme: DialogTeamTheme;
   teamDomain?: string;
 }
+
+interface LinkProps {
+  subdomain?: string;
+  titleIcon?: SvgIconProps;
+  title: string;
+  link: string;
+  description?: string;
+  status?: string;
+  type: "published" | "draft" | "preview";
+  isPublished?: boolean;
+}
+
+type PublishedLinkProps = Pick<
+  LinkProps,
+  "status" | "subdomain" | "link" | "isPublished"
+>;
 
 type DialogProps = DialogBaseProps & DialogPropsWithTheme;
 
@@ -70,6 +85,7 @@ const CopyButton = (props: any) => {
           setCopyMessage("copied");
           navigator.clipboard.writeText(props.link);
         }}
+        sx={{ marginLeft: "8px" }}
       >
         <Typography
           display={"flex"}
@@ -85,49 +101,50 @@ const CopyButton = (props: any) => {
   );
 };
 
-const PublishedLink = (props: {
-  status?: string;
-  subdomain?: string;
-  link: string;
-  isPublished: boolean;
-}) => {
+const PublishedLink = (props: PublishedLinkProps) => {
   return (
     <>
-      <PaddedText variant="h4" mr={1}>
-        {"Subdomain"}
-      </PaddedText>
-      <Link pl={"31px"} href={props.subdomain}>
-        {props.subdomain}
-      </Link>
-      <PaddedText variant="h4" mr={1}>
-        {"Published"}
-      </PaddedText>
-      <Link pl={"31px"} href={props.link}>
-        {props.link}
-      </Link>{" "}
+      {props.subdomain && props.status === "online" ? (
+        <>
+          {" "}
+          <PaddedText variant="h4">
+            {"Subdomain"}
+            <CopyButton link={props.link} />
+          </PaddedText>
+          <Link pl={"31px"} href={props.subdomain}>
+            {props.subdomain}
+          </Link>{" "}
+        </>
+      ) : (
+        <>
+          {" "}
+          <PaddedText variant="h4">{"Subdomain"}</PaddedText>
+          <InactiveLink pl={"31px"}>
+            {"There is not a subdomain configured for this team"}
+          </InactiveLink>{" "}
+        </>
+      )}
+      {props.isPublished && props.status === "online" ? (
+        <>
+          <PaddedText variant="h4">
+            {"Published"}
+            <CopyButton link={props.link} />
+          </PaddedText>
+          <Link pl={"31px"} href={props.link}>
+            {props.link}
+          </Link>{" "}
+        </>
+      ) : (
+        <>
+          <PaddedText variant="h4">{"Published"}</PaddedText>
+          <InactiveLink pl={"31px"}>{props.link}</InactiveLink>{" "}
+        </>
+      )}
     </>
   );
 };
 
-const BaseLink = (props: { link: string }) => {
-  return (
-    <>
-      <Link pl={"31px"} href={props.link}>
-        {props.link}
-      </Link>
-    </>
-  );
-};
-
-const LinkContainer = (props: {
-  subdomain?: string;
-  titleIcon?: SvgIconProps;
-  title: string;
-  link: string;
-  description?: string;
-  status?: string;
-  linkComponent: ReactNode;
-}) => {
+const LinkContainer = (props: LinkProps) => {
   const infoPadding = "31px";
   return (
     <Box display={"flex"} flexDirection={"column"} gap={"8px"} mb={1}>
@@ -138,13 +155,24 @@ const LinkContainer = (props: {
         gap={"7px"}
       >
         <>{props.titleIcon}</>
-        <Typography variant="h4" component={"h4"} mr={1}>
+        <Typography variant="h4" component={"h4"}>
           {props.title}
         </Typography>
-        <CopyButton link={props.link} />
+        {props.type !== "published" && <CopyButton link={props.link} />}
       </Box>
       <Typography pl={infoPadding}>{props.description}</Typography>
-      {props.linkComponent}
+      {props.type === "published" ? (
+        <PublishedLink
+          status={props.status}
+          subdomain={props.subdomain}
+          link={props.link}
+          isPublished={props.isPublished}
+        />
+      ) : (
+        <Link pl={"31px"} href={props.link}>
+          {props.link}
+        </Link>
+      )}
     </Box>
   );
 };
@@ -173,7 +201,6 @@ export default function LinkDialog(props: DialogProps) {
           team_slug: props.teamSlug,
         },
       });
-      console.log();
       setFlowStatus(data.flows[0].status);
     };
 
@@ -211,23 +238,16 @@ export default function LinkDialog(props: DialogProps) {
             title={"Published flow"}
             link={props.url}
             description="View of the currently published version of this flow."
-            linkComponent={
-              <PublishedLink
-                subdomain="thisisasubdomain"
-                status={flowStatus}
-                link={props.url}
-                isPublished={props.isFlowPublished}
-              />
-            }
+            type="published"
+            isPublished={props.isFlowPublished}
+            status={flowStatus}
           />
           <LinkContainer
             titleIcon={<OpenInNewIcon />}
             title={"Preview flow"}
             link={props.url.replace("/published", "/preview")}
             description="View of the draft data of the main flow and the latest published version of nested flows. This link is representative of what your next published version will look like."
-            linkComponent={
-              <BaseLink link={props.url.replace("/published", "/draft")} />
-            }
+            type="preview"
           />{" "}
           <Permission.IsPlatformAdmin>
             <LinkContainer
@@ -235,9 +255,7 @@ export default function LinkDialog(props: DialogProps) {
               title={"Draft flow"}
               link={props.url.replace("/published", "/draft")}
               description="View of the draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
-              linkComponent={
-                <BaseLink link={props.url.replace("/published", "/draft")} />
-              }
+              type="draft"
             />
           </Permission.IsPlatformAdmin>
         </Stack>
