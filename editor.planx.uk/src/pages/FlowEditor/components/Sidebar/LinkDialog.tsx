@@ -253,7 +253,7 @@ export default function LinkDialog(props: DialogBaseProps) {
         <Stack spacing={"25px"} mb={"30px"}>
           <LinkContainer
             titleIcon={<LanguageIcon />}
-            title={"Published flow"}
+            title={"Published"}
             link={props.url}
             description={
               !props.isFlowPublished && flowStatus !== "online"
@@ -271,17 +271,17 @@ export default function LinkDialog(props: DialogBaseProps) {
           />
           <LinkContainer
             titleIcon={<OpenInNewIcon />}
-            title={"Preview flow"}
+            title={"Preview"}
             link={props.url.replace("/published", "/preview")}
-            description="View of the draft data of the main flow and the latest published version of nested flows. This link is representative of what your next published version will look like."
+            description="The draft data of the main flow and the latest published version of nested flows. This link is representative of what your next published version will look like."
             type="preview"
           />{" "}
           <Permission.IsPlatformAdmin>
             <LinkContainer
               titleIcon={<OpenInNewOffIcon />}
-              title={"Draft flow"}
+              title={"Draft"}
               link={props.url.replace("/published", "/draft")}
-              description="View of the draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
+              description="The draft data of the main flow and the draft data of nested flows.This link is not representative of what your next published version will look like."
               type="draft"
             />
           </Permission.IsPlatformAdmin>
