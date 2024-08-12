@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -6,7 +5,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
-import { client } from "lib/graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
@@ -14,74 +12,10 @@ import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
 import * as Yup from "yup";
 
+import { addUserToTeam } from "../queries/addUserToTeam";
+import { createUser } from "../queries/createUser";
 import { AddNewEditorModalProps } from "../types";
 
-const createUser = async (
-  email: string,
-  firstName: string,
-  lastName: string,
-  isPlatformAdmin?: boolean,
-) => {
-  const response = (await client.mutate({
-    mutation: gql`
-      mutation CreateUser(
-        $email: String!
-        $firstName: String!
-        $lastName: String!
-        $isPlatformAdmin: Boolean
-      ) {
-        insert_users_one(
-          object: {
-            email: $email
-            first_name: $firstName
-            last_name: $lastName
-            is_platform_admin: $isPlatformAdmin
-          }
-        ) {
-          id
-          email
-          first_name
-          last_name
-          is_platform_admin
-        }
-      }
-    `,
-    variables: {
-      email,
-      firstName,
-      lastName,
-      isPlatformAdmin,
-    },
-  })) as any;
-  const { id, email: emailAddress } = response.data.insert_users_one;
-
-  console.log("created a user with id: ", id, "and email: ", emailAddress);
-  return { id, emailAddress };
-};
-
-const addUserToTeam = async (teamId: number, userId: number) => {
-  const response = await client.mutate({
-    mutation: gql`
-      mutation AddUserToTeam($teamId: Int!, $userId: Int!) {
-        insert_team_members_one(
-          object: { team_id: $teamId, user_id: $userId, role: teamEditor }
-        ) {
-          team_id
-          user_id
-          role
-        }
-      }
-    `,
-    variables: {
-      teamId,
-      userId,
-    },
-  });
-
-  const res = response.data.insert_team_members_one;
-  console.log(res);
-  return res;
-};
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
