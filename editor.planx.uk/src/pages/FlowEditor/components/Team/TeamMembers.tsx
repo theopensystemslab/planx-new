@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
-import { AddNewEditorModal } from "./components/AddNewEditorModal";
+import { AddNewEditorModal } from "./components/AddNewEditorModal.1";
 import { MembersTable } from "./components/MembersTable";
 import { TeamMember, TeamMembersProps } from "./types";
 

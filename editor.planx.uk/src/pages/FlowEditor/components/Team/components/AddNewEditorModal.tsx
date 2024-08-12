@@ -4,47 +4,37 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
-import * as Yup from "yup";
 
+import { addNewEditorFormSchema } from "../formSchema";
 import { addUserToTeam } from "../queries/addUserToTeam";
 import { createUser } from "../queries/createUser";
-import { AddNewEditorModalProps } from "../types";
+import { AddNewEditorFormValues, AddNewEditorModalProps } from "../types";
 
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
 }: AddNewEditorModalProps) => {
   const handleSubmit = async (
-    values: { email: string; firstName: string; lastName: string },
-    { resetForm }: any,
+    values: AddNewEditorFormValues,
+    { resetForm }: FormikHelpers<AddNewEditorFormValues>,
   ) => {
-    const fetchedTeam = await useStore.getState().fetchCurrentTeam(); // TODO: error handling if unable to fetch team
+    const { id: teamId } = await useStore.getState().fetchCurrentTeam();
 
-    const teamId = fetchedTeam.id;
-
-    // TODO: do I need to use a store?
     await createUser(
       values.email,
       values.firstName,
       values.lastName,
       false, // TODO: sort out isPlatformAdmin
-      // ).then(console.log);
-      // .then add team member
-    )
-      .then((values) => addUserToTeam(teamId, values.id))
-      .then(console.log);
-
-    // use generic role?
+    ).then((values) => addUserToTeam(teamId, values.id));
 
     setShowModal(false);
-    resetForm({ values }); // TODO: onSuccess
-    // TODO: refresh list of users automatically or optimistically update
+    resetForm({ values });
   };
 
   const formik = useFormik({
@@ -53,11 +43,7 @@ export const AddNewEditorModal = ({
       lastName: "",
       email: "",
     },
-    validationSchema: Yup.object({
-      firstName: Yup.string().required("Required"),
-      lastName: Yup.string().required("Required"),
-      email: Yup.string().email("Invalid email address").required("Required"),
-    }),
+    validationSchema: addNewEditorFormSchema,
     onSubmit: handleSubmit,
   });
 
