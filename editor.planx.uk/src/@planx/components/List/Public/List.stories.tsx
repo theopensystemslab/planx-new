@@ -1,7 +1,11 @@
 import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
+import Wrapper from "../../fixtures/Wrapper";
 import { SCHEMAS } from "../Editor";
+import Editor from "../Editor";
 import ListComponent from "../Public";
+import Public from "./";
 
 const meta = {
   title: "PlanX Components/List",
@@ -32,4 +36,8 @@ export const Singular: Story = {
       SCHEMAS.find((schema) => schema.name === "Proposed advertisements")
         ?.schema || SCHEMAS[0].schema,
   },
+};
+
+export const WithEditor = () => {
+  return <Wrapper Editor={Editor} Public={Public} />;
 };
