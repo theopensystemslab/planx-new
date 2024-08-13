@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 
 const schemaFinder = (name: string) => {
   const schemaObj = SCHEMAS.find((schema) => schema.name === name)?.schema;
-  return schemaObj;
+  return schemaObj || SCHEMAS[0].schema;
 };
 
 export const Basic: Story = {
