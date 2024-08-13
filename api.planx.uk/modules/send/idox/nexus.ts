@@ -92,6 +92,13 @@ export async function sendToIdoxNexus(
     const randomOrgId = orgIds[Math.floor(Math.random() * orgIds.length)];
     const randomOrg = organisations[randomOrgId];
 
+    // Create a zip containing only the ODP Schema JSON
+    //   Do this BEFORE creating a submission in order to throw any validation errors early
+    const zip = await buildSubmissionExportZip({
+      sessionId: payload.sessionId,
+      onlyDigitalPlanningJSON: true,
+    });
+
     // 2/4 - Create a submission
     const idoxSubmissionId = await createSubmission(
       token,
@@ -100,12 +107,7 @@ export async function sendToIdoxNexus(
       payload.sessionId,
     );
 
-    // 3/4 - Create & attach the zip
-    const zip = await buildSubmissionExportZip({
-      sessionId: payload.sessionId,
-      onlyDigitalPlanningJSON: true,
-    });
-
+    // 3/4 - Attach the zip
     const attachmentAdded = await attachArchive(
       token,
       idoxSubmissionId,
@@ -117,7 +119,6 @@ export async function sendToIdoxNexus(
 
     // 4/4 - Get submission details and create audit record
     const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
-
     const applicationAuditRecord = await createUniformApplicationAuditRecord({
       idoxSubmissionId,
       submissionDetails,
