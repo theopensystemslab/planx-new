@@ -6,23 +6,30 @@ import ListComponent from "../Public";
 const meta = {
   title: "PlanX Components/List",
   component: ListComponent,
-  argTypes: {
-    handleSubmit: { action: true, control: { disable: true } },
-  },
 } satisfies Meta<typeof ListComponent>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-console.log(SCHEMAS);
-
 export const Basic: Story = {
   args: {
-    fn: "",
-    title: "This is a new Title for a List",
-    description: "This new list has a description which is what is here",
-    schemaName: "TestSchemaName",
-    schema: SCHEMAS[1].schema,
+    title: "List",
+    description: "Add information on the removed residential units",
+    schemaName: "Residential units (GLA) - Removed",
+    fn: "MockFn",
+    schema: SCHEMAS[4].schema,
+  },
+};
+
+export const Singular: Story = {
+  args: {
+    title: "List",
+    description: "List component with a min / max value set to 1",
+    schemaName: "Proposed advertisements",
+    fn: "MockFn",
+    schema:
+      SCHEMAS.find((schema) => schema.name === "Proposed advertisements")
+        ?.schema || SCHEMAS[0].schema,
   },
 };
