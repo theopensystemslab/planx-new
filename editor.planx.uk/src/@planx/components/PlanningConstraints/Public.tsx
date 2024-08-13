@@ -50,6 +50,7 @@ function Component(props: Props) {
     siteBoundary,
     { x, y, longitude, latitude, usrn },
     hasPlanningData,
+    priorOverrides,
   ] = useStore((state) => [
     state.currentCard?.id,
     state.cachedBreadcrumbs,
@@ -57,6 +58,7 @@ function Component(props: Props) {
     state.computePassport().data?.["property.boundary.site"],
     (state.computePassport().data?.["_address"] as SiteAddress) || {},
     state.teamIntegrations?.hasPlanningData,
+    state.computePassport().data?.["_overrides"],
   ]);
 
   // PlanningConstraints must come after at least a FindProperty in the graph
@@ -66,7 +68,7 @@ function Component(props: Props) {
   //   still prepopulate any previously marked inaccurateConstraints
   const initialInaccurateConstraints =
     currentCardId &&
-    cachedBreadcrumbs?.[currentCardId]?.["data"]?.["_overrides"];
+    cachedBreadcrumbs?.[currentCardId]?.["data"]?.["_overrides"]?.[props.fn];
   const [inaccurateConstraints, setInaccurateConstraints] =
     useState<InaccurateConstraints>(initialInaccurateConstraints);
 
@@ -176,7 +178,13 @@ function Component(props: Props) {
               if (data) _constraints.push(data as GISResponse["constraints"]);
             }
 
-            const _overrides = inaccurateConstraints;
+            const hasInaccurateConstraints = inaccurateConstraints && Object.keys(inaccurateConstraints).length > 0;
+            const _overrides = hasInaccurateConstraints ? { ...priorOverrides, [props.fn]: inaccurateConstraints } : undefined;
+
+            // `planningConstraints.action` is for analytics
+            const userAction = hasInaccurateConstraints
+              ? "Reported at least one inaccurate planning constraint" 
+              : "Accepted all planning constraints";
 
             // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
             const _nots: IntersectingConstraints = {};
@@ -206,6 +214,7 @@ function Component(props: Props) {
             const passportData = {
               _constraints,
               _overrides,
+              "planningConstraints.action": userAction,
               _nots: notsAfterOverrides,
               ...intersectingConstraintsAfterOverrides,
             };

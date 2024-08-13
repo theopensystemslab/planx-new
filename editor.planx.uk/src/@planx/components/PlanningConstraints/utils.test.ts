@@ -52,7 +52,7 @@ describe("handleOverrides with non-granular constraint categories", () => {
   test("when all entities in a constraint category are inaccurate, the whole category no longer applies", () => {
     const overrides = {
       "road.classified": {
-        "entities": ['undefined'], // @todo roads don't have entity ids, record the property.OBJECTID via OS?
+        "entities": ["Highways_RoadLink.83155"],
         "reason": "My house is on a corner, and this is not the road that my entry faces"
       },
     };

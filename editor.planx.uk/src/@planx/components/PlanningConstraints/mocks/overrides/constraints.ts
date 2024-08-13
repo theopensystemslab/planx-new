@@ -323,6 +323,7 @@ export const mockConstraints: GISResponse["constraints"] = {
     "data": [
       {
         "name": "Black Prince Road - Classified Unnumbered",
+        "entity": "Highways_RoadLink.83155",
         "properties": {
           "GmlID": "Highways_RoadLink.83155",
           "OBJECTID": 83155,
