@@ -302,4 +302,25 @@ describe("buildSubmissionExportZip", () => {
       ).rejects.toThrow(/Failed to generate ODP Schema JSON/);
     });
   });
+
+  describe("onlyDigitalPlanningJSON", () => {
+    test("ODP schema json is added to the zip", async () => {
+      await buildSubmissionExportZip({
+        sessionId: "1234",
+        onlyDigitalPlanningJSON: true,
+      });
+      expect(mockAddFile).toHaveBeenCalledWith(
+        "application.json",
+        expect.anything(),
+      );
+    });
+
+    test("the zip contains exactly one file", async () => {
+      await buildSubmissionExportZip({
+        sessionId: "1234",
+        onlyDigitalPlanningJSON: true,
+      });
+      expect(mockAddFile).toHaveBeenCalledTimes(1);
+    });
+  });
 });

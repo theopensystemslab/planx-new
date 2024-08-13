@@ -241,11 +241,12 @@ async function createSubmission(
     createSubmissionEndpoint.includes(hostname),
   );
 
+  // Get the application type prefix (eg "ldc", "pp", "pa") to send as the "entity"
   const session = await $api.session.find(sessionId);
   const rawApplicationType = session?.data.passport.data?.[
     "application.type"
   ] as string[];
-  const parentApplicationType = rawApplicationType?.[0]?.split(".")?.[0];
+  const applicationTypePrefix = rawApplicationType?.[0]?.split(".")?.[0];
 
   const createSubmissionConfig: AxiosRequestConfig = {
     url: createSubmissionEndpoint,
@@ -255,7 +256,7 @@ async function createSubmission(
       "Content-type": "application/json",
     },
     data: JSON.stringify({
-      entity: parentApplicationType,
+      entity: applicationTypePrefix,
       module: "dcplanx",
       organisation: organisation,
       organisationId: organisationId,
