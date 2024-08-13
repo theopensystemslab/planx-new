@@ -1,21 +1,22 @@
-import os from "os";
-import path from "path";
-import { $api } from "../../../client/index.js";
-import { stringify } from "csv-stringify";
-import fs from "fs";
-import str from "string-to-stream";
-import AdmZip from "adm-zip";
-import { getFileFromS3 } from "../../file/service/getFile.js";
 import {
-  hasRequiredDataForTemplate,
-  generateMapHTML,
   generateApplicationHTML,
   generateDocxTemplateStream,
+  generateMapHTML,
+  hasRequiredDataForTemplate,
+  Passport,
 } from "@opensystemslab/planx-core";
-import { Passport } from "@opensystemslab/planx-core";
-import type { Passport as IPassport } from "../../../types.js";
-import type { Stream } from "node:stream";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
+import AdmZip from "adm-zip";
+import { stringify } from "csv-stringify";
+import fs from "fs";
+import type { Stream } from "node:stream";
+import os from "os";
+import path from "path";
+import str from "string-to-stream";
+import { fileURLToPath } from "url";
+import { $api } from "../../../client/index.js";
+import type { Passport as IPassport } from "../../../types.js";
+import { getFileFromS3 } from "../../file/service/getFile.js";
 import { isApplicationTypeSupported } from "./helpers.js";
 
 export async function buildSubmissionExportZip({
@@ -206,6 +207,10 @@ export class ExportZip {
     this.zip = new AdmZip();
     // make a tmp directory to avoid file name collisions if simultaneous applications
     this.tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), sessionId));
+
+    // we can't directly access `__dirname` in ESM, so get equivalent using fileURLToPath
+    const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+    const __dirname = path.dirname(__filename); // get the name of the directory
     this.filename = path.join(__dirname, `${flowSlug}-${sessionId}.zip`);
   }
 
