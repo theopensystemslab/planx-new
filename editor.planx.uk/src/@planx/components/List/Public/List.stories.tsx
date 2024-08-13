@@ -16,7 +16,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const MultipleCards: Story = {
+export const Basic: Story = {
   args: {
     title: "List",
     description: "Add information on the removed residential units",
