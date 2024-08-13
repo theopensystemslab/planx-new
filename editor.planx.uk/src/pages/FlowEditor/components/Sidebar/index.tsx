@@ -87,12 +87,15 @@ const ViewButton = styled(Button)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   boxShadow: "none",
   color: theme.palette.common.black,
-  width: "33%",
+  width: "30%",
   display: "flex",
   flexDirection: "row",
   gap: "8px",
-  borderRadius: "5px",
+  borderRadius: "3px",
   padding: "8px",
+  "&:hover": {
+    boxShadow: "none",
+  },
 }));
 
 const TabList = styled(Box)(({ theme }) => ({
@@ -305,9 +308,9 @@ const Sidebar: React.FC<{
           pr={2}
           display="flex"
           flexDirection="row"
-          gap={"24px"}
+          gap={"10px"}
           style={{ position: "relative" }}
-          justifyContent={"space-between"}
+          justifyContent={"space-around"}
         >
           <ViewButton
             onClick={() => setLinkDialogOpen(true)}

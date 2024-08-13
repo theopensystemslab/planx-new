@@ -229,6 +229,9 @@ export default function LinkDialog(props: DialogBaseProps) {
   const unpublishedOfflineDescription =
     "The flow is not yet published and is not yet viewable by the public.";
 
+  const unpublishedOnlineDescription =
+    "The flow is not yet published and is not viewable by the public";
+
   const publishedOfflineDescription =
     "The published version of this flow. It is not yet viewable by the public.";
 
