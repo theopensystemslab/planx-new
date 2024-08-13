@@ -5,6 +5,7 @@ import React, { ReactNode } from "react";
 
 interface RootProps extends BoxProps {
   background?: boolean;
+  "data-testid"?: string;
 }
 
 const Root = styled(Box, {
@@ -31,9 +32,15 @@ const Root = styled(Box, {
 export default function SettingsSection({
   children,
   background,
+  testId,
 }: {
   children: ReactNode;
   background?: boolean;
+  testId?: string;
 }) {
-  return <Root background={background}>{children}</Root>;
+  return (
+    <Root data-testid={testId} background={background}>
+      {children}
+    </Root>
+  );
 }
