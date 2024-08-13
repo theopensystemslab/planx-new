@@ -18,6 +18,7 @@ const ALLOW_LIST = [
   "property.constraints.planning",
   "property.type",
   "proposal.projectType",
+  "usedFOIYNPP",
   "user.role",
 ];
 
