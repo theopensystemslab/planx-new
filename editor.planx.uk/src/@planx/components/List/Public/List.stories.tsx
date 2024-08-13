@@ -16,7 +16,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Basic: Story = {
+export const MultipleCards: Story = {
   args: {
     title: "List",
     description: "Add information on the removed residential units",
@@ -26,7 +26,7 @@ export const Basic: Story = {
   },
 };
 
-export const Singular: Story = {
+export const SingularCard: Story = {
   args: {
     title: "List",
     description: "List component with a min / max value set to 1",
