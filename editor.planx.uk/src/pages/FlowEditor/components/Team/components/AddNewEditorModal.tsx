@@ -15,10 +15,13 @@ import { addNewEditorFormSchema } from "../formSchema";
 import { addUserToTeam } from "../queries/addUserToTeam";
 import { createUser } from "../queries/createUser";
 import { AddNewEditorFormValues, AddNewEditorModalProps } from "../types";
+import { optimisticallyUpdateTable } from "./lib/optimisticallyUpdateTable";
 
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
+  setTableData,
+  tableData,
 }: AddNewEditorModalProps) => {
   const handleSubmit = async (
     values: AddNewEditorFormValues,
@@ -33,6 +36,7 @@ export const AddNewEditorModal = ({
       false, // TODO: sort out isPlatformAdmin
     ).then((values) => addUserToTeam(teamId, values.id));
 
+    optimisticallyUpdateTable(values, setTableData, tableData);
     setShowModal(false);
     resetForm({ values });
   };

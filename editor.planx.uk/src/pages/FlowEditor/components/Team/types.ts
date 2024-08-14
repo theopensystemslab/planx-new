@@ -11,11 +11,12 @@ export interface TeamMembersProps {
 export interface MembersTableProps {
   members: TeamMember[];
   showAddMemberButton?: boolean;
-  setShowModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 export interface AddNewEditorModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
+  setTableData: React.Dispatch<SetStateAction<TeamMember[]>>;
+  tableData: TeamMember[];
 }
 
 export interface AddNewEditorFormValues {

@@ -1,15 +1,12 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
-import { AddNewEditorModal } from "./components/AddNewEditorModal";
 import { MembersTable } from "./components/MembersTable";
 import { TeamMember, TeamMembersProps } from "./types";
 
 export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
-  const [showModal, setShowModal] = useState(false);
-
   const platformAdmins = (teamMembersByRole.platformAdmin || []).filter(
     (member) => member.email,
   );
@@ -34,11 +31,7 @@ export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
         <Typography variant="body1">
           Editors have access to edit your services.
         </Typography>
-        <MembersTable
-          members={activeMembers}
-          showAddMemberButton
-          setShowModal={setShowModal}
-        />
+        <MembersTable members={activeMembers} showAddMemberButton />
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
@@ -60,9 +53,6 @@ export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
           </Typography>
           <MembersTable members={archivedMembers} />
         </SettingsSection>
-      )}
-      {showModal && (
-        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
       )}
     </Container>
   );

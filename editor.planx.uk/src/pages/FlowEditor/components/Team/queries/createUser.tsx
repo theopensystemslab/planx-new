@@ -1,6 +1,30 @@
 import { gql } from "@apollo/client";
 import { client } from "lib/graphql";
 
+export const CREATE_USER_QUERY = gql`
+  mutation CreateUser(
+    $email: String!
+    $firstName: String!
+    $lastName: String!
+    $isPlatformAdmin: Boolean
+  ) {
+    insert_users_one(
+      object: {
+        email: $email
+        first_name: $firstName
+        last_name: $lastName
+        is_platform_admin: $isPlatformAdmin
+      }
+    ) {
+      id
+      email
+      first_name
+      last_name
+      is_platform_admin
+    }
+  }
+`;
+
 export const createUser = async (
   email: string,
   firstName: string,
@@ -8,29 +32,7 @@ export const createUser = async (
   isPlatformAdmin?: boolean,
 ) => {
   const response = (await client.mutate({
-    mutation: gql`
-      mutation CreateUser(
-        $email: String!
-        $firstName: String!
-        $lastName: String!
-        $isPlatformAdmin: Boolean
-      ) {
-        insert_users_one(
-          object: {
-            email: $email
-            first_name: $firstName
-            last_name: $lastName
-            is_platform_admin: $isPlatformAdmin
-          }
-        ) {
-          id
-          email
-          first_name
-          last_name
-          is_platform_admin
-        }
-      }
-    `,
+    mutation: CREATE_USER_QUERY,
     variables: {
       email,
       firstName,
