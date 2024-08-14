@@ -34,7 +34,7 @@ export const Basic: Story = {
   },
 };
 
-export const SingularCard: Story = {
+export const SingularItem: Story = {
   args: {
     title: "List",
     description: "List component with a min / max value set to 1",
