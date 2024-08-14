@@ -26,8 +26,8 @@ dependencies:
     specifier: ^2.1467.0
     version: 2.1467.0
   axios:
-    specifier: ^1.7.2
-    version: 1.7.2
+    specifier: ^1.7.4
+    version: 1.7.4
   body-parser:
     specifier: ^1.20.2
     version: 1.20.2
@@ -2715,8 +2715,8 @@ packages:
       xml2js: 0.5.0
     dev: false
 
-  /axios@1.7.2:
-    resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
+  /axios@1.7.4:
+    resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
@@ -6411,7 +6411,7 @@ packages:
     resolution: {integrity: sha512-XGmW2f2CroEwIUrPaTyShpF8pLlu79rBnwWns1uPGs27LbZdzNPJF1BzPl3cG3Tsu3nVlaWeXJJYAE+ALryalA==}
     engines: {node: '>=14.17.3', npm: '>=6.14.13'}
     dependencies:
-      axios: 1.7.2
+      axios: 1.7.4
       jsonwebtoken: 9.0.2
     transitivePeerDependencies:
       - debug
