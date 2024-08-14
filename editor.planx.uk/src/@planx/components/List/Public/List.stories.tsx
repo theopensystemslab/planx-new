@@ -26,8 +26,9 @@ const schemaFinder = (name: SchemaNames) => {
 
 export const Basic: Story = {
   args: {
-    title: "List",
-    description: "Add information on the removed residential units",
+    title:
+      "Describe any residential units that are being removed or lost as part of the development",
+    description: "Add one or many units below",
     schemaName: "Residential units (GLA) - Removed",
     fn: "MockFn",
     schema: schemaFinder("Residential units (GLA) - Removed"),
@@ -36,8 +37,8 @@ export const Basic: Story = {
 
 export const SingularItem: Story = {
   args: {
-    title: "List",
-    description: "List component with a min / max value set to 1",
+    title: "Describe the advertisements you want to add",
+    description: "Complete the questions below",
     schemaName: "Proposed advertisements",
     fn: "MockFn",
     schema: schemaFinder("Proposed advertisements"),
