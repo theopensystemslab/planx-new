@@ -12,11 +12,14 @@ const meta = {
   component: ListComponent,
 } satisfies Meta<typeof ListComponent>;
 
+type SchemaItem = (typeof SCHEMAS)[number];
+type SchemaNames = SchemaItem["name"];
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const schemaFinder = (name: string) => {
+const schemaFinder = (name: SchemaNames) => {
   const schemaObj = SCHEMAS.find((schema) => schema.name === name)?.schema;
   return schemaObj || SCHEMAS[0].schema;
 };
