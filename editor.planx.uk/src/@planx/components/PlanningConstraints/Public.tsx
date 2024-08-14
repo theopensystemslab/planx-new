@@ -216,7 +216,7 @@ function Component(props: Props) {
               _overrides,
               "planningConstraints.action": userAction,
               _nots: notsAfterOverrides,
-              ...intersectingConstraintsAfterOverrides,
+              ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0 ? undefined : intersectingConstraintsAfterOverrides),
             };
 
             props.handleSubmit?.({
