@@ -1,10 +1,38 @@
-/* eslint-disable jest/expect-expect */
-import { screen, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
+import { userEntersInput } from "./helpers/userEntersInput";
 
 jest.mock("lib/featureFlags.ts", () => ({
   hasFeatureFlag: jest.fn().mockReturnValue(true),
+}));
+jest.mock("pages/FlowEditor/lib/store/team.ts", () => ({
+  teamStore: jest.fn().mockImplementation(() => ({
+    fetchCurrentTeam: jest.fn().mockResolvedValue({
+      team_id: 1,
+      role: "teamEditor",
+      user_id: 1,
+      __typename: "team_members",
+    }),
+  })),
+}));
+jest.mock("pages/FlowEditor/components/Team/queries/createUser.tsx", () => ({
+  createUser: jest.fn().mockResolvedValue({
+    id: 1,
+    email: "mickeymouse@email.com",
+    first_name: "Mickey",
+    last_name: "Mouse",
+    is_platform_admin: false,
+    __typename: "users",
+  }),
+}));
+jest.mock("pages/FlowEditor/components/Team/queries/addUserToTeam.tsx", () => ({
+  addUserToTeam: jest.fn().mockResolvedValue({
+    team_id: 1,
+    role: "teamEditor",
+    user_id: 1,
+    __typename: "team_members",
+  }),
 }));
 
 describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add a new editor'", () => {
@@ -31,41 +59,27 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
     );
     user.click(addEditorButton);
     const addNewEditorModal = await screen.findByTestId("modal-create-user");
-    const firstNameField = await within(addNewEditorModal).findByLabelText(
-      "First name",
-    );
-
-    user.type(firstNameField, "Mickey");
-    const lastNameField = await within(addNewEditorModal).findByLabelText(
-      "Last name",
-    );
-    user.type(lastNameField, "Mouse");
-    const emailField = await within(addNewEditorModal).findByLabelText(
+    await userEntersInput("First name", "Mickey", addNewEditorModal);
+    await userEntersInput("Last name", "Mouse", addNewEditorModal);
+    await userEntersInput(
       "Email address",
+      "mickeymouse@email.com",
+      addNewEditorModal,
     );
-    user.type(emailField, "mickeymouse@email.com");
 
     const createUserButton = await screen.findByTestId(
       "modal-create-user-button",
     );
     user.click(createUserButton);
   });
-  it("closes the modal and adds the new user row to the Team Editors table", async () => {
-    // TODO: this test is not working
-    // waitForElementToBeRemoved(screen.findByTestId("modal-create-user"));
-    // await waitFor(async () => {
-    //   expect(
-    //     await screen.findByTestId("modal-create-user-button")
-    //   ).not.toBeVisible();
-    //   expect(await screen.findByLabelText("First name")).not.toBeVisible();
-    // });
-    // await waitFor(() => {
-    //   const modal = screen.queryByTestId('modal-create-user');
-    //   expect(modal).not.toBeInTheDocument();
-    // });
-    // await waitForElementToBeRemoved(() =>
-    //   screen.queryByTestId("modal-create-user")
-    // );
-    // expect(screen.queryByTestId("modal-create-user")).toBeNull();
+
+  it("adds the new user row to the Team Editors table", async () => {
+    const membersTable = screen.getByTestId("members-table-add-editor");
+
+    await waitFor(() => {
+      expect(
+        within(membersTable).getByText(/Mickey Mouse/),
+      ).toBeInTheDocument();
+    });
   });
 });

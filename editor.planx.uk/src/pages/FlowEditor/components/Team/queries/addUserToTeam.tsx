@@ -22,7 +22,5 @@ export const addUserToTeam = async (teamId: number, userId: number) => {
     },
   });
 
-  const res = response.data.insert_team_members_one;
-  console.log(res);
-  return res;
+  return response.data.insert_team_members_one;
 };

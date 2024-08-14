@@ -80,7 +80,11 @@ export const AddNewEditorModal = ({
                 id="firstName"
                 type="text"
                 {...formik.getFieldProps("firstName")}
-                errorMessage={formik.errors.firstName}
+                errorMessage={
+                  formik.touched.firstName && formik.errors.firstName
+                    ? formik.errors.firstName
+                    : undefined
+                }
               />
             </InputLabel>
             <InputLabel label="Last name" htmlFor="lastName">
@@ -88,7 +92,11 @@ export const AddNewEditorModal = ({
                 id="lastName"
                 type="text"
                 {...formik.getFieldProps("lastName")}
-                errorMessage={formik.errors.lastName}
+                errorMessage={
+                  formik.touched.lastName && formik.errors.lastName
+                    ? formik.errors.lastName
+                    : undefined
+                }
               />
             </InputLabel>
             <InputLabel label="Email address" htmlFor="email">
@@ -96,7 +104,11 @@ export const AddNewEditorModal = ({
                 id="email"
                 type="email"
                 {...formik.getFieldProps("email")}
-                errorMessage={formik.errors.email}
+                errorMessage={
+                  formik.touched.email && formik.errors.email
+                    ? formik.errors.email
+                    : undefined
+                }
               />
             </InputLabel>
           </InputGroup>
