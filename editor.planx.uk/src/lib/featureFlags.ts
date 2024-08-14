@@ -1,7 +1,6 @@
 // add/edit/remove feature flags in array below
 const AVAILABLE_FEATURE_FLAGS = [
   "SEARCH",
-  "OVERRIDE_CONSTRAINTS",
   "TREES",
   "ADD_NEW_EDITOR",
 ] as const;
