@@ -60,7 +60,7 @@ export const SCHEMAS = [
   { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
   { name: "Open spaces (GLA)", schema: OpenSpaceGLA },
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
-];
+] as const;
 
 function ListComponent(props: Props) {
   const formik = useFormik({
