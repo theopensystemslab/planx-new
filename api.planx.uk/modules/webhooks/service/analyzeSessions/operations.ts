@@ -21,6 +21,7 @@ const ALLOW_LIST = [
   "property.type",
   "propertyInformation.action",
   "proposal.projectType",
+  "usedFOIYNPP",
   "user.role",
 ];
 
