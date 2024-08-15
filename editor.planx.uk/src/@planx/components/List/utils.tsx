@@ -38,7 +38,7 @@ export function formatSchemaDisplayValue(
     }
     case "question": {
       const matchingOption = field.data.options.find(
-        (option) => option.data.val === value,
+        (option) => option.data.text === value,
       );
       return matchingOption?.data.text;
     }
