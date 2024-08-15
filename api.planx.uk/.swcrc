@@ -1,0 +1,14 @@
+{
+  "jsc": {
+    "target": "esnext",
+    "parser": {
+      "syntax": "typescript",
+      "dynamicImport": true,
+      "topLevelAwait": true
+    }
+  },
+  "module": {
+    "type": "nodenext",
+    "strict": true
+  }
+}

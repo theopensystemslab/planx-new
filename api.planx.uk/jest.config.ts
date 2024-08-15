@@ -4,26 +4,7 @@ const config: JestConfigWithTsJest = {
   // ts-jest presets are deprecated, so we prefer to give an explicit manual config
   testEnvironment: "node",
   transform: {
-    // esbuild-jest transformer is unmaintained and can't handle ts-with-esm, so we stick to ts-jest
-    // TODO: if tests are too slow, consider swapping out for @swc/jest
-    "^.+\\.[jt]s$": [
-      "ts-jest",
-      {
-        useESM: true,
-        // we need a separate module/moduleResolution config for tests (jest v30 may fix this)
-        tsconfig: "tsconfig.test.json",
-        diagnostics: {
-          ignoreCodes: [1343],
-        },
-        astTransformers: {
-          before: [
-            {
-              path: "node_modules/ts-jest-mock-import-meta",
-            },
-          ],
-        },
-      },
-    ],
+    "^.+\\.[jt]s$": "@swc/jest",
   },
   // mime v4 (which moves to pure ESM) may still have commonJS traces, so we transform it
   transformIgnorePatterns: ["node_modules\\/.pnpm\\/(?!(mime))"],
