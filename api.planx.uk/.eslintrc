@@ -29,7 +29,8 @@
           "supertest.**.expect"
         ]
       }
-    ]
+    ],
+    "no-nested-ternary": "error"
   },
   "globals": {
     "require": "readonly",

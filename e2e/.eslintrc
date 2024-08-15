@@ -15,7 +15,8 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "@typescript-eslint/no-non-null-assertion": "off"
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "no-nested-ternary": "error"
   },
   "ignorePatterns": [ "dist/**", "pnpm-lock.yaml" ]
 }
