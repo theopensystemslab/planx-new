@@ -1,7 +1,7 @@
 import { Schema } from "../../model";
 
 export const ResidentialUnitsProposed: Schema = {
-  type: "Proposed residential unit",
+  type: "Proposed residential unit type",
   fields: [
     {
       type: "question",
