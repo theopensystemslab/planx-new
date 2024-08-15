@@ -1,0 +1,16 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current",
+          "esmodules": true
+        },
+        "modules": false, // preserve ESM
+        "debug": true
+      }
+    ],
+    "@babel/preset-typescript"
+  ]
+}
