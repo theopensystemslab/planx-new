@@ -385,9 +385,11 @@ describe("Form validation and error handling", () => {
     );
 
     let errorMessages = getAllByTestId(/error-message-input/);
+    // One error per field, plus 3 for a date input (one per input)
+    const numberOfErrors = mockZooProps.schema.fields.length + 3;
 
     // Each field has an ErrorWrapper
-    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length);
+    expect(errorMessages).toHaveLength(numberOfErrors);
 
     // All are empty initially
     errorMessages.forEach((message) => {
@@ -398,10 +400,12 @@ describe("Form validation and error handling", () => {
 
     // Error wrappers persist
     errorMessages = getAllByTestId(/error-message-input/);
-    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length);
+    expect(errorMessages).toHaveLength(numberOfErrors);
 
-    // Each field is in an error state
-    errorMessages.forEach((message) => {
+    // Each field is in an error state, ignoring individual date input fields
+    const fieldErrors = errorMessages.slice(0, mockZooProps.schema.fields.length);
+
+    fieldErrors.forEach((message) => {
       expect(message).not.toBeEmptyDOMElement();
     });
   });
@@ -493,6 +497,22 @@ describe("Form validation and error handling", () => {
 
       expect(foodInputErrorMessage).toHaveTextContent(
         /Select at least one option/,
+      );
+    });
+
+    test("date fields", async () => {
+      const { user, getByRole, getAllByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const dateInputErrorMessage = getAllByTestId(
+        /error-message-input-date-birthday/,
+      )[0];
+
+      expect(dateInputErrorMessage).toHaveTextContent(
+        /Date must include a day/,
       );
     });
   });
@@ -707,6 +727,13 @@ const fillInResponse = async (user: UserEvent) => {
   await user.click(eatCheckboxes[0]);
   await user.click(eatCheckboxes[1]);
   await user.click(eatCheckboxes[2]);
+
+  const dayInput = screen.getByLabelText("Day");
+  const monthInput = screen.getByLabelText("Month");
+  const yearInput = screen.getByLabelText("Year");
+  await user.type(dayInput, "14");
+  await user.type(monthInput, "7");
+  await user.type(yearInput, "1988");
 
   const saveButton = screen.getByRole("button", {
     name: /Save/,
