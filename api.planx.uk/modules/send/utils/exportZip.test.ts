@@ -313,6 +313,9 @@ describe("buildSubmissionExportZip", () => {
         "application.json",
         expect.anything(),
       );
+      expect(mockAddLocalFile).not.toHaveBeenCalledWith(
+        expect.stringMatching(/proposal\.xml$/),
+      );
     });
 
     test("the zip contains exactly one file", async () => {
