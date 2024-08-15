@@ -313,9 +313,8 @@ describe("buildSubmissionExportZip", () => {
         "application.json",
         expect.anything(),
       );
-      expect(mockAddLocalFile).not.toHaveBeenCalledWith(
-        expect.stringMatching(/proposal\.xml$/),
-      );
+      // ensure we haven't tried to build other files, even if we haven't added them
+      expect(mockGenerateOneAppXML).not.toHaveBeenCalled();
     });
 
     test("the zip contains exactly one file", async () => {
@@ -324,6 +323,18 @@ describe("buildSubmissionExportZip", () => {
         onlyDigitalPlanningJSON: true,
       });
       expect(mockAddFile).toHaveBeenCalledTimes(1);
+    });
+
+    it("throws an error when ODP schema generation fails", async () => {
+      mockGenerateDigitalPlanningDataPayload.mockRejectedValueOnce(
+        new Error("validation test error"),
+      );
+      await expect(
+        buildSubmissionExportZip({
+          sessionId: "1234",
+          onlyDigitalPlanningJSON: true,
+        }),
+      ).rejects.toThrow(/Failed to generate ODP Schema JSON/);
     });
   });
 });

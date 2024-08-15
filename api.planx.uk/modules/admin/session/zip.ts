@@ -37,7 +37,7 @@ export async function generateZip(
   try {
     const zip = await buildSubmissionExportZip({
       sessionId: req.params.sessionId,
-      includeOneAppXML: req.query.includeOneAppXML === "true",
+      includeOneAppXML: req.query.includeOneAppXML === "false",
       includeDigitalPlanningJSON:
         req.query.includeDigitalPlanningJSON === "false",
       onlyDigitalPlanningJSON: req.query.onlyDigitalPlanningJSON === "false",
