@@ -5,6 +5,7 @@ import Container from "@mui/material/Container";
 import FormControlLabel, {
   formControlLabelClasses,
 } from "@mui/material/FormControlLabel";
+import Link from "@mui/material/Link";
 import Snackbar from "@mui/material/Snackbar";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
@@ -81,13 +82,23 @@ const TextInput: React.FC<{
 };
 
 const ServiceSettings: React.FC = () => {
-  const [flowSettings, updateFlowSettings, flowStatus, updateFlowStatus] =
-    useStore((state) => [
-      state.flowSettings,
-      state.updateFlowSettings,
-      state.flowStatus,
-      state.updateFlowStatus,
-    ]);
+  const [
+    flowSettings,
+    updateFlowSettings,
+    flowStatus,
+    updateFlowStatus,
+    flowSlug,
+    getTeam,
+    isFlowPublished,
+  ] = useStore((state) => [
+    state.flowSettings,
+    state.updateFlowSettings,
+    state.flowStatus,
+    state.updateFlowStatus,
+    state.flowSlug,
+    state.getTeam,
+    state.isFlowPublished,
+  ]);
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
@@ -280,6 +291,7 @@ const ServiceSettings: React.FC = () => {
             </p>
             <p>Offline services can still be edited and published as normal.</p>
           </SettingsDescription>
+
           <Box>
             <Button
               type="submit"
