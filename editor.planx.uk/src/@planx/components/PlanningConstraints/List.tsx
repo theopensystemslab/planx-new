@@ -15,7 +15,6 @@ import type {
   GISResponse,
   Metadata,
 } from "@opensystemslab/planx-core/types";
-import { hasFeatureFlag } from "lib/featureFlags";
 import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ReactNode, useState } from "react";
@@ -161,13 +160,21 @@ interface ConstraintListItemProps {
 function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const { longitude, latitude, usrn } =
-    (useStore(
-      (state) => state.computePassport().data?._address,
-    ) as SiteAddress) || {};
+  const [{ longitude, latitude, usrn }, hasPlanningData] = useStore((state) => [
+    (state.computePassport().data?.["_address"] as SiteAddress) || {},
+    state.teamIntegrations?.hasPlanningData,
+  ]);
 
+  // Whether a particular constraint list item is sourced from Planning Data
   const isSourcedFromPlanningData =
     props.metadata?.plural !== "Classified roads";
+
+  // Whether to show the button to the override modal
+  const showOverrideButton =
+    hasPlanningData && // skip teams that don't publish via Planning Data eg Braintree
+    !props.fn.startsWith("article4") && // skip A4s (and therefore CAZs) because we can't confidently update granular passport vars based on entity data
+    props.value && // skip negative constraints that don't apply to this property
+    Boolean(props.data?.length); // skip any positive constraints that don't have individual linked entities
 
   // Some constraint categories search for entities amongst many PD datasets, but our `props.metadata.dataset` will only store reference to the last one
   //   Cross reference with `availableDatasets` in Editor to ensure map URL is filtered to include each possible dataset
@@ -313,23 +320,21 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
               openLinksOnNewTab
             />
           </Typography>
-          {hasFeatureFlag("OVERRIDE_CONSTRAINTS") &&
-            props.value &&
-            Boolean(props.data?.length) && (
-              <Typography variant="h5">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setShowModal(true);
-                  }}
-                >
-                  I don't think this constraint applies to this property
-                </Button>
-              </Typography>
-            )}
+          {showOverrideButton && (
+            <Typography variant="h5">
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setShowModal(true);
+                }}
+              >
+                I don't think this constraint applies to this property
+              </Button>
+            </Typography>
+          )}
           <OverrideEntitiesModal
             showModal={showModal}
             setShowModal={setShowModal}
@@ -353,11 +358,14 @@ export function formatEntityName(
   entity: Record<string, any>,
   metadata?: Metadata,
 ): string {
-  return (
-    entity.name ||
-    (metadata?.name &&
-      entity["flood-risk-level"] &&
-      `${metadata.name} - Level ${entity["flood-risk-level"]}`) ||
-    `Planning Data entity #${entity.entity}`
-  );
+  if (entity["listed-building-grade"]) {
+    // Listed buildings should additionally display their grade
+    return `${entity.name} - Grade ${entity["listed-building-grade"]}`;
+  } else if (entity["flood-risk-level"] && metadata?.name) {
+    // Flood zones don't publish "name", so rely on dataset name plus risk level
+    return `${metadata.name} - Level ${entity["flood-risk-level"]}`;
+  } else {
+    // Default to entity "name" or fallback to "id"
+    return entity.name || `Planning Data entity #${entity.entity}`;
+  }
 }

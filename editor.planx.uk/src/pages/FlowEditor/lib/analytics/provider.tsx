@@ -40,9 +40,13 @@ export const ALLOW_LIST = [
   "application.declaration.connection",
   "drawBoundary.action",
   "findProperty.action",
+  "_overrides",
+  "planningConstraints.action",
   "property.constraints.planning",
   "property.type",
+  "propertyInformation.action",
   "proposal.projectType",
+  "usedFOIYNPP",
   "user.role",
 ] as const;
 

@@ -27,6 +27,7 @@ import {
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "./model";
+import { handleOverrides } from "./utils";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -42,19 +43,34 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
-  const [inaccurateConstraints, setInaccurateConstraints] =
-    useState<InaccurateConstraints>();
+  const [
+    currentCardId,
+    cachedBreadcrumbs,
+    teamSlug,
+    siteBoundary,
+    { x, y, longitude, latitude, usrn },
+    hasPlanningData,
+    priorOverrides,
+  ] = useStore((state) => [
+    state.currentCard?.id,
+    state.cachedBreadcrumbs,
+    state.teamSlug,
+    state.computePassport().data?.["property.boundary.site"],
+    (state.computePassport().data?.["_address"] as SiteAddress) || {},
+    state.teamIntegrations?.hasPlanningData,
+    state.computePassport().data?.["_overrides"],
+  ]);
 
-  const siteBoundary = useStore(
-    (state) => state.computePassport().data?.["property.boundary.site"],
-  );
-  const { x, y, longitude, latitude, usrn } =
-    (useStore(
-      (state) => state.computePassport().data?._address,
-    ) as SiteAddress) || {};
+  // PlanningConstraints must come after at least a FindProperty in the graph
   const showGraphError = !x || !y || !longitude || !latitude;
 
-  const teamSlug = useStore((state) => state.teamSlug);
+  // Even though this component will fetch fresh GIS data when coming "back",
+  //   still prepopulate any previously marked inaccurateConstraints
+  const initialInaccurateConstraints =
+    currentCardId &&
+    cachedBreadcrumbs?.[currentCardId]?.["data"]?.["_overrides"]?.[props.fn];
+  const [inaccurateConstraints, setInaccurateConstraints] =
+    useState<InaccurateConstraints>(initialInaccurateConstraints);
 
   // Get current query parameters (eg ?analytics=false&sessionId=XXX) to determine if we should audit this response
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -69,12 +85,7 @@ function Component(props: Props) {
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly
-  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
-  const hasPlanningData = useStore(
-    (state) => state.teamIntegrations?.hasPlanningData,
-  );
-
+  const root = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
     ...params,
@@ -86,8 +97,8 @@ function Component(props: Props) {
     version: "1",
   };
 
-  // Fetch planning constraints data for a given local authority
-  const root = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
+  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly to fetch data
+  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
@@ -125,12 +136,12 @@ function Component(props: Props) {
   );
 
   // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
-  const constraints: GISResponse["constraints"] | {} = {
+  const constraints: GISResponse["constraints"] | Record<string, any> = {
     ...(data?.constraints || data),
     ...roads?.constraints,
   };
 
-  const metadata: GISResponse["metadata"] | {} = {
+  const metadata: GISResponse["metadata"] | Record<string, any> = {
     ...data?.metadata,
     ...roads?.metadata,
   };
@@ -148,6 +159,7 @@ function Component(props: Props) {
           constraints={constraints}
           metadata={metadata}
           handleSubmit={() => {
+            // `_constraints` & `_overrides` are responsible for auditing
             const _constraints: Array<
               EnhancedGISResponse | GISResponse["constraints"]
             > = [];
@@ -166,9 +178,16 @@ function Component(props: Props) {
               if (data) _constraints.push(data as GISResponse["constraints"]);
             }
 
-            const _overrides = inaccurateConstraints;
+            const hasInaccurateConstraints = inaccurateConstraints && Object.keys(inaccurateConstraints).length > 0;
+            const _overrides = hasInaccurateConstraints ? { ...priorOverrides, [props.fn]: inaccurateConstraints } : undefined;
 
-            const _nots: any = {};
+            // `planningConstraints.action` is for analytics
+            const userAction = hasInaccurateConstraints
+              ? "Reported at least one inaccurate planning constraint" 
+              : "Accepted all planning constraints";
+
+            // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
+            const _nots: IntersectingConstraints = {};
             const intersectingConstraints: IntersectingConstraints = {};
             Object.entries(constraints).forEach(([key, data]) => {
               if (data.value) {
@@ -180,11 +199,24 @@ function Component(props: Props) {
               }
             });
 
+            // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
+            const {
+              nots: notsAfterOverrides,
+              intersectingConstraints: intersectingConstraintsAfterOverrides,
+            } = handleOverrides(
+              props.fn,
+              constraints,
+              inaccurateConstraints,
+              intersectingConstraints,
+              _nots,
+            );
+
             const passportData = {
               _constraints,
               _overrides,
-              _nots,
-              ...intersectingConstraints,
+              "planningConstraints.action": userAction,
+              _nots: notsAfterOverrides,
+              ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0 ? undefined : intersectingConstraintsAfterOverrides),
             };
 
             props.handleSubmit?.({
