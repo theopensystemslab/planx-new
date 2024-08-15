@@ -1,29 +1,8 @@
 import { Schema } from "@planx/components/List/model";
 
 export const ResidentialUnitsGLANew: Schema = {
-  type: "New residential unit",
+  type: "New residential unit type",
   fields: [
-    {
-      type: "question",
-      data: {
-        title: "What development does this unit result from?",
-        fn: "development",
-        options: [
-          { id: "newBuild", data: { text: "New build", val: "newBuild" } },
-          {
-            id: "changeOfUseFrom",
-            data: {
-              text: "Change of use of existing single home",
-              val: "changeOfUseFrom",
-            },
-          },
-          {
-            id: "changeOfUseTo",
-            data: { text: "Change of use to a home", val: "changeOfUseTo" },
-          },
-        ],
-      },
-    },
     {
       type: "number",
       data: {
@@ -226,7 +205,7 @@ export const ResidentialUnitsGLANew: Schema = {
     {
       type: "number",
       data: {
-        title: "How many identical units does the description above apply to?",
+        title: "How many new units fit the descriptions above?",
         fn: "identicalUnits",
         allowNegatives: false,
       },
