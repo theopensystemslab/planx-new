@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React, { useState } from "react";
+import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
@@ -24,6 +25,26 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import type { FlowSettings } from "../../../../types";
 import { useStore } from "../../lib/store";
+
+const TitledLinkComponent: React.FC<{
+  title: string;
+  link: string;
+  isActive: boolean;
+}> = () => {
+  return <></>;
+};
+
+const PublicLink: React.FC<{
+  isFlowPublished: boolean;
+  status: string;
+  subdomain: string;
+  link: string;
+}> = ({ isFlowPublished, status, subdomain, link }) => {
+  const isFlowPublic = isFlowPublished && status === "online";
+  const hasSubdomain = Boolean(subdomain);
+
+  return <></>;
+};
 
 const TextInput: React.FC<{
   title: string;
@@ -88,7 +109,7 @@ const ServiceSettings: React.FC = () => {
     flowStatus,
     updateFlowStatus,
     flowSlug,
-    getTeam,
+    teamDomain,
     isFlowPublished,
   ] = useStore((state) => [
     state.flowSettings,
@@ -96,7 +117,7 @@ const ServiceSettings: React.FC = () => {
     state.flowStatus,
     state.updateFlowStatus,
     state.flowSlug,
-    state.getTeam,
+    state.teamDomain,
     state.isFlowPublished,
   ]);
 
@@ -153,6 +174,15 @@ const ServiceSettings: React.FC = () => {
       }
     },
   });
+
+  const removeLinkEndSlash = (link: string) =>
+    link[link.length - 1] === "/" ? link.slice(0, -1) : link;
+
+  const publishedLink = `${window.location.origin}${rootFlowPath(
+    false,
+  )}/published`;
+
+  const subdomainLink = `${removeLinkEndSlash(teamDomain)}/${flowSlug}`;
 
   return (
     <Container maxWidth="formWrap">
@@ -291,7 +321,10 @@ const ServiceSettings: React.FC = () => {
             </p>
             <p>Offline services can still be edited and published as normal.</p>
           </SettingsDescription>
-
+          <SettingsDescription>
+            <Typography variant="h4">Your public link</Typography>
+            <Link>{teamDomain ? subdomainLink : publishedLink}</Link>
+          </SettingsDescription>
           <Box>
             <Button
               type="submit"
