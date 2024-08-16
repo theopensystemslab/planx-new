@@ -30,19 +30,75 @@ const TitledLinkComponent: React.FC<{
   title: string;
   link: string;
   isActive: boolean;
-}> = () => {
-  return <></>;
+}> = ({ title, link, isActive }) => {
+  return (
+    <Box paddingBottom={0.5}>
+      <Typography mb={1} variant="h4">
+        {title}
+      </Typography>
+      {isActive ? (
+        <Link href={link}>{link}</Link>
+      ) : (
+        <Typography variant="body3">{link}</Typography>
+      )}
+    </Box>
+  );
 };
 
 const PublicLink: React.FC<{
   isFlowPublished: boolean;
   status: string;
   subdomain: string;
-  link: string;
-}> = ({ isFlowPublished, status, subdomain, link }) => {
+  publishedLink: string;
+}> = ({ isFlowPublished, status, subdomain, publishedLink }) => {
   const isFlowPublic = isFlowPublished && status === "online";
   const hasSubdomain = Boolean(subdomain);
 
+  console.log({ isFlowPublic, hasSubdomain });
+
+  // Passing both subdomain and publishedLink into this component...
+  // means we have the flexibility to display one or both...
+  // and means we need to do less upfront work in the ServiceSettings component
+  // the logic is contained within this one component with context around it
+
+  switch (true) {
+    case isFlowPublic && hasSubdomain:
+      console.log("Flow Public and Subdomain true");
+      return (
+        <TitledLinkComponent
+          title={"Your public link"}
+          link={subdomain}
+          isActive={true}
+        />
+      );
+    case isFlowPublic && !hasSubdomain:
+      console.log("Flow Public and Subdomain false");
+      return (
+        <TitledLinkComponent
+          title={"Your public link"}
+          link={publishedLink}
+          isActive={true}
+        />
+      );
+    case !isFlowPublic && hasSubdomain:
+      console.log("Flow private and Subdomain true");
+      return (
+        <TitledLinkComponent
+          title={"Your public link"}
+          link={subdomain}
+          isActive={true}
+        />
+      );
+    case !isFlowPublic && !hasSubdomain:
+      console.log("Flow private and Subdomain false");
+      return (
+        <TitledLinkComponent
+          title={"Your public link"}
+          link={publishedLink}
+          isActive={true}
+        />
+      );
+  }
   return <></>;
 };
 
@@ -182,7 +238,9 @@ const ServiceSettings: React.FC = () => {
     false,
   )}/published`;
 
-  const subdomainLink = `${removeLinkEndSlash(teamDomain)}/${flowSlug}`;
+  const subdomainLink = teamDomain
+    ? `${removeLinkEndSlash(teamDomain)}/${flowSlug}`
+    : teamDomain;
 
   return (
     <Container maxWidth="formWrap">
@@ -321,10 +379,14 @@ const ServiceSettings: React.FC = () => {
             </p>
             <p>Offline services can still be edited and published as normal.</p>
           </SettingsDescription>
-          <SettingsDescription>
-            <Typography variant="h4">Your public link</Typography>
-            <Link>{teamDomain ? subdomainLink : publishedLink}</Link>
-          </SettingsDescription>
+
+          <PublicLink
+            isFlowPublished={isFlowPublished}
+            status={flowStatus || statusForm.values.status}
+            subdomain={subdomainLink}
+            publishedLink={publishedLink}
+          />
+
           <Box>
             <Button
               type="submit"
