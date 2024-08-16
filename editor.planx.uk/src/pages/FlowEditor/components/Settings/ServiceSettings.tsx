@@ -27,14 +27,13 @@ import type { FlowSettings } from "../../../../types";
 import { useStore } from "../../lib/store";
 
 const TitledLinkComponent: React.FC<{
-  title: string;
   link: string;
   isActive: boolean;
-}> = ({ title, link, isActive }) => {
+}> = ({ link, isActive }) => {
   return (
-    <Box paddingBottom={0.5}>
+    <Box paddingBottom={0.5} mt={1}>
       <Typography mb={1} variant="h4">
-        {title}
+        Your public link
       </Typography>
       {isActive ? (
         <Link href={link}>{link}</Link>
@@ -64,40 +63,16 @@ const PublicLink: React.FC<{
   switch (true) {
     case isFlowPublic && hasSubdomain:
       console.log("Flow Public and Subdomain true");
-      return (
-        <TitledLinkComponent
-          title={"Your public link"}
-          link={subdomain}
-          isActive={true}
-        />
-      );
+      return <TitledLinkComponent link={subdomain} isActive={true} />;
     case isFlowPublic && !hasSubdomain:
       console.log("Flow Public and Subdomain false");
-      return (
-        <TitledLinkComponent
-          title={"Your public link"}
-          link={publishedLink}
-          isActive={true}
-        />
-      );
+      return <TitledLinkComponent link={publishedLink} isActive={true} />;
     case !isFlowPublic && hasSubdomain:
       console.log("Flow private and Subdomain true");
-      return (
-        <TitledLinkComponent
-          title={"Your public link"}
-          link={subdomain}
-          isActive={true}
-        />
-      );
+      return <TitledLinkComponent link={subdomain} isActive={false} />;
     case !isFlowPublic && !hasSubdomain:
       console.log("Flow private and Subdomain false");
-      return (
-        <TitledLinkComponent
-          title={"Your public link"}
-          link={publishedLink}
-          isActive={true}
-        />
-      );
+      return <TitledLinkComponent link={publishedLink} isActive={false} />;
   }
   return <></>;
 };
