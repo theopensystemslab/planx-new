@@ -173,6 +173,7 @@ const ServiceSettings: React.FC = () => {
   const [
     flowSettings,
     updateFlowSettings,
+    flowStatus,
     updateFlowStatus,
     flowSlug,
     teamDomain,
@@ -180,6 +181,7 @@ const ServiceSettings: React.FC = () => {
   ] = useStore((state) => [
     state.flowSettings,
     state.updateFlowSettings,
+    state.flowStatus,
     state.updateFlowStatus,
     state.flowSlug,
     state.teamDomain,
