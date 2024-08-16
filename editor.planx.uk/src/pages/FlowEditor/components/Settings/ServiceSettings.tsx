@@ -1,3 +1,4 @@
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -5,9 +6,11 @@ import Container from "@mui/material/Container";
 import FormControlLabel, {
   formControlLabelClasses,
 } from "@mui/material/FormControlLabel";
+import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Snackbar from "@mui/material/Snackbar";
 import Switch, { SwitchProps } from "@mui/material/Switch";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
@@ -26,6 +29,34 @@ import InputRowItem from "ui/shared/InputRowItem";
 import type { FlowSettings } from "../../../../types";
 import { useStore } from "../../lib/store";
 
+const CopyButton = (props: { link: string }) => {
+  const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
+  return (
+    <Tooltip title={copyMessage}>
+      <Button
+        component={"button"}
+        variant="help"
+        onMouseLeave={() => {
+          setTimeout(() => {
+            setCopyMessage("copy");
+          }, 500);
+        }}
+        onClick={() => {
+          setCopyMessage("copied");
+          navigator.clipboard.writeText(props.link);
+        }}
+      >
+        <IconButton sx={{ marginLeft: 0.5 }} color="primary" size="small">
+          <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
+          <Typography ml={0.5} variant="body3">
+            {copyMessage}
+          </Typography>
+        </IconButton>
+      </Button>
+    </Tooltip>
+  );
+};
+
 const TitledLinkComponent: React.FC<{
   link: string;
   isActive: boolean;
@@ -34,6 +65,7 @@ const TitledLinkComponent: React.FC<{
     <Box paddingBottom={0.5} mt={1}>
       <Typography mb={1} variant="h4">
         Your public link
+        <CopyButton link={link} />
       </Typography>
       {isActive ? (
         <Link variant="body2" href={link}>
