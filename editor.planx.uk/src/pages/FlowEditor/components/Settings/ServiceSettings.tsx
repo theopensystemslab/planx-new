@@ -38,7 +38,9 @@ const TitledLinkComponent: React.FC<{
       {isActive ? (
         <Link href={link}>{link}</Link>
       ) : (
-        <Typography variant="body3">{link}</Typography>
+        <Typography style={{ color: "GrayText" }} variant="body3">
+          {link}
+        </Typography>
       )}
     </Box>
   );
