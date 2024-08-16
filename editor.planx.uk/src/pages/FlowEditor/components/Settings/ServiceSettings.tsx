@@ -56,7 +56,7 @@ const CopyButton = (props: { link: string; isActive: boolean }) => {
   );
 };
 
-const TitledLinkComponent: React.FC<{
+const TitledLink: React.FC<{
   link: string;
   isActive: boolean;
 }> = ({ link, isActive }) => {
@@ -90,13 +90,13 @@ const PublicLink: React.FC<{
 
   switch (true) {
     case isFlowPublic && hasSubdomain:
-      return <TitledLinkComponent isActive={true} link={subdomain} />;
+      return <TitledLink isActive={true} link={subdomain} />;
     case isFlowPublic && !hasSubdomain:
-      return <TitledLinkComponent isActive={true} link={publishedLink} />;
+      return <TitledLink isActive={true} link={publishedLink} />;
     case !isFlowPublic && hasSubdomain:
-      return <TitledLinkComponent isActive={false} link={subdomain} />;
+      return <TitledLink isActive={false} link={subdomain} />;
     case !isFlowPublic && !hasSubdomain:
-      return <TitledLinkComponent isActive={false} link={publishedLink} />;
+      return <TitledLink isActive={false} link={publishedLink} />;
   }
 };
 
@@ -228,6 +228,20 @@ const ServiceSettings: React.FC = () => {
       }
     },
   });
+
+  const publicLinkHelpText = () => {
+    const isFlowOnline = Boolean(statusForm.values.status === "online");
+    switch (true) {
+      case isFlowPublished && isFlowOnline:
+        return "";
+      case !isFlowPublished && isFlowOnline:
+        return "Publish your flow to activate the public link";
+      case isFlowPublished && !isFlowOnline:
+        return "Switch your flow to 'online' to activate the public link";
+      case !isFlowPublished && !isFlowOnline:
+        return "Publish your flow and switch it to 'online' to activate the public link";
+    }
+  };
 
   const removeLinkEndSlash = (link: string) =>
     link[link.length - 1] === "/" ? link.slice(0, -1) : link;
@@ -376,6 +390,7 @@ const ServiceSettings: React.FC = () => {
               enable analytics gathering.
             </p>
             <p>Offline services can still be edited and published as normal.</p>
+            <p>{publicLinkHelpText()}</p>
           </SettingsDescription>
 
           <PublicLink
