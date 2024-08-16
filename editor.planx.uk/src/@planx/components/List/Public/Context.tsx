@@ -1,6 +1,5 @@
+import { useSchema } from "@planx/components/shared/Schema/hook";
 import {
-  generateInitialValues,
-  generateValidationSchema,
   Schema,
   UserData,
   UserResponse,
@@ -58,6 +57,7 @@ const ListContext = createContext<ListContextValue | undefined>(undefined);
 
 export const ListProvider: React.FC<ListProviderProps> = (props) => {
   const { schema, children, handleSubmit } = props;
+  const { initialValues, validationSchema } = useSchema(schema)
 
   const [activeIndex, setActiveIndex] = useState<number>(
     props.previouslySubmittedData ? -1 : 0,
@@ -91,7 +91,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
 
     // Add new item, and set to active
     setAddItemError(false);
-    formik.values.userData.push(generateInitialValues(schema));
+    formik.values.userData.push(initialValues);
     setActiveIndex(formik.values.userData.length - 1);
   };
 
@@ -152,7 +152,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     const previousValues = getPreviouslySubmittedData(props);
     if (previousValues) return previousValues;
 
-    return schema.min ? [generateInitialValues(schema)] : [];
+    return schema.min ? [initialValues] : [];
   };
 
   const exitEditMode = () => setActiveIndex(-1);
@@ -204,7 +204,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: generateValidationSchema(schema),
+    validationSchema,
   });
 
   return (
