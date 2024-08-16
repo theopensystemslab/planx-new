@@ -6,14 +6,12 @@ import Container from "@mui/material/Container";
 import FormControlLabel, {
   formControlLabelClasses,
 } from "@mui/material/FormControlLabel";
-import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Snackbar from "@mui/material/Snackbar";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
-import { isActive } from "@tiptap/core";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
@@ -83,7 +81,7 @@ const TitledLinkComponent: React.FC<{
 
 const PublicLink: React.FC<{
   isFlowPublished: boolean;
-  status: string;
+  status: FlowStatus;
   subdomain: string;
   publishedLink: string;
 }> = ({ isFlowPublished, status, subdomain, publishedLink }) => {
