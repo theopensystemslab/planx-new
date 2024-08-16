@@ -34,7 +34,6 @@ const CopyButton = (props: { link: string; isActive: boolean }) => {
     <Tooltip title={copyMessage}>
       <Button
         disabled={!props.isActive}
-        component={"button"}
         variant="help"
         onMouseLeave={() => {
           setTimeout(() => {
@@ -59,19 +58,31 @@ const CopyButton = (props: { link: string; isActive: boolean }) => {
 const TitledLink: React.FC<{
   link: string;
   isActive: boolean;
-}> = ({ link, isActive }) => {
+  helpText: string | undefined;
+}> = ({ link, isActive, helpText }) => {
   return (
     <Box paddingBottom={0.5} mt={1}>
-      <Typography mb={1} variant="h4">
+      <Typography mb={0.5} variant="h4">
         Your public link
         <CopyButton isActive={isActive} link={link} />
       </Typography>
+      <SettingsDescription>
+        <Typography variant="body2">{helpText}</Typography>
+      </SettingsDescription>
       {isActive ? (
-        <Link variant="body2" href={link}>
+        <Link
+          variant="body2"
+          href={link}
+          target={"_blank"}
+          rel={"noopener noreferrer"}
+        >
           {link}
         </Link>
       ) : (
-        <Typography style={{ color: "GrayText" }} variant="body2">
+        <Typography
+          style={{ color: "GrayText", textDecoration: "underline" }}
+          variant="body2"
+        >
           {link}
         </Typography>
       )}
@@ -88,15 +99,53 @@ const PublicLink: React.FC<{
   const isFlowPublic = isFlowPublished && status === "online";
   const hasSubdomain = Boolean(subdomain);
 
+  const publicLinkHelpText = () => {
+    const isFlowOnline = status === "online";
+    switch (true) {
+      case isFlowPublished && isFlowOnline:
+        return undefined;
+      case !isFlowPublished && isFlowOnline:
+        return "Publish your flow to activate the public link";
+      case isFlowPublished && !isFlowOnline:
+        return "Switch your flow to 'online' to activate the public link";
+      case !isFlowPublished && !isFlowOnline:
+        return "Publish your flow and switch it to 'online' to activate the public link";
+    }
+  };
+
   switch (true) {
     case isFlowPublic && hasSubdomain:
-      return <TitledLink isActive={true} link={subdomain} />;
+      return (
+        <TitledLink
+          helpText={publicLinkHelpText()}
+          isActive={true}
+          link={subdomain}
+        />
+      );
     case isFlowPublic && !hasSubdomain:
-      return <TitledLink isActive={true} link={publishedLink} />;
+      return (
+        <TitledLink
+          helpText={publicLinkHelpText()}
+          isActive={true}
+          link={publishedLink}
+        />
+      );
     case !isFlowPublic && hasSubdomain:
-      return <TitledLink isActive={false} link={subdomain} />;
+      return (
+        <TitledLink
+          helpText={publicLinkHelpText()}
+          isActive={false}
+          link={subdomain}
+        />
+      );
     case !isFlowPublic && !hasSubdomain:
-      return <TitledLink isActive={false} link={publishedLink} />;
+      return (
+        <TitledLink
+          helpText={publicLinkHelpText()}
+          isActive={false}
+          link={publishedLink}
+        />
+      );
   }
 };
 
@@ -229,30 +278,11 @@ const ServiceSettings: React.FC = () => {
     },
   });
 
-  const publicLinkHelpText = () => {
-    const isFlowOnline = Boolean(statusForm.values.status === "online");
-    switch (true) {
-      case isFlowPublished && isFlowOnline:
-        return "";
-      case !isFlowPublished && isFlowOnline:
-        return "Publish your flow to activate the public link";
-      case isFlowPublished && !isFlowOnline:
-        return "Switch your flow to 'online' to activate the public link";
-      case !isFlowPublished && !isFlowOnline:
-        return "Publish your flow and switch it to 'online' to activate the public link";
-    }
-  };
-
-  const removeLinkEndSlash = (link: string) =>
-    link[link.length - 1] === "/" ? link.slice(0, -1) : link;
-
   const publishedLink = `${window.location.origin}${rootFlowPath(
     false,
   )}/published`;
 
-  const subdomainLink = teamDomain
-    ? `${removeLinkEndSlash(teamDomain)}/${flowSlug}`
-    : teamDomain;
+  const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
 
   return (
     <Container maxWidth="formWrap">
@@ -390,7 +420,6 @@ const ServiceSettings: React.FC = () => {
               enable analytics gathering.
             </p>
             <p>Offline services can still be edited and published as normal.</p>
-            <p>{publicLinkHelpText()}</p>
           </SettingsDescription>
 
           <PublicLink
