@@ -1,8 +1,36 @@
-import { generateInitialValues, generateValidationSchema, Schema } from "./model";
+import { useFormik } from "formik";
 
-export const useSchema = (schema: Schema) => {
+import { generateInitialValues, generateValidationSchema, Schema, UserData, UserResponse } from "./model";
+
+interface Props {
+  schema: Schema;
+  onSubmit: (values: UserData) => void;
+  previousValues?: UserResponse[];
+}
+
+export const useSchema = ({
+  schema,
+  onSubmit,
+  previousValues,
+}: Props) => {
   const validationSchema = generateValidationSchema(schema);
   const initialValues = generateInitialValues(schema);
 
-  return { validationSchema, initialValues };
+  const getInitialValues = () => {
+    if (previousValues) return previousValues;
+
+    return schema.min ? [initialValues] : [];
+  };
+
+  const formik = useFormik<UserData>({
+    initialValues: {
+      userData: getInitialValues(),
+    },
+    onSubmit,
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema,
+  });
+
+  return { formik, initialValues, };
 }
