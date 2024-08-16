@@ -5,12 +5,14 @@ import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
+import { paddedDate } from "@planx/components/DateInput/model";
 import { getIn } from "formik";
 import { get } from "lodash";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem";
+import DateInput from "ui/shared/DateInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRowLabel from "ui/shared/InputRowLabel";
@@ -19,6 +21,7 @@ import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../shared/constants";
 import BasicRadio from "../../shared/Radio/BasicRadio";
 import type {
   ChecklistField,
+  DateField,
   NumberField,
   QuestionField,
   TextField,
@@ -223,6 +226,29 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
           ))}
         </Grid>
       </ErrorWrapper>
+    </InputLabel>
+  );
+};
+
+export const DateFieldInput: React.FC<Props<DateField>> = ({
+  id,
+  data,
+}) => {
+  const { formik, activeIndex } = useListContext();
+
+  return (
+    <InputLabel label={data.title} htmlFor={id}>
+      <Box sx={{ display: "flex", alignItems: "baseline" }}>
+        <DateInput
+          value={formik.values.userData[activeIndex][data.fn] as string}
+          bordered
+          onChange={(newDate: string, eventType: string) => {
+            formik.setFieldValue(`userData[${activeIndex}]['${data.fn}']`, paddedDate(newDate, eventType));
+          }}
+          error={get(formik.errors, ["userData", activeIndex, data.fn])}
+          id={id}
+        />
+      </Box>
     </InputLabel>
   );
 };

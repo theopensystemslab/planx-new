@@ -27,7 +27,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      date: dateRangeSchema({ min: props.min, max: props.max }),
+      date: dateRangeSchema(props),
     }),
   });
 

@@ -2,6 +2,10 @@ import { cloneDeep } from "lodash";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
 import { checklistValidationSchema } from "../Checklist/model";
+import {
+  DateInput,
+  dateRangeSchema as dateValidationSchema,
+} from "../DateInput/model";
 import { NumberInput, numberInputValidationSchema } from "../NumberInput/model";
 import { MoreInformation, Option, parseMoreInformation } from "../shared";
 import {
@@ -49,17 +53,23 @@ export type QuestionField = {
   type: "question";
   data: QuestionInput & { fn: string };
 };
+
 export type ChecklistField = {
   type: "checklist";
   required?: true;
   data: ChecklistInput & { fn: string };
 };
 
+export type DateField = {
+  type: "date";
+  data: DateInput & { fn: string };
+};
+
 /**
  * Represents the input types available in the List component
  * Existing models are used to allow to us to re-use existing components, maintaining consistend UX/UI
  */
-export type Field = TextField | NumberField | QuestionField | ChecklistField;
+export type Field = TextField | NumberField | QuestionField | ChecklistField | DateField;
 
 /**
  * Models the form displayed to the user
@@ -114,6 +124,9 @@ const generateValidationSchemaForFields = (
         break;
       case "checklist":
         fieldSchemas[data.fn] = checklistValidationSchema(data);
+        break;
+      case "date":
+        fieldSchemas[data.fn] = dateValidationSchema(data);
         break;
     }
   });
