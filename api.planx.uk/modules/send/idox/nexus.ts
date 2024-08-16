@@ -373,8 +373,6 @@ const createUniformApplicationAuditRecord = async ({
   localAuthority: string;
   submissionDetails: UniformSubmissionResponse;
 }): Promise<UniformApplication> => {
-  const xml = await $api.export.oneAppPayload(payload?.sessionId);
-
   const application: Record<
     "insert_uniform_applications_one",
     UniformApplication
@@ -413,7 +411,7 @@ const createUniformApplicationAuditRecord = async ({
       destination: localAuthority,
       response: submissionDetails,
       payload,
-      xml,
+      xml: "ODP Schema",
     },
   );
 
