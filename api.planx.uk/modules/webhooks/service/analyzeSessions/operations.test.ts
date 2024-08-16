@@ -1,5 +1,5 @@
+import type planxCore from "@opensystemslab/planx-core";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
-
 import {
   getSubmittedUnAnalyzedSessionIds,
   updateLowcalSessionAllowListAnswers,
@@ -9,8 +9,7 @@ vi.mock("../../../../lib/hasura/schema");
 const mockFindSession = vi.fn();
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
-  const actualCore =
-    await importOriginal<typeof import("@opensystemslab/planx-core")>();
+  const actualCore = await importOriginal<typeof planxCore>();
   const actualCoreDomainClient = actualCore.CoreDomainClient;
   const actualPassport = actualCore.Passport;
 

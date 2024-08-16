@@ -4,8 +4,8 @@ import {
 } from "../pay/service/inviteToPay/index.js";
 import { sendSingleApplicationEmail } from "../saveAndReturn/service/utils.js";
 import { ServerError } from "../../errors/index.js";
-import { NextFunction } from "express";
-import {
+import type { NextFunction } from "express";
+import type {
   ConfirmationEmail,
   PaymentEmail,
   SingleApplicationEmail,

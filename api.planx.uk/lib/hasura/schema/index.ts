@@ -1,4 +1,5 @@
-import Axios, { AxiosResponse, isAxiosError } from "axios";
+import type { AxiosResponse } from "axios";
+import axios, { isAxiosError } from "axios";
 
 export interface RunSQLArgs {
   source: "default";
@@ -18,7 +19,7 @@ const postToSchemaAPI = async <T>(
   query: SchemaAPIQuery,
 ): Promise<AxiosResponse<T>> => {
   try {
-    return await Axios.post(
+    return await axios.post(
       process.env.HASURA_SCHEMA_URL!,
       JSON.stringify(query),
       {

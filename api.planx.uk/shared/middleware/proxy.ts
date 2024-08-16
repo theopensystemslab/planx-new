@@ -1,4 +1,5 @@
-import { createProxyMiddleware, Options } from "http-proxy-middleware";
+import type { Options } from "http-proxy-middleware";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";

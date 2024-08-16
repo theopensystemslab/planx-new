@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
+import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import { getClient } from "../../client/index.js";
 import { ServerError } from "../../errors/index.js";
-import { RequestHandler } from "express";
-import { User } from "@opensystemslab/planx-core/types";
+import type { RequestHandler } from "express";
+import type { User } from "@opensystemslab/planx-core/types";
 import { userContext } from "../auth/middleware.js";
 
 interface UserResponse {

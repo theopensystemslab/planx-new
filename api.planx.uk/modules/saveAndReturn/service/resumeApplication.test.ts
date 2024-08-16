@@ -1,4 +1,4 @@
-import { LowCalSession } from "../../../types.js";
+import type { LowCalSession } from "../../../types.js";
 import supertest from "supertest";
 import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
@@ -7,8 +7,8 @@ import {
   mockTeam,
 } from "../../../tests/mocks/saveAndReturnMocks.js";
 import { buildContentFromSessions } from "./resumeApplication.js";
-import { PartialDeep } from "type-fest";
-import { Team } from "@opensystemslab/planx-core/types";
+import type { PartialDeep } from "type-fest";
+import type { Team } from "@opensystemslab/planx-core/types";
 
 const ENDPOINT = "/resume-application";
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";

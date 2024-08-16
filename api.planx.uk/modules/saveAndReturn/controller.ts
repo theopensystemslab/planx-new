@@ -1,6 +1,6 @@
 import { resumeApplication } from "./service/resumeApplication.js";
 import { findSession, validateSession } from "./service/validateSession.js";
-import { ResumeApplication, ValidateSessionController } from "./types.js";
+import type { ResumeApplication, ValidateSessionController } from "./types.js";
 
 export const validateSessionController: ValidateSessionController = async (
   _req,

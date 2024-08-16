@@ -1,6 +1,7 @@
-import axios, { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
+import axios from "axios";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
 import { ServerError } from "../../../errors/index.js";

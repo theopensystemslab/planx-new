@@ -9,7 +9,7 @@ https://mapping.canterbury.gov.uk/arcgis/rest/services/
 https://environment.data.gov.uk/arcgis/rest/services
 */
 
-import { LocalAuthorityMetadata } from "../../digitalLand.js";
+import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   article4: {

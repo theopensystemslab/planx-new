@@ -1,11 +1,12 @@
-import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 
 import {
   hasComponentType,
   isComponentType,
   numberOfComponentType,
 } from "../helpers.js";
-import { FlowValidationResponse } from "./index.js";
+import type { FlowValidationResponse } from "./index.js";
 
 const validateInviteToPay = (flowGraph: FlowGraph): FlowValidationResponse => {
   if (inviteToPayEnabled(flowGraph)) {

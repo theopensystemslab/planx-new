@@ -1,5 +1,5 @@
-import { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
-import { NextFunction, Request, Response } from "express";
+import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
+import type { NextFunction, Request, Response } from "express";
 import fetch from "isomorphic-fetch";
 
 type OSFeatures = {

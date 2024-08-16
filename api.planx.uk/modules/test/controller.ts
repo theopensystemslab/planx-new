@@ -1,4 +1,4 @@
-import { RequestHandler } from "express";
+import type { RequestHandler } from "express";
 
 export const testSessionMethods: RequestHandler = (req, res) => {
   const hasRegenerate = typeof req.session?.regenerate === "function";

@@ -1,5 +1,5 @@
 import { getClient } from "../../client/index.js";
-import { TeamRole } from "@opensystemslab/planx-core/types";
+import type { TeamRole } from "@opensystemslab/planx-core/types";
 
 interface UpsertMember {
   userEmail: string;

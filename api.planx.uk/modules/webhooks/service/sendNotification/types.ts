@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
-import {
+import type { z } from "zod";
+import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
+import type {
   bopsSubmissionSchema,
   emailSubmissionSchema,
   s3SubmissionSchema,

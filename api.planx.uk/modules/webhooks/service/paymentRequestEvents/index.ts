@@ -5,7 +5,7 @@ import {
   DAYS_UNTIL_EXPIRY,
   REMINDER_DAYS_FROM_EXPIRY,
 } from "../../../saveAndReturn/service/utils.js";
-import { CreatePaymentEvent } from "./schema.js";
+import type { CreatePaymentEvent } from "./schema.js";
 
 /**
  * Create two "invitation" events for a payments_request record: one for the nominee and one for the agent

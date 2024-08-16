@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 import { subMonths } from "date-fns";
 
-import { Operation, OperationResult, QueryResult } from "./types.js";
+import type { Operation, OperationResult, QueryResult } from "./types.js";
 import { runSQL } from "../../../../lib/hasura/schema/index.js";
 import { deleteFilesByURL } from "../../../file/service/deleteFile.js";
 import { $api } from "../../../../client/index.js";

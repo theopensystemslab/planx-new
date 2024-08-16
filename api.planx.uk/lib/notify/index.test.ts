@@ -1,6 +1,6 @@
 import { sendEmail } from "./index.js";
 import { NotifyClient } from "notifications-node-client";
-import { NotifyConfig } from "../../types.js";
+import type { NotifyConfig } from "../../types.js";
 
 vi.mock("notifications-node-client");
 

@@ -1,10 +1,11 @@
-import { createScheduledEvent, RequiredScheduledEventArgs } from "./index.js";
+import type { RequiredScheduledEventArgs } from "./index.js";
+import { createScheduledEvent } from "./index.js";
 import axios from "axios";
 import type { Mocked } from "vitest";
 
 describe("Creation of scheduled event", () => {
   vi.mock("axios", async (importOriginal) => {
-    const actualAxios = await importOriginal<typeof import("axios")>();
+    const actualAxios = await importOriginal<typeof axios>();
     return {
       default: {
         ...actualAxios,

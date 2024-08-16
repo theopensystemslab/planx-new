@@ -1,12 +1,12 @@
-import { Role } from "@opensystemslab/planx-core/types";
+import type { Role } from "@opensystemslab/planx-core/types";
 import assert from "assert";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
-import cors, { CorsOptions } from "cors";
-import express from "express";
+import type { CorsOptions } from "cors";
+import cors from "cors";
 import type { ErrorRequestHandler, Request } from "express";
-import "express-async-errors";
+import express from "express";
 import pinoLogger from "express-pino-logger";
 import helmet from "helmet";
 import { Server, type IncomingMessage } from "http";

@@ -1,20 +1,20 @@
 import { ServerError } from ".././../errors/index.js";
-import { CreateSessionEventController } from "./service/lowcalSessionEvents/schema.js";
+import type { CreateSessionEventController } from "./service/lowcalSessionEvents/schema.js";
 import {
   createSessionExpiryEvent,
   createSessionReminderEvent,
 } from "./service/lowcalSessionEvents/index.js";
-import { SendSlackNotification } from "./service/sendNotification/types.js";
+import type { SendSlackNotification } from "./service/sendNotification/types.js";
 import { sendSlackNotification } from "./service/sendNotification/index.js";
-import { CreatePaymentEventController } from "./service/paymentRequestEvents/schema.js";
+import type { CreatePaymentEventController } from "./service/paymentRequestEvents/schema.js";
 import {
   createPaymentExpiryEvents,
   createPaymentInvitationEvents,
   createPaymentReminderEvents,
 } from "./service/paymentRequestEvents/index.js";
-import { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
+import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index.js";
-import { IsCleanJSONBController } from "./service/validateInput/schema.js";
+import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
 import { analyzeSessions } from "./service/analyzeSessions/index.js";
 
 export const sendSlackNotificationController: SendSlackNotification = async (

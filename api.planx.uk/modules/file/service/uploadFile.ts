@@ -1,4 +1,4 @@
-import S3 from "aws-sdk/clients/s3.js";
+import type S3 from "aws-sdk/clients/s3.js";
 import { customAlphabet } from "nanoid";
 import mime from "mime";
 import { s3Factory } from "./utils.js";

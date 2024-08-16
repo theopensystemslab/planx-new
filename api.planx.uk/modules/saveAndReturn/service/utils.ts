@@ -1,15 +1,12 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
-import { SiteAddress, Team } from "@opensystemslab/planx-core/types";
+import type { SiteAddress, Team } from "@opensystemslab/planx-core/types";
 import { addDays, format } from "date-fns";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
-import {
-  Template,
-  getClientForTemplate,
-  sendEmail,
-} from "../../../lib/notify/index.js";
-import { LowCalSession } from "../../../types.js";
+import type { Template } from "../../../lib/notify/index.js";
+import { getClientForTemplate, sendEmail } from "../../../lib/notify/index.js";
+import type { LowCalSession } from "../../../types.js";
 
 const DAYS_UNTIL_EXPIRY = 28;
 const REMINDER_DAYS_FROM_EXPIRY = [7, 1];

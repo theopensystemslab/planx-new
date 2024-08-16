@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
-import { LowCalSessionData } from "../../types.js";
-import { PaymentRequest } from "@opensystemslab/planx-core/types";
+import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
+import type { LowCalSessionData } from "../../types.js";
+import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 
 interface ResumeApplicationResponse {
   message: string;

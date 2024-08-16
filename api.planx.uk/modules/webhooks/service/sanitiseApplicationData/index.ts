@@ -1,7 +1,7 @@
 import SlackNotify from "slack-notify";
 
 import { getOperations, operationHandler } from "./operations.js";
-import { OperationResult } from "./types.js";
+import type { OperationResult } from "./types.js";
 import { getFormattedEnvironment } from "../../../../helpers.js";
 
 /**

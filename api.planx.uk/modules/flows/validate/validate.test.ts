@@ -5,7 +5,7 @@ import { authHeader, getJWT } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
 import { flowWithInviteToPay } from "../../../tests/mocks/inviteToPayData.js";
 import { userContext } from "../../auth/middleware.js";
-import { FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
 
 beforeAll(() => {

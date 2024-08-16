@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { Mocked } from "vitest";
+import type { Mocked } from "vitest";
 
 import app from "../../server.js";
 import { deleteFilesByURL } from "./service/deleteFile.js";

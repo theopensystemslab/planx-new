@@ -1,12 +1,12 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import type { PaymentRequest, Team } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
+import type { Template } from "../../../../lib/notify/index.js";
 import {
-  Template,
   getClientForTemplate,
   sendEmail,
 } from "../../../../lib/notify/index.js";
-import { InviteToPayNotifyConfig } from "../../../../types.js";
+import type { InviteToPayNotifyConfig } from "../../../../types.js";
 import {
   calculateExpiryDate,
   getServiceLink,

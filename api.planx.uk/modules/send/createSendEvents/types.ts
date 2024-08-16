@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { CombinedResponse } from "../../../lib/hasura/metadata/index.js";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import type { CombinedResponse } from "../../../lib/hasura/metadata/index.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
 const eventSchema = z.object({
   localAuthority: z.string(),

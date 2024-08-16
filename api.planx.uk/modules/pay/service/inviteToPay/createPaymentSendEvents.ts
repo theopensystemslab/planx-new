@@ -1,13 +1,12 @@
-import { ComponentType, Team } from "@opensystemslab/planx-core/types";
-import { NextFunction, Request, Response } from "express";
+import type { Team } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
+import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import {
-  CombinedResponse,
-  createScheduledEvent,
-} from "../../../../lib/hasura/metadata/index.js";
+import type { CombinedResponse } from "../../../../lib/hasura/metadata/index.js";
+import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
 import { $api, $public } from "../../../../client/index.js";
 import { getMostRecentPublishedFlow } from "../../../../helpers.js";
-import { Flow, Node } from "../../../../types.js";
+import type { Flow, Node } from "../../../../types.js";
 
 enum Destination {
   BOPS = "bops",

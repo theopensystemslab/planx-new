@@ -1,4 +1,5 @@
-import Axios, { AxiosResponse, isAxiosError } from "axios";
+import type { AxiosResponse } from "axios";
+import axios, { isAxiosError } from "axios";
 
 /**
  * Body posted to Hasura Metadata API to create a scheduled event
@@ -46,7 +47,7 @@ const postToMetadataAPI = async (
   body: ScheduledEvent,
 ): Promise<AxiosResponse<ScheduledEventResponse>> => {
   try {
-    return await Axios.post(
+    return await axios.post(
       process.env.HASURA_METADATA_URL!,
       JSON.stringify(body),
       {

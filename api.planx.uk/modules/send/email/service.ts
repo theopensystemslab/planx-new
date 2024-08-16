@@ -1,7 +1,10 @@
 import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
-import { Session, TeamContactSettings } from "@opensystemslab/planx-core/types";
-import { EmailSubmissionNotifyConfig } from "../../../types.js";
+import type {
+  Session,
+  TeamContactSettings,
+} from "@opensystemslab/planx-core/types";
+import type { EmailSubmissionNotifyConfig } from "../../../types.js";
 
 interface GetTeamEmailSettings {
   teams: {
