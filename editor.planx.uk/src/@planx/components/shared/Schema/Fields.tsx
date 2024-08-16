@@ -10,14 +10,14 @@ import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import type {
   ChecklistField,
   DateField,
+  Field,
   MapField,
   NumberField,
   QuestionField,
   TextField,
 } from "@planx/components/shared/Schema/model";
-import { getIn } from "formik";
+import { FormikHandlers, FormikHelpers } from "formik";
 import { Feature } from "geojson";
-import { get } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import SelectInput from "ui/editor/SelectInput";
@@ -28,39 +28,57 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../shared/constants";
-import BasicRadio from "../../shared/Radio/BasicRadio";
-import { useListContext } from "./Context";
+import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../constants";
+import BasicRadio from "../Radio/BasicRadio";
 
-type Props<T> = T & { id: string };
+type BaseProps<T extends Field> = {
+  id: string;
+  errorMessage: string;
+  value: unknown;
+  name: string
+} & T;
 
-export const TextFieldInput: React.FC<Props<TextField>> = ({ id, data }) => {
-  const { formik, activeIndex } = useListContext();
+type Props<T extends Field> = { 
+  onChange: FormikHandlers["handleChange"]
+} & BaseProps<T>
+
+type DateFieldProps = {
+  onChange: FormikHelpers<unknown>["setFieldValue"]
+  value: string;
+} & BaseProps<DateField>
+
+type ChecklistFieldProps = {
+  onChange: FormikHelpers<unknown>["setFieldValue"]
+  value: string[];
+} & BaseProps<ChecklistField>
+
+type MapFieldProps = {
+  onChange: FormikHelpers<unknown>["setFieldValue"]
+  value: string[];
+} & BaseProps<MapField>
+
+export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
 
   return (
-    <InputLabel label={data.title} htmlFor={id}>
+    <InputLabel label={props.data.title} htmlFor={props.id}>
       <Input
+        {...props}
         type={((type) => {
           if (type === "email") return "email";
           else if (type === "phone") return "tel";
           return "text";
-        })(data.type)}
-        multiline={data.type && ["long", "extraLong"].includes(data.type)}
+        })(props.data.type)}
+        multiline={props.data.type && ["long", "extraLong"].includes(props.data.type)}
         bordered
-        value={formik.values.userData[activeIndex][data.fn]}
-        onChange={formik.handleChange}
-        errorMessage={get(formik.errors, ["userData", activeIndex, data.fn])}
-        id={id}
         rows={
-          data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
+          props.data.type && ["long", "extraLong"].includes(props.data.type) ? 5 : undefined
         }
-        name={`userData[${activeIndex}]['${data.fn}']`}
         required
         inputProps={{
           "aria-describedby": [
-            data.description ? DESCRIPTION_TEXT : "",
-            get(formik.errors, ["userData", activeIndex, data.fn])
-              ? `${ERROR_MESSAGE}-${id}`
+            props.data.description ? DESCRIPTION_TEXT : "",
+            props.errorMessage
+              ? `${ERROR_MESSAGE}-${props.id}`
               : "",
           ]
             .filter(Boolean)
@@ -71,45 +89,36 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({ id, data }) => {
   );
 };
 
-export const NumberFieldInput: React.FC<Props<NumberField>> = ({
-  id,
-  data,
-}) => {
-  const { formik, activeIndex } = useListContext();
+export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {
 
   return (
-    <InputLabel label={data.title} htmlFor={id}>
+    <InputLabel label={props.data.title} htmlFor={props.id}>
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <Input
+          {...props}
           required
           bordered
-          name={`userData[${activeIndex}]['${data.fn}']`}
           type="number"
-          value={formik.values.userData[activeIndex][data.fn]}
-          onChange={formik.handleChange}
-          errorMessage={get(formik.errors, ["userData", activeIndex, data.fn])}
           inputProps={{
             "aria-describedby": [
-              data.description ? DESCRIPTION_TEXT : "",
-              get(formik.errors, ["userData", activeIndex, data.fn])
-                ? `${ERROR_MESSAGE}-${id}`
+              props.data.description ? DESCRIPTION_TEXT : "",
+              props.errorMessage
+                ? `${ERROR_MESSAGE}-${props.id}`
                 : "",
             ]
               .filter(Boolean)
               .join(" "),
           }}
-          id={id}
         />
-        {data.units && <InputRowLabel>{data.units}</InputRowLabel>}
+        {props.data.units && <InputRowLabel>{props.data.units}</InputRowLabel>}
       </Box>
     </InputLabel>
   );
 };
 
-export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
-  const { formik, activeIndex } = useListContext();
-  const { id, data } = props;
-
+export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
+  id, data, name, value, onChange, errorMessage,
+}) => {
   return (
     <FormControl sx={{ width: "100%" }} component="fieldset">
       <FormLabel
@@ -126,20 +135,20 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
       </FormLabel>
       <ErrorWrapper
         id={`${id}-error`}
-        error={get(formik.errors, ["userData", activeIndex, data.fn])}
+        error={errorMessage}
       >
         <RadioGroup
           aria-labelledby={`radio-buttons-group-label-${id}`}
-          name={`userData[${activeIndex}]['${data.fn}']`}
+          name={name}
           sx={{ p: 1, mb: -2 }}
-          value={formik.values.userData[activeIndex][data.fn]}
+          value={value}
         >
           {data.options.map(({ id, data }) => (
             <BasicRadio
               key={id}
               id={data.val || data.text}
               title={data.text}
-              onChange={formik.handleChange}
+              onChange={onChange}
             />
           ))}
         </RadioGroup>
@@ -148,24 +157,21 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
   );
 };
 
-export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
-  const { formik, activeIndex } = useListContext();
-  const { id, data } = props;
-
+export const SelectFieldInput: React.FC<Props<QuestionField>> = ({ id, data, errorMessage, name, value, onChange }) => {
   return (
     <InputLabel label={data.title} id={`select-label-${id}`}>
       <ErrorWrapper
         id={`${id}-error`}
-        error={get(formik.errors, ["userData", activeIndex, data.fn])}
+        error={errorMessage}
       >
         <SelectInput
           bordered
           required
           title={data.title}
           labelId={`select-label-${id}`}
-          value={formik.values.userData[activeIndex][data.fn]}
-          onChange={formik.handleChange}
-          name={`userData[${activeIndex}]['${data.fn}']`}
+          value={value}
+          onChange={onChange}
+          name={name}
         >
           {data.options.map((option) => (
             <MenuItem
@@ -181,11 +187,14 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   );
 };
 
-export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
-  const { formik, activeIndex } = useListContext();
+export const ChecklistFieldInput: React.FC<ChecklistFieldProps> = (props) => {
   const {
     id,
-    data: { options, title, fn },
+    data: { options, title },
+    name,
+    value,
+    errorMessage,
+    onChange,
   } = props;
 
   const changeCheckbox =
@@ -195,24 +204,21 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
     ) => {
       let newCheckedIds;
 
-      if (formik.values.userData[activeIndex][fn].includes(id)) {
+      if (value.includes(id)) {
         newCheckedIds = (
-          formik.values.userData[activeIndex][fn] as string[]
+          value as string[]
         ).filter((x) => x !== id);
       } else {
-        newCheckedIds = [...formik.values.userData[activeIndex][fn], id];
+        newCheckedIds = [...value, id];
       }
 
-      await formik.setFieldValue(
-        `userData[${activeIndex}]['${fn}']`,
-        newCheckedIds,
-      );
+      await onChange(name, newCheckedIds);
     };
 
   return (
     <InputLabel label={title} id={`checklist-label-${id}`}>
       <ErrorWrapper
-        error={getIn(formik.errors, `userData[${activeIndex}]['${fn}']`)}
+        error={errorMessage}
         id={id}
       >
         <Grid container component="fieldset">
@@ -223,7 +229,7 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
               onChange={changeCheckbox(option.id)}
               label={option.data.text}
               id={option.id}
-              checked={formik.values.userData[activeIndex][fn].includes(
+              checked={value.includes(
                 option.id,
               )}
             />
@@ -234,22 +240,24 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
   );
 };
 
-export const DateFieldInput: React.FC<Props<DateField>> = ({ id, data }) => {
-  const { formik, activeIndex } = useListContext();
-
+export const DateFieldInput: React.FC<DateFieldProps> = ({
+  id,
+  data,
+  errorMessage,
+  onChange,
+  value,
+  name
+}) => {
   return (
     <InputLabel label={data.title} htmlFor={id}>
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <DateInput
-          value={formik.values.userData[activeIndex][data.fn] as string}
+          value={value}
           bordered
           onChange={(newDate: string, eventType: string) => {
-            formik.setFieldValue(
-              `userData[${activeIndex}]['${data.fn}']`,
-              paddedDate(newDate, eventType),
-            );
+            onChange(name, paddedDate(newDate, eventType));
           }}
-          error={get(formik.errors, ["userData", activeIndex, data.fn])}
+          error={errorMessage}
           id={id}
         />
       </Box>
@@ -257,11 +265,11 @@ export const DateFieldInput: React.FC<Props<DateField>> = ({ id, data }) => {
   );
 };
 
-export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
-  const { formik, activeIndex, schema } = useListContext();
+export const MapFieldInput: React.FC<MapFieldProps> = (props) => {
   const {
     id,
-    data: { title, fn, mapOptions },
+    name,
+    data: { title, mapOptions },
   } = props;
 
   const teamSettings = useStore.getState().teamSettings;
@@ -273,17 +281,11 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
     const geojsonChangeHandler = async ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         setFeatures(geojson["EPSG:3857"].features);
-        await formik.setFieldValue(
-          `userData[${activeIndex}]['${fn}']`,
-          geojson["EPSG:3857"].features,
-        );
+        props.onChange(name, geojson["EPSG:3857"].features)
       } else {
         // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
-        await formik.setFieldValue(
-          `userData[${activeIndex}]['${fn}']`,
-          undefined,
-        );
+        props.onChange(name, undefined)
       }
     };
 
@@ -299,14 +301,15 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   return (
     <InputLabel label={title} id={`map-label-${id}`} htmlFor={id}>
       <ErrorWrapper
-        error={getIn(formik.errors, `userData[${activeIndex}]['${fn}']`)}
+        error={props.errorMessage}
         id={id}
       >
         <MapContainer environment="standalone">
           {/* @ts-ignore */}
           <my-map
             id={id}
-            ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
+            // TODO
+            // ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
             height={400}
             basemap={mapOptions?.basemap}
             drawMode

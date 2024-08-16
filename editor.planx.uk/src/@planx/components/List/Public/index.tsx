@@ -10,6 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import type { Field } from "@planx/components/shared/Schema/model";
 import { PublicProps } from "@planx/components/ui";
+import { get } from "lodash";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -17,18 +18,18 @@ import InputRow from "ui/shared/InputRow";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
-import type { List } from "../model";
-import { formatSchemaDisplayValue } from "../utils";
-import { ListProvider, useListContext } from "./Context";
 import {
   ChecklistFieldInput,
-  MapFieldInput,
   DateFieldInput,
+  MapFieldInput,
   NumberFieldInput,
   RadioFieldInput,
   SelectFieldInput,
   TextFieldInput,
-} from "./Fields";
+} from "../../shared/Schema/Fields";
+import type { List } from "../model";
+import { formatSchemaDisplayValue } from "../utils";
+import { ListProvider, useListContext } from "./Context";
 
 export type Props = PublicProps<List>;
 
@@ -51,24 +52,51 @@ const CardButton = styled(Button)(({ theme }) => ({
  * Controller to return correct user input for field in schema
  */
 const InputField: React.FC<Field> = (props) => {
-  const inputFieldId = `input-${props.type}-${props.data.fn}`;
+  const { formik, activeIndex } = useListContext();
+  const fieldProps = {
+    id: `input-${props.type}-${props.data.fn}`,
+    errorMessage: get(formik.errors, ["userData", activeIndex, props.data.fn]),
+    onChange: formik.handleChange,
+    value: formik.values.userData[activeIndex][props.data.fn],
+    name:`userData[${activeIndex}]['${props.data.fn}']`,
+  };
 
   switch (props.type) {
     case "text":
-      return <TextFieldInput id={inputFieldId} {...props} />;
+      return <TextFieldInput {...fieldProps} {...props}/>;
     case "number":
-      return <NumberFieldInput id={inputFieldId} {...props} />;
+      return <NumberFieldInput {...fieldProps} {...props} />;
     case "question":
       if (props.data.options.length === 2) {
-        return <RadioFieldInput id={inputFieldId} {...props} />;
+        return <RadioFieldInput {...fieldProps} {...props} />;
       }
-      return <SelectFieldInput id={inputFieldId} {...props} />;
+      return <SelectFieldInput {...fieldProps} {...props} />;
     case "checklist":
-      return <ChecklistFieldInput id={inputFieldId} {...props} />;
+      return (
+        <ChecklistFieldInput 
+          {...fieldProps} 
+          {...props}
+          value={fieldProps.value as string[]}
+          onChange={formik.setFieldValue}
+        />
+      );
     case "date":
-      return <DateFieldInput id={inputFieldId} {...props} />;
-    case "map":
-      return <MapFieldInput id={inputFieldId} {...props} />;
+      return (
+        <DateFieldInput
+          {...fieldProps}
+          {...props}
+          value={fieldProps.value as string}
+          onChange={formik.setFieldValue}
+        />
+      );
+    case "map": 
+      return (
+        <MapFieldInput 
+          {...fieldProps}
+          {...props} 
+          onChange={formik.setFieldValue}
+        />
+      )
   }
 };
 
