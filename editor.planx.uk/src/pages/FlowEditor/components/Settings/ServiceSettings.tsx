@@ -36,9 +36,11 @@ const TitledLinkComponent: React.FC<{
         Your public link
       </Typography>
       {isActive ? (
-        <Link href={link}>{link}</Link>
+        <Link variant="body2" href={link}>
+          {link}
+        </Link>
       ) : (
-        <Typography style={{ color: "GrayText" }} variant="body3">
+        <Typography style={{ color: "GrayText" }} variant="body2">
           {link}
         </Typography>
       )}
@@ -65,18 +67,17 @@ const PublicLink: React.FC<{
   switch (true) {
     case isFlowPublic && hasSubdomain:
       console.log("Flow Public and Subdomain true");
-      return <TitledLinkComponent link={subdomain} isActive={true} />;
+      return <TitledLinkComponent isActive={true} link={subdomain} />;
     case isFlowPublic && !hasSubdomain:
       console.log("Flow Public and Subdomain false");
-      return <TitledLinkComponent link={publishedLink} isActive={true} />;
+      return <TitledLinkComponent isActive={true} link={publishedLink} />;
     case !isFlowPublic && hasSubdomain:
       console.log("Flow private and Subdomain true");
-      return <TitledLinkComponent link={subdomain} isActive={false} />;
+      return <TitledLinkComponent isActive={false} link={subdomain} />;
     case !isFlowPublic && !hasSubdomain:
       console.log("Flow private and Subdomain false");
-      return <TitledLinkComponent link={publishedLink} isActive={false} />;
+      return <TitledLinkComponent isActive={false} link={publishedLink} />;
   }
-  return <></>;
 };
 
 const TextInput: React.FC<{
