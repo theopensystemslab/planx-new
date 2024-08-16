@@ -583,6 +583,40 @@ describe("Form validation and error handling", () => {
   });
 });
 
+test("Input data is displayed in the inactive card view", async () => {
+  const { getByText, user } = setup(
+    <ListComponent {...mockZooProps} />,
+  );
+
+  await fillInResponse(user);
+
+  // Text input
+  expect(getByText("What's their name?", { selector: "td" })).toBeVisible();
+  expect(getByText("Richard Parker", { selector: "td" })).toBeVisible();
+
+  // Email input
+  expect(getByText("What's their email address?", { selector: "td" })).toBeVisible();
+  expect(getByText("richard.parker@pi.com", { selector: "td" })).toBeVisible();
+  
+  // Number input
+  expect(getByText("How old are they?", { selector: "td" })).toBeVisible();
+  expect(getByText("10 years old", { selector: "td" })).toBeVisible();
+  
+  // Question input - select
+  expect(getByText("What size are they?", { selector: "td" })).toBeVisible();
+  expect(getByText("Medium", { selector: "td" })).toBeVisible();
+
+  // Question input - radio
+  expect(getByText("How cute are they?", { selector: "td" })).toBeVisible();
+  expect(getByText("Very", { selector: "td" })).toBeVisible();
+  
+  // Checklist input
+  expect(getByText("What do they eat?", { selector: "td" })).toBeVisible();
+  expect(getByText("Meat", { selector: "li" })).toBeVisible();
+  expect(getByText("Leaves", { selector: "li" })).toBeVisible();
+  expect(getByText("Bamboo", { selector: "li" })).toBeVisible();
+})
+
 describe("Payload generation", () => {
   it("generates a valid payload on submission (Zoo)", async () => {
     const handleSubmit = jest.fn();
