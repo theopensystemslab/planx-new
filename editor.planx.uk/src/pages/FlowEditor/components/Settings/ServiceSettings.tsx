@@ -13,6 +13,7 @@ import Switch, { SwitchProps } from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
+import { isActive } from "@tiptap/core";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
@@ -29,11 +30,12 @@ import InputRowItem from "ui/shared/InputRowItem";
 import type { FlowSettings } from "../../../../types";
 import { useStore } from "../../lib/store";
 
-const CopyButton = (props: { link: string }) => {
+const CopyButton = (props: { link: string; isActive: boolean }) => {
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
   return (
     <Tooltip title={copyMessage}>
       <Button
+        disabled={!props.isActive}
         component={"button"}
         variant="help"
         onMouseLeave={() => {
@@ -45,13 +47,12 @@ const CopyButton = (props: { link: string }) => {
           setCopyMessage("copied");
           navigator.clipboard.writeText(props.link);
         }}
+        sx={{ marginLeft: 0.5 }}
       >
-        <IconButton sx={{ marginLeft: 0.5 }} color="primary" size="small">
-          <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
-          <Typography ml={0.5} variant="body3">
-            {copyMessage}
-          </Typography>
-        </IconButton>
+        <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
+        <Typography ml={0.5} variant="body3">
+          {copyMessage}
+        </Typography>
       </Button>
     </Tooltip>
   );
@@ -65,7 +66,7 @@ const TitledLinkComponent: React.FC<{
     <Box paddingBottom={0.5} mt={1}>
       <Typography mb={1} variant="h4">
         Your public link
-        <CopyButton link={link} />
+        <CopyButton isActive={isActive} link={link} />
       </Typography>
       {isActive ? (
         <Link variant="body2" href={link}>
@@ -172,7 +173,6 @@ const ServiceSettings: React.FC = () => {
   const [
     flowSettings,
     updateFlowSettings,
-    flowStatus,
     updateFlowStatus,
     flowSlug,
     teamDomain,
@@ -180,7 +180,6 @@ const ServiceSettings: React.FC = () => {
   ] = useStore((state) => [
     state.flowSettings,
     state.updateFlowSettings,
-    state.flowStatus,
     state.updateFlowStatus,
     state.flowSlug,
     state.teamDomain,
@@ -392,7 +391,7 @@ const ServiceSettings: React.FC = () => {
 
           <PublicLink
             isFlowPublished={isFlowPublished}
-            status={flowStatus || statusForm.values.status}
+            status={statusForm.values.status}
             subdomain={subdomainLink}
             publishedLink={publishedLink}
           />
