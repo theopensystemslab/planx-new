@@ -212,6 +212,7 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
           <legend style={visuallyHidden}>{title}</legend>
           {options.map((option) => (
             <ChecklistItem
+              key={option.id}
               onChange={changeCheckbox(option.id)}
               label={option.data.text}
               id={option.id}
