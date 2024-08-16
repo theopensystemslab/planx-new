@@ -90,25 +90,14 @@ const PublicLink: React.FC<{
   const isFlowPublic = isFlowPublished && status === "online";
   const hasSubdomain = Boolean(subdomain);
 
-  console.log({ isFlowPublic, hasSubdomain });
-
-  // Passing both subdomain and publishedLink into this component...
-  // means we have the flexibility to display one or both...
-  // and means we need to do less upfront work in the ServiceSettings component
-  // the logic is contained within this one component with context around it
-
   switch (true) {
     case isFlowPublic && hasSubdomain:
-      console.log("Flow Public and Subdomain true");
       return <TitledLinkComponent isActive={true} link={subdomain} />;
     case isFlowPublic && !hasSubdomain:
-      console.log("Flow Public and Subdomain false");
       return <TitledLinkComponent isActive={true} link={publishedLink} />;
     case !isFlowPublic && hasSubdomain:
-      console.log("Flow private and Subdomain true");
       return <TitledLinkComponent isActive={false} link={subdomain} />;
     case !isFlowPublic && !hasSubdomain:
-      console.log("Flow private and Subdomain false");
       return <TitledLinkComponent isActive={false} link={publishedLink} />;
   }
 };
