@@ -1,6 +1,6 @@
+import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
-import { Schema } from "../../model";
 import { Props } from "../../Public";
 
 export const Zoo: Schema = {

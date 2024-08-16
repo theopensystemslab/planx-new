@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { Field, UserResponse } from "./model";
+import { Field, UserResponse } from "./../shared/Schema/model";
 
 const List = styled("ul")(() => ({
   listStylePosition: "inside",

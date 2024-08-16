@@ -1,4 +1,11 @@
 import {
+  generateInitialValues,
+  generateValidationSchema,
+  Schema,
+  UserData,
+  UserResponse,
+} from "@planx/components/shared/Schema/model"
+import {
   getPreviouslySubmittedData,
   makeData,
 } from "@planx/components/shared/utils";
@@ -11,14 +18,7 @@ import React, {
   useState,
 } from "react";
 
-import {
-  generateInitialValues,
-  generateValidationSchema,
-  List,
-  Schema,
-  UserData,
-  UserResponse,
-} from "../model";
+import { List } from "../model";
 import {
   flatten,
   sumIdenticalUnits,

@@ -8,6 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import type { Field } from "@planx/components/shared/Schema/model";
 import { PublicProps } from "@planx/components/ui";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -16,7 +17,7 @@ import InputRow from "ui/shared/InputRow";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
-import type { Field, List } from "../model";
+import type { List } from "../model";
 import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";
 import {

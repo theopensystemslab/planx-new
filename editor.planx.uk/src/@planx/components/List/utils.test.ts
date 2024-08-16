@@ -1,4 +1,4 @@
-import { UserResponse } from "./model";
+import { UserResponse } from "./../shared/Schema/model";
 import {
   flatten,
   sumIdenticalUnits,

@@ -7,6 +7,14 @@ import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
 import { paddedDate } from "@planx/components/DateInput/model";
 import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
+import type {
+  ChecklistField,
+  DateField,
+  MapField,
+  NumberField,
+  QuestionField,
+  TextField,
+} from "@planx/components/shared/Schema/model";
 import { getIn } from "formik";
 import { Feature } from "geojson";
 import { get } from "lodash";
@@ -22,14 +30,6 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../shared/constants";
 import BasicRadio from "../../shared/Radio/BasicRadio";
-import type {
-  ChecklistField,
-  DateField,
-  MapField,
-  NumberField,
-  QuestionField,
-  TextField,
-} from "../model";
 import { useListContext } from "./Context";
 
 type Props<T> = T & { id: string };
