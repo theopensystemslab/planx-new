@@ -1,5 +1,4 @@
 import { FormikProps } from "formik";
-import { get } from "lodash";
 import React from "react";
 import InputRow from "ui/shared/InputRow";
 
@@ -15,52 +14,22 @@ type InputFieldProps = {
 * Controller to return correct user input for field in schema
 */
 const InputField: React.FC<InputFieldProps> = (props) => {
-
-  const fieldProps = {
-    id: `input-${props.type}-${props.data.fn}`,
-    errorMessage: get(props.formik.errors, ["userData", props.activeIndex, props.data.fn]),
-    onChange: props.formik.handleChange,
-    value: props.formik.values.userData[props.activeIndex][props.data.fn],
-    name: `userData[${props.activeIndex}]['${props.data.fn}']`,
-  };
-
   switch (props.type) {
     case "text":
-      return <TextFieldInput {...fieldProps} {...props} />;
+      return <TextFieldInput {...props} />;
     case "number":
-      return <NumberFieldInput {...fieldProps} {...props} />;
+      return <NumberFieldInput {...props} />;
     case "question":
       if (props.data.options.length === 2) {
-        return <RadioFieldInput {...fieldProps} {...props} />;
+        return <RadioFieldInput {...props} />;
       }
-      return <SelectFieldInput {...fieldProps} {...props} />;
+      return <SelectFieldInput {...props} />;
     case "checklist":
-      return (
-        <ChecklistFieldInput
-          {...fieldProps}
-          {...props}
-          value={fieldProps.value as string[]}
-          onChange={props.formik.setFieldValue}
-        />
-      );
+      return <ChecklistFieldInput {...props} />;
     case "date":
-      return (
-        <DateFieldInput
-          {...fieldProps}
-          {...props}
-          value={fieldProps.value as string}
-          onChange={props.formik.setFieldValue}
-        />
-      );
+      return <DateFieldInput {...props} />;
     case "map":
-      return (
-        <MapFieldInput
-          {...fieldProps}
-          {...props}
-          value={fieldProps.value as any[]}
-          onChange={props.formik.setFieldValue}
-        />
-      )
+      return <MapFieldInput {...props} />;
     default:
       return null;
   }

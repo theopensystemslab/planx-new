@@ -15,9 +15,11 @@ import type {
   NumberField,
   QuestionField,
   TextField,
+  UserData,
 } from "@planx/components/shared/Schema/model";
-import { FormikHandlers, FormikHelpers } from "formik";
+import { FormikProps } from "formik";
 import { Feature } from "geojson";
+import { get } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import SelectInput from "ui/editor/SelectInput";
@@ -31,42 +33,28 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../constants";
 import BasicRadio from "../Radio/BasicRadio";
 
-type BaseProps<T extends Field> = {
-  id: string;
-  errorMessage: string;
-  value: unknown;
-  name: string
+type Props<T extends Field> = {
+  formik: FormikProps<UserData>
+  activeIndex: number;
 } & T;
 
-type Props<T extends Field> = { 
-  onChange: FormikHandlers["handleChange"]
-} & BaseProps<T>
+const getFieldProps = <T extends Field>(props: Props<T>) => ({
+  id: `input-${props.type}-${props.data.fn}`,
+  errorMessage: get(props.formik.errors, ["userData", props.activeIndex, props.data.fn]),
+  name: `userData[${props.activeIndex}]['${props.data.fn}']`,
+  value: props.formik.values.userData[props.activeIndex][props.data.fn],
+});
 
-type DateFieldProps = {
-  onChange: FormikHelpers<unknown>["setFieldValue"]
-  value: string;
-} & BaseProps<DateField>
-
-type ChecklistFieldProps = {
-  onChange: FormikHelpers<unknown>["setFieldValue"]
-  value: string[];
-} & BaseProps<ChecklistField>
-
-type MapFieldProps = {
-  onChange: FormikHelpers<unknown>["setFieldValue"]
-  value: string[];
-} & BaseProps<MapField>
-
-export const TextFieldInput: React.FC<Props<TextField>> = ({ id, data, name, value, onChange, errorMessage }) => {
+export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
+  const fieldProps = getFieldProps(props);
+  const { data, formik } = props;
+  const { id, errorMessage } = fieldProps;
 
   return (
     <InputLabel label={data.title} htmlFor={id}>
       <Input
-        id={id}
-        name={name}
-        value={value}
-        onChange={onChange}
-        errorMessage={errorMessage}
+        {...fieldProps}
+        onChange={formik.handleChange}
         type={((type) => {
           if (type === "email") return "email";
           else if (type === "phone") return "tel";
@@ -93,17 +81,17 @@ export const TextFieldInput: React.FC<Props<TextField>> = ({ id, data, name, val
   );
 };
 
-export const NumberFieldInput: React.FC<Props<NumberField>> = ({ id, data, name, value, onChange, errorMessage }) => {
+export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {
+  const fieldProps = getFieldProps(props);
+  const { data, formik } = props;
+  const { id, errorMessage } = fieldProps;
 
   return (
     <InputLabel label={data.title} htmlFor={id}>
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <Input
-          id={id}
-          name={name}
-          value={value}
-          onChange={onChange}
-          errorMessage={errorMessage}
+          {...fieldProps}
+          onChange={formik.handleChange}
           required
           bordered
           type="number"
@@ -124,9 +112,10 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = ({ id, data, name,
   );
 };
 
-export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
-  id, data, name, value, onChange, errorMessage,
-}) => {
+export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
+  const { data, formik } = props;
+  const { id, errorMessage, name, value } = getFieldProps(props);
+
   return (
     <FormControl sx={{ width: "100%" }} component="fieldset">
       <FormLabel
@@ -156,7 +145,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
               key={id}
               id={data.val || data.text}
               title={data.text}
-              onChange={onChange}
+              onChange={formik.handleChange}
             />
           ))}
         </RadioGroup>
@@ -165,7 +154,10 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = ({
   );
 };
 
-export const SelectFieldInput: React.FC<Props<QuestionField>> = ({ id, data, errorMessage, name, value, onChange }) => {
+export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
+  const { data, formik } = props;
+  const { id, errorMessage, name, value } = getFieldProps(props);
+
   return (
     <InputLabel label={data.title} id={`select-label-${id}`}>
       <ErrorWrapper
@@ -178,7 +170,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = ({ id, data, err
           title={data.title}
           labelId={`select-label-${id}`}
           value={value}
-          onChange={onChange}
+          onChange={formik.handleChange}
           name={name}
         >
           {data.options.map((option) => (
@@ -195,14 +187,11 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = ({ id, data, err
   );
 };
 
-export const ChecklistFieldInput: React.FC<ChecklistFieldProps> = ({
-  id,
-  data: { options, title },
-  name,
-  value,
-  errorMessage,
-  onChange,
-}) => {
+export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
+  const { data: { title, options }, formik } = props;
+  const { id, errorMessage, name, value } = getFieldProps(props);
+
+  if (!Array.isArray(value)) throw Error("'value' prop for ChecklistFieldInput must be of type string[]");
 
   const changeCheckbox =
     (id: string) =>
@@ -219,7 +208,7 @@ export const ChecklistFieldInput: React.FC<ChecklistFieldProps> = ({
         newCheckedIds = [...value, id];
       }
 
-      await onChange(name, newCheckedIds);
+      await formik.setFieldValue(name, newCheckedIds);
     };
 
   return (
@@ -247,14 +236,12 @@ export const ChecklistFieldInput: React.FC<ChecklistFieldProps> = ({
   );
 };
 
-export const DateFieldInput: React.FC<DateFieldProps> = ({
-  id,
-  data,
-  errorMessage,
-  onChange,
-  value,
-  name
-}) => {
+export const DateFieldInput: React.FC<Props<DateField>> = (props) => {
+  const { data, formik } = props;
+  const { id, errorMessage, name, value } = getFieldProps(props);
+
+  if (typeof value !== "string") throw Error("'value' prop for DateFieldInput must be of type string");
+
   return (
     <InputLabel label={data.title} htmlFor={id}>
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
@@ -262,7 +249,7 @@ export const DateFieldInput: React.FC<DateFieldProps> = ({
           value={value}
           bordered
           onChange={(newDate: string, eventType: string) => {
-            onChange(name, paddedDate(newDate, eventType));
+            formik.setFieldValue(name, paddedDate(newDate, eventType));
           }}
           error={errorMessage}
           id={id}
@@ -272,12 +259,9 @@ export const DateFieldInput: React.FC<DateFieldProps> = ({
   );
 };
 
-export const MapFieldInput: React.FC<MapFieldProps> = (props) => {
-  const {
-    id,
-    name,
-    data: { title, mapOptions },
-  } = props;
+export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
+  const { formik, data: { title, mapOptions } } = props;
+  const { id, errorMessage, name } = getFieldProps(props);
 
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
@@ -288,11 +272,11 @@ export const MapFieldInput: React.FC<MapFieldProps> = (props) => {
     const geojsonChangeHandler = async ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         setFeatures(geojson["EPSG:3857"].features);
-        props.onChange(name, geojson["EPSG:3857"].features)
+        formik.setFieldValue(name, geojson["EPSG:3857"].features)
       } else {
         // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
-        props.onChange(name, undefined)
+        formik.setFieldValue(name, undefined)
       }
     };
 
@@ -308,7 +292,7 @@ export const MapFieldInput: React.FC<MapFieldProps> = (props) => {
   return (
     <InputLabel label={title} id={`map-label-${id}`} htmlFor={id}>
       <ErrorWrapper
-        error={props.errorMessage}
+        error={errorMessage}
         id={id}
       >
         <MapContainer environment="standalone">
