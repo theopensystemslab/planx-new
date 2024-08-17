@@ -8,25 +8,14 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import type { Field } from "@planx/components/shared/Schema/model";
+import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { PublicProps } from "@planx/components/ui";
-import { get } from "lodash";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import InputRow from "ui/shared/InputRow";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
-import {
-  ChecklistFieldInput,
-  DateFieldInput,
-  MapFieldInput,
-  NumberFieldInput,
-  RadioFieldInput,
-  SelectFieldInput,
-  TextFieldInput,
-} from "../../shared/Schema/Fields";
 import type { List } from "../model";
 import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";
@@ -48,62 +37,10 @@ const CardButton = styled(Button)(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
-/**
- * Controller to return correct user input for field in schema
- */
-const InputField: React.FC<Field> = (props) => {
-  const { formik, activeIndex } = useListContext();
-  const fieldProps = {
-    id: `input-${props.type}-${props.data.fn}`,
-    errorMessage: get(formik.errors, ["userData", activeIndex, props.data.fn]),
-    onChange: formik.handleChange,
-    value: formik.values.userData[activeIndex][props.data.fn],
-    name:`userData[${activeIndex}]['${props.data.fn}']`,
-  };
-
-  switch (props.type) {
-    case "text":
-      return <TextFieldInput {...fieldProps} {...props}/>;
-    case "number":
-      return <NumberFieldInput {...fieldProps} {...props} />;
-    case "question":
-      if (props.data.options.length === 2) {
-        return <RadioFieldInput {...fieldProps} {...props} />;
-      }
-      return <SelectFieldInput {...fieldProps} {...props} />;
-    case "checklist":
-      return (
-        <ChecklistFieldInput 
-          {...fieldProps} 
-          {...props}
-          value={fieldProps.value as string[]}
-          onChange={formik.setFieldValue}
-        />
-      );
-    case "date":
-      return (
-        <DateFieldInput
-          {...fieldProps}
-          {...props}
-          value={fieldProps.value as string}
-          onChange={formik.setFieldValue}
-        />
-      );
-    case "map": 
-      return (
-        <MapFieldInput 
-          {...fieldProps}
-          {...props} 
-          onChange={formik.setFieldValue}
-        />
-      )
-  }
-};
-
 const ActiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, saveItem, cancelEditItem, errors, isPageComponent } =
+  const { schema, saveItem, cancelEditItem, errors, isPageComponent, formik, activeIndex } =
     useListContext();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -122,11 +59,7 @@ const ActiveListCard: React.FC<{
           {schema.type}
           {!isPageComponent && ` ${i + 1}`}
         </Typography>
-        {schema.fields.map((field, i) => (
-          <InputRow key={i}>
-            <InputField {...field} />
-          </InputRow>
-        ))}
+        <SchemaFields schema={schema} activeIndex={activeIndex} formik={formik}/>
         <Box display="flex" gap={2}>
           <Button
             variant="contained"
