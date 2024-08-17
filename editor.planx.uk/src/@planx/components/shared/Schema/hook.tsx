@@ -1,16 +1,14 @@
-import { useFormik } from "formik";
+import { FormikConfig } from "formik";
 
 import { generateInitialValues, generateValidationSchema, Schema, UserData, UserResponse } from "./model";
 
 interface Props {
   schema: Schema;
-  onSubmit: (values: UserData) => void;
   previousValues?: UserResponse[];
 }
 
 export const useSchema = ({
   schema,
-  onSubmit,
   previousValues,
 }: Props) => {
   const validationSchema = generateValidationSchema(schema);
@@ -22,15 +20,14 @@ export const useSchema = ({
     return schema.min ? [initialValues] : [];
   };
 
-  const formik = useFormik<UserData>({
+  const formikConfig: Omit<FormikConfig<UserData>, "onSubmit"> = {
     initialValues: {
       userData: getInitialValues(),
     },
-    onSubmit,
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema,
-  });
+  }
 
-  return { formik, initialValues, };
+  return { formikConfig, initialValues, };
 }

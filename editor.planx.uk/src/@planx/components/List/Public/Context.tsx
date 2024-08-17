@@ -9,7 +9,7 @@ import {
   makeData,
 } from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
-import { FormikProps } from "formik";
+import { FormikProps, useFormik } from "formik";
 import React, {
   createContext,
   PropsWithChildren,
@@ -57,49 +57,50 @@ const ListContext = createContext<ListContextValue | undefined>(undefined);
 
 export const ListProvider: React.FC<ListProviderProps> = (props) => {
   const { schema, children, handleSubmit } = props;
-
-  const onSubmit = (values: UserData) => {
-    // defaultPassportData (array) is used when coming "back"
-    const defaultPassportData = makeData(props, values.userData)?.["data"];
-
-    // flattenedPassportData makes individual list items compatible with Calculate components
-    const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
-
-    // basic example of general summary stats we can add onSubmit:
-    //   1. count of items/responses
-    //   2. if the schema includes a field that sets fn = "identicalUnits", sum of total units
-    //   3. if the schema includes a field that sets fn = "development" & fn = "identicalUnits", sum of total units by development "val"
-    const totalUnits = sumIdenticalUnits(props.fn, defaultPassportData);
-    const totalUnitsByDevelopmentType = sumIdenticalUnitsByDevelopmentType(
-      props.fn,
-      defaultPassportData,
-    );
-
-    const summaries = {
-      [`${props.fn}.total.listItems`]:
-        defaultPassportData[`${props.fn}`].length,
-      ...(totalUnits > 0 && {
-        [`${props.fn}.total.units`]: totalUnits,
-      }),
-      ...(totalUnits > 0 &&
-        Object.keys(totalUnitsByDevelopmentType).length > 0 &&
-        totalUnitsByDevelopmentType),
-    };
-
-    handleSubmit?.({
-      data: {
-        ...defaultPassportData,
-        ...flattenedPassportData,
-        ...summaries,
-      },
-    });
-  };
-
-  const { formik, initialValues } = useSchema({
-    schema, 
-    onSubmit, 
+  const { formikConfig, initialValues } = useSchema({
+    schema,
     previousValues: getPreviouslySubmittedData(props),
   });
+
+  const formik = useFormik<UserData>({
+    ...formikConfig,
+    onSubmit: (values) => {
+      // defaultPassportData (array) is used when coming "back"
+      const defaultPassportData = makeData(props, values.userData)?.["data"];
+
+      // flattenedPassportData makes individual list items compatible with Calculate components
+      const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
+
+      // basic example of general summary stats we can add onSubmit:
+      //   1. count of items/responses
+      //   2. if the schema includes a field that sets fn = "identicalUnits", sum of total units
+      //   3. if the schema includes a field that sets fn = "development" & fn = "identicalUnits", sum of total units by development "val"
+      const totalUnits = sumIdenticalUnits(props.fn, defaultPassportData);
+      const totalUnitsByDevelopmentType = sumIdenticalUnitsByDevelopmentType(
+        props.fn,
+        defaultPassportData,
+      );
+
+      const summaries = {
+        [`${props.fn}.total.listItems`]:
+          defaultPassportData[`${props.fn}`].length,
+        ...(totalUnits > 0 && {
+          [`${props.fn}.total.units`]: totalUnits,
+        }),
+        ...(totalUnits > 0 &&
+          Object.keys(totalUnitsByDevelopmentType).length > 0 &&
+          totalUnitsByDevelopmentType),
+      };
+
+      handleSubmit?.({
+        data: {
+          ...defaultPassportData,
+          ...flattenedPassportData,
+          ...summaries,
+        },
+      });
+    },
+  })
 
   const [activeIndex, setActiveIndex] = useState<number>(
     props.previouslySubmittedData ? -1 : 0,
