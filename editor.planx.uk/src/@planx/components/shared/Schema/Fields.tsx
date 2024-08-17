@@ -57,28 +57,32 @@ type MapFieldProps = {
   value: string[];
 } & BaseProps<MapField>
 
-export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
+export const TextFieldInput: React.FC<Props<TextField>> = ({ id, data, name, value, onChange, errorMessage }) => {
 
   return (
-    <InputLabel label={props.data.title} htmlFor={props.id}>
+    <InputLabel label={data.title} htmlFor={id}>
       <Input
-        {...props}
+        id={id}
+        name={name}
+        value={value}
+        onChange={onChange}
+        errorMessage={errorMessage}
         type={((type) => {
           if (type === "email") return "email";
           else if (type === "phone") return "tel";
           return "text";
-        })(props.data.type)}
-        multiline={props.data.type && ["long", "extraLong"].includes(props.data.type)}
+        })(data.type)}
+        multiline={data.type && ["long", "extraLong"].includes(data.type)}
         bordered
         rows={
-          props.data.type && ["long", "extraLong"].includes(props.data.type) ? 5 : undefined
+          data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
         }
         required
         inputProps={{
           "aria-describedby": [
-            props.data.description ? DESCRIPTION_TEXT : "",
-            props.errorMessage
-              ? `${ERROR_MESSAGE}-${props.id}`
+            data.description ? DESCRIPTION_TEXT : "",
+            errorMessage
+              ? `${ERROR_MESSAGE}-${id}`
               : "",
           ]
             .filter(Boolean)
@@ -89,28 +93,32 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   );
 };
 
-export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {
+export const NumberFieldInput: React.FC<Props<NumberField>> = ({ id, data, name, value, onChange, errorMessage }) => {
 
   return (
-    <InputLabel label={props.data.title} htmlFor={props.id}>
+    <InputLabel label={data.title} htmlFor={id}>
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <Input
-          {...props}
+          id={id}
+          name={name}
+          value={value}
+          onChange={onChange}
+          errorMessage={errorMessage}
           required
           bordered
           type="number"
           inputProps={{
             "aria-describedby": [
-              props.data.description ? DESCRIPTION_TEXT : "",
-              props.errorMessage
-                ? `${ERROR_MESSAGE}-${props.id}`
+              data.description ? DESCRIPTION_TEXT : "",
+              errorMessage
+                ? `${ERROR_MESSAGE}-${id}`
                 : "",
             ]
               .filter(Boolean)
               .join(" "),
           }}
         />
-        {props.data.units && <InputRowLabel>{props.data.units}</InputRowLabel>}
+        {data.units && <InputRowLabel>{data.units}</InputRowLabel>}
       </Box>
     </InputLabel>
   );
@@ -187,15 +195,14 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = ({ id, data, err
   );
 };
 
-export const ChecklistFieldInput: React.FC<ChecklistFieldProps> = (props) => {
-  const {
-    id,
-    data: { options, title },
-    name,
-    value,
-    errorMessage,
-    onChange,
-  } = props;
+export const ChecklistFieldInput: React.FC<ChecklistFieldProps> = ({
+  id,
+  data: { options, title },
+  name,
+  value,
+  errorMessage,
+  onChange,
+}) => {
 
   const changeCheckbox =
     (id: string) =>
