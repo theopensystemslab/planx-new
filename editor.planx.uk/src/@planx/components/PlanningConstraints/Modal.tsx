@@ -65,9 +65,11 @@ export const OverrideEntitiesModal = ({
       return;
     }
 
-    // Revert any non-submitted inputs on cancel
+    // Revert any non-submitted inputs on cancel & clear errors
     setCheckedOptions(initialCheckedOptions);
+    setShowChecklistError(false);
     setTextInput(initialTextInput);
+    setShowInputError(false);
 
     // Close modal
     setShowModal(false);

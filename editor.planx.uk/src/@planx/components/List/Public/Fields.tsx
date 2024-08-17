@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
+import { paddedDate } from "@planx/components/DateInput/model";
 import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import { getIn } from "formik";
 import { Feature } from "geojson";
@@ -14,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem";
+import DateInput from "ui/shared/DateInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRowLabel from "ui/shared/InputRowLabel";
@@ -22,6 +24,7 @@ import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../shared/constants";
 import BasicRadio from "../../shared/Radio/BasicRadio";
 import type {
   ChecklistField,
+  DateField,
   MapField,
   NumberField,
   QuestionField,
@@ -216,6 +219,7 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
           <legend style={visuallyHidden}>{title}</legend>
           {options.map((option) => (
             <ChecklistItem
+              key={option.id}
               onChange={changeCheckbox(option.id)}
               label={option.data.text}
               id={option.id}
@@ -226,6 +230,29 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
           ))}
         </Grid>
       </ErrorWrapper>
+    </InputLabel>
+  );
+};
+
+export const DateFieldInput: React.FC<Props<DateField>> = ({
+  id,
+  data,
+}) => {
+  const { formik, activeIndex } = useListContext();
+
+  return (
+    <InputLabel label={data.title} htmlFor={id}>
+      <Box sx={{ display: "flex", alignItems: "baseline" }}>
+        <DateInput
+          value={formik.values.userData[activeIndex][data.fn] as string}
+          bordered
+          onChange={(newDate: string, eventType: string) => {
+            formik.setFieldValue(`userData[${activeIndex}]['${data.fn}']`, paddedDate(newDate, eventType));
+          }}
+          error={get(formik.errors, ["userData", activeIndex, data.fn])}
+          id={id}
+        />
+      </Box>
     </InputLabel>
   );
 };
@@ -301,5 +328,5 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
         </MapContainer>
       </ErrorWrapper>
     </InputLabel>
-  );
+  )
 };

@@ -13,5 +13,8 @@
     "tests": "./scripts/start-containers-for-tests.sh",
     "analytics": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services --profile analytics  up -d --quiet-pull",
     "logs": "docker compose logs --tail 30 -f"
+  },
+  "devDependencies": {
+    "typescript": "5.4.3"
   }
 }

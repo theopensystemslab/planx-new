@@ -14,11 +14,9 @@ import Hanger from "./Hanger";
 import Question from "./Question";
 
 const ExternalPortal: React.FC<any> = (props) => {
-  const [copyNode, addExternalPortal] = useStore((state) => [
-    state.copyNode,
-    state.addExternalPortal,
-  ]);
   const [href, setHref] = useState("Loading...");
+
+  const addExternalPortal = useStore.getState().addExternalPortal;
 
   const { data, loading } = useQuery(
     gql`
@@ -77,12 +75,6 @@ const ExternalPortal: React.FC<any> = (props) => {
     );
   }
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    copyNode(props.id);
-  };
-
   let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
   if (parent) {
     editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
@@ -91,10 +83,7 @@ const ExternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li
-        className={classNames("card", "portal", { isDragging })}
-        onContextMenu={handleContext}
-      >
+      <li className={classNames("card", "portal", { isDragging })}>
         <Link href={`/${href}`} prefetch={false} ref={drag}>
           <span>{href}</span>
         </Link>

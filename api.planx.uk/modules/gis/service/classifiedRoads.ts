@@ -128,6 +128,7 @@ export const classifiedRoadsSearch = async (
             text: `is on a Classified Road`,
             data: features.map((feature: any) => ({
               name: `${feature.properties["RoadName1"]} - ${feature.properties["RoadClassification"]}`,
+              entity: feature.properties["GmlID"], // match Planning Data "entity" identifier for convenience when reporting inaccurate constraints
               properties: feature.properties,
             })),
             category: "General policy",

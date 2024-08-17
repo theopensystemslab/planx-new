@@ -54,11 +54,10 @@ export const Trees: Schema = {
       },
     },
     {
-      type: "text", // @todo field type "date"
+      type: "date",
       data: {
         title: "Expected completion date",
         fn: "completionDate",
-        type: TextInputType.Short,
       },
     },
     {

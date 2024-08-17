@@ -50,7 +50,7 @@ const createSendEvents: CreateSendEventsController = async (
     if (idox) {
       const idoxEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/idox/${idox.localAuthority}`,
-        schedule_at: new Date(now.getTime() + 60 * 1000),
+        schedule_at: new Date(now.getTime()), // now() is good for testing, but should be staggered if dual processing in future
         payload: idox.body,
         comment: `idox_nexus_submission_${sessionId}`,
       });

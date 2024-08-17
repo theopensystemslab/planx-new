@@ -73,7 +73,8 @@
     "@typescript-eslint/no-var-requires": "warn",
     "@typescript-eslint/no-empty-function": "warn",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/ban-ts-comment": "off"
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-nested-ternary": "error"
   },
   "settings": {
     "jest": {

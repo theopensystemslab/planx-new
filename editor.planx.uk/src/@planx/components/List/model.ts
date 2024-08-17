@@ -3,6 +3,10 @@ import { cloneDeep } from "lodash";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
 import { checklistValidationSchema } from "../Checklist/model";
+import {
+  DateInput,
+  dateRangeSchema as dateValidationSchema,
+} from "../DateInput/model";
 import { NumberInput, numberInputValidationSchema } from "../NumberInput/model";
 import { MoreInformation, Option, parseMoreInformation } from "../shared";
 import {
@@ -57,6 +61,11 @@ export type ChecklistField = {
   data: ChecklistInput & { fn: string };
 };
 
+export type DateField = {
+  type: "date";
+  data: DateInput & { fn: string };
+};
+
 export type MapField = {
   type: "map";
   data: {
@@ -77,6 +86,7 @@ export type Field =
   | NumberField
   | QuestionField
   | ChecklistField
+  | DateField
   | MapField;
 
 /**
@@ -143,6 +153,9 @@ const generateValidationSchemaForFields = (
         break;
       case "checklist":
         fieldSchemas[data.fn] = checklistValidationSchema(data);
+        break;
+      case "date":
+        fieldSchemas[data.fn] = dateValidationSchema(data);
         break;
       case "map":
         fieldSchemas[data.fn] = mapValidationSchema(data);

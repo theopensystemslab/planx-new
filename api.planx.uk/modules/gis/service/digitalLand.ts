@@ -199,7 +199,7 @@ async function go(
 
   // --- FLOODING ---
   if (formattedResult["flood"] && formattedResult["flood"].value) {
-    ["flood.zone.1", "flood.zone.2", "flood.zone.3"].forEach(
+    ["flood.zone.2", "flood.zone.3"].forEach(
       (zone) =>
         (formattedResult[zone] = {
           fn: zone,

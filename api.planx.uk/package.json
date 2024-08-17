@@ -15,7 +15,7 @@
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "aws-sdk": "^2.1467.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.1.0",
@@ -116,6 +116,7 @@
     "rimraf": "^5.0.5",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.4",
+    "ts-jest-mock-import-meta": "^1.2.0",
     "tsx": "^4.16.2",
     "typescript": "^5.5.2",
     "uuid": "^10.0.0"
