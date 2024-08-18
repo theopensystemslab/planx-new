@@ -96,7 +96,7 @@ const InactiveListCard: React.FC<{
               </TableCell>
               <TableCell>
                 {formatSchemaDisplayValue(
-                  formik.values.userData[i][field.data.fn],
+                  formik.values.schemaData[i][field.data.fn],
                   schema.fields[j],
                 )}
               </TableCell>
@@ -137,9 +137,9 @@ const Root = () => {
     (errors.max && `You can provide at most ${schema.max} response(s)`) ||
     "";
 
-  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (userData = [])
+  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (schemaData = [])
   const shouldShowAddAnotherButton =
-    schema.max !== 1 || formik.values.userData.length < 1;
+    schema.max !== 1 || formik.values.schemaData.length < 1;
 
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
@@ -152,7 +152,7 @@ const Root = () => {
       />
       <ErrorWrapper error={rootError}>
         <>
-          {formik.values.userData.map((_, i) =>
+          {formik.values.schemaData.map((_, i) =>
             i === activeIndex ? (
               <ActiveListCard key={`card-${i}`} index={i} />
             ) : (

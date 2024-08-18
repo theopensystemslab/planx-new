@@ -14,8 +14,8 @@ import type {
   MapField,
   NumberField,
   QuestionField,
+  SchemaData,
   TextField,
-  UserData,
 } from "@planx/components/shared/Schema/model";
 import { FormikProps } from "formik";
 import { Feature } from "geojson";
@@ -34,7 +34,7 @@ import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../constants";
 import BasicRadio from "../Radio/BasicRadio";
 
 type Props<T extends Field> = {
-  formik: FormikProps<UserData>
+  formik: FormikProps<SchemaData>
   activeIndex: number;
 } & T;
 
@@ -43,9 +43,9 @@ type Props<T extends Field> = {
  */
 const getFieldProps = <T extends Field>(props: Props<T>) => ({
   id: `input-${props.type}-${props.data.fn}`,
-  errorMessage: get(props.formik.errors, ["userData", props.activeIndex, props.data.fn]),
-  name: `userData[${props.activeIndex}]['${props.data.fn}']`,
-  value: props.formik.values.userData[props.activeIndex][props.data.fn],
+  errorMessage: get(props.formik.errors, ["schemaData", props.activeIndex, props.data.fn]),
+  name: `schemaData[${props.activeIndex}]['${props.data.fn}']`,
+  value: props.formik.values.schemaData[props.activeIndex][props.data.fn],
 });
 
 export const TextFieldInput: React.FC<Props<TextField>> = (props) => {

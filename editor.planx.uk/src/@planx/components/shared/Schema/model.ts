@@ -107,12 +107,12 @@ export interface Schema {
   max?: number;
 }
 
-export type UserResponse = Record<Field["data"]["fn"], string | any[]>; // string | string[] | Feature[]
+export type SchemaResponse = Record<Field["data"]["fn"], string | string[] | any[] >; // string | string[] | Feature[]
 
 /**
  * Output data from a form using the useSchema hook
  */
-export type UserData = { userData: UserResponse[] };
+export type SchemaData = { schemaData: SchemaResponse[] };
 
 /**
  * For each field in schema, return a map of Yup validation schema
@@ -160,14 +160,14 @@ export const generateValidationSchema = (schema: Schema) => {
   );
 
   const validationSchema = object().shape({
-    userData: array().of(fieldvalidationSchema),
+    schemaData: array().of(fieldvalidationSchema),
   });
 
   return validationSchema;
 };
 
-export const generateInitialValues = (schema: Schema): UserResponse => {
-  const initialValues: UserResponse = {};
+export const generateInitialValues = (schema: Schema): SchemaResponse => {
+  const initialValues: SchemaResponse = {};
   schema.fields.forEach((field) => {
     ["checklist", "map"].includes(field.type)
       ? (initialValues[field.data.fn] = [])

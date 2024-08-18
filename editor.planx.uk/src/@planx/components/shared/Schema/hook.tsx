@@ -1,22 +1,22 @@
 import { FormikConfig } from "formik";
 
-import { generateInitialValues, generateValidationSchema, Schema, UserData, UserResponse } from "./model";
+import { generateInitialValues, generateValidationSchema, Schema, SchemaData, SchemaResponse } from "./model";
 
 type UseSchema = (props: {
   schema: Schema;
-  previousValues?: UserResponse[];
+  previousValues?: SchemaResponse[];
 }) => {
   /**
    * Extensible Formik config which allows custom form state and submission logic
-   * @example const formik = useFormik<UserData & MyCustomState>(...)
-   * @example const formik = useFormik<UserData>(...formikConfig, onSubmit: () => {...})
+   * @example const formik = useFormik<SchemaData & MyCustomState>(...)
+   * @example const formik = useFormik<SchemaData>(...formikConfig, onSubmit: () => {...})
   */
-  formikConfig: Omit<FormikConfig<UserData>, "onSubmit">,
+  formikConfig: Omit<FormikConfig<SchemaData>, "onSubmit">,
   /** 
    * A blank set of initial values matching the schema
    * Can be if multiple responses are allowed (e.g. in the List component)
   */
-  initialValues: UserResponse,
+  initialValues: SchemaResponse,
 }
 
 /**
@@ -38,7 +38,7 @@ export const useSchema: UseSchema = ({
 
   const formikConfig = {
     initialValues: {
-      userData: getInitialValues(),
+      schemaData: getInitialValues(),
     },
     validateOnBlur: false,
     validateOnChange: false,

@@ -1,8 +1,8 @@
 import { useSchema } from "@planx/components/shared/Schema/hook";
 import {
   Schema,
-  UserData,
-  UserResponse,
+  SchemaData,
+  SchemaResponse,
 } from "@planx/components/shared/Schema/model"
 import {
   getPreviouslySubmittedData,
@@ -32,7 +32,7 @@ interface ListContextValue {
   removeItem: (index: number) => void;
   editItem: (index: number) => void;
   cancelEditItem: () => void;
-  formik: FormikProps<UserData>;
+  formik: FormikProps<SchemaData>;
   validateAndSubmitForm: () => void;
   listProps: PublicProps<List>;
   /**
@@ -62,11 +62,11 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     previousValues: getPreviouslySubmittedData(props),
   });
 
-  const formik = useFormik<UserData>({
+  const formik = useFormik<SchemaData>({
     ...formikConfig,
     onSubmit: (values) => {
       // defaultPassportData (array) is used when coming "back"
-      const defaultPassportData = makeData(props, values.userData)?.["data"];
+      const defaultPassportData = makeData(props, values.schemaData)?.["data"];
 
       // flattenedPassportData makes individual list items compatible with Calculate components
       const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
@@ -107,7 +107,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
   );
 
   const [activeItemInitialState, setActiveItemInitialState] = useState<
-    UserResponse | undefined
+    SchemaResponse | undefined
   >(undefined);
 
   const [addItemError, setAddItemError] = useState<boolean>(false);
@@ -128,21 +128,21 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     if (activeIndex !== -1) return setAddItemError(true);
 
     // Do not allow new item to be added if it will exceed max
-    if (schema.max && formik.values.userData.length === schema.max) {
+    if (schema.max && formik.values.schemaData.length === schema.max) {
       return setMaxError(true);
     }
 
     // Add new item, and set to active
     setAddItemError(false);
-    formik.values.userData.push(initialValues);
-    setActiveIndex(formik.values.userData.length - 1);
+    formik.values.schemaData.push(initialValues);
+    setActiveIndex(formik.values.schemaData.length - 1);
   };
 
   const saveItem = async () => {
     resetErrors();
 
     const errors = await formik.validateForm();
-    const isValid = !errors.userData?.length;
+    const isValid = !errors.schemaData?.length;
     if (isValid) {
       exitEditMode();
       setAddItemError(false);
@@ -157,10 +157,10 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       setActiveIndex((prev) => (prev === -1 ? 0 : prev - 1));
     }
 
-    // Remove item from userData
+    // Remove item from schemaData
     formik.setFieldValue(
-      "userData",
-      formik.values.userData.filter((_, i) => i !== index),
+      "schemaData",
+      formik.values.schemaData.filter((_, i) => i !== index),
     );
   };
 
@@ -169,7 +169,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     if (activeIndex !== -1) return setUnsavedItemError(true);
 
     // Manually validate minimum number of items
-    if (formik.values.userData.length < schema.min) {
+    if (formik.values.schemaData.length < schema.min) {
       return setMinError(true);
     }
 
@@ -187,14 +187,14 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
   };
 
   const editItem = (index: number) => {
-    setActiveItemInitialState(formik.values.userData[index]);
+    setActiveItemInitialState(formik.values.schemaData[index]);
     setActiveIndex(index);
   };
 
   const exitEditMode = () => setActiveIndex(-1);
 
   const resetItemToPreviousState = () =>
-    formik.setFieldValue(`userData[${activeIndex}]`, activeItemInitialState);
+    formik.setFieldValue(`schemaData[${activeIndex}]`, activeItemInitialState);
 
   const isPageComponent = schema.max === 1;
 

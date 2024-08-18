@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { Field, UserResponse } from "./../shared/Schema/model";
+import { Field, SchemaResponse } from "./../shared/Schema/model";
 
 const List = styled("ul")(() => ({
   listStylePosition: "inside",
@@ -54,7 +54,7 @@ export function formatSchemaDisplayValue(
  */
 export function sumIdenticalUnits(
   fn: string,
-  passportData: Record<string, UserResponse[]>,
+  passportData: Record<string, SchemaResponse[]>,
 ): number {
   let sum = 0;
   passportData[`${fn}`].map((item) => {
@@ -73,7 +73,7 @@ export function sumIdenticalUnits(
  */
 export function sumIdenticalUnitsByDevelopmentType(
   fn: string,
-  passportData: Record<string, UserResponse[]>,
+  passportData: Record<string, SchemaResponse[]>,
 ): Record<string, number> {
   // Sum identical units by development type (@todo read all possible option `val` from Schema in future)
   const baseSums: Record<string, number> = {

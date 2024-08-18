@@ -3,11 +3,11 @@ import React from "react";
 import InputRow from "ui/shared/InputRow";
 
 import { ChecklistFieldInput, DateFieldInput, MapFieldInput, NumberFieldInput, RadioFieldInput, SelectFieldInput, TextFieldInput } from "./Fields";
-import { Field, Schema, UserData } from "./model";
+import { Field, Schema, SchemaData } from "./model";
 
 type InputFieldProps = {
   activeIndex: number;
-  formik: FormikProps<UserData>;
+  formik: FormikProps<SchemaData>;
 } & Field;
 
 /**
@@ -39,11 +39,11 @@ interface SchemaFieldsProps {
   /** 
    * Optional index of currently active schema instance. 
    * Only required if multiple user responses are allowed, e.g. in the List component. 
-   * Defaults to 0 as `UserData` always holds an array of responses
+   * Defaults to 0 as `SchemaData` always holds an array of responses
   */
   activeIndex?: number;
   /** Formik instance generated from config provided by useSchema hook */
-  formik: FormikProps<UserData>;
+  formik: FormikProps<SchemaData>;
   schema: Schema;
 }
 
