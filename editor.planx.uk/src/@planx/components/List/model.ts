@@ -120,14 +120,14 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   ...parseMoreInformation(data),
 });
 
-const mapValidationSchema = ({ drawMany }: MapField["data"]) =>
+const mapValidationSchema = ({ drawType }: MapField["data"]) =>
   array()
     .required()
     .test({
       name: "atLeastOneFeature",
-      message: "Add at least one feature to the map",
+      message: `Draw at least one ${drawType?.toLocaleLowerCase()} on the map`,
       test: (features?: Array<Feature>) => {
-        return Boolean(drawMany && features && features?.length > 0);
+        return Boolean(features && features?.length > 0);
       },
     });
 

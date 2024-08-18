@@ -234,10 +234,7 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
   );
 };
 
-export const DateFieldInput: React.FC<Props<DateField>> = ({
-  id,
-  data,
-}) => {
+export const DateFieldInput: React.FC<Props<DateField>> = ({ id, data }) => {
   const { formik, activeIndex } = useListContext();
 
   return (
@@ -247,7 +244,10 @@ export const DateFieldInput: React.FC<Props<DateField>> = ({
           value={formik.values.userData[activeIndex][data.fn] as string}
           bordered
           onChange={(newDate: string, eventType: string) => {
-            formik.setFieldValue(`userData[${activeIndex}]['${data.fn}']`, paddedDate(newDate, eventType));
+            formik.setFieldValue(
+              `userData[${activeIndex}]['${data.fn}']`,
+              paddedDate(newDate, eventType),
+            );
           }}
           error={get(formik.errors, ["userData", activeIndex, data.fn])}
           id={id}
@@ -267,7 +267,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
 
-  const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
+  const [_features, setFeatures] = useState<Feature[] | undefined>(undefined);
 
   useEffect(() => {
     const geojsonChangeHandler = async ({ detail: geojson }: any) => {
@@ -275,15 +275,14 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
         setFeatures(geojson["EPSG:3857"].features);
         await formik.setFieldValue(
           `userData[${activeIndex}]['${fn}']`,
-          features,
+          geojson["EPSG:3857"].features,
         );
-        console.log(features, formik);
       } else {
         // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
         await formik.setFieldValue(
           `userData[${activeIndex}]['${fn}']`,
-          features,
+          undefined,
         );
       }
     };
@@ -328,5 +327,5 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
         </MapContainer>
       </ErrorWrapper>
     </InputLabel>
-  )
+  );
 };
