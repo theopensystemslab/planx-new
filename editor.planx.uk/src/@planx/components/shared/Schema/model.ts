@@ -109,6 +109,9 @@ export interface Schema {
 
 export type UserResponse = Record<Field["data"]["fn"], string | any[]>; // string | string[] | Feature[]
 
+/**
+ * Output data from a form using the useSchema hook
+ */
 export type UserData = { userData: UserResponse[] };
 
 /**

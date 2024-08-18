@@ -36,11 +36,20 @@ const InputField: React.FC<InputFieldProps> = (props) => {
 };
 
 interface SchemaFieldsProps { 
+  /** 
+   * Optional index of currently active schema instance. 
+   * Only required if multiple user responses are allowed, e.g. in the List component. 
+   * Defaults to 0 as `UserData` always holds an array of responses
+  */
   activeIndex?: number;
+  /** Formik instance generated from config provided by useSchema hook */
   formik: FormikProps<UserData>;
   schema: Schema;
 }
 
+/**
+ * Display a set of fields for the provided schema
+ */
 export const SchemaFields: React.FC<SchemaFieldsProps> = ({ schema, formik, activeIndex = 0 }) => (
   schema.fields.map((field, i) => (
     <InputRow key={i}>

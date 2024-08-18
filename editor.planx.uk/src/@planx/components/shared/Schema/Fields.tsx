@@ -38,6 +38,9 @@ type Props<T extends Field> = {
   activeIndex: number;
 } & T;
 
+/**
+ * Helper function to get shared props derived from `Field` and `props.formik`
+ */
 const getFieldProps = <T extends Field>(props: Props<T>) => ({
   id: `input-${props.type}-${props.data.fn}`,
   errorMessage: get(props.formik.errors, ["userData", props.activeIndex, props.data.fn]),
