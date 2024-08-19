@@ -1,0 +1,37 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+components:
+  schemas:
+    SendSlackNotification:
+      type: object
+      properties:
+        message: string
+  responses:
+    SendSlackNotification:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: string
+paths:
+  /send-slack-notification:
+    post:
+      summary: Send a Slack notification
+      description: Allows authenticated users to trigger a Slack notification when they update settings in the editor
+      tags: ["misc"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendSlackNotification"
+      responses:
+        "200":
+          $ref: "#/components/responses/SendSlackNotification"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"

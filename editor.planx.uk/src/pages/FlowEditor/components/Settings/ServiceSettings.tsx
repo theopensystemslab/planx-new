@@ -9,6 +9,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
+import axios from "axios";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
@@ -81,13 +82,23 @@ const TextInput: React.FC<{
 };
 
 const ServiceSettings: React.FC = () => {
-  const [flowSettings, updateFlowSettings, flowStatus, updateFlowStatus] =
-    useStore((state) => [
-      state.flowSettings,
-      state.updateFlowSettings,
-      state.flowStatus,
-      state.updateFlowStatus,
-    ]);
+  const [
+    flowSettings,
+    updateFlowSettings,
+    flowStatus,
+    updateFlowStatus,
+    token,
+    teamSlug,
+    flowSlug,
+  ] = useStore((state) => [
+    state.flowSettings,
+    state.updateFlowSettings,
+    state.flowStatus,
+    state.updateFlowStatus,
+    state.jwt,
+    state.teamSlug,
+    state.flowSlug,
+  ]);
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
@@ -100,6 +111,23 @@ const ServiceSettings: React.FC = () => {
     }
 
     setIsAlertOpen(false);
+  };
+
+  const sendFlowStatusSlackNotification = async (status: FlowStatus) => {
+    const emoji = status === "online" ? ":large_green_circle:" : ":no_entry:";
+    const message = `${emoji} *${teamSlug}/${flowSlug}* is now ${status}`;
+
+    return axios.post(
+      `${process.env.REACT_APP_API_URL}/send-slack-notification`,
+      {
+        message: message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
   };
 
   const elementsForm = useFormik<FlowSettings>({
@@ -137,6 +165,8 @@ const ServiceSettings: React.FC = () => {
       const isSuccess = await updateFlowStatus(values.status);
       if (isSuccess) {
         setIsAlertOpen(true);
+        // Send a Slack notification to #planx-notifications
+        sendFlowStatusSlackNotification(values.status);
         // Reset "dirty" status to disable Save & Reset buttons
         resetForm({ values });
       }
