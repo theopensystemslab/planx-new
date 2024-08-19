@@ -27,7 +27,7 @@ export const AddNewEditorModal = ({
     values: AddNewEditorFormValues,
     { resetForm }: FormikHelpers<AddNewEditorFormValues>,
   ) => {
-    const { id: teamId } = await useStore.getState().fetchCurrentTeam();
+    const teamId = useStore.getState().teamId;
 
     await createUser(
       values.email,

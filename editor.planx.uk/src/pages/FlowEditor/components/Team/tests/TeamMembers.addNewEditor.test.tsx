@@ -6,16 +6,7 @@ import { userEntersInput } from "./helpers/userEntersInput";
 jest.mock("lib/featureFlags.ts", () => ({
   hasFeatureFlag: jest.fn().mockReturnValue(true),
 }));
-jest.mock("pages/FlowEditor/lib/store/team.ts", () => ({
-  teamStore: jest.fn().mockImplementation(() => ({
-    fetchCurrentTeam: jest.fn().mockResolvedValue({
-      team_id: 1,
-      role: "teamEditor",
-      user_id: 1,
-      __typename: "team_members",
-    }),
-  })),
-}));
+
 jest.mock("pages/FlowEditor/components/Team/queries/createUser.tsx", () => ({
   createUser: jest.fn().mockResolvedValue({
     id: 1,
