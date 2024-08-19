@@ -6,9 +6,12 @@ import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
 import { paddedDate } from "@planx/components/DateInput/model";
+import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import { getIn } from "formik";
+import { Feature } from "geojson";
 import { get } from "lodash";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect, useState } from "react";
 import SelectInput from "ui/editor/SelectInput";
 import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem";
@@ -22,6 +25,7 @@ import BasicRadio from "../../shared/Radio/BasicRadio";
 import type {
   ChecklistField,
   DateField,
+  MapField,
   NumberField,
   QuestionField,
   TextField,
@@ -230,10 +234,7 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
   );
 };
 
-export const DateFieldInput: React.FC<Props<DateField>> = ({
-  id,
-  data,
-}) => {
+export const DateFieldInput: React.FC<Props<DateField>> = ({ id, data }) => {
   const { formik, activeIndex } = useListContext();
 
   return (
@@ -243,12 +244,89 @@ export const DateFieldInput: React.FC<Props<DateField>> = ({
           value={formik.values.userData[activeIndex][data.fn] as string}
           bordered
           onChange={(newDate: string, eventType: string) => {
-            formik.setFieldValue(`userData[${activeIndex}]['${data.fn}']`, paddedDate(newDate, eventType));
+            formik.setFieldValue(
+              `userData[${activeIndex}]['${data.fn}']`,
+              paddedDate(newDate, eventType),
+            );
           }}
           error={get(formik.errors, ["userData", activeIndex, data.fn])}
           id={id}
         />
       </Box>
+    </InputLabel>
+  );
+};
+
+export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
+  const { formik, activeIndex, schema } = useListContext();
+  const {
+    id,
+    data: { title, fn, mapOptions },
+  } = props;
+
+  const teamSettings = useStore.getState().teamSettings;
+  const passport = useStore((state) => state.computePassport());
+
+  const [_features, setFeatures] = useState<Feature[] | undefined>(undefined);
+
+  useEffect(() => {
+    const geojsonChangeHandler = async ({ detail: geojson }: any) => {
+      if (geojson["EPSG:3857"]?.features) {
+        setFeatures(geojson["EPSG:3857"].features);
+        await formik.setFieldValue(
+          `userData[${activeIndex}]['${fn}']`,
+          geojson["EPSG:3857"].features,
+        );
+      } else {
+        // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
+        setFeatures(undefined);
+        await formik.setFieldValue(
+          `userData[${activeIndex}]['${fn}']`,
+          undefined,
+        );
+      }
+    };
+
+    const map: any = document.getElementById(id);
+
+    map?.addEventListener("geojsonChange", geojsonChangeHandler);
+
+    return function cleanup() {
+      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
+    };
+  }, [setFeatures]);
+
+  return (
+    <InputLabel label={title} id={`map-label-${id}`} htmlFor={id}>
+      <ErrorWrapper
+        error={getIn(formik.errors, `userData[${activeIndex}]['${fn}']`)}
+        id={id}
+      >
+        <MapContainer environment="standalone">
+          {/* @ts-ignore */}
+          <my-map
+            id={id}
+            ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
+            height={400}
+            basemap={mapOptions?.basemap}
+            drawMode
+            drawMany={mapOptions?.drawMany}
+            drawColor={mapOptions?.drawColor}
+            drawType={mapOptions?.drawType}
+            drawPointer="crosshair"
+            zoom={20}
+            maxZoom={23}
+            latitude={Number(passport?.data?._address?.latitude)}
+            longitude={Number(passport?.data?._address?.longitude)}
+            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+            osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+            clipGeojsonData={
+              teamSettings?.boundaryBBox &&
+              JSON.stringify(teamSettings?.boundaryBBox)
+            }
+          />
+        </MapContainer>
+      </ErrorWrapper>
     </InputLabel>
   );
 };
