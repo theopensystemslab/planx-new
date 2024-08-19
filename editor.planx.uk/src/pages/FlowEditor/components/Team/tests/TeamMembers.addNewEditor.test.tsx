@@ -7,24 +7,15 @@ jest.mock("lib/featureFlags.ts", () => ({
   hasFeatureFlag: jest.fn().mockReturnValue(true),
 }));
 
-jest.mock("pages/FlowEditor/components/Team/queries/createUser.tsx", () => ({
-  createUser: jest.fn().mockResolvedValue({
-    id: 1,
-    email: "mickeymouse@email.com",
-    first_name: "Mickey",
-    last_name: "Mouse",
-    is_platform_admin: false,
-    __typename: "users",
+jest.mock(
+  "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
+  () => ({
+    createAndAddUserToTeam: jest.fn().mockResolvedValue({
+      id: 1,
+      __typename: "users",
+    }),
   }),
-}));
-jest.mock("pages/FlowEditor/components/Team/queries/addUserToTeam.tsx", () => ({
-  addUserToTeam: jest.fn().mockResolvedValue({
-    team_id: 1,
-    role: "teamEditor",
-    user_id: 1,
-    __typename: "team_members",
-  }),
-}));
+);
 
 describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add a new editor'", () => {
   beforeEach(async () => {
