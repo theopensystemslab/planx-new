@@ -424,7 +424,7 @@ const ServiceSettings: React.FC = () => {
 
           <PublicLink
             isFlowPublished={isFlowPublished}
-            status={statusForm.values.status}
+            status={flowStatus || "offline"}
             subdomain={subdomainLink}
             publishedLink={publishedLink}
           />
