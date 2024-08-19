@@ -25,6 +25,10 @@ config:
   application:hasura-memory: "2048"
   application:hasura-planx-api-key:
     secure: AAABAExsXFL7HabeK0Z1oSUJzI2NqVqEmKJ1ojYXyX4Hi8Sbt1Ht9QJc/Yn3cPBAB2r32HKa4HtqqLmfGjS+04lFB/I=
+  application:idox-nexus-client:
+    secure: AAABACdm6IyRjfVPrHLCS5eKQD0ixA2lFC5h04HULwcCXx3j
+  application:idox-nexus-submission-url: todo
+  application:idox-nexus-token-url: todo
   application:jwt-secret:
     secure: AAABABnYUYnZbOVTfN/n+m6kMQV951efSyHJYKVkGmtYvbPkpAk+BUIciL6AbJvW2x5bBuYvsrmY1v5lyZkoqoJ3XgDA/MTBQNIiNg==
   application:metabase-encryption-secret-key:
