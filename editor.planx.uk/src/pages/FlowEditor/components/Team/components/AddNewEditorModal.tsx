@@ -41,7 +41,7 @@ export const AddNewEditorModal = ({
     resetForm({ values });
   };
 
-  const formik = useFormik({
+  const formik = useFormik<AddNewEditorFormValues>({
     initialValues: {
       firstName: "",
       lastName: "",
