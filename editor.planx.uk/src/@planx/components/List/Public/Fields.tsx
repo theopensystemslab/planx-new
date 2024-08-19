@@ -261,7 +261,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   const { formik, activeIndex, schema } = useListContext();
   const {
     id,
-    data: { title, fn, drawType, drawColor, drawMany },
+    data: { title, fn, mapOptions },
   } = props;
 
   const teamSettings = useStore.getState().teamSettings;
@@ -308,10 +308,11 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
             id={id}
             ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
             height={400}
+            basemap={mapOptions?.basemap}
             drawMode
-            drawMany={drawMany}
-            drawColor={drawColor}
-            drawType={drawType}
+            drawMany={mapOptions?.drawMany}
+            drawColor={mapOptions?.drawColor}
+            drawType={mapOptions?.drawType}
             drawPointer="crosshair"
             zoom={20}
             maxZoom={23}

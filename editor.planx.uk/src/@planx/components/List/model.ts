@@ -70,10 +70,13 @@ export type MapField = {
   type: "map";
   data: {
     title: string;
-    fn: "features";
-    drawType?: "Point" | "Polygon";
-    drawColor?: string;
-    drawMany?: boolean;
+    fn: string;
+    mapOptions?: {
+      basemap?: "OSVectorTile" | "OSRaster" | "MapboxSatellite" | "OSM";
+      drawType?: "Point" | "Polygon";
+      drawColor?: string;
+      drawMany?: boolean;
+    };
   };
 };
 
@@ -120,12 +123,14 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   ...parseMoreInformation(data),
 });
 
-const mapValidationSchema = ({ drawType }: MapField["data"]) =>
+const mapValidationSchema = ({ mapOptions }: MapField["data"]) =>
   array()
     .required()
     .test({
       name: "atLeastOneFeature",
-      message: `Draw at least one ${drawType?.toLocaleLowerCase()} on the map`,
+      message: `Draw at least one ${
+        mapOptions?.drawType?.toLocaleLowerCase() || "feature"
+      } on the map`,
       test: (features?: Array<Feature>) => {
         return Boolean(features && features?.length > 0);
       },

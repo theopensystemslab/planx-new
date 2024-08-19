@@ -65,9 +65,12 @@ export const Trees: Schema = {
       data: {
         title: "Where is it?",
         fn: "features",
-        drawType: "Point",
-        drawColor: "#ff0000",
-        drawMany: true,
+        mapOptions: {
+          basemap: "OSVectorTile",
+          drawType: "Point",
+          drawColor: "#ff0000",
+          drawMany: true,
+        },
       },
     },
   ],
