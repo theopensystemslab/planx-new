@@ -8,7 +8,20 @@ import { rootFlowPath } from "routes/utils";
 
 const { getState, setState } = useStore;
 
-describe("Check when service is offline and published, the team has a subdomain", () => {
+const disabledCopyCheck = () => {
+  const copyButton = screen.getByRole("button", { name: `copy` });
+  expect(copyButton).toBeDisabled();
+};
+
+const inactiveLinkCheck = async () => {
+  const publicLink = await screen.findByText(
+    `https://mockedteamdomain.com/mock-planning-permish`
+  );
+
+  expect(publicLink.tagName).toBe("P");
+};
+
+describe("A team with a subdomain has an offline, published service. ", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({
@@ -29,13 +42,9 @@ describe("Check when service is offline and published, the team has a subdomain"
       .mockReturnValue(mockWindowLocationObject);
   });
 
-  it("public link should be the current published url in a <p> tag", async () => {
-    const publicLink = await screen.findByText(
-      `https://mockedteamdomain.com/mock-planning-permish`
-    );
-
-    const copyButton = await screen.findByText(`copy`);
-    expect(publicLink.tagName).toBe("P");
-    expect(copyButton.tagName).toBe("SPAN");
-  });
+  it(
+    "has a public link with the subdomain url in a <p> tag",
+    inactiveLinkCheck
+  );
+  it("has a disabled copy button", disabledCopyCheck);
 });
