@@ -228,7 +228,7 @@ const ServiceSettings: React.FC = () => {
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
-    reason?: string,
+    reason?: string
   ) => {
     if (reason === "clickaway") {
       return;
@@ -279,7 +279,7 @@ const ServiceSettings: React.FC = () => {
   });
 
   const publishedLink = `${window.location.origin}${rootFlowPath(
-    false,
+    false
   )}/published`;
 
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
@@ -405,9 +405,7 @@ const ServiceSettings: React.FC = () => {
                 onChange={() =>
                   statusForm.setFieldValue(
                     "status",
-                    statusForm.values.status === "online"
-                      ? "offline"
-                      : "online",
+                    statusForm.values.status === "online" ? "offline" : "online"
                   )
                 }
               />
