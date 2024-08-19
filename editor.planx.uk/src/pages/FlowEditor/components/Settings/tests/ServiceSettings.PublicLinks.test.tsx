@@ -29,11 +29,13 @@ describe("Check when service is offline and published, the team has a subdomain"
       .mockReturnValue(mockWindowLocationObject);
   });
 
-  it("public link should be the current published url", async () => {
-    expect(
-      await screen.findByText(
-        `https://mockedteamdomain.com/mock-planning-permish`
-      )
-    ).toBe;
+  it("public link should be the current published url in a <p> tag", async () => {
+    const publicLink = await screen.findByText(
+      `https://mockedteamdomain.com/mock-planning-permish`
+    );
+
+    const copyButton = await screen.findByText(`copy`);
+    expect(publicLink.tagName).toBe("P");
+    expect(copyButton.tagName).toBe("SPAN");
   });
 });
