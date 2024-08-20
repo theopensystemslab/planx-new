@@ -1,7 +1,7 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import setupServiceSettingsScreen, {
   mockWindowLocationObject,
-} from "./helpers/setupServiceSettingsScreen";
+} from "../helpers/setupServiceSettingsScreen";
 import { screen } from "@testing-library/react";
 
 const { getState, setState } = useStore;
@@ -125,7 +125,26 @@ describe("A team with a subdomain has an online, published service. ", () => {
     );
   });
 });
+describe("A team with a subdomain has an offline, unpublished service. ", () => {
+  beforeEach(async () => {
+    // setup state values that <ServiceSettings/> depends on
+    setState({
+      ...subdomainStateData,
+      isFlowPublished: false,
+      flowStatus: "offline",
+    });
 
+    // render the <ServiceSettings/> comp
+    setupServiceSettingsScreen();
+  });
+
+  it("has a public link with the subdomain url in a <p> tag", async () => {
+    const { flowSlug, teamDomain } = getState();
+
+    await inactiveLinkCheck(`https://${teamDomain}/${flowSlug}`);
+  });
+  it("has a disabled copy button", disabledCopyCheck);
+});
 describe("A team without a subdomain has an offline, published service. ", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
@@ -198,7 +217,7 @@ describe("A team without a subdomain has an online, published service. ", () => 
     setupServiceSettingsScreen();
     await activeLinkCheck(publishedUrl);
   });
-  it("has a enabled copy button", () => {
+  it("has an enabled copy button", () => {
     // render the <ServiceSettings/> comp
     setupServiceSettingsScreen();
     enabledCopyCheck();
@@ -214,4 +233,28 @@ describe("A team without a subdomain has an online, published service. ", () => 
     expect(await screen.findByText("copied")).toBeVisible();
     expect(navigator.clipboard.writeText).toBeCalledWith(publishedUrl);
   });
+});
+
+describe("A team without a subdomain has an offline, unpublished service. ", () => {
+  beforeEach(async () => {
+    // setup state values that <ServiceSettings/> depends on
+    setState({
+      ...nonSubdomainStateData,
+      flowStatus: "offline",
+      isFlowPublished: false,
+    });
+
+    // Mocking window.location.origin
+    jest
+      .spyOn(window, "location", "get")
+      .mockReturnValue(mockWindowLocationObject);
+
+    // render the <ServiceSettings/> comp
+    setupServiceSettingsScreen();
+  });
+
+  it("has a public link with the url in a <p> tag", async () => {
+    await inactiveLinkCheck(publishedUrl);
+  });
+  it("has a disabled copy button", disabledCopyCheck);
 });
