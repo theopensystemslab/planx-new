@@ -1,5 +1,4 @@
 import React from "react";
-
 import ServiceSettings from "../../ServiceSettings";
 import { setup } from "testUtils";
 import { DndProvider } from "react-dnd";

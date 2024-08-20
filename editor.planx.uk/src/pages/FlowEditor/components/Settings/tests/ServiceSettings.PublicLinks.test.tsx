@@ -3,8 +3,6 @@ import setupServiceSettingsScreen, {
   mockWindowLocationObject,
 } from "./helpers/setupServiceSettingsScreen";
 import { fireEvent, screen } from "@testing-library/react";
-import { exp } from "mathjs";
-import userEvent from "@testing-library/user-event";
 
 const { getState, setState } = useStore;
 
