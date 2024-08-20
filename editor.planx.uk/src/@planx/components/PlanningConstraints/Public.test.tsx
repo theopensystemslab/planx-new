@@ -8,13 +8,13 @@ import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
 import PlanningConstraints from "./Public";
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
-  const isGISRequest = url()?.startsWith(`${process.env.REACT_APP_API_URL}/gis/`);
-  const isRoadsRequest = url()?.startsWith(`${process.env.REACT_APP_API_URL}/roads/`);
-
-  if (isGISRequest) return { data: digitalLandResponseMock } as any;
-  if (isRoadsRequest) return { data: classifiedRoadsResponseMock } as any;
-
-  return { data: null };
+  return {
+    data: url()?.startsWith(`${process.env.REACT_APP_API_URL}/gis/`)
+      ? digitalLandResponseMock
+      : url()?.startsWith(`${process.env.REACT_APP_API_URL}/roads/`)
+      ? classifiedRoadsResponseMock
+      : null,
+  } as any;
 });
 
 it("renders correctly", async () => {

@@ -146,100 +146,98 @@ function Component(props: Props) {
     ...roads?.metadata,
   };
 
-  if (showGraphError) return <ConstraintsGraphError {...props} />;
-
-  const isLoading = isValidating && isValidatingRoads && !constraints;
-
-  if (isLoading) return (
-    <Card handleSubmit={props.handleSubmit} isValid>
-      <CardHeader
-        title={props.title}
-        description={props.description || ""}
-      />
-      <DelayedLoadingIndicator text="Fetching data..." />
-    </Card>
-  )
-
   return (
-    <PlanningConstraintsContent
-      title={props.title}
-      description={props.description || ""}
-      fn={props.fn}
-      disclaimer={props.disclaimer}
-      constraints={constraints}
-      metadata={metadata}
-      handleSubmit={() => {
-        // `_constraints` & `_overrides` are responsible for auditing
-        const _constraints: Array<
-          EnhancedGISResponse | GISResponse["constraints"]
-        > = [];
-        if (hasPlanningData) {
-          if (data && !dataError)
-            _constraints.push({
-              ...data,
-              planxRequest: teamGisEndpoint,
-            } as EnhancedGISResponse);
-          if (roads && !roadsError)
-            _constraints.push({
-              ...roads,
-              planxRequest: classifiedRoadsEndpoint,
-            } as EnhancedGISResponse);
-        } else {
-          if (data) _constraints.push(data as GISResponse["constraints"]);
-        }
+    <>
+      {showGraphError ? (
+        <ConstraintsGraphError {...props} />
+      ) : !isValidating && !isValidatingRoads && constraints ? (
+        <PlanningConstraintsContent
+          title={props.title}
+          description={props.description || ""}
+          fn={props.fn}
+          disclaimer={props.disclaimer}
+          constraints={constraints}
+          metadata={metadata}
+          handleSubmit={() => {
+            // `_constraints` & `_overrides` are responsible for auditing
+            const _constraints: Array<
+              EnhancedGISResponse | GISResponse["constraints"]
+            > = [];
+            if (hasPlanningData) {
+              if (data && !dataError)
+                _constraints.push({
+                  ...data,
+                  planxRequest: teamGisEndpoint,
+                } as EnhancedGISResponse);
+              if (roads && !roadsError)
+                _constraints.push({
+                  ...roads,
+                  planxRequest: classifiedRoadsEndpoint,
+                } as EnhancedGISResponse);
+            } else {
+              if (data) _constraints.push(data as GISResponse["constraints"]);
+            }
 
-        const hasInaccurateConstraints = inaccurateConstraints && Object.keys(inaccurateConstraints).length > 0;
-        const _overrides = hasInaccurateConstraints ? { ...priorOverrides, [props.fn]: inaccurateConstraints } : undefined;
+            const hasInaccurateConstraints = inaccurateConstraints && Object.keys(inaccurateConstraints).length > 0;
+            const _overrides = hasInaccurateConstraints ? { ...priorOverrides, [props.fn]: inaccurateConstraints } : undefined;
 
-        // `planningConstraints.action` is for analytics
-        const userAction = hasInaccurateConstraints
-          ? "Reported at least one inaccurate planning constraint"
-          : "Accepted all planning constraints";
+            // `planningConstraints.action` is for analytics
+            const userAction = hasInaccurateConstraints
+              ? "Reported at least one inaccurate planning constraint" 
+              : "Accepted all planning constraints";
 
-        // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
-        const _nots: IntersectingConstraints = {};
-        const intersectingConstraints: IntersectingConstraints = {};
-        Object.entries(constraints).forEach(([key, data]) => {
-          if (data.value) {
-            intersectingConstraints[props.fn] ||= [];
-            intersectingConstraints[props.fn].push(key);
-          } else {
-            _nots[props.fn] ||= [];
-            _nots[props.fn].push(key);
-          }
-        });
+            // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
+            const _nots: IntersectingConstraints = {};
+            const intersectingConstraints: IntersectingConstraints = {};
+            Object.entries(constraints).forEach(([key, data]) => {
+              if (data.value) {
+                intersectingConstraints[props.fn] ||= [];
+                intersectingConstraints[props.fn].push(key);
+              } else {
+                _nots[props.fn] ||= [];
+                _nots[props.fn].push(key);
+              }
+            });
 
-        // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
-        const {
-          nots: notsAfterOverrides,
-          intersectingConstraints: intersectingConstraintsAfterOverrides,
-        } = handleOverrides(
-          props.fn,
-          constraints,
-          inaccurateConstraints,
-          intersectingConstraints,
-          _nots,
-        );
+            // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
+            const {
+              nots: notsAfterOverrides,
+              intersectingConstraints: intersectingConstraintsAfterOverrides,
+            } = handleOverrides(
+              props.fn,
+              constraints,
+              inaccurateConstraints,
+              intersectingConstraints,
+              _nots,
+            );
 
-        const passportData = {
-          _constraints,
-          _overrides,
-          "planningConstraints.action": userAction,
-          _nots: notsAfterOverrides,
-          ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0 ? undefined : intersectingConstraintsAfterOverrides),
-        };
+            const passportData = {
+              _constraints,
+              _overrides,
+              "planningConstraints.action": userAction,
+              _nots: notsAfterOverrides,
+              ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0 ? undefined : intersectingConstraintsAfterOverrides),
+            };
 
-
-        props.handleSubmit?.({
-          data: passportData,
-        });
-      }}
-      refreshConstraints={() => mutate()}
-      inaccurateConstraints={inaccurateConstraints}
-      setInaccurateConstraints={setInaccurateConstraints}
-    />
-  )
-
+            props.handleSubmit?.({
+              data: passportData,
+            });
+          }}
+          refreshConstraints={() => mutate()}
+          inaccurateConstraints={inaccurateConstraints}
+          setInaccurateConstraints={setInaccurateConstraints}
+        />
+      ) : (
+        <Card handleSubmit={props.handleSubmit} isValid>
+          <CardHeader
+            title={props.title}
+            description={props.description || ""}
+          />
+          <DelayedLoadingIndicator text="Fetching data..." />
+        </Card>
+      )}
+    </>
+  );
 }
 
 export type PlanningConstraintsContentProps = {
@@ -379,8 +377,8 @@ const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
       No information available
     </Typography>
     {props.error &&
-      typeof props.error === "string" &&
-      props.error.endsWith("local authority") ? (
+    typeof props.error === "string" &&
+    props.error.endsWith("local authority") ? (
       <Typography variant="body2">{capitalize(props.error)}</Typography>
     ) : (
       <>

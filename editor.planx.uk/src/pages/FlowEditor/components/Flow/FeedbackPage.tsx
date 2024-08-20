@@ -225,17 +225,11 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
     }
   };
 
-  const generateCommentSummary = (userComment: string | null) => {
-    if (!userComment) return "No comment";
-
-    const COMMENT_LENGTH = 50;
-    const shouldBeSummarised = userComment.length > COMMENT_LENGTH;
-    if (shouldBeSummarised) return `${userComment.slice(0, COMMENT_LENGTH)}...`
-
-    return userComment;
-  }
-
-  const commentSummary = generateCommentSummary(item.userComment);
+  const commentSummary = item.userComment
+    ? item.userComment.length > 50
+      ? `${item.userComment.slice(0, 50)}...`
+      : item.userComment
+    : "No comment";
 
   const filteredFeedbackItems = (() => {
     switch (item.type) {
