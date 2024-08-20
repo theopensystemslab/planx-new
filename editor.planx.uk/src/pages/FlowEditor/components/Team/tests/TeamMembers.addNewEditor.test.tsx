@@ -37,7 +37,7 @@ describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add 
 });
 
 describe("when a user fills in the 'add a new editor' form correctly", () => {
-  afterEach(() => useStore.setState(initialState));
+  afterAll(() => useStore.setState(initialState));
   beforeEach(async () => {
     const user = await setupTeamMembersScreen();
     const teamEditorsTable = screen.getByTestId("team-editors");
@@ -57,6 +57,7 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
     const createUserButton = await screen.findByTestId(
       "modal-create-user-button",
     );
+
     user.click(createUserButton);
   });
 
