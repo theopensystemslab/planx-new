@@ -13,6 +13,7 @@ export default async function setupServiceSettingsScreen() {
     </DndProvider>
   );
 
+  await screen.findByText("Your public link");
   return user;
 }
 
