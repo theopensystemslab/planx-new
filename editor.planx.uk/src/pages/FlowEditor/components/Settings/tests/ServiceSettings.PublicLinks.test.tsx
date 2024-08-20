@@ -2,7 +2,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import setupServiceSettingsScreen, {
   mockWindowLocationObject,
 } from "./helpers/setupServiceSettingsScreen";
-import { fireEvent, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 
 const { getState, setState } = useStore;
 
@@ -96,61 +96,30 @@ describe("A team with a subdomain has an online, published service. ", () => {
     jest
       .spyOn(navigator.clipboard, "writeText")
       .mockImplementation(() => Promise.resolve());
-
-    // render the <ServiceSettings/> comp
-    const user = await setupServiceSettingsScreen();
   });
 
   it("has a public link with the subdomain url in an <a> tag", async () => {
     // render the <ServiceSettings/> comp
     const { flowSlug, teamDomain } = getState();
 
+    await setupServiceSettingsScreen();
     await activeLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
   it("has an enabled copy button", async () => {
     // render the <ServiceSettings/> comp
+    await setupServiceSettingsScreen();
     enabledCopyCheck();
   });
   it("can be copied to the clipboard", async () => {
-    const copyButton = screen.getByRole("button", { name: `copy` });
-
-    fireEvent.click(copyButton);
-
     const { flowSlug, teamDomain } = getState();
-
-    expect(navigator.clipboard.writeText).toBeCalledWith(
-      `https://${teamDomain}/${flowSlug}`
-    );
-  });
-});
-
-describe("An active link is", () => {
-  beforeEach(async () => {
-    // setup state values that <ServiceSettings/> depends on
-    setState({
-      flowSettings: {},
-      flowStatus: "online",
-      teamDomain: "mockedteamdomain.com",
-      teamName: "mockTeam",
-      isFlowPublished: true,
-      flowSlug: "mock-planning-permish",
-    });
-
     // render the <ServiceSettings/> comp
-    await setupServiceSettingsScreen();
+    const user = await setupServiceSettingsScreen();
 
-    jest
-      .spyOn(navigator.clipboard, "writeText")
-      .mockImplementation(() => Promise.resolve());
-  });
-
-  it("copied to the clipboard", async () => {
     const copyButton = screen.getByRole("button", { name: `copy` });
 
-    fireEvent.click(copyButton);
+    user.click(copyButton);
 
-    const { flowSlug, teamDomain } = getState();
-
+    expect(await screen.findByText("copied")).toBeVisible();
     expect(navigator.clipboard.writeText).toBeCalledWith(
       `https://${teamDomain}/${flowSlug}`
     );
