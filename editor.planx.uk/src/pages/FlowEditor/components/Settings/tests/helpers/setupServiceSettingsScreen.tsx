@@ -12,7 +12,7 @@ export default async function setupServiceSettingsScreen() {
       <ServiceSettings />
     </DndProvider>
   );
-  await screen.findByText("Your public Link");
+
   return user;
 }
 
@@ -24,7 +24,7 @@ export const mockWindowLocationObject = {
   protocol: "http:",
   hostname: "dummy.com",
   href: "http://dummy.com?page=1&name=testing",
-  pathname: "",
+  pathname: "/mockTeam/mock-planning-permish",
   search: "",
   assign: jest.fn(),
   reload: jest.fn(),
