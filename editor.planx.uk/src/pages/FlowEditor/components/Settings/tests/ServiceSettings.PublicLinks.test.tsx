@@ -4,6 +4,7 @@ import setupServiceSettingsScreen, {
 } from "./helpers/setupServiceSettingsScreen";
 import { fireEvent, screen } from "@testing-library/react";
 import { exp } from "mathjs";
+import userEvent from "@testing-library/user-event";
 
 const { getState, setState } = useStore;
 
@@ -223,21 +224,27 @@ describe("A team without a subdomain has an online, published service. ", () => 
     jest
       .spyOn(navigator.clipboard, "writeText")
       .mockImplementation(() => Promise.resolve());
-
-    // render the <ServiceSettings/> comp
-    setupServiceSettingsScreen();
   });
 
   it("has a public link with the subdomain url in an <a> tag", async () => {
+    // render the <ServiceSettings/> comp
+    setupServiceSettingsScreen();
     await activeLinkCheck(publishedUrl);
   });
-  it("has a enabled copy button", enabledCopyCheck);
+  it("has a enabled copy button", () => {
+    // render the <ServiceSettings/> comp
+    setupServiceSettingsScreen();
+    enabledCopyCheck();
+  });
 
   it("can be copied to the clipboard", async () => {
+    // render the <ServiceSettings/> comp
+    const user = await setupServiceSettingsScreen();
     const copyButton = screen.getByRole("button", { name: `copy` });
 
-    fireEvent.click(copyButton);
+    user.click(copyButton);
 
+    expect(await screen.findByText("copied")).toBeVisible();
     expect(navigator.clipboard.writeText).toBeCalledWith(publishedUrl);
   });
 });
