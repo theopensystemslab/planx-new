@@ -1,3 +1,4 @@
+import { Feature } from "geojson";
 import { cloneDeep } from "lodash";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
@@ -65,11 +66,31 @@ export type DateField = {
   data: DateInput & { fn: string };
 };
 
+export type MapField = {
+  type: "map";
+  data: {
+    title: string;
+    fn: string;
+    mapOptions?: {
+      basemap?: "OSVectorTile" | "OSRaster" | "MapboxSatellite" | "OSM";
+      drawType?: "Point" | "Polygon";
+      drawColor?: string;
+      drawMany?: boolean;
+    };
+  };
+};
+
 /**
  * Represents the input types available in the List component
  * Existing models are used to allow to us to re-use existing components, maintaining consistend UX/UI
  */
-export type Field = TextField | NumberField | QuestionField | ChecklistField | DateField;
+export type Field =
+  | TextField
+  | NumberField
+  | QuestionField
+  | ChecklistField
+  | DateField
+  | MapField;
 
 /**
  * Models the form displayed to the user
@@ -81,7 +102,7 @@ export interface Schema {
   max?: number;
 }
 
-export type UserResponse = Record<Field["data"]["fn"], string | string[]>;
+export type UserResponse = Record<Field["data"]["fn"], string | any[]>; // string | string[] | Feature[]
 
 export type UserData = { userData: UserResponse[] };
 
@@ -101,6 +122,19 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   schema: cloneDeep(data?.schema) || SCHEMAS[0].schema,
   ...parseMoreInformation(data),
 });
+
+const mapValidationSchema = ({ mapOptions }: MapField["data"]) =>
+  array()
+    .required()
+    .test({
+      name: "atLeastOneFeature",
+      message: `Draw at least one ${
+        mapOptions?.drawType?.toLocaleLowerCase() || "feature"
+      } on the map`,
+      test: (features?: Array<Feature>) => {
+        return Boolean(features && features?.length > 0);
+      },
+    });
 
 /**
  * For each field in schema, return a map of Yup validation schema
@@ -128,6 +162,9 @@ const generateValidationSchemaForFields = (
       case "date":
         fieldSchemas[data.fn] = dateValidationSchema(data);
         break;
+      case "map":
+        fieldSchemas[data.fn] = mapValidationSchema(data);
+        break;
     }
   });
 
@@ -154,7 +191,7 @@ export const generateValidationSchema = (schema: Schema) => {
 export const generateInitialValues = (schema: Schema): UserResponse => {
   const initialValues: UserResponse = {};
   schema.fields.forEach((field) => {
-    field.type === "checklist"
+    ["checklist", "map"].includes(field.type)
       ? (initialValues[field.data.fn] = [])
       : (initialValues[field.data.fn] = "");
   });

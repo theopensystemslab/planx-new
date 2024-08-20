@@ -1,6 +1,7 @@
 import MenuItem from "@mui/material/MenuItem";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -27,6 +28,7 @@ import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebui
 import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
 import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
+import { Trees } from "./schemas/Trees";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -60,7 +62,8 @@ export const SCHEMAS = [
   { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
   { name: "Open spaces (GLA)", schema: OpenSpaceGLA },
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
-] as const;
+  ...(hasFeatureFlag("TREES") ? [{ name: "Trees", schema: Trees }] : []),
+];
 
 function ListComponent(props: Props) {
   const formik = useFormik({
