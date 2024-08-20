@@ -6,6 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
+import { TeamMember } from "pages/FlowEditor/components/Team/types";
 import type { StateCreator } from "zustand";
 
 import { SharedStore } from "./shared";
@@ -17,6 +18,7 @@ export interface TeamStore {
   teamSettings: TeamSettings;
   teamSlug: string;
   teamTheme: TeamTheme;
+  teamMembers: TeamMember[];
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
@@ -26,6 +28,7 @@ export interface TeamStore {
   updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
   updateTeamSettings: (teamSettings: Partial<TeamSettings>) => Promise<boolean>;
   createTeam: (newTeam: { name: string; slug: string }) => Promise<number>;
+  setTeamMembers: (teamMembers: TeamMember[]) => Promise<void>;
 }
 
 export const teamStore: StateCreator<
@@ -40,6 +43,7 @@ export const teamStore: StateCreator<
   teamSettings: {} as TeamSettings,
   teamSlug: "",
   teamTheme: {} as TeamTheme,
+  teamMembers: [] as TeamMember[],
 
   setTeam: (team) => {
     set({
@@ -64,12 +68,12 @@ export const teamStore: StateCreator<
     settings: get().teamSettings,
     slug: get().teamSlug,
     theme: get().teamTheme,
+    members: get().teamMembers,
   }),
 
   createTeam: async (newTeam) => {
     const { $client } = get();
-    const isSuccess = await $client.team.create(newTeam);
-    return isSuccess;
+    return await $client.team.create(newTeam);
   },
 
   initTeamStore: async (slug) => {
@@ -117,6 +121,7 @@ export const teamStore: StateCreator<
       teamSettings: undefined,
       teamSlug: "",
       teamTheme: undefined,
+      teamMembers: [],
     }),
 
   /**
@@ -125,22 +130,20 @@ export const teamStore: StateCreator<
    */
   fetchCurrentTeam: async () => {
     const { teamSlug, $client } = get();
-    const team = await $client.team.getBySlug(teamSlug);
-    return team;
+    return await $client.team.getBySlug(teamSlug);
   },
 
   updateTeamTheme: async (theme: Partial<TeamTheme>) => {
     const { teamId, $client } = get();
-    const isSuccess = await $client.team.updateTheme(teamId, theme);
-    return isSuccess;
+    return await $client.team.updateTheme(teamId, theme);
   },
 
   updateTeamSettings: async (teamSettings: Partial<TeamSettings>) => {
     const { teamId, $client } = get();
-    const isSuccess = await $client.team.updateTeamSettings(
-      teamId,
-      teamSettings,
-    );
-    return isSuccess;
+    return await $client.team.updateTeamSettings(teamId, teamSettings);
+  },
+
+  setTeamMembers: async (teamMembers: TeamMember[]) => {
+    set((state) => ({ teamMembers: [...state.teamMembers, ...teamMembers] }));
   },
 });

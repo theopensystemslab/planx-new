@@ -18,7 +18,6 @@ export const MembersTable = ({
   showAddMemberButton,
 }: MembersTableProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [tableData, setTableData] = useState(members);
 
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
@@ -30,7 +29,7 @@ export const MembersTable = ({
     return roleLabels[role] || role;
   };
 
-  if (tableData.length === 0) {
+  if (members.length === 0) {
     return (
       <Table>
         <TableHead>
@@ -64,7 +63,7 @@ export const MembersTable = ({
           <TableBody
             data-testid={`members-table${showAddMemberButton && "-add-editor"}`}
           >
-            {tableData.map((member) => (
+            {members.map((member) => (
               <StyledTableRow key={member.id}>
                 <TableCell
                   sx={{
@@ -102,12 +101,7 @@ export const MembersTable = ({
         </Table>
       </TableContainer>
       {showModal && (
-        <AddNewEditorModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          setTableData={setTableData}
-          tableData={tableData}
-        />
+        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
       )}
     </>
   );

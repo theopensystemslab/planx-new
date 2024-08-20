@@ -19,8 +19,6 @@ import { optimisticallyUpdateTable } from "./lib/optimisticallyUpdateTable";
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
-  setTableData,
-  tableData,
 }: AddNewEditorModalProps) => {
   const handleSubmit = async (
     values: AddNewEditorFormValues,
@@ -35,7 +33,8 @@ export const AddNewEditorModal = ({
       teamId,
     );
 
-    optimisticallyUpdateTable(values, setTableData, tableData);
+    optimisticallyUpdateTable(values);
+
     setShowModal(false);
     resetForm({ values });
   };

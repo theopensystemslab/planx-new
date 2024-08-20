@@ -1,6 +1,5 @@
-import { Role, User } from "@opensystemslab/planx-core/types";
+import { User } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
-import { groupBy } from "lodash";
 import { compose, mount, NotFoundError, route, withData } from "navi";
 import { TeamMembers } from "pages/FlowEditor/components/Team/TeamMembers";
 import { TeamMember } from "pages/FlowEditor/components/Team/types";
@@ -65,14 +64,11 @@ const teamMembersRoutes = compose(
         role: user.isPlatformAdmin ? "platformAdmin" : user.teams[0].role,
       }));
 
-      const teamMembersByRole = groupBy(teamMembers, "role") as Record<
-        Role,
-        TeamMember[]
-      >;
+      await useStore.getState().setTeamMembers(teamMembers);
 
       return {
         title: makeTitle("Team Members"),
-        view: <TeamMembers teamMembersByRole={teamMembersByRole} />,
+        view: <TeamMembers />,
       };
     }),
   }),
