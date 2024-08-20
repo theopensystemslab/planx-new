@@ -114,8 +114,21 @@ const ServiceSettings: React.FC = () => {
   };
 
   const sendFlowStatusSlackNotification = async (status: FlowStatus) => {
-    const emoji = status === "online" ? ":large_green_circle:" : ":no_entry:";
-    const message = `${emoji} *${teamSlug}/${flowSlug}* is now ${status}`;
+    const skipTeamSlugs = [
+      "open-digital-planning",
+      "opensystemslab",
+      "planx",
+      "templates",
+      "testing",
+      "wikihouse",
+    ];
+    if (skipTeamSlugs.includes(teamSlug)) return;
+
+    const emoji = {
+      online: ":large_green_circle:",
+      offline: ":no_entry:",
+    };
+    const message = `${emoji[status]} *${teamSlug}/${flowSlug}* is now ${status} (@Silvia)`;
 
     return axios.post(
       `${process.env.REACT_APP_API_URL}/send-slack-notification`,

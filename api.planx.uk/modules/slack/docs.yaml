@@ -4,12 +4,12 @@ info:
   version: 0.1.0
 components:
   schemas:
-    SendSlackNotification:
+    SendSlackNotificationDirect:
       type: object
       properties:
         message: string
   responses:
-    SendSlackNotification:
+    SendSlackNotificationDirect:
       content:
         application/json:
           schema:
@@ -20,7 +20,7 @@ paths:
   /send-slack-notification:
     post:
       summary: Send a Slack notification
-      description: Allows authenticated users to trigger a Slack notification when they update settings in the editor
+      description: Allows authenticated users to trigger a Slack notification when they update settings in the Planx Editor
       tags: ["misc"]
       security:
         - bearerAuth: []
@@ -29,9 +29,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SendSlackNotification"
+              $ref: "#/components/schemas/SendSlackNotificationDirect"
       responses:
         "200":
-          $ref: "#/components/responses/SendSlackNotification"
+          $ref: "#/components/responses/SendSlackNotificationDirect"
         "500":
           $ref: "#/components/responses/ErrorMessage"
