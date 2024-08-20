@@ -45,7 +45,17 @@ function Component(props: PublicProps<PropertyInformation>) {
       titleBoundary={passport.data?.["property.boundary.title"]}
       blpuCodes={blpuCodes}
       overrideAnswer={overrideAnswer}
-      handleSubmit={props.handleSubmit}
+      handleSubmit={() => {
+        // If the user changed their property type, they'll already have a previous PropertyInformation breadcrumb that set `_overrides`
+        const hasOverrodeAnswer = passport.data?.["_overrides"]?.["property.type"];
+        const passportData = {
+          "propertyInformation.action": hasOverrodeAnswer ? "Changed the property type" : "Accepted the property type",
+        };
+        
+        props.handleSubmit?.({
+          data: passportData,
+        });
+      }}
     />
   ) : (
     <Card>

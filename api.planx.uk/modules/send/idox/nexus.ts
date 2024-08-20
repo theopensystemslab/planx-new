@@ -9,25 +9,25 @@ import { $api } from "../../../client/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
 
-interface UniformClient {
+interface IdoxNexusClient {
   clientId: string;
   clientSecret: string;
+}
+
+interface RawIdoxNexusAuthResponse {
+  access_token: string;
+}
+
+interface IdoxNexusAuthResponse {
+  token: string;
+  organisations: Record<string, string>;
+  authorities: string[];
 }
 
 interface UniformSubmissionResponse {
   submissionStatus?: string;
   canDownload?: boolean;
   submissionId?: string;
-}
-
-interface RawUniformAuthResponse {
-  access_token: string;
-}
-
-interface UniformAuthResponse {
-  token: string;
-  organisation: string;
-  organisationId: string;
 }
 
 interface UniformApplication {
@@ -39,7 +39,7 @@ interface UniformApplication {
   created_at: string;
 }
 
-interface SendToUniformPayload {
+interface SendToIdoxNexusPayload {
   sessionId: string;
 }
 
@@ -49,16 +49,16 @@ export async function sendToIdoxNexus(
   next: NextFunction,
 ) {
   /**
-   * Submits application data to Uniform
+   * Submits application data to Idox's Submission API (aka Nexus)
    *
-   *   first, create a zip folder containing an XML (Idox's schema), CSV (our format), and any user-uploaded files
+   *   first, create a zip folder containing the ODP Schema JSON
    *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
    *   finally, insert a record into uniform_applications for future auditing
    */
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
-  // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
-  const payload: SendToUniformPayload = req.body.payload;
+  // `/idox/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
+  const payload: SendToIdoxNexusPayload = req.body.payload;
   if (!payload?.sessionId) {
     return next({
       status: 400,
@@ -68,39 +68,46 @@ export async function sendToIdoxNexus(
 
   // localAuthority is only parsed for audit record, not client-specific
   const localAuthority = req.params.localAuthority;
-  const uniformClient = getUniformClient();
+  const idoxNexusClient = getIdoxNexusClient();
 
   // confirm that this session has not already been successfully submitted before proceeding
   const submittedApp = await checkUniformAuditTable(payload?.sessionId);
-  const isAlreadySubmitted =
+  const _isAlreadySubmitted =
     submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload;
-  if (isAlreadySubmitted) {
-    return res.status(200).send({
-      sessionId: payload?.sessionId,
-      idoxSubmissionId: submittedApp?.submissionId,
-      message: `Skipping send, already successfully submitted`,
-    });
-  }
+  // if (isAlreadySubmitted) {
+  //   return res.status(200).send({
+  //     sessionId: payload?.sessionId,
+  //     idoxSubmissionId: submittedApp?.submissionId,
+  //     message: `Skipping send, already successfully submitted`,
+  //   });
+  // }
 
   try {
     // Request 1/4 - Authenticate
-    const { token, organisation, organisationId } =
-      await authenticate(uniformClient);
+    const { token, organisations } = await authenticate(idoxNexusClient);
 
-    // 2/4 - Create a submission
-    const idoxSubmissionId = await createSubmission(
-      token,
-      organisation,
-      organisationId,
-      payload.sessionId,
-    );
+    // TEMP - Mock organisations do NOT correspond to council envs, so randomly alternate submissions among ones we have access to for initial testing
+    //   Switch to `team_integrations`-based approach later
+    const orgIds = Object.keys(organisations);
+    const randomOrgId = orgIds[Math.floor(Math.random() * orgIds.length)];
+    const randomOrg = organisations[randomOrgId];
 
-    // 3/4 - Create & attach the zip
+    // Create a zip containing only the ODP Schema JSON
+    //   Do this BEFORE creating a submission in order to throw any validation errors early
     const zip = await buildSubmissionExportZip({
       sessionId: payload.sessionId,
       onlyDigitalPlanningJSON: true,
     });
 
+    // 2/4 - Create a submission
+    const idoxSubmissionId = await createSubmission(
+      token,
+      randomOrg,
+      randomOrgId,
+      payload.sessionId,
+    );
+
+    // 3/4 - Attach the zip
     const attachmentAdded = await attachArchive(
       token,
       idoxSubmissionId,
@@ -112,7 +119,6 @@ export async function sendToIdoxNexus(
 
     // 4/4 - Get submission details and create audit record
     const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
-
     const applicationAuditRecord = await createUniformApplicationAuditRecord({
       idoxSubmissionId,
       submissionDetails,
@@ -124,7 +130,7 @@ export async function sendToIdoxNexus(
     markSessionAsSubmitted(payload?.sessionId);
 
     return res.status(200).send({
-      message: `Successfully created an Idox Nexus submission`,
+      message: `Successfully created an Idox Nexus submission (${randomOrgId} - ${randomOrg})`,
       zipAttached: attachmentAdded,
       application: applicationAuditRecord,
     });
@@ -172,14 +178,14 @@ async function checkUniformAuditTable(
 async function authenticate({
   clientId,
   clientSecret,
-}: UniformClient): Promise<UniformAuthResponse> {
+}: IdoxNexusClient): Promise<IdoxNexusAuthResponse> {
   const authString = Buffer.from(`${clientId}:${clientSecret}`).toString(
     "base64",
   );
 
   const authConfig: AxiosRequestConfig = {
     method: "POST",
-    url: process.env.UNIFORM_TOKEN_URL!,
+    url: process.env.IDOX_NEXUS_TOKEN_URL!,
     headers: {
       Authorization: `Basic ${authString}`,
       "Content-type": "application/x-www-form-urlencoded",
@@ -191,30 +197,32 @@ async function authenticate({
     }),
   };
 
-  const response = await axios.request<RawUniformAuthResponse>(authConfig);
+  const response = await axios.request<RawIdoxNexusAuthResponse>(authConfig);
 
   if (!response.data.access_token) {
-    throw Error("Failed to authenticate to Uniform - no access token returned");
-  }
-
-  // Decode access_token to get "organisation-name" & "organisation-id"
-  const decodedAccessToken = jwt.decode(response.data.access_token) as any;
-  const organisation = decodedAccessToken?.["organisation-name"];
-  const organisationId = decodedAccessToken?.["organisation-id"];
-
-  if (!organisation || !organisationId) {
     throw Error(
-      "Failed to authenticate to Uniform - failed to decode organisation details from access_token",
+      "Failed to authenticate to Idox Nexus - no access token returned",
     );
   }
 
-  const uniformAuthResponse: UniformAuthResponse = {
+  // Decode access_token to get "organisations" & "authorities"
+  const decodedAccessToken = jwt.decode(response.data.access_token) as any;
+  const organisations = decodedAccessToken?.["organisations"];
+  const authorities = decodedAccessToken?.["authorities"];
+
+  if (!organisations || !authorities) {
+    throw Error(
+      "Failed to authenticate to Idox Nexus - failed to decode organisations or authorities from access_token",
+    );
+  }
+
+  const idoxNexusAuthResponse: IdoxNexusAuthResponse = {
     token: response.data.access_token,
-    organisation: organisation,
-    organisationId: organisationId,
+    organisations: organisations,
+    authorities: authorities,
   };
 
-  return uniformAuthResponse;
+  return idoxNexusAuthResponse;
 }
 
 /**
@@ -227,12 +235,18 @@ async function createSubmission(
   organisationId: string,
   sessionId = "TEST",
 ): Promise<string> {
-  const createSubmissionEndpoint = `${process.env
-    .UNIFORM_SUBMISSION_URL!}/secure/submission`;
+  const createSubmissionEndpoint = `${process.env.IDOX_NEXUS_SUBMISSION_URL!}/secure/submission`;
 
-  const isStaging = ["mock-server", "staging"].some((hostname) =>
+  const isStaging = ["mock-server", "staging", "dev"].some((hostname) =>
     createSubmissionEndpoint.includes(hostname),
   );
+
+  // Get the application type prefix (eg "ldc", "pp", "pa") to send as the "entity"
+  const session = await $api.session.find(sessionId);
+  const rawApplicationType = session?.data.passport.data?.[
+    "application.type"
+  ] as string[];
+  const applicationTypePrefix = rawApplicationType?.[0]?.split(".")?.[0];
 
   const createSubmissionConfig: AxiosRequestConfig = {
     url: createSubmissionEndpoint,
@@ -242,15 +256,15 @@ async function createSubmission(
       "Content-type": "application/json",
     },
     data: JSON.stringify({
-      entity: "dc",
-      module: "dc",
+      entity: applicationTypePrefix,
+      module: "dcplanx",
       organisation: organisation,
       organisationId: organisationId,
       submissionReference: sessionId,
       description: isStaging
         ? "Staging submission from PlanX"
         : "Production submission from PlanX",
-      submissionProcessorType: "API",
+      submissionProcessorType: "PLANX_QUEUE",
     }),
   };
 
@@ -283,8 +297,7 @@ async function attachArchive(
     return false;
   }
 
-  const attachArchiveEndpoint = `${process.env
-    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
+  const attachArchiveEndpoint = `${process.env.IDOX_NEXUS_SUBMISSION_URL!}/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
@@ -306,7 +319,7 @@ async function attachArchive(
   const isSuccess = response.status === 204;
 
   // Temp additional logging to debug failures
-  console.log("*** Uniform attachArchive response ***");
+  console.log("*** Idox Nexus attachArchive response ***");
   console.log({ status: response.status });
   console.log(JSON.stringify(response.data, null, 2));
   console.log("******");
@@ -323,7 +336,7 @@ async function retrieveSubmission(
   submissionId: string,
 ): Promise<UniformSubmissionResponse> {
   const getSubmissionEndpoint = `${process.env
-    .UNIFORM_SUBMISSION_URL!}/secure/submission/${submissionId}`;
+    .IDOX_NEXUS_SUBMISSION_URL!}/secure/submission/${submissionId}`;
 
   const getSubmissionConfig: AxiosRequestConfig = {
     url: getSubmissionEndpoint,
@@ -340,7 +353,7 @@ async function retrieveSubmission(
 /**
  * Get id and secret of Idox Nexus client
  */
-const getUniformClient = (): UniformClient => {
+const getIdoxNexusClient = (): IdoxNexusClient => {
   const client = process.env["IDOX_NEXUS_CLIENT"];
 
   if (!client) throw Error(`Unable to find Idox Nexus client`);
@@ -356,12 +369,10 @@ const createUniformApplicationAuditRecord = async ({
   submissionDetails,
 }: {
   idoxSubmissionId: string;
-  payload: SendToUniformPayload;
+  payload: SendToIdoxNexusPayload;
   localAuthority: string;
   submissionDetails: UniformSubmissionResponse;
 }): Promise<UniformApplication> => {
-  const xml = await $api.export.oneAppPayload(payload?.sessionId);
-
   const application: Record<
     "insert_uniform_applications_one",
     UniformApplication
@@ -400,7 +411,7 @@ const createUniformApplicationAuditRecord = async ({
       destination: localAuthority,
       response: submissionDetails,
       payload,
-      xml,
+      xml: "ODP Schema",
     },
   );
 

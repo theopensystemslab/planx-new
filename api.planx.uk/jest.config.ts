@@ -12,6 +12,16 @@ const config: JestConfigWithTsJest = {
         useESM: true,
         // we need a separate module/moduleResolution config for tests (jest v30 may fix this)
         tsconfig: "tsconfig.test.json",
+        diagnostics: {
+          ignoreCodes: [1343],
+        },
+        astTransformers: {
+          before: [
+            {
+              path: "node_modules/ts-jest-mock-import-meta",
+            },
+          ],
+        },
       },
     ],
   },

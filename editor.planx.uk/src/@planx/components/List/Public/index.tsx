@@ -21,6 +21,8 @@ import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";
 import {
   ChecklistFieldInput,
+  MapFieldInput,
+  DateFieldInput,
   NumberFieldInput,
   RadioFieldInput,
   SelectFieldInput,
@@ -62,6 +64,10 @@ const InputField: React.FC<Field> = (props) => {
       return <SelectFieldInput id={inputFieldId} {...props} />;
     case "checklist":
       return <ChecklistFieldInput id={inputFieldId} {...props} />;
+    case "date":
+      return <DateFieldInput id={inputFieldId} {...props} />;
+    case "map":
+      return <MapFieldInput id={inputFieldId} {...props} />;
   }
 };
 

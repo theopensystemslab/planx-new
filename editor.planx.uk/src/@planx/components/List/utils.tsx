@@ -23,6 +23,7 @@ export function formatSchemaDisplayValue(
     case "number":
       return field.data.units ? `${value} ${field.data.units}` : value;
     case "text":
+    case "date":
       return value;
     case "checklist": {
       const matchingOptions = field.data.options.filter((option) =>
@@ -38,7 +39,7 @@ export function formatSchemaDisplayValue(
     }
     case "question": {
       const matchingOption = field.data.options.find(
-        (option) => option.data.val === value,
+        (option) => option.data.text === value,
       );
       return matchingOption?.data.text;
     }

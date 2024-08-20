@@ -27,6 +27,7 @@ import {
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "./model";
+import { handleOverrides } from "./utils";
 
 type Props = PublicProps<PlanningConstraints>;
 
@@ -42,19 +43,34 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
-  const [inaccurateConstraints, setInaccurateConstraints] =
-    useState<InaccurateConstraints>();
+  const [
+    currentCardId,
+    cachedBreadcrumbs,
+    teamSlug,
+    siteBoundary,
+    { x, y, longitude, latitude, usrn },
+    hasPlanningData,
+    priorOverrides,
+  ] = useStore((state) => [
+    state.currentCard?.id,
+    state.cachedBreadcrumbs,
+    state.teamSlug,
+    state.computePassport().data?.["property.boundary.site"],
+    (state.computePassport().data?.["_address"] as SiteAddress) || {},
+    state.teamIntegrations?.hasPlanningData,
+    state.computePassport().data?.["_overrides"],
+  ]);
 
-  const siteBoundary = useStore(
-    (state) => state.computePassport().data?.["property.boundary.site"],
-  );
-  const { x, y, longitude, latitude, usrn } =
-    (useStore(
-      (state) => state.computePassport().data?._address,
-    ) as SiteAddress) || {};
+  // PlanningConstraints must come after at least a FindProperty in the graph
   const showGraphError = !x || !y || !longitude || !latitude;
 
-  const teamSlug = useStore((state) => state.teamSlug);
+  // Even though this component will fetch fresh GIS data when coming "back",
+  //   still prepopulate any previously marked inaccurateConstraints
+  const initialInaccurateConstraints =
+    currentCardId &&
+    cachedBreadcrumbs?.[currentCardId]?.["data"]?.["_overrides"]?.[props.fn];
+  const [inaccurateConstraints, setInaccurateConstraints] =
+    useState<InaccurateConstraints>(initialInaccurateConstraints);
 
   // Get current query parameters (eg ?analytics=false&sessionId=XXX) to determine if we should audit this response
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -69,12 +85,7 @@ function Component(props: Props) {
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly
-  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
-  const hasPlanningData = useStore(
-    (state) => state.teamIntegrations?.hasPlanningData,
-  );
-
+  const root = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
     ...params,
@@ -86,8 +97,8 @@ function Component(props: Props) {
     version: "1",
   };
 
-  // Fetch planning constraints data for a given local authority
-  const root = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
+  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly to fetch data
+  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
@@ -125,86 +136,113 @@ function Component(props: Props) {
   );
 
   // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
-  const constraints: GISResponse["constraints"] | {} = {
+  const constraints: GISResponse["constraints"] | Record<string, any> = {
     ...(data?.constraints || data),
     ...roads?.constraints,
   };
 
-  const metadata: GISResponse["metadata"] | {} = {
+  const metadata: GISResponse["metadata"] | Record<string, any> = {
     ...data?.metadata,
     ...roads?.metadata,
   };
 
-  return (
-    <>
-      {showGraphError ? (
-        <ConstraintsGraphError {...props} />
-      ) : !isValidating && !isValidatingRoads && constraints ? (
-        <PlanningConstraintsContent
-          title={props.title}
-          description={props.description || ""}
-          fn={props.fn}
-          disclaimer={props.disclaimer}
-          constraints={constraints}
-          metadata={metadata}
-          handleSubmit={() => {
-            const _constraints: Array<
-              EnhancedGISResponse | GISResponse["constraints"]
-            > = [];
-            if (hasPlanningData) {
-              if (data && !dataError)
-                _constraints.push({
-                  ...data,
-                  planxRequest: teamGisEndpoint,
-                } as EnhancedGISResponse);
-              if (roads && !roadsError)
-                _constraints.push({
-                  ...roads,
-                  planxRequest: classifiedRoadsEndpoint,
-                } as EnhancedGISResponse);
-            } else {
-              if (data) _constraints.push(data as GISResponse["constraints"]);
-            }
+  if (showGraphError) return <ConstraintsGraphError {...props} />;
 
-            const _overrides = inaccurateConstraints;
-
-            const _nots: any = {};
-            const intersectingConstraints: IntersectingConstraints = {};
-            Object.entries(constraints).forEach(([key, data]) => {
-              if (data.value) {
-                intersectingConstraints[props.fn] ||= [];
-                intersectingConstraints[props.fn].push(key);
-              } else {
-                _nots[props.fn] ||= [];
-                _nots[props.fn].push(key);
-              }
-            });
-
-            const passportData = {
-              _constraints,
-              _overrides,
-              _nots,
-              ...intersectingConstraints,
-            };
-
-            props.handleSubmit?.({
-              data: passportData,
-            });
-          }}
-          refreshConstraints={() => mutate()}
-          inaccurateConstraints={inaccurateConstraints}
-          setInaccurateConstraints={setInaccurateConstraints}
+  const isLoading = isValidating || isValidatingRoads;
+  if (isLoading)
+    return (
+      <Card handleSubmit={props.handleSubmit} isValid>
+        <CardHeader title={props.title} description={props.description || ""} />
+        <DelayedLoadingIndicator
+          text="Fetching data..."
+          msDelayBeforeVisible={0}
         />
-      ) : (
-        <Card handleSubmit={props.handleSubmit} isValid>
-          <CardHeader
-            title={props.title}
-            description={props.description || ""}
-          />
-          <DelayedLoadingIndicator text="Fetching data..." />
-        </Card>
-      )}
-    </>
+      </Card>
+    );
+
+  return (
+    <PlanningConstraintsContent
+      title={props.title}
+      description={props.description || ""}
+      fn={props.fn}
+      disclaimer={props.disclaimer}
+      constraints={constraints}
+      metadata={metadata}
+      handleSubmit={() => {
+        // `_constraints` & `_overrides` are responsible for auditing
+        const _constraints: Array<
+          EnhancedGISResponse | GISResponse["constraints"]
+        > = [];
+        if (hasPlanningData) {
+          if (data && !dataError)
+            _constraints.push({
+              ...data,
+              planxRequest: teamGisEndpoint,
+            } as EnhancedGISResponse);
+          if (roads && !roadsError)
+            _constraints.push({
+              ...roads,
+              planxRequest: classifiedRoadsEndpoint,
+            } as EnhancedGISResponse);
+        } else {
+          if (data) _constraints.push(data as GISResponse["constraints"]);
+        }
+
+        const hasInaccurateConstraints =
+          inaccurateConstraints &&
+          Object.keys(inaccurateConstraints).length > 0;
+        const _overrides = hasInaccurateConstraints
+          ? { ...priorOverrides, [props.fn]: inaccurateConstraints }
+          : undefined;
+
+        // `planningConstraints.action` is for analytics
+        const userAction = hasInaccurateConstraints
+          ? "Reported at least one inaccurate planning constraint"
+          : "Accepted all planning constraints";
+
+        // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
+        const _nots: IntersectingConstraints = {};
+        const intersectingConstraints: IntersectingConstraints = {};
+        Object.entries(constraints).forEach(([key, data]) => {
+          if (data.value) {
+            intersectingConstraints[props.fn] ||= [];
+            intersectingConstraints[props.fn].push(key);
+          } else {
+            _nots[props.fn] ||= [];
+            _nots[props.fn].push(key);
+          }
+        });
+
+        // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
+        const {
+          nots: notsAfterOverrides,
+          intersectingConstraints: intersectingConstraintsAfterOverrides,
+        } = handleOverrides(
+          props.fn,
+          constraints,
+          inaccurateConstraints,
+          intersectingConstraints,
+          _nots,
+        );
+
+        const passportData = {
+          _constraints,
+          _overrides,
+          "planningConstraints.action": userAction,
+          _nots: notsAfterOverrides,
+          ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0
+            ? undefined
+            : intersectingConstraintsAfterOverrides),
+        };
+
+        props.handleSubmit?.({
+          data: passportData,
+        });
+      }}
+      refreshConstraints={() => mutate()}
+      inaccurateConstraints={inaccurateConstraints}
+      setInaccurateConstraints={setInaccurateConstraints}
+    />
   );
 }
 
@@ -238,11 +276,11 @@ export function PlanningConstraintsContent(
   } = props;
   const error = constraints.error || undefined;
   const showError = error || !Object.values(constraints)?.length;
+  if (showError) return <ConstraintsFetchError error={error} {...props} />;
 
   const positiveConstraints = Object.values(constraints).filter(
     (v: Constraint, _i) => v.text && v.value,
   );
-
   const negativeConstraints = Object.values(constraints).filter(
     (v: Constraint, _i) => v.text && !v.value,
   );
@@ -250,13 +288,7 @@ export function PlanningConstraintsContent(
   return (
     <Card handleSubmit={props.handleSubmit}>
       <CardHeader title={title} description={description} />
-      {showError && (
-        <ConstraintsFetchError
-          error={error}
-          refreshConstraints={refreshConstraints}
-        />
-      )}
-      {!showError && positiveConstraints.length > 0 && (
+      {positiveConstraints.length > 0 && (
         <>
           <Typography variant="h3" component="h2" mt={3}>
             These are the planning constraints we think apply to this property
@@ -286,38 +318,36 @@ export function PlanningConstraintsContent(
           <Disclaimer text={disclaimer} />
         </>
       )}
-      {!showError &&
-        positiveConstraints.length === 0 &&
-        negativeConstraints.length > 0 && (
-          <>
-            <Typography variant="h3" component="h2" gutterBottom mt={3}>
-              It looks like there are no constraints on this property
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Based on the information you've given it looks like there are no
-              planning constraints on your property that might limit what you
-              can do.
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Continue with your application to tell us more about your project.
-            </Typography>
-            <SimpleExpand
-              id="negative-constraints-list"
-              buttonText={{
-                open: "Show the things we checked",
-                closed: "Hide constraints that don't apply",
-              }}
-            >
-              <ConstraintsList
-                data={negativeConstraints}
-                metadata={metadata}
-                inaccurateConstraints={inaccurateConstraints}
-                setInaccurateConstraints={setInaccurateConstraints}
-              />
-            </SimpleExpand>
-            <Disclaimer text={disclaimer} />
-          </>
-        )}
+      {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
+        <>
+          <Typography variant="h3" component="h2" gutterBottom mt={3}>
+            It looks like there are no constraints on this property
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Based on the information you've given it looks like there are no
+            planning constraints on your property that might limit what you can
+            do.
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Continue with your application to tell us more about your project.
+          </Typography>
+          <SimpleExpand
+            id="negative-constraints-list"
+            buttonText={{
+              open: "Show the things we checked",
+              closed: "Hide constraints that don't apply",
+            }}
+          >
+            <ConstraintsList
+              data={negativeConstraints}
+              metadata={metadata}
+              inaccurateConstraints={inaccurateConstraints}
+              setInaccurateConstraints={setInaccurateConstraints}
+            />
+          </SimpleExpand>
+          <Disclaimer text={disclaimer} />
+        </>
+      )}
     </Card>
   );
 }
@@ -336,30 +366,36 @@ const Disclaimer = (props: { text: string }) => (
 
 interface ConstraintsFetchErrorProps {
   error: any;
+  title: string;
+  description: string;
   refreshConstraints: () => void;
+  handleSubmit?: handleSubmit;
 }
 
 const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
-  <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
-    <Typography variant="h4" component="h2" gutterBottom>
-      No information available
-    </Typography>
-    {props.error &&
-    typeof props.error === "string" &&
-    props.error.endsWith("local authority") ? (
-      <Typography variant="body2">{capitalize(props.error)}</Typography>
-    ) : (
-      <>
-        <Typography variant="body2">
-          We couldn't find any information about your property. Click search
-          again to try again. You can continue your application without this
-          information but it might mean we ask additional questions about your
-          project.
-        </Typography>
-        <button onClick={props.refreshConstraints}>Search again</button>
-      </>
-    )}
-  </ErrorSummaryContainer>
+  <Card handleSubmit={props.handleSubmit} isValid>
+    <CardHeader title={props.title} description={props.description} />
+    <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
+      <Typography variant="h4" component="h2" gutterBottom>
+        No information available
+      </Typography>
+      {props.error &&
+      typeof props.error === "string" &&
+      props.error.endsWith("local authority") ? (
+        <Typography variant="body2">{capitalize(props.error)}</Typography>
+      ) : (
+        <>
+          <Typography variant="body2">
+            We couldn't find any information about your property. Click search
+            again to try again. You can continue your application without this
+            information but it might mean we ask additional questions about your
+            project.
+          </Typography>
+          <button onClick={props.refreshConstraints}>Search again</button>
+        </>
+      )}
+    </ErrorSummaryContainer>
+  </Card>
 );
 
 interface ConstraintsGraphErrorProps {
@@ -370,7 +406,7 @@ interface ConstraintsGraphErrorProps {
 
 const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (
   <Card handleSubmit={props.handleSubmit} isValid>
-    <CardHeader title={props.title} description={props.description || ""} />
+    <CardHeader title={props.title} description={props.description} />
     <ErrorSummaryContainer
       role="status"
       data-testid="error-summary-invalid-graph"

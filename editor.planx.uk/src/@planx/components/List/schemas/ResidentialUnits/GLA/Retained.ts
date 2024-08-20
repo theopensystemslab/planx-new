@@ -1,7 +1,7 @@
 import { Schema } from "@planx/components/List/model";
 
 export const ResidentialUnitsGLARetained: Schema = {
-  type: "Retained residential unit",
+  type: "Retained residential unit type",
   fields: [
     {
       type: "number",
@@ -94,7 +94,7 @@ export const ResidentialUnitsGLARetained: Schema = {
     {
       type: "number",
       data: {
-        title: "How many identical units does the description above apply to?",
+        title: "How many retained units fit the descriptions above?",
         fn: "identicalUnits",
         allowNegatives: false,
       },

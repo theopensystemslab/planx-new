@@ -1,7 +1,7 @@
 import { Schema } from "../../model";
 
 export const ResidentialUnitsExisting: Schema = {
-  type: "Existing residential unit",
+  type: "Existing residential unit type",
   fields: [
     {
       type: "question",
@@ -62,7 +62,7 @@ export const ResidentialUnitsExisting: Schema = {
     {
       type: "number",
       data: {
-        title: "How many identical units does the description above apply to?",
+        title: "How many existing units fit the descriptions above?",
         fn: "identicalUnits",
         allowNegatives: false,
       },
