@@ -5,7 +5,7 @@ cd $(dirname "$0")
 
 source ../../../.env
 
-(cd ../../../editor.planx.uk && pnpm install --frozen-lockfile && REACT_APP_ENV=test pnpm build:ci)
+(cd ../../../editor.planx.uk && pnpm install --frozen-lockfile --loglevel debug && REACT_APP_ENV=test pnpm build:ci)
 
 if [ -z "${CI}" ]; then
   echo "Please make sure you have Chrome installed on this machine."
