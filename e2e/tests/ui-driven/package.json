@@ -16,12 +16,12 @@
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
-    "serve": "^14.2.1",
+    "serve": "^14.2.3",
     "uuid": "^9.0.1"
   },
   "packageManager": "pnpm@8.6.6",
   "devDependencies": {
-    "@playwright/test": "^1.40.1",
+    "@playwright/test": "^1.46.1",
     "@types/node": "18.16.1",
     "eslint-plugin-playwright": "^0.20.0"
   }
