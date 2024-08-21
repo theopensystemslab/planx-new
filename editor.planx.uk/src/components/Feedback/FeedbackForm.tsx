@@ -9,6 +9,8 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 
 import { FeedbackFormInput, FormProps, UserFeedback } from ".";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const StyledForm = styled(Form)(({ theme }) => ({
   "& > *": contentFlowSpacing(theme),
@@ -52,8 +54,17 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <StyledForm>
-        <FormInputs inputs={inputs} />
         <FeedbackDisclaimer />
+        <FormInputs inputs={inputs} />
+        <Box>
+          <Typography variant="body2">
+            This information is not monitored frequently by planning officers,
+            do not use it to provide extra information or queries with regard to
+            your application or project. Any information of this nature will be
+            disregarded.
+          </Typography>
+        </Box>
+
         <Button
           type="submit"
           variant="contained"
