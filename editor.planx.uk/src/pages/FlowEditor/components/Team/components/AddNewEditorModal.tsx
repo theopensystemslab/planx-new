@@ -12,10 +12,14 @@ import InputLabel from "ui/editor/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 
+import {
+  AddNewEditorErrors,
+  isUserAlreadyExistsError,
+} from "../errors/addNewEditorErrors";
 import { addNewEditorFormSchema } from "../formSchema";
+import { optimisticallyUpdateTable } from "../lib/optimisticallyUpdateTable";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { AddNewEditorFormValues, AddNewEditorModalProps } from "../types";
-import { optimisticallyUpdateTable } from "./lib/optimisticallyUpdateTable";
 
 export const AddNewEditorModal = ({
   showModal,
@@ -27,16 +31,6 @@ export const AddNewEditorModal = ({
 
   const clearErrors = () => {
     setShowUserAlreadyExistsError(false);
-  };
-
-  const isUserAlreadyExistsError = (error: string) =>
-    AddNewEditorErrors.USER_ALREADY_EXISTS.regex.test(error);
-
-  const AddNewEditorErrors = {
-    USER_ALREADY_EXISTS: {
-      regex: /violates unique constraint "users_email_key"/i,
-      errorMessage: "User already exists",
-    },
   };
 
   const handleSubmit = async (
@@ -54,7 +48,6 @@ export const AddNewEditorModal = ({
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
       }
-
       console.error(err);
     });
 

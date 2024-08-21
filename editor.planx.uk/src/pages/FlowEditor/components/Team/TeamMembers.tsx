@@ -6,12 +6,12 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
+import { MembersTable } from "./components/MembersTable";
 import {
   filterByEmailPresent,
   filterExcludingPlatformAdmins,
   hasEmailPresent,
-} from "./components/lib/filterTeamMembers";
-import { MembersTable } from "./components/MembersTable";
+} from "./lib/filterTeamMembers";
 import { TeamMember } from "./types";
 
 export const TeamMembers = () => {

@@ -3,7 +3,6 @@ import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
-import { GRAPHQL_USER_ALREADY_EXISTS_ERROR } from "./mocks/mockErrors";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import { alreadyExistingUser } from "./mocks/mockUsers";
 
@@ -14,9 +13,10 @@ jest.mock("lib/featureFlags.ts", () => ({
 jest.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
   () => ({
-    createAndAddUserToTeam: jest
-      .fn()
-      .mockRejectedValue(GRAPHQL_USER_ALREADY_EXISTS_ERROR),
+    createAndAddUserToTeam: jest.fn().mockRejectedValue({
+      message:
+        'Uniqueness violation. duplicate key value violates unique constraint "users_email_key"',
+    }),
   }),
 );
 

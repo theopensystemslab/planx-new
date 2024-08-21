@@ -1,7 +1,7 @@
 import { getRandomNumberInRange } from "@planx/components/shared/utils";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { AddNewEditorFormValues, TeamMember } from "../../types";
+import { AddNewEditorFormValues, TeamMember } from "../types";
 
 export const optimisticallyUpdateTable = async (
   values: AddNewEditorFormValues,

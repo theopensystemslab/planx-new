@@ -1,4 +1,4 @@
-import { TeamMember } from "../../types";
+import { TeamMember } from "../types";
 
 export const hasEmailPresent = (member: TeamMember) => !!member.email;
 
