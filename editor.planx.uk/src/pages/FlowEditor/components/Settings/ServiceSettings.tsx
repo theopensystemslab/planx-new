@@ -106,11 +106,11 @@ const PublicLink: React.FC<{
       case isFlowPublished && isFlowOnline:
         return undefined;
       case !isFlowPublished && isFlowOnline:
-        return "Publish your flow to activate the public link.";
+        return "Publish your service to activate the public link.";
       case isFlowPublished && !isFlowOnline:
-        return "Switch your flow to 'online' to activate the public link.";
+        return "Switch your service to 'online' to activate the public link.";
       case !isFlowPublished && !isFlowOnline:
-        return "Publish your flow and switch it to 'online' to activate the public link.";
+        return "Publish your service and switch it to 'online' to activate the public link.";
     }
   };
 
@@ -233,7 +233,7 @@ const ServiceSettings: React.FC = () => {
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
-    reason?: string,
+    reason?: string
   ) => {
     if (reason === "clickaway") {
       return;
@@ -268,7 +268,7 @@ const ServiceSettings: React.FC = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
   };
 
@@ -316,7 +316,7 @@ const ServiceSettings: React.FC = () => {
   });
 
   const publishedLink = `${window.location.origin}${rootFlowPath(
-    false,
+    false
   )}/published`;
 
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
@@ -442,9 +442,7 @@ const ServiceSettings: React.FC = () => {
                 onChange={() =>
                   statusForm.setFieldValue(
                     "status",
-                    statusForm.values.status === "online"
-                      ? "offline"
-                      : "online",
+                    statusForm.values.status === "online" ? "offline" : "online"
                   )
                 }
               />
