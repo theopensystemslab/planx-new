@@ -2,7 +2,7 @@ import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.js";
 import { useTeamEditorAuth } from "../auth/middleware.js";
 import {
-  sendSlackNotifcationController,
+  sendSlackNotificationController,
   slackNotificationSchema,
 } from "./controller.js";
 
@@ -12,7 +12,7 @@ router.post(
   "/send-slack-notification",
   useTeamEditorAuth,
   validate(slackNotificationSchema),
-  sendSlackNotifcationController,
+  sendSlackNotificationController,
 );
 
 export default router;

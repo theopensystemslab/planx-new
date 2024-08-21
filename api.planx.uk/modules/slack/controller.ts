@@ -18,7 +18,7 @@ export type SendSlackNotificationController = ValidatedRequestHandler<
   SendSlackNotificationResponse
 >;
 
-export const sendSlackNotifcationController: SendSlackNotificationController =
+export const sendSlackNotificationController: SendSlackNotificationController =
   async (_req, res, next) => {
     const { message } = res.locals.parsedReq.body;
 

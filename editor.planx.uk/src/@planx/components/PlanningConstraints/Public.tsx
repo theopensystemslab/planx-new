@@ -148,17 +148,17 @@ function Component(props: Props) {
 
   if (showGraphError) return <ConstraintsGraphError {...props} />;
 
-  const isLoading = isValidating && isValidatingRoads && !constraints;
-
-  if (isLoading) return (
-    <Card handleSubmit={props.handleSubmit} isValid>
-      <CardHeader
-        title={props.title}
-        description={props.description || ""}
-      />
-      <DelayedLoadingIndicator text="Fetching data..." />
-    </Card>
-  )
+  const isLoading = isValidating || isValidatingRoads;
+  if (isLoading)
+    return (
+      <Card handleSubmit={props.handleSubmit} isValid>
+        <CardHeader title={props.title} description={props.description || ""} />
+        <DelayedLoadingIndicator
+          text="Fetching data..."
+          msDelayBeforeVisible={0}
+        />
+      </Card>
+    );
 
   return (
     <PlanningConstraintsContent
@@ -188,8 +188,12 @@ function Component(props: Props) {
           if (data) _constraints.push(data as GISResponse["constraints"]);
         }
 
-        const hasInaccurateConstraints = inaccurateConstraints && Object.keys(inaccurateConstraints).length > 0;
-        const _overrides = hasInaccurateConstraints ? { ...priorOverrides, [props.fn]: inaccurateConstraints } : undefined;
+        const hasInaccurateConstraints =
+          inaccurateConstraints &&
+          Object.keys(inaccurateConstraints).length > 0;
+        const _overrides = hasInaccurateConstraints
+          ? { ...priorOverrides, [props.fn]: inaccurateConstraints }
+          : undefined;
 
         // `planningConstraints.action` is for analytics
         const userAction = hasInaccurateConstraints
@@ -226,9 +230,10 @@ function Component(props: Props) {
           _overrides,
           "planningConstraints.action": userAction,
           _nots: notsAfterOverrides,
-          ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0 ? undefined : intersectingConstraintsAfterOverrides),
+          ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0
+            ? undefined
+            : intersectingConstraintsAfterOverrides),
         };
-
 
         props.handleSubmit?.({
           data: passportData,
@@ -238,8 +243,7 @@ function Component(props: Props) {
       inaccurateConstraints={inaccurateConstraints}
       setInaccurateConstraints={setInaccurateConstraints}
     />
-  )
-
+  );
 }
 
 export type PlanningConstraintsContentProps = {
@@ -272,11 +276,11 @@ export function PlanningConstraintsContent(
   } = props;
   const error = constraints.error || undefined;
   const showError = error || !Object.values(constraints)?.length;
+  if (showError) return <ConstraintsFetchError error={error} {...props} />;
 
   const positiveConstraints = Object.values(constraints).filter(
     (v: Constraint, _i) => v.text && v.value,
   );
-
   const negativeConstraints = Object.values(constraints).filter(
     (v: Constraint, _i) => v.text && !v.value,
   );
@@ -284,13 +288,7 @@ export function PlanningConstraintsContent(
   return (
     <Card handleSubmit={props.handleSubmit}>
       <CardHeader title={title} description={description} />
-      {showError && (
-        <ConstraintsFetchError
-          error={error}
-          refreshConstraints={refreshConstraints}
-        />
-      )}
-      {!showError && positiveConstraints.length > 0 && (
+      {positiveConstraints.length > 0 && (
         <>
           <Typography variant="h3" component="h2" mt={3}>
             These are the planning constraints we think apply to this property
@@ -320,38 +318,36 @@ export function PlanningConstraintsContent(
           <Disclaimer text={disclaimer} />
         </>
       )}
-      {!showError &&
-        positiveConstraints.length === 0 &&
-        negativeConstraints.length > 0 && (
-          <>
-            <Typography variant="h3" component="h2" gutterBottom mt={3}>
-              It looks like there are no constraints on this property
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Based on the information you've given it looks like there are no
-              planning constraints on your property that might limit what you
-              can do.
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Continue with your application to tell us more about your project.
-            </Typography>
-            <SimpleExpand
-              id="negative-constraints-list"
-              buttonText={{
-                open: "Show the things we checked",
-                closed: "Hide constraints that don't apply",
-              }}
-            >
-              <ConstraintsList
-                data={negativeConstraints}
-                metadata={metadata}
-                inaccurateConstraints={inaccurateConstraints}
-                setInaccurateConstraints={setInaccurateConstraints}
-              />
-            </SimpleExpand>
-            <Disclaimer text={disclaimer} />
-          </>
-        )}
+      {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
+        <>
+          <Typography variant="h3" component="h2" gutterBottom mt={3}>
+            It looks like there are no constraints on this property
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Based on the information you've given it looks like there are no
+            planning constraints on your property that might limit what you can
+            do.
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Continue with your application to tell us more about your project.
+          </Typography>
+          <SimpleExpand
+            id="negative-constraints-list"
+            buttonText={{
+              open: "Show the things we checked",
+              closed: "Hide constraints that don't apply",
+            }}
+          >
+            <ConstraintsList
+              data={negativeConstraints}
+              metadata={metadata}
+              inaccurateConstraints={inaccurateConstraints}
+              setInaccurateConstraints={setInaccurateConstraints}
+            />
+          </SimpleExpand>
+          <Disclaimer text={disclaimer} />
+        </>
+      )}
     </Card>
   );
 }
@@ -370,30 +366,36 @@ const Disclaimer = (props: { text: string }) => (
 
 interface ConstraintsFetchErrorProps {
   error: any;
+  title: string;
+  description: string;
   refreshConstraints: () => void;
+  handleSubmit?: handleSubmit;
 }
 
 const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
-  <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
-    <Typography variant="h4" component="h2" gutterBottom>
-      No information available
-    </Typography>
-    {props.error &&
+  <Card handleSubmit={props.handleSubmit} isValid>
+    <CardHeader title={props.title} description={props.description} />
+    <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
+      <Typography variant="h4" component="h2" gutterBottom>
+        No information available
+      </Typography>
+      {props.error &&
       typeof props.error === "string" &&
       props.error.endsWith("local authority") ? (
-      <Typography variant="body2">{capitalize(props.error)}</Typography>
-    ) : (
-      <>
-        <Typography variant="body2">
-          We couldn't find any information about your property. Click search
-          again to try again. You can continue your application without this
-          information but it might mean we ask additional questions about your
-          project.
-        </Typography>
-        <button onClick={props.refreshConstraints}>Search again</button>
-      </>
-    )}
-  </ErrorSummaryContainer>
+        <Typography variant="body2">{capitalize(props.error)}</Typography>
+      ) : (
+        <>
+          <Typography variant="body2">
+            We couldn't find any information about your property. Click search
+            again to try again. You can continue your application without this
+            information but it might mean we ask additional questions about your
+            project.
+          </Typography>
+          <button onClick={props.refreshConstraints}>Search again</button>
+        </>
+      )}
+    </ErrorSummaryContainer>
+  </Card>
 );
 
 interface ConstraintsGraphErrorProps {
@@ -404,7 +406,7 @@ interface ConstraintsGraphErrorProps {
 
 const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (
   <Card handleSubmit={props.handleSubmit} isValid>
-    <CardHeader title={props.title} description={props.description || ""} />
+    <CardHeader title={props.title} description={props.description} />
     <ErrorSummaryContainer
       role="status"
       data-testid="error-summary-invalid-graph"
