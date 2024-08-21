@@ -12,6 +12,7 @@ import Switch, { SwitchProps } from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
+import axios from "axios";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
@@ -211,6 +212,8 @@ const ServiceSettings: React.FC = () => {
     updateFlowSettings,
     flowStatus,
     updateFlowStatus,
+    token,
+    teamSlug,
     flowSlug,
     teamDomain,
     isFlowPublished,
@@ -219,6 +222,8 @@ const ServiceSettings: React.FC = () => {
     state.updateFlowSettings,
     state.flowStatus,
     state.updateFlowStatus,
+    state.jwt,
+    state.teamSlug,
     state.flowSlug,
     state.teamDomain,
     state.isFlowPublished,
@@ -228,13 +233,43 @@ const ServiceSettings: React.FC = () => {
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     if (reason === "clickaway") {
       return;
     }
 
     setIsAlertOpen(false);
+  };
+
+  const sendFlowStatusSlackNotification = async (status: FlowStatus) => {
+    const skipTeamSlugs = [
+      "open-digital-planning",
+      "opensystemslab",
+      "planx",
+      "templates",
+      "testing",
+      "wikihouse",
+    ];
+    if (skipTeamSlugs.includes(teamSlug)) return;
+
+    const emoji = {
+      online: ":large_green_circle:",
+      offline: ":no_entry:",
+    };
+    const message = `${emoji[status]} *${teamSlug}/${flowSlug}* is now ${status} (@Silvia)`;
+
+    return axios.post(
+      `${process.env.REACT_APP_API_URL}/send-slack-notification`,
+      {
+        message: message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
   };
 
   const elementsForm = useFormik<FlowSettings>({
@@ -272,6 +307,8 @@ const ServiceSettings: React.FC = () => {
       const isSuccess = await updateFlowStatus(values.status);
       if (isSuccess) {
         setIsAlertOpen(true);
+        // Send a Slack notification to #planx-notifications
+        sendFlowStatusSlackNotification(values.status);
         // Reset "dirty" status to disable Save & Reset buttons
         resetForm({ values });
       }
@@ -279,7 +316,7 @@ const ServiceSettings: React.FC = () => {
   });
 
   const publishedLink = `${window.location.origin}${rootFlowPath(
-    false
+    false,
   )}/published`;
 
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
@@ -405,7 +442,9 @@ const ServiceSettings: React.FC = () => {
                 onChange={() =>
                   statusForm.setFieldValue(
                     "status",
-                    statusForm.values.status === "online" ? "offline" : "online"
+                    statusForm.values.status === "online"
+                      ? "offline"
+                      : "online",
                   )
                 }
               />

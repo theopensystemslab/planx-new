@@ -1,8 +1,9 @@
+import { screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
+
 import setupServiceSettingsScreen, {
   mockWindowLocationObject,
 } from "../helpers/setupServiceSettingsScreen";
-import { screen } from "@testing-library/react";
 
 const { getState, setState } = useStore;
 
@@ -42,7 +43,7 @@ const activeLinkCheck = async (link: string) => {
   expect(publicLink.tagName).toBe("A");
 };
 
-describe("A team with a subdomain has an offline, published service. ", () => {
+describe("A team with a subdomain has an offline, published service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({
@@ -63,7 +64,7 @@ describe("A team with a subdomain has an offline, published service. ", () => {
   it("has a disabled copy button", disabledCopyCheck);
 });
 
-describe("A team with a subdomain has an online, unpublished service. ", () => {
+describe("A team with a subdomain has an online, unpublished service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({
@@ -84,7 +85,7 @@ describe("A team with a subdomain has an online, unpublished service. ", () => {
   it("has a disabled copy button", disabledCopyCheck);
 });
 
-describe("A team with a subdomain has an online, published service. ", () => {
+describe("A team with a subdomain has an online, published service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({
@@ -121,11 +122,11 @@ describe("A team with a subdomain has an online, published service. ", () => {
 
     expect(await screen.findByText("copied")).toBeVisible();
     expect(navigator.clipboard.writeText).toBeCalledWith(
-      `https://${teamDomain}/${flowSlug}`
+      `https://${teamDomain}/${flowSlug}`,
     );
   });
 });
-describe("A team with a subdomain has an offline, unpublished service. ", () => {
+describe("A team with a subdomain has an offline, unpublished service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({
@@ -145,7 +146,7 @@ describe("A team with a subdomain has an offline, unpublished service. ", () => 
   });
   it("has a disabled copy button", disabledCopyCheck);
 });
-describe("A team without a subdomain has an offline, published service. ", () => {
+describe("A team without a subdomain has an offline, published service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({
@@ -169,7 +170,7 @@ describe("A team without a subdomain has an offline, published service. ", () =>
   it("has a disabled copy button", disabledCopyCheck);
 });
 
-describe("A team without a subdomain has an online, unpublished service. ", () => {
+describe("A team without a subdomain has an online, unpublished service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({
@@ -193,7 +194,7 @@ describe("A team without a subdomain has an online, unpublished service. ", () =
   it("has a disabled copy button", disabledCopyCheck);
 });
 
-describe("A team without a subdomain has an online, published service. ", () => {
+describe("A team without a subdomain has an online, published service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({
@@ -235,7 +236,7 @@ describe("A team without a subdomain has an online, published service. ", () => 
   });
 });
 
-describe("A team without a subdomain has an offline, unpublished service. ", () => {
+describe("A team without a subdomain has an offline, unpublished service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
     setState({

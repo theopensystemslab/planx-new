@@ -1,15 +1,16 @@
+import { screen } from "@testing-library/react";
 import React from "react";
-import ServiceSettings from "../../ServiceSettings";
-import { setup } from "testUtils";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { screen } from "@testing-library/react";
+import { setup } from "testUtils";
+
+import ServiceSettings from "../../ServiceSettings";
 
 export default async function setupServiceSettingsScreen() {
   const { user } = setup(
     <DndProvider backend={HTML5Backend}>
       <ServiceSettings />
-    </DndProvider>
+    </DndProvider>,
   );
 
   await screen.findByText("Your public link");
