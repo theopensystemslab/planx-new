@@ -1,6 +1,6 @@
-import { TeamMember } from "../types";
+import { TeamMember } from "../../types";
 
-export const exampleTeamMembersData: TeamMember[] = [
+export const mockTeamMembersData: TeamMember[] = [
   {
     firstName: "Donella",
     lastName: "Meadows",

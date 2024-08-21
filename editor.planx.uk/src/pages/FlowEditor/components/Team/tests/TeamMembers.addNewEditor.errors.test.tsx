@@ -1,29 +1,15 @@
 import { screen, within } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 
-import { TeamMember } from "../types";
-import { exampleTeamMembersData } from "./exampleTeamMembersData";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
+import { GRAPHQL_USER_ALREADY_EXISTS_ERROR } from "./mocks/mockErrors";
+import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
+import { alreadyExistingUser } from "./mocks/mockUsers";
 
 jest.mock("lib/featureFlags.ts", () => ({
   hasFeatureFlag: jest.fn().mockReturnValue(true),
 }));
-
-const GRAPHQL_USER_ALREADY_EXISTS_ERROR = {
-  message:
-    'Uniqueness violation. duplicate key value violates unique constraint "users_email_key"',
-  graphQLErrors: [
-    {
-      message:
-        'Uniqueness violation. duplicate key value violates unique constraint "users_email_key"',
-      extensions: {
-        path: "$.selectionSet.insert_users_one.args.object[0]",
-        code: "constraint-violation",
-      },
-    },
-  ],
-};
 
 jest.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
@@ -36,19 +22,11 @@ jest.mock(
 
 let initialState: FullStore;
 
-const alreadyExistingUser: TeamMember = {
-  firstName: "Mickey",
-  lastName: "Mouse",
-  email: "mickeymouse@email.com",
-  id: 3,
-  role: "teamEditor",
-};
-
 describe("when a user fills in the 'add a new editor' form correctly but the user already exists", () => {
   afterAll(() => useStore.setState(initialState));
   beforeEach(async () => {
     useStore.setState({
-      teamMembers: [...exampleTeamMembersData, alreadyExistingUser],
+      teamMembers: [...mockTeamMembersData, alreadyExistingUser],
     });
 
     const user = await setupTeamMembersScreen();

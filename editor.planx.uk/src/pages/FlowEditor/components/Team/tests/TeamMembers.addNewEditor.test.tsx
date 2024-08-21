@@ -1,9 +1,9 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 
-import { exampleTeamMembersData } from "./exampleTeamMembersData";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
+import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 
 jest.mock("lib/featureFlags.ts", () => ({
   hasFeatureFlag: jest.fn().mockReturnValue(true),
@@ -23,7 +23,7 @@ let initialState: FullStore;
 
 describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add a new editor'", () => {
   beforeEach(async () => {
-    useStore.setState({ teamMembers: exampleTeamMembersData });
+    useStore.setState({ teamMembers: mockTeamMembersData });
     const user = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
@@ -41,7 +41,7 @@ describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add 
 describe("when a user fills in the 'add a new editor' form correctly", () => {
   afterAll(() => useStore.setState(initialState));
   beforeEach(async () => {
-    useStore.setState({ teamMembers: exampleTeamMembersData });
+    useStore.setState({ teamMembers: mockTeamMembersData });
     const user = await setupTeamMembersScreen();
     await userTriesToAddNewEditor(user);
   });
