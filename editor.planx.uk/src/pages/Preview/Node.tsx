@@ -1,9 +1,7 @@
 import {
+  ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
-  GOV_PAY_PASSPORT_KEY,
-  GovUKPayment,
 } from "@opensystemslab/planx-core/types";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import AddressInput from "@planx/components/AddressInput/Public";
 import Calculate from "@planx/components/Calculate/Public";
 import Checklist from "@planx/components/Checklist/Public";
@@ -31,7 +29,6 @@ import Send from "@planx/components/Send/Public";
 import SetValue from "@planx/components/SetValue/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
-import { objectWithoutNullishValues } from "lib/objectHelpers";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
@@ -87,6 +84,7 @@ const Node: React.FC<any> = (props: Props) => {
   switch (props.node.type) {
     case TYPES.Calculate:
       return <Calculate {...allProps} />;
+
     case TYPES.Checklist: {
       const childNodes = childNodesOf(props.node.id);
       return (
@@ -114,43 +112,10 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
     }
-    case TYPES.Confirmation: {
-      const payment: GovUKPayment | undefined =
-        passport.data?.[GOV_PAY_PASSPORT_KEY];
 
-      const details = {
-        "Planning application reference": payment?.reference ?? sessionId,
+    case TYPES.Confirmation:
+      return <Confirmation {...allProps} />;
 
-        "Property address": passport.data?._address?.title,
-
-        "Application type": [
-          flowName.replace("Apply", "Application"),
-          getWorkStatus(passport),
-        ]
-          .filter(Boolean)
-          .join(" - "),
-
-        // XXX: If there is no payment we can't alternatively show Date.now() because it
-        //      will change after page refresh. BOPS submission time needs to be queryable.
-        Submitted: payment?.created_date
-          ? new Date(payment.created_date).toLocaleDateString("en-gb", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })
-          : undefined,
-
-        "GOV.UK Payment reference": payment?.payment_id,
-      };
-
-      return (
-        <Confirmation
-          {...allProps}
-          details={objectWithoutNullishValues(details)}
-          color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
-        />
-      );
-    }
     case TYPES.Content:
       return <Content {...allProps} />;
 
@@ -209,6 +174,7 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
     }
+
     case TYPES.Review:
       return <Review {...allProps} />;
 
@@ -267,6 +233,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Answer:
     case undefined:
       return null;
+
     default:
       console.error({ nodeNotFound: props });
       return exhaustiveCheck(props.node.type);
@@ -275,15 +242,6 @@ const Node: React.FC<any> = (props: Props) => {
 
 function exhaustiveCheck(type: never): never {
   throw new Error(`Missing type ${type}`);
-}
-
-function getWorkStatus(passport: Store.passport): string | undefined {
-  switch (passport?.data?.["application.type"]?.toString()) {
-    case "ldc.existing":
-      return "existing";
-    case "ldc.proposed":
-      return "proposed";
-  }
 }
 
 export default Node;
