@@ -90,7 +90,14 @@ export async function sendToIdoxNexus(
     //   Switch to `team_integrations`-based approach later
     const orgIds = Object.keys(organisations);
     const randomOrgId = orgIds[Math.floor(Math.random() * orgIds.length)];
-    const randomOrg = organisations[randomOrgId];
+    // Dev auth endpoint returns "Multi-organisation" as every org name, but Idox expects these
+    const orgNamesMap: Record<string, string> = {
+      "210051": "Open System Labs 001",
+      "210052": "Open System Labs 002",
+      "210053": "Open System Labs 003",
+      "210054": "Open System Labs 004",
+    };
+    const randomOrg = orgNamesMap[randomOrgId];
 
     // Create a zip containing only the ODP Schema JSON
     //   Do this BEFORE creating a submission in order to throw any validation errors early
