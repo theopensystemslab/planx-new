@@ -108,9 +108,9 @@ const PublicLink: React.FC<{
       case !isFlowPublished && isFlowOnline:
         return "Publish your service to activate the public link.";
       case isFlowPublished && !isFlowOnline:
-        return "Switch your service to 'online' to activate the public link.";
+        return "Switch your service to 'online' to activate the public link. Save and refresh to see the activate link";
       case !isFlowPublished && !isFlowOnline:
-        return "Publish your service and switch it to 'online' to activate the public link.";
+        return "Publish your service and switch it to 'online' to activate the public link. Save and refesh to see the active page";
     }
   };
 
