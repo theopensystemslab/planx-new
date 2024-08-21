@@ -167,7 +167,7 @@
   "scripts": {
     "start": "craco start",
     "build": "CI=false && craco build",
-    "build:ci": "CI=true && craco build",
+    "build:ci": "CI=true && craco build --verbose",
     "test": "react-scripts test",
     "test:silent": "react-scripts test --silent",
     "eject": "react-scripts eject",
