@@ -6,9 +6,10 @@ import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { FormikHelpers, useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useState } from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 
 import { addNewEditorFormSchema } from "../formSchema";
@@ -21,6 +22,23 @@ export const AddNewEditorModal = ({
   setShowModal,
   setShowToast,
 }: AddNewEditorModalProps) => {
+  const [showUserAlreadyExistsError, setShowUserAlreadyExistsError] =
+    useState<boolean>(false);
+
+  const clearErrors = () => {
+    setShowUserAlreadyExistsError(false);
+  };
+
+  const isUserAlreadyExistsError = (error: string) =>
+    AddNewEditorErrors.USER_ALREADY_EXISTS.regex.test(error);
+
+  const AddNewEditorErrors = {
+    USER_ALREADY_EXISTS: {
+      regex: /violates unique constraint "users_email_key"/i,
+      errorMessage: "User already exists",
+    },
+  };
+
   const handleSubmit = async (
     values: AddNewEditorFormValues,
     { resetForm }: FormikHelpers<AddNewEditorFormValues>,
@@ -32,13 +50,19 @@ export const AddNewEditorModal = ({
       values.firstName,
       values.lastName,
       teamId,
-    );
+    ).catch((err) => {
+      if (isUserAlreadyExistsError(err.message)) {
+        setShowUserAlreadyExistsError(true);
+      }
+
+      console.error(err);
+    });
+
     if (!isSuccess) {
       return;
     }
-
+    clearErrors();
     optimisticallyUpdateTable(values);
-
     setShowModal(false);
     setShowToast(true);
     resetForm({ values });
@@ -57,6 +81,7 @@ export const AddNewEditorModal = ({
   return (
     <Dialog
       aria-labelledby="dialog-heading"
+      data-testid="dialog-create-user"
       PaperProps={{
         sx: (theme) => ({
           width: "100%",
@@ -123,26 +148,36 @@ export const AddNewEditorModal = ({
             padding: 2,
           }}
         >
-          <Box>
-            <Button
-              variant="contained"
-              color="prompt"
-              type="submit"
-              data-testid="modal-create-user-button"
-            >
-              Create user
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              type="reset"
-              sx={{ ml: 1.5 }}
-              onClick={() => setShowModal(false)}
-              data-testid="modal-cancel-button"
-            >
-              Cancel
-            </Button>
-          </Box>
+          <ErrorWrapper
+            error={
+              showUserAlreadyExistsError
+                ? AddNewEditorErrors.USER_ALREADY_EXISTS.errorMessage
+                : undefined
+            }
+          >
+            <Box>
+              <>
+                <Button
+                  variant="contained"
+                  color="prompt"
+                  type="submit"
+                  data-testid="modal-create-user-button"
+                >
+                  Create user
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="reset"
+                  sx={{ ml: 1.5 }}
+                  onClick={() => setShowModal(false)}
+                  data-testid="modal-cancel-button"
+                >
+                  Cancel
+                </Button>
+              </>
+            </Box>
+          </ErrorWrapper>
         </DialogActions>
       </form>
     </Dialog>
