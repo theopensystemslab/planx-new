@@ -19,6 +19,7 @@ import { optimisticallyUpdateTable } from "./lib/optimisticallyUpdateTable";
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
+  setShowToast,
 }: AddNewEditorModalProps) => {
   const handleSubmit = async (
     values: AddNewEditorFormValues,
@@ -26,16 +27,20 @@ export const AddNewEditorModal = ({
   ) => {
     const teamId = useStore.getState().teamId;
 
-    await createAndAddUserToTeam(
+    const isSuccess = await createAndAddUserToTeam(
       values.email,
       values.firstName,
       values.lastName,
       teamId,
     );
+    if (!isSuccess) {
+      return;
+    }
 
     optimisticallyUpdateTable(values);
 
     setShowModal(false);
+    setShowToast(true);
     resetForm({ values });
   };
 

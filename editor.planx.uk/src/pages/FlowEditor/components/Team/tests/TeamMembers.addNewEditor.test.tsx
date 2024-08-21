@@ -70,4 +70,10 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
       ).toBeInTheDocument();
     });
   });
+
+  it("shows a success message", async () => {
+    expect(
+      await screen.findByText(/Successfully added a user/),
+    ).toBeInTheDocument();
+  });
 });
