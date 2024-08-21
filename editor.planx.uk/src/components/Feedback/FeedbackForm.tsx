@@ -3,15 +3,14 @@ import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { Form, Formik, useFormikContext } from "formik";
 import React from "react";
-import FeedbackDataDisclaimer from "ui/public/FeedbackDataDisclaimer";
+import {
+  FeedbackDataDisclaimer,
+  FeedbackMonitoringDisclaimer,
+} from "ui/public/FeedbackDisclaimer";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
-
 import { FeedbackFormInput, FormProps, UserFeedback } from ".";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import FeedbackMonitoringDisclaimer from "ui/public/FeedbackMonitoringDisclaimer";
 
 const StyledForm = styled(Form)(({ theme }) => ({
   "& > *": contentFlowSpacing(theme),
