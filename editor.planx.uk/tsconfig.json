@@ -22,6 +22,6 @@
       "vite-plugin-svgr/client"
     ]
   },
-  "include": ["**/*.ts", "**/*.tsx", "jest.setup.js"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"],
 }

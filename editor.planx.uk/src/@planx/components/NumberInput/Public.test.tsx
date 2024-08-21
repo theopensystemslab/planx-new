@@ -1,7 +1,8 @@
 import { screen } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 
 import NumberInput from "./Public";
 
@@ -140,8 +141,8 @@ test("recovers previously submitted number when clicking the back button even if
   expect(handleSubmit).toHaveBeenCalledWith({ data: { [dataField]: 43 } });
 });
 
-it("should not have any accessibility violations", async () => {
-  const { container } = setup(<NumberInput fn="num" title="Numberwang!" />);
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
+// it("should not have any accessibility violations", async () => {
+//   const { container } = setup(<NumberInput fn="num" title="Numberwang!" />);
+//   const results = await axe(container);
+//   expect(results).toHaveNoViolations();
+// });

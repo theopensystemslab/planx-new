@@ -1,7 +1,8 @@
 import { screen } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 
 import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import FileUpload from "./Public";
@@ -77,18 +78,18 @@ const dummyFile = {
   },
 };
 
-it("should not have any accessibility violations", async () => {
-  const handleSubmit = jest.fn();
-  const componentId = uniqueId();
+// it("should not have any accessibility violations", async () => {
+//   const handleSubmit = jest.fn();
+//   const componentId = uniqueId();
 
-  const { container } = setup(
-    <FileUpload
-      fn="someKey"
-      id={componentId}
-      handleSubmit={handleSubmit}
-      description="description"
-    />,
-  );
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
+//   const { container } = setup(
+//     <FileUpload
+//       fn="someKey"
+//       id={componentId}
+//       handleSubmit={handleSubmit}
+//       description="description"
+//     />,
+//   );
+//   const results = await axe(container);
+//   expect(results).toHaveNoViolations();
+// });

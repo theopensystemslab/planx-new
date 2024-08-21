@@ -71,7 +71,6 @@ const createPublicStore = () =>
  * If accessing the editor then load ALL store files
  */
 const createFullStore = () => {
-  const { editorStore, editorUIStore } = require("./editor");
   return create<FullStore>()((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),
