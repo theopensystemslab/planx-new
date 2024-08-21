@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { Form, Formik, useFormikContext } from "formik";
 import React from "react";
-import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
+import FeedbackDataDisclaimer from "ui/public/FeedbackDataDisclaimer";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
@@ -11,6 +11,7 @@ import Input from "ui/shared/Input";
 import { FeedbackFormInput, FormProps, UserFeedback } from ".";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import FeedbackMonitoringDisclaimer from "ui/public/FeedbackMonitoringDisclaimer";
 
 const StyledForm = styled(Form)(({ theme }) => ({
   "& > *": contentFlowSpacing(theme),
@@ -54,17 +55,9 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <StyledForm>
-        <FeedbackDisclaimer />
+        <FeedbackDataDisclaimer />
         <FormInputs inputs={inputs} />
-        <Box>
-          <Typography variant="body2">
-            This information is not monitored frequently by planning officers,
-            do not use it to provide extra information or queries with regard to
-            your application or project. Any information of this nature will be
-            disregarded.
-          </Typography>
-        </Box>
-
+        <FeedbackMonitoringDisclaimer />
         <Button
           type="submit"
           variant="contained"

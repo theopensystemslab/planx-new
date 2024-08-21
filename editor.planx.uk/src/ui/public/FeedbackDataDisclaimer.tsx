@@ -3,7 +3,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-export default function FeedbackDisclaimer(): FCReturn {
+export default function FeedbackDataDisclaimer(): FCReturn {
   return (
     <Box>
       <Typography variant="body2">
