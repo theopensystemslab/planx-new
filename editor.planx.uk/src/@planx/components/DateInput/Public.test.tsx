@@ -1,15 +1,16 @@
 import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingLabel } from "../shared/testHelpers";
 import DateInput from "./Public";
 
 test("submits a date", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
   const { user } = setup(
@@ -38,7 +39,7 @@ test("submits a date", async () => {
 });
 
 test("recovers previously submitted date when clicking the back button", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
   const { user } = setup(
@@ -64,7 +65,7 @@ test("recovers previously submitted date when clicking the back button", async (
 });
 
 test("recovers previously submitted date when clicking the back button even if a data field is set", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
   const dataField = "data-field";
 
@@ -98,7 +99,7 @@ test("renders", async () => {
 });
 
 test("allows user to type into input field and click continue", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <DateInput title="Enter a date" handleSubmit={handleSubmit} />,
@@ -139,49 +140,49 @@ test("date fields have a max length set", async () => {
   expect(year.maxLength).toBe(4);
 });
 
-// it("should not have any accessibility violations upon initial load", async () => {
-//   const { container } = setup(
-//     <DateInput id="123" title="Test title" description="description" />,
-//   );
-//   const results = await axe(container);
-//   expect(results).toHaveNoViolations();
-// });
+it.skip("should not have any accessibility violations upon initial load", async () => {
+  const { container } = setup(
+    <DateInput id="123" title="Test title" description="description" />,
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
 
-// it("should not have any accessibility violations whilst in the error state", async () => {
-//   const { container, user } = setup(
-//     <DateInput id="testId" title="Test title" description="description" />,
-//   );
+it.skip("should not have any accessibility violations whilst in the error state", async () => {
+  const { container, user } = setup(
+    <DateInput id="testId" title="Test title" description="description" />,
+  );
 
-//   const dateElements = ["day", "month", "year"];
+  const dateElements = ["day", "month", "year"];
 
-//   // There is an ErrorWrapper per input, which should not display on load
-//   dateElements.forEach((el) => {
-//     const inputErrorWrapper = screen.getByTestId(
-//       `${ERROR_MESSAGE}-testId-${el}`,
-//     );
-//     expect(inputErrorWrapper).toBeEmptyDOMElement();
-//   });
+  // There is an ErrorWrapper per input, which should not display on load
+  dateElements.forEach((el) => {
+    const inputErrorWrapper = screen.getByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`,
+    );
+    expect(inputErrorWrapper).toBeEmptyDOMElement();
+  });
 
-//   // There is a main ErrorWrapper, which should not display on load
-//   const mainErrorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
-//   expect(mainErrorMessage).toBeEmptyDOMElement();
+  // There is a main ErrorWrapper, which should not display on load
+  const mainErrorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
+  expect(mainErrorMessage).toBeEmptyDOMElement();
 
-//   // Trigger error state
-//   await user.click(screen.getByTestId("continue-button"));
-//   // Individual input errors do not display, and are not in an error state
-//   dateElements.forEach((el) => {
-//     const inputErrorWrapper = screen.getByTestId(
-//       `${ERROR_MESSAGE}-testId-${el}`,
-//     );
-//     expect(inputErrorWrapper).toBeEmptyDOMElement();
-//     expect(inputErrorWrapper).not.toHaveAttribute("role", "status");
-//   });
+  // Trigger error state
+  await user.click(screen.getByTestId("continue-button"));
+  // Individual input errors do not display, and are not in an error state
+  dateElements.forEach((el) => {
+    const inputErrorWrapper = screen.getByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`,
+    );
+    expect(inputErrorWrapper).toBeEmptyDOMElement();
+    expect(inputErrorWrapper).not.toHaveAttribute("role", "status");
+  });
 
-//   // Main ErrorWrapper does display, and is in error state
-//   await waitFor(() => expect(mainErrorMessage).not.toBeEmptyDOMElement());
-//   const [mainErrorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
-//   expect(mainErrorWrapper).toHaveAttribute("role", "alert");
+  // Main ErrorWrapper does display, and is in error state
+  await waitFor(() => expect(mainErrorMessage).not.toBeEmptyDOMElement());
+  const [mainErrorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
+  expect(mainErrorWrapper).toHaveAttribute("role", "alert");
 
-//   const results = await axe(container);
-//   expect(results).toHaveNoViolations();
-// });
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});

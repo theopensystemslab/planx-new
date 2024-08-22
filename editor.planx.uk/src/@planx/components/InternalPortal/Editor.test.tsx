@@ -1,14 +1,15 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import InternalPortalForm from "./Editor";
 
 describe("adding an internal portal", () => {
   test("creating a new internal portal", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <InternalPortalForm
@@ -43,7 +44,7 @@ describe("adding an internal portal", () => {
   });
 
   test("selecting an existing internal portal", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <InternalPortalForm
@@ -67,7 +68,7 @@ describe("adding an internal portal", () => {
   });
 
   test("if text and flowId are set, only flowId should be submitted", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <InternalPortalForm
@@ -94,7 +95,7 @@ test("do not display select field when there are no flows to select", () => {
 });
 
 test("updating an internal portal", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <InternalPortalForm id="test" text="val" handleSubmit={handleSubmit} />,
@@ -140,7 +141,7 @@ describe("validations", () => {
     ];
     for (const scenario of scenarios) {
       test(`${scenario.action}`, async () => {
-        const handleSubmit = jest.fn();
+        const handleSubmit = vi.fn();
 
         setup(
           <InternalPortalForm
@@ -159,15 +160,15 @@ describe("validations", () => {
   });
 });
 
-// it("should not have any accessibility violations", async () => {
-//   const handleSubmit = jest.fn();
+it.skip("should not have any accessibility violations", async () => {
+  const handleSubmit = vi.fn();
 
-//   const { container } = setup(
-//     <InternalPortalForm
-//       flows={[{ id: "portal", text: "portal" }]}
-//       handleSubmit={handleSubmit}
-//     />,
-//   );
-//   const results = await axe(container);
-//   expect(results).toHaveNoViolations();
-// });
+  const { container } = setup(
+    <InternalPortalForm
+      flows={[{ id: "portal", text: "portal" }]}
+      handleSubmit={handleSubmit}
+    />,
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});

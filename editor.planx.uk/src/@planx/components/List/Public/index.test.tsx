@@ -2,8 +2,9 @@ import { screen, within } from "@testing-library/react";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import ListComponent from "../Public";
 import {
@@ -14,7 +15,7 @@ import { mockMaxOneProps } from "../schemas/mocks/MaxOne";
 import { mockZooPayload, mockZooProps } from "../schemas/mocks/Zoo";
 
 jest.setTimeout(20_000);
-Element.prototype.scrollIntoView = jest.fn();
+Element.prototype.scrollIntoView = vi.fn();
 
 describe("Basic UI", () => {
   it("renders correctly", () => {
@@ -91,11 +92,11 @@ describe("Basic UI", () => {
     expect(getByText(/Cancel/, { selector: "button" })).toBeInTheDocument();
   });
 
-  // it("should not have any accessibility violations", async () => {
-  //   const { container } = setup(<ListComponent {...mockZooProps} />);
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+  it.skip("should not have any accessibility violations", async () => {
+    const { container } = setup(<ListComponent {...mockZooProps} />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 describe("Building a list", () => {
@@ -643,7 +644,7 @@ test("Input data is displayed in the inactive card view", async () => {
 
 describe("Payload generation", () => {
   it("generates a valid payload on submission (Zoo)", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const { getByTestId, user } = setup(
       <ListComponent {...mockZooProps} handleSubmit={handleSubmit} />,
     );
@@ -661,7 +662,7 @@ describe("Payload generation", () => {
   });
 
   it("generates a valid payload with summary stats on submission (Units)", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const { getByTestId, user, getByRole, getAllByRole, getByLabelText } =
       setup(<ListComponent {...mockUnitsProps} handleSubmit={handleSubmit} />);
 

@@ -4,10 +4,10 @@ import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { FullStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
 import { Breadcrumbs } from "types";
 import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { mockFileTypes, mockFileTypesUniqueKeys } from "./mocks";
 import { PASSPORT_REQUESTED_FILES_KEY } from "./model";
@@ -42,22 +42,22 @@ describe("Basic state and setup", () => {
     expect(getByTestId("upload-input")).toBeInTheDocument();
   });
 
-  // it("should not have any accessibility violations", async () => {
-  //   const { container } = setup(
-  //     <FileUploadAndLabelComponent
-  //       title="Test title"
-  //       fileTypes={[
-  //         mockFileTypes.AlwaysRequired,
-  //         mockFileTypes.AlwaysRequired,
-  //         mockFileTypes.AlwaysRequired,
-  //         mockFileTypes.AlwaysRecommended,
-  //         mockFileTypes.NotRequired,
-  //       ]}
-  //     />,
-  //   );
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+  it.skip("should not have any accessibility violations", async () => {
+    const { container } = setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+      />,
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 
   test("shows help buttons for header and applicable file", async () => {
     const { getAllByTestId } = setup(
@@ -122,23 +122,23 @@ describe("Info-only mode with hidden drop zone", () => {
     expect(queryByTestId("upload-input")).not.toBeInTheDocument();
   });
 
-  // it("should not have any accessibility violations", async () => {
-  //   const { container } = setup(
-  //     <FileUploadAndLabelComponent
-  //       title="Test title"
-  //       fileTypes={[
-  //         mockFileTypes.AlwaysRequired,
-  //         mockFileTypes.AlwaysRequired,
-  //         mockFileTypes.AlwaysRequired,
-  //         mockFileTypes.AlwaysRecommended,
-  //         mockFileTypes.NotRequired,
-  //       ]}
-  //       hideDropZone={true}
-  //     />,
-  //   );
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+  it.skip("should not have any accessibility violations", async () => {
+    const { container } = setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRequired,
+          mockFileTypes.AlwaysRecommended,
+          mockFileTypes.NotRequired,
+        ]}
+        hideDropZone={true}
+      />,
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 
   test("shows help buttons for header and applicable file", async () => {
     const { getAllByTestId } = setup(

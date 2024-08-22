@@ -2,11 +2,12 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
+import { vi } from "vitest";
 
 import ExternalPortalForm from "./Editor";
 
 test("adding an external portal", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   setup(
     <ExternalPortalForm
@@ -36,7 +37,7 @@ test("adding an external portal", async () => {
 });
 
 test("changing an external portal", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   setup(
     <ExternalPortalForm

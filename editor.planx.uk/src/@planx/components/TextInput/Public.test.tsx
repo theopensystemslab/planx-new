@@ -1,14 +1,15 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { TextInputType } from "./model";
 import TextInput from "./Public";
 test("requires a value before being able to continue", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <TextInput title="hello" handleSubmit={handleSubmit} />,
@@ -23,7 +24,7 @@ test("requires a value before being able to continue", async () => {
 });
 
 test("requires a valid email before being able to continue", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <TextInput
@@ -42,7 +43,7 @@ test("requires a valid email before being able to continue", async () => {
 });
 
 test("recovers previously submitted text when clicking the back button", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const nodeId = uniqueId();
 
   const { user } = setup(
@@ -68,7 +69,7 @@ test("recovers previously submitted text when clicking the back button", async (
 });
 
 test("recovers previously submitted text when clicking the back button even if a data field is set", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const nodeId = uniqueId();
 
   const { user } = setup(
@@ -105,7 +106,7 @@ const examplePhoneNumbers = [
 
 examplePhoneNumbers.forEach((number) => {
   test(`continues for valid phone number example ${number}`, async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <TextInput
@@ -125,13 +126,13 @@ examplePhoneNumbers.forEach((number) => {
   });
 });
 
-// it("should not have any accessibility violations", async () => {
-//   const { container } = setup(
-//     <TextInput title="phone" type={TextInputType.Phone} />,
-//   );
-//   const results = await axe(container);
-//   expect(results).toHaveNoViolations();
-// });
+it.skip("should not have any accessibility violations", async () => {
+  const { container } = setup(
+    <TextInput title="phone" type={TextInputType.Phone} />,
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
 
 it("should always an empty error message element in the DOM", () => {
   setup(
@@ -146,7 +147,7 @@ it("should always an empty error message element in the DOM", () => {
 });
 
 it("should change the role of the ErrorWrapper when an invalid input is given", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <TextInput
