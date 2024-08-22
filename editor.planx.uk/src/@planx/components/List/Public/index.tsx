@@ -8,26 +8,17 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { PublicProps } from "@planx/components/ui";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import InputRow from "ui/shared/InputRow";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
-import type { Field, List } from "../model";
+import type { List } from "../model";
 import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";
-import {
-  ChecklistFieldInput,
-  MapFieldInput,
-  DateFieldInput,
-  NumberFieldInput,
-  RadioFieldInput,
-  SelectFieldInput,
-  TextFieldInput,
-} from "./Fields";
 
 export type Props = PublicProps<List>;
 
@@ -46,35 +37,10 @@ const CardButton = styled(Button)(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
-/**
- * Controller to return correct user input for field in schema
- */
-const InputField: React.FC<Field> = (props) => {
-  const inputFieldId = `input-${props.type}-${props.data.fn}`;
-
-  switch (props.type) {
-    case "text":
-      return <TextFieldInput id={inputFieldId} {...props} />;
-    case "number":
-      return <NumberFieldInput id={inputFieldId} {...props} />;
-    case "question":
-      if (props.data.options.length === 2) {
-        return <RadioFieldInput id={inputFieldId} {...props} />;
-      }
-      return <SelectFieldInput id={inputFieldId} {...props} />;
-    case "checklist":
-      return <ChecklistFieldInput id={inputFieldId} {...props} />;
-    case "date":
-      return <DateFieldInput id={inputFieldId} {...props} />;
-    case "map":
-      return <MapFieldInput id={inputFieldId} {...props} />;
-  }
-};
-
 const ActiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, saveItem, cancelEditItem, errors, isPageComponent } =
+  const { schema, saveItem, cancelEditItem, errors, isPageComponent, formik, activeIndex } =
     useListContext();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -93,11 +59,7 @@ const ActiveListCard: React.FC<{
           {schema.type}
           {!isPageComponent && ` ${i + 1}`}
         </Typography>
-        {schema.fields.map((field, i) => (
-          <InputRow key={i}>
-            <InputField {...field} />
-          </InputRow>
-        ))}
+        <SchemaFields schema={schema} activeIndex={activeIndex} formik={formik}/>
         <Box display="flex" gap={2}>
           <Button
             variant="contained"
@@ -134,7 +96,7 @@ const InactiveListCard: React.FC<{
               </TableCell>
               <TableCell>
                 {formatSchemaDisplayValue(
-                  formik.values.userData[i][field.data.fn],
+                  formik.values.schemaData[i][field.data.fn],
                   schema.fields[j],
                 )}
               </TableCell>
@@ -175,9 +137,9 @@ const Root = () => {
     (errors.max && `You can provide at most ${schema.max} response(s)`) ||
     "";
 
-  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (userData = [])
+  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (schemaData = [])
   const shouldShowAddAnotherButton =
-    schema.max !== 1 || formik.values.userData.length < 1;
+    schema.max !== 1 || formik.values.schemaData.length < 1;
 
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
@@ -190,7 +152,7 @@ const Root = () => {
       />
       <ErrorWrapper error={rootError}>
         <>
-          {formik.values.userData.map((_, i) =>
+          {formik.values.schemaData.map((_, i) =>
             i === activeIndex ? (
               <ActiveListCard key={`card-${i}`} index={i} />
             ) : (
