@@ -30,7 +30,7 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
   const afterOverridePassport = getState().computePassport();
   expect(afterOverridePassport.data).toBeDefined();
   expect(afterOverridePassport.data).not.toHaveProperty(["property.type"]);
-  expect(afterOverridePassport.data).toHaveProperty(["_overrides"])
+  expect(afterOverridePassport.data).toHaveProperty(["_overrides"]);
   expect(afterOverridePassport.data?.["_overrides"]).toEqual({
     "property.type": ["residential.dwelling.house.semiDetached"],
   });

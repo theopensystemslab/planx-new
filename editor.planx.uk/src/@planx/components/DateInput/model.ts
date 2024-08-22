@@ -97,7 +97,9 @@ export const dateSchema = () => {
     );
 };
 
-export const dateRangeSchema: (input: DateInput) => SchemaOf<string> = (params) =>
+export const dateRangeSchema: (input: DateInput) => SchemaOf<string> = (
+  params,
+) =>
   dateSchema()
     .required("Enter a valid date in DD.MM.YYYY format")
     .test({

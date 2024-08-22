@@ -110,19 +110,19 @@ describe("dateRangeSchema", () => {
       await dateRangeSchema({
         min: "1990-01-01",
         max: "1999-12-31",
-      } as DateInput).isValid("1995-06-15")
+      } as DateInput).isValid("1995-06-15"),
     ).toBe(true);
     expect(
       await dateRangeSchema({
         min: "1990-01-01",
         max: "1999-12-31",
-      } as DateInput).isValid("2021-06-15")
+      } as DateInput).isValid("2021-06-15"),
     ).toBe(false);
     expect(
       await dateRangeSchema({
         min: "1990-01-01",
         max: "1999-12-31",
-      } as DateInput).isValid("1980-06-15")
+      } as DateInput).isValid("1980-06-15"),
     ).toBe(false);
   });
 });

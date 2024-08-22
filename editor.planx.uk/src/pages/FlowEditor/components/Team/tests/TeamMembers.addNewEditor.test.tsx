@@ -22,7 +22,7 @@ describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add 
     const user = await setupTeamMembersScreen();
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByText(
-      "Add a new editor"
+      "Add a new editor",
     );
     user.click(addEditorButton);
   });
