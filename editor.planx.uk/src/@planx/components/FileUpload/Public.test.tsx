@@ -79,7 +79,7 @@ const dummyFile = {
   },
 };
 
-it.skip("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations", async () => {
   const handleSubmit = vi.fn();
   const componentId = uniqueId();
 

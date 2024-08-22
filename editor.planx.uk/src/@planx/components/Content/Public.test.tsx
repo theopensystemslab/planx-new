@@ -35,7 +35,7 @@ test("use light text color if color param is dark", () => {
   });
 });
 
-it.skip("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations", async () => {
   const { container } = setup(<Content content="dark" color="#000" />);
   const results = await axe(container);
   expect(results).toHaveNoViolations();

@@ -45,7 +45,7 @@ it("renders correctly", async () => {
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 
-it.skip("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <PlanningConstraints
       title="Planning constraints"

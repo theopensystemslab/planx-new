@@ -81,7 +81,7 @@ describe("Simple flow", () => {
     expect(screen.queryAllByText("undefined")).toHaveLength(0);
   });
 
-  it.skip("should not have any accessibility violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const changeAnswer = vi.fn();
 
     const { container } = setup(
@@ -291,7 +291,7 @@ describe("Flow with sections", () => {
     expect(handleSubmit).toHaveBeenCalled();
   });
 
-  it.skip("should not have any accessibility violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const { container } = setup(
       <Review
         title="Review with sections"
@@ -355,7 +355,7 @@ describe("Flow with empty sections", () => {
     ).not.toBeInTheDocument();
   });
 
-  it.skip("should not have any accessibility violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const { container } = setup(
       <Review
         title="Review with empty sections"

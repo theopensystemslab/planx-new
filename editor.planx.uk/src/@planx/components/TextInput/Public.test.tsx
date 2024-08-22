@@ -126,7 +126,7 @@ examplePhoneNumbers.forEach((number) => {
   });
 });
 
-it.skip("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <TextInput title="phone" type={TextInputType.Phone} />,
   );

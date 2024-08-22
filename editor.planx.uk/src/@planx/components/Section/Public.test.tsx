@@ -23,7 +23,7 @@ describe("Section component", () => {
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 
-  it.skip("should not have any accessibility violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const handleSubmit = vi.fn();
 
     const { container } = setup(
@@ -113,7 +113,7 @@ describe("SectionsOverviewList component", () => {
     expect(screen.queryByText("Change Section one")).not.toBeInTheDocument();
   });
 
-  it.skip("should not have any accessibility violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const { container } = setup(<SectionsOverviewList {...defaultProps} />);
 
     const results = await axe(container);

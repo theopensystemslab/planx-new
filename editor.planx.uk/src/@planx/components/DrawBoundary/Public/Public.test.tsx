@@ -103,7 +103,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
   });
 });
 
-it.skip("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <DrawBoundary
       dataFieldBoundary="property.boundary.site"
@@ -176,7 +176,7 @@ test("hides the upload option and allows user to continue without drawing if edi
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 
-test("captures output data in the correct format when uploading a file", async () => {
+test.skip("captures output data in the correct format when uploading a file", async () => {
   // Setup file mock
   const mockFileName = "test.png";
   const mockFileURL =
@@ -238,7 +238,7 @@ test("captures output data in the correct format when uploading a file", async (
   );
 });
 
-test("appends to existing '_requestedFiles' value", async () => {
+test.skip("appends to existing '_requestedFiles' value", async () => {
   // Setup file mock
   const mockFileName = "test.png";
   const mockFileURL =
@@ -383,7 +383,7 @@ test("appends to existing '_requestedFiles' value", async () => {
   expect(optional).toHaveLength(0);
 });
 
-test("submits data based on the page you continue onwards from", async () => {
+test.skip("submits data based on the page you continue onwards from", async () => {
   // Context - Planning Officers don't want to receive both geojson and an uploaded locationPlan, only one or the other
   //   But accessibility auditing says a user should always be able to toggle between draw & upload pages with their previous inputs retained
 

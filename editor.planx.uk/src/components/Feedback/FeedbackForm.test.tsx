@@ -55,7 +55,7 @@ describe("FeedbackForm functionality", () => {
 
 describe("FeedbackForm accessibility tests", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   // test("renders inputs with no accessibility violations", async () => {

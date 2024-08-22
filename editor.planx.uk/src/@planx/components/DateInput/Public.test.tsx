@@ -140,7 +140,7 @@ test("date fields have a max length set", async () => {
   expect(year.maxLength).toBe(4);
 });
 
-it.skip("should not have any accessibility violations upon initial load", async () => {
+it("should not have any accessibility violations upon initial load", async () => {
   const { container } = setup(
     <DateInput id="123" title="Test title" description="description" />,
   );
@@ -148,7 +148,7 @@ it.skip("should not have any accessibility violations upon initial load", async 
   expect(results).toHaveNoViolations();
 });
 
-it.skip("should not have any accessibility violations whilst in the error state", async () => {
+it("should not have any accessibility violations whilst in the error state", async () => {
   const { container, user } = setup(
     <DateInput id="testId" title="Test title" description="description" />,
   );

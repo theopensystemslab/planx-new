@@ -127,7 +127,7 @@ test("recovers previously submitted text when clicking the back button even if a
   });
 });
 
-it.skip("should not have any accessibility violations on initial load", async () => {
+it("should not have any accessibility violations on initial load", async () => {
   const { container, user } = setup(<AddressInput title="title" />);
   await fillInFieldsUsingLabel(user, {
     "Address line 1": "Flat 1",
@@ -141,7 +141,7 @@ it.skip("should not have any accessibility violations on initial load", async ()
   expect(results).toHaveNoViolations();
 });
 
-it.skip("should not have any accessibility violations whilst in the error state", async () => {
+it("should not have any accessibility violations whilst in the error state", async () => {
   const { container, user } = setup(<AddressInput title="title" id="testId" />);
 
   const requiredAddressElements = ["line1", "town", "postcode"];

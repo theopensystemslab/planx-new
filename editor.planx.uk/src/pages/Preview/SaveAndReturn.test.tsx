@@ -2,8 +2,9 @@ import Button from "@mui/material/Button";
 import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import SaveAndReturn, { ConfirmEmail } from "./SaveAndReturn";
 
@@ -58,15 +59,15 @@ describe("Save and Return component", () => {
     expect(screen.getByText("Testing 123")).toBeInTheDocument();
   });
 
-  // it("should not have any accessibility violations", async () => {
-  //   const children = <Button>Testing 123</Button>;
-  //   const { container } = setup(
-  //     <SaveAndReturn children={children}></SaveAndReturn>,
-  //   );
+  it("should not have any accessibility violations", async () => {
+    const children = <Button>Testing 123</Button>;
+    const { container } = setup(
+      <SaveAndReturn children={children}></SaveAndReturn>,
+    );
 
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 
   it("stores the sessionId as part of the URL once an email has been submitted", async () => {
     const children = <Button>Testing 123</Button>;
@@ -96,7 +97,7 @@ describe("Save and Return component", () => {
 
 describe("ConfirmEmail component", () => {
   it("will not submit if form fields are empty", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
@@ -115,7 +116,7 @@ describe("ConfirmEmail component", () => {
   });
 
   it("will not submit if form fields do not match", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
@@ -137,7 +138,7 @@ describe("ConfirmEmail component", () => {
   });
 
   it("will display an error for an invalid email address", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
@@ -156,7 +157,7 @@ describe("ConfirmEmail component", () => {
   });
 
   it("will display an error if a field is left empty", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
@@ -177,34 +178,34 @@ describe("ConfirmEmail component", () => {
     );
   });
 
-  // it("should not have any accessibility violations upon load", async () => {
-  //   const handleSubmit = jest.fn();
+  it("should not have any accessibility violations upon load", async () => {
+    const handleSubmit = vi.fn();
 
-  //   const { container } = setup(
-  //     <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
-  //   );
+    const { container } = setup(
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
+    );
 
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 
-  // it("should not have any accessibility violations in the error state", async () => {
-  //   const handleSubmit = jest.fn();
-  //   const { container, user } = setup(
-  //     <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
-  //   );
+  it("should not have any accessibility violations in the error state", async () => {
+    const handleSubmit = vi.fn();
+    const { container, user } = setup(
+      <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,
+    );
 
-  //   await user.click(screen.getByTestId("continue-button"));
-  //   expect(await screen.findAllByText("Email address required")).toHaveLength(
-  //     2,
-  //   );
+    await user.click(screen.getByTestId("continue-button"));
+    expect(await screen.findAllByText("Email address required")).toHaveLength(
+      2,
+    );
 
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 
   it("submits matching emails", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>,

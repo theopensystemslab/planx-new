@@ -179,7 +179,7 @@ test("recovers previously submitted text when clicking the back button when a pa
   });
 });
 
-it.skip("should not have any accessibility violations on initial load", async () => {
+it("should not have any accessibility violations on initial load", async () => {
   const { container, user } = setup(<ContactInput title="title" />);
   await fillInFieldsUsingLabel(user, {
     "Title (optional)": "Mme",
@@ -193,7 +193,7 @@ it.skip("should not have any accessibility violations on initial load", async ()
   expect(results).toHaveNoViolations();
 });
 
-it.skip("should not have any accessibility violations while in the error state", async () => {
+it("should not have any accessibility violations while in the error state", async () => {
   const { container, user } = setup(
     <ContactInput title="Enter your contact details" id="testId" />,
   );

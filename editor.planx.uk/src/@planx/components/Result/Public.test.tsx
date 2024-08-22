@@ -30,7 +30,7 @@ test("renders correctly", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-it.skip("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <Result
       headingColor={{ text: "#000", background: "#fff" }}

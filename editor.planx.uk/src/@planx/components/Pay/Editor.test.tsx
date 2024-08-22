@@ -22,7 +22,7 @@ describe("Pay component - Editor Modal", () => {
   });
 
   // Currently failing, Editor not a11y compliant
-  it.skip("should not have any accessibility violations upon initial load", async () => {
+  it("should not have any accessibility violations upon initial load", async () => {
     const { container } = setup(
       <DndProvider backend={HTML5Backend}>
         <PayComponent id="test" />
@@ -33,7 +33,7 @@ describe("Pay component - Editor Modal", () => {
   });
 
   describe("GOV.UK Pay Metadata section", () => {
-    jest.setTimeout(20000);
+    vi.useFakeTimers({ shouldAdvanceTime: true });
 
     // Set up mock state with platformAdmin user so all Editor features are enabled
     const { getState, setState } = useStore;

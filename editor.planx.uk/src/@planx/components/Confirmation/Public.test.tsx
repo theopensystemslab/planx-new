@@ -15,7 +15,7 @@ vi.mock("@opensystemslab/planx-core", () => {
   };
 });
 
-it.skip("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <ConfirmationComponent
       heading="heading"

@@ -73,7 +73,7 @@ describe("Card component", () => {
     expect(getState().path).toEqual(ApplicationPath.Save);
   });
 
-  it.skip("should not have any accessibility violations", async () => {
+  it("should not have any accessibility violations", async () => {
     setState({ path: ApplicationPath.SaveAndReturn });
     const children = <Button>Testing 123</Button>;
     const { container } = setup(
