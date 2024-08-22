@@ -8,7 +8,7 @@ import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import { FeedbackFormInput, FormProps, UserFeedback } from ".";
-import { Link } from "react-navi";
+import { Link } from "@mui/material";
 
 const StyledForm = styled(Form)(({ theme }) => ({
   "& > *": contentFlowSpacing(theme),

@@ -1,15 +1,10 @@
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React from "react";
-
-interface FeedbackDisclaimerProps {
-  children: React.ReactNode;
-}
+import React, { PropsWithChildren } from "react";
 
 export default function FeedbackDisclaimer({
   children,
-}: FeedbackDisclaimerProps): FCReturn {
+}: PropsWithChildren): FCReturn {
   return (
     <Box>
       <Typography variant="body2">{children}</Typography>
