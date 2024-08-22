@@ -34,7 +34,7 @@ function getEnvForAllowedHosts(host: string) {
 }
 
 function log(...args: any[]) {
-  return process.env.SUPPRESS_LOGS
+  return import.meta.env.SUPPRESS_LOGS
     ? () => {
         /* silence */
       }
@@ -45,8 +45,8 @@ function log(...args: any[]) {
 function getErrorLogger(): ErrorLogger {
   const hasConfig =
     isLiveEnv() &&
-    process.env.REACT_APP_AIRBRAKE_PROJECT_ID &&
-    process.env.REACT_APP_AIRBRAKE_PROJECT_KEY;
+    import.meta.env.VITE_APP_AIRBRAKE_PROJECT_ID &&
+    import.meta.env.VITE_APP_AIRBRAKE_PROJECT_KEY;
 
   if (!hasConfig) {
     log("Airbrake not configured");
@@ -59,8 +59,8 @@ function getErrorLogger(): ErrorLogger {
   }
 
   return new Notifier({
-    projectId: Number(process.env.REACT_APP_AIRBRAKE_PROJECT_ID!),
-    projectKey: process.env.REACT_APP_AIRBRAKE_PROJECT_KEY!,
+    projectId: Number(import.meta.env.VITE_APP_AIRBRAKE_PROJECT_ID!),
+    projectKey: import.meta.env.VITE_APP_AIRBRAKE_PROJECT_KEY!,
     environment: getEnvForAllowedHosts(window.location.host),
   });
 }

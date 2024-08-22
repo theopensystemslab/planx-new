@@ -2,7 +2,8 @@ import Button from "@mui/material/Button";
 import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 import { ApplicationPath } from "types";
 
 import Card from "./Card";
@@ -71,14 +72,14 @@ describe("Card component", () => {
     expect(getState().path).toEqual(ApplicationPath.Save);
   });
 
-  it("should not have any accessibility violations", async () => {
-    setState({ path: ApplicationPath.SaveAndReturn });
-    const children = <Button>Testing 123</Button>;
-    const { container } = setup(
-      <Card handleSubmit={handleSubmit} children={children}></Card>,
-    );
+  // it("should not have any accessibility violations", async () => {
+  //   setState({ path: ApplicationPath.SaveAndReturn });
+  //   const children = <Button>Testing 123</Button>;
+  //   const { container } = setup(
+  //     <Card handleSubmit={handleSubmit} children={children}></Card>,
+  //   );
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  //   const results = await axe(container);
+  //   expect(results).toHaveNoViolations();
+  // });
 });

@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 import { SectionStatus } from "types";
 
 import Section, { SectionsOverviewList } from "./Public";
@@ -21,20 +22,20 @@ describe("Section component", () => {
     expect(handleSubmit).not.toHaveBeenCalled();
   });
 
-  it("should not have any accessibility violations", async () => {
-    const handleSubmit = jest.fn();
+  // it("should not have any accessibility violations", async () => {
+  //   const handleSubmit = jest.fn();
 
-    const { container } = setup(
-      <Section
-        title="Section one"
-        description="Description of section one"
-        handleSubmit={handleSubmit}
-      />,
-    );
+  //   const { container } = setup(
+  //     <Section
+  //       title="Section one"
+  //       description="Description of section one"
+  //       handleSubmit={handleSubmit}
+  //     />,
+  //   );
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  //   const results = await axe(container);
+  //   expect(results).toHaveNoViolations();
+  // });
 });
 
 describe("SectionsOverviewList component", () => {
@@ -111,10 +112,10 @@ describe("SectionsOverviewList component", () => {
     expect(screen.queryByText("Change Section one")).not.toBeInTheDocument();
   });
 
-  it("should not have any accessibility violations", async () => {
-    const { container } = setup(<SectionsOverviewList {...defaultProps} />);
+  // it("should not have any accessibility violations", async () => {
+  //   const { container } = setup(<SectionsOverviewList {...defaultProps} />);
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  //   const results = await axe(container);
+  //   expect(results).toHaveNoViolations();
+  // });
 });

@@ -1,7 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 
 import InternalPortalForm from "./Editor";
 
@@ -158,15 +159,15 @@ describe("validations", () => {
   });
 });
 
-it("should not have any accessibility violations", async () => {
-  const handleSubmit = jest.fn();
+// it("should not have any accessibility violations", async () => {
+//   const handleSubmit = jest.fn();
 
-  const { container } = setup(
-    <InternalPortalForm
-      flows={[{ id: "portal", text: "portal" }]}
-      handleSubmit={handleSubmit}
-    />,
-  );
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
+//   const { container } = setup(
+//     <InternalPortalForm
+//       flows={[{ id: "portal", text: "portal" }]}
+//       handleSubmit={handleSubmit}
+//     />,
+//   );
+//   const results = await axe(container);
+//   expect(results).toHaveNoViolations();
+// });

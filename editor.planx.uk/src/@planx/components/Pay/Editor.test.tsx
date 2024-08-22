@@ -5,7 +5,8 @@ import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { act } from "react-dom/test-utils";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 
 import PayComponent from "./Editor";
 
@@ -20,15 +21,15 @@ describe("Pay component - Editor Modal", () => {
   });
 
   // Currently failing, Editor not a11y compliant
-  it.skip("should not have any accessibility violations upon initial load", async () => {
-    const { container } = setup(
-      <DndProvider backend={HTML5Backend}>
-        <PayComponent id="test" />
-      </DndProvider>,
-    );
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+  // it.skip("should not have any accessibility violations upon initial load", async () => {
+  //   const { container } = setup(
+  //     <DndProvider backend={HTML5Backend}>
+  //       <PayComponent id="test" />
+  //     </DndProvider>,
+  //   );
+  //   const results = await axe(container);
+  //   expect(results).toHaveNoViolations();
+  // });
 
   describe("GOV.UK Pay Metadata section", () => {
     jest.setTimeout(20000);

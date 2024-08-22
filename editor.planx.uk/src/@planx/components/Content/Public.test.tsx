@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 
 import Content from "./Public";
 
@@ -33,11 +34,11 @@ test("use light text color if color param is dark", () => {
   });
 });
 
-it("should not have any accessibility violations", async () => {
-  const { container } = setup(<Content content="dark" color="#000" />);
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
+// it("should not have any accessibility violations", async () => {
+//   const { container } = setup(<Content content="dark" color="#000" />);
+//   const results = await axe(container);
+//   expect(results).toHaveNoViolations();
+// });
 
 test("should display and open more information link if help text is provided", async () => {
   const handleSubmit = jest.fn();

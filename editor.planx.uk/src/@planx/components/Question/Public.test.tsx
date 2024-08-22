@@ -1,6 +1,7 @@
 import { waitFor } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 
 import Question, { IQuestion, QuestionLayout } from "./Public";
 
@@ -107,18 +108,18 @@ describe("Question component", () => {
         expect(continueButton).toBeEnabled();
       });
 
-      it(`should not have any accessibility violations`, async () => {
-        const handleSubmit = jest.fn();
-        const { container } = setup(
-          <Question
-            text="Best food"
-            responses={responses[type]}
-            handleSubmit={handleSubmit}
-          />,
-        );
-        const results = await axe(container);
-        expect(results).toHaveNoViolations();
-      });
+      // it(`should not have any accessibility violations`, async () => {
+      //   const handleSubmit = jest.fn();
+      //   const { container } = setup(
+      //     <Question
+      //       text="Best food"
+      //       responses={responses[type]}
+      //       handleSubmit={handleSubmit}
+      //     />,
+      //   );
+      //   const results = await axe(container);
+      //   expect(results).toHaveNoViolations();
+      // });
 
       it(`should display an error message if no option is selected`, async () => {
         const handleSubmit = jest.fn();

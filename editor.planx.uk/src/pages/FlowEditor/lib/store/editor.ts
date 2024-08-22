@@ -184,7 +184,7 @@ export const editorStore: StateCreator<
     );
 
     return axios.post(
-      `${process.env.REACT_APP_API_URL}/flows/${flowId}/copy`,
+      `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/copy`,
       {
         replaceValue: randomReplacementCharacters(),
         insert: true,
@@ -278,7 +278,7 @@ export const editorStore: StateCreator<
     const token = get().jwt;
 
     return axios.post(
-      `${process.env.REACT_APP_API_URL}/flows/${flowId}/diff`,
+      `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/diff`,
       null,
       {
         headers: {
@@ -383,7 +383,7 @@ export const editorStore: StateCreator<
 
     return axios
       .post(
-        `${process.env.REACT_APP_API_URL}/flows/${flowId}/move/${teamSlug}`,
+        `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/move/${teamSlug}`,
         null,
         {
           headers: {
@@ -438,7 +438,7 @@ export const editorStore: StateCreator<
 
     const { data } = await axios.post<PublishFlowResponse>(
       urlWithParams(
-        `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
+        `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/publish`,
         { summary },
       ),
       null,

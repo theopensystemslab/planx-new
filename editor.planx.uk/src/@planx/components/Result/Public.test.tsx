@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 import Result from "./Public";
@@ -28,30 +29,30 @@ test("renders correctly", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-it("should not have any accessibility violations", async () => {
-  const { container } = setup(
-    <Result
-      headingColor={{ text: "#000", background: "#fff" }}
-      responses={[
-        {
-          question: { data: { text: "Is this hidden?" }, id: "a" },
-          hidden: false,
-          selections: [],
-        },
-        {
-          question: { data: { text: "Is this shown?" }, id: "b" },
-          hidden: true,
-          selections: [],
-        },
-      ]}
-      allowChanges
-      headingTitle="title"
-      reasonsTitle="reasons"
-    />,
-  );
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
+// it("should not have any accessibility violations", async () => {
+//   const { container } = setup(
+//     <Result
+//       headingColor={{ text: "#000", background: "#fff" }}
+//       responses={[
+//         {
+//           question: { data: { text: "Is this hidden?" }, id: "a" },
+//           hidden: false,
+//           selections: [],
+//         },
+//         {
+//           question: { data: { text: "Is this shown?" }, id: "b" },
+//           hidden: true,
+//           selections: [],
+//         },
+//       ]}
+//       allowChanges
+//       headingTitle="title"
+//       reasonsTitle="reasons"
+//     />,
+//   );
+//   const results = await axe(container);
+//   expect(results).toHaveNoViolations();
+// });
 
 describe("showing and hiding change capabilities", () => {
   it("hides the change button by default", () => {

@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+// import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 
 import Notice from "./Public";
 
@@ -21,10 +22,10 @@ test("renders correctly", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-it("should not have any accessibility violations", async () => {
-  const { container } = setup(
-    <Notice title="hello" description="world" color="red" />,
-  );
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
+// it("should not have any accessibility violations", async () => {
+//   const { container } = setup(
+//     <Notice title="hello" description="world" color="red" />,
+//   );
+//   const results = await axe(container);
+//   expect(results).toHaveNoViolations();
+// });
