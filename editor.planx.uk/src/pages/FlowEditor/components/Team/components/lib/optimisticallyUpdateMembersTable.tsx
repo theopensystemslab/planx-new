@@ -12,5 +12,7 @@ export const optimisticallyUpdateMembersTable = async (
     id: userId,
   };
 
-  await useStore.getState().setTeamMembers([newMember]);
+  const existingMembers = useStore.getState().teamMembers;
+
+  await useStore.getState().setTeamMembers([...existingMembers, newMember]);
 };
