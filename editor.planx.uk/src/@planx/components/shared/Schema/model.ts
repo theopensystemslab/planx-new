@@ -6,7 +6,10 @@ import {
   DateInput,
   dateRangeSchema as dateValidationSchema,
 } from "../../DateInput/model";
-import { NumberInput, numberInputValidationSchema } from "../../NumberInput/model";
+import {
+  NumberInput,
+  numberInputValidationSchema,
+} from "../../NumberInput/model";
 import {
   TextInput,
   userDataSchema as textInputValidationSchema,
@@ -95,7 +98,13 @@ export type MapField = {
  * Represents the input types available in the List component
  * Existing models are used to allow to us to re-use existing components, maintaining consistend UX/UI
  */
-export type Field = TextField | NumberField | QuestionField | ChecklistField | DateField | MapField;
+export type Field =
+  | TextField
+  | NumberField
+  | QuestionField
+  | ChecklistField
+  | DateField
+  | MapField;
 
 /**
  * Models the form displayed to the user
@@ -107,12 +116,15 @@ export interface Schema {
   max?: number;
 }
 
-export type SchemaResponse = Record<Field["data"]["fn"], string | string[] | any[] >; // string | string[] | Feature[]
+export type SchemaUserResponse = Record<
+  Field["data"]["fn"],
+  string | string[] | any[]
+>; // string | string[] | Feature[]
 
 /**
  * Output data from a form using the useSchema hook
  */
-export type SchemaData = { schemaData: SchemaResponse[] };
+export type SchemaUserData = { schemaData: SchemaUserResponse[] };
 
 /**
  * For each field in schema, return a map of Yup validation schema
@@ -166,8 +178,8 @@ export const generateValidationSchema = (schema: Schema) => {
   return validationSchema;
 };
 
-export const generateInitialValues = (schema: Schema): SchemaResponse => {
-  const initialValues: SchemaResponse = {};
+export const generateInitialValues = (schema: Schema): SchemaUserResponse => {
+  const initialValues: SchemaUserResponse = {};
   schema.fields.forEach((field) => {
     ["checklist", "map"].includes(field.type)
       ? (initialValues[field.data.fn] = [])

@@ -1,8 +1,7 @@
-import { Feature } from "geojson";
 import { cloneDeep } from "lodash";
 
 import { MoreInformation, parseMoreInformation } from "../shared";
-import { Schema } from "../shared/Schema/model"
+import { Schema } from "../shared/Schema/model";
 import { SCHEMAS } from "./Editor";
 
 export interface List extends MoreInformation {

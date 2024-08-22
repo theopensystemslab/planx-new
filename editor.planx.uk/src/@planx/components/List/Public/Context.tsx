@@ -1,9 +1,9 @@
 import { useSchema } from "@planx/components/shared/Schema/hook";
 import {
   Schema,
-  SchemaData,
-  SchemaResponse,
-} from "@planx/components/shared/Schema/model"
+  SchemaUserData,
+  SchemaUserResponse,
+} from "@planx/components/shared/Schema/model";
 import {
   getPreviouslySubmittedData,
   makeData,
@@ -32,7 +32,7 @@ interface ListContextValue {
   removeItem: (index: number) => void;
   editItem: (index: number) => void;
   cancelEditItem: () => void;
-  formik: FormikProps<SchemaData>;
+  formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
   listProps: PublicProps<List>;
   /**
@@ -62,7 +62,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
     previousValues: getPreviouslySubmittedData(props),
   });
 
-  const formik = useFormik<SchemaData>({
+  const formik = useFormik<SchemaUserData>({
     ...formikConfig,
     onSubmit: (values) => {
       // defaultPassportData (array) is used when coming "back"
@@ -100,14 +100,14 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
         },
       });
     },
-  })
+  });
 
   const [activeIndex, setActiveIndex] = useState<number>(
     props.previouslySubmittedData ? -1 : 0,
   );
 
   const [activeItemInitialState, setActiveItemInitialState] = useState<
-    SchemaResponse | undefined
+    SchemaUserResponse | undefined
   >(undefined);
 
   const [addItemError, setAddItemError] = useState<boolean>(false);

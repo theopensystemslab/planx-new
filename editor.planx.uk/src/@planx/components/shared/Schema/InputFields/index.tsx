@@ -1,4 +1,7 @@
-import type { Field, SchemaData } from "@planx/components/shared/Schema/model";
+import type {
+  Field,
+  SchemaUserData,
+} from "@planx/components/shared/Schema/model";
 import { FormikProps } from "formik";
 import { get } from "lodash";
 import React from "react";
@@ -12,7 +15,7 @@ import { SelectFieldInput } from "./SelectInputField";
 import { TextFieldInput } from "./TextFieldInput";
 
 export type Props<T extends Field> = {
-  formik: FormikProps<SchemaData>;
+  formik: FormikProps<SchemaUserData>;
   activeIndex: number;
 } & T;
 

@@ -3,17 +3,17 @@ import React from "react";
 import InputRow from "ui/shared/InputRow";
 
 import { InputFields } from "./InputFields";
-import { Schema, SchemaData } from "./model";
+import { Schema, SchemaUserData } from "./model";
 
 interface SchemaFieldsProps {
   /**
    * Optional index of currently active schema instance.
    * Only required if multiple user responses are allowed, e.g. in the List component.
-   * Defaults to 0 as `SchemaData` always holds an array of responses
+   * Defaults to 0 as `SchemaUserData` always holds an array of responses
    */
   activeIndex?: number;
   /** Formik instance generated from config provided by useSchema hook */
-  formik: FormikProps<SchemaData>;
+  formik: FormikProps<SchemaUserData>;
   schema: Schema;
 }
 
