@@ -14,7 +14,7 @@ import Input from "ui/shared/Input";
 import { addNewEditorFormSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { AddNewEditorFormValues, AddNewEditorModalProps } from "../types";
-import { optimisticallyUpdateTable } from "./lib/optimisticallyUpdateTable";
+import { optimisticallyUpdateMembersTable } from "./lib/optimisticallyUpdateMembersTable";
 
 export const AddNewEditorModal = ({
   showModal,
@@ -26,14 +26,14 @@ export const AddNewEditorModal = ({
   ) => {
     const teamId = useStore.getState().teamId;
 
-    await createAndAddUserToTeam(
+    const newUserId = await createAndAddUserToTeam(
       values.email,
       values.firstName,
       values.lastName,
       teamId,
     );
 
-    optimisticallyUpdateTable(values);
+    optimisticallyUpdateMembersTable(values, newUserId);
 
     setShowModal(false);
     resetForm({ values });
