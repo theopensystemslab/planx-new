@@ -3,12 +3,12 @@ import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
-import Confirmation from "./Public";
+import Confirmation, { Presentational } from "./Public";
 
 const meta = {
   title: "PlanX Components/Confirmation",
-  component: Confirmation,
-} satisfies Meta<typeof Confirmation>;
+  component: Presentational,
+} satisfies Meta<typeof Presentational>;
 
 export default meta;
 
@@ -20,7 +20,8 @@ export const Basic = {
     description: `A payment receipt has been emailed to you. You will also 
     receive an email to confirm when your application has been received.`,
     color: { background: "rgba(1, 99, 96, 0.1)", text: "#000" },
-    details: {
+    sessionId: "123-t3st-456",
+    applicableDetails: {
       "Planning Application Reference": "LBL–LDCP-2138261",
       "Property Address": "45, Greenfield Road, London SE22 7FF",
       "Application type":
@@ -48,6 +49,7 @@ export const Basic = {
       <br/><br/>
       What did you think of this service? Please give us your feedback using the link in the footer below.
     `,
+    data: [],
   },
 } satisfies Story;
 

@@ -7,7 +7,6 @@ export interface Confirmation {
   heading?: string;
   description?: string;
   color?: { text: string; background: string };
-  details?: { [key: string]: string };
   nextSteps?: Step[];
   moreInfo?: string;
   contactInfo?: string;
