@@ -1,6 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { exhaustiveCheck } from "utils";
 
 import { Store, useStore } from "../../../lib/store";
 import { stripTagsAndLimitLength } from "../lib/utils";
@@ -158,10 +159,6 @@ const getSetValueText = ({ operation, fn, val }: Store.node["data"]) => {
       return `Replace ${fn} with ${val}`;
   }
 };
-
-function exhaustiveCheck(type: never): never {
-  throw new Error(`Missing type ${type}`);
-}
 
 export default function SafeNode(props: any) {
   return (

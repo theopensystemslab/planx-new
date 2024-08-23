@@ -31,6 +31,7 @@ import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
+import { exhaustiveCheck } from "utils";
 
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
@@ -239,9 +240,5 @@ const Node: React.FC<any> = (props: Props) => {
       return exhaustiveCheck(props.node.type);
   }
 };
-
-function exhaustiveCheck(type: never): never {
-  throw new Error(`Missing type ${type}`);
-}
 
 export default Node;
