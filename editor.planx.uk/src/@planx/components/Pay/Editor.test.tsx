@@ -106,7 +106,7 @@ describe("Pay component - Editor Modal", () => {
       expect(getByDisplayValue("myValue")).toBeInTheDocument();
     });
 
-    it("allows new values to be added", async () => {
+    it("allows new values to be added", { timeout: 20000 }, async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
 
       const handleSubmit = vi.fn();

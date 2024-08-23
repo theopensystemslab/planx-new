@@ -4,9 +4,9 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
 import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import MoreInfoFeedbackComponent from "./MoreInfoFeedback";
 
@@ -114,39 +114,39 @@ describe("MoreInfoFeedbackComponent accessibility", () => {
     vi.clearAllMocks();
   });
 
-  // test("Initial load should have no accessibility violations", async () => {
-  //   const { container } = setup(<MoreInfoFeedbackComponent />);
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+  test("Initial load should have no accessibility violations", async () => {
+    const { container } = setup(<MoreInfoFeedbackComponent />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 
-  // test("Form view should have no accessability violations", async () => {
-  //   const { container, getByText, user } = setup(<MoreInfoFeedbackComponent />);
-  //   user.click(getByText("Yes"));
+  test("Form view should have no accessability violations", async () => {
+    const { container, getByText, user } = setup(<MoreInfoFeedbackComponent />);
+    user.click(getByText("Yes"));
 
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 
-  // test("Thank you view should have no accessibility violations", async () => {
-  //   const { container, getByText, getByTestId, user } = setup(
-  //     <MoreInfoFeedbackComponent />,
-  //   );
+  test("Thank you view should have no accessibility violations", async () => {
+    const { container, getByText, getByTestId, user } = setup(
+      <MoreInfoFeedbackComponent />,
+    );
 
-  //   user.click(getByText("Yes"));
-  //   await waitFor(() => {
-  //     expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
-  //   });
+    user.click(getByText("Yes"));
+    await waitFor(() => {
+      expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
+    });
 
-  //   await user.type(getByTestId("userCommentTextarea"), "Great help, thanks!");
+    await user.type(getByTestId("userCommentTextarea"), "Great help, thanks!");
 
-  //   user.click(getByText("Send feedback"));
+    user.click(getByText("Send feedback"));
 
-  //   await waitFor(() => {
-  //     expect(getByText("Thank you for your feedback.")).toBeInTheDocument();
-  //   });
+    await waitFor(() => {
+      expect(getByText("Thank you for your feedback.")).toBeInTheDocument();
+    });
 
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
