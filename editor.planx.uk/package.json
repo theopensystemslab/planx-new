@@ -173,6 +173,7 @@
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "vitest",
+    "test:silent": "vitest --silent",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "mkdir -p build && storybook build --quiet --output-dir ./build/storybook",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src",

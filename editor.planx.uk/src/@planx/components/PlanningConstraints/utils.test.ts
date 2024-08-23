@@ -23,6 +23,7 @@ describe("handleOverrides basic", () => {
     });
   });
 
+  // Intentional skip, not handling these edge cases yet!
   test.skip("when a constraint was reported as inaccurate, but is not part of the latest GIS API response, it's skipped", () => {
     const overrides = {
       listed: {

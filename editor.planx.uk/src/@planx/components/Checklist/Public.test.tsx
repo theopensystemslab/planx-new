@@ -303,7 +303,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
       });
     });
 
-    it.skip(`should not have any accessibility violations (${ChecklistLayout[type]} layout)`, async () => {
+    it(`should not have any accessibility violations (${ChecklistLayout[type]} layout)`, async () => {
       const { container } = setup(
         <Checklist
           allRequired={false}
