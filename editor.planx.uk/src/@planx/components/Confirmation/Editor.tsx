@@ -16,7 +16,7 @@ import { Confirmation, parseNextSteps, Step } from "./model";
 
 export type Props = EditorProps<TYPES.Confirmation, Confirmation>;
 
-function StepEditor(props: ListManagerEditorProps<Step>) {
+function NextStepEditor(props: ListManagerEditorProps<Step>) {
   return (
     <Box width="100%">
       <InputRow>
@@ -55,10 +55,14 @@ export default function ConfirmationEditor(props: Props) {
   const type = TYPES.Confirmation;
   const formik = useFormik({
     initialValues: {
+      color: props.node?.color || {
+        text: "#000",
+        background: "rgba(1, 99, 96, 0.1)",
+      },
       heading: props.node?.data?.heading || "Application sent",
       description:
         props.node?.data?.description ||
-        `A payment receipt has been emailed to you. You will also receive an email to confirm when your application has been received.`,
+        `<p>A payment receipt has been emailed to you. You will also receive an email to confirm when your application has been received.</p>`,
       moreInfo:
         props.node?.data?.moreInfo ||
         `<h2>You will be contacted</h2>
@@ -95,7 +99,7 @@ export default function ConfirmationEditor(props: Props) {
             />
           </InputRow>
           <InputRow>
-            <Input
+            <RichTextInput
               placeholder="Description"
               name="description"
               value={formik.values.description}
@@ -112,7 +116,7 @@ export default function ConfirmationEditor(props: Props) {
             onChange={(steps: Step[]) => {
               formik.setFieldValue("nextSteps", steps);
             }}
-            Editor={StepEditor}
+            Editor={NextStepEditor}
             newValue={() => ({ title: "", description: "" })}
           />
         </ModalSectionContent>

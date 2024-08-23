@@ -16,9 +16,9 @@ jest.mock("@opensystemslab/planx-core", () => {
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <ConfirmationComponent
+      color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
       heading="heading"
       description="description"
-      details={{ key1: "something", key2: "something else" }}
       nextSteps={[
         { title: "title1", description: "description1" },
         { title: "title2", description: "description2" },

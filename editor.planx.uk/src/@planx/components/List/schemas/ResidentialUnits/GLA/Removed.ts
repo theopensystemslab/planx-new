@@ -1,7 +1,7 @@
-import { Schema } from "@planx/components/List/model";
+import { Schema } from "@planx/components/shared/Schema/model";
 
 export const ResidentialUnitsGLARemoved: Schema = {
-  type: "Removed residential unit",
+  type: "Removed residential unit type",
   fields: [
     {
       type: "number",
@@ -172,7 +172,7 @@ export const ResidentialUnitsGLARemoved: Schema = {
     {
       type: "question",
       data: {
-        title: "Will this unit provide sheltered accommodation?",
+        title: "Is this unit providing sheltered accommodation?",
         fn: "sheltered",
         options: [
           { id: "true", data: { text: "Yes", val: "true" } },
@@ -194,7 +194,7 @@ export const ResidentialUnitsGLARemoved: Schema = {
     {
       type: "number",
       data: {
-        title: "How many identical units does the description above apply to?",
+        title: "How many removed units fit the descriptions above?",
         fn: "identicalUnits",
         allowNegatives: false,
       },

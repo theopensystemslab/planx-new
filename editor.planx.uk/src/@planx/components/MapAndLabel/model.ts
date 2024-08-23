@@ -1,7 +1,7 @@
 import cloneDeep from "lodash/cloneDeep";
 
-import { Schema } from "../List/model";
 import { MoreInformation, parseMoreInformation } from "../shared";
+import { Schema } from "../shared/Schema/model";
 import { SCHEMAS } from "./Editor";
 
 export interface MapAndLabel extends MoreInformation {

@@ -60,16 +60,25 @@ const Responses = ({
   flagColor?: string;
 }) => {
   const breadcrumbs = useStore((state) => state.breadcrumbs);
+
+  const hasAffectedResult = (response: Response): boolean => {
+    // Remove invalid breadcrumbs
+    const breadcrumb = breadcrumbs[response.question.id];
+    if (!breadcrumb) return false;
+
+    // Retain all user answered questions
+    const isAnsweredByUser = breadcrumbs[response.question.id].auto !== true;
+    if (isAnsweredByUser) return true;
+
+    // Retain responses with flags which are auto answered
+    const hasFlag = response.selections.some((s) => s.data?.flag);
+    return hasFlag;
+  };
+
   return (
     <>
       {responses
-        .filter((response) =>
-          breadcrumbs[response.question.id]
-            ? breadcrumbs[response.question.id].auto
-              ? response.selections.some((s) => s.data?.flag)
-              : true
-            : false,
-        )
+        .filter(hasAffectedResult)
         .map(({ question, selections }: Response) => (
           <ResultReason
             key={question.id}

@@ -1,6 +1,6 @@
+import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
-import { Schema } from "../../model";
 import { Props } from "../../Public";
 
 export const Zoo: Schema = {
@@ -70,8 +70,18 @@ export const Zoo: Schema = {
           { id: "meat", data: { text: "Meat" } },
           { id: "leaves", data: { text: "Leaves" } },
           { id: "bamboo", data: { text: "Bamboo" } },
-          { id: "fruit", data: { text: "fruit" } },
+          { id: "fruit", data: { text: "Fruit" } },
         ],
+      },
+    },
+    // Date
+    {
+      type: "date",
+      data: {
+        title: "What's their birthday?",
+        fn: "birthday",
+        min: "1970-01-01",
+        max: "2999-12-31",
       },
     },
   ],
@@ -97,6 +107,7 @@ export const mockZooPayload = {
         name: "Richard Parker",
         size: "Medium",
         food: ["meat", "leaves", "bamboo"],
+        birthday: "1988-07-14",
       },
       {
         age: 10,
@@ -105,6 +116,7 @@ export const mockZooPayload = {
         name: "Richard Parker",
         size: "Medium",
         food: ["meat", "leaves", "bamboo"],
+        birthday: "1988-07-14",
       },
     ],
     "mockFn.one.age": 10,
@@ -113,12 +125,14 @@ export const mockZooPayload = {
     "mockFn.one.name": "Richard Parker",
     "mockFn.one.size": "Medium",
     "mockFn.one.food": ["meat", "leaves", "bamboo"],
+    "mockFn.one.birthday": "1988-07-14",
     "mockFn.two.age": 10,
     "mockFn.two.cuteness.amount": "Very",
     "mockFn.two.email.address": "richard.parker@pi.com",
     "mockFn.two.name": "Richard Parker",
     "mockFn.two.size": "Medium",
     "mockFn.two.food": ["meat", "leaves", "bamboo"],
+    "mockFn.two.birthday": "1988-07-14",
     "mockFn.total.listItems": 2,
   },
 };

@@ -1,8 +1,9 @@
 import { createHash } from "crypto";
 import { writeFileSync } from "fs";
+import stringify from "json-stringify-pretty-compact";
 import nock from "nock";
 import path from "path";
-import stringify from "json-stringify-pretty-compact";
+import { fileURLToPath } from "url";
 
 /**
  * Attempts to load HTTP requests that have been made in previous tests.
@@ -20,6 +21,9 @@ function loadOrRecordNockRequests(filename, hashKey) {
     .digest("hex")
     .slice(0, 8);
 
+  // we can't directly access `__dirname` in ESM, so get equivalent using fileURLToPath
+  const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+  const __dirname = path.dirname(__filename); // get the name of the directory
   const filePath = path.join(__dirname, "nocks", `${filename}.${hash}.json`);
 
   const records = [];

@@ -1,6 +1,7 @@
 import { array } from "yup";
 
 import { MoreInformation, Option } from "../shared";
+import { ChecklistLayout } from "./Public";
 
 export interface Group<T> {
   title: string;
@@ -73,6 +74,21 @@ export const getFlatOptions = ({
     return groupedOptions.flatMap((group) => group.children);
   }
   return [];
+};
+
+export const getLayout = ({
+  options,
+  groupedOptions,
+}: {
+  options: Checklist["options"];
+  groupedOptions: Checklist["groupedOptions"];
+}): ChecklistLayout => {
+  const hasImages = options?.some((o) => o.data.img);
+  if (hasImages) return ChecklistLayout.Images;
+
+  if (groupedOptions) return ChecklistLayout.Grouped;
+
+  return ChecklistLayout.Basic;
 };
 
 export const checklistValidationSchema = ({

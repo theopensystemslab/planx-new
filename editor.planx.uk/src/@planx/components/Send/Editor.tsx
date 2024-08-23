@@ -52,6 +52,10 @@ const SendComponent: React.FC<Props> = (props) => {
       label: "Uniform",
     },
     {
+      value: Destination.Idox,
+      label: "Idox Nexus (TESTING ONLY)",
+    },
+    {
       value: Destination.Email,
       label: "Email to planning office",
     },
@@ -60,14 +64,6 @@ const SendComponent: React.FC<Props> = (props) => {
       label: "Upload to AWS S3 bucket",
     },
   ];
-
-  // Show Nexus option on staging only
-  if (process.env.REACT_APP_ENV !== "production") {
-    options.push({
-      value: Destination.Idox,
-      label: "Idox Nexus (testing only)",
-    });
-  }
 
   const changeCheckbox =
     (value: Destination) =>

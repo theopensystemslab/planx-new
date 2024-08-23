@@ -385,9 +385,11 @@ describe("Form validation and error handling", () => {
     );
 
     let errorMessages = getAllByTestId(/error-message-input/);
+    // One error per field, plus 3 for a date input (one per input)
+    const numberOfErrors = mockZooProps.schema.fields.length + 3;
 
     // Each field has an ErrorWrapper
-    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length);
+    expect(errorMessages).toHaveLength(numberOfErrors);
 
     // All are empty initially
     errorMessages.forEach((message) => {
@@ -398,10 +400,15 @@ describe("Form validation and error handling", () => {
 
     // Error wrappers persist
     errorMessages = getAllByTestId(/error-message-input/);
-    expect(errorMessages).toHaveLength(mockZooProps.schema.fields.length);
+    expect(errorMessages).toHaveLength(numberOfErrors);
 
-    // Each field is in an error state
-    errorMessages.forEach((message) => {
+    // Each field is in an error state, ignoring individual date input fields
+    const fieldErrors = errorMessages.slice(
+      0,
+      mockZooProps.schema.fields.length,
+    );
+
+    fieldErrors.forEach((message) => {
       expect(message).not.toBeEmptyDOMElement();
     });
   });
@@ -495,6 +502,22 @@ describe("Form validation and error handling", () => {
         /Select at least one option/,
       );
     });
+
+    test("date fields", async () => {
+      const { user, getByRole, getAllByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const dateInputErrorMessage = getAllByTestId(
+        /error-message-input-date-birthday/,
+      )[0];
+
+      expect(dateInputErrorMessage).toHaveTextContent(
+        /Date must include a day/,
+      );
+    });
   });
 
   test("an error displays if the minimum number of items is not met", async () => {
@@ -581,6 +604,40 @@ describe("Form validation and error handling", () => {
     );
     expect(unsavedItemErrorMessage).toBeVisible();
   });
+});
+
+test("Input data is displayed in the inactive card view", async () => {
+  const { getByText, user } = setup(<ListComponent {...mockZooProps} />);
+
+  await fillInResponse(user);
+
+  // Text input
+  expect(getByText("What's their name?", { selector: "td" })).toBeVisible();
+  expect(getByText("Richard Parker", { selector: "td" })).toBeVisible();
+
+  // Email input
+  expect(
+    getByText("What's their email address?", { selector: "td" }),
+  ).toBeVisible();
+  expect(getByText("richard.parker@pi.com", { selector: "td" })).toBeVisible();
+
+  // Number input
+  expect(getByText("How old are they?", { selector: "td" })).toBeVisible();
+  expect(getByText("10 years old", { selector: "td" })).toBeVisible();
+
+  // Question input - select
+  expect(getByText("What size are they?", { selector: "td" })).toBeVisible();
+  expect(getByText("Medium", { selector: "td" })).toBeVisible();
+
+  // Question input - radio
+  expect(getByText("How cute are they?", { selector: "td" })).toBeVisible();
+  expect(getByText("Very", { selector: "td" })).toBeVisible();
+
+  // Checklist input
+  expect(getByText("What do they eat?", { selector: "td" })).toBeVisible();
+  expect(getByText("Meat", { selector: "li" })).toBeVisible();
+  expect(getByText("Leaves", { selector: "li" })).toBeVisible();
+  expect(getByText("Bamboo", { selector: "li" })).toBeVisible();
 });
 
 describe("Payload generation", () => {
@@ -707,6 +764,13 @@ const fillInResponse = async (user: UserEvent) => {
   await user.click(eatCheckboxes[0]);
   await user.click(eatCheckboxes[1]);
   await user.click(eatCheckboxes[2]);
+
+  const dayInput = screen.getByLabelText("Day");
+  const monthInput = screen.getByLabelText("Month");
+  const yearInput = screen.getByLabelText("Year");
+  await user.type(dayInput, "14");
+  await user.type(monthInput, "7");
+  await user.type(yearInput, "1988");
 
   const saveButton = screen.getByRole("button", {
     name: /Save/,

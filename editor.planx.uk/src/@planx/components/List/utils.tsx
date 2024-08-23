@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { Field, UserResponse } from "./model";
+import { Field, SchemaUserResponse } from "./../shared/Schema/model";
 
 const List = styled("ul")(() => ({
   listStylePosition: "inside",
@@ -23,6 +23,7 @@ export function formatSchemaDisplayValue(
     case "number":
       return field.data.units ? `${value} ${field.data.units}` : value;
     case "text":
+    case "date":
       return value;
     case "checklist": {
       const matchingOptions = field.data.options.filter((option) =>
@@ -38,7 +39,7 @@ export function formatSchemaDisplayValue(
     }
     case "question": {
       const matchingOption = field.data.options.find(
-        (option) => option.data.val === value,
+        (option) => option.data.text === value,
       );
       return matchingOption?.data.text;
     }
@@ -53,7 +54,7 @@ export function formatSchemaDisplayValue(
  */
 export function sumIdenticalUnits(
   fn: string,
-  passportData: Record<string, UserResponse[]>,
+  passportData: Record<string, SchemaUserResponse[]>,
 ): number {
   let sum = 0;
   passportData[`${fn}`].map((item) => {
@@ -72,7 +73,7 @@ export function sumIdenticalUnits(
  */
 export function sumIdenticalUnitsByDevelopmentType(
   fn: string,
-  passportData: Record<string, UserResponse[]>,
+  passportData: Record<string, SchemaUserResponse[]>,
 ): Record<string, number> {
   // Sum identical units by development type (@todo read all possible option `val` from Schema in future)
   const baseSums: Record<string, number> = {

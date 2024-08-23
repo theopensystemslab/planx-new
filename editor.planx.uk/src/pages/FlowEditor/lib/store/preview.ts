@@ -617,11 +617,11 @@ export const previewStore: StateCreator<
 
     if (originalNodeId) {
       // Omit existing passport value from breadcrumbs.data in whichever node originally set it, so it won't be auto-answered in future
-      //   and keep a receipt of the original value in breadcrumbs.override
+      //   and keep a receipt of the original value in breadcrumbs.data._overrides
       record(originalNodeId, {
-        data: omit(breadcrumbs?.[originalNodeId]?.data, fn),
-        override: {
-          [fn]: breadcrumbs?.[originalNodeId]?.data?.[fn],
+        data: {
+          ...omit(breadcrumbs?.[originalNodeId]?.data, fn),
+          _overrides: { [fn]: breadcrumbs?.[originalNodeId]?.data?.[fn] },
         },
       });
     }

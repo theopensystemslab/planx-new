@@ -207,7 +207,9 @@ describe("Feedback component 'Report an issue with this page journey'", () => {
     expect(scrollIntoViewMock).toBeCalledTimes(1);
 
     await waitFor(() => {
-      expect(getByText("Report an issue")).toBeInTheDocument();
+      expect(
+        getByText("Report an issue with this service"),
+      ).toBeInTheDocument();
       expect(getByLabelText("What were you doing?")).toBeInTheDocument();
       expect(getByLabelText("What went wrong?")).toBeInTheDocument();
     });

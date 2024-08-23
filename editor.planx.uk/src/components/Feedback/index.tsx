@@ -197,7 +197,7 @@ const Feedback: React.FC = () => {
       return (
         <TitleAndCloseFeedbackHeader
           Icon={WarningIcon}
-          title="Report an issue"
+          title="Report an issue with this service"
         />
       );
     } else
@@ -207,7 +207,7 @@ const Feedback: React.FC = () => {
           <FeedbackTitle>
             <WarningIcon />
             <Typography variant="h3" component="h2">
-              Report an issue
+              Report an issue with this service
             </Typography>
           </FeedbackTitle>
         </>

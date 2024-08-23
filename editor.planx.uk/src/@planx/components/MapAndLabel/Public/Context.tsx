@@ -1,10 +1,9 @@
+import { useSchema } from "@planx/components/shared/Schema/hook";
 import {
-  generateInitialValues,
-  generateValidationSchema,
   Schema,
-  UserData,
-  UserResponse,
-} from "@planx/components/List/model";
+  SchemaUserData,
+  SchemaUserResponse,
+} from "@planx/components/shared/Schema/model";
 import {
   getPreviouslySubmittedData,
   makeData,
@@ -26,7 +25,7 @@ interface MapAndLabelContextValue {
   saveItem: () => Promise<void>;
   editItem: (index: number) => void;
   cancelEditItem: () => void;
-  formik: FormikProps<UserData>;
+  formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
   mapAndLabelProps: PublicProps<MapAndLabel>;
   errors: {
@@ -46,12 +45,30 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   props,
 ) => {
   const { schema, children, handleSubmit } = props;
+  const { formikConfig, initialValues: _initialValues } = useSchema({
+    schema,
+    previousValues: getPreviouslySubmittedData(props),
+  });
+
+  const formik = useFormik<SchemaUserData>({
+    ...formikConfig,
+    onSubmit: (values) => {
+      const defaultPassportData = makeData(props, values.schemaData)?.["data"];
+
+      handleSubmit?.({
+        data: {
+          ...defaultPassportData,
+        },
+      });
+    },
+  });
+
   const [activeIndex, setActiveIndex] = useState<number>(
     props.previouslySubmittedData ? -1 : 0,
   );
 
   const [activeItemInitialState, setActiveItemInitialState] = useState<
-    UserResponse | undefined
+    SchemaUserResponse | undefined
   >(undefined);
 
   const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
@@ -68,7 +85,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     resetErrors();
 
     const errors = await formik.validateForm();
-    const isValid = !errors.userData?.length;
+    const isValid = !errors.schemaData?.length;
     if (isValid) {
       exitEditMode();
     }
@@ -79,7 +96,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     if (activeIndex !== -1) return setUnsavedItemError(true);
 
     // Manually validate minimum number of items
-    if (formik.values.userData.length < schema.min) {
+    if (formik.values.schemaData.length < schema.min) {
       return setMinError(true);
     }
 
@@ -95,40 +112,14 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   };
 
   const editItem = (index: number) => {
-    setActiveItemInitialState(formik.values.userData[index]);
+    setActiveItemInitialState(formik.values.schemaData[index]);
     setActiveIndex(index);
-  };
-
-  const getInitialValues = () => {
-    const previousValues = getPreviouslySubmittedData(props);
-    if (previousValues) return previousValues;
-
-    return schema.min ? [generateInitialValues(schema)] : [];
   };
 
   const exitEditMode = () => setActiveIndex(-1);
 
   const resetItemToPreviousState = () =>
-    formik.setFieldValue(`userData[${activeIndex}]`, activeItemInitialState);
-
-  const formik = useFormik<UserData>({
-    initialValues: {
-      userData: getInitialValues(),
-    },
-    onSubmit: (values) => {
-      // defaultPassportData (array) is used when coming "back"
-      const defaultPassportData = makeData(props, values.userData)?.["data"];
-
-      handleSubmit?.({
-        data: {
-          ...defaultPassportData,
-        },
-      });
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    validationSchema: generateValidationSchema(schema),
-  });
+    formik.setFieldValue(`schemaData[${activeIndex}]`, activeItemInitialState);
 
   return (
     <MapAndLabelContext.Provider

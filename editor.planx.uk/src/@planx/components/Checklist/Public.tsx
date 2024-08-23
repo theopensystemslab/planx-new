@@ -5,6 +5,7 @@ import {
   type Checklist,
   checklistValidationSchema,
   getFlatOptions,
+  getLayout,
   type Group,
 } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
@@ -71,14 +72,7 @@ const ChecklistComponent: React.FC<Props> = (props) => {
     initialExpandedGroups,
   );
 
-  const layout = options
-    ? options.find((o) => o.data.img)
-      ? ChecklistLayout.Images
-      : ChecklistLayout.Basic
-    : groupedOptions
-    ? ChecklistLayout.Grouped
-    : ChecklistLayout.Basic;
-
+  const layout = getLayout({ options, groupedOptions });
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
   const changeCheckbox = (id: string) => (_checked: any) => {
@@ -117,7 +111,7 @@ const ChecklistComponent: React.FC<Props> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            {options ? (
+            {options &&
               options.map((option) =>
                 layout === ChecklistLayout.Basic ? (
                   <FormWrapper key={option.id}>
@@ -148,8 +142,9 @@ const ChecklistComponent: React.FC<Props> = (props) => {
                     />
                   </Grid>
                 ),
-              )
-            ) : groupedOptions ? (
+              )}
+
+            {groupedOptions && (
               <FormWrapper>
                 <Grid item xs={12}>
                   <ExpandableList>
@@ -195,7 +190,7 @@ const ChecklistComponent: React.FC<Props> = (props) => {
                   </ExpandableList>
                 </Grid>
               </FormWrapper>
-            ) : null}
+            )}
           </Grid>
         </ErrorWrapper>
       </FullWidthWrapper>

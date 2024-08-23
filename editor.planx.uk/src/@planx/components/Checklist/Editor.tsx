@@ -316,24 +316,27 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                   }),
             },
           },
-          options
-            ? options
+          ...[
+            options &&
+              options
                 .filter((o) => o.data.text)
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,
                   type: TYPES.Answer,
-                }))
-            : groupedOptions
-            ? groupedOptions
+                })),
+          ],
+          ...[
+            groupedOptions &&
+              groupedOptions
                 .flatMap((gr) => gr.children)
                 .filter((o) => o.data.text)
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,
                   type: TYPES.Answer,
-                }))
-            : [],
+                })),
+          ],
         );
       } else {
         alert(JSON.stringify({ type, ...values, options }, null, 2));

@@ -4,7 +4,11 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
-import { Field } from "@planx/components/List/model";
+import { NumberFieldInput } from "@planx/components/shared/Schema/InputFields/NumberFieldInput";
+import { RadioFieldInput } from "@planx/components/shared/Schema/InputFields/RadioFieldInput";
+import { TextFieldInput } from "@planx/components/shared/Schema/InputFields/TextFieldInput";
+import { Field } from "@planx/components/shared/Schema/model";
+import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { Feature } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -17,36 +21,8 @@ import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import { MapAndLabel } from "./../model";
 import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
-import {
-  ChecklistFieldInput,
-  NumberFieldInput,
-  RadioFieldInput,
-  SelectFieldInput,
-  TextFieldInput,
-} from "./Fields";
 
 type Props = PublicProps<MapAndLabel>;
-
-/**
- * Controller to return correct user input for field in schema
- */
-export const InputField: React.FC<Field> = (props) => {
-  const inputFieldId = `input-${props.type}-${props.data.fn}`;
-
-  switch (props.type) {
-    case "text":
-      return <TextFieldInput id={inputFieldId} {...props} />;
-    case "number":
-      return <NumberFieldInput id={inputFieldId} {...props} />;
-    case "question":
-      if (props.data.options.length === 2) {
-        return <RadioFieldInput id={inputFieldId} {...props} />;
-      }
-      return <SelectFieldInput id={inputFieldId} {...props} />;
-    case "checklist":
-      return <ChecklistFieldInput id={inputFieldId} {...props} />;
-  }
-};
 
 function a11yProps(index: number) {
   return {
@@ -58,7 +34,7 @@ function a11yProps(index: number) {
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
-  const { schema } = useMapAndLabelContext();
+  const { schema, activeIndex, formik } = useMapAndLabelContext();
   const [activeTab, setActiveTab] = useState<string>(
     features[features.length - 1].properties?.label || "",
   );
@@ -111,11 +87,11 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
                   )})`
                 : ` (area ${feature.properties?.area || `0 m²`})`}
             </Typography>
-            {schema.fields.map((field, i) => (
-              <InputRow key={i}>
-                <InputField {...field} />
-              </InputRow>
-            ))}
+            <SchemaFields
+              schema={schema}
+              activeIndex={activeIndex}
+              formik={formik}
+            />
           </TabPanel>
         ))}
       </TabContext>

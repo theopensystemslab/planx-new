@@ -42,7 +42,7 @@
     "@turf/buffer": "^7.0.0",
     "@turf/helpers": "^7.0.0",
     "array-move": "^4.0.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "bowser": "^2.11.0",
     "camelcase-keys": "^9.0.0",
     "classnames": "^2.3.2",
@@ -223,11 +223,9 @@
   },
   "pnpm": {
     "overrides": {
-      "nth-check@<2.0.1": ">=2.0.1",
       "postcss@<8.4.31": ">=8.4.31",
-      "follow-redirects@<1.15.4": ">=1.15.4",
-      "braces@<3.0.3": ">=3.0.3",
-      "fast-loops@<1.1.4": ">=1.1.4"
+      "nth-check@<2.0.1": ">=2.0.1",
+      "braces@<3.0.3": ">=3.0.3"
     }
   }
 }

@@ -16,24 +16,22 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
     ["residential.dwelling.house.semiDetached"],
   );
 
-  // override answer
+  // override answer ("I'm in a flat not a house")
   overrideAnswer("property.type");
 
-  // confirm we've cleared the provided passport variable from the first node that set it
+  // confirm we've cleared the provided passport variable from the first node that set it but added an audit variable `_overrides`
   const afterOverrideBreadcrumb = getState().breadcrumbs;
   const addressBreadcrumb: any =
     afterOverrideBreadcrumb?.["FindPropertyNodeId"]?.data;
-  expect(Object.keys(addressBreadcrumb)).toHaveLength(3);
+  expect(Object.keys(addressBreadcrumb)).toHaveLength(4);
   expect(addressBreadcrumb).not.toHaveProperty(["property.type"]);
+  expect(addressBreadcrumb).toHaveProperty(["_overrides"]);
 
   const afterOverridePassport = getState().computePassport();
   expect(afterOverridePassport.data).toBeDefined();
   expect(afterOverridePassport.data).not.toHaveProperty(["property.type"]);
-
-  // confirm we've stored a copy of the original value in the first node that set it
-  const overrideData: any =
-    afterOverrideBreadcrumb?.["FindPropertyNodeId"]?.override;
-  expect(overrideData).toEqual({
+  expect(afterOverridePassport.data).toHaveProperty(["_overrides"]);
+  expect(afterOverridePassport.data?.["_overrides"]).toEqual({
     "property.type": ["residential.dwelling.house.semiDetached"],
   });
 

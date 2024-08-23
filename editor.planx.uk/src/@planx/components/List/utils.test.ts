@@ -1,4 +1,4 @@
-import { UserResponse } from "./model";
+import { SchemaUserResponse } from "./../shared/Schema/model";
 import {
   flatten,
   sumIdenticalUnits,
@@ -63,7 +63,7 @@ describe("passport data shape", () => {
           identicalUnits: 2,
         },
       ],
-    } as unknown as Record<string, UserResponse[]>;
+    } as unknown as Record<string, SchemaUserResponse[]>;
 
     expect(
       sumIdenticalUnits("proposal.units.residential", defaultPassportData),
