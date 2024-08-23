@@ -24,13 +24,14 @@ export const AddNewEditorModal = ({
     values: AddNewEditorFormValues,
     { resetForm }: FormikHelpers<AddNewEditorFormValues>,
   ) => {
-    const teamId = useStore.getState().teamId;
+    const { teamId, teamSlug } = useStore.getState();
 
     const newUserId = await createAndAddUserToTeam(
       values.email,
       values.firstName,
       values.lastName,
       teamId,
+      teamSlug,
     );
 
     optimisticallyUpdateMembersTable(values, newUserId);
