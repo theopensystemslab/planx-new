@@ -185,6 +185,19 @@ describe("slotSchema", () => {
     expect(result).toBe(false);
   });
 
+  it("rejects slots which failed to upload", async () => {
+    const mockSlots = [
+      { status: "error" },
+      { status: "success" },
+    ] as FileUploadSlot[];
+
+    const result = await slotsSchema.isValid(mockSlots, {
+      context: { fileList: mockFileList },
+    });
+
+    expect(result).toBe(false);
+  });
+
   it("allows slots with all files uploaded", async () => {
     const mockSlots = [
       { status: "success" },
@@ -193,6 +206,40 @@ describe("slotSchema", () => {
 
     const result = await slotsSchema.isValid(mockSlots, {
       context: { fileList: mockFileList },
+    });
+
+    expect(result).toBe(true);
+  });
+
+  it("allows users to proceed if there are no required files", async () => {
+    const mockSlots: FileUploadSlot[] = [];
+
+    const result = await slotsSchema.isValid(mockSlots, {
+      context: {
+        fileList: {
+          required: [],
+          recommended: [
+            { ...mockFileTypes.AlwaysRecommended, slots: [{ id: "123" }] },
+          ],
+          optional: [{ ...mockFileTypes.NotRequired, slots: [{ id: "456" }] }],
+        },
+      },
+    });
+
+    expect(result).toBe(true);
+  });
+
+  it("allows users to proceed if there are no required files, and they have not uploaded any optional or recommended files", async () => {
+    const mockSlots: FileUploadSlot[] = [];
+
+    const result = await slotsSchema.isValid(mockSlots, {
+      context: {
+        fileList: {
+          required: [],
+          recommended: [{ ...mockFileTypes.AlwaysRecommended }],
+          optional: [{ ...mockFileTypes.NotRequired }],
+        },
+      },
     });
 
     expect(result).toBe(true);
