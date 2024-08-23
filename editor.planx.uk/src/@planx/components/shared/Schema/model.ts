@@ -1,4 +1,5 @@
 import { Feature } from "geojson";
+import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
 import { checklistValidationSchema } from "../../Checklist/model";
@@ -155,6 +156,8 @@ const generateValidationSchemaForFields = (
       case "map":
         fieldSchemas[data.fn] = mapValidationSchema(data);
         break;
+      default:
+        return exhaustiveCheck(type);
     }
   });
 
