@@ -5,6 +5,7 @@ import type {
 import { FormikProps } from "formik";
 import { get } from "lodash";
 import React from "react";
+import { exhaustiveCheck } from "utils";
 
 import { ChecklistFieldInput } from "./ChecklistFieldInput";
 import { DateFieldInput } from "./DateFieldInput";
@@ -37,7 +38,10 @@ export const getFieldProps = <T extends Field>(props: Props<T>) => ({
  * Controller to return correct user input for field in schema
  */
 export const InputFields: React.FC<Props<Field>> = (props) => {
-  switch (props.type) {
+  // Local variable required for TS to correctly infer the type
+  const type = props.type;
+
+  switch (type) {
     case "text":
       return <TextFieldInput {...props} />;
     case "number":
@@ -54,6 +58,6 @@ export const InputFields: React.FC<Props<Field>> = (props) => {
     case "map":
       return <MapFieldInput {...props} />;
     default:
-      return null;
+      return exhaustiveCheck(type);
   }
 };
