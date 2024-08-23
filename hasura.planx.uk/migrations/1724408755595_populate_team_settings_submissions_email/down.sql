@@ -1,6 +1,0 @@
--- Could not auto-generate a down migration.
--- Please write an appropriate down migration for the SQL below:
--- UPDATE team_settings
--- SET submission_email = teams.submission_email
--- FROM teams
--- WHERE team_settings.team_id = teams.id;

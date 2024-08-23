@@ -1833,7 +1833,6 @@
           - homepage
           - id
           - reference_code
-          - submission_email
           - team_id
         filter: {}
       comment: ""
