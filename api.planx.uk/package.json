@@ -65,6 +65,9 @@
     "test": "TZ=Europe/London NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --no-cache",
     "test:coverage": "TZ=Europe/London NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest; open ./coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --coverage=false --watch",
+    "vitest": "TZ=Europe/London vitest run",
+    "vitest:coverage": "TZ=Europe/London vitest run --coverage",
+    "vitest:watch": "TZ=Europe/London vitest",
     "build": "rimraf ./dist && npx tsc && pnpm copy-swagger-files",
     "prepare": "cd .. && husky install api.planx.uk/.husky",
     "copy-swagger-files": "copyfiles '**/docs.yaml' dist"
@@ -119,7 +122,8 @@
     "ts-jest-mock-import-meta": "^1.2.0",
     "tsx": "^4.16.2",
     "typescript": "^5.5.2",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "vitest": "^2.0.5"
   },
   "pnpm": {
     "peerDependencyRules": {

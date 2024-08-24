@@ -14,6 +14,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
+    "types": ["vitest/globals"],
     // ensure the code is ready for transpilation by tsx/esbuild (used in dev)
     "isolatedModules": true,
     // TODO: implement "verbatimModuleSyntax" option (laborious)
