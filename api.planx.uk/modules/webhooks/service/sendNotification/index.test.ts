@@ -3,7 +3,6 @@ import app from "../../../../server.js";
 import SlackNotify from "slack-notify";
 import { BOPSBody, EmailBody, S3Body, UniformBody } from "./types.js";
 import { $api } from "../../../../client/index.js";
-import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 const mockSessionWithFee = {
   data: {
@@ -35,15 +34,15 @@ const mockSessionWithResubmissionExemption = {
   },
 };
 
-jest.mock<CoreDomainClient>("../../../../client");
-const mockAdmin = jest.mocked($api);
+vi.mock("../../../../client");
+const mockAdmin = vi.mocked($api);
 
-const mockSend = jest.fn();
-jest.mock<typeof SlackNotify>("slack-notify", () =>
-  jest.fn().mockImplementation(() => {
+const mockSend = vi.fn();
+vi.mock("slack-notify", () => ({
+  default: vi.fn().mockImplementation(() => {
     return { send: mockSend };
   }),
-);
+}));
 
 const { post } = supertest(app);
 
@@ -53,13 +52,17 @@ describe("Send Slack notifications endpoint", () => {
 
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    mockAdmin.session.find = jest.fn().mockResolvedValue(mockSessionWithFee);
+    mockAdmin.session.find = vi.fn().mockResolvedValue(mockSessionWithFee);
     mockSend.mockResolvedValue("Success!");
   });
 
-  afterEach(jest.clearAllMocks);
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
-  afterAll(() => (process.env = ORIGINAL_ENV));
+  afterAll(() => {
+    process.env = ORIGINAL_ENV;
+  });
 
   describe("authentication and validation", () => {
     it("fails without correct authentication", async () => {
@@ -215,7 +218,7 @@ describe("Send Slack notifications endpoint", () => {
 
     it("adds a status to the Slack message for a disability exemption", async () => {
       process.env.APP_ENVIRONMENT = "production";
-      mockAdmin.session.find = jest
+      mockAdmin.session.find = vi
         .fn()
         .mockResolvedValue(mockSessionWithDisabilityExemption);
 
@@ -231,7 +234,7 @@ describe("Send Slack notifications endpoint", () => {
 
     it("adds a status to the Slack message for a resubmission exemption", async () => {
       process.env.APP_ENVIRONMENT = "production";
-      mockAdmin.session.find = jest
+      mockAdmin.session.find = vi
         .fn()
         .mockResolvedValue(mockSessionWithResubmissionExemption);
 
@@ -247,7 +250,7 @@ describe("Send Slack notifications endpoint", () => {
 
     it("handles missing sessions", async () => {
       process.env.APP_ENVIRONMENT = "production";
-      mockAdmin.session.find = jest.fn().mockResolvedValueOnce(null);
+      mockAdmin.session.find = vi.fn().mockResolvedValueOnce(null);
 
       await post(ENDPOINT)
         .query({ type: "uniform-submission" })

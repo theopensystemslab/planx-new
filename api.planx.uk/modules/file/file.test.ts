@@ -1,15 +1,16 @@
 import supertest from "supertest";
+import { Mocked } from "vitest";
 
 import app from "../../server.js";
 import { deleteFilesByURL } from "./service/deleteFile.js";
 import { authHeader } from "../../tests/mockJWT.js";
 
-let mockPutObject: jest.Mocked<() => void>;
-let mockGetObject: jest.Mocked<() => void>;
-let mockDeleteObjects: jest.Mocked<() => void>;
+let mockPutObject: Mocked<() => void>;
+let mockGetObject: Mocked<() => void>;
+let mockDeleteObjects: Mocked<() => void>;
 let getObjectResponse = {};
 
-const mockGetSignedUrl = jest.fn(() => {
+const mockGetSignedUrl = vi.fn(() => {
   const randomFolderName = "nanoid";
   const modifiedKey = "modified%20key";
   return `
@@ -26,17 +27,17 @@ const s3Mock = () => {
   };
 };
 
-jest.mock("aws-sdk/clients/s3", () => {
-  return jest.fn().mockImplementation(() => {
+vi.mock("aws-sdk/clients/s3", () => ({
+  default: vi.fn().mockImplementation(() => {
     return s3Mock();
-  });
-});
+  }),
+}));
 
 describe("File upload", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
-    mockPutObject = jest.fn(() => ({
+    mockPutObject = vi.fn(() => ({
       promise: () => Promise.resolve(),
     }));
   });
@@ -86,7 +87,7 @@ describe("File upload", () => {
     });
 
     it("should handle S3 error", async () => {
-      mockPutObject = jest.fn(() => ({
+      mockPutObject = vi.fn(() => ({
         promise: () => Promise.reject(new Error("S3 error!")),
       }));
 
@@ -163,7 +164,7 @@ describe("File upload", () => {
     });
 
     it("should handle S3 error", async () => {
-      mockPutObject = jest.fn(() => ({
+      mockPutObject = vi.fn(() => ({
         promise: () => Promise.reject(new Error("S3 error!")),
       }));
 
@@ -194,9 +195,9 @@ describe("File download", () => {
         "Tue May 31 2022 12:21:37 GMT+0000 (Coordinated Universal Time)",
       ETag: "a4c57ed39e8d869d636ccf5fc34a65a1",
     };
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
-    mockGetObject = jest.fn(() => ({
+    mockGetObject = vi.fn(() => ({
       promise: () => Promise.resolve(getObjectResponse),
     }));
   });
@@ -234,7 +235,7 @@ describe("File download", () => {
     });
 
     it("should handle S3 error", async () => {
-      mockGetObject = jest.fn(() => ({
+      mockGetObject = vi.fn(() => ({
         promise: () => Promise.reject(new Error("S3 error!")),
       }));
 
@@ -312,7 +313,7 @@ describe("File download", () => {
     });
 
     it("should handle S3 error", async () => {
-      mockGetObject = jest.fn(() => ({
+      mockGetObject = vi.fn(() => ({
         promise: () => Promise.reject(new Error("S3 error!")),
       }));
 
@@ -332,11 +333,11 @@ describe("File download", () => {
 
 describe("File delete", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("deletes files by URL", async () => {
-    mockDeleteObjects = jest.fn(() => ({
+    mockDeleteObjects = vi.fn(() => ({
       promise: () => Promise.resolve(),
     }));
     const fileURLs = [
@@ -360,7 +361,7 @@ describe("File delete", () => {
   });
 
   it("throw an error if S3 fails to delete the file", async () => {
-    mockDeleteObjects = jest.fn(() => ({
+    mockDeleteObjects = vi.fn(() => ({
       promise: () => {
         throw Error();
       },

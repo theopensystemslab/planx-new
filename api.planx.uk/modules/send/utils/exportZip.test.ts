@@ -3,79 +3,79 @@ import { buildSubmissionExportZip } from "./exportZip.js";
 import type { LowCalSession } from "../../../types.js";
 import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 
-jest.mock("fs", () => ({
-  mkdtempSync: () => "tmpdir",
-  existsSync: () => true,
-  unlinkSync: () => undefined,
-  createWriteStream: () => undefined,
-  rmSync: () => undefined,
+vi.mock("fs", () => ({
+  default: {
+    mkdtempSync: () => "tmpdir",
+    existsSync: () => true,
+    unlinkSync: () => undefined,
+    createWriteStream: () => undefined,
+    rmSync: () => undefined,
+  },
 }));
 
-const mockAddFile = jest.fn();
-const mockAddLocalFile = jest.fn();
-jest.mock("adm-zip", () => {
-  return jest.fn().mockImplementation(() => ({
+const mockAddFile = vi.fn();
+const mockAddLocalFile = vi.fn();
+vi.mock("adm-zip", () => ({
+  default: vi.fn().mockImplementation(() => ({
     addFile: mockAddFile,
     addLocalFile: mockAddLocalFile,
-    writeZip: jest.fn(),
-  }));
-});
+    writeZip: vi.fn(),
+  })),
+}));
 const mockPipe = {
-  pipe: jest.fn().mockImplementation(() => ({
+  pipe: vi.fn().mockImplementation(() => ({
     on: (event: string, cb: () => void) => {
       if (event == "finish") return cb();
     },
   })),
 };
-jest.mock("csv-stringify", () => {
+vi.mock("csv-stringify", () => {
   return {
-    stringify: jest.fn().mockImplementation(() => mockPipe),
+    stringify: vi.fn().mockImplementation(() => mockPipe),
   };
 });
-jest.mock("string-to-stream", () => {
-  return jest.fn().mockImplementation(() => mockPipe);
-});
+vi.mock("string-to-stream", () => ({
+  default: vi.fn().mockImplementation(() => mockPipe),
+}));
 
-const mockGetSessionById = jest.fn().mockResolvedValue(mockLowcalSession);
-const mockHasRequiredDataForTemplate = jest.fn(() => true);
-jest.mock("@opensystemslab/planx-core", () => {
+const mockGetSessionById = vi.fn().mockResolvedValue(mockLowcalSession);
+const mockHasRequiredDataForTemplate = vi.fn(() => true);
+vi.mock("@opensystemslab/planx-core", () => {
   return {
-    Passport: jest.fn().mockImplementation(() => ({
-      files: jest.fn().mockImplementation(() => []),
+    Passport: vi.fn().mockImplementation(() => ({
+      files: vi.fn().mockImplementation(() => []),
     })),
-    hasRequiredDataForTemplate: jest.fn(() => mockHasRequiredDataForTemplate()),
-    generateDocxTemplateStream: jest.fn().mockImplementation(() => mockPipe),
-    generateApplicationHTML: jest
+    hasRequiredDataForTemplate: vi.fn(() => mockHasRequiredDataForTemplate()),
+    generateDocxTemplateStream: vi.fn().mockImplementation(() => mockPipe),
+    generateApplicationHTML: vi
       .fn()
       .mockImplementation(() => "<p>application</p>"),
-    generateMapHTML: jest.fn().mockImplementation(() => "<p>map</p>"),
+    generateMapHTML: vi.fn().mockImplementation(() => "<p>map</p>"),
   };
 });
-const mockGenerateOneAppXML = jest
+const mockGenerateOneAppXML = vi
   .fn()
   .mockResolvedValue({ trim: () => "<dummy:xml></dummy:xml>" });
-const mockGenerateDigitalPlanningDataPayload = jest
+const mockGenerateDigitalPlanningDataPayload = vi
   .fn()
   .mockResolvedValue(expectedPlanningPermissionPayload);
 
-jest.mock("../../../client", () => {
+vi.mock("../../../client", () => {
   return {
     $api: {
-      getDocumentTemplateNamesForSession: jest
-        .fn()
-        .mockResolvedValue(["X", "Y"]),
+      getDocumentTemplateNamesForSession: vi.fn().mockResolvedValue(["X", "Y"]),
       session: {
         find: () => mockGetSessionById(),
       },
       export: {
-        csvData: jest.fn().mockResolvedValue([
+        csvData: vi.fn().mockResolvedValue([
           {
             question: "Test",
             responses: [{ value: "Answer" }],
             metadata: {},
           },
         ]),
-        csvDataRedacted: jest.fn().mockResolvedValue([]),
+        csvDataRedacted: vi.fn().mockResolvedValue([]),
         oneAppPayload: () => mockGenerateOneAppXML(),
         digitalPlanningDataPayload: () =>
           mockGenerateDigitalPlanningDataPayload(),
@@ -86,7 +86,7 @@ jest.mock("../../../client", () => {
 
 describe("buildSubmissionExportZip", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   test("the csv is added to the zip", async () => {
     await buildSubmissionExportZip({ sessionId: "1234" });

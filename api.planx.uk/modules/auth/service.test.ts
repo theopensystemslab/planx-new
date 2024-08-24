@@ -1,8 +1,8 @@
 import { checkUserCanAccessEnv } from "./service.js";
 
-const mockIsStagingOnly = jest.fn();
+const mockIsStagingOnly = vi.fn();
 
-jest.mock("../../client", () => {
+vi.mock("../../client", () => {
   return {
     $api: {
       user: {

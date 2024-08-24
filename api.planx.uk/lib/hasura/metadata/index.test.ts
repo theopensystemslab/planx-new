@@ -1,32 +1,40 @@
 import { createScheduledEvent, RequiredScheduledEventArgs } from "./index.js";
-import Axios, { AxiosError } from "axios";
+import axios from "axios";
+import type { Mocked } from "vitest";
 
-jest.mock("axios", () => ({
-  ...jest.requireActual("axios"),
-  post: jest.fn(),
-}));
-const mockAxios = Axios as jest.Mocked<typeof Axios>;
+describe("Creation of scheduled event", () => {
+  vi.mock("axios", async (importOriginal) => {
+    const actualAxios = await importOriginal<typeof import("axios")>();
+    return {
+      default: {
+        ...actualAxios,
+        post: vi.fn(),
+      },
+    };
+  });
+  const mockAxios = axios as Mocked<typeof axios>;
 
-const mockScheduledEvent: RequiredScheduledEventArgs = {
-  webhook: "test url",
-  schedule_at: new Date(),
-  comment: "test comment",
-  payload: {},
-};
+  const mockScheduledEvent: RequiredScheduledEventArgs = {
+    webhook: "test url",
+    schedule_at: new Date(),
+    comment: "test comment",
+    payload: {},
+  };
 
-test("createScheduledEvent returns an error if request fails", async () => {
-  mockAxios.post.mockRejectedValue(new Error());
-  await expect(createScheduledEvent(mockScheduledEvent)).rejects.toThrow();
-});
+  test("returns an error if request fails", async () => {
+    mockAxios.post.mockRejectedValue(new Error());
+    await expect(createScheduledEvent(mockScheduledEvent)).rejects.toThrow();
+  });
 
-test("createScheduledEvent returns an error if Axios errors", async () => {
-  mockAxios.post.mockRejectedValue(new AxiosError());
-  await expect(createScheduledEvent(mockScheduledEvent)).rejects.toThrow();
-});
+  test("returns an error if axios errors", async () => {
+    mockAxios.post.mockRejectedValue(new axios.AxiosError());
+    await expect(createScheduledEvent(mockScheduledEvent)).rejects.toThrow();
+  });
 
-test("createScheduledEvent returns response data on success", async () => {
-  mockAxios.post.mockResolvedValue({ data: "test data" });
-  await expect(createScheduledEvent(mockScheduledEvent)).resolves.toBe(
-    "test data",
-  );
+  test("returns response data on success", async () => {
+    mockAxios.post.mockResolvedValue({ data: "test data" });
+    await expect(createScheduledEvent(mockScheduledEvent)).resolves.toBe(
+      "test data",
+    );
+  });
 });

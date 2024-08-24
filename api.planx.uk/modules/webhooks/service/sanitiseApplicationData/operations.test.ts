@@ -26,29 +26,25 @@ import {
   deleteHasuraScheduledEventsForSubmittedSessions,
   deleteFeedback,
 } from "./operations.js";
+import { MockedFunction } from "vitest";
 
-jest.mock("../../../../lib/hasura/schema");
-const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
+vi.mock("../../../../lib/hasura/schema");
+const mockRunSQL = runSQL as MockedFunction<typeof runSQL>;
 
-const mockFindSession = jest.fn();
+const mockFindSession = vi.fn();
 
-jest.mock("@opensystemslab/planx-core", () => {
-  const actualCoreDomainClient = jest.requireActual(
-    "@opensystemslab/planx-core",
-  ).CoreDomainClient;
-
-  const actualPassport = jest.requireActual(
-    "@opensystemslab/planx-core",
-  ).Passport;
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const actualCore2 =
+    await importOriginal<typeof import("@opensystemslab/planx-core")>();
+  const actualCoreDomainClient = actualCore2.CoreDomainClient;
+  const actualPassport = actualCore2.Passport;
 
   return {
     Passport: actualPassport,
     CoreDomainClient: class extends actualCoreDomainClient {
       constructor() {
         super();
-        this.session.find = jest
-          .fn()
-          .mockImplementation(() => mockFindSession());
+        this.session.find = vi.fn().mockImplementation(() => mockFindSession());
       }
     },
   };
@@ -56,36 +52,36 @@ jest.mock("@opensystemslab/planx-core", () => {
 
 const s3Mock = () => {
   return {
-    deleteObjects: jest.fn(() => ({
+    deleteObjects: vi.fn(() => ({
       promise: () => Promise.resolve(),
     })),
   };
 };
 
-jest.mock("aws-sdk/clients/s3", () => {
-  return jest.fn().mockImplementation(() => {
+vi.mock("aws-sdk/clients/s3", () => ({
+  default: vi.fn().mockImplementation(() => {
     return s3Mock();
-  });
-});
+  }),
+}));
 
 describe("'operationHandler' helper function", () => {
   it("returns a success result when an operation succeeds", async () => {
-    const successOperation = jest
+    const successOperation = vi
       .fn()
       .mockResolvedValue(["123", "abc", "456", "xyz"]);
     await expect(operationHandler(successOperation)).resolves.toEqual({
-      operationName: "mockConstructor",
+      operationName: "spy",
       status: "success",
       count: 4,
     });
   });
 
   it("returns a failure result when an operation fails", async () => {
-    const failureOperation = jest
+    const failureOperation = vi
       .fn()
       .mockRejectedValue(new Error("Something went wrong"));
     await expect(operationHandler(failureOperation)).resolves.toEqual({
-      operationName: "mockConstructor",
+      operationName: "spy",
       status: "failure",
       errorMessage: "Something went wrong",
     });
@@ -93,10 +89,12 @@ describe("'operationHandler' helper function", () => {
 });
 
 describe("getRetentionPeriod helper function", () => {
-  afterAll(() => jest.useRealTimers());
+  afterAll(() => {
+    vi.useRealTimers();
+  });
 
   it("returns a date 6 months in the past", () => {
-    jest.useFakeTimers().setSystemTime(new Date("2022-08-01"));
+    vi.useFakeTimers().setSystemTime(new Date("2022-08-01"));
 
     const result = getRetentionPeriod();
 

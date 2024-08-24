@@ -19,7 +19,9 @@ describe("Session summary admin endpoint", () => {
     });
   });
 
-  afterEach(() => jest.clearAllMocks());
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
   it("requires a user to be logged in", async () => {
     await supertest(app)

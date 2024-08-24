@@ -2,16 +2,13 @@ import supertest from "supertest";
 import app from "../../../../server.js";
 import * as operations from "./operations.js";
 
-const mockSend = jest.fn();
-const mockSlackNotify = jest.fn().mockImplementation(() => {
+const mockSend = vi.fn();
+const mockSlackNotify = vi.fn().mockImplementation(() => {
   return { send: mockSend };
 });
-jest.mock("slack-notify", () => {
-  return {
-    __esModule: true, // see https://jestjs.io/docs/jest-object#jestmockmodulename-factory-options
-    default: (webhookURL: string) => mockSlackNotify(webhookURL),
-  };
-});
+vi.mock("slack-notify", () => ({
+  default: (webhookURL: string) => mockSlackNotify(webhookURL),
+}));
 
 const { post } = supertest(app);
 
@@ -29,7 +26,7 @@ describe("Sanitise application data webhook", () => {
   });
 
   it("returns a 500 if an unhandled error is thrown whilst running operations", async () => {
-    const mockOperationHandler = jest.spyOn(operations, "operationHandler");
+    const mockOperationHandler = vi.spyOn(operations, "operationHandler");
     mockOperationHandler.mockRejectedValueOnce("Unhandled error!");
 
     await post(ENDPOINT)
@@ -43,11 +40,11 @@ describe("Sanitise application data webhook", () => {
   });
 
   it("returns a 200 when all operations are successful", async () => {
-    const mockOperation1 = jest.fn().mockResolvedValue(["123"]);
-    const mockOperation2 = jest.fn().mockResolvedValue(["456", "789"]);
-    const mockOperation3 = jest.fn().mockResolvedValue(["abc", "def", "ghi"]);
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+    const mockOperation2 = vi.fn().mockResolvedValue(["456", "789"]);
+    const mockOperation3 = vi.fn().mockResolvedValue(["abc", "def", "ghi"]);
 
-    const mockGetOperations = jest.spyOn(operations, "getOperations");
+    const mockGetOperations = vi.spyOn(operations, "getOperations");
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,
@@ -82,13 +79,13 @@ describe("Sanitise application data webhook", () => {
   });
 
   it("returns a 500 when only a single operation fails", async () => {
-    const mockOperation1 = jest.fn().mockResolvedValue(["123"]);
-    const mockOperation2 = jest
+    const mockOperation1 = vi.fn().mockResolvedValue(["123"]);
+    const mockOperation2 = vi
       .fn()
       .mockRejectedValue(new Error("Query failed!"));
-    const mockOperation3 = jest.fn().mockResolvedValue(["abc", "def", "ghi"]);
+    const mockOperation3 = vi.fn().mockResolvedValue(["abc", "def", "ghi"]);
 
-    const mockGetOperations = jest.spyOn(operations, "getOperations");
+    const mockGetOperations = vi.spyOn(operations, "getOperations");
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,
@@ -132,17 +129,17 @@ describe("Sanitise application data webhook", () => {
   });
 
   it("returns a 500 if all operations fail", async () => {
-    const mockOperation1 = jest
+    const mockOperation1 = vi
       .fn()
       .mockRejectedValue(new Error("Query failed!"));
-    const mockOperation2 = jest
+    const mockOperation2 = vi
       .fn()
       .mockRejectedValue(new Error("Query failed!"));
-    const mockOperation3 = jest
+    const mockOperation3 = vi
       .fn()
       .mockRejectedValue(new Error("Query failed!"));
 
-    const mockGetOperations = jest.spyOn(operations, "getOperations");
+    const mockGetOperations = vi.spyOn(operations, "getOperations");
     mockGetOperations.mockImplementationOnce(() => [
       mockOperation1,
       mockOperation2,

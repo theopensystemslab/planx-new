@@ -5,7 +5,7 @@ import { authHeader } from "../../../tests/mockJWT.js";
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/html`;
 
-const mockGenerateHTMLData = jest.fn().mockResolvedValue({
+const mockGenerateHTMLData = vi.fn().mockResolvedValue({
   responses: [
     {
       question: "Is this a test?",
@@ -15,7 +15,7 @@ const mockGenerateHTMLData = jest.fn().mockResolvedValue({
   ],
   redactedResponses: [],
 });
-jest.mock("../../../client", () => {
+vi.mock("../../../client", () => {
   return {
     $api: {
       export: {
@@ -26,7 +26,9 @@ jest.mock("../../../client", () => {
 });
 
 describe("HTML data admin endpoint", () => {
-  afterEach(() => jest.clearAllMocks());
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
   it("requires a user to be logged in", () => {
     return supertest(app)

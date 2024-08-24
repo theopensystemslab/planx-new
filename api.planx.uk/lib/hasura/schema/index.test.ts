@@ -1,25 +1,33 @@
 import { runSQL } from "./index.js";
-import Axios, { AxiosError } from "axios";
+import axios from "axios";
+import type { Mocked } from "vitest";
 
-jest.mock("axios", () => ({
-  ...jest.requireActual("axios"),
-  post: jest.fn(),
-}));
-const mockAxios = Axios as jest.Mocked<typeof Axios>;
+describe("runSQL", () => {
+  vi.mock("axios", async (importOriginal) => {
+    const actualAxios = await importOriginal<typeof import("axios")>();
+    return {
+      default: {
+        ...actualAxios,
+        post: vi.fn(),
+      },
+    };
+  });
+  const mockAxios = axios as Mocked<typeof axios>;
 
-const sql = "SELECT * FROM TEST";
+  const sql = "SELECT * FROM TEST";
 
-test("runSQL returns an error if request fails", async () => {
-  mockAxios.post.mockRejectedValue(new Error());
-  await expect(runSQL(sql)).rejects.toThrow();
-});
+  test("returns an error if request fails", async () => {
+    mockAxios.post.mockRejectedValue(new Error());
+    await expect(runSQL(sql)).rejects.toThrow();
+  });
 
-test("runSQL returns an error if Axios errors", async () => {
-  mockAxios.post.mockRejectedValue(new AxiosError());
-  await expect(runSQL(sql)).rejects.toThrow();
-});
+  test("returns an error if Axios errors", async () => {
+    mockAxios.post.mockRejectedValue(new axios.AxiosError());
+    await expect(runSQL(sql)).rejects.toThrow();
+  });
 
-test("runSQL returns response data on success", async () => {
-  mockAxios.post.mockResolvedValue({ data: "test data" });
-  await expect(runSQL(sql)).resolves.toBe("test data");
+  test("returns response data on success", async () => {
+    mockAxios.post.mockResolvedValue({ data: "test data" });
+    await expect(runSQL(sql)).resolves.toBe("test data");
+  });
 });

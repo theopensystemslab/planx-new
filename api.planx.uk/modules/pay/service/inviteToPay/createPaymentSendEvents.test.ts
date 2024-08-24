@@ -3,9 +3,10 @@ import app from "../../../../server.js";
 import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { flowWithInviteToPay } from "../../../../tests/mocks/inviteToPayData.js";
+import { MockedFunction } from "vitest";
 
-jest.mock("../../../../lib/hasura/metadata");
-const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<
+vi.mock("../../../../lib/hasura/metadata");
+const mockedCreateScheduledEvent = createScheduledEvent as MockedFunction<
   typeof createScheduledEvent
 >;
 
@@ -67,7 +68,9 @@ describe("Create payment send events webhook", () => {
     });
   });
 
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   it("fails without correct authentication", async () => {
     await supertest(app)

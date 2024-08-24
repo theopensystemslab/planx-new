@@ -12,14 +12,16 @@ const invalidBody = {
   wrong: "message",
 };
 
-const mockSend = jest.fn();
-jest.mock<typeof SlackNotify>("slack-notify", () =>
-  jest.fn().mockImplementation(() => {
+const mockSend = vi.fn();
+vi.mock("slack-notify", () => ({
+  default: vi.fn().mockImplementation(() => {
     return { send: mockSend };
   }),
-);
+}));
 
-afterEach(jest.clearAllMocks);
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 it("returns an error if authorization headers are not set", async () => {
   await supertest(app)

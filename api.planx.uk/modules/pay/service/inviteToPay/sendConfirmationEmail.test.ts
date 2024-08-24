@@ -4,8 +4,8 @@ import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { sendAgentAndPayeeConfirmationEmail } from "./sendConfirmationEmail.js";
 import { sendEmail } from "../../../../lib/notify/index.js";
 
-jest.mock("../../../../lib/notify", () => ({
-  sendEmail: jest.fn(),
+vi.mock("../../../../lib/notify", () => ({
+  sendEmail: vi.fn(),
 }));
 
 describe("sendAgentAndPayeeConfirmationEmail", () => {
@@ -14,7 +14,7 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test("sendEmail is called with agent and payee arguments", async () => {

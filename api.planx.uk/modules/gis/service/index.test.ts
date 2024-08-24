@@ -8,11 +8,11 @@ import { locationSearchWithTimeout } from "./index.js";
 //   Please comment in and run locally if making changes to /gis functionality
 describe("locationSearchWithTimeout", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test.skip("a successful call", async () => {
@@ -34,7 +34,7 @@ describe("locationSearchWithTimeout", () => {
       { x: 50, y: 50, siteBoundary: "[]" },
       timeout,
     );
-    jest.runAllTimers();
+    vi.runAllTimers();
     await expect(promise).rejects.toEqual("location search timeout");
   });
 });

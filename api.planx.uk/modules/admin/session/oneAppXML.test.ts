@@ -5,11 +5,11 @@ import { authHeader } from "../../../tests/mockJWT.js";
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/xml`;
 
-const mockGenerateOneAppXML = jest
+const mockGenerateOneAppXML = vi
   .fn()
   .mockResolvedValue("<dummy:xml></dummy:xml>");
 
-jest.mock("../../../client", () => {
+vi.mock("../../../client", () => {
   return {
     $api: {
       export: {
