@@ -34,10 +34,10 @@ const mockRunSQL = runSQL as MockedFunction<typeof runSQL>;
 const mockFindSession = vi.fn();
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
-  const actualCore2 =
+  const actualCore =
     await importOriginal<typeof import("@opensystemslab/planx-core")>();
-  const actualCoreDomainClient = actualCore2.CoreDomainClient;
-  const actualPassport = actualCore2.Passport;
+  const actualCoreDomainClient = actualCore.CoreDomainClient;
+  const actualPassport = actualCore.Passport;
 
   return {
     Passport: actualPassport,
