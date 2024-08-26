@@ -121,7 +121,7 @@ describe("A team with a subdomain has an online, published service.", () => {
 
     user.click(copyButton);
 
-    expect(await screen.findByText("copied")).toBeVisible();
+    expect((await screen.findAllByText("copied"))[0]).toBeVisible();
     expect(navigator.clipboard.writeText).toBeCalledWith(
       `https://${teamDomain}/${flowSlug}`,
     );
@@ -232,7 +232,7 @@ describe("A team without a subdomain has an online, published service.", () => {
 
     user.click(copyButton);
 
-    expect(await screen.findByText("copied")).toBeVisible();
+    expect((await screen.findAllByText("copied"))[0]).toBeVisible();
     expect(navigator.clipboard.writeText).toBeCalledWith(publishedUrl);
   });
 });
