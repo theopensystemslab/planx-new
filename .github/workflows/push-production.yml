@@ -53,13 +53,13 @@ jobs:
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
-          REACT_APP_API_URL: https://api.editor.planx.uk
-          REACT_APP_HASURA_URL: https://hasura.editor.planx.uk/v1/graphql
-          REACT_APP_HASURA_WEBSOCKET: wss://hasura.editor.planx.uk/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.uk
-          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_ENV: production
+          VITE_APP_API_URL: https://api.editor.planx.uk
+          VITE_APP_HASURA_URL: https://hasura.editor.planx.uk/v1/graphql
+          VITE_APP_HASURA_WEBSOCKET: wss://hasura.editor.planx.uk/v1/graphql
+          VITE_APP_SHAREDB_URL: wss://sharedb.editor.planx.uk
+          VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          VITE_APP_ENV: production
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
