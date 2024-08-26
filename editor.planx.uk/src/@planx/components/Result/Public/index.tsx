@@ -73,7 +73,7 @@ const Responses = ({
     // Retain responses with flags which are auto answered
     const hasFlag = response.selections.some((s) => s.data?.flag);
     return hasFlag;
-  }
+  };
 
   return (
     <>

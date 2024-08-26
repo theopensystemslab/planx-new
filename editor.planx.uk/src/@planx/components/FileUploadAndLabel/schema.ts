@@ -79,12 +79,11 @@ export const slotsSchema = array()
       if (!slots) throw new Error("Missing slots for slotsSchema");
 
       const { fileList } = context as SlotsSchemaTestContext;
-      const allFilesOptional =
-        !fileList.recommended.length && !fileList.required.length;
-      const isMinFileUploadCountSatisfied =
-        allFilesOptional || slots.length > 0;
+      const noFilesAreRequired = Boolean(!fileList.required.length);
+      if (noFilesAreRequired) return true;
 
-      return isMinFileUploadCountSatisfied;
+      const isAtLeastOneFileUploaded = slots.length > 0;
+      return isAtLeastOneFileUploaded;
     },
   })
   .test({
@@ -101,11 +100,8 @@ export const slotsSchema = array()
     name: "errorStatus",
     message: "Remove files which failed to upload",
     test: (slots?: Array<FileUploadSlot>) => {
-      return Boolean(
-        slots &&
-          slots.length > 0 &&
-          !slots.some((slot) => slot.status === "error"),
-      );
+      const didAnyUploadFail = slots?.some((slot) => slot.status === "error");
+      return !didAnyUploadFail;
     },
   });
 

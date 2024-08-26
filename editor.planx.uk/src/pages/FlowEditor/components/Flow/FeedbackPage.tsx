@@ -230,10 +230,10 @@ const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
 
     const COMMENT_LENGTH = 50;
     const shouldBeSummarised = userComment.length > COMMENT_LENGTH;
-    if (shouldBeSummarised) return `${userComment.slice(0, COMMENT_LENGTH)}...`
+    if (shouldBeSummarised) return `${userComment.slice(0, COMMENT_LENGTH)}...`;
 
     return userComment;
-  }
+  };
 
   const commentSummary = generateCommentSummary(item.userComment);
 

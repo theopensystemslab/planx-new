@@ -37,14 +37,17 @@ export default function FileDownload({
       <Link
         component="button"
         onClick={async () => {
-          await fetch(`${process.env.REACT_APP_API_URL}/download-application`, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
+          await fetch(
+            `${import.meta.env.VITE_APP_API_URL}/download-application`,
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ data }),
             },
-            body: JSON.stringify({ data }),
-          })
+          )
             .then((res) => res.text())
             .then((data) => downloadCsv(filename, data))
             .catch((error) => console.log(error));

@@ -88,29 +88,24 @@ export default function Component(props: Props) {
     if (isMounted.current) setSlots([]);
     isMounted.current = true;
 
-    const areaChangeHandler = ({ detail }: { detail: string }) => {
-      const numberString = detail.split(" ")[0];
-      const area = Number(numberString);
-      setArea(area);
-    };
-
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
         setBoundary(geojson["EPSG:3857"].features[0]);
+        setArea(
+          geojson["EPSG:3857"].features[0]?.properties?.["area.squareMetres"],
+        );
       } else {
-        // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined
+        // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined & area to 0
         setBoundary(undefined);
+        setArea(0);
       }
     };
 
     const map: any = document.getElementById("draw-boundary-map");
-
-    map?.addEventListener("areaChange", areaChangeHandler);
     map?.addEventListener("geojsonChange", geojsonChangeHandler);
 
     return function cleanup() {
-      map?.removeEventListener("areaChange", areaChangeHandler);
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
   }, [page, setArea, setBoundary, setSlots]);
@@ -276,7 +271,9 @@ export default function Component(props: Props) {
                   markerLatitude={Number(passport?.data?._address?.latitude)}
                   markerLongitude={Number(passport?.data?._address?.longitude)}
                   resetControlImage="trash"
-                  osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+                  osProxyEndpoint={`${
+                    import.meta.env.VITE_APP_API_URL
+                  }/proxy/ordnance-survey`}
                   osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
                   drawGeojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
                   collapseAttributions={

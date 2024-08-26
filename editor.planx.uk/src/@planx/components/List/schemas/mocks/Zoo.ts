@@ -1,6 +1,6 @@
+import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
-import { Schema } from "../../model";
 import { Props } from "../../Public";
 
 export const Zoo: Schema = {
@@ -81,7 +81,7 @@ export const Zoo: Schema = {
         title: "What's their birthday?",
         fn: "birthday",
         min: "1970-01-01",
-        max: "2999-12-31"
+        max: "2999-12-31",
       },
     },
   ],

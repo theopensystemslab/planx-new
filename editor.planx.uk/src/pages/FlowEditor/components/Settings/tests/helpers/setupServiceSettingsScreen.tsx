@@ -1,15 +1,17 @@
+import { screen } from "@testing-library/react";
 import React from "react";
-import ServiceSettings from "../../ServiceSettings";
-import { setup } from "testUtils";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { screen } from "@testing-library/react";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+
+import ServiceSettings from "../../ServiceSettings";
 
 export default async function setupServiceSettingsScreen() {
   const { user } = setup(
     <DndProvider backend={HTML5Backend}>
       <ServiceSettings />
-    </DndProvider>
+    </DndProvider>,
   );
 
   await screen.findByText("Your public link");
@@ -26,13 +28,13 @@ export const mockWindowLocationObject = {
   href: "http://dummy.com?page=1&name=testing",
   pathname: "/mockTeam/mock-planning-permish",
   search: "",
-  assign: jest.fn(),
-  reload: jest.fn(),
-  replace: jest.fn(),
+  assign: vi.fn(),
+  reload: vi.fn(),
+  replace: vi.fn(),
   ancestorOrigins: {
     length: 0,
     contains: () => true,
     item: () => null,
-    [Symbol.iterator]: jest.fn(),
+    [Symbol.iterator]: vi.fn(),
   },
 };

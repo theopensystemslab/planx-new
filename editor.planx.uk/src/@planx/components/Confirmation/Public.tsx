@@ -5,7 +5,8 @@ import { QuestionAndResponses } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { PublicProps } from "@planx/components/ui";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { objectWithoutNullishValues } from "lib/objectHelpers";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import Banner from "ui/public/Banner";
 import FileDownload from "ui/public/FileDownload";
@@ -19,11 +20,38 @@ export type Props = PublicProps<Confirmation>;
 export default function ConfirmationComponent(props: Props) {
   const [data, setData] = useState<QuestionAndResponses[]>([]);
 
-  const [sessionId, saveToEmail, $public] = useStore((state) => [
-    state.sessionId,
-    state.saveToEmail,
-    state.$public,
-  ]);
+  const [sessionId, saveToEmail, $public, passport, govUkPayment, flowName] =
+    useStore((state) => [
+      state.sessionId,
+      state.saveToEmail,
+      state.$public,
+      state.computePassport(),
+      state.govUkPayment,
+      state.flowName,
+    ]);
+
+  const details = {
+    "Application reference": sessionId,
+    "Property address": passport.data?._address?.title,
+    "Application type": [
+      flowName.replace("Apply", "Application"),
+      getWorkStatus(passport),
+    ]
+      .filter(Boolean)
+      .join(" - "),
+    "GOV.UK payment reference": govUkPayment?.payment_id,
+    "Paid at":
+      govUkPayment?.created_date &&
+      new Date(govUkPayment.created_date).toLocaleDateString("en-gb", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+  };
+  const applicableDetails = objectWithoutNullishValues(details) as Record<
+    string,
+    string
+  >;
 
   useEffect(() => {
     const makeCsvData = async () => {
@@ -41,6 +69,23 @@ export default function ConfirmationComponent(props: Props) {
   });
 
   return (
+    <Presentational
+      {...props}
+      applicableDetails={applicableDetails}
+      data={data}
+      sessionId={sessionId}
+    />
+  );
+}
+
+interface PresentationalProps extends Props {
+  sessionId: string;
+  applicableDetails: Record<string, string>;
+  data: QuestionAndResponses[];
+}
+
+export function Presentational(props: PresentationalProps) {
+  return (
     <Box width="100%">
       <Banner
         heading={props.heading || ""}
@@ -49,25 +94,24 @@ export default function ConfirmationComponent(props: Props) {
         iconTitle={"Success"}
       >
         {props.description && (
-          <Box mt={4}>
-            <Typography maxWidth="formWrap">{props.description}</Typography>
+          <Box mt={2} maxWidth="formWrap">
+            <ReactMarkdownOrHtml source={props.description} openLinksOnNewTab />
           </Box>
         )}
       </Banner>
       <Card>
-        {props.details && (
-          <SummaryListTable>
-            {Object.entries(props.details).map((item) => (
-              <>
-                <Box component="dt">{item[0]}</Box>
-                <Box component="dd">{item[1]}</Box>
-              </>
-            ))}
-          </SummaryListTable>
-        )}
-
-        {<FileDownload data={data} filename={sessionId || "application"} />}
-
+        <SummaryListTable>
+          {Object.entries(props.applicableDetails).map(([k, v], i) => (
+            <React.Fragment key={`detail-${i}`}>
+              <Box component="dt">{k}</Box>
+              <Box component="dd">{v}</Box>
+            </React.Fragment>
+          ))}
+        </SummaryListTable>
+        <FileDownload
+          data={props.data}
+          filename={props.sessionId || "application"}
+        />
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
             <Typography variant="h2" mb={2}>
@@ -76,7 +120,6 @@ export default function ConfirmationComponent(props: Props) {
             <NumberedList items={props.nextSteps} heading="h2" />
           </Box>
         )}
-
         {props.moreInfo && (
           <>
             <Box py={1}>
@@ -85,18 +128,25 @@ export default function ConfirmationComponent(props: Props) {
             <hr />
           </>
         )}
-
         {props.contactInfo && (
-          <>
-            <Box py={1}>
-              <Typography variant="h2" component="h3" gutterBottom>
-                Contact us
-              </Typography>
-              <ReactMarkdownOrHtml source={props.contactInfo} />
-            </Box>
-          </>
+          <Box py={1}>
+            <Typography variant="h2" component="h3" gutterBottom>
+              Contact us
+            </Typography>
+            <ReactMarkdownOrHtml source={props.contactInfo} openLinksOnNewTab />
+          </Box>
         )}
       </Card>
     </Box>
   );
+}
+
+// TODO - Retire in favor of ODP Schema application type descriptions or fallback to flowName
+function getWorkStatus(passport: Store.passport): string | undefined {
+  switch (passport?.data?.["application.type"]?.toString()) {
+    case "ldc.existing":
+      return "existing";
+    case "ldc.proposed":
+      return "proposed";
+  }
 }

@@ -124,7 +124,7 @@ export const sharedStore: StateCreator<
 
   $public(auth: Auth | undefined): CoreDomainClient {
     return new CoreDomainClient({
-      targetURL: process.env.REACT_APP_HASURA_URL!,
+      targetURL: import.meta.env.VITE_APP_HASURA_URL!,
       auth: auth,
     });
   },
@@ -133,6 +133,6 @@ export const sharedStore: StateCreator<
    * Authenticated client is re-instantiated upon user login
    */
   $client: new CoreDomainClient({
-    targetURL: process.env.REACT_APP_HASURA_URL!,
+    targetURL: import.meta.env.VITE_APP_HASURA_URL!,
   }),
 });

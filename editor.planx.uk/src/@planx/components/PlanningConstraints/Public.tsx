@@ -85,7 +85,6 @@ function Component(props: Props) {
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  const root = `${process.env.REACT_APP_API_URL}/gis/${teamSlug}?`;
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
     ...params,
@@ -97,8 +96,8 @@ function Component(props: Props) {
     version: "1",
   };
 
-  // Check if this team should query Planning Data (or continue to use custom GIS) and set URL params accordingly to fetch data
-  //   In future, Planning Data will theoretically support any UK address and this db setting won't be necessary, but data collection still limited to select councils!
+  // Fetch planning constraints data for a given local authority
+  const root = `${import.meta.env.VITE_APP_API_URL}/gis/${teamSlug}?`;
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
@@ -122,7 +121,7 @@ function Component(props: Props) {
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new non-UPRN address on the map
   const classifiedRoadsEndpoint: string =
-    `${process.env.REACT_APP_API_URL}/roads?` +
+    `${import.meta.env.VITE_APP_API_URL}/roads?` +
     new URLSearchParams(usrn ? { usrn } : undefined)?.toString();
 
   const {

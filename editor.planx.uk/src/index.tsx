@@ -1,7 +1,4 @@
 import "core-js/actual/string/replace-all"; // replace-all polyfill
-// init airbrake before everything else
-require("./airbrake");
-
 import "react-toastify/dist/ReactToastify.css";
 import "./app.css";
 
@@ -18,13 +15,15 @@ import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
 import { ToastContainer } from "react-toastify";
 
+// init airbrake before everything else
+import * as airbrake from "./airbrake";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import { defaultTheme } from "./theme";
 
-if (process.env.REACT_APP_ENV !== "production") {
-  console.log(`ENV: ${process.env.REACT_APP_ENV}`);
+if (import.meta.env.VITE_APP_ENV !== "production") {
+  console.log(`ENV: ${import.meta.env.VITE_APP_ENV}`);
 }
 
 const container = document.getElementById("root") as HTMLElement;

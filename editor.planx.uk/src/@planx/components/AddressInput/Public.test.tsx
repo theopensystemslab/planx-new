@@ -1,14 +1,16 @@
 import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingLabel } from "../shared/testHelpers";
 import AddressInput from "./Public";
 
 test("submits an address", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />,
@@ -40,7 +42,7 @@ test("submits an address", async () => {
 });
 
 test("recovers previously submitted text when clicking the back button", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
   const { user } = setup(
@@ -82,7 +84,7 @@ test("recovers previously submitted text when clicking the back button", async (
 });
 
 test("recovers previously submitted text when clicking the back button even if a data field is set", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
   const dataField = "data-field";
 

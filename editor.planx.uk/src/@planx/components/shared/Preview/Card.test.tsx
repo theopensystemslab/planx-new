@@ -2,8 +2,10 @@ import Button from "@mui/material/Button";
 import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 import { ApplicationPath } from "types";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import Card from "./Card";
 
@@ -14,7 +16,7 @@ let initialState: FullStore;
 describe("Card component", () => {
   const resumeButtonText = "Resume an application you have already started";
   const saveButtonText = "Save and return to this application later";
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   beforeAll(() => (initialState = getState()));
 

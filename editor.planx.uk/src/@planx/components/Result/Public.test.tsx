@@ -1,6 +1,8 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
 import Result from "./Public";
@@ -12,7 +14,7 @@ beforeEach(() => {
 });
 
 test("renders correctly", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <Result

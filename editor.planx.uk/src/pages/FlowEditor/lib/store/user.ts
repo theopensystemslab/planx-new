@@ -23,7 +23,7 @@ export const userStore: StateCreator<
 > = (set, get) => ({
   setUser: ({ jwt, ...user }) => {
     const authenticatedClient = new CoreDomainClient({
-      targetURL: process.env.REACT_APP_HASURA_URL!,
+      targetURL: import.meta.env.VITE_APP_HASURA_URL!,
       auth: { jwt },
     });
     set({ $client: authenticatedClient });
@@ -53,7 +53,7 @@ export const userStore: StateCreator<
 });
 
 const getLoggedInUser = async () => {
-  const url = `${process.env.REACT_APP_API_URL}/user/me`;
+  const url = `${import.meta.env.VITE_APP_API_URL}/user/me`;
   try {
     const response = await axios.get<User & { jwt: string }>(url, {
       withCredentials: true,

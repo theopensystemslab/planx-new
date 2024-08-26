@@ -8,26 +8,20 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { SiteAddress } from "@planx/components/FindProperty/model";
+import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
+import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { PublicProps } from "@planx/components/ui";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import InputRow from "ui/shared/InputRow";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
-import type { Field, List } from "../model";
+import type { List } from "../model";
 import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";
-import {
-  ChecklistFieldInput,
-  MapFieldInput,
-  DateFieldInput,
-  NumberFieldInput,
-  RadioFieldInput,
-  SelectFieldInput,
-  TextFieldInput,
-} from "./Fields";
 
 export type Props = PublicProps<List>;
 
@@ -46,36 +40,18 @@ const CardButton = styled(Button)(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
-/**
- * Controller to return correct user input for field in schema
- */
-const InputField: React.FC<Field> = (props) => {
-  const inputFieldId = `input-${props.type}-${props.data.fn}`;
-
-  switch (props.type) {
-    case "text":
-      return <TextFieldInput id={inputFieldId} {...props} />;
-    case "number":
-      return <NumberFieldInput id={inputFieldId} {...props} />;
-    case "question":
-      if (props.data.options.length === 2) {
-        return <RadioFieldInput id={inputFieldId} {...props} />;
-      }
-      return <SelectFieldInput id={inputFieldId} {...props} />;
-    case "checklist":
-      return <ChecklistFieldInput id={inputFieldId} {...props} />;
-    case "date":
-      return <DateFieldInput id={inputFieldId} {...props} />;
-    case "map":
-      return <MapFieldInput id={inputFieldId} {...props} />;
-  }
-};
-
 const ActiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, saveItem, cancelEditItem, errors, isPageComponent } =
-    useListContext();
+  const {
+    schema,
+    saveItem,
+    cancelEditItem,
+    errors,
+    isPageComponent,
+    formik,
+    activeIndex,
+  } = useListContext();
 
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -93,11 +69,11 @@ const ActiveListCard: React.FC<{
           {schema.type}
           {!isPageComponent && ` ${i + 1}`}
         </Typography>
-        {schema.fields.map((field, i) => (
-          <InputRow key={i}>
-            <InputField {...field} />
-          </InputRow>
-        ))}
+        <SchemaFields
+          schema={schema}
+          activeIndex={activeIndex}
+          formik={formik}
+        />
         <Box display="flex" gap={2}>
           <Button
             variant="contained"
@@ -134,7 +110,7 @@ const InactiveListCard: React.FC<{
               </TableCell>
               <TableCell>
                 {formatSchemaDisplayValue(
-                  formik.values.userData[i][field.data.fn],
+                  formik.values.schemaData[i][field.data.fn],
                   schema.fields[j],
                 )}
               </TableCell>
@@ -168,16 +144,44 @@ const Root = () => {
     listProps,
   } = useListContext();
 
-  const { title, description, info, policyRef, howMeasured } = listProps;
+  const { title, description, info, policyRef, howMeasured, handleSubmit } =
+    listProps;
 
   const rootError: string =
     (errors.min && `You must provide at least ${schema.min} response(s)`) ||
     (errors.max && `You can provide at most ${schema.max} response(s)`) ||
     "";
 
-  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (userData = [])
+  // Hide the "+ Add another" button if the schema has a max length of 1, unless the only item has been cancelled/removed (schemaData = [])
   const shouldShowAddAnotherButton =
-    schema.max !== 1 || formik.values.userData.length < 1;
+    schema.max !== 1 || formik.values.schemaData.length < 1;
+
+  // If the selected schema has a "map" field, ensure there's a FindProperty component preceding it (eg address data in state to position map view)
+  const hasMapField = schema.fields.some((field) => field.type === "map");
+  const { longitude, latitude } = useStore(
+    (state) =>
+      (state.computePassport()?.data?.["_address"] as SiteAddress) || {},
+  );
+
+  if (hasMapField && (!longitude || !latitude)) {
+    return (
+      <Card handleSubmit={handleSubmit} isValid>
+        <CardHeader title={title} description={description} />
+        <ErrorSummaryContainer
+          role="status"
+          data-testid="error-summary-invalid-graph"
+        >
+          <Typography variant="h4" component="h2" gutterBottom>
+            Invalid graph
+          </Typography>
+          <Typography variant="body2">
+            Edit this flow so that "List" is positioned after "FindProperty"; an
+            address is required for schemas that include a "map" field.
+          </Typography>
+        </ErrorSummaryContainer>
+      </Card>
+    );
+  }
 
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
@@ -190,7 +194,7 @@ const Root = () => {
       />
       <ErrorWrapper error={rootError}>
         <>
-          {formik.values.userData.map((_, i) =>
+          {formik.values.schemaData.map((_, i) =>
             i === activeIndex ? (
               <ActiveListCard key={`card-${i}`} index={i} />
             ) : (

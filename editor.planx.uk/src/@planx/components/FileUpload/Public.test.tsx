@@ -1,13 +1,15 @@
 import { screen } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import FileUpload from "./Public";
 
 test("renders correctly", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   setup(<FileUpload fn="someKey" handleSubmit={handleSubmit} />);
 
@@ -17,7 +19,7 @@ test("renders correctly", async () => {
 });
 
 test("shows error if user tries to continue before adding files", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <FileUpload fn="elevations" id="elevations" handleSubmit={handleSubmit} />,
@@ -31,7 +33,7 @@ test("shows error if user tries to continue before adding files", async () => {
 });
 
 test("recovers previously submitted files when clicking the back button", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
   const dataField = "data-field";
   const uploadedFile = {
@@ -78,7 +80,7 @@ const dummyFile = {
 };
 
 it("should not have any accessibility violations", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
   const { container } = setup(

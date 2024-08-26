@@ -620,7 +620,7 @@ export const previewStore: StateCreator<
       //   and keep a receipt of the original value in breadcrumbs.data._overrides
       record(originalNodeId, {
         data: {
-          ...omit(breadcrumbs?.[originalNodeId]?.data, fn), 
+          ...omit(breadcrumbs?.[originalNodeId]?.data, fn),
           _overrides: { [fn]: breadcrumbs?.[originalNodeId]?.data?.[fn] },
         },
       });

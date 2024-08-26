@@ -1,14 +1,16 @@
 import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingLabel } from "../shared/testHelpers";
 import DateInput from "./Public";
 
 test("submits a date", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
   const { user } = setup(
@@ -37,7 +39,7 @@ test("submits a date", async () => {
 });
 
 test("recovers previously submitted date when clicking the back button", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
   const { user } = setup(
@@ -63,7 +65,7 @@ test("recovers previously submitted date when clicking the back button", async (
 });
 
 test("recovers previously submitted date when clicking the back button even if a data field is set", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
   const dataField = "data-field";
 
@@ -97,7 +99,7 @@ test("renders", async () => {
 });
 
 test("allows user to type into input field and click continue", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <DateInput title="Enter a date" handleSubmit={handleSubmit} />,
