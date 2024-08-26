@@ -2,11 +2,12 @@
 
 Let's add a `SetValue` component
 
-## Core directory & files 
+## Core directory & files
 
 1. `planx-core/src/types/component.ts`
 
 Add type to enum in `planx-core` repository
+
 ```typescript
 SetValue = 380,
 ```
@@ -23,7 +24,7 @@ export interface SetValue extends MoreInformation {
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): SetValue => ({
   fn: data?.fn || "",
   ...parseMoreInformation(data),
@@ -50,7 +51,7 @@ function SetValueComponent(props: Props) {
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      //... 
+      //...
     </form>
   );
 }
@@ -87,7 +88,7 @@ function SetValueComponent(props: Props) {
 
 1. `src/@planx/components/ui.tsx`
 
-```typescript 
+```typescript
 import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 [TYPES.SetValue]: PlaylistAdd,
 ```
@@ -108,7 +109,7 @@ case TYPES.SetValue:
 4. `src/pages/FlowEditor/components/forms/FormModal.tsx`
 
 ```jsx
-  <option value={TYPES.SetValue}>SetValue</option>
+<option value={TYPES.SetValue}>SetValue</option>
 ```
 
 5. `src/pages/FlowEditor/components/forms/index.ts`
@@ -147,11 +148,10 @@ If/how should this component be formatted in Send data formats such as BOPS?
 ```typescript
 function isTypeForBopsPayload(type?: TYPES) {
   switch (type) {
-    // ... 
+    // ...
     case TYPES.SetValue:
       return false;
     // ...
   }
 }
 ```
-

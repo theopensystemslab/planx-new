@@ -247,7 +247,9 @@ async function fetchPayment({
   govPayPaymentId?: string;
 }): Promise<GovUKPayment | null> {
   if (!govPayPaymentId) return Promise.resolve(null);
-  const paymentURL = `${import.meta.env.VITE_APP_API_URL}/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
+  const paymentURL = `${
+    import.meta.env.VITE_APP_API_URL
+  }/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
   const response = await axios.get<GovUKPayment>(paymentURL);
   return response.data;
 }

@@ -1,15 +1,16 @@
 import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingLabel } from "../shared/testHelpers";
 import AddressInput from "./Public";
 
 test("submits an address", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />,
@@ -41,7 +42,7 @@ test("submits an address", async () => {
 });
 
 test("recovers previously submitted text when clicking the back button", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
   const { user } = setup(
@@ -83,7 +84,7 @@ test("recovers previously submitted text when clicking the back button", async (
 });
 
 test("recovers previously submitted text when clicking the back button even if a data field is set", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
   const dataField = "data-field";
 
@@ -126,40 +127,40 @@ test("recovers previously submitted text when clicking the back button even if a
   });
 });
 
-// it("should not have any accessibility violations on initial load", async () => {
-//   const { container, user } = setup(<AddressInput title="title" />);
-//   await fillInFieldsUsingLabel(user, {
-//     "Address line 1": "Flat 1",
-//     "Address line 2 (optional)": "221b Baker St",
-//     Town: "London",
-//     "County (optional)": "County",
-//     Postcode: "SW1A 2AA",
-//     "Country (optional)": "United Kingdom",
-//   });
-//   const results = await axe(container);
-//   expect(results).toHaveNoViolations();
-// });
+it("should not have any accessibility violations on initial load", async () => {
+  const { container, user } = setup(<AddressInput title="title" />);
+  await fillInFieldsUsingLabel(user, {
+    "Address line 1": "Flat 1",
+    "Address line 2 (optional)": "221b Baker St",
+    Town: "London",
+    "County (optional)": "County",
+    Postcode: "SW1A 2AA",
+    "Country (optional)": "United Kingdom",
+  });
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
 
-// it("should not have any accessibility violations whilst in the error state", async () => {
-//   const { container, user } = setup(<AddressInput title="title" id="testId" />);
+it("should not have any accessibility violations whilst in the error state", async () => {
+  const { container, user } = setup(<AddressInput title="title" id="testId" />);
 
-//   const requiredAddressElements = ["line1", "town", "postcode"];
+  const requiredAddressElements = ["line1", "town", "postcode"];
 
-//   requiredAddressElements.forEach((el) => {
-//     const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId-${el}`);
-//     expect(errorMessage).toBeEmptyDOMElement();
-//   });
+  requiredAddressElements.forEach((el) => {
+    const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId-${el}`);
+    expect(errorMessage).toBeEmptyDOMElement();
+  });
 
-//   // This should trigger multiple ErrorWrappers to display as the form is empty
-//   await user.click(screen.getByTestId("continue-button"));
+  // This should trigger multiple ErrorWrappers to display as the form is empty
+  await user.click(screen.getByTestId("continue-button"));
 
-//   for (const el of requiredAddressElements) {
-//     const errorMessage = await screen.findByTestId(
-//       `${ERROR_MESSAGE}-testId-${el}`,
-//     );
-//     await waitFor(() => expect(errorMessage).not.toBeEmptyDOMElement());
-//   }
+  for (const el of requiredAddressElements) {
+    const errorMessage = await screen.findByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`,
+    );
+    await waitFor(() => expect(errorMessage).not.toBeEmptyDOMElement());
+  }
 
-//   const results = await axe(container);
-//   expect(results).toHaveNoViolations();
-// });
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});

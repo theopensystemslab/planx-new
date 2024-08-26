@@ -4,8 +4,9 @@ import userEvent, {
   PointerEventsCheckLevel,
 } from "@testing-library/user-event";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { Option } from "../shared";
 import { Group } from "./model";
@@ -128,7 +129,7 @@ const groupedOptions: Array<Group<Option>> = [
 
 describe("Checklist Component - Grouped Layout", () => {
   it("answers are submitted in order they were supplied", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <Checklist
@@ -151,7 +152,7 @@ describe("Checklist Component - Grouped Layout", () => {
     });
   });
   it("recovers checkboxes state when clicking the back button", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <Checklist
@@ -175,21 +176,21 @@ describe("Checklist Component - Grouped Layout", () => {
     });
   });
 
-  // it("should not have any accessibility violations", async () => {
-  //   const { container } = setup(
-  //     <Checklist
-  //       allRequired={false}
-  //       description=""
-  //       text="home type?"
-  //       groupedOptions={groupedOptions}
-  //     />,
-  //   );
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+  it("should not have any accessibility violations", async () => {
+    const { container } = setup(
+      <Checklist
+        allRequired={false}
+        description=""
+        text="home type?"
+        groupedOptions={groupedOptions}
+      />,
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 
   it("should be navigable by keyboard", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <Checklist
@@ -246,7 +247,7 @@ describe("Checklist Component - Grouped Layout", () => {
 describe("Checklist Component - Basic & Images Layout", () => {
   [ChecklistLayout.Basic, ChecklistLayout.Images].forEach((type) => {
     it(`answers are submitted in order they were supplied (${ChecklistLayout[type]} layout)`, async () => {
-      const handleSubmit = jest.fn();
+      const handleSubmit = vi.fn();
 
       setup(
         <Checklist
@@ -282,7 +283,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     });
 
     it(`recovers checkboxes state when clicking the back button (${ChecklistLayout[type]} layout)`, async () => {
-      const handleSubmit = jest.fn();
+      const handleSubmit = vi.fn();
 
       const { user } = setup(
         <Checklist
@@ -301,20 +302,22 @@ describe("Checklist Component - Basic & Images Layout", () => {
         answers: ["flat_id", "house_id"],
       });
     });
-    // it(`should not have any accessibility violations (${ChecklistLayout[type]} layout)`, async () => {
-    //   const { container } = setup(
-    //     <Checklist
-    //       allRequired={false}
-    //       description=""
-    //       text="home type?"
-    //       options={options[type]}
-    //     />,
-    //   );
-    //   const results = await axe(container);
-    //   expect(results).toHaveNoViolations();
-    // });
+
+    it(`should not have any accessibility violations (${ChecklistLayout[type]} layout)`, async () => {
+      const { container } = setup(
+        <Checklist
+          allRequired={false}
+          description=""
+          text="home type?"
+          options={options[type]}
+        />,
+      );
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+
     test(`Focus jumps from checkbox to checkbox (${ChecklistLayout[type]} layout)`, async () => {
-      const handleSubmit = jest.fn();
+      const handleSubmit = vi.fn();
 
       const { user } = setup(
         <Checklist

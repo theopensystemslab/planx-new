@@ -190,7 +190,9 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           data-testid="address-autocomplete-web-component"
           postcode={sanitizedPostcode}
           initialAddress={selectedOption?.title || ""}
-          osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL}/proxy/ordnance-survey`}
+          osProxyEndpoint={`${
+            import.meta.env.VITE_APP_API_URL
+          }/proxy/ordnance-survey`}
           arrowStyle="light"
           labelStyle="static"
         />

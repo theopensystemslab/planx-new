@@ -46,7 +46,9 @@ export const previewView = async (req: NaviRequest) => {
 };
 
 const fetchFlattenedFlowData = async (flowId: string): Promise<FlowGraph> => {
-  const url = `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/flatten-data`;
+  const url = `${
+    import.meta.env.VITE_APP_API_URL
+  }/flows/${flowId}/flatten-data`;
   try {
     const { data } = await axios.get<FlowGraph>(url);
     return data;

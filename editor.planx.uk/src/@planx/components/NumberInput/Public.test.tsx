@@ -1,13 +1,14 @@
 import { screen } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import NumberInput from "./Public";
 
 test("renders correctly", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
@@ -22,7 +23,7 @@ test("renders correctly", async () => {
 });
 
 test("allows 0 to be input as a valid number", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
@@ -37,7 +38,7 @@ test("allows 0 to be input as a valid number", async () => {
 });
 
 test("requires a positive number to be input by default", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <NumberInput
@@ -62,7 +63,7 @@ test("requires a positive number to be input by default", async () => {
 });
 
 test("allows negative numbers to be input when toggled on by editor", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <NumberInput
@@ -84,7 +85,7 @@ test("allows negative numbers to be input when toggled on by editor", async () =
 });
 
 test("requires a value before being able to continue", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
@@ -96,7 +97,7 @@ test("requires a value before being able to continue", async () => {
 });
 
 test("recovers previously submitted number when clicking the back button", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
 
   const { user } = setup(
@@ -118,7 +119,7 @@ test("recovers previously submitted number when clicking the back button", async
 });
 
 test("recovers previously submitted number when clicking the back button even if a data field is set", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
   const dataField = "data-field";
 
@@ -141,8 +142,8 @@ test("recovers previously submitted number when clicking the back button even if
   expect(handleSubmit).toHaveBeenCalledWith({ data: { [dataField]: 43 } });
 });
 
-// it("should not have any accessibility violations", async () => {
-//   const { container } = setup(<NumberInput fn="num" title="Numberwang!" />);
-//   const results = await axe(container);
-//   expect(results).toHaveNoViolations();
-// });
+it("should not have any accessibility violations", async () => {
+  const { container } = setup(<NumberInput fn="num" title="Numberwang!" />);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});

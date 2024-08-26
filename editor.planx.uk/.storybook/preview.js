@@ -17,5 +17,5 @@ export const decorators = [
       </ThemeProvider>
     </StyledEngineProvider>
   ),
-  reactNaviDecorator
+  reactNaviDecorator,
 ];

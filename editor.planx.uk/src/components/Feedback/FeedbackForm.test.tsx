@@ -1,7 +1,7 @@
 import React from "react";
-// import { axe, setup } from "testUtils";
 import { setup } from "testUtils";
 import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { FeedbackFormInput } from ".";
 import FeedbackForm from "./FeedbackForm";
@@ -55,17 +55,17 @@ describe("FeedbackForm functionality", () => {
 
 describe("FeedbackForm accessibility tests", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
-  // test("renders inputs with no accessibility violations", async () => {
-  //   const { container } = setup(
-  //     <FeedbackForm
-  //       inputs={mockLabelledInputs}
-  //       handleSubmit={mockHandleSubmit}
-  //     />,
-  //   );
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+  test("renders inputs with no accessibility violations", async () => {
+    const { container } = setup(
+      <FeedbackForm
+        inputs={mockLabelledInputs}
+        handleSubmit={mockHandleSubmit}
+      />,
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });

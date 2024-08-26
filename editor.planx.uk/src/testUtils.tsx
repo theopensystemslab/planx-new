@@ -3,20 +3,10 @@ import { FadeProps, ThemeProvider } from "@mui/material";
 import { render, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
-import { configureAxe } from "jest-axe";
 import React from "react";
-
-import { defaultTheme } from "./theme";
 import { vi } from "vitest";
 
-// export const axe = configureAxe({
-//   rules: {
-//     // Currently, jest-axe does not correctly evaluate this rule due to an issue with jsdom
-//     // https://github.com/dequelabs/axe-core/issues/2587
-//     // To pass this test, non-decorative MUI icons should always use the 'titleAccess' prop
-//     "svg-img-alt": { enabled: false },
-//   },
-// });
+import { defaultTheme } from "./theme";
 
 /**
  * Setup @testing-library/react environment with userEvent
@@ -28,6 +18,15 @@ export const setup = (
   user: userEvent.setup(),
   ...render(<ThemeProvider theme={defaultTheme}>{jsx}</ThemeProvider>),
 });
+
+// export const axe = configureAxe({
+//   rules: {
+//     // Currently, jest-axe does not correctly evaluate this rule due to an issue with jsdom
+//     // https://github.com/dequelabs/axe-core/issues/2587
+//     // To pass this test, non-decorative MUI icons should always use the 'titleAccess' prop
+//     "svg-img-alt": { enabled: false },
+//   },
+// });
 
 /**
  * Mock the MUI Fade component used in @planx/components/shared/Preview/Card.tsx

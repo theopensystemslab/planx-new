@@ -68,7 +68,9 @@ const NotConfigured: React.FC = () => <Close color="error" fontSize="small" />;
 const Configured: React.FC = () => <Done color="success" fontSize="small" />;
 
 const TeamData: React.FC<TeamData> = ({ data }) => {
-  const a4Endpoint = `${import.meta.env.VITE_APP_API_URL}/gis/${data.slug}/article4-schema`;
+  const a4Endpoint = `${import.meta.env.VITE_APP_API_URL}/gis/${
+    data.slug
+  }/article4-schema`;
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data: a4Check, isValidating } = useSWR(
     () => (data.slug ? a4Endpoint : null),

@@ -2,6 +2,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { screen } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
+import { vi } from "vitest";
 
 import { presentationalPropsMock } from "./mocks/propsMock";
 import PropertyInformation, {
@@ -11,7 +12,7 @@ import PropertyInformation, {
 
 const defaultPresentationalProps: PresentationalProps = {
   ...presentationalPropsMock,
-  overrideAnswer: jest.fn(),
+  overrideAnswer: vi.fn(),
 };
 
 test("renders a warning for editors if address data is not in state", async () => {
@@ -28,7 +29,7 @@ test("renders a warning for editors if address data is not in state", async () =
 });
 
 test("renders correctly when property override is enabled", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <MockedProvider>
@@ -48,7 +49,7 @@ test("renders correctly when property override is enabled", async () => {
 });
 
 test("renders correctly when property override is toggled off", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <MockedProvider>

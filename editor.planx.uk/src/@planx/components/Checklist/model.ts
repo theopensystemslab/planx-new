@@ -24,7 +24,7 @@ interface ChecklistExpandableProps {
 }
 
 export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps
+  checklist: ChecklistExpandableProps,
 ): ChecklistExpandableProps => {
   if (checklist.options !== undefined && checklist.options.length > 0) {
     return {
@@ -85,7 +85,7 @@ export const getLayout = ({
 }): ChecklistLayout => {
   const hasImages = options?.some((o) => o.data.img);
   if (hasImages) return ChecklistLayout.Images;
-  
+
   if (groupedOptions) return ChecklistLayout.Grouped;
 
   return ChecklistLayout.Basic;
