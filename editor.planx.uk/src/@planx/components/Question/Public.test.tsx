@@ -1,6 +1,8 @@
 import { waitFor } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import Question, { IQuestion, QuestionLayout } from "./Public";
 
@@ -54,7 +56,7 @@ describe("Question component", () => {
   ].forEach((type) => {
     describe(`${QuestionLayout[type]} layout`, () => {
       it(`renders the layout correctly`, async () => {
-        const handleSubmit = jest.fn();
+        const handleSubmit = vi.fn();
 
         const { user, getByTestId, getByRole, getByText } = setup(
           <Question
@@ -78,7 +80,7 @@ describe("Question component", () => {
       });
 
       it(`should display previously selected answer on back or change`, async () => {
-        const handleSubmit = jest.fn();
+        const handleSubmit = vi.fn();
         const { user, getByRole, getByTestId } = setup(
           <Question
             text="Best food"
@@ -108,7 +110,7 @@ describe("Question component", () => {
       });
 
       it(`should not have any accessibility violations`, async () => {
-        const handleSubmit = jest.fn();
+        const handleSubmit = vi.fn();
         const { container } = setup(
           <Question
             text="Best food"
@@ -121,7 +123,7 @@ describe("Question component", () => {
       });
 
       it(`should display an error message if no option is selected`, async () => {
-        const handleSubmit = jest.fn();
+        const handleSubmit = vi.fn();
         const errorMessage = /Select your answer before continuing/;
 
         const { user, getByTestId, getByText, queryByText } = setup(

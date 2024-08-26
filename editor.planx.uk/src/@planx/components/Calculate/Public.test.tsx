@@ -1,11 +1,12 @@
 import React from "react";
 import { setup } from "testUtils";
+import { vi } from "vitest";
 
 import Calculate from "./Public";
 
 describe("Calculate component", () => {
   it("renders correctly", () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     setup(
       <Calculate
         output="testGroup"

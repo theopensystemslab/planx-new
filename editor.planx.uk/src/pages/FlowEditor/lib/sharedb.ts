@@ -4,7 +4,7 @@ import sharedb from "sharedb/lib/client";
 import type { Socket } from "sharedb/lib/sharedb";
 
 const socket = new ReconnectingWebSocket(
-  process.env.REACT_APP_SHAREDB_URL || "",
+  import.meta.env.VITE_APP_SHAREDB_URL || "",
 );
 
 const connection = new sharedb.Connection(socket as unknown as Socket);

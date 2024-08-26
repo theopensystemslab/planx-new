@@ -12,14 +12,11 @@ test("modifyDeep helper", () => {
    * the value unchanged at that level but keep traversing downwards to see if there is something to change.
    */
   expect(
-    modifyDeep((val) =>{
+    modifyDeep((val) => {
       if (typeof val !== "number") return null;
       const isEven = val % 2 === 0;
-      return isEven
-        ? val + 1 
-        : val;
-    }
-    )({
+      return isEven ? val + 1 : val;
+    })({
       a: { c: { val: 2 } },
       b: { val: 3 },
       d: [1, 2, 3, 4],

@@ -1,9 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = [
-  "SEARCH",
-  "TREES",
-  "ADD_NEW_EDITOR",
-] as const;
+const AVAILABLE_FEATURE_FLAGS = ["SEARCH", "TREES", "ADD_NEW_EDITOR"] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
@@ -66,7 +62,7 @@ export const hasFeatureFlag = (featureFlag: FeatureFlag) =>
   has: hasFeatureFlag,
 };
 
-if (process.env.REACT_APP_ENV !== "test") {
+if (import.meta.env.VITE_APP_ENV !== "test") {
   // log current flag status on page load
   console.debug(
     activeFeatureFlags.size > 0

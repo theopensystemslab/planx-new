@@ -6,7 +6,9 @@ import {
 } from "lib/feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import Feedback from "./index";
 
@@ -19,17 +21,17 @@ const mockedBreadcrumbs: Breadcrumbs = {
   },
 };
 
-jest.mock("lib/feedback", () => ({
-  getInternalFeedbackMetadata: jest.fn(),
-  insertFeedbackMutation: jest.fn(),
+vi.mock("lib/feedback", () => ({
+  getInternalFeedbackMetadata: vi.fn(),
+  insertFeedbackMutation: vi.fn(),
 }));
 
-const scrollIntoViewMock = jest.fn();
+const scrollIntoViewMock = vi.fn();
 window.Element.prototype.scrollIntoView = scrollIntoViewMock;
 
 describe("Feedback component triage journey", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Initial render shows the FeedbackPhaseBannerView but doesn't scroll into view", () => {
@@ -196,7 +198,7 @@ describe("Feedback component triage journey", () => {
 
 describe("Feedback component 'Report an issue with this page journey'", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Selecting 'Report an issue with this page journey' directly scrolls the issue form variation into view", async () => {
@@ -241,7 +243,7 @@ describe("Feedback component 'Report an issue with this page journey'", () => {
 
 describe("Feedback view changes with breadcrumbs", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("If breadcrumbs change and the view was thank you it resets to banner", async () => {
@@ -291,7 +293,7 @@ describe("Feedback view changes with breadcrumbs", () => {
 
 describe("Feedback component accessibility", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Initial load should have no accessibility violations", async () => {

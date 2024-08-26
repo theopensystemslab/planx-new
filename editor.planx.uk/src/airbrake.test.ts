@@ -1,40 +1,44 @@
 import { Notifier } from "@airbrake/browser";
+import { MockInstance, vi } from "vitest";
 
-jest.mock("@airbrake/browser");
+vi.mock("@airbrake/browser");
+
+// Instantiate the logger after mocks and env variables set
+const instantiateLogger = async () => {
+  const { logger } = await import("./airbrake");
+  return logger;
+};
 
 describe("logger", () => {
-  const originalEnv = process.env;
-  let logSpy: jest.SpyInstance;
-  let windowSpy: jest.SpyInstance;
+  let logSpy: MockInstance;
 
   beforeEach(() => {
-    process.env = originalEnv;
-    logSpy = jest.spyOn(console, "log").mockImplementation();
-    windowSpy = jest.spyOn(window, "window", "get");
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.resetModules();
   });
 
   afterEach(() => {
-    jest.resetModules();
-    (Notifier as any).mockRestore();
     logSpy.mockRestore();
-    windowSpy.mockRestore();
+    vi.mocked(Notifier).mockClear();
   });
 
   afterAll(() => {
-    process.env = originalEnv;
+    vi.unstubAllEnvs();
   });
 
-  test("Notifier is configured in a production-like environment", () => {
-    windowSpy.mockImplementation(() => ({
-      location: { host: "editor.planx.uk" },
-    }));
-    process.env = Object.assign({
-      REACT_APP_ENV: "production",
-      REACT_APP_AIRBRAKE_PROJECT_ID: "1",
-      REACT_APP_AIRBRAKE_PROJECT_KEY: "a",
+  test("Notifier is configured in a production-like environment", async () => {
+    Object.defineProperty(window, "location", {
+      value: { host: "editor.planx.uk" },
+      writable: true,
     });
-    // instantiate the logger after mocks and env variables set
-    const { logger } = require("./airbrake");
+
+    vi.stubEnv("VITE_APP_ENV", "production");
+    vi.stubEnv("VITE_APP_AIRBRAKE_PROJECT_ID", "1");
+    vi.stubEnv("VITE_APP_AIRBRAKE_PROJECT_KEY", "a");
+
+    const logger = await instantiateLogger();
+
     expect(Notifier).toHaveBeenCalledWith({
       projectId: 1,
       projectKey: "a",
@@ -46,22 +50,24 @@ describe("logger", () => {
     });
   });
 
-  test("Notifier is not configured for development environments", () => {
-    // instantiate the logger after env variables set
-    const { logger } = require("./airbrake");
+  test("Notifier is not configured for development environments", async () => {
+    vi.stubEnv("VITE_APP_ENV", "development");
+
+    const logger = await instantiateLogger();
+
     expect(Notifier).not.toHaveBeenCalled();
+
     logger.notify({ some: "value" });
     expect(logSpy).toHaveBeenCalledWith({ some: "value" });
   });
 
-  test("logs are suppressed when SUPPRESS_LOGS is set", () => {
-    process.env = Object.assign({
-      SUPPRESS_LOGS: "true",
-    });
-    // instantiate the logger after env variables set
-    const { logger } = require("./airbrake");
+  test("logs are suppressed when SUPPRESS_LOGS is set", async () => {
+    vi.stubEnv("SUPPRESS_LOGS", "true");
+    const logger = await instantiateLogger();
+
     expect(Notifier).not.toHaveBeenCalled();
+
     logger.notify({ some: "value" });
-    expect(logSpy).not.toHaveBeenCalledWith({ some: "value" });
+    expect(logSpy).not.toHaveBeenCalled();
   });
 });

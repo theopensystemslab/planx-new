@@ -11,7 +11,7 @@ export async function setupTeamMembersScreen() {
   const { user } = setup(
     <DndProvider backend={HTML5Backend}>
       <TeamMembers teamMembersByRole={exampleTeamMembersData} />
-    </DndProvider>
+    </DndProvider>,
   );
   await screen.findByText("Team editors");
   return user;

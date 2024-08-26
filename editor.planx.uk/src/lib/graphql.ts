@@ -38,7 +38,7 @@ const customFetch = async (
 };
 
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_HASURA_URL,
+  uri: import.meta.env.VITE_APP_HASURA_URL,
   fetch: customFetch,
 });
 
@@ -62,7 +62,7 @@ const authHttpLink = authMiddleware.concat(httpLink);
  * Authenticated web socket connection - used for GraphQL subscriptions
  */
 const authWsLink = new WebSocketLink({
-  uri: process.env.REACT_APP_HASURA_WEBSOCKET!,
+  uri: import.meta.env.VITE_APP_HASURA_WEBSOCKET!,
   options: {
     reconnect: true,
     connectionParams: async () => {
@@ -94,7 +94,7 @@ const splitLink = split(
 );
 
 const publicHttpLink = createHttpLink({
-  uri: process.env.REACT_APP_HASURA_URL,
+  uri: import.meta.env.VITE_APP_HASURA_URL,
   fetch: customFetch,
   headers: { "x-hasura-role": "public" },
 });

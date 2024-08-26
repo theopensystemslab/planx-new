@@ -1,7 +1,9 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import {
   breadcrumbsWithEmptySections,
@@ -33,8 +35,8 @@ beforeAll(() => (initialState = getState()));
 
 describe("Simple flow", () => {
   it("renders correctly", async () => {
-    const handleSubmit = jest.fn();
-    const changeAnswer = jest.fn();
+    const handleSubmit = vi.fn();
+    const changeAnswer = vi.fn();
 
     const { user } = setup(
       <Review
@@ -57,8 +59,8 @@ describe("Simple flow", () => {
   });
 
   it("doesn't return undefined when multiple nodes are filled", async () => {
-    const handleSubmit = jest.fn();
-    const changeAnswer = jest.fn();
+    const handleSubmit = vi.fn();
+    const changeAnswer = vi.fn();
 
     setup(
       <Review
@@ -80,7 +82,7 @@ describe("Simple flow", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const changeAnswer = jest.fn();
+    const changeAnswer = vi.fn();
 
     const { container } = setup(
       <Review
@@ -98,8 +100,8 @@ describe("Simple flow", () => {
   });
 
   it("opens a 'confirm' dialog on change", async () => {
-    const handleSubmit = jest.fn();
-    const changeAnswer = jest.fn();
+    const handleSubmit = vi.fn();
+    const changeAnswer = vi.fn();
 
     setup(
       <Review
@@ -133,8 +135,8 @@ describe("Simple flow", () => {
   });
 
   it("selecting 'no' closes the dialog and does not make a change", async () => {
-    const handleSubmit = jest.fn();
-    const changeAnswer = jest.fn();
+    const handleSubmit = vi.fn();
+    const changeAnswer = vi.fn();
 
     setup(
       <Review
@@ -168,8 +170,8 @@ describe("Simple flow", () => {
   });
 
   it("selecting 'yes' closes the dialog and does make change", async () => {
-    const handleSubmit = jest.fn();
-    const changeAnswer = jest.fn();
+    const handleSubmit = vi.fn();
+    const changeAnswer = vi.fn();
 
     setup(
       <Review
@@ -206,7 +208,7 @@ describe("Simple flow", () => {
 describe("File uploads", () => {
   beforeEach(() => {
     global.URL = {
-      createObjectURL: jest.fn(() => mockLink),
+      createObjectURL: vi.fn(() => mockLink),
     } as any;
   });
 
@@ -261,7 +263,7 @@ describe("Flow with sections", () => {
   afterEach(() => act(() => setState(initialState)));
 
   it("renders correctly", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     const { user } = setup(
       <Review
@@ -270,7 +272,7 @@ describe("Flow with sections", () => {
         flow={flowWithSections}
         breadcrumbs={breadcrumbsWithSections}
         passport={passportWithSections}
-        changeAnswer={jest.fn()}
+        changeAnswer={vi.fn()}
         handleSubmit={handleSubmit}
         showChangeButton={true}
       />,
@@ -297,8 +299,8 @@ describe("Flow with sections", () => {
         flow={flowWithSections}
         breadcrumbs={breadcrumbsWithSections}
         passport={passportWithSections}
-        changeAnswer={jest.fn()}
-        handleSubmit={jest.fn()}
+        changeAnswer={vi.fn()}
+        handleSubmit={vi.fn()}
         showChangeButton={true}
       />,
     );
@@ -328,8 +330,8 @@ describe("Flow with empty sections", () => {
         flow={flowWithEmptySections}
         breadcrumbs={breadcrumbsWithEmptySections}
         passport={passportWithEmptySections}
-        changeAnswer={jest.fn()}
-        handleSubmit={jest.fn()}
+        changeAnswer={vi.fn()}
+        handleSubmit={vi.fn()}
         showChangeButton={true}
       />,
     );
@@ -361,8 +363,8 @@ describe("Flow with empty sections", () => {
         flow={flowWithEmptySections}
         breadcrumbs={breadcrumbsWithEmptySections}
         passport={passportWithEmptySections}
-        changeAnswer={jest.fn()}
-        handleSubmit={jest.fn()}
+        changeAnswer={vi.fn()}
+        handleSubmit={vi.fn()}
         showChangeButton={true}
       />,
     );

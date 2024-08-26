@@ -47,11 +47,14 @@ function Component(props: PublicProps<PropertyInformation>) {
       overrideAnswer={overrideAnswer}
       handleSubmit={() => {
         // If the user changed their property type, they'll already have a previous PropertyInformation breadcrumb that set `_overrides`
-        const hasOverrodeAnswer = passport.data?.["_overrides"]?.["property.type"];
+        const hasOverrodeAnswer =
+          passport.data?.["_overrides"]?.["property.type"];
         const passportData = {
-          "propertyInformation.action": hasOverrodeAnswer ? "Changed the property type" : "Accepted the property type",
+          "propertyInformation.action": hasOverrodeAnswer
+            ? "Changed the property type"
+            : "Accepted the property type",
         };
-        
+
         props.handleSubmit?.({
           data: passportData,
         });
@@ -149,7 +152,9 @@ export function Presentational(props: PresentationalProps) {
           zoom={19.5}
           latitude={address?.latitude}
           longitude={address?.longitude}
-          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+          osProxyEndpoint={`${
+            import.meta.env.VITE_APP_API_URL
+          }/proxy/ordnance-survey`}
           hideResetControl
           staticMode
           showCentreMarker

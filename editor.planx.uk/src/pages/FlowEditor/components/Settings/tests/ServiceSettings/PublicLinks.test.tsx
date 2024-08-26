@@ -1,5 +1,6 @@
 import { screen } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { vi } from "vitest";
 
 import setupServiceSettingsScreen, {
   mockWindowLocationObject,
@@ -94,9 +95,9 @@ describe("A team with a subdomain has an online, published service.", () => {
       flowStatus: "online",
     });
     // mock navigator.clipboard fn
-    jest
-      .spyOn(navigator.clipboard, "writeText")
-      .mockImplementation(() => Promise.resolve());
+    vi.spyOn(navigator.clipboard, "writeText").mockImplementation(() =>
+      Promise.resolve(),
+    );
   });
 
   it("has a public link with the subdomain url in an <a> tag", async () => {
@@ -120,7 +121,7 @@ describe("A team with a subdomain has an online, published service.", () => {
 
     user.click(copyButton);
 
-    expect(await screen.findByText("copied")).toBeVisible();
+    expect((await screen.findAllByText("copied"))[0]).toBeVisible();
     expect(navigator.clipboard.writeText).toBeCalledWith(
       `https://${teamDomain}/${flowSlug}`,
     );
@@ -156,9 +157,9 @@ describe("A team without a subdomain has an offline, published service.", () => 
     });
 
     // Mocking window.location.origin
-    jest
-      .spyOn(window, "location", "get")
-      .mockReturnValue(mockWindowLocationObject);
+    vi.spyOn(window, "location", "get").mockReturnValue(
+      mockWindowLocationObject,
+    );
 
     // render the <ServiceSettings/> comp
     setupServiceSettingsScreen();
@@ -180,9 +181,9 @@ describe("A team without a subdomain has an online, unpublished service.", () =>
     });
 
     // Mocking window.location.origin
-    jest
-      .spyOn(window, "location", "get")
-      .mockReturnValue(mockWindowLocationObject);
+    vi.spyOn(window, "location", "get").mockReturnValue(
+      mockWindowLocationObject,
+    );
 
     // render the <ServiceSettings/> comp
     setupServiceSettingsScreen();
@@ -203,14 +204,14 @@ describe("A team without a subdomain has an online, published service.", () => {
       isFlowPublished: true,
     });
     // Mocking window.location.origin
-    jest
-      .spyOn(window, "location", "get")
-      .mockReturnValue(mockWindowLocationObject);
+    vi.spyOn(window, "location", "get").mockReturnValue(
+      mockWindowLocationObject,
+    );
 
     // mock navigator.clipboard fn
-    jest
-      .spyOn(navigator.clipboard, "writeText")
-      .mockImplementation(() => Promise.resolve());
+    vi.spyOn(navigator.clipboard, "writeText").mockImplementation(() =>
+      Promise.resolve(),
+    );
   });
 
   it("has a public link with the subdomain url in an <a> tag", async () => {
@@ -231,7 +232,7 @@ describe("A team without a subdomain has an online, published service.", () => {
 
     user.click(copyButton);
 
-    expect(await screen.findByText("copied")).toBeVisible();
+    expect((await screen.findAllByText("copied"))[0]).toBeVisible();
     expect(navigator.clipboard.writeText).toBeCalledWith(publishedUrl);
   });
 });
@@ -246,9 +247,9 @@ describe("A team without a subdomain has an offline, unpublished service.", () =
     });
 
     // Mocking window.location.origin
-    jest
-      .spyOn(window, "location", "get")
-      .mockReturnValue(mockWindowLocationObject);
+    vi.spyOn(window, "location", "get").mockReturnValue(
+      mockWindowLocationObject,
+    );
 
     // render the <ServiceSettings/> comp
     setupServiceSettingsScreen();
