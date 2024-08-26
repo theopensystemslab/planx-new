@@ -1,4 +1,3 @@
-import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Feature } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -26,12 +25,6 @@ function MapAndLabelComponent(props: Props) {
   let count = 0;
 
   useEffect(() => {
-    const areaChangeHandler = ({ detail }: { detail: string }) => {
-      const numberString = detail.split(" ")[0];
-      const area = Number(numberString);
-      setArea(area);
-    };
-
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         count++;
@@ -49,12 +42,9 @@ function MapAndLabelComponent(props: Props) {
     };
 
     const map: any = document.getElementById("draw-boundary-map");
-
-    map?.addEventListener("areaChange", areaChangeHandler);
     map?.addEventListener("geojsonChange", geojsonChangeHandler);
 
     return function cleanup() {
-      map?.removeEventListener("areaChange", areaChangeHandler);
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
   }, [objectArray, boundary]);
@@ -79,20 +69,20 @@ function MapAndLabelComponent(props: Props) {
           {/* @ts-ignore */}
           <my-map
             id="draw-boundary-map"
+            zoom={16}
             drawMode
             drawPointer="crosshair"
             drawGeojsonData={JSON.stringify(boundary)}
-            zoom={16}
-            drawFillColor={alpha(props.drawColor, 0.1)}
             drawColor={props.drawColor}
-            drawPointColor={props.drawColor}
             drawType={props.drawType}
             clipGeojsonData={
               teamSettings?.boundaryBBox &&
               JSON.stringify(teamSettings?.boundaryBBox)
             }
+            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+            osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+            collapseAttributions={window.innerWidth < 500 ? true : undefined}
           />
-
           <MapFooter>
             <Typography variant="body1">
               The property boundary you have drawn is{" "}

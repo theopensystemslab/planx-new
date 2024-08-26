@@ -500,6 +500,7 @@ function DrawBoundary(props: ComponentProps) {
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
+              osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
               collapseAttributions
             />
           </>
