@@ -79,7 +79,9 @@ function MapAndLabelComponent(props: Props) {
               teamSettings?.boundaryBBox &&
               JSON.stringify(teamSettings?.boundaryBBox)
             }
-            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+            osProxyEndpoint={`${
+              import.meta.env.VITE_APP_API_URL
+            }/proxy/ordnance-survey`}
             osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
             collapseAttributions={window.innerWidth < 500 ? true : undefined}
           />

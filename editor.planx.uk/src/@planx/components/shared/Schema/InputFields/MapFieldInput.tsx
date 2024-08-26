@@ -61,7 +61,9 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
             maxZoom={23}
             latitude={Number(passport?.data?._address?.latitude)}
             longitude={Number(passport?.data?._address?.longitude)}
-            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+            osProxyEndpoint={`${
+              import.meta.env.VITE_APP_API_URL
+            }/proxy/ordnance-survey`}
             osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
             clipGeojsonData={
               teamSettings?.boundaryBBox &&
