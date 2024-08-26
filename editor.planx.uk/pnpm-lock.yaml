@@ -41,8 +41,8 @@ dependencies:
     specifier: ^5.15.11
     version: 5.15.11(@types/react@18.2.45)(react@18.2.0)
   '@opensystemslab/map':
-    specifier: ^0.8.3
-    version: 0.8.3
+    specifier: 1.0.0-alpha.0
+    version: 1.0.0-alpha.0
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#6b2fd26
     version: github.com/theopensystemslab/planx-core/6b2fd26(@types/react@18.2.45)
@@ -5662,10 +5662,10 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@0.8.3:
-    resolution: {integrity: sha512-4WS4Cow27wmffp7KLtSB/m9HtXz0UDCXJXhq9kz152ofSretWgAl7+WFbqC+CeoVx+CV7ETmbFdjoJ3yZQzJ0Q==}
+  /@opensystemslab/map@1.0.0-alpha.0:
+    resolution: {integrity: sha512-zOAo9mz4g8VOqd6Kp4Fxf4a1uCTPBYqGLLhdD/7QJjRBZN5kWxYMhymiteFPE0V5afEIPyI4nnWS2Q2RB9JnDQ==}
     dependencies:
-      '@turf/union': 6.5.0
+      '@turf/union': 7.1.0
       accessible-autocomplete: 2.0.4
       file-saver: 2.0.5
       govuk-frontend: 5.5.0
@@ -5676,7 +5676,7 @@ packages:
       ol-mapbox-style: 12.3.5(ol@9.2.4)
       postcode: 5.1.0
       proj4: 2.12.0
-      rambda: 8.6.0
+      rambda: 9.3.0
     dev: false
 
   /@petamoriken/float16@3.8.7:
@@ -8343,10 +8343,6 @@ packages:
       tslib: 2.6.3
     dev: false
 
-  /@turf/helpers@6.5.0:
-    resolution: {integrity: sha512-VbI1dV5bLFzohYYdgqwikdMVpe7pJ9X3E+dlr425wa2/sMJqYDhTO++ec38/pcPvPE6oD9WEEeU3Xu3gza+VPw==}
-    dev: false
-
   /@turf/helpers@7.0.0:
     resolution: {integrity: sha512-vwZvxRuyjGpGXvhXSbT9mX6FK92dBMLWbMbDJ/MXQUPx17ReVPFc+6N6IcxAzZfkiCnqy7vpuq0c+/TTrQxIiA==}
     dependencies:
@@ -8359,12 +8355,6 @@ packages:
     dependencies:
       '@types/geojson': 7946.0.14
       tslib: 2.6.3
-    dev: false
-
-  /@turf/invariant@6.5.0:
-    resolution: {integrity: sha512-Wv8PRNCtPD31UVbdJE/KVAWKe7l6US+lJItRR/HOEW3eh+U/JwRCSUl/KZ7bmjM/C+zLNoreM2TU6OoLACs4eg==}
-    dependencies:
-      '@turf/helpers': 6.5.0
     dev: false
 
   /@turf/jsts@2.7.1:
@@ -8390,12 +8380,14 @@ packages:
       tslib: 2.6.3
     dev: false
 
-  /@turf/union@6.5.0:
-    resolution: {integrity: sha512-igYWCwP/f0RFHIlC2c0SKDuM/ObBaqSljI3IdV/x71805QbIvY/BYGcJdyNcgEA6cylIGl/0VSlIbpJHZ9ldhw==}
+  /@turf/union@7.1.0:
+    resolution: {integrity: sha512-7VI8jONdBg9qmbfNlLQycPr93l5aU9HGMgWI9M6pb4ERuU2+p8KgffCgs2NyMtP2HxPrKSybzj31g7bnbEKofQ==}
     dependencies:
-      '@turf/helpers': 6.5.0
-      '@turf/invariant': 6.5.0
+      '@turf/helpers': 7.1.0
+      '@turf/meta': 7.1.0
+      '@types/geojson': 7946.0.14
       polygon-clipping: 0.15.7
+      tslib: 2.6.3
     dev: false
 
   /@types/aria-query@5.0.4:
@@ -18124,8 +18116,8 @@ packages:
     dependencies:
       performance-now: 2.1.0
 
-  /rambda@8.6.0:
-    resolution: {integrity: sha512-Ax+/bAcV2h4wINXx6wm0792G5uXZAl78rzhei+FqmHezg45vbeTUyDAmDNbSdjNOL6LGN8AUEvzaYD7oO5eYrw==}
+  /rambda@9.3.0:
+    resolution: {integrity: sha512-cl/7DCCKNxmsbc0dXZTJTY08rvDdzLhVfE6kPBson1fWzDapLzv0RKSzjpmAqP53fkQqAvq05gpUVHTrUNsuxg==}
     dev: false
 
   /ramda@0.29.0:
