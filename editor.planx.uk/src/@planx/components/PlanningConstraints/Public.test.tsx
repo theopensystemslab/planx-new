@@ -1,6 +1,5 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import * as SWR from "swr";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -9,19 +8,21 @@ import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
 import PlanningConstraints from "./Public";
 
-vi.spyOn(SWR, "default").mockImplementation((url: any) => {
-  const isGISRequest = url()?.startsWith(
-    `${import.meta.env.VITE_APP_API_URL}/gis/`,
-  );
-  const isRoadsRequest = url()?.startsWith(
-    `${import.meta.env.VITE_APP_API_URL}/roads/`,
-  );
+vi.mock("swr", () => ({
+  default: vi.fn((url: any) => {
+    const isGISRequest = url()?.startsWith(
+      `${import.meta.env.VITE_APP_API_URL}/gis/`,
+    );
+    const isRoadsRequest = url()?.startsWith(
+      `${import.meta.env.VITE_APP_API_URL}/roads/`,
+    );
 
-  if (isGISRequest) return { data: digitalLandResponseMock } as any;
-  if (isRoadsRequest) return { data: classifiedRoadsResponseMock } as any;
+    if (isGISRequest) return { data: digitalLandResponseMock } as any;
+    if (isRoadsRequest) return { data: classifiedRoadsResponseMock } as any;
 
-  return { data: null };
-});
+    return { data: null };
+  }),
+}));
 
 it("renders correctly", async () => {
   const handleSubmit = vi.fn();
