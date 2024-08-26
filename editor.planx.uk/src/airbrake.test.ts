@@ -1,68 +1,73 @@
-// import { Notifier } from "@airbrake/browser";
-import { vi } from "vitest";
+import { Notifier } from "@airbrake/browser";
+import { MockInstance, vi } from "vitest";
 
 vi.mock("@airbrake/browser");
 
-// describe("logger", () => {
-//   const originalEnv = import.meta.env;
-//   let logSpy: vi.SpyInstance;
-//   let windowSpy: vi.SpyInstance;
+// Instantiate the logger after mocks and env variables set
+const instantiateLogger = async () => {
+  const { logger } = await import("./airbrake");
+  return logger;
+};
 
-//   beforeEach(() => {
-//     process.env = originalEnv;
-//     logSpy = vi.spyOn(console, "log").mockImplementation();
-//     windowSpy = vi.spyOn(window, "window", "get");
-//   });
+describe("logger", () => {
+  let logSpy: MockInstance;
 
-//   afterEach(() => {
-//     vi.resetModules();
-//     (Notifier as any).mockRestore();
-//     logSpy.mockRestore();
-//     windowSpy.mockRestore();
-//   });
+  beforeEach(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.resetModules();
+  });
 
-//   afterAll(() => {
-//     process.env = originalEnv;
-//   });
+  afterEach(() => {
+    logSpy.mockRestore();
+    vi.mocked(Notifier).mockClear();
+  });
 
-//   test("Notifier is configured in a production-like environment", () => {
-//     windowSpy.mockImplementation(() => ({
-//       location: { host: "editor.planx.uk" },
-//     }));
-//     process.env = Object.assign({
-//       VITE_APP_ENV: "production",
-//       VITE_APP_AIRBRAKE_PROJECT_ID: "1",
-//       VITE_APP_AIRBRAKE_PROJECT_KEY: "a",
-//     });
-//     // instantiate the logger after mocks and env variables set
-//     const { logger } = require("./airbrake");
-//     expect(Notifier).toHaveBeenCalledWith({
-//       projectId: 1,
-//       projectKey: "a",
-//       environment: "production",
-//     });
-//     logger.notify({ some: "value" });
-//     expect(Notifier.prototype.notify).toHaveBeenCalledWith({
-//       some: "value",
-//     });
-//   });
+  afterAll(() => {
+    vi.unstubAllEnvs();
+  });
 
-//   test("Notifier is not configured for development environments", () => {
-//     // instantiate the logger after env variables set
-//     const { logger } = require("./airbrake");
-//     expect(Notifier).not.toHaveBeenCalled();
-//     logger.notify({ some: "value" });
-//     expect(logSpy).toHaveBeenCalledWith({ some: "value" });
-//   });
+  test("Notifier is configured in a production-like environment", async () => {
+    Object.defineProperty(window, "location", {
+      value: { host: "editor.planx.uk" },
+      writable: true,
+    });
 
-//   test("logs are suppressed when SUPPRESS_LOGS is set", () => {
-//     process.env = Object.assign({
-//       SUPPRESS_LOGS: "true",
-//     });
-//     // instantiate the logger after env variables set
-//     const { logger } = require("./airbrake");
-//     expect(Notifier).not.toHaveBeenCalled();
-//     logger.notify({ some: "value" });
-//     expect(logSpy).not.toHaveBeenCalledWith({ some: "value" });
-//   });
-// });
+    vi.stubEnv("VITE_APP_ENV", "production");
+    vi.stubEnv("VITE_APP_AIRBRAKE_PROJECT_ID", "1");
+    vi.stubEnv("VITE_APP_AIRBRAKE_PROJECT_KEY", "a");
+
+    const logger = await instantiateLogger();
+
+    expect(Notifier).toHaveBeenCalledWith({
+      projectId: 1,
+      projectKey: "a",
+      environment: "production",
+    });
+    logger.notify({ some: "value" });
+    expect(Notifier.prototype.notify).toHaveBeenCalledWith({
+      some: "value",
+    });
+  });
+
+  test("Notifier is not configured for development environments", async () => {
+    vi.stubEnv("VITE_APP_ENV", "development");
+
+    const logger = await instantiateLogger();
+
+    expect(Notifier).not.toHaveBeenCalled();
+
+    logger.notify({ some: "value" });
+    expect(logSpy).toHaveBeenCalledWith({ some: "value" });
+  });
+
+  test("logs are suppressed when SUPPRESS_LOGS is set", async () => {
+    vi.stubEnv("SUPPRESS_LOGS", "true");
+    const logger = await instantiateLogger();
+
+    expect(Notifier).not.toHaveBeenCalled();
+
+    logger.notify({ some: "value" });
+    expect(logSpy).not.toHaveBeenCalled();
+  });
+});
