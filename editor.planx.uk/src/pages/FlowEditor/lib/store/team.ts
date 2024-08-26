@@ -149,6 +149,6 @@ export const teamStore: StateCreator<
   },
 
   setTeamMembers: async (teamMembers: TeamMember[]) => {
-    set((state) => ({ teamMembers: [...state.teamMembers, ...teamMembers] }));
+    set(() => ({ teamMembers }));
   },
 });

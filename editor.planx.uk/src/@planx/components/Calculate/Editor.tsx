@@ -44,8 +44,8 @@ export default function Component(props: Props) {
   });
 
   /**
-  * When the formula is updated, remove any defaults which are no longer used
-  */
+   * When the formula is updated, remove any defaults which are no longer used
+   */
   const removeUnusedDefaults = (variables: Set<string>) => {
     const defaultKeys = Object.keys(formik.values.defaults);
 
@@ -58,7 +58,7 @@ export default function Component(props: Props) {
 
   const variables = React.useMemo(() => {
     try {
-      const variables = getVariables(formik.values.formula)
+      const variables = getVariables(formik.values.formula);
       removeUnusedDefaults(variables);
       return [...variables];
     } catch (e) {

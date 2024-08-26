@@ -4,11 +4,9 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { act } from "react-dom/test-utils";
 import { setup } from "testUtils";
+import { vi } from "vitest";
 
 import DateInputComponent from "./Editor";
-
-// double regular timeout for tests in this file, as they regularly timeout on CI
-jest.setTimeout(10000);
 
 const minError = "Min must be less than max";
 const maxError = "Max must be greater than min";
@@ -25,7 +23,7 @@ describe("DateInputComponent - Editor Modal", () => {
   });
 
   it("throws an error for incompatible date values", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
@@ -57,7 +55,7 @@ describe("DateInputComponent - Editor Modal", () => {
 
   it("does not show errors if min is less than max", async () => {
     const promise = Promise.resolve();
-    const handleSubmit = jest.fn(() => promise);
+    const handleSubmit = vi.fn(() => promise);
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
@@ -88,7 +86,7 @@ describe("DateInputComponent - Editor Modal", () => {
 
   it("does not show an error if user deletes a date", async () => {
     const promise = Promise.resolve();
-    const handleSubmit = jest.fn(() => promise);
+    const handleSubmit = vi.fn(() => promise);
     const node = { data: { min: "1900-02-13", max: "2000-12-14" } };
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>

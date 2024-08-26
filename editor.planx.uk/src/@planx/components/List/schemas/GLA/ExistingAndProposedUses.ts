@@ -1,4 +1,4 @@
-import { Schema } from "@planx/components/List/model";
+import { Schema } from "@planx/components/shared/Schema/model";
 
 export const ExistingAndProposedUsesGLA: Schema = {
   type: "Existing and proposed uses",

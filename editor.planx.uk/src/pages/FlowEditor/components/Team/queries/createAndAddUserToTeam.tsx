@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { GET_USERS_FOR_TEAM_QUERY } from "routes/teamMembers";
 
 import { client } from "../../../../../lib/graphql";
 
@@ -7,6 +8,7 @@ export const createAndAddUserToTeam = async (
   firstName: string,
   lastName: string,
   teamId: number,
+  teamSlug: string,
 ) => {
   // NB: the user is hard-coded with the 'teamEditor' role for now
   const response = (await client.mutate({
@@ -35,6 +37,9 @@ export const createAndAddUserToTeam = async (
       lastName,
       teamId,
     },
+    refetchQueries: [
+      { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
+    ],
   })) as any;
   return response.data.insert_users_one;
 };

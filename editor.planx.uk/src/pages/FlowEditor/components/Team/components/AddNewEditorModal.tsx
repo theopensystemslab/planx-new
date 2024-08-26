@@ -17,7 +17,7 @@ import {
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
 import { addNewEditorFormSchema } from "../formSchema";
-import { optimisticallyUpdateTable } from "../lib/optimisticallyUpdateTable";
+import { optimisticallyUpdateMembersTable } from "../lib/optimisticallyUpdateMembersTable";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { AddNewEditorFormValues, AddNewEditorModalProps } from "../types";
 
@@ -37,13 +37,14 @@ export const AddNewEditorModal = ({
     values: AddNewEditorFormValues,
     { resetForm }: FormikHelpers<AddNewEditorFormValues>,
   ) => {
-    const teamId = useStore.getState().teamId;
+    const { teamId, teamSlug } = useStore.getState();
 
-    const isSuccess = await createAndAddUserToTeam(
+    const newUserId = await createAndAddUserToTeam(
       values.email,
       values.firstName,
       values.lastName,
       teamId,
+      teamSlug,
     ).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
@@ -51,11 +52,11 @@ export const AddNewEditorModal = ({
       console.error(err);
     });
 
-    if (!isSuccess) {
+    if (!newUserId) {
       return;
     }
     clearErrors();
-    optimisticallyUpdateTable(values);
+    optimisticallyUpdateMembersTable(values, newUserId);
     setShowModal(false);
     setShowToast(true);
     resetForm({ values });

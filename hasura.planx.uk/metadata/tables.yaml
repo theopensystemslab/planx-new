@@ -1768,25 +1768,24 @@
       permission:
         check: {}
         columns:
-          - id
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
-          - homepage
           - help_email
           - help_opening_hours
           - help_phone
-          - email_reply_to_id
-          - team_id
-          - boundary_bbox
+          - homepage
+          - id
           - reference_code
-          - boundary_url
+          - submission_email
+          - team_id
       comment: ""
   select_permissions:
     - role: api
       permission:
         columns:
-          - id
-          - team_id
           - boundary_bbox
           - boundary_url
           - email_reply_to_id
@@ -1796,14 +1795,15 @@
           - help_opening_hours
           - help_phone
           - homepage
+          - id
           - reference_code
+          - submission_email
+          - team_id
         filter: {}
       comment: ""
     - role: platformAdmin
       permission:
         columns:
-          - id
-          - team_id
           - boundary_bbox
           - boundary_url
           - email_reply_to_id
@@ -1813,7 +1813,10 @@
           - help_opening_hours
           - help_phone
           - homepage
+          - id
           - reference_code
+          - submission_email
+          - team_id
         filter: {}
       comment: ""
     - role: public
@@ -1836,8 +1839,6 @@
     - role: teamEditor
       permission:
         columns:
-          - id
-          - team_id
           - boundary_bbox
           - boundary_url
           - email_reply_to_id
@@ -1847,7 +1848,10 @@
           - help_opening_hours
           - help_phone
           - homepage
+          - id
           - reference_code
+          - submission_email
+          - team_id
         filter: {}
       comment: ""
   update_permissions:
@@ -1864,6 +1868,7 @@
           - help_phone
           - homepage
           - reference_code
+          - submission_email
         filter: {}
         check: null
       comment: ""
@@ -1880,6 +1885,7 @@
           - help_phone
           - homepage
           - reference_code
+          - submission_email
         filter:
           team:
             members:

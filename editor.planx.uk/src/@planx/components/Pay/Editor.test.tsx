@@ -5,7 +5,9 @@ import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { act } from "react-dom/test-utils";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { it, vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import PayComponent from "./Editor";
 
@@ -31,8 +33,6 @@ describe("Pay component - Editor Modal", () => {
   });
 
   describe("GOV.UK Pay Metadata section", () => {
-    jest.setTimeout(20000);
-
     // Set up mock state with platformAdmin user so all Editor features are enabled
     const { getState, setState } = useStore;
     const mockUser: User = {
@@ -106,10 +106,10 @@ describe("Pay component - Editor Modal", () => {
       expect(getByDisplayValue("myValue")).toBeInTheDocument();
     });
 
-    it("allows new values to be added", async () => {
+    it("allows new values to be added", { timeout: 20000 }, async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
 
-      const handleSubmit = jest.fn();
+      const handleSubmit = vi.fn();
 
       const { getAllByPlaceholderText, getAllByLabelText, user, getByRole } =
         setup(
@@ -156,7 +156,7 @@ describe("Pay component - Editor Modal", () => {
         },
       };
 
-      const handleSubmit = jest.fn();
+      const handleSubmit = vi.fn();
 
       const { getAllByLabelText, user, getByRole } = setup(
         <DndProvider backend={HTML5Backend}>
@@ -188,7 +188,7 @@ describe("Pay component - Editor Modal", () => {
     it("displays field-level errors", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
 
-      const handleSubmit = jest.fn();
+      const handleSubmit = vi.fn();
 
       const { getByText, user, getByRole } = setup(
         <DndProvider backend={HTML5Backend}>
@@ -208,10 +208,10 @@ describe("Pay component - Editor Modal", () => {
       );
     });
 
-    it("displays array-level errors", async () => {
+    it("displays array-level errors", { timeout: 20000 }, async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
 
-      const handleSubmit = jest.fn();
+      const handleSubmit = vi.fn();
 
       const { getByText, user, getByRole, getAllByPlaceholderText } = setup(
         <DndProvider backend={HTML5Backend}>
@@ -247,7 +247,7 @@ describe("Pay component - Editor Modal", () => {
     it("only disables the first instance of a required filed", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
 
-      const handleSubmit = jest.fn();
+      const handleSubmit = vi.fn();
 
       const {
         getAllByPlaceholderText,

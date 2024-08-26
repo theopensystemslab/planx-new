@@ -72,7 +72,7 @@ const ChecklistComponent: React.FC<Props> = (props) => {
     initialExpandedGroups,
   );
 
-  const layout = getLayout({ options, groupedOptions});
+  const layout = getLayout({ options, groupedOptions });
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
   const changeCheckbox = (id: string) => (_checked: any) => {
@@ -111,7 +111,7 @@ const ChecklistComponent: React.FC<Props> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            {options && (
+            {options &&
               options.map((option) =>
                 layout === ChecklistLayout.Basic ? (
                   <FormWrapper key={option.id}>
@@ -142,8 +142,7 @@ const ChecklistComponent: React.FC<Props> = (props) => {
                     />
                   </Grid>
                 ),
-              )
-            )}
+              )}
 
             {groupedOptions && (
               <FormWrapper>

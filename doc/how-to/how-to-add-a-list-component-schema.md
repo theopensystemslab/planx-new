@@ -12,7 +12,7 @@ The ideal maintainers of these schemas are still the services team though, rathe
 
 2. **GitHub** - In the `.ts` file, ensure the schema has this basic structure: 
 ```ts
-import { Schema } from "@planx/components/List/model";
+import { Schema } from "@planx/component/shared/Schema/model";
 
 export const YourSchemasName: Schema = {
   type: "Title (singular if no max, plural if max = 1)",

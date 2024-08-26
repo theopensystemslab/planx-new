@@ -1,4 +1,4 @@
-import { Schema } from "@planx/components/List/model";
+import { Schema } from "@planx/components/shared/Schema/model";
 
 export const CommunalSpaceGLA: Schema = {
   type: "Unit of communal space",

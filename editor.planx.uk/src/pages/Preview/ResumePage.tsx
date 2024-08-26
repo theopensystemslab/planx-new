@@ -240,7 +240,7 @@ const ResumePage: React.FC = () => {
    * Sets page status based on validation of request by API
    */
   const sendResumeEmail = async () => {
-    const url = `${process.env.REACT_APP_API_URL}/resume-application`;
+    const url = `${import.meta.env.VITE_APP_API_URL}/resume-application`;
     const data = {
       payload: { email, teamSlug },
     };
@@ -264,7 +264,7 @@ const ResumePage: React.FC = () => {
    * Query DB to validate that sessionID & email match
    */
   const validateSessionId = async () => {
-    const url = `${process.env.REACT_APP_API_URL}/validate-session`;
+    const url = `${import.meta.env.VITE_APP_API_URL}/validate-session`;
     const data: SendEmailPayload = {
       payload: { email, sessionId },
     };

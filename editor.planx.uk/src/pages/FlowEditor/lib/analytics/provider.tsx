@@ -105,14 +105,14 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       case "hidden":
         send(
           `${
-            process.env.REACT_APP_API_URL
+            import.meta.env.VITE_APP_API_URL
           }/analytics/log-user-exit?analyticsLogId=${lastVisibleNodeAnalyticsLogId?.toString()}`,
         );
         break;
       case "visible":
         send(
           `${
-            process.env.REACT_APP_API_URL
+            import.meta.env.VITE_APP_API_URL
           }/analytics/log-user-resume?analyticsLogId=${lastVisibleNodeAnalyticsLogId?.toString()}`,
         );
         break;

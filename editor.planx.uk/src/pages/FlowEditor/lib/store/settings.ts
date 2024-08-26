@@ -47,6 +47,7 @@ export const settingsStore: StateCreator<
       flow: { id },
       status: newStatus,
     });
+    set({ flowStatus: newStatus });
     return Boolean(result?.id);
   },
 

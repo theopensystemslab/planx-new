@@ -1,10 +1,12 @@
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { FeedbackFormInput } from ".";
 import FeedbackForm from "./FeedbackForm";
 
-const mockHandleSubmit = jest.fn();
+const mockHandleSubmit = vi.fn();
 
 const mockLabelledInputs: FeedbackFormInput[] = [
   { name: "userContext", id: "userContext", label: "User Context" },
@@ -13,7 +15,7 @@ const mockLabelledInputs: FeedbackFormInput[] = [
 
 describe("FeedbackForm functionality", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("renders inputs correctly", () => {
@@ -53,7 +55,7 @@ describe("FeedbackForm functionality", () => {
 
 describe("FeedbackForm accessibility tests", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("renders inputs with no accessibility violations", async () => {

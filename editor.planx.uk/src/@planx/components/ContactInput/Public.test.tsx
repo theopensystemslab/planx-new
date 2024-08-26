@@ -1,14 +1,16 @@
 import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingLabel } from "../shared/testHelpers";
 import ContactInput from "./Public";
 
 test("submits contact data", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const dataField = "applicant";
 
   const { user } = setup(
@@ -54,7 +56,7 @@ test("submits contact data", async () => {
 });
 
 test("recovers previously submitted text when clicking the back button", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
   const dataField = "applicant";
 
@@ -116,7 +118,7 @@ test("recovers previously submitted text when clicking the back button", async (
 });
 
 test("recovers previously submitted text when clicking the back button when a passport field is set", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const componentId = uniqueId();
   const dataField = "applicant.agent";
 
@@ -218,7 +220,7 @@ it("should not have any accessibility violations while in the error state", asyn
 });
 
 test("does not allow the name 'Test Test' to be used", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
   const dataField = "applicant";
 
   const { user } = setup(

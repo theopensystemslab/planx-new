@@ -5,8 +5,10 @@ import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
 import { ApplicationPath, Breadcrumbs } from "types";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
@@ -15,9 +17,9 @@ const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
-jest
-  .spyOn(ReactNavi, "useCurrentRoute")
-  .mockImplementation(() => ({ data: { mountpath: "mountpath" } }) as any);
+vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+  () => ({ data: { mountpath: "mountpath" } }) as any,
+);
 
 const resumeButtonText = "Resume an application you have already started";
 const saveButtonText = "Save and return to this application later";
@@ -78,7 +80,7 @@ describe("Pay component when fee is undefined or £0", () => {
   });
 
   it("Shows an error if fee is undefined", () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     setState({ flow: flowWithUndefinedFee, breadcrumbs: breadcrumbs });
     expect(getState().computePassport()).toEqual({
@@ -103,7 +105,7 @@ describe("Pay component when fee is undefined or £0", () => {
   });
 
   it("Skips pay if fee = 0", () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
 
     setState({ flow: flowWithZeroFee, breadcrumbs: breadcrumbs });
     expect(getState().computePassport()).toEqual({
@@ -132,7 +134,7 @@ const defaultProps = {
   instructionsTitle: "How to pay",
   instructionsDescription: "Pay via GOV.UK Pay",
   buttonTitle: "Pay",
-  onConfirm: jest.fn(),
+  onConfirm: vi.fn(),
   error: undefined,
   showInviteToPay: false,
 };
@@ -174,7 +176,7 @@ describe("Confirm component without inviteToPay", () => {
   });
 
   it("displays an error and continue-with-testing button if Pay is not enabled for this team", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const errorMessage =
       "GOV.UK Pay is not enabled for this local authority (testing)";
 
@@ -386,7 +388,7 @@ describe("Confirm component in information-only mode", () => {
   afterEach(() => act(() => setState(initialState)));
 
   it("renders correctly", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const { user } = setup(
       <Confirm {...defaultProps} hidePay={true} onConfirm={handleSubmit} />,
     );
@@ -409,7 +411,7 @@ describe("Confirm component in information-only mode", () => {
   });
 
   it("renders correctly when inviteToPay is also toggled on by an editor", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const { user } = setup(
       <Confirm
         {...defaultProps}
@@ -440,7 +442,7 @@ describe("Confirm component in information-only mode", () => {
   });
 
   it("should not have any accessibility violations", async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmit = vi.fn();
     const { container } = setup(
       <Confirm {...defaultProps} hidePay={true} onConfirm={handleSubmit} />,
     );

@@ -23,7 +23,7 @@ export const TeamMembers = () => {
   >;
 
   const platformAdmins =
-    filterByEmailPresent(teamMembersByRole.platformAdmin) || [];
+    teamMembersByRole.platformAdmin.filter(hasEmailPresent);
 
   const otherRoles = filterExcludingPlatformAdmins(teamMembers);
 

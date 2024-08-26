@@ -41,7 +41,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
     expect(screen.getAllByText("File")).toHaveLength(1);
   });
 
-  it.skip("allows an Editor to add multiple rules", async () => {
+  it("allows an Editor to add multiple rules", async () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <FileUploadAndLabelComponent id="test" />

@@ -1,18 +1,19 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import { vi } from "vitest";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 
-jest.mock("lib/featureFlags.ts", () => ({
-  hasFeatureFlag: jest.fn().mockReturnValue(true),
+vi.mock("lib/featureFlags.ts", () => ({
+  hasFeatureFlag: vi.fn().mockReturnValue(true),
 }));
 
-jest.mock(
+vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
   () => ({
-    createAndAddUserToTeam: jest.fn().mockResolvedValue({
+    createAndAddUserToTeam: vi.fn().mockResolvedValue({
       id: 1,
       __typename: "users",
     }),
@@ -32,6 +33,7 @@ describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add 
     );
     user.click(addEditorButton);
   });
+
   it("opens the modal and displays the input fields", async () => {
     expect(await screen.findByTestId("modal-create-user-button")).toBeVisible();
     expect(await screen.findByLabelText("First name")).toBeVisible();
