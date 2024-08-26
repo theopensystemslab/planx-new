@@ -123,15 +123,17 @@ const proposedAddressProps = {
   "findProperty.action": "Proposed a new address",
 };
 
-// vi.spyOn(SWR, "default").mockImplementation((url: any) => {
-//   return {
-//     data: url()?.startsWith("https://www.planning.data.gov.uk")
-//       ? localAuthorityMock
-//       : null,
-//   } as any;
-// });
+vi.mock("swr", () => ({
+  default: vi.fn((url: any) => {
+    return {
+      data: url()?.startsWith("https://www.planning.data.gov.uk")
+        ? localAuthorityMock
+        : null,
+    };
+  }),
+}));
 
-describe.skip("render states", () => {
+describe("render states", () => {
   it("renders correctly and defaults to the address autocomplete page", async () => {
     const handleSubmit = vi.fn();
 
@@ -299,7 +301,7 @@ describe.skip("render states", () => {
   });
 });
 
-describe.skip("picking an OS address", () => {
+describe("picking an OS address", () => {
   it("displays an error if you submit an invalid postcode", async () => {
     const handleSubmit = vi.fn();
 
@@ -384,7 +386,7 @@ describe.skip("picking an OS address", () => {
   });
 });
 
-describe.skip("plotting a new address that does not have a uprn yet", () => {
+describe("plotting a new address that does not have a uprn yet", () => {
   it("displays an error if you haven't entered a site address", async () => {
     const handleSubmit = vi.fn();
 
