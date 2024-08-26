@@ -17,9 +17,9 @@ import {
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
 import { addNewEditorFormSchema } from "../formSchema";
-import { optimisticallyUpdateMembersTable } from "../lib/optimisticallyUpdateMembersTable";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { AddNewEditorFormValues, AddNewEditorModalProps } from "../types";
+import { optimisticallyUpdateMembersTable } from "./lib/optimisticallyUpdateMembersTable";
 
 export const AddNewEditorModal = ({
   showModal,
