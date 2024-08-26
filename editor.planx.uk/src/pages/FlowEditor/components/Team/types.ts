@@ -5,15 +5,17 @@ export type TeamMember = Omit<User, "teams" | "isPlatformAdmin"> & {
   role: Role;
 };
 
-export interface TeamMembersProps {
-  teamMembersByRole: Record<string, TeamMember[]>;
-}
 export interface MembersTableProps {
   members: TeamMember[];
   showAddMemberButton?: boolean;
-  setShowModal?: React.Dispatch<SetStateAction<boolean>>;
 }
-export type AddNewEditorModalProps = {
+export interface AddNewEditorModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
-};
+}
+
+export interface AddNewEditorFormValues {
+  email: string;
+  firstName: string;
+  lastName: string;
+}

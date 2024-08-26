@@ -1,28 +1,36 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import { Role } from "@opensystemslab/planx-core/types";
+import { groupBy } from "lodash";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
-import { AddNewEditorModal } from "./components/AddNewEditorModal";
+import {
+  filterByEmailPresent,
+  filterExcludingPlatformAdmins,
+  hasEmailPresent,
+} from "./components/lib/filterTeamMembers";
 import { MembersTable } from "./components/MembersTable";
-import { TeamMember, TeamMembersProps } from "./types";
+import { TeamMember } from "./types";
 
-export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
-  const [showModal, setShowModal] = useState(false);
+export const TeamMembers = () => {
+  const teamMembers = useStore((state) => state.teamMembers);
 
-  const platformAdmins = (teamMembersByRole.platformAdmin || []).filter(
-    (member) => member.email,
-  );
-  const otherRoles = Object.keys(teamMembersByRole)
-    .filter((role) => role !== "platformAdmin")
-    .reduce((acc: TeamMember[], role) => {
-      return acc.concat(teamMembersByRole[role]);
-    }, []);
+  const teamMembersByRole = groupBy(teamMembers, "role") as Record<
+    Role,
+    TeamMember[]
+  >;
 
-  const activeMembers = otherRoles.filter((member) => member.email);
+  const platformAdmins =
+    teamMembersByRole.platformAdmin.filter(hasEmailPresent);
 
-  const archivedMembers = otherRoles.filter(
-    (member) => member.role !== "platformAdmin" && !member.email,
+  const otherRoles = filterExcludingPlatformAdmins(teamMembers);
+
+  const activeMembers = filterByEmailPresent(otherRoles);
+
+  const archivedMembers: TeamMember[] = otherRoles.filter(
+    (member) => !hasEmailPresent(member),
   );
 
   return (
@@ -34,11 +42,7 @@ export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
         <Typography variant="body1">
           Editors have access to edit your services.
         </Typography>
-        <MembersTable
-          members={activeMembers}
-          showAddMemberButton
-          setShowModal={setShowModal}
-        />
+        <MembersTable members={activeMembers} showAddMemberButton />
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
@@ -60,9 +64,6 @@ export const TeamMembers = ({ teamMembersByRole }: TeamMembersProps) => {
           </Typography>
           <MembersTable members={archivedMembers} />
         </SettingsSection>
-      )}
-      {showModal && (
-        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
       )}
     </Container>
   );
