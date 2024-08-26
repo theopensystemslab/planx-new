@@ -64,3 +64,7 @@ export const removeSessionIdSearchParam = () => {
   window.history.pushState({}, document.title, currentURL);
   window.location.reload();
 };
+
+export const exhaustiveCheck = (type: never): never => {
+  throw new Error(`Missing type ${type}`);
+};

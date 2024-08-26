@@ -1,3 +1,9 @@
+import { useSchema } from "@planx/components/shared/Schema/hook";
+import {
+  Schema,
+  SchemaUserData,
+  SchemaUserResponse,
+} from "@planx/components/shared/Schema/model";
 import {
   getPreviouslySubmittedData,
   makeData,
@@ -11,14 +17,7 @@ import React, {
   useState,
 } from "react";
 
-import {
-  generateInitialValues,
-  generateValidationSchema,
-  List,
-  Schema,
-  UserData,
-  UserResponse,
-} from "../model";
+import { List } from "../model";
 import {
   flatten,
   sumIdenticalUnits,
@@ -33,7 +32,7 @@ interface ListContextValue {
   removeItem: (index: number) => void;
   editItem: (index: number) => void;
   cancelEditItem: () => void;
-  formik: FormikProps<UserData>;
+  formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
   listProps: PublicProps<List>;
   /**
@@ -58,117 +57,16 @@ const ListContext = createContext<ListContextValue | undefined>(undefined);
 
 export const ListProvider: React.FC<ListProviderProps> = (props) => {
   const { schema, children, handleSubmit } = props;
+  const { formikConfig, initialValues } = useSchema({
+    schema,
+    previousValues: getPreviouslySubmittedData(props),
+  });
 
-  const [activeIndex, setActiveIndex] = useState<number>(
-    props.previouslySubmittedData ? -1 : 0,
-  );
-
-  const [activeItemInitialState, setActiveItemInitialState] = useState<
-    UserResponse | undefined
-  >(undefined);
-
-  const [addItemError, setAddItemError] = useState<boolean>(false);
-  const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
-  const [minError, setMinError] = useState<boolean>(false);
-  const [maxError, setMaxError] = useState<boolean>(false);
-
-  const resetErrors = () => {
-    setMinError(false);
-    setMaxError(false);
-    setUnsavedItemError(false);
-  };
-
-  const addNewItem = async () => {
-    resetErrors();
-
-    // Do not allow a new item to be added if there's still an active item
-    if (activeIndex !== -1) return setAddItemError(true);
-
-    // Do not allow new item to be added if it will exceed max
-    if (schema.max && formik.values.userData.length === schema.max) {
-      return setMaxError(true);
-    }
-
-    // Add new item, and set to active
-    setAddItemError(false);
-    formik.values.userData.push(generateInitialValues(schema));
-    setActiveIndex(formik.values.userData.length - 1);
-  };
-
-  const saveItem = async () => {
-    resetErrors();
-
-    const errors = await formik.validateForm();
-    const isValid = !errors.userData?.length;
-    if (isValid) {
-      exitEditMode();
-      setAddItemError(false);
-    }
-  };
-
-  const removeItem = (index: number) => {
-    resetErrors();
-
-    // If item is before currently active card, retain active card
-    if (activeIndex && index < activeIndex) {
-      setActiveIndex((prev) => (prev === -1 ? 0 : prev - 1));
-    }
-
-    // Remove item from userData
-    formik.setFieldValue(
-      "userData",
-      formik.values.userData.filter((_, i) => i !== index),
-    );
-  };
-
-  const validateAndSubmitForm = () => {
-    // Do not allow submissions with an unsaved item
-    if (activeIndex !== -1) return setUnsavedItemError(true);
-
-    // Manually validate minimum number of items
-    if (formik.values.userData.length < schema.min) {
-      return setMinError(true);
-    }
-
-    formik.handleSubmit();
-  };
-
-  const cancelEditItem = () => {
-    activeItemInitialState
-      ? resetItemToPreviousState()
-      : removeItem(activeIndex);
-
-    setActiveItemInitialState(undefined);
-
-    exitEditMode();
-  };
-
-  const editItem = (index: number) => {
-    setActiveItemInitialState(formik.values.userData[index]);
-    setActiveIndex(index);
-  };
-
-  const getInitialValues = () => {
-    const previousValues = getPreviouslySubmittedData(props);
-    if (previousValues) return previousValues;
-
-    return schema.min ? [generateInitialValues(schema)] : [];
-  };
-
-  const exitEditMode = () => setActiveIndex(-1);
-
-  const resetItemToPreviousState = () =>
-    formik.setFieldValue(`userData[${activeIndex}]`, activeItemInitialState);
-
-  const isPageComponent = schema.max === 1;
-
-  const formik = useFormik<UserData>({
-    initialValues: {
-      userData: getInitialValues(),
-    },
+  const formik = useFormik<SchemaUserData>({
+    ...formikConfig,
     onSubmit: (values) => {
       // defaultPassportData (array) is used when coming "back"
-      const defaultPassportData = makeData(props, values.userData)?.["data"];
+      const defaultPassportData = makeData(props, values.schemaData)?.["data"];
 
       // flattenedPassportData makes individual list items compatible with Calculate components
       const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
@@ -202,10 +100,103 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
         },
       });
     },
-    validateOnBlur: false,
-    validateOnChange: false,
-    validationSchema: generateValidationSchema(schema),
   });
+
+  const [activeIndex, setActiveIndex] = useState<number>(
+    props.previouslySubmittedData ? -1 : 0,
+  );
+
+  const [activeItemInitialState, setActiveItemInitialState] = useState<
+    SchemaUserResponse | undefined
+  >(undefined);
+
+  const [addItemError, setAddItemError] = useState<boolean>(false);
+  const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
+  const [minError, setMinError] = useState<boolean>(false);
+  const [maxError, setMaxError] = useState<boolean>(false);
+
+  const resetErrors = () => {
+    setMinError(false);
+    setMaxError(false);
+    setUnsavedItemError(false);
+  };
+
+  const addNewItem = async () => {
+    resetErrors();
+
+    // Do not allow a new item to be added if there's still an active item
+    if (activeIndex !== -1) return setAddItemError(true);
+
+    // Do not allow new item to be added if it will exceed max
+    if (schema.max && formik.values.schemaData.length === schema.max) {
+      return setMaxError(true);
+    }
+
+    // Add new item, and set to active
+    setAddItemError(false);
+    formik.values.schemaData.push(initialValues);
+    setActiveIndex(formik.values.schemaData.length - 1);
+  };
+
+  const saveItem = async () => {
+    resetErrors();
+
+    const errors = await formik.validateForm();
+    const isValid = !errors.schemaData?.length;
+    if (isValid) {
+      exitEditMode();
+      setAddItemError(false);
+    }
+  };
+
+  const removeItem = (index: number) => {
+    resetErrors();
+
+    // If item is before currently active card, retain active card
+    if (activeIndex && index < activeIndex) {
+      setActiveIndex((prev) => (prev === -1 ? 0 : prev - 1));
+    }
+
+    // Remove item from schemaData
+    formik.setFieldValue(
+      "schemaData",
+      formik.values.schemaData.filter((_, i) => i !== index),
+    );
+  };
+
+  const validateAndSubmitForm = () => {
+    // Do not allow submissions with an unsaved item
+    if (activeIndex !== -1) return setUnsavedItemError(true);
+
+    // Manually validate minimum number of items
+    if (formik.values.schemaData.length < schema.min) {
+      return setMinError(true);
+    }
+
+    formik.handleSubmit();
+  };
+
+  const cancelEditItem = () => {
+    activeItemInitialState
+      ? resetItemToPreviousState()
+      : removeItem(activeIndex);
+
+    setActiveItemInitialState(undefined);
+
+    exitEditMode();
+  };
+
+  const editItem = (index: number) => {
+    setActiveItemInitialState(formik.values.schemaData[index]);
+    setActiveIndex(index);
+  };
+
+  const exitEditMode = () => setActiveIndex(-1);
+
+  const resetItemToPreviousState = () =>
+    formik.setFieldValue(`schemaData[${activeIndex}]`, activeItemInitialState);
+
+  const isPageComponent = schema.max === 1;
 
   return (
     <ListContext.Provider
