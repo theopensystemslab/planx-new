@@ -260,7 +260,7 @@ const ServiceSettings: React.FC = () => {
     const message = `${emoji[status]} *${teamSlug}/${flowSlug}* is now ${status} (@Silvia)`;
 
     return axios.post(
-      `${process.env.REACT_APP_API_URL}/send-slack-notification`,
+      `${import.meta.env.VITE_APP_API_URL}/send-slack-notification`,
       {
         message: message,
       },
