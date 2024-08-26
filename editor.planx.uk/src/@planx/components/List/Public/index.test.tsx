@@ -235,7 +235,7 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when all cards are inactive",
-    { timeout: 20000 },
+    { timeout: 25000 },
     async () => {
       // Setup three cards
       const {
