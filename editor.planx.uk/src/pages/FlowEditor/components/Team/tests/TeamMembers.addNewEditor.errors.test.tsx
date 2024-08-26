@@ -1,19 +1,20 @@
 import { screen, within } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import { vi } from "vitest";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import { alreadyExistingUser } from "./mocks/mockUsers";
 
-jest.mock("lib/featureFlags.ts", () => ({
-  hasFeatureFlag: jest.fn().mockReturnValue(true),
+vi.mock("lib/featureFlags.ts", () => ({
+  hasFeatureFlag: vi.fn().mockReturnValue(true),
 }));
 
-jest.mock(
+vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
   () => ({
-    createAndAddUserToTeam: jest.fn().mockRejectedValue({
+    createAndAddUserToTeam: vi.fn().mockRejectedValue({
       message:
         'Uniqueness violation. duplicate key value violates unique constraint "users_email_key"',
     }),
