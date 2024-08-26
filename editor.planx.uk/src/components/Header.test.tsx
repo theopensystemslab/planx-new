@@ -6,6 +6,7 @@ import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import flowWithoutSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithClones.json";
 import flowWithThreeSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithThreeSections.json";
@@ -109,7 +110,7 @@ describe("Header Component - Editor Route", () => {
 
   it("displays breadcrumbs", () => {
     setup(<Header />);
-    // expect(screen.getByText("Plan✕")).to.be.
+    expect(screen.getByText("Plan✕")).toBeInTheDocument();
     expect(screen.getByText(mockTeam1.slug)).toBeInTheDocument();
     expect(screen.getByText("test-flow")).toBeInTheDocument();
   });
@@ -120,11 +121,11 @@ describe("Header Component - Editor Route", () => {
     expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
   });
 
-  // it("should not have any accessibility violations", async () => {
-  //   const { container } = setup(<Header />);
-  //   const results = await axe(container);
-  //   expect(results).toHaveNoViolations();
-  // });
+  it("should not have any accessibility violations", async () => {
+    const { container } = setup(<Header />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {

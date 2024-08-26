@@ -37,8 +37,6 @@ const customFetch = async (
   return fetchResult;
 };
 
-console.log(import.meta.env.VITE_APP_HASURA_URL);
-
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_APP_HASURA_URL,
   fetch: customFetch,
