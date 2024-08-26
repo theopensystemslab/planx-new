@@ -4,22 +4,17 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
-import { NumberFieldInput } from "@planx/components/shared/Schema/InputFields/NumberFieldInput";
-import { RadioFieldInput } from "@planx/components/shared/Schema/InputFields/RadioFieldInput";
-import { TextFieldInput } from "@planx/components/shared/Schema/InputFields/TextFieldInput";
-import { Field } from "@planx/components/shared/Schema/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { Feature } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
-import InputRow from "ui/shared/InputRow";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
 import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
-import { MapAndLabel } from "./../model";
+import type { MapAndLabel } from "./../model";
 import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
 
 type Props = PublicProps<MapAndLabel>;
@@ -85,7 +80,9 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
                 ? ` (${feature.geometry.coordinates.map((coord) =>
                     coord.toFixed(5),
                   )})`
-                : ` (area ${feature.properties?.area || `0 m²`})`}
+                : ` (area ${
+                    feature.properties?.["area.squareMetres"] || 0
+                  } m²)`}
             </Typography>
             <SchemaFields
               schema={schema}
@@ -160,8 +157,10 @@ const Root = () => {
             maxZoom={23}
             latitude={Number(passport?.data?._address?.latitude)}
             longitude={Number(passport?.data?._address?.longitude)}
-            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-            osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+            osProxyEndpoint={`${
+              import.meta.env.VITE_APP_API_URL
+            }/proxy/ordnance-survey`}
+            osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
             clipGeojsonData={
               teamSettings?.boundaryBBox &&
               JSON.stringify(teamSettings?.boundaryBBox)

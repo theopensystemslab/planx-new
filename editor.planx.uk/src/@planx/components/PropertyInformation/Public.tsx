@@ -152,7 +152,9 @@ export function Presentational(props: PresentationalProps) {
           zoom={19.5}
           latitude={address?.latitude}
           longitude={address?.longitude}
-          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+          osProxyEndpoint={`${
+            import.meta.env.VITE_APP_API_URL
+          }/proxy/ordnance-survey`}
           hideResetControl
           staticMode
           showCentreMarker

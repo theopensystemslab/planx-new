@@ -6,7 +6,6 @@ import { visuallyHidden } from "@mui/utils";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
-import MapAndLabelComponent from "@planx/components/MapAndLabel/Editor";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -102,7 +101,7 @@ const presentationalComponents: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.List]: List,
-  [TYPES.MapAndLabel]: MapAndLabelComponent,
+  [TYPES.MapAndLabel]: undefined,
   [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
@@ -496,10 +495,13 @@ function DrawBoundary(props: ComponentProps) {
               geojsonColor="#ff0000"
               geojsonFill
               geojsonBuffer={20}
-              osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+              osProxyEndpoint={`${
+                import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
+              osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
               collapseAttributions
             />
           </>

@@ -57,8 +57,8 @@ const Login: React.FC = () => {
           variant="contained"
           color="secondary"
           href={`${
-            process.env.REACT_APP_GOOGLE_OAUTH_OVERRIDE ??
-            process.env.REACT_APP_API_URL
+            import.meta.env.VITE_APP_GOOGLE_OAUTH_OVERRIDE ??
+            import.meta.env.VITE_APP_API_URL
           }/auth/google`}
         >
           <Box component="span">

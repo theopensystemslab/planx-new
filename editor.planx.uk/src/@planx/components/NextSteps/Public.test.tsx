@@ -1,5 +1,6 @@
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { axe } from "vitest-axe";
 
 import NextStepsComponent from "./Public";
 

@@ -3,6 +3,7 @@ import { isPreviewOnlyDomain } from "routes/utils";
 import { create, StoreApi, UseBoundStore } from "zustand";
 
 import type { EditorStore, EditorUIStore } from "./editor";
+import { editorStore, editorUIStore } from "./editor";
 import type { NavigationStore } from "./navigation";
 import { navigationStore } from "./navigation";
 import type { PreviewStore } from "./preview";
@@ -70,7 +71,6 @@ const createPublicStore = () =>
  * If accessing the editor then load ALL store files
  */
 const createFullStore = () => {
-  const { editorStore, editorUIStore } = require("./editor");
   return create<FullStore>()((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),

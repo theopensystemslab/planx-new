@@ -4,23 +4,25 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import MoreInfoFeedbackComponent from "./MoreInfoFeedback";
 
-jest.mock("lib/feedback", () => {
+vi.mock("lib/feedback", () => {
   return {
-    getInternalFeedbackMetadata: jest.fn(),
-    insertFeedbackMutation: jest.fn(),
+    getInternalFeedbackMetadata: vi.fn(),
+    insertFeedbackMutation: vi.fn(),
   };
 });
 
-const scrollIntoView = jest.fn();
+const scrollIntoView = vi.fn();
 window.Element.prototype.scrollIntoView = scrollIntoView;
 
 describe("MoreInfoFeedbackComponent presentation and functionality", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   // Initial load
@@ -109,7 +111,7 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
 
 describe("MoreInfoFeedbackComponent accessibility", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Initial load should have no accessibility violations", async () => {

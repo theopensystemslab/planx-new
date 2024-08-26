@@ -54,11 +54,10 @@ export const Trees: Schema = {
       },
     },
     {
-      type: "text",
+      type: "date",
       data: {
         title: "Expected completion date",
         fn: "completionDate",
-        type: TextInputType.Short,
       },
     },
   ],

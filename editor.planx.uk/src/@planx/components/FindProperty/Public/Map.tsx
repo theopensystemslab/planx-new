@@ -162,8 +162,11 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
               resetControlImage="trash"
               showScale
               showNorthArrow
-              osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+              osProxyEndpoint={`${
+                import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
               clipGeojsonData={JSON.stringify(boundaryBBox)}
+              osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
               collapseAttributions={window.innerWidth < 500 ? true : undefined}
             />
           </MapContainer>

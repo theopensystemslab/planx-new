@@ -16,7 +16,8 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es6",
-    "typeRoots": ["src/types"]
+    "typeRoots": ["src/types"],
+    "types": ["vite/client", "vite-plugin-svgr/client"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

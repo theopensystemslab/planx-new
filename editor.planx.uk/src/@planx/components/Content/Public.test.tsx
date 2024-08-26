@@ -1,13 +1,15 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import { axe, setup } from "testUtils";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
 import Content from "./Public";
 
 const content = () => screen.getByTestId("content");
 
 test("const { user } = setups correctly", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <Content content="hello" color="#fff" handleSubmit={handleSubmit} />,
@@ -40,7 +42,7 @@ it("should not have any accessibility violations", async () => {
 });
 
 test("should display and open more information link if help text is provided", async () => {
-  const handleSubmit = jest.fn();
+  const handleSubmit = vi.fn();
 
   const { user } = setup(
     <Content
