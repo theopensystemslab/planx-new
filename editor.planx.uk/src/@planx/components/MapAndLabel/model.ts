@@ -8,6 +8,7 @@ export interface MapAndLabel extends MoreInformation {
   fn: string;
   title: string;
   description?: string;
+  basemap: "OSVectorTile" | "OSRaster" | "MapboxSatellite" | "OSM";
   drawColor: string;
   drawType: "Polygon" | "Point";
   schemaName: string;
@@ -20,6 +21,7 @@ export const parseContent = (
   fn: data?.fn || "",
   title: data?.title,
   description: data?.description,
+  basemap: data?.basemap || "OSVectorTile",
   drawColor: data?.drawColor || "#22194D",
   drawType: data?.drawType || "Polygon",
   schemaName: data?.schemaName || SCHEMAS[0].name,
