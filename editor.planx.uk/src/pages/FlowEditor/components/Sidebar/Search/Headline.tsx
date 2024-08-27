@@ -8,7 +8,7 @@ interface Props {
   variant: "data";
 }
 
-export const Headline: React.FC<Props> = ({ text, matchIndices }) => {
+export const Headline: React.FC<Props> = ({ text, matchIndices, variant }) => {
   const isHighlighted = (index: number) =>
     matchIndices.some(([start, end]) => index >= start && index <= end);
 
@@ -17,7 +17,7 @@ export const Headline: React.FC<Props> = ({ text, matchIndices }) => {
       {text.split("").map((char, index) => (
         <Typography
           component="span"
-          variant="data"
+          variant={variant}
           key={`headline-character-${index}`}
           sx={(theme) => ({
             fontWeight: isHighlighted(index) ? FONT_WEIGHT_BOLD : "regular",
