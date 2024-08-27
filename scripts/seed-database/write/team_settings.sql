@@ -30,8 +30,7 @@ INSERT INTO
     external_planning_site_url,
     external_planning_site_name,
     boundary_url,
-    boundary_bbox,
-    submission_email
+    boundary_bbox
   )
 SELECT
     id,
@@ -45,8 +44,7 @@ SELECT
     external_planning_site_url,
     external_planning_site_name,
     boundary_url,
-    boundary_bbox,
-    submission_email
+    boundary_bbox
 FROM
   sync_team_settings ON CONFLICT (id) DO
 UPDATE
@@ -61,8 +59,7 @@ SET
     external_planning_site_url = EXCLUDED.external_planning_site_url,
     external_planning_site_name = EXCLUDED.external_planning_site_name,
     boundary_url = EXCLUDED.boundary_url,
-    boundary_bbox = EXCLUDED.boundary_bbox,
-    submission_email = EXCLUDED.submission_email;
+    boundary_bbox = EXCLUDED.boundary_bbox;
 SELECT
   setval('team_settings_id_seq', max(id))
 FROM
