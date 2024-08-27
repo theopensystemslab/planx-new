@@ -105,7 +105,9 @@ const InactiveListCard: React.FC<{
         <TableBody>
           {schema.fields.map((field, j) => (
             <TableRow key={`tableRow-${j}`}>
-              <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+              <TableCell
+                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD, maxWidth: "100px" }}
+              >
                 {field.data.title}
               </TableCell>
               <TableCell>
