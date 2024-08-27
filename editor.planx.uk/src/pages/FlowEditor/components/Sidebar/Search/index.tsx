@@ -51,6 +51,7 @@ const Search: React.FC = () => {
           Search this flow and internal portals
         </Typography>
         <Input
+          id="search"
           name="search"
           value={formik.values.input}
           onChange={(e) => {
