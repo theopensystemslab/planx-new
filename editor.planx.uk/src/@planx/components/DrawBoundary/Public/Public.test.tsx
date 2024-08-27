@@ -16,7 +16,9 @@ import {
 } from "../model";
 import DrawBoundary from "./";
 
+vi.mock("axios");
 const mockedAxios = vi.mocked(axios, true);
+
 global.URL.createObjectURL = vi.fn();
 
 const { getState, setState } = useStore;
@@ -176,7 +178,7 @@ test("hides the upload option and allows user to continue without drawing if edi
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 
-test.skip("captures output data in the correct format when uploading a file", async () => {
+test("captures output data in the correct format when uploading a file", async () => {
   // Setup file mock
   const mockFileName = "test.png";
   const mockFileURL =
@@ -238,7 +240,7 @@ test.skip("captures output data in the correct format when uploading a file", as
   );
 });
 
-test.skip("appends to existing '_requestedFiles' value", async () => {
+test("appends to existing '_requestedFiles' value", async () => {
   // Setup file mock
   const mockFileName = "test.png";
   const mockFileURL =
@@ -383,7 +385,7 @@ test.skip("appends to existing '_requestedFiles' value", async () => {
   expect(optional).toHaveLength(0);
 });
 
-test.skip("submits data based on the page you continue onwards from", async () => {
+test("submits data based on the page you continue onwards from", async () => {
   // Context - Planning Officers don't want to receive both geojson and an uploaded locationPlan, only one or the other
   //   But accessibility auditing says a user should always be able to toggle between draw & upload pages with their previous inputs retained
 

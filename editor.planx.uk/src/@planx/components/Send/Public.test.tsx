@@ -8,17 +8,18 @@ import hasuraEventsResponseMock from "./mocks/hasuraEventsResponseMock";
 import { Destination } from "./model";
 import SendComponent from "./Public";
 
-// const mockAxios = vi.mocked(axios, true);
+vi.mock("axios");
+const mockAxios = vi.mocked(axios, true);
 
-// mockAxios.post.mockImplementation((url: any) => {
-//   return {
-//     value: url()?.startsWith(
-//       `${import.meta.env.VITE_APP_API_URL}/create-send-events/`,
-//     )
-//       ? hasuraEventsResponseMock
-//       : null,
-//   } as any;
-// });
+mockAxios.post.mockResolvedValue(async (url: string) => {
+  return {
+    value: url.startsWith(
+      `${import.meta.env.VITE_APP_API_URL}/create-send-events/`,
+    )
+      ? hasuraEventsResponseMock
+      : null,
+  };
+});
 
 it.todo("renders correctly");
 
