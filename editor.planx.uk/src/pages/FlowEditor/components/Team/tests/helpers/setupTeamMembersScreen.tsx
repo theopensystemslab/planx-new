@@ -7,11 +7,11 @@ import { setup } from "../../../../../../testUtils";
 import { TeamMembers } from "../../TeamMembers";
 
 export const setupTeamMembersScreen = async () => {
-  const { user } = setup(
+  const setupResult = setup(
     <DndProvider backend={HTML5Backend}>
       <TeamMembers />
     </DndProvider>,
   );
-  await screen.findByText("Team editors");
-  return user;
+  await screen.findByTestId("team-editors");
+  return setupResult;
 };

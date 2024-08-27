@@ -30,7 +30,7 @@ describe("when a user fills in the 'add a new editor' form correctly but the use
       teamMembers: [...mockTeamMembersData, alreadyExistingUser],
     });
 
-    const user = await setupTeamMembersScreen();
+    const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewEditor(user);
   });
 
