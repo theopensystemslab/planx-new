@@ -11,7 +11,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import { Headline } from "./Headline";
+import { Headline } from "../Headline";
 
 export const Root = styled(ListItemButton)(({ theme }) => ({
   padding: theme.spacing(1),
