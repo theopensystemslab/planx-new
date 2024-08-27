@@ -115,10 +115,6 @@ const TabList = styled(Box)(({ theme }) => ({
   },
 }));
 
-const SidebarTab = (props: any) => (
-  <StyledTab disableFocusRipple disableTouchRipple disableRipple {...props} />
-);
-
 const DebugConsole = () => {
   const [passport, breadcrumbs, flowId, cachedBreadcrumbs] = useStore(
     (state) => [
