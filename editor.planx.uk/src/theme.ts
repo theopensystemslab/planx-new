@@ -324,6 +324,31 @@ const getThemeOptions = ({
               },
             },
           },
+          {
+            props: { variant: "link" },
+            style: {
+              color: palette.text.primary,
+              boxShadow: "none",
+              padding: 0,
+              width: "auto",
+              fontWeight: "initial",
+              fontSize: "inherit",
+              textDecoration: "underline",
+              textUnderlineOffset: "0.1em",
+              gap: "10px",
+              minHeight: "48px",
+              "&:hover": {
+                textDecoration: "underline",
+                textDecorationThickness: "3px",
+                background: "transparent",
+                boxShadow: "none",
+              },
+              "&:focus": {
+                borderColor: palette.text.primary,
+                borderStyle: "solid",
+              },
+            },
+          },
         ],
         defaultProps: {
           // Removes default box shadow on buttons
