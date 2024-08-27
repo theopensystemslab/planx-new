@@ -25,7 +25,7 @@ import { ListProvider, useListContext } from "./Context";
 
 export type Props = PublicProps<List>;
 
-export const ListCard = styled(Box)(({ theme }) => ({
+const ListCard = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   backgroundColor: theme.palette.background.paper,
   border: "1px solid darkgray",

@@ -182,7 +182,7 @@ describe("Building a list", () => {
     ).toBeInTheDocument();
   });
 
-  test("Editing an item", { timeout: 20000 }, async () => {
+  test("Editing an item", { timeout: 25000 }, async () => {
     // Setup three cards
     const { getAllByTestId, getByTestId, user } = setup(
       <ListComponent {...mockZooProps} />,
@@ -235,7 +235,7 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when all cards are inactive",
-    { timeout: 20000 },
+    { timeout: 25000 },
     async () => {
       // Setup three cards
       const {

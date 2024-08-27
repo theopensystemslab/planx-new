@@ -7,16 +7,18 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { AddButton } from "pages/Team";
-import React from "react";
+import React, { useState } from "react";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps } from "./../types";
+import { AddNewEditorModal } from "./AddNewEditorModal";
 
 export const MembersTable = ({
   members,
   showAddMemberButton,
-  setShowModal = () => true,
 }: MembersTableProps) => {
+  const [showModal, setShowModal] = useState(false);
+
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
     teamEditor: "Editor",
@@ -42,58 +44,65 @@ export const MembersTable = ({
   }
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <StyledTableRow>
-            <TableCell sx={{ width: 300 }}>
-              <strong>User</strong>
-            </TableCell>
-            <TableCell sx={{ width: 200 }}>
-              <strong>Role</strong>
-            </TableCell>
-            <TableCell>
-              <strong>Email</strong>
-            </TableCell>
-          </StyledTableRow>
-        </TableHead>
-        <TableBody>
-          {members.map((member) => (
-            <StyledTableRow key={member.id}>
-              <TableCell
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <StyledAvatar>
-                  {member.firstName[0]}
-                  {member.lastName[0]}
-                </StyledAvatar>
-                {member.firstName} {member.lastName}
+    <>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <StyledTableRow>
+              <TableCell sx={{ width: 300 }}>
+                <strong>User</strong>
+              </TableCell>
+              <TableCell sx={{ width: 200 }}>
+                <strong>Role</strong>
               </TableCell>
               <TableCell>
-                <Chip
-                  label={getRoleLabel(member.role)}
-                  size="small"
-                  sx={{ background: "#ddd" }}
-                />
+                <strong>Email</strong>
               </TableCell>
-              <TableCell>{member.email}</TableCell>
             </StyledTableRow>
-          ))}
-          {showAddMemberButton && hasFeatureFlag("ADD_NEW_EDITOR") && (
-            <TableRow>
-              <TableCell colSpan={3}>
-                <AddButton onClick={() => setShowModal(true)}>
-                  Add a new editor
-                </AddButton>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody
+            data-testid={`members-table${showAddMemberButton && "-add-editor"}`}
+          >
+            {members.map((member) => (
+              <StyledTableRow key={member.id}>
+                <TableCell
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <StyledAvatar>
+                    {member.firstName[0]}
+                    {member.lastName[0]}
+                  </StyledAvatar>
+                  {member.firstName} {member.lastName}
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    label={getRoleLabel(member.role)}
+                    size="small"
+                    sx={{ background: "#ddd" }}
+                  />
+                </TableCell>
+                <TableCell>{member.email}</TableCell>
+              </StyledTableRow>
+            ))}
+            {showAddMemberButton && hasFeatureFlag("ADD_NEW_EDITOR") && (
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <AddButton onClick={() => setShowModal(true)}>
+                    Add a new editor
+                  </AddButton>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {showModal && (
+        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
+      )}
+    </>
   );
 };
