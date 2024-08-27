@@ -49,8 +49,10 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            sendToEmail: "planning.office.example@council.gov.uk",
-            settings: { emailReplyToId: "abc123" },
+            settings: {
+              emailReplyToId: "abc123",
+              sendToEmail: "planning.office.example@council.gov.uk",
+            },
           },
         ],
       },
@@ -145,15 +147,14 @@ describe(`sending an application by email to a planning office`, () => {
       });
   });
 
-  it("errors if this team does not have a 'submission_email' configured in teams", async () => {
+  it("errors if this team does not have a 'submission_email' configured in team settings", async () => {
     queryMock.mockQuery({
       name: "GetTeamEmailSettings",
       matchOnVariables: false,
       data: {
         teams: [
           {
-            sendToEmail: null,
-            settings: { emailReplyToId: "abc123" },
+            settings: { emailReplyToId: "abc123", sendToEmail: null },
           },
         ],
       },
@@ -229,7 +230,7 @@ describe(`downloading application data received by email`, () => {
   it("errors if email query param does not match the stored database value for this team", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=wrong@council.gov.uk&localAuthority=southwark",
+        "/download-application-files/123?email=wrong@council.gov.uk&localAuthority=southwark"
       )
       .expect(403)
       .then((res) => {
@@ -251,12 +252,12 @@ describe(`downloading application data received by email`, () => {
 
     await supertest(app)
       .get(
-        "/download-application-files/456?email=planning.office.example@council.gov.uk&localAuthority=southwark",
+        "/download-application-files/456?email=planning.office.example@council.gov.uk&localAuthority=southwark"
       )
       .expect(400)
       .then((res) => {
         expect(res.body.error).toMatch(
-          /Failed to find session data for this sessionId/,
+          /Failed to find session data for this sessionId/
         );
       });
   });
@@ -264,7 +265,7 @@ describe(`downloading application data received by email`, () => {
   it("calls addTemplateFilesToZip()", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=planning.office.example@council.gov.uk&localAuthority=southwark",
+        "/download-application-files/123?email=planning.office.example@council.gov.uk&localAuthority=southwark"
       )
       .expect(200)
       .then((_res) => {
