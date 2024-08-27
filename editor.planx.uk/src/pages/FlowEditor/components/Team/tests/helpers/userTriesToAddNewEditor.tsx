@@ -10,12 +10,13 @@ export const userTriesToAddNewEditor = async (user: UserEvent) => {
   );
   user.click(addEditorButton);
   const addNewEditorModal = await screen.findByTestId("modal-create-user");
-  await userEntersInput("First name", "Mickey", addNewEditorModal);
-  await userEntersInput("Last name", "Mouse", addNewEditorModal);
+  await userEntersInput("First name", "Mickey", addNewEditorModal, user);
+  await userEntersInput("Last name", "Mouse", addNewEditorModal, user);
   await userEntersInput(
     "Email address",
     "mickeymouse@email.com",
     addNewEditorModal,
+    user,
   );
 
   const createUserButton = await screen.findByTestId(
