@@ -16,6 +16,7 @@ import FileUploadAndLabelComponent from "./Public";
 const { getState, setState } = useStore;
 let initialState: FullStore;
 
+vi.mock("axios");
 const mockedAxios = vi.mocked(axios, true);
 
 window.URL.createObjectURL = vi.fn();
@@ -193,7 +194,7 @@ describe("Modal trigger", () => {
     expect(fileTaggingModal).not.toBeInTheDocument();
   });
 
-  test.skip("Modal opens when a single file is uploaded", async () => {
+  test("Modal opens when a single file is uploaded", async () => {
     const { getByTestId, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
@@ -224,7 +225,7 @@ describe("Modal trigger", () => {
     expect(await within(fileTaggingModal).findByText("test.png")).toBeVisible();
   });
 
-  test.skip("Modal opens when multiple files are uploaded", async () => {
+  test("Modal opens when multiple files are uploaded", async () => {
     const { getByTestId, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
@@ -269,7 +270,7 @@ describe("Modal trigger", () => {
     ).toBeVisible();
   });
 
-  test.skip("Modal does not open when a file is deleted", async () => {
+  test("Modal does not open when a file is deleted", async () => {
     const { getByTestId, getByLabelText, queryByText, getByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
@@ -329,7 +330,7 @@ describe("Modal trigger", () => {
 });
 
 describe("Adding tags and syncing state", () => {
-  test.skip("Can continue when all required file types are uploaded and tagged", async () => {
+  test("Can continue when all required file types are uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
     const {
       getAllByRole,
@@ -411,7 +412,7 @@ describe("Adding tags and syncing state", () => {
     expect(handleSubmit).toHaveBeenCalledTimes(1);
   });
 
-  test.skip("Cannot continue when only an optional file type is uploaded and tagged", async () => {
+  test("Cannot continue when only an optional file type is uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
     const {
       getAllByRole,
@@ -494,7 +495,7 @@ describe("Adding tags and syncing state", () => {
 });
 
 describe("Error handling", () => {
-  test.skip("An error is thrown if a user does not upload any files", async () => {
+  test("An error is thrown if a user does not upload any files", async () => {
     const handleSubmit = vi.fn();
 
     const { getByTestId, getByRole, findByText, user } = setup(
@@ -549,7 +550,7 @@ describe("Error handling", () => {
     expect(dropzoneError).toBeVisible();
   });
 
-  test.skip("An error is thrown in the modal if a user does not tag all files", async () => {
+  test("An error is thrown in the modal if a user does not tag all files", async () => {
     const { getByTestId, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
@@ -587,7 +588,7 @@ describe("Error handling", () => {
     expect(modalError).toBeVisible();
   });
 
-  test.skip("An error is thrown in the main component if a user does not tag all files", async () => {
+  test("An error is thrown in the main component if a user does not tag all files", async () => {
     const handleSubmit = vi.fn();
 
     const { getAllByRole, getByTestId, getByRole, findByText, user } = setup(
@@ -647,7 +648,7 @@ describe("Submitting data", () => {
 
   afterEach(() => waitFor(() => setState(initialState)));
 
-  it.skip("records the user uploaded files", async () => {
+  it("records the user uploaded files", async () => {
     const handleSubmit = vi.fn();
     const { getByText, user } = setup(
       <FileUploadAndLabelComponent
@@ -675,7 +676,7 @@ describe("Submitting data", () => {
     );
   });
 
-  it.skip("records the full file type list presented to the user", async () => {
+  it("records the full file type list presented to the user", async () => {
     const handleSubmit = vi.fn();
     const { getByText, user } = setup(
       <FileUploadAndLabelComponent
@@ -697,7 +698,7 @@ describe("Submitting data", () => {
     expect(requestedFiles.optional).toContain("utilityBill");
   });
 
-  it.skip("appends to the list of existing requested files", async () => {
+  it("appends to the list of existing requested files", async () => {
     // Mimic having passed file upload / file upload and label component
     const breadcrumbs: Breadcrumbs = {
       previousFileUploadComponent: {
