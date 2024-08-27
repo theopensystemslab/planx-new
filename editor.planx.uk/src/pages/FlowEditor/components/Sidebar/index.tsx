@@ -185,7 +185,6 @@ const Sidebar: React.FC<{
     state.validateAndDiffFlow,
     state.isFlowPublished,
   ]);
-  const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet",
   );
@@ -447,13 +446,12 @@ const Sidebar: React.FC<{
             variant="link"
             onClick={() => {
               resetPreview();
-              setKey((a) => !a);
             }}
           >
             <Reset fontSize="small" />
             Restart
           </ResetToggle>
-          <Questions previewEnvironment="editor" key={String(key)} />
+          <Questions previewEnvironment="editor" />
         </SidebarContainer>
       )}
       {activeTab === "History" && (
