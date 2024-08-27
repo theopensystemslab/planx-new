@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { ChangeEvent } from "react";
+import React from "react";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input";
 import * as Yup from "yup";
