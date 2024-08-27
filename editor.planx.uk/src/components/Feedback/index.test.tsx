@@ -183,7 +183,7 @@ describe("Feedback component triage journey", () => {
 
     await user.type(
       getByTestId("userCommentTextarea"),
-      "This information is wrong"
+      "This information is wrong",
     );
 
     await user.click(getByText("Send feedback"));
@@ -210,7 +210,7 @@ describe("Feedback component 'Report an issue with this page journey'", () => {
 
     await waitFor(() => {
       expect(
-        getByText("Report an issue with this service")
+        getByText("Report an issue with this service"),
       ).toBeInTheDocument();
       expect(getByLabelText("What were you doing?")).toBeInTheDocument();
       expect(getByLabelText("What went wrong?")).toBeInTheDocument();
@@ -325,7 +325,7 @@ describe("Feedback component accessibility", () => {
 
   test("Issue form via triage should have no accessibility violations", async () => {
     const { container, getByText, getByLabelText, getByRole, user } = setup(
-      <Feedback />
+      <Feedback />,
     );
 
     await user.click(getByText("feedback"));
@@ -389,11 +389,11 @@ describe("Feedback component accessibility", () => {
 
     await user.type(
       getByLabelText("What were you doing?"),
-      "Answering a question"
+      "Answering a question",
     );
     await user.type(
       getByLabelText("What went wrong?"),
-      "I couldn't select Continue"
+      "I couldn't select Continue",
     );
 
     await user.click(getByText("Send feedback"));
