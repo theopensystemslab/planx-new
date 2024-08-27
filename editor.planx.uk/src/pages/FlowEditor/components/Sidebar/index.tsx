@@ -2,7 +2,6 @@ import LanguageIcon from "@mui/icons-material/Language";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -23,6 +22,7 @@ import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Permission from "ui/editor/Permission";
+import Reset from "ui/icons/Reset";
 import Input from "ui/shared/Input";
 
 import Questions from "../../../Preview/Questions";
@@ -64,6 +64,7 @@ const SidebarContainer = styled(Box)(() => ({
   overflow: "auto",
   flex: 1,
   background: "#fff",
+  position: "relative",
 }));
 
 const Header = styled("header")(({ theme }) => ({
@@ -81,6 +82,15 @@ const Header = styled("header")(({ theme }) => ({
     margin: "6px 4px 1px 4px",
     fontSize: "1.2rem",
   },
+}));
+
+const ResetToggle = styled(Button)(({ theme }) => ({
+  position: "absolute",
+  top: 0,
+  right: theme.spacing(3),
+  padding: theme.spacing(1, 1, 1, 0),
+  textDecorationStyle: "solid",
+  color: theme.palette.text.primary,
 }));
 
 const TabList = styled(Box)(({ theme }) => ({
@@ -261,15 +271,6 @@ const Sidebar: React.FC<{
             value={props.url.replace("/published", "/preview")}
           />
 
-          <Tooltip arrow title="Refresh preview">
-            <RefreshIcon
-              onClick={() => {
-                resetPreview();
-                setKey((a) => !a);
-              }}
-            />
-          </Tooltip>
-
           <Tooltip arrow title="Toggle debug console">
             <MenuOpenIcon
               onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
@@ -442,6 +443,16 @@ const Sidebar: React.FC<{
       </TabList>
       {activeTab === "PreviewBrowser" && (
         <SidebarContainer>
+          <ResetToggle
+            variant="link"
+            onClick={() => {
+              resetPreview();
+              setKey((a) => !a);
+            }}
+          >
+            <Reset fontSize="small" />
+            Restart
+          </ResetToggle>
           <Questions previewEnvironment="editor" key={String(key)} />
         </SidebarContainer>
       )}
