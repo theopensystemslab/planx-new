@@ -11,7 +11,8 @@ CREATE TEMPORARY TABLE sync_team_settings (
   external_planning_site_url text,
   external_planning_site_name text,
   boundary_url text,
-  boundary_bbox jsonb
+  boundary_bbox jsonb,
+  submission_email text
 );
 
 \copy sync_team_settings FROM '/tmp/team_settings.csv' WITH (FORMAT csv, DELIMITER ';');
@@ -29,7 +30,8 @@ INSERT INTO
     external_planning_site_url,
     external_planning_site_name,
     boundary_url,
-    boundary_bbox
+    boundary_bbox,
+    submission_email
   )
 SELECT
     id,
@@ -43,7 +45,8 @@ SELECT
     external_planning_site_url,
     external_planning_site_name,
     boundary_url,
-    boundary_bbox
+    boundary_bbox,
+    submission_email
 FROM
   sync_team_settings ON CONFLICT (id) DO
 UPDATE
@@ -58,7 +61,8 @@ SET
     external_planning_site_url = EXCLUDED.external_planning_site_url,
     external_planning_site_name = EXCLUDED.external_planning_site_name,
     boundary_url = EXCLUDED.boundary_url,
-    boundary_bbox = EXCLUDED.boundary_bbox;
+    boundary_bbox = EXCLUDED.boundary_bbox,
+    submission_email = EXCLUDED.submission_email;
 SELECT
   setval('team_settings_id_seq', max(id))
 FROM
