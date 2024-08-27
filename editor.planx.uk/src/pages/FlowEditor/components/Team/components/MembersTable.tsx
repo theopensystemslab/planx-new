@@ -7,7 +7,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { AddButton } from "pages/Team";
 import React, { useState } from "react";
 
@@ -102,7 +101,7 @@ export const MembersTable = ({
                 <TableCell>{member.email}</TableCell>
               </StyledTableRow>
             ))}
-            {showAddMemberButton && hasFeatureFlag("ADD_NEW_EDITOR") && (
+            {showAddMemberButton && (
               <TableRow>
                 <TableCell colSpan={3}>
                   <AddButton onClick={() => setShowModal(true)}>

@@ -7,10 +7,6 @@ import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import { alreadyExistingUser } from "./mocks/mockUsers";
 
-vi.mock("lib/featureFlags.ts", () => ({
-  hasFeatureFlag: vi.fn().mockReturnValue(true),
-}));
-
 vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
   () => ({
