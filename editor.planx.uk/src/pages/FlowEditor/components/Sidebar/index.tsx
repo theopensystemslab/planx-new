@@ -11,7 +11,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
-import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -34,6 +33,7 @@ import {
   ValidationChecks,
 } from "./PublishDialog";
 import Search from "./Search";
+import StyledTab from "./StyledTab";
 
 type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
 
@@ -114,27 +114,6 @@ const TabList = styled(Box)(({ theme }) => ({
     display: "none",
   },
 }));
-
-const StyledTab = styled(Tab)(({ theme }) => ({
-  position: "relative",
-  zIndex: 1,
-  textTransform: "none",
-  background: "transparent",
-  border: `1px solid transparent`,
-  borderBottomColor: theme.palette.border.main,
-  color: theme.palette.primary.main,
-  fontWeight: "600",
-  minHeight: "36px",
-  margin: theme.spacing(0, 0.5),
-  marginBottom: "-1px",
-  padding: "0.5em",
-  [`&.${tabClasses.selected}`]: {
-    background: theme.palette.background.default,
-    borderColor: theme.palette.border.main,
-    borderBottomColor: theme.palette.common.white,
-    color: theme.palette.text.primary,
-  },
-})) as typeof Tab;
 
 const SidebarTab = (props: any) => (
   <StyledTab disableFocusRipple disableTouchRipple disableRipple {...props} />
@@ -415,12 +394,12 @@ const Sidebar: React.FC<{
       </Header>
       <TabList>
         <Tabs centered onChange={handleChange} value={activeTab} aria-label="">
-          <SidebarTab value="PreviewBrowser" label="Preview" />
-          <SidebarTab value="History" label="History" />
+          <StyledTab value="PreviewBrowser" label="Preview" tabTheme="light" />
+          <StyledTab value="History" label="History" tabTheme="light" />
           {hasFeatureFlag("SEARCH") && (
-            <SidebarTab value="Search" label="Search" />
+            <StyledTab value="Search" label="Search" tabTheme="light" />
           )}
-          <SidebarTab value="Console" label="Console" />
+          <StyledTab value="Console" label="Console" tabTheme="dark" />
         </Tabs>
       </TabList>
       {activeTab === "PreviewBrowser" && (
