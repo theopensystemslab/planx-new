@@ -11,6 +11,7 @@ import SettingsSection from "ui/editor/SettingsSection";
 import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
 import ReferenceCodeForm from "./ReferenceCodeForm";
+import SubmissionsForm from "./SubmissionsForm";
 
 export interface FormProps {
   formikConfig: FormikConfig<TeamSettings>;
@@ -77,6 +78,7 @@ const GeneralSettings: React.FC = () => {
             formikConfig={formikConfig}
             onSuccess={onSuccess}
           />
+          <SubmissionsForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>
       )}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

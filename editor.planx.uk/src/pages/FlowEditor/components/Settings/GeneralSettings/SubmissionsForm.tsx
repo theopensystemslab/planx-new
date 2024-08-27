@@ -9,7 +9,10 @@ import * as Yup from "yup";
 import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
-export default function SubmissionForm({ formikConfig, onSuccess }: FormProps) {
+export default function SubmissionsForm({
+  formikConfig,
+  onSuccess,
+}: FormProps) {
   const formSchema = Yup.object().shape({
     submissionEmail: Yup.string().email("Enter a valid email address"),
   });
@@ -35,8 +38,8 @@ export default function SubmissionForm({ formikConfig, onSuccess }: FormProps) {
       description={
         <>
           <Typography variant="body2">
-            The email address used by the Send component to send applications to
-            your planning office.
+            If your Send component has the 'Email to planning office' option
+            selected, submissions are sent to this address.
           </Typography>
         </>
       }
