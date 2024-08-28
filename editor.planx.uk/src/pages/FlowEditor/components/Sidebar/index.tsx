@@ -18,6 +18,7 @@ import { AxiosError } from "axios";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
+import ReactJson from "react-json-view";
 import { useAsync } from "react-use";
 import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
@@ -138,9 +139,16 @@ const DebugConsole = () => {
           Download the flow schema
         </a>
       </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", fontSize: "medium" }}>
-        {JSON.stringify({ passport, breadcrumbs, cachedBreadcrumbs }, null, 2)}
-      </pre>
+      <div style={{ fontSize: "medium" }}>
+        <ReactJson
+          src={{ passport, breadcrumbs, cachedBreadcrumbs }}
+          theme="monokai"
+          enableClipboard={false}
+          displayDataTypes={false}
+          indentWidth={2}
+          style={{ padding: "2em 0", background: "transparent" }}
+        />
+      </div>
     </Console>
   );
 };

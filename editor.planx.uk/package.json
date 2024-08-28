@@ -75,6 +75,7 @@
     "react-dropzone": "^14.2.3",
     "react-error-boundary": "^3.1.4",
     "react-html-parser": "^2.0.2",
+    "react-json-view": "^1.21.3",
     "react-markdown": "^8.0.7",
     "react-navi": "^0.15.0",
     "react-navi-helmet-async": "^0.15.0",
