@@ -205,7 +205,7 @@ export const ResidentialUnitsGLAGained: Schema = {
     {
       type: "number",
       data: {
-        title: "How many units that fit the descriptions above are gained?",
+        title: "How many units of the type described above are gained?",
         fn: "identicalUnits",
         allowNegatives: false,
       },
