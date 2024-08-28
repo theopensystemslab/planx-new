@@ -8,6 +8,7 @@ import { SiteAddress } from "@planx/components/FindProperty/model";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { Feature } from "geojson";
+import { GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -20,6 +21,12 @@ import type { MapAndLabel } from "./../model";
 import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
 
 type Props = PublicProps<MapAndLabel>;
+
+export interface PresentationalProps extends Props {
+  latitude: number;
+  longitude: number;
+  boundaryBBox?: GeoJsonObject;
+}
 
 function a11yProps(index: number) {
   return {
@@ -110,13 +117,10 @@ const Root = () => {
     drawColor,
     drawType,
     schemaName,
-    handleSubmit,
+    latitude,
+    longitude,
+    boundaryBBox,
   } = mapAndLabelProps;
-
-  const teamSettings = useStore.getState().teamSettings;
-  const passport = useStore((state) => state.computePassport());
-  const { latitude, longitude } =
-    (passport?.data?._address as SiteAddress) || {};
 
   const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
 
@@ -138,27 +142,6 @@ const Root = () => {
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
   }, [setFeatures]);
-
-  if (!latitude || !longitude) {
-    return (
-      <Card handleSubmit={handleSubmit} isValid>
-        <CardHeader title={title} description={description} />
-        <ErrorSummaryContainer
-          role="status"
-          data-testid="error-summary-invalid-graph"
-        >
-          <Typography variant="h4" component="h2" gutterBottom>
-            Invalid graph
-          </Typography>
-          <Typography variant="body2">
-            Edit this flow so that "MapAndLabel" is positioned after
-            "FindProperty"; an initial address is required to correctly display
-            the map.
-          </Typography>
-        </ErrorSummaryContainer>
-      </Card>
-    );
-  }
 
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
@@ -193,10 +176,7 @@ const Root = () => {
                 ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
                 : ``
             }
-            clipGeojsonData={
-              teamSettings?.boundaryBBox &&
-              JSON.stringify(teamSettings?.boundaryBBox)
-            }
+            clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
             mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
             collapseAttributions
           />
@@ -221,11 +201,47 @@ const Root = () => {
   );
 };
 
+export const Presentational: React.FC<PresentationalProps> = (props) => (
+  <MapAndLabelProvider {...props}>
+    <Root />
+  </MapAndLabelProvider>
+);
+
+const GraphError = (props: Props) => (
+  <Card handleSubmit={props.handleSubmit} isValid>
+    <CardHeader title={props.title} description={props.description} />
+    <ErrorSummaryContainer
+      role="status"
+      data-testid="error-summary-invalid-graph"
+    >
+      <Typography variant="h4" component="h2" gutterBottom>
+        Invalid graph
+      </Typography>
+      <Typography variant="body2">
+        Edit this flow so that "MapAndLabel" is positioned after "FindProperty";
+        an initial address is required to correctly display the map.
+      </Typography>
+    </ErrorSummaryContainer>
+  </Card>
+);
+
 function MapAndLabelComponent(props: Props) {
+  const teamSettings = useStore.getState().teamSettings;
+  const passport = useStore((state) => state.computePassport());
+  const { latitude, longitude } =
+    (passport?.data?._address as SiteAddress) || {};
+
+  if (!latitude || !longitude) {
+    return <GraphError {...props} />;
+  }
+
   return (
-    <MapAndLabelProvider {...props}>
-      <Root />
-    </MapAndLabelProvider>
+    <Presentational
+      {...props}
+      latitude={latitude}
+      longitude={longitude}
+      boundaryBBox={teamSettings.boundaryBBox}
+    />
   );
 }
 

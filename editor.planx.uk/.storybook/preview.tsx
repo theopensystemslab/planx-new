@@ -4,8 +4,13 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { defaultTheme } from "../src/theme";
 import React from "react";
+import { MyMap } from "@opensystemslab/map";
 
 import { reactNaviDecorator } from "./__mocks__/react-navi";
+
+if (!window.customElements.get("my-map")) {
+  window.customElements.define("my-map", MyMap);
+}
 
 export const decorators = [
   (Story) => (

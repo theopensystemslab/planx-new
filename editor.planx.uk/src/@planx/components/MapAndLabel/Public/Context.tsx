@@ -8,7 +8,6 @@ import {
   getPreviouslySubmittedData,
   makeData,
 } from "@planx/components/shared/utils";
-import { PublicProps } from "@planx/components/ui";
 import { FormikProps, useFormik } from "formik";
 import React, {
   createContext,
@@ -17,7 +16,7 @@ import React, {
   useState,
 } from "react";
 
-import { MapAndLabel } from "../model";
+import { PresentationalProps } from ".";
 
 interface MapAndLabelContextValue {
   schema: Schema;
@@ -27,7 +26,7 @@ interface MapAndLabelContextValue {
   cancelEditItem: () => void;
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
-  mapAndLabelProps: PublicProps<MapAndLabel>;
+  mapAndLabelProps: PresentationalProps;
   errors: {
     unsavedItem: boolean;
     min: boolean;
@@ -35,7 +34,7 @@ interface MapAndLabelContextValue {
   };
 }
 
-type MapAndLabelProviderProps = PropsWithChildren<PublicProps<MapAndLabel>>;
+type MapAndLabelProviderProps = PropsWithChildren<PresentationalProps>;
 
 const MapAndLabelContext = createContext<MapAndLabelContextValue | undefined>(
   undefined,
