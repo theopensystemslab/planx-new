@@ -76,6 +76,7 @@ declare module "@mui/material/styles/createPalette" {
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     help: true;
+    link: true;
   }
 
   interface ButtonPropsColorOverrides {
