@@ -1,7 +1,7 @@
+import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import RadioGroup from "@mui/material/RadioGroup";
-import { useTheme } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -28,8 +28,6 @@ export const SCHEMAS = [{ name: "Trees", schema: Trees }];
 export default MapAndLabelComponent;
 
 function MapAndLabelComponent(props: Props) {
-  const theme = useTheme();
-
   const formik = useFormik({
     initialValues: parseContent(props.node?.data),
     onSubmit: (newValues) => {
@@ -78,8 +76,68 @@ function MapAndLabelComponent(props: Props) {
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
-        <ModalSectionContent title="Map formatting">
+        <ModalSectionContent title="Map options">
           <InputGroup>
+            <Box mb={2}>
+              <FormControl component="fieldset">
+                <InputLabel label="Basemap">
+                  <RadioGroup
+                    defaultValue="OSVectorTile"
+                    value={formik.values.basemap}
+                  >
+                    {[
+                      {
+                        id: "OSVectorTile",
+                        title: "Ordnance Survey Vector Tiles",
+                      },
+                      {
+                        id: "MapboxSatellite",
+                        title: "Mapbox Satellite imagery",
+                      },
+                    ].map((type) => (
+                      <BasicRadio
+                        key={type.id}
+                        id={type.id}
+                        title={type.title}
+                        variant="compact"
+                        value={type.id}
+                        onChange={(e: React.SyntheticEvent<Element, Event>) => {
+                          const target = e?.target as HTMLInputElement;
+                          formik.setFieldValue("basemap", target.value);
+                        }}
+                      />
+                    ))}
+                  </RadioGroup>
+                </InputLabel>
+              </FormControl>
+            </Box>
+            <Box mb={2}>
+              <FormControl component="fieldset">
+                <InputLabel label="Drawing type">
+                  <RadioGroup
+                    defaultValue="Polygon"
+                    value={formik.values.drawType}
+                  >
+                    {[
+                      { id: "Polygon", title: "Polygon" },
+                      { id: "Point", title: "Point" },
+                    ].map((type) => (
+                      <BasicRadio
+                        key={type.id}
+                        id={type.id}
+                        title={type.title}
+                        variant="compact"
+                        value={type.id}
+                        onChange={(e: React.SyntheticEvent<Element, Event>) => {
+                          const target = e?.target as HTMLInputElement;
+                          formik.setFieldValue("drawType", target.value);
+                        }}
+                      />
+                    ))}
+                  </RadioGroup>
+                </InputLabel>
+              </FormControl>
+            </Box>
             <InputRow>
               <InputRowItem>
                 <ColorPicker
@@ -93,30 +151,6 @@ function MapAndLabelComponent(props: Props) {
               </InputRowItem>
             </InputRow>
           </InputGroup>
-        </ModalSectionContent>
-        <ModalSectionContent>
-          <FormControl component="fieldset">
-            <InputLabel label="Map drawing type">
-              <RadioGroup defaultValue="Polygon" value={formik.values.drawType}>
-                {[
-                  { id: "Polygon", title: "Polygon" },
-                  { id: "Point", title: "Point" },
-                ].map((type) => (
-                  <BasicRadio
-                    key={type.id}
-                    id={type.id}
-                    title={type.title}
-                    variant="compact"
-                    value={type.id}
-                    onChange={(e: React.SyntheticEvent<Element, Event>) => {
-                      const target = e?.target as HTMLInputElement;
-                      formik.setFieldValue("drawType", target.value);
-                    }}
-                  />
-                ))}
-              </RadioGroup>
-            </InputLabel>
-          </FormControl>
         </ModalSectionContent>
         <ModalSectionContent title="Schema">
           <InputRow>

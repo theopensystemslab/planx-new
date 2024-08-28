@@ -76,7 +76,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             <Typography component="h2" variant="h3">
               {`${schema.type} ${feature.properties?.label}`}
             </Typography>
-            <Typography variant="body2" gutterBottom>
+            <Typography variant="body2" mb={2}>
               {`${feature.geometry.type}`}
               {feature.geometry.type === "Point"
                 ? ` (${feature.geometry.coordinates.map((coord) =>
@@ -106,6 +106,7 @@ const Root = () => {
     info,
     policyRef,
     howMeasured,
+    basemap,
     drawColor,
     drawType,
     schemaName,
@@ -173,6 +174,7 @@ const Root = () => {
           {/* @ts-ignore */}
           <my-map
             id="map-and-label-map"
+            basemap={basemap}
             ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
             drawMode
             drawMany
@@ -186,11 +188,17 @@ const Root = () => {
             osProxyEndpoint={`${
               import.meta.env.VITE_APP_API_URL
             }/proxy/ordnance-survey`}
-            osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+            osCopyright={
+              basemap === "OSVectorTile"
+                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                : ``
+            }
             clipGeojsonData={
               teamSettings?.boundaryBBox &&
               JSON.stringify(teamSettings?.boundaryBBox)
             }
+            mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
+            collapseAttributions
           />
         </MapContainer>
         {features && features?.length > 0 ? (

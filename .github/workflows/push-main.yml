@@ -53,13 +53,14 @@ jobs:
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
-          VITE_APP_API_URL: https://api.editor.planx.dev
-          VITE_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql
-          VITE_APP_HASURA_WEBSOCKET: wss://hasura.editor.planx.dev/v1/graphql
-          VITE_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
           VITE_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           VITE_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          VITE_APP_API_URL: https://api.editor.planx.dev
           VITE_APP_ENV: staging
+          VITE_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql
+          VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+          VITE_APP_HASURA_WEBSOCKET: wss://hasura.editor.planx.dev/v1/graphql
+          VITE_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:

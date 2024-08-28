@@ -421,6 +421,10 @@ export = async () => {
             name: "IDOX_NEXUS_SUBMISSION_URL",
             value: config.requireSecret("idox-nexus-submission-url"),
           },
+          {
+            name: "MAPBOX_ACCESS_TOKEN",
+            value: config.requireSecret("mapbox-access-token"),
+          },
           generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
           ...generateTeamSecrets(config, env),
         ],

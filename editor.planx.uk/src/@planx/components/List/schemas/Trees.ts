@@ -68,8 +68,7 @@ export const Trees: Schema = {
         mapOptions: {
           basemap: "OSVectorTile",
           drawType: "Point",
-          drawColor: "#ff0000",
-          drawMany: true,
+          drawColor: "#66ff00",
         },
       },
     },

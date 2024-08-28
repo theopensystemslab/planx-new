@@ -211,6 +211,7 @@ jobs:
           VITE_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           VITE_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
           VITE_APP_HASURA_WEBSOCKET: wss://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
           VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
@@ -226,6 +227,7 @@ jobs:
           VITE_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           VITE_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
           VITE_APP_HASURA_WEBSOCKET: wss://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
