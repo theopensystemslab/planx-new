@@ -1,5 +1,4 @@
 import LanguageIcon from "@mui/icons-material/Language";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Badge from "@mui/material/Badge";
@@ -12,7 +11,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
-import Tab, { tabClasses } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -35,13 +33,16 @@ import {
   ValidationChecks,
 } from "./PublishDialog";
 import Search from "./Search";
+import StyledTab from "./StyledTab";
 
-type SidebarTabs = "PreviewBrowser" | "History" | "Search";
+type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
 
-const Console = styled(Box)(() => ({
+const Console = styled(Box)(({ theme }) => ({
   overflow: "auto",
-  padding: 20,
-  maxHeight: "50%",
+  padding: theme.spacing(2),
+  height: "100%",
+  backgroundColor: theme.palette.background.dark,
+  color: theme.palette.common.white,
 }));
 
 const Root = styled(Box)(({ theme }) => ({
@@ -114,27 +115,6 @@ const TabList = styled(Box)(({ theme }) => ({
   },
 }));
 
-const StyledTab = styled(Tab)(({ theme }) => ({
-  position: "relative",
-  zIndex: 1,
-  textTransform: "none",
-  background: "transparent",
-  border: `1px solid transparent`,
-  borderBottomColor: theme.palette.border.main,
-  color: theme.palette.primary.main,
-  fontWeight: "600",
-  minHeight: "36px",
-  margin: theme.spacing(0, 0.5),
-  marginBottom: "-1px",
-  padding: "0.5em",
-  [`&.${tabClasses.selected}`]: {
-    background: theme.palette.background.default,
-    borderColor: theme.palette.border.main,
-    borderBottomColor: theme.palette.common.white,
-    color: theme.palette.text.primary,
-  },
-})) as typeof Tab;
-
 const DebugConsole = () => {
   const [passport, breadcrumbs, flowId, cachedBreadcrumbs] = useStore(
     (state) => [
@@ -145,7 +125,7 @@ const DebugConsole = () => {
     ],
   );
   return (
-    <Console borderTop={2} borderColor="border.main" bgcolor="background.paper">
+    <Console>
       <Typography variant="body2">
         <a
           href={`${
@@ -153,11 +133,12 @@ const DebugConsole = () => {
           }/flows/${flowId}/download-schema`}
           target="_blank"
           rel="noopener noreferrer"
+          style={{ color: "inherit" }}
         >
           Download the flow schema
         </a>
       </Typography>
-      <pre>
+      <pre style={{ whiteSpace: "pre-wrap", fontSize: "medium" }}>
         {JSON.stringify({ passport, breadcrumbs, cachedBreadcrumbs }, null, 2)}
       </pre>
     </Console>
@@ -269,12 +250,6 @@ const Sidebar: React.FC<{
             disabled
             value={props.url.replace("/published", "/preview")}
           />
-
-          <Tooltip arrow title="Toggle debug console">
-            <MenuOpenIcon
-              onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
-            />
-          </Tooltip>
 
           <Permission.IsPlatformAdmin>
             <Tooltip arrow title="Open draft service">
@@ -415,29 +390,12 @@ const Sidebar: React.FC<{
       </Header>
       <TabList>
         <Tabs centered onChange={handleChange} value={activeTab} aria-label="">
-          <StyledTab
-            disableFocusRipple
-            disableTouchRipple
-            disableRipple
-            value="PreviewBrowser"
-            label="Preview"
-          />
-          <StyledTab
-            disableFocusRipple
-            disableTouchRipple
-            disableRipple
-            value="History"
-            label="History"
-          />
+          <StyledTab value="PreviewBrowser" label="Preview" tabTheme="light" />
+          <StyledTab value="History" label="History" tabTheme="light" />
           {hasFeatureFlag("SEARCH") && (
-            <StyledTab
-              disableFocusRipple
-              disableTouchRipple
-              disableRipple
-              value="Search"
-              label="Search"
-            />
+            <StyledTab value="Search" label="Search" tabTheme="light" />
           )}
+          <StyledTab value="Console" label="Console" tabTheme="dark" />
         </Tabs>
       </TabList>
       {activeTab === "PreviewBrowser" && (
@@ -466,7 +424,11 @@ const Sidebar: React.FC<{
           <Search />
         </SidebarContainer>
       )}
-      {showDebugConsole && <DebugConsole />}
+      {activeTab === "Console" && (
+        <SidebarContainer>
+          <DebugConsole />
+        </SidebarContainer>
+      )}
     </Root>
   );
 });
