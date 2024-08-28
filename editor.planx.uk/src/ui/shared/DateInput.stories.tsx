@@ -20,6 +20,7 @@ export const Basic = {
     value: "2025-01-01",
     bordered: true,
     id: "date-input-0",
+    onChange: () => {},
   },
 } satisfies Story;
 
@@ -30,5 +31,6 @@ export const WithError = {
     bordered: true,
     id: "date-input-0",
     error: "Enter a valid date",
+    onChange: () => {},
   },
 } satisfies Story;

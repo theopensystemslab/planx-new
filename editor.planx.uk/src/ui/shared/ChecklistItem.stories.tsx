@@ -16,5 +16,6 @@ export const Basic = {
     id: "option-a",
     label: "Option A",
     checked: false,
+    onChange: () => {},
   },
 } satisfies Story;
