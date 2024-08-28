@@ -1,9 +1,9 @@
-import Fuse, { IFuseOptions } from "fuse.js";
+import Fuse, { FuseOptionKey, IFuseOptions } from "fuse.js";
 import { useEffect, useMemo, useState } from "react";
 
 interface UseSearchProps<T extends object> {
   list: T[];
-  keys: string[];
+  keys: Array<FuseOptionKey<T>>;
 }
 
 export interface SearchResult<T extends object> {
@@ -47,7 +47,7 @@ export const useSearch = <T extends object>({
           (result.matches?.[0].indices as [number, number][]) || undefined,
       })),
     );
-  }, [pattern]);
+  }, [pattern, fuse]);
 
   return { results, search: setPattern };
 };

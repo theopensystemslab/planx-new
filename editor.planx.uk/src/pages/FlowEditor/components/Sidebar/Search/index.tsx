@@ -9,11 +9,12 @@ import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
 
 import { ExternalPortalList } from "./ExternalPortalList";
+import { DATA_FACETS } from "./facets";
 import { NodeSearchResults } from "./NodeSearchResults";
 
 interface SearchNodes {
   input: string;
-  facets: ["data.fn", "data.val"];
+  facets: typeof DATA_FACETS;
 }
 
 const Search: React.FC = () => {
@@ -27,7 +28,7 @@ const Search: React.FC = () => {
   }, [orderedFlow, setOrderedFlow]);
 
   const formik = useFormik<SearchNodes>({
-    initialValues: { input: "", facets: ["data.fn", "data.val"] },
+    initialValues: { input: "", facets: DATA_FACETS },
     onSubmit: ({ input }) => {
       search(input);
     },
