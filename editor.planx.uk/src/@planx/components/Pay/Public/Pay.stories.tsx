@@ -68,5 +68,6 @@ export const ForInformationOnly = {
       "Payments will be accepted for your future application via GOV.UK Pay. You will have the option to pay yourself or invite someone else to pay.",
     fee: 103,
     hidePay: true,
+    onConfirm: () => {},
   },
 } satisfies Story;
