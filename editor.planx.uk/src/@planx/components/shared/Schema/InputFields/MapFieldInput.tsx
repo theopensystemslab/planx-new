@@ -64,11 +64,17 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
             osProxyEndpoint={`${
               import.meta.env.VITE_APP_API_URL
             }/proxy/ordnance-survey`}
-            osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+            osCopyright={
+              mapOptions?.basemap === "OSVectorTile"
+                ? `Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                : ``
+            }
             clipGeojsonData={
               teamSettings?.boundaryBBox &&
               JSON.stringify(teamSettings?.boundaryBBox)
             }
+            mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
+            collapseAttributions
           />
         </MapContainer>
       </ErrorWrapper>

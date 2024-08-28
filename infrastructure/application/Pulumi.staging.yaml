@@ -32,6 +32,8 @@ config:
   application:idox-nexus-token-url: https://dev.identity.idoxgroup.com/uaa/oauth/token
   application:jwt-secret:
     secure: AAABACbmLC4176IBxX5iL64/nycSXEsCYSQ0hTb7t2OCVlWUc627Vr/EpBhcqPrw9q+0z8UOvRJG5/c/DflZxfPxyJRUVNu+
+  application:mapbox-access-token:
+    secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
   application:metabase-encryption-secret-key:
     secure: AAABAGmfVICD8sR+IE6mHC8BNUY1WQXGCbv5F3C1fSgA+1ADiRem3GNrwY0YRZociRYuPIo3MIRS0aIg44jt10SBCE0ik58wHamcKA==
   application:metabasePgPassword:

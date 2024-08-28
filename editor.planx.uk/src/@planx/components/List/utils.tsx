@@ -39,7 +39,7 @@ export function formatSchemaDisplayValue(
     }
     case "question": {
       const matchingOption = field.data.options.find(
-        (option) => option.data.text === value,
+        (option) => option.data.text === value || option.data.val === value,
       );
       return matchingOption?.data.text;
     }
@@ -56,6 +56,7 @@ export function formatSchemaDisplayValue(
               {/* @ts-ignore */}
               <my-map
                 id="inactive-list-map"
+                basemap={field.data.mapOptions?.basemap}
                 latitude={feature.geometry.coordinates[1]}
                 longitude={feature.geometry.coordinates[0]}
                 zoom={19}
@@ -69,7 +70,12 @@ export function formatSchemaDisplayValue(
                 hideResetControl
                 staticMode
                 style={{ width: "100%", height: "30vh" }}
-                osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+                osCopyright={
+                  field.data.mapOptions?.basemap === "OSVectorTile"
+                    ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                    : ``
+                }
+                mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
                 collapseAttributions
               />
             </>
@@ -80,6 +86,7 @@ export function formatSchemaDisplayValue(
               {/* @ts-ignore */}
               <my-map
                 id="inactive-list-map"
+                basemap={field.data.mapOptions?.basemap}
                 geojsonData={JSON.stringify(feature)}
                 geojsonColor={field.data.mapOptions?.drawColor}
                 geojsonFill
@@ -90,7 +97,12 @@ export function formatSchemaDisplayValue(
                 hideResetControl
                 staticMode
                 style={{ width: "100%", height: "30vh" }}
-                osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+                osCopyright={
+                  field.data.mapOptions?.basemap === "OSVectorTile"
+                    ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                    : ``
+                }
+                mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
                 collapseAttributions
               />
             </>
