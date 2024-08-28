@@ -3,7 +3,8 @@ import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import { vi } from "vitest";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { userEntersInput } from "./helpers/userEntersInput";
+import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
+import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 
 vi.mock("lib/featureFlags.ts", () => ({
   hasFeatureFlag: vi.fn().mockReturnValue(true),
@@ -23,6 +24,7 @@ let initialState: FullStore;
 
 describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add a new editor'", () => {
   beforeEach(async () => {
+    useStore.setState({ teamMembers: mockTeamMembersData });
     const user = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
@@ -41,26 +43,9 @@ describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add 
 describe("when a user fills in the 'add a new editor' form correctly", () => {
   afterAll(() => useStore.setState(initialState));
   beforeEach(async () => {
+    useStore.setState({ teamMembers: mockTeamMembersData });
     const user = await setupTeamMembersScreen();
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton = await within(teamEditorsTable).findByText(
-      "Add a new editor",
-    );
-    user.click(addEditorButton);
-    const addNewEditorModal = await screen.findByTestId("modal-create-user");
-    await userEntersInput("First name", "Mickey", addNewEditorModal);
-    await userEntersInput("Last name", "Mouse", addNewEditorModal);
-    await userEntersInput(
-      "Email address",
-      "mickeymouse@email.com",
-      addNewEditorModal,
-    );
-
-    const createUserButton = await screen.findByTestId(
-      "modal-create-user-button",
-    );
-
-    user.click(createUserButton);
+    await userTriesToAddNewEditor(user);
   });
 
   it("adds the new user row to the Team Editors table", async () => {
@@ -71,5 +56,17 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
         within(membersTable).getByText(/Mickey Mouse/),
       ).toBeInTheDocument();
     });
+  });
+
+  it("closes the modal", async () => {
+    await waitFor(() => {
+      expect(screen.queryByTestId("modal-create-user")).not.toBeInTheDocument();
+    });
+  });
+
+  it("shows a success message", async () => {
+    expect(
+      await screen.findByText(/Successfully added a user/),
+    ).toBeInTheDocument();
   });
 });
