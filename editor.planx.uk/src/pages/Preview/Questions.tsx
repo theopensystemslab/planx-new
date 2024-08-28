@@ -1,6 +1,6 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
-import ButtonBase from "@mui/material/ButtonBase";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -23,23 +23,12 @@ const BackBar = styled(Box)(() => ({
   zIndex: "1000",
 }));
 
-export const BackButton = styled(ButtonBase)(({ theme, hidden }) => ({
+export const BackButton = styled(Button)(({ theme, hidden }) => ({
   visibility: "visible",
   pointerEvents: "auto",
-  display: "flex",
-  cursor: "pointer",
   userSelect: "none",
   alignSelf: "start",
-  fontSize: "inherit",
-  background: "transparent",
-  border: "none",
-  columnGap: theme.spacing(1),
   padding: theme.spacing(1, 1, 1, 0),
-  minHeight: "48px",
-  textDecoration: "underline",
-  "&:hover": {
-    textDecorationThickness: "3px",
-  },
   ...(hidden && {
     visibility: "hidden",
     pointerEvents: "none",
@@ -180,6 +169,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       <BackBar hidden={!showBackBar}>
         <Container maxWidth={false}>
           <BackButton
+            variant="link"
             hidden={!showBackButton}
             data-testid="backButton"
             onClick={() => goBack()}

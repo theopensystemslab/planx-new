@@ -11,7 +11,8 @@ CREATE TEMPORARY TABLE sync_team_settings (
   external_planning_site_url text,
   external_planning_site_name text,
   boundary_url text,
-  boundary_bbox jsonb
+  boundary_bbox jsonb,
+  submission_email text
 );
 
 \copy sync_team_settings FROM '/tmp/team_settings.csv' WITH (FORMAT csv, DELIMITER ';');
