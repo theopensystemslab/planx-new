@@ -41,7 +41,7 @@ const Console = styled(Box)(({ theme }) => ({
   overflow: "auto",
   padding: theme.spacing(2),
   height: "100%",
-  backgroundColor: theme.palette.text.primary,
+  backgroundColor: theme.palette.background.dark,
   color: theme.palette.common.white,
 }));
 

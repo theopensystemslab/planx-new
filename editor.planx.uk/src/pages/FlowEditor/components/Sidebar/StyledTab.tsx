@@ -25,7 +25,7 @@ const StyledTab = styled(({ tabTheme, ...props }: StyledTabProps) => (
   [`&.${tabClasses.selected}`]: {
     background:
       tabTheme === "dark"
-        ? theme.palette.text.primary
+        ? theme.palette.background.dark
         : theme.palette.background.default,
     borderColor: theme.palette.border.main,
     borderBottomColor: theme.palette.common.white,
