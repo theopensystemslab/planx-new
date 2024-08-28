@@ -3,6 +3,7 @@ import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { defaultTheme } from "../src/theme";
+import React from "react";
 
 import { reactNaviDecorator } from "./__mocks__/react-navi";
 
@@ -19,3 +20,4 @@ export const decorators = [
   ),
   reactNaviDecorator,
 ];
+export const tags = ["autodocs"];
