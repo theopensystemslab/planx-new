@@ -24,13 +24,15 @@ import { optimisticallyUpdateMembersTable } from "./lib/optimisticallyUpdateMemb
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
-  setShowToast,
+  setShowSuccessToast,
+  setShowErrorToast,
 }: AddNewEditorModalProps) => {
   const [showUserAlreadyExistsError, setShowUserAlreadyExistsError] =
     useState<boolean>(false);
 
   const clearErrors = () => {
     setShowUserAlreadyExistsError(false);
+    setShowErrorToast(false);
   };
 
   const handleSubmit = async (
@@ -39,7 +41,7 @@ export const AddNewEditorModal = ({
   ) => {
     const { teamId, teamSlug } = useStore.getState();
 
-    const newUserId = await createAndAddUserToTeam(
+    const createUserResult = await createAndAddUserToTeam(
       values.email,
       values.firstName,
       values.lastName,
@@ -49,16 +51,19 @@ export const AddNewEditorModal = ({
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
       }
+      if (err.message === "Unable to create user") {
+        setShowErrorToast(true);
+      }
       console.error(err);
     });
 
-    if (!newUserId) {
+    if (!createUserResult) {
       return;
     }
     clearErrors();
-    optimisticallyUpdateMembersTable(values, newUserId);
+    optimisticallyUpdateMembersTable(values, createUserResult.id);
     setShowModal(false);
-    setShowToast(true);
+    setShowSuccessToast(true);
     resetForm({ values });
   };
 

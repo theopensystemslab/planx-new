@@ -80,7 +80,7 @@ describe("when the addNewEditor modal is rendered", () => {
         <AddNewEditorModal
           showModal={true}
           setShowModal={() => {}}
-          setShowToast={() => {}}
+          setShowSuccessToast={() => {}}
         />
       </DndProvider>,
     );

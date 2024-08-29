@@ -16,7 +16,6 @@ vi.mock(
     }),
   }),
 );
-
 let initialState: FullStore;
 
 describe("when a user fills in the 'add a new editor' form correctly but the user already exists", () => {

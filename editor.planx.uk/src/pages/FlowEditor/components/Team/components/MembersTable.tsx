@@ -19,9 +19,10 @@ export const MembersTable = ({
   showAddMemberButton,
 }: MembersTableProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
 
-  const handleCloseToast = (
+  const handleCloseSuccessToast = (
     _event?: React.SyntheticEvent | Event,
     reason?: string,
   ) => {
@@ -29,7 +30,18 @@ export const MembersTable = ({
       return;
     }
 
-    setShowToast(false);
+    setShowSuccessToast(false);
+  };
+
+  const handleCloseErrorToast = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setShowErrorToast(false);
   };
 
   const roleLabels: Record<string, string> = {
@@ -114,12 +126,12 @@ export const MembersTable = ({
         </Table>
         {showAddMemberButton && (
           <Snackbar
-            open={showToast}
+            open={showSuccessToast}
             autoHideDuration={6000}
-            onClose={handleCloseToast}
+            onClose={handleCloseSuccessToast}
           >
             <Alert
-              onClose={handleCloseToast}
+              onClose={handleCloseSuccessToast}
               severity="success"
               sx={{ width: "100%" }}
             >
@@ -127,10 +139,26 @@ export const MembersTable = ({
             </Alert>
           </Snackbar>
         )}
+        {showAddMemberButton && (
+          <Snackbar
+            open={showErrorToast}
+            autoHideDuration={6000}
+            onClose={handleCloseErrorToast}
+          >
+            <Alert
+              onClose={handleCloseErrorToast}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              Failed to add new user, please try again
+            </Alert>
+          </Snackbar>
+        )}
       </TableContainer>
       {showModal && (
         <AddNewEditorModal
-          setShowToast={setShowToast}
+          setShowSuccessToast={setShowSuccessToast}
+          setShowErrorToast={setShowErrorToast}
           showModal={showModal}
           setShowModal={setShowModal}
         />
