@@ -1,9 +1,13 @@
 import ToastContainer from "components/Toast/ToastContainer";
-import { ToastState, ToastType } from "components/Toast/types";
+import {
+  ToastContextType,
+  ToastState,
+  ToastType,
+} from "components/Toast/types";
 import React, { createContext, ReactNode, useReducer } from "react";
 import { toastReducer } from "reducers/toastReducer";
 
-export const ToastContext = createContext(null);
+export const ToastContext = createContext<ToastContextType>(null);
 
 const initialState: ToastState = {
   toasts: [],
@@ -36,7 +40,14 @@ export const ToastContextProvider = ({
     addToast("error", message);
   };
 
-  const value = { success, warning, info, error, remove };
+  const value: ToastContextType = {
+    success,
+    warning,
+    info,
+    error,
+    remove,
+    addToast,
+  };
 
   return (
     <ToastContext.Provider value={value}>

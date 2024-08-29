@@ -20,3 +20,12 @@ type DeleteToast = {
   type: "DELETE_TOAST";
   payload: { id: number };
 };
+
+export type ToastContextType = {
+  addToast: (type: ToastType, message: string) => void;
+  remove: (id: number) => void;
+  success: (message: string) => void;
+  warning: (message: string) => void;
+  info: (message: string) => void;
+  error: (message: string) => void;
+} | null;

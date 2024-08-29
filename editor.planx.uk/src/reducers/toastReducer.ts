@@ -17,6 +17,8 @@ export const toastReducer = (state: ToastState, action: ToastAction) => {
       };
     }
     default:
+      // @ts-ignore
+      //   Typescript complains because action is of type 'never' here
       throw new Error(`Unhandled action type: ${action.type}`);
   }
 };
