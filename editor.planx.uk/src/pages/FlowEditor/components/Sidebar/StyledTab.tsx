@@ -19,7 +19,7 @@ const StyledTab = styled((props: TabProps) => (
   [`&.${tabClasses.selected}`]: {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
     color: theme.palette.text.primary,
-    boxShadow: `inset 0 -3px 0 ${theme.palette.warning.main}`,
+    boxShadow: `inset 0 -3px 0 ${theme.palette.info.main}`,
   },
 }));
 
