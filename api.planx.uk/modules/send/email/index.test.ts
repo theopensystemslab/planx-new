@@ -49,7 +49,7 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            settings: {
+            notifyPersonalisation: {
               emailReplyToId: "abc123",
               sendToEmail: "planning.office.example@council.gov.uk",
             },
@@ -154,7 +154,10 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            settings: { emailReplyToId: "abc123", sendToEmail: null },
+            notifyPersonalisation: {
+              emailReplyToId: "abc123",
+              sendToEmail: null,
+            },
           },
         ],
       },

@@ -8,13 +8,11 @@ import { EmailSubmissionNotifyConfig } from "../../../types.js";
 
 interface GetTeamEmailSettings {
   teams: {
-    sendToEmail: string;
     notifyPersonalisation: NotifyPersonalisation & { sendToEmail: string };
   }[];
 }
 
 export async function getTeamEmailSettings(localAuthority: string) {
-  console.log("inside getEmailSettings...");
   const response = await $api.client.request<GetTeamEmailSettings>(
     gql`
       query GetTeamEmailSettings($slug: String) {
@@ -33,7 +31,6 @@ export async function getTeamEmailSettings(localAuthority: string) {
       slug: localAuthority,
     }
   );
-  console.log(response?.teams[0]);
   return response?.teams[0];
 }
 

@@ -27,7 +27,6 @@ export async function sendToEmail(
   }
 
   try {
-    console.log("before getEmailSettings...");
     // Confirm this local authority (aka team) has an email configured in team_settings.submission_email
     const { notifyPersonalisation } =
       await getTeamEmailSettings(localAuthority);
@@ -49,7 +48,7 @@ export async function sendToEmail(
         serviceName: flowName,
         sessionId: payload.sessionId,
         applicantEmail: email,
-        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${localAuthority}`,
+        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${notifyPersonalisation.sendToEmail}&localAuthority=${localAuthority}`,
         ...notifyPersonalisation,
       },
     };
@@ -75,7 +74,7 @@ export async function sendToEmail(
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: sendToEmail,
+      inbox: notifyPersonalisation.sendToEmail,
       govuk_notify_template: "Submit",
     });
   } catch (error) {
