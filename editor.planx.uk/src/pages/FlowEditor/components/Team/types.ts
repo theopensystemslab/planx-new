@@ -12,7 +12,6 @@ export interface MembersTableProps {
 export interface AddNewEditorModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
-  setShowToast: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export interface AddNewEditorFormValues {

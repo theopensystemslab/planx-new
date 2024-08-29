@@ -6,6 +6,7 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
+import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
 import ErrorPage from "pages/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
@@ -16,7 +17,6 @@ import HelmetProvider from "react-navi-helmet-async";
 import { ToastContainer } from "react-toastify";
 
 // init airbrake before everything else
-import * as airbrake from "./airbrake";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
@@ -93,7 +93,7 @@ const Layout: React.FC<{
 };
 
 root.render(
-  <>
+  <ToastContextProvider>
     <ApolloProvider client={client}>
       <AnalyticsProvider>
         <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
@@ -109,5 +109,5 @@ root.render(
       </AnalyticsProvider>
     </ApolloProvider>
     <ToastContainer icon={false} theme="colored" />
-  </>,
+  </ToastContextProvider>,
 );

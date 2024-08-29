@@ -1,6 +1,4 @@
-import Alert from "@mui/material/Alert";
 import Chip from "@mui/material/Chip";
-import Snackbar from "@mui/material/Snackbar";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -20,18 +18,6 @@ export const MembersTable = ({
   showAddMemberButton,
 }: MembersTableProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-
-  const handleCloseToast = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setShowToast(false);
-  };
 
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
@@ -113,28 +99,9 @@ export const MembersTable = ({
             )}
           </TableBody>
         </Table>
-        {showAddMemberButton && (
-          <Snackbar
-            open={showToast}
-            autoHideDuration={6000}
-            onClose={handleCloseToast}
-          >
-            <Alert
-              onClose={handleCloseToast}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Successfully added a user
-            </Alert>
-          </Snackbar>
-        )}
       </TableContainer>
       {showModal && (
-        <AddNewEditorModal
-          setShowToast={setShowToast}
-          showModal={showModal}
-          setShowModal={setShowModal}
-        />
+        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
       )}
     </>
   );
