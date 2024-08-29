@@ -1,8 +1,9 @@
 import React from "react";
 
 import Toast from "./Toast";
+import { Toast as ToastComponent } from "./types";
 
-const ToastContainer = ({ toasts }) => {
+const ToastContainer = ({ toasts }: { toasts: ToastComponent[] }) => {
   return (
     <div className="toasts-container">
       {toasts.map((toast) => (

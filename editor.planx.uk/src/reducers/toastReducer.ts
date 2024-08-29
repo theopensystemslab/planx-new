@@ -1,4 +1,6 @@
-export const toastReducer = (state, action) => {
+import { ToastAction, ToastState } from "components/Toast/types";
+
+export const toastReducer = (state: ToastState, action: ToastAction) => {
   switch (action.type) {
     case "ADD_TOAST":
       return {
@@ -7,7 +9,7 @@ export const toastReducer = (state, action) => {
       };
     case "DELETE_TOAST": {
       const updatedToasts = state.toasts.filter(
-        (toast) => toast.id !== action.payload,
+        (toast) => toast.id !== action.payload.id,
       );
       return {
         ...state,

@@ -3,13 +3,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { useToast } from "hooks/useToast";
 import React from "react";
 
-interface ToastProps {
-  message: string;
-  type: ToastType;
-  id: number;
-}
-
-export type ToastType = "success" | "warning" | "info" | "error";
+import { Toast as ToastProps } from "./types";
 
 const Toast = ({ message, type = "success", id }: ToastProps) => {
   const toast = useToast();

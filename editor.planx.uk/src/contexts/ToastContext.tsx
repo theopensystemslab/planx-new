@@ -1,11 +1,11 @@
-import { ToastType } from "components/Toast/Toast";
 import ToastContainer from "components/Toast/ToastContainer";
+import { ToastState, ToastType } from "components/Toast/types";
 import React, { createContext, ReactNode, useReducer } from "react";
 import { toastReducer } from "reducers/toastReducer";
 
 export const ToastContext = createContext(null);
 
-const initialState = {
+const initialState: ToastState = {
   toasts: [],
 };
 
@@ -18,7 +18,7 @@ export const ToastContextProvider = ({
     dispatch({ type: "ADD_TOAST", payload: { id, message, type } });
   };
   const remove = (id: number) => {
-    dispatch({ type: "DELETE_TOAST", payload: id });
+    dispatch({ type: "DELETE_TOAST", payload: { id } });
   };
   const success = (message: string) => {
     addToast("success", message);
