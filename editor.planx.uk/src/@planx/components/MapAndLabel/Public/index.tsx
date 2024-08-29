@@ -44,14 +44,7 @@ function a11yProps(index: number) {
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
-  const { schema, activeIndex, formik } = useMapAndLabelContext();
-  const [activeTab, setActiveTab] = useState<string>(
-    features[features.length - 1].properties?.label || "",
-  );
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setActiveTab(newValue);
-  };
+  const { schema, activeIndex, formik, editItem } = useMapAndLabelContext();
 
   return (
     <Box
@@ -62,19 +55,22 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
         maxHeight: "fit-content",
       }}
     >
-      <TabContext value={activeTab}>
+      <TabContext value={activeIndex.toString()}>
         <Tabs
           orientation="vertical"
           variant="scrollable"
-          value={activeTab}
-          onChange={handleChange}
+          value={activeIndex.toString()}
+          onChange={(_e, newValue) => {
+            editItem(parseInt(newValue, 10));
+          }}
+          // TODO!
           aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
           {features.map((feature, i) => (
             <Tab
               key={`tab-${i}`}
-              value={feature.properties?.label}
+              value={i.toString()}
               label={`${schema.type} ${feature.properties?.label}`}
               {...a11yProps(i)}
             />
@@ -83,7 +79,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
         {features.map((feature, i) => (
           <TabPanel
             key={`tabpanel-${i}`}
-            value={feature.properties?.label}
+            value={i.toString()}
             sx={{ width: "100%" }}
           >
             <Box

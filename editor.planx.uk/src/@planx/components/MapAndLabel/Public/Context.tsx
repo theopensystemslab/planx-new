@@ -118,7 +118,6 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   };
 
   const editItem = (index: number) => {
-    setActiveItemInitialState(formik.values.schemaData[index]);
     setActiveIndex(index);
   };
 
@@ -128,6 +127,8 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     formik.setFieldValue(`schemaData[${activeIndex}]`, activeItemInitialState);
 
   const addFeature = () => {
+    resetErrors();
+
     const currentFeatures = formik.values.schemaData;
     const updatedFeatures = [...currentFeatures, initialValues];
     formik.setFieldValue("schemaData", updatedFeatures);
