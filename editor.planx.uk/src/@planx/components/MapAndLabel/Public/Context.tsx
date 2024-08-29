@@ -26,6 +26,7 @@ interface MapAndLabelContextValue {
   cancelEditItem: () => void;
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
+  addFeature: () => void;
   mapAndLabelProps: PresentationalProps;
   errors: {
     unsavedItem: boolean;
@@ -44,13 +45,15 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   props,
 ) => {
   const { schema, children, handleSubmit } = props;
-  const { formikConfig, initialValues: _initialValues } = useSchema({
+  const { formikConfig, initialValues } = useSchema({
     schema,
     previousValues: getPreviouslySubmittedData(props),
   });
 
   const formik = useFormik<SchemaUserData>({
     ...formikConfig,
+    // The user interactions are map driven - start with no values added
+    initialValues: { schemaData: [] },
     onSubmit: (values) => {
       const defaultPassportData = makeData(props, values.schemaData)?.["data"];
 
@@ -80,6 +83,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     setUnsavedItemError(false);
   };
 
+  // TODO: Not required?
   const saveItem = async () => {
     resetErrors();
 
@@ -95,9 +99,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     // if (activeIndex !== -1) return setUnsavedItemError(true);
 
     // Manually validate minimum number of items
-    // if (formik.values.schemaData.length < schema.min) {
-    //   return setMinError(true);
-    // }
+    if (formik.values.schemaData.length < schema.min) {
+      return setMinError(true);
+    }
 
     // const errors = await formik.validateForm();
     // console.log({errors})
@@ -123,6 +127,12 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   const resetItemToPreviousState = () =>
     formik.setFieldValue(`schemaData[${activeIndex}]`, activeItemInitialState);
 
+  const addFeature = () => {
+    const currentFeatures = formik.values.schemaData;
+    const updatedFeatures = [...currentFeatures, initialValues];
+    formik.setFieldValue("schemaData", updatedFeatures);
+  };
+
   return (
     <MapAndLabelContext.Provider
       value={{
@@ -134,6 +144,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         cancelEditItem,
         formik,
         validateAndSubmitForm,
+        addFeature,
         errors: {
           unsavedItem: unsavedItemError,
           min: minError,

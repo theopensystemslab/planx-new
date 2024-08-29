@@ -190,11 +190,13 @@ const Root = () => {
   } = mapAndLabelProps;
 
   const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
+  const { addFeature } = useMapAndLabelContext();
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         setFeatures(geojson["EPSG:3857"].features);
+        addFeature();
       } else {
         // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
@@ -208,7 +210,7 @@ const Root = () => {
     return function cleanup() {
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
-  }, [setFeatures]);
+  }, [setFeatures, addFeature]);
 
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
