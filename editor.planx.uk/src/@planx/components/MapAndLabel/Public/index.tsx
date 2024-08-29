@@ -3,7 +3,6 @@ import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
@@ -14,9 +13,7 @@ import { Feature, GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import SelectInput from "ui/editor/SelectInput";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
-import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../../shared/Preview/Card";
@@ -25,6 +22,7 @@ import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import type { MapAndLabel } from "./../model";
 import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
+import { CopyFeature } from "./CopyFeature";
 
 type Props = PublicProps<MapAndLabel>;
 
@@ -111,36 +109,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
                       } m²)`}
                 </Typography>
               </Box>
-              {features.length > 1 && (
-                <Box>
-                  <InputLabel label="Copy from" id={`select-${i}`}>
-                    <SelectInput
-                      bordered
-                      required
-                      title={"Copy from"}
-                      labelId={`select-label-${i}`}
-                      value={""}
-                      onChange={() =>
-                        console.log(`TODO - Copy data from another tab`)
-                      }
-                      name={""}
-                      style={{ width: "200px" }}
-                    >
-                      {/* Iterate over all other features */}
-                      {features
-                        .filter((_, j) => j !== i)
-                        .map((option) => (
-                          <MenuItem
-                            key={option.properties?.label}
-                            value={option.properties?.label}
-                          >
-                            {`${schema.type} ${option.properties?.label}`}
-                          </MenuItem>
-                        ))}
-                    </SelectInput>
-                  </InputLabel>
-                </Box>
-              )}
+              <CopyFeature features={features} index={i} />
             </Box>
             <SchemaFields
               sx={(theme) => ({
