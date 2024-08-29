@@ -78,6 +78,7 @@ describe("when the addNewEditor modal is rendered", () => {
     const { container } = setup(
       <DndProvider backend={HTML5Backend}>
         <AddNewEditorModal
+          setShowErrorToast={() => {}}
           showModal={true}
           setShowModal={() => {}}
           setShowSuccessToast={() => {}}
