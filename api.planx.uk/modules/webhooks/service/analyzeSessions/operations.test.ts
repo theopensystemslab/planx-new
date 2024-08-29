@@ -5,26 +5,21 @@ import {
   updateLowcalSessionAllowListAnswers,
 } from "./operations.js";
 
-jest.mock("../../../../lib/hasura/schema");
-const mockFindSession = jest.fn();
+vi.mock("../../../../lib/hasura/schema");
+const mockFindSession = vi.fn();
 
-jest.mock("@opensystemslab/planx-core", () => {
-  const actualCoreDomainClient = jest.requireActual(
-    "@opensystemslab/planx-core",
-  ).CoreDomainClient;
-
-  const actualPassport = jest.requireActual(
-    "@opensystemslab/planx-core",
-  ).Passport;
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const actualCore =
+    await importOriginal<typeof import("@opensystemslab/planx-core")>();
+  const actualCoreDomainClient = actualCore.CoreDomainClient;
+  const actualPassport = actualCore.Passport;
 
   return {
     Passport: actualPassport,
     CoreDomainClient: class extends actualCoreDomainClient {
       constructor() {
         super();
-        this.session.find = jest
-          .fn()
-          .mockImplementation(() => mockFindSession());
+        this.session.find = vi.fn().mockImplementation(() => mockFindSession());
       }
     },
   };

@@ -8,20 +8,20 @@ import {
   changeMemberRole,
 } from "./service.js";
 
-const getStoreMock = jest.spyOn(userContext, "getStore");
+const getStoreMock = vi.spyOn(userContext, "getStore");
 
 const mockTeam = { id: 123 };
 const mockUser = { id: 456 };
 
-const mockAddMember = jest.fn();
-const mockRemoveMember = jest.fn();
-const mockChangeMemberRole = jest.fn();
-const mockGetTeamBySlug = jest.fn().mockResolvedValue(mockTeam);
-const mockGetUserByEmail = jest.fn().mockResolvedValue(mockUser);
+const mockAddMember = vi.fn();
+const mockRemoveMember = vi.fn();
+const mockChangeMemberRole = vi.fn();
+const mockGetTeamBySlug = vi.fn().mockResolvedValue(mockTeam);
+const mockGetUserByEmail = vi.fn().mockResolvedValue(mockUser);
 
-jest.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", () => {
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+    CoreDomainClient: vi.fn().mockImplementation(() => ({
       team: {
         getBySlug: () => mockGetTeamBySlug(),
         addMember: () => mockAddMember(),

@@ -2,7 +2,7 @@ import supertest from "supertest";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import app from "../../../server.js";
 
-const mockGenerateCSVData = jest.fn().mockResolvedValue([
+const mockGenerateCSVData = vi.fn().mockResolvedValue([
   {
     question: "Is this a test?",
     responses: [{ value: "Yes" }],
@@ -10,31 +10,31 @@ const mockGenerateCSVData = jest.fn().mockResolvedValue([
   },
 ]);
 
-jest.mock("@opensystemslab/planx-core", () => {
-  const actualCoreDomainClient = jest.requireActual(
-    "@opensystemslab/planx-core",
-  ).CoreDomainClient;
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const actualCore =
+    await importOriginal<typeof import("@opensystemslab/planx-core")>();
+  const actualCoreDomainClient = actualCore.CoreDomainClient;
 
   return {
-    Passport: jest.fn().mockImplementation(() => ({
-      files: jest.fn().mockImplementation(() => []),
+    Passport: vi.fn().mockImplementation(() => ({
+      files: vi.fn().mockImplementation(() => []),
     })),
     CoreDomainClient: class extends actualCoreDomainClient {
       constructor() {
         super();
-        this.getDocumentTemplateNamesForSession = jest.fn();
+        this.getDocumentTemplateNamesForSession = vi.fn();
         this.export.csvData = () => mockGenerateCSVData();
       }
     },
   };
 });
 
-const mockBuildSubmissionExportZip = jest.fn().mockImplementation(() => ({
+const mockBuildSubmissionExportZip = vi.fn().mockImplementation(() => ({
   write: () => "zip",
   toBuffer: () => Buffer.from("test"),
 }));
 
-jest.mock("../utils/exportZip", () => {
+vi.mock("../utils/exportZip", () => {
   return {
     buildSubmissionExportZip: (input: string) =>
       Promise.resolve(mockBuildSubmissionExportZip(input)),

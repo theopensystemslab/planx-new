@@ -9,7 +9,7 @@ import { FlowGraph } from "@opensystemslab/planx-core/types";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
 
 beforeAll(() => {
-  const getStoreMock = jest.spyOn(userContext, "getStore");
+  const getStoreMock = vi.spyOn(userContext, "getStore");
   getStoreMock.mockReturnValue({
     user: {
       sub: "123",

@@ -197,7 +197,7 @@ it("throws an error if the a GraphQL operation fails", async () => {
 });
 
 it("throws an error if user details are missing", async () => {
-  const getStoreMock = jest.spyOn(userContext, "getStore");
+  const getStoreMock = vi.spyOn(userContext, "getStore");
   getStoreMock.mockReturnValue(undefined);
 
   const body = {

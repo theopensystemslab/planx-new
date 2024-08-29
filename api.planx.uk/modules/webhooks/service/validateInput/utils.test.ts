@@ -2,7 +2,7 @@ import { isCleanHTML, isObjectValid } from "./utils.js";
 
 describe("isObjectValid", () => {
   it("calls the callback for each child if validator returns true", () => {
-    const mockValidator = jest.fn().mockReturnValue(true);
+    const mockValidator = vi.fn().mockReturnValue(true);
 
     const testObject = {
       a: 1,
@@ -21,7 +21,7 @@ describe("isObjectValid", () => {
   });
 
   it("fails fast if any validator encounters any false values", () => {
-    const mockValidator = jest
+    const mockValidator = vi
       .fn()
       .mockReturnValueOnce(true)
       .mockReturnValueOnce(false);
@@ -43,7 +43,7 @@ describe("isObjectValid", () => {
   });
 
   it("handles arrays correctly", () => {
-    const mockValidator = jest.fn().mockReturnValue(true);
+    const mockValidator = vi.fn().mockReturnValue(true);
 
     const testArray = [1, [2, 3], { a: 4 }];
 
@@ -53,7 +53,7 @@ describe("isObjectValid", () => {
   });
 
   it("handles an object containing an array of objects", () => {
-    const mockValidator = jest.fn().mockReturnValue(true);
+    const mockValidator = vi.fn().mockReturnValue(true);
 
     const objectWithArrayOfObjects = {
       a: 1,
@@ -68,7 +68,7 @@ describe("isObjectValid", () => {
   });
 
   it("handles empty objects and arrays", () => {
-    const mockValidator = jest.fn().mockReturnValue(true);
+    const mockValidator = vi.fn().mockReturnValue(true);
 
     const emptyObject = {};
     const emptyArray: unknown[] = [];

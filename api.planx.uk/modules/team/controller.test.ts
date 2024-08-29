@@ -2,11 +2,11 @@ import supertest from "supertest";
 import app from "../../server.js";
 import { authHeader } from "../../tests/mockJWT.js";
 
-const mockAddMember = jest.fn();
-const mockRemoveMember = jest.fn();
-const mockChangeMemberRole = jest.fn();
+const mockAddMember = vi.fn();
+const mockRemoveMember = vi.fn();
+const mockChangeMemberRole = vi.fn();
 
-jest.mock("./service", () => ({
+vi.mock("./service", () => ({
   addMember: () => mockAddMember(),
   changeMemberRole: () => mockChangeMemberRole(),
   removeMember: () => mockRemoveMember(),

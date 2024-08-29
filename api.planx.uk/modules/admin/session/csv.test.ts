@@ -5,16 +5,16 @@ import { authHeader } from "../../../tests/mockJWT.js";
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/csv`;
 
-const mockGenerateCSVData = jest.fn().mockResolvedValue([
+const mockGenerateCSVData = vi.fn().mockResolvedValue([
   {
     question: "Is this a test?",
     responses: [{ value: "Yes" }],
     metadata: {},
   },
 ]);
-jest.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", () => {
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+    CoreDomainClient: vi.fn().mockImplementation(() => ({
       export: {
         csvData: () => mockGenerateCSVData(),
       },
@@ -23,7 +23,9 @@ jest.mock("@opensystemslab/planx-core", () => {
 });
 
 describe("CSV data admin endpoint", () => {
-  afterEach(() => jest.clearAllMocks());
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
   const auth = authHeader({ role: "platformAdmin" });
 
   it("requires a user to be logged in", async () => {

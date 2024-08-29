@@ -2,10 +2,10 @@ import supertest from "supertest";
 import app from "../../../server.js";
 import { authHeader } from "../../../tests/mockJWT.js";
 
-jest.mock("../../send/utils/exportZip", () => ({
-  buildSubmissionExportZip: jest.fn().mockResolvedValue({
+vi.mock("../../send/utils/exportZip", () => ({
+  buildSubmissionExportZip: vi.fn().mockResolvedValue({
     filename: "tests/mocks/test.zip",
-    remove: jest.fn,
+    remove: vi.fn,
   }),
 }));
 
@@ -13,7 +13,9 @@ const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/zip`;
 
 describe("zip data admin endpoint", () => {
-  afterEach(() => jest.clearAllMocks());
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
   it("requires a user to be logged in", async () => {
     await supertest(app)

@@ -1,12 +1,11 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "jest"],
+  "plugins": ["@typescript-eslint"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "plugin:jest/recommended"
+    "prettier"
   ],
   "rules": {
     "@typescript-eslint/no-explicit-any": "warn",
@@ -18,18 +17,6 @@
       }
     ],
     "@typescript-eslint/no-non-null-assertion": "off",
-    "jest/expect-expect": [
-      "error",
-      {
-        "assertFunctionNames": [
-          "expect",
-          // Allow Supertest expect() calls
-          "get.expect",
-          "post.expect",
-          "supertest.**.expect"
-        ]
-      }
-    ],
     "no-nested-ternary": "error"
   },
   "globals": {
@@ -44,7 +31,7 @@
     "URLSearchParams": "readonly",
     "exports": "readonly",
     "fetch": "readonly",
-    "jest": "readonly",
+    "vi": "readonly",
     "test": "readonly",
     "describe": "readonly",
     "it": "readonly",

@@ -1,11 +1,12 @@
 import supertest from "supertest";
 import app from "../../../../server.js";
 import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
+import { MockedFunction } from "vitest";
 
 const { post } = supertest(app);
 
-jest.mock("../../../../lib/hasura/metadata");
-const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<
+vi.mock("../../../../lib/hasura/metadata");
+const mockedCreateScheduledEvent = createScheduledEvent as MockedFunction<
   typeof createScheduledEvent
 >;
 
@@ -17,7 +18,9 @@ const mockScheduledEventResponse = {
 describe("Create reminder event webhook", () => {
   const ENDPOINT = "/webhooks/hasura/create-reminder-event";
 
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   it("fails without correct authentication", async () => {
     await post(ENDPOINT)
@@ -138,7 +141,9 @@ describe("Create reminder event webhook", () => {
 describe("Create expiry event webhook", () => {
   const ENDPOINT = "/webhooks/hasura/create-expiry-event";
 
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   it("fails without correct authentication", async () => {
     await post(ENDPOINT)

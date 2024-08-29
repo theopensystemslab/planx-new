@@ -19,7 +19,7 @@ import { userContext } from "../../auth/middleware.js";
 import { getJWT } from "../../../tests/mockJWT.js";
 
 const validateSessionPath = "/validate-session";
-const getStoreMock = jest.spyOn(userContext, "getStore");
+const getStoreMock = vi.spyOn(userContext, "getStore");
 
 describe("Validate Session endpoint", () => {
   const reconciledData = omit(mockLowcalSession.data, "passport");

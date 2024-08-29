@@ -3,7 +3,7 @@ import app from "../../server.js";
 import { authHeader, getJWT } from "../../tests/mockJWT.js";
 import { userContext } from "../auth/middleware.js";
 
-const getStoreMock = jest.spyOn(userContext, "getStore");
+const getStoreMock = vi.spyOn(userContext, "getStore");
 
 const mockUser = {
   firstName: "Bilbo",
@@ -12,10 +12,10 @@ const mockUser = {
   isPlatformAdmin: false,
 };
 
-const mockCreateUser = jest.fn();
-const mockDeleteUser = jest.fn();
-const mockGetByEmail = jest.fn().mockResolvedValue(mockUser);
-const mockGetById = jest.fn().mockResolvedValue({
+const mockCreateUser = vi.fn();
+const mockDeleteUser = vi.fn();
+const mockGetByEmail = vi.fn().mockResolvedValue(mockUser);
+const mockGetById = vi.fn().mockResolvedValue({
   id: 123,
   firstName: "Albert",
   lastName: "Einstein",
@@ -33,9 +33,9 @@ const mockGetById = jest.fn().mockResolvedValue({
   ],
 });
 
-jest.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", () => {
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+    CoreDomainClient: vi.fn().mockImplementation(() => ({
       user: {
         create: () => mockCreateUser(),
         delete: () => mockDeleteUser(),

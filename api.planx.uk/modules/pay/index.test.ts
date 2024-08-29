@@ -4,14 +4,14 @@ import supertest from "supertest";
 
 import app from "../../server.js";
 
-jest.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", () => {
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+    CoreDomainClient: vi.fn().mockImplementation(() => ({
       session: {
-        findDetails: jest.fn().mockImplementation(() => ({ lockedAt: null })),
+        findDetails: vi.fn().mockImplementation(() => ({ lockedAt: null })),
       },
       team: {
-        getIntegrations: jest
+        getIntegrations: vi
           .fn()
           .mockImplementation(() => ({ govPayToken: "abc123" })),
       },

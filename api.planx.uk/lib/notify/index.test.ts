@@ -2,7 +2,7 @@ import { sendEmail } from "./index.js";
 import { NotifyClient } from "notifications-node-client";
 import { NotifyConfig } from "../../types.js";
 
-jest.mock("notifications-node-client");
+vi.mock("notifications-node-client");
 
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 const mockConfig: NotifyConfig = {

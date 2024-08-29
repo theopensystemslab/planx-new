@@ -18,7 +18,7 @@ it("returns an error if required query param is missing", async () => {
 // "Success" test commented out due to reliance on external API calls and fallibility of nocks
 //   Please comment in and run locally if making changes to /roads functionality
 describe.skip("fetching classified roads data from OS Features API for any local authority", () => {
-  jest.setTimeout(10000);
+  vi.setConfig({ testTimeout: 1000 });
 
   // address is for reference only, geom is buffered & flipped site boundary coords
   const locations = [

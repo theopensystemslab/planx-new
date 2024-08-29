@@ -4,21 +4,21 @@ import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import app from "../../../server.js";
 import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 
-jest.mock("../../saveAndReturn/service/utils", () => ({
-  markSessionAsSubmitted: jest.fn(),
+vi.mock("../../saveAndReturn/service/utils", () => ({
+  markSessionAsSubmitted: vi.fn(),
 }));
 
-jest.mock("@opensystemslab/planx-core", () => {
-  const actualCoreDomainClient = jest.requireActual(
-    "@opensystemslab/planx-core",
-  ).CoreDomainClient;
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const actualCore =
+    await importOriginal<typeof import("@opensystemslab/planx-core")>();
+  const actualCoreDomainClient = actualCore.CoreDomainClient;
 
   return {
     CoreDomainClient: class extends actualCoreDomainClient {
       constructor() {
         super();
-        this.export.digitalPlanningDataPayload = () =>
-          jest.fn().mockResolvedValue({
+        this.export.digitalPlanningDataPayload = async () =>
+          vi.fn().mockResolvedValue({
             exportData: expectedPlanningPermissionPayload,
           });
       }

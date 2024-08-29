@@ -6,13 +6,13 @@ import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalP
 const endpoint = (strings: TemplateStringsArray) =>
   `/admin/session/${strings[0]}/digital-planning-application`;
 
-const mockGenerateDigitalPlanningApplicationPayload = jest
+const mockGenerateDigitalPlanningApplicationPayload = vi
   .fn()
   .mockResolvedValue(expectedPlanningPermissionPayload);
 
-jest.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", () => {
   return {
-    CoreDomainClient: jest.fn().mockImplementation(() => ({
+    CoreDomainClient: vi.fn().mockImplementation(() => ({
       export: {
         digitalPlanningDataPayload: () =>
           mockGenerateDigitalPlanningApplicationPayload(),

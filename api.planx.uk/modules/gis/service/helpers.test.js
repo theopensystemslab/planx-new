@@ -151,7 +151,6 @@ describe("rollupResultLayer helper function", () => {
     // Assert
     expect(result).toHaveProperty(key);
     layersToRollup.forEach((layer) => {
-      // Jest can handle paths using dot notation, so keys with a dot need to be wrapped in []
       expect(result).toHaveProperty([layer]);
       expect(result[layer]).toMatchObject({ value: false });
     });

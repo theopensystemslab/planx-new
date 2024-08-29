@@ -8,7 +8,7 @@ test("getClient() throws an error if a store is not set", () => {
 });
 
 test("getClient() returns a client if store is set", () => {
-  const getStoreMock = jest.spyOn(userContext, "getStore");
+  const getStoreMock = vi.spyOn(userContext, "getStore");
   getStoreMock.mockReturnValue({
     user: {
       sub: "123",
