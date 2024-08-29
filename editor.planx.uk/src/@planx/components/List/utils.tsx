@@ -44,70 +44,32 @@ export function formatSchemaDisplayValue(
       return matchingOption?.data.text;
     }
     case "map": {
-      const feature = value[0] as string as any; // won't be necessary to cast once we're only setting "geojsonData" prop in future
-      const drawType = field.data.mapOptions?.drawType;
-
-      switch (drawType) {
-        case "Point":
-          // Our "geojsonData" layer doesn't have a "point" style yet, so make due with center marker for now!
-          //   Once style layers are more comprehensive, share same map as "Polygon" style here
-          return (
-            <>
-              {/* @ts-ignore */}
-              <my-map
-                id="inactive-list-map"
-                basemap={field.data.mapOptions?.basemap}
-                latitude={feature.geometry.coordinates[1]}
-                longitude={feature.geometry.coordinates[0]}
-                zoom={19}
-                showCentreMarker
-                markerLatitude={feature.geometry.coordinates[1]}
-                markerLongitude={feature.geometry.coordinates[0]}
-                markerColor={field.data.mapOptions?.drawColor}
-                osProxyEndpoint={`${
-                  import.meta.env.VITE_APP_API_URL
-                }/proxy/ordnance-survey`}
-                hideResetControl
-                staticMode
-                style={{ width: "100%", height: "30vh" }}
-                osCopyright={
-                  field.data.mapOptions?.basemap === "OSVectorTile"
-                    ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
-                    : ``
-                }
-                mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
-                collapseAttributions
-              />
-            </>
-          );
-        case "Polygon":
-          return (
-            <>
-              {/* @ts-ignore */}
-              <my-map
-                id="inactive-list-map"
-                basemap={field.data.mapOptions?.basemap}
-                geojsonData={JSON.stringify(feature)}
-                geojsonColor={field.data.mapOptions?.drawColor}
-                geojsonFill
-                geojsonBuffer={20}
-                osProxyEndpoint={`${
-                  import.meta.env.VITE_APP_API_URL
-                }/proxy/ordnance-survey`}
-                hideResetControl
-                staticMode
-                style={{ width: "100%", height: "30vh" }}
-                osCopyright={
-                  field.data.mapOptions?.basemap === "OSVectorTile"
-                    ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
-                    : ``
-                }
-                mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
-                collapseAttributions
-              />
-            </>
-          );
-      }
+      const feature = value[0];
+      return (
+        <>
+          {/* @ts-ignore */}
+          <my-map
+            id="inactive-list-map"
+            basemap={field.data.mapOptions?.basemap}
+            geojsonData={JSON.stringify(feature)}
+            geojsonColor={field.data.mapOptions?.drawColor}
+            geojsonFill
+            geojsonBuffer={20}
+            osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
+            hideResetControl
+            staticMode
+            style={{ width: "100%", height: "30vh" }}
+            osCopyright={
+              field.data.mapOptions?.basemap === "OSVectorTile"
+                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                : ``
+            }
+            mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
+            collapseAttributions
+          />
+        </>
+      );
     }
   }
 }
@@ -203,9 +165,9 @@ export function flatten<T extends Record<string, any>>(
 
     return isObject && depth > 0
       ? {
-          ...acc,
-          ...flatten(value, { depth: depth - 1, path: newPath, separator }),
-        }
+        ...acc,
+        ...flatten(value, { depth: depth - 1, path: newPath, separator }),
+      }
       : { ...acc, [newPath]: value };
   }, {} as T);
 }
