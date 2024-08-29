@@ -1,3 +1,4 @@
+import ReactJson from "@microlink/react-json-view";
 import LanguageIcon from "@mui/icons-material/Language";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
@@ -18,7 +19,6 @@ import { AxiosError } from "axios";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
-import ReactJson from "react-json-view";
 import { useAsync } from "react-use";
 import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
