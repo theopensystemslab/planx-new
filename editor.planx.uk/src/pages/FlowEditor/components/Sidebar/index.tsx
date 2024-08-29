@@ -70,7 +70,7 @@ const SidebarContainer = styled(Box)(() => ({
 }));
 
 const Header = styled("header")(({ theme }) => ({
-  padding: theme.spacing(1),
+  padding: theme.spacing(1, 1.5),
   "& input": {
     flex: "1",
     padding: "5px",
@@ -109,6 +109,7 @@ const TabList = styled(Box)(({ theme }) => ({
   },
   "& .MuiTabs-root": {
     minHeight: "0",
+    padding: theme.spacing(0, 1.5),
   },
   // Hide default MUI indicator as we're using custom styling
   "& .MuiTabs-indicator": {
@@ -304,12 +305,7 @@ const Sidebar: React.FC<{
           )}
         </Box>
         <Box width="100%" mt={2}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-end"
-            marginRight={1}
-          >
+          <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Badge
               sx={{ width: "100%" }}
               badgeContent={alteredNodes && alteredNodes.length}
@@ -396,13 +392,13 @@ const Sidebar: React.FC<{
         </Box>
       </Header>
       <TabList>
-        <Tabs centered onChange={handleChange} value={activeTab} aria-label="">
-          <StyledTab value="PreviewBrowser" label="Preview" tabTheme="light" />
-          <StyledTab value="History" label="History" tabTheme="light" />
+        <Tabs onChange={handleChange} value={activeTab} aria-label="">
+          <StyledTab value="PreviewBrowser" label="Preview" />
+          <StyledTab value="History" label="History" />
           {hasFeatureFlag("SEARCH") && (
-            <StyledTab value="Search" label="Search" tabTheme="light" />
+            <StyledTab value="Search" label="Search" />
           )}
-          <StyledTab value="Console" label="Console" tabTheme="dark" />
+          <StyledTab value="Console" label="Console" />
         </Tabs>
       </TabList>
       {activeTab === "PreviewBrowser" && (
