@@ -1,3 +1,4 @@
+import ReactJson from "@microlink/react-json-view";
 import LanguageIcon from "@mui/icons-material/Language";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
@@ -126,21 +127,27 @@ const DebugConsole = () => {
   );
   return (
     <Console>
-      <Typography variant="body2">
-        <a
-          href={`${
-            import.meta.env.VITE_APP_API_URL
-          }/flows/${flowId}/download-schema`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "inherit" }}
-        >
-          Download the flow schema
-        </a>
-      </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", fontSize: "medium" }}>
-        {JSON.stringify({ passport, breadcrumbs, cachedBreadcrumbs }, null, 2)}
-      </pre>
+      <div style={{ fontSize: "medium" }}>
+        <ReactJson
+          src={{ passport, breadcrumbs, cachedBreadcrumbs }}
+          theme="monokai"
+          displayDataTypes={false}
+          indentWidth={2}
+          style={{ padding: "2em 0", background: "transparent" }}
+        />
+        <Typography variant="body2">
+          <a
+            href={`${
+              import.meta.env.VITE_APP_API_URL
+            }/flows/${flowId}/download-schema`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "inherit" }}
+          >
+            Download the flow schema
+          </a>
+        </Typography>
+      </div>
     </Console>
   );
 };

@@ -8,6 +8,7 @@
     "@ctrl/tinycolor": "^4.0.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@microlink/react-json-view": "^1.23.1",
     "@mui/base": "5.0.0-beta.40",
     "@mui/icons-material": "^5.15.10",
     "@mui/lab": "5.0.0-alpha.170",
