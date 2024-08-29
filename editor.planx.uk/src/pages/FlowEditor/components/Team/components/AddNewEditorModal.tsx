@@ -87,7 +87,7 @@ export const AddNewEditorModal = ({
           maxWidth: theme.breakpoints.values.md,
           borderRadius: 0,
           borderTop: `20px solid ${theme.palette.primary.main}`,
-          background: "#FFF",
+          background: theme.palette.background.paper,
           margin: theme.spacing(2),
         }),
       }}
