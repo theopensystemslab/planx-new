@@ -204,7 +204,13 @@ describe(`downloading application data received by email`, () => {
       name: "GetTeamEmailSettings",
       matchOnVariables: false,
       data: {
-        teams: [{ sendToEmail: "planning.office.example@council.gov.uk" }],
+        teams: [
+          {
+            notifyPersonalisation: {
+              sendToEmail: "planning.office.example@council.gov.uk",
+            },
+          },
+        ],
       },
       variables: { slug: "southwark" },
     });
