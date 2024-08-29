@@ -298,12 +298,7 @@ const Sidebar: React.FC<{
           )}
         </Box>
         <Box width="100%" mt={2}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-end"
-            marginRight={1}
-          >
+          <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Badge
               sx={{ width: "100%" }}
               badgeContent={alteredNodes && alteredNodes.length}
