@@ -111,35 +111,36 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
                       } m²)`}
                 </Typography>
               </Box>
-              <Box>
-                <InputLabel label="Copy from" id={`select-${i}`}>
-                  <SelectInput
-                    bordered
-                    required
-                    title={"Copy from"}
-                    labelId={`select-label-${i}`}
-                    value={""}
-                    onChange={() =>
-                      console.log(`TODO - Copy data from another tab`)
-                    }
-                    name={""}
-                    style={{ width: "200px" }}
-                  >
-                    {features
-                      .filter(
-                        (feature) => feature.properties?.label !== activeTab,
-                      )
-                      .map((option) => (
-                        <MenuItem
-                          key={option.properties?.label}
-                          value={option.properties?.label}
-                        >
-                          {`${schema.type} ${option.properties?.label}`}
-                        </MenuItem>
-                      ))}
-                  </SelectInput>
-                </InputLabel>
-              </Box>
+              {features.length > 1 && (
+                <Box>
+                  <InputLabel label="Copy from" id={`select-${i}`}>
+                    <SelectInput
+                      bordered
+                      required
+                      title={"Copy from"}
+                      labelId={`select-label-${i}`}
+                      value={""}
+                      onChange={() =>
+                        console.log(`TODO - Copy data from another tab`)
+                      }
+                      name={""}
+                      style={{ width: "200px" }}
+                    >
+                      {/* Iterate over all other features */}
+                      {features
+                        .filter((_, j) => j !== i)
+                        .map((option) => (
+                          <MenuItem
+                            key={option.properties?.label}
+                            value={option.properties?.label}
+                          >
+                            {`${schema.type} ${option.properties?.label}`}
+                          </MenuItem>
+                        ))}
+                    </SelectInput>
+                  </InputLabel>
+                </Box>
+              )}
             </Box>
             <SchemaFields
               sx={(theme) => ({
@@ -245,8 +246,9 @@ const Root = () => {
               maxZoom={23}
               latitude={latitude}
               longitude={longitude}
-              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
-                }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${
+                import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
               osCopyright={
                 basemap === "OSVectorTile"
                   ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
