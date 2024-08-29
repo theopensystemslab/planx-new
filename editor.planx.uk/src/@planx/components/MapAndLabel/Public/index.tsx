@@ -42,8 +42,14 @@ function a11yProps(index: number) {
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
-  const { schema, activeIndex, formik, editFeature, isFeatureInvalid } =
-    useMapAndLabelContext();
+  const {
+    schema,
+    activeIndex,
+    formik,
+    editFeature,
+    isFeatureInvalid,
+    removeFeature,
+  } = useMapAndLabelContext();
 
   return (
     <Box
@@ -124,11 +130,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
               formik={formik}
             />
             <Button
-              onClick={() =>
-                console.log(
-                  `TODO - Remove ${schema.type} ${feature.properties?.label}`,
-                )
-              }
+              onClick={() => removeFeature(activeIndex)}
               sx={{
                 fontWeight: FONT_WEIGHT_SEMI_BOLD,
                 gap: (theme) => theme.spacing(2),

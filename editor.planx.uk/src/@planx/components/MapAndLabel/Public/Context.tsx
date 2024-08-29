@@ -24,6 +24,7 @@ interface MapAndLabelContextValue {
   isFeatureInvalid: (index: number) => boolean;
   addFeature: () => void;
   copyFeature: (sourceIndex: number, destinationIndex: number) => void;
+  removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
   errors: {
     min: boolean;
@@ -106,6 +107,17 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     const sourceFeature = formik.values.schemaData[sourceIndex];
     formik.setFieldValue(`schemaData[${destinationIndex}]`, sourceFeature);
   };
+  
+  const removeFeature = (index: number) => {
+    resetErrors();
+
+    setActiveIndex(-1);
+
+    formik.setFieldValue(
+      "schemaData",
+      formik.values.schemaData.filter((_, i) => i !== index),
+    );
+  };
 
   return (
     <MapAndLabelContext.Provider
@@ -118,6 +130,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         validateAndSubmitForm,
         addFeature,
         copyFeature,
+        removeFeature,
         isFeatureInvalid,
         errors: {
           min: minError,
