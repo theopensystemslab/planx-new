@@ -186,7 +186,7 @@ const Root = () => {
   } = mapAndLabelProps;
 
   const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
-  const { addFeature } = useMapAndLabelContext();
+  const { addFeature, schema } = useMapAndLabelContext();
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
@@ -208,6 +208,11 @@ const Root = () => {
     };
   }, [setFeatures, addFeature]);
 
+  const rootError: string =
+    (errors.min && `You must provide at least ${schema.min} response(s)`) ||
+    (errors.max && `You can provide at most ${schema.max} response(s)`) ||
+    "";
+
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
@@ -218,13 +223,7 @@ const Root = () => {
         howMeasured={howMeasured}
       />
       <FullWidthWrapper>
-        <ErrorWrapper
-          error={
-            errors.min
-              ? "Please add at least one feature to the map"
-              : undefined
-          }
-        >
+        <ErrorWrapper error={rootError}>
           <MapContainer environment="standalone">
             {/* @ts-ignore */}
             <my-map

@@ -132,6 +132,11 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     const currentFeatures = formik.values.schemaData;
     const updatedFeatures = [...currentFeatures, initialValues];
     formik.setFieldValue("schemaData", updatedFeatures);
+
+    // TODO: Handle more gracefully - stop user from adding new feature to map?
+    if (schema.max && updatedFeatures.length > schema.max) {
+      setMaxError(true);
+    }
   };
 
   return (
