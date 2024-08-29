@@ -1,9 +1,5 @@
 import { useSchema } from "@planx/components/shared/Schema/hook";
-import {
-  Schema,
-  SchemaUserData,
-  SchemaUserResponse,
-} from "@planx/components/shared/Schema/model";
+import { Schema, SchemaUserData } from "@planx/components/shared/Schema/model";
 import {
   getPreviouslySubmittedData,
   makeData,
@@ -22,16 +18,13 @@ import { PresentationalProps } from ".";
 interface MapAndLabelContextValue {
   schema: Schema;
   activeIndex: number;
-  saveItem: () => Promise<void>;
-  editItem: (index: number) => void;
-  cancelEditItem: () => void;
+  editFeature: (index: number) => void;
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
-  isTabInvalid: (index: number) => boolean;
+  isFeatureInvalid: (index: number) => boolean;
   addFeature: () => void;
   mapAndLabelProps: PresentationalProps;
   errors: {
-    unsavedItem: boolean;
     min: boolean;
     max: boolean;
   };
@@ -71,36 +64,16 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     props.previouslySubmittedData ? -1 : 0,
   );
 
-  const [activeItemInitialState, setActiveItemInitialState] = useState<
-    SchemaUserResponse | undefined
-  >(undefined);
-
-  const [unsavedItemError, setUnsavedItemError] = useState<boolean>(false);
   const [minError, setMinError] = useState<boolean>(false);
   const [maxError, setMaxError] = useState<boolean>(false);
 
   const resetErrors = () => {
     setMinError(false);
     setMaxError(false);
-    setUnsavedItemError(false);
-  };
-
-  // TODO: Not required?
-  const saveItem = async () => {
-    resetErrors();
-
-    const errors = await formik.validateForm();
-    const isValid = !errors.schemaData?.length;
-    if (isValid) {
-      exitEditMode();
-    }
   };
 
   const validateAndSubmitForm = () => {
-    // Do not allow submissions with an unsaved item
-    // if (activeIndex !== -1) return setUnsavedItemError(true);
-
-    // Manually validate minimum number of items
+    // Manually validate minimum number of features
     if (formik.values.schemaData.length < schema.min) {
       return setMinError(true);
     }
@@ -108,25 +81,12 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     formik.handleSubmit();
   };
 
-  const cancelEditItem = () => {
-    if (activeItemInitialState) resetItemToPreviousState();
-
-    setActiveItemInitialState(undefined);
-
-    exitEditMode();
-  };
-
-  const editItem = (index: number) => {
+  const editFeature = (index: number) => {
     setActiveIndex(index);
   };
 
-  const isTabInvalid = (index: number) =>
+  const isFeatureInvalid = (index: number) =>
     Boolean(get(formik.errors, ["schemaData", index]));
-
-  const exitEditMode = () => setActiveIndex(-1);
-
-  const resetItemToPreviousState = () =>
-    formik.setFieldValue(`schemaData[${activeIndex}]`, activeItemInitialState);
 
   const addFeature = () => {
     resetErrors();
@@ -145,17 +105,14 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     <MapAndLabelContext.Provider
       value={{
         activeIndex,
-        saveItem,
         schema,
         mapAndLabelProps: props,
-        editItem,
-        cancelEditItem,
+        editFeature,
         formik,
         validateAndSubmitForm,
         addFeature,
-        isTabInvalid,
+        isFeatureInvalid,
         errors: {
-          unsavedItem: unsavedItemError,
           min: minError,
           max: maxError,
         },

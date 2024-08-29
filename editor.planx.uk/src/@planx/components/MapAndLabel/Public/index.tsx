@@ -44,7 +44,7 @@ function a11yProps(index: number) {
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
-  const { schema, activeIndex, formik, editItem, isTabInvalid } =
+  const { schema, activeIndex, formik, editFeature, isFeatureInvalid } =
     useMapAndLabelContext();
 
   return (
@@ -62,7 +62,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
           variant="scrollable"
           value={activeIndex.toString()}
           onChange={(_e, newValue) => {
-            editItem(parseInt(newValue, 10));
+            editFeature(parseInt(newValue, 10));
           }}
           // TODO!
           aria-label="Vertical tabs example"
@@ -74,7 +74,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
               value={i.toString()}
               label={`${schema.type} ${feature.properties?.label}`}
               {...a11yProps(i)}
-              {...(isTabInvalid(i) && {
+              {...(isFeatureInvalid(i) && {
                 sx: (theme) => ({
                   backgroundColor: theme.palette.action.focus,
                 }),
