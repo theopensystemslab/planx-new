@@ -101,12 +101,6 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     }
   };
 
-  const addFeature = () => {
-    const currentFeatures = formik.values.schemaData;
-    const updatedFeatures = [...currentFeatures, initialValues];
-    formik.setFieldValue("schemaData", updatedFeatures);
-  };
-
   return (
     <MapAndLabelContext.Provider
       value={{
