@@ -92,12 +92,15 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
   const validateAndSubmitForm = () => {
     // Do not allow submissions with an unsaved item
-    if (activeIndex !== -1) return setUnsavedItemError(true);
+    // if (activeIndex !== -1) return setUnsavedItemError(true);
 
     // Manually validate minimum number of items
-    if (formik.values.schemaData.length < schema.min) {
-      return setMinError(true);
-    }
+    // if (formik.values.schemaData.length < schema.min) {
+    //   return setMinError(true);
+    // }
+
+    // const errors = await formik.validateForm();
+    // console.log({errors})
 
     formik.handleSubmit();
   };
