@@ -9,6 +9,7 @@ import {
   makeData,
 } from "@planx/components/shared/utils";
 import { FormikProps, useFormik } from "formik";
+import { get } from "lodash";
 import React, {
   createContext,
   PropsWithChildren,
@@ -26,6 +27,7 @@ interface MapAndLabelContextValue {
   cancelEditItem: () => void;
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
+  isTabInvalid: (index: number) => boolean;
   addFeature: () => void;
   mapAndLabelProps: PresentationalProps;
   errors: {
@@ -103,9 +105,6 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
       return setMinError(true);
     }
 
-    // const errors = await formik.validateForm();
-    // console.log({errors})
-
     formik.handleSubmit();
   };
 
@@ -120,6 +119,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   const editItem = (index: number) => {
     setActiveIndex(index);
   };
+
+  const isTabInvalid = (index: number) =>
+    Boolean(get(formik.errors, ["schemaData", index]));
 
   const exitEditMode = () => setActiveIndex(-1);
 
@@ -151,6 +153,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         formik,
         validateAndSubmitForm,
         addFeature,
+        isTabInvalid,
         errors: {
           unsavedItem: unsavedItemError,
           min: minError,

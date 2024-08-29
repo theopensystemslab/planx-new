@@ -44,7 +44,8 @@ function a11yProps(index: number) {
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
-  const { schema, activeIndex, formik, editItem } = useMapAndLabelContext();
+  const { schema, activeIndex, formik, editItem, isTabInvalid } =
+    useMapAndLabelContext();
 
   return (
     <Box
@@ -73,6 +74,11 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
               value={i.toString()}
               label={`${schema.type} ${feature.properties?.label}`}
               {...a11yProps(i)}
+              {...(isTabInvalid(i) && {
+                sx: (theme) => ({
+                  backgroundColor: theme.palette.action.focus,
+                }),
+              })}
             />
           ))}
         </Tabs>
