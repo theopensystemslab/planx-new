@@ -41,8 +41,8 @@ dependencies:
     specifier: ^5.15.11
     version: 5.15.11(@types/react@18.2.45)(react@18.2.0)
   '@opensystemslab/map':
-    specifier: 1.0.0-alpha.0
-    version: 1.0.0-alpha.0
+    specifier: 1.0.0-alpha.1
+    version: 1.0.0-alpha.1
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#d46df8d
     version: github.com/theopensystemslab/planx-core/d46df8d(@types/react@18.2.45)
@@ -5590,8 +5590,8 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@1.0.0-alpha.0:
-    resolution: {integrity: sha512-zOAo9mz4g8VOqd6Kp4Fxf4a1uCTPBYqGLLhdD/7QJjRBZN5kWxYMhymiteFPE0V5afEIPyI4nnWS2Q2RB9JnDQ==}
+  /@opensystemslab/map@1.0.0-alpha.1:
+    resolution: {integrity: sha512-T8foDyKS18algLun1uV4o4j0VL+TfsvNL0YnqKj26E8m6x6RMx6gbo5njjRH0bRnj14E8IsLaRN546fGoZhrWw==}
     dependencies:
       '@turf/union': 7.0.0
       accessible-autocomplete: 2.0.4
@@ -9242,7 +9242,7 @@ packages:
     dev: true
 
   /batch@0.6.1:
-    resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}
+    resolution: {integrity: sha1-3DQxT05nkxgJP8dgJyUl+UvyXBY=}
     dev: true
 
   /bfj@7.1.0:
@@ -9382,7 +9382,7 @@ packages:
     dev: true
 
   /bytes@3.0.0:
-    resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
+    resolution: {integrity: sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=}
     engines: {node: '>= 0.8'}
     dev: true
 
@@ -21023,6 +21023,7 @@ packages:
 
   /workbox-google-analytics@6.6.0:
     resolution: {integrity: sha512-p4DJa6OldXWd6M9zRl0H6vB9lkrmqYFkRQ2xEiNdBFp9U0LhsGO7hsBscVEyH9H2/3eZZt8c97NB2FD9U2NJ+Q==}
+    deprecated: It is not compatible with newer versions of GA starting with v4, as long as you are using GAv3 it should be ok, but the package is not longer being maintained
     dependencies:
       workbox-background-sync: 6.6.0
       workbox-core: 6.6.0

@@ -13,7 +13,7 @@
     "@mui/lab": "5.0.0-alpha.170",
     "@mui/material": "^5.15.10",
     "@mui/utils": "^5.15.11",
-    "@opensystemslab/map": "1.0.0-alpha.0",
+    "@opensystemslab/map": "1.0.0-alpha.1",
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#d46df8d",
     "@tiptap/core": "^2.4.0",
     "@tiptap/extension-bold": "^2.0.3",
