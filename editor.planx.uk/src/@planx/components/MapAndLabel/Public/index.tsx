@@ -17,6 +17,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import SelectInput from "ui/editor/SelectInput";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import InputLabel from "ui/public/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
@@ -171,7 +172,8 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
 };
 
 const Root = () => {
-  const { validateAndSubmitForm, mapAndLabelProps } = useMapAndLabelContext();
+  const { validateAndSubmitForm, mapAndLabelProps, errors } =
+    useMapAndLabelContext();
   const {
     title,
     description,
@@ -218,34 +220,41 @@ const Root = () => {
         howMeasured={howMeasured}
       />
       <FullWidthWrapper>
-        <MapContainer environment="standalone">
-          {/* @ts-ignore */}
-          <my-map
-            id="map-and-label-map"
-            basemap={basemap}
-            ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
-            drawMode
-            drawMany
-            drawColor={drawColor}
-            drawType={drawType}
-            drawPointer="crosshair"
-            zoom={20}
-            maxZoom={23}
-            latitude={latitude}
-            longitude={longitude}
-            osProxyEndpoint={`${
-              import.meta.env.VITE_APP_API_URL
-            }/proxy/ordnance-survey`}
-            osCopyright={
-              basemap === "OSVectorTile"
-                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
-                : ``
-            }
-            clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
-            mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
-            collapseAttributions
-          />
-        </MapContainer>
+        <ErrorWrapper
+          error={
+            errors.min
+              ? "Please add at least one feature to the map"
+              : undefined
+          }
+        >
+          <MapContainer environment="standalone">
+            {/* @ts-ignore */}
+            <my-map
+              id="map-and-label-map"
+              basemap={basemap}
+              ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
+              drawMode
+              drawMany
+              drawColor={drawColor}
+              drawType={drawType}
+              drawPointer="crosshair"
+              zoom={20}
+              maxZoom={23}
+              latitude={latitude}
+              longitude={longitude}
+              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+                }/proxy/ordnance-survey`}
+              osCopyright={
+                basemap === "OSVectorTile"
+                  ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                  : ``
+              }
+              clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
+              mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
+              collapseAttributions
+            />
+          </MapContainer>
+        </ErrorWrapper>
         {features && features?.length > 0 ? (
           <VerticalFeatureTabs features={features} />
         ) : (
