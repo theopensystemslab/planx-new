@@ -109,7 +109,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
                       } m²)`}
                 </Typography>
               </Box>
-              <CopyFeature features={features} index={i} />
+              <CopyFeature features={features} destinationIndex={i} />
             </Box>
             <SchemaFields
               sx={(theme) => ({

@@ -8,29 +8,39 @@ import InputLabel from "ui/public/InputLabel";
 import { useMapAndLabelContext } from "./Context";
 
 interface Props {
-  index: number;
+  destinationIndex: number;
   features: Feature[];
 }
 
-export const CopyFeature: React.FC<Props> = ({ index: i, features }) => {
-  const { schema } = useMapAndLabelContext();
+export const CopyFeature: React.FC<Props> = ({
+  destinationIndex,
+  features,
+}) => {
+  const { schema, copyFeature } = useMapAndLabelContext();
 
   // Only show component if there are multiple features
   if (features.length < 2) return null;
 
   // We can only copy from other features
-  const sourceFeatures = features.filter((_, j) => j !== i);
+  const sourceFeatures = features.filter(
+    (_, sourceIndex) => sourceIndex !== destinationIndex,
+  );
 
   return (
     <Box>
-      <InputLabel label="Copy from" id={`select-${i}`}>
+      <InputLabel label="Copy from" id={`select-${destinationIndex}`}>
         <SelectInput
           bordered
           required
           title={"Copy from"}
-          labelId={`select-label-${i}`}
+          labelId={`select-label-${destinationIndex}`}
           value={""}
-          onChange={() => console.log(`TODO - Copy data from another tab`)}
+          onChange={(e) => {
+            const label = e.target.value as string;
+            // Convert text label to zero-indexed integer
+            const sourceIndex = parseInt(label, 10) - 1;
+            copyFeature(sourceIndex, destinationIndex);
+          }}
           name={""}
           style={{ width: "200px" }}
         >
