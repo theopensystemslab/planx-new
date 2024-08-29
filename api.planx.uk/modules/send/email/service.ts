@@ -9,11 +9,12 @@ import { EmailSubmissionNotifyConfig } from "../../../types.js";
 interface GetTeamEmailSettings {
   teams: {
     sendToEmail: string;
-    notifyPersonalisation: NotifyPersonalisation;
+    notifyPersonalisation: NotifyPersonalisation & { sendToEmail: string };
   }[];
 }
 
 export async function getTeamEmailSettings(localAuthority: string) {
+  console.log("inside getEmailSettings...");
   const response = await $api.client.request<GetTeamEmailSettings>(
     gql`
       query GetTeamEmailSettings($slug: String) {
@@ -30,9 +31,9 @@ export async function getTeamEmailSettings(localAuthority: string) {
     `,
     {
       slug: localAuthority,
-    },
+    }
   );
-
+  console.log(response?.teams[0]);
   return response?.teams[0];
 }
 
@@ -51,7 +52,7 @@ export async function getSessionData(sessionId: string) {
     `,
     {
       id: sessionId,
-    },
+    }
   );
 
   return response?.session?.data;
@@ -82,12 +83,12 @@ export async function getSessionEmailDetailsById(sessionId: string) {
     `,
     {
       id: sessionId,
-    },
+    }
   );
 
   if (!response.session)
     throw Error(
-      `Cannot find session ${sessionId} in GetSessionEmailDetails query`,
+      `Cannot find session ${sessionId} in GetSessionEmailDetails query`
     );
 
   return response.session;
@@ -107,7 +108,7 @@ export async function insertAuditEntry(
   sendEmailResponse: {
     message: string;
     expiryDate?: string;
-  },
+  }
 ) {
   const response = await $api.client.request<CreateEmailApplication>(
     gql`
@@ -137,7 +138,7 @@ export async function insertAuditEntry(
       recipient: recipient,
       request: notifyRequest,
       response: sendEmailResponse,
-    },
+    }
   );
 
   return response?.application?.id;
