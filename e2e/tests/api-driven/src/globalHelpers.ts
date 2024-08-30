@@ -8,9 +8,10 @@ export function createTeam(
     $admin.team.create({
       name: "E2E Test Team",
       slug: "E2E",
-      submissionEmail: TEST_EMAIL,
+
       settings: {
         homepage: "http://www.planx.uk",
+        submissionEmail: TEST_EMAIL,
       },
       ...args,
     }),

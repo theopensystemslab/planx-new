@@ -49,8 +49,10 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            sendToEmail: "planning.office.example@council.gov.uk",
-            settings: { emailReplyToId: "abc123" },
+            notifyPersonalisation: {
+              emailReplyToId: "abc123",
+              sendToEmail: "planning.office.example@council.gov.uk",
+            },
           },
         ],
       },
@@ -145,15 +147,17 @@ describe(`sending an application by email to a planning office`, () => {
       });
   });
 
-  it("errors if this team does not have a 'submission_email' configured in teams", async () => {
+  it("errors if this team does not have a 'submission_email' configured in team settings", async () => {
     queryMock.mockQuery({
       name: "GetTeamEmailSettings",
       matchOnVariables: false,
       data: {
         teams: [
           {
-            sendToEmail: null,
-            settings: { emailReplyToId: "abc123" },
+            notifyPersonalisation: {
+              emailReplyToId: "abc123",
+              sendToEmail: null,
+            },
           },
         ],
       },
@@ -200,7 +204,13 @@ describe(`downloading application data received by email`, () => {
       name: "GetTeamEmailSettings",
       matchOnVariables: false,
       data: {
-        teams: [{ sendToEmail: "planning.office.example@council.gov.uk" }],
+        teams: [
+          {
+            notifyPersonalisation: {
+              sendToEmail: "planning.office.example@council.gov.uk",
+            },
+          },
+        ],
       },
       variables: { slug: "southwark" },
     });
