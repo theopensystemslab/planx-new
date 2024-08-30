@@ -17,6 +17,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import SelectInput from "ui/editor/SelectInput";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import InputLabel from "ui/public/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
@@ -43,14 +44,8 @@ function a11yProps(index: number) {
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
-  const { schema, activeIndex, formik } = useMapAndLabelContext();
-  const [activeTab, setActiveTab] = useState<string>(
-    features[features.length - 1].properties?.label || "",
-  );
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setActiveTab(newValue);
-  };
+  const { schema, activeIndex, formik, editFeature, isFeatureInvalid } =
+    useMapAndLabelContext();
 
   return (
     <Box
@@ -61,28 +56,36 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
         maxHeight: "fit-content",
       }}
     >
-      <TabContext value={activeTab}>
+      <TabContext value={activeIndex.toString()}>
         <Tabs
           orientation="vertical"
           variant="scrollable"
-          value={activeTab}
-          onChange={handleChange}
+          value={activeIndex.toString()}
+          onChange={(_e, newValue) => {
+            editFeature(parseInt(newValue, 10));
+          }}
+          // TODO!
           aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
           {features.map((feature, i) => (
             <Tab
               key={`tab-${i}`}
-              value={feature.properties?.label}
+              value={i.toString()}
               label={`${schema.type} ${feature.properties?.label}`}
               {...a11yProps(i)}
+              {...(isFeatureInvalid(i) && {
+                sx: (theme) => ({
+                  backgroundColor: theme.palette.action.focus,
+                }),
+              })}
             />
           ))}
         </Tabs>
         {features.map((feature, i) => (
           <TabPanel
             key={`tabpanel-${i}`}
-            value={feature.properties?.label}
+            value={i.toString()}
             sx={{ width: "100%" }}
           >
             <Box
@@ -108,35 +111,36 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
                       } m²)`}
                 </Typography>
               </Box>
-              <Box>
-                <InputLabel label="Copy from" id={`select-${i}`}>
-                  <SelectInput
-                    bordered
-                    required
-                    title={"Copy from"}
-                    labelId={`select-label-${i}`}
-                    value={""}
-                    onChange={() =>
-                      console.log(`TODO - Copy data from another tab`)
-                    }
-                    name={""}
-                    style={{ width: "200px" }}
-                  >
-                    {features
-                      .filter(
-                        (feature) => feature.properties?.label !== activeTab,
-                      )
-                      .map((option) => (
-                        <MenuItem
-                          key={option.properties?.label}
-                          value={option.properties?.label}
-                        >
-                          {`${schema.type} ${option.properties?.label}`}
-                        </MenuItem>
-                      ))}
-                  </SelectInput>
-                </InputLabel>
-              </Box>
+              {features.length > 1 && (
+                <Box>
+                  <InputLabel label="Copy from" id={`select-${i}`}>
+                    <SelectInput
+                      bordered
+                      required
+                      title={"Copy from"}
+                      labelId={`select-label-${i}`}
+                      value={""}
+                      onChange={() =>
+                        console.log(`TODO - Copy data from another tab`)
+                      }
+                      name={""}
+                      style={{ width: "200px" }}
+                    >
+                      {/* Iterate over all other features */}
+                      {features
+                        .filter((_, j) => j !== i)
+                        .map((option) => (
+                          <MenuItem
+                            key={option.properties?.label}
+                            value={option.properties?.label}
+                          >
+                            {`${schema.type} ${option.properties?.label}`}
+                          </MenuItem>
+                        ))}
+                    </SelectInput>
+                  </InputLabel>
+                </Box>
+              )}
             </Box>
             <SchemaFields
               sx={(theme) => ({
@@ -171,7 +175,8 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
 };
 
 const Root = () => {
-  const { validateAndSubmitForm, mapAndLabelProps } = useMapAndLabelContext();
+  const { validateAndSubmitForm, mapAndLabelProps, errors } =
+    useMapAndLabelContext();
   const {
     title,
     description,
@@ -188,11 +193,13 @@ const Root = () => {
   } = mapAndLabelProps;
 
   const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
+  const { addFeature, schema } = useMapAndLabelContext();
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         setFeatures(geojson["EPSG:3857"].features);
+        addFeature();
       } else {
         // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
@@ -206,7 +213,12 @@ const Root = () => {
     return function cleanup() {
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
-  }, [setFeatures]);
+  }, [setFeatures, addFeature]);
+
+  const rootError: string =
+    (errors.min && `You must provide at least ${schema.min} response(s)`) ||
+    (errors.max && `You can provide at most ${schema.max} response(s)`) ||
+    "";
 
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
@@ -218,34 +230,36 @@ const Root = () => {
         howMeasured={howMeasured}
       />
       <FullWidthWrapper>
-        <MapContainer environment="standalone">
-          {/* @ts-ignore */}
-          <my-map
-            id="map-and-label-map"
-            basemap={basemap}
-            ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
-            drawMode
-            drawMany
-            drawColor={drawColor}
-            drawType={drawType}
-            drawPointer="crosshair"
-            zoom={20}
-            maxZoom={23}
-            latitude={latitude}
-            longitude={longitude}
-            osProxyEndpoint={`${
-              import.meta.env.VITE_APP_API_URL
-            }/proxy/ordnance-survey`}
-            osCopyright={
-              basemap === "OSVectorTile"
-                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
-                : ``
-            }
-            clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
-            mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
-            collapseAttributions
-          />
-        </MapContainer>
+        <ErrorWrapper error={rootError}>
+          <MapContainer environment="standalone">
+            {/* @ts-ignore */}
+            <my-map
+              id="map-and-label-map"
+              basemap={basemap}
+              ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
+              drawMode
+              drawMany
+              drawColor={drawColor}
+              drawType={drawType}
+              drawPointer="crosshair"
+              zoom={20}
+              maxZoom={23}
+              latitude={latitude}
+              longitude={longitude}
+              osProxyEndpoint={`${
+                import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
+              osCopyright={
+                basemap === "OSVectorTile"
+                  ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                  : ``
+              }
+              clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
+              mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
+              collapseAttributions
+            />
+          </MapContainer>
+        </ErrorWrapper>
         {features && features?.length > 0 ? (
           <VerticalFeatureTabs features={features} />
         ) : (
