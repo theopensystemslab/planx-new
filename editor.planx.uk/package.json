@@ -170,7 +170,7 @@
   },
   "packageManager": "pnpm@8.6.6",
   "scripts": {
-    "start": "vite",
+    "start": "vite --open",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "vitest",
