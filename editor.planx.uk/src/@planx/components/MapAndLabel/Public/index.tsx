@@ -13,11 +13,11 @@ import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { Feature, GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import SelectInput from "ui/editor/SelectInput";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import InputLabel from "ui/public/InputLabel";
 
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
 import { MapContainer } from "../../shared/Preview/MapContainer";
@@ -85,7 +85,14 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             value={feature.properties?.label}
             sx={{ width: "100%" }}
           >
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", height: "90px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                height: "90px",
+              }}
+            >
               <Box>
                 <Typography component="h2" variant="h3">
                   {`${schema.type} ${feature.properties?.label}`}
@@ -94,10 +101,11 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
                   {`${feature.geometry.type}`}
                   {feature.geometry.type === "Point"
                     ? ` (${feature.geometry.coordinates.map((coord) =>
-                      coord.toFixed(5),
-                    )})`
-                    : ` (area ${feature.properties?.["area.squareMetres"] || 0
-                    } m²)`}
+                        coord.toFixed(5),
+                      )})`
+                    : ` (area ${
+                        feature.properties?.["area.squareMetres"] || 0
+                      } m²)`}
                 </Typography>
               </Box>
               <Box>
@@ -108,30 +116,49 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
                     title={"Copy from"}
                     labelId={`select-label-${i}`}
                     value={""}
-                    onChange={() => console.log(`TODO - Copy data from another tab`)}
+                    onChange={() =>
+                      console.log(`TODO - Copy data from another tab`)
+                    }
                     name={""}
                     style={{ width: "200px" }}
                   >
-                    {features.filter((feature) => feature.properties?.label !== activeTab).map((option) => (
-                      <MenuItem
-                        key={option.properties?.label}
-                        value={option.properties?.label}
-                      >
-                        {`${schema.type} ${option.properties?.label}`}
-                      </MenuItem>
-                    ))}
+                    {features
+                      .filter(
+                        (feature) => feature.properties?.label !== activeTab,
+                      )
+                      .map((option) => (
+                        <MenuItem
+                          key={option.properties?.label}
+                          value={option.properties?.label}
+                        >
+                          {`${schema.type} ${option.properties?.label}`}
+                        </MenuItem>
+                      ))}
                   </SelectInput>
                 </InputLabel>
               </Box>
             </Box>
             <SchemaFields
+              sx={(theme) => ({
+                display: "flex",
+                flexDirection: "column",
+                gap: theme.spacing(2),
+              })}
               schema={schema}
               activeIndex={activeIndex}
               formik={formik}
             />
             <Button
-              onClick={() => console.log(`TODO - Remove ${schema.type} ${feature.properties?.label}`)}
-              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD, gap: (theme) => theme.spacing(2), marginTop: 2 }}
+              onClick={() =>
+                console.log(
+                  `TODO - Remove ${schema.type} ${feature.properties?.label}`,
+                )
+              }
+              sx={{
+                fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                gap: (theme) => theme.spacing(2),
+                marginTop: 2,
+              }}
             >
               <DeleteIcon color="warning" fontSize="medium" />
               Remove
@@ -206,8 +233,9 @@ const Root = () => {
             maxZoom={23}
             latitude={latitude}
             longitude={longitude}
-            osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+            osProxyEndpoint={`${
+              import.meta.env.VITE_APP_API_URL
+            }/proxy/ordnance-survey`}
             osCopyright={
               basemap === "OSVectorTile"
                 ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
