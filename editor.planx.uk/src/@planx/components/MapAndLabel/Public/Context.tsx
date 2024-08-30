@@ -17,6 +17,8 @@ import React, {
 
 import { PresentationalProps } from ".";
 
+export const MAP_ID = "map-and-label-map";
+
 interface MapAndLabelContextValue {
   schema: Schema;
   features?: Feature[];
@@ -83,7 +85,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     addFeatureToForm();
   };
 
-  const [features, setFeatures] = useGeoJSONChange(handleGeoJSONChange);
+  const [features, setFeatures] = useGeoJSONChange(MAP_ID, handleGeoJSONChange);
 
   const resetErrors = () => {
     setMinError(false);

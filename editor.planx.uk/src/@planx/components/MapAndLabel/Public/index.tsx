@@ -21,7 +21,7 @@ import CardHeader from "../../shared/Preview/CardHeader";
 import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import type { MapAndLabel } from "./../model";
-import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
+import { MAP_ID, MapAndLabelProvider, useMapAndLabelContext } from "./Context";
 import { CopyFeature } from "./CopyFeature";
 
 type Props = PublicProps<MapAndLabel>;
@@ -187,7 +187,7 @@ const Root = () => {
           <MapContainer environment="standalone">
             {/* @ts-ignore */}
             <my-map
-              id="map-and-label-map"
+              id={MAP_ID}
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode
