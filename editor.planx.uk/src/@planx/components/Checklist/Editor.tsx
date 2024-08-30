@@ -298,6 +298,20 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
       ...parseMoreInformation(props.node?.data),
     },
     onSubmit: ({ options, groupedOptions, ...values }) => {
+      const sourceOptions = options?.length
+        ? options
+        : groupedOptions?.flatMap((group) => group.children);
+
+      const filteredOptions = (sourceOptions || []).filter(
+        (option) => option.data.text,
+      );
+
+      const processedOptions = filteredOptions.map((option) => ({
+        ...option,
+        id: option.id || undefined,
+        type: TYPES.Answer,
+      }));
+
       if (props.handleSubmit) {
         props.handleSubmit(
           {
@@ -316,27 +330,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                   }),
             },
           },
-          ...[
-            options &&
-              options
-                .filter((o) => o.data.text)
-                .map((o) => ({
-                  ...o,
-                  id: o.id || undefined,
-                  type: TYPES.Answer,
-                })),
-          ],
-          ...[
-            groupedOptions &&
-              groupedOptions
-                .flatMap((gr) => gr.children)
-                .filter((o) => o.data.text)
-                .map((o) => ({
-                  ...o,
-                  id: o.id || undefined,
-                  type: TYPES.Answer,
-                })),
-          ],
+          processedOptions,
         );
       } else {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
