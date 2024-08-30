@@ -90,6 +90,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   const resetErrors = () => {
     setMinError(false);
     setMaxError(false);
+    formik.setErrors({});
   };
 
   const removeAllFeaturesFromMap = () => setFeatures(undefined);
@@ -145,13 +146,16 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     );
   };
 
+  const removeFeatureFromMap = (index: number) => {
+    // TODO: Actually remove from map layer, not just feature array
+    setFeatures(features?.filter((_, i) => i !== index));
+  };
+
   const removeFeature = (index: number) => {
     resetErrors();
     setActiveIndex(activeIndex - 1);
     removeFeatureFromForm(index);
-
-    // TODO! Remove a single feature
-    // removeFeatureFromMap()
+    removeFeatureFromMap(index);
   };
 
   return (
