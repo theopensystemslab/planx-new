@@ -145,6 +145,23 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   );
 };
 
+const PlotFeatureToBegin = () => (
+  <Box
+    sx={(theme) => ({
+      backgroundColor: theme.palette.background.paper,
+      p: theme.spacing(3),
+      textAlign: "center",
+      mt: theme.spacing(-1),
+      color: theme.typography.body2.color,
+      border: `1px solid ${theme.palette.border.main}`,
+    })}
+  >
+    <Typography variant="body2" fontSize={"large"}>
+      Plot a feature on the map to begin
+    </Typography>
+  </Box>
+);
+
 const Root = () => {
   const { validateAndSubmitForm, mapAndLabelProps, errors } =
     useMapAndLabelContext();
@@ -236,17 +253,7 @@ const Root = () => {
         {features && features?.length > 0 ? (
           <VerticalFeatureTabs features={features} />
         ) : (
-          <Box
-            sx={
-              {
-                /** TODO match figma */
-              }
-            }
-          >
-            <Typography variant="body2">
-              {`Plot a feature on the map to begin`}
-            </Typography>
-          </Box>
+          <PlotFeatureToBegin />
         )}
       </FullWidthWrapper>
     </Card>
