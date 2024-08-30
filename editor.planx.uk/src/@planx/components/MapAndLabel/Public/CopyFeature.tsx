@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
+import { visuallyHidden } from "@mui/utils";
 import { Feature } from "geojson";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
@@ -18,8 +19,8 @@ export const CopyFeature: React.FC<Props> = ({
 }) => {
   const { schema, copyFeature } = useMapAndLabelContext();
 
-  // Only show component if there are multiple features
-  if (features.length < 2) return null;
+  // Only enable component if there are multiple features
+  const isDisabled = features.length < 2;
 
   // We can only copy from other features
   const sourceFeatures = features.filter(
@@ -30,6 +31,8 @@ export const CopyFeature: React.FC<Props> = ({
     <Box>
       <InputLabel label="Copy from" id={`select-${destinationIndex}`}>
         <SelectInput
+          disabled={isDisabled}
+          aria-describedby="copy-feature-description"
           bordered
           required
           title={"Copy from"}
@@ -41,9 +44,13 @@ export const CopyFeature: React.FC<Props> = ({
             const sourceIndex = parseInt(label, 10) - 1;
             copyFeature(sourceIndex, destinationIndex);
           }}
-          name={""}
+          name={"copyFeature"}
           style={{ width: "200px" }}
         >
+          <span id="copy-feature-description" style={visuallyHidden}>
+            Please add at least two features to the map in order to enable this
+            feature
+          </span>
           {sourceFeatures.map((option) => (
             <MenuItem
               key={option.properties?.label}
