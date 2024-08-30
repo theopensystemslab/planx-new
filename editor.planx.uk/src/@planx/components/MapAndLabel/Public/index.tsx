@@ -216,8 +216,10 @@ const Root = () => {
   }, [setFeatures, addFeature]);
 
   const rootError: string =
-    (errors.min && `You must provide at least ${schema.min} response(s)`) ||
-    (errors.max && `You can provide at most ${schema.max} response(s)`) ||
+    (errors.min &&
+      `You must plot at least ${schema.min} ${schema.type}(s) on the map`) ||
+    (errors.max &&
+      `You must plot at most ${schema.max} ${schema.type}(s) on the map`) ||
     "";
 
   return (
