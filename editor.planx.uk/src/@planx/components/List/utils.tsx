@@ -17,7 +17,7 @@ const List = styled("ul")(() => ({
  */
 export function formatSchemaDisplayValue(
   value: string | string[],
-  field: Field,
+  field: Field
 ) {
   switch (field.type) {
     case "number":
@@ -27,7 +27,7 @@ export function formatSchemaDisplayValue(
       return value;
     case "checklist": {
       const matchingOptions = field.data.options.filter((option) =>
-        (value as string[]).includes(option.id),
+        (value as string[]).includes(option.id)
       );
       return (
         <List>
@@ -39,12 +39,13 @@ export function formatSchemaDisplayValue(
     }
     case "question": {
       const matchingOption = field.data.options.find(
-        (option) => option.data.text === value || option.data.val === value,
+        (option) => option.data.text === value || option.data.val === value
       );
       return matchingOption?.data.text;
     }
     case "map": {
       const feature = value[0];
+      console.log(feature);
       return (
         <>
           {/* @ts-ignore */}
@@ -52,11 +53,13 @@ export function formatSchemaDisplayValue(
             id="inactive-list-map"
             basemap={field.data.mapOptions?.basemap}
             geojsonData={JSON.stringify(feature)}
+            drawGeojsonData={JSON.stringify(feature)}
             geojsonColor={field.data.mapOptions?.drawColor}
             geojsonFill
             geojsonBuffer={20}
-            osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+            osProxyEndpoint={`${
+              import.meta.env.VITE_APP_API_URL
+            }/proxy/ordnance-survey`}
             hideResetControl
             staticMode
             style={{ width: "100%", height: "30vh" }}
@@ -82,7 +85,7 @@ export function formatSchemaDisplayValue(
  */
 export function sumIdenticalUnits(
   fn: string,
-  passportData: Record<string, SchemaUserResponse[]>,
+  passportData: Record<string, SchemaUserResponse[]>
 ): number {
   let sum = 0;
   passportData[`${fn}`].map((item) => {
@@ -101,7 +104,7 @@ export function sumIdenticalUnits(
  */
 export function sumIdenticalUnitsByDevelopmentType(
   fn: string,
-  passportData: Record<string, SchemaUserResponse[]>,
+  passportData: Record<string, SchemaUserResponse[]>
 ): Record<string, number> {
   // Sum identical units by development type (@todo read all possible option `val` from Schema in future)
   const baseSums: Record<string, number> = {
@@ -144,7 +147,7 @@ interface FlattenOptions {
  */
 export function flatten<T extends Record<string, any>>(
   object: T,
-  { depth = Infinity, path = null, separator = "." }: FlattenOptions = {},
+  { depth = Infinity, path = null, separator = "." }: FlattenOptions = {}
 ): T {
   return Object.keys(object).reduce((acc: T, key: string): T => {
     const value = object[key];
@@ -165,9 +168,9 @@ export function flatten<T extends Record<string, any>>(
 
     return isObject && depth > 0
       ? {
-        ...acc,
-        ...flatten(value, { depth: depth - 1, path: newPath, separator }),
-      }
+          ...acc,
+          ...flatten(value, { depth: depth - 1, path: newPath, separator }),
+        }
       : { ...acc, [newPath]: value };
   }, {} as T);
 }

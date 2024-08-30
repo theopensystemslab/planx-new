@@ -14,6 +14,8 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
     data: { title, mapOptions },
   } = props;
   const { id, errorMessage, name } = getFieldProps(props);
+  const geojsonFieldProp =
+    props.formik.values.schemaData[props.activeIndex].features[0];
 
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
@@ -73,6 +75,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               teamSettings?.boundaryBBox &&
               JSON.stringify(teamSettings?.boundaryBBox)
             }
+            drawGeojsonData={JSON.stringify(geojsonFieldProp) || null}
             mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
             collapseAttributions
           />

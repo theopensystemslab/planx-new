@@ -60,6 +60,8 @@ const ActiveListCard: React.FC<{
     }
   }, []);
 
+  console.log({ message: "from index", formik, schema });
+
   return (
     <ErrorWrapper
       error={errors.unsavedItem ? "Please save in order to continue" : ""}
@@ -113,7 +115,7 @@ const InactiveListCard: React.FC<{
               <TableCell>
                 {formatSchemaDisplayValue(
                   formik.values.schemaData[i][field.data.fn],
-                  schema.fields[j],
+                  schema.fields[j]
                 )}
               </TableCell>
             </TableRow>
@@ -162,7 +164,7 @@ const Root = () => {
   const hasMapField = schema.fields.some((field) => field.type === "map");
   const { longitude, latitude } = useStore(
     (state) =>
-      (state.computePassport()?.data?.["_address"] as SiteAddress) || {},
+      (state.computePassport()?.data?.["_address"] as SiteAddress) || {}
   );
 
   if (hasMapField && (!longitude || !latitude)) {
@@ -201,7 +203,7 @@ const Root = () => {
               <ActiveListCard key={`card-${i}`} index={i} />
             ) : (
               <InactiveListCard key={`card-${i}`} index={i} />
-            ),
+            )
           )}
           {shouldShowAddAnotherButton && (
             <ErrorWrapper
