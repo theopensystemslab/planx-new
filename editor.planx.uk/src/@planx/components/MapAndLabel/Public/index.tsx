@@ -76,7 +76,9 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
               {...a11yProps(i)}
               {...(isFeatureInvalid(i) && {
                 sx: (theme) => ({
-                  backgroundColor: theme.palette.action.focus,
+                  borderRight: `12px solid ${theme.palette.error.main}`,
+                  // Appear over tab indicator
+                  zIndex: 2,
                 }),
               })}
             />
