@@ -11,7 +11,7 @@ import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSum
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { Feature, GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -164,29 +164,7 @@ const Root = () => {
     longitude,
     boundaryBBox,
   } = mapAndLabelProps;
-
-  const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
-  const { addFeature, schema } = useMapAndLabelContext();
-
-  useEffect(() => {
-    const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      if (geojson["EPSG:3857"]?.features) {
-        setFeatures(geojson["EPSG:3857"].features);
-        addFeature();
-      } else {
-        // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
-        setFeatures(undefined);
-      }
-    };
-
-    const map: HTMLElement | null =
-      document.getElementById("map-and-label-map");
-    map?.addEventListener("geojsonChange", geojsonChangeHandler);
-
-    return function cleanup() {
-      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
-    };
-  }, [setFeatures, addFeature]);
+  const { features, schema } = useMapAndLabelContext();
 
   const rootError: string =
     (errors.min &&

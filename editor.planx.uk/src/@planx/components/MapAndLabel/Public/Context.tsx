@@ -5,6 +5,8 @@ import {
   makeData,
 } from "@planx/components/shared/utils";
 import { FormikProps, useFormik } from "formik";
+import { Feature } from "geojson";
+import { GeoJSONChange, GeoJSONChangeEvent, useGeoJSONChange } from "lib/gis";
 import { get } from "lodash";
 import React, {
   createContext,
@@ -17,12 +19,12 @@ import { PresentationalProps } from ".";
 
 interface MapAndLabelContextValue {
   schema: Schema;
+  features?: Feature[];
   activeIndex: number;
   editFeature: (index: number) => void;
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
   isFeatureInvalid: (index: number) => boolean;
-  addFeature: () => void;
   copyFeature: (sourceIndex: number, destinationIndex: number) => void;
   removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
@@ -62,16 +64,37 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     },
   });
 
-  const [activeIndex, setActiveIndex] = useState<number>(
-    props.previouslySubmittedData ? -1 : 0,
-  );
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
 
   const [minError, setMinError] = useState<boolean>(false);
   const [maxError, setMaxError] = useState<boolean>(false);
 
+  const handleGeoJSONChange = (event: GeoJSONChangeEvent) => {
+    // If the user clicks 'reset' on the map, geojson will be empty object
+    const userHitsReset = !event.detail["EPSG:3857"];
+
+    if (userHitsReset) {
+      removeAllFeaturesFromMap();
+      removeAllFeaturesFromForm();
+      return;
+    }
+
+    addFeatureToMap(event.detail);
+    addFeatureToForm();
+  };
+
+  const [features, setFeatures] = useGeoJSONChange(handleGeoJSONChange);
+
   const resetErrors = () => {
     setMinError(false);
     setMaxError(false);
+  };
+
+  const removeAllFeaturesFromMap = () => setFeatures(undefined);
+
+  const removeAllFeaturesFromForm = () => {
+    formik.setFieldValue("schemaData", []);
+    setActiveIndex(-1);
   };
 
   const validateAndSubmitForm = () => {
@@ -90,7 +113,10 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   const isFeatureInvalid = (index: number) =>
     Boolean(get(formik.errors, ["schemaData", index]));
 
-  const addFeature = () => {
+  const addFeatureToMap = (geojson: GeoJSONChange) =>
+    setFeatures(geojson["EPSG:3857"].features);
+
+  const addFeatureToForm = () => {
     resetErrors();
 
     const currentFeatures = formik.values.schemaData;
@@ -101,34 +127,41 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     if (schema.max && updatedFeatures.length > schema.max) {
       setMaxError(true);
     }
+
+    setActiveIndex(activeIndex + 1);
   };
 
   const copyFeature = (sourceIndex: number, destinationIndex: number) => {
     const sourceFeature = formik.values.schemaData[sourceIndex];
     formik.setFieldValue(`schemaData[${destinationIndex}]`, sourceFeature);
   };
-  
-  const removeFeature = (index: number) => {
-    resetErrors();
 
-    setActiveIndex(-1);
-
+  const removeFeatureFromForm = (index: number) => {
     formik.setFieldValue(
       "schemaData",
       formik.values.schemaData.filter((_, i) => i !== index),
     );
   };
 
+  const removeFeature = (index: number) => {
+    resetErrors();
+    setActiveIndex(activeIndex - 1);
+    removeFeatureFromForm(index);
+
+    // TODO! Remove a single feature
+    // removeFeatureFromMap()
+  };
+
   return (
     <MapAndLabelContext.Provider
       value={{
+        features,
         activeIndex,
         schema,
         mapAndLabelProps: props,
         editFeature,
         formik,
         validateAndSubmitForm,
-        addFeature,
         copyFeature,
         removeFeature,
         isFeatureInvalid,
