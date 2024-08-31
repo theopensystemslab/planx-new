@@ -39,9 +39,9 @@ export const contextDefaults: Context = {
       logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
       primaryColour: "#444444",
     },
+    submissionEmail: "simulate-delivered@notifications.service.gov.uk",
     settings: {
       homepage: "planx.uk",
-      submissionEmail: "simulate-delivered@notifications.service.gov.uk",
     },
   },
 };
@@ -58,9 +58,9 @@ export async function setUpTestContext(
     context.team.id = await $admin.team.create({
       slug: context.team.slug,
       name: context.team.name,
+      submissionEmail: context.team.submissionEmail,
       settings: {
         homepage: context.team.settings?.homepage,
-        submissionEmail: context.team.submissionEmail,
       },
     });
   }
