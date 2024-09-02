@@ -1,5 +1,4 @@
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -7,13 +6,13 @@ import FormControlLabel, {
   formControlLabelClasses,
 } from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
-import Snackbar from "@mui/material/Snackbar";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { useFormik } from "formik";
+import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
@@ -228,19 +227,7 @@ const ServiceSettings: React.FC = () => {
     state.teamDomain,
     state.isFlowPublished,
   ]);
-
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-
-  const handleClose = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setIsAlertOpen(false);
-  };
+  const toast = useToast();
 
   const sendFlowStatusSlackNotification = async (status: FlowStatus) => {
     const skipTeamSlugs = [
@@ -294,7 +281,7 @@ const ServiceSettings: React.FC = () => {
     },
     onSubmit: async (values) => {
       await updateFlowSettings(values);
-      setIsAlertOpen(true);
+      toast.success("Service settings updated successfully");
     },
     validate: () => {},
   });
@@ -306,7 +293,7 @@ const ServiceSettings: React.FC = () => {
     onSubmit: async (values, { resetForm }) => {
       const isSuccess = await updateFlowStatus(values.status);
       if (isSuccess) {
-        setIsAlertOpen(true);
+        toast.success("Service settings updated successfully");
         // Send a Slack notification to #planx-notifications
         sendFlowStatusSlackNotification(values.status);
         // Reset "dirty" status to disable Save & Reset buttons
@@ -487,15 +474,6 @@ const ServiceSettings: React.FC = () => {
           </Box>
         </SettingsSection>
       </Box>
-      <Snackbar
-        open={isAlertOpen}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Service settings updated successfully
-        </Alert>
-      </Snackbar>
     </Container>
   );
 };

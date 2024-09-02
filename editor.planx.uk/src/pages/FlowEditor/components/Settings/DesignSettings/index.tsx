@@ -1,11 +1,10 @@
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { FormikConfig } from "formik";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -34,7 +33,7 @@ const DesignSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
     FormikConfig<TeamTheme> | undefined
   >(undefined);
-
+  const toast = useToast();
   /**
    * Fetch current team and setup shared form config
    */
@@ -60,20 +59,7 @@ const DesignSettings: React.FC = () => {
     fetchTeam();
   }, []);
 
-  const [open, setOpen] = useState(false);
-
-  const handleClose = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const onSuccess = () => setOpen(true);
+  const onSuccess = () => toast.success("Theme updated successfully");
 
   return (
     <Container maxWidth="formWrap">
@@ -93,11 +79,6 @@ const DesignSettings: React.FC = () => {
           <FaviconForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>
       )}
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Theme updated successfully
-        </Alert>
-      </Snackbar>
     </Container>
   );
 };

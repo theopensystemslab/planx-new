@@ -1,12 +1,11 @@
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React from "react";
 import type { TextContent } from "types";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
@@ -24,8 +23,7 @@ function Component() {
     state.globalSettings,
     state.updateGlobalSettings,
   ]);
-
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const toast = useToast();
 
   const formik = useFormik({
     initialValues: {
@@ -49,73 +47,51 @@ function Component() {
       );
 
       updateGlobalSettings(formatted);
-      setIsAlertOpen(true);
+      toast.success("Footer settings updated successfully");
     },
   });
 
-  const handleClose = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setIsAlertOpen(false);
-  };
-
   return (
-    <>
-      <Container maxWidth="contentWrap">
-        <form onSubmit={formik.handleSubmit}>
-          <SettingsSection>
-            <Typography variant="h2" component="h3" gutterBottom>
-              Global Settings
-            </Typography>
-          </SettingsSection>
-          <SettingsSection background>
-            <InputGroup flowSpacing>
-              <InputLegend>Footer Elements</InputLegend>
-              <SettingsDescription>
-                <p>Manage the content that will appear in the footer.</p>
-                <p>
-                  The heading will appear as a footer link which will open a
-                  content page.
-                </p>
-              </SettingsDescription>
-              <Box width="100%" mb={4} p={0}>
-                <ListManager
-                  values={formik.values.footerContent}
-                  onChange={(newOptions) => {
-                    formik.setFieldValue("footerContent", newOptions);
-                  }}
-                  newValue={() =>
-                    ({
-                      heading: "",
-                      content: "",
-                      show: true,
-                    }) as TextContent
-                  }
-                  Editor={ContentEditor}
-                />
-              </Box>
-            </InputGroup>
-            <Button type="submit" variant="contained" color="primary">
-              Save
-            </Button>
-          </SettingsSection>
-        </form>
-      </Container>
-      <Snackbar
-        open={isAlertOpen}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Footer settings updated successfully
-        </Alert>
-      </Snackbar>
-    </>
+    <Container maxWidth="contentWrap">
+      <form onSubmit={formik.handleSubmit}>
+        <SettingsSection>
+          <Typography variant="h2" component="h3" gutterBottom>
+            Global Settings
+          </Typography>
+        </SettingsSection>
+        <SettingsSection background>
+          <InputGroup flowSpacing>
+            <InputLegend>Footer Elements</InputLegend>
+            <SettingsDescription>
+              <p>Manage the content that will appear in the footer.</p>
+              <p>
+                The heading will appear as a footer link which will open a
+                content page.
+              </p>
+            </SettingsDescription>
+            <Box width="100%" mb={4} p={0}>
+              <ListManager
+                values={formik.values.footerContent}
+                onChange={(newOptions) => {
+                  formik.setFieldValue("footerContent", newOptions);
+                }}
+                newValue={() =>
+                  ({
+                    heading: "",
+                    content: "",
+                    show: true,
+                  }) as TextContent
+                }
+                Editor={ContentEditor}
+              />
+            </Box>
+          </InputGroup>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
+        </SettingsSection>
+      </form>
+    </Container>
   );
 }
 
