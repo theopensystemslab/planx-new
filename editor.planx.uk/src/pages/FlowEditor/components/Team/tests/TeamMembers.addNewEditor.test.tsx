@@ -1,14 +1,16 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
+import React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
+import { setup } from "../../../../../testUtils";
+import { AddNewEditorModal } from "../components/AddNewEditorModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
-
-vi.mock("lib/featureFlags.ts", () => ({
-  hasFeatureFlag: vi.fn().mockReturnValue(true),
-}));
 
 vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
@@ -22,10 +24,10 @@ vi.mock(
 
 let initialState: FullStore;
 
-describe("when a user with the ADD_NEW_EDITOR feature flag enabled presses 'add a new editor'", () => {
+describe("when a user presses 'add a new editor'", () => {
   beforeEach(async () => {
     useStore.setState({ teamMembers: mockTeamMembersData });
-    const user = await setupTeamMembersScreen();
+    const { user } = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByText(
@@ -44,7 +46,7 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
   afterAll(() => useStore.setState(initialState));
   beforeEach(async () => {
     useStore.setState({ teamMembers: mockTeamMembersData });
-    const user = await setupTeamMembersScreen();
+    const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewEditor(user);
   });
 
@@ -68,5 +70,24 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
     expect(
       await screen.findByText(/Successfully added a user/),
     ).toBeInTheDocument();
+  });
+});
+
+describe("when the addNewEditor modal is rendered", () => {
+  it("should not have any accessibility issues", async () => {
+    const { container } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <AddNewEditorModal
+          setShowErrorToast={() => {}}
+          showModal={true}
+          setShowModal={() => {}}
+          setShowSuccessToast={() => {}}
+        />
+      </DndProvider>,
+    );
+    await screen.findByTestId("modal-create-user");
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });
