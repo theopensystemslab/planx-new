@@ -18,7 +18,11 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
 
-  const [_features, setFeatures] = useState<Feature[] | undefined>(undefined);
+  const editableFeatures = props.formik.values.schemaData?.[props.activeIndex]
+    ?.features as Feature[];
+  const [features, setFeatures] = useState<Feature[] | undefined>(
+    editableFeatures.length > 0 ? editableFeatures : undefined,
+  );
 
   useEffect(() => {
     const geojsonChangeHandler = async ({ detail: geojson }: any) => {
@@ -53,6 +57,10 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
             height={400}
             basemap={mapOptions?.basemap}
             drawMode
+            drawGeojsonData={
+              features &&
+              JSON.stringify({ type: "FeatureCollection", features: features })
+            }
             drawMany={mapOptions?.drawMany}
             drawColor={mapOptions?.drawColor}
             drawType={mapOptions?.drawType}
