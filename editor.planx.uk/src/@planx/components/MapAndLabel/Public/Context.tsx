@@ -1,10 +1,15 @@
 import { useSchema } from "@planx/components/shared/Schema/hook";
-import { Schema, SchemaUserData } from "@planx/components/shared/Schema/model";
+import {
+  Schema,
+  SchemaUserData,
+  SchemaUserResponse,
+} from "@planx/components/shared/Schema/model";
 import {
   getPreviouslySubmittedData,
   makeData,
 } from "@planx/components/shared/utils";
 import { FormikProps, useFormik } from "formik";
+import { FeatureCollection } from "geojson";
 import { get } from "lodash";
 import React, {
   createContext,
@@ -40,18 +45,45 @@ const MapAndLabelContext = createContext<MapAndLabelContextValue | undefined>(
 export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   props,
 ) => {
-  const { schema, children, handleSubmit } = props;
+  const { schema, children, handleSubmit, previouslySubmittedData, fn } = props;
   const { formikConfig, initialValues } = useSchema({
     schema,
     previousValues: getPreviouslySubmittedData(props),
   });
 
+  // Deconstruct GeoJSON saved to passport back into schemaData & geoData
+  const previousGeojson = previouslySubmittedData?.data?.[
+    fn
+  ] as FeatureCollection;
+  const previousSchemaData = previousGeojson?.features.map(
+    (feature) => feature.properties,
+  ) as SchemaUserResponse[];
+  const previousGeoData = previousGeojson?.features;
+
   const formik = useFormik<SchemaUserData>({
     ...formikConfig,
     // The user interactions are map driven - start with no values added
-    initialValues: { schemaData: [] },
+    initialValues: {
+      schemaData: previousSchemaData || [],
+      geoData: previousGeoData || [],
+    },
     onSubmit: (values) => {
-      const defaultPassportData = makeData(props, values.schemaData)?.["data"];
+      const geojson: FeatureCollection = {
+        type: "FeatureCollection",
+        features: [],
+      };
+
+      values.geoData?.forEach((feature, i) => {
+        // Store user inputs as GeoJSON properties
+        const mergedProperties = {
+          ...feature.properties,
+          ...values.schemaData[i],
+        };
+        feature["properties"] = mergedProperties;
+        geojson.features.push(feature);
+      });
+
+      const defaultPassportData = makeData(props, geojson)?.["data"];
 
       handleSubmit?.({
         data: {

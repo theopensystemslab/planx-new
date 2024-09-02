@@ -125,7 +125,10 @@ export type SchemaUserResponse = Record<
 /**
  * Output data from a form using the useSchema hook
  */
-export type SchemaUserData = { schemaData: SchemaUserResponse[] };
+export type SchemaUserData = {
+  schemaData: SchemaUserResponse[];
+  geoData?: Feature[];
+};
 
 /**
  * For each field in schema, return a map of Yup validation schema
