@@ -5,7 +5,7 @@ import {
   DESCRIPTION_TEXT,
   ERROR_MESSAGE,
 } from "@planx/components/shared/constants";
-import { publicClient } from "lib/graphql";
+import useApolloClientSetup from "hooks/useApolloClientSetup";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
@@ -45,6 +45,8 @@ const AutocompleteWrapper = styled(Box)(({ theme }) => ({
 }));
 
 export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
+  const { publicClient } = useApolloClientSetup();
+
   const [postcode, setPostcode] = useState<string | null>(
     props.initialPostcode ?? null,
   );

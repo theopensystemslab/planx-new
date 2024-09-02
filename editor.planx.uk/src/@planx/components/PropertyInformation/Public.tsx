@@ -8,7 +8,7 @@ import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/ui";
 import { Feature } from "geojson";
-import { publicClient } from "lib/graphql";
+import useApolloClientSetup from "hooks/useApolloClientSetup";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -24,6 +24,7 @@ import type { PropertyInformation } from "./model";
 export default Component;
 
 function Component(props: PublicProps<PropertyInformation>) {
+  const { publicClient } = useApolloClientSetup();
   const [passport, overrideAnswer] = useStore((state) => [
     state.computePassport(),
     state.overrideAnswer,
