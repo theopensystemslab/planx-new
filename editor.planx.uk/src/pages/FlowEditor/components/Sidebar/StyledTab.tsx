@@ -3,36 +3,23 @@ import Tab, { tabClasses, TabProps } from "@mui/material/Tab";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-interface StyledTabProps extends TabProps {
-  tabTheme?: "light" | "dark";
-}
-
-const StyledTab = styled(({ tabTheme, ...props }: StyledTabProps) => (
+const StyledTab = styled((props: TabProps) => (
   <Tab {...props} disableFocusRipple disableTouchRipple disableRipple />
-))<StyledTabProps>(({ theme, tabTheme }) => ({
+))<TabProps>(({ theme }) => ({
   position: "relative",
   zIndex: 1,
   textTransform: "none",
   background: "transparent",
-  border: `1px solid transparent`,
   borderBottomColor: theme.palette.border.main,
-  color: theme.palette.primary.main,
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  color: theme.palette.text.primary,
+  minWidth: "75px",
   minHeight: "36px",
   margin: theme.spacing(0, 0.5),
-  marginBottom: "-1px",
-  padding: "0.5em",
+  padding: "0.75em 0.25em",
   [`&.${tabClasses.selected}`]: {
-    background:
-      tabTheme === "dark"
-        ? theme.palette.background.dark
-        : theme.palette.background.default,
-    borderColor: theme.palette.border.main,
-    borderBottomColor: theme.palette.common.white,
-    color:
-      tabTheme === "dark"
-        ? theme.palette.common.white
-        : theme.palette.text.primary,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
+    color: theme.palette.text.primary,
+    boxShadow: `inset 0 -3px 0 ${theme.palette.info.main}`,
   },
 }));
 

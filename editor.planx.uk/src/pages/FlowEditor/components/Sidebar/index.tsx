@@ -1,3 +1,4 @@
+import ReactJson from "@microlink/react-json-view";
 import LanguageIcon from "@mui/icons-material/Language";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
@@ -69,7 +70,7 @@ const SidebarContainer = styled(Box)(() => ({
 }));
 
 const Header = styled("header")(({ theme }) => ({
-  padding: theme.spacing(1),
+  padding: theme.spacing(1, 1.5),
   "& input": {
     flex: "1",
     padding: "5px",
@@ -108,6 +109,7 @@ const TabList = styled(Box)(({ theme }) => ({
   },
   "& .MuiTabs-root": {
     minHeight: "0",
+    padding: theme.spacing(0, 1.5),
   },
   // Hide default MUI indicator as we're using custom styling
   "& .MuiTabs-indicator": {
@@ -126,21 +128,27 @@ const DebugConsole = () => {
   );
   return (
     <Console>
-      <Typography variant="body2">
-        <a
-          href={`${
-            import.meta.env.VITE_APP_API_URL
-          }/flows/${flowId}/download-schema`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "inherit" }}
-        >
-          Download the flow schema
-        </a>
-      </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", fontSize: "medium" }}>
-        {JSON.stringify({ passport, breadcrumbs, cachedBreadcrumbs }, null, 2)}
-      </pre>
+      <div style={{ fontSize: "medium" }}>
+        <ReactJson
+          src={{ passport, breadcrumbs, cachedBreadcrumbs }}
+          theme="monokai"
+          displayDataTypes={false}
+          indentWidth={2}
+          style={{ padding: "2em 0", background: "transparent" }}
+        />
+        <Typography variant="body2">
+          <a
+            href={`${
+              import.meta.env.VITE_APP_API_URL
+            }/flows/${flowId}/download-schema`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "inherit" }}
+          >
+            Download the flow schema
+          </a>
+        </Typography>
+      </div>
     </Console>
   );
 };
@@ -297,12 +305,7 @@ const Sidebar: React.FC<{
           )}
         </Box>
         <Box width="100%" mt={2}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-end"
-            marginRight={1}
-          >
+          <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Badge
               sx={{ width: "100%" }}
               badgeContent={alteredNodes && alteredNodes.length}
@@ -389,13 +392,13 @@ const Sidebar: React.FC<{
         </Box>
       </Header>
       <TabList>
-        <Tabs centered onChange={handleChange} value={activeTab} aria-label="">
-          <StyledTab value="PreviewBrowser" label="Preview" tabTheme="light" />
-          <StyledTab value="History" label="History" tabTheme="light" />
+        <Tabs onChange={handleChange} value={activeTab} aria-label="">
+          <StyledTab value="PreviewBrowser" label="Preview" />
+          <StyledTab value="History" label="History" />
           {hasFeatureFlag("SEARCH") && (
-            <StyledTab value="Search" label="Search" tabTheme="light" />
+            <StyledTab value="Search" label="Search" />
           )}
-          <StyledTab value="Console" label="Console" tabTheme="dark" />
+          <StyledTab value="Console" label="Console" />
         </Tabs>
       </TabList>
       {activeTab === "PreviewBrowser" && (

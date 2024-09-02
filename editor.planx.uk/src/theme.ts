@@ -470,6 +470,29 @@ const getThemeOptions = ({
           },
         ],
       },
+      MuiInputBase: {
+        styleOverrides: {
+          root: {
+            "&.Mui-disabled": {
+              backgroundColor: palette.grey[200],
+            },
+          },
+        },
+      },
+      MuiSelect: {
+        styleOverrides: {
+          root: {
+            "&.Mui-disabled": {
+              backgroundColor: palette.grey[200],
+            },
+          },
+          icon: {
+            "&.Mui-disabled": {
+              color: palette.grey[400],
+            },
+          },
+        },
+      },
       MuiSwitch: {
         styleOverrides: {
           root: {

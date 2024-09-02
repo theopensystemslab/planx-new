@@ -7,10 +7,6 @@ import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import { alreadyExistingUser } from "./mocks/mockUsers";
 
-vi.mock("lib/featureFlags.ts", () => ({
-  hasFeatureFlag: vi.fn().mockReturnValue(true),
-}));
-
 vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
   () => ({
@@ -20,7 +16,6 @@ vi.mock(
     }),
   }),
 );
-
 let initialState: FullStore;
 
 describe("when a user fills in the 'add a new editor' form correctly but the user already exists", () => {
@@ -30,7 +25,7 @@ describe("when a user fills in the 'add a new editor' form correctly but the use
       teamMembers: [...mockTeamMembersData, alreadyExistingUser],
     });
 
-    const user = await setupTeamMembersScreen();
+    const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewEditor(user);
   });
 

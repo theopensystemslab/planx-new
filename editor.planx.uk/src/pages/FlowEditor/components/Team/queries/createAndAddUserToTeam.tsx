@@ -1,7 +1,11 @@
-import { gql } from "@apollo/client";
+import { FetchResult, gql } from "@apollo/client";
 import { GET_USERS_FOR_TEAM_QUERY } from "routes/teamMembers";
 
 import { client } from "../../../../../lib/graphql";
+
+type CreateAndAddUserResponse = FetchResult<{
+  insert_users_one: { id: number; __typename: "users" };
+}>;
 
 export const createAndAddUserToTeam = async (
   email: string,
@@ -11,7 +15,7 @@ export const createAndAddUserToTeam = async (
   teamSlug: string,
 ) => {
   // NB: the user is hard-coded with the 'teamEditor' role for now
-  const response = (await client.mutate({
+  const response: CreateAndAddUserResponse = await client.mutate({
     mutation: gql`
       mutation CreateAndAddUserToTeam(
         $email: String!
@@ -40,6 +44,9 @@ export const createAndAddUserToTeam = async (
     refetchQueries: [
       { query: GET_USERS_FOR_TEAM_QUERY, variables: { teamSlug } },
     ],
-  })) as any;
-  return response.data.insert_users_one;
+  });
+  if (response.data) {
+    return response.data.insert_users_one;
+  }
+  throw new Error("Unable to create user");
 };

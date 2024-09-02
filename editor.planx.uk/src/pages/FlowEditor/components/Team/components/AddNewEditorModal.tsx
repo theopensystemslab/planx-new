@@ -33,6 +33,7 @@ export const AddNewEditorModal = ({
 
   const clearErrors = () => {
     setShowUserAlreadyExistsError(false);
+    setShowErrorToast(false);
   };
 
   const handleSubmit = async (
@@ -41,7 +42,7 @@ export const AddNewEditorModal = ({
   ) => {
     const { teamId, teamSlug } = useStore.getState();
 
-    const newUserId = await createAndAddUserToTeam(
+    const createUserResult = await createAndAddUserToTeam(
       values.email,
       values.firstName,
       values.lastName,
@@ -51,14 +52,17 @@ export const AddNewEditorModal = ({
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
       }
+      if (err.message === "Unable to create user") {
+        setShowErrorToast(true);
+      }
       console.error(err);
     });
 
-    if (!newUserId) {
+    if (!createUserResult) {
       return;
     }
     clearErrors();
-    optimisticallyUpdateMembersTable(values, newUserId);
+    optimisticallyUpdateMembersTable(values, createUserResult.id);
     setShowModal(false);
     toast.success("Successfully added a user");
     resetForm({ values });
@@ -84,7 +88,7 @@ export const AddNewEditorModal = ({
           maxWidth: theme.breakpoints.values.md,
           borderRadius: 0,
           borderTop: `20px solid ${theme.palette.primary.main}`,
-          background: "#FFF",
+          background: theme.palette.background.paper,
           margin: theme.spacing(2),
         }),
       }}

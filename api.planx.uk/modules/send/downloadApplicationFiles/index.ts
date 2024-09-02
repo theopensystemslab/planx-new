@@ -17,10 +17,10 @@ export async function downloadApplicationFiles(
 
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const { sendToEmail } = await getTeamEmailSettings(
+    const { notifyPersonalisation } = await getTeamEmailSettings(
       req.query.localAuthority as string,
     );
-    if (sendToEmail !== req.query.email) {
+    if (notifyPersonalisation.sendToEmail !== req.query.email) {
       return next({
         status: 403,
         message:

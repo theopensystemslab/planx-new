@@ -44,28 +44,22 @@ interface Props {
   data?: any;
 }
 
-const Node: React.FC<any> = (props: Props) => {
+const Node: React.FC<Props> = (props) => {
   const [
     childNodesOf,
     resultData,
     hasPaid,
-    passport,
     isFinalCard,
     resetPreview,
-    sessionId,
     cachedBreadcrumbs,
-    flowName,
     flowSettings,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
     state.hasPaid(),
-    state.computePassport(),
     state.isFinalCard(),
     state.resetPreview,
-    state.sessionId,
     state.cachedBreadcrumbs,
-    state.flowName,
     state.flowSettings,
   ]);
 

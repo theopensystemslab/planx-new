@@ -1,17 +1,20 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
-import { Feature } from "geojson";
-import { GeoJsonObject } from "geojson";
+import { Feature, GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../../shared/Preview/Card";
 import CardHeader from "../../shared/Preview/CardHeader";
@@ -19,6 +22,7 @@ import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import type { MapAndLabel } from "./../model";
 import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
+import { CopyFeature } from "./CopyFeature";
 
 type Props = PublicProps<MapAndLabel>;
 
@@ -38,14 +42,8 @@ function a11yProps(index: number) {
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
-  const { schema, activeIndex, formik } = useMapAndLabelContext();
-  const [activeTab, setActiveTab] = useState<string>(
-    features[features.length - 1].properties?.label || "",
-  );
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setActiveTab(newValue);
-  };
+  const { schema, activeIndex, formik, editFeature, isFeatureInvalid } =
+    useMapAndLabelContext();
 
   return (
     <Box
@@ -56,48 +54,90 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
         maxHeight: "fit-content",
       }}
     >
-      <TabContext value={activeTab}>
+      <TabContext value={activeIndex.toString()}>
         <Tabs
           orientation="vertical"
           variant="scrollable"
-          value={activeTab}
-          onChange={handleChange}
+          value={activeIndex.toString()}
+          onChange={(_e, newValue) => {
+            editFeature(parseInt(newValue, 10));
+          }}
+          // TODO!
           aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
           {features.map((feature, i) => (
             <Tab
               key={`tab-${i}`}
-              value={feature.properties?.label}
+              value={i.toString()}
               label={`${schema.type} ${feature.properties?.label}`}
               {...a11yProps(i)}
+              {...(isFeatureInvalid(i) && {
+                sx: (theme) => ({
+                  borderRight: `12px solid ${theme.palette.error.main}`,
+                  // Appear over tab indicator
+                  zIndex: 2,
+                }),
+              })}
             />
           ))}
         </Tabs>
         {features.map((feature, i) => (
           <TabPanel
             key={`tabpanel-${i}`}
-            value={feature.properties?.label}
+            value={i.toString()}
             sx={{ width: "100%" }}
           >
-            <Typography component="h2" variant="h3">
-              {`${schema.type} ${feature.properties?.label}`}
-            </Typography>
-            <Typography variant="body2" mb={2}>
-              {`${feature.geometry.type}`}
-              {feature.geometry.type === "Point"
-                ? ` (${feature.geometry.coordinates.map((coord) =>
-                    coord.toFixed(5),
-                  )})`
-                : ` (area ${
-                    feature.properties?.["area.squareMetres"] || 0
-                  } m²)`}
-            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                height: "90px",
+              }}
+            >
+              <Box>
+                <Typography component="h2" variant="h3">
+                  {`${schema.type} ${feature.properties?.label}`}
+                </Typography>
+                <Typography variant="body2" mb={2}>
+                  {`${feature.geometry.type}`}
+                  {feature.geometry.type === "Point"
+                    ? ` (${feature.geometry.coordinates.map((coord) =>
+                        coord.toFixed(5),
+                      )})`
+                    : ` (area ${
+                        feature.properties?.["area.squareMetres"] || 0
+                      } m²)`}
+                </Typography>
+              </Box>
+              <CopyFeature features={features} destinationIndex={i} />
+            </Box>
             <SchemaFields
+              sx={(theme) => ({
+                display: "flex",
+                flexDirection: "column",
+                gap: theme.spacing(2),
+              })}
               schema={schema}
               activeIndex={activeIndex}
               formik={formik}
             />
+            <Button
+              onClick={() =>
+                console.log(
+                  `TODO - Remove ${schema.type} ${feature.properties?.label}`,
+                )
+              }
+              sx={{
+                fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                gap: (theme) => theme.spacing(2),
+                marginTop: 2,
+              }}
+            >
+              <DeleteIcon color="warning" fontSize="medium" />
+              Remove
+            </Button>
           </TabPanel>
         ))}
       </TabContext>
@@ -105,8 +145,26 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   );
 };
 
+const PlotFeatureToBegin = () => (
+  <Box
+    sx={(theme) => ({
+      backgroundColor: theme.palette.background.paper,
+      p: theme.spacing(3),
+      textAlign: "center",
+      mt: theme.spacing(-1),
+      color: theme.typography.body2.color,
+      border: `1px solid ${theme.palette.border.main}`,
+    })}
+  >
+    <Typography variant="body2" fontSize={"large"}>
+      Plot a feature on the map to begin
+    </Typography>
+  </Box>
+);
+
 const Root = () => {
-  const { validateAndSubmitForm, mapAndLabelProps } = useMapAndLabelContext();
+  const { validateAndSubmitForm, mapAndLabelProps, errors } =
+    useMapAndLabelContext();
   const {
     title,
     description,
@@ -123,11 +181,13 @@ const Root = () => {
   } = mapAndLabelProps;
 
   const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
+  const { addFeature, schema } = useMapAndLabelContext();
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         setFeatures(geojson["EPSG:3857"].features);
+        addFeature();
       } else {
         // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
@@ -141,7 +201,14 @@ const Root = () => {
     return function cleanup() {
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
-  }, [setFeatures]);
+  }, [setFeatures, addFeature]);
+
+  const rootError: string =
+    (errors.min &&
+      `You must plot at least ${schema.min} ${schema.type}(s) on the map`) ||
+    (errors.max &&
+      `You must plot at most ${schema.max} ${schema.type}(s) on the map`) ||
+    "";
 
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
@@ -153,48 +220,40 @@ const Root = () => {
         howMeasured={howMeasured}
       />
       <FullWidthWrapper>
-        <MapContainer environment="standalone">
-          {/* @ts-ignore */}
-          <my-map
-            id="map-and-label-map"
-            basemap={basemap}
-            ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
-            drawMode
-            drawMany
-            drawColor={drawColor}
-            drawType={drawType}
-            drawPointer="crosshair"
-            zoom={20}
-            maxZoom={23}
-            latitude={latitude}
-            longitude={longitude}
-            osProxyEndpoint={`${
-              import.meta.env.VITE_APP_API_URL
-            }/proxy/ordnance-survey`}
-            osCopyright={
-              basemap === "OSVectorTile"
-                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
-                : ``
-            }
-            clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
-            mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
-            collapseAttributions
-          />
-        </MapContainer>
+        <ErrorWrapper error={rootError}>
+          <MapContainer environment="standalone">
+            {/* @ts-ignore */}
+            <my-map
+              id="map-and-label-map"
+              basemap={basemap}
+              ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
+              drawMode
+              drawMany
+              drawColor={drawColor}
+              drawType={drawType}
+              drawPointer="crosshair"
+              zoom={20}
+              maxZoom={23}
+              latitude={latitude}
+              longitude={longitude}
+              osProxyEndpoint={`${
+                import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
+              osCopyright={
+                basemap === "OSVectorTile"
+                  ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                  : ``
+              }
+              clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
+              mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
+              collapseAttributions
+            />
+          </MapContainer>
+        </ErrorWrapper>
         {features && features?.length > 0 ? (
           <VerticalFeatureTabs features={features} />
         ) : (
-          <Box
-            sx={
-              {
-                /** TODO match figma */
-              }
-            }
-          >
-            <Typography variant="body2">
-              {`Plot a feature on the map to begin`}
-            </Typography>
-          </Box>
+          <PlotFeatureToBegin />
         )}
       </FullWidthWrapper>
     </Card>
