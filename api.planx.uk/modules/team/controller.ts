@@ -45,7 +45,7 @@ export const changeMemberRole: UpsertMember = async (_req, res, next) => {
     return res.send({ message: "Successfully changed role" });
   } catch (error) {
     return next(
-      new ServerError({ message: "Failed to change role", cause: error })
+      new ServerError({ message: "Failed to change role", cause: error }),
     );
   }
 };
@@ -62,7 +62,7 @@ export const removeMember: RemoveMember = async (_req, res, next) => {
       new ServerError({
         message: "Failed to remove member from team",
         cause: error,
-      })
+      }),
     );
   }
 };
