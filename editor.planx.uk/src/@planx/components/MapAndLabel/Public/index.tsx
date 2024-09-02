@@ -322,7 +322,7 @@ function MapAndLabelComponent(props: Props) {
       {...props}
       latitude={latitude}
       longitude={longitude}
-      boundaryBBox={teamSettings.boundaryBBox}
+      boundaryBBox={teamSettings?.boundaryBBox}
     />
   );
 }
