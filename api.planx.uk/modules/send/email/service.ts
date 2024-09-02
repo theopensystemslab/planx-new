@@ -8,7 +8,8 @@ import { EmailSubmissionNotifyConfig } from "../../../types.js";
 
 interface GetTeamEmailSettings {
   teams: {
-    notifyPersonalisation: NotifyPersonalisation & { sendToEmail: string };
+    sendToEmail: string;
+    notifyPersonalisation: NotifyPersonalisation;
   }[];
 }
 
@@ -17,12 +18,12 @@ export async function getTeamEmailSettings(localAuthority: string) {
     gql`
       query GetTeamEmailSettings($slug: String) {
         teams(where: { slug: { _eq: $slug } }) {
+          sendToEmail: submission_email
           notifyPersonalisation: team_settings {
             helpEmail: help_email
             helpPhone: help_phone
             emailReplyToId: email_reply_to_id
             helpOpeningHours: help_opening_hours
-            sendToEmail: submission_email
           }
         }
       }
@@ -31,6 +32,7 @@ export async function getTeamEmailSettings(localAuthority: string) {
       slug: localAuthority,
     },
   );
+
   return response?.teams[0];
 }
 

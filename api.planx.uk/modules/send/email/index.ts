@@ -27,11 +27,10 @@ export async function sendToEmail(
   }
 
   try {
-    // Confirm this local authority (aka team) has an email configured in team_settings.submission_email
-    const { notifyPersonalisation } =
+    // Confirm this local authority (aka team) has an email configured in teams.submission_email
+    const { sendToEmail, notifyPersonalisation } =
       await getTeamEmailSettings(localAuthority);
-
-    if (!notifyPersonalisation.sendToEmail) {
+    if (!sendToEmail) {
       return next({
         status: 400,
         message: `Send to email is not enabled for this local authority (${localAuthority})`,
@@ -48,17 +47,13 @@ export async function sendToEmail(
         serviceName: flowName,
         sessionId: payload.sessionId,
         applicantEmail: email,
-        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${notifyPersonalisation.sendToEmail}&localAuthority=${localAuthority}`,
+        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${localAuthority}`,
         ...notifyPersonalisation,
       },
     };
 
     // Send the email
-    const response = await sendEmail(
-      "submit",
-      notifyPersonalisation.sendToEmail,
-      config,
-    );
+    const response = await sendEmail("submit", sendToEmail, config);
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(payload.sessionId);
@@ -67,14 +62,14 @@ export async function sendToEmail(
     insertAuditEntry(
       payload.sessionId,
       localAuthority,
-      notifyPersonalisation.sendToEmail,
+      sendToEmail,
       config,
       response,
     );
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: notifyPersonalisation.sendToEmail,
+      inbox: sendToEmail,
       govuk_notify_template: "Submit",
     });
   } catch (error) {
