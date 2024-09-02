@@ -1,5 +1,4 @@
 import "core-js/actual/string/replace-all"; // replace-all polyfill
-import "react-toastify/dist/ReactToastify.css";
 import "./app.css";
 
 import App from "App";

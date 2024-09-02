@@ -1,5 +1,4 @@
 import "core-js/actual/string/replace-all"; // replace-all polyfill
-import "react-toastify/dist/ReactToastify.css";
 import "./app.css";
 
 import { ApolloProvider } from "@apollo/client";
@@ -13,7 +12,6 @@ import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense } from "react";
 import { Router, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
-import { ToastContainer } from "react-toastify";
 
 // import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
@@ -58,7 +56,6 @@ const App = () => {
           </Router>
         </AnalyticsProvider>
       </ApolloProvider>
-      <ToastContainer icon={false} theme="colored" />
     </ToastContextProvider>
   );
 };
