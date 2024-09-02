@@ -9,7 +9,11 @@ const Toast = ({ message, type = "success", id }: ToastProps) => {
   const toast = useToast();
 
   const handleCloseToast = () => {
-    toast.remove(id);
+    if (toast) {
+      toast.remove(id);
+    } else {
+      console.warn("ToastContext is not provided.");
+    }
   };
 
   return (
