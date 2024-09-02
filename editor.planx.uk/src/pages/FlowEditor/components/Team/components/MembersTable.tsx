@@ -1,6 +1,4 @@
-import Alert from "@mui/material/Alert";
 import Chip from "@mui/material/Chip";
-import Snackbar from "@mui/material/Snackbar";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -19,30 +17,6 @@ export const MembersTable = ({
   showAddMemberButton,
 }: MembersTableProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [showErrorToast, setShowErrorToast] = useState(false);
-
-  const handleCloseSuccessToast = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setShowSuccessToast(false);
-  };
-
-  const handleCloseErrorToast = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setShowErrorToast(false);
-  };
 
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
@@ -75,40 +49,9 @@ export const MembersTable = ({
             </TableRow>
           )}
         </Table>
-        {showAddMemberButton && (
-          <Snackbar
-            open={showSuccessToast}
-            autoHideDuration={6000}
-            onClose={handleCloseSuccessToast}
-          >
-            <Alert
-              onClose={handleCloseSuccessToast}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Successfully added a user
-            </Alert>
-          </Snackbar>
-        )}
-        {showAddMemberButton && (
-          <Snackbar
-            open={showErrorToast}
-            autoHideDuration={6000}
-            onClose={handleCloseErrorToast}
-          >
-            <Alert
-              onClose={handleCloseErrorToast}
-              severity="error"
-              sx={{ width: "100%" }}
-            >
-              Failed to add new user, please try again
-            </Alert>
-          </Snackbar>
-        )}
+
         {showModal && (
           <AddNewEditorModal
-            setShowSuccessToast={setShowSuccessToast}
-            setShowErrorToast={setShowErrorToast}
             showModal={showModal}
             setShowModal={setShowModal}
           />
@@ -173,44 +116,9 @@ export const MembersTable = ({
             )}
           </TableBody>
         </Table>
-        {showAddMemberButton && (
-          <Snackbar
-            open={showSuccessToast}
-            autoHideDuration={6000}
-            onClose={handleCloseSuccessToast}
-          >
-            <Alert
-              onClose={handleCloseSuccessToast}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Successfully added a user
-            </Alert>
-          </Snackbar>
-        )}
-        {showAddMemberButton && (
-          <Snackbar
-            open={showErrorToast}
-            autoHideDuration={6000}
-            onClose={handleCloseErrorToast}
-          >
-            <Alert
-              onClose={handleCloseErrorToast}
-              severity="error"
-              sx={{ width: "100%" }}
-            >
-              Failed to add new user, please try again
-            </Alert>
-          </Snackbar>
-        )}
       </TableContainer>
       {showModal && (
-        <AddNewEditorModal
-          setShowSuccessToast={setShowSuccessToast}
-          setShowErrorToast={setShowErrorToast}
-          showModal={showModal}
-          setShowModal={setShowModal}
-        />
+        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
       )}
     </>
   );

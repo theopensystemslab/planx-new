@@ -5,6 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { FormikHelpers, useFormik } from "formik";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import InputGroup from "ui/editor/InputGroup";
@@ -24,15 +25,14 @@ import { optimisticallyUpdateMembersTable } from "./lib/optimisticallyUpdateMemb
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
-  setShowSuccessToast,
-  setShowErrorToast,
 }: AddNewEditorModalProps) => {
   const [showUserAlreadyExistsError, setShowUserAlreadyExistsError] =
     useState<boolean>(false);
 
+  const toast = useToast();
+
   const clearErrors = () => {
     setShowUserAlreadyExistsError(false);
-    setShowErrorToast(false);
   };
 
   const handleSubmit = async (
@@ -52,7 +52,7 @@ export const AddNewEditorModal = ({
         setShowUserAlreadyExistsError(true);
       }
       if (err.message === "Unable to create user") {
-        setShowErrorToast(true);
+        toast.error("Failed to add new user, please try again");
       }
       console.error(err);
     });
@@ -63,7 +63,7 @@ export const AddNewEditorModal = ({
     clearErrors();
     optimisticallyUpdateMembersTable(values, createUserResult.id);
     setShowModal(false);
-    setShowSuccessToast(true);
+    toast.success("Successfully added a user");
     resetForm({ values });
   };
 
