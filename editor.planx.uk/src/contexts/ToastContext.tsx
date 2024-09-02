@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import ToastContainer from "components/Toast/ToastContainer";
 import {
   ToastContextType,
@@ -7,7 +8,18 @@ import {
 import React, { createContext, ReactNode, useReducer } from "react";
 import { toastReducer } from "reducers/toastReducer";
 
-export const ToastContext = createContext<ToastContextType>(null);
+const defaultCreateContextValue = {
+  remove: (_id: number) => {},
+  addToast: (_type: ToastType, _message: string) => {},
+  success: (_message: string) => {},
+  warning: (_message: string) => {},
+  info: (_message: string) => {},
+  error: (_message: string) => {},
+};
+
+export const ToastContext = createContext<ToastContextType>(
+  defaultCreateContextValue,
+);
 
 const initialState: ToastState = {
   toasts: [],

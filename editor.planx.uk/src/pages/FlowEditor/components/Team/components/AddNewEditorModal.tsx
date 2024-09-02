@@ -33,7 +33,6 @@ export const AddNewEditorModal = ({
 
   const clearErrors = () => {
     setShowUserAlreadyExistsError(false);
-    setShowErrorToast(false);
   };
 
   const handleSubmit = async (
@@ -53,7 +52,7 @@ export const AddNewEditorModal = ({
         setShowUserAlreadyExistsError(true);
       }
       if (err.message === "Unable to create user") {
-        setShowErrorToast(true);
+        toast.error("Failed to add new user, please try again");
       }
       console.error(err);
     });

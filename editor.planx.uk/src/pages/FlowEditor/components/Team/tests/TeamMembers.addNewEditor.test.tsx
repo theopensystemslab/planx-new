@@ -77,12 +77,7 @@ describe("when the addNewEditor modal is rendered", () => {
   it("should not have any accessibility issues", async () => {
     const { container } = setup(
       <DndProvider backend={HTML5Backend}>
-        <AddNewEditorModal
-          setShowErrorToast={() => {}}
-          showModal={true}
-          setShowModal={() => {}}
-          setShowSuccessToast={() => {}}
-        />
+        <AddNewEditorModal showModal={true} setShowModal={() => {}} />
       </DndProvider>,
     );
     await screen.findByTestId("modal-create-user");
