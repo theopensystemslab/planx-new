@@ -49,40 +49,9 @@ export const MembersTable = ({
             </TableRow>
           )}
         </Table>
-        {showAddMemberButton && (
-          <Snackbar
-            open={showSuccessToast}
-            autoHideDuration={6000}
-            onClose={handleCloseSuccessToast}
-          >
-            <Alert
-              onClose={handleCloseSuccessToast}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Successfully added a user
-            </Alert>
-          </Snackbar>
-        )}
-        {showAddMemberButton && (
-          <Snackbar
-            open={showErrorToast}
-            autoHideDuration={6000}
-            onClose={handleCloseErrorToast}
-          >
-            <Alert
-              onClose={handleCloseErrorToast}
-              severity="error"
-              sx={{ width: "100%" }}
-            >
-              Failed to add new user, please try again
-            </Alert>
-          </Snackbar>
-        )}
+
         {showModal && (
           <AddNewEditorModal
-            setShowSuccessToast={setShowSuccessToast}
-            setShowErrorToast={setShowErrorToast}
             showModal={showModal}
             setShowModal={setShowModal}
           />
