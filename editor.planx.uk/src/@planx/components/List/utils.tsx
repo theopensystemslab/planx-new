@@ -44,7 +44,11 @@ export function formatSchemaDisplayValue(
       return matchingOption?.data.text;
     }
     case "map": {
-      const feature = value[0];
+      const feature = {
+        type: "FeatureCollection",
+        features: value,
+      };
+
       console.log(feature);
       return (
         <>
@@ -53,9 +57,8 @@ export function formatSchemaDisplayValue(
             id="inactive-list-map"
             basemap={field.data.mapOptions?.basemap}
             geojsonData={JSON.stringify(feature)}
-            drawGeojsonData={JSON.stringify(feature)}
             geojsonColor={field.data.mapOptions?.drawColor}
-            geojsonFill
+            geojsonFill={true}
             geojsonBuffer={20}
             osProxyEndpoint={`${
               import.meta.env.VITE_APP_API_URL

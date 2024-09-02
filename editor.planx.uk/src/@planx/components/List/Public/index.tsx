@@ -60,8 +60,6 @@ const ActiveListCard: React.FC<{
     }
   }, []);
 
-  console.log({ message: "from index", formik, schema });
-
   return (
     <ErrorWrapper
       error={errors.unsavedItem ? "Please save in order to continue" : ""}
