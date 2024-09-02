@@ -1,9 +1,8 @@
-import Alert from "@mui/material/Alert";
 import Container from "@mui/material/Container";
-import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
 import { TeamSettings } from "@opensystemslab/planx-core/types";
 import { FormikConfig } from "formik";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -22,6 +21,7 @@ const GeneralSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
     FormikConfig<TeamSettings> | undefined
   >(undefined);
+  const toast = useToast();
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -44,21 +44,7 @@ const GeneralSettings: React.FC = () => {
     fetchTeam();
   }, []);
 
-  const [open, setOpen] = useState(false);
-  const [updateMessage, _setUpdateMessage] = useState("Setting Updated");
-
-  const handleClose = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const onSuccess = () => setOpen(true);
+  const onSuccess = () => toast.success("Setting Updated");
 
   return (
     <Container maxWidth="formWrap">
@@ -81,11 +67,6 @@ const GeneralSettings: React.FC = () => {
           <SubmissionsForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>
       )}
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          {updateMessage}
-        </Alert>
-      </Snackbar>
     </Container>
   );
 };
