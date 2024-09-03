@@ -3,7 +3,8 @@ import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Tab from "@mui/material/Tab";
+import { lighten, styled } from "@mui/material/styles";
+import Tab, { tabClasses, TabProps } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { SiteAddress } from "@planx/components/FindProperty/model";
@@ -39,6 +40,20 @@ function a11yProps(index: number) {
   };
 }
 
+const StyledTab = styled((props: TabProps) => (
+  <Tab {...props} disableFocusRipple disableTouchRipple disableRipple />
+))<TabProps>(({ theme }) => ({
+  textTransform: "none",
+  textAlign: "right",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  fontSize: theme.typography.body1.fontSize,
+  minWidth: "120px",
+  [`&.${tabClasses.selected}`]: {
+    background: lighten(theme.palette.border.light, 0.2),
+    color: theme.palette.text.primary,
+  },
+})) as typeof Tab;
+
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
@@ -63,19 +78,27 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             editFeature(parseInt(newValue, 10));
           }}
           aria-label="Select a feature to enter data"
-          sx={{ borderRight: 1, borderColor: "divider" }}
+          TabIndicatorProps={{
+            style: {
+              width: "4px",
+            },
+          }}
+          sx={{
+            borderRight: 1,
+            borderColor: (theme) => theme.palette.border.main,
+          }}
         >
           {features.map((feature, i) => (
-            <Tab
+            <StyledTab
               key={`tab-${i}`}
               value={i.toString()}
               label={`${schema.type} ${feature.properties?.label}`}
+              disableRipple
+              disableTouchRipple
               {...a11yProps(i)}
               {...(isFeatureInvalid(i) && {
                 sx: (theme) => ({
-                  borderRight: `12px solid ${theme.palette.error.main}`,
-                  // Appear over tab indicator
-                  zIndex: 2,
+                  borderLeft: `5px solid ${theme.palette.error.main}`,
                 }),
               })}
             />
@@ -98,7 +121,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
               }}
             >
               <Box>
-                <Typography component="h2" variant="h3">
+                <Typography component="h2" variant="h3" gutterBottom>
                   {`${schema.type} ${feature.properties?.label}`}
                 </Typography>
                 <Typography variant="body2" mb={2}>
