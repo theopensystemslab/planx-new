@@ -113,3 +113,22 @@ export const createNumberInput = async (
     .filter({ hasText: "Create number-input" })
     .click();
 };
+
+export const createDateInput = async (
+  page: Page,
+  locatingNode: Locator,
+  inputTitle: string
+) => {
+  await locatingNode.click();
+  await page.getByRole("dialog").waitFor();
+  await page.locator("select").selectOption({ label: "Date Input" });
+  await page.getByPlaceholder("Title").fill(inputTitle);
+  await page.locator("id=undefined-min-day").fill("01");
+  await page.locator("id=undefined-min-month").fill("01");
+  await page.locator("id=undefined-min-year").fill("1800");
+  await page.locator("id=undefined-max-day").fill("31");
+  await page.locator("id=undefined-max-month").fill("12");
+  await page.locator("id=undefined-max-year").fill("2199");
+
+  await page.locator("button").filter({ hasText: "Create date-input" }).click();
+};

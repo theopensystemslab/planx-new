@@ -12,6 +12,7 @@ import {
 } from "../globalHelpers";
 import {
   createChecklist,
+  createDateInput,
   createNotice,
   createNumberInput,
   createQuestionWithOptions,
@@ -147,11 +148,17 @@ test.describe("Navigation", () => {
       "The third checklist item",
     ]);
 
+    // add a text input
     nextNode = page.locator(".hanger > a").nth(7);
     await createTextInput(page, nextNode, "Tell us about your trees.");
 
+    // add a number input
     nextNode = page.locator(".hanger > a").nth(8);
     await createNumberInput(page, nextNode, "How old are you?", "years");
+
+    // add a date input
+    nextNode = page.locator(".hanger > a").nth(9);
+    createDateInput(page, nextNode, "When is your birthday?");
 
     const nodes = page.locator(".card");
     await expect(nodes.getByText(questionText)).toBeVisible();
@@ -160,6 +167,7 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText("Checklist item 1")).toBeVisible();
     await expect(nodes.getByText("Tell us about your trees.")).toBeVisible();
     await expect(nodes.getByText("How old are you?")).toBeVisible();
+    await expect(nodes.getByText("When is your birthday?")).toBeVisible();
   });
 
   test("Cannot preview an unpublished flow", async ({
