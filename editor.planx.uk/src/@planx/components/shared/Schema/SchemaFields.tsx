@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import { SxProps, Theme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
 import { FormikProps } from "formik";
 import React from "react";
 import InputRow from "ui/shared/InputRow";
@@ -21,13 +20,6 @@ interface SchemaFieldsProps {
   sx?: SxProps<Theme>;
 }
 
-const ListRows = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
-  display: "flex",
-  flexDirection: "column",
-  gap: theme.spacing(1.5),
-}));
-
 /**
  * Display a set of fields for the provided schema
  */
@@ -37,11 +29,11 @@ export const SchemaFields: React.FC<SchemaFieldsProps> = ({
   sx,
   activeIndex = 0,
 }) => (
-  <ListRows sx={sx}>
+  <Box sx={sx}>
     {schema.fields.map((field, i) => (
       <InputRow key={i}>
         <InputFields {...field} activeIndex={activeIndex} formik={formik} />
       </InputRow>
     ))}
-  </ListRows>
+  </Box>
 );
